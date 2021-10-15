@@ -10,7 +10,6 @@ import { NavigationContainer, RouteProp } from "@react-navigation/native";
 import Drawer from "./components/drawer";
 import HomeScreen from "./screens/home";
 import React from "react";
-import { StatusBar } from "expo-status-bar";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
 const { Group, Navigator, Screen } = createDrawerNavigator();
@@ -38,13 +37,15 @@ export default function App() {
   return (
     <NavigationContainer>
       <Navigator
-        screenOptions={{ headerTransparent: true }}
+        screenOptions={{ headerTransparent: false, headerTintColor: "#333" }}
         drawerContent={Drawer}
       >
         <Screen
           name="Home"
           component={HomeScreen}
-          options={{ title: "Wallet 3" }}
+          options={{
+            title: "Wallet 3",
+          }}
         />
         <Screen name="Details" component={DetailsScreen} />
       </Navigator>
