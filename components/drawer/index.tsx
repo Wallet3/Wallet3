@@ -19,76 +19,84 @@ export default (props: DrawerContentComponentProps) => {
 
   return (
     <DrawerContentScrollView {...props} scrollEnabled={false}>
-      <View
-        style={{
-          marginHorizontal: 16,
-          alignItems: "center",
-          flexDirection: "row",
-          marginBottom: 8,
-          paddingBottom: 12,
-          borderBottomWidth: 1,
-          //   borderRadius: 8,
-          borderBottomColor: "#efefef",
-        }}
-      >
-        <Image
+      <View>
+        {/* Avatar Header */}
+        <View
           style={{
-            width: 50,
-            height: 50,
-            borderRadius: 25,
-            backgroundColor: "#00bfff",
+            marginHorizontal: 16,
+            alignItems: "center",
+            flexDirection: "row",
+            marginBottom: 8,
+            paddingBottom: 12,
+            borderBottomWidth: 1,
+            borderBottomColor: "#efefef",
           }}
-          source={{
-            uri: "https://lh3.googleusercontent.com/xoSEsxi45bAjWFvxbAWX-Sng4AeEyU7NfA9vJ9k-UpX_1qoP0JrdNI-njQ0K8A1gm1cJqv4j_P-cMZuedCgQ3ik=w600",
-          }}
-        />
-
-        <Text
-          style={{
-            fontWeight: "500",
-            marginStart: 12,
-            fontSize: 17,
-            maxWidth: "70%",
-          }}
-          numberOfLines={1}
         >
-          ChainLinkGod.eth
-        </Text>
-      </View>
+          <Image
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: 25,
+              backgroundColor: "#00bfff",
+            }}
+            source={{
+              uri: "https://lh3.googleusercontent.com/xoSEsxi45bAjWFvxbAWX-Sng4AeEyU7NfA9vJ9k-UpX_1qoP0JrdNI-njQ0K8A1gm1cJqv4j_P-cMZuedCgQ3ik=w600",
+            }}
+          />
 
-      <DrawerItem
-        label="Wallet"
-        onPress={() => {
-          navigation.navigate("Home");
-        }}
-        labelStyle={{ fontSize: 17, marginStart: -16 }}
-        icon={({ color, size }) => (
-          <SimpleLineIcons color={color} size={size} name={"wallet"} />
-        )}
-      />
+          <Text
+            style={{
+              fontWeight: "500",
+              marginStart: 12,
+              fontSize: 17,
+              maxWidth: "70%",
+            }}
+            numberOfLines={1}
+          >
+            ChainLinkGod.eth
+          </Text>
+        </View>
 
-      <DrawerItem
-        label="Settings"
-        onPress={() => {}}
-        labelStyle={{ fontSize: 17, marginStart: -16 }}
-        icon={({ color, size }) => (
-          <SimpleLineIcons color={color} size={size} name={"settings"} />
-        )}
-      />
+        <View style={{ paddingBottom: 12 }}>
+          <DrawerItem
+            label="Wallet"
+            onPress={() => {
+              navigation.navigate("Home");
+            }}
+            labelStyle={{ fontSize: 17, marginStart: -16, color: "#333" }}
+            icon={({ color, size }) => (
+              <SimpleLineIcons color={color} size={size} name={"wallet"} />
+            )}
+          />
 
-      <View style={{ height: "100%", backgroundColor: "yellow" }}></View>
+          <DrawerItem
+            label="Settings"
+            onPress={() => {}}
+            labelStyle={{ fontSize: 17, marginStart: -16, color: "#333" }}
+            icon={({ color, size }) => (
+              <SimpleLineIcons color={color} size={size} name={"settings"} />
+            )}
+          />
 
-      <View style={{ paddingHorizontal: 8 }}>
-        <FontAwesome5.Button
-          name="ethereum"
-          onPress={() => {}}
-          size={18}
-          iconStyle={{ marginHorizontal: 8 }}
-          style={{ justifyContent: "center", alignItems: "center" }}
-          borderRadius={5}
-        >
-          Connect with Ethereum
-        </FontAwesome5.Button>
+          {/* <View style={{ height: "99%" }}></View> */}
+
+          <View
+            style={{
+              paddingHorizontal: 8,
+            }}
+          >
+            <FontAwesome5.Button
+              name="ethereum"
+              onPress={() => {}}
+              size={18}
+              iconStyle={{ marginHorizontal: 8 }}
+              style={{ justifyContent: "center", alignItems: "center" }}
+              borderRadius={5}
+            >
+              Connect with Ethereum
+            </FontAwesome5.Button>
+          </View>
+        </View>
       </View>
     </DrawerContentScrollView>
   );
