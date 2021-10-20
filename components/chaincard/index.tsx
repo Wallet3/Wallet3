@@ -7,10 +7,14 @@ import {
   ViewStyle,
 } from "react-native";
 
+import { Feather } from "@expo/vector-icons";
 import React from "react";
 
 interface Props {
   style?: StyleProp<ViewStyle>;
+  network?: string;
+  connectedApps?: number;
+  address?: string;
 }
 
 export default ({ style }: Props) => {
@@ -24,6 +28,11 @@ export default ({ style }: Props) => {
         }}
       >
         <Text style={{ ...styles.text, fontSize: 15 }}>Ethereum</Text>
+
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Text style={{ ...styles.text, fontSize: 14, marginEnd: 5 }}>3</Text>
+          <Feather name="layers" size={14} color="#fff" />
+        </View>
       </View>
 
       <Text style={{ ...styles.text, marginBottom: 42, fontSize: 12 }}>

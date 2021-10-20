@@ -24,15 +24,15 @@ export default observer(
           backgroundColor: "#fff",
         }}
       >
-        <ChainCard />
+        <ChainCard style={{ height: 132 }} />
 
-        <Button
+        {/* <Button
           title="Go to Details"
           onPress={() => {
             navigation.navigate("Details", { userId: 0 });
             navigation.openDrawer();
           }}
-        />
+        /> */}
         <StatusBar style="dark" />
       </View>
     );
