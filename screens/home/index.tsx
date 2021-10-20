@@ -1,5 +1,6 @@
 import { Button, StyleSheet, Text, View } from "react-native";
 
+import ChainCard from "../../components/chaincard";
 import { DrawerScreenProps } from "@react-navigation/drawer";
 import React from "react";
 import { StatusBar } from "expo-status-bar";
@@ -17,12 +18,13 @@ export default observer(
       <View
         style={{
           flex: 1,
-          alignItems: "center",
-          justifyContent: "center",
+          padding: 16,
+          alignItems: "stretch",
+          justifyContent: "flex-start",
           backgroundColor: "#fff",
         }}
       >
-        <Text>Home</Text>
+        <ChainCard />
 
         <Button
           title="Go to Details"
