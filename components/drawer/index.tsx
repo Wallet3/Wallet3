@@ -1,18 +1,9 @@
-import { Button, Image, StyleSheet, Text, View } from "react-native";
-import {
-  DrawerContent,
-  DrawerContentComponentProps,
-  DrawerContentScrollView,
-  DrawerItem,
-  DrawerItemList,
-  DrawerNavigationProp,
-  DrawerScreenProps,
-  DrawerView,
-} from "@react-navigation/drawer";
-import { FontAwesome5, SimpleLineIcons } from "@expo/vector-icons";
+import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
+import { FontAwesome5, SimpleLineIcons } from '@expo/vector-icons';
+import { Image, Text, View } from 'react-native';
+import { borderColor, fontColor } from '../../constants/styles';
 
-import Logo from "../../assets/icons/app/Logo.svg";
-import React from "react";
+import React from 'react';
 
 export default (props: DrawerContentComponentProps) => {
   const { navigation } = props;
@@ -24,12 +15,12 @@ export default (props: DrawerContentComponentProps) => {
         <View
           style={{
             marginHorizontal: 16,
-            alignItems: "center",
-            flexDirection: "row",
+            alignItems: 'center',
+            flexDirection: 'row',
             marginBottom: 8,
             paddingBottom: 12,
             borderBottomWidth: 1,
-            borderBottomColor: "#efefef",
+            borderBottomColor: borderColor,
           }}
         >
           <Image
@@ -37,19 +28,19 @@ export default (props: DrawerContentComponentProps) => {
               width: 50,
               height: 50,
               borderRadius: 25,
-              backgroundColor: "#00bfff",
+              backgroundColor: '#00bfff',
             }}
             source={{
-              uri: "https://lh3.googleusercontent.com/xoSEsxi45bAjWFvxbAWX-Sng4AeEyU7NfA9vJ9k-UpX_1qoP0JrdNI-njQ0K8A1gm1cJqv4j_P-cMZuedCgQ3ik=w600",
+              uri: 'https://lh3.googleusercontent.com/xoSEsxi45bAjWFvxbAWX-Sng4AeEyU7NfA9vJ9k-UpX_1qoP0JrdNI-njQ0K8A1gm1cJqv4j_P-cMZuedCgQ3ik=w600',
             }}
           />
 
           <Text
             style={{
-              fontWeight: "500",
+              fontWeight: '500',
               marginStart: 12,
               fontSize: 17,
-              maxWidth: "70%",
+              maxWidth: '70%',
             }}
             numberOfLines={1}
           >
@@ -61,21 +52,17 @@ export default (props: DrawerContentComponentProps) => {
           <DrawerItem
             label="Wallet"
             onPress={() => {
-              navigation.navigate("Home");
+              navigation.navigate('Home');
             }}
-            labelStyle={{ fontSize: 17, marginStart: -16, color: "#333" }}
-            icon={({ color, size }) => (
-              <SimpleLineIcons color={color} size={size} name={"wallet"} />
-            )}
+            labelStyle={{ fontSize: 17, marginStart: -16, color: fontColor }}
+            icon={({ color, size }) => <SimpleLineIcons color={color} size={size} name={'wallet'} />}
           />
 
           <DrawerItem
             label="Settings"
             onPress={() => {}}
-            labelStyle={{ fontSize: 17, marginStart: -16, color: "#333" }}
-            icon={({ color, size }) => (
-              <SimpleLineIcons color={color} size={size} name={"settings"} />
-            )}
+            labelStyle={{ fontSize: 17, marginStart: -16, color: fontColor }}
+            icon={({ color, size }) => <SimpleLineIcons color={color} size={size} name={'settings'} />}
           />
 
           {/* <View style={{ height: "99%" }}></View> */}
@@ -90,7 +77,7 @@ export default (props: DrawerContentComponentProps) => {
               onPress={() => {}}
               size={18}
               iconStyle={{ marginHorizontal: 8 }}
-              style={{ justifyContent: "center", alignItems: "center" }}
+              style={{ justifyContent: 'center', alignItems: 'center' }}
               borderRadius={5}
             >
               Connect with Ethereum

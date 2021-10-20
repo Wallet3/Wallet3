@@ -1,12 +1,6 @@
-import {
-  RegisteredStyle,
-  StyleProp,
-  StyleSheet,
-  Text,
-  View,
-  ViewStyle,
-} from "react-native";
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
 
+import Ethereum from "../../../../assets/icons/networks/white/ethereum.svg";
 import { Feather } from "@expo/vector-icons";
 import React from "react";
 
@@ -42,6 +36,17 @@ export default ({ style }: Props) => {
       <Text style={styles.headline} numberOfLines={1}>
         $ 223,875.64
       </Text>
+
+      <Ethereum
+        width={64}
+        height={64}
+        style={{
+          marginTop: -60,
+          marginEnd: -19,
+          alignSelf: "flex-end",
+          opacity: 0.72,
+        }}
+      />
     </View>
   );
 };

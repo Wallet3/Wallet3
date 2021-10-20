@@ -1,40 +1,41 @@
-import { Button, StyleSheet, Text, View } from "react-native";
+import { Button, StyleSheet, Text, View } from 'react-native';
 
-import ChainCard from "../../components/chaincard";
-import { DrawerScreenProps } from "@react-navigation/drawer";
-import React from "react";
-import { StatusBar } from "expo-status-bar";
-import { observer } from "mobx-react-lite";
+import Assets from './components/assets';
+import { DrawerScreenProps } from '@react-navigation/drawer';
+import Overview from './components/overview';
+import React from 'react';
+import { StatusBar } from 'expo-status-bar';
+import { observer } from 'mobx-react-lite';
 
 type RootStackParamList = {
   Home: undefined;
   Details?: { userId?: number };
-  Feed: { sort: "latest" | "top" } | undefined;
+  Feed: { sort: 'latest' | 'top' } | undefined;
 };
 
-export default observer(
-  ({ navigation }: DrawerScreenProps<RootStackParamList, "Home">) => {
-    return (
-      <View
-        style={{
-          flex: 1,
-          padding: 16,
-          alignItems: "stretch",
-          justifyContent: "flex-start",
-          backgroundColor: "#fff",
-        }}
-      >
-        <ChainCard style={{ height: 132 }} />
+export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, 'Home'>) => {
+  return (
+    <View
+      style={{
+        flex: 1,
+        padding: 16,
+        alignItems: 'stretch',
+        justifyContent: 'flex-start',
+        backgroundColor: '#fff',
+      }}
+    >
+      <Overview style={{ height: 132, marginBottom: 12 }} />
 
-        {/* <Button
+      <Assets />
+
+      {/* <Button
           title="Go to Details"
           onPress={() => {
             navigation.navigate("Details", { userId: 0 });
             navigation.openDrawer();
           }}
         /> */}
-        <StatusBar style="dark" />
-      </View>
-    );
-  }
-);
+      <StatusBar style="dark" />
+    </View>
+  );
+});
