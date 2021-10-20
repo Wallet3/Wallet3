@@ -1,8 +1,9 @@
-import { StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 
-import Ethereum from "../../../../assets/icons/networks/white/ethereum.svg";
-import { Feather } from "@expo/vector-icons";
-import React from "react";
+import Ethereum from '../../../../assets/icons/networks/white/ethereum.svg';
+import { Feather } from '@expo/vector-icons';
+import React from 'react';
+import { observer } from 'mobx-react-lite';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
@@ -11,27 +12,25 @@ interface Props {
   address?: string;
 }
 
-export default ({ style }: Props) => {
+export default observer(({ style }: Props) => {
   return (
     <View style={{ ...styles.container, ...((style as any) || {}) }}>
       <View
         style={{
-          flexDirection: "row",
+          flexDirection: 'row',
           marginBottom: 4,
-          justifyContent: "space-between",
+          justifyContent: 'space-between',
         }}
       >
         <Text style={{ ...styles.text, fontSize: 15 }}>Ethereum</Text>
 
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={{ ...styles.text, fontSize: 14, marginEnd: 5 }}>3</Text>
           <Feather name="layers" size={14} color="#fff" />
         </View>
       </View>
 
-      <Text style={{ ...styles.text, marginBottom: 42, fontSize: 12 }}>
-        0xABCDE....67890
-      </Text>
+      <Text style={{ ...styles.text, marginBottom: 42, fontSize: 12 }}>0xABCDE....67890</Text>
 
       <Text style={styles.headline} numberOfLines={1}>
         $ 223,875.64
@@ -43,13 +42,13 @@ export default ({ style }: Props) => {
         style={{
           marginTop: -60,
           marginEnd: -19,
-          alignSelf: "flex-end",
+          alignSelf: 'flex-end',
           opacity: 0.72,
         }}
       />
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -57,15 +56,15 @@ const styles = StyleSheet.create({
     padding: 12,
     paddingHorizontal: 16,
     paddingBottom: 8,
-    backgroundColor: "#627EEA",
+    backgroundColor: '#627EEA',
   },
 
-  text: { color: "white", fontWeight: "500" },
+  text: { color: 'white', fontWeight: '500' },
 
   headline: {
-    color: "white",
-    fontWeight: "500",
+    color: 'white',
+    fontWeight: '500',
     fontSize: 27,
-    fontFamily: "Avenir Next",
+    fontFamily: 'Avenir Next',
   },
 });

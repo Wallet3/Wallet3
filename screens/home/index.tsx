@@ -28,13 +28,8 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
 
       <Assets />
 
-      {/* <Button
-          title="Go to Details"
-          onPress={() => {
-            navigation.navigate("Details", { userId: 0 });
-            navigation.openDrawer();
-          }}
-        /> */}
+      <View ></View>
+
       <StatusBar style="dark" />
     </View>
   );
