@@ -1,6 +1,6 @@
 import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 
-import Ethereum from '../../../../assets/icons/networks/white/ethereum.svg';
+import Ethereum from '../../../assets/icons/networks/white/ethereum.svg';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import { observer } from 'mobx-react-lite';

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { borderColor, fontColor, secondaryFontColor } from '../../../../constants/styles';
+import { borderColor, fontColor, secondaryFontColor } from '../../../constants/styles';
 
 import Swiper from 'react-native-swiper';
 import { observer } from 'mobx-react-lite';

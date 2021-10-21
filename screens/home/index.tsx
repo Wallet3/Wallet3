@@ -1,10 +1,10 @@
 import { Text, View } from 'react-native';
 
-import Actions from './components/actions';
-import Assets from './components/assets';
+import Actions from './actions';
+import Assets from './assets';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import { Modalize } from 'react-native-modalize';
-import Overview from './components/overview';
+import Overview from './overview';
 import { Portal } from 'react-native-portalize';
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
