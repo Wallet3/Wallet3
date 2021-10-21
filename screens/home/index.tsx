@@ -1,14 +1,15 @@
-import { Button, StyleSheet, Text, View } from 'react-native';
-import { Feather, FontAwesome5, SimpleLineIcons } from '@expo/vector-icons';
-import React, { useMemo, useRef } from 'react';
+import { Text, View } from 'react-native';
 
 import Actions from './components/actions';
 import Assets from './components/assets';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import { Modalize } from 'react-native-modalize';
 import Overview from './components/overview';
+import { Portal } from 'react-native-portalize';
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { observer } from 'mobx-react-lite';
+import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 type RootStackParamList = {
   Home: undefined;
@@ -17,11 +18,7 @@ type RootStackParamList = {
 };
 
 export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, 'Home'>) => {
-  const modalizeRef = useRef<Modalize>(null);
-
-  const onOpen = () => {
-    modalizeRef.current?.open();
-  };
+  const { ref: modalizeRef, open, close } = useModalize();
 
   return (
     <View
@@ -37,11 +34,18 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
 
       <Assets />
 
-      <Actions style={{ marginBottom: 12 }} onSendPress={onOpen} />
+      <Actions style={{ marginBottom: 12 }} onSendPress={open} />
 
-      <Modalize ref={modalizeRef}>
-        <Text>Hello</Text>
-      </Modalize>
+      <Portal>
+        <Modalize
+          ref={modalizeRef}
+          snapPoint={300}
+          modalHeight={300}
+          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+        >
+          <Text>Hello</Text>
+        </Modalize>
+      </Portal>
 
       <StatusBar style="dark" />
     </View>
