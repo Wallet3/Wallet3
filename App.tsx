@@ -35,7 +35,12 @@ export default function App() {
   return (
     <NavigationContainer>
       <Host>
-        <Navigator screenOptions={{ headerTransparent: false, headerTintColor: '#333' }} drawerContent={Drawer}>
+        <Navigator
+          initialRouteName="Home"
+          screenOptions={{ headerTransparent: false, headerTintColor: '#333' }}
+          drawerContent={Drawer}
+        >
+          <Screen name="Details" component={DetailsScreen} />
           <Screen
             name="Home"
             component={HomeScreen}
@@ -43,7 +48,6 @@ export default function App() {
               title: 'Wallet 3',
             }}
           />
-          <Screen name="Details" component={DetailsScreen} />
         </Navigator>
       </Host>
     </NavigationContainer>

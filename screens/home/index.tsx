@@ -1,5 +1,7 @@
+import { NavigationContainer, RouteProp } from '@react-navigation/native';
 import { Text, View } from 'react-native';
 
+import Account from './modals/send/account';
 import Actions from './actions';
 import Assets from './assets';
 import { DrawerScreenProps } from '@react-navigation/drawer';
@@ -8,6 +10,7 @@ import Overview from './overview';
 import { Portal } from 'react-native-portalize';
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
+import Swiper from 'react-native-swiper';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
@@ -39,11 +42,14 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
       <Portal>
         <Modalize
           ref={modalizeRef}
-          snapPoint={300}
-          modalHeight={300}
+          modalHeight={400}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <Text>Hello</Text>
+          <View>
+            <Swiper showsPagination={false} showsButtons={false} style={{}}>
+              <Account />
+            </Swiper>
+          </View>
         </Modalize>
       </Portal>
 
