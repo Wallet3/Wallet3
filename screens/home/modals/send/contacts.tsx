@@ -48,7 +48,7 @@ export default (props: Props) => {
   };
 
   return (
-    <View style={{ padding: 16, paddingBottom: 24 }}>
+    <View style={{ padding: 16, height: 420 }}>
       <View
         style={{
           flexDirection: 'row',
@@ -81,7 +81,7 @@ export default (props: Props) => {
       <FlatList
         data={data}
         renderItem={renderAddress}
-        style={{ maxHeight: 250, marginHorizontal: -16, paddingHorizontal: 16 }}
+        style={{ flex: 1, marginHorizontal: -16, paddingHorizontal: 16 }}
         keyExtractor={(item) => item}
         ItemSeparatorComponent={() => <View style={{ backgroundColor: borderColor, height: 1 }} />}
       />

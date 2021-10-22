@@ -1,7 +1,6 @@
 import { AmountPad, ContactsPad } from './modals/send';
-import { NavigationContainer, RouteProp } from '@react-navigation/native';
 import React, { useRef } from 'react';
-import { Text, View } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 
 import Actions from './actions';
 import Assets from './assets';
@@ -47,19 +46,20 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
           adjustToContentHeight
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <Swiper
-            ref={swiper}
-            showsPagination={false}
-            showsButtons={false}
-            style={{ maxHeight: 420 }}
-            scrollEnabled={false}
-            loop={false}
-            automaticallyAdjustContentInsets
-            onIndexChanged={(i) => console.log(i)}
-          >
-            <ContactsPad onNext={() => swiper.current?.scrollTo(1, true)} />
-            <AmountPad onBack={() => swiper.current?.scrollTo(-1)} />
-          </Swiper>
+          <SafeAreaView style={{ height: 439 }}>
+            <Swiper
+              ref={swiper}
+              showsPagination={false}
+              showsButtons={false}
+              scrollEnabled={false}
+              loop={false}
+              automaticallyAdjustContentInsets
+              onIndexChanged={(i) => console.log(i)}
+            >
+              <ContactsPad onNext={() => swiper.current?.scrollTo(1, true)} />
+              <AmountPad onBack={() => swiper.current?.scrollTo(-1)} />
+            </Swiper>
+          </SafeAreaView>
         </Modalize>
       </Portal>
 

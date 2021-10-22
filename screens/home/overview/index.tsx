@@ -3,6 +3,7 @@ import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import Ethereum from '../../../assets/icons/networks/white/ethereum.svg';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
+import { numericFontFamily } from '../../../constants/styles';
 import { observer } from 'mobx-react-lite';
 
 interface Props {
@@ -64,6 +65,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '500',
     fontSize: 27,
-    fontFamily: 'Avenir Next',
+    fontFamily: numericFontFamily,
   },
 });
