@@ -1,7 +1,7 @@
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { FontAwesome5, SimpleLineIcons } from '@expo/vector-icons';
 import { Image, Text, View } from 'react-native';
-import { borderColor, fontColor } from '../../constants/styles';
+import { borderColor, fontColor } from '../constants/styles';
 
 import React from 'react';
 

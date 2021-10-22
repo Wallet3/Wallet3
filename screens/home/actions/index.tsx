@@ -12,7 +12,7 @@ interface Props {
 
 export default (props: Props) => {
   return (
-    <View style={{ ...styles.container, ...((props.style as any) || {}) }}>
+    <View style={{ ...styles.container, ...((props?.style as any) || {}) }}>
       <Ripple style={styles.button} rippleContainerBorderRadius={20} onPress={(_) => props?.onSendPress?.()}>
         <Ionicons name="md-arrow-up-circle-outline" size={20} color="white" />
         <Text style={styles.text}>Send</Text>
@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    height: 42,
     backgroundColor: '#627EEA',
   },
 

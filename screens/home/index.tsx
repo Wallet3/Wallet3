@@ -42,14 +42,19 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
       <Portal>
         <Modalize
           ref={modalizeRef}
-          modalHeight={400}
+          // modalHeight={460}
+          adjustToContentHeight
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <View>
-            <Swiper showsPagination={false} showsButtons={false} style={{}}>
-              <Account />
-            </Swiper>
-          </View>
+          <Swiper
+            showsPagination={false}
+            showsButtons={false}
+            style={{ maxHeight: 420 }}
+            scrollEnabled={false}
+            automaticallyAdjustContentInsets
+          >
+            <Account />
+          </Swiper>
         </Modalize>
       </Portal>
 
