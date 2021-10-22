@@ -1,7 +1,6 @@
-import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
 
 import React from 'react';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
@@ -15,6 +14,7 @@ interface Props {
 export default (props: Props) => {
   return (
     <TouchableOpacity
+      onPress={() => props.onPress?.()}
       style={{
         ...styles.default,
         ...((props?.style as any) || {}),
@@ -22,8 +22,6 @@ export default (props: Props) => {
           ? 'lightgrey'
           : (props?.style as ViewStyle)?.backgroundColor || styles.default.backgroundColor,
       }}
-      disabled={props?.disabled}
-      onPress={props.onPress}
     >
       {props?.icon}
       <Text style={{ ...styles.text, ...((props?.txtStyle as any) || {}) }}>{props?.title}</Text>
@@ -38,7 +36,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    height: 44,
+    height: 42,
     backgroundColor: '#627EEA',
   },
 

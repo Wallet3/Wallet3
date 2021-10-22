@@ -1,7 +1,7 @@
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { ListRenderItemInfo, Text, TextInput, TouchableHighlight, TouchableOpacity, View } from 'react-native';
 import React, { useRef, useState } from 'react';
-import { borderColor, secondaryFontColor } from '../../../../constants/styles';
+import { borderColor, fontColor, secondaryFontColor } from '../../../../constants/styles';
 
 import Button from '../../../../components/button';
 import { FlatList } from 'react-native-gesture-handler';
@@ -40,7 +40,7 @@ export default (props: Props) => {
         onPress={(_) => setAddr(item)}
       >
         <FontAwesome name="user-circle-o" size={20} color={secondaryFontColor} style={{ opacity: 0.5, marginEnd: 12 }} />
-        <Text style={{ fontSize: 18 }} numberOfLines={1}>
+        <Text style={{ fontSize: 17, color: fontColor }} numberOfLines={1}>
           {formatAddress(item)}
         </Text>
       </TouchableOpacity>
@@ -64,9 +64,14 @@ export default (props: Props) => {
         }}
       >
         <Text style={{ fontSize: 18, color: secondaryFontColor, marginEnd: 12 }}>To:</Text>
-        <TextInput ref={addrRef} style={{ fontSize: 20, flex: 1 }} value={addr} onChangeText={(t) => setAddr(t)} />
+        <TextInput
+          ref={addrRef}
+          style={{ fontSize: 20, flex: 1, color: fontColor }}
+          value={addr}
+          onChangeText={(t) => setAddr(t)}
+        />
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={(_) => alert('icon')}>
           <Ionicons name="copy-outline" size={20} style={{ marginStart: 12, opacity: 0.5 }} />
         </TouchableOpacity>
       </View>
@@ -81,7 +86,7 @@ export default (props: Props) => {
         ItemSeparatorComponent={() => <View style={{ backgroundColor: borderColor, height: 1 }} />}
       />
 
-      <Button title="Next" style={{ marginTop: 12 }} disabled onPress={props?.onNext} />
+      <Button title="Next" style={{ marginTop: 12 }} onPress={() => props.onNext?.()} />
     </View>
   );
 };
