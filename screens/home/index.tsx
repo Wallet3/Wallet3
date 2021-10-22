@@ -53,10 +53,12 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
             showsButtons={false}
             style={{ maxHeight: 420 }}
             scrollEnabled={false}
+            loop={false}
             automaticallyAdjustContentInsets
+            onIndexChanged={(i) => console.log(i)}
           >
-            <ContactsPad onNext={() => swiper.current?.scrollTo(2)} />
-            <AmountPad />
+            <ContactsPad onNext={() => swiper.current?.scrollTo(1, true)} />
+            <AmountPad onBack={() => swiper.current?.scrollTo(-1)} />
           </Swiper>
         </Modalize>
       </Portal>
