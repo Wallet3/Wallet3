@@ -1,5 +1,5 @@
 import { Feather, FontAwesome5, Ionicons } from '@expo/vector-icons';
-import { Pressable, StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { SafeAreaView, StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 
 import Button from '../../../components/button';
 import React from 'react';
@@ -13,7 +13,7 @@ interface Props {
 
 export default (props: Props) => {
   return (
-    <View style={{ ...styles.container, ...((props?.style as any) || {}) }}>
+    <SafeAreaView style={{ ...styles.container, ...((props?.style as any) || {}) }}>
       <Ripple style={styles.button} rippleContainerBorderRadius={20} onPress={(_) => props?.onSendPress?.()}>
         <Ionicons name="md-arrow-up-circle-outline" size={20} color="white" />
         <Text style={styles.text}>Send</Text>
@@ -25,7 +25,7 @@ export default (props: Props) => {
         <Ionicons name="md-arrow-down-circle-outline" size={20} color="white" />
         <Text style={styles.text}>Request</Text>
       </Ripple>
-    </View>
+    </SafeAreaView>
   );
 };
 

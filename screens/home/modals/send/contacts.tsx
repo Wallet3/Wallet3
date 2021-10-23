@@ -86,7 +86,7 @@ export default (props: Props) => {
         ItemSeparatorComponent={() => <View style={{ backgroundColor: borderColor, height: 1 }} />}
       />
 
-      <Button title="Next" style={{ marginTop: 12 }} onPress={() => props.onNext?.()} />
+      <Button title="Next" style={{ marginTop: 12 }} onPress={props.onNext} />
     </View>
   );
 };

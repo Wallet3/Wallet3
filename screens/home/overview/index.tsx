@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
 
   headline: {
     color: 'white',
-    fontWeight: '500',
+    fontWeight: '600',
     fontSize: 27,
     fontFamily: numericFontFamily,
   },

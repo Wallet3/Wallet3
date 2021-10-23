@@ -43,7 +43,6 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
       <Portal>
         <Modalize
           ref={modalizeRef}
-          // modalHeight={460}
           adjustToContentHeight
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
@@ -55,7 +54,6 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
               scrollEnabled={false}
               loop={false}
               automaticallyAdjustContentInsets
-              onIndexChanged={(i) => console.log(i)}
             >
               <ContactsPad onNext={() => swiper.current?.scrollTo(1, true)} />
               <AmountPad onBack={() => swiper.current?.scrollTo(-1)} />

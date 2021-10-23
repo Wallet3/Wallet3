@@ -1,32 +1,33 @@
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, TextInput } from 'react-native-gesture-handler';
+import { Image, ListRenderItemInfo, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
 import { borderColor, fontColor, numericFontFamily, secondaryFontColor } from '../../../../constants/styles';
 
 import Button from '../../../../components/button';
-import ETH from '../../../../assets/icons/crypto/usdc.svg';
+import Coin from '../../../../components/coin';
 import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
+import Svg from 'react-native-svg';
 import Swiper from 'react-native-swiper';
-import { TextInput } from 'react-native-gesture-handler';
+import { observer } from 'mobx-react-lite';
 
-interface AmountProps {
+interface SubViewProps {
   onBack?: () => void;
+  onNext?: () => void;
+  onTokenPress?: () => void;
+  onTokenBack?: () => void;
 }
 
-const AmountView = (props: AmountProps) => {
+const AmountView = observer((props: SubViewProps) => {
+  const [symbol, setSymbol] = useState('usdc');
+
+  useEffect(() => {
+    // symbol = 'eth';
+  }, []);
   return (
-    <View style={{ padding: 16, height: 420 }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          margin: -16,
-          padding: 16,
-          zIndex: 5,
-        }}
-      >
-        <TouchableOpacity onPress={() => props.onBack?.()} style={{}}>
-          <Ionicons name="ios-arrow-back-circle-outline" size={34} color={'#627EEA'} style={{ opacity: 0.7 }} />
+    <View style={styles.container}>
+      <View style={styles.navBar}>
+        <TouchableOpacity onPress={props.onBack}>
+          <Ionicons name="ios-arrow-back-circle-outline" size={34} color={'#627EEA'} />
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -34,16 +35,17 @@ const AmountView = (props: AmountProps) => {
             alignSelf: 'center',
             borderRadius: 50,
             borderWidth: 1,
-            borderColor: secondaryFontColor,
+            borderColor: borderColor,
             padding: 4,
             paddingHorizontal: 12,
             alignItems: 'center',
             flexDirection: 'row',
           }}
+          onPress={props.onTokenPress}
         >
           <Text style={{ fontSize: 19, marginEnd: 8, color: secondaryFontColor, fontWeight: '500' }}>USDC</Text>
 
-          <ETH width={21} height={21} />
+          <Coin symbol="USDC" />
         </TouchableOpacity>
       </View>
 
@@ -55,6 +57,7 @@ const AmountView = (props: AmountProps) => {
             fontSize: 52,
             borderBottomColor: borderColor,
             borderBottomWidth: 1,
+            fontWeight: '500',
             minWidth: 128,
             textAlign: 'center',
             marginTop: 24,
@@ -66,20 +69,77 @@ const AmountView = (props: AmountProps) => {
         </TouchableOpacity>
       </View>
 
-      <Button />
+      <Button title="Next" />
     </View>
   );
-};
+});
+
+const data = [{ symbol: 'USDC' }];
+const TokensView = observer((props: SubViewProps) => {
+  const renderItem = ({ item }: ListRenderItemInfo<{ symbol: string }>) => {
+    return (
+      <TouchableOpacity
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          padding: 0,
+          margin: 0,
+          paddingVertical: 10,
+        }}
+      >
+        <Text style={{ fontSize: 17, color: fontColor }} numberOfLines={1}>
+          {item.symbol}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
+
+  // const a = require('../../../../assets/icons/crypto/celo.svg').default();
+  // a.props.style = { width: 21, height: 21 };
+  // a.propTypes!.style ={}
+
+  return (
+    <View style={{ ...styles.container, flexDirection: 'row' }}>
+      <View style={{ ...styles.navBar, alignItems: 'flex-start', marginEnd: 12 }}>
+        <TouchableOpacity onPress={props.onTokenBack}>
+          <Ionicons name="ios-arrow-back-circle-outline" size={34} color={'#627EEA'} />
+        </TouchableOpacity>
+      </View>
+
+      <FlatList data={data} renderItem={renderItem} keyExtractor={(i) => i} />
+
+      {/* <View style={{ width: 12, height: 12, alignItems: 'center', justifyContent: 'center', backgroundColor: 'blue' }}>
+      </View> */}
+    </View>
+  );
+});
 
 interface Props {
   onBack?: () => void;
   onNext?: () => void;
 }
 
-export default (props: Props) => {
+export default observer((props: Props) => {
+  const swiper = useRef<Swiper>(null);
+
   return (
-    <Swiper scrollEnabled={false} showsButtons={false} showsPagination={false} style={{}}>
-      <AmountView onBack={() => props.onBack?.()} />
+    <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
+      <AmountView onBack={props.onBack} onNext={props.onNext} onTokenPress={() => swiper.current?.scrollTo(1)} />
+      <TokensView onTokenBack={() => swiper.current?.scrollTo(-1)} />
     </Swiper>
   );
-};
+});
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 16,
+    height: 420,
+  },
+
+  navBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    zIndex: 5,
+  },
+});

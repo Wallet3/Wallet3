@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
 
   text: {
     color: 'white',
+    textTransform: 'capitalize',
     marginStart: 6,
     fontSize: 17,
     fontWeight: '500',
