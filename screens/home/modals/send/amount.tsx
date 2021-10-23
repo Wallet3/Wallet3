@@ -64,7 +64,7 @@ const AmountView = observer((props: SubViewProps) => {
         </TouchableOpacity>
       </View>
 
-      <Button title="Next" />
+      <Button title="Next" onPress={props.onNext} />
     </View>
   );
 });
@@ -78,7 +78,6 @@ const data = [
   { symbol: 'MKR' },
   { symbol: 'COMP' },
   { symbol: 'Sushi' },
-
 ];
 const TokensView = observer((props: SubViewProps) => {
   const renderItem = ({ item }: ListRenderItemInfo<{ symbol: string }>) => {
@@ -115,7 +114,7 @@ const TokensView = observer((props: SubViewProps) => {
         data={data}
         renderItem={renderItem}
         keyExtractor={(i) => i.symbol}
-        style={{ marginTop: -3, marginEnd: -16, paddingEnd: 16 }}
+        style={{ marginTop: -2, marginEnd: -16, paddingEnd: 16 }}
       />
 
       {/* <View style={{ width: 12, height: 12, alignItems: 'center', justifyContent: 'center', backgroundColor: 'blue' }}>
@@ -135,7 +134,7 @@ export default observer((props: Props) => {
   return (
     <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
       <AmountView onBack={props.onBack} onNext={props.onNext} onTokenPress={() => swiper.current?.scrollTo(1)} />
-      <TokensView onTokenBack={() => swiper.current?.scrollTo(-1)} />
+      <TokensView onTokenBack={() => swiper.current?.scrollTo(0)} />
     </Swiper>
   );
 });

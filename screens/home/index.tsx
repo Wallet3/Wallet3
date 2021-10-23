@@ -1,4 +1,4 @@
-import { AmountPad, ContactsPad } from './modals/send';
+import { AmountPad, ContactsPad, ReviewPad } from './modals/send';
 import React, { useRef } from 'react';
 import { SafeAreaView, View } from 'react-native';
 
@@ -56,7 +56,8 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
               automaticallyAdjustContentInsets
             >
               <ContactsPad onNext={() => swiper.current?.scrollTo(1, true)} />
-              <AmountPad onBack={() => swiper.current?.scrollTo(-1)} />
+              <AmountPad onBack={() => swiper.current?.scrollTo(0)} onNext={() => swiper.current?.scrollTo(2)} />
+              <ReviewPad />
             </Swiper>
           </SafeAreaView>
         </Modalize>
