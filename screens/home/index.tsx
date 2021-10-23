@@ -4,6 +4,7 @@ import { SafeAreaView, View } from 'react-native';
 
 import Actions from './actions';
 import Assets from './assets';
+import { Dimensions } from 'react-native';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import { Modalize } from 'react-native-modalize';
 import Overview from './overview';

@@ -14,7 +14,7 @@
     "@react-navigation/elements": "^1.2.1",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
-    "expo": "~43.0.0-beta.4",
+    "expo": "~43.0.0",
     "expo-secure-store": "~11.0.3",
     "expo-status-bar": "~1.1.0",
     "mobx": "^6.3.5",
@@ -30,12 +30,12 @@
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.8.0",
     "react-native-svg": "12.1.1",
-    "react-native-swiper": "^1.6.0-rc.3",
+    "react-native-swiper": "^1.6.0",
     "react-native-web": "0.17.5"
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",
-    "@types/react": "~17.0.30",
+    "@types/react": "~17.0.31",
     "@types/react-native": "~0.64.12",
     "react-native-svg-transformer": "^0.14.3",
     "typescript": "~4.4.4"
