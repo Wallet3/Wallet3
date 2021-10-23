@@ -21,7 +21,7 @@ type RootStackParamList = {
 };
 
 export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, 'Home'>) => {
-  const { ref: modalizeRef, open, close } = useModalize();
+  const { ref: sendModalizeRef, open, close } = useModalize();
   const swiper = useRef<Swiper>(null);
 
   return (
@@ -42,7 +42,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
 
       <Portal>
         <Modalize
-          ref={modalizeRef}
+          ref={sendModalizeRef}
           adjustToContentHeight
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >

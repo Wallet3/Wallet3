@@ -18,16 +18,11 @@ interface SubViewProps {
 }
 
 const AmountView = observer((props: SubViewProps) => {
-  const [symbol, setSymbol] = useState('usdc');
-
-  useEffect(() => {
-    // symbol = 'eth';
-  }, []);
   return (
     <View style={styles.container}>
       <View style={styles.navBar}>
         <TouchableOpacity onPress={props.onBack}>
-          <Ionicons name="ios-arrow-back-circle-outline" size={34} color={'#627EEA'} />
+          <Ionicons name="ios-arrow-back-circle-outline" size={33} color={'#627EEA'} />
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -45,7 +40,7 @@ const AmountView = observer((props: SubViewProps) => {
         >
           <Text style={{ fontSize: 19, marginEnd: 8, color: secondaryFontColor, fontWeight: '500' }}>USDC</Text>
 
-          <Coin symbol="USDC" />
+          <Coin symbol="USDC" style={{ width: 22, height: 22 }} />
         </TouchableOpacity>
       </View>
 
@@ -74,7 +69,17 @@ const AmountView = observer((props: SubViewProps) => {
   );
 });
 
-const data = [{ symbol: 'USDC' }];
+const data = [
+  { symbol: 'ETH' },
+  { symbol: 'USDC' },
+  { symbol: 'DAI' },
+  { symbol: 'CRV' },
+  { symbol: 'UNI' },
+  { symbol: 'MKR' },
+  { symbol: 'COMP' },
+  { symbol: 'Sushi' },
+
+];
 const TokensView = observer((props: SubViewProps) => {
   const renderItem = ({ item }: ListRenderItemInfo<{ symbol: string }>) => {
     return (
@@ -82,12 +87,12 @@ const TokensView = observer((props: SubViewProps) => {
         style={{
           flexDirection: 'row',
           alignItems: 'center',
-          padding: 0,
           margin: 0,
-          paddingVertical: 10,
+          padding: 8,
         }}
       >
-        <Text style={{ fontSize: 17, color: fontColor }} numberOfLines={1}>
+        <Coin symbol={item.symbol} style={{ width: 25, height: 25, marginEnd: 12 }} />
+        <Text style={{ fontSize: 19, color: fontColor, textTransform: 'uppercase' }} numberOfLines={1}>
           {item.symbol}
         </Text>
       </TouchableOpacity>
@@ -100,13 +105,18 @@ const TokensView = observer((props: SubViewProps) => {
 
   return (
     <View style={{ ...styles.container, flexDirection: 'row' }}>
-      <View style={{ ...styles.navBar, alignItems: 'flex-start', marginEnd: 12 }}>
+      <View style={{ ...styles.navBar, alignItems: 'flex-start', marginEnd: 8 }}>
         <TouchableOpacity onPress={props.onTokenBack}>
-          <Ionicons name="ios-arrow-back-circle-outline" size={34} color={'#627EEA'} />
+          <Ionicons name="ios-arrow-back-circle-outline" size={33} color={'#627EEA'} />
         </TouchableOpacity>
       </View>
 
-      <FlatList data={data} renderItem={renderItem} keyExtractor={(i) => i} />
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={(i) => i.symbol}
+        style={{ marginTop: -3, marginEnd: -16, paddingEnd: 16 }}
+      />
 
       {/* <View style={{ width: 12, height: 12, alignItems: 'center', justifyContent: 'center', backgroundColor: 'blue' }}>
       </View> */}
