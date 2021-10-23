@@ -1,11 +1,12 @@
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { ListRenderItemInfo, Text, TextInput, TouchableHighlight, TouchableOpacity, View } from 'react-native';
 import React, { useRef, useState } from 'react';
-import { borderColor, fontColor, secondaryFontColor } from '../../../../constants/styles';
+import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
-import Button from '../../../../components/button';
+import Button from '../../components/button';
 import { FlatList } from 'react-native-gesture-handler';
-import { formatAddress } from '../../../../utils/formatter';
+import { formatAddress } from '../../utils/formatter';
+import styles from '../styles';
 
 const data = [
   'rsa.eth',
@@ -48,7 +49,7 @@ export default (props: Props) => {
   };
 
   return (
-    <View style={{ padding: 16, height: 420 }}>
+    <View style={styles.container}>
       <View
         style={{
           flexDirection: 'row',

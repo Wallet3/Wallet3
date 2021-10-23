@@ -1,4 +1,4 @@
-import { AmountPad, ContactsPad, ReviewPad } from './modals/send';
+import { AmountPad, ContactsPad, ReviewPad } from '../../modals/send';
 import React, { useRef } from 'react';
 import { SafeAreaView, View } from 'react-native';
 

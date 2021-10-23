@@ -1,14 +1,15 @@
 import { FlatList, TextInput } from 'react-native-gesture-handler';
 import { Image, ListRenderItemInfo, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
-import { borderColor, fontColor, numericFontFamily, secondaryFontColor } from '../../../../constants/styles';
+import { borderColor, fontColor, numericFontFamily, secondaryFontColor } from '../../constants/styles';
 
-import Button from '../../../../components/button';
-import Coin from '../../../../components/coin';
+import Button from '../../components/button';
+import Coin from '../../components/coin';
 import { Ionicons } from '@expo/vector-icons';
 import Svg from 'react-native-svg';
 import Swiper from 'react-native-swiper';
 import { observer } from 'mobx-react-lite';
+import styles from '../styles';
 
 interface SubViewProps {
   onBack?: () => void;
@@ -78,7 +79,10 @@ const data = [
   { symbol: 'MKR' },
   { symbol: 'COMP' },
   { symbol: 'Sushi' },
+  { symbol: 'LINK' },
+  { symbol: 'Aave' },
 ];
+
 const TokensView = observer((props: SubViewProps) => {
   const renderItem = ({ item }: ListRenderItemInfo<{ symbol: string }>) => {
     return (
@@ -89,6 +93,7 @@ const TokensView = observer((props: SubViewProps) => {
           margin: 0,
           padding: 8,
         }}
+        onPress={props.onTokenPress}
       >
         <Coin symbol={item.symbol} style={{ width: 25, height: 25, marginEnd: 12 }} />
         <Text style={{ fontSize: 19, color: fontColor, textTransform: 'uppercase' }} numberOfLines={1}>
@@ -97,10 +102,6 @@ const TokensView = observer((props: SubViewProps) => {
       </TouchableOpacity>
     );
   };
-
-  // const a = require('../../../../assets/icons/crypto/celo.svg').default();
-  // a.props.style = { width: 21, height: 21 };
-  // a.propTypes!.style ={}
 
   return (
     <View style={{ ...styles.container, flexDirection: 'row' }}>
@@ -116,9 +117,6 @@ const TokensView = observer((props: SubViewProps) => {
         keyExtractor={(i) => i.symbol}
         style={{ marginTop: -2, marginEnd: -16, paddingEnd: 16 }}
       />
-
-      {/* <View style={{ width: 12, height: 12, alignItems: 'center', justifyContent: 'center', backgroundColor: 'blue' }}>
-      </View> */}
     </View>
   );
 });
@@ -134,21 +132,7 @@ export default observer((props: Props) => {
   return (
     <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
       <AmountView onBack={props.onBack} onNext={props.onNext} onTokenPress={() => swiper.current?.scrollTo(1)} />
-      <TokensView onTokenBack={() => swiper.current?.scrollTo(0)} />
+      <TokensView onTokenBack={() => swiper.current?.scrollTo(0)} onTokenPress={() => swiper.current?.scrollTo(0)} />
     </Swiper>
   );
-});
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-    height: 420,
-  },
-
-  navBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    zIndex: 5,
-  },
 });
