@@ -101,56 +101,56 @@ const GasView = observer((props: GasProps) => {
       </View>
 
       <View style={viewStyles.reviewItemContainer}>
-        <View style={viewStyles.reviewItem}>
+        <View style={{ ...viewStyles.reviewItem, paddingBottom: 12 }}>
           <Text style={viewStyles.reviewItemTitle}>Gas Limit</Text>
 
           <TextInput
             keyboardType="number-pad"
             placeholder="21000"
             textAlign="right"
-            style={{ ...viewStyles.reviewItemValue, fontSize: 18 }}
+            style={{ ...viewStyles.reviewItemValue, fontSize: 20 }}
             maxLength={12}
           />
         </View>
 
-        <View style={viewStyles.reviewItem}>
+        <View style={{ ...viewStyles.reviewItem, paddingBottom: 12 }}>
           <Text style={viewStyles.reviewItemTitle}>Max Gas Price</Text>
 
-          <View style={{ marginBottom: -10 }}>
+          <View style={{ marginBottom: -8 }}>
             <TextInput
               keyboardType="decimal-pad"
               placeholder="20.00"
               textAlign="right"
               maxLength={12}
-              style={{ ...viewStyles.reviewItemValue, fontSize: 18 }}
+              style={{ ...viewStyles.reviewItemValue, fontSize: 20 }}
             />
             <Text style={{ fontSize: 8, color: secondaryFontColor, textAlign: 'right' }}>Gwei</Text>
           </View>
         </View>
 
-        <View style={viewStyles.reviewItem}>
+        <View style={{ ...viewStyles.reviewItem, paddingBottom: 12 }}>
           <Text style={viewStyles.reviewItemTitle}>Priority Price</Text>
 
-          <View style={{ marginBottom: -10 }}>
+          <View style={{ marginBottom: -8 }}>
             <TextInput
               keyboardType="decimal-pad"
               placeholder="1.00"
               textAlign="right"
               maxLength={12}
-              style={{ ...viewStyles.reviewItemValue, fontSize: 18 }}
+              style={{ ...viewStyles.reviewItemValue, fontSize: 20 }}
             />
-            <Text style={{ fontSize: 8, color: secondaryFontColor, textAlign: 'right' }}>Gwei</Text>
+            <Text style={{ fontSize: 8, color: secondaryFontColor, textAlign: 'right', marginTop: -2 }}>Gwei</Text>
           </View>
         </View>
 
-        <View style={{ ...viewStyles.reviewItem, borderBottomWidth: 0 }}>
+        <View style={{ ...viewStyles.reviewItem, borderBottomWidth: 0, paddingBottom: 12 }}>
           <Text style={viewStyles.reviewItemTitle}>Nonce</Text>
 
           <TextInput
             keyboardType="number-pad"
             placeholder="0"
             textAlign="right"
-            style={{ ...viewStyles.reviewItemValue, fontSize: 18 }}
+            style={{ ...viewStyles.reviewItemValue, fontSize: 20 }}
             maxLength={12}
           />
         </View>
