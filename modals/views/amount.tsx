@@ -1,12 +1,10 @@
 import { Button, Coin } from '../../components';
 import { FlatList, TextInput } from 'react-native-gesture-handler';
-import { Image, ListRenderItemInfo, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
-import { borderColor, fontColor, numericFontFamily, secondaryFontColor } from '../../constants/styles';
+import { ListRenderItemInfo, Text, TouchableOpacity, View } from 'react-native';
+import React, { useRef } from 'react';
+import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
 import BackButton from '../components/BackButton';
-import { Ionicons } from '@expo/vector-icons';
-import Svg from 'react-native-svg';
 import Swiper from 'react-native-swiper';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
