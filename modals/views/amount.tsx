@@ -22,18 +22,7 @@ const AmountView = observer((props: SubViewProps) => {
       <View style={{ ...styles.navBar }}>
         <BackButton onPress={props.onBack} />
 
-        <TouchableOpacity
-          style={{
-            borderRadius: 50,
-            borderWidth: 1,
-            borderColor: borderColor,
-            padding: 4,
-            paddingHorizontal: 12,
-            alignItems: 'center',
-            flexDirection: 'row',
-          }}
-          onPress={props.onTokenPress}
-        >
+        <TouchableOpacity style={styles.navMoreButton} onPress={props.onTokenPress}>
           <Text style={{ fontSize: 19, marginEnd: 8, color: secondaryFontColor, fontWeight: '500' }}>USDC</Text>
 
           <Coin symbol="USDC" style={{ width: 22, height: 22 }} />

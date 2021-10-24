@@ -21,4 +21,14 @@ export default StyleSheet.create({
     paddingEnd: 4,
     color: borderColor,
   },
+
+  navMoreButton: {
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: borderColor,
+    padding: 4,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
 });

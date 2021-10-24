@@ -61,7 +61,6 @@ const ReviewView = observer((props: Props) => {
           justifyContent: 'space-between',
           alignItems: 'center',
           paddingStart: 16,
-          // borderColor: 'red',
         }}
       >
         <Text style={viewStyles.reviewItemTitle}>Tx Fee</Text>

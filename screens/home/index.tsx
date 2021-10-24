@@ -5,6 +5,7 @@ import { Modalize } from 'react-native-modalize';
 import Overview from './overview';
 import { Portal } from 'react-native-portalize';
 import React from 'react';
+import Request from '../../modals/request';
 import Send from '../../modals/send';
 import { StatusBar } from 'expo-status-bar';
 import { View } from 'react-native';
@@ -18,7 +19,8 @@ type RootStackParamList = {
 };
 
 export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, 'Home'>) => {
-  const { ref: sendModalizeRef, open, close } = useModalize();
+  const { ref: sendModalizeRef, open: openSend, close } = useModalize();
+  const { ref: requestModalizeRef, open: openRequest } = useModalize();
 
   return (
     <View
@@ -34,7 +36,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
 
       <Assets />
 
-      <Actions style={{ marginBottom: 12 }} onSendPress={open} />
+      <Actions style={{ marginBottom: 12 }} onSendPress={openSend} onRequestPress={openRequest} />
 
       <Portal>
         <Modalize
@@ -43,6 +45,16 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
           <Send />
+        </Modalize>
+      </Portal>
+
+      <Portal>
+        <Modalize
+          ref={requestModalizeRef}
+          adjustToContentHeight
+          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+        >
+          <Request />
         </Modalize>
       </Portal>
 
