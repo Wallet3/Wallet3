@@ -1,7 +1,6 @@
 import { Feather, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { SafeAreaView, StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 
-import Button from '../../../components/button';
 import React from 'react';
 import Ripple from 'react-native-material-ripple';
 

@@ -57,7 +57,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
             >
               <ContactsPad onNext={() => swiper.current?.scrollTo(1, true)} />
               <AmountPad onBack={() => swiper.current?.scrollTo(0)} onNext={() => swiper.current?.scrollTo(2)} />
-              <ReviewPad />
+              <ReviewPad onBack={() => swiper.current?.scrollTo(1)} />
             </Swiper>
           </SafeAreaView>
         </Modalize>

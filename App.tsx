@@ -5,7 +5,7 @@ import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navig
 import { NavigationContainer, RouteProp } from '@react-navigation/native';
 import React, { useEffect, useRef } from 'react';
 
-import Drawer from './components/drawer';
+import { Drawer } from './components';
 import HomeScreen from './screens/home';
 import { Host } from 'react-native-portalize';
 import { createDrawerNavigator } from '@react-navigation/drawer';

@@ -1,10 +1,10 @@
+import { Button, Coin } from '../../components';
 import { FlatList, TextInput } from 'react-native-gesture-handler';
 import { Image, ListRenderItemInfo, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { borderColor, fontColor, numericFontFamily, secondaryFontColor } from '../../constants/styles';
 
-import Button from '../../components/button';
-import Coin from '../../components/coin';
+import BackButton from '../components/BackButton';
 import { Ionicons } from '@expo/vector-icons';
 import Svg from 'react-native-svg';
 import Swiper from 'react-native-swiper';
@@ -22,9 +22,7 @@ const AmountView = observer((props: SubViewProps) => {
   return (
     <View style={styles.container}>
       <View style={styles.navBar}>
-        <TouchableOpacity onPress={props.onBack}>
-          <Ionicons name="ios-arrow-back-circle-outline" size={33} color={'#627EEA'} />
-        </TouchableOpacity>
+        <BackButton onPress={props.onBack} />
 
         <TouchableOpacity
           style={{
@@ -61,7 +59,9 @@ const AmountView = observer((props: SubViewProps) => {
         />
 
         <TouchableOpacity style={{}} onPress={(_) => alert('abc')}>
-          <Text style={{ color: secondaryFontColor, padding: 8 }}>Max: 12,345.67</Text>
+          <Text style={{ color: secondaryFontColor, padding: 8 }} numberOfLines={1}>
+            Balance: 1,212,345.67
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -106,9 +106,7 @@ const TokensView = observer((props: SubViewProps) => {
   return (
     <View style={{ ...styles.container, flexDirection: 'row' }}>
       <View style={{ ...styles.navBar, alignItems: 'flex-start', marginEnd: 8 }}>
-        <TouchableOpacity onPress={props.onTokenBack}>
-          <Ionicons name="ios-arrow-back-circle-outline" size={33} color={'#627EEA'} />
-        </TouchableOpacity>
+        <BackButton onPress={props.onTokenBack} />
       </View>
 
       <FlatList
