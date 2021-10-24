@@ -1,3 +1,5 @@
+import { borderColor, secondaryFontColor } from '../constants/styles';
+
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
@@ -11,5 +13,12 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     zIndex: 5,
+  },
+
+  navTitle: {
+    fontSize: 22,
+    fontWeight: '500',
+    paddingEnd: 4,
+    color: borderColor,
   },
 });

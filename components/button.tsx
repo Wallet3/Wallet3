@@ -23,7 +23,6 @@ export default (props: Props) => {
           : (props?.style as ViewStyle)?.backgroundColor || styles.default.backgroundColor,
       }}
     >
-      {props?.icon}
       <Text style={{ ...styles.text, ...((props?.txtStyle as any) || {}) }}>{props?.title}</Text>
     </TouchableOpacity>
   );

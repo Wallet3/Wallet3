@@ -21,12 +21,11 @@ interface SubViewProps {
 const AmountView = observer((props: SubViewProps) => {
   return (
     <View style={styles.container}>
-      <View style={styles.navBar}>
+      <View style={{ ...styles.navBar }}>
         <BackButton onPress={props.onBack} />
 
         <TouchableOpacity
           style={{
-            alignSelf: 'center',
             borderRadius: 50,
             borderWidth: 1,
             borderColor: borderColor,

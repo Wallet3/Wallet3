@@ -1,7 +1,7 @@
 import { Button, Coin } from '../../components';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { FontAwesome5, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import React, { useRef } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
 import BackButton from '../components/BackButton';
@@ -21,6 +21,8 @@ const ReviewView = observer((props: Props) => {
     <View style={styles.container}>
       <View style={styles.navBar}>
         <BackButton onPress={props.onBack} />
+
+        <Text style={styles.navTitle}>Review</Text>
       </View>
 
       <View style={viewStyles.reviewItemContainer}>
@@ -94,7 +96,86 @@ const GasView = observer((props: GasProps) => {
     <View style={styles.container}>
       <View style={styles.navBar}>
         <BackButton onPress={props.onBack} />
+
+        <Text style={styles.navTitle}>Tx Fee</Text>
       </View>
+
+      <View style={viewStyles.reviewItemContainer}>
+        <View style={viewStyles.reviewItem}>
+          <Text style={viewStyles.reviewItemTitle}>Gas Limit</Text>
+
+          <TextInput
+            keyboardType="number-pad"
+            placeholder="21000"
+            textAlign="right"
+            style={{ ...viewStyles.reviewItemValue, fontSize: 18 }}
+            maxLength={12}
+          />
+        </View>
+
+        <View style={viewStyles.reviewItem}>
+          <Text style={viewStyles.reviewItemTitle}>Max Gas Price</Text>
+
+          <View style={{ marginBottom: -10 }}>
+            <TextInput
+              keyboardType="decimal-pad"
+              placeholder="20.00"
+              textAlign="right"
+              maxLength={12}
+              style={{ ...viewStyles.reviewItemValue, fontSize: 18 }}
+            />
+            <Text style={{ fontSize: 8, color: secondaryFontColor, textAlign: 'right' }}>Gwei</Text>
+          </View>
+        </View>
+
+        <View style={viewStyles.reviewItem}>
+          <Text style={viewStyles.reviewItemTitle}>Priority Price</Text>
+
+          <View style={{ marginBottom: -10 }}>
+            <TextInput
+              keyboardType="decimal-pad"
+              placeholder="1.00"
+              textAlign="right"
+              maxLength={12}
+              style={{ ...viewStyles.reviewItemValue, fontSize: 18 }}
+            />
+            <Text style={{ fontSize: 8, color: secondaryFontColor, textAlign: 'right' }}>Gwei</Text>
+          </View>
+        </View>
+
+        <View style={{ ...viewStyles.reviewItem, borderBottomWidth: 0 }}>
+          <Text style={viewStyles.reviewItemTitle}>Nonce</Text>
+
+          <TextInput
+            keyboardType="number-pad"
+            placeholder="0"
+            textAlign="right"
+            style={{ ...viewStyles.reviewItemValue, fontSize: 18 }}
+            maxLength={12}
+          />
+        </View>
+      </View>
+
+      <View style={{ ...viewStyles.reviewItemContainer, flexDirection: 'row' }}>
+        <TouchableOpacity style={viewStyles.gasItem}>
+          <Ionicons name="rocket" size={12} color="tomato" />
+          <Text style={{ ...viewStyles.gasItemText, color: 'tomato' }}>Rapid</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={viewStyles.gasItem}>
+          <Ionicons name="car-sport" size={13} color="dodgerblue" />
+          <Text style={{ ...viewStyles.gasItemText, color: 'dodgerblue' }}>Fast</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={viewStyles.gasItem}>
+          <FontAwesome5 name="walking" size={12} color="darkorchid" />
+          <Text style={{ ...viewStyles.gasItemText, color: 'darkorchid' }}>Standard</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={{ flex: 1 }}></View>
+
+      <Button title="OK" txtStyle={{ textTransform: 'uppercase' }} onPress={props.onBack} />
     </View>
   );
 });
@@ -124,7 +205,8 @@ const viewStyles = StyleSheet.create({
     alignItems: 'center',
     borderBottomWidth: 1,
     borderColor,
-    padding: 16,
+    paddingVertical: 15,
+    paddingHorizontal: 16,
   },
 
   reviewItemTitle: {
@@ -137,5 +219,17 @@ const viewStyles = StyleSheet.create({
     fontSize: 17,
     color: fontColor,
     fontWeight: '500',
+  },
+
+  gasItem: {
+    flexDirection: 'row',
+    padding: 8,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  gasItemText: {
+    marginStart: 6,
   },
 });
