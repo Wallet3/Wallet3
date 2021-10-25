@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Button, Dimensions, StyleSheet, Text, View } from 'react-native';
 import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer, RouteProp } from '@react-navigation/native';
 import React, { useEffect, useRef } from 'react';
@@ -11,7 +11,9 @@ import { Host } from 'react-native-portalize';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
-const { Group, Navigator, Screen } = createDrawerNavigator();
+const DrawerRoot = createDrawerNavigator();
+const StackRoot = createNativeStackNavigator();
+const screenWidth = Dimensions.get('window').width;
 
 type RootStackParamList = {
   Home: undefined;
@@ -29,25 +31,36 @@ function DetailsScreen({ navigation, route }: NativeStackScreenProps<RootStackPa
   );
 }
 
+const Root = () => {
+  const { Navigator, Screen } = DrawerRoot;
+
+  return (
+    <Navigator
+      initialRouteName="Home"
+      screenOptions={{ headerTransparent: false, headerTintColor: '#333', swipeEdgeWidth: screenWidth, drawerType: 'slide' }}
+      drawerContent={Drawer}
+    >
+      <Screen name="Details" component={DetailsScreen} />
+      <Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          title: 'Wallet 3',
+        }}
+      />
+    </Navigator>
+  );
+};
+
 export default function App() {
   const { ref: modalizeRef } = useModalize();
+  const { Navigator, Screen } = StackRoot;
 
   return (
     <NavigationContainer>
       <Host>
-        <Navigator
-          initialRouteName="Home"
-          screenOptions={{ headerTransparent: false, headerTintColor: '#333' }}
-          drawerContent={Drawer}
-        >
-          <Screen name="Details" component={DetailsScreen} />
-          <Screen
-            name="Home"
-            component={HomeScreen}
-            options={{
-              title: 'Wallet 3',
-            }}
-          />
+        <Navigator>
+          <Screen name="Root" component={Root} options={{ headerShown: false }} />
         </Navigator>
       </Host>
     </NavigationContainer>
