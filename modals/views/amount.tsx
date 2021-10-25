@@ -14,13 +14,15 @@ interface SubViewProps {
   onNext?: () => void;
   onTokenPress?: () => void;
   onTokenBack?: () => void;
+  disableBack?: boolean;
+  disableBalance?: boolean;
 }
 
 const AmountView = observer((props: SubViewProps) => {
   return (
     <View style={styles.container}>
       <View style={{ ...styles.navBar }}>
-        <BackButton onPress={props.onBack} />
+        {props.disableBack ? <View /> : <BackButton onPress={props.onBack} />}
 
         <TouchableOpacity style={styles.navMoreButton} onPress={props.onTokenPress}>
           <Text style={{ fontSize: 19, marginEnd: 8, color: secondaryFontColor, fontWeight: '500' }}>USDC</Text>
@@ -44,11 +46,13 @@ const AmountView = observer((props: SubViewProps) => {
           }}
         />
 
-        <TouchableOpacity style={{}} onPress={(_) => alert('abc')}>
-          <Text style={{ color: secondaryFontColor, padding: 8 }} numberOfLines={1}>
-            Balance: 1,212,345.67
-          </Text>
-        </TouchableOpacity>
+        {props.disableBalance ? undefined : (
+          <TouchableOpacity style={{}} onPress={(_) => alert('abc')}>
+            <Text style={{ color: secondaryFontColor, padding: 8 }} numberOfLines={1}>
+              Balance: 1,212,345.67
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
 
       <Button title="Next" onPress={props.onNext} />
@@ -69,7 +73,7 @@ const data = [
   { symbol: 'Aave' },
 ];
 
-const TokensView = observer((props: SubViewProps) => {
+export const TokensView = observer((props: SubViewProps) => {
   const renderItem = ({ item }: ListRenderItemInfo<{ symbol: string }>) => {
     return (
       <TouchableOpacity
@@ -108,6 +112,8 @@ const TokensView = observer((props: SubViewProps) => {
 interface Props {
   onBack?: () => void;
   onNext?: () => void;
+  disableBack?: boolean;
+  disableBalance?: boolean;
 }
 
 export default observer((props: Props) => {
@@ -115,7 +121,14 @@ export default observer((props: Props) => {
 
   return (
     <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
-      <AmountView onBack={props.onBack} onNext={props.onNext} onTokenPress={() => swiper.current?.scrollTo(1)} />
+      <AmountView
+        onBack={props.onBack}
+        onNext={props.onNext}
+        onTokenPress={() => swiper.current?.scrollTo(1)}
+        disableBack={props.disableBack}
+        disableBalance={props.disableBalance}
+      />
+
       <TokensView onTokenBack={() => swiper.current?.scrollTo(0)} onTokenPress={() => swiper.current?.scrollTo(0)} />
     </Swiper>
   );

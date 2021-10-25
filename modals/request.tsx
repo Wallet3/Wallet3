@@ -1,6 +1,7 @@
 import { AmountPad, NFCPad } from './views';
 import React, { useRef } from 'react';
 
+import { Numpad } from './views';
 import { SafeAreaView } from 'react-native';
 import Swiper from 'react-native-swiper';
 import { observer } from 'mobx-react-lite';
@@ -18,7 +19,7 @@ export default observer(() => {
         loop={false}
         automaticallyAdjustContentInsets
       >
-        <AmountPad onBack={() => swiper.current?.scrollTo(0)} onNext={() => swiper.current?.scrollTo(1)} />
+        <Numpad onNext={() => swiper.current?.scrollTo(1)} />
         <NFCPad onBack={() => swiper.current?.scrollTo(0)} />
       </Swiper>
     </SafeAreaView>

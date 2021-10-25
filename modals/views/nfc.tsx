@@ -1,11 +1,11 @@
 import React, { useRef } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+import { fontColor, secondaryFontColor } from '../../constants/styles';
 
 import BackButton from '../components/BackButton';
 import { Ionicons } from '@expo/vector-icons';
 import Swiper from 'react-native-swiper';
 import { observer } from 'mobx-react-lite';
-import { secondaryFontColor } from '../../constants/styles';
 import styles from '../styles';
 
 interface SubViewProps {
@@ -21,9 +21,13 @@ const NFCView = observer((props: SubViewProps) => {
         <BackButton onPress={props.onBack} />
 
         <TouchableOpacity style={styles.navMoreButton} onPress={props.onQRPress}>
-          <Ionicons name="qr-code-outline" size={32} color={secondaryFontColor} />
-          <Text style={{ fontSize: 19, marginEnd: 8, color: secondaryFontColor, fontWeight: '500' }}>QRCode</Text>
+          <Ionicons name="qr-code-outline" size={17} color={secondaryFontColor} />
+          <Text style={{ fontSize: 19, marginStart: 8, color: secondaryFontColor, fontWeight: '500' }}>QRCode</Text>
         </TouchableOpacity>
+      </View>
+
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ color: fontColor, fontSize: 17 }}>Put phones nearby</Text>
       </View>
     </View>
   );
