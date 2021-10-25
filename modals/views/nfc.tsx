@@ -4,8 +4,10 @@ import React, { useRef } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
 import BackButton from '../components/BackButton';
+import { Coin } from '../../components';
 import IPhone from '../../assets/icons/app/IPhone.svg';
 import { Ionicons } from '@expo/vector-icons';
+import QRCode from 'react-native-qrcode-svg';
 import Swiper from 'react-native-swiper';
 import { observer } from 'mobx-react-lite';
 import { secondaryFontColor } from '../../constants/styles';
@@ -141,6 +143,15 @@ const QRView = observer((props: SubViewProps) => {
     <View style={styles.container}>
       <View style={styles.navBar}>
         <BackButton onPress={props.onBack} />
+
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={{ ...styles.navTitle, fontSize: 20, color: secondaryFontColor }}>150 USDC</Text>
+          <Coin symbol="usdc" style={{ width: 24, height: 24, marginStart: 4 }} />
+        </View>
+      </View>
+
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <QRCode value="abc" size={180} backgroundColor="transparent" />
       </View>
     </View>
   );
