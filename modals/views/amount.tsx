@@ -81,7 +81,7 @@ export default observer((props: Props) => {
         disableBalance={props.disableBalance}
       />
 
-      <Tokenlist onTokenBack={() => swiper.current?.scrollTo(0)} onTokenPress={() => swiper.current?.scrollTo(0)} />
+      <Tokenlist onBack={() => swiper.current?.scrollTo(0)} onTokenSelected={() => swiper.current?.scrollTo(0)} />
     </Swiper>
   );
 });
