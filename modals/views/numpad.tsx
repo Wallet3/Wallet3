@@ -5,7 +5,7 @@ import { borderColor, fontColor, numericFontFamily, secondaryFontColor } from '.
 
 import BackButton from '../components/BackButton';
 import Swiper from 'react-native-swiper';
-import { TokensView } from './amount';
+import Tokenlist from './tokenlist';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 
@@ -62,7 +62,7 @@ export default observer((props: Props) => {
   return (
     <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
       <NumpadView onNext={props.onNext} disableBack />
-      <TokensView />
+      <Tokenlist />
     </Swiper>
   );
 });
