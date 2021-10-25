@@ -33,6 +33,11 @@ export const NumpadView = observer((props: SubViewProps) => {
       return;
     }
 
+    if (num === 'clear') {
+      setAmount('0');
+      return;
+    }
+
     setAmount((pre) => {
       const combined = `${pre}${num}`;
 
@@ -86,33 +91,4 @@ export default observer((props: Props) => {
       <Tokenlist onBack={() => swiper.current?.scrollTo(0)} />
     </Swiper>
   );
-});
-
-const viewStyles = StyleSheet.create({
-  numpadContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    borderRadius: 10,
-    borderColor,
-    borderWidth: 1,
-    marginBottom: 12,
-    flexWrap: 'wrap',
-  },
-
-  keyboard: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '33.3%',
-    height: '25%',
-    borderBottomWidth: 1,
-    borderRightWidth: 1,
-    borderColor,
-  },
-
-  num: {
-    fontSize: 20,
-    color: fontColor,
-    fontWeight: '600',
-    textAlign: 'center',
-  },
 });

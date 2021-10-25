@@ -18,6 +18,8 @@ export default observer(() => {
         scrollEnabled={false}
         loop={false}
         automaticallyAdjustContentInsets
+        removeClippedSubviews
+        style={{ overflow: 'hidden' }}
       >
         <Numpad onNext={() => swiper.current?.scrollTo(1)} />
         <NFCPad onBack={() => swiper.current?.scrollTo(0)} />

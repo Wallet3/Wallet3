@@ -83,6 +83,7 @@ export default (props: Props) => {
         style={{ ...viewStyles.keyboard, borderBottomWidth: 0, borderRightWidth: 0, borderBottomRightRadius: 10 }}
         underlayColor={borderColor}
         onPress={(_) => props.onPress('del')}
+        onLongPress={(_) => props.onPress('clear')}
       >
         <Feather name="delete" size={20} color={fontColor} />
       </TouchableHighlight>
