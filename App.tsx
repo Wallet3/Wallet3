@@ -1,5 +1,6 @@
 import 'react-native-gesture-handler';
 
+import { AntDesign, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Button, Dimensions, StyleSheet, Text, View } from 'react-native';
 import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer, RouteProp } from '@react-navigation/native';
@@ -8,6 +9,7 @@ import React, { useEffect, useRef } from 'react';
 import { Drawer } from './components';
 import HomeScreen from './screens/home';
 import { Host } from 'react-native-portalize';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
@@ -37,10 +39,30 @@ const Root = () => {
   return (
     <Navigator
       initialRouteName="Home"
-      screenOptions={{ headerTransparent: false, headerTintColor: '#333', swipeEdgeWidth: screenWidth, drawerType: 'slide' }}
+      screenOptions={{
+        headerTransparent: false,
+        headerTintColor: '#333',
+        swipeEdgeWidth: screenWidth,
+        drawerType: 'slide',
+        headerRight: () => (
+          <TouchableOpacity
+            style={{
+              zIndex: 5,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              position: 'relative',
+              marginEnd: 17,
+            }}
+            onPress={() => alert('a')}
+          >
+            <MaterialCommunityIcons name="scan-helper" size={20} style={{}} />
+            <View style={{ position: 'absolute', left: 2, right: 2.5, height: 1.5, backgroundColor: '#000' }} />
+          </TouchableOpacity>
+        ),
+      }}
       drawerContent={Drawer}
     >
-      <Screen name="Details" component={DetailsScreen} />
       <Screen
         name="Home"
         component={HomeScreen}
@@ -53,7 +75,6 @@ const Root = () => {
 };
 
 export default function App() {
-  const { ref: modalizeRef } = useModalize();
   const { Navigator, Screen } = StackRoot;
 
   return (
@@ -61,6 +82,7 @@ export default function App() {
       <Host>
         <Navigator>
           <Screen name="Root" component={Root} options={{ headerShown: false }} />
+          <Screen name="Details" component={DetailsScreen} />
         </Navigator>
       </Host>
     </NavigationContainer>

@@ -60,7 +60,9 @@ export default (props: DrawerContentComponentProps) => {
 
           <DrawerItem
             label="Settings"
-            onPress={() => {}}
+            onPress={() => {
+              navigation.navigate('Details');
+            }}
             labelStyle={{ fontSize: 17, marginStart: -16, color: fontColor }}
             icon={({ color, size }) => <SimpleLineIcons color={color} size={size} name={'settings'} />}
           />
