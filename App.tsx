@@ -56,7 +56,7 @@ const Root = () => {
             }}
             onPress={() => alert('a')}
           >
-            <MaterialCommunityIcons name="scan-helper" size={20} style={{}} />
+            <MaterialCommunityIcons name="scan-helper" size={18} style={{}} />
             <View style={{ position: 'absolute', left: 2, right: 2.5, height: 1.5, backgroundColor: '#000' }} />
           </TouchableOpacity>
         ),

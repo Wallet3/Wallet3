@@ -1,17 +1,29 @@
+import { Arbitrum, Ethereum, NetworkIcons, Optimism, Polygon } from '../assets/icons/networks/color';
+import { Dimensions, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { FontAwesome5, SimpleLineIcons } from '@expo/vector-icons';
-import { Image, Text, View } from 'react-native';
-import { borderColor, fontColor } from '../constants/styles';
+import { borderColor, fontColor, secondaryFontColor } from '../constants/styles';
 
+import { DrawerActions } from '@react-navigation/core';
 import React from 'react';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { initialWindowMetrics } from 'react-native-safe-area-context';
+
+const { bottom, top } = initialWindowMetrics?.insets ?? { bottom: 0, top: 0 };
+const screenHeight = Dimensions.get('window').height - (bottom + top);
 
 export default (props: DrawerContentComponentProps) => {
   const { navigation } = props;
 
+  const networks = [
+    <Ethereum width={42} height={42} style={{ marginHorizontal: -4, marginEnd: -8 }} />,
+    <Arbitrum width={42} height={42} />,
+    <Optimism width={42} height={42} />,
+  ];
+
   return (
     <DrawerContentScrollView {...props} scrollEnabled={false}>
-      <View>
-        {/* Avatar Header */}
+      <View style={{ flex: 1, height: screenHeight }}>
         <View
           style={{
             marginHorizontal: 16,
@@ -66,27 +78,44 @@ export default (props: DrawerContentComponentProps) => {
             labelStyle={{ fontSize: 17, marginStart: -16, color: fontColor }}
             icon={({ color, size }) => <SimpleLineIcons color={color} size={size} name={'settings'} />}
           />
+        </View>
 
-          {/* <View style={{ height: "99%" }}></View> */}
+        <View style={{ flex: 1 }} />
 
-          <View
-            style={{
-              paddingHorizontal: 8,
-            }}
-          >
-            <FontAwesome5.Button
-              name="ethereum"
-              onPress={() => {}}
-              size={18}
-              iconStyle={{ marginHorizontal: 8 }}
-              style={{ justifyContent: 'center', alignItems: 'center' }}
-              borderRadius={5}
-            >
-              Connect with Ethereum
-            </FontAwesome5.Button>
+        <View style={{ padding: 16 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Text style={{ color: secondaryFontColor, fontSize: 14 }}>Networks</Text>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <TouchableOpacity onPress={() => navigation.navigate('Details')} style={styles.smallNetworkContainer}>
+                <Ethereum width={14} height={14} />
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.smallNetworkContainer}>
+                <Arbitrum width={14} height={14} />
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.smallNetworkContainer}>
+                <Optimism width={14} height={13} />
+              </TouchableOpacity>
+            </View>
           </View>
+          <View style={{ height: 1, backgroundColor: borderColor, marginVertical: 4, marginBottom: 8 }} />
+          <TouchableOpacity
+            style={{ flexDirection: 'row', alignItems: 'center' }}
+            onPress={() => navigation.dispatch(DrawerActions.closeDrawer())}
+          >
+            {NetworkIcons['ethereum']}
+            <Text style={{ marginStart: 8, fontSize: 16, color: fontColor }}>Ethereum</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </DrawerContentScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  smallNetworkContainer: {
+    marginHorizontal: 4,
+  },
+});
