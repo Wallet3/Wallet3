@@ -9,11 +9,13 @@ import React, { useEffect, useRef } from 'react';
 
 import { Drawer } from './components';
 import HomeScreen from './screens/home';
+import LandScreen from './screens/land';
 import { Modalize } from 'react-native-modalize';
 import NetworksView from './modals/networks';
 import PubSub from 'pubsub-js';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { useFonts } from 'expo-font';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 const DrawerRoot = createDrawerNavigator();
@@ -36,7 +38,7 @@ function DetailsScreen({ navigation, route }: NativeStackScreenProps<RootStackPa
   );
 }
 
-const Root = () => {
+const Root = ({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>) => {
   const { Navigator, Screen } = DrawerRoot;
 
   return (
@@ -85,12 +87,16 @@ export default function App() {
     PubSub.subscribe('openNetworksModal', () => openNetworksModal());
   }, []);
 
+  useFonts({
+    Questrial: require('./assets/fonts/Questrial.ttf'),
+  });
+
   return (
     <NavigationContainer>
       <Host>
-        <Navigator>
+        <Navigator initialRouteName="Land">
           <Screen name="Root" component={Root} options={{ headerShown: false }} />
-          <Screen name="Details" component={DetailsScreen} />
+          <Screen name="Land" component={LandScreen} options={{ headerShown: false }} />
         </Navigator>
       </Host>
 
