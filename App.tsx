@@ -79,7 +79,7 @@ const Root = () => {
 
 export default function App() {
   const { Navigator, Screen } = StackRoot;
-  const { ref: networksModal, open: openNetworksModal } = useModalize();
+  const { ref: networksModal, open: openNetworksModal, close: closeNetworksModal } = useModalize();
 
   useEffect(() => {
     PubSub.subscribe('openNetworksModal', () => openNetworksModal());
@@ -99,7 +99,11 @@ export default function App() {
         adjustToContentHeight
         scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
       >
-        <NetworksView />
+        <NetworksView
+          onNetworkPress={(_) => {
+            closeNetworksModal();
+          }}
+        />
       </Modalize>
     </NavigationContainer>
   );

@@ -1,7 +1,7 @@
 import { Arbitrum, Ethereum, NetworkIcons, Optimism, Polygon } from '../assets/icons/networks/color';
 import { Dimensions, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
-import { FontAwesome5, SimpleLineIcons } from '@expo/vector-icons';
+import { Feather, SimpleLineIcons } from '@expo/vector-icons';
 import { borderColor, fontColor, secondaryFontColor } from '../constants/styles';
 
 import { DrawerActions } from '@react-navigation/core';
@@ -66,7 +66,7 @@ export default (props: DrawerContentComponentProps) => {
               navigation.navigate('Home');
             }}
             labelStyle={{ fontSize: 17, marginStart: -16, color: fontColor }}
-            icon={({ color, size }) => <SimpleLineIcons color={color} size={size} name={'wallet'} />}
+            icon={({ color, size }) => <SimpleLineIcons color={fontColor} size={size} name={'wallet'} />}
           />
 
           <DrawerItem
@@ -75,7 +75,7 @@ export default (props: DrawerContentComponentProps) => {
               navigation.navigate('Details');
             }}
             labelStyle={{ fontSize: 17, marginStart: -16, color: fontColor }}
-            icon={({ color, size }) => <SimpleLineIcons color={color} size={size} name={'settings'} />}
+            icon={({ color, size }) => <SimpleLineIcons color={fontColor} size={size} name={'settings'} />}
           />
         </View>
 
@@ -109,6 +109,9 @@ export default (props: DrawerContentComponentProps) => {
           >
             {NetworkIcons['ethereum']}
             <Text style={{ marginStart: 8, fontSize: 16, color: '#6186ff', fontWeight: '500' }}>Ethereum</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}></View>
+
+            <Feather name="chevron-right" size={16} color={'#6186ff'} style={{marginBottom: -2}} />
           </TouchableOpacity>
         </View>
       </View>

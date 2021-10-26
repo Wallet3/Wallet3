@@ -16,7 +16,11 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app uses the camera to scan QRCode.",
+        "NSFaceIDUsageDescription": "Enabling Face ID allows you quick and secure access to your account."
+      }
     },
     "android": {
       "adaptiveIcon": {
