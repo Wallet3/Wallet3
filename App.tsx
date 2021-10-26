@@ -2,13 +2,15 @@ import 'react-native-gesture-handler';
 
 import { AntDesign, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Button, Dimensions, StyleSheet, Text, View } from 'react-native';
+import { Host, Portal } from 'react-native-portalize';
 import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer, RouteProp } from '@react-navigation/native';
 import React, { useEffect, useRef } from 'react';
 
 import { Drawer } from './components';
 import HomeScreen from './screens/home';
-import { Host } from 'react-native-portalize';
+import { Modalize } from 'react-native-modalize';
+import PubSub from 'pubsub-js';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
@@ -76,6 +78,11 @@ const Root = () => {
 
 export default function App() {
   const { Navigator, Screen } = StackRoot;
+  const { ref: networksModal, open: openNetworksModal } = useModalize();
+
+  useEffect(() => {
+    PubSub.subscribe('openNetworksModal', () => openNetworksModal());
+  }, []);
 
   return (
     <NavigationContainer>
@@ -85,6 +92,14 @@ export default function App() {
           <Screen name="Details" component={DetailsScreen} />
         </Navigator>
       </Host>
+
+      <Modalize
+        ref={networksModal}
+        adjustToContentHeight
+        scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+      >
+        <View />
+      </Modalize>
     </NavigationContainer>
   );
 }

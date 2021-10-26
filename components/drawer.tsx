@@ -5,21 +5,20 @@ import { FontAwesome5, SimpleLineIcons } from '@expo/vector-icons';
 import { borderColor, fontColor, secondaryFontColor } from '../constants/styles';
 
 import { DrawerActions } from '@react-navigation/core';
+import { Modalize } from 'react-native-modalize';
+import { Portal } from 'react-native-portalize';
+import PubSub from 'pubsub-js';
 import React from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
+import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 const { bottom, top } = initialWindowMetrics?.insets ?? { bottom: 0, top: 0 };
 const screenHeight = Dimensions.get('window').height - (bottom + top);
 
 export default (props: DrawerContentComponentProps) => {
   const { navigation } = props;
-
-  const networks = [
-    <Ethereum width={42} height={42} style={{ marginHorizontal: -4, marginEnd: -8 }} />,
-    <Arbitrum width={42} height={42} />,
-    <Optimism width={42} height={42} />,
-  ];
+  // const { ref: networksRef } = useModalize();
 
   return (
     <DrawerContentScrollView {...props} scrollEnabled={false}>
@@ -82,7 +81,7 @@ export default (props: DrawerContentComponentProps) => {
 
         <View style={{ flex: 1 }} />
 
-        <View style={{ padding: 16 }}>
+        <View style={{ padding: 16, paddingBottom: 12 }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
             <Text style={{ color: secondaryFontColor, fontSize: 14 }}>Networks</Text>
 
@@ -103,7 +102,10 @@ export default (props: DrawerContentComponentProps) => {
           <View style={{ height: 1, backgroundColor: borderColor, marginVertical: 4, marginBottom: 8 }} />
           <TouchableOpacity
             style={{ flexDirection: 'row', alignItems: 'center' }}
-            onPress={() => navigation.dispatch(DrawerActions.closeDrawer())}
+            onPress={() => {
+              navigation.dispatch(DrawerActions.closeDrawer());
+              PubSub.publish('openNetworksModal');
+            }}
           >
             {NetworkIcons['ethereum']}
             <Text style={{ marginStart: 8, fontSize: 16, color: fontColor }}>Ethereum</Text>
