@@ -108,7 +108,7 @@ export default (props: DrawerContentComponentProps) => {
             }}
           >
             {NetworkIcons['ethereum']}
-            <Text style={{ marginStart: 8, fontSize: 16, color: fontColor }}>Ethereum</Text>
+            <Text style={{ marginStart: 8, fontSize: 16, color: '#6186ff', fontWeight: '500' }}>Ethereum</Text>
           </TouchableOpacity>
         </View>
       </View>

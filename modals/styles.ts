@@ -3,6 +3,11 @@ import { borderColor, secondaryFontColor } from '../constants/styles';
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
+  safeArea: {
+    height: 439,
+    flex: 1,
+  },
+
   container: {
     padding: 16,
     height: 420,

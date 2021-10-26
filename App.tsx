@@ -10,6 +10,7 @@ import React, { useEffect, useRef } from 'react';
 import { Drawer } from './components';
 import HomeScreen from './screens/home';
 import { Modalize } from 'react-native-modalize';
+import NetworksView from './modals/networks';
 import PubSub from 'pubsub-js';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -98,17 +99,8 @@ export default function App() {
         adjustToContentHeight
         scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
       >
-        <View />
+        <NetworksView />
       </Modalize>
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

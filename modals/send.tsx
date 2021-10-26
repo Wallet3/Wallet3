@@ -4,12 +4,13 @@ import React, { useRef } from 'react';
 import { SafeAreaView } from 'react-native';
 import Swiper from 'react-native-swiper';
 import { observer } from 'mobx-react-lite';
+import styles from './styles';
 
 export default observer(() => {
   const swiper = useRef<Swiper>(null);
 
   return (
-    <SafeAreaView style={{ height: 439 }}>
+    <SafeAreaView style={styles.safeArea}>
       <Swiper
         ref={swiper}
         showsPagination={false}
