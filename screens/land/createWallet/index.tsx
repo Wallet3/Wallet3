@@ -3,15 +3,17 @@ import { SafeAreaView, Text, View } from 'react-native';
 import { secondaryFontColor, themeColor } from '../../../constants/styles';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
+import { WelcomeStackParamList } from '../navs';
 import styles from '../styles';
 
 const phrases = 'brisk casual lunch sudden trust path impose october prosper chunk deposit claw become oil strike'.split(' ');
 
-export default (props) => {
+export default ({ navigation }: NativeStackScreenProps<WelcomeStackParamList, 'Backup'>) => {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-      <View style={{ paddingHorizontal: 16, flex: 1 }}>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.rootContainer}>
         <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 16 }}>
           <MaterialCommunityIcons name="shield-key" size={96} color={'yellowgreen'} />
         </View>
@@ -31,7 +33,7 @@ export default (props) => {
         <View style={{ flex: 1 }} />
 
         <Button title="Backup later" style={styles.borderButton} txtStyle={{ color: themeColor, textTransform: 'none' }} />
-        <Button title="Backup now" txtStyle={{ textTransform: 'none' }} />
+        <Button title="Backup now" txtStyle={{ textTransform: 'none' }} onPress={() => navigation.navigate('Backup')} />
       </View>
     </SafeAreaView>
   );

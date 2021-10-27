@@ -8,15 +8,10 @@ import React from 'react';
 import { SafeAreaView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet } from 'react-native';
+import { WelcomeStackParamList } from '../navs';
 import styles from '../styles';
 import { themeColor } from '../../../constants/styles';
 import { useFonts } from 'expo-font';
-
-type WelcomeStackParamList = {
-  Welcome: undefined;
-  ImportWallet: undefined;
-  CreateWallet: undefined;
-};
 
 export default ({ navigation }: NativeStackScreenProps<WelcomeStackParamList, 'Welcome'>) => {
   const [loaded] = useFonts({

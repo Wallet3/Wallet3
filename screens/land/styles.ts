@@ -3,6 +3,13 @@ import { borderColor, secondaryFontColor, themeColor } from '../../constants/sty
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
+  safeArea: { flex: 1, backgroundColor: '#fff' },
+
+  rootContainer: {
+    paddingHorizontal: 16,
+    flex: 1,
+  },
+
   navBar: {
     flexDirection: 'row',
     alignItems: 'center',

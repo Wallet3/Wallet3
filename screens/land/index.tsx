@@ -1,6 +1,7 @@
 import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useRef } from 'react';
 
+import Backup from './backup';
 import CreateWallet from './createWallet';
 import ImportWallet from './importWallet';
 import { Ionicons } from '@expo/vector-icons';
@@ -31,6 +32,7 @@ export default ({ navigation }: NativeStackScreenProps<RootStackParamList, 'Welc
       <Screen name="Welcome" component={Welcome} options={{ headerShown: false }} />
       <Screen name="ImportWallet" component={ImportWallet} options={{ title: 'Import a wallet' }} />
       <Screen name="CreateWallet" component={CreateWallet} options={{ title: 'Create a new wallet' }} />
+      <Screen name="Backup" component={Backup} options={{ title: 'Backup your secret' }} />
     </Navigator>
   );
 };
