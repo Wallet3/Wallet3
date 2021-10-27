@@ -2,7 +2,8 @@ import Button from './button';
 import Coin from './coin';
 import DismissKeyboard from './dismissKeyboard';
 import Drawer from './drawer';
+import Mnemonic from './mnemonic';
 import Numpad from './numpad';
 import Separator from './separator';
 
-export { Button, Coin, Drawer, Numpad, Separator, DismissKeyboard };
+export { Button, Coin, Drawer, Numpad, Separator, DismissKeyboard, Mnemonic };

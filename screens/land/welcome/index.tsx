@@ -8,6 +8,7 @@ import React from 'react';
 import { SafeAreaView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet } from 'react-native';
+import styles from '../styles';
 import { themeColor } from '../../../constants/styles';
 import { useFonts } from 'expo-font';
 
@@ -40,7 +41,7 @@ export default ({ navigation }: NativeStackScreenProps<WelcomeStackParamList, 'W
             <Button
               title="Import a wallet"
               onPress={() => navigation.navigate('ImportWallet')}
-              style={styles.button}
+              style={styles.borderButton}
               txtStyle={{ color: themeColor, textTransform: 'none' }}
             />
           </View>
@@ -58,7 +59,3 @@ export default ({ navigation }: NativeStackScreenProps<WelcomeStackParamList, 'W
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  button: { backgroundColor: 'transparent', borderColor: themeColor, borderWidth: 1, marginBottom: 12 },
-});

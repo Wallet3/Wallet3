@@ -1,4 +1,4 @@
-import { borderColor, secondaryFontColor } from '../../constants/styles';
+import { borderColor, secondaryFontColor, themeColor } from '../../constants/styles';
 
 import { StyleSheet } from 'react-native';
 
@@ -26,4 +26,6 @@ export default StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
   },
+
+  borderButton: { backgroundColor: 'transparent', borderColor: themeColor, borderWidth: 1, marginBottom: 12 },
 });

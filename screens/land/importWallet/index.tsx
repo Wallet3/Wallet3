@@ -1,7 +1,7 @@
-import { Button, DismissKeyboard } from '../../../components';
 import { ScrollView, Text, TextInput, View } from 'react-native';
 import { borderColor, secondaryFontColor, themeColor } from '../../../constants/styles';
 
+import { Button } from '../../../components';
 import React from 'react';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
