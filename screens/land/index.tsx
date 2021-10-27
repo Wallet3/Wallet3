@@ -1,19 +1,36 @@
+import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useRef } from 'react';
-import { SafeAreaView, View } from 'react-native';
 
+import CreateWallet from './createWallet';
 import ImportWallet from './importWallet';
-import Swiper from 'react-native-swiper';
+import { Ionicons } from '@expo/vector-icons';
+import { TouchableOpacity } from 'react-native';
 import Welcome from './welcome';
 
-export default () => {
-  const swiper = useRef<Swiper>(null);
+type RootStackParamList = {
+  Home: undefined;
+  Welcome: undefined;
+  Feed: { sort: 'latest' | 'top' } | undefined;
+};
 
+const { Navigator, Screen } = createNativeStackNavigator();
+
+export default ({ navigation }: NativeStackScreenProps<RootStackParamList, 'Welcome'>) => {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }}>
-      <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
-        <Welcome onImportWallet={() => swiper.current?.scrollTo(1)} />
-        <ImportWallet />
-      </Swiper>
-    </SafeAreaView>
+    <Navigator
+      screenOptions={{
+        headerTransparent: true,
+        headerLeft: () => (
+          <TouchableOpacity onPress={() => navigation.pop()}>
+            <Ionicons name="arrow-back-outline" size={20} />
+          </TouchableOpacity>
+        ),
+      }}
+      initialRouteName="Welcome"
+    >
+      <Screen name="Welcome" component={Welcome} options={{ headerShown: false }} />
+      <Screen name="ImportWallet" component={ImportWallet} options={{ title: 'Import a wallet' }} />
+      <Screen name="CreateWallet" component={CreateWallet} options={{ title: 'Create a new wallet' }} />
+    </Navigator>
   );
 };

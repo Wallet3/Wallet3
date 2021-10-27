@@ -1,21 +1,25 @@
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Button, DismissKeyboard } from '../../../components';
+import { ScrollView, Text, TextInput, View } from 'react-native';
 import { borderColor, secondaryFontColor, themeColor } from '../../../constants/styles';
 
-import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import styles from '../styles';
+import { useHeaderHeight } from '@react-navigation/elements';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default () => {
-  return (
-    <View style={{ paddingHorizontal: 16, paddingBottom: 0 }}>
-      <TouchableOpacity style={styles.navBar}>
-        <Ionicons name="chevron-back-outline" size={24} />
-        <Text style={styles.navTitle}>Back</Text>
-      </TouchableOpacity>
+  const headerHeight = useHeaderHeight();
+  const { bottom } = useSafeAreaInsets();
 
+  return (
+    <ScrollView
+      scrollEnabled={false}
+      contentContainerStyle={{ flex: 1 }}
+      style={{ paddingHorizontal: 16, paddingBottom: bottom, paddingTop: headerHeight, flex: 1, backgroundColor: 'white' }}
+    >
       <TextInput
         multiline={true}
         numberOfLines={5}
+        placeholder="Enter your mnemonic phrases"
         style={{
           height: 200,
           textAlignVertical: 'top',
@@ -24,11 +28,30 @@ export default () => {
           borderRadius: 10,
           padding: 8,
           paddingVertical: 24,
-          fontSize: 15,
+          fontSize: 16,
         }}
         autoCapitalize="none"
         keyboardType="default"
       />
-    </View>
+
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          marginTop: 12,
+          borderBottomWidth: 1,
+          borderBottomColor: borderColor,
+          paddingBottom: 2,
+          paddingHorizontal: 2,
+        }}
+      >
+        <Text style={{ fontSize: 16, color: secondaryFontColor }}>Derivation Path</Text>
+        <TextInput style={{ fontSize: 16, color: themeColor }} defaultValue={`m/44'/60'/0'/0/0`} />
+      </View>
+
+      <View style={{ flex: 1 }} />
+
+      <Button title="Next" />
+    </ScrollView>
   );
 };
