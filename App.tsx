@@ -87,9 +87,6 @@ export default function App() {
     PubSub.subscribe('openNetworksModal', () => openNetworksModal());
   }, []);
 
-  useFonts({
-    Questrial: require('./assets/fonts/Questrial.ttf'),
-  });
 
   return (
     <NavigationContainer>

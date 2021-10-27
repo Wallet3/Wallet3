@@ -14,7 +14,7 @@
     "@react-navigation/elements": "^1.2.1",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
-    "expo": "~43.0.0",
+    "expo": "~43.0.1",
     "expo-font": "^10.0.3",
     "expo-local-authentication": "^12.0.1",
     "expo-secure-store": "~11.0.3",
@@ -41,7 +41,7 @@
   "devDependencies": {
     "@babel/core": "^7.15.8",
     "@types/pubsub-js": "^1.8.3",
-    "@types/react": "~17.0.32",
+    "@types/react": "~17.0.33",
     "@types/react-native": "~0.64.17",
     "react-native-svg-transformer": "^0.14.3",
     "typescript": "~4.4.4"

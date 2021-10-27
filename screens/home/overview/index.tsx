@@ -1,9 +1,9 @@
 import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { numericFontFamily, themeColor } from '../../../constants/styles';
 
 import Ethereum from '../../../assets/icons/networks/white/ethereum.svg';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
-import { numericFontFamily } from '../../../constants/styles';
 import { observer } from 'mobx-react-lite';
 
 interface Props {
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 12,
     paddingHorizontal: 16,
-    backgroundColor: '#627EEA',
+    backgroundColor: themeColor,
   },
 
   text: { color: 'white', fontWeight: '500' },

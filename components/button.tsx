@@ -1,6 +1,7 @@
 import { StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
 
 import React from 'react';
+import { themeColor } from '../constants/styles';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 42,
-    backgroundColor: '#627EEA',
+    backgroundColor: themeColor,
   },
 
   text: {

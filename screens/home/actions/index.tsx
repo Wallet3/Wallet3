@@ -3,6 +3,7 @@ import { SafeAreaView, StyleProp, StyleSheet, Text, View, ViewStyle } from 'reac
 
 import React from 'react';
 import Ripple from 'react-native-material-ripple';
+import { themeColor } from '../../../constants/styles';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 42,
-    backgroundColor: '#627EEA',
+    backgroundColor: themeColor,
   },
 
   text: {

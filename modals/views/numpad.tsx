@@ -1,7 +1,7 @@
 import { Button, Coin, Numpad } from '../../components';
 import React, { useRef, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { borderColor, fontColor, numericFontFamily, secondaryFontColor } from '../../constants/styles';
+import { borderColor, fontColor, numericFontFamily, secondaryFontColor, themeColor } from '../../constants/styles';
 
 import BackButton from '../components/BackButton';
 import Swiper from 'react-native-swiper';
@@ -64,7 +64,7 @@ export const NumpadView = observer((props: SubViewProps) => {
           fontWeight: '600',
           marginVertical: 4,
           textAlign: 'center',
-          color: '#627EEA',
+          color: themeColor,
         }}
         numberOfLines={1}
       >
