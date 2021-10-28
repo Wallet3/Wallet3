@@ -3,4 +3,5 @@ export type WelcomeStackParamList = {
   ImportWallet: undefined;
   CreateWallet: undefined;
   Backup: undefined;
+  SetupPasscode: undefined;
 };

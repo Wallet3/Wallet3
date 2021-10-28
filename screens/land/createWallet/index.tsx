@@ -32,7 +32,12 @@ export default ({ navigation }: NativeStackScreenProps<WelcomeStackParamList, 'B
 
         <View style={{ flex: 1 }} />
 
-        <Button title="Backup later" style={styles.borderButton} txtStyle={{ color: themeColor, textTransform: 'none' }} />
+        <Button
+          title="Backup later"
+          style={styles.borderButton}
+          txtStyle={{ color: themeColor, textTransform: 'none' }}
+          onPress={() => navigation.navigate('SetupPasscode')}
+        />
         <Button title="Backup now" txtStyle={{ textTransform: 'none' }} onPress={() => navigation.navigate('Backup')} />
       </View>
     </SafeAreaView>

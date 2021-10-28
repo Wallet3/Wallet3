@@ -4,8 +4,11 @@ import { borderColor, fontColor } from '../constants/styles';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
 
+export type NumpadChar = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '0' | '.' | 'del' | 'clear';
+
 interface Props {
-  onPress: (value: string) => void;
+  onPress: (value: NumpadChar) => void;
+  disableDot?: boolean;
 }
 
 export default (props: Props) => {
@@ -67,8 +70,9 @@ export default (props: Props) => {
         style={{ ...viewStyles.keyboard, borderBottomWidth: 0, borderBottomLeftRadius: 9.75 }}
         underlayColor={borderColor}
         onPress={(_) => props.onPress('.')}
+        disabled={props.disableDot}
       >
-        <Text style={viewStyles.num}>.</Text>
+        {props.disableDot ? <View /> : <Text style={viewStyles.num}>.</Text>}
       </TouchableHighlight>
 
       <TouchableHighlight

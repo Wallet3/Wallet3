@@ -5,6 +5,7 @@ import Backup from './backup';
 import CreateWallet from './createWallet';
 import ImportWallet from './importWallet';
 import { Ionicons } from '@expo/vector-icons';
+import SetupPasscode from './passcode';
 import { TouchableOpacity } from 'react-native';
 import Welcome from './welcome';
 
@@ -33,6 +34,7 @@ export default ({ navigation }: NativeStackScreenProps<RootStackParamList, 'Welc
       <Screen name="ImportWallet" component={ImportWallet} options={{ title: 'Import a wallet' }} />
       <Screen name="CreateWallet" component={CreateWallet} options={{ title: 'Create a new wallet' }} />
       <Screen name="Backup" component={Backup} options={{ title: 'Backup your secret' }} />
+      <Screen name="SetupPasscode" component={SetupPasscode} options={{ title: 'Set up passcode' }} />
     </Navigator>
   );
 };
