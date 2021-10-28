@@ -3,16 +3,16 @@ import { borderColor, fontColor, secondaryFontColor } from '../../../constants/s
 
 import { Button } from '../../../components';
 import { Ionicons } from '@expo/vector-icons';
+import { LandStackNavs } from '../navs';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { WelcomeStackParamList } from '../navs';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 
 const phrases = 'brisk casual lunch sudden trust path impose october prosper chunk deposit claw become oil strike'.split(' ');
 
-export default observer(({ navigation }: NativeStackScreenProps<WelcomeStackParamList, 'Backup'>) => {
+export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, 'Backup'>) => {
   const renderStaticWords = (words: string[]) => (
     <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
       {words.map((word, index) => (

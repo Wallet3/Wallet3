@@ -3,17 +3,17 @@ import {} from 'react-native';
 import { Text, View } from 'react-native-animatable';
 
 import { Button } from '../../../components';
+import { LandStackNavs } from '../navs';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import { SafeAreaView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet } from 'react-native';
-import { WelcomeStackParamList } from '../navs';
 import styles from '../styles';
 import { themeColor } from '../../../constants/styles';
 import { useFonts } from 'expo-font';
 
-export default ({ navigation }: NativeStackScreenProps<WelcomeStackParamList, 'Welcome'>) => {
+export default ({ navigation }: NativeStackScreenProps<LandStackNavs, 'Welcome'>) => {
   const [loaded] = useFonts({
     Questrial: require('../../../assets/fonts/Questrial.ttf'),
   });

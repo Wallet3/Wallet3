@@ -4,14 +4,17 @@ import { Button, Numpad, NumpadChar } from '../../../components';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaView, Text, View } from 'react-native';
 
+import { LandStackNavs } from '../navs';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { secondaryFontColor } from '../../../constants/styles';
 import styles from '../styles';
 
-export default () => {
+export default ({ navigation }: NativeStackScreenProps<LandStackNavs, 'Backup'>) => {
   const passcodeLength = 6;
   const [passcode, setPasscode] = useState('');
   const [confirm, setConfirm] = useState('');
   const passcodeView = useRef<Animatable.View>(null);
+  const tipView = useRef<Animatable.Text>(null);
 
   const onNumpadPress = (value: NumpadChar) => {
     if (value === 'del') {
@@ -42,6 +45,7 @@ export default () => {
 
     setConfirm(passcode);
     setPasscode('');
+    tipView.current?.fadeIn?.();
   }, [passcode]);
 
   const renderEmptyCircle = (index: number) => (
@@ -60,9 +64,9 @@ export default () => {
       <View style={styles.rootContainer}>
         <View style={{ flex: 1 }} />
 
-        <Text style={{ textAlign: 'center', marginBottom: 16, color: secondaryFontColor }}>
+        <Animatable.Text ref={tipView as any} style={{ textAlign: 'center', marginBottom: 16, color: secondaryFontColor }}>
           {confirm ? 'Please enter again' : ''}
-        </Text>
+        </Animatable.Text>
 
         <Animatable.View ref={passcodeView as any} style={{ flexDirection: 'row', justifyContent: 'center' }}>
           {new Array(passcode.length).fill(0).map((_, index) => renderFilledCircle(index))}

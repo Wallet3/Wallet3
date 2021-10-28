@@ -1,4 +1,4 @@
-export type WelcomeStackParamList = {
+export type LandStackNavs = {
   Welcome: undefined;
   ImportWallet: undefined;
   CreateWallet: undefined;

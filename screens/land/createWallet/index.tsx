@@ -2,15 +2,15 @@ import { Button, Mnemonic } from '../../../components';
 import { SafeAreaView, Text, View } from 'react-native';
 import { secondaryFontColor, themeColor } from '../../../constants/styles';
 
+import { LandStackNavs } from '../navs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
-import { WelcomeStackParamList } from '../navs';
 import styles from '../styles';
 
 const phrases = 'brisk casual lunch sudden trust path impose october prosper chunk deposit claw become oil strike'.split(' ');
 
-export default ({ navigation }: NativeStackScreenProps<WelcomeStackParamList, 'Backup'>) => {
+export default ({ navigation }: NativeStackScreenProps<LandStackNavs, 'Backup'>) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.rootContainer}>
