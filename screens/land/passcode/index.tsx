@@ -62,7 +62,7 @@ export default ({ navigation }: NativeStackScreenProps<LandStackNavs, 'Backup'>)
         <View style={{ flex: 1 }} />
 
         <Animatable.Text ref={tipView as any} style={{ textAlign: 'center', marginBottom: 16, color: secondaryFontColor }}>
-          {confirm ? 'Please enter again' : ''}
+          {confirm ? 'Please enter again' : ' '}
         </Animatable.Text>
 
         <Animatable.View ref={passcodeView as any} style={{ flexDirection: 'row', justifyContent: 'center' }}>

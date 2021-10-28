@@ -8,14 +8,13 @@ import { NavigationContainer, RouteProp } from '@react-navigation/native';
 import React, { useEffect, useRef } from 'react';
 
 import { Drawer } from './components';
-import HomeScreen from './move/screens/home';
-import LandScreen from './move/screens/land';
+import HomeScreen from './screens/home';
+import LandScreen from './screens/land';
 import { Modalize } from 'react-native-modalize';
-import NetworksView from './modals/networks';
+import NetworksView from './modals/Networks';
 import PubSub from 'pubsub-js';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { useFonts } from 'expo-font';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 const DrawerRoot = createDrawerNavigator();
@@ -27,16 +26,6 @@ type RootStackParamList = {
   Details?: { userId?: number };
   Feed: { sort: 'latest' | 'top' } | undefined;
 };
-
-function DetailsScreen({ navigation, route }: NativeStackScreenProps<RootStackParamList, 'Details'>) {
-  const { userId } = route.params || {};
-
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Details Screen {userId}</Text>
-    </View>
-  );
-}
 
 const Root = ({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>) => {
   const { Navigator, Screen } = DrawerRoot;
@@ -86,7 +75,6 @@ export default function App() {
   useEffect(() => {
     PubSub.subscribe('openNetworksModal', () => openNetworksModal());
   }, []);
-
 
   return (
     <NavigationContainer>
