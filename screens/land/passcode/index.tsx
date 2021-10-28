@@ -2,8 +2,9 @@ import * as Animatable from 'react-native-animatable';
 
 import { Button, Numpad, NumpadChar } from '../../../components';
 import React, { useEffect, useRef, useState } from 'react';
-import { SafeAreaView, View } from 'react-native';
+import { SafeAreaView, Text, View } from 'react-native';
 
+import { secondaryFontColor } from '../../../constants/styles';
 import styles from '../styles';
 
 export default () => {
@@ -58,6 +59,10 @@ export default () => {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.rootContainer}>
         <View style={{ flex: 1 }} />
+
+        <Text style={{ textAlign: 'center', marginBottom: 16, color: secondaryFontColor }}>
+          {confirm ? 'Please enter again' : ''}
+        </Text>
 
         <Animatable.View ref={passcodeView as any} style={{ flexDirection: 'row', justifyContent: 'center' }}>
           {new Array(passcode.length).fill(0).map((_, index) => renderFilledCircle(index))}
