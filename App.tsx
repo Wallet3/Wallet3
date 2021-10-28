@@ -5,7 +5,7 @@ import { Button, Dimensions, StyleSheet, Text, View } from 'react-native';
 import { Host, Portal } from 'react-native-portalize';
 import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer, RouteProp } from '@react-navigation/native';
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 
 import { Drawer } from './components';
 import HomeScreen from './screens/home';
@@ -14,6 +14,7 @@ import { Modalize } from 'react-native-modalize';
 import NetworksView from './modals/Networks';
 import PubSub from 'pubsub-js';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import WalletMan from './viewmodels/WalletManager';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
@@ -74,7 +75,10 @@ export default function App() {
 
   useEffect(() => {
     PubSub.subscribe('openNetworksModal', () => openNetworksModal());
+    WalletMan.init();
   }, []);
+
+  useCallback(() => {}, []);
 
   return (
     <NavigationContainer>
