@@ -15,10 +15,10 @@ export default ({ navigation }: NativeStackScreenProps<LandStackNavs, 'Backup'>)
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.rootContainer}>
         <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 16 }}>
-          <MaterialCommunityIcons name="shield-key" size={96} color={'yellowgreen'} />
+          <MaterialCommunityIcons name="shield-key" size={72} color={'yellowgreen'} />
         </View>
 
-        <View style={{ marginVertical: 24 }}>
+        <View style={{ marginVertical: 16 }}>
           <Text style={{ fontSize: 16, fontWeight: '500', color: themeColor, marginBottom: 8 }}>Security Tips</Text>
           <Text style={{ marginStart: 16, marginBottom: 8, color: secondaryFontColor }}>
             The mnemonic consists of english words, please keep them safe.
@@ -29,6 +29,13 @@ export default ({ navigation }: NativeStackScreenProps<LandStackNavs, 'Backup'>)
         </View>
 
         <Mnemonic phrases={phrases} />
+
+        <View style={{ marginTop: 8, flexDirection: 'row', justifyContent: 'space-between' }}>
+          <Text style={{ color: secondaryFontColor }}>0xABCDE....09872</Text>
+          <View>
+            <Text>12/24</Text>
+          </View>
+        </View>
 
         <View style={{ flex: 1 }} />
 
