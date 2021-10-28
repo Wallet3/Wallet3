@@ -5,7 +5,7 @@ import { borderColor, fontColor, numericFontFamily, secondaryFontColor, themeCol
 
 import BackButton from '../components/BackButton';
 import Swiper from 'react-native-swiper';
-import Tokenlist from './tokenlist';
+import Tokenlist from './Tokenlist';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 

@@ -3,7 +3,7 @@ import { ListRenderItemInfo, Text, TextInput, TouchableHighlight, TouchableOpaci
 import React, { useRef, useState } from 'react';
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
-import Button from '../../components/button';
+import Button from '../../components/Button';
 import { FlatList } from 'react-native-gesture-handler';
 import { formatAddress } from '../../utils/formatter';
 import styles from '../styles';

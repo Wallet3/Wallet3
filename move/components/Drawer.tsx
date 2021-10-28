@@ -1,4 +1,4 @@
-import { Arbitrum, Ethereum, NetworkIcons, Optimism, Polygon } from '../assets/icons/networks/color';
+import { Arbitrum, Ethereum, NetworkIcons, Optimism, Polygon } from '../../assets/icons/networks/color';
 import { Dimensions, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { Feather, SimpleLineIcons } from '@expo/vector-icons';

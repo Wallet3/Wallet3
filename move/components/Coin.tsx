@@ -1,7 +1,7 @@
 import { Image, ImageResizeMode, ImageStyle, ImageURISource, StyleProp } from 'react-native';
 
 import React from 'react';
-import icons from '../assets/icons/crypto';
+import icons from '../../assets/icons/crypto';
 
 interface CoinProps {
   symbol: string;
