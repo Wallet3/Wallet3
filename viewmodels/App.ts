@@ -1,29 +1,38 @@
-import { makeObservable, observable, runInAction } from 'mobx';
+import { computed, keys, makeObservable, observable, runInAction } from 'mobx';
 
+import Authentication from './Authentication';
 import Database from '../models/Database';
 import { WalletKey } from './WalletKey';
 
-export class App {
+export class AppVM {
   initialized = false;
   keys: WalletKey[] = [];
+
+  get hasKeys() {
+    return this.keys.length > 0;
+  }
 
   constructor() {
     makeObservable(this, {
       initialized: observable,
       keys: observable,
+      hasKeys: computed,
     });
   }
 
   async init() {
-    await Database.init();
+    await Promise.all([Database.init(), Authentication.init()]);
     const keys = (await Database.keyRepository.find()).map((key) => new WalletKey(key));
-    console.log(keys.length);
 
     runInAction(() => {
       this.initialized = true;
       this.keys = keys;
     });
   }
+
+  dispose() {
+    Database.dispose();
+  }
 }
 
-export default new App();
+export default new AppVM();

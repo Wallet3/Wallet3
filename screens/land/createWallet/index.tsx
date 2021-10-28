@@ -6,11 +6,13 @@ import { LandStackNavs } from '../navs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 
 const phrases = 'brisk casual lunch sudden trust path impose october prosper chunk deposit claw become oil strike'.split(' ');
 
-export default ({ navigation }: NativeStackScreenProps<LandStackNavs, 'Backup'>) => {
+export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, 'Backup'>) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.rootContainer}>
@@ -30,10 +32,16 @@ export default ({ navigation }: NativeStackScreenProps<LandStackNavs, 'Backup'>)
 
         <Mnemonic phrases={phrases} />
 
-        <View style={{ marginTop: 8, flexDirection: 'row', justifyContent: 'space-between' }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
           <Text style={{ color: secondaryFontColor }}>0xABCDE....09872</Text>
-          <View>
-            <Text>12/24</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <TouchableOpacity style={{ paddingVertical: 8, paddingHorizontal: 4 }}>
+              <Text>12</Text>
+            </TouchableOpacity>
+            <Text style={{ fontSize: 12, marginTop: -2 }}>/</Text>
+            <TouchableOpacity style={{ paddingVertical: 8, paddingHorizontal: 4, zIndex: 5 }}>
+              <Text>24</Text>
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -49,4 +57,4 @@ export default ({ navigation }: NativeStackScreenProps<LandStackNavs, 'Backup'>)
       </View>
     </SafeAreaView>
   );
-};
+});

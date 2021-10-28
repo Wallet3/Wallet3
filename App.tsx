@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 
 import { AntDesign, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import AppViewModel, { App as AppVM } from './viewmodels/App';
+import AppViewModel, { AppVM } from './viewmodels/App';
 import { Button, Dimensions, StyleSheet, Text, View } from 'react-native';
 import { Host, Portal } from 'react-native-portalize';
 import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -27,7 +27,7 @@ type RootStackParamList = {
   Home: undefined;
 };
 
-const Root = ({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>) => {
+const Root = observer(({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>) => {
   const { Navigator, Screen } = DrawerRoot;
 
   return (
@@ -66,24 +66,29 @@ const Root = ({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>
       />
     </Navigator>
   );
-};
+});
 
 const App = observer(({ app }: { app: AppVM }) => {
   const { Navigator, Screen } = StackRoot;
   const { ref: networksModal, open: openNetworksModal, close: closeNetworksModal } = useModalize();
 
   useEffect(() => {
+    app.init();
     PubSub.subscribe('openNetworksModal', () => openNetworksModal());
-    AppViewModel.init();
+
+    return () => AppViewModel.dispose();
   }, []);
 
   return (
     <NavigationContainer>
       <Host>
-        {AppViewModel.initialized ? (
-          <Navigator initialRouteName="Land">
-            <Screen name="Root" component={Root} options={{ headerShown: false }} />
-            <Screen name="Land" component={LandScreen} options={{ headerShown: false }} />
+        {app.initialized ? (
+          <Navigator>
+            {app.hasKeys ? (
+              <Screen name="Root" component={Root} options={{ headerShown: false }} />
+            ) : (
+              <Screen name="Land" component={LandScreen} options={{ headerShown: false }} />
+            )}
           </Navigator>
         ) : undefined}
       </Host>

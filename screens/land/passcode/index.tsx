@@ -7,9 +7,10 @@ import { fontColor, secondaryFontColor, themeColor } from '../../../constants/st
 
 import { LandStackNavs } from '../navs';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 
-export default ({ navigation }: NativeStackScreenProps<LandStackNavs, 'Backup'>) => {
+export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, 'Backup'>) => {
   const passcodeLength = 6;
   const [passcode, setPasscode] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -88,4 +89,4 @@ export default ({ navigation }: NativeStackScreenProps<LandStackNavs, 'Backup'>)
       </View>
     </SafeAreaView>
   );
-};
+});

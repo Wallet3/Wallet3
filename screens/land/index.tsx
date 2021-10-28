@@ -1,6 +1,7 @@
 import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useRef } from 'react';
 
+import { AppVM } from '../../viewmodels/App';
 import Backup from './backup';
 import CreateWallet from './createWallet';
 import ImportWallet from './importWallet';
@@ -8,6 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import SetupPasscode from './passcode';
 import { TouchableOpacity } from 'react-native';
 import Welcome from './welcome';
+import { observer } from 'mobx-react-lite';
 
 type RootStackParamList = {
   Home: undefined;
@@ -17,7 +19,7 @@ type RootStackParamList = {
 
 const { Navigator, Screen } = createNativeStackNavigator();
 
-export default ({ navigation }: NativeStackScreenProps<RootStackParamList, 'Welcome'>) => {
+export default observer(({ navigation }: NativeStackScreenProps<RootStackParamList, 'Welcome'>) => {
   return (
     <Navigator
       screenOptions={{
@@ -37,4 +39,4 @@ export default ({ navigation }: NativeStackScreenProps<RootStackParamList, 'Welc
       <Screen name="SetupPasscode" component={SetupPasscode} options={{ title: 'Set up passcode' }} />
     </Navigator>
   );
-};
+});

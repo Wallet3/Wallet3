@@ -1,6 +1,6 @@
+import Authentication from './Authentication';
 import Key from '../models/Key';
 import { makeObservable } from 'mobx';
-
 export class WalletKey {
   private key: Key;
 
@@ -8,5 +8,11 @@ export class WalletKey {
     this.key = key || new Key();
 
     makeObservable(this, {});
+  }
+
+  async readSecret(pin?: string) {
+    if (!(await Authentication.authenticate({ pin }))) return;
+
+    
   }
 }

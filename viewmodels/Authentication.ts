@@ -36,7 +36,7 @@ class Authentication {
     });
   }
 
-  async authenticate({ pin, options }: { pin?: string; options?: LocalAuthenticationOptions }) {
+  async authenticate({ pin, options }: { pin?: string; options?: LocalAuthenticationOptions } = {}) {
     if (pin) {
       return;
     }
