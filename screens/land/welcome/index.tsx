@@ -1,6 +1,7 @@
 import {} from 'react-native';
 
 import { Text, View } from 'react-native-animatable';
+import { secondaryFontColor, themeColor } from '../../../constants/styles';
 
 import { Button } from '../../../components';
 import { LandStackNavs } from '../navs';
@@ -10,7 +11,6 @@ import { SafeAreaView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet } from 'react-native';
 import styles from '../styles';
-import { themeColor } from '../../../constants/styles';
 import { useFonts } from 'expo-font';
 
 export default ({ navigation }: NativeStackScreenProps<LandStackNavs, 'Welcome'>) => {
@@ -28,6 +28,9 @@ export default ({ navigation }: NativeStackScreenProps<LandStackNavs, 'Welcome'>
         <View style={{ flex: 1 }} />
         <Text animation="fadeInUp" style={{ fontFamily: 'Questrial', fontWeight: '600', fontSize: 42, color: '#6186ff' }}>
           Wallet 3
+        </Text>
+        <Text animation="fadeInUp" delay={500} style={{ color: secondaryFontColor, fontSize: 12, fontWeight: '500' }}>
+          A Secure Wallet for Web3
         </Text>
         <View style={{ flex: 1 }} />
 

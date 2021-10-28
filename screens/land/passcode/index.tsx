@@ -2,11 +2,11 @@ import * as Animatable from 'react-native-animatable';
 
 import { Button, Numpad, NumpadChar } from '../../../components';
 import React, { useEffect, useRef, useState } from 'react';
-import { SafeAreaView, Text, View } from 'react-native';
+import { SafeAreaView, Switch, Text, View } from 'react-native';
+import { fontColor, secondaryFontColor, themeColor } from '../../../constants/styles';
 
 import { LandStackNavs } from '../navs';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { secondaryFontColor } from '../../../constants/styles';
 import styles from '../styles';
 
 export default ({ navigation }: NativeStackScreenProps<LandStackNavs, 'Backup'>) => {
@@ -53,10 +53,7 @@ export default ({ navigation }: NativeStackScreenProps<LandStackNavs, 'Backup'>)
   );
 
   const renderFilledCircle = (index: number) => (
-    <View
-      key={index}
-      style={{ borderRadius: 10, backgroundColor: 'black', width: 20, height: 20, borderWidth: 2, marginHorizontal: 6 }}
-    />
+    <View key={index} style={{ borderRadius: 10, backgroundColor: '#000', width: 20, height: 20, marginHorizontal: 6 }} />
   );
 
   return (
@@ -75,6 +72,17 @@ export default ({ navigation }: NativeStackScreenProps<LandStackNavs, 'Backup'>)
 
         <View style={{ flex: 1 }} />
 
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginVertical: 16,
+            alignItems: 'center',
+          }}
+        >
+          <Text style={{ marginBottom: -3, color: secondaryFontColor }}>Enable Biometrics</Text>
+          <Switch value={true} trackColor={{ true: themeColor }} />
+        </View>
         <Numpad onPress={onNumpadPress} disableDot />
         <Button title="Done" />
       </View>

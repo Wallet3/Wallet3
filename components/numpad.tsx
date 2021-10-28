@@ -103,6 +103,7 @@ const viewStyles = StyleSheet.create({
     borderColor,
     borderWidth: 1,
     marginBottom: 12,
+    overflow: 'hidden',
     flexWrap: 'wrap',
   },
 
