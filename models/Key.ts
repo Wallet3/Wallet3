@@ -9,22 +9,19 @@ export default class Key extends BaseEntity {
   name?: string;
 
   @Column({ nullable: true })
-  saltIv?: string;
-
-  @Column()
-  salt!: string;
-
-  @Column({ nullable: true })
-  mnIv?: string;
-
-  @Column({ nullable: true })
   type?: number; // mnemonic, privkey, keystore
 
-  @Column({ nullable: true })
-  kc_unique?: string;
+  @Column({})
+  iv!: string;
+
+  @Column()
+  secret!: string;
 
   @Column({ default: 10 })
   addrs!: number;
+
+  @Column()
+  xpubkey!: string;
 
   @Column({ default: `m/44''/60''/0''/0`, type: 'text' })
   basePath!: string;

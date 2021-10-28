@@ -1,6 +1,7 @@
 import 'react-native-gesture-handler';
 
 import { AntDesign, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import AppViewModel, { App as AppVM } from './viewmodels/App';
 import { Button, Dimensions, StyleSheet, Text, View } from 'react-native';
 import { Host, Portal } from 'react-native-portalize';
 import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -14,8 +15,8 @@ import { Modalize } from 'react-native-modalize';
 import NetworksView from './modals/Networks';
 import PubSub from 'pubsub-js';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import WalletMan from './viewmodels/WalletManager';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 const DrawerRoot = createDrawerNavigator();
@@ -24,8 +25,6 @@ const screenWidth = Dimensions.get('window').width;
 
 type RootStackParamList = {
   Home: undefined;
-  Details?: { userId?: number };
-  Feed: { sort: 'latest' | 'top' } | undefined;
 };
 
 const Root = ({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>) => {
@@ -69,24 +68,24 @@ const Root = ({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>
   );
 };
 
-export default function App() {
+const App = observer(({ app }: { app: AppVM }) => {
   const { Navigator, Screen } = StackRoot;
   const { ref: networksModal, open: openNetworksModal, close: closeNetworksModal } = useModalize();
 
   useEffect(() => {
     PubSub.subscribe('openNetworksModal', () => openNetworksModal());
-    WalletMan.init();
+    AppViewModel.init();
   }, []);
-
-  useCallback(() => {}, []);
 
   return (
     <NavigationContainer>
       <Host>
-        <Navigator initialRouteName="Land">
-          <Screen name="Root" component={Root} options={{ headerShown: false }} />
-          <Screen name="Land" component={LandScreen} options={{ headerShown: false }} />
-        </Navigator>
+        {AppViewModel.initialized ? (
+          <Navigator initialRouteName="Land">
+            <Screen name="Root" component={Root} options={{ headerShown: false }} />
+            <Screen name="Land" component={LandScreen} options={{ headerShown: false }} />
+          </Navigator>
+        ) : undefined}
       </Host>
 
       <Modalize
@@ -102,4 +101,6 @@ export default function App() {
       </Modalize>
     </NavigationContainer>
   );
-}
+});
+
+export default () => <App app={AppViewModel} />;
