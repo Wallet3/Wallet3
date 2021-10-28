@@ -7,7 +7,7 @@ import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navig
 import { NavigationContainer, RouteProp } from '@react-navigation/native';
 import React, { useEffect, useRef } from 'react';
 
-import { Drawer } from './move/components';
+import { Drawer } from './components';
 import HomeScreen from './move/screens/home';
 import LandScreen from './move/screens/land';
 import { Modalize } from 'react-native-modalize';
