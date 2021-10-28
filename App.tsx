@@ -1,4 +1,5 @@
 import 'react-native-gesture-handler';
+import './configs/polyfill'
 
 import { AntDesign, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import AppViewModel, { AppVM } from './viewmodels/App';

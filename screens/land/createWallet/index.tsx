@@ -1,11 +1,13 @@
 import { Button, Mnemonic } from '../../../components';
+import React, { useEffect } from 'react';
 import { SafeAreaView, Text, View } from 'react-native';
 import { secondaryFontColor, themeColor } from '../../../constants/styles';
 
+import App from '../../../viewmodels/App';
 import { LandStackNavs } from '../navs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import MenmonicOnce from '../../../viewmodels/MenmonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
@@ -13,6 +15,10 @@ import styles from '../styles';
 const phrases = 'brisk casual lunch sudden trust path impose october prosper chunk deposit claw become oil strike'.split(' ');
 
 export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, 'Backup'>) => {
+  useEffect(() => {
+    MenmonicOnce.generate();
+  }, []);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.rootContainer}>
