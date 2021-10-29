@@ -1,3 +1,4 @@
+import * as Random from 'expo-random';
 import * as SecureStore from 'expo-secure-store';
 
 import {
@@ -11,6 +12,13 @@ import {
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { sha256 } from '../utils/digest';
+
+const keys = {
+  enableBiometrics: 'enableBiometrics',
+  masterKey: 'masterKey',
+  pin: 'pin',
+};
 
 class Authentication {
   biometricsSupported = false;
@@ -29,12 +37,17 @@ class Authentication {
   }
 
   async init() {
-    const [supported, enrolled, supportedTypes, enableBiometrics] = await Promise.all([
+    const [supported, enrolled, supportedTypes, enableBiometrics, masterKey] = await Promise.all([
       hasHardwareAsync(),
       isEnrolledAsync(),
       supportedAuthenticationTypesAsync(),
-      AsyncStorage.getItem('enableBiometrics'),
+      AsyncStorage.getItem(keys.enableBiometrics),
+      SecureStore.getItemAsync(keys.masterKey),
     ]);
+
+    if (!masterKey) {
+      SecureStore.setItemAsync(keys.masterKey, Buffer.from(Random.getRandomBytes(8)).toString('hex'));
+    }
 
     runInAction(() => {
       this.biometricsSupported = supported && enrolled;
@@ -43,8 +56,9 @@ class Authentication {
     });
   }
 
-  async authenticate({ pin, options }: { pin?: string; options?: LocalAuthenticationOptions } = {}) {
-    if (pin) return pin === (await SecureStore.getItemAsync('pin'));
+  async authenticate({ pin, options }: { pin?: string; options?: LocalAuthenticationOptions } = {}): Promise<boolean> {
+    if (pin) return await this.verifyPin(pin);
+    if (!this.biometricsSupported) return false;
 
     const { success } = await authenticateAsync(options);
     return success;
@@ -52,11 +66,15 @@ class Authentication {
 
   setBiometrics(enabled: boolean) {
     this.biometricsEnabled = enabled;
-    AsyncStorage.setItem('enableBiometrics', enabled.toString());
+    AsyncStorage.setItem(keys.enableBiometrics, enabled.toString());
   }
 
   async setupPin(pin: string) {
-    await SecureStore.setItemAsync('pin', pin);
+    await SecureStore.setItemAsync(keys.pin, await sha256(pin));
+  }
+
+  async verifyPin(pin: string) {
+    return (await sha256(pin)) === (await SecureStore.getItemAsync(keys.pin));
   }
 }
 

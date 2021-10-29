@@ -108,6 +108,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, '
           onPress={async () => {
             setBusy(true);
             await Authentication.setupPin(passcode);
+
             if (Authentication.biometricsEnabled) await Authentication.authenticate();
 
             MnemonicOnce.save();
