@@ -1,8 +1,8 @@
 import * as Animatable from 'react-native-animatable';
 
-import { Button, Numpad, NumpadChar } from '../../../components';
+import { Button, Loader, Numpad, NumpadChar } from '../../../components';
+import { Modal, SafeAreaView, Switch, Text, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
-import { SafeAreaView, Switch, Text, View } from 'react-native';
 import { fontColor, secondaryFontColor, themeColor } from '../../../constants/styles';
 
 import Authentication from '../../../viewmodels/Authentication';
@@ -16,6 +16,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, '
   const passcodeLength = 6;
   const [passcode, setPasscode] = useState('');
   const [confirm, setConfirm] = useState('');
+  const [busy, setBusy] = useState(false);
   const [verified, setVerified] = useState(false);
 
   const passcodeView = useRef<Animatable.View>(null);
@@ -103,15 +104,19 @@ export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, '
 
         <Button
           title="Done"
-          disabled={!verified}
+          disabled={!verified || busy}
           onPress={async () => {
+            setBusy(true);
             await Authentication.setupPin(passcode);
             if (Authentication.biometricsEnabled) await Authentication.authenticate();
 
             MnemonicOnce.save();
+            setBusy(false);
           }}
         />
       </View>
+
+      <Loader loading={busy} />
     </SafeAreaView>
   );
 });
