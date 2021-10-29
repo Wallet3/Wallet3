@@ -13,13 +13,16 @@ interface Props {
 }
 
 export default (props: Props) => {
+  const { disabled } = props;
+
   return (
     <TouchableOpacity
       onPress={() => props.onPress?.()}
+      disabled={disabled}
       style={{
         ...styles.default,
         ...((props?.style as any) || {}),
-        backgroundColor: props?.disabled
+        backgroundColor: disabled
           ? 'lightgrey'
           : (props?.style as ViewStyle)?.backgroundColor || styles.default.backgroundColor,
       }}
