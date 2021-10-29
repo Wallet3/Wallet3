@@ -17,8 +17,11 @@ export class Wallet {
 
   async init() {
     const count = Number((await AsyncStorage.getItem('genAddressCount')) || 1);
-    const xprivkey = await Authentication.decrypt(this.key.xprivkey);
-    ethers.utils.HDNode.fromExtendedKey(xprivkey).derivePath('0').address;
+    const bip32 = ethers.utils.HDNode.fromExtendedKey(this.key.bip32Xpubkey);
+
+    for (let i = 0; i < count; i++) {
+      const account = bip32.derivePath(`${i}`);
+    }
     console.log();
   }
 }

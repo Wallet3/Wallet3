@@ -8,6 +8,7 @@ import { DEFAULT_DERIVATION_PATH } from '../common/Constants';
 import Key from '../models/Key';
 import { langToWordlist } from '../utils/mnemonic';
 import { makeAutoObservable } from 'mobx';
+import { xpubkeyFromHDNode } from '../utils/bip32';
 
 class MnemonicOnce {
   secret = '';
@@ -43,17 +44,22 @@ class MnemonicOnce {
 
   async save() {
     const root = ethers.utils.HDNode.fromMnemonic(this.secret);
-    const main = root.derivePath(this.derivationPath);
-    const xprivkey = main.extendedKey;
+    const bip32 = root.derivePath(this.derivationPath);
+    console.log(this.secret);
+
+    const bip32XPubkey = xpubkeyFromHDNode(bip32);
+    console.log(bip32.extendedKey);
+    console.log(bip32XPubkey);
 
     const key = new Key();
     key.id = Date.now();
     key.secret = await Authentication.encrypt(this.secret);
-    key.xprivkey = await Authentication.encrypt(xprivkey);
+    key.bip32Xprivkey = await Authentication.encrypt(bip32.extendedKey);
+    key.bip32Xpubkey = bip32XPubkey;
     key.basePath = this.derivationPath;
     key.basePathIndex = this.derivationIndex;
 
-    await key.save();
+    // await key.save();
   }
 
   clean() {}

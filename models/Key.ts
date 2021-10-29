@@ -12,7 +12,10 @@ export default class Key extends BaseEntity {
   secret!: string;
 
   @Column({ type: 'text', default: '' })
-  xprivkey!: string;
+  bip32Xpubkey!: string;
+
+  @Column({ type: 'text', default: '' })
+  bip32Xprivkey!: string;
 
   @Column({ default: `m/44''/60''/0''/0`, type: 'text' })
   basePath!: string;
