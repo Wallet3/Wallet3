@@ -21,7 +21,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, '
   const [verified, setVerified] = React.useState(false);
 
   useEffect(() => {
-    setVerified(ethers.utils.isValidMnemonic(mnemonic, langToWordlist(mnemonic)));
+    setVerified(MnemonicOnce.setMnemonic(mnemonic));
   }, [mnemonic]);
 
   return (
@@ -61,8 +61,12 @@ export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, '
           paddingHorizontal: 2,
         }}
       >
-        <Text style={{ fontSize: 16, color: secondaryFontColor }}>Derivation Path</Text>
-        <TextInput style={{ fontSize: 16, color: themeColor }} defaultValue={`m/44'/60'/0'/0/0`} />
+        <Text style={{ fontSize: 17, color: secondaryFontColor }}>Derivation Path</Text>
+        <TextInput
+          style={{ fontSize: 17, color: themeColor }}
+          defaultValue={`m/44'/60'/0'/0/0`}
+          onChangeText={(txt) => MnemonicOnce.setDerivationPath(txt)}
+        />
       </View>
 
       <View style={{ flex: 1 }} />

@@ -2,12 +2,12 @@ import * as Random from 'expo-random';
 import * as ethers from 'ethers';
 
 import { decrypt, encrypt } from '../utils/cipher';
-import { makeAutoObservable, makeObservable, runInAction } from 'mobx';
 
 import Authentication from './Authentication';
 import { DEFAULT_DERIVATION_PATH } from '../common/Constants';
 import Key from '../models/Key';
-import { WalletKey } from './WalletKey';
+import { langToWordlist } from '../utils/mnemonic';
+import { makeAutoObservable } from 'mobx';
 
 class MnemonicOnce {
   secret = '';
@@ -27,16 +27,30 @@ class MnemonicOnce {
     this.secret = ethers.utils.entropyToMnemonic(entropy);
   }
 
+  setMnemonic(mnemonic: string) {
+    if (!ethers.utils.isValidMnemonic(mnemonic, langToWordlist(mnemonic))) return false;
+    this.secret = mnemonic;
+
+    return true;
+  }
+
+  async setDerivationPath(fullPath: string) {
+    if (!fullPath.startsWith('m/')) return;
+    const lastSlash = fullPath.lastIndexOf('/');
+    this.derivationPath = fullPath.substring(0, lastSlash) || DEFAULT_DERIVATION_PATH;
+    this.derivationIndex = Number.parseInt(fullPath.substring(lastSlash + 1)) || 0;
+  }
+
   async save() {
     const root = ethers.utils.HDNode.fromMnemonic(this.secret);
     const main = root.derivePath(this.derivationPath);
     const xprivkey = main.extendedKey;
-    ethers.utils.HDNode.fromExtendedKey(xprivkey).derivePath('0').address;
+    console.log(ethers.utils.HDNode.fromExtendedKey(xprivkey).derivePath('0').address);
 
     const key = new Key();
     key.id = Date.now();
     key.secret = encrypt(this.secret, await Authentication.getMasterKey());
-    key.xprvkey = encrypt(xprivkey, await Authentication.getMasterKey());
+    key.xprivkey = encrypt(xprivkey, await Authentication.getMasterKey());
     key.basePath = this.derivationPath;
     key.basePathIndex = this.derivationIndex;
 
