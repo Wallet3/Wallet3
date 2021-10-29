@@ -2,11 +2,11 @@ import { computed, keys, makeObservable, observable, runInAction } from 'mobx';
 
 import Authentication from './Authentication';
 import Database from '../models/Database';
-import { WalletKey } from './WalletKey';
+import { Wallet } from './Wallet';
 
 export class AppVM {
   initialized = false;
-  keys: WalletKey[] = [];
+  keys: Wallet[] = [];
 
   get hasWallet() {
     return this.keys.length > 0;
@@ -22,7 +22,7 @@ export class AppVM {
 
   async init() {
     await Promise.all([Database.init(), Authentication.init()]);
-    const keys = (await Database.keyRepository.find()).map((key) => new WalletKey(key));
+    const keys = (await Database.keyRepository.find()).map((key) => new Wallet(key));
 
     runInAction(() => {
       this.initialized = true;

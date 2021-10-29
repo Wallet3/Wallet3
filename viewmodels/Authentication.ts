@@ -10,10 +10,10 @@ import {
   supportedAuthenticationTypesAsync,
 } from 'expo-local-authentication';
 import { action, makeObservable, observable, runInAction } from 'mobx';
+import { decrypt, encrypt, sha256 } from '../utils/cipher';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { appEncryptKey } from '../configs/secret';
-import { sha256 } from '../utils/cipher';
 
 const keys = {
   enableBiometrics: 'enableBiometrics',
@@ -80,6 +80,14 @@ class Authentication {
 
   async getMasterKey() {
     return `${await SecureStore.getItemAsync(keys.masterKey)}_${appEncryptKey}`;
+  }
+
+  async encrypt(data: string) {
+    return encrypt(data, await this.getMasterKey());
+  }
+
+  async decrypt(data: string) {
+    return decrypt(data, await this.getMasterKey());
   }
 }
 
