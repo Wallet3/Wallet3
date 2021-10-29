@@ -5,7 +5,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaView, Switch, Text, View } from 'react-native';
 import { fontColor, secondaryFontColor, themeColor } from '../../../constants/styles';
 
+import Authentication from '../../../viewmodels/Authentication';
 import { LandStackNavs } from '../navs';
+import MnemonicOnce from '../../../viewmodels/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
@@ -15,6 +17,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, '
   const [passcode, setPasscode] = useState('');
   const [confirm, setConfirm] = useState('');
   const [verified, setVerified] = useState(false);
+
   const passcodeView = useRef<Animatable.View>(null);
   const tipView = useRef<Animatable.Text>(null);
 
@@ -35,7 +38,10 @@ export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, '
   };
 
   useEffect(() => {
-    if (passcode.length < passcodeLength) return;
+    if (passcode.length < passcodeLength) {
+      setVerified(false);
+      return;
+    }
 
     if (confirm) {
       if (passcode === confirm) {
@@ -85,12 +91,26 @@ export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, '
           }}
         >
           <Text style={{ marginBottom: -3, color: secondaryFontColor }}>Enable Biometrics</Text>
-          <Switch value={true} trackColor={{ true: themeColor }} />
+
+          <Switch
+            value={Authentication.biometricsEnabled}
+            trackColor={{ true: themeColor }}
+            onValueChange={(v) => Authentication.setBiometrics(v)}
+          />
         </View>
 
         <Numpad onPress={onNumpadPress} disableDot />
 
-        <Button title="Done" disabled={!verified} />
+        <Button
+          title="Done"
+          disabled={!verified}
+          onPress={async () => {
+            await Authentication.setupPin(passcode);
+            if (Authentication.biometricsEnabled) await Authentication.authenticate();
+
+            MnemonicOnce.save();
+          }}
+        />
       </View>
     </SafeAreaView>
   );

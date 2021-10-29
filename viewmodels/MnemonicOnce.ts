@@ -6,7 +6,6 @@ import { makeAutoObservable, makeObservable, runInAction } from 'mobx';
 import { WalletKey } from './WalletKey';
 
 class MnemonicOnce {
-  key = new WalletKey();
   secret = '';
   derivationPath = `m/44'/60'/0'/0`;
 
@@ -28,6 +27,8 @@ class MnemonicOnce {
     const main = root.derivePath(this.derivationPath);
     const xprivkey = main.extendedKey;
     ethers.utils.HDNode.fromExtendedKey(xprivkey).derivePath('0').address;
+
+    const key = new WalletKey();
   }
 
   clean() {}
