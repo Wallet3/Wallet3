@@ -15,6 +15,7 @@
     "@react-navigation/elements": "^1.2.1",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
+    "crypto-es": "^1.2.7",
     "ethereumjs-wallet": "^1.0.2",
     "ethers": "^5.5.1",
     "expo": "~43.0.1",

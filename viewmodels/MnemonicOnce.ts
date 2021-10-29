@@ -3,7 +3,10 @@ import * as ethers from 'ethers';
 
 import { makeAutoObservable, makeObservable, runInAction } from 'mobx';
 
+import Authentication from './Authentication';
+import Key from '../models/Key';
 import { WalletKey } from './WalletKey';
+import { encrypt } from '../utils/cipher';
 
 class MnemonicOnce {
   secret = '';
@@ -22,13 +25,17 @@ class MnemonicOnce {
     this.secret = ethers.utils.entropyToMnemonic(entropy);
   }
 
-  save() {
+  async save() {
     const root = ethers.utils.HDNode.fromMnemonic(this.secret);
     const main = root.derivePath(this.derivationPath);
     const xprivkey = main.extendedKey;
     ethers.utils.HDNode.fromExtendedKey(xprivkey).derivePath('0').address;
 
-    const key = new WalletKey();
+    let n = Date.now();
+    const key = new Key();
+    key.secret = encrypt(this.secret, await Authentication.getMasterKey());
+    console.log(key.secret);
+    console.log(Date.now() - n);
   }
 
   clean() {}

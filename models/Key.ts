@@ -12,9 +12,6 @@ export default class Key extends BaseEntity {
   type?: number; // mnemonic, privkey, keystore
 
   @Column()
-  secretIv!: string;
-
-  @Column()
   secret!: string;
 
   @Column({ default: 10 })
@@ -22,9 +19,6 @@ export default class Key extends BaseEntity {
 
   @Column({ type: 'text' })
   xprvkey!: string;
-
-  @Column()
-  xprivKeyIv!: string;
 
   @Column({ default: `m/44''/60''/0''/0`, type: 'text' })
   basePath!: string;

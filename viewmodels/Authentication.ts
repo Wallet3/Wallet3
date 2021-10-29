@@ -12,7 +12,8 @@ import {
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { sha256 } from '../utils/digest';
+import { appEncryptKey } from '../configs/secret';
+import { sha256 } from '../utils/cipher';
 
 const keys = {
   enableBiometrics: 'enableBiometrics',
@@ -75,6 +76,10 @@ class Authentication {
 
   async verifyPin(pin: string) {
     return (await sha256(pin)) === (await SecureStore.getItemAsync(keys.pin));
+  }
+
+  async getMasterKey() {
+    return `${await SecureStore.getItemAsync(keys.masterKey)}_${appEncryptKey}`;
   }
 }
 
