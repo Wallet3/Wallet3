@@ -1,22 +1,20 @@
 import { Button, Mnemonic } from '../../../components';
 import React, { useEffect } from 'react';
 import { SafeAreaView, Text, View } from 'react-native';
-import { secondaryFontColor, themeColor } from '../../../constants/styles';
+import { fontColor, secondaryFontColor, themeColor } from '../../../constants/styles';
 
-import App from '../../../viewmodels/App';
 import { LandStackNavs } from '../navs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import MenmonicOnce from '../../../viewmodels/MenmonicOnce';
+import MnemonicOnce from '../../../viewmodels/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { formatAddress } from '../../../utils/formatter';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 
-const phrases = 'brisk casual lunch sudden trust path impose october prosper chunk deposit claw become oil strike'.split(' ');
-
 export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, 'Backup'>) => {
   useEffect(() => {
-    MenmonicOnce.generate();
+    MnemonicOnce.generate();
   }, []);
 
   return (
@@ -36,17 +34,17 @@ export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, '
           </Text>
         </View>
 
-        <Mnemonic phrases={phrases} />
+        <Mnemonic phrases={MnemonicOnce.secretWords} />
 
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Text style={{ color: secondaryFontColor }}>0xABCDE....09872</Text>
+          <Text style={{ color: secondaryFontColor }}></Text>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <TouchableOpacity style={{ paddingVertical: 8, paddingHorizontal: 4 }}>
-              <Text>12</Text>
+            <TouchableOpacity style={{ padding: 8, paddingEnd: 10 }} onPress={() => MnemonicOnce.generate(12)}>
+              <Text style={{ color: MnemonicOnce.secretWords.length === 12 ? fontColor : secondaryFontColor }}>12</Text>
             </TouchableOpacity>
             <Text style={{ fontSize: 12, marginTop: -2 }}>/</Text>
-            <TouchableOpacity style={{ paddingVertical: 8, paddingHorizontal: 4, zIndex: 5 }}>
-              <Text>24</Text>
+            <TouchableOpacity style={{ padding: 8, zIndex: 5 }} onPress={() => MnemonicOnce.generate(24)}>
+              <Text style={{ color: MnemonicOnce.secretWords.length === 24 ? fontColor : secondaryFontColor }}>24</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -55,11 +53,18 @@ export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, '
 
         <Button
           title="Backup later"
+          disabled={MnemonicOnce.secretWords.length < 12}
           style={styles.borderButton}
           txtStyle={{ color: themeColor, textTransform: 'none' }}
           onPress={() => navigation.navigate('SetupPasscode')}
         />
-        <Button title="Backup now" txtStyle={{ textTransform: 'none' }} onPress={() => navigation.navigate('Backup')} />
+        
+        <Button
+          title="Backup now"
+          disabled={MnemonicOnce.secretWords.length < 12}
+          txtStyle={{ textTransform: 'none' }}
+          onPress={() => navigation.navigate('Backup')}
+        />
       </View>
     </SafeAreaView>
   );

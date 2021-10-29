@@ -3,12 +3,14 @@ import { borderColor, secondaryFontColor, themeColor } from '../../../constants/
 
 import { Button } from '../../../components';
 import { LandStackNavs } from '../navs';
+import MnemonicOnce from '../../../viewmodels/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
+import { observer } from 'mobx-react-lite';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-export default ({ navigation }: NativeStackScreenProps<LandStackNavs, 'Backup'>) => {
+export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, 'Backup'>) => {
   const headerHeight = useHeaderHeight();
   const { bottom } = useSafeAreaInsets();
 
@@ -56,4 +58,4 @@ export default ({ navigation }: NativeStackScreenProps<LandStackNavs, 'Backup'>)
       <Button title="Next" onPress={() => navigation.navigate('SetupPasscode')} />
     </ScrollView>
   );
-};
+});

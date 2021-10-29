@@ -6,6 +6,7 @@ import { SafeAreaView, Switch, Text, View } from 'react-native';
 import { fontColor, secondaryFontColor, themeColor } from '../../../constants/styles';
 
 import { LandStackNavs } from '../navs';
+import MnemonicOnce from '../../../viewmodels/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';

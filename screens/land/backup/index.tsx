@@ -1,25 +1,45 @@
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, Text, TouchableHighlight, View } from 'react-native';
 import { borderColor, fontColor, secondaryFontColor } from '../../../constants/styles';
 
 import { Button } from '../../../components';
 import { Ionicons } from '@expo/vector-icons';
 import { LandStackNavs } from '../navs';
+import MnemonicOnce from '../../../viewmodels/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import _ from 'lodash';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 
-const phrases = 'brisk casual lunch sudden trust path impose october prosper chunk deposit claw become oil strike'.split(' ');
-
 export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, 'Backup'>) => {
+  const [sorted, setSorted] = useState<string[]>([]);
+  const [shuffled, setShuffled] = useState<string[]>([]);
+  const [verified, setVerified] = useState(false);
+
+  const onStaticWordPress = (word: string, index: number) => {
+    setSorted((pre) => [...pre, word]);
+    setShuffled((pre) => [...pre.slice(0, index), ...pre.slice(index + 1)]);
+  };
+
+  const delSortedWord = (word: string, index: number) => {
+    setSorted((pre) => [...pre.slice(0, index), ...pre.slice(index + 1)]);
+    setShuffled((pre) => [...pre, word]);
+  };
+
+  useEffect(() => setShuffled(_.shuffle(MnemonicOnce.secretWords)), []);
+
+  useEffect(() => {
+    setVerified(_.isEqual(sorted, MnemonicOnce.secretWords));
+  }, [sorted]);
+
   const renderStaticWords = (words: string[]) => (
     <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
       {words.map((word, index) => (
         <TouchableHighlight
           underlayColor={borderColor}
           key={index}
-          onPress={() => {}}
+          onPress={() => onStaticWordPress(word, index)}
           style={{
             padding: 12,
             paddingVertical: 8,
@@ -40,6 +60,8 @@ export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, '
     <ScrollView
       contentContainerStyle={{
         padding: 12,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
       }}
       style={{
         backgroundColor: borderColor,
@@ -50,37 +72,36 @@ export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, '
         maxHeight: 200,
       }}
     >
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-        {words.map((word, index) => (
-          <View
-            key={index}
+      {words.map((word, index) => (
+        <View
+          key={index}
+          style={{
+            padding: 12,
+            paddingEnd: 0,
+            paddingVertical: 0,
+            borderColor: secondaryFontColor,
+            borderWidth: 1,
+            borderRadius: 7,
+            marginEnd: 12,
+            marginBottom: 8,
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+        >
+          <Text style={{ fontSize: 14 }}>{word}</Text>
+          <TouchableOpacity
+            onPress={() => delSortedWord(word, index)}
             style={{
-              padding: 12,
-              paddingEnd: 0,
-              paddingVertical: 0,
-              borderColor: secondaryFontColor,
-              borderWidth: 1,
-              borderRadius: 7,
-              marginEnd: 12,
-              marginBottom: 8,
-              flexDirection: 'row',
-              alignItems: 'center',
+              paddingStart: 8,
+              paddingVertical: 8,
+              paddingEnd: 8,
+              marginBottom: -2,
             }}
           >
-            <Text style={{ fontSize: 14 }}>{word}</Text>
-            <TouchableOpacity
-              style={{
-                paddingStart: 8,
-                paddingVertical: 8,
-                paddingEnd: 8,
-                marginBottom: -2,
-              }}
-            >
-              <Ionicons name="close" size={12} color={fontColor} />
-            </TouchableOpacity>
-          </View>
-        ))}
-      </View>
+            <Ionicons name="close" size={12} color={fontColor} />
+          </TouchableOpacity>
+        </View>
+      ))}
     </ScrollView>
   );
 
@@ -89,12 +110,13 @@ export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, '
       <View style={styles.rootContainer}>
         <Text>Please sort the words correctly. </Text>
 
-        {renderSortedWords([...phrases].slice(0, 24))}
+        {renderSortedWords(sorted.filter((i) => i))}
 
-        {renderStaticWords(phrases)}
+        {renderStaticWords(shuffled)}
 
         <View style={{ flex: 1 }} />
-        <Button title="Next" onPress={() => navigation.navigate('SetupPasscode')} />
+
+        <Button title="Next" disabled={!verified} onPress={() => navigation.navigate('SetupPasscode')} />
       </View>
     </SafeAreaView>
   );
