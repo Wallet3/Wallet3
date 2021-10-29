@@ -8,7 +8,7 @@ export class AppVM {
   initialized = false;
   keys: WalletKey[] = [];
 
-  get hasKeys() {
+  get hasWallet() {
     return this.keys.length > 0;
   }
 
@@ -16,7 +16,7 @@ export class AppVM {
     makeObservable(this, {
       initialized: observable,
       keys: observable,
-      hasKeys: computed,
+      hasWallet: computed,
     });
   }
 

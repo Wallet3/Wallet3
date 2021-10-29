@@ -4,4 +4,6 @@ export type LandStackNavs = {
   CreateWallet: undefined;
   Backup: undefined;
   SetupPasscode: undefined;
+  Home: undefined;
+  Root: undefined;
 };

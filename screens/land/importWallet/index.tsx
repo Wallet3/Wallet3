@@ -1,3 +1,6 @@
+import * as ethers from 'ethers';
+
+import React, { useEffect } from 'react';
 import { ScrollView, Text, TextInput, View } from 'react-native';
 import { borderColor, secondaryFontColor, themeColor } from '../../../constants/styles';
 
@@ -5,7 +8,7 @@ import { Button } from '../../../components';
 import { LandStackNavs } from '../navs';
 import MnemonicOnce from '../../../viewmodels/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React from 'react';
+import { langToWordlist } from '../../../utils/mnemonic';
 import { observer } from 'mobx-react-lite';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -13,6 +16,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, 'Backup'>) => {
   const headerHeight = useHeaderHeight();
   const { bottom } = useSafeAreaInsets();
+
+  const [mnemonic, setMnemonic] = React.useState('');
+  const [verified, setVerified] = React.useState(false);
+
+  useEffect(() => {
+    setVerified(ethers.utils.isValidMnemonic(mnemonic, langToWordlist(mnemonic)));
+  }, [mnemonic]);
 
   return (
     <ScrollView
@@ -28,12 +38,14 @@ export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, '
           height: 200,
           textAlignVertical: 'top',
           borderWidth: 1,
+          lineHeight: 22,
           borderColor: themeColor,
           borderRadius: 10,
           padding: 8,
           paddingVertical: 24,
           fontSize: 16,
         }}
+        onChangeText={(txt) => setMnemonic(txt)}
         autoCapitalize="none"
         keyboardType="default"
       />
@@ -55,7 +67,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, '
 
       <View style={{ flex: 1 }} />
 
-      <Button title="Next" onPress={() => navigation.navigate('SetupPasscode')} />
+      <Button title="Next" disabled={!verified} onPress={() => navigation.navigate('SetupPasscode')} />
     </ScrollView>
   );
 });

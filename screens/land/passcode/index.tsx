@@ -5,6 +5,7 @@ import { Modal, SafeAreaView, Switch, Text, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { fontColor, secondaryFontColor, themeColor } from '../../../constants/styles';
 
+import AppVM from '../../../viewmodels/App';
 import Authentication from '../../../viewmodels/Authentication';
 import { LandStackNavs } from '../navs';
 import MnemonicOnce from '../../../viewmodels/MnemonicOnce';
@@ -59,6 +60,20 @@ export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, '
     tipView.current?.fadeIn?.();
   }, [passcode]);
 
+  const finishInitialization = async () => {
+    setBusy(true);
+
+    await Authentication.setupPin(passcode);
+
+    if (Authentication.biometricsEnabled) await Authentication.authenticate();
+
+    await MnemonicOnce.save();
+
+    setBusy(false);
+
+    await AppVM.init();
+  };
+
   const renderEmptyCircle = (index: number) => (
     <View key={index} style={{ borderRadius: 10, width: 20, height: 20, borderWidth: 2, marginHorizontal: 6 }} />
   );
@@ -102,19 +117,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, '
 
         <Numpad onPress={onNumpadPress} disableDot />
 
-        <Button
-          title="Done"
-          disabled={!verified || busy}
-          onPress={async () => {
-            setBusy(true);
-            await Authentication.setupPin(passcode);
-
-            if (Authentication.biometricsEnabled) await Authentication.authenticate();
-
-            MnemonicOnce.save();
-            setBusy(false);
-          }}
-        />
+        <Button title="Done" disabled={!verified || busy} onPress={() => finishInitialization()} />
       </View>
 
       <Loader loading={busy} />

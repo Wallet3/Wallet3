@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import './configs/polyfill'
+import './configs/polyfill';
 
 import { AntDesign, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import AppViewModel, { AppVM } from './viewmodels/App';
@@ -85,7 +85,7 @@ const App = observer(({ app }: { app: AppVM }) => {
       <Host>
         {app.initialized ? (
           <Navigator>
-            {app.hasKeys ? (
+            {app.hasWallet ? (
               <Screen name="Root" component={Root} options={{ headerShown: false }} />
             ) : (
               <Screen name="Land" component={LandScreen} options={{ headerShown: false }} />

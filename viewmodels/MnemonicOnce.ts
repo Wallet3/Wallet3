@@ -34,6 +34,7 @@ class MnemonicOnce {
     ethers.utils.HDNode.fromExtendedKey(xprivkey).derivePath('0').address;
 
     const key = new Key();
+    key.id = Date.now();
     key.secret = encrypt(this.secret, await Authentication.getMasterKey());
     key.xprvkey = encrypt(xprivkey, await Authentication.getMasterKey());
     key.basePath = this.derivationPath;
