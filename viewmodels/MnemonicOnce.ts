@@ -1,16 +1,18 @@
 import * as Random from 'expo-random';
 import * as ethers from 'ethers';
 
+import { decrypt, encrypt } from '../utils/cipher';
 import { makeAutoObservable, makeObservable, runInAction } from 'mobx';
 
 import Authentication from './Authentication';
+import { DEFAULT_DERIVATION_PATH } from '../common/Constants';
 import Key from '../models/Key';
 import { WalletKey } from './WalletKey';
-import { encrypt } from '../utils/cipher';
 
 class MnemonicOnce {
   secret = '';
-  derivationPath = `m/44'/60'/0'/0`;
+  derivationPath = DEFAULT_DERIVATION_PATH;
+  derivationIndex = 0;
 
   get secretWords() {
     return this.secret.split(' ');
@@ -31,11 +33,13 @@ class MnemonicOnce {
     const xprivkey = main.extendedKey;
     ethers.utils.HDNode.fromExtendedKey(xprivkey).derivePath('0').address;
 
-    let n = Date.now();
     const key = new Key();
     key.secret = encrypt(this.secret, await Authentication.getMasterKey());
-    console.log(key.secret);
-    console.log(Date.now() - n);
+    key.xprvkey = encrypt(xprivkey, await Authentication.getMasterKey());
+    key.basePath = this.derivationPath;
+    key.basePathIndex = this.derivationIndex;
+
+    await key.save();
   }
 
   clean() {}

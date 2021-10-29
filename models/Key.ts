@@ -8,16 +8,10 @@ export default class Key extends BaseEntity {
   @Column({ nullable: true })
   name?: string;
 
-  @Column({ nullable: true })
-  type?: number; // mnemonic, privkey, keystore
-
-  @Column()
+  @Column({ type: 'text' })
   secret!: string;
 
-  @Column({ default: 10 })
-  addrs!: number;
-
-  @Column({ type: 'text' })
+  @Column({ type: 'text', default: '' })
   xprvkey!: string;
 
   @Column({ default: `m/44''/60''/0''/0`, type: 'text' })
