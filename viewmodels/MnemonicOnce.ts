@@ -45,11 +45,11 @@ class MnemonicOnce {
   async save() {
     const root = ethers.utils.HDNode.fromMnemonic(this.secret);
     const bip32 = root.derivePath(this.derivationPath);
-    console.log(this.secret);
-
     const bip32XPubkey = xpubkeyFromHDNode(bip32);
-    console.log(bip32.extendedKey);
-    console.log(bip32XPubkey);
+
+    // console.log(this.secret);
+    // console.log(bip32.extendedKey);
+    // console.log(bip32XPubkey);
 
     const key = new Key();
     key.id = Date.now();
@@ -59,7 +59,7 @@ class MnemonicOnce {
     key.basePath = this.derivationPath;
     key.basePathIndex = this.derivationIndex;
 
-    // await key.save();
+    await key.save();
   }
 
   clean() {}

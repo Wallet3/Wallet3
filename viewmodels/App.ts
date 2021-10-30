@@ -6,27 +6,27 @@ import { Wallet } from './Wallet';
 
 export class AppVM {
   initialized = false;
-  keys: Wallet[] = [];
+  wallets: Wallet[] = [];
 
   get hasWallet() {
-    return this.keys.length > 0;
+    return this.wallets.length > 0;
   }
 
   constructor() {
     makeObservable(this, {
       initialized: observable,
-      keys: observable,
+      wallets: observable,
       hasWallet: computed,
     });
   }
 
   async init() {
     await Promise.all([Database.init(), Authentication.init()]);
-    const keys = (await Database.keyRepository.find()).map((key) => new Wallet(key));
+    const wallets = await Promise.all((await Database.keyRepository.find()).map((key) => new Wallet(key).init()));
 
     runInAction(() => {
       this.initialized = true;
-      this.keys = keys;
+      this.wallets = wallets;
     });
   }
 

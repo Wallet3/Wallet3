@@ -71,7 +71,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, '
 
     setBusy(false);
 
-    // await AppVM.init();
+    await AppVM.init();
   };
 
   const renderEmptyCircle = (index: number) => (
