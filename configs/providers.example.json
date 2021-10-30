@@ -1,0 +1,53 @@
+{
+  "1": [],
+
+  "3": [],
+  "4": [],
+  "5": [],
+  "42": [],
+
+  "10": ["https://mainnet.optimism.io"],
+
+  "42161": ["https://arb1.arbitrum.io/rpc"],
+
+  "43114": ["https://api.avax.network/ext/bc/C/rpc"],
+
+  "42220": ["https://forno.celo.org"],
+
+  "66": ["https://exchainrpc.okex.org"],
+  "100": ["https://rpc.xdaichain.com"],
+  "128": [
+    "https://http-mainnet-node.huobichain.com",
+    "https://http-mainnet.hecochain.com",
+    "https://http-mainnet-node.defibox.com"
+  ],
+
+  "137": [
+    "https://rpc-mainnet.maticvigil.com",
+    "https://matic-mainnet.chainstacklabs.com",
+    "https://matic-mainnet-full-rpc.bwarelabs.com",
+    "https://rpc-mainnet.matic.network",
+    "https://matic-mainnet-archive-rpc.bwarelabs.com"
+  ],
+
+  "250": ["https://rpc.ftm.tools", "https://rpc.fantom.network", "https://rpcapi.fantom.network"],
+
+  "80001": ["https://rpc-mumbai.matic.today", "https://rpc-mumbai.maticvigil.com", "https://matic-mumbai.chainstacklabs.com"],
+
+  "56": [
+    "https://bsc-dataseed1.ninicoin.io",
+    "https://bsc-dataseed2.ninicoin.io",
+    "https://bsc-dataseed3.ninicoin.io",
+    "https://bsc-dataseed2.binance.org",
+    "https://bsc-dataseed3.binance.org",
+    "https://bsc-dataseed4.binance.org",
+    "https://bsc-dataseed1.defibit.io",
+    "https://bsc-dataseed3.defibit.io",
+    "https://binance.ankr.com/"
+  ],
+
+  "10000": ["https://smartbch.fountainhead.cash/mainnet", "https://smartbch.greyh.at"],
+
+  "272": ["https://stage2-api.zksync.dev/web3"],
+  "288": ["https://mainnet.boba.network"]
+}

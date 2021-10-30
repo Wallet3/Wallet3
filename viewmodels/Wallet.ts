@@ -1,14 +1,16 @@
 import * as ethers from 'ethers';
 
-import { action, makeObservable, observable } from 'mobx';
+import { action, makeObservable, observable, reaction, runInAction } from 'mobx';
 
 import { Account } from './Account';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Authentication from './Authentication';
 import Key from '../models/Key';
+import Networks from './Networks';
 
 export class Wallet {
   private key: Key;
+  accounts: Account[] = [];
   currentAccount: Account | null = null;
 
   constructor(key: Key) {
@@ -16,8 +18,16 @@ export class Wallet {
 
     makeObservable(this, {
       currentAccount: observable,
+      accounts: observable,
       switchAccount: action,
     });
+
+    reaction(
+      () => Networks.current,
+      () => {
+        this.currentAccount?.refreshOverview();
+      }
+    );
   }
 
   async init() {
@@ -31,8 +41,20 @@ export class Wallet {
       accounts.push(new Account(accountNode.address, i));
     }
 
+    console.log(accounts.length);
+
+    runInAction(() => {
+      this.accounts = accounts;
+      this.switchAccount(accounts[0]);
+    });
+
     return this;
   }
 
-  switchAccount(index: number) {}
+  switchAccount(account: Account) {
+    if (!account) return;
+    this.currentAccount = account;
+    this.currentAccount.refreshOverview();
+    this.currentAccount.fetchBasicInfo();
+  }
 }

@@ -12,7 +12,7 @@ import {
 } from './Tokens';
 
 export interface INetwork {
-  comm_id?: string;
+  comm_id: string;
   symbol: string;
   network: string;
   chainId: number;
@@ -153,6 +153,7 @@ export const PublicNetworks: INetwork[] = [
 
 export const Testnets: INetwork[] = [
   {
+    comm_id: '',
     symbol: 'ETH',
     network: 'Ropsten',
     chainId: 3,
@@ -162,6 +163,7 @@ export const Testnets: INetwork[] = [
     defaultTokens: [],
   },
   {
+    comm_id: '',
     symbol: 'ETH',
     network: 'Rinkeby',
     chainId: 4,
@@ -171,6 +173,7 @@ export const Testnets: INetwork[] = [
     defaultTokens: [],
   },
   {
+    comm_id: '',
     symbol: 'ETH',
     network: 'Goerli',
     chainId: 5,
@@ -180,6 +183,7 @@ export const Testnets: INetwork[] = [
     defaultTokens: [],
   },
   {
+    comm_id: '',
     symbol: 'ETH',
     network: 'Kovan',
     chainId: 42,
@@ -188,6 +192,7 @@ export const Testnets: INetwork[] = [
     defaultTokens: [],
   },
   {
+    comm_id: '',
     symbol: 'ETH',
     network: 'zkSync 2.0 Rinkeby',
     chainId: 272,
@@ -196,6 +201,7 @@ export const Testnets: INetwork[] = [
     defaultTokens: zkSyncTestPopularTokens,
   },
   {
+    comm_id: '',
     symbol: 'MATIC',
     network: 'Mumbai',
     chainId: 80001,

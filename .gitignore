@@ -14,3 +14,4 @@ web-build/
 .DS_Store
 
 configs/secret.ts
+configs/providers.json
