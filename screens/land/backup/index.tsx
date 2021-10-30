@@ -1,8 +1,8 @@
+import { Button, SafeViewContainer } from '../../../components';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, Text, TouchableHighlight, View } from 'react-native';
 import { borderColor, fontColor, secondaryFontColor } from '../../../constants/styles';
 
-import { Button } from '../../../components';
 import { Ionicons } from '@expo/vector-icons';
 import { LandStackNavs } from '../navs';
 import MnemonicOnce from '../../../viewmodels/MnemonicOnce';
@@ -107,7 +107,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, '
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.rootContainer}>
+      <SafeViewContainer style={styles.rootContainer}>
         <Text>Please sort the words correctly. </Text>
 
         {renderSortedWords(sorted.filter((i) => i))}
@@ -117,7 +117,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, '
         <View style={{ flex: 1 }} />
 
         <Button title="Next" disabled={!verified} onPress={() => navigation.navigate('SetupPasscode')} />
-      </View>
+      </SafeViewContainer>
     </SafeAreaView>
   );
 });

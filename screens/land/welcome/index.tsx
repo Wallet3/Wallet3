@@ -1,9 +1,9 @@
 import {} from 'react-native';
 
+import { Button, SafeViewContainer } from '../../../components';
 import { Text, View } from 'react-native-animatable';
 import { secondaryFontColor, themeColor } from '../../../constants/styles';
 
-import { Button } from '../../../components';
 import { LandStackNavs } from '../navs';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
@@ -24,7 +24,7 @@ export default ({ navigation }: NativeStackScreenProps<LandStackNavs, 'Welcome'>
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-      <View style={{ flex: 1, padding: 16, alignItems: 'center', paddingBottom: 0 }}>
+      <SafeViewContainer style={{ alignItems: 'center' }}>
         <View style={{ flex: 1 }} />
         <Text animation="fadeInUp" style={{ fontFamily: 'Questrial', fontWeight: '600', fontSize: 42, color: '#6186ff' }}>
           Wallet 3
@@ -52,7 +52,7 @@ export default ({ navigation }: NativeStackScreenProps<LandStackNavs, 'Welcome'>
             />
           </View>
         </View>
-      </View>
+      </SafeViewContainer>
       <StatusBar style="dark" />
     </SafeAreaView>
   );

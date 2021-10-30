@@ -97,7 +97,6 @@ export default (props: Props) => {
 
 const viewStyles = StyleSheet.create({
   numpadContainer: {
-    flex: 1,
     flexDirection: 'row',
     borderRadius: 10,
     borderColor,
@@ -112,6 +111,7 @@ const viewStyles = StyleSheet.create({
     alignItems: 'center',
     width: '33.3%',
     height: '25%',
+    minHeight: 45,
     borderBottomWidth: 1,
     borderRightWidth: 1,
     borderColor,

@@ -1,6 +1,6 @@
 import * as Animatable from 'react-native-animatable';
 
-import { Button, Loader, Numpad, NumpadChar } from '../../../components';
+import { Button, Loader, Numpad, NumpadChar, SafeViewContainer } from '../../../components';
 import { Modal, SafeAreaView, Switch, Text, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { fontColor, secondaryFontColor, themeColor } from '../../../constants/styles';
@@ -84,7 +84,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, '
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.rootContainer}>
+      <SafeViewContainer style={styles.rootContainer}>
         <View style={{ flex: 1 }} />
 
         <Animatable.Text ref={tipView as any} style={{ textAlign: 'center', marginBottom: 16, color: secondaryFontColor }}>
@@ -118,7 +118,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, '
         <Numpad onPress={onNumpadPress} disableDot />
 
         <Button title="Done" disabled={!verified || busy} onPress={() => finishInitialization()} />
-      </View>
+      </SafeViewContainer>
 
       <Loader loading={busy} />
     </SafeAreaView>

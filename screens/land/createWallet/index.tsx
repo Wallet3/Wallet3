@@ -1,4 +1,4 @@
-import { Button, Mnemonic } from '../../../components';
+import { Button, Mnemonic, SafeViewContainer } from '../../../components';
 import React, { useEffect } from 'react';
 import { SafeAreaView, Text, View } from 'react-native';
 import { fontColor, secondaryFontColor, themeColor } from '../../../constants/styles';
@@ -19,8 +19,8 @@ export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, '
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.rootContainer}>
-        <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 16 }}>
+      <SafeViewContainer style={styles.rootContainer}>
+        <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 0 }}>
           <MaterialCommunityIcons name="shield-key" size={72} color={'yellowgreen'} />
         </View>
 
@@ -58,14 +58,14 @@ export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, '
           txtStyle={{ color: themeColor, textTransform: 'none' }}
           onPress={() => navigation.navigate('SetupPasscode')}
         />
-        
+
         <Button
           title="Backup now"
           disabled={MnemonicOnce.secretWords.length < 12}
           txtStyle={{ textTransform: 'none' }}
           onPress={() => navigation.navigate('Backup')}
         />
-      </View>
+      </SafeViewContainer>
     </SafeAreaView>
   );
 });
