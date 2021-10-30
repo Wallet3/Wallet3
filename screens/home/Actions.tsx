@@ -32,6 +32,7 @@ export default (props: Props) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    // backgroundColor: 'blue',
   },
 
   button: {

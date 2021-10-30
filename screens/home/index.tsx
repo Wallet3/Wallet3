@@ -38,7 +38,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
 
       <Assets />
 
-      <Actions style={{ marginBottom: 12 }} onSendPress={openSend} onRequestPress={openRequest} />
+      <Actions style={{}} onSendPress={openSend} onRequestPress={openRequest} />
 
       <Portal>
         <Modalize

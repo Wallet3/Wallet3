@@ -1,7 +1,7 @@
+import { Coin, SafeViewContainer } from '../../components';
 import { FlatList, ListRenderItemInfo, Text, TouchableOpacity, View } from 'react-native';
 
 import BackButton from '../components/BackButton';
-import { Coin } from '../../components';
 import React from 'react';
 import { fontColor } from '../../constants/styles';
 import { observer } from 'mobx-react-lite';
@@ -46,7 +46,7 @@ export default observer((props: Props) => {
   };
 
   return (
-    <View style={{ ...styles.container, flexDirection: 'row' }}>
+    <SafeViewContainer style={{ ...styles.container, flexDirection: 'row' }}>
       <View style={{ ...styles.navBar, alignItems: 'flex-start', marginEnd: 8 }}>
         <BackButton onPress={props.onBack} />
       </View>
@@ -57,6 +57,6 @@ export default observer((props: Props) => {
         keyExtractor={(i) => i.symbol}
         style={{ marginTop: -2, marginEnd: -16, paddingEnd: 16 }}
       />
-    </View>
+    </SafeViewContainer>
   );
 });

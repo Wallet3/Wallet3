@@ -1,4 +1,4 @@
-import { Button, Coin } from '../../components';
+import { Button, Coin, SafeViewContainer } from '../../components';
 import { FlatList, TextInput } from 'react-native-gesture-handler';
 import { ListRenderItemInfo, Text, TouchableOpacity, View } from 'react-native';
 import React, { useRef } from 'react';
@@ -21,7 +21,7 @@ interface SubViewProps {
 
 const AmountView = observer((props: SubViewProps) => {
   return (
-    <View style={styles.container}>
+    <SafeViewContainer style={styles.container}>
       <View style={{ ...styles.navBar }}>
         {props.disableBack ? <View /> : <BackButton onPress={props.onBack} />}
 
@@ -57,7 +57,7 @@ const AmountView = observer((props: SubViewProps) => {
       </View>
 
       <Button title="Next" onPress={props.onNext} />
-    </View>
+    </SafeViewContainer>
   );
 });
 

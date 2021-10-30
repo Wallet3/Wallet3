@@ -1,4 +1,4 @@
-import { Button, Coin } from '../../components';
+import { Button, Coin, SafeViewContainer } from '../../components';
 import { FontAwesome5, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import React, { useRef } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
@@ -18,7 +18,7 @@ interface Props {
 
 const ReviewView = observer((props: Props) => {
   return (
-    <View style={styles.container}>
+    <SafeViewContainer style={styles.container}>
       <View style={styles.navBar}>
         <BackButton onPress={props.onBack} />
 
@@ -82,7 +82,7 @@ const ReviewView = observer((props: Props) => {
       <View style={{ flex: 1 }} />
 
       <Button title="Send" onPress={props.onSend} />
-    </View>
+    </SafeViewContainer>
   );
 });
 
@@ -92,7 +92,7 @@ interface GasProps {
 
 const GasView = observer((props: GasProps) => {
   return (
-    <View style={styles.container}>
+    <SafeViewContainer style={styles.container}>
       <View style={styles.navBar}>
         <BackButton onPress={props.onBack} />
 
@@ -175,7 +175,7 @@ const GasView = observer((props: GasProps) => {
       <View style={{ flex: 1 }}></View>
 
       <Button title="OK" txtStyle={{ textTransform: 'uppercase' }} onPress={props.onBack} />
-    </View>
+    </SafeViewContainer>
   );
 });
 

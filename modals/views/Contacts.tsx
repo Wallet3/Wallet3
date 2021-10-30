@@ -5,6 +5,7 @@ import { borderColor, fontColor, secondaryFontColor } from '../../constants/styl
 
 import Button from '../../components/Button';
 import { FlatList } from 'react-native-gesture-handler';
+import { SafeViewContainer } from '../../components';
 import { formatAddress } from '../../utils/formatter';
 import styles from '../styles';
 
@@ -49,7 +50,7 @@ export default (props: Props) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeViewContainer style={styles.container}>
       <View
         style={{
           flexDirection: 'row',
@@ -88,6 +89,6 @@ export default (props: Props) => {
       />
 
       <Button title="Next" style={{ marginTop: 12 }} onPress={props.onNext} />
-    </View>
+    </SafeViewContainer>
   );
 };

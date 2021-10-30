@@ -1,4 +1,4 @@
-import { Button, Coin, Numpad } from '../../components';
+import { Button, Coin, Numpad, SafeViewContainer } from '../../components';
 import React, { useRef, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { borderColor, fontColor, numericFontFamily, secondaryFontColor, themeColor } from '../../constants/styles';
@@ -46,7 +46,7 @@ export const NumpadView = observer((props: SubViewProps) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeViewContainer style={styles.container}>
       <View style={{ ...styles.navBar }}>
         {props.disableBack ? <View /> : <BackButton onPress={props.onBack} />}
 
@@ -59,7 +59,7 @@ export const NumpadView = observer((props: SubViewProps) => {
 
       <Text
         style={{
-          fontSize: 48,
+          fontSize: 64,
           fontFamily: numericFontFamily,
           fontWeight: '600',
           marginVertical: 4,
@@ -71,10 +71,12 @@ export const NumpadView = observer((props: SubViewProps) => {
         {amount}
       </Text>
 
+      <View style={{ flex: 1 }} />
+
       <Numpad onPress={onNumPress} />
 
       <Button title="Next" onPress={props.onNext} />
-    </View>
+    </SafeViewContainer>
   );
 });
 

@@ -1,10 +1,10 @@
 import * as Animatable from 'react-native-animatable';
 
+import { Coin, SafeViewContainer } from '../../components';
 import React, { useRef } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
 import BackButton from '../components/BackButton';
-import { Coin } from '../../components';
 import IPhone from '../../assets/icons/app/IPhone.svg';
 import { Ionicons } from '@expo/vector-icons';
 import QRCode from 'react-native-qrcode-svg';
@@ -72,7 +72,7 @@ const NFCView = observer((props: SubViewProps) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeViewContainer style={styles.container}>
       <View style={styles.navBar}>
         <BackButton onPress={props.onBack} />
 
@@ -131,16 +131,16 @@ const NFCView = observer((props: SubViewProps) => {
         </View>
 
         <Animatable.Text style={{ color: secondaryFontColor, fontSize: 17, textAlign: 'center', marginTop: 16 }}>
-          Put phones nearby
+          Open Wallet 3 then put phones nearby
         </Animatable.Text>
       </View>
-    </View>
+    </SafeViewContainer>
   );
 });
 
 const QRView = observer((props: SubViewProps) => {
   return (
-    <View style={styles.container}>
+    <SafeViewContainer style={styles.container}>
       <View style={styles.navBar}>
         <BackButton onPress={props.onBack} />
 
@@ -153,7 +153,7 @@ const QRView = observer((props: SubViewProps) => {
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <QRCode value="abc" size={180} backgroundColor="transparent" />
       </View>
-    </View>
+    </SafeViewContainer>
   );
 });
 

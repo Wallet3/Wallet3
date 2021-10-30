@@ -10,7 +10,7 @@ export default StyleSheet.create({
 
   container: {
     padding: 16,
-    height: 420,
+    flex: 1,
   },
 
   navBar: {
