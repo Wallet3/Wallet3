@@ -8,6 +8,7 @@ import { borderColor, fontColor, secondaryFontColor } from '../../constants/styl
 import { DrawerActions } from '@react-navigation/core';
 import PubSub from 'pubsub-js';
 import React from 'react';
+import { SafeViewContainer } from '../../components';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
 import { observer } from 'mobx-react-lite';
@@ -24,7 +25,7 @@ const Drawer = observer((props: DrawerProps) => {
   const { currentWallet } = appVM;
 
   return (
-    <View style={{ flex: 1, height: screenHeight }}>
+    <SafeViewContainer style={{ flex: 1, height: screenHeight, paddingHorizontal: 0, paddingTop: 0 }}>
       <View
         style={{
           marginHorizontal: 16,
@@ -112,7 +113,7 @@ const Drawer = observer((props: DrawerProps) => {
           <Feather name="chevron-right" size={16} color={'#6186ff'} style={{ marginBottom: -2 }} />
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeViewContainer>
   );
 });
 

@@ -9,11 +9,11 @@ import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navig
 import { NavigationContainer, RouteProp } from '@react-navigation/native';
 import React, { useCallback, useEffect, useRef } from 'react';
 
-import { Drawer } from './components';
+import Drawer from './screens/home/Drawer';
 import HomeScreen from './screens/home';
 import LandScreen from './screens/land';
 import { Modalize } from 'react-native-modalize';
-import NetworksView from './modals/Networks';
+import NetworksMenu from './modals/Networks';
 import PubSub from 'pubsub-js';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -99,7 +99,7 @@ const App = observer(({ app }: { app: AppVM }) => {
         adjustToContentHeight
         scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
       >
-        <NetworksView
+        <NetworksMenu
           onNetworkPress={(_) => {
             closeNetworksModal();
           }}

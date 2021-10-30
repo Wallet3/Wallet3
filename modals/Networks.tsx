@@ -1,9 +1,10 @@
 import { FlatList, ListRenderItemInfo, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { INetwork, PublicNetworks } from '../common/Networks';
+import { SafeViewContainer, Separator } from '../components';
 
 import { NetworkIcons } from '../assets/icons/networks/color';
 import React from 'react';
-import { Separator } from '../components';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { observer } from 'mobx-react-lite';
 import { secondaryFontColor } from '../constants/styles';
 import styles from './styles';
@@ -34,17 +35,19 @@ export default observer((props: Props) => {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={{ padding: 16 }}>
-        <Text style={{ color: secondaryFontColor }}>Switch Network</Text>
-        <Separator style={{ marginVertical: 4 }} />
-        <FlatList
-          keyExtractor={(i) => i.network}
-          data={PublicNetworks}
-          renderItem={renderItem}
-          style={{ marginHorizontal: -16, paddingHorizontal: 16, marginTop: -4 }}
-        />
-      </View>
-    </SafeAreaView>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.safeArea}>
+        <SafeViewContainer style={{ padding: 16 }}>
+          <Text style={{ color: secondaryFontColor }}>Switch Network</Text>
+          <Separator style={{ marginVertical: 4 }} />
+          <FlatList
+            keyExtractor={(i) => i.network}
+            data={PublicNetworks}
+            renderItem={renderItem}
+            style={{ marginHorizontal: -16, paddingHorizontal: 16, marginTop: -4 }}
+          />
+        </SafeViewContainer>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 });
