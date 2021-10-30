@@ -1,8 +1,9 @@
-import Actions from './actions';
-import Assets from './assets';
+import Actions from './Actions';
+import App from '../../viewmodels/App';
+import Assets from './Assets';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import { Modalize } from 'react-native-modalize';
-import Overview from './overview';
+import Overview from './Overview';
 import { Portal } from 'react-native-portalize';
 import React from 'react';
 import Request from '../../modals/Request';
@@ -21,6 +22,7 @@ type RootStackParamList = {
 export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, 'Home'>) => {
   const { ref: sendModalizeRef, open: openSend, close } = useModalize();
   const { ref: requestModalizeRef, open: openRequest } = useModalize();
+  const { currentWallet } = App;
 
   return (
     <View
@@ -32,7 +34,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         backgroundColor: '#fff',
       }}
     >
-      <Overview style={{ height: 132, marginBottom: 12 }} />
+      <Overview style={{ height: 132, marginBottom: 12 }} address={currentWallet?.currentAccount?.address} />
 
       <Assets />
 

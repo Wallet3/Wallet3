@@ -1,9 +1,10 @@
 import * as Debank from '../common/apis/Debank';
 
-import { makeObservable, observable, runInAction } from 'mobx';
+import { computed, makeObservable, observable, runInAction } from 'mobx';
 
 import { IToken } from '../common/Tokens';
 import Networks from './Networks';
+import { formatAddress } from '../utils/formatter';
 import { getBalance } from '../common/RPC';
 
 export class Account {
@@ -11,15 +12,20 @@ export class Account {
   readonly index: number;
 
   tokens: IToken[] = [];
-  balanceUSD: number = 0;
+  balanceUSD = 0;
+  ensName = '';
+
+  get displayName() {
+    return this.ensName || formatAddress(this.address, 7, 5);
+  }
 
   constructor(address: string, index: number) {
-    this.address = '0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B'; // address;
+    this.address = '0xb8c2C29ee19D8307cb7255e1Cd9CbDE883A267d5'; // address;
     this.index = index;
 
-    console.log(address, index);
+    // console.log(address, index);
 
-    makeObservable(this, { tokens: observable });
+    makeObservable(this, { tokens: observable, ensName: observable, balanceUSD: observable, displayName: computed });
   }
 
   async refreshOverview() {
@@ -28,15 +34,9 @@ export class Account {
   }
 
   async fetchBasicInfo() {
-    // await getBalance(Networks.current.chainId, this.address);
-    // console.log(await Networks.currentProvider.getBalance(this.address));
-    // console.log(await Networks.currentProvider.getAvatar('brantly.eth'));
-    // console.log(await Networks.currentProvider.getAvatar('nick.eth'));
-
     if (Networks.current.chainId !== 1) return;
-    const resolver = (await Networks.currentProvider.getResolver('nick.eth'))!;
-    
-    console.log(await resolver.getAddress());
-    console.log(await resolver.getAvatar());
+
+    const { currentProvider } = Networks;
+    currentProvider.lookupAddress(this.address).then((v) => runInAction(() => (this.ensName = v || this.address)));
   }
 }

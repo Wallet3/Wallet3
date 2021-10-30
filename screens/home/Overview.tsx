@@ -1,9 +1,10 @@
 import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
-import { numericFontFamily, themeColor } from '../../../constants/styles';
+import { numericFontFamily, themeColor } from '../../constants/styles';
 
-import Ethereum from '../../../assets/icons/networks/white/ethereum.svg';
+import Ethereum from '../../assets/icons/networks/white/ethereum.svg';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
+import { formatAddress } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
 
 interface Props {
@@ -13,7 +14,7 @@ interface Props {
   address?: string;
 }
 
-export default observer(({ style }: Props) => {
+export default observer(({ style, address }: Props) => {
   return (
     <View style={{ ...styles.container, ...((style as any) || {}) }}>
       <View
@@ -31,7 +32,7 @@ export default observer(({ style }: Props) => {
         </View>
       </View>
 
-      <Text style={{ ...styles.text, marginBottom: 42, fontSize: 12 }}>0xABCDE....67890</Text>
+      <Text style={{ ...styles.text, marginBottom: 42, fontSize: 12 }}>{formatAddress(address ?? '', 7, 5)}</Text>
 
       <Text style={styles.headline} numberOfLines={1}>
         $ 223,875.64

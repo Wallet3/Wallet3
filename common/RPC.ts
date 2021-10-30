@@ -26,7 +26,7 @@ export async function getBalance(chainId: number, address: string): Promise<BigN
 }
 
 export async function sendTransaction(chainId: number, txHex: string) {
-  const urls = Providers[`${chainId}`] as string[];
+  const urls = getUrls(chainId);
 
   try {
     const result = await Promise.any(
@@ -53,9 +53,9 @@ export async function sendTransaction(chainId: number, txHex: string) {
 }
 
 export async function getTransactionCount(chainId: number, address: string) {
-  const rpcs = Providers[`${chainId}`] as string[];
+  const urls = getUrls(chainId);
 
-  for (let url of rpcs) {
+  for (let url of urls) {
     try {
       const resp = await post(url, {
         jsonrpc: '2.0',
@@ -83,9 +83,9 @@ export async function call<T>(
     data: string;
   }
 ) {
-  const rpcs = Providers[`${chainId}`] as string[];
+  const urls = getUrls(chainId);
 
-  for (let url of rpcs) {
+  for (let url of urls) {
     try {
       const resp = await post(url, {
         jsonrpc: '2.0',
@@ -112,9 +112,9 @@ export async function estimateGas<T>(
     data: string;
   }
 ) {
-  const rpcs = Providers[`${chainId}`] as string[];
+  const urls = getUrls(chainId);
 
-  for (let url of rpcs) {
+  for (let url of urls) {
     try {
       const resp = await post(url, {
         jsonrpc: '2.0',
@@ -131,9 +131,9 @@ export async function estimateGas<T>(
 }
 
 export async function getGasPrice(chainId: number) {
-  const rpcs = Providers[`${chainId}`] as string[];
+  const urls = getUrls(chainId);
 
-  for (let url of rpcs) {
+  for (let url of urls) {
     try {
       const resp = await post(url, {
         jsonrpc: '2.0',
@@ -150,9 +150,9 @@ export async function getGasPrice(chainId: number) {
 }
 
 export async function getTransactionReceipt(chainId: number, hash: string) {
-  const rpcs = Providers[`${chainId}`] as string[];
+  const urls = getUrls(chainId);
 
-  for (let url of rpcs) {
+  for (let url of urls) {
     try {
       const resp = await post(url, { jsonrpc: '2.0', method: 'eth_getTransactionReceipt', params: [hash], id: Date.now() });
 
@@ -176,9 +176,9 @@ export async function getTransactionReceipt(chainId: number, hash: string) {
 }
 
 export async function getNextBlockBaseFee(chainId: number) {
-  const rpcs = Providers[`${chainId}`] as string[];
+  const urls = getUrls(chainId);
 
-  for (let url of rpcs) {
+  for (let url of urls) {
     try {
       const resp = await post(url, {
         jsonrpc: '2.0',
@@ -199,9 +199,9 @@ export async function getNextBlockBaseFee(chainId: number) {
 }
 
 export async function getMaxPriorityFee(chainId: number) {
-  const rpcs = Providers[`${chainId}`] as string[];
+  const urls = getUrls(chainId);
 
-  for (let url of rpcs) {
+  for (let url of urls) {
     try {
       const resp = await post(url, {
         jsonrpc: '2.0',

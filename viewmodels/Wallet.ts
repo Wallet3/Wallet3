@@ -41,8 +41,6 @@ export class Wallet {
       accounts.push(new Account(accountNode.address, i));
     }
 
-    console.log(accounts.length);
-
     runInAction(() => {
       this.accounts = accounts;
       this.switchAccount(accounts[0]);

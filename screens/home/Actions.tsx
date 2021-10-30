@@ -3,7 +3,7 @@ import { SafeAreaView, StyleProp, StyleSheet, Text, View, ViewStyle } from 'reac
 
 import React from 'react';
 import Ripple from 'react-native-material-ripple';
-import { themeColor } from '../../../constants/styles';
+import { themeColor } from '../../constants/styles';
 
 interface Props {
   style?: StyleProp<ViewStyle>;

@@ -7,6 +7,7 @@ import { Wallet } from './Wallet';
 export class AppVM {
   initialized = false;
   wallets: Wallet[] = [];
+  currentWallet?: Wallet = undefined;
 
   get hasWallet() {
     return this.wallets.length > 0;
@@ -17,6 +18,7 @@ export class AppVM {
       initialized: observable,
       wallets: observable,
       hasWallet: computed,
+      currentWallet: observable,
     });
   }
 
@@ -27,6 +29,7 @@ export class AppVM {
     runInAction(() => {
       this.initialized = true;
       this.wallets = wallets;
+      this.currentWallet = wallets[0];
     });
   }
 
