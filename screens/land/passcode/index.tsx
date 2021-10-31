@@ -98,22 +98,24 @@ export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, '
 
         <View style={{ flex: 1 }} />
 
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginVertical: 16,
-            alignItems: 'center',
-          }}
-        >
-          <Text style={{ marginBottom: -3, color: secondaryFontColor }}>Enable Biometrics</Text>
+        {Authentication.biometricsSupported ? (
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginVertical: 16,
+              alignItems: 'center',
+            }}
+          >
+            <Text style={{ marginBottom: -3, color: secondaryFontColor }}>Enable Biometrics</Text>
 
-          <Switch
-            value={Authentication.biometricsEnabled}
-            trackColor={{ true: themeColor }}
-            onValueChange={(v) => Authentication.setBiometrics(v)}
-          />
-        </View>
+            <Switch
+              value={Authentication.biometricsEnabled}
+              trackColor={{ true: themeColor }}
+              onValueChange={(v) => Authentication.setBiometrics(v)}
+            />
+          </View>
+        ) : undefined}
 
         <Numpad onPress={onNumpadPress} disableDot />
 

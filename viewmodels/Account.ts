@@ -12,8 +12,9 @@ export class Account {
   readonly index: number;
 
   tokens: IToken[] = [];
-  balanceUSD = 0;
+  balance = '$ 0';
   ensName = '';
+  avatar = '';
 
   get displayName() {
     return this.ensName || formatAddress(this.address, 7, 5);
@@ -25,18 +26,26 @@ export class Account {
 
     // console.log(address, index);
 
-    makeObservable(this, { tokens: observable, ensName: observable, balanceUSD: observable, displayName: computed });
+    makeObservable(this, {
+      tokens: observable,
+      ensName: observable,
+      balance: observable,
+      displayName: computed,
+      avatar: observable,
+    });
   }
 
   async refreshOverview() {
     const { usd_value } = await Debank.getBalance(this.address, Networks.current.comm_id);
-    runInAction(() => (this.balanceUSD = usd_value));
+    runInAction(() => (this.balance = `$ ${usd_value.toFixed(2)}`));
   }
 
   async fetchBasicInfo() {
     if (Networks.current.chainId !== 1) return;
+    if (this.ensName) return;
 
     const { currentProvider } = Networks;
     currentProvider.lookupAddress(this.address).then((v) => runInAction(() => (this.ensName = v || this.address)));
+    currentProvider.getAvatar(this.ensName || this.address).then((v) => runInAction(() => (this.avatar = v || '')));
   }
 }

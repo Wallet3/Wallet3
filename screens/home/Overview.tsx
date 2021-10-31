@@ -9,12 +9,13 @@ import { observer } from 'mobx-react-lite';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
+  balance?: string;
   network?: string;
   connectedApps?: number;
   address?: string;
 }
 
-export default observer(({ style, address }: Props) => {
+export default observer(({ style, address, balance }: Props) => {
   return (
     <View style={{ ...styles.container, ...((style as any) || {}) }}>
       <View
@@ -35,7 +36,7 @@ export default observer(({ style, address }: Props) => {
       <Text style={{ ...styles.text, marginBottom: 42, fontSize: 12 }}>{formatAddress(address ?? '', 7, 5)}</Text>
 
       <Text style={styles.headline} numberOfLines={1}>
-        $ 223,875.64
+        {balance}
       </Text>
 
       <Ethereum
@@ -65,6 +66,7 @@ const styles = StyleSheet.create({
   headline: {
     color: 'white',
     fontWeight: '600',
+    maxWidth: '85%',
     fontSize: 27,
     fontFamily: numericFontFamily,
   },

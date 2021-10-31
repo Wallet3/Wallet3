@@ -131,7 +131,7 @@ const NFCView = observer((props: SubViewProps) => {
         </View>
 
         <Animatable.Text style={{ color: secondaryFontColor, fontSize: 17, textAlign: 'center', marginTop: 16 }}>
-          Open Wallet 3 then put phones nearby
+          Put phones nearby
         </Animatable.Text>
       </View>
     </SafeViewContainer>

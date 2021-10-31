@@ -45,7 +45,7 @@ const Drawer = observer((props: DrawerProps) => {
             backgroundColor: '#00bfff',
           }}
           source={{
-            uri: 'https://lh3.googleusercontent.com/xoSEsxi45bAjWFvxbAWX-Sng4AeEyU7NfA9vJ9k-UpX_1qoP0JrdNI-njQ0K8A1gm1cJqv4j_P-cMZuedCgQ3ik=w600',
+            uri: currentWallet?.currentAccount?.avatar,
           }}
         />
 

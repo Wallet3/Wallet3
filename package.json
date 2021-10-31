@@ -40,15 +40,15 @@
     "react-native-qrcode-svg": "^6.1.1",
     "react-native-reanimated": "^2.2.3",
     "react-native-safe-area-context": "^3.3.2",
-    "react-native-screens": "~3.8.0",
+    "react-native-screens": "^3.9.0",
     "react-native-svg": "12.1.1",
     "react-native-swiper": "^1.6.0",
     "react-native-web": "0.17.5",
     "typeorm": "^0.2.38"
   },
   "devDependencies": {
-    "@babel/core": "^7.15.8",
-    "@babel/plugin-proposal-decorators": "^7.15.8",
+    "@babel/core": "^7.16.0",
+    "@babel/plugin-proposal-decorators": "^7.16.0",
     "@types/lodash": "^4.14.176",
     "@types/node": "^16.11.6",
     "@types/pubsub-js": "^1.8.3",

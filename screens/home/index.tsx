@@ -34,7 +34,11 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         backgroundColor: '#fff',
       }}
     >
-      <Overview style={{ height: 132, marginBottom: 12 }} address={currentWallet?.currentAccount?.address} />
+      <Overview
+        style={{ height: 132, marginBottom: 12 }}
+        address={currentWallet?.currentAccount?.address}
+        balance={currentWallet?.currentAccount?.balance}
+      />
 
       <Assets />
 

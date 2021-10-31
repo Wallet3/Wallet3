@@ -111,7 +111,7 @@ const viewStyles = StyleSheet.create({
     alignItems: 'center',
     width: '33.3%',
     height: '25%',
-    minHeight: 45,
+    minHeight: 49,
     borderBottomWidth: 1,
     borderRightWidth: 1,
     borderColor,
