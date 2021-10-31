@@ -3,6 +3,7 @@ export interface IToken {
   decimals: number;
   symbol: string;
   minGas?: number;
+  price?: number;
 }
 
 export const ETH = {

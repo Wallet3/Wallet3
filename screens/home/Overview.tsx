@@ -1,6 +1,7 @@
 import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import { numericFontFamily, themeColor } from '../../constants/styles';
 
+import AnimateNumber from 'react-native-animate-number';
 import Ethereum from '../../assets/icons/networks/white/ethereum.svg';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
@@ -35,9 +36,10 @@ export default observer(({ style, address, balance }: Props) => {
 
       <Text style={{ ...styles.text, marginBottom: 42, fontSize: 12 }}>{formatAddress(address ?? '', 7, 5)}</Text>
 
-      <Text style={styles.headline} numberOfLines={1}>
+      <AnimateNumber value={2412300221} style={styles.headline} numberOfLines={1} />
+      {/* <Text style={styles.headline} numberOfLines={1}>
         {balance}
-      </Text>
+      </Text> */}
 
       <Ethereum
         width={64}
