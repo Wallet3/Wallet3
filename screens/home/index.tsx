@@ -37,7 +37,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
       <Overview
         style={{ height: 132, marginBottom: 12 }}
         address={currentWallet?.currentAccount?.address}
-        balance={currentWallet?.currentAccount?.balance}
+        balance={currentWallet?.currentAccount?.balanceUSD}
       />
 
       <Assets />

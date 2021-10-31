@@ -20,10 +20,6 @@ export class Account {
     return this.ensName || formatAddress(this.address, 7, 5);
   }
 
-  get balance() {
-    return `$ ${this.balanceUSD.toFixed(2)}`;
-  }
-
   constructor(address: string, index: number) {
     this.address = '0xb8c2C29ee19D8307cb7255e1Cd9CbDE883A267d5'; // address;
     this.index = index;
@@ -35,7 +31,6 @@ export class Account {
       ensName: observable,
       displayName: computed,
       balanceUSD: observable,
-      balance: computed,
       avatar: observable,
     });
   }
@@ -45,7 +40,6 @@ export class Account {
     runInAction(() => (this.balanceUSD = usd_value));
 
     const tokens = await Debank.getTokens(this.address, Networks.current.comm_id);
-    console.log(tokens);
   }
 
   fetchBasicInfo() {

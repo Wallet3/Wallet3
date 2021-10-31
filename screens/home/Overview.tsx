@@ -1,16 +1,17 @@
 import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { formatAddress, formatCurrency } from '../../utils/formatter';
 import { numericFontFamily, themeColor } from '../../constants/styles';
 
 import AnimateNumber from 'react-native-animate-number';
 import Ethereum from '../../assets/icons/networks/white/ethereum.svg';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
-import { formatAddress } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
-  balance?: string;
+  balance?: number;
+  currency?: string;
   network?: string;
   connectedApps?: number;
   address?: string;
@@ -36,10 +37,7 @@ export default observer(({ style, address, balance }: Props) => {
 
       <Text style={{ ...styles.text, marginBottom: 42, fontSize: 12 }}>{formatAddress(address ?? '', 7, 5)}</Text>
 
-      <AnimateNumber value={2412300221} style={styles.headline} numberOfLines={1} />
-      {/* <Text style={styles.headline} numberOfLines={1}>
-        {balance}
-      </Text> */}
+      <AnimateNumber value={balance || 0} style={styles.headline} numberOfLines={1} formatter={formatCurrency} />
 
       <Ethereum
         width={64}
