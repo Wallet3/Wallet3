@@ -1,9 +1,10 @@
-import { BigNumber, BigNumberish, ethers } from 'ethers';
+import { BigNumber, BigNumberish, ethers, utils } from 'ethers';
 import { makeObservable, observable } from 'mobx';
 
 import ERC20ABI from '../abis/ERC20.json';
 
 export class ERC20Token {
+  private owner = '';
   readonly address: string;
   readonly erc20: ethers.Contract;
 
@@ -12,7 +13,6 @@ export class ERC20Token {
   decimals = -1;
   price = 0;
   balance = BigNumber.from(0);
-  amount = 0;
   minGas?: number;
   iconUrl?: string;
 
@@ -20,13 +20,18 @@ export class ERC20Token {
     return this.erc20.interface;
   }
 
+  get amount() {
+    return utils.formatUnits(this.balance, this.decimals < 0 ? 18 : this.decimals);
+  }
+
   constructor(props: {
     contract: string;
-    provider: ethers.providers.BaseProvider;
+    owner: string;
+    chainId: number;
+    provider?: ethers.providers.BaseProvider;
     name?: string;
     symbol?: string;
     decimals?: number;
-    amount?: number;
     price?: number;
     minGas?: number;
     iconUrl?: string;
@@ -40,7 +45,7 @@ export class ERC20Token {
     this.price = props.price || 0;
     this.minGas = props.minGas;
     this.iconUrl = props.iconUrl;
-    this.amount = props.amount || 0;
+    this.owner = props.owner || '';
 
     makeObservable(this, { name: observable, symbol: observable, balance: observable, decimals: observable });
   }

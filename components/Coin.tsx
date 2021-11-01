@@ -105,5 +105,16 @@ interface CoinProps {
 
 export default (props: CoinProps) => {
   const symbol = props.symbol.toLowerCase();
-  return <Image source={icons[symbol] || { uri: props.iconUrl }} style={{ width: 22, height: 22 }} {...props} />;
+  return (
+    <Image
+      source={icons[symbol] || { uri: props.iconUrl }}
+      {...props}
+      style={{
+        ...((props.style as any) || {}),
+        width: (props.style as any)?.width ?? 22,
+        height: (props.style as any)?.height ?? 22,
+        borderRadius: (props.style as any)?.width / 2 ?? 11,
+      }}
+    />
+  );
 };

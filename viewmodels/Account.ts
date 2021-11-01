@@ -6,6 +6,7 @@ import { ERC20Token } from '../common/ERC20';
 import { IToken } from '../common/Tokens';
 import Networks from './Networks';
 import { PublicNetworks } from '../common/Networks';
+import TokensMan from './services/TokensMan';
 import { formatAddress } from '../utils/formatter';
 import { getBalance } from '../common/RPC';
 
@@ -14,6 +15,7 @@ export class Account {
   readonly index: number;
 
   tokens: IToken[] = [];
+  allTokens: IToken[] = [];
   balanceUSD = 0;
   ensName = '';
   avatar = '';
@@ -38,17 +40,25 @@ export class Account {
   }
 
   async refreshOverview() {
-    const { usd_value } = await Debank.getBalance(this.address, Networks.current.comm_id);
-    runInAction(() => (this.balanceUSD = usd_value));
+    this.refreshNativeToken().then(async (native) => {
+      const userTokens = await TokensMan.loadUserTokens(Networks.current.chainId, this.address);
+      runInAction(() => (this.tokens = [native, ...userTokens]));
+    });
 
-    const [native, tokens] = await Promise.all([
-      this.refreshNativeToken(),
-      (
-        await Debank.getTokens(this.address, Networks.current.comm_id)
-      ).map((t) => new ERC20Token({ ...t, contract: t.address, provider: Networks.currentProvider })),
-    ]);
+    Debank.getBalance(this.address, Networks.current.comm_id).then(({ usd_value }) => {
+      runInAction(() => (this.balanceUSD = usd_value));
+    });
 
-    runInAction(() => (this.tokens = [native, ...tokens]));
+    // const tokens = (await Debank.getTokens(this.address, Networks.current.comm_id)).map(
+    //   (t) =>
+    //     new ERC20Token({
+    //       ...t,
+    //       contract: t.address,
+    //       provider: Networks.currentProvider,
+    //       owner: this.address,
+    //       chainId: Networks.current.chainId,
+    //     })
+    // );
   }
 
   async refreshNativeToken() {

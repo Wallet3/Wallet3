@@ -37,7 +37,7 @@ const Root = observer(({ navigation }: NativeStackScreenProps<RootStackParamList
       screenOptions={{
         headerTransparent: false,
         headerTintColor: '#333',
-        swipeEdgeWidth: screenWidth,
+        swipeEdgeWidth: screenWidth / 3,
         drawerType: 'slide',
         headerRight: () => (
           <TouchableOpacity

@@ -21,17 +21,14 @@ const Tokens = ({ tokens }: { tokens?: IToken[] }) => {
           marginHorizontal: -16,
           paddingVertical: 16,
           paddingBottom: 13,
-          paddingHorizontal: 20,
-          paddingEnd: 24,
+          paddingHorizontal: 22,
         }}
       >
         <Coin symbol={item.symbol} style={{ width: 36, height: 36, marginEnd: 16 }} iconUrl={item.iconUrl} />
         <Text style={{ fontSize: 18, color: fontColor }}>{item.symbol}</Text>
         <View style={{ flex: 1 }} />
         <Text style={{ fontSize: 19, color: fontColor }}>
-          {item.amount
-            ? formatCurrency(item.amount, '')
-            : formatCurrency(utils.formatUnits(item.balance || 0, item.decimals), '')}
+          {formatCurrency(utils.formatUnits(item.balance || 0, item.decimals), '')}
         </Text>
       </TouchableOpacity>
     );
@@ -83,7 +80,7 @@ export default observer(({ tokens }: { tokens?: IToken[] }) => {
 
         {activeTab === 0 ? (
           <TouchableOpacity>
-            <Ionicons name="add-circle-outline" size={24} />
+            <Ionicons name="add-circle-outline" size={24} color={secondaryFontColor} style={{ opacity: 0.85 }} />
           </TouchableOpacity>
         ) : undefined}
       </View>
