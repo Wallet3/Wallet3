@@ -2,8 +2,10 @@ import * as Debank from '../common/apis/Debank';
 
 import { computed, makeObservable, observable, runInAction } from 'mobx';
 
+import { ERC20Token } from '../common/ERC20';
 import { IToken } from '../common/Tokens';
 import Networks from './Networks';
+import { PublicNetworks } from '../common/Networks';
 import { formatAddress } from '../utils/formatter';
 import { getBalance } from '../common/RPC';
 
@@ -11,7 +13,7 @@ export class Account {
   readonly address: string;
   readonly index: number;
 
-  tokens: IToken[] = [];
+  tokens: ERC20Token[] = [];
   balanceUSD = 0;
   ensName = '';
   avatar = '';
@@ -21,7 +23,7 @@ export class Account {
   }
 
   constructor(address: string, index: number) {
-    this.address = '0xb8c2C29ee19D8307cb7255e1Cd9CbDE883A267d5'; // address;
+    this.address = '0x8568E1A8082B442aE9BE089A3b3888a25Ae55f8C'; // address;
     this.index = index;
 
     // console.log(address, index);
@@ -39,7 +41,9 @@ export class Account {
     const { usd_value } = await Debank.getBalance(this.address, Networks.current.comm_id);
     runInAction(() => (this.balanceUSD = usd_value));
 
-    const tokens = await Debank.getTokens(this.address, Networks.current.comm_id);
+    const tokens = (await Debank.getTokens(this.address, Networks.current.comm_id)).map(
+      (t) => new ERC20Token({ ...t, contract: t.address, provider: Networks.currentProvider })
+    );
   }
 
   fetchBasicInfo() {

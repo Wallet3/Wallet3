@@ -19,15 +19,17 @@ export async function getTokens(address: string, chain: chain, is_all = false) {
     const resp = await fetch(`${host}/v1/user/token_list?id=${address}&chain_id=${chain}&is_all=${is_all}`.toLowerCase());
     const data = (await resp.json()) as ITokenBalance[];
 
-    return data.map<IToken>((t) => {
-      return {
-        address: t.id,
-        decimals: t.decimals,
-        symbol: t.symbol,
-        price: t.price,
-        balance: utils.formatUnits(t.wei || '0', t.decimals || 18),
-      };
-    });
+    return data
+      .filter((t) => utils.isAddress(t.id))
+      .map<IToken>((t) => {
+        return {
+          address: t.id,
+          decimals: t.decimals,
+          symbol: t.optimized_symbol || t.symbol,
+          price: t.price,
+          balance: utils.formatUnits(t.wei || '0', t.decimals || 18),
+        };
+      });
   } catch (error) {
     return [];
   }

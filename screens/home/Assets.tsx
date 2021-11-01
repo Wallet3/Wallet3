@@ -1,9 +1,19 @@
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
 import Swiper from 'react-native-swiper';
 import { observer } from 'mobx-react-lite';
+
+const Tokens = () => {
+  const data = [];
+
+  const renderItem = ({ item }) => {
+    return <View></View>;
+  };
+
+  return <FlatList data={data} renderItem={renderItem}></FlatList>;
+};
 
 export default observer(() => {
   const [activeTab, setActiveTab] = useState(0);
@@ -17,7 +27,7 @@ export default observer(() => {
       </View>
 
       <Swiper showsPagination={false} showsButtons={false} style={{}} onIndexChanged={(index) => setActiveTab(index)}>
-        <View style={{ flex: 1 }}></View>
+        <Tokens />
         <View style={{ flex: 1 }}></View>
         <View style={{ flex: 1 }}></View>
       </Swiper>
