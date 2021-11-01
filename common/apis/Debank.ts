@@ -28,6 +28,7 @@ export async function getTokens(address: string, chain: chain, is_all = false) {
           symbol: t.optimized_symbol || t.symbol,
           price: t.price,
           balance: utils.formatUnits(t.wei || '0', t.decimals || 18),
+          iconUrl: t.logo_url,
         };
       });
   } catch (error) {

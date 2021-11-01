@@ -13,6 +13,7 @@ export class ERC20Token {
   price = 0;
   balance = BigNumber.from(0);
   minGas?: number;
+  iconUrl?: string;
 
   get interface() {
     return this.erc20.interface;
@@ -26,6 +27,7 @@ export class ERC20Token {
     decimals?: number;
     price?: number;
     minGas?: number;
+    iconUrl?: string;
   }) {
     this.address = props.contract;
     this.erc20 = new ethers.Contract(this.address, ERC20ABI, props.provider);
@@ -35,6 +37,7 @@ export class ERC20Token {
     this.decimals = props.decimals || -1;
     this.price = props.price || 0;
     this.minGas = props.minGas;
+    this.iconUrl = props.iconUrl;
 
     makeObservable(this, { name: observable, symbol: observable, balance: observable, decimals: observable });
   }

@@ -44,6 +44,8 @@ export class Account {
     const tokens = (await Debank.getTokens(this.address, Networks.current.comm_id)).map(
       (t) => new ERC20Token({ ...t, contract: t.address, provider: Networks.currentProvider })
     );
+
+    runInAction(() => (this.tokens = tokens));
   }
 
   fetchBasicInfo() {

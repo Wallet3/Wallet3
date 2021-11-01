@@ -107,7 +107,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, '
               alignItems: 'center',
             }}
           >
-            <Text style={{ marginBottom: -3, color: secondaryFontColor }}>Enable Biometrics</Text>
+            <Text style={{ marginBottom: -2, color: secondaryFontColor }}>Enable Biometrics</Text>
 
             <Switch
               value={Authentication.biometricsEnabled}

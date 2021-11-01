@@ -4,6 +4,7 @@ export interface IToken {
   symbol: string;
   minGas?: number;
   price?: number;
+  iconUrl?: string;
 }
 
 export const ETH = {

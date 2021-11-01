@@ -6,6 +6,7 @@ import icons from '../assets/icons/crypto';
 interface CoinProps {
   symbol: string;
   style?: StyleProp<ImageStyle>;
+  iconUrl?: string;
 
   /**
    * Invoked on load error with {nativeEvent: {error}}
@@ -104,5 +105,5 @@ interface CoinProps {
 
 export default (props: CoinProps) => {
   const symbol = props.symbol.toLowerCase();
-  return <Image source={icons[symbol]} style={{ width: 22, height: 22 }} {...props} />;
+  return <Image source={icons[symbol] || { uri: props.iconUrl }} style={{ width: 22, height: 22 }} {...props} />;
 };

@@ -35,14 +35,14 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
       }}
     >
       <Overview
-        style={{ height: 132, marginBottom: 12 }}
+        style={{ height: 132, marginBottom: 4 }}
         address={currentWallet?.currentAccount?.address}
         balance={currentWallet?.currentAccount?.balanceUSD}
       />
 
-      <Assets />
+      <Assets tokens={currentWallet?.currentAccount?.tokens} />
 
-      <Actions style={{}} onSendPress={openSend} onRequestPress={openRequest} />
+      <Actions style={{ marginTop: 8 }} onSendPress={openSend} onRequestPress={openRequest} />
 
       <Portal>
         <Modalize
