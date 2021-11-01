@@ -32,30 +32,37 @@ const Tokens = ({ tokens }: { tokens?: IToken[] }) => {
     );
   };
 
-  return <FlatList data={tokens} renderItem={renderItem} style={{ paddingHorizontal: 16 }}></FlatList>;
+  return <FlatList data={tokens} keyExtractor={(i) => i.address} renderItem={renderItem} style={{ paddingHorizontal: 16 }} />;
 };
 
 export default observer(({ tokens }: { tokens?: IToken[] }) => {
   const [activeTab, setActiveTab] = useState(0);
+  const swiper = React.useRef<Swiper>(null);
 
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.header}>
-        <Text style={styles.headerLabel}>Assets</Text>
-        <Text style={styles.headerLabel}>NFTs</Text>
-        <Text style={styles.headerLabel}>History</Text>
+        <Text style={{ ...styles.headerLabel, ...(activeTab === 0 ? styles.headerLabelActive : {}) }}>Assets</Text>
+        <Text style={{ ...styles.headerLabel, ...(activeTab === 1 ? styles.headerLabelActive : {}) }}>NFTs</Text>
+        <Text style={{ ...styles.headerLabel, ...(activeTab === 2 ? styles.headerLabelActive : {}) }}>History</Text>
       </View>
 
       <Swiper
+        ref={swiper}
         showsPagination={false}
+        loop={false}
         showsButtons={false}
         containerStyle={{ marginHorizontal: -16, paddingHorizontal: 0 }}
         style={{}}
-        onIndexChanged={(index) => setActiveTab(index)}
+        onIndexChanged={(i) => setActiveTab(i)}
       >
         <Tokens tokens={tokens} />
-        <View style={{ flex: 1 }}></View>
-        <View style={{ flex: 1 }}></View>
+        <View style={{ flex: 1 }}>
+          <Text>Nfts</Text>
+        </View>
+        <View style={{ flex: 1 }}>
+          <Text>History</Text>
+        </View>
       </Swiper>
     </View>
   );

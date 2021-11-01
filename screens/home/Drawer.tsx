@@ -45,7 +45,7 @@ const Drawer = observer((props: DrawerProps) => {
             backgroundColor: '#00bfff',
           }}
           source={{
-            uri: currentWallet?.currentAccount?.avatar,
+            uri: 'https://cryptologos.cc/logos/ethereum-eth-logo.png?v=014', // currentWallet?.currentAccount?.avatar,
           }}
         />
 
