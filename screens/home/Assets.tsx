@@ -1,12 +1,15 @@
 import { FlatList, ListRenderItemInfo, StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
-import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
+import { borderColor, fontColor, secondaryFontColor, themeColor } from '../../constants/styles';
 
 import { Coin } from '../../components';
 import { IToken } from '../../common/Tokens';
+import { Ionicons } from '@expo/vector-icons';
 import Swiper from 'react-native-swiper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { formatCurrency } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
+import { utils } from 'ethers';
 
 const Tokens = ({ tokens }: { tokens?: IToken[] }) => {
   const renderItem = ({ item, index }: ListRenderItemInfo<IToken>) => {
@@ -25,7 +28,11 @@ const Tokens = ({ tokens }: { tokens?: IToken[] }) => {
         <Coin symbol={item.symbol} style={{ width: 36, height: 36, marginEnd: 16 }} iconUrl={item.iconUrl} />
         <Text style={{ fontSize: 18, color: fontColor }}>{item.symbol}</Text>
         <View style={{ flex: 1 }} />
-        <Text style={{ fontSize: 20, color: fontColor }}>0</Text>
+        <Text style={{ fontSize: 19, color: fontColor }}>
+          {item.amount
+            ? formatCurrency(item.amount, '')
+            : formatCurrency(utils.formatUnits(item.balance || 0, item.decimals), '')}
+        </Text>
       </TouchableOpacity>
     );
   };
@@ -53,24 +60,32 @@ export default observer(({ tokens }: { tokens?: IToken[] }) => {
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.header}>
-        <Text
-          style={{ ...styles.headerLabel, ...(activeTab === 0 ? styles.headerLabelActive : {}) }}
-          onPress={() => swipeTo(0)}
-        >
-          Assets
-        </Text>
-        <Text
-          style={{ ...styles.headerLabel, ...(activeTab === 1 ? styles.headerLabelActive : {}) }}
-          onPress={() => swipeTo(1)}
-        >
-          NFTs
-        </Text>
-        <Text
-          style={{ ...styles.headerLabel, ...(activeTab === 2 ? styles.headerLabelActive : {}) }}
-          onPress={() => swipeTo(2)}
-        >
-          History
-        </Text>
+        <View style={styles.tabsContainer}>
+          <Text
+            style={{ ...styles.headerLabel, ...(activeTab === 0 ? styles.headerLabelActive : {}), paddingStart: 0 }}
+            onPress={() => swipeTo(0)}
+          >
+            Assets
+          </Text>
+          <Text
+            style={{ ...styles.headerLabel, ...(activeTab === 1 ? styles.headerLabelActive : {}) }}
+            onPress={() => swipeTo(1)}
+          >
+            NFTs
+          </Text>
+          <Text
+            style={{ ...styles.headerLabel, ...(activeTab === 2 ? styles.headerLabelActive : {}) }}
+            onPress={() => swipeTo(2)}
+          >
+            History
+          </Text>
+        </View>
+
+        {activeTab === 0 ? (
+          <TouchableOpacity>
+            <Ionicons name="add-circle-outline" size={24} />
+          </TouchableOpacity>
+        ) : undefined}
       </View>
 
       <Swiper
@@ -96,21 +111,29 @@ export default observer(({ tokens }: { tokens?: IToken[] }) => {
 
 const styles = StyleSheet.create({
   header: {
+    justifyContent: 'space-between',
     flexDirection: 'row',
-    padding: 10,
+    alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: borderColor,
   },
 
+  tabsContainer: {
+    flexDirection: 'row',
+    padding: 10,
+    paddingStart: 8,
+  },
+
   headerLabel: {
-    flex: 1,
     textAlign: 'center',
+    paddingHorizontal: 12,
+    fontWeight: '400',
     fontSize: 15,
     color: secondaryFontColor,
   },
 
   headerLabelActive: {
-    color: fontColor,
+    color: themeColor,
     fontWeight: '500',
   },
 

@@ -27,7 +27,7 @@ export async function getTokens(address: string, chain: chain, is_all = false) {
           decimals: t.decimals,
           symbol: t.optimized_symbol || t.symbol,
           price: t.price,
-          balance: utils.formatUnits(t.wei || '0', t.decimals || 18),
+          amount: t.amount,
           iconUrl: t.logo_url,
         };
       });
@@ -61,7 +61,6 @@ export interface ITokenBalance {
   is_wallet?: boolean;
   time_at?: number;
   amount: number;
-  wei?: string;
 }
 
 interface ITotalBalance {

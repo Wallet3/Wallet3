@@ -37,7 +37,7 @@ export default observer(({ style, address, balance }: Props) => {
 
       <Text style={{ ...styles.text, fontSize: 12 }}>{formatAddress(address ?? '', 7, 5)}</Text>
 
-      <View style={{ height: 52 }} />
+      <View style={{ height: 54 }} />
 
       <View style={{ justifyContent: 'space-between' }}>
         <AnimateNumber value={balance || 0} style={styles.headline} numberOfLines={1} formatter={formatCurrency} />
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '600',
     maxWidth: '85%',
-    fontSize: 32,
+    fontSize: 29,
     fontFamily: numericFontFamily,
   },
 });

@@ -12,6 +12,7 @@ export class ERC20Token {
   decimals = -1;
   price = 0;
   balance = BigNumber.from(0);
+  amount = 0;
   minGas?: number;
   iconUrl?: string;
 
@@ -25,6 +26,7 @@ export class ERC20Token {
     name?: string;
     symbol?: string;
     decimals?: number;
+    amount?: number;
     price?: number;
     minGas?: number;
     iconUrl?: string;
@@ -38,6 +40,7 @@ export class ERC20Token {
     this.price = props.price || 0;
     this.minGas = props.minGas;
     this.iconUrl = props.iconUrl;
+    this.amount = props.amount || 0;
 
     makeObservable(this, { name: observable, symbol: observable, balance: observable, decimals: observable });
   }

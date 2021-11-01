@@ -4,6 +4,7 @@ export interface IToken {
   symbol: string;
   minGas?: number;
   price?: number;
+  amount?:number;
   balance?: BigNumberish;
   iconUrl?: string;
 }
