@@ -4,6 +4,7 @@ export interface IToken {
   symbol: string;
   minGas?: number;
   price?: number;
+  balance?: BigNumberish;
   iconUrl?: string;
 }
 
@@ -300,6 +301,7 @@ export function findTokenByAddress(address: string) {
   return all.find((t) => t.address.toUpperCase() === upper);
 }
 
+import { BigNumberish } from '@ethersproject/bignumber';
 import { PartnerTokens } from './PartnerTokens';
 
 export const EthereumPopularTokens = [DAI, USDC, USDT, UNI, SUSHI, COMP, MKR, CRV, LINK, AAVE, DPI, ...PartnerTokens];

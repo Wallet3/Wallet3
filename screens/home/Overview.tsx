@@ -35,20 +35,24 @@ export default observer(({ style, address, balance }: Props) => {
         </View>
       </View>
 
-      <Text style={{ ...styles.text, marginBottom: 42, fontSize: 12 }}>{formatAddress(address ?? '', 7, 5)}</Text>
+      <Text style={{ ...styles.text, fontSize: 12 }}>{formatAddress(address ?? '', 7, 5)}</Text>
 
-      <AnimateNumber value={balance || 0} style={styles.headline} numberOfLines={1} formatter={formatCurrency} />
+      <View style={{ height: 52 }} />
 
-      <Ethereum
-        width={64}
-        height={64}
-        style={{
-          marginTop: -60,
-          marginEnd: -19,
-          alignSelf: 'flex-end',
-          opacity: 0.72,
-        }}
-      />
+      <View style={{ justifyContent: 'space-between' }}>
+        <AnimateNumber value={balance || 0} style={styles.headline} numberOfLines={1} formatter={formatCurrency} />
+
+        <Ethereum
+          width={64}
+          height={64}
+          style={{
+            marginTop: -60,
+            marginEnd: -19,
+            alignSelf: 'flex-end',
+            opacity: 0.72,
+          }}
+        />
+      </View>
     </View>
   );
 });
@@ -56,8 +60,9 @@ export default observer(({ style, address, balance }: Props) => {
 const styles = StyleSheet.create({
   container: {
     borderRadius: 10,
-    padding: 12,
+    paddingVertical: 10,
     paddingHorizontal: 16,
+    height: 142,
     backgroundColor: themeColor,
   },
 
@@ -67,7 +72,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '600',
     maxWidth: '85%',
-    fontSize: 27,
+    fontSize: 32,
     fontFamily: numericFontFamily,
   },
 });

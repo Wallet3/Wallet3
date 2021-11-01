@@ -13,7 +13,7 @@ export class Account {
   readonly address: string;
   readonly index: number;
 
-  tokens: ERC20Token[] = [];
+  tokens: IToken[] = [];
   balanceUSD = 0;
   ensName = '';
   avatar = '';
@@ -41,11 +41,26 @@ export class Account {
     const { usd_value } = await Debank.getBalance(this.address, Networks.current.comm_id);
     runInAction(() => (this.balanceUSD = usd_value));
 
-    const tokens = (await Debank.getTokens(this.address, Networks.current.comm_id)).map(
-      (t) => new ERC20Token({ ...t, contract: t.address, provider: Networks.currentProvider })
-    );
+    const [native, tokens] = await Promise.all([
+      this.refreshNativeToken(),
+      (
+        await Debank.getTokens(this.address, Networks.current.comm_id)
+      ).map((t) => new ERC20Token({ ...t, contract: t.address, provider: Networks.currentProvider })),
+    ]);
 
-    runInAction(() => (this.tokens = tokens));
+    runInAction(() => (this.tokens = [native, ...tokens]));
+  }
+
+  async refreshNativeToken() {
+    const native: IToken = {
+      address: '',
+      decimals: 18,
+      symbol: Networks.current.symbol,
+      price: 0,
+      balance: await getBalance(Networks.current.chainId, this.address),
+    };
+
+    return native;
   }
 
   fetchBasicInfo() {
