@@ -63,6 +63,7 @@ export class ERC20Token {
       amount: computed,
       loading: observable,
       getBalance: action,
+      shown: observable,
     });
   }
 

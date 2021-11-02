@@ -1,12 +1,12 @@
 import * as Debank from '../common/apis/Debank';
 
-import { computed, makeObservable, observable, runInAction } from 'mobx';
+import TokensMan, { UserToken } from './services/TokensMan';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
 import { ERC20Token } from '../common/ERC20';
 import { IToken } from '../common/Tokens';
 import Networks from './Networks';
 import { PublicNetworks } from '../common/Networks';
-import TokensMan from './services/TokensMan';
 import { formatAddress } from '../utils/formatter';
 import { getBalance } from '../common/RPC';
 import { utils } from 'ethers';
@@ -37,6 +37,8 @@ export class Account {
       displayName: computed,
       balanceUSD: observable,
       avatar: observable,
+      toggleToken: action,
+      reorderTokens: action,
     });
   }
 
@@ -96,5 +98,25 @@ export class Account {
     const { currentProvider } = Networks;
     currentProvider.lookupAddress(this.address).then((v) => runInAction(() => (this.ensName = v || this.address)));
     currentProvider.getAvatar(this.ensName || this.address).then((v) => runInAction(() => (this.avatar = v || '')));
+  }
+
+  toggleToken(token: UserToken) {
+    token.shown = !token.shown;
+
+    const index = this.tokens.indexOf(token);
+
+    if (token.shown && index === -1) {
+      this.tokens = [...this.tokens, token];
+    } else {
+      if (index >= 0) this.tokens = [...this.tokens.slice(0, index), ...this.tokens.slice(index + 1)];
+    }
+
+    TokensMan.saveUserTokens(Networks.current.chainId, this.address, this.allTokens);
+  }
+
+  reorderTokens(tokens: UserToken[]) {
+    this.allTokens = tokens;
+    this.tokens = [this.tokens[0], ...tokens.filter((t) => t.shown)];
+    TokensMan.saveUserTokens(Networks.current.chainId, this.address, tokens);
   }
 }

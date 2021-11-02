@@ -7,7 +7,7 @@ export interface IToken {
   balance?: BigNumberish;
   iconUrl?: string;
 
-  get amount(): string;
+  amount?: string;
   loading?: boolean;
 }
 
