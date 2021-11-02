@@ -1,6 +1,6 @@
 import { Image, ImageResizeMode, ImageStyle, ImageURISource, StyleProp } from 'react-native';
+import React, { useState } from 'react';
 
-import React from 'react';
 import icons from '../assets/icons/crypto';
 
 interface CoinProps {
@@ -105,9 +105,12 @@ interface CoinProps {
 
 export default (props: CoinProps) => {
   const symbol = props.symbol.toLowerCase();
+  const [source, setSource] = useState(props.iconUrl ? icons[symbol] : icons[symbol] || icons['_coin']);
+
   return (
     <Image
-      source={icons[symbol] || { uri: props.iconUrl }}
+      source={source || { uri: props.iconUrl }}
+      onError={() => setSource(icons['_coin'])}
       {...props}
       style={{
         ...((props.style as any) || {}),
