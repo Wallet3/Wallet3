@@ -4,7 +4,7 @@ import { SafeAreaView, ScrollView, Text, TouchableHighlight, View } from 'react-
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
 import { Ionicons } from '@expo/vector-icons';
-import { LandStackNavs } from './navs';
+import { LandScreenStack } from '../navigations';
 import MnemonicOnce from '../../viewmodels/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -12,7 +12,7 @@ import _ from 'lodash';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
 
-export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, 'Backup'>) => {
+export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack, 'Backup'>) => {
   const [sorted, setSorted] = useState<string[]>([]);
   const [shuffled, setShuffled] = useState<string[]>([]);
   const [verified, setVerified] = useState(false);

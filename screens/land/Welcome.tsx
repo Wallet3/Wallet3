@@ -4,7 +4,7 @@ import { Button, SafeViewContainer } from '../../components';
 import { Text, View } from 'react-native-animatable';
 import { secondaryFontColor, themeColor } from '../../constants/styles';
 
-import { LandStackNavs } from './navs';
+import { LandScreenStack } from '../navigations';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import { SafeAreaView } from 'react-native';
@@ -13,7 +13,7 @@ import { StyleSheet } from 'react-native';
 import styles from './styles';
 import { useFonts } from 'expo-font';
 
-export default ({ navigation }: NativeStackScreenProps<LandStackNavs, 'Welcome'>) => {
+export default ({ navigation }: NativeStackScreenProps<LandScreenStack, 'Welcome'>) => {
   const [loaded] = useFonts({
     Questrial: require('../../assets/fonts/Questrial.ttf'),
   });

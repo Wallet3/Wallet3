@@ -7,13 +7,13 @@ import { fontColor, secondaryFontColor, themeColor } from '../../constants/style
 
 import AppVM from '../../viewmodels/App';
 import Authentication from '../../viewmodels/Authentication';
-import { LandStackNavs } from './navs';
+import { LandScreenStack } from '../navigations';
 import MnemonicOnce from '../../viewmodels/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
 
-export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, 'Backup'>) => {
+export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack, 'Backup'>) => {
   const passcodeLength = 6;
   const [passcode, setPasscode] = useState('');
   const [confirm, setConfirm] = useState('');

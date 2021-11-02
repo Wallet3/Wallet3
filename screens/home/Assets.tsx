@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   headerLabel: {
     textAlign: 'center',
     paddingHorizontal: 12,
-    fontWeight: '400',
+    fontWeight: '500',
     fontSize: 15,
     color: secondaryFontColor,
   },

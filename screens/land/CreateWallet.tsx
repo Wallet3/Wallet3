@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { SafeAreaView, Text, View } from 'react-native';
 import { fontColor, secondaryFontColor, themeColor } from '../../constants/styles';
 
-import { LandStackNavs } from './navs';
+import { LandScreenStack } from '../navigations';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import MnemonicOnce from '../../viewmodels/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -12,7 +12,7 @@ import { formatAddress } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
 
-export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, 'Backup'>) => {
+export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack, 'Backup'>) => {
   useEffect(() => {
     MnemonicOnce.generate();
   }, []);

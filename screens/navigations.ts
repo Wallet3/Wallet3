@@ -1,4 +1,4 @@
-export type LandStackNavs = {
+export type LandScreenStack = {
   Welcome: undefined;
   ImportWallet: undefined;
   CreateWallet: undefined;
@@ -6,4 +6,9 @@ export type LandStackNavs = {
   SetupPasscode: undefined;
   Home: undefined;
   Root: undefined;
+};
+
+export type HomeScreenStack = {
+  Home: undefined;
+  Tokens: undefined;
 };
