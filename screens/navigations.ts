@@ -1,3 +1,5 @@
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
 export type LandScreenStack = {
   Welcome: undefined;
   ImportWallet: undefined;
@@ -8,7 +10,9 @@ export type LandScreenStack = {
   Root: undefined;
 };
 
-export type HomeScreenStack = {
-  Home: undefined;
+export type RootStack = {
+  Root: undefined;
   Tokens: undefined;
 };
+
+export type RootNavigationProps = NativeStackNavigationProp<RootStack>;

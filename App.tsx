@@ -6,7 +6,7 @@ import AppViewModel, { AppVM } from './viewmodels/App';
 import { Button, Dimensions, StyleSheet, Text, View } from 'react-native';
 import { Host, Portal } from 'react-native-portalize';
 import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer, RouteProp } from '@react-navigation/native';
+import { NavigationContainer, RouteProp, useNavigation } from '@react-navigation/native';
 import React, { useCallback, useEffect, useRef } from 'react';
 
 import Drawer from './screens/home/Drawer';
@@ -15,6 +15,7 @@ import LandScreen from './screens/land';
 import { Modalize } from 'react-native-modalize';
 import NetworksMenu from './modals/Networks';
 import PubSub from 'pubsub-js';
+import Tokens from './screens/tokens';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { observer } from 'mobx-react-lite';
@@ -84,13 +85,28 @@ const App = observer(({ app }: { app: AppVM }) => {
     <NavigationContainer>
       <Host>
         {app.initialized ? (
-          <Navigator>
-            {app.hasWallet ? (
+          app.hasWallet ? (
+            <Navigator
+              initialRouteName="Root"
+              screenOptions={({ navigation }) => {
+                return {
+                  headerTransparent: true,
+                  headerLeft: ({}) => (
+                    <TouchableOpacity onPress={() => navigation.pop()}>
+                      <Ionicons name="arrow-back-outline" size={20} />
+                    </TouchableOpacity>
+                  ),
+                };
+              }}
+            >
               <Screen name="Root" component={Root} options={{ headerShown: false }} />
-            ) : (
+              <Screen name="Tokens" component={Tokens} />
+            </Navigator>
+          ) : (
+            <Navigator>
               <Screen name="Land" component={LandScreen} options={{ headerShown: false }} />
-            )}
-          </Navigator>
+            </Navigator>
+          )
         ) : undefined}
       </Host>
 

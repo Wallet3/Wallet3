@@ -1,5 +1,6 @@
 import { FlatList, ListRenderItemInfo, StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
+import { RootNavigationProps, RootStack } from '../navigations';
 import { borderColor, fontColor, secondaryFontColor, themeColor } from '../../constants/styles';
 
 import { Coin } from '../../components';
@@ -10,6 +11,7 @@ import Swiper from 'react-native-swiper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { formatCurrency } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
+import { useNavigation } from '@react-navigation/core';
 
 const Token = observer(({ item }: { item: IToken }) => {
   return (
@@ -63,6 +65,8 @@ export default observer(({ tokens }: { tokens?: IToken[] }) => {
     setActiveTab(index);
   };
 
+  const navigation = useNavigation<RootNavigationProps>();
+
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.header}>
@@ -88,7 +92,7 @@ export default observer(({ tokens }: { tokens?: IToken[] }) => {
         </View>
 
         {activeTab === 0 ? (
-          <TouchableOpacity style={{ padding: 4, marginEnd: -4 }}>
+          <TouchableOpacity style={{ padding: 4, marginEnd: -4 }} onPress={() => navigation.navigate('Tokens')}>
             <Ionicons name="add-circle-outline" size={24} color={secondaryFontColor} style={{ opacity: 0.85 }} />
           </TouchableOpacity>
         ) : undefined}
