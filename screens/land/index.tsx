@@ -1,14 +1,13 @@
 import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useRef } from 'react';
 
-import { AppVM } from '../../viewmodels/App';
-import Backup from './backup';
-import CreateWallet from './createWallet';
-import ImportWallet from './importWallet';
+import Backup from './Backup';
+import CreateWallet from './CreateWallet';
+import ImportWallet from './ImportWallet';
 import { Ionicons } from '@expo/vector-icons';
-import SetupPasscode from './passcode';
+import SetupPasscode from './Passcode';
 import { TouchableOpacity } from 'react-native';
-import Welcome from './welcome';
+import Welcome from './Welcome';
 import { observer } from 'mobx-react-lite';
 
 type RootStackParamList = {

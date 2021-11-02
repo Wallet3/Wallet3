@@ -2,13 +2,13 @@ import * as ethers from 'ethers';
 
 import React, { useEffect } from 'react';
 import { ScrollView, Text, TextInput, View } from 'react-native';
-import { borderColor, secondaryFontColor, themeColor } from '../../../constants/styles';
+import { borderColor, secondaryFontColor, themeColor } from '../../constants/styles';
 
-import { Button } from '../../../components';
-import { LandStackNavs } from '../navs';
-import MnemonicOnce from '../../../viewmodels/MnemonicOnce';
+import { Button } from '../../components';
+import { LandStackNavs } from './navs';
+import MnemonicOnce from '../../viewmodels/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { langToWordlist } from '../../../utils/mnemonic';
+import { langToWordlist } from '../../utils/mnemonic';
 import { observer } from 'mobx-react-lite';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';

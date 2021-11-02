@@ -1,16 +1,16 @@
-import { Button, Mnemonic, SafeViewContainer } from '../../../components';
+import { Button, Mnemonic, SafeViewContainer } from '../../components';
 import React, { useEffect } from 'react';
 import { SafeAreaView, Text, View } from 'react-native';
-import { fontColor, secondaryFontColor, themeColor } from '../../../constants/styles';
+import { fontColor, secondaryFontColor, themeColor } from '../../constants/styles';
 
-import { LandStackNavs } from '../navs';
+import { LandStackNavs } from './navs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import MnemonicOnce from '../../../viewmodels/MnemonicOnce';
+import MnemonicOnce from '../../viewmodels/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { formatAddress } from '../../../utils/formatter';
+import { formatAddress } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
-import styles from '../styles';
+import styles from './styles';
 
 export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, 'Backup'>) => {
   useEffect(() => {

@@ -33,7 +33,7 @@ const ReviewView = observer((props: Props) => {
             <Text style={{ ...viewStyles.reviewItemValue, marginEnd: 8 }} numberOfLines={1}>
               20.01 UNI
             </Text>
-            <Coin symbol="UNI" />
+            <Coin symbol="uni" />
           </View>
         </View>
 

@@ -88,7 +88,7 @@ export default observer(({ tokens }: { tokens?: IToken[] }) => {
         </View>
 
         {activeTab === 0 ? (
-          <TouchableOpacity>
+          <TouchableOpacity style={{ padding: 4, marginEnd: -4 }}>
             <Ionicons name="add-circle-outline" size={24} color={secondaryFontColor} style={{ opacity: 0.85 }} />
           </TouchableOpacity>
         ) : undefined}

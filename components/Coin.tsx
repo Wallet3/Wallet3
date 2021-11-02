@@ -113,10 +113,9 @@ export default (props: CoinProps) => {
       onError={() => setSource(icons['_coin'])}
       {...props}
       style={{
+        width: 22,
+        height: 22,
         ...((props.style as any) || {}),
-        width: (props.style as any)?.width ?? 22,
-        height: (props.style as any)?.height ?? 22,
-        borderRadius: (props.style as any)?.width / 2 ?? 11,
       }}
     />
   );

@@ -1,17 +1,17 @@
 import * as Animatable from 'react-native-animatable';
 
-import { Button, Loader, Numpad, NumpadChar, SafeViewContainer } from '../../../components';
+import { Button, Loader, Numpad, NumpadChar, SafeViewContainer } from '../../components';
 import { Modal, SafeAreaView, Switch, Text, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
-import { fontColor, secondaryFontColor, themeColor } from '../../../constants/styles';
+import { fontColor, secondaryFontColor, themeColor } from '../../constants/styles';
 
-import AppVM from '../../../viewmodels/App';
-import Authentication from '../../../viewmodels/Authentication';
-import { LandStackNavs } from '../navs';
-import MnemonicOnce from '../../../viewmodels/MnemonicOnce';
+import AppVM from '../../viewmodels/App';
+import Authentication from '../../viewmodels/Authentication';
+import { LandStackNavs } from './navs';
+import MnemonicOnce from '../../viewmodels/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { observer } from 'mobx-react-lite';
-import styles from '../styles';
+import styles from './styles';
 
 export default observer(({ navigation }: NativeStackScreenProps<LandStackNavs, 'Backup'>) => {
   const passcodeLength = 6;

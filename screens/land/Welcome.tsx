@@ -1,21 +1,21 @@
 import {} from 'react-native';
 
-import { Button, SafeViewContainer } from '../../../components';
+import { Button, SafeViewContainer } from '../../components';
 import { Text, View } from 'react-native-animatable';
-import { secondaryFontColor, themeColor } from '../../../constants/styles';
+import { secondaryFontColor, themeColor } from '../../constants/styles';
 
-import { LandStackNavs } from '../navs';
+import { LandStackNavs } from './navs';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import { SafeAreaView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet } from 'react-native';
-import styles from '../styles';
+import styles from './styles';
 import { useFonts } from 'expo-font';
 
 export default ({ navigation }: NativeStackScreenProps<LandStackNavs, 'Welcome'>) => {
   const [loaded] = useFonts({
-    Questrial: require('../../../assets/fonts/Questrial.ttf'),
+    Questrial: require('../../assets/fonts/Questrial.ttf'),
   });
 
   if (!loaded) {

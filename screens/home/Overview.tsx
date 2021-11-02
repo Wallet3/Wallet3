@@ -59,7 +59,7 @@ export default observer(({ style, address, balance }: Props) => {
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 10,
+    borderRadius: 9,
     paddingVertical: 10,
     paddingHorizontal: 16,
     height: 142,
