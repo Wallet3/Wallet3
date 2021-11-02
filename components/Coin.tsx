@@ -105,18 +105,17 @@ interface CoinProps {
 
 export default (props: CoinProps) => {
   const symbol = props.symbol.toLowerCase();
-  const [source, setSource] = useState(props.iconUrl ? icons[symbol] : icons[symbol] || icons['_coin']);
+  const [source, setSource] = useState(props.iconUrl ? { uri: props.iconUrl } : icons[symbol] || icons['_coin']);
   const size = (props.style as any)?.width || 22;
 
   return (
     <Image
-      source={source || { uri: props.iconUrl }}
+      source={source}
       onError={() => setSource(icons['_coin'])}
       {...props}
       style={{
         width: size,
         height: size,
-        backgroundColor: 'darkorange',
         ...((props.style as any) || {}),
         borderRadius: size / 2,
       }}

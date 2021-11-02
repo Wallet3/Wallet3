@@ -32,7 +32,7 @@ const DraggableToken = observer(
         paddingHorizontal: 16,
       }}
     >
-      <Coin symbol={item.symbol} style={{ width: 36, height: 36, marginEnd: 16 }} />
+      <Coin symbol={item.symbol} style={{ width: 36, height: 36, marginEnd: 16 }} iconUrl={item.iconUrl} />
       <Text style={{ fontSize: 18, color: fontColor }}>{item.symbol}</Text>
       <View style={{ flex: 1 }} />
       <Switch value={item.shown} onValueChange={(on) => onValueChange(on)} />
