@@ -1,11 +1,11 @@
 import { FlatList, ListRenderItemInfo, StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
-import { RootNavigationProps, RootStack } from '../navigations';
 import { borderColor, fontColor, secondaryFontColor, themeColor } from '../../constants/styles';
 
 import { Coin } from '../../components';
 import { Feather } from '@expo/vector-icons';
 import { IToken } from '../../common/Tokens';
+import { RootNavigationProps } from '../navigations';
 import Skeleton from '../../components/Skeleton';
 import Swiper from 'react-native-swiper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -35,7 +35,7 @@ const Token = observer(({ item }: { item: IToken }) => {
         <Skeleton />
       ) : (
         <Text style={{ fontSize: 19, color: fontColor }} numberOfLines={1}>
-          {formatCurrency(item.amount, '')}
+          {formatCurrency(item.amount || '0', '')}
         </Text>
       )}
     </TouchableOpacity>
@@ -45,7 +45,7 @@ const Token = observer(({ item }: { item: IToken }) => {
 const Tokens = observer(({ tokens }: { tokens?: IToken[] }) => {
   const renderItem = ({ item, index }: ListRenderItemInfo<IToken>) => <Token item={item} />;
 
-  return (
+  return (tokens?.length ?? 0) > 0 ? (
     <FlatList
       data={tokens}
       keyExtractor={(i) => i.address}
@@ -53,6 +53,10 @@ const Tokens = observer(({ tokens }: { tokens?: IToken[] }) => {
       style={{ paddingHorizontal: 16 }}
       ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: '#efefef80', marginStart: 56 }} />}
     />
+  ) : (
+    <View style={{ flex: 1, padding: 16, paddingVertical: 12 }}>
+      <Skeleton style={{ height: 52, width: '100%' }} />
+    </View>
   );
 });
 

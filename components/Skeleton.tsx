@@ -19,8 +19,8 @@ export default (props: Props) => {
       animation={fadeInOut}
       iterationCount={'infinite'}
       duration={1500}
-      style={{ width: 100, height: 20, borderRadius: 6, backgroundColor: '#f5f5f5' }}
       {...props}
+      style={{ width: 100, height: 20, borderRadius: 6, backgroundColor: '#f5f5f5', ...((props.style as any) || {}) }}
     ></View>
   );
 };
