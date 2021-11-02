@@ -51,7 +51,10 @@ export class Account {
       Debank.getBalance(this.address, current.comm_id),
     ]);
 
-    const favTokens = [native, ...userTokens.filter((t) => t.shown)];
+    const shownTokens = userTokens.filter((t) => t.shown);
+    const favTokens = [native, ...shownTokens];
+    shownTokens.map((t) => t.getBalance());
+
     runInAction(() => {
       this.tokens = favTokens;
       this.balanceUSD = usd_value;
@@ -106,6 +109,7 @@ export class Account {
     const index = this.tokens.indexOf(token);
 
     if (token.shown && index === -1) {
+      (token as ERC20Token).getBalance?.();
       this.tokens = [...this.tokens, token];
     } else {
       if (index >= 0) this.tokens = [...this.tokens.slice(0, index), ...this.tokens.slice(index + 1)];
