@@ -25,7 +25,6 @@ class Networks {
     }
 
     const [url] = providers[chainId] as string[];
-    console.log(chainId, url);
 
     const provider = url.startsWith('ws')
       ? new ethers.providers.WebSocketProvider(url, chainId)

@@ -7,5 +7,6 @@ import Loader from './Loader';
 import Mnemonic from './Mnemonic';
 import SafeViewContainer from './SafeViewContainer';
 import Separator from './Separator';
+import Skeleton from './Skeleton';
 
-export { Button, Coin, Numpad, Separator, DismissKeyboard, Mnemonic, NumpadChar, Loader, SafeViewContainer };
+export { Button, Coin, Numpad, Separator, DismissKeyboard, Mnemonic, NumpadChar, Loader, SafeViewContainer, Skeleton };

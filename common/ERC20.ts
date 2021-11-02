@@ -1,5 +1,5 @@
 import { BigNumber, BigNumberish, ethers, utils } from 'ethers';
-import { makeObservable, observable } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
 import ERC20ABI from '../abis/ERC20.json';
 
@@ -15,6 +15,8 @@ export class ERC20Token {
   balance = BigNumber.from(0);
   minGas?: number;
   iconUrl?: string;
+
+  loading = false;
 
   get interface() {
     return this.erc20.interface;
@@ -47,12 +49,27 @@ export class ERC20Token {
     this.iconUrl = props.iconUrl;
     this.owner = props.owner || '';
 
-    makeObservable(this, { name: observable, symbol: observable, balance: observable, decimals: observable });
+    makeObservable(this, {
+      name: observable,
+      symbol: observable,
+      balance: observable,
+      decimals: observable,
+      amount: computed,
+      loading: observable,
+      getBalance: action,
+    });
   }
 
-  async balanceOf(guy: string): Promise<BigNumber> {
-    this.balance = await this.erc20.balanceOf(guy);
-    return this.balance;
+  async getBalance(): Promise<BigNumber> {
+    this.loading = true;
+    const balance = await this.erc20.balanceOf(this.owner);
+
+    runInAction(() => {
+      this.balance = balance;
+      this.loading = false;
+    });
+
+    return balance;
   }
 
   allowance(owner: string, spender: string): Promise<BigNumber> {
@@ -61,20 +78,23 @@ export class ERC20Token {
 
   async getName(): Promise<string> {
     if (this.name) return this.name;
-    this.name = await this.erc20.name();
-    return this.name;
+    const name = await this.erc20.name();
+    runInAction(() => (this.name = name));
+    return name;
   }
 
   async getDecimals(): Promise<number> {
     if (this.decimals >= 0) return this.decimals;
-    this.decimals = await this.erc20.decimals();
-    return this.decimals;
+    const decimals = await this.erc20.decimals();
+    runInAction(() => (this.decimals = decimals));
+    return decimals;
   }
 
   async getSymbol(): Promise<string> {
     if (this.symbol) return this.symbol;
-    this.symbol = await this.erc20.symbol();
-    return this.symbol;
+    const symbol = await this.erc20.symbol();
+    runInAction(() => (this.symbol = symbol));
+    return symbol;
   }
 
   get filters() {

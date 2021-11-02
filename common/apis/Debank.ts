@@ -27,7 +27,7 @@ export async function getTokens(address: string, chain: chain, is_all = false) {
           decimals: t.decimals,
           symbol: t.optimized_symbol || t.symbol,
           price: t.price,
-          amount: t.amount,
+          amount: `${t.amount}`,
           iconUrl: t.logo_url,
         };
       });

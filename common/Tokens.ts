@@ -6,6 +6,9 @@ export interface IToken {
   price?: number;
   balance?: BigNumberish;
   iconUrl?: string;
+
+  get amount(): string;
+  loading?: boolean;
 }
 
 export const ETH = {
@@ -596,7 +599,7 @@ const zkSyncTest_DAI = {
 
 export const zkSyncTestPopularTokens = [zkSyncTest_USDC, zkSyncTest_DAI];
 
-const all: IToken[] = [
+const all = [
   ...Stablecoins,
   WETH,
   ...BTCTokens,
@@ -607,6 +610,6 @@ const all: IToken[] = [
   ...FTMPopularTokens,
   ...BscPopularTokens,
   ...HecoPopularTokens,
-];
+] as IToken[];
 
 export default all;

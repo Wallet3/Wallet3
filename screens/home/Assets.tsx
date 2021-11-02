@@ -5,34 +5,43 @@ import { borderColor, fontColor, secondaryFontColor, themeColor } from '../../co
 import { Coin } from '../../components';
 import { IToken } from '../../common/Tokens';
 import { Ionicons } from '@expo/vector-icons';
+import Skeleton from '../../components/Skeleton';
 import Swiper from 'react-native-swiper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { formatCurrency } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
-import { utils } from 'ethers';
 
-const Tokens = ({ tokens }: { tokens?: IToken[] }) => {
-  const renderItem = ({ item, index }: ListRenderItemInfo<IToken>) => {
-    return (
-      <TouchableOpacity
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          marginHorizontal: -16,
-          paddingVertical: 16,
-          paddingBottom: 13,
-          paddingHorizontal: 22,
-        }}
-      >
-        <Coin symbol={item.symbol} style={{ width: 36, height: 36, marginEnd: 16 }} iconUrl={item.iconUrl} />
-        <Text style={{ fontSize: 18, color: fontColor }}>{item.symbol}</Text>
-        <View style={{ flex: 1 }} />
-        <Text style={{ fontSize: 19, color: fontColor }}>
-          {formatCurrency(utils.formatUnits(item.balance || 0, item.decimals), '')}
+const Token = observer(({ item }: { item: IToken }) => {
+  return (
+    <TouchableOpacity
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginHorizontal: -16,
+        paddingVertical: 16,
+        paddingBottom: 13,
+        paddingHorizontal: 22,
+      }}
+    >
+      <Coin symbol={item.symbol} style={{ width: 36, height: 36, marginEnd: 16 }} iconUrl={item.iconUrl} />
+      <Text style={{ fontSize: 18, color: fontColor }} numberOfLines={1}>
+        {item.symbol}
+      </Text>
+      <View style={{ flex: 1 }} />
+
+      {item.loading ? (
+        <Skeleton />
+      ) : (
+        <Text style={{ fontSize: 19, color: fontColor }} numberOfLines={1}>
+          {formatCurrency(item.amount, '')}
         </Text>
-      </TouchableOpacity>
-    );
-  };
+      )}
+    </TouchableOpacity>
+  );
+});
+
+const Tokens = observer(({ tokens }: { tokens?: IToken[] }) => {
+  const renderItem = ({ item, index }: ListRenderItemInfo<IToken>) => <Token item={item} />;
 
   return (
     <FlatList
@@ -43,7 +52,7 @@ const Tokens = ({ tokens }: { tokens?: IToken[] }) => {
       ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: '#efefef80', marginStart: 56 }} />}
     />
   );
-};
+});
 
 export default observer(({ tokens }: { tokens?: IToken[] }) => {
   const [activeTab, setActiveTab] = useState(0);

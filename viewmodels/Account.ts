@@ -9,6 +9,7 @@ import { PublicNetworks } from '../common/Networks';
 import TokensMan from './services/TokensMan';
 import { formatAddress } from '../utils/formatter';
 import { getBalance } from '../common/RPC';
+import { utils } from 'ethers';
 
 export class Account {
   readonly address: string;
@@ -25,7 +26,7 @@ export class Account {
   }
 
   constructor(address: string, index: number) {
-    this.address = '0x8568E1A8082B442aE9BE089A3b3888a25Ae55f8C'; // address;
+    this.address = '0xC73f6738311E76D45dFED155F39773e68251D251'; // address;
     this.index = index;
 
     // console.log(address, index);
@@ -41,7 +42,8 @@ export class Account {
 
   async refreshOverview() {
     this.refreshNativeToken().then(async (native) => {
-      const userTokens = await TokensMan.loadUserTokens(Networks.current.chainId, this.address);
+      const userTokens = await TokensMan.loadUserTokens(Networks.current.chainId, this.address, Networks.currentProvider);
+      userTokens.map((t) => t.getBalance());
       runInAction(() => (this.tokens = [native, ...userTokens]));
     });
 
@@ -62,12 +64,15 @@ export class Account {
   }
 
   async refreshNativeToken() {
+    const balance = await getBalance(Networks.current.chainId, this.address);
+
     const native: IToken = {
       address: '',
       decimals: 18,
       symbol: Networks.current.symbol,
       price: 0,
-      balance: await getBalance(Networks.current.chainId, this.address),
+      balance: balance,
+      amount: utils.formatUnits(balance, 18),
     };
 
     return native;
