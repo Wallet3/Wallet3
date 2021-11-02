@@ -23,7 +23,7 @@ export async function getTokens(address: string, chain: chain, is_all = false) {
       .filter((t) => utils.isAddress(t.id))
       .map<IToken>((t) => {
         return {
-          address: t.id,
+          address: utils.getAddress(t.id),
           decimals: t.decimals,
           symbol: t.optimized_symbol || t.symbol,
           price: t.price,

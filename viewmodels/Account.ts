@@ -41,26 +41,37 @@ export class Account {
   }
 
   async refreshOverview() {
-    this.refreshNativeToken().then(async (native) => {
-      const userTokens = await TokensMan.loadUserTokens(Networks.current.chainId, this.address, Networks.currentProvider);
-      userTokens.map((t) => t.getBalance());
-      runInAction(() => (this.tokens = [native, ...userTokens]));
+    const { current } = Networks;
+
+    const [native, userTokens, { usd_value }] = await Promise.all([
+      this.refreshNativeToken(),
+      TokensMan.loadUserTokens(current.chainId, this.address, Networks.currentProvider),
+      Debank.getBalance(this.address, current.comm_id),
+    ]);
+
+    const favTokens = [native, ...userTokens.filter((t) => t.shown)];
+    runInAction(() => {
+      this.tokens = favTokens;
+      this.balanceUSD = usd_value;
+      this.allTokens = [...userTokens];
     });
 
-    Debank.getBalance(this.address, Networks.current.comm_id).then(({ usd_value }) => {
-      runInAction(() => (this.balanceUSD = usd_value));
-    });
+    Debank.getTokens(this.address, Networks.current.comm_id).then((d) => {
+      const suggested = d
+        .filter((i) => !userTokens.find((fav) => fav.address === i.address))
+        .map(
+          (t) =>
+            new ERC20Token({
+              ...t,
+              contract: t.address,
+              provider: Networks.currentProvider,
+              owner: this.address,
+              chainId: Networks.current.chainId,
+            })
+        );
 
-    // const tokens = (await Debank.getTokens(this.address, Networks.current.comm_id)).map(
-    //   (t) =>
-    //     new ERC20Token({
-    //       ...t,
-    //       contract: t.address,
-    //       provider: Networks.currentProvider,
-    //       owner: this.address,
-    //       chainId: Networks.current.chainId,
-    //     })
-    // );
+      runInAction(() => (this.allTokens = [...this.allTokens, ...suggested]));
+    });
   }
 
   async refreshNativeToken() {

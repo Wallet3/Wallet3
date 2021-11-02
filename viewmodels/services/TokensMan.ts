@@ -6,14 +6,15 @@ import { providers } from 'ethers';
 
 export interface UserToken extends IToken {
   order?: number;
+  shown?: boolean;
 }
 
 export default class TokensMan {
   static async loadUserTokens(chainId: number, account: string, provider: providers.BaseProvider) {
     const popTokens = Networks.find((n) => n.chainId === chainId)?.defaultTokens ?? [];
-    const customized: IToken[] = JSON.parse((await AsyncStorage.getItem(`${chainId}-${account}`)) || '[]');
+    const customized: UserToken[] = JSON.parse((await AsyncStorage.getItem(`${chainId}-${account}`)) || '[]');
 
     const tokens = customized.length === 0 ? popTokens : customized;
-    return tokens.map((t) => new ERC20Token({ ...t, owner: account, chainId, contract: t.address,provider }));
+    return tokens.map((t) => new ERC20Token({ ...t, owner: account, chainId, contract: t.address, provider }));
   }
 }

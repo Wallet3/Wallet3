@@ -15,6 +15,8 @@ export class ERC20Token {
   balance = BigNumber.from(0);
   minGas?: number;
   iconUrl?: string;
+  shown?: boolean;
+  order?: number;
 
   loading = false;
 
@@ -37,6 +39,8 @@ export class ERC20Token {
     price?: number;
     minGas?: number;
     iconUrl?: string;
+    shown?: boolean;
+    order?: number;
   }) {
     this.address = props.contract;
     this.erc20 = new ethers.Contract(this.address, ERC20ABI, props.provider);
@@ -48,6 +52,8 @@ export class ERC20Token {
     this.minGas = props.minGas;
     this.iconUrl = props.iconUrl;
     this.owner = props.owner || '';
+    this.shown = props.shown;
+    this.order = props.order;
 
     makeObservable(this, {
       name: observable,

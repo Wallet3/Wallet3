@@ -106,6 +106,7 @@ interface CoinProps {
 export default (props: CoinProps) => {
   const symbol = props.symbol.toLowerCase();
   const [source, setSource] = useState(props.iconUrl ? icons[symbol] : icons[symbol] || icons['_coin']);
+  const size = (props.style as any)?.width || 22;
 
   return (
     <Image
@@ -113,9 +114,11 @@ export default (props: CoinProps) => {
       onError={() => setSource(icons['_coin'])}
       {...props}
       style={{
-        width: 22,
-        height: 22,
+        width: size,
+        height: size,
+        backgroundColor: 'darkorange',
         ...((props.style as any) || {}),
+        borderRadius: size / 2,
       }}
     />
   );

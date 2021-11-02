@@ -4,8 +4,8 @@ import { RootNavigationProps, RootStack } from '../navigations';
 import { borderColor, fontColor, secondaryFontColor, themeColor } from '../../constants/styles';
 
 import { Coin } from '../../components';
+import { Feather } from '@expo/vector-icons';
 import { IToken } from '../../common/Tokens';
-import { Ionicons } from '@expo/vector-icons';
 import Skeleton from '../../components/Skeleton';
 import Swiper from 'react-native-swiper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -92,8 +92,11 @@ export default observer(({ tokens }: { tokens?: IToken[] }) => {
         </View>
 
         {activeTab === 0 ? (
-          <TouchableOpacity style={{ padding: 4, marginEnd: -4 }} onPress={() => navigation.navigate('Tokens')}>
-            <Ionicons name="add-circle-outline" size={24} color={secondaryFontColor} style={{ opacity: 0.85 }} />
+          <TouchableOpacity
+            style={{ padding: 4, marginEnd: 0, marginBottom: -2 }}
+            onPress={() => navigation.navigate('Tokens')}
+          >
+            <Feather name="more-horizontal" size={21} color={secondaryFontColor} style={{ opacity: 0.8 }} />
           </TouchableOpacity>
         ) : undefined}
       </View>

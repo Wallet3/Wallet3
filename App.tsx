@@ -3,7 +3,7 @@ import './configs/polyfill';
 
 import { AntDesign, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import AppViewModel, { AppVM } from './viewmodels/App';
-import { Button, Dimensions, StyleSheet, Text, View } from 'react-native';
+import { Button, Dimensions, LogBox, StyleSheet, Text, View } from 'react-native';
 import { Host, Portal } from 'react-native-portalize';
 import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer, RouteProp, useNavigation } from '@react-navigation/native';
@@ -24,6 +24,10 @@ import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 const DrawerRoot = createDrawerNavigator();
 const StackRoot = createNativeStackNavigator();
 const screenWidth = Dimensions.get('window').width;
+
+LogBox.ignoreLogs([
+  'ReactNativeFiberHostComponent: Calling getNode() on the ref of an Animated component is no longer necessary. You can now directly use the ref instead. This method will be removed in a future release.',
+]);
 
 type RootStackParamList = {
   Home: undefined;
