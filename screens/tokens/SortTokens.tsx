@@ -1,6 +1,6 @@
 import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist';
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { fontColor, secondaryFontColor } from '../../constants/styles';
 
 import App from '../../viewmodels/App';
@@ -59,7 +59,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
         renderItem={renderItem}
         keyExtractor={(item) => item.address}
         onDragEnd={({ data }) => {
-          currentWallet?.currentAccount?.reorderTokens(data);
+          currentWallet?.currentAccount?.sortTokens(data);
           setData(data);
         }}
       />

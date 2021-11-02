@@ -6,7 +6,6 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 import { ERC20Token } from '../common/ERC20';
 import { IToken } from '../common/Tokens';
 import Networks from './Networks';
-import { PublicNetworks } from '../common/Networks';
 import { formatAddress } from '../utils/formatter';
 import { getBalance } from '../common/RPC';
 import { utils } from 'ethers';
@@ -38,7 +37,7 @@ export class Account {
       balanceUSD: observable,
       avatar: observable,
       toggleToken: action,
-      reorderTokens: action,
+      sortTokens: action,
     });
   }
 
@@ -110,7 +109,9 @@ export class Account {
 
     if (token.shown && index === -1) {
       (token as ERC20Token).getBalance?.();
-      this.tokens = [...this.tokens, token];
+      const tokens = [...this.tokens];
+      tokens.splice(this.allTokens.indexOf(token) + 1, 0, token);
+      this.tokens = tokens;
     } else {
       if (index >= 0) this.tokens = [...this.tokens.slice(0, index), ...this.tokens.slice(index + 1)];
     }
@@ -118,7 +119,7 @@ export class Account {
     TokensMan.saveUserTokens(Networks.current.chainId, this.address, this.allTokens);
   }
 
-  reorderTokens(tokens: UserToken[]) {
+  sortTokens(tokens: UserToken[]) {
     this.allTokens = tokens;
     this.tokens = [this.tokens[0], ...tokens.filter((t) => t.shown)];
     TokensMan.saveUserTokens(Networks.current.chainId, this.address, tokens);

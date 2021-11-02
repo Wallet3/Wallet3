@@ -9,13 +9,14 @@ import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navig
 import { NavigationContainer, RouteProp, useNavigation } from '@react-navigation/native';
 import React, { useCallback, useEffect, useRef } from 'react';
 
+import AddToken from './screens/tokens/AddToken';
 import Drawer from './screens/home/Drawer';
 import HomeScreen from './screens/home';
 import LandScreen from './screens/land';
 import { Modalize } from 'react-native-modalize';
 import NetworksMenu from './modals/Networks';
 import PubSub from 'pubsub-js';
-import Tokens from './screens/tokens';
+import Tokens from './screens/tokens/SortTokens';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { observer } from 'mobx-react-lite';
@@ -95,7 +96,7 @@ const App = observer(({ app }: { app: AppVM }) => {
               screenOptions={({ navigation }) => {
                 return {
                   headerTransparent: true,
-                  headerLeft: ({}) => (
+                  headerLeft: () => (
                     <TouchableOpacity onPress={() => navigation.pop()}>
                       <Ionicons name="arrow-back-outline" size={20} />
                     </TouchableOpacity>
@@ -104,7 +105,24 @@ const App = observer(({ app }: { app: AppVM }) => {
               }}
             >
               <Screen name="Root" component={Root} options={{ headerShown: false }} />
-              <Screen name="Tokens" component={Tokens} />
+              <Screen name="AddToken" component={AddToken} />
+              <Screen
+                name="Tokens"
+                component={Tokens}
+                options={({ navigation }) => {
+                  return {
+                    headerRight: () => (
+                      <TouchableOpacity
+                        onPress={() => {
+                          navigation.navigate('AddToken');
+                        }}
+                      >
+                        <Ionicons name="add-circle-outline" size={24} />
+                      </TouchableOpacity>
+                    ),
+                  };
+                }}
+              />
             </Navigator>
           ) : (
             <Navigator>
