@@ -3,7 +3,7 @@ import * as Debank from '../common/apis/Debank';
 import TokensMan, { UserToken } from './services/TokensMan';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
-import { ERC20Token } from '../common/ERC20';
+import { ERC20Token } from '../models/ERC20';
 import { IToken } from '../common/Tokens';
 import Networks from './Networks';
 import { formatAddress } from '../utils/formatter';
@@ -73,7 +73,6 @@ export class Account {
             new ERC20Token({
               ...t,
               contract: t.address,
-              provider: Networks.currentProvider,
               owner: this.address,
               chainId: Networks.current.chainId,
             })
@@ -141,7 +140,6 @@ export class Account {
       contract: utils.getAddress(address),
       owner: this.address,
       chainId: Networks.current.chainId,
-      provider: Networks.currentProvider,
     });
 
     await Promise.all([token.getBalance(), token.getBalance(), token.getDecimals(), token.getName(), token.getSymbol()]);

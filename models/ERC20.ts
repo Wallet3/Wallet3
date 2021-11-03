@@ -1,12 +1,19 @@
 import { BigNumber, BigNumberish, ethers, utils } from 'ethers';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { call, estimateGas } from '../common/RPC';
 
 import ERC20ABI from '../abis/ERC20.json';
+
+const call_symbol = '0x95d89b41';
+const call_decimals = '0x313ce567';
+const call_name = '0x06fdde03';
 
 export class ERC20Token {
   private owner = '';
   readonly address: string;
   readonly erc20: ethers.Contract;
+  readonly chainId: number;
+  private call_balanceOfOwner = '';
 
   name = '';
   symbol = '';
@@ -32,7 +39,7 @@ export class ERC20Token {
     contract: string;
     owner: string;
     chainId: number;
-    provider?: ethers.providers.BaseProvider;
+
     name?: string;
     symbol?: string;
     decimals?: number;
@@ -43,7 +50,8 @@ export class ERC20Token {
     order?: number;
   }) {
     this.address = props.contract;
-    this.erc20 = new ethers.Contract(this.address, ERC20ABI, props.provider);
+    this.erc20 = new ethers.Contract(this.address, ERC20ABI);
+    this.chainId = props.chainId;
 
     this.symbol = props.symbol || '';
     this.name = props.name || '';
@@ -54,6 +62,8 @@ export class ERC20Token {
     this.owner = props.owner || '';
     this.shown = props.shown;
     this.order = props.order;
+
+    this.call_balanceOfOwner = this.erc20.interface.encodeFunctionData('balanceOf', [this.owner]);
 
     makeObservable(this, {
       name: observable,
@@ -69,7 +79,7 @@ export class ERC20Token {
 
   async getBalance(): Promise<BigNumber> {
     this.loading = true;
-    const balance = await this.erc20.balanceOf(this.owner);
+    const balance = BigNumber.from((await call(this.chainId, { to: this.address, data: this.call_balanceOfOwner })) || '0');
 
     runInAction(() => {
       this.balance = balance;
@@ -85,21 +95,35 @@ export class ERC20Token {
 
   async getName(): Promise<string> {
     if (this.name) return this.name;
-    const name = await this.erc20.name();
+
+    const [name] = this.erc20.interface.decodeFunctionResult(
+      'name',
+      (await call<string>(this.chainId, { to: this.address, data: call_name })) || ''
+    ) as string[];
+
     runInAction(() => (this.name = name));
     return name;
   }
 
   async getDecimals(): Promise<number> {
     if (this.decimals >= 0) return this.decimals;
-    const decimals = await this.erc20.decimals();
+
+    const decimals = BigNumber.from(
+      (await call<string>(this.chainId, { to: this.address, data: call_decimals })) || '0'
+    ).toNumber();
+
     runInAction(() => (this.decimals = decimals));
     return decimals;
   }
 
   async getSymbol(): Promise<string> {
     if (this.symbol) return this.symbol;
-    const symbol = await this.erc20.symbol();
+
+    const [symbol] = this.erc20.interface.decodeFunctionResult(
+      'symbol',
+      (await call<string>(this.chainId, { to: this.address, data: call_symbol })) || ''
+    );
+
     runInAction(() => (this.symbol = symbol));
     return symbol;
   }
@@ -112,13 +136,14 @@ export class ERC20Token {
     this.erc20.on(filter, listener);
   }
 
-  async estimateGas(from: string, to: string, amt: BigNumberish = BigNumber.from(0), l2?: boolean) {
+  async estimateGas(to: string, amt: BigNumberish = BigNumber.from(0), l2?: boolean) {
     try {
-      return Number.parseInt(((await this.erc20.estimateGas.transfer(to, amt)).toNumber() * 2) as any);
-    } catch (error) {}
-
-    try {
-      return Number.parseInt(((await this.erc20.estimateGas.transferFrom(from, to, amt)).toNumber() * 3) as any);
+      return Number.parseInt(
+        (await estimateGas(this.chainId, {
+          to: this.address,
+          data: this.encodeTransferData(to, amt),
+        })) || '150_000'
+      );
     } catch (error) {}
 
     return 150_000 + (l2 ? 1_000_000 : 0);
