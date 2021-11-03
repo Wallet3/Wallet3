@@ -17,7 +17,7 @@ export class Account {
   loadingTokens = false;
 
   tokens: IToken[] = [];
-  allTokens: IToken[] = [];
+  allTokens: UserToken[] = [];
   balanceUSD = 0;
   ensName = '';
   avatar = '';
@@ -110,16 +110,8 @@ export class Account {
   toggleToken(token: UserToken) {
     token.shown = !token.shown;
 
-    const index = this.tokens.indexOf(token);
-
-    if (token.shown && index === -1) {
-      (token as ERC20Token).getBalance?.();
-      const tokens = [...this.tokens];
-      tokens.splice(this.allTokens.indexOf(token) + 1, 0, token);
-      this.tokens = tokens;
-    } else {
-      if (index >= 0) this.tokens = [...this.tokens.slice(0, index), ...this.tokens.slice(index + 1)];
-    }
+    this.tokens = [this.tokens[0], ...this.allTokens.filter((t) => t.shown)];
+    (token as ERC20Token).getBalance?.();
 
     TokensMan.saveUserTokens(Networks.current.chainId, this.address, this.allTokens);
   }

@@ -106,9 +106,11 @@ interface CoinProps {
 
 export default observer((props: CoinProps) => {
   const symbol = props.symbol.toLowerCase();
+
   const [source, setSource] = useState(
     props.iconUrl && !icons[symbol] ? { uri: props.iconUrl } : icons[symbol] || icons['_coin']
   );
+  
   const size = (props.style as any)?.width || 22;
 
   return (
@@ -120,7 +122,7 @@ export default observer((props: CoinProps) => {
         width: size,
         height: size,
         ...((props.style as any) || {}),
-        borderRadius: size / 2,
+        borderRadius: props.iconUrl ? size / 2 : 0,
       }}
     />
   );
