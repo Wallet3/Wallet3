@@ -3,6 +3,7 @@ import App from '../../viewmodels/App';
 import Assets from './Assets';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import { Modalize } from 'react-native-modalize';
+import Networks from '../../viewmodels/Networks';
 import Overview from './Overview';
 import { Portal } from 'react-native-portalize';
 import React from 'react';
@@ -23,6 +24,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
   const { ref: sendModalizeRef, open: openSend, close } = useModalize();
   const { ref: requestModalizeRef, open: openRequest } = useModalize();
   const { currentWallet } = App;
+  const { current } = Networks;
 
   return (
     <View
@@ -35,14 +37,15 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
       }}
     >
       <Overview
-        style={{ marginBottom: 2 }}
+        style={{ marginBottom: 2, backgroundColor: current.color }}
         address={currentWallet?.currentAccount?.address}
         balance={currentWallet?.currentAccount?.balanceUSD}
+        network={current.network}
       />
 
-      <Assets tokens={currentWallet?.currentAccount?.tokens} />
+      <Assets tokens={currentWallet?.currentAccount?.tokens} themeColor={current.color} />
 
-      <Actions style={{ marginTop: 8 }} onSendPress={openSend} onRequestPress={openRequest} />
+      <Actions style={{ marginTop: 8 }} onSendPress={openSend} onRequestPress={openRequest} themeColor={current.color} />
 
       <Portal>
         <Modalize

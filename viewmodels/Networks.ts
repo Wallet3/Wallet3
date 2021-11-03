@@ -1,7 +1,7 @@
 import * as ethers from 'ethers';
 
 import { INetwork, PublicNetworks } from '../common/Networks';
-import { makeObservable, observable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 
 import providers from '../configs/providers.json';
 
@@ -9,8 +9,20 @@ class Networks {
   current: INetwork = PublicNetworks[0];
   cache = new Map<number, ethers.providers.JsonRpcProvider | ethers.providers.WebSocketProvider>();
 
+  get Ethereum() {
+    return PublicNetworks[0];
+  }
+
+  get Optimism() {
+    return PublicNetworks[2];
+  }
+
+  get Arbitrum() {
+    return PublicNetworks[1];
+  }
+
   constructor() {
-    makeObservable(this, { current: observable });
+    makeObservable(this, { current: observable, switch: action });
   }
 
   switch(network: INetwork) {

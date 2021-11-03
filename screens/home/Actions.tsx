@@ -9,19 +9,28 @@ interface Props {
   style?: StyleProp<ViewStyle>;
   onSendPress?: () => void;
   onRequestPress?: () => void;
+  themeColor?: string;
 }
 
 export default (props: Props) => {
   return (
     <SafeAreaView style={{ ...styles.container, ...((props?.style as any) || {}) }}>
-      <Ripple style={styles.button} rippleContainerBorderRadius={20} onPress={(_) => props?.onSendPress?.()}>
+      <Ripple
+        style={{ ...styles.button, backgroundColor: props.themeColor ?? themeColor }}
+        rippleContainerBorderRadius={20}
+        onPress={(_) => props?.onSendPress?.()}
+      >
         <Ionicons name="md-arrow-up-circle-outline" size={20} color="white" />
         <Text style={styles.text}>Send</Text>
       </Ripple>
 
       <View style={{ flex: 1 }}></View>
 
-      <Ripple style={styles.button} rippleContainerBorderRadius={20} onPress={(_) => props?.onRequestPress?.()}>
+      <Ripple
+        style={{ ...styles.button, backgroundColor: props.themeColor ?? themeColor }}
+        rippleContainerBorderRadius={20}
+        onPress={(_) => props?.onRequestPress?.()}
+      >
         <Ionicons name="md-arrow-down-circle-outline" size={20} color="white" />
         <Text style={styles.text}>Request</Text>
       </Ripple>
@@ -32,7 +41,6 @@ export default (props: Props) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    // backgroundColor: 'blue',
   },
 
   button: {
@@ -43,7 +51,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 42,
-    backgroundColor: themeColor,
   },
 
   text: {

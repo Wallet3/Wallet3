@@ -1,6 +1,6 @@
 import { FlatList, ListRenderItemInfo, StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
-import { borderColor, fontColor, secondaryFontColor, themeColor } from '../../constants/styles';
+import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
 import { Coin } from '../../components';
 import { Feather } from '@expo/vector-icons';
@@ -60,7 +60,7 @@ const Tokens = observer(({ tokens }: { tokens?: IToken[] }) => {
   );
 });
 
-export default observer(({ tokens }: { tokens?: IToken[] }) => {
+export default observer(({ tokens, themeColor }: { tokens?: IToken[]; themeColor: string }) => {
   const [activeTab, setActiveTab] = useState(0);
   const swiper = React.useRef<Swiper>(null);
 
@@ -76,19 +76,23 @@ export default observer(({ tokens }: { tokens?: IToken[] }) => {
       <View style={styles.header}>
         <View style={styles.tabsContainer}>
           <Text
-            style={{ ...styles.headerLabel, ...(activeTab === 0 ? styles.headerLabelActive : {}), paddingStart: 0 }}
+            style={{
+              ...styles.headerLabel,
+              ...(activeTab === 0 ? { ...styles.headerLabelActive, color: themeColor } : {}),
+              paddingStart: 0,
+            }}
             onPress={() => swipeTo(0)}
           >
             Assets
           </Text>
           <Text
-            style={{ ...styles.headerLabel, ...(activeTab === 1 ? styles.headerLabelActive : {}) }}
+            style={{ ...styles.headerLabel, ...(activeTab === 1 ? { ...styles.headerLabelActive, color: themeColor } : {}) }}
             onPress={() => swipeTo(1)}
           >
             NFTs
           </Text>
           <Text
-            style={{ ...styles.headerLabel, ...(activeTab === 2 ? styles.headerLabelActive : {}) }}
+            style={{ ...styles.headerLabel, ...(activeTab === 2 ? { ...styles.headerLabelActive, color: themeColor } : {}) }}
             onPress={() => swipeTo(2)}
           >
             History
@@ -150,7 +154,6 @@ const styles = StyleSheet.create({
   },
 
   headerLabelActive: {
-    color: themeColor,
     fontWeight: '500',
   },
 

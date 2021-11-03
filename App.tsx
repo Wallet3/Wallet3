@@ -14,6 +14,7 @@ import Drawer from './screens/home/Drawer';
 import HomeScreen from './screens/home';
 import LandScreen from './screens/land';
 import { Modalize } from 'react-native-modalize';
+import Networks from './viewmodels/Networks';
 import NetworksMenu from './modals/Networks';
 import PubSub from 'pubsub-js';
 import Tokens from './screens/tokens/SortTokens';
@@ -28,6 +29,7 @@ const screenWidth = Dimensions.get('window').width;
 
 LogBox.ignoreLogs([
   'ReactNativeFiberHostComponent: Calling getNode() on the ref of an Animated component is no longer necessary. You can now directly use the ref instead. This method will be removed in a future release.',
+  'VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality - use another VirtualizedList-backed container instead.',
 ]);
 
 type RootStackParamList = {
@@ -138,8 +140,9 @@ const App = observer(({ app }: { app: AppVM }) => {
         scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
       >
         <NetworksMenu
-          onNetworkPress={(_) => {
+          onNetworkPress={(network) => {
             closeNetworksModal();
+            Networks.switch(network);
           }}
         />
       </Modalize>

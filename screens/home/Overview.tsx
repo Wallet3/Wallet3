@@ -17,7 +17,7 @@ interface Props {
   address?: string;
 }
 
-export default observer(({ style, address, balance }: Props) => {
+export default observer(({ style, address, balance, network }: Props) => {
   return (
     <View style={{ ...styles.container, ...((style as any) || {}) }}>
       <View
@@ -27,7 +27,7 @@ export default observer(({ style, address, balance }: Props) => {
           justifyContent: 'space-between',
         }}
       >
-        <Text style={{ ...styles.text, fontSize: 15 }}>Ethereum</Text>
+        <Text style={{ ...styles.text, fontSize: 15 }}>{network}</Text>
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={{ ...styles.text, fontSize: 14, marginEnd: 5 }}>3</Text>

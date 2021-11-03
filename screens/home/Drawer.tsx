@@ -6,6 +6,7 @@ import { Feather, SimpleLineIcons } from '@expo/vector-icons';
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
 import { DrawerActions } from '@react-navigation/core';
+import Networks from '../../viewmodels/Networks';
 import PubSub from 'pubsub-js';
 import React from 'react';
 import { SafeViewContainer } from '../../components';
@@ -23,6 +24,7 @@ interface DrawerProps extends DrawerContentComponentProps {
 const Drawer = observer((props: DrawerProps) => {
   const { navigation, appVM } = props;
   const { currentWallet } = appVM;
+  const { current } = Networks;
 
   return (
     <SafeViewContainer style={{ flex: 1, height: screenHeight, paddingHorizontal: 0, paddingTop: 0 }}>
@@ -85,15 +87,15 @@ const Drawer = observer((props: DrawerProps) => {
           <Text style={{ color: secondaryFontColor, fontSize: 14 }}>Networks</Text>
 
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <TouchableOpacity onPress={() => navigation.navigate('Details')} style={styles.smallNetworkContainer}>
+            <TouchableOpacity onPress={() => Networks.switch(Networks.Ethereum)} style={styles.smallNetworkContainer}>
               <Ethereum width={14} height={14} />
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.smallNetworkContainer}>
+            <TouchableOpacity onPress={() => Networks.switch(Networks.Arbitrum)} style={styles.smallNetworkContainer}>
               <Arbitrum width={14} height={14} />
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.smallNetworkContainer}>
+            <TouchableOpacity onPress={() => Networks.switch(Networks.Optimism)} style={styles.smallNetworkContainer}>
               <Optimism width={14} height={13} />
             </TouchableOpacity>
           </View>
@@ -106,11 +108,11 @@ const Drawer = observer((props: DrawerProps) => {
             PubSub.publish('openNetworksModal');
           }}
         >
-          {NetworkIcons['ethereum']}
-          <Text style={{ marginStart: 8, fontSize: 16, color: '#6186ff', fontWeight: '500' }}>Ethereum</Text>
+          {NetworkIcons[current.network.toLowerCase()]}
+          <Text style={{ marginStart: 8, fontSize: 16, color: current.color, fontWeight: '500' }}>{current.network}</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}></View>
 
-          <Feather name="chevron-right" size={16} color={'#6186ff'} style={{ marginBottom: -2 }} />
+          <Feather name="chevron-right" size={16} color={current.color} style={{ marginBottom: -2 }} />
         </TouchableOpacity>
       </View>
     </SafeViewContainer>

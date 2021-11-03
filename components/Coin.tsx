@@ -2,6 +2,7 @@ import { Image, ImageResizeMode, ImageStyle, ImageURISource, StyleProp } from 'r
 import React, { useState } from 'react';
 
 import icons from '../assets/icons/crypto';
+import { observer } from 'mobx-react-lite';
 
 interface CoinProps {
   symbol: string;
@@ -103,7 +104,7 @@ interface CoinProps {
   defaultSource?: ImageURISource | number | undefined;
 }
 
-export default (props: CoinProps) => {
+export default observer((props: CoinProps) => {
   const symbol = props.symbol.toLowerCase();
   const [source, setSource] = useState(
     props.iconUrl && !icons[symbol] ? { uri: props.iconUrl } : icons[symbol] || icons['_coin']
@@ -123,4 +124,4 @@ export default (props: CoinProps) => {
       }}
     />
   );
-};
+});
