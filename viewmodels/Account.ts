@@ -27,7 +27,7 @@ export class Account {
   }
 
   constructor(address: string, index: number) {
-    this.address = '0xC73f6738311E76D45dFED155F39773e68251D251'; // address;
+    this.address = address;
     this.index = index;
 
     makeObservable(this, {
@@ -102,7 +102,7 @@ export class Account {
     if (this.ensName) return;
 
     const { currentProvider } = Networks;
-    currentProvider.lookupAddress(this.address).then((v) => runInAction(() => (this.ensName = v || this.address)));
+    currentProvider.lookupAddress(this.address).then((v) => runInAction(() => (this.ensName = v || this.ensName)));
     currentProvider.getAvatar(this.ensName || this.address).then((v) => runInAction(() => (this.avatar = v || '')));
   }
 

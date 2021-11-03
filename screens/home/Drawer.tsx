@@ -1,11 +1,11 @@
 import App, { AppVM } from '../../viewmodels/App';
 import { Arbitrum, Ethereum, NetworkIcons, Optimism, Polygon } from '../../assets/icons/networks/color';
 import { Dimensions, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { DrawerActions, useRoute } from '@react-navigation/core';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { Feather, SimpleLineIcons } from '@expo/vector-icons';
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
-import { DrawerActions } from '@react-navigation/core';
 import Networks from '../../viewmodels/Networks';
 import PubSub from 'pubsub-js';
 import React from 'react';
@@ -25,6 +25,9 @@ const Drawer = observer((props: DrawerProps) => {
   const { navigation, appVM } = props;
   const { currentWallet } = appVM;
   const { current } = Networks;
+
+  const [routeName] = navigation.getState().routeNames;
+  const homeHighlight = routeName === 'Home' ? current.color : fontColor;
 
   return (
     <SafeViewContainer style={{ flex: 1, height: screenHeight, paddingHorizontal: 0, paddingTop: 0 }}>
@@ -46,9 +49,10 @@ const Drawer = observer((props: DrawerProps) => {
             borderRadius: 25,
             backgroundColor: current.color,
           }}
-          source={{
-            uri: 'https://cryptologos.cc/logos/ethereum-eth-logo.png?v=014', // currentWallet?.currentAccount?.avatar,
-          }}
+          source={
+            require('../../assets/icon.png')
+            // currentWallet?.currentAccount?.avatar,
+          }
         />
 
         <Text
@@ -68,15 +72,15 @@ const Drawer = observer((props: DrawerProps) => {
         <DrawerItem
           label="Wallet"
           onPress={() => navigation.navigate('Home')}
-          labelStyle={{ fontSize: 17, marginStart: -16, color: fontColor }}
-          icon={({ color, size }) => <SimpleLineIcons color={fontColor} size={size} name={'wallet'} />}
+          labelStyle={{ ...styles.drawerLabel, color: homeHighlight }}
+          icon={({ color, size }) => <Feather color={homeHighlight} size={size} name={'credit-card'} />}
         />
 
         <DrawerItem
           label="Settings"
           onPress={() => navigation.navigate('Details')}
-          labelStyle={{ fontSize: 17, marginStart: -16, color: fontColor }}
-          icon={({ color, size }) => <SimpleLineIcons color={fontColor} size={size} name={'settings'} />}
+          labelStyle={styles.drawerLabel}
+          icon={({ color, size }) => <Feather color={fontColor} size={size} name={'settings'} />}
         />
       </View>
 
@@ -130,5 +134,12 @@ export default (props: DrawerContentComponentProps) => {
 const styles = StyleSheet.create({
   smallNetworkContainer: {
     marginHorizontal: 4,
+  },
+
+  drawerLabel: {
+    fontFamily: 'PingFang HK',
+    fontSize: 17,
+    marginStart: -16,
+    color: fontColor,
   },
 });
