@@ -1,11 +1,12 @@
 import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist';
 import React, { useState } from 'react';
 import { SafeAreaView, Switch, Text, TouchableOpacity, View } from 'react-native';
-import { fontColor, secondaryFontColor, themeColor } from '../../constants/styles';
+import { fontColor, secondaryFontColor } from '../../constants/styles';
 
 import App from '../../viewmodels/App';
 import { Coin } from '../../components';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import Networks from '../../viewmodels/Networks';
 import { RootStack } from '../navigations';
 import { UserToken } from '../../viewmodels/services/TokensMan';
 import { observer } from 'mobx-react-lite';
@@ -35,7 +36,7 @@ const DraggableToken = observer(
       <Coin symbol={item.symbol} style={{ width: 36, height: 36, marginEnd: 16 }} iconUrl={item.iconUrl} />
       <Text style={{ fontSize: 18, color: fontColor }}>{item.symbol}</Text>
       <View style={{ flex: 1 }} />
-      <Switch value={item.shown} onValueChange={(on) => onValueChange(on)} trackColor={{ true: themeColor }} />
+      <Switch value={item.shown} onValueChange={(on) => onValueChange(on)} trackColor={{ true: Networks.current.color }} />
     </TouchableOpacity>
   )
 );

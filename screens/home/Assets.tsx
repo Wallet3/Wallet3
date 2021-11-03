@@ -42,10 +42,10 @@ const Token = observer(({ item }: { item: IToken }) => {
   );
 });
 
-const Tokens = observer(({ tokens }: { tokens?: IToken[] }) => {
+const Tokens = observer(({ tokens, loading }: { tokens?: IToken[]; loading?: boolean }) => {
   const renderItem = ({ item, index }: ListRenderItemInfo<IToken>) => <Token item={item} />;
 
-  return (tokens?.length ?? 0) > 0 ? (
+  return (tokens?.length ?? 0) > 0 && !loading ? (
     <FlatList
       data={tokens}
       keyExtractor={(i) => i.address}
@@ -60,7 +60,13 @@ const Tokens = observer(({ tokens }: { tokens?: IToken[] }) => {
   );
 });
 
-export default observer(({ tokens, themeColor }: { tokens?: IToken[]; themeColor: string }) => {
+interface Props {
+  tokens?: IToken[];
+  themeColor: string;
+  loadingTokens?: boolean;
+}
+
+export default observer(({ tokens, themeColor, loadingTokens }: Props) => {
   const [activeTab, setActiveTab] = useState(0);
   const swiper = React.useRef<Swiper>(null);
 
@@ -118,7 +124,7 @@ export default observer(({ tokens, themeColor }: { tokens?: IToken[]; themeColor
         style={{}}
         onIndexChanged={(i) => setActiveTab(i)}
       >
-        <Tokens tokens={tokens} />
+        <Tokens tokens={tokens} loading={loadingTokens} />
         <View style={{ flex: 1 }}>
           <Text>Nfts</Text>
         </View>

@@ -43,7 +43,11 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         network={current.network}
       />
 
-      <Assets tokens={currentWallet?.currentAccount?.tokens} themeColor={current.color} />
+      <Assets
+        tokens={currentWallet?.currentAccount?.tokens}
+        themeColor={current.color}
+        loadingTokens={currentWallet?.currentAccount?.loadingTokens}
+      />
 
       <Actions style={{ marginTop: 8 }} onSendPress={openSend} onRequestPress={openRequest} themeColor={current.color} />
 

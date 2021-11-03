@@ -14,6 +14,8 @@ export class Account {
   readonly address: string;
   readonly index: number;
 
+  loadingTokens = false;
+
   tokens: IToken[] = [];
   allTokens: IToken[] = [];
   balanceUSD = 0;
@@ -27,9 +29,9 @@ export class Account {
   constructor(address: string, index: number) {
     this.address = '0xC73f6738311E76D45dFED155F39773e68251D251'; // address;
     this.index = index;
-    // console.log(address, index);
 
     makeObservable(this, {
+      loadingTokens: observable,
       tokens: observable,
       ensName: observable,
       displayName: computed,
@@ -38,11 +40,13 @@ export class Account {
       toggleToken: action,
       sortTokens: action,
       addToken: action,
+      refreshOverview: action,
     });
   }
 
   async refreshOverview() {
     const { current } = Networks;
+    this.loadingTokens = true;
 
     const [native, userTokens, { usd_value }] = await Promise.all([
       this.refreshNativeToken(),
@@ -58,6 +62,7 @@ export class Account {
       this.tokens = favTokens;
       this.balanceUSD = usd_value;
       this.allTokens = [...userTokens];
+      this.loadingTokens = false;
     });
 
     Debank.getTokens(this.address, Networks.current.comm_id).then((d) => {
