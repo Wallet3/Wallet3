@@ -1,7 +1,7 @@
 import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist';
 import React, { useState } from 'react';
 import { SafeAreaView, Switch, Text, TouchableOpacity, View } from 'react-native';
-import { fontColor, secondaryFontColor } from '../../constants/styles';
+import { fontColor, secondaryFontColor, themeColor } from '../../constants/styles';
 
 import App from '../../viewmodels/App';
 import { Coin } from '../../components';
@@ -35,7 +35,7 @@ const DraggableToken = observer(
       <Coin symbol={item.symbol} style={{ width: 36, height: 36, marginEnd: 16 }} iconUrl={item.iconUrl} />
       <Text style={{ fontSize: 18, color: fontColor }}>{item.symbol}</Text>
       <View style={{ flex: 1 }} />
-      <Switch value={item.shown} onValueChange={(on) => onValueChange(on)} />
+      <Switch value={item.shown} onValueChange={(on) => onValueChange(on)} trackColor={{ true: themeColor }}/>
     </TouchableOpacity>
   )
 );
@@ -50,7 +50,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
 
   return (
     <SafeAreaView style={{ backgroundColor: '#fff', flex: 1 }}>
-      <Text style={{ paddingHorizontal: 16, color: secondaryFontColor, paddingBottom: 8 }}>
+      <Text style={{ paddingHorizontal: 16, color: secondaryFontColor, paddingBottom: 4 }}>
         Move tokens with drag and drop
       </Text>
       <DraggableFlatList

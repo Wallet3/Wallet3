@@ -1,11 +1,11 @@
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { ListRenderItemInfo, Text, TextInput, TouchableHighlight, TouchableOpacity, View } from 'react-native';
 import React, { useRef, useState } from 'react';
+import { SafeViewContainer, TextBox } from '../../components';
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
 import Button from '../../components/Button';
 import { FlatList } from 'react-native-gesture-handler';
-import { SafeViewContainer } from '../../components';
 import { formatAddress } from '../../utils/formatter';
 import styles from '../styles';
 
@@ -26,7 +26,6 @@ interface Props {
 }
 
 export default (props: Props) => {
-  const addrRef = useRef<TextInput>(null);
   const [addr, setAddr] = useState('');
 
   const renderAddress = ({ item }: ListRenderItemInfo<string>) => {
@@ -51,32 +50,13 @@ export default (props: Props) => {
 
   return (
     <SafeViewContainer style={styles.container}>
-      <View
-        style={{
-          flexDirection: 'row',
-          position: 'relative',
-          height: 42,
-          borderColor,
-          borderWidth: 1,
-          borderRadius: 10,
-          padding: 8,
-          paddingStart: 12,
-          alignItems: 'center',
-          marginBottom: 8,
+      <TextBox
+        title="To:"
+        onChangeText={(t) => {
+          setAddr(t);
         }}
-      >
-        <Text style={{ fontSize: 18, color: secondaryFontColor, marginEnd: 12 }}>To:</Text>
-        <TextInput
-          ref={addrRef}
-          style={{ fontSize: 20, flex: 1, color: fontColor }}
-          value={addr}
-          onChangeText={(t) => setAddr(t)}
-        />
-
-        <TouchableOpacity onPress={(_) => alert('icon')}>
-          <Ionicons name="copy-outline" size={20} style={{ marginStart: 12, opacity: 0.5 }} />
-        </TouchableOpacity>
-      </View>
+        value={addr}
+      />
 
       <Text style={{ color: secondaryFontColor }}>Recent contacts:</Text>
 
