@@ -6,6 +6,7 @@ export interface IToken {
   price?: number;
   balance?: BigNumberish;
   iconUrl?: string;
+  name?: string;
 
   amount?: string;
   loading?: boolean;

@@ -35,14 +35,15 @@ const DraggableToken = observer(
       <Coin symbol={item.symbol} style={{ width: 36, height: 36, marginEnd: 16 }} iconUrl={item.iconUrl} />
       <Text style={{ fontSize: 18, color: fontColor }}>{item.symbol}</Text>
       <View style={{ flex: 1 }} />
-      <Switch value={item.shown} onValueChange={(on) => onValueChange(on)} trackColor={{ true: themeColor }}/>
+      <Switch value={item.shown} onValueChange={(on) => onValueChange(on)} trackColor={{ true: themeColor }} />
     </TouchableOpacity>
   )
 );
 
 export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Tokens'>) => {
   const { currentWallet } = App;
-  const [data, setData] = useState(currentWallet?.currentAccount?.allTokens ?? []);
+  const { allTokens } = currentWallet?.currentAccount ?? { allTokens: [] };
+  const [data, setData] = useState(allTokens);
 
   const renderItem = (props: RenderItemParams<UserToken>) => {
     return <DraggableToken {...props} onValueChange={() => currentWallet?.currentAccount?.toggleToken(props.item)} />;

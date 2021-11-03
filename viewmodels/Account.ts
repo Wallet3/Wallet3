@@ -37,6 +37,7 @@ export class Account {
       avatar: observable,
       toggleToken: action,
       sortTokens: action,
+      addToken: action,
     });
   }
 
@@ -122,5 +123,32 @@ export class Account {
     this.allTokens = tokens;
     this.tokens = [this.tokens[0], ...tokens.filter((t) => t.shown)];
     TokensMan.saveUserTokens(Networks.current.chainId, this.address, tokens);
+  }
+
+  addToken(token: UserToken) {
+    if (this.allTokens.find((t) => t.address === token.address)) return;
+    if (this.tokens.find((t) => t.address === token.address)) return;
+
+    token.shown = true;
+
+    this.allTokens = [token, ...this.allTokens];
+    this.tokens = [this.tokens[0], token, ...this.tokens.slice(1)];
+
+    TokensMan.saveUserTokens(Networks.current.chainId, this.address, this.allTokens);
+  }
+
+  async fetchToken(address: string) {
+    if (!utils.isAddress(address)) return;
+
+    const token = new ERC20Token({
+      contract: utils.getAddress(address),
+      owner: this.address,
+      chainId: Networks.current.chainId,
+      provider: Networks.currentProvider,
+    });
+
+    await Promise.all([token.getBalance(), token.getBalance(), token.getDecimals(), token.getName(), token.getSymbol()]);
+
+    return token;
   }
 }

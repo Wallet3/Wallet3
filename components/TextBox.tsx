@@ -3,6 +3,7 @@ import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { borderColor, fontColor, secondaryFontColor } from '../constants/styles';
 
 import { Ionicons } from '@expo/vector-icons';
+import { getStringAsync } from 'expo-clipboard';
 
 interface Props {
   onChangeText: (text: string) => void;
@@ -12,6 +13,12 @@ interface Props {
 
 export default ({ value, onChangeText, title }: Props) => {
   const addrRef = useRef<TextInput>(null);
+
+  const readClipboard = async () => {
+    const txt = await getStringAsync();
+    if (!txt) return;
+    onChangeText(txt);
+  };
 
   return (
     <View
@@ -36,7 +43,7 @@ export default ({ value, onChangeText, title }: Props) => {
         onChangeText={(t) => onChangeText(t)}
       />
 
-      <TouchableOpacity onPress={(_) => alert('icon')}>
+      <TouchableOpacity onPress={(_) => readClipboard()}>
         <Ionicons name="copy-outline" size={20} style={{ marginStart: 12, opacity: 0.5 }} />
       </TouchableOpacity>
     </View>
