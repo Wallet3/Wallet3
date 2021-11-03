@@ -74,7 +74,7 @@ export const PublicNetworks: INetwork[] = [
   {
     symbol: 'xDAI',
     comm_id: 'xdai',
-    network: 'xDAI',
+    network: 'xDai',
     chainId: 100,
     color: '#48A9A6',
     order: 3,
@@ -126,7 +126,7 @@ export const PublicNetworks: INetwork[] = [
     chainId: 128,
     network: 'Heco',
     order: 6,
-    color: '#01943f',
+    color: '#3F7FFF',
     defaultTokens: HecoPopularTokens,
   },
   {
@@ -139,7 +139,7 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: [],
   },
   {
-    symbol: 'BSC',
+    symbol: 'BNB',
     comm_id: 'bsc',
     network: 'BSC',
     chainId: 56,

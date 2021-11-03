@@ -1,8 +1,9 @@
 import * as ethers from 'ethers';
 
 import { INetwork, PublicNetworks } from '../common/Networks';
-import { action, makeObservable, observable } from 'mobx';
+import { action, makeObservable, observable, runInAction } from 'mobx';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import providers from '../configs/providers.json';
 
 class Networks {
@@ -23,10 +24,16 @@ class Networks {
 
   constructor() {
     makeObservable(this, { current: observable, switch: action });
+
+    AsyncStorage.getItem('network').then((chainId) => {
+      const chain = Number(chainId || 1);
+      runInAction(() => (this.current = PublicNetworks.find((n) => n.chainId === chain) || PublicNetworks[0]));
+    });
   }
 
   switch(network: INetwork) {
     this.current = network;
+    AsyncStorage.setItem('network', JSON.stringify(network.chainId));
   }
 
   get currentProvider() {

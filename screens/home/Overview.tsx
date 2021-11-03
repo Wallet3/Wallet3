@@ -5,6 +5,7 @@ import { numericFontFamily, themeColor } from '../../constants/styles';
 import AnimateNumber from 'react-native-animate-number';
 import Ethereum from '../../assets/icons/networks/white/ethereum.svg';
 import { Feather } from '@expo/vector-icons';
+import Logos from '../../assets/icons/networks/white';
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 
@@ -42,7 +43,8 @@ export default observer(({ style, address, balance, network }: Props) => {
       <View style={{ justifyContent: 'space-between' }}>
         <AnimateNumber value={balance || 0} style={styles.headline} numberOfLines={1} formatter={formatCurrency} />
 
-        <Ethereum
+        {Logos[network || 'Ethereum']}
+        {/* <Ethereum
           width={64}
           height={64}
           style={{
@@ -51,7 +53,7 @@ export default observer(({ style, address, balance, network }: Props) => {
             alignSelf: 'flex-end',
             opacity: 0.72,
           }}
-        />
+        /> */}
       </View>
     </View>
   );
@@ -64,6 +66,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     height: 142,
     backgroundColor: themeColor,
+    overflow: 'hidden',
   },
 
   text: { color: 'white', fontWeight: '500' },
