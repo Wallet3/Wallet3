@@ -1,11 +1,9 @@
 import { Button, Coin, Numpad, SafeViewContainer } from '../../components';
-import React, { useRef, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { borderColor, fontColor, numericFontFamily, secondaryFontColor, themeColor } from '../../constants/styles';
+import React, { useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
+import { numericFontFamily, secondaryFontColor, themeColor } from '../../constants/styles';
 
 import BackButton from '../components/BackButton';
-import Swiper from 'react-native-swiper';
-import Tokenlist from './Tokenlist';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 
@@ -18,7 +16,7 @@ interface SubViewProps {
   disableBalance?: boolean;
 }
 
-export const NumpadView = observer((props: SubViewProps) => {
+export default observer((props: SubViewProps) => {
   const [amount, setAmount] = useState('0');
 
   const onNumPress = (num: string) => {
@@ -77,20 +75,5 @@ export const NumpadView = observer((props: SubViewProps) => {
 
       <Button title="Next" onPress={props.onNext} />
     </SafeViewContainer>
-  );
-});
-
-interface Props {
-  onNext?: () => void;
-}
-
-export default observer((props: Props) => {
-  const swiper = useRef<Swiper>(null);
-
-  return (
-    <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
-      <NumpadView onNext={props.onNext} disableBack onTokenPress={() => swiper.current?.scrollTo(1)} />
-      <Tokenlist onBack={() => swiper.current?.scrollTo(0)} />
-    </Swiper>
   );
 });
