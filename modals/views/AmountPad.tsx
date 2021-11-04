@@ -16,6 +16,7 @@ interface SubViewProps {
   token?: IToken;
   disableBack?: boolean;
   disableBalance?: boolean;
+  disableButton?: boolean;
   max?: string;
   onMaxPress?: () => void;
   onNumChanged?: (num: string) => void;
@@ -99,7 +100,7 @@ export default observer((props: SubViewProps) => {
 
       <Numpad onPress={onNumPress} />
 
-      <Button title="Next" onPress={props.onNext} />
+      <Button title="Next" onPress={props.onNext} disabled={props.disableButton} />
     </SafeViewContainer>
   );
 });

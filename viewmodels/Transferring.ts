@@ -1,4 +1,4 @@
-import { action, makeObservable, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
 import App from './App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -31,6 +31,8 @@ export class Transferring {
       isResolvingAddress: observable,
       setTo: action,
       setToken: action,
+      setAmount: action,
+      isValidAmount: computed,
     });
 
     AsyncStorage.getItem(`contacts`).then((v) => {
@@ -39,18 +41,18 @@ export class Transferring {
 
     AsyncStorage.getItem(`${Networks.current.chainId}-LastUsedToken`).then((v) => {
       if (!v) {
-        runInAction(() => (this.token = this.currentAccount.tokens[0]));
+        runInAction(() => this.setToken(this.currentAccount.tokens[0]));
         return;
       }
 
       const token = this.currentAccount.allTokens.find((t) => t.address === v) || this.currentAccount.tokens[0];
-      runInAction(() => (this.token = token));
+      runInAction(() => this.setToken(token));
     });
   }
 
   setTo(to: string) {
     if (this.to === to) return;
-    
+
     this.to = to;
     this.toAddress = '';
     this.isResolvingAddress = true;
@@ -69,11 +71,24 @@ export class Transferring {
     AsyncStorage.setItem(`${Networks.current.chainId}-LastUsedToken`, token.address);
   }
 
+  setAmount(amount: string) {
+    this.amount = amount;
+  }
+
   get isEns() {
     return !utils.isAddress(this.to);
   }
 
   get isValidAddress() {
     return utils.isAddress(this.toAddress);
+  }
+
+  get isValidAmount() {
+    try {
+      const amount = utils.parseUnits(this.amount, this.token?.decimals || 18);
+      return amount.gt(0) && amount.lte(this.token?.balance || '0');
+    } catch (error) {
+      return false;
+    }
   }
 }

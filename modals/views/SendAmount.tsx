@@ -33,6 +33,8 @@ export default observer(({ onNext, onBack, vm }: Props) => {
         onBack={onBack}
         max={vm.token?.amount}
         token={vm.token}
+        onNumChanged={(n) => vm.setAmount(n)}
+        disableButton={!vm.isValidAmount}
       />
 
       <Tokenlist
