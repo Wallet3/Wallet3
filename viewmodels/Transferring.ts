@@ -10,6 +10,8 @@ import { IToken } from '../common/Tokens';
 import Networks from './Networks';
 
 export class Transferring {
+  private timer?: NodeJS.Timer;
+
   to = '';
   toAddress = '';
   token: IToken;
@@ -116,6 +118,10 @@ export class Transferring {
     });
 
     this.initChainData();
+
+    if (this.currentNetwork.eip1559) {
+      this.timer = setTimeout(() => this.refreshEIP1559(), 1000 * 10);
+    }
   }
 
   private async initChainData() {
@@ -138,6 +144,13 @@ export class Transferring {
       } else {
         this.setMaxGasPrice((gasPrice || Gwei_1) / Gwei_1);
       }
+    });
+  }
+
+  private refreshEIP1559() {
+    getNextBlockBaseFee(this.currentNetwork.chainId).then((nextBaseFee) => {
+      runInAction(() => (this.nextBlockBaseFeeWei = nextBaseFee));
+      this.timer = setTimeout(() => this.refreshEIP1559(), 1000 * 10);
     });
   }
 
@@ -198,5 +211,9 @@ export class Transferring {
 
   setPriorityPrice(price: string | number) {
     this.maxPriorityPrice = Math.max(Math.min(Number(price), MAX_GWEI_PRICE), 0);
+  }
+
+  dispose() {
+    clearTimeout(this.timer as any);
   }
 }

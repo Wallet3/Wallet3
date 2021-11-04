@@ -1,5 +1,4 @@
-import * as ethers from 'ethers';
-
+import { Wallet as EthersWallet, providers, utils } from 'ethers';
 import { action, makeObservable, observable, reaction, runInAction } from 'mobx';
 
 import { Account } from './Account';
@@ -32,7 +31,7 @@ export class Wallet {
 
   async init() {
     const count = Number((await AsyncStorage.getItem('genAddressCount')) || 1);
-    const bip32 = ethers.utils.HDNode.fromExtendedKey(this.key.bip32Xpubkey);
+    const bip32 = utils.HDNode.fromExtendedKey(this.key.bip32Xpubkey);
 
     const accounts: Account[] = [];
 
@@ -54,5 +53,14 @@ export class Wallet {
     this.currentAccount = account;
     this.currentAccount.refreshOverview();
     this.currentAccount.fetchBasicInfo();
+  }
+
+  async signTx(accountIndex: number, tx: providers.TransactionRequest) {
+    const xprivkey = await Authentication.decrypt(this.key.bip32Xprivkey);
+    if (!xprivkey) return undefined;
+
+    const bip32 = utils.HDNode.fromExtendedKey(xprivkey);
+    const account = bip32.derivePath(`${accountIndex}`);
+    return await new EthersWallet(account.privateKey).signTransaction(tx);
   }
 }

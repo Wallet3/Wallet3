@@ -1,5 +1,5 @@
 import { ContactsPad, ReviewPad, SendAmount } from './views';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { SafeAreaView } from 'react-native';
@@ -12,6 +12,10 @@ export default observer(() => {
   const swiper = useRef<Swiper>(null);
   const [vm] = useState(new Transferring());
 
+  useEffect(() => {
+    return vm.dispose();
+  }, []);
+  
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.safeArea}>

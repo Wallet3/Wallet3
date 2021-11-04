@@ -86,7 +86,8 @@ class Authentication {
     return encrypt(data, await this.getMasterKey());
   }
 
-  async decrypt(data: string) {
+  async decrypt(data: string, pin?: string) {
+    if (!(await this.authenticate({ pin }))) return undefined;
     return decrypt(data, await this.getMasterKey());
   }
 }

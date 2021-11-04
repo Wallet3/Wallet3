@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { NFCPad } from './views';
 import { RequestAmount } from './views';
@@ -12,6 +12,10 @@ import styles from './styles';
 export default observer(() => {
   const swiper = useRef<Swiper>(null);
   const [vm] = useState(new Transferring());
+
+  useEffect(() => {
+    return vm.dispose();
+  }, []);
 
   return (
     <SafeAreaProvider>
