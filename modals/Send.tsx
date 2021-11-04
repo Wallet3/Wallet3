@@ -1,4 +1,4 @@
-import { AmountPad, ContactsPad, ReviewPad } from './views';
+import { ContactsPad, ReviewPad, SendAmount } from './views';
 import React, { useRef } from 'react';
 
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -22,7 +22,7 @@ export default observer(() => {
           automaticallyAdjustContentInsets
         >
           <ContactsPad onNext={() => swiper.current?.scrollTo(1, true)} />
-          <AmountPad onBack={() => swiper.current?.scrollTo(0)} onNext={() => swiper.current?.scrollTo(2)} />
+          <SendAmount onBack={() => swiper.current?.scrollTo(0)} onNext={() => swiper.current?.scrollTo(2)} />
           <ReviewPad onBack={() => swiper.current?.scrollTo(1)} />
         </Swiper>
       </SafeAreaView>

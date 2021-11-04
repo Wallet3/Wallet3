@@ -14,6 +14,8 @@ interface SubViewProps {
   onTokenBack?: () => void;
   disableBack?: boolean;
   disableBalance?: boolean;
+  max?: string;
+  onMaxPress?: () => void;
 }
 
 export default observer((props: SubViewProps) => {
@@ -60,7 +62,8 @@ export default observer((props: SubViewProps) => {
           fontSize: 64,
           fontFamily: numericFontFamily,
           fontWeight: '600',
-          marginVertical: 4,
+          marginTop: 4,
+          marginBottom: -14,
           textAlign: 'center',
           color: themeColor,
         }}
@@ -68,6 +71,18 @@ export default observer((props: SubViewProps) => {
       >
         {amount}
       </Text>
+
+      {props.max ? (
+        <TouchableOpacity
+          onPress={() => {
+            props.onMaxPress?.();
+            setAmount(props.max!);
+          }}
+          style={{ justifyContent: 'flex-end', flexDirection: 'row', paddingEnd: 4 }}
+        >
+          <Text style={{ color: secondaryFontColor }}>{`Balance: ${props.max}`}</Text>
+        </TouchableOpacity>
+      ) : undefined}
 
       <View style={{ flex: 1 }} />
 
