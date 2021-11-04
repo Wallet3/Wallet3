@@ -1,6 +1,7 @@
-import { ContactsPad, ReviewPad, SendAmount } from './views';
+import { ContactsPad, Passpad, ReviewPad, SendAmount } from './views';
 import React, { useEffect, useRef, useState } from 'react';
 
+import Authentication from '../viewmodels/Authentication';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { SafeAreaView } from 'react-native';
 import Swiper from 'react-native-swiper';
@@ -13,9 +14,21 @@ export default observer(() => {
   const [vm] = useState(new Transferring());
 
   useEffect(() => {
-    return vm.dispose();
+    return () => vm.dispose();
   }, []);
-  
+
+  const onSend = () => {
+    if (!Authentication.biometricsEnabled) {
+      swiper.current?.scrollTo(3);
+      return;
+    }
+  };
+
+  const onPasscodeEnter = async (code: string) => {
+    return await Authentication.verifyPin(code);
+    return false;
+  };
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.safeArea}>
@@ -36,7 +49,12 @@ export default observer(() => {
               vm.estimateGas();
             }}
           />
-          <ReviewPad onBack={() => swiper.current?.scrollTo(1)} vm={vm} />
+          <ReviewPad onBack={() => swiper.current?.scrollTo(1)} vm={vm} onSend={onSend} />
+          <Passpad
+            themeColor={vm.currentNetwork.color}
+            onCodeEntered={(c) => onPasscodeEnter(c)}
+            onCancel={() => swiper.current?.scrollTo(2)}
+          />
         </Swiper>
       </SafeAreaView>
     </SafeAreaProvider>

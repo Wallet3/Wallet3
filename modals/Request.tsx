@@ -14,7 +14,7 @@ export default observer(() => {
   const [vm] = useState(new Transferring());
 
   useEffect(() => {
-    return vm.dispose();
+    return () => vm.dispose();
   }, []);
 
   return (

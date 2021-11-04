@@ -201,7 +201,7 @@ const GasView = observer(({ onBack, vm }: GasProps) => {
   );
 });
 
-export default observer(({ onBack, vm, onGasPress, onSend }: Props) => {
+export default observer(({ onBack, vm, onSend }: Props) => {
   const swiper = useRef<Swiper>(null);
 
   return (

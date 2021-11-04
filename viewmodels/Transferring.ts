@@ -68,8 +68,8 @@ export class Transferring {
 
   get txFeeWei() {
     return this.currentNetwork.eip1559
-      ? BigNumber.from(Math.min(this.nextBlockBaseFeeWei, this.maxGasPrice * Gwei_1))
-          .add(BigNumber.from(Number(this.maxPriorityPrice.toFixed(4)) * Gwei_1))
+      ? BigNumber.from(Math.min(Number(this.maxGasPrice.toFixed(9)) * Gwei_1))
+          .add(BigNumber.from(Number(this.maxPriorityPrice.toFixed(9)) * Gwei_1))
           .mul(this.gasLimit)
       : BigNumber.from(Number.parseInt((this.maxGasPrice * Gwei_1) as any)).mul(this.gasLimit);
   }
@@ -101,7 +101,12 @@ export class Transferring {
 
   constructor() {
     this.token = this.currentAccount.tokens[0];
-    makeAutoObservable(this);
+
+    makeAutoObservable(this, {
+      txFeeWei: computed,
+      txFee: computed,
+      nextBlockBaseFee: computed,
+    });
 
     AsyncStorage.getItem(`contacts`).then((v) => {
       JSON.parse(v || '[]');
