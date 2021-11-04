@@ -14,7 +14,7 @@ interface SubViewProps {
   onNext?: () => void;
   onTokenPress?: () => void;
   onTokenBack?: () => void;
-  token?: IToken;
+  token: IToken;
   disableBack?: boolean;
   disableBalance?: boolean;
   disableButton?: boolean;

@@ -137,16 +137,13 @@ export class ERC20Token {
   }
 
   async estimateGas(to: string, amt: BigNumberish = BigNumber.from(0), l2?: boolean) {
-    try {
-      return Number.parseInt(
-        (await estimateGas(this.chainId, {
-          to: this.address,
-          data: this.encodeTransferData(to, amt),
-        })) || '150_000'
-      );
-    } catch (error) {}
+    const gas = await estimateGas(this.chainId, {
+      from: this.owner,
+      to: this.address,
+      data: this.encodeTransferData(to, amt),
+    });
 
-    return 150_000 + (l2 ? 1_000_000 : 0);
+    return Number.parseInt(gas || '150_000');
   }
 
   encodeTransferData(to: string, amount: BigNumberish) {

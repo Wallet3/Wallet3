@@ -26,7 +26,7 @@ export default observer(() => {
           removeClippedSubviews
           style={{ overflow: 'hidden' }}
         >
-          <RequestAmount onNext={() => swiper.current?.scrollTo(1)} />
+          <RequestAmount onNext={() => swiper.current?.scrollTo(1)} vm={vm} />
           <NFCPad onBack={() => swiper.current?.scrollTo(0)} />
         </Swiper>
       </SafeAreaView>

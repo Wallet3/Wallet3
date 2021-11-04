@@ -24,7 +24,14 @@ export default observer(() => {
           automaticallyAdjustContentInsets
         >
           <ContactsPad onNext={() => swiper.current?.scrollTo(1, true)} vm={vm} />
-          <SendAmount onBack={() => swiper.current?.scrollTo(0)} onNext={() => swiper.current?.scrollTo(2)} vm={vm} />
+          <SendAmount
+            vm={vm}
+            onBack={() => swiper.current?.scrollTo(0)}
+            onNext={() => {
+              swiper.current?.scrollTo(2);
+              vm.estimateGas();
+            }}
+          />
           <ReviewPad onBack={() => swiper.current?.scrollTo(1)} vm={vm} />
         </Swiper>
       </SafeAreaView>

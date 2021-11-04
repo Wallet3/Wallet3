@@ -91,13 +91,14 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
 
 interface GasProps {
   onBack?: () => void;
+  vm: Transferring;
 }
 
-const GasView = observer((props: GasProps) => {
+const GasView = observer(({ onBack, vm }: GasProps) => {
   return (
     <SafeViewContainer style={styles.container}>
       <View style={styles.navBar}>
-        <BackButton onPress={props.onBack} />
+        <BackButton onPress={onBack} />
 
         <Text style={styles.navTitle}>Tx Fee</Text>
       </View>
@@ -112,6 +113,8 @@ const GasView = observer((props: GasProps) => {
             textAlign="right"
             style={{ ...viewStyles.reviewItemValue, fontSize: 20 }}
             maxLength={12}
+            value={`${vm.gasLimit}`}
+            onChangeText={(txt) => vm.setGasLimit(txt)}
           />
         </View>
 
@@ -125,25 +128,31 @@ const GasView = observer((props: GasProps) => {
               textAlign="right"
               maxLength={12}
               style={{ ...viewStyles.reviewItemValue, fontSize: 20 }}
+              value={`${vm.maxGasPrice}`}
+              onChangeText={(txt) => vm.setMaxGasPrice(txt)}
             />
             <Text style={{ fontSize: 8, color: secondaryFontColor, textAlign: 'right' }}>Gwei</Text>
           </View>
         </View>
 
-        <View style={{ ...viewStyles.reviewItem, paddingBottom: 12 }}>
-          <Text style={viewStyles.reviewItemTitle}>Priority Price</Text>
+        {vm.currentNetwork.eip1559 ? (
+          <View style={{ ...viewStyles.reviewItem, paddingBottom: 12 }}>
+            <Text style={viewStyles.reviewItemTitle}>Priority Price</Text>
 
-          <View style={{ marginBottom: -8 }}>
-            <TextInput
-              keyboardType="decimal-pad"
-              placeholder="1.00"
-              textAlign="right"
-              maxLength={12}
-              style={{ ...viewStyles.reviewItemValue, fontSize: 20 }}
-            />
-            <Text style={{ fontSize: 8, color: secondaryFontColor, textAlign: 'right', marginTop: -2 }}>Gwei</Text>
+            <View style={{ marginBottom: -8 }}>
+              <TextInput
+                keyboardType="decimal-pad"
+                placeholder="1.00"
+                textAlign="right"
+                maxLength={12}
+                style={{ ...viewStyles.reviewItemValue, fontSize: 20 }}
+                value={`${vm.maxPriorityPrice}`}
+                onChangeText={(txt) => vm.setPriorityPrice(txt)}
+              />
+              <Text style={{ fontSize: 8, color: secondaryFontColor, textAlign: 'right', marginTop: -2 }}>Gwei</Text>
+            </View>
           </View>
-        </View>
+        ) : undefined}
 
         <View style={{ ...viewStyles.reviewItem, borderBottomWidth: 0, paddingBottom: 12 }}>
           <Text style={viewStyles.reviewItemTitle}>Nonce</Text>
@@ -154,6 +163,8 @@ const GasView = observer((props: GasProps) => {
             textAlign="right"
             style={{ ...viewStyles.reviewItemValue, fontSize: 20 }}
             maxLength={12}
+            value={`${vm.nonce}`}
+            onChangeText={(txt) => vm.setNonce(txt)}
           />
         </View>
       </View>
@@ -177,12 +188,7 @@ const GasView = observer((props: GasProps) => {
 
       <View style={{ flex: 1 }}></View>
 
-      <Button
-        title="OK"
-        txtStyle={{ textTransform: 'uppercase' }}
-        onPress={props.onBack}
-        themeColor={Networks.current.color}
-      />
+      <Button title="OK" txtStyle={{ textTransform: 'uppercase' }} onPress={onBack} themeColor={Networks.current.color} />
     </SafeViewContainer>
   );
 });
@@ -193,7 +199,7 @@ export default observer(({ onBack, vm, onGasPress, onSend }: Props) => {
   return (
     <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
       <ReviewView onBack={onBack} onSend={onSend} onGasPress={() => swiper.current?.scrollTo(1)} vm={vm} />
-      <GasView onBack={() => swiper.current?.scrollTo(0)} />
+      <GasView onBack={() => swiper.current?.scrollTo(0)} vm={vm} />
     </Swiper>
   );
 });

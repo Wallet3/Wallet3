@@ -32,7 +32,7 @@ export default observer(({ onNext, onBack, vm }: Props) => {
         onTokenPress={() => swiper.current?.scrollTo(1)}
         onBack={onBack}
         max={vm.token?.amount}
-        token={vm.token}
+        token={vm.token!}
         onNumChanged={(n) => vm.setAmount(n)}
         disableButton={!vm.isValidAmount}
       />

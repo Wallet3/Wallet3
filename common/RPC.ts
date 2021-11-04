@@ -101,10 +101,10 @@ export async function call<T>(
   return undefined;
 }
 
-export async function estimateGas<T>(
+export async function estimateGas(
   chainId: number,
   args: {
-    from?: string;
+    from: string;
     to: string;
     gas?: string | number;
     gasPrice?: string | number;
@@ -123,7 +123,7 @@ export async function estimateGas<T>(
         id: Date.now(),
       });
 
-      return resp.result as T;
+      return resp.result as string;
     } catch (error) {}
   }
 

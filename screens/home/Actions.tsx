@@ -3,22 +3,22 @@ import { SafeAreaView, StyleProp, StyleSheet, Text, View, ViewStyle } from 'reac
 
 import React from 'react';
 import Ripple from 'react-native-material-ripple';
-import { themeColor } from '../../constants/styles';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
   onSendPress?: () => void;
   onRequestPress?: () => void;
   themeColor?: string;
+  disabled?: boolean;
 }
 
-export default (props: Props) => {
+export default ({ style, onSendPress, onRequestPress, themeColor, disabled }: Props) => {
   return (
-    <SafeAreaView style={{ ...styles.container, ...((props?.style as any) || {}) }}>
+    <SafeAreaView style={{ ...styles.container, ...((style as any) || {}) }}>
       <Ripple
-        style={{ ...styles.button, backgroundColor: props.themeColor ?? themeColor }}
+        style={{ ...styles.button, backgroundColor: themeColor ?? themeColor }}
         rippleContainerBorderRadius={20}
-        onPress={(_) => props?.onSendPress?.()}
+        onPress={(_) => (disabled ? undefined : onSendPress?.())}
       >
         <Ionicons name="md-arrow-up-circle-outline" size={20} color="white" />
         <Text style={styles.text}>Send</Text>
@@ -27,9 +27,9 @@ export default (props: Props) => {
       <View style={{ flex: 1 }}></View>
 
       <Ripple
-        style={{ ...styles.button, backgroundColor: props.themeColor ?? themeColor }}
+        style={{ ...styles.button, backgroundColor: themeColor ?? themeColor }}
         rippleContainerBorderRadius={20}
-        onPress={(_) => props?.onRequestPress?.()}
+        onPress={(_) => (disabled ? undefined : onRequestPress?.())}
       >
         <Ionicons name="md-arrow-down-circle-outline" size={20} color="white" />
         <Text style={styles.text}>Request</Text>

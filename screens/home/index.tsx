@@ -49,7 +49,13 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         loadingTokens={currentWallet?.currentAccount?.loadingTokens}
       />
 
-      <Actions style={{ marginTop: 8 }} onSendPress={openSend} onRequestPress={openRequest} themeColor={current.color} />
+      <Actions
+        style={{ marginTop: 8 }}
+        disabled={currentWallet?.currentAccount?.loadingTokens}
+        onSendPress={openSend}
+        onRequestPress={openRequest}
+        themeColor={current.color}
+      />
 
       <Portal>
         <Modalize
