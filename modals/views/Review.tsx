@@ -5,7 +5,9 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
 import BackButton from '../components/BackButton';
+import Networks from '../../viewmodels/Networks';
 import Swiper from 'react-native-swiper';
+import { Transferring } from '../../viewmodels/Transferring';
 import { formatAddress } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
@@ -14,15 +16,16 @@ interface Props {
   onBack?: () => void;
   onSend?: () => void;
   onGasPress?: () => void;
+  vm: Transferring;
 }
 
-const ReviewView = observer((props: Props) => {
+const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
   return (
     <SafeViewContainer style={styles.container}>
       <View style={styles.navBar}>
-        <BackButton onPress={props.onBack} />
+        <BackButton onPress={onBack} />
 
-        <Text style={styles.navTitle}>Review</Text>
+        <Text style={styles.navTitle}>Tx Review</Text>
       </View>
 
       <View style={viewStyles.reviewItemContainer}>
@@ -31,17 +34,17 @@ const ReviewView = observer((props: Props) => {
 
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text style={{ ...viewStyles.reviewItemValue, marginEnd: 8 }} numberOfLines={1}>
-              20.01 UNI
+              {`${vm.amount} ${vm.token?.symbol}`}
             </Text>
-            <Coin symbol="uni" />
+            <Coin symbol={vm.token!.symbol} forceRefresh />
           </View>
         </View>
 
         <View style={viewStyles.reviewItem}>
           <Text style={viewStyles.reviewItemTitle}>To</Text>
 
-          <Text style={{ ...viewStyles.reviewItemValue, maxWidth: '45%' }} numberOfLines={1}>
-            {formatAddress('cryptopunk.eth')}
+          <Text style={{ ...viewStyles.reviewItemValue, maxWidth: '72%' }} numberOfLines={1}>
+            {formatAddress(vm.to, 9, 7)}
           </Text>
         </View>
 
@@ -49,7 +52,7 @@ const ReviewView = observer((props: Props) => {
           <Text style={viewStyles.reviewItemTitle}>Network</Text>
 
           <View>
-            <Text style={viewStyles.reviewItemValue}>Ethereum</Text>
+            <Text style={viewStyles.reviewItemValue}>{vm.currentNetwork.network}</Text>
           </View>
         </View>
       </View>
@@ -65,7 +68,7 @@ const ReviewView = observer((props: Props) => {
       >
         <Text style={viewStyles.reviewItemTitle}>Tx Fee</Text>
 
-        <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', padding: 16 }} onPress={props.onGasPress}>
+        <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', padding: 16 }} onPress={onGasPress}>
           <Text style={{ ...viewStyles.reviewItemTitle, fontSize: 15 }}>(89.01 USD)</Text>
           <Text style={{ ...viewStyles.reviewItemValue, marginHorizontal: 2, maxWidth: '50%' }} numberOfLines={1}>
             0.02567 ETH
@@ -81,7 +84,7 @@ const ReviewView = observer((props: Props) => {
 
       <View style={{ flex: 1 }} />
 
-      <Button title="Send" onPress={props.onSend} />
+      <Button title="Send" onPress={onSend} themeColor={Networks.current.color} />
     </SafeViewContainer>
   );
 });
@@ -174,17 +177,22 @@ const GasView = observer((props: GasProps) => {
 
       <View style={{ flex: 1 }}></View>
 
-      <Button title="OK" txtStyle={{ textTransform: 'uppercase' }} onPress={props.onBack} />
+      <Button
+        title="OK"
+        txtStyle={{ textTransform: 'uppercase' }}
+        onPress={props.onBack}
+        themeColor={Networks.current.color}
+      />
     </SafeViewContainer>
   );
 });
 
-export default observer((props: Props) => {
+export default observer(({ onBack, vm, onGasPress, onSend }: Props) => {
   const swiper = useRef<Swiper>(null);
 
   return (
     <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
-      <ReviewView onBack={props.onBack} onSend={props.onSend} onGasPress={() => swiper.current?.scrollTo(1)} />
+      <ReviewView onBack={onBack} onSend={onSend} onGasPress={() => swiper.current?.scrollTo(1)} vm={vm} />
       <GasView onBack={() => swiper.current?.scrollTo(0)} />
     </Swiper>
   );

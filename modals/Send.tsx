@@ -25,7 +25,7 @@ export default observer(() => {
         >
           <ContactsPad onNext={() => swiper.current?.scrollTo(1, true)} vm={vm} />
           <SendAmount onBack={() => swiper.current?.scrollTo(0)} onNext={() => swiper.current?.scrollTo(2)} vm={vm} />
-          <ReviewPad onBack={() => swiper.current?.scrollTo(1)} />
+          <ReviewPad onBack={() => swiper.current?.scrollTo(1)} vm={vm} />
         </Swiper>
       </SafeAreaView>
     </SafeAreaProvider>

@@ -5,6 +5,7 @@ import { numericFontFamily, secondaryFontColor, themeColor } from '../../constan
 
 import BackButton from '../components/BackButton';
 import { IToken } from '../../common/Tokens';
+import Networks from '../../viewmodels/Networks';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 
@@ -100,7 +101,7 @@ export default observer((props: SubViewProps) => {
 
       <Numpad onPress={onNumPress} />
 
-      <Button title="Next" onPress={props.onNext} disabled={props.disableButton} />
+      <Button title="Next" onPress={props.onNext} disabled={props.disableButton} themeColor={Networks.current.color} />
     </SafeViewContainer>
   );
 });

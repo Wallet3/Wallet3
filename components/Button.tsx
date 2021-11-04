@@ -10,6 +10,7 @@ interface Props {
   icon?: React.ComponentType<any>;
   disabled?: boolean;
   onPress?: () => void;
+  themeColor?: string;
 }
 
 export default (props: Props) => {
@@ -24,7 +25,7 @@ export default (props: Props) => {
         ...((props?.style as any) || {}),
         backgroundColor: disabled
           ? 'lightgrey'
-          : (props?.style as ViewStyle)?.backgroundColor || styles.default.backgroundColor,
+          : props.themeColor || (props?.style as ViewStyle)?.backgroundColor || styles.default.backgroundColor,
       }}
     >
       <Text style={{ ...styles.text, ...((props?.txtStyle as any) || {}) }}>{props?.title}</Text>

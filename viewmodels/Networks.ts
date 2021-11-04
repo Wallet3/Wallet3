@@ -53,6 +53,18 @@ class Networks {
 
     return provider;
   }
+
+  get MainnetProvider() {
+    if (this.cache.has(1)) {
+      return this.cache.get(1)!;
+    }
+
+    const [ws] = providers[1] as string[];
+    const provider = new ethers.providers.WebSocketProvider(ws, 1);
+    this.cache.set(1, provider);
+
+    return provider;
+  }
 }
 
 export default new Networks();

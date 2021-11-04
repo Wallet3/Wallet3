@@ -6,6 +6,7 @@ import { borderColor, fontColor, secondaryFontColor } from '../../constants/styl
 
 import Button from '../../components/Button';
 import { FlatList } from 'react-native-gesture-handler';
+import Networks from '../../viewmodels/Networks';
 import { Transferring } from '../../viewmodels/Transferring';
 import { formatAddress } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
@@ -82,7 +83,13 @@ export default observer(({ onNext, vm }: Props) => {
         ItemSeparatorComponent={() => <View style={{ backgroundColor: borderColor, height: 1 }} />}
       />
 
-      <Button title="Next" disabled={!vm.isValidAddress} style={{ marginTop: 12 }} onPress={onNext} />
+      <Button
+        title="Next"
+        disabled={!vm.isValidAddress}
+        style={{ marginTop: 12 }}
+        onPress={onNext}
+        themeColor={Networks.current.color}
+      />
     </SafeViewContainer>
   );
 });
