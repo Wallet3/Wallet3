@@ -1,9 +1,10 @@
 import { Button, Coin, Numpad, SafeViewContainer } from '../../components';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { numericFontFamily, secondaryFontColor, themeColor } from '../../constants/styles';
 
 import BackButton from '../components/BackButton';
+import { IToken } from '../../common/Tokens';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 
@@ -12,10 +13,12 @@ interface SubViewProps {
   onNext?: () => void;
   onTokenPress?: () => void;
   onTokenBack?: () => void;
+  token?: IToken;
   disableBack?: boolean;
   disableBalance?: boolean;
   max?: string;
   onMaxPress?: () => void;
+  onNumChanged?: (num: string) => void;
 }
 
 export default observer((props: SubViewProps) => {
@@ -40,10 +43,13 @@ export default observer((props: SubViewProps) => {
 
     setAmount((pre) => {
       const combined = `${pre}${num}`;
-
       return combined.startsWith('0') && !combined.startsWith('0.') ? Number(combined).toString() : combined;
     });
   };
+
+  useEffect(() => {
+    props.onNumChanged?.(amount);
+  }, [amount]);
 
   return (
     <SafeViewContainer style={styles.container}>
@@ -51,13 +57,19 @@ export default observer((props: SubViewProps) => {
         {props.disableBack ? <View /> : <BackButton onPress={props.onBack} />}
 
         <TouchableOpacity style={styles.navMoreButton} onPress={props.onTokenPress}>
-          <Text style={{ fontSize: 19, marginEnd: 8, color: secondaryFontColor, fontWeight: '500' }}>USDC</Text>
+          <Text
+            style={{ fontSize: 19, marginEnd: 8, color: secondaryFontColor, fontWeight: '500', maxWidth: 200 }}
+            numberOfLines={1}
+          >
+            {props.token?.symbol}
+          </Text>
 
-          <Coin symbol="USDC" style={{ width: 22, height: 22 }} />
+          <Coin symbol={props.token?.symbol || ''} style={{ width: 22, height: 22 }} />
         </TouchableOpacity>
       </View>
 
       <Text
+        numberOfLines={1}
         style={{
           fontSize: 64,
           fontFamily: numericFontFamily,
@@ -67,7 +79,6 @@ export default observer((props: SubViewProps) => {
           textAlign: 'center',
           color: themeColor,
         }}
-        numberOfLines={1}
       >
         {amount}
       </Text>

@@ -2,31 +2,20 @@ import { Coin, SafeViewContainer } from '../../components';
 import { FlatList, ListRenderItemInfo, Text, TouchableOpacity, View } from 'react-native';
 
 import BackButton from '../components/BackButton';
+import { IToken } from '../../common/Tokens';
 import React from 'react';
 import { fontColor } from '../../constants/styles';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 
-const data = [
-  { symbol: 'ETH' },
-  { symbol: 'USDC' },
-  { symbol: 'DAI' },
-  { symbol: 'CRV' },
-  { symbol: 'UNI' },
-  { symbol: 'MKR' },
-  { symbol: 'COMP' },
-  { symbol: 'Sushi' },
-  { symbol: 'LINK' },
-  { symbol: 'Aave' },
-];
-
 interface Props {
-  onTokenSelected?: () => void;
+  onTokenSelected?: (token: IToken) => void;
   onBack?: () => void;
+  tokens?: IToken[];
 }
 
 export default observer((props: Props) => {
-  const renderItem = ({ item }: ListRenderItemInfo<{ symbol: string }>) => {
+  const renderItem = ({ item }: ListRenderItemInfo<IToken>) => {
     return (
       <TouchableOpacity
         style={{
@@ -34,8 +23,9 @@ export default observer((props: Props) => {
           alignItems: 'center',
           margin: 0,
           padding: 8,
+          paddingVertical: 12,
         }}
-        onPress={props.onTokenSelected}
+        onPress={() => props.onTokenSelected?.(item)}
       >
         <Coin symbol={item.symbol} style={{ width: 25, height: 25, marginEnd: 12 }} />
         <Text style={{ fontSize: 19, color: fontColor, textTransform: 'uppercase' }} numberOfLines={1}>
@@ -52,10 +42,10 @@ export default observer((props: Props) => {
       </View>
 
       <FlatList
-        data={data}
+        data={props.tokens}
         renderItem={renderItem}
         keyExtractor={(i) => i.symbol}
-        style={{ marginTop: -2, marginEnd: -16, paddingEnd: 16 }}
+        style={{ marginTop: -6, marginEnd: -16, paddingEnd: 16 }}
       />
     </SafeViewContainer>
   );

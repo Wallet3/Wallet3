@@ -1,12 +1,14 @@
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { ListRenderItemInfo, Text, TextInput, TouchableHighlight, TouchableOpacity, View } from 'react-native';
-import React, { useRef, useState } from 'react';
-import { SafeViewContainer, TextBox } from '../../components';
+import React, { useEffect, useRef, useState } from 'react';
+import { SafeViewContainer, Skeleton, TextBox } from '../../components';
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
 import Button from '../../components/Button';
 import { FlatList } from 'react-native-gesture-handler';
+import { Transferring } from '../../viewmodels/Transferring';
 import { formatAddress } from '../../utils/formatter';
+import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 
 const data = [
@@ -23,9 +25,10 @@ const data = [
 
 interface Props {
   onNext?: () => void;
+  vm: Transferring;
 }
 
-export default (props: Props) => {
+export default observer(({ onNext, vm }: Props) => {
   const [addr, setAddr] = useState('');
 
   const renderAddress = ({ item }: ListRenderItemInfo<string>) => {
@@ -48,17 +51,28 @@ export default (props: Props) => {
     );
   };
 
+  useEffect(() => {
+    vm.setTo(addr);
+  }, [addr]);
+
   return (
     <SafeViewContainer style={styles.container}>
       <TextBox
         title="To:"
+        value={addr}
         onChangeText={(t) => {
           setAddr(t);
         }}
-        value={addr}
       />
 
-      <Text style={{ color: secondaryFontColor }}>Recent contacts:</Text>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Text style={{ color: secondaryFontColor }}>Recent contacts:</Text>
+        {vm.isResolvingAddress ? (
+          <Skeleton style={{ height: 14, width: 96 }} />
+        ) : vm.isEns ? (
+          <Text style={{ color: secondaryFontColor }}>{formatAddress(vm.toAddress, 7, 5)}</Text>
+        ) : undefined}
+      </View>
 
       <FlatList
         data={data}
@@ -68,7 +82,7 @@ export default (props: Props) => {
         ItemSeparatorComponent={() => <View style={{ backgroundColor: borderColor, height: 1 }} />}
       />
 
-      <Button title="Next" style={{ marginTop: 12 }} onPress={props.onNext} />
+      <Button title="Next" disabled={!vm.isValidAddress} style={{ marginTop: 12 }} onPress={onNext} />
     </SafeViewContainer>
   );
-};
+});

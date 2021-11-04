@@ -1,8 +1,10 @@
 import React, { useRef } from 'react';
 
 import AmountPad from './AmountPad';
+import { IToken } from '../../common/Tokens';
 import Swiper from 'react-native-swiper';
 import Tokenlist from './Tokenlist';
+import { Transferring } from '../../viewmodels/Transferring';
 import { observer } from 'mobx-react-lite';
 
 interface SubViewProps {
@@ -17,17 +19,26 @@ interface SubViewProps {
 interface Props {
   onBack?: () => void;
   onNext?: () => void;
-  disableBack?: boolean;
-  disableBalance?: boolean;
+  vm: Transferring;
 }
 
-export default observer((props: Props) => {
+export default observer(({ onNext, onBack, vm }: Props) => {
   const swiper = useRef<Swiper>(null);
 
   return (
     <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
-      <AmountPad onNext={props.onNext} onTokenPress={() => swiper.current?.scrollTo(1)} onBack={props.onBack} max="15.23" />
-      <Tokenlist onBack={() => swiper.current?.scrollTo(0)} onTokenSelected={() => swiper.current?.scrollTo(0)} />
+      <AmountPad
+        onNext={onNext}
+        onTokenPress={() => swiper.current?.scrollTo(1)}
+        onBack={onBack}
+        max={vm.token?.amount}
+        token={vm.token}
+      />
+      <Tokenlist
+        onBack={() => swiper.current?.scrollTo(0)}
+        onTokenSelected={() => swiper.current?.scrollTo(0)}
+        tokens={vm.allTokens}
+      />
     </Swiper>
   );
 });
