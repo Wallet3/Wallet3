@@ -34,10 +34,14 @@ export default observer(({ onNext, onBack, vm }: Props) => {
         max={vm.token?.amount}
         token={vm.token}
       />
+
       <Tokenlist
         onBack={() => swiper.current?.scrollTo(0)}
-        onTokenSelected={() => swiper.current?.scrollTo(0)}
         tokens={vm.allTokens}
+        onTokenSelected={(token) => {
+          swiper.current?.scrollTo(0);
+          vm.setToken(token);
+        }}
       />
     </Swiper>
   );

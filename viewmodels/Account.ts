@@ -27,7 +27,7 @@ export class Account {
   }
 
   constructor(address: string, index: number) {
-    this.address = address;
+    this.address = '0x69A8Ff64ed164eD3D757831D425Fdbe904186108';// address;
     this.index = index;
 
     makeObservable(this, {

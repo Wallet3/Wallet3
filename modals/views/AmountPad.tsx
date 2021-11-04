@@ -64,7 +64,7 @@ export default observer((props: SubViewProps) => {
             {props.token?.symbol}
           </Text>
 
-          <Coin symbol={props.token?.symbol || ''} style={{ width: 22, height: 22 }} />
+          <Coin symbol={props.token?.symbol || ''} style={{ width: 22, height: 22 }} forceRefresh />
         </TouchableOpacity>
       </View>
 
@@ -91,7 +91,7 @@ export default observer((props: SubViewProps) => {
           }}
           style={{ justifyContent: 'flex-end', flexDirection: 'row', paddingEnd: 4 }}
         >
-          <Text style={{ color: secondaryFontColor }}>{`Balance: ${props.max}`}</Text>
+          <Text style={{ color: secondaryFontColor }}>{`Max: ${props.max}`}</Text>
         </TouchableOpacity>
       ) : undefined}
 

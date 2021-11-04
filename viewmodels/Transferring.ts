@@ -2,6 +2,7 @@ import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import App from './App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ERC20Token } from '../models/ERC20';
 import { IToken } from '../common/Tokens';
 import Networks from './Networks';
 import { utils } from 'ethers';
@@ -18,7 +19,7 @@ export class Transferring {
   }
 
   get allTokens() {
-    return this.currentAccount.allTokens;
+    return [this.currentAccount.tokens[0], ...this.currentAccount.allTokens];
   }
 
   constructor() {
@@ -28,8 +29,8 @@ export class Transferring {
       token: observable,
       amount: observable,
       isResolvingAddress: observable,
-
       setTo: action,
+      setToken: action,
     });
 
     AsyncStorage.getItem(`contacts`).then((v) => {
@@ -48,6 +49,8 @@ export class Transferring {
   }
 
   setTo(to: string) {
+    if (this.to === to) return;
+    
     this.to = to;
     this.toAddress = '';
     this.isResolvingAddress = true;
@@ -58,6 +61,12 @@ export class Transferring {
         this.isResolvingAddress = false;
       });
     });
+  }
+
+  setToken(token: IToken) {
+    this.token = token;
+    (token as ERC20Token).getBalance?.();
+    AsyncStorage.setItem(`${Networks.current.chainId}-LastUsedToken`, token.address);
   }
 
   get isEns() {

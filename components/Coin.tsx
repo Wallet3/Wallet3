@@ -8,6 +8,7 @@ interface CoinProps {
   symbol: string;
   style?: StyleProp<ImageStyle>;
   iconUrl?: string;
+  forceRefresh?: boolean;
 
   /**
    * Invoked on load error with {nativeEvent: {error}}
@@ -107,16 +108,18 @@ interface CoinProps {
 export default observer((props: CoinProps) => {
   const symbol = props.symbol.toLowerCase();
 
-  const [source, setSource] = useState(
-    props.iconUrl && !icons[symbol] ? { uri: props.iconUrl } : icons[symbol] || icons['_coin']
-  );
-  
+  const [source] = props.forceRefresh
+    ? [props.iconUrl && !icons[symbol] ? { uri: props.iconUrl } : icons[symbol] || icons['_coin']]
+    : useState(props.iconUrl && !icons[symbol] ? { uri: props.iconUrl } : icons[symbol] || icons['_coin']);
+
+  const [failedSource, setFailedSource] = useState();
+
   const size = (props.style as any)?.width || 22;
 
   return (
     <Image
-      source={source}
-      onError={() => setSource(icons['_coin'])}
+      source={failedSource || source}
+      onError={() => setFailedSource(icons['_coin'])}
       {...props}
       style={{
         width: size,
