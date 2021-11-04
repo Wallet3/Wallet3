@@ -1,13 +1,13 @@
+import { BigNumber, utils } from 'ethers';
 import { Gwei_1, MAX_GWEI_PRICE } from '../common/Constants';
+import { action, computed, makeAutoObservable, makeObservable, observable, runInAction } from 'mobx';
 import { estimateGas, getGasPrice, getMaxPriorityFee, getNextBlockBaseFee, getTransactionCount } from '../common/RPC';
-import { makeAutoObservable, runInAction } from 'mobx';
 
 import App from './App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ERC20Token } from '../models/ERC20';
 import { IToken } from '../common/Tokens';
 import Networks from './Networks';
-import { utils } from 'ethers';
 
 export class Transferring {
   to = '';
@@ -42,6 +42,13 @@ export class Transferring {
   }
 
   get amountWei() {
+    if (this.isNativeToken) {
+      const ether = utils.parseEther(this.amount);
+      if (ether.gte(this.currentAccount.nativeToken.balance!)) {
+        return BigNumber.from(this.currentAccount.nativeToken.balance!).sub(this.txFeeWei);
+      }
+    }
+
     return utils.parseUnits(this.amount, this.token?.decimals || 18);
   }
 
@@ -53,13 +60,45 @@ export class Transferring {
     }
   }
 
+  get nextBlockBaseFee() {
+    return this.nextBlockBaseFeeWei / Gwei_1;
+  }
+
+  get txFeeWei() {
+    return this.currentNetwork.eip1559
+      ? BigNumber.from(Math.min(this.nextBlockBaseFeeWei, this.maxGasPrice * Gwei_1))
+          .add(BigNumber.from(Number(this.maxPriorityPrice.toFixed(4)) * Gwei_1))
+          .mul(this.gasLimit)
+      : BigNumber.from(Number.parseInt((this.maxGasPrice * Gwei_1) as any)).mul(this.gasLimit);
+  }
+
+  get txFee() {
+    return Number(utils.formatEther(this.txFeeWei)).toFixed(5);
+  }
+
+  get isNativeToken() {
+    return !this.token.address;
+  }
+
+  get inSufficientFee() {
+    return this.isNativeToken
+      ? this.amountWei.add(this.txFeeWei).gt(this.currentAccount.nativeToken.balance!)
+      : this.txFeeWei.gt(this.currentAccount.nativeToken.balance!);
+  }
+
   get isValidParams() {
-    return this.toAddress && this.isValidAmount && this.nonce >= 0;
+    return (
+      this.toAddress &&
+      this.isValidAmount &&
+      this.nonce >= 0 &&
+      this.maxGasPrice > 0 &&
+      this.gasLimit >= 21000 &&
+      !this.inSufficientFee
+    );
   }
 
   constructor() {
     this.token = this.currentAccount.tokens[0];
-
     makeAutoObservable(this);
 
     AsyncStorage.getItem(`contacts`).then((v) => {
@@ -92,7 +131,7 @@ export class Transferring {
       this.nextBlockBaseFeeWei = nextBaseFee;
 
       this.setNonce(nonce);
-      this.setPriorityPrice((priorityFee || Gwei_1) / Gwei_1);
+      this.setPriorityPrice((priorityFee || Gwei_1) / Gwei_1 + 2);
 
       if (this.currentNetwork.eip1559) {
         this.setMaxGasPrice((nextBaseFee || Gwei_1) / Gwei_1 + 30);
@@ -105,10 +144,10 @@ export class Transferring {
   estimateGas() {
     if (!this.toAddress) return;
 
-    const erc20 = this.token as ERC20Token;
-
-    if (erc20) {
-      erc20.estimateGas(this.toAddress, this.amountWei).then((gas) => runInAction(() => this.setGasLimit(gas)));
+    if (this.token instanceof ERC20Token) {
+      (this.token as ERC20Token)
+        .estimateGas(this.toAddress, this.amountWei)
+        .then((gas) => runInAction(() => this.setGasLimit(gas)));
     } else {
       estimateGas(this.currentNetwork.chainId, {
         from: this.currentAccount.address,

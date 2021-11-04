@@ -21,13 +21,14 @@ export class Account {
   balanceUSD = 0;
   ensName = '';
   avatar = '';
+  nativeToken!: IToken;
 
   get displayName() {
     return this.ensName || formatAddress(this.address, 7, 5);
   }
 
   constructor(address: string, index: number) {
-    this.address = '0x69A8Ff64ed164eD3D757831D425Fdbe904186108';// address;
+    this.address = '0x69A8Ff64ed164eD3D757831D425Fdbe904186108'; // address;
     this.index = index;
 
     makeObservable(this, {
@@ -94,6 +95,7 @@ export class Account {
       amount: utils.formatUnits(balance, 18),
     };
 
+    this.nativeToken = native;
     return native;
   }
 

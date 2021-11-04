@@ -5,6 +5,8 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
 import BackButton from '../components/BackButton';
+import Fire from '../../assets/icons/app/fire.svg';
+import Gem from '../../assets/icons/app/gem.svg';
 import Networks from '../../viewmodels/Networks';
 import Swiper from 'react-native-swiper';
 import { Transferring } from '../../viewmodels/Transferring';
@@ -71,7 +73,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
         <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', padding: 16 }} onPress={onGasPress}>
           <Text style={{ ...viewStyles.reviewItemTitle, fontSize: 15 }}>(89.01 USD)</Text>
           <Text style={{ ...viewStyles.reviewItemValue, marginHorizontal: 2, maxWidth: '50%' }} numberOfLines={1}>
-            0.02567 ETH
+            {vm.txFee}
           </Text>
 
           <MaterialIcons name="keyboard-arrow-right" size={15} />
@@ -79,12 +81,12 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
       </View>
 
       <Text style={{ color: 'red', textAlign: 'right', fontSize: 12, fontWeight: '600', marginEnd: 18, marginTop: 6 }}>
-        {'Insufficient Funds'}
+        {vm.inSufficientFee ? 'Insufficient Funds' : undefined}
       </Text>
 
       <View style={{ flex: 1 }} />
 
-      <Button title="Send" onPress={onSend} themeColor={Networks.current.color} />
+      <Button title="Send" onPress={onSend} themeColor={Networks.current.color} disabled={!vm.isValidParams} />
     </SafeViewContainer>
   );
 });
@@ -128,10 +130,16 @@ const GasView = observer(({ onBack, vm }: GasProps) => {
               textAlign="right"
               maxLength={12}
               style={{ ...viewStyles.reviewItemValue, fontSize: 20 }}
-              value={`${vm.maxGasPrice}`}
+              value={`${vm.maxGasPrice.toFixed(5)}`}
               onChangeText={(txt) => vm.setMaxGasPrice(txt)}
             />
-            <Text style={{ fontSize: 8, color: secondaryFontColor, textAlign: 'right' }}>Gwei</Text>
+
+            <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+              {vm.currentNetwork.eip1559 ? <Fire width={8} height={8} style={{ marginEnd: 3 }} /> : undefined}
+              <Text style={{ fontSize: 8, color: secondaryFontColor, textAlign: 'right' }}>
+                {vm.currentNetwork.eip1559 ? `${vm.nextBlockBaseFee} Gwei` : 'Gwei'}
+              </Text>
+            </View>
           </View>
         </View>
 
