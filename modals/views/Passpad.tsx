@@ -4,6 +4,7 @@ import { Button, SafeViewContainer } from '../../components';
 import Numpad, { NumpadChar } from '../../components/Numpad';
 import React, { useEffect, useRef, useState } from 'react';
 
+import LottieView from 'lottie-react-native';
 import { View } from 'react-native';
 import styles from '../styles';
 
@@ -57,24 +58,41 @@ export default ({ themeColor, onCancel, onCodeEntered }: Props) => {
 
       passcodeView.current?.shake?.();
       setTimeout(() => setPasscode(''), 500);
-      setVerified(false);
     });
   }, [passcode]);
 
   return (
     <SafeViewContainer style={styles.container}>
-      <View style={{ flex: 1 }} />
+      {verified ? (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <LottieView
+            style={{
+              width: 200,
+              height: 200,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            loop={false}
+            autoPlay
+            source={require('../../assets/animations/success.json')}
+          />
+        </View>
+      ) : (
+        <View style={{ flex: 1 }}>
+          <View style={{ flex: 1 }} />
 
-      <Animatable.View ref={passcodeView as any} style={{ flexDirection: 'row', justifyContent: 'center' }}>
-        {new Array(passcode.length).fill(0).map((_, index) => renderFilledCircle(index))}
-        {new Array(passcodeLength - passcode.length).fill(0).map((_, index) => renderEmptyCircle(index))}
-      </Animatable.View>
+          <Animatable.View ref={passcodeView as any} style={{ flexDirection: 'row', justifyContent: 'center' }}>
+            {new Array(passcode.length).fill(0).map((_, index) => renderFilledCircle(index))}
+            {new Array(passcodeLength - passcode.length).fill(0).map((_, index) => renderEmptyCircle(index))}
+          </Animatable.View>
 
-      <View style={{ flex: 1 }} />
+          <View style={{ flex: 1 }} />
 
-      <Numpad onPress={onNumpadPress} disableDot />
+          <Numpad onPress={onNumpadPress} disableDot />
 
-      <Button title="Cancel" onPress={() => onCancel?.()} themeColor={themeColor} />
+          <Button title="Cancel" onPress={() => onCancel?.()} themeColor={themeColor} />
+        </View>
+      )}
     </SafeViewContainer>
   );
 };
