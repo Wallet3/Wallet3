@@ -7,6 +7,7 @@ import App from './App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ERC20Token } from '../models/ERC20';
 import { IToken } from '../common/Tokens';
+import { ITransaction } from '../models/Transaction';
 import Networks from './Networks';
 
 export class Transferring {
@@ -108,7 +109,7 @@ export class Transferring {
       chainId: this.currentNetwork.chainId,
       from: this.currentAccount.address,
       to: this.isNativeToken ? this.toAddress : this.token.address,
-      value: this.isNativeToken ? this.amountWei : 0,
+      value: this.isNativeToken ? this.amountWei.toString() : 0,
       nonce: this.nonce,
       data,
       gasLimit: this.gasLimit,

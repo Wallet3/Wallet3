@@ -6,11 +6,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Authentication from './Authentication';
 import Key from '../models/Key';
 import Networks from './Networks';
+import TxHub from './TxHub';
 import { sendTransaction } from '../common/RPC';
 
 type SendTxRequest = {
   accountIndex: number;
   tx: providers.TransactionRequest;
+  tokenInfo: { symbol: string; decimals: number; amountWei: string; recipient: string };
   pin?: string;
 };
 
@@ -85,7 +87,7 @@ export class Wallet {
     const txHex = await this.signTx(request);
     if (!txHex) return false;
 
-    sendTransaction(request.tx.chainId!, txHex);
+    TxHub.broadcastTx({ chainId: request.tx.chainId!, txHex, tx: { ...request.tx, ...request.tokenInfo } });
 
     return true;
   }

@@ -22,7 +22,17 @@ export default observer(() => {
   }, []);
 
   const sendTx = async (pin?: string) => {
-    const success = await App.currentWallet!.sendTx({ accountIndex: vm.currentAccount.index, tx: vm.txRequest, pin });
+    const success = await App.currentWallet!.sendTx({
+      accountIndex: vm.currentAccount.index,
+      tx: vm.txRequest,
+      pin,
+      tokenInfo: {
+        symbol: vm.token.symbol,
+        decimals: vm.token.decimals,
+        amountWei: vm.amountWei.toString(),
+        recipient: vm.toAddress,
+      },
+    });
     setVerified(success);
 
     if (success) setTimeout(() => PubSub.publish('closeSendModal'), 1500);

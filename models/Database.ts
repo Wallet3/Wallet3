@@ -1,10 +1,13 @@
 import { Connection, Repository, createConnection } from 'typeorm';
 
 import Key from './Key';
+import Transaction from './Transaction';
 
 class Database {
   private _connection?: Connection;
+
   keyRepository!: Repository<Key>;
+  txRepository!: Repository<Transaction>;
 
   async init() {
     if (this._connection) return;
@@ -14,10 +17,11 @@ class Database {
       database: 'test17',
       driver: require('expo-sqlite'),
       synchronize: true,
-      entities: [Key],
+      entities: [Key, Transaction],
     });
 
     this.keyRepository = this._connection.getRepository(Key);
+    this.txRepository = this._connection.getRepository(Transaction);
   }
 
   dispose() {
