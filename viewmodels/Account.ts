@@ -5,6 +5,7 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 
 import { ERC20Token } from '../models/ERC20';
 import { IToken } from '../common/Tokens';
+import { NativeToken } from '../models/NativeToken';
 import Networks from './Networks';
 import { formatAddress } from '../utils/formatter';
 import { getBalance } from '../common/RPC';
@@ -21,7 +22,7 @@ export class Account {
   balanceUSD = 0;
   ensName = '';
   avatar = '';
-  nativeToken!: IToken;
+  nativeToken!: NativeToken;
 
   get displayName() {
     return this.ensName || formatAddress(this.address, 7, 5);
@@ -50,7 +51,7 @@ export class Account {
     this.loadingTokens = true;
 
     const [native, userTokens, { usd_value }] = await Promise.all([
-      this.refreshNativeToken(),
+      this.createNativeToken(),
       TokensMan.loadUserTokens(current.chainId, this.address, Networks.currentProvider),
       Debank.getBalance(this.address, current.comm_id),
     ]);
@@ -83,20 +84,22 @@ export class Account {
     });
   }
 
-  async refreshNativeToken() {
-    const balance = await getBalance(Networks.current.chainId, this.address);
-
-    const native: IToken = {
-      address: '',
-      decimals: 18,
+  private async createNativeToken() {
+    const native = new NativeToken({
+      owner: this.address,
+      chainId: Networks.current.chainId,
       symbol: Networks.current.symbol,
-      price: 0,
-      balance: balance,
-      amount: utils.formatUnits(balance, 18),
-    };
+    });
+
+    native.getBalance();
 
     this.nativeToken = native;
-    return native;
+
+    return native as unknown as ERC20Token;
+  }
+
+  async refreshTokensBalance() {
+    this.tokens.map((t) => (t as ERC20Token).getBalance?.(false));
   }
 
   fetchBasicInfo() {

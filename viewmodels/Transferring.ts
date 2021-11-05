@@ -56,7 +56,7 @@ export class Transferring {
 
   get isValidAmount() {
     try {
-      return this.amountWei.gt(0) && this.amountWei.lte(this.token?.balance || '0');
+      return this.amountWei.gte(0) && this.amountWei.lte(this.token?.balance || '0');
     } catch (error) {
       return false;
     }
@@ -103,17 +103,22 @@ export class Transferring {
     const data = this.isNativeToken ? '0x' : (this.token as ERC20Token).encodeTransferData(this.toAddress, this.amountWei);
 
     const tx: providers.TransactionRequest = {
-      to: this.toAddress,
-      from: this.currentAccount.address,
       chainId: this.currentNetwork.chainId,
+      from: this.currentAccount.address,
+      to: this.isNativeToken ? this.toAddress : this.token.address,
+      value: this.isNativeToken ? this.amountWei : '0',
+      nonce: this.nonce,
       data,
       gasLimit: this.gasLimit,
-      value: this.isNativeToken ? this.amountWei : '0',
-      gasPrice: this.maxGasPrice * Gwei_1,
-      maxFeePerGas: this.maxGasPrice * Gwei_1,
-      maxPriorityFeePerGas: this.maxPriorityPrice * Gwei_1,
       type: this.currentNetwork.eip1559 ? 2 : 0,
     };
+
+    if (tx.type === 0) {
+      tx.gasPrice = Number.parseInt((this.maxGasPrice * Gwei_1) as any);
+    } else {
+      tx.maxFeePerGas = Number.parseInt((this.maxGasPrice * Gwei_1) as any);
+      tx.maxPriorityFeePerGas = Number.parseInt((this.maxPriorityPrice * Gwei_1) as any);
+    }
 
     return tx;
   }

@@ -77,8 +77,8 @@ export class ERC20Token {
     });
   }
 
-  async getBalance(): Promise<BigNumber> {
-    this.loading = true;
+  async getBalance(setLoading = true): Promise<BigNumber> {
+    this.loading = setLoading;
     const balance = BigNumber.from((await call(this.chainId, { to: this.address, data: this.call_balanceOfOwner })) || '0');
 
     runInAction(() => {

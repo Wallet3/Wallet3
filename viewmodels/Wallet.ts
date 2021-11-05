@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Authentication from './Authentication';
 import Key from '../models/Key';
 import Networks from './Networks';
+import { sendTransaction } from '../common/RPC';
 
 type SendTxRequest = {
   accountIndex: number;
@@ -15,6 +16,7 @@ type SendTxRequest = {
 
 export class Wallet {
   private key: Key;
+  private refreshTimer!: NodeJS.Timer;
   accounts: Account[] = [];
   currentAccount: Account | null = null;
 
@@ -54,11 +56,20 @@ export class Wallet {
     return this;
   }
 
+  private async refreshAccount() {
+    clearTimeout(this.refreshTimer);
+    await this.currentAccount?.refreshTokensBalance();
+    this.refreshTimer = setTimeout(() => this.refreshAccount(), 1000 * 30);
+  }
+
   switchAccount(account: Account) {
     if (!account) return;
     this.currentAccount = account;
     this.currentAccount.refreshOverview();
     this.currentAccount.fetchBasicInfo();
+
+    clearTimeout(this.refreshTimer);
+    this.refreshTimer = setTimeout(() => this.refreshAccount(), 1000 * 30);
   }
 
   async signTx({ accountIndex, tx, pin }: SendTxRequest) {
@@ -72,9 +83,9 @@ export class Wallet {
 
   async sendTx(request: SendTxRequest) {
     const txHex = await this.signTx(request);
-    console.log(txHex);
-
     if (!txHex) return false;
+
+    sendTransaction(request.tx.chainId!, txHex);
 
     return true;
   }

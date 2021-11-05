@@ -17,6 +17,8 @@ import { Modalize } from 'react-native-modalize';
 import Networks from './viewmodels/Networks';
 import NetworksMenu from './modals/Networks';
 import PubSub from 'pubsub-js';
+import Request from './modals/Request';
+import Send from './modals/Send';
 import Tokens from './screens/tokens/SortTokens';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -80,10 +82,15 @@ const Root = observer(({ navigation }: NativeStackScreenProps<RootStackParamList
 const App = observer(({ app }: { app: AppVM }) => {
   const { Navigator, Screen } = StackRoot;
   const { ref: networksModal, open: openNetworksModal, close: closeNetworksModal } = useModalize();
+  const { ref: sendModalizeRef, open: openSendModal, close: closeSendModal } = useModalize();
+  const { ref: requestModalizeRef, open: openRequestModal, close: closeRequestModal } = useModalize();
 
   useEffect(() => {
     app.init();
     PubSub.subscribe('openNetworksModal', () => openNetworksModal());
+    PubSub.subscribe('openSendModal', () => openSendModal());
+    PubSub.subscribe('openRequestModal', () => openRequestModal());
+    PubSub.subscribe('closeSendModal', () => closeSendModal());
 
     return () => AppViewModel.dispose();
   }, []);
@@ -145,6 +152,22 @@ const App = observer(({ app }: { app: AppVM }) => {
             Networks.switch(network);
           }}
         />
+      </Modalize>
+
+      <Modalize
+        ref={sendModalizeRef}
+        adjustToContentHeight
+        scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+      >
+        <Send />
+      </Modalize>
+
+      <Modalize
+        ref={requestModalizeRef}
+        adjustToContentHeight
+        scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+      >
+        <Request />
       </Modalize>
     </NavigationContainer>
   );

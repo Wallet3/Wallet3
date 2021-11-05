@@ -142,6 +142,8 @@ export async function getGasPrice(chainId: number) {
         id: Date.now(),
       });
 
+      if (resp.error) continue;
+
       return Number.parseInt(resp.result);
     } catch (error) {}
   }

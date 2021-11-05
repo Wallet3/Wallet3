@@ -141,7 +141,7 @@ const GasView = observer(({ onBack, vm }: GasProps) => {
               textAlign="right"
               maxLength={12}
               style={{ ...viewStyles.reviewItemValue, fontSize: 20 }}
-              value={`${vm.maxGasPrice.toFixed(5)}`}
+              value={`${Number(vm.maxGasPrice.toFixed(5))}`}
               onChangeText={(txt) => vm.setMaxGasPrice(txt)}
             />
 
