@@ -12,18 +12,6 @@ import { formatAddress } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 
-const data = [
-  'rsa.eth',
-  'vitalik.eth',
-  '0x00192Fb10dF37c9FB26829eb2CC623cd1BF599E8',
-  'pixlpa.eth',
-  '0x1B99d91C3416bD3e6E6dc75d81ABfD360e7733F3',
-  'solemnstranger.eth',
-  '0xd24400ae8BfEBb18cA49Be86258a3C749cf46853',
-  '0x96a29A8B1F9dC2546D5995874d23630B27E0b9d7',
-  'mangimi.eth',
-];
-
 interface Props {
   onNext?: () => void;
   vm: Transferring;
@@ -76,7 +64,7 @@ export default observer(({ onNext, vm }: Props) => {
       </View>
 
       <FlatList
-        data={data}
+        data={vm.contacts}
         renderItem={renderAddress}
         style={{ flex: 1, marginHorizontal: -16, paddingHorizontal: 16 }}
         keyExtractor={(item) => item}

@@ -12,6 +12,8 @@ import Networks from './Networks';
 export class Transferring {
   private timer?: NodeJS.Timer;
 
+  contacts: string[] = [];
+
   to = '';
   toAddress = '';
   token: IToken;
@@ -106,7 +108,7 @@ export class Transferring {
       chainId: this.currentNetwork.chainId,
       from: this.currentAccount.address,
       to: this.isNativeToken ? this.toAddress : this.token.address,
-      value: this.isNativeToken ? this.amountWei : '0',
+      value: this.isNativeToken ? this.amountWei : 0,
       nonce: this.nonce,
       data,
       gasLimit: this.gasLimit,
@@ -133,7 +135,7 @@ export class Transferring {
     });
 
     AsyncStorage.getItem(`contacts`).then((v) => {
-      JSON.parse(v || '[]');
+      runInAction(() => (this.contacts = JSON.parse(v || '[]')));
     });
 
     AsyncStorage.getItem(`${this.currentNetwork.chainId}-LastUsedToken`).then((v) => {
@@ -211,14 +213,20 @@ export class Transferring {
       runInAction(() => {
         this.toAddress = address || to;
         this.isResolvingAddress = false;
+
+        if (utils.isAddress(address || to) && !this.contacts.includes(to)) {
+          this.contacts.push(to);
+          AsyncStorage.setItem(`contacts`, JSON.stringify(this.contacts));
+        }
       })
     );
   }
 
   setToken(token: IToken) {
+    if (this.token?.address === token.address) return;
     this.token = token;
 
-    (token as ERC20Token)?.getBalance?.();
+    (token as ERC20Token)?.getBalance?.(false);
     AsyncStorage.setItem(`${this.currentNetwork.chainId}-LastUsedToken`, token.address);
   }
 

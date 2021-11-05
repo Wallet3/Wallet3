@@ -99,6 +99,7 @@ export const PublicNetworks: INetwork[] = [
     network: 'Avalanche',
     color: '#E84142',
     order: 5,
+    eip1559: true,
     defaultTokens: [],
     showOverview: true,
   },

@@ -58,6 +58,7 @@ export class Account {
 
     const shownTokens = userTokens.filter((t) => t.shown);
     const favTokens = [native, ...shownTokens];
+
     shownTokens.map((t) => t.getBalance());
 
     runInAction(() => {
@@ -122,7 +123,7 @@ export class Account {
     token.shown = !token.shown;
 
     this.tokens = [this.tokens[0], ...this.allTokens.filter((t) => t.shown)];
-    (token as ERC20Token).getBalance?.();
+    if (token.shown) (token as ERC20Token).getBalance?.();
 
     TokensMan.saveUserTokens(Networks.current.chainId, this.address, this.allTokens);
   }
