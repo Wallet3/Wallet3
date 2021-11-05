@@ -5,6 +5,7 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
 import BackButton from '../components/BackButton';
+import Currency from '../../viewmodels/Currency';
 import Fire from '../../assets/icons/app/fire.svg';
 import Gem from '../../assets/icons/app/gem.svg';
 import Networks from '../../viewmodels/Networks';
@@ -57,7 +58,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
           <Text style={viewStyles.reviewItemTitle}>Network</Text>
 
           <View>
-            <Text style={viewStyles.reviewItemValue}>{vm.currentNetwork.network}</Text>
+            <Text style={{ ...viewStyles.reviewItemValue, color: vm.currentNetwork.color }}>{vm.currentNetwork.network}</Text>
           </View>
         </View>
       </View>
@@ -73,10 +74,23 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
       >
         <Text style={viewStyles.reviewItemTitle}>Tx Fee</Text>
 
-        <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', padding: 16 }} onPress={onGasPress}>
-          <Text style={{ ...viewStyles.reviewItemTitle, fontSize: 15 }}>(89.01 USD)</Text>
-          <Text style={{ ...viewStyles.reviewItemValue, marginHorizontal: 2, maxWidth: '50%' }} numberOfLines={1}>
-            {vm.txFee}
+        <TouchableOpacity
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            padding: 16,
+            paddingVertical: 12,
+            paddingEnd: 14,
+            justifyContent: 'flex-end',
+            width: '75%',
+          }}
+          onPress={onGasPress}
+        >
+          <Text style={{ ...viewStyles.reviewItemTitle, fontSize: 15 }}>
+            {`(${Currency.tokenToUSD(vm.txFee, vm.currentNetwork.symbol).toFixed(2)} USD)`}
+          </Text>
+          <Text style={{ ...viewStyles.reviewItemValue, marginHorizontal: 2 }} numberOfLines={1}>
+            {`${vm.txFee.toFixed(5)} ${vm.feeTokenSymbol}`}
           </Text>
 
           <MaterialIcons name="keyboard-arrow-right" size={15} />

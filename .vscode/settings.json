@@ -3,6 +3,7 @@
         "ciphertext",
         "Debank",
         "typeorm",
+        "Viewmodel",
         "Wordlist",
         "xprivkey",
         "Xpubkey"

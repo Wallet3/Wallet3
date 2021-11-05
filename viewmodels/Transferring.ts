@@ -76,7 +76,15 @@ export class Transferring {
   }
 
   get txFee() {
-    return Number(utils.formatEther(this.txFeeWei)).toFixed(5);
+    try {
+      return Number(utils.formatEther(this.txFeeWei));
+    } catch (error) {
+      return 0;
+    }
+  }
+
+  get feeTokenSymbol() {
+    return this.currentNetwork.symbol;
   }
 
   get isNativeToken() {
@@ -129,6 +137,8 @@ export class Transferring {
     this.token = defaultToken || this.currentAccount.tokens[0];
 
     makeAutoObservable(this, {
+      currentNetwork: observable,
+      token: observable,
       txFeeWei: computed,
       txFee: computed,
       nextBlockBaseFee: computed,
