@@ -33,9 +33,10 @@ export default observer(() => {
         recipient: vm.toAddress,
       },
     });
+
     setVerified(success);
 
-    if (success) setTimeout(() => PubSub.publish('closeSendModal'), 1500);
+    if (success) setTimeout(() => PubSub.publish('closeSendModal'), 1700);
 
     return success;
   };

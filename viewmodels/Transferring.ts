@@ -6,6 +6,7 @@ import { estimateGas, getGasPrice, getMaxPriorityFee, getNextBlockBaseFee, getTr
 import App from './App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ERC20Token } from '../models/ERC20';
+import { INetwork } from '../common/Networks';
 import { IToken } from '../common/Tokens';
 import { ITransaction } from '../models/Transaction';
 import Networks from './Networks';
@@ -25,6 +26,7 @@ export class Transferring {
   maxGasPrice = 0; // Gwei
   maxPriorityPrice = 0; // Gwei
   nonce = -1;
+  currentNetwork: INetwork;
 
   get currentAccount() {
     return App.currentWallet?.currentAccount!;
@@ -32,10 +34,6 @@ export class Transferring {
 
   get allTokens() {
     return [this.currentAccount.tokens[0], ...this.currentAccount.allTokens];
-  }
-
-  get currentNetwork() {
-    return Networks.current;
   }
 
   get isEns() {
@@ -59,7 +57,7 @@ export class Transferring {
 
   get isValidAmount() {
     try {
-      return this.amountWei.gte(0) && this.amountWei.lte(this.token?.balance || '0');
+      return this.amountWei.gt(0) && this.amountWei.lte(this.token?.balance || '0');
     } catch (error) {
       return false;
     }
@@ -126,8 +124,9 @@ export class Transferring {
     return tx;
   }
 
-  constructor() {
-    this.token = this.currentAccount.tokens[0];
+  constructor({ targetNetwork, defaultToken, to }: { targetNetwork?: INetwork; defaultToken?: IToken; to?: string } = {}) {
+    this.currentNetwork = targetNetwork || Networks.current;
+    this.token = defaultToken || this.currentAccount.tokens[0];
 
     makeAutoObservable(this, {
       txFeeWei: computed,
@@ -150,6 +149,8 @@ export class Transferring {
     });
 
     this.initChainData();
+
+    if (to) this.setTo(to);
 
     if (this.currentNetwork.eip1559) {
       this.timer = setTimeout(() => this.refreshEIP1559(), 1000 * 10);
@@ -249,6 +250,25 @@ export class Transferring {
 
   setPriorityPrice(price: string | number) {
     this.maxPriorityPrice = Math.max(Math.min(Number(price), MAX_GWEI_PRICE), 0);
+  }
+
+  async setGas(speed: 'rapid' | 'fast' | 'standard') {
+    const wei = (await getGasPrice(this.currentNetwork.chainId)) || Gwei_1;
+    const basePrice = wei / Gwei_1;
+
+    runInAction(() => {
+      switch (speed) {
+        case 'rapid':
+          this.setMaxGasPrice(basePrice + 10);
+          break;
+        case 'fast':
+          this.setMaxGasPrice(basePrice);
+          break;
+        case 'standard':
+          this.setMaxGasPrice(Math.max(basePrice - 3, 1));
+          break;
+      }
+    });
   }
 
   dispose() {

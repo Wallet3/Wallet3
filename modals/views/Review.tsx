@@ -36,10 +36,11 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
         <View style={viewStyles.reviewItem}>
           <Text style={viewStyles.reviewItemTitle}>Send</Text>
 
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ ...viewStyles.reviewItemValue, marginEnd: 8 }} numberOfLines={1}>
-              {`${vm.amount} ${vm.token?.symbol}`}
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+            <Text style={{ ...viewStyles.reviewItemValue, marginEnd: 8, maxWidth: '50%' }} numberOfLines={1}>
+              {vm.amount}
             </Text>
+            <Text style={{ ...viewStyles.reviewItemValue, marginEnd: 8 }}>{vm.token.symbol}</Text>
             <Coin symbol={vm.token!.symbol} forceRefresh />
           </View>
         </View>
@@ -189,17 +190,17 @@ const GasView = observer(({ onBack, vm }: GasProps) => {
       </View>
 
       <View style={{ ...viewStyles.reviewItemContainer, flexDirection: 'row' }}>
-        <TouchableOpacity style={viewStyles.gasItem}>
+        <TouchableOpacity style={viewStyles.gasItem} onPress={() => vm.setGas('rapid')}>
           <Ionicons name="rocket" size={12} color="tomato" />
           <Text style={{ ...viewStyles.gasItemText, color: 'tomato' }}>Rapid</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={viewStyles.gasItem}>
+        <TouchableOpacity style={viewStyles.gasItem} onPress={() => vm.setGas('fast')}>
           <Ionicons name="car-sport" size={13} color="dodgerblue" />
           <Text style={{ ...viewStyles.gasItemText, color: 'dodgerblue' }}>Fast</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={viewStyles.gasItem}>
+        <TouchableOpacity style={viewStyles.gasItem} onPress={() => vm.setGas('standard')}>
           <FontAwesome5 name="walking" size={12} color="darkorchid" />
           <Text style={{ ...viewStyles.gasItemText, color: 'darkorchid' }}>Standard</Text>
         </TouchableOpacity>
