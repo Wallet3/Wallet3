@@ -85,12 +85,15 @@ export class Account {
   }
 
   private async createNativeToken() {
-    const native = new NativeToken({
-      owner: this.address,
-      chainId: Networks.current.chainId,
-      symbol: Networks.current.symbol,
-    });
+    const native =
+      this.nativeToken ||
+      new NativeToken({
+        owner: this.address,
+        chainId: Networks.current.chainId,
+        symbol: Networks.current.symbol,
+      });
 
+    native.setChain({ ...Networks.current });
     native.getBalance();
 
     this.nativeToken = native;
@@ -99,6 +102,10 @@ export class Account {
   }
 
   async refreshTokensBalance() {
+    Debank.getBalance(this.address, Networks.current.comm_id).then(({ usd_value }) =>
+      runInAction(() => (this.balanceUSD = usd_value))
+    );
+
     this.tokens.map((t) => (t as ERC20Token).getBalance?.(false));
   }
 

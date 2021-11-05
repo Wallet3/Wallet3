@@ -1,16 +1,16 @@
 import { BigNumber, utils } from 'ethers';
-import { computed, makeAutoObservable, makeObservable, observable, runInAction } from 'mobx';
+import { action, computed, makeAutoObservable, makeObservable, observable, runInAction } from 'mobx';
 import { estimateGas, getBalance } from '../common/RPC';
 
 import { IToken } from '../common/Tokens';
 
 export class NativeToken implements IToken {
   readonly owner: string;
-  readonly chainId: number;
-  readonly symbol: string;
   readonly decimals = 18;
   readonly address = '';
 
+  chainId: number = 1;
+  symbol: string = '';
   balance = BigNumber.from(0);
 
   get amount() {
@@ -22,7 +22,12 @@ export class NativeToken implements IToken {
     this.chainId = chainId;
     this.symbol = symbol;
 
-    makeObservable(this, { balance: observable, amount: computed });
+    makeObservable(this, { balance: observable, amount: computed, symbol: observable, setChain: action });
+  }
+
+  setChain({ chainId, symbol }: { chainId: number; symbol: string }) {
+    this.chainId = chainId;
+    this.symbol = symbol;
   }
 
   async getBalance() {
