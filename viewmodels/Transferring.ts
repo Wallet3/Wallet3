@@ -109,7 +109,7 @@ export class Transferring {
       chainId: this.currentNetwork.chainId,
       from: this.currentAccount.address,
       to: this.isNativeToken ? this.toAddress : this.token.address,
-      value: this.isNativeToken ? this.amountWei.toString() : 0,
+      value: this.isNativeToken ? this.amountWei : 0,
       nonce: this.nonce,
       data,
       gasLimit: this.gasLimit,

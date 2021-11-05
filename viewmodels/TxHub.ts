@@ -5,6 +5,7 @@ import { getTransactionReceipt, sendTransaction } from '../common/RPC';
 import { hideMessage, showMessage } from 'react-native-flash-message';
 
 import Database from '../models/Database';
+import { formatAddress } from '../utils/formatter';
 
 class TxHub {
   pendingTxs: Transaction[] = [];
@@ -62,6 +63,14 @@ class TxHub {
       tx.transactionIndex = Number.parseInt(receipt.transactionIndex);
       tx.blockNumber = Number.parseInt(receipt.blockNumber);
       tx.blockHash = receipt.blockHash;
+
+      showMessage({
+        message: tx.status ? 'Transaction confirmed' : 'Transaction failed',
+        description: `Tx: ${formatAddress(tx.hash, 7, 5)} has been confirmed at block: ${tx.blockNumber}`,
+        type: tx.status ? 'success' : 'danger',
+        duration: 3000,
+      });
+
       await tx.save();
       confirmedTxs.push(tx);
 
@@ -117,7 +126,7 @@ class TxHub {
     t.priorityPrice = tx.maxPriorityFeePerGas as number;
     t.hash = tx.hash!;
     t.nonce = tx.nonce! as number;
-    t.value = tx.value! as string;
+    t.value = tx.value!.toString();
     t.timestamp = Date.now();
     t.tokenSymbol = tx.tokenSymbol;
     t.tokenDecimals = tx.tokenDecimals;

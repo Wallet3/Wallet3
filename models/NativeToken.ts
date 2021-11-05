@@ -28,6 +28,7 @@ export class NativeToken implements IToken {
   setChain({ chainId, symbol }: { chainId: number; symbol: string }) {
     this.chainId = chainId;
     this.symbol = symbol;
+    this.balance = BigNumber.from(0);
   }
 
   async getBalance() {

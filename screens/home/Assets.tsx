@@ -1,9 +1,11 @@
+import * as Animatable from 'react-native-animatable';
+
+import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
 import { FlatList, ListRenderItemInfo, StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
 import { Coin } from '../../components';
-import { Feather } from '@expo/vector-icons';
 import { IToken } from '../../common/Tokens';
 import { RootNavigationProps } from '../navigations';
 import Skeleton from '../../components/Skeleton';
@@ -67,6 +69,15 @@ interface Props {
   loadingTokens?: boolean;
 }
 
+const rotate = {
+  from: {
+    transform: [{ rotate: '0deg' }],
+  },
+  to: {
+    transform: [{ rotate: '360deg' }],
+  },
+};
+
 export default observer(({ tokens, themeColor, loadingTokens }: Props) => {
   const [activeTab, setActiveTab] = useState(0);
   const swiper = React.useRef<Swiper>(null);
@@ -98,12 +109,40 @@ export default observer(({ tokens, themeColor, loadingTokens }: Props) => {
           >
             NFTs
           </Text>
-          <Text
-            style={{ ...styles.headerLabel, ...(activeTab === 2 ? { ...styles.headerLabelActive, color: themeColor } : {}) }}
-            onPress={() => swipeTo(2)}
-          >
-            {TxHub.pendingCount > 0 ? `History (${TxHub.pendingCount})` : `History`}
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12 }}>
+            <Text
+              style={{
+                ...styles.headerLabel,
+                ...(activeTab === 2 ? { ...styles.headerLabelActive, color: themeColor } : {}),
+                paddingHorizontal: 0,
+              }}
+              onPress={() => swipeTo(2)}
+            >
+              {TxHub.pendingCount > 0 ? `History (${TxHub.pendingCount}` : `History`}
+            </Text>
+            {TxHub.pendingCount > 0 && (
+              <Animatable.View
+                style={{ marginStart: 4 }}
+                animation={rotate}
+                iterationCount="infinite"
+                easing="linear"
+                duration={2000}
+              >
+                <Ionicons name="sync" size={14} color={activeTab === 2 ? themeColor : secondaryFontColor} />
+              </Animatable.View>
+            )}
+            {TxHub.pendingCount > 0 && (
+              <Text
+                style={{
+                  ...styles.headerLabel,
+                  ...(activeTab === 2 ? { ...styles.headerLabelActive, color: themeColor } : {}),
+                  paddingHorizontal: 0,
+                }}
+              >
+                )
+              </Text>
+            )}
+          </View>
         </View>
 
         {activeTab === 0 ? (
