@@ -1,9 +1,9 @@
-import { IsNull, MoreThan, Not } from 'typeorm';
+import { IsNull, LessThanOrEqual, MoreThan, Not } from 'typeorm';
 import Transaction, { ITransaction } from '../models/Transaction';
-import { makeObservable, observable } from 'mobx';
+import { computed, makeObservable, observable, runInAction } from 'mobx';
+import { getTransactionReceipt, sendTransaction } from '../common/RPC';
 
 import Database from '../models/Database';
-import { sendTransaction } from '../common/RPC';
 
 class TxHub {
   pendingTxs: Transaction[] = [];
@@ -12,8 +12,12 @@ class TxHub {
     return Database.txRepository;
   }
 
+  get pendingCount() {
+    return this.pendingTxs.length;
+  }
+
   constructor() {
-    makeObservable(this, { pendingTxs: observable });
+    makeObservable(this, { pendingTxs: observable, pendingCount: computed });
   }
 
   async init() {
@@ -39,16 +43,53 @@ class TxHub {
     );
 
     unconfirmedTxs = unconfirmedTxs.filter((tx) => !confirmedTxs.includes(tx));
+    runInAction(() => this.pendingTxs.push(...unconfirmedTxs));
+    setTimeout(() => this.watchPendingTxs(), 0);
+  }
+
+  async watchPendingTxs() {
+    const confirmedTxs: Transaction[] = [];
+    console.log('watching txs:', this.pendingCount);
+
+    for (let tx of this.pendingTxs) {
+      const receipt = await getTransactionReceipt(tx.chainId, tx.hash);
+      if (!receipt) {
+        continue;
+      }
+
+      tx.gasUsed = Number.parseInt(receipt.gasUsed);
+      tx.status = Number.parseInt(receipt.status) === 1;
+      tx.transactionIndex = Number.parseInt(receipt.transactionIndex);
+      tx.blockNumber = Number.parseInt(receipt.blockNumber);
+      tx.blockHash = receipt.blockHash;
+      await tx.save();
+      confirmedTxs.push(tx);
+
+      const invalidTxs = await this.repository.find({
+        where: { from: tx.from, chainId: tx.chainId, nonce: LessThanOrEqual(tx.nonce), blockNumber: IsNull() },
+      });
+
+      confirmedTxs.push(...invalidTxs);
+      await Promise.all(invalidTxs.map((t) => t.remove()));
+    }
+
+    runInAction(() => {
+      this.pendingTxs = this.pendingTxs.filter((pt) => !confirmedTxs.find((tx) => pt.hash === tx.hash));
+    });
+
+    setTimeout(() => this.watchPendingTxs(), 1000 * 5);
   }
 
   async broadcastTx({ chainId, txHex, tx }: { chainId: number; txHex: string; tx: ITransaction }) {
-    const { result: hash, error } = await sendTransaction(chainId, txHex);
+    const { result: hash, error } = (await sendTransaction(chainId, txHex)) || {};
 
     if (!hash) {
       return;
     }
 
-    this.saveTx(tx);
+    const pendingTx = await this.saveTx({ ...tx, hash });
+    if (pendingTx) runInAction(() => this.pendingTxs.push(pendingTx));
+    console.log(pendingTx?.hash);
   }
 
   saveTx = async (tx: ITransaction) => {
@@ -74,6 +115,8 @@ class TxHub {
     t.amountWei = tx.amountWei;
 
     await t.save();
+
+    return t;
   };
 }
 

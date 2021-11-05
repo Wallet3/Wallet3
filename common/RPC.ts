@@ -28,28 +28,24 @@ export async function getBalance(chainId: number, address: string): Promise<BigN
 export async function sendTransaction(chainId: number, txHex: string) {
   const urls = getUrls(chainId);
 
-  try {
-    const result = await Promise.any(
-      urls.map(async (url) => {
-        const resp = await post(url, {
-          jsonrpc: '2.0',
-          method: 'eth_sendRawTransaction',
-          params: [txHex],
-          id: Date.now(),
-        });
+  for (let url of urls) {
+    try {
+      const resp = await post(url, {
+        jsonrpc: '2.0',
+        method: 'eth_sendRawTransaction',
+        params: [txHex],
+        id: Date.now(),
+      });
 
-        if (resp.error) {
-          throw new Error(resp.error.message);
-        }
+      if (resp.error) {
+        continue;
+      }
 
-        return resp as { id: number; result: string; error: { code: number; message: string } };
-      })
-    );
-
-    return result;
-  } catch (error) {
-    return { error: (error as AggregateError).errors[0], result: undefined };
+      return resp as { id: number; result: string; error: { code: number; message: string } };
+    } catch {}
   }
+
+  return undefined;
 }
 
 export async function getTransactionCount(chainId: number, address: string) {

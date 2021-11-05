@@ -9,6 +9,7 @@ import { RootNavigationProps } from '../navigations';
 import Skeleton from '../../components/Skeleton';
 import Swiper from 'react-native-swiper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import TxHub from '../../viewmodels/TxHub';
 import { formatCurrency } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
 import { useNavigation } from '@react-navigation/core';
@@ -101,7 +102,7 @@ export default observer(({ tokens, themeColor, loadingTokens }: Props) => {
             style={{ ...styles.headerLabel, ...(activeTab === 2 ? { ...styles.headerLabelActive, color: themeColor } : {}) }}
             onPress={() => swipeTo(2)}
           >
-            History
+            {TxHub.pendingCount > 0 ? `History (${TxHub.pendingCount})` : `History`}
           </Text>
         </View>
 
