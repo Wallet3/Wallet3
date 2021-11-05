@@ -1,13 +1,15 @@
-import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
+import * as Animatable from 'react-native-animatable';
+
+import React, { useRef } from 'react';
+import { StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { formatAddress, formatCurrency } from '../../utils/formatter';
 import { numericFontFamily, themeColor } from '../../constants/styles';
 
 import AnimateNumber from 'react-native-animate-number';
-import Ethereum from '../../assets/icons/networks/white/ethereum.svg';
 import { Feather } from '@expo/vector-icons';
 import Logos from '../../assets/icons/networks/white';
-import React from 'react';
 import { observer } from 'mobx-react-lite';
+import { setString } from 'expo-clipboard';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
@@ -19,6 +21,13 @@ interface Props {
 }
 
 export default observer(({ style, address, balance, network }: Props) => {
+  const addressView = useRef<Animatable.Text>(null);
+
+  const writeAddressToClipboard = () => {
+    setString(address || '');
+    addressView.current?.flash?.();
+  };
+
   return (
     <View style={{ ...styles.container, ...((style as any) || {}) }}>
       <View
@@ -36,7 +45,12 @@ export default observer(({ style, address, balance, network }: Props) => {
         </View>
       </View>
 
-      <Text style={{ ...styles.text, fontSize: 12 }}>{formatAddress(address ?? '', 7, 5)}</Text>
+      <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={() => writeAddressToClipboard()}>
+        <Animatable.Text ref={addressView as any} style={{ ...styles.text, fontSize: 12 }}>
+          {formatAddress(address ?? '', 7, 5)}
+        </Animatable.Text>
+        <Feather name="copy" size={10} color="#fff" style={{ marginStart: 5 }} />
+      </TouchableOpacity>
 
       <View style={{ height: 54 }} />
 
