@@ -1,5 +1,9 @@
 import * as Random from 'expo-random';
 
+import { polyfillWebCrypto } from 'expo-standard-web-crypto';
+
+polyfillWebCrypto();
+
 if (!global.crypto) {
   const selfCrypto = {};
 

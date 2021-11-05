@@ -11,6 +11,7 @@ import React, { useCallback, useEffect, useRef } from 'react';
 
 import AddToken from './screens/tokens/AddToken';
 import Drawer from './screens/home/Drawer';
+import FlashMessage from 'react-native-flash-message';
 import HomeScreen from './screens/home';
 import LandScreen from './screens/land';
 import { Modalize } from 'react-native-modalize';
@@ -32,6 +33,7 @@ const screenWidth = Dimensions.get('window').width;
 LogBox.ignoreLogs([
   'ReactNativeFiberHostComponent: Calling getNode() on the ref of an Animated component is no longer necessary. You can now directly use the ref instead. This method will be removed in a future release.',
   'VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality - use another VirtualizedList-backed container instead.',
+  'componentWillUpdate has been renamed, and is not recommended for use. See https://reactjs.org/link/unsafe-component-lifecycles for details.',
 ]);
 
 type RootStackParamList = {
@@ -140,7 +142,6 @@ const App = observer(({ app }: { app: AppVM }) => {
           )
         ) : undefined}
       </Host>
-
       <Modalize
         ref={networksModal}
         adjustToContentHeight
@@ -153,7 +154,6 @@ const App = observer(({ app }: { app: AppVM }) => {
           }}
         />
       </Modalize>
-
       <Modalize
         ref={sendModalizeRef}
         adjustToContentHeight
@@ -161,7 +161,6 @@ const App = observer(({ app }: { app: AppVM }) => {
       >
         <Send />
       </Modalize>
-
       <Modalize
         ref={requestModalizeRef}
         adjustToContentHeight
@@ -169,6 +168,8 @@ const App = observer(({ app }: { app: AppVM }) => {
       >
         <Request />
       </Modalize>
+
+      <FlashMessage position="top" />
     </NavigationContainer>
   );
 });

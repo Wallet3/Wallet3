@@ -2,6 +2,7 @@ import { IsNull, LessThanOrEqual, MoreThan, Not } from 'typeorm';
 import Transaction, { ITransaction } from '../models/Transaction';
 import { computed, makeObservable, observable, runInAction } from 'mobx';
 import { getTransactionReceipt, sendTransaction } from '../common/RPC';
+import { hideMessage, showMessage } from 'react-native-flash-message';
 
 import Database from '../models/Database';
 
@@ -49,7 +50,6 @@ class TxHub {
 
   async watchPendingTxs() {
     const confirmedTxs: Transaction[] = [];
-    console.log('watching txs:', this.pendingCount);
 
     for (let tx of this.pendingTxs) {
       const receipt = await getTransactionReceipt(tx.chainId, tx.hash);
@@ -83,13 +83,23 @@ class TxHub {
   async broadcastTx({ chainId, txHex, tx }: { chainId: number; txHex: string; tx: ITransaction }) {
     const { result: hash, error } = (await sendTransaction(chainId, txHex)) || {};
 
+    if (error) {
+      showMessage({
+        message: error.message,
+        animated: true,
+        autoHide: true,
+        backgroundColor: 'orange',
+        duration: 3000,
+        icon: 'warning',
+      });
+    }
+
     if (!hash) {
       return;
     }
 
     const pendingTx = await this.saveTx({ ...tx, hash });
     if (pendingTx) runInAction(() => this.pendingTxs.push(pendingTx));
-    console.log(pendingTx?.hash);
   }
 
   saveTx = async (tx: ITransaction) => {
