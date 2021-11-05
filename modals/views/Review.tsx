@@ -16,12 +16,14 @@ import styles from '../styles';
 
 interface Props {
   onBack?: () => void;
-  onSend?: () => void;
+  onSend?: () => Promise<void>;
   onGasPress?: () => void;
   vm: Transferring;
 }
 
 const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
+  const [busy, setBusy] = React.useState(false);
+
   return (
     <SafeViewContainer style={styles.container}>
       <View style={styles.navBar}>
@@ -86,7 +88,16 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
 
       <View style={{ flex: 1 }} />
 
-      <Button title="Send" onPress={onSend} themeColor={Networks.current.color} disabled={!vm.isValidParams} />
+      <Button
+        title="Send"
+        themeColor={Networks.current.color}
+        disabled={!vm.isValidParams || busy}
+        onPress={async () => {
+          setBusy(true);
+          await onSend?.();
+          setBusy(false);
+        }}
+      />
     </SafeViewContainer>
   );
 });

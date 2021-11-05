@@ -1,4 +1,4 @@
-import { BigNumber, utils } from 'ethers';
+import { BigNumber, providers, utils } from 'ethers';
 import { Gwei_1, MAX_GWEI_PRICE } from '../common/Constants';
 import { action, computed, makeAutoObservable, makeObservable, observable, runInAction } from 'mobx';
 import { estimateGas, getGasPrice, getMaxPriorityFee, getNextBlockBaseFee, getTransactionCount } from '../common/RPC';
@@ -97,6 +97,25 @@ export class Transferring {
       this.gasLimit >= 21000 &&
       !this.inSufficientFee
     );
+  }
+
+  get txRequest(): providers.TransactionRequest {
+    const data = this.isNativeToken ? '0x' : (this.token as ERC20Token).encodeTransferData(this.toAddress, this.amountWei);
+
+    const tx: providers.TransactionRequest = {
+      to: this.toAddress,
+      from: this.currentAccount.address,
+      chainId: this.currentNetwork.chainId,
+      data,
+      gasLimit: this.gasLimit,
+      value: this.isNativeToken ? this.amountWei : '0',
+      gasPrice: this.maxGasPrice * Gwei_1,
+      maxFeePerGas: this.maxGasPrice * Gwei_1,
+      maxPriorityFeePerGas: this.maxPriorityPrice * Gwei_1,
+      type: this.currentNetwork.eip1559 ? 2 : 0,
+    };
+
+    return tx;
   }
 
   constructor() {

@@ -7,6 +7,12 @@ import Authentication from './Authentication';
 import Key from '../models/Key';
 import Networks from './Networks';
 
+type SendTxRequest = {
+  accountIndex: number;
+  tx: providers.TransactionRequest;
+  pin?: string;
+};
+
 export class Wallet {
   private key: Key;
   accounts: Account[] = [];
@@ -55,12 +61,21 @@ export class Wallet {
     this.currentAccount.fetchBasicInfo();
   }
 
-  async signTx(accountIndex: number, tx: providers.TransactionRequest) {
-    const xprivkey = await Authentication.decrypt(this.key.bip32Xprivkey);
+  async signTx({ accountIndex, tx, pin }: SendTxRequest) {
+    const xprivkey = await Authentication.decrypt(this.key.bip32Xprivkey, pin);
     if (!xprivkey) return undefined;
 
     const bip32 = utils.HDNode.fromExtendedKey(xprivkey);
     const account = bip32.derivePath(`${accountIndex}`);
     return await new EthersWallet(account.privateKey).signTransaction(tx);
+  }
+
+  async sendTx(request: SendTxRequest) {
+    const txHex = await this.signTx(request);
+    console.log(txHex);
+
+    if (!txHex) return false;
+
+    return true;
   }
 }
