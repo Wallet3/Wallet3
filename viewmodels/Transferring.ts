@@ -26,7 +26,7 @@ export class Transferring {
   maxGasPrice = 0; // Gwei
   maxPriorityPrice = 0; // Gwei
   nonce = -1;
-  currentNetwork: INetwork;
+  readonly network: INetwork;
 
   get currentAccount() {
     return App.currentWallet?.currentAccount!;
@@ -68,7 +68,7 @@ export class Transferring {
   }
 
   get txFeeWei() {
-    return this.currentNetwork.eip1559
+    return this.network.eip1559
       ? BigNumber.from(Math.min(Number(this.maxGasPrice.toFixed(9)) * Gwei_1))
           .add(BigNumber.from(Number(this.maxPriorityPrice.toFixed(9)) * Gwei_1))
           .mul(this.gasLimit)
@@ -84,7 +84,7 @@ export class Transferring {
   }
 
   get feeTokenSymbol() {
-    return this.currentNetwork.symbol;
+    return this.network.symbol;
   }
 
   get isNativeToken() {
@@ -104,7 +104,8 @@ export class Transferring {
       this.nonce >= 0 &&
       this.maxGasPrice > 0 &&
       this.gasLimit >= 21000 &&
-      !this.inSufficientFee
+      !this.inSufficientFee &&
+      this.network
     );
   }
 
@@ -112,14 +113,14 @@ export class Transferring {
     const data = this.isNativeToken ? '0x' : (this.token as ERC20Token).encodeTransferData(this.toAddress, this.amountWei);
 
     const tx: providers.TransactionRequest = {
-      chainId: this.currentNetwork.chainId,
+      chainId: this.network.chainId,
       from: this.currentAccount.address,
       to: this.isNativeToken ? this.toAddress : this.token.address,
       value: this.isNativeToken ? this.amountWei : 0,
       nonce: this.nonce,
       data,
       gasLimit: this.gasLimit,
-      type: this.currentNetwork.eip1559 ? 2 : 0,
+      type: this.network.eip1559 ? 2 : 0,
     };
 
     if (tx.type === 0) {
@@ -132,12 +133,11 @@ export class Transferring {
     return tx;
   }
 
-  constructor({ targetNetwork, defaultToken, to }: { targetNetwork?: INetwork; defaultToken?: IToken; to?: string } = {}) {
-    this.currentNetwork = targetNetwork || Networks.current;
+  constructor({ targetNetwork, defaultToken, to }: { targetNetwork: INetwork; defaultToken?: IToken; to?: string }) {
+    this.network = targetNetwork;
     this.token = defaultToken || this.currentAccount.tokens[0];
 
     makeAutoObservable(this, {
-      currentNetwork: observable,
       token: observable,
       txFeeWei: computed,
       txFee: computed,
@@ -148,7 +148,7 @@ export class Transferring {
       runInAction(() => (this.contacts = JSON.parse(v || '[]')));
     });
 
-    AsyncStorage.getItem(`${this.currentNetwork.chainId}-LastUsedToken`).then((v) => {
+    AsyncStorage.getItem(`${this.network.chainId}-LastUsedToken`).then((v) => {
       if (!v) {
         runInAction(() => this.setToken(this.currentAccount.tokens[0]));
         return;
@@ -162,13 +162,13 @@ export class Transferring {
 
     if (to) this.setTo(to);
 
-    if (this.currentNetwork.eip1559) {
+    if (this.network.eip1559) {
       this.timer = setTimeout(() => this.refreshEIP1559(), 1000 * 10);
     }
   }
 
   private async initChainData() {
-    const { chainId } = this.currentNetwork;
+    const { chainId } = this.network;
     const [gasPrice, nextBaseFee, priorityFee, nonce] = await Promise.all([
       getGasPrice(chainId),
       getNextBlockBaseFee(chainId),
@@ -180,9 +180,9 @@ export class Transferring {
       this.nextBlockBaseFeeWei = nextBaseFee;
 
       this.setNonce(nonce);
-      this.setPriorityPrice((priorityFee || Gwei_1) / Gwei_1 + 2);
+      this.setPriorityPrice((priorityFee || Gwei_1) / Gwei_1 + 0.1);
 
-      if (this.currentNetwork.eip1559) {
+      if (this.network.eip1559) {
         this.setMaxGasPrice((nextBaseFee || Gwei_1) / Gwei_1 + 30);
       } else {
         this.setMaxGasPrice((gasPrice || Gwei_1) / Gwei_1);
@@ -191,7 +191,7 @@ export class Transferring {
   }
 
   private refreshEIP1559() {
-    getNextBlockBaseFee(this.currentNetwork.chainId).then((nextBaseFee) => {
+    getNextBlockBaseFee(this.network.chainId).then((nextBaseFee) => {
       runInAction(() => (this.nextBlockBaseFeeWei = nextBaseFee));
       this.timer = setTimeout(() => this.refreshEIP1559(), 1000 * 10);
     });
@@ -205,7 +205,7 @@ export class Transferring {
         .estimateGas(this.toAddress, this.amountWei)
         .then((gas) => runInAction(() => this.setGasLimit(gas)));
     } else {
-      estimateGas(this.currentNetwork.chainId, {
+      estimateGas(this.network.chainId, {
         from: this.currentAccount.address,
         to: this.toAddress,
         value: this.amountWei.toString(),
@@ -239,7 +239,7 @@ export class Transferring {
     this.token = token;
 
     (token as ERC20Token)?.getBalance?.(false);
-    AsyncStorage.setItem(`${this.currentNetwork.chainId}-LastUsedToken`, token.address);
+    AsyncStorage.setItem(`${this.network.chainId}-LastUsedToken`, token.address);
   }
 
   setAmount(amount: string) {
@@ -263,13 +263,13 @@ export class Transferring {
   }
 
   async setGas(speed: 'rapid' | 'fast' | 'standard') {
-    const wei = (await getGasPrice(this.currentNetwork.chainId)) || Gwei_1;
+    const wei = (await getGasPrice(this.network.chainId)) || Gwei_1;
     const basePrice = wei / Gwei_1;
 
     runInAction(() => {
       switch (speed) {
         case 'rapid':
-          this.setMaxGasPrice(basePrice + 10);
+          this.setMaxGasPrice(basePrice + (this.network.eip1559 ? this.maxPriorityPrice : 0) + 10);
           break;
         case 'fast':
           this.setMaxGasPrice(basePrice);

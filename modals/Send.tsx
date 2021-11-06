@@ -5,6 +5,7 @@ import { SafeAreaView, View } from 'react-native';
 import App from '../viewmodels/App';
 import Authentication from '../viewmodels/Authentication';
 import LottieView from 'lottie-react-native';
+import Networks from '../viewmodels/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
 import { Transferring } from '../viewmodels/Transferring';
@@ -12,7 +13,7 @@ import { observer } from 'mobx-react-lite';
 import styles from './styles';
 
 export default observer(() => {
-  const [vm] = useState(new Transferring());
+  const [vm] = useState(new Transferring({ targetNetwork: Networks.current }));
   const [verified, setVerified] = useState(false);
 
   const swiper = useRef<Swiper>(null);
@@ -87,7 +88,7 @@ export default observer(() => {
             />
             <ReviewPad onBack={() => swiper.current?.scrollTo(1)} vm={vm} onSend={onSendClick} />
             <Passpad
-              themeColor={vm.currentNetwork.color}
+              themeColor={vm.network.color}
               onCodeEntered={(c) => sendTx(c)}
               onCancel={() => swiper.current?.scrollTo(2)}
             />

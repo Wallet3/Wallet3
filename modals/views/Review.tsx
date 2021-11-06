@@ -58,7 +58,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
           <Text style={viewStyles.reviewItemTitle}>Network</Text>
 
           <View>
-            <Text style={{ ...viewStyles.reviewItemValue, color: vm.currentNetwork.color }}>{vm.currentNetwork.network}</Text>
+            <Text style={{ ...viewStyles.reviewItemValue, color: vm.network.color }}>{vm.network.network}</Text>
           </View>
         </View>
       </View>
@@ -87,7 +87,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
           onPress={onGasPress}
         >
           <Text style={{ ...viewStyles.reviewItemTitle, fontSize: 15 }}>
-            {`(${Currency.tokenToUSD(vm.txFee, vm.currentNetwork.symbol).toFixed(2)} USD)`}
+            {`(${Currency.tokenToUSD(vm.txFee, vm.network.symbol).toFixed(2)} USD)`}
           </Text>
           <Text style={{ ...viewStyles.reviewItemValue, marginHorizontal: 2 }} numberOfLines={1}>
             {`${vm.txFee.toFixed(5)} ${vm.feeTokenSymbol}`}
@@ -161,15 +161,15 @@ const GasView = observer(({ onBack, vm }: GasProps) => {
             />
 
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-              {vm.currentNetwork.eip1559 ? <Fire width={8} height={8} style={{ marginEnd: 3 }} /> : undefined}
+              {vm.network.eip1559 ? <Fire width={8} height={8} style={{ marginEnd: 3 }} /> : undefined}
               <Text style={{ fontSize: 8, color: secondaryFontColor, textAlign: 'right' }}>
-                {vm.currentNetwork.eip1559 ? `${vm.nextBlockBaseFee} Gwei` : 'Gwei'}
+                {vm.network.eip1559 ? `${vm.nextBlockBaseFee} Gwei` : 'Gwei'}
               </Text>
             </View>
           </View>
         </View>
 
-        {vm.currentNetwork.eip1559 ? (
+        {vm.network.eip1559 ? (
           <View style={{ ...viewStyles.reviewItem, paddingBottom: 12 }}>
             <Text style={viewStyles.reviewItemTitle}>Priority Price</Text>
 
