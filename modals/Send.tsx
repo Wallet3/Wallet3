@@ -48,7 +48,9 @@ export default observer(() => {
       return;
     }
 
-    await sendTx();
+    if (!(await sendTx())) {
+      swiper.current?.scrollTo(3);
+    }
   };
 
   return (

@@ -37,7 +37,7 @@ export const PublicNetworks: INetwork[] = [
     order: 1,
     defaultTokens: EthereumPopularTokens,
     showOverview: true,
-    blockTimeMs: 15 * 1000,
+    blockTimeMs: 12 * 1000,
   },
   {
     symbol: 'ETH',
@@ -49,7 +49,6 @@ export const PublicNetworks: INetwork[] = [
     l2: true,
     defaultTokens: ArbiPopularTokens,
     showOverview: false,
-    blockTimeMs: 1 * 1000,
   },
   {
     symbol: 'ETH',
@@ -61,7 +60,6 @@ export const PublicNetworks: INetwork[] = [
     l2: true,
     defaultTokens: [],
     showOverview: false,
-    blockTimeMs: 1 * 1000,
   },
   {
     symbol: 'MATIC',
@@ -106,7 +104,7 @@ export const PublicNetworks: INetwork[] = [
     eip1559: true,
     defaultTokens: [],
     showOverview: true,
-    blockTimeMs: 3 * 1000,
+    blockTimeMs: 5 * 1000,
   },
   {
     symbol: 'CELO',
@@ -135,7 +133,7 @@ export const PublicNetworks: INetwork[] = [
     order: 6,
     color: '#3F7FFF',
     defaultTokens: HecoPopularTokens,
-    blockTimeMs: 10 * 1000,
+    blockTimeMs: 5 * 1000,
   },
   {
     symbol: 'OKT',
@@ -145,7 +143,7 @@ export const PublicNetworks: INetwork[] = [
     order: 7,
     color: '#24c',
     defaultTokens: [],
-    blockTimeMs: 10 * 1000,
+    blockTimeMs: 5 * 1000,
   },
   {
     symbol: 'BNB',
@@ -156,7 +154,7 @@ export const PublicNetworks: INetwork[] = [
     order: 5,
     defaultTokens: BscPopularTokens,
     showOverview: true,
-    blockTimeMs: 3 * 1000,
+    blockTimeMs: 5 * 1000,
   },
 ];
 

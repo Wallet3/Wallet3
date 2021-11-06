@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "mobile",
-    "slug": "mobile",
+    "name": "Wallet 3",
+    "slug": "Wallet",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -16,7 +16,8 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true,
+      "bundleIdentifier": "jp.co.chainbow.wallet3.mobile",
+      "supportsTablet": false,
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to scan QRCode.",
         "NSFaceIDUsageDescription": "Enabling Face ID allows you quick and secure access to your account."

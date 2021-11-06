@@ -4,6 +4,7 @@ import React, { useRef } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
+import AnimateNumber from 'react-native-animate-number';
 import BackButton from '../components/BackButton';
 import Currency from '../../viewmodels/Currency';
 import Fire from '../../assets/icons/app/fire.svg';
@@ -162,9 +163,15 @@ const GasView = observer(({ onBack, vm }: GasProps) => {
 
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
               {vm.network.eip1559 ? <Fire width={8} height={8} style={{ marginEnd: 3 }} /> : undefined}
-              <Text style={{ fontSize: 8, color: secondaryFontColor, textAlign: 'right' }}>
-                {vm.network.eip1559 ? `${vm.nextBlockBaseFee} Gwei` : 'Gwei'}
-              </Text>
+              {vm.network.eip1559 ? (
+                <AnimateNumber
+                  style={viewStyles.gasGweiLabel}
+                  value={vm.nextBlockBaseFee}
+                  formatter={(val) => `${val.toFixed(6)} Gwei`}
+                />
+              ) : (
+                <Text style={viewStyles.gasGweiLabel}>Gwei</Text>
+              )}
             </View>
           </View>
         </View>
@@ -180,10 +187,10 @@ const GasView = observer(({ onBack, vm }: GasProps) => {
                 textAlign="right"
                 maxLength={12}
                 style={{ ...viewStyles.reviewItemValue, fontSize: 20 }}
-                value={`${vm.maxPriorityPrice}`}
+                value={`${vm.maxPriorityPrice.toFixed(6)}`}
                 onChangeText={(txt) => vm.setPriorityPrice(txt)}
               />
-              <Text style={{ fontSize: 8, color: secondaryFontColor, textAlign: 'right', marginTop: -2 }}>Gwei</Text>
+              <Text style={{ ...viewStyles.gasGweiLabel, marginTop: -2 }}>Gwei</Text>
             </View>
           </View>
         ) : undefined}
@@ -274,6 +281,12 @@ const viewStyles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+
+  gasGweiLabel: {
+    fontSize: 8,
+    color: secondaryFontColor,
+    textAlign: 'right',
   },
 
   gasItemText: {
