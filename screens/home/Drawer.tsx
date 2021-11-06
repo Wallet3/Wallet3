@@ -3,7 +3,7 @@ import { Arbitrum, Ethereum, NetworkIcons, Optimism, Polygon } from '../../asset
 import { Dimensions, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { DrawerActions, useRoute } from '@react-navigation/core';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
-import { Feather, SimpleLineIcons } from '@expo/vector-icons';
+import { Feather, Ionicons, SimpleLineIcons } from '@expo/vector-icons';
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
 import Networks from '../../viewmodels/Networks';
@@ -73,14 +73,28 @@ const Drawer = observer((props: DrawerProps) => {
           label="Wallet"
           onPress={() => navigation.navigate('Home')}
           labelStyle={{ ...styles.drawerLabel, color: homeHighlight }}
-          icon={({ color, size }) => <Feather color={homeHighlight} size={size} name={'credit-card'} />}
+          icon={({ color, size }) => <Feather color={homeHighlight} size={21} name={'credit-card'} />}
         />
 
         <DrawerItem
           label="Settings"
           onPress={() => navigation.navigate('Details')}
           labelStyle={styles.drawerLabel}
-          icon={({ color, size }) => <Feather color={fontColor} size={size} name={'settings'} />}
+          icon={({ color, size }) => <Feather color={fontColor} size={21} name={'settings'} />}
+        />
+
+        <DrawerItem
+          label={() => (
+            <View style={{ ...styles.drawerLabel, flexDirection: 'row', position: 'relative' }}>
+              <Text style={{ fontSize: 17, fontFamily: 'PingFang HK', color: fontColor, fontWeight: '500' }}>
+                Backup Secret
+              </Text>
+              <Ionicons name="alert-circle" size={15} color="darkorange" style={{ marginStart: 4 }} />
+            </View>
+          )}
+          onPress={() => navigation.navigate('Backup')}
+          labelStyle={styles.drawerLabel}
+          icon={() => <Feather color={fontColor} size={21} name="shield" />}
         />
       </View>
 

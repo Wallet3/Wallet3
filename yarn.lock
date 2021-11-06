@@ -1603,7 +1603,7 @@
     "@ethersproject/properties" "^5.5.0"
     "@ethersproject/strings" "^5.5.0"
 
-"@expo/config-plugins@3.1.0":
+"@expo/config-plugins@3.1.0", "@expo/config-plugins@^3.0.6":
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/@expo/config-plugins/-/config-plugins-3.1.0.tgz#0752ff33c5eab21cf42034a44e79df97f0f867f8"
   integrity sha512-V5qxaxCAExBM0TXmbU1QKiZcAGP3ecu7KXede8vByT15cro5PkcWu2sSdJCYbHQ/gw6Vf/i8sr8gKlN8V8TSLg==
@@ -6120,6 +6120,13 @@ react-native-modalize@^2.0.10:
   version "2.0.10"
   resolved "https://registry.yarnpkg.com/react-native-modalize/-/react-native-modalize-2.0.10.tgz#35e40d7bacce080fd2f1a29dda246d6640985f67"
   integrity sha512-iExYqVTGIP8GREKy9AadeoVV9FCE0JtInt/+X0AeTqHcmTglSDiUOT8mnXeKDIxGaDak28NFOZcZEzIA+vq/JQ==
+
+react-native-nfc-manager@^3.11.0:
+  version "3.11.0"
+  resolved "https://registry.yarnpkg.com/react-native-nfc-manager/-/react-native-nfc-manager-3.11.0.tgz#cb52e04b029cbcd00bc57cfbd5ba38d82963f36a"
+  integrity sha512-00xSlId5VYKgUx5HoRP7914y3WrrmZ+p9HlP1ZH3j7ashtLwq+RMwrx2QtBV3aP5eYwJnRxuNzCVwNMNnZCAGQ==
+  dependencies:
+    "@expo/config-plugins" "^3.0.6"
 
 react-native-portalize@^1.0.7:
   version "1.0.7"

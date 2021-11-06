@@ -1,21 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import { NFCPad } from './views';
+import { NFCRequesting } from '../viewmodels/NFCRequesting';
 import { RequestAmount } from './views';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { SafeAreaView } from 'react-native';
 import Swiper from 'react-native-swiper';
-import { Transferring } from '../viewmodels/Transferring';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
 
 export default observer(() => {
   const swiper = useRef<Swiper>(null);
-  const [vm] = useState(new Transferring());
-
-  useEffect(() => {
-    return () => vm.dispose();
-  }, []);
+  const [vm] = useState(new NFCRequesting());
 
   return (
     <SafeAreaProvider>
