@@ -32,7 +32,7 @@ export class ERC20Token {
   }
 
   get amount() {
-    return utils.formatUnits(this.balance, this.decimals < 0 ? 18 : this.decimals);
+    return this.balance.eq(0) ? '0' : utils.formatUnits(this.balance, this.decimals < 0 ? 18 : this.decimals);
   }
 
   constructor(props: {

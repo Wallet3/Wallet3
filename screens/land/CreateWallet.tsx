@@ -4,6 +4,7 @@ import { SafeAreaView, Text, View } from 'react-native';
 import { fontColor, secondaryFontColor, themeColor } from '../../constants/styles';
 
 import { LandScreenStack } from '../navigations';
+import LottieView from 'lottie-react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import MnemonicOnce from '../../viewmodels/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -20,8 +21,15 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
   return (
     <SafeAreaView style={styles.safeArea}>
       <SafeViewContainer style={styles.rootContainer}>
-        <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 0 }}>
-          <MaterialCommunityIcons name="shield-key" size={72} color={'yellowgreen'} />
+        {/* <LottieView
+          style={{ width: 200, height: 200, alignSelf: 'center', marginBottom: -125, marginTop: -27 }}
+          autoSize
+          autoPlay
+          loop
+          source={require('../../assets/animations/shield.json')}
+        /> */}
+        <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: -12, marginBottom: -8 }}>
+          <MaterialCommunityIcons name="shield-key" size={64} color={'#61D800'} />
         </View>
 
         <View style={{ marginVertical: 16 }}>

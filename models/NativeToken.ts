@@ -14,7 +14,7 @@ export class NativeToken implements IToken {
   balance = BigNumber.from(0);
 
   get amount() {
-    return utils.formatUnits(this.balance, this.decimals);
+    return this.balance.eq(0) ? '0' : utils.formatUnits(this.balance, this.decimals);
   }
 
   constructor({ owner, chainId, symbol }: { owner: string; chainId: number; symbol: string }) {
