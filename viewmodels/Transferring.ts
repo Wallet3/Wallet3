@@ -92,7 +92,7 @@ export class Transferring {
     return !this.token.address;
   }
 
-  get inSufficientFee() {
+  get insufficientFee() {
     return this.isNativeToken
       ? this.amountWei.add(this.txFeeWei).gt(this.currentAccount.nativeToken.balance!)
       : this.txFeeWei.gt(this.currentAccount.nativeToken.balance!);
@@ -105,7 +105,7 @@ export class Transferring {
       this.nonce >= 0 &&
       this.maxGasPrice > 0 &&
       this.gasLimit >= 21000 &&
-      !this.inSufficientFee &&
+      !this.insufficientFee &&
       this.network
     );
   }

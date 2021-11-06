@@ -10,6 +10,7 @@ import Currency from '../../viewmodels/Currency';
 import Fire from '../../assets/icons/app/fire.svg';
 import Gem from '../../assets/icons/app/gem.svg';
 import Networks from '../../viewmodels/Networks';
+import { ScrollView } from 'react-native-gesture-handler';
 import Swiper from 'react-native-swiper';
 import { Transferring } from '../../viewmodels/Transferring';
 import { formatAddress } from '../../utils/formatter';
@@ -98,9 +99,31 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
         </TouchableOpacity>
       </View>
 
-      <Text style={{ color: 'red', textAlign: 'right', fontSize: 12, fontWeight: '600', marginEnd: 18, marginTop: 6 }}>
-        {vm.inSufficientFee ? 'Insufficient Funds' : undefined}
-      </Text>
+      {vm.txException ? (
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={{
+            ...viewStyles.reviewItemContainer,
+
+            borderWidth: 1,
+            paddingTop: 12,
+            paddingHorizontal: 16,
+            backgroundColor: 'crimson',
+            paddingBottom: 0,
+          }}
+          contentContainerStyle={{ alignItems: 'center', marginTop: -11 }}
+        >
+          <Ionicons name="alert-circle" color="white" size={16} />
+          <Text style={{ color: 'white', marginStart: 8, fontSize: 12 }}>{vm.txException}</Text>
+        </ScrollView>
+      ) : undefined}
+
+      {vm.insufficientFee ? (
+        <Text style={{ color: 'crimson', textAlign: 'right', fontSize: 12, fontWeight: '600', marginEnd: 18, marginTop: 6 }}>
+          {'Insufficient funds'}
+        </Text>
+      ) : undefined}
 
       <View style={{ flex: 1 }} />
 
