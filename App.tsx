@@ -1,20 +1,21 @@
 import 'react-native-gesture-handler';
 import './configs/polyfill';
+import './configs/debug';
 
-import { AntDesign, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import AppViewModel, { AppVM } from './viewmodels/App';
-import { Button, Dimensions, LogBox, StyleSheet, Text, View } from 'react-native';
-import { Host, Portal } from 'react-native-portalize';
+import { Dimensions, View } from 'react-native';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer, RouteProp, useNavigation } from '@react-navigation/native';
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 
 import AddToken from './screens/tokens/AddToken';
 import Drawer from './screens/home/Drawer';
 import FlashMessage from 'react-native-flash-message';
 import HomeScreen from './screens/home';
+import { Host } from 'react-native-portalize';
 import LandScreen from './screens/land';
 import { Modalize } from 'react-native-modalize';
+import { NavigationContainer } from '@react-navigation/native';
 import Networks from './viewmodels/Networks';
 import NetworksMenu from './modals/Networks';
 import PubSub from 'pubsub-js';
@@ -29,12 +30,6 @@ import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 const DrawerRoot = createDrawerNavigator();
 const StackRoot = createNativeStackNavigator();
 const screenWidth = Dimensions.get('window').width;
-
-LogBox.ignoreLogs([
-  'ReactNativeFiberHostComponent: Calling getNode() on the ref of an Animated component is no longer necessary. You can now directly use the ref instead. This method will be removed in a future release.',
-  'VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality - use another VirtualizedList-backed container instead.',
-  'componentWillUpdate has been renamed, and is not recommended for use. See https://reactjs.org/link/unsafe-component-lifecycles for details.',
-]);
 
 type RootStackParamList = {
   Home: undefined;

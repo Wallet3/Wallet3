@@ -27,7 +27,7 @@ export default observer((props: Props) => {
         }}
         onPress={() => props.onTokenSelected?.(item)}
       >
-        <Coin symbol={item.symbol} style={{ width: 25, height: 25, marginEnd: 12 }} />
+        <Coin symbol={item.symbol} style={{ width: 25, height: 25, marginEnd: 12 }} iconUrl={item.iconUrl} />
         <Text style={{ fontSize: 19, color: fontColor, textTransform: 'uppercase' }} numberOfLines={1}>
           {item.symbol}
         </Text>
