@@ -62,7 +62,7 @@ export class Transferring {
 
   get isValidAmount() {
     try {
-      return this.amountWei.gt(0) && this.amountWei.lte(this.token?.balance || '0');
+      return this.amountWei.gt(0) && this.amountWei.lte(this.token?.balance || '0') && !this.token.loading;
     } catch (error) {
       return false;
     }
@@ -109,8 +109,9 @@ export class Transferring {
       this.nonce >= 0 &&
       this.maxGasPrice > 0 &&
       this.gasLimit >= 21000 &&
+      this.network &&
       !this.insufficientFee &&
-      this.network
+      !this.token.loading
     );
   }
 

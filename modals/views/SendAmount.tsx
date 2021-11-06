@@ -1,20 +1,10 @@
 import React, { useRef } from 'react';
 
 import AmountPad from './AmountPad';
-import { IToken } from '../../common/Tokens';
 import Swiper from 'react-native-swiper';
 import Tokenlist from './Tokenlist';
 import { Transferring } from '../../viewmodels/Transferring';
 import { observer } from 'mobx-react-lite';
-
-interface SubViewProps {
-  onBack?: () => void;
-  onNext?: () => void;
-  onTokenPress?: () => void;
-  onTokenBack?: () => void;
-  disableBack?: boolean;
-  disableBalance?: boolean;
-}
 
 interface Props {
   onBack?: () => void;

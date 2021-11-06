@@ -13,6 +13,7 @@ export class NativeToken implements IToken {
   chainId: number = 1;
   symbol: string = '';
   balance = BigNumber.from(0);
+  loading = false;
 
   get amount() {
     return this.balance.eq(0) ? '0' : utils.formatUnits(this.balance, this.decimals);
@@ -23,7 +24,14 @@ export class NativeToken implements IToken {
     this.chainId = chainId;
     this.symbol = symbol;
 
-    makeObservable(this, { balance: observable, amount: computed, symbol: observable, setChain: action });
+    makeObservable(this, {
+      balance: observable,
+      amount: computed,
+      symbol: observable,
+      setChain: action,
+      loading: observable,
+      getBalance: action,
+    });
   }
 
   setChain({ chainId, symbol }: { chainId: number; symbol: string }) {
@@ -32,9 +40,15 @@ export class NativeToken implements IToken {
     this.balance = BigNumber.from(0);
   }
 
-  async getBalance() {
+  async getBalance(setLoading: boolean = true) {
+    this.loading = setLoading;
+
     const balance = await getBalance(this.chainId, this.owner);
-    runInAction(() => (this.balance = balance));
+
+    runInAction(() => {
+      this.balance = balance;
+      this.loading = false;
+    });
   }
 
   async estimateGas(to: string) {

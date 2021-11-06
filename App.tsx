@@ -164,7 +164,7 @@ const App = observer(({ app }: { app: AppVM }) => {
         <Request />
       </Modalize>
 
-      <FlashMessage position="top" />
+      <FlashMessage position="top" hideStatusBar />
     </NavigationContainer>
   );
 });

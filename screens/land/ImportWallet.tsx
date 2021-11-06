@@ -28,7 +28,13 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
     <ScrollView
       scrollEnabled={false}
       contentContainerStyle={{ flex: 1 }}
-      style={{ paddingHorizontal: 16, paddingBottom: bottom, paddingTop: headerHeight, flex: 1, backgroundColor: 'white' }}
+      style={{
+        paddingHorizontal: 16,
+        paddingBottom: bottom > 0 ? 0 : 16,
+        paddingTop: headerHeight,
+        flex: 1,
+        backgroundColor: 'white',
+      }}
     >
       <TextInput
         multiline={true}
