@@ -3,6 +3,7 @@ import { action, computed, makeAutoObservable, makeObservable, observable, runIn
 import { estimateGas, getBalance } from '../common/RPC';
 
 import { IToken } from '../common/Tokens';
+import { hexlify } from '@ethersproject/bytes';
 
 export class NativeToken implements IToken {
   readonly owner: string;
@@ -36,14 +37,12 @@ export class NativeToken implements IToken {
     runInAction(() => (this.balance = balance));
   }
 
-  async estimateGas(to: string, wei: BigNumber) {
-    const gas = await estimateGas(this.chainId, {
+  async estimateGas(to: string) {
+    return await estimateGas(this.chainId, {
       from: this.owner,
       to,
-      value: wei.toString(),
+      value: '0x0',
       data: '0x',
     });
-
-    return Number(gas || 21000);
   }
 }

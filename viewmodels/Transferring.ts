@@ -26,6 +26,7 @@ export class Transferring {
   maxGasPrice = 0; // Gwei
   maxPriorityPrice = 0; // Gwei
   nonce = -1;
+  txException = '';
   readonly network: INetwork;
 
   get currentAccount() {
@@ -197,21 +198,14 @@ export class Transferring {
     });
   }
 
-  estimateGas() {
+  async estimateGas() {
     if (!this.toAddress) return;
 
-    if (this.token instanceof ERC20Token) {
-      (this.token as ERC20Token)
-        .estimateGas(this.toAddress, this.amountWei)
-        .then((gas) => runInAction(() => this.setGasLimit(gas)));
-    } else {
-      estimateGas(this.network.chainId, {
-        from: this.currentAccount.address,
-        to: this.toAddress,
-        value: this.amountWei.toString(),
-        data: '0x',
-      }).then((gas) => runInAction(() => this.setGasLimit(gas || 21000)));
-    }
+    const { gas, errorMessage } = await (this.token as ERC20Token).estimateGas(this.toAddress, this.amountWei);
+    runInAction(() => {
+      this.setGasLimit(gas || 0);
+      this.txException = errorMessage || '';
+    });
   }
 
   setTo(to: string) {
@@ -220,6 +214,7 @@ export class Transferring {
     this.to = to;
     this.toAddress = '';
     this.isResolvingAddress = true;
+    this.txException = '';
 
     Networks.MainnetProvider.resolveName(to).then((address) =>
       runInAction(() => {
@@ -237,6 +232,7 @@ export class Transferring {
   setToken(token: IToken) {
     if (this.token?.address === token.address) return;
     this.token = token;
+    this.txException = '';
 
     (token as ERC20Token)?.getBalance?.(false);
     AsyncStorage.setItem(`${this.network.chainId}-LastUsedToken`, token.address);
@@ -244,6 +240,7 @@ export class Transferring {
 
   setAmount(amount: string) {
     this.amount = amount;
+    this.txException = '';
   }
 
   setNonce(nonce: string | number) {

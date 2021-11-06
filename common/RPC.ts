@@ -109,21 +109,27 @@ export async function estimateGas(
   }
 ) {
   const urls = getUrls(chainId);
+  let errorMessage = '';
 
   for (let url of urls) {
     try {
       const resp = await post(url, {
         jsonrpc: '2.0',
         method: 'eth_estimateGas',
-        params: [args, 'latest'],
+        params: [args],
         id: Date.now(),
       });
 
-      return resp.result as string;
+      if (resp.error) {
+        errorMessage = resp.error.message;
+        continue;
+      }
+
+      return { gas: Number(resp.result as string) };
     } catch (error) {}
   }
 
-  return undefined;
+  return { errorMessage };
 }
 
 export async function getGasPrice(chainId: number) {
