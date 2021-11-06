@@ -46,14 +46,18 @@ export class Transferring {
   }
 
   get amountWei() {
-    if (this.isNativeToken) {
-      const ether = utils.parseEther(this.amount);
-      if (ether.gte(this.currentAccount.nativeToken.balance!)) {
-        return BigNumber.from(this.currentAccount.nativeToken.balance!).sub(this.txFeeWei);
+    try {
+      if (this.isNativeToken) {
+        const ether = utils.parseEther(this.amount);
+        if (ether.eq(this.currentAccount.nativeToken.balance!)) {
+          return BigNumber.from(this.currentAccount.nativeToken.balance!).sub(this.txFeeWei);
+        }
       }
-    }
 
-    return utils.parseUnits(this.amount, this.token?.decimals || 18);
+      return utils.parseUnits(this.amount, this.token?.decimals || 18);
+    } catch (error) {}
+
+    return BigNumber.from(0);
   }
 
   get isValidAmount() {
@@ -248,15 +252,21 @@ export class Transferring {
   }
 
   setGasLimit(limit: string | number) {
-    this.gasLimit = Math.max(Math.min(Number.parseInt(limit as any), 100_000_000), 21000);
+    try {
+      this.gasLimit = Math.max(Math.min(Number.parseInt(limit as any), 100_000_000), 21000);
+    } catch (error) {}
   }
 
   setMaxGasPrice(price: string | number) {
-    this.maxGasPrice = Math.max(Math.min(Number(price), MAX_GWEI_PRICE), 0);
+    try {
+      this.maxGasPrice = Math.max(Math.min(Number(price), MAX_GWEI_PRICE), 0);
+    } catch {}
   }
 
   setPriorityPrice(price: string | number) {
-    this.maxPriorityPrice = Math.max(Math.min(Number(price), MAX_GWEI_PRICE), 0);
+    try {
+      this.maxPriorityPrice = Math.max(Math.min(Number(price), MAX_GWEI_PRICE), 0);
+    } catch (error) {}
   }
 
   async setGas(speed: 'rapid' | 'fast' | 'standard') {
