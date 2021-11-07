@@ -10,7 +10,6 @@ export interface IToken {
 
   amount?: string;
   loading?: boolean;
-  busy?: boolean;
 }
 
 export const ETH = {

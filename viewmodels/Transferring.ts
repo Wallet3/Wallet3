@@ -1,7 +1,7 @@
 import { BigNumber, providers, utils } from 'ethers';
 import { Gwei_1, MAX_GWEI_PRICE } from '../common/Constants';
 import { action, computed, makeAutoObservable, makeObservable, observable, runInAction } from 'mobx';
-import { estimateGas, getGasPrice, getMaxPriorityFee, getNextBlockBaseFee, getTransactionCount } from '../common/RPC';
+import { getGasPrice, getMaxPriorityFee, getNextBlockBaseFee, getTransactionCount } from '../common/RPC';
 
 import App from './App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -21,6 +21,7 @@ export class Transferring {
   token: IToken;
   amount = '0';
   isResolvingAddress = false;
+  isEstimatingGas = false;
   gasLimit = 21000;
   nextBlockBaseFeeWei = 0;
   maxGasPrice = 0; // Gwei
@@ -54,7 +55,7 @@ export class Transferring {
         }
       }
 
-      return utils.parseUnits(this.amount, this.token?.decimals || 18);
+      return utils.parseUnits(this.amount, this.token.decimals || 18);
     } catch (error) {}
 
     return BigNumber.from(0);
@@ -62,7 +63,7 @@ export class Transferring {
 
   get isValidAmount() {
     try {
-      return this.amountWei.gt(0) && this.amountWei.lte(this.token?.balance || '0') && !this.token.busy;
+      return this.amountWei.gt(0) && this.amountWei.lte(this.token.balance!) && !this.token.loading;
     } catch (error) {
       return false;
     }
@@ -111,7 +112,8 @@ export class Transferring {
       this.gasLimit >= 21000 &&
       this.network &&
       !this.insufficientFee &&
-      !this.token.loading
+      !this.token.loading &&
+      !this.isEstimatingGas
     );
   }
 
@@ -206,8 +208,10 @@ export class Transferring {
   async estimateGas() {
     if (!this.toAddress) return;
 
+    this.isEstimatingGas = true;
     const { gas, errorMessage } = await (this.token as ERC20Token).estimateGas(this.toAddress, this.amountWei);
     runInAction(() => {
+      this.isEstimatingGas = false;
       this.setGasLimit(gas || 0);
       this.txException = errorMessage || '';
     });
@@ -235,7 +239,7 @@ export class Transferring {
   }
 
   setToken(token: IToken) {
-    if (this.token?.address === token.address) return;
+    if (this.token.address === token.address) return;
     this.token = token;
     this.txException = '';
 

@@ -14,7 +14,6 @@ export class NativeToken implements IToken {
   symbol: string = '';
   balance = BigNumber.from(0);
   loading = false;
-  busy = false;
 
   get amount() {
     return this.balance.eq(0) ? '0' : utils.formatUnits(this.balance, this.decimals);
@@ -31,7 +30,6 @@ export class NativeToken implements IToken {
       symbol: observable,
       setChain: action,
       loading: observable,
-      busy: observable,
       getBalance: action,
     });
   }
@@ -44,14 +42,12 @@ export class NativeToken implements IToken {
 
   async getBalance(setLoading: boolean = true) {
     this.loading = setLoading;
-    this.busy = true;
 
     const balance = await getBalance(this.chainId, this.owner);
 
     runInAction(() => {
       this.balance = balance;
       this.loading = false;
-      this.busy = false;
     });
   }
 
