@@ -62,7 +62,7 @@ export class Transferring {
 
   get isValidAmount() {
     try {
-      return this.amountWei.gt(0) && this.amountWei.lte(this.token?.balance || '0') && !this.token.loading;
+      return this.amountWei.gt(0) && this.amountWei.lte(this.token?.balance || '0') && !this.token.busy;
     } catch (error) {
       return false;
     }

@@ -7,6 +7,7 @@ import { Wallet } from './Wallet';
 
 export class AppVM {
   initialized = false;
+  authorized = false;
   wallets: Wallet[] = [];
   currentWallet?: Wallet = undefined;
 
@@ -18,15 +19,16 @@ export class AppVM {
     makeObservable(this, {
       initialized: observable,
       wallets: observable,
-      hasWallet: computed,
+      authorized: observable,
       currentWallet: observable,
+      hasWallet: computed,
     });
   }
 
   async init() {
     await Promise.all([Database.init(), Authentication.init()]);
     await TxHub.init();
-    
+
     const wallets = await Promise.all((await Database.keyRepository.find()).map((key) => new Wallet(key).init()));
 
     runInAction(() => {

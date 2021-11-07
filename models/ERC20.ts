@@ -26,6 +26,7 @@ export class ERC20Token {
   order?: number;
 
   loading = false;
+  busy = false;
 
   get interface() {
     return this.erc20.interface;
@@ -72,6 +73,7 @@ export class ERC20Token {
       decimals: observable,
       amount: computed,
       loading: observable,
+      busy: observable,
       getBalance: action,
       shown: observable,
     });
@@ -79,11 +81,14 @@ export class ERC20Token {
 
   async getBalance(setLoading = true): Promise<BigNumber> {
     this.loading = setLoading;
+    this.busy = true;
+    
     const balance = BigNumber.from((await call(this.chainId, { to: this.address, data: this.call_balanceOfOwner })) || '0');
 
     runInAction(() => {
       this.balance = balance;
       this.loading = false;
+      this.busy = false;
     });
 
     return balance;
