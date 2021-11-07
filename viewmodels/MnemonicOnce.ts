@@ -60,9 +60,13 @@ class MnemonicOnce {
     key.basePathIndex = this.derivationIndex;
 
     await key.save();
+
+    this.clean();
   }
 
-  clean() {}
+  clean() {
+    this.secret = '';
+  }
 }
 
 export default new MnemonicOnce();

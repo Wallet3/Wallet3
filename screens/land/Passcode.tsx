@@ -65,7 +65,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
 
     await Authentication.setupPin(passcode);
 
-    if (Authentication.biometricsEnabled) await Authentication.authorize(passcode);
+    await Authentication.authorize(passcode);
 
     await MnemonicOnce.save();
 
