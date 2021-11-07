@@ -1,7 +1,7 @@
 import * as Animatable from 'react-native-animatable';
 
 import { Button, SafeViewContainer } from '../../components';
-import Numpad, { NumpadChar } from '../../components/Numpad';
+import Numpad, { DefaultNumpadHandler } from '../../components/Numpad';
 import React, { useEffect, useRef, useState } from 'react';
 import { renderEmptyCircle, renderFilledCircle } from '../../components/PasscodeCircle';
 
@@ -19,22 +19,6 @@ export default ({ themeColor, onCancel, onCodeEntered }: Props) => {
   const [passcode, setPasscode] = useState('');
 
   const passcodeView = useRef<Animatable.View>(null);
-
-  const onNumpadPress = (value: NumpadChar) => {
-    if (value === 'del') {
-      setPasscode(passcode.slice(0, -1));
-      return;
-    }
-
-    if (value === 'clear') {
-      setPasscode('');
-      return;
-    }
-
-    if (passcode.length >= passcodeLength) return;
-
-    setPasscode((pre) => pre + value);
-  };
 
   useEffect(() => {
     if (passcode.length < passcodeLength) {
@@ -60,7 +44,7 @@ export default ({ themeColor, onCancel, onCodeEntered }: Props) => {
 
       <View style={{ flex: 1 }} />
 
-      <Numpad onPress={onNumpadPress} disableDot />
+      <Numpad onPress={(value) => DefaultNumpadHandler(value, passcode, setPasscode)} disableDot />
 
       <Button title="Cancel" onPress={() => onCancel?.()} themeColor={themeColor} />
     </SafeViewContainer>

@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { renderEmptyCircle, renderFilledCircle } from '../../components/PasscodeCircle';
 
 import Authentication from '../../viewmodels/Authentication';
+import { DefaultNumpadHandler } from '../../components/Numpad';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { View } from 'react-native';
 import { observer } from 'mobx-react-lite';
@@ -13,22 +14,6 @@ export default observer(() => {
   const passcodeView = useRef<Animatable.View>(null);
   const passcodeLength = 6;
   const [passcode, setPasscode] = useState('');
-
-  const onNumpadPress = (value: NumpadChar) => {
-    if (value === 'del') {
-      setPasscode(passcode.slice(0, -1));
-      return;
-    }
-
-    if (value === 'clear') {
-      setPasscode('');
-      return;
-    }
-
-    if (passcode.length >= passcodeLength) return;
-
-    setPasscode((pre) => pre + value);
-  };
 
   useEffect(() => {
     if (passcode.length < passcodeLength) {
@@ -57,7 +42,7 @@ export default observer(() => {
 
         {Authentication.biometricsSupported ? undefined : undefined}
 
-        <Numpad onPress={onNumpadPress} disableDot />
+        <Numpad onPress={(value) => DefaultNumpadHandler(value, passcode, setPasscode)} disableDot />
       </SafeViewContainer>
     </SafeAreaView>
   );

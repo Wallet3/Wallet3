@@ -124,3 +124,23 @@ const viewStyles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+export const DefaultNumpadHandler = (
+  value: NumpadChar,
+  state: string,
+  setStateAction: React.Dispatch<React.SetStateAction<string>>
+) => {
+  if (value === 'del') {
+    setStateAction(state.slice(0, -1));
+    return;
+  }
+
+  if (value === 'clear') {
+    setStateAction('');
+    return;
+  }
+
+  if (state.length >= 6) return;
+
+  setStateAction((pre) => pre + value);
+};
