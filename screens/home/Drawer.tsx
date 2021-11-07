@@ -26,8 +26,10 @@ const Drawer = observer((props: DrawerProps) => {
   const { currentWallet } = appVM;
   const { current } = Networks;
 
-  const [routeName] = navigation.getState().routeNames;
-  const homeHighlight = routeName === 'Home' ? current.color : fontColor;
+  const { index } = navigation.getState();
+
+  const homeHighlight = index === 0 ? current.color : fontColor;
+  const settingsHighlight = index === 1 ? current.color : fontColor;
 
   return (
     <SafeViewContainer style={{ flex: 1, height: screenHeight, paddingHorizontal: 0, paddingTop: 0 }}>
@@ -73,14 +75,14 @@ const Drawer = observer((props: DrawerProps) => {
           label="Wallet"
           onPress={() => navigation.navigate('Home')}
           labelStyle={{ ...styles.drawerLabel, color: homeHighlight }}
-          icon={({ color, size }) => <Feather color={homeHighlight} size={21} name={'credit-card'} />}
+          icon={() => <Feather color={homeHighlight} size={21} name={'credit-card'} />}
         />
 
         <DrawerItem
           label="Settings"
-          onPress={() => navigation.navigate('Details')}
-          labelStyle={styles.drawerLabel}
-          icon={({ color, size }) => <Feather color={fontColor} size={21} name={'settings'} />}
+          onPress={() => navigation.navigate('Settings')}
+          labelStyle={{ ...styles.drawerLabel, color: settingsHighlight }}
+          icon={() => <Feather color={settingsHighlight} size={21} name={'settings'} />}
         />
 
         <DrawerItem

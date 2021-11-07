@@ -6,6 +6,7 @@ import AppViewModel, { AppVM } from './viewmodels/App';
 import { Dimensions, View } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NetworksMenu, Request, Send } from './modals';
 import React, { useEffect } from 'react';
 
 import AddToken from './screens/tokens/AddToken';
@@ -19,13 +20,12 @@ import LockScreen from './screens/security/LockScreen';
 import { Modalize } from 'react-native-modalize';
 import { NavigationContainer } from '@react-navigation/native';
 import Networks from './viewmodels/Networks';
-import NetworksMenu from './modals/Networks';
 import PubSub from 'pubsub-js';
-import Request from './modals/Request';
-import Send from './modals/Send';
+import SettingScreen from './screens/settings';
 import Tokens from './screens/tokens/SortTokens';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { fontColor } from './constants/styles';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
@@ -45,25 +45,9 @@ const Root = observer(({ navigation }: NativeStackScreenProps<RootStackParamList
       initialRouteName="Home"
       screenOptions={{
         headerTransparent: false,
-        headerTintColor: '#333',
-        swipeEdgeWidth: screenWidth / 3,
+        headerTintColor: fontColor,
+        swipeEdgeWidth: screenWidth / 2,
         drawerType: 'slide',
-        headerRight: () => (
-          <TouchableOpacity
-            style={{
-              zIndex: 5,
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-              position: 'relative',
-              marginEnd: 17,
-            }}
-            onPress={() => alert('a')}
-          >
-            <MaterialCommunityIcons name="scan-helper" size={18} style={{}} />
-            <View style={{ position: 'absolute', left: 2, right: 2.5, height: 1.5, backgroundColor: '#000' }} />
-          </TouchableOpacity>
-        ),
       }}
       drawerContent={Drawer}
     >
@@ -72,8 +56,26 @@ const Root = observer(({ navigation }: NativeStackScreenProps<RootStackParamList
         component={HomeScreen}
         options={{
           title: 'Wallet 3',
+          headerRight: () => (
+            <TouchableOpacity
+              style={{
+                zIndex: 5,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                position: 'relative',
+                marginEnd: 17,
+              }}
+              onPress={() => alert('a')}
+            >
+              <MaterialCommunityIcons name="scan-helper" size={18} style={{}} />
+              <View style={{ position: 'absolute', left: 2, right: 2.5, height: 1.5, backgroundColor: '#000' }} />
+            </TouchableOpacity>
+          ),
         }}
       />
+
+      <Screen name="Settings" component={SettingScreen} options={{ title: 'Settings' }} />
     </Navigator>
   );
 });
