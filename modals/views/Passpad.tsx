@@ -12,9 +12,10 @@ interface Props {
   themeColor?: string;
   onCodeEntered: (code: string) => Promise<boolean>;
   onCancel?: () => void;
+  disableCancel?: boolean;
 }
 
-export default ({ themeColor, onCancel, onCodeEntered }: Props) => {
+export default ({ themeColor, onCancel, onCodeEntered, disableCancel }: Props) => {
   const passcodeLength = 6;
   const [passcode, setPasscode] = useState('');
 
@@ -46,7 +47,7 @@ export default ({ themeColor, onCancel, onCodeEntered }: Props) => {
 
       <Numpad onPress={(value) => DefaultNumpadHandler(value, passcode, setPasscode)} disableDot />
 
-      <Button title="Cancel" onPress={() => onCancel?.()} themeColor={themeColor} />
+      {disableCancel ? undefined : <Button title="Cancel" onPress={() => onCancel?.()} themeColor={themeColor} />}
     </SafeViewContainer>
   );
 };

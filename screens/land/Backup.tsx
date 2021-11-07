@@ -107,7 +107,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <SafeViewContainer style={styles.rootContainer}>
+      <SafeViewContainer style={{ ...styles.rootContainer, paddingTop: 0 }}>
         <Text>Please sort the words correctly. </Text>
 
         {renderSortedWords(sorted.filter((i) => i))}

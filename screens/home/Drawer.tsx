@@ -52,7 +52,7 @@ const Drawer = observer((props: DrawerProps) => {
             backgroundColor: current.color,
           }}
           source={
-            require('../../assets/icon.png')
+            { uri: 'https://www.larvalabs.com/public/images/cryptopunks/punk8473.png' }
             // currentWallet?.currentAccount?.avatar,
           }
         />

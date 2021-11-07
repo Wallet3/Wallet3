@@ -4,11 +4,12 @@ import { fontColor, secondaryFontColor } from '../../constants/styles';
 
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScrollView } from 'react-native-gesture-handler';
 import { observer } from 'mobx-react-lite';
 
 export default observer((props) => {
   return (
-    <View style={{ flex: 1, backgroundColor: '#fff', padding: 16 }}>
+    <ScrollView style={{ flex: 1, backgroundColor: '#fff', padding: 16 }}>
       <Text style={{ ...styles.sectionTitle, marginTop: 0 }}>General</Text>
 
       <TouchableOpacity style={styles.itemContainer}>
@@ -86,7 +87,7 @@ export default observer((props) => {
       </TouchableOpacity>
 
       <Text style={{ marginTop: 24, fontSize: 12 }}>© 2021 ChainBow</Text>
-    </View>
+    </ScrollView>
   );
 });
 
