@@ -66,7 +66,7 @@ export class Wallet {
     clearTimeout(this.refreshTimer);
     await this.currentAccount?.refreshTokensBalance();
 
-    this.refreshTimer = setTimeout(() => this.refreshAccount(), 60 * 1000);
+    this.refreshTimer = setTimeout(() => this.refreshAccount(), 15 * 1000);
   }
 
   switchAccount(account: Account) {

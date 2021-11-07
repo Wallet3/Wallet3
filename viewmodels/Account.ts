@@ -103,11 +103,12 @@ export class Account {
   }
 
   async refreshTokensBalance() {
-    Debank.getBalance(this.address, Networks.current.comm_id).then(({ usd_value }) =>
-      runInAction(() => (this.balanceUSD = usd_value))
-    );
+    const [{ usd_value }] = await Promise.all([
+      Debank.getBalance(this.address, Networks.current.comm_id),
+      this.tokens.map((t) => (t as ERC20Token).getBalance?.(false)),
+    ]);
 
-    this.tokens.map((t) => (t as ERC20Token).getBalance?.(false));
+    runInAction(() => (this.balanceUSD = usd_value));
   }
 
   fetchBasicInfo() {
