@@ -14,7 +14,7 @@ class Database {
 
     this._connection = await createConnection({
       type: 'expo',
-      database: 'test18',
+      database: 'test19',
       driver: require('expo-sqlite'),
       synchronize: true,
       entities: [Key, Transaction],
