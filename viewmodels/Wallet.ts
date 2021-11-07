@@ -21,6 +21,7 @@ export class Wallet {
   private refreshTimer!: NodeJS.Timer;
   accounts: Account[] = [];
   currentAccount: Account | null = null;
+  lastRefreshedTime = 0;
 
   constructor(key: Key) {
     this.key = key;
@@ -58,14 +59,14 @@ export class Wallet {
     return this;
   }
 
-  private async refreshAccount() {
+  async refreshAccount() {
+    if (Date.now() - this.lastRefreshedTime < 1000 * 10) return;
+    this.lastRefreshedTime = Date.now();
+
     clearTimeout(this.refreshTimer);
     await this.currentAccount?.refreshTokensBalance();
 
-    this.refreshTimer = setTimeout(
-      () => this.refreshAccount(),
-      Math.max((Networks.current.blockTimeMs || 15 * 1000) * 2, 10 * 1000)
-    );
+    this.refreshTimer = setTimeout(() => this.refreshAccount(), 60 * 1000);
   }
 
   switchAccount(account: Account) {
@@ -75,7 +76,7 @@ export class Wallet {
     this.currentAccount.fetchBasicInfo();
 
     clearTimeout(this.refreshTimer);
-    this.refreshTimer = setTimeout(() => this.refreshAccount(), 1000 * 30);
+    this.refreshTimer = setTimeout(() => this.refreshAccount(), 1000 * 60);
   }
 
   async signTx({ accountIndex, tx, pin }: SendTxRequest) {

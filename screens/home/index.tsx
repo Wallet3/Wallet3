@@ -41,6 +41,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         tokens={currentWallet?.currentAccount?.tokens}
         themeColor={current.color}
         loadingTokens={currentWallet?.currentAccount?.loadingTokens}
+        onRefreshRequest={() => currentWallet?.refreshAccount()}
       />
 
       <Actions

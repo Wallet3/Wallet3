@@ -61,9 +61,6 @@ export default observer((props) => {
           <Ionicons name="backspace-outline" style={styles.itemStartSymbol} size={16} />
           <Text style={styles.itemText}>Reset App</Text>
         </View>
-        {/* <View style={styles.itemSubContainer}>
-          <Entypo name="chevron-right" style={styles.itemEndSymbol} />
-        </View> */}
       </TouchableOpacity>
 
       <Text style={styles.sectionTitle}>Legal</Text>
@@ -97,7 +94,7 @@ const styles = StyleSheet.create({
   itemContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 16,
+    paddingVertical: 12,
     justifyContent: 'space-between',
   },
 
@@ -128,5 +125,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     color: secondaryFontColor,
     marginTop: 32,
+    marginBottom: 4,
   },
 });

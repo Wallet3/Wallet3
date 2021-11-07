@@ -1,7 +1,7 @@
 import * as Animatable from 'react-native-animatable';
 
 import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
-import { FlatList, ListRenderItemInfo, StyleSheet, Text, View } from 'react-native';
+import { FlatList, ListRenderItemInfo, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
@@ -45,28 +45,32 @@ const Token = observer(({ item }: { item: IToken }) => {
   );
 });
 
-const Tokens = observer(({ tokens, loading }: { tokens?: IToken[]; loading?: boolean }) => {
-  const renderItem = ({ item, index }: ListRenderItemInfo<IToken>) => <Token item={item} />;
+const Tokens = observer(
+  ({ tokens, loading, onRefreshRequest }: { tokens?: IToken[]; loading?: boolean; onRefreshRequest?: () => void }) => {
+    const renderItem = ({ item, index }: ListRenderItemInfo<IToken>) => <Token item={item} />;
 
-  return (tokens?.length ?? 0) > 0 && !loading ? (
-    <FlatList
-      data={tokens}
-      keyExtractor={(i) => i.address}
-      renderItem={renderItem}
-      style={{ paddingHorizontal: 16 }}
-      ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: '#efefef80', marginStart: 56 }} />}
-    />
-  ) : (
-    <View style={{ flex: 1, padding: 16, paddingVertical: 12 }}>
-      <Skeleton style={{ height: 52, width: '100%' }} />
-    </View>
-  );
-});
+    return (tokens?.length ?? 0) > 0 && !loading ? (
+      <FlatList
+        data={tokens}
+        keyExtractor={(i) => i.address}
+        refreshControl={<RefreshControl refreshing={false} onRefresh={() => onRefreshRequest?.()} />}
+        renderItem={renderItem}
+        style={{ paddingHorizontal: 16 }}
+        ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: '#efefef80', marginStart: 56 }} />}
+      />
+    ) : (
+      <View style={{ flex: 1, padding: 16, paddingVertical: 12 }}>
+        <Skeleton style={{ height: 52, width: '100%' }} />
+      </View>
+    );
+  }
+);
 
 interface Props {
   tokens?: IToken[];
   themeColor: string;
   loadingTokens?: boolean;
+  onRefreshRequest?: () => void;
 }
 
 const rotate = {
@@ -78,7 +82,7 @@ const rotate = {
   },
 };
 
-export default observer(({ tokens, themeColor, loadingTokens }: Props) => {
+export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest }: Props) => {
   const [activeTab, setActiveTab] = useState(0);
   const swiper = React.useRef<Swiper>(null);
 
@@ -164,7 +168,7 @@ export default observer(({ tokens, themeColor, loadingTokens }: Props) => {
         style={{}}
         onIndexChanged={(i) => setActiveTab(i)}
       >
-        <Tokens tokens={tokens} loading={loadingTokens} />
+        <Tokens tokens={tokens} loading={loadingTokens} onRefreshRequest={onRefreshRequest} />
         <View style={{ flex: 1 }}>
           <Text>Nfts</Text>
         </View>
