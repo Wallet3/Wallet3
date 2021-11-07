@@ -3,6 +3,7 @@ import './configs/polyfill';
 import './configs/debug';
 
 import AppViewModel, { AppVM } from './viewmodels/App';
+import AuthViewModel, { Authentication } from './viewmodels/Authentication';
 import { Dimensions, View } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -12,7 +13,6 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { autorun, reaction } from 'mobx';
 
 import AddToken from './screens/tokens/AddToken';
-import Authentication from './viewmodels/Authentication';
 import Drawer from './screens/home/Drawer';
 import FlashMessage from 'react-native-flash-message';
 import HomeScreen from './screens/home';
@@ -38,6 +38,8 @@ const StackRoot = createNativeStackNavigator();
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 
+AppViewModel.init();
+
 type RootStackParamList = {
   Home: undefined;
 };
@@ -50,6 +52,7 @@ const Root = observer(({ navigation }: NativeStackScreenProps<RootStackParamList
       initialRouteName="Home"
       screenOptions={{
         headerTransparent: false,
+        
         headerTintColor: fontColor,
         swipeEdgeWidth: ScreenWidth / 2,
         drawerType: 'slide',
@@ -85,7 +88,7 @@ const Root = observer(({ navigation }: NativeStackScreenProps<RootStackParamList
   );
 });
 
-const App = observer(({ app }: { app: AppVM }) => {
+const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication }) => {
   const { Navigator, Screen } = StackRoot;
   const { ref: networksModal, open: openNetworksModal, close: closeNetworksModal } = useModalize();
   const { ref: sendModalizeRef, open: openSendModal, close: closeSendModal } = useModalize();
@@ -93,14 +96,13 @@ const App = observer(({ app }: { app: AppVM }) => {
   const { ref: lockscreenModalizeRef, open: openLockScreen, close: closeLockScreen } = useModalize();
 
   useEffect(() => {
-    app.init();
     PubSub.subscribe('openNetworksModal', () => openNetworksModal());
     PubSub.subscribe('openSendModal', () => openSendModal());
     PubSub.subscribe('openRequestModal', () => openRequestModal());
     PubSub.subscribe('closeSendModal', () => closeSendModal());
 
     const dipose = autorun(() => {
-      if (app.hasWallet && !Authentication.appAuthorized) {
+      if (app.hasWallet && !appAuth.appAuthorized) {
         openLockScreen();
       }
     });
@@ -169,13 +171,13 @@ const App = observer(({ app }: { app: AppVM }) => {
         <SafeAreaProvider>
           <SafeAreaView style={{ flex: 1, height: ScreenHeight }}>
             <Passpad
+              themeColor={Networks.current.color}
+              disableCancel
               onCodeEntered={async (code) => {
-                const success = await Authentication.authorize(code);
+                const success = await appAuth.authorize(code);
                 if (success) closeLockScreen();
                 return success;
               }}
-              themeColor={Networks.current.color}
-              disableCancel
             />
           </SafeAreaView>
         </SafeAreaProvider>
@@ -213,4 +215,4 @@ const App = observer(({ app }: { app: AppVM }) => {
   );
 });
 
-export default () => <App app={AppViewModel} />;
+export default () => <App app={AppViewModel} appAuth={AuthViewModel} />;

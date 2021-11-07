@@ -21,7 +21,7 @@ const keys = {
   pin: 'pin',
 };
 
-class Authentication {
+export class Authentication {
   biometricsSupported = false;
   supportedTypes: AuthenticationType[] = [];
   biometricsEnabled = true;
