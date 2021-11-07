@@ -28,6 +28,11 @@ export default observer(() => {
     });
   }, [passcode]);
 
+  useEffect(() => {
+    if (!Authentication.biometricsEnabled || !Authentication.biometricsSupported) return;
+    Authentication.authorize();
+  }, []);
+
   return (
     <SafeAreaView style={{ backgroundColor: '#fff', flex: 1 }}>
       <SafeViewContainer style={{ paddingHorizontal: 16, flex: 1 }}>
