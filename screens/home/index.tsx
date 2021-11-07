@@ -1,10 +1,11 @@
+import React, { useEffect } from 'react';
+
 import Actions from './Actions';
 import App from '../../viewmodels/App';
 import Assets from './Assets';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import Networks from '../../viewmodels/Networks';
 import Overview from './Overview';
-import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { View } from 'react-native';
 import { observer } from 'mobx-react-lite';

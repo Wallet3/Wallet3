@@ -7,7 +7,6 @@ import { Wallet } from './Wallet';
 
 export class AppVM {
   initialized = false;
-  authorized = false;
   wallets: Wallet[] = [];
   currentWallet?: Wallet = undefined;
 
@@ -19,7 +18,6 @@ export class AppVM {
     makeObservable(this, {
       initialized: observable,
       wallets: observable,
-      authorized: observable,
       currentWallet: observable,
       hasWallet: computed,
     });

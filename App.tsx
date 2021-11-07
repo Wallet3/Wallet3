@@ -9,11 +9,13 @@ import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navig
 import React, { useEffect } from 'react';
 
 import AddToken from './screens/tokens/AddToken';
+import Authentication from './viewmodels/Authentication';
 import Drawer from './screens/home/Drawer';
 import FlashMessage from 'react-native-flash-message';
 import HomeScreen from './screens/home';
 import { Host } from 'react-native-portalize';
 import LandScreen from './screens/land';
+import LockScreen from './screens/security/LockScreen';
 import { Modalize } from 'react-native-modalize';
 import { NavigationContainer } from '@react-navigation/native';
 import Networks from './viewmodels/Networks';
@@ -97,39 +99,45 @@ const App = observer(({ app }: { app: AppVM }) => {
       <Host>
         {app.initialized ? (
           app.hasWallet ? (
-            <Navigator
-              initialRouteName="Root"
-              screenOptions={({ navigation }) => {
-                return {
-                  headerTransparent: true,
-                  headerLeft: () => (
-                    <TouchableOpacity onPress={() => navigation.pop()}>
-                      <Ionicons name="arrow-back-outline" size={20} />
-                    </TouchableOpacity>
-                  ),
-                };
-              }}
-            >
-              <Screen name="Root" component={Root} options={{ headerShown: false }} />
-              <Screen name="AddToken" component={AddToken} />
-              <Screen
-                name="Tokens"
-                component={Tokens}
-                options={({ navigation }) => {
+            Authentication.appAuthorized ? (
+              <Navigator
+                initialRouteName="Root"
+                screenOptions={({ navigation }) => {
                   return {
-                    headerRight: () => (
-                      <TouchableOpacity
-                        onPress={() => {
-                          navigation.navigate('AddToken');
-                        }}
-                      >
-                        <Ionicons name="add-circle-outline" size={24} />
+                    headerTransparent: true,
+                    headerLeft: () => (
+                      <TouchableOpacity onPress={() => navigation.pop()}>
+                        <Ionicons name="arrow-back-outline" size={20} />
                       </TouchableOpacity>
                     ),
                   };
                 }}
-              />
-            </Navigator>
+              >
+                <Screen name="Root" component={Root} options={{ headerShown: false }} />
+                <Screen name="AddToken" component={AddToken} />
+                <Screen
+                  name="Tokens"
+                  component={Tokens}
+                  options={({ navigation }) => {
+                    return {
+                      headerRight: () => (
+                        <TouchableOpacity
+                          onPress={() => {
+                            navigation.navigate('AddToken');
+                          }}
+                        >
+                          <Ionicons name="add-circle-outline" size={24} />
+                        </TouchableOpacity>
+                      ),
+                    };
+                  }}
+                />
+              </Navigator>
+            ) : (
+              <Navigator>
+                <Screen name="LockScreen" component={LockScreen} options={{ headerShown: false }} />
+              </Navigator>
+            )
           ) : (
             <Navigator>
               <Screen name="Land" component={LandScreen} options={{ headerShown: false }} />
@@ -137,6 +145,7 @@ const App = observer(({ app }: { app: AppVM }) => {
           )
         ) : undefined}
       </Host>
+
       <Modalize
         ref={networksModal}
         adjustToContentHeight

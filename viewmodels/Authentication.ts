@@ -10,10 +10,10 @@ import {
   supportedAuthenticationTypesAsync,
 } from 'expo-local-authentication';
 import { action, makeObservable, observable, runInAction } from 'mobx';
+import { appEncryptKey, pinEncryptKey } from '../configs/secret';
 import { decrypt, encrypt, sha256 } from '../utils/cipher';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { appEncryptKey } from '../configs/secret';
 
 const keys = {
   enableBiometrics: 'enableBiometrics',
@@ -26,11 +26,14 @@ class Authentication {
   supportedTypes: AuthenticationType[] = [];
   biometricsEnabled = true;
 
+  appAuthorized = false;
+
   constructor() {
     makeObservable(this, {
       biometricsSupported: observable,
       supportedTypes: observable,
       biometricsEnabled: observable,
+      appAuthorized: observable,
       setBiometrics: action,
     });
 
@@ -57,12 +60,16 @@ class Authentication {
     });
   }
 
-  async authenticate({ pin, options }: { pin?: string; options?: LocalAuthenticationOptions } = {}): Promise<boolean> {
+  private async authenticate({ pin, options }: { pin?: string; options?: LocalAuthenticationOptions } = {}): Promise<boolean> {
     if (pin) return await this.verifyPin(pin);
     if (!this.biometricsSupported) return false;
 
     const { success } = await authenticateAsync(options);
     return success;
+  }
+
+  private async getMasterKey() {
+    return `${await SecureStore.getItemAsync(keys.masterKey)}_${appEncryptKey}`;
   }
 
   setBiometrics(enabled: boolean) {
@@ -71,15 +78,17 @@ class Authentication {
   }
 
   async setupPin(pin: string) {
-    await SecureStore.setItemAsync(keys.pin, await sha256(pin));
+    await SecureStore.setItemAsync(keys.pin, await sha256(`${pin}_${pinEncryptKey}`));
   }
 
   async verifyPin(pin: string) {
-    return (await sha256(pin)) === (await SecureStore.getItemAsync(keys.pin));
+    return (await sha256(`${pin}_${pinEncryptKey}`)) === (await SecureStore.getItemAsync(keys.pin));
   }
 
-  async getMasterKey() {
-    return `${await SecureStore.getItemAsync(keys.masterKey)}_${appEncryptKey}`;
+  async authorize(pin?: string) {
+    const success = await this.authenticate({ pin });
+    runInAction(() => (this.appAuthorized = success));
+    return success;
   }
 
   async encrypt(data: string) {
