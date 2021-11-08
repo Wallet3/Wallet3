@@ -1,24 +1,28 @@
-import { Mnemonic, SafeViewContainer } from '../../components';
+import { Button, Mnemonic, SafeViewContainer } from '../../components';
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, View } from 'react-native';
+import { SafeAreaView, Text, View } from 'react-native';
 
 import App from '../../viewmodels/App';
 import Authentication from '../../viewmodels/Authentication';
 import { FullPasspad } from '../../modals/views/Passpad';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Modalize } from 'react-native-modalize';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/Networks';
 import { Portal } from 'react-native-portalize';
 import { observer } from 'mobx-react-lite';
+import { secondaryFontColor } from '../../constants/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
   const { ref: authModalRef, open, close } = useModalize();
   const [retried, setRetried] = useState(0);
   const [authorized, setAuthorized] = useState(false);
+  const [words, setWords] = useState<string[]>([]);
+
+  const themeColor = Networks.current.color;
 
   const verify = async (passcode?: string) => {
-    console.log('verify', passcode);
     const secret = await App.currentWallet?.getSecret(passcode);
     const success = secret ? true : false;
 
@@ -27,6 +31,7 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
     try {
       if (success) {
         close();
+        setWords(secret!.split(/\s/));
       } else {
         setRetried((p) => p + 1);
       }
@@ -43,11 +48,29 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
   }, []);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <SafeViewContainer>
         {authorized ? (
-          <View>
-            <Mnemonic phrases={['']} />
+          <View style={{ flex: 1 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: -12, marginBottom: -8 }}>
+              <MaterialCommunityIcons name="shield-key" size={64} color={'#61D800'} />
+            </View>
+
+            <View style={{ marginVertical: 16 }}>
+              <Text style={{ fontSize: 16, fontWeight: '500', color: themeColor, marginBottom: 8 }}>Security Tips</Text>
+              <Text style={{ marginStart: 16, marginBottom: 8, color: secondaryFontColor }}>
+                The mnemonic consists of english words, please keep them safe.
+              </Text>
+              <Text style={{ marginStart: 16, color: secondaryFontColor }}>
+                Once the mnemonic gets lost, it cannot be retrieved, and you would lose all your funds.
+              </Text>
+            </View>
+
+            <Mnemonic phrases={words} />
+
+            <View style={{ flex: 1 }} />
+
+            <Button title="Verify" themeColor={themeColor} />
           </View>
         ) : (
           <View></View>
@@ -64,7 +87,7 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
           panGestureComponentEnabled={false}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <FullPasspad themeColor={Networks.current.color} height={420} onCodeEntered={(code) => verify(code)} />
+          <FullPasspad themeColor={themeColor} height={420} onCodeEntered={(code) => verify(code)} />
         </Modalize>
       </Portal>
     </SafeAreaView>

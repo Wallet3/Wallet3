@@ -142,7 +142,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
               <Screen name="Root" component={Root} options={{ headerShown: false }} />
               <Screen name="Languages" component={Languages} />
               <Screen name="Currencies" component={Currencies} />
-              <Screen name="ChangePasscode" component={ChangePasscode} options={{ title: 'Update Passcode' }} />
+              <Screen name="ChangePasscode" component={ChangePasscode} options={{ title: 'Change Passcode' }} />
               <Screen name="Backup" component={Backup} options={{ title: 'Backup' }} />
               <Screen name="AddToken" component={AddToken} />
               <Screen
