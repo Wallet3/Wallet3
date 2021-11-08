@@ -11,6 +11,7 @@ import { Transferring } from '../../viewmodels/Transferring';
 import { formatAddress } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
+import { utils } from 'ethers';
 
 interface Props {
   onNext?: () => void;
@@ -34,7 +35,7 @@ export default observer(({ onNext, vm }: Props) => {
       >
         <FontAwesome name="user-circle-o" size={20} color={secondaryFontColor} style={{ opacity: 0.5, marginEnd: 12 }} />
         <Text style={{ fontSize: 17, color: fontColor }} numberOfLines={1}>
-          {formatAddress(item)}
+          {utils.isAddress(item) ? formatAddress(item) : item}
         </Text>
       </TouchableOpacity>
     );

@@ -41,6 +41,7 @@ export default ({ value, onChangeText, title }: Props) => {
         style={{ fontSize: 20, flex: 1, color: fontColor }}
         value={value}
         autoCapitalize="none"
+        keyboardType='url'
         onChangeText={(t) => onChangeText(t)}
       />
 

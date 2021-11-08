@@ -16,6 +16,7 @@ import { Transferring } from '../../viewmodels/Transferring';
 import { formatAddress } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
+import { utils } from 'ethers';
 
 interface Props {
   onBack?: () => void;
@@ -52,7 +53,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
           <Text style={viewStyles.reviewItemTitle}>To</Text>
 
           <Text style={{ ...viewStyles.reviewItemValue, maxWidth: '72%' }} numberOfLines={1}>
-            {formatAddress(vm.to, 9, 7)}
+            {utils.isAddress(vm.to) ? formatAddress(vm.to, 9, 7) : vm.to}
           </Text>
         </View>
 
