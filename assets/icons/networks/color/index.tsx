@@ -30,7 +30,7 @@ const ZSYNC = <ZKSync width={32} height={32} />;
 
 export const NetworkIcons = {
   ethereum: ETH,
-  arbitrum: ARB,
+  'arbitrum one': ARB,
   optimism: OPT,
   avalanche: AVL,
   bsc: BSC,

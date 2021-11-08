@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
 
 export default {
   Ethereum: <Ethereum width={64} height={64} style={styles.ethereum} />,
-  Arbitrum: <Arbitrum width={54} height={54} style={styles.arbitrum} />,
+  'Arbitrum One': <Arbitrum width={54} height={54} style={styles.arbitrum} />,
   Optimism: <Optimism width={54} height={54} style={styles.optimism} />,
   xDai: <XDai width={50} height={50} style={styles.xdai} />,
   Polygon: <Polygon width={49} height={49} style={styles.polygon} />,
