@@ -13,6 +13,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { autorun, reaction } from 'mobx';
 
 import AddToken from './screens/tokens/AddToken';
+import ChangePasscode from './screens/settings/ChangePasscode';
 import Currencies from './screens/settings/Currencies';
 import Drawer from './screens/home/Drawer';
 import FlashMessage from 'react-native-flash-message';
@@ -138,8 +139,9 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
               }}
             >
               <Screen name="Root" component={Root} options={{ headerShown: false }} />
-              <Screen name="Languages" component={Languages} options={{ headerTransparent: false }} />
-              <Screen name="Currencies" component={Currencies} options={{ headerTransparent: false }} />
+              <Screen name="Languages" component={Languages} />
+              <Screen name="Currencies" component={Currencies} />
+              <Screen name="ChangePasscode" component={ChangePasscode} options={{ title: 'Update Passcode' }} />
               <Screen name="AddToken" component={AddToken} />
               <Screen
                 name="Tokens"
