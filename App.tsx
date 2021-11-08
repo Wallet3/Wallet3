@@ -16,6 +16,7 @@ import AddToken from './screens/tokens/AddToken';
 import Currencies from './screens/settings/Currencies';
 import Drawer from './screens/home/Drawer';
 import FlashMessage from 'react-native-flash-message';
+import { FullPasspad } from './modals/views/Passpad';
 import HomeScreen from './screens/home';
 import { Host } from 'react-native-portalize';
 import LandScreen from './screens/land';
@@ -175,19 +176,15 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
         panGestureComponentEnabled={false}
         scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
       >
-        <SafeAreaProvider>
-          <SafeAreaView style={{ flex: 1, height: ScreenHeight }}>
-            <Passpad
-              themeColor={Networks.current.color}
-              disableCancel
-              onCodeEntered={async (code) => {
-                const success = await appAuth.authorize(code);
-                if (success) closeLockScreen();
-                return success;
-              }}
-            />
-          </SafeAreaView>
-        </SafeAreaProvider>
+        <FullPasspad
+          themeColor={Networks.current.color}
+          height={ScreenHeight}
+          onCodeEntered={async (code) => {
+            const success = await appAuth.authorize(code);
+            if (success) closeLockScreen();
+            return success;
+          }}
+        />
       </Modalize>
 
       <Modalize

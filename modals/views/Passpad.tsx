@@ -3,9 +3,10 @@ import * as Animatable from 'react-native-animatable';
 import { Button, SafeViewContainer } from '../../components';
 import Numpad, { DefaultNumpadHandler } from '../../components/Numpad';
 import React, { useEffect, useRef, useState } from 'react';
+import { SafeAreaView, View } from 'react-native';
 import { renderEmptyCircle, renderFilledCircle } from '../../components/PasscodeCircle';
 
-import { View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import styles from '../styles';
 
 interface Props {
@@ -15,7 +16,7 @@ interface Props {
   disableCancel?: boolean;
 }
 
-export default ({ themeColor, onCancel, onCodeEntered, disableCancel }: Props) => {
+const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel }: Props) => {
   const passcodeLength = 6;
   const [passcode, setPasscode] = useState('');
 
@@ -49,5 +50,23 @@ export default ({ themeColor, onCancel, onCodeEntered, disableCancel }: Props) =
 
       {disableCancel ? undefined : <Button title="Cancel" onPress={() => onCancel?.()} themeColor={themeColor} />}
     </SafeViewContainer>
+  );
+};
+
+export default Passpad;
+
+interface FullPasspadProps {
+  height?: number;
+  themeColor?: string;
+  onCodeEntered: (code: string) => Promise<boolean>;
+}
+
+export const FullPasspad = ({ height, themeColor, onCodeEntered }: FullPasspadProps) => {
+  return (
+    <SafeAreaProvider>
+      <SafeAreaView style={{ flex: 1, height }}>
+        <Passpad themeColor={themeColor} disableCancel onCodeEntered={onCodeEntered} />
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };

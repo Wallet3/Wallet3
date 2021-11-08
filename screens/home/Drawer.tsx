@@ -52,7 +52,7 @@ const Drawer = observer((props: DrawerProps) => {
             backgroundColor: current.color,
           }}
           source={
-            { uri: 'https://www.larvalabs.com/public/images/cryptopunks/punk8473.png' }
+            { uri: 'https://lh3.googleusercontent.com/1cYgtxvPgxU3tlU6r4trPcl9cU0xFpkUKpba0QPSbBFx_OC-347VQq9MuAA0Y4KoE1zsGUcmmik-XJJw1wG1qv75BsSefDX26VbLnw=w600' }
             // currentWallet?.currentAccount?.avatar,
           }
         />
@@ -85,19 +85,6 @@ const Drawer = observer((props: DrawerProps) => {
           icon={() => <Feather color={settingsHighlight} size={21} name={'settings'} />}
         />
 
-        <DrawerItem
-          label={() => (
-            <View style={{ ...styles.drawerLabel, flexDirection: 'row', position: 'relative' }}>
-              <Text style={{ fontSize: 17, fontFamily: 'PingFang HK', color: fontColor, fontWeight: '500' }}>
-                Backup Secret
-              </Text>
-              <Ionicons name="alert-circle" size={15} color="darkorange" style={{ marginStart: 4 }} />
-            </View>
-          )}
-          onPress={() => navigation.navigate('Backup')}
-          labelStyle={styles.drawerLabel}
-          icon={() => <Feather color={fontColor} size={21} name="shield" />}
-        />
       </View>
 
       <View style={{ flex: 1 }} />

@@ -87,7 +87,7 @@ export class Authentication {
 
   async authorize(pin?: string) {
     const success = await this.authenticate({ pin });
-    runInAction(() => (this.appAuthorized = success));
+    if (!this.appAuthorized) runInAction(() => (this.appAuthorized = success));
     return success;
   }
 

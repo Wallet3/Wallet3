@@ -4,10 +4,14 @@ import { fontColor, secondaryFontColor } from '../../constants/styles';
 
 import Authentication from '../../viewmodels/Authentication';
 import { DrawerScreenProps } from '@react-navigation/drawer';
+import { FullPasspad } from '../../modals/views/Passpad';
+import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
+import { Portal } from 'react-native-portalize';
 import React from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { observer } from 'mobx-react-lite';
+import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 type SettingsStack = {
   Settings: undefined;
@@ -15,6 +19,23 @@ type SettingsStack = {
 
 export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Settings'>) => {
   const parent = navigation.getParent();
+  const [securityJumpTo, setSecurityJumpTo] = React.useState('');
+  const { ref: authModalRef, open, close } = useModalize();
+
+  const openChangePasscode = () => {
+    open();
+    setSecurityJumpTo('ChangePasscode');
+  };
+
+  const openBackup = async () => {
+    open();
+    setSecurityJumpTo('BackupSecret');
+
+    if (Authentication.biometricsEnabled && (await Authentication.authorize())) {
+      close();
+      parent?.navigate('BackupSecret');
+    }
+  };
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: '#fff', padding: 16 }}>
@@ -59,9 +80,9 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
         </View>
       </View>
 
-      <TouchableOpacity style={styles.itemContainer}>
+      <TouchableOpacity style={styles.itemContainer} onPress={() => openChangePasscode()}>
         <View style={styles.itemSubContainer}>
-          <Ionicons name="shield-checkmark-outline" style={styles.itemStartSymbol} size={16} />
+          <Ionicons name="keypad-outline" style={styles.itemStartSymbol} size={16} />
           <Text style={styles.itemText}>Change Passcode</Text>
         </View>
 
@@ -70,10 +91,11 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.itemContainer}>
+      <TouchableOpacity style={styles.itemContainer} onPress={() => openBackup()}>
         <View style={styles.itemSubContainer}>
           <Ionicons name="file-tray-outline" style={styles.itemStartSymbol} size={16} />
           <Text style={styles.itemText}>Backup</Text>
+          <Ionicons name="alert-circle" size={15} color="darkorange" style={{ marginStart: 4, marginTop: -8 }} />
         </View>
         <View style={styles.itemSubContainer}>
           <Entypo name="chevron-right" style={styles.itemEndSymbol} />
@@ -110,6 +132,30 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
       </TouchableOpacity>
 
       <Text style={{ marginTop: 24, fontSize: 12 }}>© 2021 ChainBow</Text>
+
+      <Portal>
+        <Modalize
+          ref={authModalRef}
+          disableScrollIfPossible
+          adjustToContentHeight
+          panGestureEnabled={false}
+          panGestureComponentEnabled={false}
+          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+        >
+          <FullPasspad
+            themeColor={Networks.current.color}
+            height={420}
+            onCodeEntered={async (code) => {
+              const success = await Authentication.verifyPin(code);
+              if (success) {
+                parent?.navigate(securityJumpTo);
+                close();
+              }
+              return success;
+            }}
+          />
+        </Modalize>
+      </Portal>
     </ScrollView>
   );
 });
