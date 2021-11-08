@@ -47,10 +47,6 @@ class MnemonicOnce {
     const bip32 = root.derivePath(this.derivationPath);
     const bip32XPubkey = xpubkeyFromHDNode(bip32);
 
-    // console.log(this.secret);
-    // console.log(bip32.extendedKey);
-    // console.log(bip32XPubkey);
-
     const key = new Key();
     key.id = Date.now();
     key.secret = await Authentication.encrypt(this.secret);

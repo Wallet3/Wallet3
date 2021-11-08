@@ -96,4 +96,8 @@ export class Wallet {
 
     return true;
   }
+
+  async getSecret(pin?: string) {
+    return await Authentication.decrypt(this.key.secret, pin);
+  }
 }

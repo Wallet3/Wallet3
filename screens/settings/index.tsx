@@ -19,22 +19,12 @@ type SettingsStack = {
 
 export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Settings'>) => {
   const parent = navigation.getParent();
-  const [securityJumpTo, setSecurityJumpTo] = React.useState('');
+  const [jumpToScreen, setJumpToScreen] = React.useState('');
   const { ref: authModalRef, open, close } = useModalize();
 
   const openChangePasscode = () => {
     open();
-    setSecurityJumpTo('ChangePasscode');
-  };
-
-  const openBackup = async () => {
-    open();
-    setSecurityJumpTo('BackupSecret');
-
-    if (Authentication.biometricsEnabled && (await Authentication.authorize())) {
-      close();
-      parent?.navigate('BackupSecret');
-    }
+    setJumpToScreen('ChangePasscode');
   };
 
   return (
@@ -91,7 +81,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.itemContainer} onPress={() => openBackup()}>
+      <TouchableOpacity style={styles.itemContainer} onPress={() => parent?.navigate('Backup')}>
         <View style={styles.itemSubContainer}>
           <Ionicons name="file-tray-outline" style={styles.itemStartSymbol} size={16} />
           <Text style={styles.itemText}>Backup</Text>
@@ -148,7 +138,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
             onCodeEntered={async (code) => {
               const success = await Authentication.verifyPin(code);
               if (success) {
-                parent?.navigate(securityJumpTo);
+                parent?.navigate(jumpToScreen);
                 close();
               }
               return success;
