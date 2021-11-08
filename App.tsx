@@ -101,10 +101,15 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
     PubSub.subscribe('openRequestModal', () => openRequestModal());
     PubSub.subscribe('closeSendModal', () => closeSendModal());
 
-    const dipose = autorun(() => {
-      if (app.hasWallet && !appAuth.appAuthorized) {
-        openLockScreen();
-      }
+    const dipose = autorun(async () => {
+      if (!app.hasWallet || appAuth.appAuthorized) return;
+
+      openLockScreen();
+
+      if (!appAuth.biometricsEnabled || !appAuth.biometricsSupported) return;
+
+      const success = await appAuth.authorize();
+      if (success) closeLockScreen();
     });
 
     return () => {
