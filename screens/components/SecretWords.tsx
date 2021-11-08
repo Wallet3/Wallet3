@@ -1,8 +1,9 @@
+import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
 import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
+import _ from 'lodash';
 import { observer } from 'mobx-react-lite';
 
 export const StaticSecretWords = observer(
@@ -44,7 +45,7 @@ export const SortedSecretWords = observer(
         borderWidth: 1,
         borderColor,
         marginVertical: 12,
-        maxHeight: 200,
+        height: 200,
       }}
     >
       {words.map((word, index) => (
@@ -80,3 +81,32 @@ export const SortedSecretWords = observer(
     </ScrollView>
   )
 );
+
+export const SortWords = ({ words, onVerified }: { words: string[]; onVerified: (success: boolean) => void }) => {
+  const [sorted, setSorted] = useState<string[]>([]);
+  const [shuffled, setShuffled] = useState<string[]>([]);
+
+  const onStaticWordPress = (word: string, index: number) => {
+    setSorted((pre) => [...pre, word]);
+    setShuffled((pre) => [...pre.slice(0, index), ...pre.slice(index + 1)]);
+  };
+
+  const delSortedWord = (word: string, index: number) => {
+    setSorted((pre) => [...pre.slice(0, index), ...pre.slice(index + 1)]);
+    setShuffled((pre) => [...pre, word]);
+  };
+
+  useEffect(() => setShuffled(_.shuffle(words)), []);
+
+  useEffect(() => {
+    onVerified(_.isEqual(sorted, words));
+  }, [sorted]);
+
+  return (
+    <View>
+      <SortedSecretWords words={sorted.filter((i) => i)} onDelWord={delSortedWord} />
+
+      <StaticSecretWords words={shuffled} onWordPress={onStaticWordPress} />
+    </View>
+  );
+};

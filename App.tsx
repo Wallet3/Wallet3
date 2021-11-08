@@ -32,6 +32,7 @@ import { SafeViewContainer } from './components';
 import SettingScreen from './screens/settings';
 import Tokens from './screens/tokens/SortTokens';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import VerifySecret from './screens/settings/VerifySecret';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { fontColor } from './constants/styles';
 import { observer } from 'mobx-react-lite';
@@ -144,6 +145,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
               <Screen name="Currencies" component={Currencies} />
               <Screen name="ChangePasscode" component={ChangePasscode} options={{ title: 'Change Passcode' }} />
               <Screen name="Backup" component={Backup} options={{ title: 'Backup' }} />
+              <Screen name="VerifySecret" component={VerifySecret} options={{ title: 'Verify' }} />
               <Screen name="AddToken" component={AddToken} />
               <Screen
                 name="Tokens"

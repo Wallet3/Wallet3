@@ -6,6 +6,7 @@ import App from '../../viewmodels/App';
 import Authentication from '../../viewmodels/Authentication';
 import { FullPasspad } from '../../modals/views/Passpad';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import MnemonicOnce from '../../viewmodels/MnemonicOnce';
 import { Modalize } from 'react-native-modalize';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/Networks';
@@ -14,7 +15,7 @@ import { observer } from 'mobx-react-lite';
 import { secondaryFontColor } from '../../constants/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
-export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
+export default observer(({ navigation }: NativeStackScreenProps<any, never>) => {
   const { ref: authModalRef, open, close } = useModalize();
   const [retried, setRetried] = useState(0);
   const [authorized, setAuthorized] = useState(false);
@@ -31,7 +32,8 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
     try {
       if (success) {
         close();
-        setWords(secret!.split(/\s/));
+        MnemonicOnce.setMnemonic(secret!);
+        setWords(MnemonicOnce.secretWords);
       } else {
         setRetried((p) => p + 1);
       }
@@ -45,6 +47,8 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
   useEffect(() => {
     setTimeout(() => open(), 0);
     if (Authentication.biometricsEnabled) verify();
+
+    return () => MnemonicOnce.clean();
   }, []);
 
   return (
@@ -70,7 +74,7 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
 
             <View style={{ flex: 1 }} />
 
-            <Button title="Verify" themeColor={themeColor} />
+            <Button title="Verify" themeColor={themeColor} onPress={() => navigation.navigate('VerifySecret')} />
           </View>
         ) : (
           <View></View>

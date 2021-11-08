@@ -16,7 +16,7 @@ class MnemonicOnce {
   derivationIndex = 0;
 
   get secretWords() {
-    return this.secret.split(' ');
+    return this.secret.split(/\s/);
   }
 
   constructor() {
