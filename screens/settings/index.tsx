@@ -55,20 +55,22 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
 
       <Text style={styles.sectionTitle}>Security</Text>
 
-      <View style={styles.itemContainer}>
-        <View style={styles.itemSubContainer}>
-          <Ionicons name="finger-print-outline" style={styles.itemStartSymbol} size={16} />
-          <Text style={styles.itemText}>Biometric</Text>
-        </View>
+      {Authentication.biometricsSupported ? (
+        <View style={styles.itemContainer}>
+          <View style={styles.itemSubContainer}>
+            <Ionicons name="finger-print-outline" style={styles.itemStartSymbol} size={16} />
+            <Text style={styles.itemText}>Biometric</Text>
+          </View>
 
-        <View>
-          <Switch
-            value={Authentication.biometricsEnabled}
-            onValueChange={(v) => Authentication.setBiometrics(v)}
-            trackColor={{ true: Networks.current.color }}
-          />
+          <View>
+            <Switch
+              value={Authentication.biometricsEnabled}
+              onValueChange={(v) => Authentication.setBiometrics(v)}
+              trackColor={{ true: Networks.current.color }}
+            />
+          </View>
         </View>
-      </View>
+      ) : undefined}
 
       <TouchableOpacity style={styles.itemContainer} onPress={() => openChangePasscode()}>
         <View style={styles.itemSubContainer}>
@@ -85,7 +87,9 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
         <View style={styles.itemSubContainer}>
           <Ionicons name="file-tray-outline" style={styles.itemStartSymbol} size={16} />
           <Text style={styles.itemText}>Backup</Text>
-          <Ionicons name="alert-circle" size={15} color="darkorange" style={{ marginStart: 4, marginTop: -8 }} />
+          {!Authentication.userSecretsVerified ? (
+            <Ionicons name="alert-circle" size={15} color="darkorange" style={{ marginStart: 4, marginTop: -8 }} />
+          ) : undefined}
         </View>
         <View style={styles.itemSubContainer}>
           <Entypo name="chevron-right" style={styles.itemEndSymbol} />
