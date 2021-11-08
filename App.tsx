@@ -101,7 +101,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
     PubSub.subscribe('openRequestModal', () => openRequestModal());
     PubSub.subscribe('closeSendModal', () => closeSendModal());
 
-    const dipose = autorun(async () => {
+    const dispose = autorun(async () => {
       if (!app.hasWallet || appAuth.appAuthorized) return;
 
       openLockScreen();
@@ -114,7 +114,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
 
     return () => {
       AppViewModel.dispose();
-      dipose();
+      dispose();
     };
   }, []);
 

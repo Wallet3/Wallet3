@@ -231,7 +231,7 @@ export class Transferring {
         this.isResolvingAddress = false;
 
         if (utils.isAddress(address || to) && !this.contacts.includes(to)) {
-          this.contacts.push(to);
+          this.contacts.unshift(to);
           AsyncStorage.setItem(`contacts`, JSON.stringify(this.contacts));
         }
       })

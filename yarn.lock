@@ -6123,10 +6123,10 @@ react-native-material-ripple@^0.9.1:
   dependencies:
     prop-types "^15.5.10"
 
-react-native-modalize@^2.0.10:
-  version "2.0.10"
-  resolved "https://registry.yarnpkg.com/react-native-modalize/-/react-native-modalize-2.0.10.tgz#35e40d7bacce080fd2f1a29dda246d6640985f67"
-  integrity sha512-iExYqVTGIP8GREKy9AadeoVV9FCE0JtInt/+X0AeTqHcmTglSDiUOT8mnXeKDIxGaDak28NFOZcZEzIA+vq/JQ==
+react-native-modalize@^2.0.11:
+  version "2.0.11"
+  resolved "https://registry.yarnpkg.com/react-native-modalize/-/react-native-modalize-2.0.11.tgz#a9b3c3d04a57b7413332dc659115021b7b7ececa"
+  integrity sha512-foRnZBvg0IOXi1TopNsci+60vnlvrGoPYVNVVlJC2jEASka2Juua3HQ43g8E4uxlu14xrSx8C+c5ra5GXmPQGA==
 
 react-native-nfc-manager@^3.11.0:
   version "3.11.0"
