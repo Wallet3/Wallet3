@@ -17,6 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const keys = {
   enableBiometrics: 'enableBiometrics',
+  userSecretsVerified: 'userSecretsVerified',
   masterKey: 'masterKey',
   pin: 'pin',
 };
@@ -27,6 +28,7 @@ export class Authentication {
   biometricsEnabled = true;
 
   appAuthorized = false;
+  userSecretsVerified = false;
 
   constructor() {
     makeObservable(this, {
@@ -34,6 +36,7 @@ export class Authentication {
       supportedTypes: observable,
       biometricsEnabled: observable,
       appAuthorized: observable,
+      userSecretsVerified: observable,
       setBiometrics: action,
     });
 
@@ -41,12 +44,13 @@ export class Authentication {
   }
 
   async init() {
-    const [supported, enrolled, supportedTypes, enableBiometrics, masterKey] = await Promise.all([
+    const [supported, enrolled, supportedTypes, enableBiometrics, masterKey, userSecretsVerified] = await Promise.all([
       hasHardwareAsync(),
       isEnrolledAsync(),
       supportedAuthenticationTypesAsync(),
       AsyncStorage.getItem(keys.enableBiometrics),
       SecureStore.getItemAsync(keys.masterKey),
+      AsyncStorage.getItem(keys.userSecretsVerified),
     ]);
 
     if (!masterKey) {
@@ -56,7 +60,8 @@ export class Authentication {
     runInAction(() => {
       this.biometricsSupported = supported && enrolled;
       this.supportedTypes = supportedTypes;
-      this.biometricsEnabled = enableBiometrics ? enableBiometrics === 'true' : true;
+      this.biometricsEnabled = enableBiometrics === 'true';
+      this.userSecretsVerified = userSecretsVerified === 'true';
     });
   }
 
@@ -98,6 +103,11 @@ export class Authentication {
   async decrypt(data: string, pin?: string) {
     if (!(await this.authenticate({ pin }))) return undefined;
     return decrypt(data, await this.getMasterKey());
+  }
+
+  setUserSecretsVerified(verified: boolean) {
+    this.userSecretsVerified = verified;
+    AsyncStorage.setItem(keys.userSecretsVerified, verified.toString());
   }
 }
 

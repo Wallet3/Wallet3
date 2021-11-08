@@ -88,7 +88,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
             disabled={!token}
             onPress={() => {
               currentWallet?.currentAccount?.addToken(token!);
-              navigation.pop(2);
+              navigation.popToTop();
             }}
           />
         </SafeViewContainer>

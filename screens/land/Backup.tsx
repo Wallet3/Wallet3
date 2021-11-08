@@ -1,14 +1,12 @@
 import { Button, SafeViewContainer } from '../../components';
-import React, { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, Text, TouchableHighlight, View } from 'react-native';
-import { SortWords, SortedSecretWords, StaticSecretWords } from '../components/SecretWords';
-import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
+import React, { useState } from 'react';
+import { SafeAreaView, Text, View } from 'react-native';
 
-import { Ionicons } from '@expo/vector-icons';
+import Authentication from '../../viewmodels/Authentication';
 import { LandScreenStack } from '../navigations';
 import MnemonicOnce from '../../viewmodels/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { SortWords } from '../components/SecretWords';
 import _ from 'lodash';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
@@ -21,7 +19,13 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
       <SafeViewContainer style={{ ...styles.rootContainer, paddingTop: 0 }}>
         <Text>Please sort the words correctly. </Text>
 
-        <SortWords words={MnemonicOnce.secretWords} onVerified={(v) => setVerified(v)} />
+        <SortWords
+          words={MnemonicOnce.secretWords}
+          onVerified={(v) => {
+            setVerified(v);
+            if (v) Authentication.setUserSecretsVerified(true);
+          }}
+        />
 
         <View style={{ flex: 1 }} />
 
