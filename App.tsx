@@ -13,12 +13,13 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { autorun, reaction } from 'mobx';
 
 import AddToken from './screens/tokens/AddToken';
+import Currencies from './screens/settings/Currencies';
 import Drawer from './screens/home/Drawer';
 import FlashMessage from 'react-native-flash-message';
 import HomeScreen from './screens/home';
 import { Host } from 'react-native-portalize';
 import LandScreen from './screens/land';
-import LockScreen from './screens/security/LockScreen';
+import Languages from './screens/settings/Languages';
 import { Modalize } from 'react-native-modalize';
 import { NavigationContainer } from '@react-navigation/native';
 import Networks from './viewmodels/Networks';
@@ -52,7 +53,6 @@ const Root = observer(({ navigation }: NativeStackScreenProps<RootStackParamList
       initialRouteName="Home"
       screenOptions={{
         headerTransparent: false,
-        
         headerTintColor: fontColor,
         swipeEdgeWidth: ScreenWidth / 2,
         drawerType: 'slide',
@@ -132,6 +132,8 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
               }}
             >
               <Screen name="Root" component={Root} options={{ headerShown: false }} />
+              <Screen name="Languages" component={Languages} options={{ headerTransparent: false }} />
+              <Screen name="Currencies" component={Currencies} options={{ headerTransparent: false }} />
               <Screen name="AddToken" component={AddToken} />
               <Screen
                 name="Tokens"

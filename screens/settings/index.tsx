@@ -1,18 +1,25 @@
 import { Entypo, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { fontColor, secondaryFontColor } from '../../constants/styles';
 
+import { DrawerScreenProps } from '@react-navigation/drawer';
 import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
 import { observer } from 'mobx-react-lite';
 
-export default observer((props) => {
+type SettingsStack = {
+  Settings: undefined;
+};
+
+export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Settings'>) => {
+  const parent = navigation.getParent();
+
   return (
     <ScrollView style={{ flex: 1, backgroundColor: '#fff', padding: 16 }}>
       <Text style={{ ...styles.sectionTitle, marginTop: 0 }}>General</Text>
 
-      <TouchableOpacity style={styles.itemContainer}>
+      <TouchableOpacity style={styles.itemContainer} onPress={() => parent?.navigate('Languages')}>
         <View style={styles.itemSubContainer}>
           <Ionicons name="language-outline" style={styles.itemStartSymbol} size={16} />
           <Text style={styles.itemText}>Languages</Text>
@@ -23,7 +30,7 @@ export default observer((props) => {
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.itemContainer}>
+      <TouchableOpacity style={styles.itemContainer} onPress={() => parent?.navigate('Currencies')}>
         <View style={styles.itemSubContainer}>
           <MaterialCommunityIcons name="currency-eth" style={styles.itemStartSymbol} size={16} />
           <Text style={styles.itemText}>Currency</Text>

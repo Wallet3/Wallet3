@@ -12,8 +12,7 @@ import { observer } from 'mobx-react-lite';
 
 type RootStackParamList = {
   Home: undefined;
-  Details?: { userId?: number };
-  Feed: { sort: 'latest' | 'top' } | undefined;
+  Settings: undefined;
 };
 
 export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, 'Home'>) => {
