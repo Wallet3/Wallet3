@@ -1,9 +1,10 @@
 import { Entypo, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { fontColor, secondaryFontColor } from '../../constants/styles';
 
+import Authentication from '../../viewmodels/Authentication';
 import { DrawerScreenProps } from '@react-navigation/drawer';
+import Networks from '../../viewmodels/Networks';
 import React from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { observer } from 'mobx-react-lite';
@@ -42,6 +43,21 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
       </TouchableOpacity>
 
       <Text style={styles.sectionTitle}>Security</Text>
+
+      <View style={styles.itemContainer}>
+        <View style={styles.itemSubContainer}>
+          <Ionicons name="finger-print-outline" style={styles.itemStartSymbol} size={16} />
+          <Text style={styles.itemText}>Biometric</Text>
+        </View>
+
+        <View>
+          <Switch
+            value={Authentication.biometricsEnabled}
+            onValueChange={(v) => Authentication.setBiometrics(v)}
+            trackColor={{ true: Networks.current.color }}
+          />
+        </View>
+      </View>
 
       <TouchableOpacity style={styles.itemContainer}>
         <View style={styles.itemSubContainer}>
