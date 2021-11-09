@@ -5,21 +5,21 @@ import React from 'react';
 import { observer } from 'mobx-react-lite';
 
 interface Props {
-  phrases: string[];
+  phrase: string[];
   style?: StyleProp<ViewStyle>;
 }
 
 export default observer((props: Props) => {
-  const { phrases } = props;
+  const { phrase } = props;
 
-  const rows = Math.ceil(phrases.length / 4);
-  const rowWords: string[][] = phrases.length === 0 ? new Array(3).fill(new Array(4).fill('')) : [];
+  const rows = Math.ceil(phrase.length / 4);
+  const rowWords: string[][] = phrase.length === 0 ? new Array(3).fill(new Array(4).fill('')) : [];
 
   for (let i = 0; i < rows; i++) {
     const row: string[] = [];
 
     for (let j = 0; j < 4; j++) {
-      row[j] = phrases[i * 4 + j];
+      row[j] = phrase[i * 4 + j];
     }
 
     rowWords.push(row);

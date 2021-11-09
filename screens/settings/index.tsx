@@ -27,6 +27,11 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
     setJumpToScreen('ChangePasscode');
   };
 
+  const openResetApp = () => {
+    open();
+    setJumpToScreen('ResetApp');
+  };
+
   return (
     <ScrollView style={{ flex: 1, backgroundColor: '#fff', padding: 16 }}>
       <Text style={{ ...styles.sectionTitle, marginTop: 0 }}>General</Text>
@@ -96,7 +101,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.itemContainer}>
+      <TouchableOpacity style={styles.itemContainer} onPress={() => openResetApp()}>
         <View style={styles.itemSubContainer}>
           <Ionicons name="backspace-outline" style={styles.itemStartSymbol} size={16} />
           <Text style={styles.itemText}>Reset App</Text>

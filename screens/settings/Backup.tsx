@@ -70,7 +70,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
               </Text>
             </View>
 
-            <Mnemonic phrases={words} />
+            <Mnemonic phrase={words} />
 
             <View style={{ flex: 1 }} />
 

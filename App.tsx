@@ -28,6 +28,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import Networks from './viewmodels/Networks';
 import { Passpad } from './modals/views';
 import PubSub from 'pubsub-js';
+import ResetApp from './screens/settings/ResetApp';
 import { SafeViewContainer } from './components';
 import SettingScreen from './screens/settings';
 import Tokens from './screens/tokens/SortTokens';
@@ -146,6 +147,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
               <Screen name="ChangePasscode" component={ChangePasscode} options={{ title: 'Change Passcode' }} />
               <Screen name="Backup" component={Backup} options={{ title: 'Backup' }} />
               <Screen name="VerifySecret" component={VerifySecret} options={{ title: 'Verify' }} />
+              <Screen name="ResetApp" component={ResetApp} options={{ title: 'Reset' }} />
               <Screen name="AddToken" component={AddToken} />
               <Screen
                 name="Tokens"
@@ -196,6 +198,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
       <Modalize
         ref={networksModal}
         adjustToContentHeight
+        disableScrollIfPossible
         scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
       >
         <NetworksMenu
@@ -205,16 +208,20 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
           }}
         />
       </Modalize>
+
       <Modalize
         ref={sendModalizeRef}
         adjustToContentHeight
+        disableScrollIfPossible
         scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
       >
         <Send />
       </Modalize>
+
       <Modalize
         ref={requestModalizeRef}
         adjustToContentHeight
+        disableScrollIfPossible
         scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
       >
         <Request />

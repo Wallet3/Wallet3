@@ -42,7 +42,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
           </Text>
         </View>
 
-        <Mnemonic phrases={MnemonicOnce.secretWords} />
+        <Mnemonic phrase={MnemonicOnce.secretWords} />
 
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
           <Text style={{ color: secondaryFontColor }}></Text>

@@ -40,7 +40,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
         <TextInput
           multiline={true}
           numberOfLines={5}
-          placeholder="Enter your mnemonic phrases"
+          placeholder="Enter your recovery phrase"
           style={{
             height: 200,
             textAlignVertical: 'top',
