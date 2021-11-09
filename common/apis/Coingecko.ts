@@ -1,4 +1,6 @@
-import { makeAutoObservable, runInAction } from 'mobx';
+import { makeObservable, observable, runInAction } from 'mobx';
+
+import { CoinDetails } from './Coingecko.d';
 
 interface Price {
   usd: number;
@@ -28,6 +30,20 @@ export async function getPrice(
   }
 }
 
+async function getCoins() {
+  try {
+    const resp = await (await fetch(`${host}/api/v3/coins/list`)).json();
+    return resp as { id: string; symbol: string }[];
+  } catch (error) {}
+}
+
+async function getCoin(id: string) {
+  try {
+    const resp = await (await fetch(`${host}/api/v3/coins/${id}`)).json();
+    return resp as CoinDetails;
+  } catch (error) {}
+}
+
 class Coingecko {
   eth: number = 0;
   matic = 0;
@@ -41,8 +57,28 @@ class Coingecko {
 
   timer?: NodeJS.Timer;
 
+  coinSymbolToId: { [index: string]: string } = {};
+
   constructor() {
-    makeAutoObservable(this);
+    makeObservable(this, {
+      eth: observable,
+      matic: observable,
+      bnb: observable,
+      ftm: observable,
+      xdai: observable,
+      okt: observable,
+      ht: observable,
+      avax: observable,
+      celo: observable,
+    });
+  }
+
+  async init() {
+    const coins = (await getCoins())!;
+
+    for (let { symbol, id } of coins) {
+      this.coinSymbolToId[symbol] = id;
+    }
   }
 
   async start(delay: number = 25) {
@@ -75,6 +111,12 @@ class Coingecko {
     } catch {}
 
     run();
+  }
+
+  async getCoinDetails(symbol: string) {
+    const id = this.coinSymbolToId[symbol];
+
+    return await getCoin(id);
   }
 }
 

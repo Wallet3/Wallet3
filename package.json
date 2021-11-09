@@ -52,6 +52,7 @@
     "react-native-svg": "12.1.1",
     "react-native-swiper": "^1.6.0",
     "react-native-web": "0.17.5",
+    "react-spring-bottom-sheet": "^3.4.0",
     "typeorm": "^0.2.38"
   },
   "devDependencies": {

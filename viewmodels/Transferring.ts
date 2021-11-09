@@ -225,6 +225,12 @@ export class Transferring {
     this.isResolvingAddress = true;
     this.txException = '';
 
+    if (utils.isAddress(to)) {
+      this.toAddress = to;
+      this.isResolvingAddress = false;
+      return;
+    }
+
     let provider = Networks.MainnetWsProvider;
 
     provider.resolveName(to).then((address) =>

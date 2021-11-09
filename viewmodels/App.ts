@@ -1,6 +1,7 @@
 import { computed, makeObservable, observable, runInAction } from 'mobx';
 
 import Authentication from './Authentication';
+import Coingecko from '../common/apis/Coingecko';
 import Database from '../models/Database';
 import TxHub from './TxHub';
 import { Wallet } from './Wallet';
@@ -24,6 +25,8 @@ export class AppVM {
   }
 
   async init() {
+    Coingecko.init();
+
     await Promise.all([Database.init(), Authentication.init()]);
     await TxHub.init();
 

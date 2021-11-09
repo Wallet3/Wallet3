@@ -54,7 +54,7 @@ export class Authentication {
     ]);
 
     if (!masterKey) {
-      SecureStore.setItemAsync(keys.masterKey, Buffer.from(Random.getRandomBytes(8)).toString('hex'));
+      SecureStore.setItemAsync(keys.masterKey, Buffer.from(Random.getRandomBytes(12)).toString('hex'));
     }
 
     runInAction(() => {
