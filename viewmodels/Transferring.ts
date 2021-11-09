@@ -225,15 +225,15 @@ export class Transferring {
     this.isResolvingAddress = true;
     this.txException = '';
 
-    Networks.MainnetProvider.resolveName(to).then((address) =>
+    let provider = Networks.MainnetWsProvider;
+
+    provider.resolveName(to).then((address) =>
       runInAction(() => {
         this.toAddress = address || to;
         this.isResolvingAddress = false;
 
-        if (utils.isAddress(address || to) && !this.contacts.includes(to)) {
-          this.contacts.unshift(to);
-          AsyncStorage.setItem(`contacts`, JSON.stringify(this.contacts));
-        }
+        provider.destroy();
+        (provider as any) = null;
       })
     );
   }
@@ -291,6 +291,14 @@ export class Transferring {
           break;
       }
     });
+  }
+
+  saveContact() {
+    if (!utils.isAddress(this.toAddress)) return;
+    if (this.contacts.includes(this.to)) return;
+
+    this.contacts.unshift(this.to);
+    AsyncStorage.setItem(`contacts`, JSON.stringify(this.contacts));
   }
 
   dispose() {

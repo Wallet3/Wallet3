@@ -101,7 +101,13 @@ export default observer((props: SubViewProps) => {
 
       <Numpad onPress={onNumPress} />
 
-      <Button title="Next" onPress={props.onNext} disabled={props.disableButton} themeColor={Networks.current.color} />
+      <Button
+        title="Next"
+        onPress={props.onNext}
+        disabled={props.disableButton}
+        themeColor={Networks.current.color}
+        style={{ marginTop: 12 }}
+      />
     </SafeViewContainer>
   );
 });

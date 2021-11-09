@@ -20,7 +20,6 @@ export default observer(({ biometricsSupported, biometricsEnabled, themeColor, o
   const passcodeLength = 6;
   const [passcode, setPasscode] = useState('');
   const [confirm, setConfirm] = useState('');
-  const [busy, setBusy] = useState(false);
   const [verified, setVerified] = useState(false);
 
   const passcodeView = useRef<Animatable.View>(null);
@@ -95,7 +94,13 @@ export default observer(({ biometricsSupported, biometricsEnabled, themeColor, o
 
       <Numpad onPress={onNumpadPress} disableDot />
 
-      <Button title="Done" disabled={!verified || busy} onPress={() => onDone?.(passcode)} />
+      <Button
+        title="Done"
+        disabled={!verified}
+        onPress={() => onDone?.(passcode)}
+        style={{ marginTop: 12 }}
+        themeColor={themeColor}
+      />
     </View>
   );
 });

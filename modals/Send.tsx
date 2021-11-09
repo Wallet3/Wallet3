@@ -43,6 +43,8 @@ export default observer(() => {
   };
 
   const onSendClick = async () => {
+    vm.saveContact();
+
     if (!Authentication.biometricsEnabled) {
       swiper.current?.scrollTo(3);
       return;
