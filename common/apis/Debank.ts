@@ -4,6 +4,8 @@ import { utils } from 'ethers';
 const host = 'https://openapi.debank.com';
 type chain = 'eth' | 'bsc' | 'xdai' | 'matic' | string;
 
+const nativeTokens = ['0x471EcE3750Da237f93B8E339c536989b8978a438']; // Celo native
+
 export async function getBalance(address: string, chain: chain) {
   try {
     const resp = await fetch(`${host}/v1/user/chain_balance?id=${address}&chain_id=${chain}`.toLowerCase());
@@ -30,7 +32,8 @@ export async function getTokens(address: string, chain: chain, is_all = false) {
           amount: `${t.amount}`,
           iconUrl: t.logo_url,
         };
-      });
+      })
+      .filter((t) => nativeTokens.indexOf(t.address) === -1);
   } catch (error) {
     return [];
   }

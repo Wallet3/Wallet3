@@ -44,7 +44,7 @@ export default observer((props: Props) => {
       <FlatList
         data={props.tokens}
         renderItem={renderItem}
-        keyExtractor={(i) => i.symbol}
+        keyExtractor={(i) => i.address}
         style={{ marginTop: -6, marginEnd: -16, paddingEnd: 16 }}
       />
     </SafeViewContainer>

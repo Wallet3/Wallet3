@@ -136,7 +136,7 @@ export const PublicNetworks: INetwork[] = [
     blockTimeMs: 5 * 1000,
   },
   {
-    symbol: 'OKT',
+    symbol: 'OKB',
     comm_id: 'okt',
     chainId: 66,
     network: 'OKEx',
