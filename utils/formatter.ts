@@ -10,7 +10,7 @@ export function formatCurrency(value: number | string, symbol = '$', maximumFrac
     if (num === 0 && !symbol) return `0`;
     const formatted = Number.isInteger(num)
       ? num.toLocaleString(undefined, {})
-      : num.toLocaleString(undefined, { maximumFractionDigits });
+      : num.toLocaleString(undefined, { maximumFractionDigits, minimumFractionDigits: 2 });
     return `${symbol} ${formatted === 'NaN' ? '0' : formatted}`.trim();
   } catch (error) {
     return '0';

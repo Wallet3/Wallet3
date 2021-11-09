@@ -1,5 +1,6 @@
+import { Button, SafeViewContainer } from '../../components';
 import { Entypo, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { fontColor, secondaryFontColor } from '../../constants/styles';
 
 import Authentication from '../../viewmodels/Authentication';
@@ -9,6 +10,7 @@ import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
 import { Portal } from 'react-native-portalize';
 import React from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
@@ -20,15 +22,16 @@ type SettingsStack = {
 export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Settings'>) => {
   const parent = navigation.getParent();
   const [jumpToScreen, setJumpToScreen] = React.useState('');
-  const { ref: authModalRef, open, close } = useModalize();
+  const { ref: passcodeRef, open: openPasscode, close: closePasscode } = useModalize();
+  const { ref: resetRef, open: openReset, close: closeReset } = useModalize();
 
   const openChangePasscode = () => {
-    open();
+    openPasscode();
     setJumpToScreen('ChangePasscode');
   };
 
   const openResetApp = () => {
-    open();
+    openPasscode();
     setJumpToScreen('ResetApp');
   };
 
@@ -134,7 +137,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
 
       <Portal>
         <Modalize
-          ref={authModalRef}
+          ref={passcodeRef}
           disableScrollIfPossible
           adjustToContentHeight
           panGestureEnabled={false}
@@ -147,12 +150,40 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
             onCodeEntered={async (code) => {
               const success = await Authentication.verifyPin(code);
               if (success) {
-                parent?.navigate(jumpToScreen);
-                close();
+                if (jumpToScreen === 'ResetApp') openReset();
+                else parent?.navigate(jumpToScreen);
+
+                closePasscode();
               }
               return success;
             }}
           />
+        </Modalize>
+      </Portal>
+
+      <Portal>
+        <Modalize
+          ref={resetRef}
+          modalHeight={270}
+          disableScrollIfPossible
+          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+        >
+          <SafeAreaProvider>
+            <SafeAreaView style={{ flex: 1, height: 270 }}>
+              <SafeViewContainer style={{ flex: 1 }}>
+                <View style={{ flex: 1 }} />
+
+                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                  <Ionicons name="warning" size={72} color="crimson" />
+                  <Text style={{ color: 'crimson' }}>I'm sure to erase all data.</Text>
+                </View>
+
+                <View style={{ flex: 1 }} />
+
+                <Button title="Confirm" />
+              </SafeViewContainer>
+            </SafeAreaView>
+          </SafeAreaProvider>
         </Modalize>
       </Portal>
     </ScrollView>

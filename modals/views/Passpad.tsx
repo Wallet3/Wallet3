@@ -3,7 +3,7 @@ import * as Animatable from 'react-native-animatable';
 import { Button, SafeViewContainer } from '../../components';
 import Numpad, { DefaultNumpadHandler } from '../../components/Numpad';
 import React, { useEffect, useRef, useState } from 'react';
-import { SafeAreaView, View } from 'react-native';
+import { SafeAreaView, StyleProp, View, ViewStyle } from 'react-native';
 import { renderEmptyCircle, renderFilledCircle } from '../../components/PasscodeCircle';
 
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -14,9 +14,10 @@ interface Props {
   onCodeEntered: (code: string) => Promise<boolean>;
   onCancel?: () => void;
   disableCancel?: boolean;
+  style?: StyleProp<ViewStyle>;
 }
 
-const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel }: Props) => {
+const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style }: Props) => {
   const passcodeLength = 6;
   const [passcode, setPasscode] = useState('');
 
@@ -36,7 +37,7 @@ const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel }: Props) 
   }, [passcode]);
 
   return (
-    <SafeViewContainer style={styles.container}>
+    <SafeViewContainer style={{ ...styles.container, ...((style as any) || {}) }}>
       <View style={{ flex: 1 }} />
 
       <Animatable.View ref={passcodeView as any} style={{ flexDirection: 'row', justifyContent: 'center' }}>
@@ -48,7 +49,9 @@ const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel }: Props) 
 
       <Numpad onPress={(value) => DefaultNumpadHandler(value, passcode, setPasscode)} disableDot />
 
-      {disableCancel ? undefined : <Button title="Cancel" onPress={() => onCancel?.()} themeColor={themeColor} />}
+      {disableCancel ? undefined : (
+        <Button title="Cancel" onPress={() => onCancel?.()} themeColor={themeColor} style={{ marginTop: 12 }} />
+      )}
     </SafeViewContainer>
   );
 };
@@ -65,7 +68,7 @@ export const FullPasspad = ({ height, themeColor, onCodeEntered }: FullPasspadPr
   return (
     <SafeAreaProvider>
       <SafeAreaView style={{ flex: 1, height }}>
-        <Passpad themeColor={themeColor} disableCancel onCodeEntered={onCodeEntered} />
+        <Passpad themeColor={themeColor} disableCancel onCodeEntered={onCodeEntered} style={{ marginBottom: 4 }} />
       </SafeAreaView>
     </SafeAreaProvider>
   );

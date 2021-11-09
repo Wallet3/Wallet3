@@ -101,7 +101,6 @@ const viewStyles = StyleSheet.create({
     borderRadius: 10,
     borderColor,
     borderWidth: 1,
-    marginBottom: 12,
     overflow: 'hidden',
     flexWrap: 'wrap',
   },
