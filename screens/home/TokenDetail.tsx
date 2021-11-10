@@ -1,4 +1,8 @@
+import * as shape from 'd3-shape';
+
 import { Coin, Skeleton } from '../../components';
+import { Defs, LinearGradient, Stop } from 'react-native-svg';
+import { Grid, LineChart } from 'react-native-svg-charts';
 import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 
@@ -20,6 +24,17 @@ export default observer(({ token }: Props) => {
   useEffect(() => {
     if (token) setTimeout(() => vm.setToken(token.symbol, token.address), 0);
   }, [token]);
+
+  const data = [50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, 80];
+
+  const Gradient = () => (
+    <Defs key={'gradient'}>
+      <LinearGradient id={'gradient'} x1={'0'} y1={'0%'} x2={'100%'} y2={'0%'}>
+        <Stop offset={'0%'} stopColor={'rgb(134, 65, 244)'} />
+        <Stop offset={'100%'} stopColor={'rgb(66, 194, 244)'} />
+      </LinearGradient>
+    </Defs>
+  );
 
   return (
     <View style={{ padding: 16 }}>
@@ -44,7 +59,20 @@ export default observer(({ token }: Props) => {
         </View>
       </View>
 
-      <View style={{ marginTop: 16 }}>
+      <LineChart
+        style={{ height: 200, marginHorizontal: -16, marginVertical: 16 }}
+        data={vm.historyPrices}
+        contentInset={{ top: 20, bottom: 20 }}
+        curve={shape.curveNatural}
+        svg={{
+          strokeWidth: 3,
+          stroke: 'url(#gradient)',
+        }}
+      >
+        <Gradient />
+      </LineChart>
+
+      <View style={{}}>
         {vm.loading ? (
           <Skeleton style={{ flex: 1, width: '100%' }} />
         ) : (

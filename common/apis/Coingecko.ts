@@ -44,6 +44,13 @@ async function getCoin(id: string) {
   } catch (error) {}
 }
 
+export async function getMarketChart(id: string, days = 1) {
+  try {
+    const resp = await (await fetch(`${host}/api/v3/coins/${id}/market_chart?vs_currency=usd&days=${days}`)).json();
+    return resp as { prices: [timestamp: number, price: number][]; market_caps: number[][]; total_volumes: number[][] };
+  } catch (error) {}
+}
+
 const FixedSymbols = {
   uni: 'uniswap',
 };
@@ -128,6 +135,10 @@ class Coingecko {
   async getCoinDetails(symbol: string) {
     const id = this.coinSymbolToId[symbol.toLowerCase()];
     return await getCoin(id);
+  }
+
+  getCoinId(symbol: string) {
+    return this.coinSymbolToId[symbol.toLowerCase()];
   }
 }
 

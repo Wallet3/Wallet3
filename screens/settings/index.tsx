@@ -183,7 +183,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
 
                 <View style={{ flex: 1 }} />
 
-                <Button title="Confirm" />
+                <Button title="Confirm" themeColor="crimson" />
               </SafeViewContainer>
             </SafeAreaView>
           </SafeAreaProvider>

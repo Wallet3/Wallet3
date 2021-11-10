@@ -1,6 +1,5 @@
+import Coingecko, { getMarketChart } from '../common/apis/Coingecko';
 import { makeObservable, observable, runInAction } from 'mobx';
-
-import Coingecko from '../common/apis/Coingecko';
 
 interface ITokenData {
   description: string;
@@ -22,8 +21,18 @@ export class TokenData implements ITokenData {
   priceChangeIn24 = 0;
   priceChangePercentIn24 = 0;
 
+  historyPrices: number[] = [];
+  historyDays = 1;
+
   constructor() {
-    makeObservable(this, { symbol: observable, description: observable, firstDescription: observable, loading: observable });
+    makeObservable(this, {
+      symbol: observable,
+      description: observable,
+      firstDescription: observable,
+      loading: observable,
+      historyPrices: observable,
+      historyDays: observable,
+    });
   }
 
   async setToken(symbol: string, address: string) {
@@ -40,6 +49,7 @@ export class TokenData implements ITokenData {
       this.loading = true;
     });
 
+    this.refreshHistoryPrices();
     const result = await Coingecko.getCoinDetails(symbol);
     if (!result) {
       runInAction(() => (this.loading = false));
@@ -47,16 +57,28 @@ export class TokenData implements ITokenData {
     }
 
     const { description, links, market_data } = result;
-    const [first] = description.en.split(/(?:\r?\n)+/);
+    const en = description.en.replace(/<[^>]*>?/gm, '');
+    const [first] = en.split(/(?:\r?\n)+/);
 
     runInAction(() => {
       this.firstDescription = first;
-      this.description = description.en;
+      this.description = en;
       this.price = market_data.current_price.usd;
       this.priceChangeIn24 = market_data.price_change_24h;
       this.priceChangePercentIn24 = market_data.price_change_percentage_24h;
       this.cache[address] = { ...this };
       this.loading = false;
     });
+  }
+
+  async refreshHistoryPrices() {
+    const id = Coingecko.getCoinId(this.symbol);
+    const data = await getMarketChart(id, this.historyDays);
+    if (!data) {
+      return;
+    }
+
+    const { prices } = data;
+    runInAction(() => (this.historyPrices = prices.map((item) => item[1])));
   }
 }
