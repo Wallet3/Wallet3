@@ -44,6 +44,10 @@ async function getCoin(id: string) {
   } catch (error) {}
 }
 
+const FixedSymbols = {
+  uni: 'uniswap',
+};
+
 class Coingecko {
   eth: number = 0;
   matic = 0;
@@ -83,6 +87,10 @@ class Coingecko {
     for (let { symbol, id } of coins) {
       this.coinSymbolToId[symbol] = id;
     }
+
+    Object.getOwnPropertyNames(FixedSymbols).forEach((symbol) => {
+      this.coinSymbolToId[symbol] = FixedSymbols[symbol];
+    });
   }
 
   async start(delay: number = 25) {
@@ -119,7 +127,6 @@ class Coingecko {
 
   async getCoinDetails(symbol: string) {
     const id = this.coinSymbolToId[symbol.toLowerCase()];
-    console.log(symbol, id);
     return await getCoin(id);
   }
 }

@@ -1,7 +1,7 @@
+import { Coin, Skeleton } from '../../components';
 import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 
-import { Coin } from '../../components';
 import Coingecko from '../../common/apis/Coingecko';
 import { IToken } from '../../common/Tokens';
 import { TokenData } from '../../viewmodels/TokenData';
@@ -18,22 +18,38 @@ export default observer(({ token }: Props) => {
   const [vm, setVM] = useState<TokenData>(new TokenData());
 
   useEffect(() => {
-    if (token) setTimeout(() => vm.setSymbol(token.symbol), 3000);
+    if (token) setTimeout(() => vm.setToken(token.symbol, token.address), 0);
   }, [token]);
 
   return (
     <View style={{ padding: 16 }}>
-      <View style={{ flexDirection: 'row' }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Coin symbol={token?.symbol || ''} size={39} />
 
         <View style={{ marginStart: 16 }}>
-          <Text style={{ fontWeight: '500', fontSize: 19, color: themeColor }}>{token?.symbol}</Text>
-          <Text style={{ fontSize: 14, color: secondaryFontColor }}>$ 2.10</Text>
+          <Text style={{ fontWeight: '500', fontSize: 19, color: themeColor }} numberOfLines={1}>
+            {token?.symbol}
+          </Text>
+          {vm.loading ? (
+            <Skeleton style={{ height: 14, marginTop: 2 }} />
+          ) : (
+            <Text style={{ fontSize: 14, color: vm.priceChangePercentIn24 > 0 ? 'yellowgreen' : 'crimson' }} numberOfLines={1}>
+              {`$ ${vm.price} (${
+                vm.priceChangePercentIn24 > 0
+                  ? '+' + vm.priceChangePercentIn24.toFixed(2)
+                  : vm.priceChangePercentIn24.toFixed(2)
+              }% 24h)`}
+            </Text>
+          )}
         </View>
       </View>
 
       <View style={{ marginTop: 16 }}>
-        <Text style={{ lineHeight: 22, color: '#75869c', fontSize: 15 }}>{vm.firstDescription}</Text>
+        {vm.loading ? (
+          <Skeleton style={{ flex: 1, width: '100%' }} />
+        ) : (
+          <Text style={{ lineHeight: 22, color: '#75869c', fontSize: 15 }}>{vm.firstDescription}</Text>
+        )}
       </View>
     </View>
   );

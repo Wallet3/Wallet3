@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Text, View } from 'react-native';
 
 import Actions from './Actions';
@@ -23,14 +23,12 @@ type RootStackParamList = {
 export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, 'Home'>) => {
   const { currentWallet } = App;
   const { current } = Networks;
-  const { ref: tokenDetailModalize, open, close } = useModalize();
-
-  useEffect(() => {
-    setTimeout(() => open(), 2000);
-  }, []);
+  const { ref: tokenDetailModalize, open } = useModalize();
+  const [selectedToken, setSelectedToken] = useState<IToken | undefined>(undefined);
 
   const onTokenPress = (token: IToken) => {
-    open();
+    setSelectedToken(token);
+    setTimeout(() => open(), 0);
   };
 
   return (
@@ -74,7 +72,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
           ref={tokenDetailModalize}
           modalStyle={{ borderTopStartRadius: 25, borderTopEndRadius: 25 }}
         >
-          <TokenDetail token={currentWallet?.currentAccount?.tokens[0]} />
+          <TokenDetail token={selectedToken} />
         </Modalize>
       </Portal>
     </View>
