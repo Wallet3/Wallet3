@@ -9,6 +9,7 @@ interface CoinProps {
   style?: StyleProp<ImageStyle>;
   iconUrl?: string;
   forceRefresh?: boolean;
+  size?: number;
 
   /**
    * Invoked on load error with {nativeEvent: {error}}
@@ -114,7 +115,7 @@ export default observer((props: CoinProps) => {
 
   const [failedSource, setFailedSource] = useState();
 
-  const size = (props.style as any)?.width || 22;
+  const size = props.size || (props.style as any)?.width || 22;
 
   return (
     <Image

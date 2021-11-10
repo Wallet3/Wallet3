@@ -57,7 +57,7 @@ class Coingecko {
 
   timer?: NodeJS.Timer;
 
-  coinSymbolToId: { [index: string]: string } = {};
+  coinSymbolToId!: { [index: string]: string };
 
   constructor() {
     makeObservable(this, {
@@ -74,6 +74,10 @@ class Coingecko {
   }
 
   async init() {
+    if (this.coinSymbolToId) return;
+
+    this.coinSymbolToId = {};
+
     const coins = (await getCoins())!;
 
     for (let { symbol, id } of coins) {
@@ -114,8 +118,8 @@ class Coingecko {
   }
 
   async getCoinDetails(symbol: string) {
-    const id = this.coinSymbolToId[symbol];
-
+    const id = this.coinSymbolToId[symbol.toLowerCase()];
+    console.log(symbol, id);
     return await getCoin(id);
   }
 }

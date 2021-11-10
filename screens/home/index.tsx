@@ -1,14 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import { Text, View } from 'react-native';
 
 import Actions from './Actions';
 import App from '../../viewmodels/App';
 import Assets from './Assets';
 import { DrawerScreenProps } from '@react-navigation/drawer';
+import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
 import Overview from './Overview';
+import { Portal } from 'react-native-portalize';
 import { StatusBar } from 'expo-status-bar';
-import { View } from 'react-native';
+import TokenDetail from './TokenDetail';
 import { observer } from 'mobx-react-lite';
+import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 type RootStackParamList = {
   Home: undefined;
@@ -18,6 +22,11 @@ type RootStackParamList = {
 export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, 'Home'>) => {
   const { currentWallet } = App;
   const { current } = Networks;
+  const { ref: tokenDetailModalize, open, close } = useModalize();
+
+  useEffect(() => {
+    setTimeout(() => open(), 2000);
+  }, []);
 
   return (
     <View
@@ -52,6 +61,12 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
       />
 
       <StatusBar style="dark" />
+
+      <Portal>
+        <Modalize adjustToContentHeight ref={tokenDetailModalize}>
+          <TokenDetail token={currentWallet?.currentAccount?.tokens[0]} />
+        </Modalize>
+      </Portal>
     </View>
   );
 });

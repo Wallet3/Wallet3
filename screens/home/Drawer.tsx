@@ -1,11 +1,12 @@
 import App, { AppVM } from '../../viewmodels/App';
-import { Arbitrum, Ethereum, NetworkIcons, Optimism, Polygon } from '../../assets/icons/networks/color';
-import { Dimensions, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { DrawerActions, useRoute } from '@react-navigation/core';
+import { Arbitrum, Ethereum, NetworkIcons, Optimism } from '../../assets/icons/networks/color';
+import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
-import { Feather, Ionicons, SimpleLineIcons } from '@expo/vector-icons';
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
+import { DrawerActions } from '@react-navigation/core';
+import { Feather } from '@expo/vector-icons';
+import { INetwork } from '../../common/Networks';
 import Networks from '../../viewmodels/Networks';
 import PubSub from 'pubsub-js';
 import React from 'react';
@@ -31,6 +32,11 @@ const Drawer = observer((props: DrawerProps) => {
   const homeHighlight = index === 0 ? current.color : fontColor;
   const settingsHighlight = index === 1 ? current.color : fontColor;
 
+  const fastSwitchNetwork = (network: INetwork) => {
+    Networks.switch(network);
+    navigation.dispatch(DrawerActions.closeDrawer());
+  };
+
   return (
     <SafeViewContainer style={{ flex: 1, height: screenHeight, paddingHorizontal: 0, paddingTop: 0 }}>
       <View
@@ -52,7 +58,9 @@ const Drawer = observer((props: DrawerProps) => {
             backgroundColor: current.color,
           }}
           source={
-            { uri: 'https://lh3.googleusercontent.com/1cYgtxvPgxU3tlU6r4trPcl9cU0xFpkUKpba0QPSbBFx_OC-347VQq9MuAA0Y4KoE1zsGUcmmik-XJJw1wG1qv75BsSefDX26VbLnw=w600' }
+            {
+              uri: 'https://lh3.googleusercontent.com/1cYgtxvPgxU3tlU6r4trPcl9cU0xFpkUKpba0QPSbBFx_OC-347VQq9MuAA0Y4KoE1zsGUcmmik-XJJw1wG1qv75BsSefDX26VbLnw=w600',
+            }
             // currentWallet?.currentAccount?.avatar,
           }
         />
@@ -84,7 +92,6 @@ const Drawer = observer((props: DrawerProps) => {
           labelStyle={{ ...styles.drawerLabel, color: settingsHighlight }}
           icon={() => <Feather color={settingsHighlight} size={21} name={'settings'} />}
         />
-
       </View>
 
       <View style={{ flex: 1 }} />
@@ -94,15 +101,15 @@ const Drawer = observer((props: DrawerProps) => {
           <Text style={{ color: secondaryFontColor, fontSize: 14 }}>Networks</Text>
 
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <TouchableOpacity onPress={() => Networks.switch(Networks.Ethereum)} style={styles.smallNetworkContainer}>
+            <TouchableOpacity onPress={() => fastSwitchNetwork(Networks.Ethereum)} style={styles.smallNetworkContainer}>
               <Ethereum width={14} height={14} />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => Networks.switch(Networks.Arbitrum)} style={styles.smallNetworkContainer}>
+            <TouchableOpacity onPress={() => fastSwitchNetwork(Networks.Arbitrum)} style={styles.smallNetworkContainer}>
               <Arbitrum width={14} height={14} />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => Networks.switch(Networks.Optimism)} style={styles.smallNetworkContainer}>
+            <TouchableOpacity onPress={() => fastSwitchNetwork(Networks.Optimism)} style={styles.smallNetworkContainer}>
               <Optimism width={14} height={13} />
             </TouchableOpacity>
           </View>
