@@ -1,6 +1,7 @@
 import { Button, Mnemonic, SafeViewContainer } from '../../components';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Text, View } from 'react-native';
+import { secondaryFontColor, styles } from '../../constants/styles';
 
 import App from '../../viewmodels/App';
 import Authentication from '../../viewmodels/Authentication';
@@ -12,7 +13,6 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/Networks';
 import { Portal } from 'react-native-portalize';
 import { observer } from 'mobx-react-lite';
-import { secondaryFontColor } from '../../constants/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 export default observer(({ navigation }: NativeStackScreenProps<any, never>) => {
@@ -89,6 +89,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
           closeOnOverlayTap={false}
           panGestureEnabled={false}
           panGestureComponentEnabled={false}
+          modalStyle={styles.modalStyle}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
           <FullPasspad themeColor={themeColor} height={420} onCodeEntered={(code) => verify(code)} />

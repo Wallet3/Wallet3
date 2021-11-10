@@ -63,7 +63,11 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
       <StatusBar style="dark" />
 
       <Portal>
-        <Modalize adjustToContentHeight ref={tokenDetailModalize}>
+        <Modalize
+          adjustToContentHeight
+          ref={tokenDetailModalize}
+          modalStyle={{ borderTopStartRadius: 25, borderTopEndRadius: 25 }}
+        >
           <TokenDetail token={currentWallet?.currentAccount?.tokens[0]} />
         </Modalize>
       </Portal>

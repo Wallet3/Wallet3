@@ -11,6 +11,7 @@ import { NetworksMenu, Request, Send } from './modals';
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { autorun, reaction } from 'mobx';
+import { fontColor, styles } from './constants/styles';
 
 import AddToken from './screens/tokens/AddToken';
 import Backup from './screens/settings/Backup';
@@ -34,7 +35,6 @@ import Tokens from './screens/tokens/SortTokens';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import VerifySecret from './screens/settings/VerifySecret';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { fontColor } from './constants/styles';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
@@ -180,6 +180,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
         disableScrollIfPossible
         panGestureEnabled={false}
         panGestureComponentEnabled={false}
+        modalStyle={{ borderTopStartRadius: 0, borderTopEndRadius: 0 }}
         scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
       >
         <FullPasspad
@@ -197,6 +198,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
         ref={networksModal}
         adjustToContentHeight
         disableScrollIfPossible
+        modalStyle={styles.modalStyle}
         scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
       >
         <NetworksMenu
@@ -211,6 +213,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
         ref={sendModalizeRef}
         adjustToContentHeight
         disableScrollIfPossible
+        modalStyle={styles.modalStyle}
         scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
       >
         <Send />
@@ -220,6 +223,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
         ref={requestModalizeRef}
         adjustToContentHeight
         disableScrollIfPossible
+        modalStyle={styles.modalStyle}
         scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
       >
         <Request />

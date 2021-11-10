@@ -12,6 +12,7 @@ import { Portal } from 'react-native-portalize';
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
+import { styles as appStyles } from '../../constants/styles';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
@@ -142,6 +143,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
           adjustToContentHeight
           panGestureEnabled={false}
           panGestureComponentEnabled={false}
+          modalStyle={appStyles.modalStyle}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
           <FullPasspad
@@ -166,6 +168,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
           ref={resetRef}
           modalHeight={270}
           disableScrollIfPossible
+          modalStyle={appStyles.modalStyle}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
           <SafeAreaProvider>
