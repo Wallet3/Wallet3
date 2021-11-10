@@ -16,7 +16,7 @@ import { formatCurrency } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
 import { useNavigation } from '@react-navigation/core';
 
-const Token = observer(({ item }: { item: IToken }) => {
+const Token = observer(({ item, onPress }: { item: IToken; onPress?: (token: IToken) => void }) => {
   return (
     <TouchableOpacity
       style={{
@@ -27,6 +27,7 @@ const Token = observer(({ item }: { item: IToken }) => {
         paddingBottom: 13,
         paddingHorizontal: 22,
       }}
+      onPress={() => onPress?.(item)}
     >
       <Coin symbol={item.symbol} style={{ width: 36, height: 36, marginEnd: 16 }} iconUrl={item.iconUrl} />
       <Text style={{ fontSize: 18, color: fontColor }} numberOfLines={1}>
@@ -46,14 +47,34 @@ const Token = observer(({ item }: { item: IToken }) => {
 });
 
 const Tokens = observer(
-  ({ tokens, loading, onRefreshRequest }: { tokens?: IToken[]; loading?: boolean; onRefreshRequest?: () => void }) => {
-    const renderItem = ({ item, index }: ListRenderItemInfo<IToken>) => <Token item={item} />;
+  ({
+    tokens,
+    loading,
+    onRefreshRequest,
+    onTokenPress,
+  }: {
+    tokens?: IToken[];
+    loading?: boolean;
+    onRefreshRequest?: () => Promise<any>;
+    onTokenPress?: (token: IToken) => void;
+  }) => {
+    const renderItem = ({ item, index }: ListRenderItemInfo<IToken>) => <Token item={item} onPress={onTokenPress} />;
+    const [manuallyLoading, setManuallyLoading] = useState(false);
 
     return (tokens?.length ?? 0) > 0 && !loading ? (
       <FlatList
         data={tokens}
         keyExtractor={(i) => i.address}
-        refreshControl={<RefreshControl refreshing={false} onRefresh={() => onRefreshRequest?.()} />}
+        refreshControl={
+          <RefreshControl
+            refreshing={manuallyLoading}
+            onRefresh={async () => {
+              setManuallyLoading(true);
+              await onRefreshRequest?.();
+              setManuallyLoading(false);
+            }}
+          />
+        }
         renderItem={renderItem}
         style={{ paddingHorizontal: 16 }}
         ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: '#efefef80', marginStart: 56 }} />}
@@ -70,7 +91,8 @@ interface Props {
   tokens?: IToken[];
   themeColor: string;
   loadingTokens?: boolean;
-  onRefreshRequest?: () => void;
+  onRefreshRequest?: () => Promise<void>;
+  onTokenPress?: (token: IToken) => void;
 }
 
 const rotate = {
@@ -82,7 +104,7 @@ const rotate = {
   },
 };
 
-export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest }: Props) => {
+export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, onTokenPress }: Props) => {
   const [activeTab, setActiveTab] = useState(0);
   const swiper = React.useRef<Swiper>(null);
 
@@ -168,7 +190,7 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest }
         style={{}}
         onIndexChanged={(i) => setActiveTab(i)}
       >
-        <Tokens tokens={tokens} loading={loadingTokens} onRefreshRequest={onRefreshRequest} />
+        <Tokens tokens={tokens} loading={loadingTokens} onRefreshRequest={onRefreshRequest} onTokenPress={onTokenPress} />
         <View style={{ flex: 1 }}>
           <Text>Nfts</Text>
         </View>

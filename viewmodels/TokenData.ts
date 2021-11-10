@@ -8,7 +8,7 @@ export class TokenData {
   firstDescription = '';
 
   constructor() {
-    makeObservable(this, { symbol: observable, description: observable });
+    makeObservable(this, { symbol: observable, description: observable, firstDescription: observable });
   }
 
   async setSymbol(symbol: string) {

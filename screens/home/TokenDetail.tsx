@@ -33,7 +33,7 @@ export default observer(({ token }: Props) => {
       </View>
 
       <View style={{ marginTop: 16 }}>
-        <Text style={{ lineHeight: 22 }}>{vm.firstDescription}</Text>
+        <Text style={{ lineHeight: 22, color: '#75869c', fontSize: 15 }}>{vm.firstDescription}</Text>
       </View>
     </View>
   );

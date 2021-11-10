@@ -5,6 +5,7 @@ import Actions from './Actions';
 import App from '../../viewmodels/App';
 import Assets from './Assets';
 import { DrawerScreenProps } from '@react-navigation/drawer';
+import { IToken } from '../../common/Tokens';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
 import Overview from './Overview';
@@ -28,6 +29,10 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
     setTimeout(() => open(), 2000);
   }, []);
 
+  const onTokenPress = (token: IToken) => {
+    open();
+  };
+
   return (
     <View
       style={{
@@ -49,7 +54,8 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         tokens={currentWallet?.currentAccount?.tokens}
         themeColor={current.color}
         loadingTokens={currentWallet?.currentAccount?.loadingTokens}
-        onRefreshRequest={() => currentWallet?.refreshAccount()}
+        onRefreshRequest={async () => await currentWallet?.refreshAccount()}
+        onTokenPress={onTokenPress}
       />
 
       <Actions
