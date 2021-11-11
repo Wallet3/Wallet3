@@ -1,6 +1,8 @@
 import Coingecko, { getMarketChart } from '../common/apis/Coingecko';
 import { makeObservable, observable, runInAction } from 'mobx';
 
+import { IToken } from '../common/Tokens';
+
 interface ITokenData {
   description: string;
   firstDescription: string;
@@ -11,9 +13,8 @@ interface ITokenData {
 }
 
 export class TokenData implements ITokenData {
-  private cache: { [index: string]: ITokenData } = {};
-
-  symbol: string = '';
+  readonly address: string;
+  readonly symbol: string;
   description: string = '';
   firstDescription = '';
   loading = false;
@@ -24,7 +25,11 @@ export class TokenData implements ITokenData {
   historyPrices: number[] = [];
   historyDays = 1;
 
-  constructor() {
+  constructor({ token }: { token: IToken }) {
+    console.log('new token data', token.symbol);
+    this.symbol = token.symbol;
+    this.address = token.address;
+
     makeObservable(this, {
       symbol: observable,
       description: observable,
@@ -33,24 +38,18 @@ export class TokenData implements ITokenData {
       historyPrices: observable,
       historyDays: observable,
     });
+
+    this.init();
   }
 
-  async setToken(symbol: string, address: string) {
-    const data = this.cache[address];
-
-    if (data) {
-      runInAction(() => Object.getOwnPropertyNames(data).forEach((key) => (this[key] = data[key])));
-      return;
-    }
-
+  private async init() {
     runInAction(() => {
-      this.symbol = symbol;
       this.description = '';
       this.loading = true;
     });
 
     this.refreshHistoryPrices();
-    const result = await Coingecko.getCoinDetails(symbol);
+    const result = await Coingecko.getCoinDetails(this.symbol);
     if (!result) {
       runInAction(() => (this.loading = false));
       return;
@@ -66,7 +65,6 @@ export class TokenData implements ITokenData {
       this.price = market_data.current_price.usd;
       this.priceChangeIn24 = market_data.price_change_24h;
       this.priceChangePercentIn24 = market_data.price_change_percentage_24h;
-      this.cache[address] = { ...this };
       this.loading = false;
     });
   }

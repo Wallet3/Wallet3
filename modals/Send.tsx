@@ -4,6 +4,7 @@ import { SafeAreaView, View } from 'react-native';
 
 import App from '../viewmodels/App';
 import Authentication from '../viewmodels/Authentication';
+import { IToken } from '../common/Tokens';
 import LottieView from 'lottie-react-native';
 import Networks from '../viewmodels/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -12,10 +13,13 @@ import { Transferring } from '../viewmodels/Transferring';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
 
-export default observer(() => {
-  const [vm] = useState(new Transferring({ targetNetwork: Networks.current }));
-  const [verified, setVerified] = useState(false);
+interface Props {
+  initToken?: IToken;
+}
 
+export default observer(({ initToken }: Props) => {
+  const [vm] = useState(new Transferring({ targetNetwork: Networks.current, defaultToken: initToken }));
+  const [verified, setVerified] = useState(false);
   const swiper = useRef<Swiper>(null);
 
   useEffect(() => {

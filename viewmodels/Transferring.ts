@@ -157,6 +157,8 @@ export class Transferring {
     });
 
     AsyncStorage.getItem(`${this.network.chainId}-LastUsedToken`).then((v) => {
+      if (defaultToken) return;
+
       if (!v) {
         runInAction(() => this.setToken(this.currentAccount.tokens[0]));
         return;
@@ -246,6 +248,7 @@ export class Transferring {
 
   setToken(token: IToken) {
     if (this.token.address === token.address) return;
+
     this.token = token;
     this.txException = '';
 

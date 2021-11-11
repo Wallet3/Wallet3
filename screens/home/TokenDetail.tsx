@@ -19,11 +19,7 @@ interface Props {
 }
 
 export default observer(({ token, themeColor, onSendPress }: Props) => {
-  const [vm] = useState<TokenData>(new TokenData());
-
-  useEffect(() => {
-    if (token) setTimeout(() => vm.setToken(token.symbol, token.address), 0);
-  }, [token]);
+  const [vm] = useState<TokenData>(new TokenData({ token: token! }));
 
   const Gradient = () => (
     <Defs key={'gradient'}>

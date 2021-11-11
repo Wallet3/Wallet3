@@ -32,21 +32,23 @@ export async function getPrice(
 
 async function getCoins() {
   try {
-    const resp = await (await fetch(`${host}/api/v3/coins/list`)).json();
+    const resp = await (await fetch(`${host}/api/v3/coins/list`, { cache: 'force-cache' })).json();
     return resp as { id: string; symbol: string }[];
   } catch (error) {}
 }
 
 async function getCoin(id: string) {
   try {
-    const resp = await (await fetch(`${host}/api/v3/coins/${id}`)).json();
+    const resp = await (await fetch(`${host}/api/v3/coins/${id}`, { cache: 'force-cache' })).json();
     return resp as CoinDetails;
   } catch (error) {}
 }
 
 export async function getMarketChart(id: string, days = 1) {
   try {
-    const resp = await (await fetch(`${host}/api/v3/coins/${id}/market_chart?vs_currency=usd&days=${days}`)).json();
+    const resp = await (
+      await fetch(`${host}/api/v3/coins/${id}/market_chart?vs_currency=usd&days=${days}`, { cache: 'force-cache' })
+    ).json();
     return resp as { prices: [timestamp: number, price: number][]; market_caps: number[][]; total_volumes: number[][] };
   } catch (error) {}
 }

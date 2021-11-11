@@ -23,7 +23,7 @@ type RootStackParamList = {
 export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, 'Home'>) => {
   const { currentWallet } = App;
   const { current } = Networks;
-  const { ref: tokenDetailModalize, open } = useModalize();
+  const { ref: tokenDetailModalize, open, close: closeTokenDetail } = useModalize();
   const [selectedToken, setSelectedToken] = useState<IToken | undefined>(undefined);
 
   const onTokenPress = (token: IToken) => {
@@ -73,7 +73,14 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
           snapPoint={450}
           modalStyle={{ borderTopStartRadius: 25, borderTopEndRadius: 25 }}
         >
-          <TokenDetail token={selectedToken} themeColor={current.color} />
+          <TokenDetail
+            token={selectedToken}
+            themeColor={current.color}
+            onSendPress={(token) => {
+              PubSub.publish('openSendModal', { token });
+              closeTokenDetail();
+            }}
+          />
         </Modalize>
       </Portal>
     </View>

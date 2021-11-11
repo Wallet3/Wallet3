@@ -8,7 +8,7 @@ import { Dimensions, Text, View } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NetworksMenu, Request, Send } from './modals';
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { autorun, reaction } from 'mobx';
 import { fontColor, styles } from './constants/styles';
@@ -22,6 +22,7 @@ import FlashMessage from 'react-native-flash-message';
 import { FullPasspad } from './modals/views/Passpad';
 import HomeScreen from './screens/home';
 import { Host } from 'react-native-portalize';
+import { IToken } from './common/Tokens';
 import LandScreen from './screens/land';
 import Languages from './screens/settings/Languages';
 import { Modalize } from 'react-native-modalize';
@@ -98,12 +99,18 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
   const { ref: sendModalizeRef, open: openSendModal, close: closeSendModal } = useModalize();
   const { ref: requestModalizeRef, open: openRequestModal, close: closeRequestModal } = useModalize();
   const { ref: lockscreenModalizeRef, open: openLockScreen, close: closeLockScreen } = useModalize();
+  const [userSelectedToken, setUserSelectedToken] = useState<IToken>();
 
   useEffect(() => {
     PubSub.subscribe('openNetworksModal', () => openNetworksModal());
-    PubSub.subscribe('openSendModal', () => openSendModal());
-    PubSub.subscribe('openRequestModal', () => openRequestModal());
+    PubSub.subscribe('openSendModal', (message, data) => {
+      const { token } = data || {};
+      setUserSelectedToken(token);
+      setTimeout(() => openSendModal(), 0);
+    });
+
     PubSub.subscribe('closeSendModal', () => closeSendModal());
+    PubSub.subscribe('openRequestModal', () => openRequestModal());
 
     const dispose = autorun(async () => {
       if (!app.hasWallet || appAuth.appAuthorized) return;
@@ -216,7 +223,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
         modalStyle={styles.modalStyle}
         scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
       >
-        <Send />
+        <Send initToken={userSelectedToken} />
       </Modalize>
 
       <Modalize
