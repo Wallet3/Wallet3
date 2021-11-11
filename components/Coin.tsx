@@ -5,7 +5,7 @@ import icons from '../assets/icons/crypto';
 import { observer } from 'mobx-react-lite';
 
 interface CoinProps {
-  symbol: string;
+  symbol?: string;
   style?: StyleProp<ImageStyle>;
   iconUrl?: string;
   forceRefresh?: boolean;
@@ -107,7 +107,7 @@ interface CoinProps {
 }
 
 export default observer((props: CoinProps) => {
-  const symbol = props.symbol.toLowerCase();
+  const symbol = props.symbol?.toLowerCase() ?? '';
 
   const [source] = props.forceRefresh
     ? [props.iconUrl && !icons[symbol] ? { uri: props.iconUrl } : icons[symbol] || icons['_coin']]

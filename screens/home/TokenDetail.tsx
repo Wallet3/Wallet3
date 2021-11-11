@@ -1,31 +1,29 @@
 import * as shape from 'd3-shape';
 
-import { Coin, Skeleton } from '../../components';
+import { Button, Coin, Skeleton } from '../../components';
 import { Defs, LinearGradient, Stop } from 'react-native-svg';
-import { Grid, LineChart } from 'react-native-svg-charts';
 import React, { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
-import Coingecko from '../../common/apis/Coingecko';
+import { FontAwesome } from '@expo/vector-icons';
 import { IToken } from '../../common/Tokens';
+import { LineChart } from 'react-native-svg-charts';
 import { TokenData } from '../../viewmodels/TokenData';
-import icons from '../../assets/icons/crypto';
+import { fontColor } from '../../constants/styles';
 import { observer } from 'mobx-react-lite';
-import { secondaryFontColor } from '../../constants/styles';
 
 interface Props {
   token?: IToken;
+  themeColor?: string;
+  onSendPress?: (token?: IToken) => void;
 }
 
-export default observer(({ token }: Props) => {
-  const [themeColor, setThemeColor] = useState('#000');
-  const [vm, setVM] = useState<TokenData>(new TokenData());
+export default observer(({ token, themeColor, onSendPress }: Props) => {
+  const [vm] = useState<TokenData>(new TokenData());
 
   useEffect(() => {
     if (token) setTimeout(() => vm.setToken(token.symbol, token.address), 0);
   }, [token]);
-
-  const data = [50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, 80];
 
   const Gradient = () => (
     <Defs key={'gradient'}>
@@ -39,10 +37,10 @@ export default observer(({ token }: Props) => {
   return (
     <View style={{ padding: 16 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Coin symbol={token?.symbol || ''} size={39} />
+        <Coin symbol={token?.symbol} size={39} />
 
         <View style={{ marginStart: 16 }}>
-          <Text style={{ fontWeight: '500', fontSize: 19, color: themeColor }} numberOfLines={1}>
+          <Text style={{ fontWeight: '500', fontSize: 19, color: fontColor }} numberOfLines={1}>
             {token?.symbol}
           </Text>
           {vm.loading ? (
@@ -64,6 +62,7 @@ export default observer(({ token }: Props) => {
         data={vm.historyPrices}
         contentInset={{ top: 20, bottom: 20 }}
         curve={shape.curveNatural}
+        animate
         svg={{
           strokeWidth: 3,
           stroke: 'url(#gradient)',
@@ -72,13 +71,58 @@ export default observer(({ token }: Props) => {
         <Gradient />
       </LineChart>
 
-      <View style={{}}>
+      <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
+        <Text style={styles.subTitle}>Value</Text>
+        <Text style={styles.subTitle}>Balance</Text>
+      </View>
+
+      <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
+        <Text style={styles.subValue} numberOfLines={1}>
+          {`$ ${(Number(token?.amount || 0) * vm.price).toLocaleString(undefined, {
+            maximumFractionDigits: 2,
+          })}`}
+        </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={{ ...styles.subValue, marginEnd: 8 }}>
+            {`${Number(token?.amount).toLocaleString(undefined, { maximumFractionDigits: 6 })} ${token?.symbol}`}
+          </Text>
+          <Coin symbol={token?.symbol} iconUrl={token?.iconUrl} />
+        </View>
+      </View>
+
+      <Button
+        themeColor={themeColor}
+        title="Send"
+        style={{ borderRadius: 50, marginVertical: 16 }}
+        icon={() => <FontAwesome name="send-o" color="white" size={14} />}
+        onPress={() => onSendPress?.(token)}
+      />
+
+      <Text style={{ fontSize: 21, marginTop: 12, color: '#75869c', fontWeight: '600', opacity: 0.72 }}>
+        {`About ${token?.symbol}`}
+      </Text>
+
+      <View style={{ marginTop: 8 }}>
         {vm.loading ? (
-          <Skeleton style={{ flex: 1, width: '100%' }} />
+          <Skeleton style={{ flex: 1, width: '100%', height: 32 }} />
         ) : (
           <Text style={{ lineHeight: 22, color: '#75869c', fontSize: 15 }}>{vm.firstDescription}</Text>
         )}
       </View>
     </View>
   );
+});
+
+const styles = StyleSheet.create({
+  subTitle: {
+    color: '#75869c',
+    opacity: 0.72,
+    fontWeight: '500',
+    fontSize: 15,
+  },
+
+  subValue: {
+    fontSize: 17,
+    fontWeight: '500',
+  },
 });

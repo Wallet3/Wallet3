@@ -73,7 +73,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
           snapPoint={450}
           modalStyle={{ borderTopStartRadius: 25, borderTopEndRadius: 25 }}
         >
-          <TokenDetail token={selectedToken} />
+          <TokenDetail token={selectedToken} themeColor={current.color} />
         </Modalize>
       </Portal>
     </View>

@@ -7,7 +7,7 @@ interface Props {
   style?: StyleProp<ViewStyle>;
   txtStyle?: StyleProp<TextStyle>;
   title?: string;
-  icon?: React.ComponentType<any>;
+  icon?: () => JSX.Element;
   disabled?: boolean;
   onPress?: () => void;
   themeColor?: string;
@@ -28,6 +28,7 @@ export default (props: Props) => {
           : props.themeColor || (props?.style as ViewStyle)?.backgroundColor || styles.default.backgroundColor,
       }}
     >
+      {props.icon?.()}
       <Text style={{ ...styles.text, ...((props?.txtStyle as any) || {}) }}>{props?.title}</Text>
     </TouchableOpacity>
   );
