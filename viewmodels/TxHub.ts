@@ -102,7 +102,10 @@ class TxHub {
 
     runInAction(() => {
       this.txs.unshift(...confirmedTxs.filter((t) => t.blockHash));
-      const latestNonce = Enumerable.from(this.txs).maxBy((i) => i.nonce).nonce;
+
+      const latestNonce = Enumerable.from(this.txs)
+        .take(10)
+        .maxBy((i) => i.nonce).nonce;
 
       this.pendingTxs = this.pendingTxs.filter(
         (pt) => !confirmedTxs.find((tx) => pt.hash === tx.hash) || pt.nonce > latestNonce

@@ -15,6 +15,7 @@ interface ITokenData {
 export class TokenData implements ITokenData {
   readonly address: string;
   readonly symbol: string;
+
   description: string = '';
   firstDescription = '';
   loading = false;
@@ -54,7 +55,10 @@ export class TokenData implements ITokenData {
       return;
     }
 
-    const { description, links, market_data } = result;
+    const { description, links, market_data, error } = result;
+
+    if (error || !description) return;
+
     const en = description.en.replace(/<[^>]*>?/gm, '');
     const [first] = en.split(/(?:\r?\n)+/);
 
@@ -71,11 +75,11 @@ export class TokenData implements ITokenData {
   async refreshHistoryPrices() {
     const id = Coingecko.getCoinId(this.symbol);
     const data = await getMarketChart(id, this.historyDays);
-    if (!data) {
-      return;
-    }
+    if (!data) return;
 
     const { prices } = data;
+    if (!prices) return;
+
     runInAction(() => (this.historyPrices = prices.map((item) => item[1])));
   }
 }

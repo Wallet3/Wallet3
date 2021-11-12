@@ -59,7 +59,7 @@ const Root = observer(({ navigation }: NativeStackScreenProps<RootStackParamList
       screenOptions={{
         headerTransparent: false,
         headerTintColor: fontColor,
-        swipeEdgeWidth: ScreenWidth / 2,
+        swipeEdgeWidth: ScreenWidth * 0.37,
         drawerType: 'slide',
       }}
       drawerContent={Drawer}

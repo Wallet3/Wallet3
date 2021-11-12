@@ -49,7 +49,12 @@ export async function getMarketChart(id: string, days = 1) {
     const resp = await (
       await fetch(`${host}/api/v3/coins/${id}/market_chart?vs_currency=usd&days=${days}`, { cache: 'force-cache' })
     ).json();
-    return resp as { prices: [timestamp: number, price: number][]; market_caps: number[][]; total_volumes: number[][] };
+    return resp as {
+      prices: [timestamp: number, price: number][];
+      market_caps: number[][];
+      total_volumes: number[][];
+      error?: string;
+    };
   } catch (error) {}
 }
 

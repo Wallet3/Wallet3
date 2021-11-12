@@ -1609,6 +1609,7 @@ export interface Ticker {
 }
 
 export interface CoinDetails {
+  error?: string;
   id: string;
   symbol: string;
   name: string;

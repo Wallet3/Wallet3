@@ -38,8 +38,8 @@ const Tx = observer(({ item }: { item: ITransaction }) => {
     <TouchableOpacity style={{ paddingVertical: 12, paddingHorizontal: 8 }}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={{ fontSize: 15, marginEnd: 4 }}>{`${methodName} ${amount} ${tokenSymbol}`}</Text>
           <Coin symbol={tokenSymbol} size={14} />
+          <Text style={{ fontSize: 15, marginHorizontal: 4 }}>{`${methodName} ${amount} ${tokenSymbol}`}</Text>
         </View>
 
         <View
