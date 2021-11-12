@@ -56,7 +56,7 @@ export default observer((props: SubViewProps) => {
   return (
     <SafeViewContainer style={styles.container}>
       <View style={{ ...styles.navBar }}>
-        {props.disableBack ? <View /> : <BackButton onPress={props.onBack} />}
+        {props.disableBack ? <View /> : <BackButton onPress={props.onBack} color={Networks.current.color} />}
 
         <TouchableOpacity style={styles.navMoreButton} onPress={props.onTokenPress}>
           <Text

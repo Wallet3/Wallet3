@@ -32,7 +32,7 @@ export async function getPrice(
 
 async function getCoins() {
   try {
-    const resp = await (await fetch(`${host}/api/v3/coins/list`, { cache: 'force-cache' })).json();
+    const resp = await (await fetch(`${host}/api/v3/coins/list`)).json();
     return resp as { id: string; symbol: string }[];
   } catch (error) {}
 }

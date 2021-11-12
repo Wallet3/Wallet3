@@ -26,7 +26,6 @@ export class TokenData implements ITokenData {
   historyDays = 1;
 
   constructor({ token }: { token: IToken }) {
-    console.log('new token data', token.symbol);
     this.symbol = token.symbol;
     this.address = token.address;
 

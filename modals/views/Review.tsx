@@ -31,7 +31,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
   return (
     <SafeViewContainer style={styles.container}>
       <View style={styles.navBar}>
-        <BackButton onPress={onBack} />
+        <BackButton onPress={onBack} color={Networks.current.color}/>
 
         <Text style={styles.navTitle}>Tx Review</Text>
       </View>
