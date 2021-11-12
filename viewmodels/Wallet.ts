@@ -12,7 +12,7 @@ import { sendTransaction } from '../common/RPC';
 type SendTxRequest = {
   accountIndex: number;
   tx: providers.TransactionRequest;
-  tokenInfo: { symbol: string; decimals: number; amountWei: string; recipient: string };
+  readableInfo: { type: 'transfer'; symbol: string; decimals: number; amountWei: string; recipient: string };
   pin?: string;
 };
 
@@ -91,8 +91,12 @@ export class Wallet {
   async sendTx(request: SendTxRequest) {
     const txHex = await this.signTx(request);
     if (!txHex) return false;
-
-    TxHub.broadcastTx({ chainId: request.tx.chainId!, txHex, tx: { ...request.tx, ...request.tokenInfo } });
+    console.log(request);
+    TxHub.broadcastTx({
+      chainId: request.tx.chainId!,
+      txHex,
+      tx: { ...request.tx, readableInfo: request.readableInfo },
+    });
 
     return true;
   }

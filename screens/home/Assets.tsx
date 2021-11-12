@@ -1,91 +1,19 @@
 import * as Animatable from 'react-native-animatable';
 
-import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
-import { FlatList, ListRenderItemInfo, RefreshControl, StyleSheet, Text, View } from 'react-native';
+import { Feather, Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
+import { StyleSheet, Text, View } from 'react-native';
+import { borderColor, secondaryFontColor } from '../../constants/styles';
 
-import { Coin } from '../../components';
+import ERC20Tokens from './ERC20Tokens';
+import HistoryList from './HistoryList';
 import { IToken } from '../../common/Tokens';
 import { RootNavigationProps } from '../navigations';
-import Skeleton from '../../components/Skeleton';
 import Swiper from 'react-native-swiper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import TxHub from '../../viewmodels/TxHub';
-import { formatCurrency } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
 import { useNavigation } from '@react-navigation/core';
-
-const Token = observer(({ item, onPress }: { item: IToken; onPress?: (token: IToken) => void }) => {
-  return (
-    <TouchableOpacity
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginHorizontal: -16,
-        paddingVertical: 16,
-        paddingBottom: 13,
-        paddingHorizontal: 22,
-      }}
-      onPress={() => onPress?.(item)}
-    >
-      <Coin symbol={item.symbol} style={{ width: 36, height: 36, marginEnd: 16 }} iconUrl={item.iconUrl} />
-      <Text style={{ fontSize: 18, color: fontColor }} numberOfLines={1}>
-        {item.symbol}
-      </Text>
-      <View style={{ flex: 1 }} />
-
-      {item.loading ? (
-        <Skeleton />
-      ) : (
-        <Text style={{ fontSize: 19, color: fontColor }} numberOfLines={1}>
-          {formatCurrency(item.amount || '0', '')}
-        </Text>
-      )}
-    </TouchableOpacity>
-  );
-});
-
-const Tokens = observer(
-  ({
-    tokens,
-    loading,
-    onRefreshRequest,
-    onTokenPress,
-  }: {
-    tokens?: IToken[];
-    loading?: boolean;
-    onRefreshRequest?: () => Promise<any>;
-    onTokenPress?: (token: IToken) => void;
-  }) => {
-    const renderItem = ({ item, index }: ListRenderItemInfo<IToken>) => <Token item={item} onPress={onTokenPress} />;
-    const [manuallyLoading, setManuallyLoading] = useState(false);
-
-    return (tokens?.length ?? 0) > 0 && !loading ? (
-      <FlatList
-        data={tokens}
-        keyExtractor={(i) => i.address}
-        refreshControl={
-          <RefreshControl
-            refreshing={manuallyLoading}
-            onRefresh={async () => {
-              setManuallyLoading(true);
-              await onRefreshRequest?.();
-              setManuallyLoading(false);
-            }}
-          />
-        }
-        renderItem={renderItem}
-        style={{ paddingHorizontal: 16 }}
-        ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: '#efefef80', marginStart: 56 }} />}
-      />
-    ) : (
-      <View style={{ flex: 1, padding: 16, paddingVertical: 12 }}>
-        <Skeleton style={{ height: 52, width: '100%' }} />
-      </View>
-    );
-  }
-);
 
 interface Props {
   tokens?: IToken[];
@@ -129,17 +57,17 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
           >
             Assets
           </Text>
-          <Text
+          {/* <Text
             style={{ ...styles.headerLabel, ...(activeTab === 1 ? { ...styles.headerLabelActive, color: themeColor } : {}) }}
             onPress={() => swipeTo(1)}
           >
             NFTs
-          </Text>
+          </Text> */}
           <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12 }}>
             <Text
               style={{
                 ...styles.headerLabel,
-                ...(activeTab === 2 ? { ...styles.headerLabelActive, color: themeColor } : {}),
+                ...(activeTab === 1 ? { ...styles.headerLabelActive, color: themeColor } : {}),
                 paddingHorizontal: 0,
               }}
               onPress={() => swipeTo(2)}
@@ -190,12 +118,12 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
         style={{}}
         onIndexChanged={(i) => setActiveTab(i)}
       >
-        <Tokens tokens={tokens} loading={loadingTokens} onRefreshRequest={onRefreshRequest} onTokenPress={onTokenPress} />
-        <View style={{ flex: 1 }}>
+        <ERC20Tokens tokens={tokens} loading={loadingTokens} onRefreshRequest={onRefreshRequest} onTokenPress={onTokenPress} />
+        {/* <View style={{ flex: 1 }}>
           <Text>Nfts</Text>
-        </View>
+        </View> */}
         <View style={{ flex: 1 }}>
-          <Text>History</Text>
+          <HistoryList data={TxHub.txs} />
         </View>
       </Swiper>
     </View>

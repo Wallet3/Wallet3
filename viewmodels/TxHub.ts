@@ -9,6 +9,7 @@ import { formatAddress } from '../utils/formatter';
 
 class TxHub {
   pendingTxs: Transaction[] = [];
+  txs: Transaction[] = [];
 
   get repository() {
     return Database.txRepository;
@@ -19,11 +20,17 @@ class TxHub {
   }
 
   constructor() {
-    makeObservable(this, { pendingTxs: observable, pendingCount: computed });
+    makeObservable(this, { pendingTxs: observable, pendingCount: computed, txs: observable });
   }
 
   async init() {
-    let unconfirmedTxs = await this.repository.find({ where: { blockNumber: IsNull() } });
+    let [minedTxs, unconfirmedTxs] = await Promise.all([
+      this.repository.find({ where: { blockNumber: MoreThan(0) } }),
+      this.repository.find({ where: { blockNumber: IsNull() } }),
+    ]);
+
+    runInAction(() => (this.txs = minedTxs));
+
     let confirmedTxs: Transaction[] = [];
 
     await Promise.all(
@@ -84,6 +91,7 @@ class TxHub {
 
     runInAction(() => {
       this.pendingTxs = this.pendingTxs.filter((pt) => !confirmedTxs.find((tx) => pt.hash === tx.hash));
+      this.txs.unshift(...confirmedTxs);
     });
 
     setTimeout(() => this.watchPendingTxs(), 1000 * 5);
@@ -116,6 +124,8 @@ class TxHub {
       return;
     }
 
+    console.log(tx.readableInfo);
+
     const t = new Transaction();
     t.chainId = tx.chainId!;
     t.from = tx.from!;
@@ -128,10 +138,7 @@ class TxHub {
     t.nonce = tx.nonce! as number;
     t.value = tx.value!.toString();
     t.timestamp = Date.now();
-    t.tokenSymbol = tx.tokenSymbol;
-    t.tokenDecimals = tx.tokenDecimals;
-    t.receipt = tx.receipt;
-    t.amountWei = tx.amountWei;
+    t.readableInfo = tx.readableInfo;
 
     await t.save();
 

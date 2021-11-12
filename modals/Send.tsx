@@ -31,7 +31,9 @@ export default observer(({ initToken }: Props) => {
       accountIndex: vm.currentAccount.index,
       tx: vm.txRequest,
       pin,
-      tokenInfo: {
+
+      readableInfo: {
+        type: 'transfer',
         symbol: vm.token.symbol,
         decimals: vm.token.decimals,
         amountWei: vm.amountWei.toString(),

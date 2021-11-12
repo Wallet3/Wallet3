@@ -51,17 +51,15 @@ export default class Transaction extends BaseEntity {
   @Column({ nullable: true })
   gasUsed?: number;
 
-  @Column({ nullable: true })
-  tokenSymbol?: string;
+  @Column({ nullable: true, type: 'simple-json' })
+  readableInfo: { type: 'transfer' } & any;
+}
 
-  @Column({ nullable: true })
+interface TransferInfo {
+  symbol?: string;
   receipt?: string;
-
-  @Column({ nullable: true })
   amountWei?: string;
-
-  @Column({ nullable: true })
-  tokenDecimals?: number;
+  decimals?: number;
 }
 
 export interface ITransaction extends providers.TransactionRequest {
@@ -79,11 +77,5 @@ export interface ITransaction extends providers.TransactionRequest {
 
   gasUsed?: number;
 
-  tokenSymbol?: string;
-
-  receipt?: string;
-
-  amountWei?: string;
-
-  tokenDecimals?: number;
+  readableInfo?: { type: 'transfer' } & TransferInfo;
 }
