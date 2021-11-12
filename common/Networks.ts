@@ -24,6 +24,7 @@ export interface INetwork {
   defaultTokens: IToken[];
   showOverview?: boolean;
   blockTimeMs?: number;
+  explorer: string;
 }
 
 export const PublicNetworks: INetwork[] = [
@@ -38,6 +39,7 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: EthereumPopularTokens,
     showOverview: true,
     blockTimeMs: 12 * 1000,
+    explorer: 'https://etherscan.io',
   },
   {
     symbol: 'ETH',
@@ -49,6 +51,7 @@ export const PublicNetworks: INetwork[] = [
     l2: true,
     defaultTokens: ArbiPopularTokens,
     showOverview: false,
+    explorer: 'https://arbiscan.io',
   },
   {
     symbol: 'ETH',
@@ -60,6 +63,7 @@ export const PublicNetworks: INetwork[] = [
     l2: true,
     defaultTokens: [],
     showOverview: false,
+    explorer: 'https://optimistic.etherscan.io',
   },
   {
     symbol: 'MATIC',
@@ -71,6 +75,7 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: PolygonPopularTokens,
     showOverview: true,
     blockTimeMs: 3 * 1000,
+    explorer: 'https://polygonscan.com',
   },
   {
     symbol: 'xDAI',
@@ -82,6 +87,7 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: xDaiPopularTokens,
     showOverview: true,
     blockTimeMs: 5 * 1000,
+    explorer: 'https://blockscout.com/xdai/mainnet',
   },
   {
     symbol: 'FTM',
@@ -93,6 +99,7 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: FTMPopularTokens,
     showOverview: true,
     blockTimeMs: 10 * 1000,
+    explorer: 'https://ftmscan.com',
   },
   {
     symbol: 'AVAX',
@@ -105,6 +112,7 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: [],
     showOverview: true,
     blockTimeMs: 5 * 1000,
+    explorer: 'https://snowtrace.io',
   },
   {
     symbol: 'CELO',
@@ -115,6 +123,7 @@ export const PublicNetworks: INetwork[] = [
     order: 6,
     defaultTokens: CeloPopularTokens,
     blockTimeMs: 5 * 1000,
+    explorer: 'https://explorer.celo.org',
   },
   // {
   //   symbol: 'BCH',
@@ -134,6 +143,7 @@ export const PublicNetworks: INetwork[] = [
     color: '#3F7FFF',
     defaultTokens: HecoPopularTokens,
     blockTimeMs: 5 * 1000,
+    explorer: 'https://hecoinfo.com',
   },
   {
     symbol: 'OKB',
@@ -144,6 +154,7 @@ export const PublicNetworks: INetwork[] = [
     color: '#24c',
     defaultTokens: [],
     blockTimeMs: 5 * 1000,
+    explorer: 'https://www.oklink.com/okexchain',
   },
   {
     symbol: 'BNB',
@@ -155,6 +166,7 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: BscPopularTokens,
     showOverview: true,
     blockTimeMs: 5 * 1000,
+    explorer: 'https://bscscan.com',
   },
 ];
 
@@ -168,6 +180,7 @@ export const Testnets: INetwork[] = [
     test: true,
     eip1559: true,
     defaultTokens: [],
+    explorer: 'https://ropsten.etherscan.io',
   },
   {
     comm_id: '',
@@ -178,6 +191,7 @@ export const Testnets: INetwork[] = [
     test: true,
     eip1559: true,
     defaultTokens: [],
+    explorer: 'https://rinkeby.etherscan.io',
   },
   {
     comm_id: '',
@@ -188,6 +202,7 @@ export const Testnets: INetwork[] = [
     eip1559: true,
     test: true,
     defaultTokens: [],
+    explorer: 'https://goerli.etherscan.io',
   },
   {
     comm_id: '',
@@ -197,24 +212,7 @@ export const Testnets: INetwork[] = [
     color: '#6186ff',
     test: true,
     defaultTokens: [],
-  },
-  {
-    comm_id: '',
-    symbol: 'ETH',
-    network: 'zkSync 2.0 Rinkeby',
-    chainId: 272,
-    color: '',
-    test: true,
-    defaultTokens: zkSyncTestPopularTokens,
-  },
-  {
-    comm_id: '',
-    symbol: 'MATIC',
-    network: 'Mumbai',
-    chainId: 80001,
-    color: '#8247E5',
-    test: true,
-    defaultTokens: [],
+    explorer: 'https://kovan.etherscan.io',
   },
 ];
 

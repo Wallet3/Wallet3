@@ -37,7 +37,8 @@ export default observer(({ initToken }: Props) => {
         symbol: vm.token.symbol,
         decimals: vm.token.decimals,
         amountWei: vm.amountWei.toString(),
-        recipient: vm.toAddress,
+        amount: Number(vm.amount).toLocaleString(undefined, { maximumFractionDigits: 7 }),
+        recipient: vm.to || vm.toAddress,
       },
     });
 

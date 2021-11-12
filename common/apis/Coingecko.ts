@@ -93,6 +93,8 @@ class Coingecko {
 
     const coins = (await getCoins())!;
 
+    if (!coins) return;
+
     for (let { symbol, id } of coins) {
       this.coinSymbolToId[symbol] = id;
     }
@@ -135,6 +137,7 @@ class Coingecko {
   }
 
   async getCoinDetails(symbol: string) {
+    await this.init();
     const id = this.coinSymbolToId[symbol.toLowerCase()];
     return await getCoin(id);
   }

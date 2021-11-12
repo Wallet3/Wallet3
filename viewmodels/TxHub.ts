@@ -5,11 +5,17 @@ import { getTransactionReceipt, sendTransaction } from '../common/RPC';
 import { hideMessage, showMessage } from 'react-native-flash-message';
 
 import Database from '../models/Database';
+import Enumerable from 'linq';
+import Networks from './Networks';
 import { formatAddress } from '../utils/formatter';
 
 class TxHub {
   pendingTxs: Transaction[] = [];
   txs: Transaction[] = [];
+
+  get chainTxs() {
+    return this.pendingTxs.concat(this.txs).filter((tx) => tx.chainId === Networks.current.chainId);
+  }
 
   get repository() {
     return Database.txRepository;
@@ -20,12 +26,12 @@ class TxHub {
   }
 
   constructor() {
-    makeObservable(this, { pendingTxs: observable, pendingCount: computed, txs: observable });
+    makeObservable(this, { pendingTxs: observable, pendingCount: computed, txs: observable, chainTxs: computed });
   }
 
   async init() {
     let [minedTxs, unconfirmedTxs] = await Promise.all([
-      this.repository.find({ where: { blockNumber: MoreThan(0) } }),
+      this.repository.find({ where: { blockNumber: MoreThan(0) }, order: { timestamp: 'DESC' }, take: 100 }),
       this.repository.find({ where: { blockNumber: IsNull() } }),
     ]);
 
@@ -61,6 +67,7 @@ class TxHub {
 
     for (let tx of this.pendingTxs) {
       const receipt = await getTransactionReceipt(tx.chainId, tx.hash);
+
       if (!receipt) {
         continue;
       }
@@ -89,12 +96,16 @@ class TxHub {
       await Promise.all(invalidTxs.map((t) => t.remove()));
     }
 
+    setTimeout(() => this.watchPendingTxs(), 1000 * 5);
+
+    if (confirmedTxs.length === 0) return;
+
     runInAction(() => {
       this.pendingTxs = this.pendingTxs.filter((pt) => !confirmedTxs.find((tx) => pt.hash === tx.hash));
-      this.txs.unshift(...confirmedTxs);
-    });
+      this.txs.unshift(...confirmedTxs.filter((t) => t.blockHash));
 
-    setTimeout(() => this.watchPendingTxs(), 1000 * 5);
+      console.log(this.pendingTxs.length, confirmedTxs[0]?.status);
+    });
   }
 
   async broadcastTx({ chainId, txHex, tx }: { chainId: number; txHex: string; tx: ITransaction }) {
@@ -116,15 +127,20 @@ class TxHub {
     }
 
     const pendingTx = await this.saveTx({ ...tx, hash });
-    if (pendingTx) runInAction(() => this.pendingTxs.push(pendingTx));
+    if (!pendingTx) return;
+
+    runInAction(() => {
+      this.pendingTxs = Enumerable.from<Transaction>([pendingTx, ...this.pendingTxs])
+        .orderBy((i) => i.gasPrice)
+        .distinct((i) => i.nonce)
+        .toArray();
+    });
   }
 
   saveTx = async (tx: ITransaction) => {
     if ((await this.repository.find({ where: { hash: tx.hash } })).length > 0) {
       return;
     }
-
-    console.log(tx.readableInfo);
 
     const t = new Transaction();
     t.chainId = tx.chainId!;

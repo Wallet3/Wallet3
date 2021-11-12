@@ -27,7 +27,7 @@
     "expo-sqlite": "~10.0.3",
     "expo-standard-web-crypto": "^1.1.1",
     "expo-status-bar": "~1.1.0",
-    "lodash": "^4.17.21",
+    "linq": "^4.0.0",
     "lottie-react-native": "^4.1.3",
     "mobx": "^6.3.7",
     "mobx-react-lite": "^3.2.2",

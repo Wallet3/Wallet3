@@ -82,14 +82,14 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
                 easing="linear"
                 duration={2000}
               >
-                <Ionicons name="sync" size={14} color={activeTab === 2 ? themeColor : secondaryFontColor} />
+                <Ionicons name="sync" size={14} color={activeTab === 1 ? themeColor : secondaryFontColor} />
               </Animatable.View>
             )}
             {TxHub.pendingCount > 0 && (
               <Text
                 style={{
                   ...styles.headerLabel,
-                  ...(activeTab === 2 ? { ...styles.headerLabelActive, color: themeColor } : {}),
+                  ...(activeTab === 1 ? { ...styles.headerLabelActive, color: themeColor } : {}),
                   paddingHorizontal: 0,
                 }}
               >
@@ -123,7 +123,7 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
           <Text>Nfts</Text>
         </View> */}
         <View style={{ flex: 1 }}>
-          <HistoryList data={TxHub.txs} />
+          <HistoryList data={[...TxHub.pendingTxs, ...TxHub.txs]} />
         </View>
       </Swiper>
     </View>

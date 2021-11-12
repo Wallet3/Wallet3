@@ -7,7 +7,6 @@ import { LandScreenStack } from '../navigations';
 import MnemonicOnce from '../../viewmodels/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SortWords } from '../components/SecretWords';
-import _ from 'lodash';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
 

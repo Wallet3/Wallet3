@@ -55,12 +55,15 @@ export default class Transaction extends BaseEntity {
   readableInfo: { type: 'transfer' } & any;
 }
 
-interface TransferInfo {
+export interface TransferInfo {
   symbol?: string;
-  receipt?: string;
+  recipient?: string;
   amountWei?: string;
   decimals?: number;
+  amount?: string;
 }
+
+export type ReadableInfo = { type: 'transfer' } & TransferInfo;
 
 export interface ITransaction extends providers.TransactionRequest {
   hash?: string;
@@ -77,5 +80,5 @@ export interface ITransaction extends providers.TransactionRequest {
 
   gasUsed?: number;
 
-  readableInfo?: { type: 'transfer' } & TransferInfo;
+  readableInfo?: ReadableInfo;
 }

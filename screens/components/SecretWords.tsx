@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
+import Enumerable from 'linq';
 import { Ionicons } from '@expo/vector-icons';
-import _ from 'lodash';
 import { observer } from 'mobx-react-lite';
 
 export const StaticSecretWords = observer(
@@ -96,10 +96,10 @@ export const SortWords = ({ words, onVerified }: { words: string[]; onVerified: 
     setShuffled((pre) => [...pre, word]);
   };
 
-  useEffect(() => setShuffled(_.shuffle(words)), []);
+  useEffect(() => setShuffled(Enumerable.from(words).shuffle().toArray()), []);
 
   useEffect(() => {
-    onVerified(_.isEqual(sorted, words));
+    onVerified(Enumerable.from(sorted).sequenceEqual(words));
   }, [sorted]);
 
   return (
