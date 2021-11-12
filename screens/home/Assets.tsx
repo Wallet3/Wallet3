@@ -123,7 +123,7 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
           <Text>Nfts</Text>
         </View> */}
         <View style={{ flex: 1 }}>
-          <HistoryList data={[...TxHub.pendingTxs, ...TxHub.txs]} />
+          <HistoryList data={TxHub.chainTxs} />
         </View>
       </Swiper>
     </View>

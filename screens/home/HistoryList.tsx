@@ -71,7 +71,7 @@ export default observer(({ data }: Props) => {
   return (
     <FlatList
       data={data}
-      keyExtractor={(i) => i.hash || `${i.timestamp!}`}
+      keyExtractor={(i) => `${i.hash} ${i.blockNumber} ${i.timestamp}`}
       renderItem={renderItem}
       style={{ paddingHorizontal: 16 }}
     />

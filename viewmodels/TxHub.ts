@@ -101,10 +101,12 @@ class TxHub {
     if (confirmedTxs.length === 0) return;
 
     runInAction(() => {
-      this.pendingTxs = this.pendingTxs.filter((pt) => !confirmedTxs.find((tx) => pt.hash === tx.hash));
       this.txs.unshift(...confirmedTxs.filter((t) => t.blockHash));
+      const latestNonce = Enumerable.from(this.txs).maxBy((i) => i.nonce).nonce;
 
-      console.log(this.pendingTxs.length, confirmedTxs[0]?.status);
+      this.pendingTxs = this.pendingTxs.filter(
+        (pt) => !confirmedTxs.find((tx) => pt.hash === tx.hash) || pt.nonce > latestNonce
+      );
     });
   }
 
@@ -130,10 +132,10 @@ class TxHub {
     if (!pendingTx) return;
 
     runInAction(() => {
-      this.pendingTxs = Enumerable.from<Transaction>([pendingTx, ...this.pendingTxs])
-        .orderBy((i) => i.gasPrice)
-        .distinct((i) => i.nonce)
-        .toArray();
+      const sameNonces = [pendingTx, ...this.pendingTxs.filter((i) => i.nonce === pendingTx.nonce)];
+      const maxPriTx = Enumerable.from(sameNonces).maxBy((t) => t.gasPrice);
+
+      this.pendingTxs = [maxPriTx, ...this.pendingTxs.filter((t) => t.nonce !== pendingTx.nonce)];
     });
   }
 
