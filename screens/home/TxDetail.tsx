@@ -10,6 +10,7 @@ import { utils } from 'ethers';
 
 export default observer(({ tx }: { tx?: Transaction }) => {
   if (!tx) return null;
+
   const network = ChainIdToNetwork.get(tx.chainId ?? 1)!;
 
   return (
@@ -65,11 +66,11 @@ export default observer(({ tx }: { tx?: Transaction }) => {
 
       <View style={styles.itemContainer}>
         <Text style={styles.txt}>Status:</Text>
-        <Text style={styles.txt}>{tx.status !== undefined ? (tx.status ? 'Confirmed' : 'Failed') : 'Pending'}</Text>
+        <Text style={styles.txt}>{Number.isInteger(tx.blockNumber) ? (tx.status ? 'Confirmed' : 'Failed') : 'Pending'}</Text>
       </View>
 
       <View style={styles.itemContainer}>
-        <Text style={styles.txt}>Block:</Text>
+        <Text style={styles.txt}>Block Height:</Text>
         <Text style={styles.txt}>{tx.blockNumber}</Text>
       </View>
 

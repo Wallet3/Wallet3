@@ -103,7 +103,7 @@ export class Account {
   }
 
   async refreshTokensBalance() {
-    const [{ usd_value }] = await Promise.all([
+    const [{ usd_value }, _] = await Promise.all([
       Debank.getBalance(this.address, Networks.current.comm_id),
       this.tokens.map((t) => (t as ERC20Token).getBalance?.(false)),
     ]);

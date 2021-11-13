@@ -61,7 +61,7 @@ export class Wallet {
   }
 
   async refreshAccount() {
-    if (Date.now() - this.lastRefreshedTime < 1000 * 10) return;
+    if (Date.now() - this.lastRefreshedTime < 1000 * 5) return;
     this.lastRefreshedTime = Date.now();
 
     clearTimeout(this.refreshTimer);
