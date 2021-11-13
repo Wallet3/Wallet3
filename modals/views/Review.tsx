@@ -31,7 +31,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
   return (
     <SafeViewContainer style={styles.container}>
       <View style={styles.navBar}>
-        <BackButton onPress={onBack} color={Networks.current.color}/>
+        <BackButton onPress={onBack} color={Networks.current.color} />
 
         <Text style={styles.navTitle}>Tx Review</Text>
       </View>
@@ -92,9 +92,13 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
           <Text style={{ ...viewStyles.reviewItemTitle, fontSize: 15 }}>
             {`(${Currency.tokenToUSD(vm.txFee, vm.network.symbol).toFixed(2)} USD)`}
           </Text>
-          <Text style={{ ...viewStyles.reviewItemValue, marginHorizontal: 2 }} numberOfLines={1}>
-            {`${vm.txFee.toFixed(5)} ${vm.feeTokenSymbol}`}
-          </Text>
+
+          <AnimateNumber
+            style={{ ...viewStyles.reviewItemValue, marginHorizontal: 2 }}
+            numberOfLines={1}
+            value={vm.txFee}
+            formatter={(val) => `${val.toFixed(5)} ${vm.feeTokenSymbol}`}
+          />
 
           <MaterialIcons name="keyboard-arrow-right" size={15} />
         </TouchableOpacity>

@@ -75,7 +75,7 @@ export class Transferring {
 
   get txFeeWei() {
     return this.network.eip1559
-      ? BigNumber.from(Math.min(Number(this.maxGasPrice.toFixed(9)) * Gwei_1).toFixed(0))
+      ? BigNumber.from(this.nextBlockBaseFeeWei)
           .add(BigNumber.from((Number(this.maxPriorityPrice.toFixed(9)) * Gwei_1).toFixed(0)))
           .mul(this.gasLimit)
       : BigNumber.from((this.maxGasPrice * Gwei_1).toFixed(0)).mul(this.gasLimit);
@@ -187,10 +187,10 @@ export class Transferring {
     ]);
 
     runInAction(() => {
-      this.nextBlockBaseFeeWei = nextBaseFee;
+      this.nextBlockBaseFeeWei = Number(nextBaseFee.toFixed(0));
 
       const priFee = (priorityFee || Gwei_1) / Gwei_1 + 0.1;
-      
+
       this.setNonce(nonce);
       this.setPriorityPrice(priFee);
 
