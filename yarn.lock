@@ -2178,10 +2178,10 @@
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.5.tgz#75a2a8e7d8ab4b230414505d92335d1dcb53a6df"
   integrity sha512-L28j2FcJfSZOnL1WBjDYp2vUHCeIFlyYI/53EwD/rKUBQ7MtUUfbQWiyKJGpcnv4/WgrhWsFKrcPstcAt/J0tQ==
 
-"@types/react-native-svg-charts@^5.0.11":
-  version "5.0.11"
-  resolved "https://registry.yarnpkg.com/@types/react-native-svg-charts/-/react-native-svg-charts-5.0.11.tgz#e3ce39e238249ef864fde320dc64a33fa226909d"
-  integrity sha512-VvOMKvcrUaD9jkdGGyWa8sFv4yWACUzkJYGvHFdiu4lcCj4+7Jf9ZjZYQJI+l8pmwQhdJaZk4Y+mRLSQTIHDzw==
+"@types/react-native-svg-charts@^5.0.12":
+  version "5.0.12"
+  resolved "https://registry.yarnpkg.com/@types/react-native-svg-charts/-/react-native-svg-charts-5.0.12.tgz#571c2207383c395047a8ae424dc37284593d96f0"
+  integrity sha512-26BmFrOqWMEni9KuBbtzY6e5Fsku1xk8j6Zkq1emfbR5XXLAoGt9NpETK+dHpfl5M2xy55yIcHW4C0Qv+ZXCOQ==
   dependencies:
     "@types/d3-scale" "^1"
     "@types/d3-shape" "^1"

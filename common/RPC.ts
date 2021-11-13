@@ -27,6 +27,7 @@ export async function getBalance(chainId: number, address: string): Promise<BigN
 
 export async function sendTransaction(chainId: number, txHex: string) {
   const urls = getUrls(chainId);
+  let error: { code: number; message: string } | undefined = undefined;
 
   for (let url of urls) {
     try {
@@ -38,6 +39,7 @@ export async function sendTransaction(chainId: number, txHex: string) {
       });
 
       if (resp.error) {
+        error = resp.error;
         continue;
       }
 
@@ -45,7 +47,7 @@ export async function sendTransaction(chainId: number, txHex: string) {
     } catch {}
   }
 
-  return undefined;
+  return { error, id: 0, result: undefined };
 }
 
 export async function getTransactionCount(chainId: number, address: string) {

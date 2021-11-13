@@ -75,10 +75,10 @@ export class Transferring {
 
   get txFeeWei() {
     return this.network.eip1559
-      ? BigNumber.from(Math.min(Number(this.maxGasPrice.toFixed(9)) * Gwei_1))
-          .add(BigNumber.from(Number(this.maxPriorityPrice.toFixed(9)) * Gwei_1))
+      ? BigNumber.from(Math.min(Number(this.maxGasPrice.toFixed(9)) * Gwei_1).toFixed(0))
+          .add(BigNumber.from((Number(this.maxPriorityPrice.toFixed(9)) * Gwei_1).toFixed(0)))
           .mul(this.gasLimit)
-      : BigNumber.from(Number.parseInt((this.maxGasPrice * Gwei_1) as any)).mul(this.gasLimit);
+      : BigNumber.from((this.maxGasPrice * Gwei_1).toFixed(0)).mul(this.gasLimit);
   }
 
   get txFee() {
@@ -189,11 +189,13 @@ export class Transferring {
     runInAction(() => {
       this.nextBlockBaseFeeWei = nextBaseFee;
 
+      const priFee = (priorityFee || Gwei_1) / Gwei_1 + 0.1;
+      
       this.setNonce(nonce);
-      this.setPriorityPrice((priorityFee || Gwei_1) / Gwei_1 + 0.1);
+      this.setPriorityPrice(priFee);
 
       if (this.network.eip1559) {
-        this.setMaxGasPrice((nextBaseFee || Gwei_1) / Gwei_1 + 30);
+        this.setMaxGasPrice((nextBaseFee || Gwei_1) / Gwei_1 + priFee + 3);
       } else {
         this.setMaxGasPrice((gasPrice || Gwei_1) / Gwei_1);
       }

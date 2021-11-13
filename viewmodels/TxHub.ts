@@ -116,9 +116,9 @@ class TxHub {
   async broadcastTx({ chainId, txHex, tx }: { chainId: number; txHex: string; tx: ITransaction }) {
     const { result: hash, error } = (await sendTransaction(chainId, txHex)) || {};
 
-    if (error) {
+    if (error || !hash) {
       showMessage({
-        message: error.message,
+        message: error?.message ?? 'Transaction failed',
         animated: true,
         autoHide: true,
         backgroundColor: 'orange',

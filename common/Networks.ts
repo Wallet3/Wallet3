@@ -88,6 +88,7 @@ export const PublicNetworks: INetwork[] = [
     showOverview: true,
     blockTimeMs: 5 * 1000,
     explorer: 'https://blockscout.com/xdai/mainnet',
+    eip1559: true,
   },
   {
     symbol: 'FTM',
