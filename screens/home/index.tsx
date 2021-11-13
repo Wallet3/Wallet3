@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Text, View } from 'react-native';
+import Transaction, { ITransaction } from '../../models/Transaction';
 
 import Actions from './Actions';
 import App from '../../viewmodels/App';
@@ -12,6 +13,7 @@ import Overview from './Overview';
 import { Portal } from 'react-native-portalize';
 import { StatusBar } from 'expo-status-bar';
 import TokenDetail from './TokenDetail';
+import TxDetail from './TxDetail';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
@@ -23,12 +25,19 @@ type RootStackParamList = {
 export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, 'Home'>) => {
   const { currentWallet } = App;
   const { current } = Networks;
-  const { ref: tokenDetailModalize, open, close: closeTokenDetail } = useModalize();
-  const [selectedToken, setSelectedToken] = useState<IToken | undefined>(undefined);
+  const { ref: tokenDetailModalize, open: openTokenDetail, close: closeTokenDetail } = useModalize();
+  const { ref: txDetailModalize, open: openTxDetail, close: closeTxDetail } = useModalize();
+  const [selectedToken, setSelectedToken] = useState<IToken>();
+  const [selectedTx, setSelectedTx] = useState<Transaction>();
 
   const onTokenPress = (token: IToken) => {
     setSelectedToken(token);
-    setTimeout(() => open(), 0);
+    setTimeout(() => openTokenDetail(), 0);
+  };
+
+  const onTxPress = (tx: Transaction) => {
+    setSelectedTx(tx);
+    setTimeout(() => openTxDetail(), 0);
   };
 
   return (
@@ -54,6 +63,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         loadingTokens={currentWallet?.currentAccount?.loadingTokens}
         onRefreshRequest={async () => await currentWallet?.refreshAccount()}
         onTokenPress={onTokenPress}
+        onTxPress={onTxPress}
       />
 
       <Actions
@@ -81,6 +91,14 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
               closeTokenDetail();
             }}
           />
+        </Modalize>
+
+        <Modalize
+          ref={txDetailModalize}
+          adjustToContentHeight
+          modalStyle={{ borderTopStartRadius: 25, borderTopEndRadius: 25 }}
+        >
+          <TxDetail tx={selectedTx} />
         </Modalize>
       </Portal>
     </View>

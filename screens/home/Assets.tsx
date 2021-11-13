@@ -3,6 +3,7 @@ import * as Animatable from 'react-native-animatable';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import Transaction, { ITransaction } from '../../models/Transaction';
 import { borderColor, secondaryFontColor } from '../../constants/styles';
 
 import ERC20Tokens from './ERC20Tokens';
@@ -21,6 +22,7 @@ interface Props {
   loadingTokens?: boolean;
   onRefreshRequest?: () => Promise<void>;
   onTokenPress?: (token: IToken) => void;
+  onTxPress?: (tx: Transaction) => void;
 }
 
 const rotate = {
@@ -32,7 +34,7 @@ const rotate = {
   },
 };
 
-export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, onTokenPress }: Props) => {
+export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, onTokenPress, onTxPress }: Props) => {
   const [activeTab, setActiveTab] = useState(0);
   const swiper = React.useRef<Swiper>(null);
 
@@ -123,7 +125,7 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
           <Text>Nfts</Text>
         </View> */}
         <View style={{ flex: 1 }}>
-          <HistoryList data={TxHub.chainTxs} />
+          <HistoryList data={TxHub.chainTxs} onTxPress={onTxPress} />
         </View>
       </Swiper>
     </View>
