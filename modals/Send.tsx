@@ -4,6 +4,7 @@ import { SafeAreaView, View } from 'react-native';
 
 import App from '../viewmodels/App';
 import Authentication from '../viewmodels/Authentication';
+import Contacts from '../viewmodels/Contacts';
 import { IToken } from '../common/Tokens';
 import LottieView from 'lottie-react-native';
 import Networks from '../viewmodels/Networks';
@@ -50,7 +51,7 @@ export default observer(({ initToken }: Props) => {
   };
 
   const onSendClick = async () => {
-    vm.saveContact();
+    Contacts.saveContact({ address: vm.toAddress, ens: vm.isEns ? vm.to : undefined });
 
     if (!Authentication.biometricsEnabled) {
       swiper.current?.scrollTo(3);

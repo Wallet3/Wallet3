@@ -8,13 +8,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ERC20Token } from '../models/ERC20';
 import { INetwork } from '../common/Networks';
 import { IToken } from '../common/Tokens';
-import { ITransaction } from '../models/Transaction';
 import Networks from './Networks';
 
 export class Transferring {
   private timer?: NodeJS.Timer;
-
-  contacts: string[] = [];
 
   to = '';
   toAddress = '';
@@ -150,10 +147,6 @@ export class Transferring {
       txFeeWei: computed,
       txFee: computed,
       nextBlockBaseFee: computed,
-    });
-
-    AsyncStorage.getItem(`contacts`).then((v) => {
-      runInAction(() => (this.contacts = JSON.parse(v || '[]')));
     });
 
     AsyncStorage.getItem(`${this.network.chainId}-LastUsedToken`).then((v) => {
@@ -302,14 +295,6 @@ export class Transferring {
           break;
       }
     });
-  }
-
-  saveContact() {
-    if (!utils.isAddress(this.toAddress)) return;
-    if (this.contacts.includes(this.to)) return;
-
-    this.contacts.unshift(this.to);
-    AsyncStorage.setItem(`contacts`, JSON.stringify(this.contacts));
   }
 
   dispose() {

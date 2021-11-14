@@ -120,7 +120,6 @@ export class Account {
     runInAction(() => (this.ensName = v || this.ensName));
 
     getAvatar('chainlinkgod.eth', '0x190473B3071946df65306989972706A4c006A561').then((v) => {
-      console.log(v)
       runInAction(() => (this.avatar = v?.url || ''));
     });
   }

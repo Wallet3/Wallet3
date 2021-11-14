@@ -44,26 +44,25 @@ function _parseString(result: string): null | string {
 }
 
 function ipfsUrlToHttps(url: string) {
-  if (url.startsWith('ipfs://')) {
-    return `https://gateway.ipfs.io/${url.substring(7)}`;
-  }
-  return url;
+  return url.startsWith('ipfs://') ? `https://gateway.ipfs.io/${url.substring(7)}` : url;
 }
 
 export async function getAvatar(name: string, owner: string) {
-  let nodehash = utils.namehash(name);
+  try {
+    let nodehash = utils.namehash(name);
 
-  let avatar = fetchAvatar(nodehash, utils.getAddress(owner));
-  if (avatar) return avatar;
+    let avatar = await fetchAvatar(nodehash, utils.getAddress(owner));
+    if (avatar) return avatar;
 
-  const resolverCallData = ENSRegistry.interface.encodeFunctionData('resolver', [nodehash]);
+    const resolverCallData = ENSRegistry.interface.encodeFunctionData('resolver', [nodehash]);
 
-  const [resolver] = ENSRegistry.interface.decodeFunctionResult(
-    'resolver',
-    (await call<string>(1, { to: ENSRegistryAddress, data: resolverCallData }))!
-  );
+    const [resolver] = ENSRegistry.interface.decodeFunctionResult(
+      'resolver',
+      (await call<string>(1, { to: ENSRegistryAddress, data: resolverCallData }))!
+    );
 
-  return fetchAvatar(nodehash, owner, resolver);
+    return await fetchAvatar(nodehash, owner, resolver);
+  } catch (error) {}
 }
 
 async function fetchAvatar(nodehash: string, owner: string, resolver = ENSResolverAddress) {
@@ -93,7 +92,7 @@ async function fetchAvatar(nodehash: string, owner: string, resolver = ENSResolv
 
       case 'ipfs':
         linkage.push({ type: 'ipfs', content: avatar });
-        return { linkage, url: `https:/\/gateway.ipfs.io/ipfs/${avatar.substring(7)}` };
+        return { linkage, url: ipfsUrlToHttps(avatar) };
 
       case 'erc721':
       case 'erc1155': {

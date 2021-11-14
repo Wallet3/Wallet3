@@ -12,6 +12,7 @@ import PubSub from 'pubsub-js';
 import React from 'react';
 import { SafeViewContainer } from '../../components';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import icons from '../../assets/icons/crypto';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
 import { observer } from 'mobx-react-lite';
 
@@ -51,30 +52,23 @@ const Drawer = observer((props: DrawerProps) => {
         }}
       >
         <Image
+          source={currentWallet?.currentAccount?.avatar ? { uri: currentWallet?.currentAccount?.avatar } : icons['eth']}
           style={{
             width: 50,
             height: 50,
             borderRadius: 25,
             backgroundColor: current.color,
           }}
-          source={
-            {
-              uri:
-                currentWallet?.currentAccount?.avatar ||
-                'https://lh3.googleusercontent.com/1cYgtxvPgxU3tlU6r4trPcl9cU0xFpkUKpba0QPSbBFx_OC-347VQq9MuAA0Y4KoE1zsGUcmmik-XJJw1wG1qv75BsSefDX26VbLnw=w600',
-            }
-            // currentWallet?.currentAccount?.avatar,
-          }
         />
 
         <Text
+          numberOfLines={1}
           style={{
             fontWeight: '500',
             marginStart: 12,
             fontSize: 17,
             maxWidth: '70%',
           }}
-          numberOfLines={1}
         >
           {currentWallet?.currentAccount?.displayName}
         </Text>

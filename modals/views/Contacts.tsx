@@ -1,5 +1,6 @@
+import Contacts, { IContact } from '../../viewmodels/Contacts';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
-import { ListRenderItemInfo, Text, TextInput, TouchableHighlight, TouchableOpacity, View } from 'react-native';
+import { Image, ListRenderItemInfo, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeViewContainer, Skeleton, TextBox } from '../../components';
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
@@ -21,7 +22,7 @@ interface Props {
 export default observer(({ onNext, vm }: Props) => {
   const [addr, setAddr] = useState('');
 
-  const renderAddress = ({ item }: ListRenderItemInfo<string>) => {
+  const renderContact = ({ item }: ListRenderItemInfo<IContact>) => {
     return (
       <TouchableOpacity
         style={{
@@ -31,11 +32,16 @@ export default observer(({ onNext, vm }: Props) => {
           margin: 0,
           paddingVertical: 10,
         }}
-        onPress={(_) => setAddr(item)}
+        onPress={(_) => setAddr(item.ens || item.address)}
       >
-        <FontAwesome name="user-circle-o" size={20} color={secondaryFontColor} style={{ opacity: 0.5, marginEnd: 12 }} />
+        <View style={{ position: 'relative' }}>
+          <FontAwesome name="user-circle-o" size={20} color={secondaryFontColor} style={{ opacity: 0.5, marginEnd: 12 }} />
+          {item.avatar ? (
+            <Image source={{ uri: item.avatar }} style={{ position: 'absolute', width: 20, height: 20, borderRadius: 100 }} />
+          ) : undefined}
+        </View>
         <Text style={{ fontSize: 17, color: fontColor }} numberOfLines={1}>
-          {utils.isAddress(item) ? formatAddress(item) : item}
+          {item.ens || formatAddress(item.address)}
         </Text>
       </TouchableOpacity>
     );
@@ -65,10 +71,10 @@ export default observer(({ onNext, vm }: Props) => {
       </View>
 
       <FlatList
-        data={vm.contacts}
-        renderItem={renderAddress}
+        data={Contacts.contacts}
+        renderItem={renderContact}
         style={{ flex: 1, marginHorizontal: -16, paddingHorizontal: 16 }}
-        keyExtractor={(item) => item}
+        keyExtractor={(item) => `${item.ens}_${item.address}_${item.avatar}`}
         ItemSeparatorComponent={() => <View style={{ backgroundColor: borderColor, height: 1 }} />}
       />
 

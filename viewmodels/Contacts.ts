@@ -1,0 +1,44 @@
+import { action, makeObservable, observable, runInAction } from 'mobx';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getAvatar } from '../common/ENS';
+
+export interface IContact {
+  address: string;
+  ens?: string;
+  avatar?: string;
+}
+
+class Contacts {
+  contacts: IContact[] = [];
+
+  constructor() {
+    makeObservable(this, { contacts: observable, saveContact: action });
+
+    AsyncStorage.getItem(`contacts`).then((v) => {
+      runInAction(() => (this.contacts = JSON.parse(v || '[]')));
+    });
+  }
+
+  saveContact(contact: IContact) {
+    const { address, ens } = contact;
+    if (this.contacts.find((c) => c.address.toLowerCase() === address.toLowerCase())) return;
+
+    this.contacts = [contact, ...this.contacts];
+
+    if (ens) {
+      getAvatar(ens, address).then((v) => {
+        if (!v?.url) return;
+
+        const target = this.contacts.find((c) => c.address === address);
+        if (target) target.avatar = v.url;
+
+        AsyncStorage.setItem(`contacts`, JSON.stringify(this.contacts));
+      });
+    }
+
+    AsyncStorage.setItem(`contacts`, JSON.stringify(this.contacts));
+  }
+}
+
+export default new Contacts();
