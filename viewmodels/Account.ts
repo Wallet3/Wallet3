@@ -116,10 +116,11 @@ export class Account {
     if (this.ensName) return;
     const { MainnetWsProvider } = Networks;
 
-    const v = await MainnetWsProvider.lookupAddress(this.address);
-    runInAction(() => (this.ensName = v || this.ensName));
+    const ens = await MainnetWsProvider.lookupAddress(this.address);
+    if (!ens) return;
 
-    getAvatar('chainlinkgod.eth', '0x190473B3071946df65306989972706A4c006A561').then((v) => {
+    runInAction(() => (this.ensName = ens));
+    getAvatar(ens, this.address).then((v) => {
       runInAction(() => (this.avatar = v?.url || ''));
     });
   }
