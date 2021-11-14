@@ -221,7 +221,6 @@ export class Transferring {
 
     this.to = to;
     this.toAddress = '';
-    this.isResolvingAddress = true;
     this.txException = '';
 
     if (utils.isAddress(to)) {
@@ -233,6 +232,7 @@ export class Transferring {
     if (!to.endsWith('.eth')) return;
 
     let provider = Networks.MainnetWsProvider;
+    this.isResolvingAddress = true;
 
     provider.resolveName(to).then((address) =>
       runInAction(() => {
