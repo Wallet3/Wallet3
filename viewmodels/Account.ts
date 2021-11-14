@@ -2,14 +2,15 @@ import * as Debank from '../common/apis/Debank';
 
 import TokensMan, { UserToken } from './services/TokensMan';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { ethers, utils } from 'ethers';
 
 import { ERC20Token } from '../models/ERC20';
 import { IToken } from '../common/Tokens';
 import { NativeToken } from '../models/NativeToken';
 import Networks from './Networks';
 import { formatAddress } from '../utils/formatter';
+import { getAvatar } from '../common/ENS';
 import { getBalance } from '../common/RPC';
-import { utils } from 'ethers';
 
 export class Account {
   readonly address: string;
@@ -111,13 +112,17 @@ export class Account {
     runInAction(() => (this.balanceUSD = usd_value));
   }
 
-  fetchBasicInfo() {
-    if (Networks.current.chainId !== 1) return;
+  async fetchBasicInfo() {
     if (this.ensName) return;
+    const { MainnetWsProvider } = Networks;
 
-    const { currentProvider } = Networks;
-    currentProvider.lookupAddress(this.address).then((v) => runInAction(() => (this.ensName = v || this.ensName)));
-    currentProvider.getAvatar(this.ensName || this.address).then((v) => runInAction(() => (this.avatar = v || '')));
+    const v = await MainnetWsProvider.lookupAddress(this.address);
+    runInAction(() => (this.ensName = v || this.ensName));
+
+    getAvatar('chainlinkgod.eth', '0x190473B3071946df65306989972706A4c006A561').then((v) => {
+      console.log(v)
+      runInAction(() => (this.avatar = v?.url || ''));
+    });
   }
 
   toggleToken(token: UserToken) {

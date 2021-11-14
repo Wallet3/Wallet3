@@ -1,11 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Linking, StyleSheet, Text, View } from 'react-native';
 import Transaction, { ITransaction } from '../../models/Transaction';
 
 import { ChainIdToNetwork } from '../../common/Networks';
 import { Gwei_1 } from '../../common/Constants';
 import React from 'react';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { formatAddress } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
+import { openBrowserAsync } from 'expo-web-browser';
 import { utils } from 'ethers';
 
 export default observer(({ tx }: { tx?: Transaction }) => {
@@ -79,6 +81,12 @@ export default observer(({ tx }: { tx?: Transaction }) => {
         <Text style={{ ...styles.txt, maxWidth: '100%' }} numberOfLines={5}>
           {tx.data}
         </Text>
+      </View>
+
+      <View style={{ ...styles.itemContainer, justifyContent: 'flex-end', borderBottomWidth: 0 }}>
+        <TouchableOpacity onPress={() => openBrowserAsync(`${network.explorer}/tx/${tx.hash}`)}>
+          <Text style={{ fontSize: 12, color: network.color }}>View on Block Explorer</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
