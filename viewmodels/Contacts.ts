@@ -22,7 +22,12 @@ class Contacts {
 
   saveContact(contact: IContact) {
     const { address, ens } = contact;
-    if (this.contacts.find((c) => c.address.toLowerCase() === address.toLowerCase())) return;
+    const freq = this.contacts.find((c) => c.address.toLowerCase() === address.toLowerCase());
+    if (freq) {
+      this.contacts = [freq, ...this.contacts.filter((c) => c !== freq)];
+      AsyncStorage.setItem(`contacts`, JSON.stringify(this.contacts));
+      return;
+    }
 
     this.contacts = [contact, ...this.contacts];
 
