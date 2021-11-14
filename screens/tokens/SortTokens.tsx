@@ -26,6 +26,7 @@ const DraggableToken = observer(
     <TouchableOpacity
       onLongPress={drag}
       disabled={isActive}
+      onPress={() => onValueChange(!item.shown)}
       style={{
         flexDirection: 'row',
         alignItems: 'center',

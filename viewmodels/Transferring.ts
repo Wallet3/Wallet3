@@ -215,6 +215,8 @@ export class Transferring {
   }
 
   setTo(to: string) {
+    to = to.trim();
+
     if (this.to === to) return;
 
     this.to = to;
@@ -227,6 +229,8 @@ export class Transferring {
       this.isResolvingAddress = false;
       return;
     }
+
+    if (!to.endsWith('.eth')) return;
 
     let provider = Networks.MainnetWsProvider;
 
