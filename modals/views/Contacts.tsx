@@ -1,12 +1,13 @@
 import Contacts, { IContact } from '../../viewmodels/Contacts';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
-import { Image, ListRenderItemInfo, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
+import { ListRenderItemInfo, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeViewContainer, Skeleton, TextBox } from '../../components';
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
 import Button from '../../components/Button';
 import { FlatList } from 'react-native-gesture-handler';
+import Image from 'react-native-expo-cached-image';
 import Networks from '../../viewmodels/Networks';
 import { Transferring } from '../../viewmodels/Transferring';
 import { formatAddress } from '../../utils/formatter';

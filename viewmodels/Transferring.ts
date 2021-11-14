@@ -214,10 +214,10 @@ export class Transferring {
     });
   }
 
-  setTo(to: string) {
+  async setTo(to: string) {
     to = to.trim();
 
-    if (this.to === to) return;
+    if (this.to.toLowerCase() === to.toLowerCase()) return;
 
     this.to = to;
     this.toAddress = '';
@@ -230,19 +230,16 @@ export class Transferring {
     }
 
     if (!to.endsWith('.eth')) return;
-
     let provider = Networks.MainnetWsProvider;
+
     this.isResolvingAddress = true;
+    const address = await provider.resolveName(to);
 
-    provider.resolveName(to).then((address) =>
-      runInAction(() => {
-        this.toAddress = address || to;
-        this.isResolvingAddress = false;
-
-        provider.destroy();
-        (provider as any) = null;
-      })
-    );
+    runInAction(() => {
+      this.toAddress = address || '';
+      this.isResolvingAddress = false;
+      provider.destroy();
+    });
   }
 
   setToken(token: IToken) {
