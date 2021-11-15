@@ -81,18 +81,22 @@ export class Wallet {
   }
 
   async signTx({ accountIndex, tx, pin }: SendTxRequest) {
-    const xprivkey = await Authentication.decrypt(this.key.bip32Xprivkey, pin);
-    if (!xprivkey) return undefined;
+    try {
+      const xprivkey = await Authentication.decrypt(this.key.bip32Xprivkey, pin);
+      if (!xprivkey) return undefined;
 
-    const bip32 = utils.HDNode.fromExtendedKey(xprivkey);
-    const account = bip32.derivePath(`${accountIndex}`);
-    return await new EthersWallet(account.privateKey).signTransaction(tx);
+      const bip32 = utils.HDNode.fromExtendedKey(xprivkey);
+      const account = bip32.derivePath(`${accountIndex}`);
+      return await new EthersWallet(account.privateKey).signTransaction(tx);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async sendTx(request: SendTxRequest) {
     const txHex = await this.signTx(request);
     if (!txHex) return false;
-    
+
     TxHub.broadcastTx({
       chainId: request.tx.chainId!,
       txHex,

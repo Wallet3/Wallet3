@@ -1,6 +1,6 @@
 import { BigNumber, providers, utils } from 'ethers';
 import { Gwei_1, MAX_GWEI_PRICE } from '../common/Constants';
-import { action, computed, makeAutoObservable, makeObservable, observable, runInAction } from 'mobx';
+import { IReactionDisposer, computed, makeAutoObservable, observable, runInAction } from 'mobx';
 import { getGasPrice, getMaxPriorityFee, getNextBlockBaseFee, getTransactionCount } from '../common/RPC';
 
 import App from './App';
@@ -12,6 +12,7 @@ import Networks from './Networks';
 
 export class Transferring {
   private timer?: NodeJS.Timer;
+  // private self: IReactionDisposer;
 
   to = '';
   toAddress = '';
@@ -147,6 +148,7 @@ export class Transferring {
       txFeeWei: computed,
       txFee: computed,
       nextBlockBaseFee: computed,
+      dispose: false,
     });
 
     AsyncStorage.getItem(`${this.network.chainId}-LastUsedToken`).then((v) => {
