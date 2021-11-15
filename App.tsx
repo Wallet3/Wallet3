@@ -2,6 +2,8 @@ import 'react-native-gesture-handler';
 import './configs/polyfill';
 import './configs/debug';
 
+import * as Linking from 'expo-linking';
+
 import AppViewModel, { AppVM } from './viewmodels/App';
 import AuthViewModel, { Authentication } from './viewmodels/Authentication';
 import { ConnectDApp, NetworksMenu, Request, Send } from './modals';
@@ -100,15 +102,18 @@ const Root = observer(({ navigation }: NativeStackScreenProps<RootStackParamList
 
 const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication }) => {
   const { Navigator, Screen } = StackRoot;
-  const { ref: networksModal, open: openNetworksModal, close: closeNetworksModal } = useModalize();
-  const { ref: sendModalizeRef, open: openSendModal, close: closeSendModal } = useModalize();
-  const { ref: requestModalizeRef, open: openRequestModal, close: closeRequestModal } = useModalize();
-  const { ref: lockscreenModalizeRef, open: openLockScreen, close: closeLockScreen } = useModalize();
+  const { ref: networksRef, open: openNetworksModal, close: closeNetworksModal } = useModalize();
+  const { ref: sendRef, open: openSendModal, close: closeSendModal } = useModalize();
+  const { ref: requestRef, open: openRequestModal, close: closeRequestModal } = useModalize();
+  const { ref: lockScreenRef, open: openLockScreen, close: closeLockScreen } = useModalize();
   const { ref: connectDappRef, open: openConnectDapp, close: closeConnectDapp } = useModalize();
+
   const [userSelectedToken, setUserSelectedToken] = useState<IToken>();
 
   useEffect(() => {
-    openConnectDapp();
+    PubSub.subscribe('CodeScan', (_, { data }) => {
+      openConnectDapp();
+    });
 
     PubSub.subscribe('openNetworksModal', () => openNetworksModal());
     PubSub.subscribe('openSendModal', (message, data) => {
@@ -204,7 +209,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
       </Host>
 
       <Modalize
-        ref={lockscreenModalizeRef}
+        ref={lockScreenRef}
         modalHeight={ScreenHeight}
         closeOnOverlayTap={false}
         disableScrollIfPossible
@@ -225,7 +230,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
       </Modalize>
 
       <Modalize
-        ref={networksModal}
+        ref={networksRef}
         adjustToContentHeight
         useNativeDriver={false}
         disableScrollIfPossible
@@ -241,7 +246,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
       </Modalize>
 
       <Modalize
-        ref={sendModalizeRef}
+        ref={sendRef}
         adjustToContentHeight
         disableScrollIfPossible
         useNativeDriver={false}
@@ -252,7 +257,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
       </Modalize>
 
       <Modalize
-        ref={requestModalizeRef}
+        ref={requestRef}
         adjustToContentHeight
         useNativeDriver={false}
         disableScrollIfPossible
@@ -284,3 +289,9 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
 });
 
 export default () => <App app={AppViewModel} appAuth={AuthViewModel} />;
+
+console.log(
+  Linking.parse(
+    'wc:ede2260a-d193-4461-aac3-927b4236f577@1?bridge=https%3A%2F%2Fv.bridge.walletconnect.org&key=8bf7950d073cbf5370f72c7502d9830b15a0fd3baef314fdb8e8bbb5f6065437'
+  )
+);

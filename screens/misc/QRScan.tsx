@@ -2,11 +2,12 @@ import { BarCodeScannedCallback, BarCodeScanner } from 'expo-barcode-scanner';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import PubSub from 'pubsub-js';
 import { StatusBar } from 'expo-status-bar';
 import { observer } from 'mobx-react-lite';
 
-export default observer(() => {
+export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
   const [hasPermission, setHasPermission] = useState(false);
   const [scanned, setScanned] = useState(false);
 
@@ -17,6 +18,7 @@ export default observer(() => {
 
     PubSub.publish('CodeScan', { data });
     setScanned(true);
+    navigation.pop();
   };
 
   useEffect(() => {

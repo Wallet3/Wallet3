@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-interface WCClientMeta {
+export interface WCClientMeta {
   description: string;
   url: string;
   icons: string[];
@@ -23,6 +23,26 @@ interface IRawWcSession {
   userChainId?: number;
 }
 
+export interface WCSessionRequestRequest {
+  id: number;
+  jsonrpc: '2.0';
+  method: 'wc_sessionRequest';
+  params: [
+    {
+      peerId: string;
+      peerMeta: WCClientMeta;
+      chainId?: number | null;
+    }
+  ];
+}
+
+export interface WCCallRequestRequest {
+  id: number;
+  jsonrpc: '2.0';
+  method: 'eth_sendTransaction' | 'eth_signTransaction' | 'eth_sign' | 'personal_sign' | 'eth_signTypedData';
+  params: any;
+}
+
 @Entity({ name: 'wcsession_v1' })
 export default class WCSession_v1 extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -31,8 +51,8 @@ export default class WCSession_v1 extends BaseEntity {
   @Column({ type: 'simple-json' })
   session!: IRawWcSession;
 
-  @Column()
-  userChainId!: number;
+  @Column({ type: 'simple-array' })
+  userChainIds!: number[];
 
   @Column()
   lastUsedTimestamp!: number;
