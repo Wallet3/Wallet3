@@ -9,6 +9,7 @@ import BackButton from '../components/BackButton';
 import Currency from '../../viewmodels/Currency';
 import Fire from '../../assets/icons/app/fire.svg';
 import Gem from '../../assets/icons/app/gem.svg';
+import Image from 'react-native-expo-cached-image';
 import Networks from '../../viewmodels/Networks';
 import { ScrollView } from 'react-native-gesture-handler';
 import Swiper from 'react-native-swiper';
@@ -52,9 +53,14 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
         <View style={viewStyles.reviewItem}>
           <Text style={viewStyles.reviewItemTitle}>To</Text>
 
-          <Text style={{ ...viewStyles.reviewItemValue, maxWidth: '72%' }} numberOfLines={1}>
-            {utils.isAddress(vm.to) ? formatAddress(vm.to, 9, 7) : vm.to}
-          </Text>
+          <View style={{ flexDirection: 'row', maxWidth: '72%', alignItems: 'center' }}>
+            {vm.avatar ? (
+              <Image source={{ uri: vm.avatar }} style={{ width: 15, height: 15, marginEnd: 5, borderRadius: 100 }} />
+            ) : undefined}
+            <Text style={{ ...viewStyles.reviewItemValue }} numberOfLines={1}>
+              {utils.isAddress(vm.to) ? formatAddress(vm.to, 9, 7) : vm.to}
+            </Text>
+          </View>
         </View>
 
         <View style={{ ...viewStyles.reviewItem, borderBottomWidth: 0 }}>

@@ -1,6 +1,6 @@
 import { BigNumber, providers, utils } from 'ethers';
 import { Gwei_1, MAX_GWEI_PRICE } from '../common/Constants';
-import { IReactionDisposer, computed, makeAutoObservable, observable, runInAction } from 'mobx';
+import { computed, makeAutoObservable, observable, runInAction } from 'mobx';
 import { getGasPrice, getMaxPriorityFee, getNextBlockBaseFee, getTransactionCount } from '../common/RPC';
 
 import App from './App';
@@ -12,9 +12,9 @@ import Networks from './Networks';
 
 export class Transferring {
   private timer?: NodeJS.Timer;
-  // private self: IReactionDisposer;
 
   to = '';
+  avatar?: string = '';
   toAddress = '';
   token: IToken;
   amount = '0';
@@ -216,8 +216,9 @@ export class Transferring {
     });
   }
 
-  async setTo(to: string) {
+  async setTo(to: string, avatar?: string) {
     to = to.trim();
+    this.avatar = avatar;
 
     if (this.to.toLowerCase() === to.toLowerCase()) return;
 

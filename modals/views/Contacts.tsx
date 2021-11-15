@@ -33,7 +33,10 @@ export default observer(({ onNext, vm }: Props) => {
           margin: 0,
           paddingVertical: 10,
         }}
-        onPress={(_) => setAddr(item.ens || item.address)}
+        onPress={(_) => {
+          setAddr(item.ens || item.address);
+          vm.setTo(item.ens || item.address, item.avatar);
+        }}
       >
         <View style={{ position: 'relative' }}>
           <FontAwesome name="user-circle-o" size={20} color={secondaryFontColor} style={{ opacity: 0.5, marginEnd: 12 }} />
@@ -48,10 +51,6 @@ export default observer(({ onNext, vm }: Props) => {
     );
   };
 
-  useEffect(() => {
-    vm.setTo(addr);
-  }, [addr]);
-
   return (
     <SafeViewContainer style={styles.container}>
       <TextBox
@@ -59,6 +58,7 @@ export default observer(({ onNext, vm }: Props) => {
         value={addr}
         onChangeText={(t) => {
           setAddr(t);
+          vm.setTo(addr);
         }}
       />
 
