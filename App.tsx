@@ -30,6 +30,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import Networks from './viewmodels/Networks';
 import { Passpad } from './modals/views';
 import PubSub from 'pubsub-js';
+import QRScan from './screens/misc/QRScan';
 import { SafeViewContainer } from './components';
 import SettingScreen from './screens/settings';
 import Tokens from './screens/tokens/SortTokens';
@@ -48,6 +49,7 @@ AppViewModel.init();
 
 type RootStackParamList = {
   Home: undefined;
+  QRScan: undefined;
 };
 
 const Root = observer(({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>) => {
@@ -71,18 +73,21 @@ const Root = observer(({ navigation }: NativeStackScreenProps<RootStackParamList
           title: 'Wallet 3',
           headerRight: () => (
             <TouchableOpacity
+              onPress={() => navigation.navigate('QRScan')}
               style={{
                 zIndex: 5,
                 flexDirection: 'row',
                 justifyContent: 'center',
                 alignItems: 'center',
                 position: 'relative',
+                paddingStart: 8,
                 marginEnd: 17,
               }}
-              onPress={() => alert('a')}
             >
               <MaterialCommunityIcons name="scan-helper" size={18} style={{}} />
-              <View style={{ position: 'absolute', left: 2, right: 2.5, height: 1.5, backgroundColor: '#000' }} />
+              <View
+                style={{ position: 'absolute', left: 2, right: 2.5, height: 1.5, backgroundColor: '#000', marginStart: 8 }}
+              />
             </TouchableOpacity>
           ),
         }}
@@ -154,6 +159,21 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
               <Screen name="Backup" component={Backup} options={{ title: 'Backup' }} />
               <Screen name="VerifySecret" component={VerifySecret} options={{ title: 'Verify' }} />
               <Screen name="AddToken" component={AddToken} />
+              <Screen
+                name="QRScan"
+                component={QRScan}
+                options={({ navigation }) => {
+                  return {
+                    animation: 'slide_from_bottom',
+                    headerTintColor: '#ffffff',
+                    headerLeft: () => (
+                      <TouchableOpacity onPress={() => navigation.pop()}>
+                        <Ionicons name="arrow-back-outline" size={20} color="#ffffff" />
+                      </TouchableOpacity>
+                    ),
+                  };
+                }}
+              />
               <Screen
                 name="Tokens"
                 component={Tokens}
