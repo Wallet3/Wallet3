@@ -27,7 +27,7 @@ export async function getTokens(address: string, chain: chain, is_all = false) {
         return {
           address: utils.getAddress(t.id),
           decimals: t.decimals,
-          symbol: t.symbol.length <= 4 ? t.symbol : t.optimized_symbol || t.symbol,
+          symbol: (t.optimized_symbol?.length ?? 10) <= 4 ? t.optimized_symbol ?? t.symbol : t.symbol,
           price: t.price,
           amount: `${t.amount}`,
           iconUrl: t.logo_url,
