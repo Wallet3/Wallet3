@@ -1,7 +1,8 @@
+import { BarCodeScannedCallback, BarCodeScanner } from 'expo-barcode-scanner';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { BarCodeScanner } from 'expo-barcode-scanner';
+import PubSub from 'pubsub-js';
 import { StatusBar } from 'expo-status-bar';
 import { observer } from 'mobx-react-lite';
 
@@ -9,9 +10,13 @@ export default observer(() => {
   const [hasPermission, setHasPermission] = useState(false);
   const [scanned, setScanned] = useState(false);
 
-  const handleBarCodeScanned = ({ type, data }) => {
+  const handleBarCodeScanned: BarCodeScannedCallback = ({ data }) => {
+    const supportedSchemas = ['ethereum', 'wc:', '0x'];
+    const schema = supportedSchemas.find((schema) => data.startsWith(schema));
+    if (!schema) return;
+
+    PubSub.publish('CodeScan', { data });
     setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
   };
 
   useEffect(() => {
