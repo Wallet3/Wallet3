@@ -2,7 +2,6 @@ import * as Debank from '../common/apis/Debank';
 
 import TokensMan, { UserToken } from './services/TokensMan';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
-import { ethers, utils } from 'ethers';
 
 import { ERC20Token } from '../models/ERC20';
 import { IToken } from '../common/Tokens';
@@ -10,7 +9,7 @@ import { NativeToken } from '../models/NativeToken';
 import Networks from './Networks';
 import { formatAddress } from '../utils/formatter';
 import { getAvatar } from '../common/ENS';
-import { getBalance } from '../common/RPC';
+import { utils } from 'ethers';
 
 export class Account {
   readonly address: string;
@@ -30,7 +29,7 @@ export class Account {
   }
 
   constructor(address: string, index: number) {
-    this.address = '0xb8c2C29ee19D8307cb7255e1Cd9CbDE883A267d5'; // address;
+    this.address = address;
     this.index = index;
 
     makeObservable(this, {

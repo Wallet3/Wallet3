@@ -224,6 +224,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
       <Modalize
         ref={networksModal}
         adjustToContentHeight
+        useNativeDriver={false}
         disableScrollIfPossible
         modalStyle={styles.modalStyle}
         scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
@@ -240,6 +241,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
         ref={sendModalizeRef}
         adjustToContentHeight
         disableScrollIfPossible
+        useNativeDriver={false}
         modalStyle={styles.modalStyle}
         scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
       >
@@ -249,6 +251,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
       <Modalize
         ref={requestModalizeRef}
         adjustToContentHeight
+        useNativeDriver={false}
         disableScrollIfPossible
         modalStyle={styles.modalStyle}
         scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}

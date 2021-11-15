@@ -13,7 +13,6 @@ import { Transferring } from '../../viewmodels/Transferring';
 import { formatAddress } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
-import { utils } from 'ethers';
 
 interface Props {
   onNext?: () => void;
@@ -58,7 +57,7 @@ export default observer(({ onNext, vm }: Props) => {
         value={addr}
         onChangeText={(t) => {
           setAddr(t);
-          vm.setTo(addr);
+          vm.setTo(t);
         }}
       />
 
