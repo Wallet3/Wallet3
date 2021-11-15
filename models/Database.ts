@@ -2,6 +2,7 @@ import { Connection, Repository, createConnection } from 'typeorm';
 
 import Key from './Key';
 import Transaction from './Transaction';
+import WCSession_v1 from './WCSession_v1';
 
 class Database {
   private _connection?: Connection;
@@ -17,7 +18,7 @@ class Database {
       database: 'test21',
       driver: require('expo-sqlite'),
       synchronize: true,
-      entities: [Key, Transaction],
+      entities: [Key, Transaction, WCSession_v1],
     });
 
     this.keyRepository = this._connection.getRepository(Key);
