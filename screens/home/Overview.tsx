@@ -7,6 +7,7 @@ import { numericFontFamily, themeColor } from '../../constants/styles';
 
 import AnimateNumber from 'react-native-animate-number';
 import { Feather } from '@expo/vector-icons';
+import Image from 'react-native-expo-cached-image';
 import Logos from '../../assets/icons/networks/white';
 import { observer } from 'mobx-react-lite';
 import { setString } from 'expo-clipboard';
@@ -18,9 +19,11 @@ interface Props {
   network?: string;
   connectedApps?: number;
   address?: string;
+  ens?: string;
+  avatar?: string;
 }
 
-export default observer(({ style, address, balance, network }: Props) => {
+export default observer(({ style, address, balance, network, avatar, ens }: Props) => {
   const addressView = useRef<Animatable.Text>(null);
 
   const writeAddressToClipboard = () => {
@@ -37,7 +40,14 @@ export default observer(({ style, address, balance, network }: Props) => {
           justifyContent: 'space-between',
         }}
       >
-        <Text style={{ ...styles.text, fontSize: 15 }}>{network}</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={{ ...styles.text, fontSize: 15 }}>{network}</Text>
+
+          {avatar ? (
+            <Image source={{ uri: avatar }} style={{ width: 15, height: 15, borderRadius: 100, marginHorizontal: 8 }} />
+          ) : undefined}
+          {/* {ens ? <Text style={{ fontSize: 12, color: '#fff', marginHorizontal: 0 }}>{ens}</Text> : undefined} */}
+        </View>
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={{ ...styles.text, fontSize: 14, marginEnd: 5 }}>3</Text>
@@ -49,7 +59,8 @@ export default observer(({ style, address, balance, network }: Props) => {
         <Animatable.Text ref={addressView as any} style={{ ...styles.text, fontSize: 12 }}>
           {formatAddress(address ?? '', 7, 5)}
         </Animatable.Text>
-        <Feather name="copy" size={10} color="#fff" style={{ marginStart: 5 }} />
+
+        <Feather name="copy" size={10} color="#fff" style={{ marginHorizontal: 5 }} />
       </TouchableOpacity>
 
       <View style={{ height: 54 }} />
@@ -58,16 +69,6 @@ export default observer(({ style, address, balance, network }: Props) => {
         <AnimateNumber value={balance || 0} style={styles.headline} numberOfLines={1} formatter={formatCurrency} />
 
         {Logos[network || 'Ethereum']}
-        {/* <Ethereum
-          width={64}
-          height={64}
-          style={{
-            marginTop: -60,
-            marginEnd: -19,
-            alignSelf: 'flex-end',
-            opacity: 0.72,
-          }}
-        /> */}
       </View>
     </View>
   );

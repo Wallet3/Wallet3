@@ -30,7 +30,7 @@ export class Account {
   }
 
   constructor(address: string, index: number) {
-    this.address = address;
+    this.address = '0xb8c2C29ee19D8307cb7255e1Cd9CbDE883A267d5'; // address;
     this.index = index;
 
     makeObservable(this, {

@@ -17,6 +17,7 @@
     "crypto-es": "^1.2.7",
     "d3-shape": "^3.0.1",
     "ethers": "^5.5.1",
+    "expo-barcode-scanner": "^11.1.2",
     "expo-clipboard": "^2.0.3",
     "expo-crypto": "^10.0.3",
     "expo-font": "^10.0.3",
