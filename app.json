@@ -15,7 +15,6 @@
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": ["**/*"],
-    "jsEngine": "hermes",
     "ios": {
       "bundleIdentifier": "jp.co.chainbow.wallet3.mobile",
       "supportsTablet": false,
