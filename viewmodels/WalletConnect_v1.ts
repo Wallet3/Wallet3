@@ -9,7 +9,7 @@ export class WalletConnect_v1 extends EventEmitter {
 
   peerId = '';
   appMeta: WCClientMeta | null = null;
-  enabledChains: number[] = [];
+  enabledChains: number[] = [1];
 
   constructor(uri?: string) {
     super();

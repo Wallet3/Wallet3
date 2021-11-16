@@ -21,9 +21,10 @@ interface Props {
   address?: string;
   ens?: string;
   avatar?: string;
+  chainId: number;
 }
 
-export default observer(({ style, address, balance, network, avatar, ens }: Props) => {
+export default observer(({ style, address, balance, network, avatar, chainId }: Props) => {
   const addressView = useRef<Animatable.Text>(null);
 
   const writeAddressToClipboard = () => {
@@ -68,7 +69,7 @@ export default observer(({ style, address, balance, network, avatar, ens }: Prop
       <View style={{ justifyContent: 'space-between' }}>
         <AnimateNumber value={balance || 0} style={styles.headline} numberOfLines={1} formatter={formatCurrency} />
 
-        {Logos[network || 'Ethereum']}
+        {Logos[chainId]}
       </View>
     </View>
   );

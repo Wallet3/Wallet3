@@ -55,6 +55,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         address={currentWallet?.currentAccount?.address}
         balance={currentWallet?.currentAccount?.balanceUSD}
         network={current.network}
+        chainId={current.chainId}
         avatar={currentWallet?.currentAccount?.avatar}
         ens={currentWallet?.currentAccount?.ensName}
       />

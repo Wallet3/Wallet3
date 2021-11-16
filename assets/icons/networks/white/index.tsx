@@ -92,15 +92,15 @@ const styles = StyleSheet.create({
 });
 
 export default {
-  Ethereum: <Ethereum width={64} height={64} style={styles.ethereum} />,
-  'Arbitrum One': <Arbitrum width={54} height={54} style={styles.arbitrum} />,
-  Optimism: <Optimism width={54} height={54} style={styles.optimism} />,
-  xDai: <XDai width={50} height={50} style={styles.xdai} />,
-  Polygon: <Polygon width={49} height={49} style={styles.polygon} />,
-  Avalanche: <Avalanche width={60} height={60} style={styles.avalanche} />,
-  Fantom: <Fantom width={60} height={60} style={styles.fantom} />,
-  Celo: <Celo width={52} height={52} style={styles.celo} />,
-  Heco: <Heco width={52} height={52} style={styles.heco} />,
-  OKEx: <OKEx width={49} height={49} style={styles.okex} />,
-  BSC: <BSC width={49} height={49} style={styles.bsc} />,
+  1: <Ethereum width={64} height={64} style={styles.ethereum} />,
+  42161: <Arbitrum width={54} height={54} style={styles.arbitrum} />,
+  10: <Optimism width={54} height={54} style={styles.optimism} />,
+  100: <XDai width={50} height={50} style={styles.xdai} />,
+  137: <Polygon width={49} height={49} style={styles.polygon} />,
+  43114: <Avalanche width={60} height={60} style={styles.avalanche} />,
+  250: <Fantom width={60} height={60} style={styles.fantom} />,
+  42220: <Celo width={52} height={52} style={styles.celo} />,
+  128: <Heco width={52} height={52} style={styles.heco} />,
+  66: <OKEx width={49} height={49} style={styles.okex} />,
+  56: <BSC width={49} height={49} style={styles.bsc} />,
 };

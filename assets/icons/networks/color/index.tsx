@@ -29,16 +29,16 @@ const xDAI = <XDai width={32} height={32} />;
 const ZSYNC = <ZKSync width={32} height={32} />;
 
 export const NetworkIcons = {
-  ethereum: ETH,
-  'arbitrum one': ARB,
-  optimism: OPT,
-  avalanche: AVL,
-  bsc: BSC,
-  celo: CELO,
-  fantom: FTM,
-  heco: HECO,
-  okex: OKX,
-  polygon: POLY,
-  xdai: xDAI,
-  zksync: ZSYNC,
+  1: ETH,
+  42161: ARB,
+  10: OPT,
+  43114: AVL,
+  56: BSC,
+  42220: CELO,
+  250: FTM,
+  128: HECO,
+  66: OKX,
+  137: POLY,
+  100: xDAI,
+  // zksync: ZSYNC,
 };

@@ -1,14 +1,13 @@
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { Button, SafeViewContainer } from '../components';
+import { INetwork, Networks } from '../common/Networks';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { borderColor, secondaryFontColor, themeColor, thirdFontColor } from '../constants/styles';
 
 import DAppHub from '../viewmodels/DAppHub';
-import { INetwork } from '../common/Networks';
 import Image from 'react-native-expo-cached-image';
 import Loading from './views/Loading';
-import Networks from '../viewmodels/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -24,12 +23,12 @@ interface Props {
 
 interface DAppProps {
   client: WalletConnect_v1;
-  networks: INetwork[];
   onNetworksPress?: () => void;
   close: Function;
 }
 
-const DApp = observer(({ client, onNetworksPress, networks, close }: DAppProps) => {
+const DApp = observer(({ client, onNetworksPress, close }: DAppProps) => {
+  const networks = Networks.filter((n) => client.enabledChains.includes(n.chainId));
   const [network] = networks;
   const app = client.appMeta!;
 
@@ -96,7 +95,7 @@ const ConnectDApp = observer(({ client, close }: { client: WalletConnect_v1; clo
         loop={false}
         automaticallyAdjustContentInsets
       >
-        <DApp client={client} networks={[Networks.current]} close={close} />
+        <DApp client={client} close={close} />
       </Swiper>
     </SafeViewContainer>
   );

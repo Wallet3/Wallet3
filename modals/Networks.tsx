@@ -21,7 +21,7 @@ export default observer((props: Props) => {
         onPress={() => props.onNetworkPress?.(item)}
       >
         <View style={{ width: 32, alignItems: 'center', justifyContent: 'center' }}>
-          {NetworkIcons[item.network.toLowerCase()] || <View />}
+          {NetworkIcons[item.chainId] || <View />}
         </View>
         <Text style={{ fontSize: 16, marginStart: 16, fontWeight: '500', color: item.color }}>{item.network}</Text>
         <View style={{ flex: 1 }} />
