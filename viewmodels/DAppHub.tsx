@@ -1,13 +1,16 @@
 import * as Linking from 'expo-linking';
 
-import { WalletConnect_v1 } from './WalletConnect_v1';
-import { makeObservable } from 'mobx';
+import { makeObservable, observable } from 'mobx';
 
-class DAppHub {
-  connectingClient?: WalletConnect_v1;
+import { EventEmitter } from '../utils/events';
+import { WalletConnect_v1 } from './WalletConnect_v1';
+
+class DAppHub extends EventEmitter {
+  clients: WalletConnect_v1[] = [];
 
   constructor() {
-    makeObservable(this, {});
+    super();
+    makeObservable(this, { clients: observable });
   }
 
   connect(uri: string) {
@@ -15,7 +18,9 @@ class DAppHub {
     const [_, version] = linking.path?.split('@') ?? [];
 
     if (version === '1') {
-      this.connectingClient = new WalletConnect_v1(uri);
+      const client = new WalletConnect_v1(uri);
+      this.clients.push(client);
+      this.emit('newClient', { client });
     }
   }
 }

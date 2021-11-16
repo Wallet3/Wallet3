@@ -2,103 +2,42 @@ import 'react-native-gesture-handler';
 import './configs/polyfill';
 import './configs/debug';
 
-import * as Linking from 'expo-linking';
-
 import AppViewModel, { AppVM } from './viewmodels/App';
 import AuthViewModel, { Authentication } from './viewmodels/Authentication';
 import { ConnectDApp, NetworksMenu, Request, Send } from './modals';
-import { Dimensions, Text, View } from 'react-native';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { autorun, reaction } from 'mobx';
-import { fontColor, styles } from './constants/styles';
+import React, { useEffect, useState } from 'react';
 
 import AddToken from './screens/tokens/AddToken';
 import Backup from './screens/settings/Backup';
 import ChangePasscode from './screens/settings/ChangePasscode';
 import Currencies from './screens/settings/Currencies';
-import Drawer from './screens/home/Drawer';
+import { Dimensions } from 'react-native';
 import FlashMessage from 'react-native-flash-message';
 import { FullPasspad } from './modals/views/Passpad';
-import HomeScreen from './screens/home';
 import { Host } from 'react-native-portalize';
 import { IToken } from './common/Tokens';
+import { Ionicons } from '@expo/vector-icons';
 import LandScreen from './screens/land';
 import Languages from './screens/settings/Languages';
 import { Modalize } from 'react-native-modalize';
 import { NavigationContainer } from '@react-navigation/native';
 import Networks from './viewmodels/Networks';
-import { Passpad } from './modals/views';
 import PubSub from 'pubsub-js';
 import QRScan from './screens/misc/QRScan';
-import { SafeViewContainer } from './components';
-import SettingScreen from './screens/settings';
+import Root from './screens/Root';
 import Tokens from './screens/tokens/SortTokens';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import VerifySecret from './screens/settings/VerifySecret';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { autorun } from 'mobx';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { observer } from 'mobx-react-lite';
+import { styles } from './constants/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
-const DrawerRoot = createDrawerNavigator();
 const StackRoot = createNativeStackNavigator();
-const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 
 AppViewModel.init();
-
-type RootStackParamList = {
-  Home: undefined;
-  QRScan: undefined;
-};
-
-const Root = observer(({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>) => {
-  const { Navigator, Screen } = DrawerRoot;
-
-  return (
-    <Navigator
-      initialRouteName="Home"
-      screenOptions={{
-        headerTransparent: false,
-        headerTintColor: fontColor,
-        swipeEdgeWidth: ScreenWidth * 0.37,
-        drawerType: 'slide',
-      }}
-      drawerContent={Drawer}
-    >
-      <Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          title: 'Wallet 3',
-          headerRight: () => (
-            <TouchableOpacity
-              onPress={() => navigation.navigate('QRScan')}
-              style={{
-                zIndex: 5,
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                position: 'relative',
-                paddingStart: 8,
-                marginEnd: 17,
-              }}
-            >
-              <MaterialCommunityIcons name="scan-helper" size={18} style={{}} />
-              <View
-                style={{ position: 'absolute', left: 2, right: 2.5, height: 1.5, backgroundColor: '#000', marginStart: 8 }}
-              />
-            </TouchableOpacity>
-          ),
-        }}
-      />
-
-      <Screen name="Settings" component={SettingScreen} options={{ title: 'Settings' }} />
-    </Navigator>
-  );
-});
 
 const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication }) => {
   const { Navigator, Screen } = StackRoot;
@@ -109,6 +48,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
   const { ref: connectDappRef, open: openConnectDapp, close: closeConnectDapp } = useModalize();
 
   const [userSelectedToken, setUserSelectedToken] = useState<IToken>();
+  const [connectUri, setConnectUri] = useState<string>();
 
   useEffect(() => {
     PubSub.subscribe('CodeScan', (_, { data }) => {
@@ -289,9 +229,3 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
 });
 
 export default () => <App app={AppViewModel} appAuth={AuthViewModel} />;
-
-console.log(
-  Linking.parse(
-    'wc:ede2260a-d193-4461-aac3-927b4236f577@1?bridge=https%3A%2F%2Fv.bridge.walletconnect.org&key=8bf7950d073cbf5370f72c7502d9830b15a0fd3baef314fdb8e8bbb5f6065437'
-  )
-);
