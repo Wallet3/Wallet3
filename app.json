@@ -14,7 +14,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "bundleIdentifier": "jp.co.chainbow.wallet3.mobile",
       "supportsTablet": false,
@@ -27,7 +29,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "jp.co.chainbow.wallet3.mobile"
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -21,6 +21,7 @@ class DAppHub extends EventEmitter {
       const client = new WalletConnect_v1(uri);
       this.clients.push(client);
       this.emit('newClient', { client });
+      return client;
     }
   }
 }

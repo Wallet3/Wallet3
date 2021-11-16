@@ -52,6 +52,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
 
   useEffect(() => {
     PubSub.subscribe('CodeScan', (_, { data }) => {
+      setConnectUri(data);
       openConnectDapp();
     });
 
@@ -220,7 +221,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
         modalStyle={styles.modalStyle}
         scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
       >
-        <ConnectDApp />
+        <ConnectDApp uri={connectUri} />
       </Modalize>
 
       <FlashMessage position="top" hideStatusBar />

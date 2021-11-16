@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-// import DAppHub from '../viewmodels/DAppHub';
+import DAppHub from '../viewmodels/DAppHub';
 import Loading from './views/Loading';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { SafeAreaView } from 'react-native';
@@ -18,6 +18,10 @@ export default observer(({ uri }: Props) => {
   console.log('ConnectDapp');
 
   useEffect(() => {
+    if (!uri) return;
+
+    const client = DAppHub.connect(uri);
+    client?.once('sessionRequest', () => {console.log(client.appMeta)});
     // DAppHub.on('newClient', ({ client }: { client: WalletConnect_v1 }) => {
     //   setConnecting(true);
     //   client.once('sessionRequest', () => {

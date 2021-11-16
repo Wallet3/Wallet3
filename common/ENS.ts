@@ -80,6 +80,7 @@ async function fetchAvatar(nodehash: string, owner: string, resolver = ENSResolv
     if (match == null) {
       continue;
     }
+
     switch (match[1]) {
       case 'https':
         linkage.push({ type: 'url', content: avatar });

@@ -5,7 +5,8 @@ import { EventEmitter } from '../utils/events';
 import WalletConnectClient from '@walletconnect/client';
 
 export class WalletConnect_v1 extends EventEmitter {
-  client!: WalletConnectClient;
+  private client!: WalletConnectClient;
+
   peerId = '';
   appMeta: WCClientMeta | null = null;
 
@@ -74,26 +75,26 @@ export class WalletConnect_v1 extends EventEmitter {
 
     switch (request.method) {
       case 'eth_sendTransaction':
-    //     const [param, chainId] = request.params as [WCCallRequest_eth_sendTransaction, string];
-    //     if (!checkAccount(param.from)) return;
+      //     const [param, chainId] = request.params as [WCCallRequest_eth_sendTransaction, string];
+      //     if (!checkAccount(param.from)) return;
 
-    //     this.eth_sendTransaction(request, param, chainId ? Number.parseInt(chainId) : undefined);
-    //     break;
-    //   case 'eth_signTransaction':
-    //     this.connector.rejectRequest({ id: request.id, error: { message: 'Use eth_sendTransaction' } });
-    //     return;
-    //   case 'eth_sign':
-    //     if (!checkAccount(request.params[0])) return;
-    //     this.sign(request, request.params, 'eth_sign');
-    //     break;
-    //   case 'personal_sign':
-    //     if (!checkAccount(request.params[1])) return;
-    //     this.sign(request, request.params, 'personal_sign');
-    //     break;
-    //   case 'eth_signTypedData':
-    //     if (!checkAccount(request.params[0])) return;
-    //     this.sign(request, request.params, 'signTypedData');
-    //     break;
+      //     this.eth_sendTransaction(request, param, chainId ? Number.parseInt(chainId) : undefined);
+      //     break;
+      //   case 'eth_signTransaction':
+      //     this.connector.rejectRequest({ id: request.id, error: { message: 'Use eth_sendTransaction' } });
+      //     return;
+      //   case 'eth_sign':
+      //     if (!checkAccount(request.params[0])) return;
+      //     this.sign(request, request.params, 'eth_sign');
+      //     break;
+      //   case 'personal_sign':
+      //     if (!checkAccount(request.params[1])) return;
+      //     this.sign(request, request.params, 'personal_sign');
+      //     break;
+      //   case 'eth_signTypedData':
+      //     if (!checkAccount(request.params[0])) return;
+      //     this.sign(request, request.params, 'signTypedData');
+      //     break;
     }
 
     this.emit('sessionUpdated');
