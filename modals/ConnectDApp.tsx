@@ -1,6 +1,7 @@
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { Button, SafeViewContainer } from '../components';
 import { INetwork, Networks } from '../common/Networks';
+import { NetworkIcons, generateNetworkIcon } from '../assets/icons/networks/color';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { borderColor, secondaryFontColor, themeColor, thirdFontColor } from '../constants/styles';
@@ -43,9 +44,18 @@ const DApp = observer(({ client, onNetworksPress, close }: DAppProps) => {
       <View style={{ flexDirection: 'row', justifyContent: 'flex-end', width: '100%' }}>
         <TouchableOpacity
           onPress={onNetworksPress}
-          style={{ padding: 6, paddingHorizontal: 16, borderColor, borderWidth: 1, borderRadius: 100 }}
+          style={{
+            padding: 6,
+            paddingHorizontal: 12,
+            borderColor,
+            borderWidth: 1,
+            borderRadius: 100,
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
         >
-          <Text style={{ color: network.color }}>{network.network}</Text>
+          {generateNetworkIcon({ chainId: network.chainId, width: 16, height: 16 })}
+          <Text style={{ color: network.color, marginStart: 8 }}>{network.network}</Text>
         </TouchableOpacity>
       </View>
 

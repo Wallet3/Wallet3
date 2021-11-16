@@ -1,3 +1,5 @@
+import { StyleProp, ViewStyle } from 'react-native';
+
 import Arbitrum from './arbitrum.svg';
 import Avalanche from './avalanche.svg';
 import Bsc from './bsc.svg';
@@ -15,18 +17,18 @@ import ZKSync from './zksync.svg';
 
 export { Arbitrum, Avalanche, Bsc, Celo, Ethereum, Fantom, Heco, Mumbai, OKEx, Optimism, Polygon, XDai, ZKSync };
 
-const ETH = <Ethereum width={32} height={32} style={{ marginHorizontal: -5 }} />;
-const ARB = <Arbitrum width={32} height={32} />;
-const OPT = <Optimism width={32} height={32} />;
-const AVL = <Avalanche width={32} height={32} />;
-const BSC = <Bsc width={32} height={32} />;
-const CELO = <Celo width={32} height={32} />;
-const FTM = <Fantom width={32} height={32} />;
-const HECO = <Heco width={32} height={32} />;
-const OKX = <OKEx width={32} height={32} />;
-const POLY = <Polygon width={27} height={32} />;
-const xDAI = <XDai width={32} height={32} />;
-const ZSYNC = <ZKSync width={32} height={32} />;
+const ETH = generateNetworkIcon({ chainId: 1, width: 32, style: { marginHorizontal: -5 } }); // <Ethereum width={32} height={32} style={{ marginHorizontal: -5 }} />;
+const ARB = generateNetworkIcon({ chainId: 42161, width: 32 });
+const OPT = generateNetworkIcon({ chainId: 10, width: 32 });
+const AVL = generateNetworkIcon({ chainId: 43114, width: 32 });
+const BSC = generateNetworkIcon({ chainId: 56, width: 32 });
+const CELO = generateNetworkIcon({ chainId: 42220, width: 32 });
+const FTM = generateNetworkIcon({ chainId: 250, width: 32 });
+const HECO = generateNetworkIcon({ chainId: 128, width: 32 });
+const OKX = generateNetworkIcon({ chainId: 66, width: 32 });
+const POLY = generateNetworkIcon({ chainId: 137, width: 27, height: 32 });
+const xDAI = generateNetworkIcon({ chainId: 100, width: 32 });
+// const ZSYNC = <ZKSync width={32} height={32} />;
 
 export const NetworkIcons = {
   1: ETH,
@@ -42,3 +44,32 @@ export const NetworkIcons = {
   100: xDAI,
   // zksync: ZSYNC,
 };
+
+export function generateNetworkIcon(props: { chainId: number; width: number; height?: number; style?: StyleProp<ViewStyle> }) {
+  const { chainId, width, height, style } = props;
+
+  switch (chainId) {
+    case 1:
+      return <Ethereum width={width} height={height ?? width} style={style} />;
+    case 42161:
+      return <Arbitrum width={width} height={height ?? width} style={style} />;
+    case 10:
+      return <Optimism width={width} height={height ?? width} style={style} />;
+    case 137:
+      return <Polygon width={width} height={height ?? width} style={style} />;
+    case 100:
+      return <XDai width={width} height={height ?? width} style={style} />;
+    case 43114:
+      return <Avalanche width={width} height={height ?? width} style={style} />;
+    case 56:
+      return <Bsc width={width} height={height ?? width} style={style} />;
+    case 42220:
+      return <Celo width={width} height={height ?? width} style={style} />;
+    case 250:
+      return <Fantom width={width} height={height ?? width} style={style} />;
+    case 128:
+      return <Heco width={width} height={height ?? width} style={style} />;
+    case 66:
+      return <OKEx width={width} height={height ?? width} style={style} />;
+  }
+}
