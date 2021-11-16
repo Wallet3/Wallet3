@@ -1,7 +1,7 @@
 import { WCCallRequestRequest, WCClientMeta, WCSessionRequestRequest } from '../models/WCSession_v1';
 import { makeObservable, observable } from 'mobx';
 
-import { EventEmitter } from '../utils/events';
+import { EventEmitter } from 'events';
 import WalletConnectClient from '@walletconnect/client';
 
 export class WalletConnect_v1 extends EventEmitter {
@@ -9,11 +9,12 @@ export class WalletConnect_v1 extends EventEmitter {
 
   peerId = '';
   appMeta: WCClientMeta | null = null;
+  enabledChains: number[] = [];
 
   constructor(uri?: string) {
     super();
 
-    makeObservable(this, { appMeta: observable });
+    makeObservable(this, { appMeta: observable, enabledChains: observable });
     if (uri) this.connect(uri);
   }
 
@@ -35,17 +36,18 @@ export class WalletConnect_v1 extends EventEmitter {
     this.client.on('transport_open', () => this.emit('transport_open'));
   }
 
-  private handleSessionRequest = async (error: Error | null, request: WCSessionRequestRequest) => {
+  private handleSessionRequest = (error: Error | null, request: WCSessionRequestRequest) => {
     if (error) {
       this.emit('error', error);
       return;
     }
 
-    this.emit('sessionRequest');
-
-    const [{ peerMeta, peerId }] = request.params;
+    const [{ peerMeta, peerId, chainId }] = request.params;
     this.peerId = peerId;
     this.appMeta = peerMeta;
+    this.enabledChains = [chainId ?? 1];
+
+    this.emit('sessionRequest');
   };
 
   approveSession = async (accounts: string[], chainId: number) => {
@@ -115,5 +117,9 @@ export class WalletConnect_v1 extends EventEmitter {
     (this.client as any) = undefined;
     (this.approveSession as any) = undefined;
     (this.rejectSession as any) = undefined;
+  }
+
+  killSession() {
+    return this.client?.killSession({ message: 'disconnect' });
   }
 }

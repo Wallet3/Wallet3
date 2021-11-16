@@ -8,6 +8,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { formatAddress } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
 import { openBrowserAsync } from 'expo-web-browser';
+import { thirdFontColor } from '../../constants/styles';
 import { utils } from 'ethers';
 
 export default observer(({ tx }: { tx?: Transaction }) => {
@@ -104,7 +105,7 @@ const styles = StyleSheet.create({
 
   txt: {
     fontSize: 15,
-    color: '#75869c',
+    color: thirdFontColor,
     maxWidth: '50%',
   },
 });

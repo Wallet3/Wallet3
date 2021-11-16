@@ -4,12 +4,12 @@ import { Button, Coin, Skeleton } from '../../components';
 import { Defs, LinearGradient, Stop } from 'react-native-svg';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { fontColor, thirdFontColor } from '../../constants/styles';
 
 import { FontAwesome } from '@expo/vector-icons';
 import { IToken } from '../../common/Tokens';
 import { LineChart } from 'react-native-svg-charts';
 import { TokenData } from '../../viewmodels/TokenData';
-import { fontColor } from '../../constants/styles';
 import { observer } from 'mobx-react-lite';
 
 interface Props {
@@ -111,7 +111,7 @@ export default observer(({ token, themeColor, onSendPress }: Props) => {
 
 const styles = StyleSheet.create({
   subTitle: {
-    color: '#75869c',
+    color: thirdFontColor,
     opacity: 0.72,
     fontWeight: '500',
     fontSize: 15,

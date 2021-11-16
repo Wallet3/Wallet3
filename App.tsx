@@ -1,7 +1,3 @@
-import 'react-native-gesture-handler';
-import './configs/polyfill';
-import './configs/debug';
-
 import AppViewModel, { AppVM } from './viewmodels/App';
 import AuthViewModel, { Authentication } from './viewmodels/Authentication';
 import { ConnectDApp, NetworksMenu, Request, Send } from './modals';
