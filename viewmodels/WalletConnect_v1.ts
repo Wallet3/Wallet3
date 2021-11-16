@@ -32,8 +32,10 @@ export class WalletConnect_v1 extends EventEmitter {
     this.client.on('session_request', this.handleSessionRequest);
     this.client.on('call_request', this.handleCallRequest);
     this.client.on('disconnect', () => this.emit('disconnect'));
-    this.client.on('transport_error', () => this.emit('transport_error'));
-    this.client.on('transport_open', () => this.emit('transport_open'));
+    this.client.on('transport_error', () => {
+      this.emit('transport_error');
+      console.log('transport_error');
+    });
   }
 
   private handleSessionRequest = (error: Error | null, request: WCSessionRequestRequest) => {
@@ -112,7 +114,10 @@ export class WalletConnect_v1 extends EventEmitter {
     this.client?.off('disconnect');
     this.client?.off('transport_error');
     this.client?.off('transport_open');
-    this.client?.transportClose();
+
+    try {
+      this.client?.transportClose();
+    } catch (error) {}
 
     (this.client as any) = undefined;
     (this.approveSession as any) = undefined;
@@ -120,6 +125,8 @@ export class WalletConnect_v1 extends EventEmitter {
   }
 
   killSession() {
-    return this.client?.killSession({ message: 'disconnect' });
+    try {
+      return this.client?.killSession({ message: 'disconnect' });
+    } catch (error) {}
   }
 }

@@ -1,13 +1,16 @@
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { Button, SafeViewContainer } from '../components';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { themeColor, thirdFontColor } from '../constants/styles';
+import { borderColor, secondaryFontColor, themeColor, thirdFontColor } from '../constants/styles';
 
-import { AntDesign } from '@expo/vector-icons';
 import DAppHub from '../viewmodels/DAppHub';
+import { INetwork } from '../common/Networks';
 import Image from 'react-native-expo-cached-image';
 import Loading from './views/Loading';
+import Networks from '../viewmodels/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import Swiper from 'react-native-swiper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { WCClientMeta } from '../models/WCSession_v1';
 import { WalletConnect_v1 } from '../viewmodels/WalletConnect_v1';
@@ -16,66 +19,127 @@ import styles from './styles';
 
 interface Props {
   uri?: string;
+  close: Function;
 }
 
-const DApp = observer(({ app }: { app: WCClientMeta }) => {
+interface DAppProps {
+  client: WalletConnect_v1;
+  networks: INetwork[];
+  onNetworksPress?: () => void;
+  close: Function;
+}
+
+const DApp = observer(({ client, onNetworksPress, networks, close }: DAppProps) => {
+  const [network] = networks;
+  const app = client.appMeta!;
+
+  const reject = async () => {
+    close();
+    await client.killSession();
+    client.dispose();
+  };
+
   return (
-    <SafeViewContainer style={{ flex: 1, alignItems: 'center' }}>
+    <View style={{ flex: 1, alignItems: 'center' }}>
       <View style={{ flexDirection: 'row', justifyContent: 'flex-end', width: '100%' }}>
-        <TouchableOpacity style={{ paddingStart: 12 }}>
-          <AntDesign name="close" size={24} />
+        <TouchableOpacity
+          onPress={onNetworksPress}
+          style={{ padding: 6, paddingHorizontal: 16, borderColor, borderWidth: 1, borderRadius: 100 }}
+        >
+          <Text style={{ color: network.color }}>{network.network}</Text>
         </TouchableOpacity>
       </View>
 
       <View style={{ flex: 1 }} />
 
-      <Image source={{ uri: app.icons[0] }} style={{ width: 72, height: 72, borderRadius: 100, marginBottom: 8 }} />
+      <Image source={{ uri: app.icons[0] }} style={{ width: 72, height: 72, marginBottom: 12 }} />
 
-      <Text style={viewStyles.txt}>{app.name}</Text>
+      <Text style={{ ...viewStyles.txt, fontSize: 24, fontWeight: '500', opacity: 1 }}>{app.name}</Text>
+
+      <Text style={viewStyles.txt} numberOfLines={1}>
+        {app.url}
+      </Text>
+
       {app.description ? (
         <Text style={viewStyles.txt} numberOfLines={2}>
           {app.description}
         </Text>
       ) : undefined}
-      <Text style={viewStyles.txt} numberOfLines={1}>
-        {app.url}
-      </Text>
 
       <View style={{ flex: 1 }} />
 
       <View style={{ width: '100%' }}>
+        <Button title="Connect" />
+
         <Button
           title="Reject"
           txtStyle={{ color: themeColor }}
           themeColor="transparent"
-          style={{ marginBottom: 12, borderColor: themeColor, borderWidth: 1 }}
+          style={{ marginTop: 12, borderColor: themeColor, borderWidth: 1 }}
+          onPress={reject}
         />
-        <Button title="Connect" />
       </View>
+    </View>
+  );
+});
+
+const ConnectDApp = observer(({ client, close }: { client: WalletConnect_v1; close: Function }) => {
+  const swiper = useRef<Swiper>(null);
+
+  return (
+    <SafeViewContainer style={{ flex: 1 }}>
+      <Swiper
+        ref={swiper}
+        showsPagination={false}
+        showsButtons={false}
+        scrollEnabled={false}
+        loop={false}
+        automaticallyAdjustContentInsets
+      >
+        <DApp client={client} networks={[Networks.current]} close={close} />
+      </Swiper>
     </SafeViewContainer>
   );
 });
 
-export default observer(({ uri }: Props) => {
+const TimeoutView = ({ close }: { close: Function }) => {
+  return (
+    <SafeViewContainer style={{ flex: 1 }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Ionicons name="timer-outline" color="crimson" size={72} />
+        <Text style={{ fontSize: 24, color: 'crimson', marginTop: 12 }}>Connection Timeout</Text>
+        <Text style={{ fontSize: 17, color: 'crimson', marginTop: 12 }}>Please refresh webpage and try again.</Text>
+      </View>
+      <Button title="Close" onPress={() => close()} />
+    </SafeViewContainer>
+  );
+};
+
+export default observer(({ uri, close }: Props) => {
   const [connecting, setConnecting] = useState(true);
   const [connectTimeout, setConnectTimeout] = useState(false);
-  const [appMeta, setAppMeta] = useState<WCClientMeta>();
+  const [client, setClient] = useState<WalletConnect_v1>();
 
   useEffect(() => {
     console.log('Connecting DApp');
     if (!uri) return;
+    if (client) return;
 
-    const client = DAppHub.connect(uri);
+    let wc_client = DAppHub.connect(uri);
     const timeout = setTimeout(async () => {
+      console.log('timeout');
       setConnectTimeout(true);
-      await client?.killSession();
-      client?.dispose();
-    }, 30 * 1000);
+      setConnecting(false);
+      setClient(undefined);
+      await wc_client?.killSession();
+      wc_client?.dispose();
+      wc_client = undefined;
+    }, 15 * 1000);
 
-    client?.once('sessionRequest', () => {
+    wc_client?.once('sessionRequest', () => {
       clearTimeout(timeout);
       setConnecting(false);
-      setAppMeta(client.appMeta!);
+      setClient(wc_client!);
     });
   }, [uri]);
 
@@ -83,7 +147,8 @@ export default observer(({ uri }: Props) => {
     <SafeAreaProvider>
       <SafeAreaView style={styles.safeArea}>
         {connecting ? <Loading /> : undefined}
-        {appMeta ? <DApp app={appMeta} /> : undefined}
+        {client ? <ConnectDApp client={client} close={close} /> : undefined}
+        {connectTimeout ? <TimeoutView close={close} /> : undefined}
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -92,8 +157,10 @@ export default observer(({ uri }: Props) => {
 const viewStyles = StyleSheet.create({
   txt: {
     color: thirdFontColor,
+    opacity: 0.75,
     fontSize: 17,
-    maxWidth: '85%',
-    marginBottom: 8,
+    maxWidth: '100%',
+    marginBottom: 12,
+    textAlign: 'center',
   },
 });

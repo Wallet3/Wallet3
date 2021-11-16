@@ -217,7 +217,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
         modalStyle={styles.modalStyle}
         scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
       >
-        <ConnectDApp uri={connectUri} />
+        <ConnectDApp uri={connectUri} close={closeConnectDapp} />
       </Modalize>
 
       <FlashMessage position="top" hideStatusBar />
