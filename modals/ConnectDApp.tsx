@@ -1,6 +1,6 @@
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { Button, SafeViewContainer } from '../components';
-import { INetwork, Networks } from '../common/Networks';
+import { INetwork, Networks, PublicNetworks } from '../common/Networks';
 import { NetworkIcons, generateNetworkIcon } from '../assets/icons/networks/color';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
@@ -9,6 +9,7 @@ import { borderColor, secondaryFontColor, themeColor, thirdFontColor } from '../
 import DAppHub from '../viewmodels/DAppHub';
 import Image from 'react-native-expo-cached-image';
 import Loading from './views/Loading';
+import NetworkSelector from './views/NetworkSelector';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -39,15 +40,27 @@ const DApp = observer(({ client, onNetworksPress, close }: DAppProps) => {
     client.dispose();
   };
 
+  if (!network) {
+    return (
+      <View style={{ flex: 1 }}>
+        <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+          <Text style={{ color: 'crimson', fontSize: 24 }}>Not Supported Network</Text>
+        </View>
+        <Button title="Close" onPress={() => close()} />
+      </View>
+    );
+  }
+
   return (
-    <View style={{ flex: 1, alignItems: 'center' }}>
+    <SafeViewContainer style={{ flex: 1, alignItems: 'center' }}>
       <View style={{ flexDirection: 'row', justifyContent: 'flex-end', width: '100%' }}>
         <TouchableOpacity
           onPress={onNetworksPress}
+          disabled={client.version > 1}
           style={{
             padding: 6,
             paddingHorizontal: 12,
-            borderColor,
+            borderColor: `${network.color}90`,
             borderWidth: 1,
             borderRadius: 100,
             flexDirection: 'row',
@@ -55,7 +68,7 @@ const DApp = observer(({ client, onNetworksPress, close }: DAppProps) => {
           }}
         >
           {generateNetworkIcon({ chainId: network.chainId, width: 16, height: 16 })}
-          <Text style={{ color: network.color, marginStart: 8 }}>{network.network}</Text>
+          <Text style={{ color: network.color, marginStart: 8 }}>{`${network.network}`}</Text>
         </TouchableOpacity>
       </View>
 
@@ -88,26 +101,30 @@ const DApp = observer(({ client, onNetworksPress, close }: DAppProps) => {
           onPress={reject}
         />
       </View>
-    </View>
+    </SafeViewContainer>
   );
 });
 
 const ConnectDApp = observer(({ client, close }: { client: WalletConnect_v1; close: Function }) => {
   const swiper = useRef<Swiper>(null);
 
+  const selectNetworks = (chains: number[]) => {
+    swiper.current?.scrollTo(0);
+    client.setChains(chains);
+  };
+
   return (
-    <SafeViewContainer style={{ flex: 1 }}>
-      <Swiper
-        ref={swiper}
-        showsPagination={false}
-        showsButtons={false}
-        scrollEnabled={false}
-        loop={false}
-        automaticallyAdjustContentInsets
-      >
-        <DApp client={client} close={close} />
-      </Swiper>
-    </SafeViewContainer>
+    <Swiper
+      ref={swiper}
+      showsPagination={false}
+      showsButtons={false}
+      scrollEnabled={false}
+      loop={false}
+      automaticallyAdjustContentInsets
+    >
+      <DApp client={client} close={close} onNetworksPress={() => swiper.current?.scrollTo(1)} />
+      <NetworkSelector networks={PublicNetworks} selectedChains={client.enabledChains} onDone={selectNetworks} />
+    </Swiper>
   );
 });
 

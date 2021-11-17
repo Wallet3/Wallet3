@@ -44,7 +44,8 @@ export default observer((props: Props) => {
             keyExtractor={(i) => i.network}
             data={PublicNetworks}
             renderItem={renderItem}
-            style={{ marginHorizontal: -16, paddingHorizontal: 16, marginTop: -4 }}
+            contentContainerStyle={{ paddingBottom: 32 }}
+            style={{ marginHorizontal: -16, paddingHorizontal: 16, marginTop: -4, marginBottom: -32 }}
           />
         </SafeViewContainer>
       </SafeAreaView>

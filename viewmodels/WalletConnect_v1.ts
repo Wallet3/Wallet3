@@ -1,5 +1,5 @@
 import { WCCallRequestRequest, WCClientMeta, WCSessionRequestRequest } from '../models/WCSession_v1';
-import { makeObservable, observable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 
 import { EventEmitter } from 'events';
 import WalletConnectClient from '@walletconnect/client';
@@ -10,11 +10,12 @@ export class WalletConnect_v1 extends EventEmitter {
   peerId = '';
   appMeta: WCClientMeta | null = null;
   enabledChains: number[] = [1];
+  readonly version = 1;
 
   constructor(uri?: string) {
     super();
 
-    makeObservable(this, { appMeta: observable, enabledChains: observable });
+    makeObservable(this, { appMeta: observable, enabledChains: observable, setChains: action });
     if (uri) this.connect(uri);
   }
 
@@ -36,6 +37,10 @@ export class WalletConnect_v1 extends EventEmitter {
       this.emit('transport_error');
       console.log('transport_error');
     });
+  }
+
+  setChains(chains: number[]) {
+    this.enabledChains = chains;
   }
 
   private handleSessionRequest = (error: Error | null, request: WCSessionRequestRequest) => {
