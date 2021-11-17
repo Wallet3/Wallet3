@@ -1,3 +1,5 @@
+import * as ethSignUtil from '@metamask/eth-sig-util';
+
 import { Wallet as EthersWallet, providers, utils } from 'ethers';
 import { action, makeObservable, observable, reaction, runInAction } from 'mobx';
 
@@ -7,8 +9,8 @@ import Authentication from './Authentication';
 import Key from '../models/Key';
 import Networks from './Networks';
 import { ReadableInfo } from '../models/Transaction';
+import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import TxHub from './TxHub';
-import { sendTransaction } from '../common/RPC';
 
 type SendTxRequest = {
   accountIndex: number;
@@ -92,13 +94,20 @@ export class Wallet {
     this.refreshTimer = setTimeout(() => this.refreshAccount(), 1000 * 60);
   }
 
-  private async openWallet({ pin, accountIndex }: { pin?: string; accountIndex: number }) {
-    const secret = await Authentication.decrypt(this.key.bip32Xprivkey, pin);
-    if (!secret) return undefined;
+  private async unlockPrivateKey({ pin, accountIndex }: { pin?: string; accountIndex?: number }) {
+    const xprivkey = await Authentication.decrypt(this.key.bip32Xprivkey, pin);
+    if (!xprivkey) return undefined;
 
-    const bip32 = utils.HDNode.fromExtendedKey(secret);
-    const account = bip32.derivePath(`${accountIndex}`);
-    return new EthersWallet(account.privateKey);
+    const bip32 = utils.HDNode.fromExtendedKey(xprivkey);
+    const account = bip32.derivePath(`${accountIndex ?? 0}`);
+    return account.privateKey;
+  }
+
+  private async openWallet(args: { pin?: string; accountIndex: number }) {
+    const key = await this.unlockPrivateKey(args);
+    if (!key) return undefined;
+
+    return new EthersWallet(key);
   }
 
   async signTx({ accountIndex, tx, pin }: SendTxRequest) {
@@ -116,8 +125,16 @@ export class Wallet {
   }
 
   async signTypedData(request: SignTypedDataRequest) {
-    const w = await this.openWallet({ accountIndex: this.currentAccount!.index, ...request });
-    // return w?._signTypedData(request.msg.domain, request.msg.types, request.msg.message);
+    try {
+      const key = await this.unlockPrivateKey(request);
+      if (!key) return undefined;
+
+      return ethSignUtil.signTypedData({
+        privateKey: Buffer.from(utils.arrayify(key)),
+        version: SignTypedDataVersion.V4,
+        data: request.typedData,
+      });
+    } catch (error) {}
   }
 
   async sendTx(request: SendTxRequest) {
