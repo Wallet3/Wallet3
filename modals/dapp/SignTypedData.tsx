@@ -37,11 +37,11 @@ export default observer(
         </View>
 
         <ScrollView
-          style={{ flex: 1, marginHorizontal: -16, paddingHorizontal: 16 }}
+          style={{ flex: 1, marginHorizontal: -16, paddingHorizontal: 12 }}
           contentContainerStyle={{}}
           bounces={false}
         >
-          <JSONTree data={data} hideRoot shouldExpandNode={() => true} theme={theme} />
+          <JSONTree data={data} hideRoot theme={theme} />
         </ScrollView>
 
         <View style={{ flexDirection: 'row', marginTop: 12 }}>

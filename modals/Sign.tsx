@@ -25,8 +25,8 @@ interface Props {
 }
 
 export default observer(({ request, themeColor, client, close, wallet, appAuth }: Props) => {
-  const [msg, setMsg] = useState('');
-  const [typedData, setTypedData] = useState({});
+  const [msg, setMsg] = useState<string>();
+  const [typedData, setTypedData] = useState();
   const [type, setType] = useState('');
   const [verified, setVerified] = useState(false);
 
@@ -34,6 +34,8 @@ export default observer(({ request, themeColor, client, close, wallet, appAuth }
 
   useEffect(() => {
     const { params, method } = request;
+    setMsg(undefined);
+    setTypedData(undefined);
 
     try {
       switch (method) {
@@ -61,7 +63,7 @@ export default observer(({ request, themeColor, client, close, wallet, appAuth }
   };
 
   const sign = async (pin?: string) => {
-    const signed = typedData ? await wallet.signTypedData({ typedData, pin }) : await wallet.signMessage({ msg, pin });
+    const signed = typedData ? await wallet.signTypedData({ typedData, pin }) : await wallet.signMessage({ msg: msg!, pin });
 
     if (signed) {
       client.approveRequest(request.id, signed);
@@ -99,11 +101,11 @@ export default observer(({ request, themeColor, client, close, wallet, appAuth }
             automaticallyAdjustContentInsets
           >
             {type === 'plaintext' ? (
-              <PlainTextSign msg={msg} themeColor={themeColor} onReject={reject} onSign={onSignPress} />
+              <PlainTextSign msg={msg!} themeColor={themeColor} onReject={reject} onSign={onSignPress} />
             ) : undefined}
 
             {type === 'typedData' ? (
-              <SignTypedData data={typedData} onReject={reject} onSign={onSignPress} themeColor={themeColor} />
+              <SignTypedData data={typedData!} onReject={reject} onSign={onSignPress} themeColor={themeColor} />
             ) : undefined}
 
             <Passpad themeColor={themeColor} onCodeEntered={(c) => sign(c)} onCancel={() => swiper.current?.scrollTo(0)} />
