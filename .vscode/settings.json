@@ -4,6 +4,7 @@
         "ciphertext",
         "Debank",
         "nodehash",
+        "swiper",
         "typeorm",
         "Viewmodel",
         "walletconnect",

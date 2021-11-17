@@ -19,7 +19,7 @@ const clientMeta = {
 
 export class WalletConnect_v1 extends EventEmitter {
   private client!: WalletConnectClient;
-  store!: WCSession_v1;
+  store?: WCSession_v1;
 
   readonly version = 1;
   peerId = '';
@@ -87,6 +87,10 @@ export class WalletConnect_v1 extends EventEmitter {
     this.client.rejectSession({ message: 'User cancelled' });
   };
 
+  rejectRequest = (id: number, message: string) => {
+    this.client.rejectRequest({ id, error: { message } });
+  };
+
   private handleCallRequest = async (error: Error | null, request: WCCallRequestRequest) => {
     if (error) {
       this.emit('error', error);
@@ -105,31 +109,31 @@ export class WalletConnect_v1 extends EventEmitter {
     console.log(request.method);
     console.log(request.params);
 
-    switch (request.method) {
-      case 'eth_sendTransaction':
-      //     const [param, chainId] = request.params as [WCCallRequest_eth_sendTransaction, string];
-      //     if (!checkAccount(param.from)) return;
+    // switch (request.method) {
+    //   case 'eth_sendTransaction':
+    //   //     const [param, chainId] = request.params as [WCCallRequest_eth_sendTransaction, string];
+    //   //     if (!checkAccount(param.from)) return;
 
-      //     this.eth_sendTransaction(request, param, chainId ? Number.parseInt(chainId) : undefined);
-      //     break;
-      //   case 'eth_signTransaction':
-      //     this.connector.rejectRequest({ id: request.id, error: { message: 'Use eth_sendTransaction' } });
-      //     return;
-      //   case 'eth_sign':
-      //     if (!checkAccount(request.params[0])) return;
-      //     this.sign(request, request.params, 'eth_sign');
-      //     break;
-      //   case 'personal_sign':
-      //     if (!checkAccount(request.params[1])) return;
-      //     this.sign(request, request.params, 'personal_sign');
-      //     break;
-      //   case 'eth_signTypedData':
-      //     if (!checkAccount(request.params[0])) return;
-      //     this.sign(request, request.params, 'signTypedData');
-      //     break;
-    }
+    //   //     this.eth_sendTransaction(request, param, chainId ? Number.parseInt(chainId) : undefined);
+    //   //     break;
+    //   //   case 'eth_signTransaction':
+    //   //     this.connector.rejectRequest({ id: request.id, error: { message: 'Use eth_sendTransaction' } });
+    //   //     return;
+    //   //   case 'eth_sign':
+    //   //     if (!checkAccount(request.params[0])) return;
+    //   //     this.sign(request, request.params, 'eth_sign');
+    //   //     break;
+    //   //   case 'personal_sign':
+    //   //     if (!checkAccount(request.params[1])) return;
+    //   //     this.sign(request, request.params, 'personal_sign');
+    //   //     break;
+    //   //   case 'eth_signTypedData':
+    //   //     if (!checkAccount(request.params[0])) return;
+    //   //     this.sign(request, request.params, 'signTypedData');
+    //   //     break;
+    // }
 
-    this.emit('sessionUpdated');
+    // this.emit('sessionUpdated');
   };
 
   dispose() {

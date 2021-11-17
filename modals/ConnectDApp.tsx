@@ -1,20 +1,16 @@
-import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { Button, SafeViewContainer } from '../components';
-import { INetwork, Networks, PublicNetworks } from '../common/Networks';
-import { NetworkIcons, generateNetworkIcon } from '../assets/icons/networks/color';
 import React, { useEffect, useRef, useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { borderColor, secondaryFontColor, themeColor, thirdFontColor } from '../constants/styles';
+import { SafeAreaView, Text, View } from 'react-native';
 
 import App from '../viewmodels/App';
+import DApp from './dapp/DApp';
 import DAppHub from '../viewmodels/DAppHub';
-import Image from 'react-native-expo-cached-image';
+import { Ionicons } from '@expo/vector-icons';
 import Loading from './views/Loading';
 import NetworkSelector from './views/NetworkSelector';
+import { PublicNetworks } from '../common/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { WCClientMeta } from '../models/WCSession_v1';
 import { WalletConnect_v1 } from '../viewmodels/WalletConnect_v1';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
@@ -24,99 +20,17 @@ interface Props {
   close: Function;
 }
 
-interface DAppProps {
-  client: WalletConnect_v1;
-  onNetworksPress?: () => void;
-  close: Function;
-}
-
-const DApp = observer(({ client, onNetworksPress, close }: DAppProps) => {
-  const networks = Networks.filter((n) => client.enabledChains.includes(n.chainId));
-  const [network] = networks;
-  const app = client.appMeta!;
-
-  const reject = async () => {
-    close();
-    await client.killSession();
-    client.dispose();
-  };
-
-  const connect = () => {
-    client.approveSession([App.currentWallet?.currentAccount?.address!]);
-    close();
-  };
-
-  if (!network) {
-    return (
-      <View style={{ flex: 1 }}>
-        <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-          <Text style={{ color: 'crimson', fontSize: 24 }}>Not Supported Network</Text>
-        </View>
-        <Button title="Close" onPress={() => close()} />
-      </View>
-    );
-  }
-
-  return (
-    <SafeViewContainer style={{ flex: 1, alignItems: 'center' }}>
-      <View style={{ flexDirection: 'row', justifyContent: 'flex-end', width: '100%' }}>
-        <TouchableOpacity
-          onPress={onNetworksPress}
-          disabled={client.version > 1}
-          style={{
-            padding: 6,
-            paddingHorizontal: 12,
-            borderColor: `${network.color}90`,
-            borderWidth: 1,
-            borderRadius: 100,
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}
-        >
-          {generateNetworkIcon({ chainId: network.chainId, width: 16, height: 16 })}
-          <Text style={{ color: network.color, marginStart: 8 }}>{`${network.network}`}</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={{ flex: 1 }} />
-
-      <Image source={{ uri: app.icons[0] }} style={{ width: 72, height: 72, marginBottom: 12 }} />
-
-      <Text style={{ ...viewStyles.txt, fontSize: 24, fontWeight: '500', opacity: 1 }}>{app.name}</Text>
-
-      <Text style={viewStyles.txt} numberOfLines={1}>
-        {app.url}
-      </Text>
-
-      {app.description ? (
-        <Text style={viewStyles.txt} numberOfLines={2}>
-          {app.description}
-        </Text>
-      ) : undefined}
-
-      <View style={{ flex: 1 }} />
-
-      <View style={{ width: '100%' }}>
-        <Button title="Connect" onPress={connect} />
-
-        <Button
-          title="Reject"
-          txtStyle={{ color: themeColor }}
-          themeColor="transparent"
-          style={{ marginTop: 12, borderColor: themeColor, borderWidth: 1 }}
-          onPress={reject}
-        />
-      </View>
-    </SafeViewContainer>
-  );
-});
-
 const ConnectDApp = observer(({ client, close }: { client: WalletConnect_v1; close: Function }) => {
   const swiper = useRef<Swiper>(null);
 
   const selectNetworks = (chains: number[]) => {
     swiper.current?.scrollTo(0);
     client.setChains(chains);
+  };
+
+  const connect = () => {
+    client.approveSession([App.currentWallet?.currentAccount?.address!]);
+    close();
   };
 
   return (
@@ -128,7 +42,7 @@ const ConnectDApp = observer(({ client, close }: { client: WalletConnect_v1; clo
       loop={false}
       automaticallyAdjustContentInsets
     >
-      <DApp client={client} close={close} onNetworksPress={() => swiper.current?.scrollTo(1)} />
+      <DApp client={client} close={close} onNetworksPress={() => swiper.current?.scrollTo(1)} onConnect={connect} />
       <NetworkSelector networks={PublicNetworks} selectedChains={client.enabledChains} onDone={selectNetworks} />
     </Swiper>
   );
@@ -184,15 +98,4 @@ export default observer(({ uri, close }: Props) => {
       </SafeAreaView>
     </SafeAreaProvider>
   );
-});
-
-const viewStyles = StyleSheet.create({
-  txt: {
-    color: thirdFontColor,
-    opacity: 0.75,
-    fontSize: 17,
-    maxWidth: '100%',
-    marginBottom: 12,
-    textAlign: 'center',
-  },
 });

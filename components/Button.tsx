@@ -11,10 +11,11 @@ interface Props {
   disabled?: boolean;
   onPress?: () => void;
   themeColor?: string;
+  reverse?: boolean;
 }
 
 export default (props: Props) => {
-  const { disabled } = props;
+  const { disabled, reverse, themeColor } = props;
 
   return (
     <TouchableOpacity
@@ -25,11 +26,17 @@ export default (props: Props) => {
         ...((props?.style as any) || {}),
         backgroundColor: disabled
           ? 'lightgrey'
+          : reverse
+          ? 'transparent'
           : props.themeColor || (props?.style as ViewStyle)?.backgroundColor || styles.default.backgroundColor,
+        borderColor: reverse ? themeColor : 'transparent',
+        borderWidth: reverse ? 1 : 0,
       }}
     >
       {props.icon?.()}
-      <Text style={{ ...styles.text, ...((props?.txtStyle as any) || {}) }}>{props?.title}</Text>
+      <Text style={{ ...styles.text, ...((props?.txtStyle as any) || {}), color: reverse ? themeColor : '#fff' }}>
+        {props?.title}
+      </Text>
     </TouchableOpacity>
   );
 };

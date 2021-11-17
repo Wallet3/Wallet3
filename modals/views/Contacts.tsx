@@ -37,8 +37,13 @@ export default observer(({ onNext, vm }: Props) => {
           vm.setTo(item.ens || item.address, item.avatar);
         }}
       >
-        <View style={{ position: 'relative' }}>
-          <FontAwesome name="user-circle-o" size={20} color={secondaryFontColor} style={{ opacity: 0.5, marginEnd: 12 }} />
+        <View style={{ position: 'relative', marginEnd: 12 }}>
+          <FontAwesome
+            name="user-circle-o"
+            size={20}
+            color={secondaryFontColor}
+            style={{ width: 20, height: 20, opacity: 0.5 }}
+          />
           {item.avatar ? (
             <Image source={{ uri: item.avatar }} style={{ position: 'absolute', width: 20, height: 20, borderRadius: 100 }} />
           ) : undefined}

@@ -55,7 +55,7 @@ class DAppHub extends EventEmitter {
 
   private handleLifecycle(client: WalletConnect_v1) {
     client.once('disconnect', () => {
-      client.store.remove();
+      client.store?.remove?.();
       runInAction(() => (this.clients = this.clients.filter((c) => c !== client)));
     });
   }

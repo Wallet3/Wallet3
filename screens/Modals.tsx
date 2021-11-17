@@ -1,4 +1,4 @@
-import { ConnectDApp, NetworksMenu, Request, Send } from '../modals';
+import { ConnectDApp, NetworksMenu, Request, Send, Sign } from '../modals';
 import React, { useEffect, useState } from 'react';
 
 import { AppVM } from '../viewmodels/App';
@@ -8,11 +8,58 @@ import { FullPasspad } from '../modals/views/Passpad';
 import { IToken } from '../common/Tokens';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../viewmodels/Networks';
+import { WCCallRequestRequest } from '../models/WCSession_v1';
+import { WalletConnect_v1 } from '../viewmodels/WalletConnect_v1';
 import { autorun } from 'mobx';
 import { styles } from '../constants/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 const ScreenHeight = Dimensions.get('window').height;
+
+const WalletConnectRequests = ({ appAuth }: { appAuth: Authentication }) => {
+  const { ref, open, close } = useModalize();
+  const [type, setType] = useState<string>();
+  const [client, setClient] = useState<WalletConnect_v1>();
+  const [request, setRequest] = useState<WCCallRequestRequest>();
+
+  useEffect(() => {
+    PubSub.subscribe('wc_request', (_, { client, request }: { client: WalletConnect_v1; request: WCCallRequestRequest }) => {
+      if (!appAuth.appAuthorized) {
+        client.rejectRequest(request.id, 'Unauthorized');
+        return;
+      }
+
+      switch (request.method) {
+        case 'eth_sign':
+        case 'personal_sign':
+          setRequest(request);
+          setType('sign');
+          break;
+      }
+
+      setClient(client);
+      setTimeout(() => open(), 0);
+    });
+  }, []);
+
+  return (
+    <Modalize
+      ref={ref}
+      adjustToContentHeight
+      panGestureEnabled={false}
+      panGestureComponentEnabled={false}
+      tapGestureEnabled={false}
+      closeOnOverlayTap={false}
+      useNativeDriver={false}
+      withHandle={false}
+      disableScrollIfPossible
+      modalStyle={styles.modalStyle}
+      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+    >
+      {type === 'sign' ? <Sign client={client!} request={request!} themeColor={Networks.current.color} /> : undefined}
+    </Modalize>
+  );
+};
 
 const WalletConnectV1 = () => {
   const { ref: connectDappRef, open: openConnectDapp, close: closeConnectDapp } = useModalize();
@@ -172,5 +219,6 @@ export default (props: { app: AppVM; appAuth: Authentication }) => {
     <RequestFundsModal key="request-funds" />,
     <NetworksMenuModal key="networks-menu" />,
     <WalletConnectV1 key="walletconnect" />,
+    <WalletConnectRequests key="walletconnect-requests" {...props} />,
   ];
 };
