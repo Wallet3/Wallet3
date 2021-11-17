@@ -23,6 +23,12 @@ type SignMessageRequest = {
   pin?: string;
 };
 
+type SignTypedDataRequest = {
+  accountIndex?: number;
+  typedData: any;
+  pin?: string;
+};
+
 export class Wallet {
   private key: Key;
   private refreshTimer!: NodeJS.Timer;
@@ -107,6 +113,11 @@ export class Wallet {
     try {
       return (await this.openWallet({ accountIndex: this.currentAccount!.index, ...request }))?.signMessage(request.msg);
     } catch (error) {}
+  }
+
+  async signTypedData(request: SignTypedDataRequest) {
+    const w = await this.openWallet({ accountIndex: this.currentAccount!.index, ...request });
+    // return w?._signTypedData(request.msg.domain, request.msg.types, request.msg.message);
   }
 
   async sendTx(request: SendTxRequest) {

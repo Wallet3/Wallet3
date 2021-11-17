@@ -21,6 +21,8 @@ import VerifySecret from './screens/settings/VerifySecret';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { observer } from 'mobx-react-lite';
 
+AppViewModel.init();
+
 const StackRoot = createNativeStackNavigator();
 
 const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication }) => {

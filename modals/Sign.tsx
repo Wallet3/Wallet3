@@ -35,19 +35,23 @@ export default observer(({ request, themeColor, client, close, wallet, appAuth }
   useEffect(() => {
     const { params, method } = request;
 
-    switch (method) {
-      case 'eth_sign':
-        setMsg(Buffer.from(utils.arrayify(params[1])).toString('utf8'));
-        setType('plaintext');
-        break;
-      case 'personal_sign':
-        setMsg(Buffer.from(utils.arrayify(params[0])).toString('utf8'));
-        setType('plaintext');
-        break;
-      case 'eth_signTypedData':
-        setTypedData(JSON.parse(params[1]));
-        setType('typedData');
-        break;
+    try {
+      switch (method) {
+        case 'eth_sign':
+          setMsg(Buffer.from(utils.arrayify(params[1])).toString('utf8'));
+          setType('plaintext');
+          break;
+        case 'personal_sign':
+          setMsg(Buffer.from(utils.arrayify(params[0])).toString('utf8'));
+          setType('plaintext');
+          break;
+        case 'eth_signTypedData':
+          setTypedData(JSON.parse(params[1]));
+          setType('typedData');
+          break;
+      }
+    } catch (error) {
+      close();
     }
   }, [request]);
 
@@ -57,7 +61,7 @@ export default observer(({ request, themeColor, client, close, wallet, appAuth }
   };
 
   const sign = async (pin?: string) => {
-    const signed = await wallet.signMessage({ msg, pin });
+    const signed = typedData ? await wallet.signTypedData({ typedData, pin }) : await wallet.signMessage({ msg, pin });
 
     if (signed) {
       client.approveRequest(request.id, signed);

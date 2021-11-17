@@ -4,11 +4,7 @@ import './configs/polyfill';
 import './configs/debug';
 
 import App from './App';
-import AppViewModel from './viewmodels/App';
 import { registerRootComponent } from 'expo';
-
-AppViewModel.init();
-
 
 // registerRootComponent calls AppRegistry.registerComponent('main', () => App);
 // It also ensures that whether you load the app in Expo Go or in a native build,

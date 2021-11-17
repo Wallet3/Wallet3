@@ -20,8 +20,8 @@ interface Props {
 export default observer(({ msg, themeColor, onReject, onSign }: Props) => {
   return (
     <SafeViewContainer>
-      <View style={{ paddingBottom: 4, borderBottomWidth: 1, borderBottomColor: borderColor }}>
-        <Text style={{ fontSize: 24, color: themeColor, fontWeight: '500' }}>Message Signing</Text>
+      <View style={{ paddingBottom: 5, borderBottomWidth: 1, borderBottomColor: borderColor }}>
+        <Text style={{ fontSize: 21, color: themeColor, fontWeight: '500' }}>Message Signing</Text>
       </View>
 
       <ScrollView
