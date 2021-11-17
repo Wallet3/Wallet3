@@ -1,12 +1,11 @@
-import { Button, SafeViewContainer } from '../components';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Text, View } from 'react-native';
 
 import { Authentication } from '../viewmodels/Authentication';
 import { Passpad } from './views';
-import PlainTextSign from './dapp/PlainTextSign';
-import { ScrollView } from 'react-native-gesture-handler';
+import PlainTextSign from './dapp/SignPlainText';
+import SignTypedData from './dapp/SignTypedData';
 import Success from './views/Success';
 import Swiper from 'react-native-swiper';
 import { WCCallRequestRequest } from '../models/WCSession_v1';
@@ -27,6 +26,7 @@ interface Props {
 
 export default observer(({ request, themeColor, client, close, wallet, appAuth }: Props) => {
   const [msg, setMsg] = useState('');
+  const [typedData, setTypedData] = useState({});
   const [type, setType] = useState('');
   const [verified, setVerified] = useState(false);
 
@@ -43,6 +43,10 @@ export default observer(({ request, themeColor, client, close, wallet, appAuth }
       case 'personal_sign':
         setMsg(Buffer.from(utils.arrayify(params[0])).toString('utf8'));
         setType('plaintext');
+        break;
+      case 'eth_signTypedData':
+        setTypedData(JSON.parse(params[1]));
+        setType('typedData');
         break;
     }
   }, [request]);
@@ -92,9 +96,11 @@ export default observer(({ request, themeColor, client, close, wallet, appAuth }
           >
             {type === 'plaintext' ? (
               <PlainTextSign msg={msg} themeColor={themeColor} onReject={reject} onSign={onSignPress} />
-            ) : (
-              <View />
-            )}
+            ) : undefined}
+
+            {type === 'typedData' ? (
+              <SignTypedData data={typedData} onReject={reject} onSign={onSignPress} themeColor={themeColor} />
+            ) : undefined}
 
             <Passpad themeColor={themeColor} onCodeEntered={(c) => sign(c)} onCancel={() => swiper.current?.scrollTo(0)} />
           </Swiper>
