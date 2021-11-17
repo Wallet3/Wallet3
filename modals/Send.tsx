@@ -9,6 +9,7 @@ import { IToken } from '../common/Tokens';
 import LottieView from 'lottie-react-native';
 import Networks from '../viewmodels/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import Success from './views/Success';
 import Swiper from 'react-native-swiper';
 import { Transferring } from '../viewmodels/Transferring';
 import { observer } from 'mobx-react-lite';
@@ -58,28 +59,15 @@ export default observer(({ initToken }: Props) => {
       return;
     }
 
-    if (!(await sendTx())) {
-      swiper.current?.scrollTo(3);
-    }
+    if (await sendTx()) return;
+    swiper.current?.scrollTo(3);
   };
 
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.safeArea}>
         {verified ? (
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <LottieView
-              style={{
-                width: 200,
-                height: 200,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-              loop={false}
-              autoPlay
-              source={require('../assets/animations/success.json')}
-            />
-          </View>
+          <Success />
         ) : (
           <Swiper
             ref={swiper}

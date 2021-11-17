@@ -10,16 +10,18 @@ interface Props {
   icon?: () => JSX.Element;
   disabled?: boolean;
   onPress?: () => void;
+  onLongPress?: () => void;
   themeColor?: string;
   reverse?: boolean;
 }
 
 export default (props: Props) => {
-  const { disabled, reverse, themeColor } = props;
+  const { disabled, reverse, themeColor, onLongPress, onPress } = props;
 
   return (
     <TouchableOpacity
-      onPress={() => props.onPress?.()}
+      onPress={onPress}
+      onLongPress={onLongPress}
       disabled={disabled}
       style={{
         ...styles.default,

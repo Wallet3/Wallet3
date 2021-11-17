@@ -41,6 +41,7 @@ class DAppHub extends EventEmitter {
         runInAction(() => this.clients.push(client));
 
         const store = new WCSession_v1();
+        store.id = Date.now();
         store.session = client.session;
         store.lastUsedTimestamp = Date.now();
         store.userChainIds = client.enabledChains;

@@ -91,6 +91,10 @@ export class WalletConnect_v1 extends EventEmitter {
     this.client.rejectRequest({ id, error: { message } });
   };
 
+  approveRequest = (id: number, result: any) => {
+    this.client.approveRequest({ id, result });
+  };
+
   private handleCallRequest = async (error: Error | null, request: WCCallRequestRequest) => {
     if (error) {
       this.emit('error', error);

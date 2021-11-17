@@ -17,6 +17,12 @@ type SendTxRequest = {
   pin?: string;
 };
 
+type SignMessageRequest = {
+  accountIndex?: number;
+  msg: string;
+  pin?: string;
+};
+
 export class Wallet {
   private key: Key;
   private refreshTimer!: NodeJS.Timer;
@@ -80,17 +86,27 @@ export class Wallet {
     this.refreshTimer = setTimeout(() => this.refreshAccount(), 1000 * 60);
   }
 
+  private async openWallet({ pin, accountIndex }: { pin?: string; accountIndex: number }) {
+    const secret = await Authentication.decrypt(this.key.bip32Xprivkey, pin);
+    if (!secret) return undefined;
+
+    const bip32 = utils.HDNode.fromExtendedKey(secret);
+    const account = bip32.derivePath(`${accountIndex}`);
+    return new EthersWallet(account.privateKey);
+  }
+
   async signTx({ accountIndex, tx, pin }: SendTxRequest) {
     try {
-      const xprivkey = await Authentication.decrypt(this.key.bip32Xprivkey, pin);
-      if (!xprivkey) return undefined;
-
-      const bip32 = utils.HDNode.fromExtendedKey(xprivkey);
-      const account = bip32.derivePath(`${accountIndex}`);
-      return await new EthersWallet(account.privateKey).signTransaction(tx);
+      return (await this.openWallet({ accountIndex, pin }))?.signTransaction(tx);
     } catch (error) {
       console.log(error);
     }
+  }
+
+  async signMessage(request: SignMessageRequest) {
+    try {
+      return (await this.openWallet({ accountIndex: this.currentAccount!.index, ...request }))?.signMessage(request.msg);
+    } catch (error) {}
   }
 
   async sendTx(request: SendTxRequest) {

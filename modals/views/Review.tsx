@@ -103,6 +103,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
             style={{ ...viewStyles.reviewItemValue, marginHorizontal: 2 }}
             numberOfLines={1}
             value={vm.txFee}
+            duration={1500}
             formatter={(val) => `${val.toFixed(5)} ${vm.feeTokenSymbol}`}
           />
 
@@ -139,10 +140,10 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
       <View style={{ flex: 1 }} />
 
       <Button
-        title="Send"
+        title="Hold to Send"
         themeColor={Networks.current.color}
         disabled={!vm.isValidParams || busy}
-        onPress={async () => {
+        onLongPress={async () => {
           setBusy(true);
           await onSend?.();
           setBusy(false);

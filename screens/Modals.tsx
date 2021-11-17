@@ -16,7 +16,7 @@ import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 const ScreenHeight = Dimensions.get('window').height;
 
-const WalletConnectRequests = ({ appAuth }: { appAuth: Authentication }) => {
+const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app: AppVM }) => {
   const { ref, open, close } = useModalize();
   const [type, setType] = useState<string>();
   const [client, setClient] = useState<WalletConnect_v1>();
@@ -58,7 +58,14 @@ const WalletConnectRequests = ({ appAuth }: { appAuth: Authentication }) => {
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
       {type === 'sign' ? (
-        <Sign client={client!} request={request!} themeColor={Networks.current.color} close={close} />
+        <Sign
+          client={client!}
+          request={request!}
+          themeColor={Networks.current.color}
+          close={close}
+          wallet={app.currentWallet!}
+          appAuth={appAuth}
+        />
       ) : undefined}
     </Modalize>
   );
