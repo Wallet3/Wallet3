@@ -33,8 +33,6 @@ import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 const StackRoot = createNativeStackNavigator();
 const ScreenHeight = Dimensions.get('window').height;
 
-AppViewModel.init();
-
 const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication }) => {
   const { Navigator, Screen } = StackRoot;
   const { ref: networksRef, open: openNetworksModal, close: closeNetworksModal } = useModalize();

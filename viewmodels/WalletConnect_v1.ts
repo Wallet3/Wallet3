@@ -1,11 +1,25 @@
-import { WCCallRequestRequest, WCClientMeta, WCSessionRequestRequest } from '../models/WCSession_v1';
+import WCSession_v1, {
+  IRawWcSession,
+  WCCallRequestRequest,
+  WCClientMeta,
+  WCSessionRequestRequest,
+} from '../models/WCSession_v1';
 import { action, makeObservable, observable } from 'mobx';
 
 import { EventEmitter } from 'events';
+import PubSub from 'pubsub-js';
 import WalletConnectClient from '@walletconnect/client';
+
+const clientMeta = {
+  name: 'Wallet 3',
+  description: 'A Secure Wallet for Web3 Era',
+  icons: [],
+  url: 'https://wallet3.io',
+};
 
 export class WalletConnect_v1 extends EventEmitter {
   private client!: WalletConnectClient;
+  store!: WCSession_v1;
 
   readonly version = 1;
   peerId = '';
@@ -24,27 +38,30 @@ export class WalletConnect_v1 extends EventEmitter {
   }
 
   connect(uri: string) {
-    this.client = new WalletConnectClient({
-      uri,
-      clientMeta: {
-        name: 'Wallet 3',
-        description: 'A Secure Wallet for Web3 Era',
-        icons: [],
-        url: 'https://wallet3.io',
-      },
-    });
+    this.client = new WalletConnectClient({ uri, clientMeta });
 
     this.client.on('session_request', this.handleSessionRequest);
     this.client.on('call_request', this.handleCallRequest);
     this.client.on('disconnect', () => this.emit('disconnect'));
-    this.client.on('transport_error', () => {
-      this.emit('transport_error');
-      console.log('transport_error');
-    });
+
+    return this;
+  }
+
+  connectSession(session: IRawWcSession) {
+    this.client = new WalletConnectClient({ session, clientMeta });
+    this.client.on('call_request', this.handleCallRequest);
+    this.client.on('disconnect', () => this.emit('disconnect'));
+
+    return this;
   }
 
   setChains(chains: number[]) {
     this.enabledChains = chains;
+  }
+
+  setStore(store: WCSession_v1) {
+    this.store = store;
+    return this;
   }
 
   private handleSessionRequest = (error: Error | null, request: WCSessionRequestRequest) => {
@@ -75,6 +92,8 @@ export class WalletConnect_v1 extends EventEmitter {
       this.emit('error', error);
       return;
     }
+
+    PubSub.publish('wc_request', { client: this, request });
 
     // const checkAccount = (from: string) => {
     //   if (from?.toLowerCase() === this.wallet.currentAddress.toLowerCase()) return true;

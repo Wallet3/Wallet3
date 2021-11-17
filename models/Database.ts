@@ -9,6 +9,7 @@ class Database {
 
   keyRepository!: Repository<Key>;
   txRepository!: Repository<Transaction>;
+  wcSessionV1Repository!: Repository<WCSession_v1>;
 
   async init() {
     if (this._connection) return;
@@ -23,6 +24,7 @@ class Database {
 
     this.keyRepository = this._connection.getRepository(Key);
     this.txRepository = this._connection.getRepository(Transaction);
+    this.wcSessionV1Repository = this._connection.getRepository(WCSession_v1);
   }
 
   dispose() {

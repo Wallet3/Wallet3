@@ -7,20 +7,18 @@ export interface WCClientMeta {
   name: string;
 }
 
-interface IRawWcSession {
+export interface IRawWcSession {
   connected: boolean;
   accounts: string[];
   chainId: number;
   bridge: string;
   key: string;
   clientId: string;
-  clientMeta?: WCClientMeta;
+  clientMeta: WCClientMeta | null;
   peerId: string;
-  peerMeta?: WCClientMeta;
+  peerMeta: WCClientMeta | null;
   handshakeId: number;
   handshakeTopic: string;
-  lastUsedTimestamp?: number;
-  userChainId?: number;
 }
 
 export interface WCSessionRequestRequest {
