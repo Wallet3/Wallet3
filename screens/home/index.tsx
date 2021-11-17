@@ -5,6 +5,7 @@ import Transaction, { ITransaction } from '../../models/Transaction';
 import Actions from './Actions';
 import App from '../../viewmodels/App';
 import Assets from './Assets';
+import DAppHub from '../../viewmodels/DAppHub';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import { IToken } from '../../common/Tokens';
 import { Modalize } from 'react-native-modalize';
@@ -58,6 +59,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         chainId={current.chainId}
         avatar={currentWallet?.currentAccount?.avatar}
         ens={currentWallet?.currentAccount?.ensName}
+        connectedApps={DAppHub.connectedCount}
       />
 
       <Assets

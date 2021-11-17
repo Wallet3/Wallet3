@@ -87,6 +87,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
           disableScrollIfPossible
           adjustToContentHeight
           closeOnOverlayTap={false}
+          withHandle={false}
           panGestureEnabled={false}
           panGestureComponentEnabled={false}
           modalStyle={styles.modalStyle}

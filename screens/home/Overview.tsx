@@ -24,7 +24,7 @@ interface Props {
   chainId: number;
 }
 
-export default observer(({ style, address, balance, network, avatar, chainId }: Props) => {
+export default observer(({ style, address, balance, network, avatar, chainId, connectedApps }: Props) => {
   const addressView = useRef<Animatable.Text>(null);
 
   const writeAddressToClipboard = () => {
@@ -50,8 +50,8 @@ export default observer(({ style, address, balance, network, avatar, chainId }: 
           {/* {ens ? <Text style={{ fontSize: 12, color: '#fff', marginHorizontal: 0 }}>{ens}</Text> : undefined} */}
         </View>
 
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={{ ...styles.text, fontSize: 14, marginEnd: 5 }}>3</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', opacity: connectedApps || 0 }}>
+          <Text style={{ ...styles.text, fontSize: 14, marginEnd: 5 }}>{connectedApps}</Text>
           <Feather name="layers" size={14} color="#fff" />
         </View>
       </View>

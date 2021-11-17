@@ -7,10 +7,14 @@ import WalletConnectClient from '@walletconnect/client';
 export class WalletConnect_v1 extends EventEmitter {
   private client!: WalletConnectClient;
 
+  readonly version = 1;
   peerId = '';
   appMeta: WCClientMeta | null = null;
   enabledChains: number[] = [1];
-  readonly version = 1;
+
+  get session() {
+    return this.client.session;
+  }
 
   constructor(uri?: string) {
     super();
@@ -57,8 +61,8 @@ export class WalletConnect_v1 extends EventEmitter {
     this.emit('sessionRequest');
   };
 
-  approveSession = async (accounts: string[], chainId: number) => {
-    this.client.approveSession({ accounts, chainId });
+  approveSession = async (accounts: string[]) => {
+    this.client.approveSession({ accounts, chainId: this.enabledChains[0] });
     this.emit('sessionApproved', this.client.session);
   };
 
@@ -112,7 +116,7 @@ export class WalletConnect_v1 extends EventEmitter {
   dispose() {
     // this._chainIdObserver?.();
     // this._currAddrObserver?.();
-    // this.removeAllListeners();
+    this.removeAllListeners();
 
     this.client?.off('session_request');
     this.client?.off('call_request');

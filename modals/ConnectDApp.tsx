@@ -6,6 +6,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { borderColor, secondaryFontColor, themeColor, thirdFontColor } from '../constants/styles';
 
+import App from '../viewmodels/App';
 import DAppHub from '../viewmodels/DAppHub';
 import Image from 'react-native-expo-cached-image';
 import Loading from './views/Loading';
@@ -38,6 +39,11 @@ const DApp = observer(({ client, onNetworksPress, close }: DAppProps) => {
     close();
     await client.killSession();
     client.dispose();
+  };
+
+  const connect = () => {
+    client.approveSession([App.currentWallet?.currentAccount?.address!]);
+    close();
   };
 
   if (!network) {
@@ -91,7 +97,7 @@ const DApp = observer(({ client, onNetworksPress, close }: DAppProps) => {
       <View style={{ flex: 1 }} />
 
       <View style={{ width: '100%' }}>
-        <Button title="Connect" />
+        <Button title="Connect" onPress={connect} />
 
         <Button
           title="Reject"
@@ -147,9 +153,9 @@ export default observer(({ uri, close }: Props) => {
   const [client, setClient] = useState<WalletConnect_v1>();
 
   useEffect(() => {
-    console.log('Connecting DApp');
     if (!uri) return;
     if (client) return;
+    console.log('Connecting DApp');
 
     let wc_client = DAppHub.connect(uri);
     const timeout = setTimeout(async () => {
