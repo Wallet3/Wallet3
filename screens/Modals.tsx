@@ -32,6 +32,7 @@ const WalletConnectRequests = ({ appAuth }: { appAuth: Authentication }) => {
       switch (request.method) {
         case 'eth_sign':
         case 'personal_sign':
+        case 'eth_signTypedData':
           setRequest(request);
           setType('sign');
           break;
@@ -56,7 +57,9 @@ const WalletConnectRequests = ({ appAuth }: { appAuth: Authentication }) => {
       modalStyle={styles.modalStyle}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
-      {type === 'sign' ? <Sign client={client!} request={request!} themeColor={Networks.current.color} /> : undefined}
+      {type === 'sign' ? (
+        <Sign client={client!} request={request!} themeColor={Networks.current.color} close={close} />
+      ) : undefined}
     </Modalize>
   );
 };

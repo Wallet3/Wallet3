@@ -14,12 +14,14 @@ import { utils } from 'ethers';
 
 interface Props {
   request: WCCallRequestRequest;
+  close: Function;
   client: WalletConnect_v1;
   themeColor: string;
 }
 
-export default observer(({ request, themeColor, client }: Props) => {
+export default observer(({ request, themeColor, client, close }: Props) => {
   const [msg, setMsg] = useState('');
+  const [type, setType] = useState('');
   const swiper = useRef<Swiper>(null);
 
   useEffect(() => {
@@ -28,14 +30,20 @@ export default observer(({ request, themeColor, client }: Props) => {
     switch (method) {
       case 'eth_sign':
         setMsg(Buffer.from(utils.arrayify(params[1])).toString('utf8'));
+        setType('plaintext');
         break;
       case 'personal_sign':
         setMsg(Buffer.from(utils.arrayify(params[0])).toString('utf8'));
+        setType('plaintext');
         break;
     }
   }, [request]);
 
-  const reject = () => {};
+  const reject = () => {
+    client.rejectRequest(request.id, 'User rejected');
+    close();
+  };
+
   const sign = () => {};
 
   return (
@@ -49,7 +57,11 @@ export default observer(({ request, themeColor, client }: Props) => {
           loop={false}
           automaticallyAdjustContentInsets
         >
-          <PlainTextSign msg={msg} themeColor={themeColor} onReject={reject} onSign={sign} />
+          {type === 'plaintext' ? (
+            <PlainTextSign msg={msg} themeColor={themeColor} onReject={reject} onSign={sign} />
+          ) : (
+            <View />
+          )}
         </Swiper>
       </SafeAreaView>
     </SafeAreaProvider>

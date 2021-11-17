@@ -77,8 +77,12 @@ export class Authentication {
     return `${await SecureStore.getItemAsync(keys.masterKey)}_${appEncryptKey}`;
   }
 
-  setBiometrics(enabled: boolean) {
-    this.biometricsEnabled = enabled;
+  async setBiometrics(enabled: boolean) {
+    if (enabled) {
+      if (!(await this.authenticate())) return;
+    }
+
+    runInAction(() => (this.biometricsEnabled = enabled));
     AsyncStorage.setItem(keys.enableBiometrics, enabled.toString());
   }
 

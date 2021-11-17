@@ -97,6 +97,11 @@ export class WalletConnect_v1 extends EventEmitter {
       return;
     }
 
+    if (request.method === 'eth_signTransaction') {
+      this.client.rejectRequest({ id: request.id, error: { message: 'Not allowed, use send_Transaction' } });
+      return;
+    }
+
     PubSub.publish('wc_request', { client: this, request });
 
     // const checkAccount = (from: string) => {
