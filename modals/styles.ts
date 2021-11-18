@@ -65,4 +65,22 @@ export default StyleSheet.create({
     color: fontColor,
     fontWeight: '500',
   },
+
+  gasItem: {
+    flexDirection: 'row',
+    padding: 8,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  gasGweiLabel: {
+    fontSize: 8,
+    color: secondaryFontColor,
+    textAlign: 'right',
+  },
+
+  gasItemText: {
+    marginStart: 6,
+  },
 });

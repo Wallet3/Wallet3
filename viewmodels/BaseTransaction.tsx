@@ -3,9 +3,12 @@ import { Gwei_1, MAX_GWEI_PRICE } from '../common/Constants';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { estimateGas, getGasPrice, getMaxPriorityFee, getNextBlockBaseFee, getTransactionCount } from '../common/RPC';
 
+import { INetwork } from '../common/Networks';
+
 export class BaseTransaction {
   private timer?: NodeJS.Timer;
-  private eip1559 = false;
+
+  readonly network: INetwork;
 
   isEstimatingGas = false;
   gasLimit = 21000;
@@ -15,8 +18,8 @@ export class BaseTransaction {
   nonce = -1;
   txException = '';
 
-  constructor(args: { chainId: number; eip1559?: boolean; account: string }) {
-    this.eip1559 = args.eip1559 ?? false;
+  constructor(args: { network: INetwork; account: string }) {
+    this.network = args.network;
 
     makeObservable(this, {
       isEstimatingGas: observable,
@@ -34,11 +37,12 @@ export class BaseTransaction {
       setGasLimit: action,
       setMaxGasPrice: action,
       setPriorityPrice: action,
+      setGas: action,
     });
 
     this.initChainData(args);
 
-    if (this.eip1559) this.refreshEIP1559(args.chainId);
+    if (this.network.eip1559) this.refreshEIP1559(this.network.chainId);
   }
 
   get nextBlockBaseFee() {
@@ -46,7 +50,7 @@ export class BaseTransaction {
   }
 
   get txFeeWei() {
-    return this.eip1559
+    return this.network.eip1559
       ? BigNumber.from(this.nextBlockBaseFeeWei)
           .add(BigNumber.from((Number(this.maxPriorityPrice.toFixed(9)) * Gwei_1).toFixed(0)))
           .mul(this.gasLimit)
@@ -83,11 +87,32 @@ export class BaseTransaction {
     } catch (error) {}
   }
 
+  async setGas(speed: 'rapid' | 'fast' | 'standard') {
+    const wei = (await getGasPrice(this.network.chainId)) || Gwei_1;
+    const basePrice = wei / Gwei_1;
+
+    runInAction(() => {
+      switch (speed) {
+        case 'rapid':
+          this.setMaxGasPrice(basePrice + (this.network.eip1559 ? this.maxPriorityPrice : 0) + 10);
+          break;
+        case 'fast':
+          this.setMaxGasPrice(basePrice);
+          break;
+        case 'standard':
+          this.setMaxGasPrice(Math.max(basePrice - 3, 1));
+          break;
+      }
+    });
+  }
+
   dispose() {
     clearTimeout(this.timer as any);
   }
 
-  protected async initChainData({ chainId, eip1559, account }: { chainId: number; eip1559?: boolean; account: string }) {
+  protected async initChainData({ network, account }: { network: INetwork; account: string }) {
+    const { chainId, eip1559 } = network;
+    
     const [gasPrice, nextBaseFee, priorityFee, nonce] = await Promise.all([
       getGasPrice(chainId),
       getNextBlockBaseFee(chainId),

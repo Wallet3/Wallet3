@@ -1,12 +1,13 @@
+import { INetwork, PublicNetworks } from '../common/Networks';
 import React, { useEffect, useRef, useState } from 'react';
 import { WCCallRequestRequest, WCCallRequest_eth_sendTransaction } from '../models/WCSession_v1';
 
 import App from '../viewmodels/App';
-import { INetwork } from '../common/Networks';
 import { Passpad } from './views';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { SafeAreaView } from 'react-native';
 import Swiper from 'react-native-swiper';
+import { TransactionRequest } from '../viewmodels/TransactionRequest';
 import TxReview from './dapp/TxReview';
 import { WalletConnect_v1 } from '../viewmodels/WalletConnect_v1';
 import { observer } from 'mobx-react-lite';
@@ -15,19 +16,14 @@ import styles from './styles';
 interface Props {
   client: WalletConnect_v1;
   request: WCCallRequestRequest;
-  currentNetwork?: INetwork;
   close: Function;
 }
 
-export default observer(({ client, request, currentNetwork, close }: Props) => {
+export default observer(({ client, request, close }: Props) => {
   const swiper = useRef<Swiper>(null);
-  const [network, setNetwork] = useState<INetwork>();
-  const [verified, setVerified] = useState(false);
 
-  useEffect(() => {
-    const [param, requestChainId] = request.params as [WCCallRequest_eth_sendTransaction, number?]; 
-    setNetwork(currentNetwork);
-  }, []);
+  const [vm] = useState(new TransactionRequest({ client, request }));
+  const [verified, setVerified] = useState(false);
 
   const reject = () => {
     client.rejectRequest(request.id, 'User rejected');
@@ -68,8 +64,8 @@ export default observer(({ client, request, currentNetwork, close }: Props) => {
         loop={false}
         automaticallyAdjustContentInsets
       >
-        <TxReview client={client} request={request} network={network} onReject={reject} />
-        <Passpad themeColor={network?.color} onCodeEntered={(c) => sendTx(c)} onCancel={() => swiper.current?.scrollTo(0)} />
+        <TxReview vm={vm} onReject={reject} />
+        <Passpad themeColor={vm.network.color} onCodeEntered={(c) => sendTx(c)} onCancel={() => swiper.current?.scrollTo(0)} />
       </Swiper>
     </SafeAreaProvider>
   );

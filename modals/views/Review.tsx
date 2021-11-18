@@ -6,8 +6,10 @@ import { borderColor, fontColor, secondaryFontColor } from '../../constants/styl
 
 import AnimateNumber from 'react-native-animate-number';
 import BackButton from '../components/BackButton';
+import { BaseTransaction } from '../../viewmodels/BaseTransaction';
 import Currency from '../../viewmodels/Currency';
 import Fire from '../../assets/icons/app/fire.svg';
+import GasReview from './GasReview';
 import Image from 'react-native-expo-cached-image';
 import Networks from '../../viewmodels/Networks';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -36,51 +38,51 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
         <Text style={styles.navTitle}>Tx Review</Text>
       </View>
 
-      <View style={viewStyles.reviewItemsContainer}>
-        <View style={viewStyles.reviewItem}>
-          <Text style={viewStyles.reviewItemTitle}>Send</Text>
+      <View style={styles.reviewItemsContainer}>
+        <View style={styles.reviewItem}>
+          <Text style={styles.reviewItemTitle}>Send</Text>
 
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-            <Text style={{ ...viewStyles.reviewItemValue, marginEnd: 8, maxWidth: '50%' }} numberOfLines={1}>
+            <Text style={{ ...styles.reviewItemValue, marginEnd: 8, maxWidth: '50%' }} numberOfLines={1}>
               {vm.amount}
             </Text>
-            <Text style={{ ...viewStyles.reviewItemValue, marginEnd: 8 }}>{vm.token.symbol}</Text>
+            <Text style={{ ...styles.reviewItemValue, marginEnd: 8 }}>{vm.token.symbol}</Text>
             <Coin symbol={vm.token!.symbol} forceRefresh />
           </View>
         </View>
 
-        <View style={viewStyles.reviewItem}>
-          <Text style={viewStyles.reviewItemTitle}>To</Text>
+        <View style={styles.reviewItem}>
+          <Text style={styles.reviewItemTitle}>To</Text>
 
           <View style={{ flexDirection: 'row', maxWidth: '72%', alignItems: 'center' }}>
             {vm.avatar ? (
               <Image source={{ uri: vm.avatar }} style={{ width: 15, height: 15, marginEnd: 5, borderRadius: 100 }} />
             ) : undefined}
-            <Text style={{ ...viewStyles.reviewItemValue }} numberOfLines={1}>
+            <Text style={{ ...styles.reviewItemValue }} numberOfLines={1}>
               {utils.isAddress(vm.to) ? formatAddress(vm.to, 9, 7) : vm.to}
             </Text>
           </View>
         </View>
 
-        <View style={{ ...viewStyles.reviewItem, borderBottomWidth: 0 }}>
-          <Text style={viewStyles.reviewItemTitle}>Network</Text>
+        <View style={{ ...styles.reviewItem, borderBottomWidth: 0 }}>
+          <Text style={styles.reviewItemTitle}>Network</Text>
 
           <View>
-            <Text style={{ ...viewStyles.reviewItemValue, color: vm.network.color }}>{vm.network.network}</Text>
+            <Text style={{ ...styles.reviewItemValue, color: vm.network.color }}>{vm.network.network}</Text>
           </View>
         </View>
       </View>
 
       <View
         style={{
-          ...viewStyles.reviewItemsContainer,
+          ...styles.reviewItemsContainer,
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
           paddingStart: 16,
         }}
       >
-        <Text style={viewStyles.reviewItemTitle}>Tx Fee</Text>
+        <Text style={styles.reviewItemTitle}>Tx Fee</Text>
 
         <TouchableOpacity
           style={{
@@ -94,12 +96,12 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
           }}
           onPress={onGasPress}
         >
-          <Text style={{ ...viewStyles.reviewItemTitle, fontSize: 15 }}>
+          <Text style={{ ...styles.reviewItemTitle, fontSize: 15 }}>
             {`(${Currency.tokenToUSD(vm.txFee, vm.network.symbol).toFixed(2)} USD)`}
           </Text>
 
           <AnimateNumber
-            style={{ ...viewStyles.reviewItemValue, marginHorizontal: 2 }}
+            style={{ ...styles.reviewItemValue, marginHorizontal: 2 }}
             numberOfLines={1}
             value={vm.txFee}
             duration={1500}
@@ -115,7 +117,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
           horizontal
           showsHorizontalScrollIndicator={false}
           style={{
-            ...viewStyles.reviewItemsContainer,
+            ...styles.reviewItemsContainer,
 
             borderWidth: 1,
             paddingTop: 12,
@@ -152,178 +154,13 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
   );
 });
 
-interface GasProps {
-  onBack?: () => void;
-  vm: TokenTransferring;
-}
-
-const GasView = observer(({ onBack, vm }: GasProps) => {
-  return (
-    <SafeViewContainer style={styles.container}>
-      <View style={styles.navBar}>
-        <BackButton onPress={onBack} />
-
-        <Text style={styles.navTitle}>Tx Fee</Text>
-      </View>
-
-      <View style={viewStyles.reviewItemsContainer}>
-        <View style={{ ...viewStyles.reviewItem, paddingBottom: 12 }}>
-          <Text style={viewStyles.reviewItemTitle}>Gas Limit</Text>
-
-          <TextInput
-            keyboardType="number-pad"
-            placeholder="21000"
-            textAlign="right"
-            style={{ ...viewStyles.reviewItemValue, fontSize: 20 }}
-            maxLength={12}
-            value={`${vm.gasLimit}`}
-            onChangeText={(txt) => vm.setGasLimit(txt)}
-          />
-        </View>
-
-        <View style={{ ...viewStyles.reviewItem, paddingBottom: 12 }}>
-          <Text style={viewStyles.reviewItemTitle}>Max Gas Price</Text>
-
-          <View style={{ marginBottom: -8 }}>
-            <TextInput
-              keyboardType="decimal-pad"
-              placeholder="20.00"
-              textAlign="right"
-              maxLength={12}
-              style={{ ...viewStyles.reviewItemValue, fontSize: 20 }}
-              value={`${Number(vm.maxGasPrice.toFixed(5))}`}
-              onChangeText={(txt) => vm.setMaxGasPrice(txt)}
-            />
-
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-              {vm.network.eip1559 ? <Fire width={8} height={8} style={{ marginEnd: 3 }} /> : undefined}
-              {vm.network.eip1559 ? (
-                <AnimateNumber
-                  style={viewStyles.gasGweiLabel}
-                  value={vm.nextBlockBaseFee}
-                  formatter={(val) => `${val.toFixed(6)} Gwei`}
-                />
-              ) : (
-                <Text style={viewStyles.gasGweiLabel}>Gwei</Text>
-              )}
-            </View>
-          </View>
-        </View>
-
-        {vm.network.eip1559 ? (
-          <View style={{ ...viewStyles.reviewItem, paddingBottom: 12 }}>
-            <Text style={viewStyles.reviewItemTitle}>Priority Price</Text>
-
-            <View style={{ marginBottom: -8 }}>
-              <TextInput
-                keyboardType="decimal-pad"
-                placeholder="1.00"
-                textAlign="right"
-                maxLength={12}
-                style={{ ...viewStyles.reviewItemValue, fontSize: 20 }}
-                value={`${vm.maxPriorityPrice.toFixed(6)}`}
-                onChangeText={(txt) => vm.setPriorityPrice(txt)}
-              />
-              <Text style={{ ...viewStyles.gasGweiLabel, marginTop: -2 }}>Gwei</Text>
-            </View>
-          </View>
-        ) : undefined}
-
-        <View style={{ ...viewStyles.reviewItem, borderBottomWidth: 0, paddingBottom: 12 }}>
-          <Text style={viewStyles.reviewItemTitle}>Nonce</Text>
-
-          <TextInput
-            keyboardType="number-pad"
-            placeholder="0"
-            textAlign="right"
-            style={{ ...viewStyles.reviewItemValue, fontSize: 20 }}
-            maxLength={12}
-            value={`${vm.nonce}`}
-            onChangeText={(txt) => vm.setNonce(txt)}
-          />
-        </View>
-      </View>
-
-      <View style={{ ...viewStyles.reviewItemsContainer, flexDirection: 'row' }}>
-        <TouchableOpacity style={viewStyles.gasItem} onPress={() => vm.setGas('rapid')}>
-          <Ionicons name="rocket" size={12} color="tomato" />
-          <Text style={{ ...viewStyles.gasItemText, color: 'tomato' }}>Rapid</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={viewStyles.gasItem} onPress={() => vm.setGas('fast')}>
-          <Ionicons name="car-sport" size={13} color="dodgerblue" />
-          <Text style={{ ...viewStyles.gasItemText, color: 'dodgerblue' }}>Fast</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={viewStyles.gasItem} onPress={() => vm.setGas('standard')}>
-          <FontAwesome5 name="walking" size={12} color="darkorchid" />
-          <Text style={{ ...viewStyles.gasItemText, color: 'darkorchid' }}>Standard</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={{ flex: 1 }}></View>
-
-      <Button title="OK" txtStyle={{ textTransform: 'uppercase' }} onPress={onBack} themeColor={Networks.current.color} />
-    </SafeViewContainer>
-  );
-});
-
 export default observer(({ onBack, vm, onSend }: Props) => {
   const swiper = useRef<Swiper>(null);
 
   return (
     <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
       <ReviewView onBack={onBack} onSend={onSend} onGasPress={() => swiper.current?.scrollTo(1)} vm={vm} />
-      <GasView onBack={() => swiper.current?.scrollTo(0)} vm={vm} />
+      <GasReview onBack={() => swiper.current?.scrollTo(0)} vm={vm} />
     </Swiper>
   );
-});
-
-const viewStyles = StyleSheet.create({
-  reviewItemsContainer: {
-    borderWidth: 1,
-    borderColor,
-    borderRadius: 10,
-    marginTop: 12,
-  },
-
-  reviewItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderColor,
-    paddingVertical: 15,
-    paddingHorizontal: 16,
-  },
-
-  reviewItemTitle: {
-    fontSize: 17,
-    color: secondaryFontColor,
-    fontWeight: '500',
-  },
-
-  reviewItemValue: {
-    fontSize: 17,
-    color: fontColor,
-    fontWeight: '500',
-  },
-
-  gasItem: {
-    flexDirection: 'row',
-    padding: 8,
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  gasGweiLabel: {
-    fontSize: 8,
-    color: secondaryFontColor,
-    textAlign: 'right',
-  },
-
-  gasItemText: {
-    marginStart: 6,
-  },
 });

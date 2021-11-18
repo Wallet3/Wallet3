@@ -19,8 +19,6 @@ export class TokenTransferring extends BaseTransaction {
   amount = '0';
   isResolvingAddress = false;
 
-  readonly network: INetwork;
-
   get currentAccount() {
     return App.currentWallet?.currentAccount!;
   }
@@ -115,10 +113,9 @@ export class TokenTransferring extends BaseTransaction {
   constructor({ targetNetwork, defaultToken, to }: { targetNetwork: INetwork; defaultToken?: IToken; to?: string }) {
     super({
       account: App.currentWallet!.currentAccount!.address,
-      ...targetNetwork,
+      network: targetNetwork,
     });
 
-    this.network = targetNetwork;
     this.token = defaultToken || this.currentAccount.tokens[0];
 
     makeObservable(this, {
@@ -137,7 +134,6 @@ export class TokenTransferring extends BaseTransaction {
       setTo: action,
       setAmount: action,
       setToken: action,
-      setGas: action,
     });
 
     AsyncStorage.getItem(`${this.network.chainId}-LastUsedToken`).then((v) => {
@@ -209,24 +205,5 @@ export class TokenTransferring extends BaseTransaction {
   setAmount(amount: string) {
     this.amount = amount;
     this.txException = '';
-  }
-
-  async setGas(speed: 'rapid' | 'fast' | 'standard') {
-    const wei = (await getGasPrice(this.network.chainId)) || Gwei_1;
-    const basePrice = wei / Gwei_1;
-
-    runInAction(() => {
-      switch (speed) {
-        case 'rapid':
-          this.setMaxGasPrice(basePrice + (this.network.eip1559 ? this.maxPriorityPrice : 0) + 10);
-          break;
-        case 'fast':
-          this.setMaxGasPrice(basePrice);
-          break;
-        case 'standard':
-          this.setMaxGasPrice(Math.max(basePrice - 3, 1));
-          break;
-      }
-    });
   }
 }

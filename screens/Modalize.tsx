@@ -43,15 +43,6 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
           break;
         case 'eth_sendTransaction':
         case 'eth_signTransaction':
-          const [param, requestChainId] = request.params as [WCCallRequest_eth_sendTransaction, number?];
-
-          const targetNetwork =
-            PublicNetworks.find((n) => n.chainId === requestChainId) ??
-            (client.enabledChains.includes(current.chainId)
-              ? current
-              : PublicNetworks.find((n) => client.enabledChains[0] === n.chainId)) ??
-            PublicNetworks[0];
-
           setRequest(request);
           setType('sendTx');
           break;
@@ -87,9 +78,7 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
         />
       ) : undefined}
 
-      {type === 'sendTx' ? (
-        <DAppTxRequest client={client!} request={request!} currentNetwork={current} close={close} />
-      ) : undefined}
+      {type === 'sendTx' ? <DAppTxRequest client={client!} request={request!} close={close} /> : undefined}
     </Modalize>
   );
 };
