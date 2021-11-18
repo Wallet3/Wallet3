@@ -1,11 +1,11 @@
+import { BigNumber, utils } from 'ethers';
 import { Gwei_1, MAX_GWEI_PRICE } from '../common/Constants';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { estimateGas, getGasPrice, getMaxPriorityFee, getNextBlockBaseFee, getTransactionCount } from '../common/RPC';
 
-import { utils } from 'ethers';
-
 export class BaseTransaction {
   private timer?: NodeJS.Timer;
+  private eip1559 = false;
 
   isEstimatingGas = false;
   gasLimit = 21000;
@@ -15,7 +15,9 @@ export class BaseTransaction {
   nonce = -1;
   txException = '';
 
-  constructor() {
+  constructor(args: { chainId: number; eip1559?: boolean; account: string }) {
+    this.eip1559 = args.eip1559 ?? false;
+
     makeObservable(this, {
       isEstimatingGas: observable,
       gasLimit: observable,
@@ -25,16 +27,38 @@ export class BaseTransaction {
       maxPriorityPrice: observable,
       nonce: observable,
       txException: observable,
+      txFee: computed,
+      txFeeWei: computed,
 
       setNonce: action,
       setGasLimit: action,
       setMaxGasPrice: action,
       setPriorityPrice: action,
     });
+
+    this.initChainData(args);
+
+    if (this.eip1559) this.refreshEIP1559(args.chainId);
   }
 
   get nextBlockBaseFee() {
     return this.nextBlockBaseFeeWei / Gwei_1;
+  }
+
+  get txFeeWei() {
+    return this.eip1559
+      ? BigNumber.from(this.nextBlockBaseFeeWei)
+          .add(BigNumber.from((Number(this.maxPriorityPrice.toFixed(9)) * Gwei_1).toFixed(0)))
+          .mul(this.gasLimit)
+      : BigNumber.from((this.maxGasPrice * Gwei_1).toFixed(0)).mul(this.gasLimit);
+  }
+
+  get txFee() {
+    try {
+      return Number(utils.formatEther(this.txFeeWei));
+    } catch (error) {
+      return 0;
+    }
   }
 
   setNonce(nonce: string | number) {

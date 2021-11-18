@@ -77,7 +77,7 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
         />
       ) : undefined}
 
-      {type === 'sendTx' ? <DAppTxRequest client={client!} request={request!} network={current} close={close} /> : undefined}
+      {type === 'sendTx' ? <DAppTxRequest client={client!} request={request!} currentNetwork={current} close={close} /> : undefined}
     </Modalize>
   );
 };

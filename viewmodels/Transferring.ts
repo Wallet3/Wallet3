@@ -60,22 +60,6 @@ export class Transferring extends BaseTransaction {
     }
   }
 
-  get txFeeWei() {
-    return this.network.eip1559
-      ? BigNumber.from(this.nextBlockBaseFeeWei)
-          .add(BigNumber.from((Number(this.maxPriorityPrice.toFixed(9)) * Gwei_1).toFixed(0)))
-          .mul(this.gasLimit)
-      : BigNumber.from((this.maxGasPrice * Gwei_1).toFixed(0)).mul(this.gasLimit);
-  }
-
-  get txFee() {
-    try {
-      return Number(utils.formatEther(this.txFeeWei));
-    } catch (error) {
-      return 0;
-    }
-  }
-
   get feeTokenSymbol() {
     return this.network.symbol;
   }
@@ -129,7 +113,10 @@ export class Transferring extends BaseTransaction {
   }
 
   constructor({ targetNetwork, defaultToken, to }: { targetNetwork: INetwork; defaultToken?: IToken; to?: string }) {
-    super();
+    super({
+      account: App.currentWallet!.currentAccount!.address,
+      ...targetNetwork,
+    });
 
     this.network = targetNetwork;
     this.token = defaultToken || this.currentAccount.tokens[0];
@@ -140,8 +127,6 @@ export class Transferring extends BaseTransaction {
       token: observable,
       amount: observable,
       isResolvingAddress: observable,
-      txFeeWei: computed,
-      txFee: computed,
       insufficientFee: computed,
       isValidParams: computed,
       amountWei: computed,
@@ -167,13 +152,7 @@ export class Transferring extends BaseTransaction {
       runInAction(() => this.setToken(token));
     });
 
-    this.initChainData({ account: this.currentAccount.address, ...this.network });
-
     if (to) this.setTo(to);
-
-    if (this.network.eip1559) {
-      this.refreshEIP1559(this.network.chainId);
-    }
   }
 
   async estimateGas() {

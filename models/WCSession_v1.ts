@@ -41,6 +41,16 @@ export interface WCCallRequestRequest {
   params: any;
 }
 
+export interface WCCallRequest_eth_sendTransaction {
+  from: string;
+  to: string;
+  gasPrice: string;
+  gas: string;
+  value: string;
+  nonce: string;
+  data: string;
+}
+
 @Entity({ name: 'wcsession_v1' })
 export default class WCSession_v1 extends BaseEntity {
   @PrimaryGeneratedColumn()
