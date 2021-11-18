@@ -172,20 +172,18 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
           <SafeAreaProvider>
-            <SafeAreaView style={{ flex: 1, height: 270 }}>
-              <SafeViewContainer style={{ flex: 1 }}>
-                <View style={{ flex: 1 }} />
+            <SafeViewContainer style={{ flex: 1, height: 270 }}>
+              <View style={{ flex: 1 }} />
 
-                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                  <Ionicons name="warning" size={72} color="crimson" />
-                  <Text style={{ color: 'crimson' }}>I'm sure to erase all data.</Text>
-                </View>
+              <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                <Ionicons name="warning" size={72} color="crimson" />
+                <Text style={{ color: 'crimson' }}>I'm sure to erase all data.</Text>
+              </View>
 
-                <View style={{ flex: 1 }} />
+              <View style={{ flex: 1 }} />
 
-                <Button title="Confirm" themeColor="crimson" />
-              </SafeViewContainer>
-            </SafeAreaView>
+              <Button title="Confirm" themeColor="crimson" />
+            </SafeViewContainer>
           </SafeAreaProvider>
         </Modalize>
       </Portal>

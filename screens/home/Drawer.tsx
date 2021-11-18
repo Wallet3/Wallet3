@@ -39,7 +39,7 @@ const Drawer = observer((props: DrawerProps) => {
   };
 
   return (
-    <SafeViewContainer style={{ flex: 1, height: screenHeight, paddingHorizontal: 0, paddingTop: 0 }}>
+    <SafeViewContainer style={{ flex: 1, height: screenHeight, paddingHorizontal: 0, paddingTop: 0, paddingBottom: 0 }}>
       <View
         style={{
           marginHorizontal: 16,

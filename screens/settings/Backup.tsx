@@ -53,7 +53,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-      <SafeViewContainer>
+      <SafeViewContainer style={{ paddingBottom: 0 }}>
         {authorized ? (
           <View style={{ flex: 1 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: -12, marginBottom: -8 }}>
