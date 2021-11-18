@@ -13,6 +13,7 @@ import Swiper from 'react-native-swiper';
 import { TransactionRequest } from '../../viewmodels/TransactionRequest';
 import { WCCallRequestRequest } from '../../models/WCSession_v1';
 import { WalletConnect_v1 } from '../../viewmodels/WalletConnect_v1';
+import { formatAddress } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 
@@ -38,6 +39,22 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress }: Props) => {
             </Text>
           </View>
         </View>
+
+        <View style={{ ...styles.reviewItem }}>
+          <Text style={styles.reviewItemTitle}>Type</Text>
+          <Text style={{ ...styles.reviewItemValue }} numberOfLines={1}>
+            {vm.type}
+          </Text>
+        </View>
+
+        {vm.type === 'Transfer' ? (
+          <View style={{ ...styles.reviewItem }}>
+            <Text style={styles.reviewItemTitle}>To</Text>
+            <Text style={{ ...styles.reviewItemValue }} numberOfLines={1}>
+              {formatAddress(vm.to, 9, 5)}
+            </Text>
+          </View>
+        ) : undefined}
 
         <View style={{ ...styles.reviewItem, borderBottomWidth: 0 }}>
           <Text style={styles.reviewItemTitle}>Network</Text>

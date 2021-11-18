@@ -8,7 +8,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { SafeAreaView } from 'react-native';
 import Swiper from 'react-native-swiper';
 import { TransactionRequest } from '../viewmodels/TransactionRequest';
-import TxReview from './dapp/TxReview';
+import TxReview from './dapp/RequestReview';
 import { WalletConnect_v1 } from '../viewmodels/WalletConnect_v1';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
