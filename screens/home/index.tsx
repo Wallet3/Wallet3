@@ -74,8 +74,8 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
       <Actions
         style={{ marginTop: 8 }}
         disabled={currentWallet?.currentAccount?.loadingTokens}
-        onSendPress={() => PubSub.publish('openSendModal')}
-        onRequestPress={() => PubSub.publish('openRequestModal')}
+        onSendPress={() => PubSub.publish('openSendFundsModal')}
+        onRequestPress={() => PubSub.publish('openRequestFundsModal')}
         themeColor={current.color}
       />
 
@@ -92,7 +92,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
             token={selectedToken}
             themeColor={current.color}
             onSendPress={(token) => {
-              PubSub.publish('openSendModal', { token });
+              PubSub.publish('openSendFundsModal', { token });
               closeTokenDetail();
             }}
           />

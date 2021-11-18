@@ -49,12 +49,28 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress }: Props) => {
 
         {vm.type === 'Transfer' ? (
           <View style={{ ...styles.reviewItem }}>
-            <Text style={styles.reviewItemTitle}>To</Text>
+            <Text style={styles.reviewItemTitle}>Amount</Text>
             <Text style={{ ...styles.reviewItemValue }} numberOfLines={1}>
-              {formatAddress(vm.to, 9, 5)}
+              {vm.tokenAmountWei.gt(0) ? `${vm.tokenAmount} ${vm.tokenSymbol}` : `${vm.value} ${vm.network.symbol}`}
             </Text>
           </View>
         ) : undefined}
+
+        {vm.type === 'Approve' ? (
+          <View style={{ ...styles.reviewItem }}>
+            <Text style={styles.reviewItemTitle}>Approve</Text>
+            <Text style={{ ...styles.reviewItemValue }} numberOfLines={1}>
+              {`${vm.tokenAmount} ${vm.tokenSymbol}`}
+            </Text>
+          </View>
+        ) : undefined}
+
+        <View style={{ ...styles.reviewItem }}>
+          <Text style={styles.reviewItemTitle}>To</Text>
+          <Text style={{ ...styles.reviewItemValue }} numberOfLines={1}>
+            {formatAddress(vm.to, 9, 5)}
+          </Text>
+        </View>
 
         <View style={{ ...styles.reviewItem, borderBottomWidth: 0 }}>
           <Text style={styles.reviewItemTitle}>Network</Text>
@@ -95,7 +111,6 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress }: Props) => {
             style={{ ...styles.reviewItemValue, marginHorizontal: 2 }}
             numberOfLines={1}
             value={vm.txFee}
-            duration={1500}
             formatter={(val) => `${val.toFixed(5)} ${vm.feeTokenSymbol}`}
           />
 

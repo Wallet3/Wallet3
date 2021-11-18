@@ -143,7 +143,7 @@ const RequestFundsModal = () => {
   const { ref: requestRef, open: openRequestModal } = useModalize();
 
   useEffect(() => {
-    PubSub.subscribe('openRequestModal', () => openRequestModal());
+    PubSub.subscribe('openRequestFundsModal', () => openRequestModal());
   }, []);
 
   return (
@@ -165,13 +165,18 @@ const SendFundsModal = () => {
   const { ref: sendRef, open: openSendModal, close: closeSendModal } = useModalize();
 
   useEffect(() => {
-    PubSub.subscribe('openSendModal', (_, data) => {
+    PubSub.subscribe('openSendFundsModal', (_, data) => {
       const { token } = data || {};
       setUserSelectedToken(token);
       setTimeout(() => openSendModal(), 0);
     });
 
-    PubSub.subscribe('closeSendModal', () => closeSendModal());
+    PubSub.subscribe('closeSendFundsModal', () => closeSendModal());
+
+    return () => {
+      PubSub.unsubscribe('openSendFundsModal');
+      PubSub.unsubscribe('closeSendFundsModal');
+    };
   }, []);
 
   return (

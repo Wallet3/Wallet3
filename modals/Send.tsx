@@ -45,7 +45,7 @@ export default observer(({ initToken }: Props) => {
 
     setVerified(success);
 
-    if (success) setTimeout(() => PubSub.publish('closeSendModal'), 1700);
+    if (success) setTimeout(() => PubSub.publish('closeSendFundsModal'), 1700);
 
     return success;
   };

@@ -50,11 +50,14 @@ export class BaseTransaction {
   }
 
   get txFeeWei() {
+    const maxGasPriceWei = BigNumber.from((this.maxGasPrice * Gwei_1).toFixed(0));
+    const nextBlockBaseFeeWei = BigNumber.from(this.nextBlockBaseFeeWei);
+
     return this.network.eip1559
-      ? BigNumber.from(this.nextBlockBaseFeeWei)
+      ? (nextBlockBaseFeeWei.gt(maxGasPriceWei) ? maxGasPriceWei : nextBlockBaseFeeWei)
           .add(BigNumber.from((Number(this.maxPriorityPrice.toFixed(9)) * Gwei_1).toFixed(0)))
           .mul(this.gasLimit)
-      : BigNumber.from((this.maxGasPrice * Gwei_1).toFixed(0)).mul(this.gasLimit);
+      : maxGasPriceWei.mul(this.gasLimit);
   }
 
   get txFee() {
@@ -112,7 +115,7 @@ export class BaseTransaction {
 
   protected async initChainData({ network, account }: { network: INetwork; account: string }) {
     const { chainId, eip1559 } = network;
-    
+
     const [gasPrice, nextBaseFee, priorityFee, nonce] = await Promise.all([
       getGasPrice(chainId),
       getNextBlockBaseFee(chainId),
