@@ -5,8 +5,8 @@ import AmountPad from './AmountPad';
 import App from '../../viewmodels/App';
 import { IToken } from '../../common/Tokens';
 import Swiper from 'react-native-swiper';
+import { TokenTransferring } from '../../viewmodels/TokenTransferring';
 import Tokenlist from './Tokenlist';
-import { Transferring } from '../../viewmodels/Transferring';
 import { observer } from 'mobx-react-lite';
 
 interface Props {

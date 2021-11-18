@@ -2,14 +2,14 @@ import React, { useRef } from 'react';
 
 import AmountPad from './AmountPad';
 import Swiper from 'react-native-swiper';
+import { TokenTransferring } from '../../viewmodels/TokenTransferring';
 import Tokenlist from './Tokenlist';
-import { Transferring } from '../../viewmodels/Transferring';
 import { observer } from 'mobx-react-lite';
 
 interface Props {
   onBack?: () => void;
   onNext?: () => void;
-  vm: Transferring;
+  vm: TokenTransferring;
 }
 
 export default observer(({ onNext, onBack, vm }: Props) => {

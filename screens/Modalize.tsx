@@ -1,6 +1,7 @@
 import { ConnectDApp, DAppTxRequest, NetworksMenu, Request, Send, Sign } from '../modals';
 import { Dimensions, SafeAreaView } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import { WCCallRequestRequest, WCCallRequest_eth_sendTransaction } from '../models/WCSession_v1';
 
 import { AppVM } from '../viewmodels/App';
 import { Authentication } from '../viewmodels/Authentication';
@@ -8,7 +9,7 @@ import { FullPasspad } from '../modals/views/Passpad';
 import { IToken } from '../common/Tokens';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../viewmodels/Networks';
-import { WCCallRequestRequest } from '../models/WCSession_v1';
+import { PublicNetworks } from '../common/Networks';
 import { WalletConnect_v1 } from '../viewmodels/WalletConnect_v1';
 import { autorun } from 'mobx';
 import { styles } from '../constants/styles';
@@ -42,6 +43,15 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
           break;
         case 'eth_sendTransaction':
         case 'eth_signTransaction':
+          const [param, requestChainId] = request.params as [WCCallRequest_eth_sendTransaction, number?];
+
+          const targetNetwork =
+            PublicNetworks.find((n) => n.chainId === requestChainId) ??
+            (client.enabledChains.includes(current.chainId)
+              ? current
+              : PublicNetworks.find((n) => client.enabledChains[0] === n.chainId)) ??
+            PublicNetworks[0];
+
           setRequest(request);
           setType('sendTx');
           break;
@@ -77,7 +87,9 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
         />
       ) : undefined}
 
-      {type === 'sendTx' ? <DAppTxRequest client={client!} request={request!} currentNetwork={current} close={close} /> : undefined}
+      {type === 'sendTx' ? (
+        <DAppTxRequest client={client!} request={request!} currentNetwork={current} close={close} />
+      ) : undefined}
     </Modalize>
   );
 };

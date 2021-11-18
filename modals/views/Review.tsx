@@ -12,7 +12,7 @@ import Image from 'react-native-expo-cached-image';
 import Networks from '../../viewmodels/Networks';
 import { ScrollView } from 'react-native-gesture-handler';
 import Swiper from 'react-native-swiper';
-import { Transferring } from '../../viewmodels/Transferring';
+import { TokenTransferring } from '../../viewmodels/TokenTransferring';
 import { formatAddress } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
@@ -22,7 +22,7 @@ interface Props {
   onBack?: () => void;
   onSend?: () => Promise<void>;
   onGasPress?: () => void;
-  vm: Transferring;
+  vm: TokenTransferring;
 }
 
 const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
@@ -154,7 +154,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
 
 interface GasProps {
   onBack?: () => void;
-  vm: Transferring;
+  vm: TokenTransferring;
 }
 
 const GasView = observer(({ onBack, vm }: GasProps) => {

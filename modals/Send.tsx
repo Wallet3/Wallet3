@@ -10,7 +10,7 @@ import Networks from '../viewmodels/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Success from './views/Success';
 import Swiper from 'react-native-swiper';
-import { Transferring } from '../viewmodels/Transferring';
+import { TokenTransferring } from '../viewmodels/TokenTransferring';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
 
@@ -19,7 +19,7 @@ interface Props {
 }
 
 export default observer(({ initToken }: Props) => {
-  const [vm] = useState(new Transferring({ targetNetwork: Networks.current, defaultToken: initToken }));
+  const [vm] = useState(new TokenTransferring({ targetNetwork: Networks.current, defaultToken: initToken }));
   const [verified, setVerified] = useState(false);
   const swiper = useRef<Swiper>(null);
 

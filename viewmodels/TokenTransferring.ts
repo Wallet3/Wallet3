@@ -11,7 +11,7 @@ import { IToken } from '../common/Tokens';
 import Networks from './Networks';
 import { getGasPrice } from '../common/RPC';
 
-export class Transferring extends BaseTransaction {
+export class TokenTransferring extends BaseTransaction {
   to = '';
   toAddress = '';
   avatar?: string = '';
