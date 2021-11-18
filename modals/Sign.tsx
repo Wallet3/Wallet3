@@ -87,31 +87,29 @@ export default observer(({ request, themeColor, client, close, wallet, appAuth }
   };
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.safeArea}>
-        {verified ? (
-          <Success />
-        ) : (
-          <Swiper
-            ref={swiper}
-            showsPagination={false}
-            showsButtons={false}
-            scrollEnabled={false}
-            loop={false}
-            automaticallyAdjustContentInsets
-          >
-            {type === 'plaintext' ? (
-              <PlainTextSign msg={msg!} themeColor={themeColor} onReject={reject} onSign={onSignPress} />
-            ) : undefined}
+    <SafeAreaProvider style={styles.safeArea}>
+      {verified ? (
+        <Success />
+      ) : (
+        <Swiper
+          ref={swiper}
+          showsPagination={false}
+          showsButtons={false}
+          scrollEnabled={false}
+          loop={false}
+          automaticallyAdjustContentInsets
+        >
+          {type === 'plaintext' ? (
+            <PlainTextSign msg={msg!} themeColor={themeColor} onReject={reject} onSign={onSignPress} />
+          ) : undefined}
 
-            {type === 'typedData' ? (
-              <SignTypedData data={typedData!} onReject={reject} onSign={onSignPress} themeColor={themeColor} />
-            ) : undefined}
+          {type === 'typedData' ? (
+            <SignTypedData data={typedData!} onReject={reject} onSign={onSignPress} themeColor={themeColor} />
+          ) : undefined}
 
-            <Passpad themeColor={themeColor} onCodeEntered={(c) => sign(c)} onCancel={() => swiper.current?.scrollTo(0)} />
-          </Swiper>
-        )}
-      </SafeAreaView>
+          <Passpad themeColor={themeColor} onCodeEntered={(c) => sign(c)} onCancel={() => swiper.current?.scrollTo(0)} />
+        </Swiper>
+      )}
     </SafeAreaProvider>
   );
 });

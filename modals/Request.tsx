@@ -14,22 +14,20 @@ export default observer(() => {
   const [vm] = useState(new NFCRequesting());
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.safeArea}>
-        <Swiper
-          ref={swiper}
-          showsPagination={false}
-          showsButtons={false}
-          scrollEnabled={false}
-          loop={false}
-          automaticallyAdjustContentInsets
-          removeClippedSubviews
-          style={{ overflow: 'hidden' }}
-        >
-          <RequestAmount onNext={() => swiper.current?.scrollTo(1)} vm={vm} />
-          <NFCPad onBack={() => swiper.current?.scrollTo(0)} />
-        </Swiper>
-      </SafeAreaView>
+    <SafeAreaProvider style={styles.safeArea}>
+      <Swiper
+        ref={swiper}
+        showsPagination={false}
+        showsButtons={false}
+        scrollEnabled={false}
+        loop={false}
+        automaticallyAdjustContentInsets
+        removeClippedSubviews
+        style={{ overflow: 'hidden' }}
+      >
+        <RequestAmount onNext={() => swiper.current?.scrollTo(1)} vm={vm} />
+        <NFCPad onBack={() => swiper.current?.scrollTo(0)} />
+      </Swiper>
     </SafeAreaProvider>
   );
 });

@@ -60,7 +60,7 @@ export default observer(
           renderItem={renderItem}
           keyExtractor={(i) => i.network}
           contentContainerStyle={{ paddingBottom: 8 }}
-          style={{ flex: 1, marginHorizontal: -16, paddingHorizontal: 16 }}
+          style={{ flex: 1, marginHorizontal: -16, paddingHorizontal: 16, marginBottom: 12 }}
         />
 
         <Button title="Done" onPress={() => onDone(selected)} />

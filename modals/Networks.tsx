@@ -35,20 +35,18 @@ export default observer((props: Props) => {
   };
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.safeArea}>
-        <SafeViewContainer style={{ padding: 16 }}>
-          <Text style={{ color: secondaryFontColor }}>Switch Network</Text>
-          <Separator style={{ marginVertical: 4 }} />
-          <FlatList
-            keyExtractor={(i) => i.network}
-            data={PublicNetworks}
-            renderItem={renderItem}
-            contentContainerStyle={{ paddingBottom: 32 }}
-            style={{ marginHorizontal: -16, paddingHorizontal: 16, marginTop: -4, marginBottom: -32 }}
-          />
-        </SafeViewContainer>
-      </SafeAreaView>
+    <SafeAreaProvider style={styles.safeArea}>
+      <SafeViewContainer style={{ padding: 16 }}>
+        <Text style={{ color: secondaryFontColor }}>Switch Network</Text>
+        <Separator style={{ marginVertical: 4 }} />
+        <FlatList
+          keyExtractor={(i) => i.network}
+          data={PublicNetworks}
+          renderItem={renderItem}
+          contentContainerStyle={{ paddingBottom: 32 }}
+          style={{ marginHorizontal: -16, paddingHorizontal: 16, marginTop: -4, marginBottom: -32 }}
+        />
+      </SafeViewContainer>
     </SafeAreaProvider>
   );
 });

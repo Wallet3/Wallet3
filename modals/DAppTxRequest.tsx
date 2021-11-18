@@ -6,6 +6,7 @@ import TxRequest from './dapp/TxRequest';
 import { WCCallRequestRequest } from '../models/WCSession_v1';
 import { WalletConnect_v1 } from '../viewmodels/WalletConnect_v1';
 import { observer } from 'mobx-react-lite';
+import styles from './styles';
 
 interface Props {
   client: WalletConnect_v1;
@@ -21,10 +22,8 @@ export default observer(({ client, request, network, close }: Props) => {
   };
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView>
-        <TxRequest client={client} request={request} network={network} onReject={reject} />
-      </SafeAreaView>
+    <SafeAreaProvider style={styles.safeArea}>
+      <TxRequest client={client} request={request} network={network} onReject={reject} />
     </SafeAreaProvider>
   );
 });

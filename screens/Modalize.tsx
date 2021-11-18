@@ -1,9 +1,9 @@
 import { ConnectDApp, DAppTxRequest, NetworksMenu, Request, Send, Sign } from '../modals';
+import { Dimensions, SafeAreaView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 
 import { AppVM } from '../viewmodels/App';
 import { Authentication } from '../viewmodels/Authentication';
-import { Dimensions } from 'react-native';
 import { FullPasspad } from '../modals/views/Passpad';
 import { IToken } from '../common/Tokens';
 import { Modalize } from 'react-native-modalize';

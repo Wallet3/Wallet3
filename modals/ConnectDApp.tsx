@@ -90,12 +90,10 @@ export default observer(({ uri, close }: Props) => {
   }, [uri]);
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.safeArea}>
-        {connecting ? <Loading /> : undefined}
-        {client ? <ConnectDApp client={client} close={close} /> : undefined}
-        {connectTimeout ? <TimeoutView close={close} /> : undefined}
-      </SafeAreaView>
+    <SafeAreaProvider style={styles.safeArea}>
+      {connecting ? <Loading /> : undefined}
+      {client ? <ConnectDApp client={client} close={close} /> : undefined}
+      {connectTimeout ? <TimeoutView close={close} /> : undefined}
     </SafeAreaProvider>
   );
 });

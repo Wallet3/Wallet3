@@ -64,37 +64,35 @@ export default observer(({ initToken }: Props) => {
   };
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.safeArea}>
-        {verified ? (
-          <Success />
-        ) : (
-          <Swiper
-            ref={swiper}
-            showsPagination={false}
-            showsButtons={false}
-            scrollEnabled={false}
-            loop={false}
-            automaticallyAdjustContentInsets
-          >
-            <ContactsPad onNext={() => swiper.current?.scrollTo(1, true)} vm={vm} />
-            <SendAmount
-              vm={vm}
-              onBack={() => swiper.current?.scrollTo(0)}
-              onNext={() => {
-                swiper.current?.scrollTo(2);
-                vm.estimateGas();
-              }}
-            />
-            <ReviewPad onBack={() => swiper.current?.scrollTo(1)} vm={vm} onSend={onSendClick} />
-            <Passpad
-              themeColor={vm.network.color}
-              onCodeEntered={(c) => sendTx(c)}
-              onCancel={() => swiper.current?.scrollTo(2)}
-            />
-          </Swiper>
-        )}
-      </SafeAreaView>
+    <SafeAreaProvider style={styles.safeArea}>
+      {verified ? (
+        <Success />
+      ) : (
+        <Swiper
+          ref={swiper}
+          showsPagination={false}
+          showsButtons={false}
+          scrollEnabled={false}
+          loop={false}
+          automaticallyAdjustContentInsets
+        >
+          <ContactsPad onNext={() => swiper.current?.scrollTo(1, true)} vm={vm} />
+          <SendAmount
+            vm={vm}
+            onBack={() => swiper.current?.scrollTo(0)}
+            onNext={() => {
+              swiper.current?.scrollTo(2);
+              vm.estimateGas();
+            }}
+          />
+          <ReviewPad onBack={() => swiper.current?.scrollTo(1)} vm={vm} onSend={onSendClick} />
+          <Passpad
+            themeColor={vm.network.color}
+            onCodeEntered={(c) => sendTx(c)}
+            onCancel={() => swiper.current?.scrollTo(2)}
+          />
+        </Swiper>
+      )}
     </SafeAreaProvider>
   );
 });

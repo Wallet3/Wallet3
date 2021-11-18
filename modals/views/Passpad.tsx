@@ -66,10 +66,8 @@ interface FullPasspadProps {
 
 export const FullPasspad = ({ height, themeColor, onCodeEntered }: FullPasspadProps) => {
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={{ flex: 1, height }}>
-        <Passpad themeColor={themeColor} disableCancel onCodeEntered={onCodeEntered} style={{ marginBottom: 4 }} />
-      </SafeAreaView>
+    <SafeAreaProvider style={{ flex: 1, height }}>
+      <Passpad themeColor={themeColor} disableCancel onCodeEntered={onCodeEntered} style={{ marginBottom: 4 }} />
     </SafeAreaProvider>
   );
 };
