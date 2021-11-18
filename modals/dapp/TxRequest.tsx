@@ -1,8 +1,10 @@
-import { StyleSheet, Text, View } from 'react-native';
-import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import AnimateNumber from 'react-native-animate-number';
+import Currency from '../../viewmodels/Currency';
 import { INetwork } from '../../common/Networks';
 import Image from 'react-native-expo-cached-image';
+import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import RejectApproveButtons from '../components/RejectApproveButtons';
 import { SafeViewContainer } from '../../components';
@@ -18,12 +20,14 @@ export default observer(
     network,
     onReject,
     onApprove,
+    onGasPress,
   }: {
     client: WalletConnect_v1;
     network?: INetwork;
     request: WCCallRequestRequest;
     onReject?: () => void;
     onApprove?: () => void;
+    onGasPress?: () => void;
   }) => {
     const { appMeta } = client;
 
@@ -47,6 +51,47 @@ export default observer(
             </Text>
           </View>
         </View>
+
+        <View
+          style={{
+            ...styles.reviewItemsContainer,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingStart: 16,
+          }}
+        >
+          <Text style={styles.reviewItemTitle}>Tx Fee</Text>
+
+          <TouchableOpacity
+            onPress={onGasPress}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              padding: 16,
+              paddingVertical: 12,
+              paddingEnd: 14,
+              justifyContent: 'flex-end',
+              width: '75%',
+            }}
+          >
+            {/* <Text style={{ ...styles.reviewItemTitle, fontSize: 15 }}>
+              {`(${Currency.tokenToUSD(vm.txFee, vm.network.symbol).toFixed(2)} USD)`}
+            </Text>
+
+            <AnimateNumber
+              style={{ ...styles.reviewItemValue, marginHorizontal: 2 }}
+              numberOfLines={1}
+              value={vm.txFee}
+              duration={1500}
+              formatter={(val) => `${val.toFixed(5)} ${vm.feeTokenSymbol}`}
+            /> */}
+
+            <MaterialIcons name="keyboard-arrow-right" size={15} />
+          </TouchableOpacity>
+        </View>
+
+        <View style={{ flex: 1 }} />
 
         <RejectApproveButtons
           onReject={onReject}

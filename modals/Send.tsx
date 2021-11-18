@@ -6,7 +6,6 @@ import App from '../viewmodels/App';
 import Authentication from '../viewmodels/Authentication';
 import Contacts from '../viewmodels/Contacts';
 import { IToken } from '../common/Tokens';
-import LottieView from 'lottie-react-native';
 import Networks from '../viewmodels/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Success from './views/Success';
