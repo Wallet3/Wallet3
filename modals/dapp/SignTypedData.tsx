@@ -3,6 +3,7 @@ import { Text, View } from 'react-native';
 
 import JSONTree from 'react-native-json-tree';
 import React from 'react';
+import RejectApproveButtons from '../components/RejectApproveButtons';
 import { ScrollView } from 'react-native-gesture-handler';
 import { borderColor } from '../../constants/styles';
 import { observer } from 'mobx-react-lite';
@@ -44,11 +45,13 @@ export default observer(
           <JSONTree data={data} hideRoot theme={theme} />
         </ScrollView>
 
-        <View style={{ flexDirection: 'row', marginTop: 12 }}>
-          <Button title="Cancel" onPress={onReject} reverse themeColor={themeColor} style={{ flex: 10 }} />
-          <View style={{ width: 12 }} />
-          <Button title="Sign" onPress={onSign} style={{ flex: 10 }} themeColor={themeColor} />
-        </View>
+        <RejectApproveButtons
+          onReject={onReject}
+          onApprove={onSign}
+          themeColor={themeColor}
+          rejectTitle="Reject"
+          approveTitle="Sign"
+        />
       </SafeViewContainer>
     );
   }

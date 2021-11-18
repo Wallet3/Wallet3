@@ -10,7 +10,7 @@ import { Host } from 'react-native-portalize';
 import { Ionicons } from '@expo/vector-icons';
 import LandScreen from './screens/land';
 import Languages from './screens/settings/Languages';
-import Modals from './screens/Modals';
+import Modals from './screens/Modalize';
 import { NavigationContainer } from '@react-navigation/native';
 import QRScan from './screens/misc/QRScan';
 import React from 'react';

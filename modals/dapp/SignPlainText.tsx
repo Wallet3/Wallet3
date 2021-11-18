@@ -4,6 +4,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Text, View } from 'react-native';
 import { borderColor, thirdFontColor } from '../../constants/styles';
 
+import RejectApproveButtons from '../components/RejectApproveButtons';
 import { ScrollView } from 'react-native-gesture-handler';
 import { WCCallRequestRequest } from '../../models/WCSession_v1';
 import { observer } from 'mobx-react-lite';
@@ -32,11 +33,13 @@ export default observer(({ msg, themeColor, onReject, onSign }: Props) => {
         <Text style={{ color: thirdFontColor }}>{msg}</Text>
       </ScrollView>
 
-      <View style={{ flexDirection: 'row', marginTop: 12 }}>
-        <Button title="Cancel" onPress={onReject} reverse themeColor={themeColor} style={{ flex: 10 }} />
-        <View style={{ width: 12 }} />
-        <Button title="Sign" onPress={onSign} style={{ flex: 10 }} themeColor={themeColor} />
-      </View>
+      <RejectApproveButtons
+        onReject={onReject}
+        onApprove={onSign}
+        themeColor={themeColor}
+        rejectTitle="Reject"
+        approveTitle="Sign"
+      />
     </SafeViewContainer>
   );
 });

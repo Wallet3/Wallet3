@@ -51,6 +51,7 @@ export class WalletConnect_v1 extends EventEmitter {
     this.client = new WalletConnectClient({ session, clientMeta });
     this.client.on('call_request', this.handleCallRequest);
     this.client.on('disconnect', () => this.emit('disconnect'));
+    this.appMeta = session.peerMeta;
 
     return this;
   }
@@ -98,11 +99,6 @@ export class WalletConnect_v1 extends EventEmitter {
   private handleCallRequest = async (error: Error | null, request: WCCallRequestRequest) => {
     if (error) {
       this.emit('error', error);
-      return;
-    }
-
-    if (request.method === 'eth_signTransaction') {
-      this.client.rejectRequest({ id: request.id, error: { message: 'Not allowed, use send_Transaction' } });
       return;
     }
 

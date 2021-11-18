@@ -8,7 +8,6 @@ import AnimateNumber from 'react-native-animate-number';
 import BackButton from '../components/BackButton';
 import Currency from '../../viewmodels/Currency';
 import Fire from '../../assets/icons/app/fire.svg';
-import Gem from '../../assets/icons/app/gem.svg';
 import Image from 'react-native-expo-cached-image';
 import Networks from '../../viewmodels/Networks';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -37,7 +36,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
         <Text style={styles.navTitle}>Tx Review</Text>
       </View>
 
-      <View style={viewStyles.reviewItemContainer}>
+      <View style={viewStyles.reviewItemsContainer}>
         <View style={viewStyles.reviewItem}>
           <Text style={viewStyles.reviewItemTitle}>Send</Text>
 
@@ -74,7 +73,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
 
       <View
         style={{
-          ...viewStyles.reviewItemContainer,
+          ...viewStyles.reviewItemsContainer,
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -116,7 +115,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
           horizontal
           showsHorizontalScrollIndicator={false}
           style={{
-            ...viewStyles.reviewItemContainer,
+            ...viewStyles.reviewItemsContainer,
 
             borderWidth: 1,
             paddingTop: 12,
@@ -167,7 +166,7 @@ const GasView = observer(({ onBack, vm }: GasProps) => {
         <Text style={styles.navTitle}>Tx Fee</Text>
       </View>
 
-      <View style={viewStyles.reviewItemContainer}>
+      <View style={viewStyles.reviewItemsContainer}>
         <View style={{ ...viewStyles.reviewItem, paddingBottom: 12 }}>
           <Text style={viewStyles.reviewItemTitle}>Gas Limit</Text>
 
@@ -245,7 +244,7 @@ const GasView = observer(({ onBack, vm }: GasProps) => {
         </View>
       </View>
 
-      <View style={{ ...viewStyles.reviewItemContainer, flexDirection: 'row' }}>
+      <View style={{ ...viewStyles.reviewItemsContainer, flexDirection: 'row' }}>
         <TouchableOpacity style={viewStyles.gasItem} onPress={() => vm.setGas('rapid')}>
           <Ionicons name="rocket" size={12} color="tomato" />
           <Text style={{ ...viewStyles.gasItemText, color: 'tomato' }}>Rapid</Text>
@@ -281,7 +280,7 @@ export default observer(({ onBack, vm, onSend }: Props) => {
 });
 
 const viewStyles = StyleSheet.create({
-  reviewItemContainer: {
+  reviewItemsContainer: {
     borderWidth: 1,
     borderColor,
     borderRadius: 10,

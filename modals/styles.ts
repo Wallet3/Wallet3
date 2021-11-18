@@ -1,4 +1,4 @@
-import { borderColor, secondaryFontColor } from '../constants/styles';
+import { borderColor, fontColor, secondaryFontColor } from '../constants/styles';
 
 import { StyleSheet } from 'react-native';
 
@@ -35,5 +35,34 @@ export default StyleSheet.create({
     paddingHorizontal: 12,
     alignItems: 'center',
     flexDirection: 'row',
+  },
+
+  reviewItemsContainer: {
+    borderWidth: 1,
+    borderColor,
+    borderRadius: 10,
+    marginTop: 12,
+  },
+
+  reviewItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderColor,
+    paddingVertical: 15,
+    paddingHorizontal: 16,
+  },
+
+  reviewItemTitle: {
+    fontSize: 17,
+    color: secondaryFontColor,
+    fontWeight: '500',
+  },
+
+  reviewItemValue: {
+    fontSize: 17,
+    color: fontColor,
+    fontWeight: '500',
   },
 });

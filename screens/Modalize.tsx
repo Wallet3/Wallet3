@@ -1,4 +1,4 @@
-import { ConnectDApp, NetworksMenu, Request, Send, Sign } from '../modals';
+import { ConnectDApp, DAppTxRequest, NetworksMenu, Request, Send, Sign } from '../modals';
 import React, { useEffect, useState } from 'react';
 
 import { AppVM } from '../viewmodels/App';
@@ -21,6 +21,7 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
   const [type, setType] = useState<string>();
   const [client, setClient] = useState<WalletConnect_v1>();
   const [request, setRequest] = useState<WCCallRequestRequest>();
+  const { current } = Networks;
 
   useEffect(() => {
     PubSub.subscribe('wc_request', (_, { client, request }: { client: WalletConnect_v1; request: WCCallRequestRequest }) => {
@@ -29,12 +30,20 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
         return;
       }
 
+      setRequest(undefined);
+      setType(undefined);
+
       switch (request.method) {
         case 'eth_sign':
         case 'personal_sign':
         case 'eth_signTypedData':
           setRequest(request);
           setType('sign');
+          break;
+        case 'eth_sendTransaction':
+        case 'eth_signTransaction':
+          setRequest(request);
+          setType('sendTx');
           break;
       }
 
@@ -61,12 +70,14 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
         <Sign
           client={client!}
           request={request!}
-          themeColor={Networks.current.color}
+          themeColor={current.color}
           close={close}
           wallet={app.currentWallet!}
           appAuth={appAuth}
         />
       ) : undefined}
+
+      {type === 'sendTx' ? <DAppTxRequest client={client!} request={request!} network={current} close={close} /> : undefined}
     </Modalize>
   );
 };
