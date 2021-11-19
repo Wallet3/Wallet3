@@ -1,3 +1,4 @@
+import { Coin, SafeViewContainer } from '../../components';
 import React, { useRef } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -8,11 +9,12 @@ import { INetwork } from '../../common/Networks';
 import Image from 'react-native-expo-cached-image';
 import { MaterialIcons } from '@expo/vector-icons';
 import RejectApproveButtons from '../components/RejectApproveButtons';
-import { SafeViewContainer } from '../../components';
 import Swiper from 'react-native-swiper';
 import { TransactionRequest } from '../../viewmodels/TransactionRequest';
 import { WCCallRequestRequest } from '../../models/WCSession_v1';
 import { WalletConnect_v1 } from '../../viewmodels/WalletConnect_v1';
+import { constants } from 'ethers';
+import { fontColor } from '../../constants/styles';
 import { formatAddress } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
@@ -58,10 +60,24 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress }: Props) => {
 
         {vm.type === 'Approve' ? (
           <View style={{ ...styles.reviewItem }}>
-            <Text style={styles.reviewItemTitle}>Approve</Text>
-            <Text style={{ ...styles.reviewItemValue }} numberOfLines={1}>
-              {`${vm.tokenAmount} ${vm.tokenSymbol}`}
-            </Text>
+            <Text style={styles.reviewItemTitle}>Max</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text
+                style={{
+                  ...styles.reviewItemValue,
+                  maxWidth: 120,
+                  marginEnd: 4,
+                  color: vm.maxUint256Amount ? 'deeppink' : fontColor,
+                }}
+                numberOfLines={1}
+              >
+                {vm.maxUint256Amount ? 'Unlimited' : vm.tokenAmount}
+              </Text>
+              <Coin symbol={vm.tokenSymbol} />
+              <Text style={{ ...styles.reviewItemValue, marginStart: 2, maxWidth: 64 }} numberOfLines={1}>
+                {vm.tokenSymbol}
+              </Text>
+            </View>
           </View>
         ) : undefined}
 

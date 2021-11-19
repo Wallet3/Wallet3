@@ -1,4 +1,4 @@
-import { BigNumber, utils } from 'ethers';
+import { BigNumber, constants, ethers, utils } from 'ethers';
 import { INetwork, PublicNetworks } from '../common/Networks';
 import { WCCallRequestRequest, WCCallRequest_eth_sendTransaction, WCClientMeta } from '../models/WCSession_v1';
 import { computed, makeObservable, observable, runInAction } from 'mobx';
@@ -43,6 +43,10 @@ export class TransactionRequest extends BaseTransaction {
     } catch (error) {
       return '0';
     }
+  }
+
+  get maxUint256Amount() {
+    return this.tokenAmountWei.eq(constants.MaxUint256);
   }
 
   get value() {
