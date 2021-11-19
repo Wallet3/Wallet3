@@ -21,7 +21,7 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
   const { ref, open, close } = useModalize();
   const [type, setType] = useState<string>();
   const [client, setClient] = useState<WalletConnect_v1>();
-  const [request, setRequest] = useState<WCCallRequestRequest>();
+  const [callRequest, setCallRequest] = useState<WCCallRequestRequest>();
   const { current } = Networks;
 
   useEffect(() => {
@@ -31,19 +31,19 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
         return;
       }
 
-      setRequest(undefined);
       setType(undefined);
+      setCallRequest(undefined);
 
       switch (request.method) {
         case 'eth_sign':
         case 'personal_sign':
         case 'eth_signTypedData':
-          setRequest(request);
+          setCallRequest(request);
           setType('sign');
           break;
         case 'eth_sendTransaction':
         case 'eth_signTransaction':
-          setRequest(request);
+          setCallRequest(request);
           setType('sendTx');
           break;
       }
@@ -70,7 +70,7 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
       {type === 'sign' ? (
         <Sign
           client={client!}
-          request={request!}
+          request={callRequest!}
           themeColor={current.color}
           close={close}
           wallet={app.currentWallet!}
@@ -78,7 +78,7 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
         />
       ) : undefined}
 
-      {type === 'sendTx' ? <DAppTxRequest client={client!} request={request!} close={close} /> : undefined}
+      {type === 'sendTx' ? <DAppTxRequest client={client!} request={callRequest!} close={close} /> : undefined}
     </Modalize>
   );
 };

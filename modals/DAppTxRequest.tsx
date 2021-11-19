@@ -26,9 +26,8 @@ export default observer(({ client, request, close }: Props) => {
   const swiper = useRef<Swiper>(null);
 
   const [vm] = useState(new TransactionRequest({ client, request }));
-  const [type] = useState(parseRequestType(request.params[0].data).type);
+  const [type] = useState(parseRequestType(request.params[0]?.data).type);
   const [verified, setVerified] = useState(false);
-  console.log('type', type);
 
   const reject = () => {
     client.rejectRequest(request.id, 'User rejected');

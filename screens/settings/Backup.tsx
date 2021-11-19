@@ -52,7 +52,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
   }, []);
 
   return (
-    <SafeViewContainer paddingHeader includeTopPadding>
+    <SafeViewContainer style={{ backgroundColor: '#fff' }} paddingHeader includeTopPadding>
       {authorized ? (
         <View style={{ flex: 1 }}>
           <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: -12, marginBottom: -8 }}>
