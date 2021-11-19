@@ -1,11 +1,12 @@
-import { BigNumber, constants, ethers, utils } from 'ethers';
+import { BigNumber, constants, ethers, providers, utils } from 'ethers';
 import { INetwork, PublicNetworks } from '../common/Networks';
 import { WCCallRequestRequest, WCCallRequest_eth_sendTransaction, WCClientMeta } from '../models/WCSession_v1';
-import { computed, makeObservable, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
 import App from './App';
 import { BaseTransaction } from './BaseTransaction';
 import { ERC20Token } from '../models/ERC20';
+import { Gwei_1 } from '../common/Constants';
 import Networks from './Networks';
 import { WalletConnect_v1 } from './WalletConnect_v1';
 
@@ -27,6 +28,7 @@ const Methods = new Map<string, RequestType>([
 export class TransactionRequest extends BaseTransaction {
   private client: WalletConnect_v1;
   private param: WCCallRequest_eth_sendTransaction;
+  private erc20?: ERC20Token;
 
   type!: RequestType;
   to!: string;
@@ -71,14 +73,6 @@ export class TransactionRequest extends BaseTransaction {
         : PublicNetworks.find((n) => client.enabledChains[0] === n.chainId)) ??
       PublicNetworks[0];
 
-    console.log(
-      requestChainId,
-      Networks.current.chainId,
-      client.enabledChains.includes(Networks.current.chainId),
-      network.network,
-      client.enabledChains
-    );
-
     super({ network, account });
 
     this.client = client;
@@ -91,6 +85,8 @@ export class TransactionRequest extends BaseTransaction {
       tokenAmount: computed,
       tokenDecimals: observable,
       tokenSymbol: observable,
+      isValidParams: computed,
+      setApproveAmount: action,
     });
 
     runInAction(() => this.parseRequest(param, account));
@@ -109,6 +105,7 @@ export class TransactionRequest extends BaseTransaction {
 
     this.type = param.data ? Methods.get(methodFunc) ?? 'Contract Interaction' : 'Transfer';
     const erc20 = new ERC20Token({ chainId: this.network.chainId, contract: param.to, owner: account });
+    this.erc20 = erc20;
 
     switch (methodFunc) {
       case Transfer:
@@ -142,5 +139,53 @@ export class TransactionRequest extends BaseTransaction {
     } else {
       this.estimateGas({ from: account, to: param.to, data: param.data, value: param.value });
     }
+
+    if (param.nonce) runInAction(() => this.setNonce(param.nonce));
+  }
+
+  setApproveAmount(amount: string) {
+    if (!this.erc20 || this.erc20.decimals < 0) return;
+    this.txException = '';
+
+    try {
+      const data = this.erc20.interface.encodeFunctionData('approve', [
+        this.to,
+        utils.parseUnits(amount, this.erc20.decimals),
+      ]);
+
+      this.param.data = data;
+    } catch (error: any) {
+      this.txException = 'Invalid amount';
+    }
+  }
+
+  get isValidParams() {
+    return (
+      utils.isAddress(this.param.to) &&
+      this.nonce >= 0 &&
+      this.maxGasPrice > 0 &&
+      this.gasLimit >= 21000 &&
+      !this.isEstimatingGas &&
+      !this.txException
+    );
+  }
+
+  get txRequest(): providers.TransactionRequest {
+    const tx: providers.TransactionRequest = {
+      chainId: this.network.chainId,
+      ...this.param,
+      nonce: this.nonce,
+      gasLimit: this.gasLimit,
+      type: this.network.eip1559 ? 2 : 0,
+    };
+
+    if (tx.type === 0) {
+      tx.gasPrice = Number.parseInt((this.maxGasPrice * Gwei_1) as any);
+    } else {
+      tx.maxFeePerGas = Number.parseInt((this.maxGasPrice * Gwei_1) as any);
+      tx.maxPriorityFeePerGas = Number.parseInt((this.maxPriorityPrice * Gwei_1) as any);
+    }
+
+    return tx;
   }
 }

@@ -1,6 +1,6 @@
-import { Coin, SafeViewContainer } from '../../components';
+import { Coin, SafeViewContainer, Skeleton } from '../../components';
 import React, { useRef } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import AnimateNumber from 'react-native-animate-number';
 import Currency from '../../viewmodels/Currency';
@@ -11,6 +11,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import RejectApproveButtons from '../components/RejectApproveButtons';
 import Swiper from 'react-native-swiper';
 import { TransactionRequest } from '../../viewmodels/TransactionRequest';
+import TxException from '../components/TxException';
 import { WCCallRequestRequest } from '../../models/WCSession_v1';
 import { WalletConnect_v1 } from '../../viewmodels/WalletConnect_v1';
 import { constants } from 'ethers';
@@ -62,21 +63,27 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress }: Props) => {
           <View style={{ ...styles.reviewItem }}>
             <Text style={styles.reviewItemTitle}>Max</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text
+              <TextInput
+                numberOfLines={1}
+                defaultValue={vm.maxUint256Amount ? 'Unlimited' : vm.tokenAmount}
+                keyboardType="decimal-pad"
+                onChangeText={(t) => vm.setApproveAmount(t)}
                 style={{
                   ...styles.reviewItemValue,
                   maxWidth: 120,
                   marginEnd: 4,
                   color: vm.maxUint256Amount ? 'deeppink' : fontColor,
                 }}
-                numberOfLines={1}
-              >
-                {vm.maxUint256Amount ? 'Unlimited' : vm.tokenAmount}
-              </Text>
-              <Coin symbol={vm.tokenSymbol} />
-              <Text style={{ ...styles.reviewItemValue, marginStart: 2, maxWidth: 64 }} numberOfLines={1}>
-                {vm.tokenSymbol}
-              </Text>
+              />
+
+              {vm.tokenSymbol ? <Coin symbol={vm.tokenSymbol} size={20} /> : undefined}
+              {vm.tokenSymbol ? (
+                <Text style={{ ...styles.reviewItemValue, marginStart: 2, maxWidth: 64 }} numberOfLines={1}>
+                  {vm.tokenSymbol}
+                </Text>
+              ) : (
+                <Skeleton style={{ width: 52, height: 19, marginStart: 4 }} />
+              )}
             </View>
           </View>
         ) : undefined}
@@ -149,6 +156,8 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress }: Props) => {
         </TouchableOpacity>
       </View>
 
+      {vm.txException ? <TxException exception={vm.txException} /> : undefined}
+
       <View style={{ flex: 1 }} />
 
       <RejectApproveButtons
@@ -157,6 +166,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress }: Props) => {
         themeColor={network?.color}
         rejectTitle="Reject"
         approveTitle="Send"
+        disabledApprove={!vm.isValidParams}
       />
     </SafeViewContainer>
   );

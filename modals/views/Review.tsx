@@ -15,6 +15,7 @@ import Networks from '../../viewmodels/Networks';
 import { ScrollView } from 'react-native-gesture-handler';
 import Swiper from 'react-native-swiper';
 import { TokenTransferring } from '../../viewmodels/TokenTransferring';
+import TxException from '../components/TxException';
 import { formatAddress } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
@@ -112,25 +113,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
         </TouchableOpacity>
       </View>
 
-      {vm.txException ? (
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={{
-            ...styles.reviewItemsContainer,
-
-            borderWidth: 1,
-            paddingTop: 12,
-            paddingHorizontal: 16,
-            backgroundColor: 'crimson',
-            paddingBottom: 0,
-          }}
-          contentContainerStyle={{ alignItems: 'center', marginTop: -11 }}
-        >
-          <Ionicons name="alert-circle" color="white" size={16} />
-          <Text style={{ color: 'white', marginStart: 8, fontSize: 12 }}>{vm.txException}</Text>
-        </ScrollView>
-      ) : undefined}
+      {vm.txException ? <TxException exception={vm.txException} /> : undefined}
 
       {vm.insufficientFee ? (
         <Text style={{ color: 'crimson', textAlign: 'right', fontSize: 12, fontWeight: '600', marginEnd: 18, marginTop: 6 }}>

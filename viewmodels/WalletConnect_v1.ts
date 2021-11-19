@@ -4,7 +4,7 @@ import WCSession_v1, {
   WCClientMeta,
   WCSessionRequestRequest,
 } from '../models/WCSession_v1';
-import { action, makeObservable, observable } from 'mobx';
+import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import { EventEmitter } from 'events';
 import PubSub from 'pubsub-js';
@@ -62,7 +62,7 @@ export class WalletConnect_v1 extends EventEmitter {
 
   setStore(store: WCSession_v1) {
     this.store = store;
-    this.enabledChains = store.userChainIds.map((id) => Number(id));
+    runInAction(() => (this.enabledChains = store.userChainIds.map((id) => Number(id))));
     return this;
   }
 

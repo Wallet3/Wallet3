@@ -15,7 +15,7 @@ export class BaseTransaction {
   nextBlockBaseFeeWei = 0;
   maxGasPrice = 0; // Gwei
   maxPriorityPrice = 0; // Gwei
-  nonce = -1;
+  nonce = 0;
   txException = '';
 
   constructor(args: { network: INetwork; account: string }) {
@@ -69,7 +69,7 @@ export class BaseTransaction {
   }
 
   setNonce(nonce: string | number) {
-    this.nonce = Number(nonce);
+    this.nonce = Number(nonce) || this.nonce;
   }
 
   setGasLimit(limit: string | number) {
