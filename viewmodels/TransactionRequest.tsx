@@ -134,8 +134,8 @@ export class TransactionRequest extends BaseTransaction {
         break;
     }
 
-    if (param.gas) {
-      runInAction(() => this.setGasLimit(param.gas));
+    if (param.gas || param.gasLimit) {
+      runInAction(() => this.setGasLimit(param.gas || param.gasLimit || 0));
     } else {
       this.estimateGas({ from: this.account.address, to: param.to, data: param.data, value: param.value });
     }
@@ -178,7 +178,11 @@ export class TransactionRequest extends BaseTransaction {
   get txRequest(): providers.TransactionRequest {
     const tx: providers.TransactionRequest = {
       chainId: this.network.chainId,
-      ...this.param,
+      from: this.account.address,
+      to: this.param.to,
+      data: this.param.data,
+      value: this.param.value,
+
       nonce: this.nonce,
       gasLimit: this.gasLimit,
       type: this.network.eip1559 ? 2 : 0,

@@ -29,7 +29,7 @@ export default observer(({ initToken }: Props) => {
 
   const sendTx = async (pin?: string) => {
     const success = await App.currentWallet!.sendTx({
-      accountIndex: vm.currentAccount.index,
+      accountIndex: vm.account.index,
       tx: vm.txRequest,
       pin,
 

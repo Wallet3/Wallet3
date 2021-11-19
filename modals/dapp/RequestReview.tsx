@@ -54,9 +54,21 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress }: Props) => {
         {vm.type === 'Transfer' ? (
           <View style={{ ...styles.reviewItem }}>
             <Text style={styles.reviewItemTitle}>Amount</Text>
-            <Text style={{ ...styles.reviewItemValue }} numberOfLines={1}>
-              {vm.tokenAmountWei.gt(0) ? `${vm.tokenAmount} ${vm.tokenSymbol}` : `${vm.value} ${vm.network.symbol}`}
-            </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              {vm.tokenAmountWei.gt(0) ? (
+                <Text style={{ ...styles.reviewItemValue }} numberOfLines={1}>
+                  {`${vm.tokenAmount} ${vm.tokenSymbol}`}
+                </Text>
+              ) : undefined}
+
+              {vm.tokenAmountWei.gt(0) && vm.valueWei.gt(0) ? (
+                <Text style={{ ...styles.reviewItemValue, marginHorizontal: 6 }}>+</Text>
+              ) : undefined}
+
+              {vm.valueWei.gt(0) || vm.tokenAmountWei.eq(0) ? (
+                <Text style={{ ...styles.reviewItemValue }} numberOfLines={1}>{`${vm.value} ${vm.network.symbol}`}</Text>
+              ) : undefined}
+            </View>
           </View>
         ) : undefined}
 
@@ -69,13 +81,13 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress }: Props) => {
                 defaultValue={vm.maxUint256Amount ? 'Unlimited' : vm.tokenAmount}
                 keyboardType="decimal-pad"
                 onChangeText={(t) => vm.setApproveAmount(t)}
-                textAlign='right'
+                textAlign="right"
                 style={{
                   ...styles.reviewItemValue,
                   maxWidth: 120,
                   color: vm.maxUint256Amount ? 'deeppink' : fontColor,
                   marginEnd: 4,
-                  minWidth: 52
+                  minWidth: 52,
                 }}
               />
 

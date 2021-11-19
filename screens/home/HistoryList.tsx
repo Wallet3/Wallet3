@@ -4,6 +4,7 @@ import Transaction, { ITransaction } from '../../models/Transaction';
 
 import { ChainIdsSymbol } from '../../common/Networks';
 import { Coin } from '../../components';
+import Image from 'react-native-expo-cached-image';
 import React from 'react';
 import { formatAddress } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
@@ -30,17 +31,25 @@ const Tx = observer(({ item, onPress }: { onPress?: (tx: Transaction) => void; i
   const method = (item.data as string).substring(0, 10);
 
   const tokenSymbol = item.readableInfo?.symbol ?? ChainIdsSymbol.get(item.chainId!);
+  const dappIcon = item.readableInfo?.icon;
   const amount = item.readableInfo?.amount ?? utils.formatEther(item.value ?? '0');
   const methodName = Methods.get(method) ?? (item.data !== '0x' ? 'Contract Interaction' : `Sent`);
-  const to = item.readableInfo?.recipient ?? item.to;
+  const to = item.readableInfo?.recipient ?? item.readableInfo.dapp ?? item.to;
   const status = item.blockNumber ? (item.status ? 'Confirmed' : 'Failed') : 'Pending';
 
   return (
     <TouchableOpacity style={{ paddingVertical: 12, paddingHorizontal: 8 }} onPress={() => onPress?.(item as Transaction)}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1, alignItems: 'center' }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Coin symbol={tokenSymbol} size={14} />
-          <Text style={{ fontSize: 16, marginHorizontal: 4 }}>{`${methodName} ${amount} ${tokenSymbol}`}</Text>
+          {dappIcon ? (
+            <Image source={{ uri: dappIcon }} style={{ width: 14, height: 14 }} />
+          ) : (
+            <Coin symbol={tokenSymbol} size={14} />
+          )}
+          <Text
+            style={{ fontSize: 16, marginHorizontal: 4 }}
+            numberOfLines={1}
+          >{`${methodName} ${amount} ${tokenSymbol}`}</Text>
         </View>
 
         <View

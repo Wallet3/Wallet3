@@ -3,12 +3,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import { WCCallRequestRequest, WCCallRequest_eth_sendTransaction } from '../models/WCSession_v1';
 
 import App from '../viewmodels/App';
+import Authentication from '../viewmodels/Authentication';
 import { Passpad } from './views';
+import RequestReview from './dapp/RequestReview';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { SafeAreaView } from 'react-native';
+import Success from './views/Success';
 import Swiper from 'react-native-swiper';
 import { TransactionRequest } from '../viewmodels/TransactionRequest';
-import TxReview from './dapp/RequestReview';
 import { WalletConnect_v1 } from '../viewmodels/WalletConnect_v1';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
@@ -31,42 +33,56 @@ export default observer(({ client, request, close }: Props) => {
   };
 
   const sendTx = async (pin?: string) => {
-    return true;
-    // const success = await App.currentWallet!.sendTx({
-    //   accountIndex: vm.currentAccount.index,
-    //   tx: vm.txRequest,
-    //   pin,
+    const success = await App.currentWallet!.sendTx({
+      accountIndex: vm.account.index,
+      tx: vm.txRequest,
+      pin,
 
-    //   readableInfo: {
-    //     type: 'transfer',
-    //     symbol: vm.token.symbol,
-    //     decimals: vm.token.decimals,
-    //     amountWei: vm.amountWei.toString(),
-    //     amount: Number(vm.amount).toLocaleString(undefined, { maximumFractionDigits: 7 }),
-    //     recipient: vm.to || vm.toAddress,
-    //   },
-    // });
+      readableInfo: {
+        type: 'dapp-interaction',
+        dapp: vm.appMeta.name,
+        icon: vm.appMeta.icons[0],
+      },
+    });
 
-    // setVerified(success);
+    setVerified(success);
 
-    // if (success) setTimeout(() => PubSub.publish('closeSendFundsModal'), 1700);
+    if (success) setTimeout(() => close(), 1700);
 
-    // return success;
+    return success;
+  };
+
+  const onSendClick = async () => {
+    if (!Authentication.biometricsEnabled) {
+      swiper.current?.scrollTo(1);
+      return;
+    }
+
+    if (await sendTx()) return;
+    swiper.current?.scrollTo(1);
   };
 
   return (
-    <SafeAreaProvider style={{ ...styles.safeArea, height: 500}}>
-      <Swiper
-        ref={swiper}
-        showsPagination={false}
-        showsButtons={false}
-        scrollEnabled={false}
-        loop={false}
-        automaticallyAdjustContentInsets
-      >
-        <TxReview vm={vm} onReject={reject} />
-        <Passpad themeColor={vm.network.color} onCodeEntered={(c) => sendTx(c)} onCancel={() => swiper.current?.scrollTo(0)} />
-      </Swiper>
+    <SafeAreaProvider style={{ ...styles.safeArea, height: 500 }}>
+      {verified ? (
+        <Success />
+      ) : (
+        <Swiper
+          ref={swiper}
+          showsPagination={false}
+          showsButtons={false}
+          scrollEnabled={false}
+          loop={false}
+          automaticallyAdjustContentInsets
+        >
+          <RequestReview vm={vm} onReject={reject} onApprove={onSendClick} />
+          <Passpad
+            themeColor={vm.network.color}
+            onCodeEntered={(c) => sendTx(c)}
+            onCancel={() => swiper.current?.scrollTo(0)}
+          />
+        </Swiper>
+      )}
     </SafeAreaProvider>
   );
 });

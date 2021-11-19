@@ -63,7 +63,12 @@ export interface TransferInfo {
   amount?: string;
 }
 
-export type ReadableInfo = { type: 'transfer' } & TransferInfo;
+export interface DAppInteraction {
+  dapp: string;
+  icon?: string;
+}
+
+export type ReadableInfo = { type: 'transfer' | 'dapp-interaction' } & (TransferInfo | DAppInteraction);
 
 export interface ITransaction extends providers.TransactionRequest {
   hash?: string;
