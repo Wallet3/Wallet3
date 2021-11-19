@@ -57,7 +57,8 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
         Move tokens with drag and drop
       </Text>
       <DraggableFlatList
-        style={{ flex: 1 }}
+        style={{ flex: 1, marginBottom: -36 }}
+        contentContainerStyle={{ paddingBottom: 36 }}
         data={data}
         renderItem={renderItem}
         keyExtractor={(item) => item.address}

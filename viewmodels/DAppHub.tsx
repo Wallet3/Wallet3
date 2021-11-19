@@ -44,9 +44,8 @@ class DAppHub extends EventEmitter {
         store.id = Date.now();
         store.session = client.session;
         store.lastUsedTimestamp = Date.now();
-        store.userChainIds = client.enabledChains;
-        console.log(store.userChainIds)
-        
+        store.chains = client.enabledChains;
+
         store.save();
         client.setStore(store);
       });

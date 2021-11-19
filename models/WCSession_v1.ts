@@ -61,7 +61,7 @@ export default class WCSession_v1 extends BaseEntity {
   session!: IRawWcSession;
 
   @Column({ type: 'simple-json' })
-  userChainIds!: number[];
+  chains!: number[];
 
   @Column()
   lastUsedTimestamp!: number;

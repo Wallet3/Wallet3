@@ -14,7 +14,7 @@ import XDai from './xdai.svg';
 
 const styles = StyleSheet.create({
   ethereum: {
-    marginTop: -60,
+    marginTop: -63,
     marginEnd: -19,
     alignSelf: 'flex-end',
     opacity: 0.72,
