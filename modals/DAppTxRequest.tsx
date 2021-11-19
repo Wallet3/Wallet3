@@ -29,6 +29,10 @@ export default observer(({ client, request, close }: Props) => {
   const [type] = useState(parseRequestType(request.params[0]?.data).type);
   const [verified, setVerified] = useState(false);
 
+  useEffect(() => {
+    return () => vm.dispose();
+  }, []);
+
   const reject = () => {
     client.rejectRequest(request.id, 'User rejected');
     close();
