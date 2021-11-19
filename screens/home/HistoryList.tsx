@@ -36,18 +36,20 @@ const Tx = observer(({ item, onPress }: { onPress?: (tx: Transaction) => void; i
   const dappIcon = item.readableInfo?.icon;
   const amount = item.readableInfo?.amount ?? utils.formatEther(item.value ?? '0');
   const methodName = Methods.get(method) ?? (item.data !== '0x' ? 'Contract Interaction' : `Sent`);
-  const to = item.readableInfo?.recipient ?? item.readableInfo.dapp ?? item.to;
+  const to: string = item.readableInfo?.recipient ?? item.readableInfo.dapp ?? item.to;
   const status = item.blockNumber ? (item.status ? 'Confirmed' : 'Failed') : 'Pending';
 
   return (
     <TouchableOpacity style={{ paddingVertical: 12, paddingHorizontal: 8 }} onPress={() => onPress?.(item as Transaction)}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1, alignItems: 'center' }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          {generateNetworkIcon({ chainId, width: 14 })}
-          <Text
-            style={{ fontSize: 16, marginHorizontal: 4 }}
-            numberOfLines={1}
-          >{`${methodName} ${amount} ${tokenSymbol}`}</Text>
+          <Image source={{ uri: dappIcon }} style={{ width: 16, height: 16, marginEnd: 4 }} />
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={{ fontSize: 16, marginEnd: 4 }} numberOfLines={1}>{`${methodName}`}</Text>
+            {methodName === 'Contract Interaction' ? undefined : (
+              <Text style={{ fontSize: 16 }}>{`${amount} ${tokenSymbol}`}</Text>
+            )}
+          </View>
         </View>
 
         <View
@@ -67,12 +69,12 @@ const Tx = observer(({ item, onPress }: { onPress?: (tx: Transaction) => void; i
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 6 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           {dappIcon ? (
-            <Image source={{ uri: dappIcon }} style={{ width: 15, height: 15, marginEnd: 4 }} />
+            generateNetworkIcon({ chainId, width: 12, style: { marginEnd: 6, marginStart: 2 } })
           ) : (
             <Text style={{ fontWeight: '300' }}>To:</Text>
           )}
-          <Text style={{ fontWeight: '300', maxWidth: 150 }} numberOfLines={1}>
-            {formatAddress(to!, 10, 5)}
+          <Text style={{ fontWeight: '300', maxWidth: 250 }} numberOfLines={1}>
+            {to.length === 40 ? formatAddress(to!, 10, 5) : to}
           </Text>
         </View>
         <Text style={{ fontWeight: '300' }}>

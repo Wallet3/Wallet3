@@ -2,16 +2,20 @@ import { IsNull, LessThanOrEqual, MoreThan, Not } from 'typeorm';
 import Transaction, { ITransaction } from '../models/Transaction';
 import { computed, makeObservable, observable, runInAction } from 'mobx';
 import { getTransactionReceipt, sendTransaction } from '../common/RPC';
-import { hideMessage, showMessage } from 'react-native-flash-message';
 
 import Database from '../models/Database';
 import Enumerable from 'linq';
 import Networks from './Networks';
 import { formatAddress } from '../utils/formatter';
+import { showMessage } from 'react-native-flash-message';
 
 class TxHub {
   pendingTxs: Transaction[] = [];
   txs: Transaction[] = [];
+
+  get allTxs() {
+    return this.pendingTxs.concat(this.txs);
+  }
 
   get repository() {
     return Database.txRepository;

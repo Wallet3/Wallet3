@@ -125,7 +125,7 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
           <Text>Nfts</Text>
         </View> */}
         <View style={{ flex: 1 }}>
-          <HistoryList data={TxHub.txs} onTxPress={onTxPress} />
+          <HistoryList data={TxHub.allTxs} onTxPress={onTxPress} />
         </View>
       </Swiper>
     </View>

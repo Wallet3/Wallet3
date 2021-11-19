@@ -139,7 +139,7 @@ export class Wallet {
 
   async sendTx(request: SendTxRequest) {
     const txHex = await this.signTx(request);
-    if (!txHex) return { success: false };
+    if (!txHex) return { success: false, error: 'Failed to sign transaction' };
 
     TxHub.broadcastTx({
       chainId: request.tx.chainId!,

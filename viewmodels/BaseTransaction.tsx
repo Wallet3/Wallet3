@@ -5,12 +5,14 @@ import { estimateGas, getGasPrice, getMaxPriorityFee, getNextBlockBaseFee, getTr
 
 import { Account } from './Account';
 import { INetwork } from '../common/Networks';
+import { NativeToken } from '../models/NativeToken';
 
 export class BaseTransaction {
   private timer?: NodeJS.Timer;
 
   readonly network: INetwork;
   readonly account: Account;
+  readonly nativeToken: NativeToken;
 
   isEstimatingGas = false;
   gasLimit = 21000;
@@ -23,6 +25,7 @@ export class BaseTransaction {
   constructor(args: { network: INetwork; account: Account }) {
     this.network = args.network;
     this.account = args.account;
+    this.nativeToken = new NativeToken({ ...this.network, owner: this.account.address });
 
     makeObservable(this, {
       isEstimatingGas: observable,
@@ -43,6 +46,7 @@ export class BaseTransaction {
       setGas: action,
     });
 
+    this.nativeToken.getBalance();
     this.initChainData({ ...args, account: args.account.address });
 
     if (this.network.eip1559) this.refreshEIP1559(this.network.chainId);

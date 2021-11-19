@@ -13,6 +13,7 @@ import Swiper from 'react-native-swiper';
 import { TransactionRequest } from '../viewmodels/TransactionRequest';
 import { WalletConnect_v1 } from '../viewmodels/WalletConnect_v1';
 import { observer } from 'mobx-react-lite';
+import { showMessage } from 'react-native-flash-message';
 import styles from './styles';
 
 interface Props {
@@ -33,7 +34,7 @@ export default observer(({ client, request, close }: Props) => {
   };
 
   const sendTx = async (pin?: string) => {
-    const { success, txHex } = await App.currentWallet!.sendTx({
+    const { success, txHex, error } = await App.currentWallet!.sendTx({
       accountIndex: vm.account.index,
       tx: vm.txRequest,
       pin,
@@ -47,8 +48,16 @@ export default observer(({ client, request, close }: Props) => {
 
     setVerified(success);
 
-    if (success) setTimeout(() => close(), 1700);
-    client.approveRequest(request.id, txHex);
+    if (success) {
+      client.approveRequest(request.id, txHex);
+      setTimeout(() => close(), 1700);
+    }
+
+    if (error) {
+      client.rejectRequest(request.id, error);
+      close();
+      showMessage({ message: error });
+    }
 
     return success;
   };

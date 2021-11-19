@@ -167,21 +167,22 @@ export class TransactionRequest extends BaseTransaction {
       this.gasLimit >= 21000 &&
       !this.isEstimatingGas &&
       !this.txException &&
-      !this.insufficientFee
+      !this.insufficientFee &&
+      !this.nativeToken.loading
     );
   }
 
   get insufficientFee() {
-    return this.txFeeWei.gt(this.account.nativeToken.balance!);
+    return this.txFeeWei.gt(this.nativeToken.balance);
   }
 
   get txRequest(): providers.TransactionRequest {
     const tx: providers.TransactionRequest = {
       chainId: this.network.chainId,
-      from: this.account.address,
+      from: this.param.from || this.account.address,
       to: this.param.to,
-      data: this.param.data,
-      value: this.param.value,
+      data: this.param.data || '0x',
+      value: this.param.value || '0x0',
 
       nonce: this.nonce,
       gasLimit: this.gasLimit,
