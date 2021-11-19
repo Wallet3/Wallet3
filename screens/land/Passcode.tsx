@@ -10,6 +10,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
+import { themeColor } from '../../constants/styles';
 
 export default observer(({}: NativeStackScreenProps<LandScreenStack, 'Backup'>) => {
   const [busy, setBusy] = useState(false);
@@ -29,17 +30,15 @@ export default observer(({}: NativeStackScreenProps<LandScreenStack, 'Backup'>) 
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <SafeViewContainer style={styles.rootContainer}>
-        <ConfirmPasscode
-          biometricsSupported={Authentication.biometricsSupported}
-          biometricsEnabled={Authentication.biometricsEnabled}
-          onBiometricValueChange={(v) => Authentication.setBiometrics(v)}
-          onDone={finishInitialization}
-        />
-      </SafeViewContainer>
-
+    <SafeViewContainer style={styles.rootContainer} paddingHeader>
+      <ConfirmPasscode
+        biometricsSupported={Authentication.biometricsSupported}
+        biometricsEnabled={Authentication.biometricsEnabled}
+        onBiometricValueChange={(v) => Authentication.setBiometrics(v)}
+        onDone={finishInitialization}
+        themeColor={themeColor}
+      />
       <Loader loading={busy} />
-    </SafeAreaView>
+    </SafeViewContainer>
   );
 });

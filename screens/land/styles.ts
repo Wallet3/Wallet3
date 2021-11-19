@@ -3,10 +3,11 @@ import { borderColor, secondaryFontColor, themeColor } from '../../constants/sty
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#fff' },
+  
 
   rootContainer: {
     paddingHorizontal: 16,
+    backgroundColor: '#fff',
     flex: 1,
   },
 
@@ -33,6 +34,4 @@ export default StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
   },
-
-  borderButton: { backgroundColor: 'transparent', borderColor: themeColor, borderWidth: 1, marginBottom: 12 },
 });
