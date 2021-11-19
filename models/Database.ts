@@ -16,7 +16,7 @@ class Database {
 
     this._connection = await createConnection({
       type: 'expo',
-      database: 'test23',
+      database: __DEV__ ? 'test24' : 'appdata',
       driver: require('expo-sqlite'),
       synchronize: true,
       entities: [Key, Transaction, WCSession_v1],

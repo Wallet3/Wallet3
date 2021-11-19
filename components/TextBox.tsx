@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { StyleProp, Text, TextInput, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { borderColor, fontColor, secondaryFontColor } from '../constants/styles';
 
 import { Ionicons } from '@expo/vector-icons';
@@ -9,9 +9,10 @@ interface Props {
   onChangeText: (text: string) => void;
   title: string;
   value: string;
+  style?: StyleProp<ViewStyle>;
 }
 
-export default ({ value, onChangeText, title }: Props) => {
+export default ({ value, onChangeText, title, style }: Props) => {
   const addrRef = useRef<TextInput>(null);
 
   const readClipboard = async () => {
@@ -33,6 +34,8 @@ export default ({ value, onChangeText, title }: Props) => {
         paddingStart: 12,
         alignItems: 'center',
         marginBottom: 8,
+
+        ...((style as any) || {}),
       }}
     >
       <Text style={{ fontSize: 18, color: secondaryFontColor, marginEnd: 12 }}>{title}</Text>

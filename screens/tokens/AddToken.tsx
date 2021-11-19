@@ -27,72 +27,70 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: '#fff' }} scrollEnabled={false} contentContainerStyle={{ flex: 1 }}>
-      <SafeAreaView style={{ flex: 1 }}>
-        <SafeViewContainer style={{ flex: 1, paddingTop: 4 }}>
-          <TextBox
-            value={addr}
-            onChangeText={(t) => {
-              setAddr(t);
-            }}
-            title="Address:"
-          />
+      <SafeViewContainer style={{ flex: 1 }} paddingHeader>
+        <TextBox
+          title="Address:"
+          value={addr}
+          onChangeText={(t) => {
+            setAddr(t);
+          }}
+        />
 
-          <View style={styles.item}>
-            <Text style={styles.itemText}>Name:</Text>
-            {loading ? (
-              <Skeleton />
-            ) : (
-              <Text style={styles.itemText} numberOfLines={1}>
-                {token?.name || '---'}
-              </Text>
-            )}
-          </View>
+        <View style={styles.item}>
+          <Text style={styles.itemText}>Name:</Text>
+          {loading ? (
+            <Skeleton />
+          ) : (
+            <Text style={styles.itemText} numberOfLines={1}>
+              {token?.name || '---'}
+            </Text>
+          )}
+        </View>
 
-          <View style={styles.item}>
-            <Text style={styles.itemText}>Symbol:</Text>
-            {loading ? (
-              <Skeleton />
-            ) : (
-              <Text style={styles.itemText} numberOfLines={1}>
-                {token?.symbol || '---'}
-              </Text>
-            )}
-          </View>
+        <View style={styles.item}>
+          <Text style={styles.itemText}>Symbol:</Text>
+          {loading ? (
+            <Skeleton />
+          ) : (
+            <Text style={styles.itemText} numberOfLines={1}>
+              {token?.symbol || '---'}
+            </Text>
+          )}
+        </View>
 
-          <View style={styles.item}>
-            <Text style={styles.itemText}>Decimals:</Text>
-            {loading ? (
-              <Skeleton />
-            ) : (
-              <Text style={styles.itemText} numberOfLines={1}>
-                {token?.decimals || '---'}
-              </Text>
-            )}
-          </View>
+        <View style={styles.item}>
+          <Text style={styles.itemText}>Decimals:</Text>
+          {loading ? (
+            <Skeleton />
+          ) : (
+            <Text style={styles.itemText} numberOfLines={1}>
+              {token?.decimals || '---'}
+            </Text>
+          )}
+        </View>
 
-          <View style={styles.item}>
-            <Text style={styles.itemText}>Balance:</Text>
-            {loading ? (
-              <Skeleton />
-            ) : (
-              <Text style={styles.itemText} numberOfLines={1}>
-                {token?.amount || '---'}
-              </Text>
-            )}
-          </View>
+        <View style={styles.item}>
+          <Text style={styles.itemText}>Balance:</Text>
+          {loading ? (
+            <Skeleton />
+          ) : (
+            <Text style={styles.itemText} numberOfLines={1}>
+              {token?.amount || '---'}
+            </Text>
+          )}
+        </View>
 
-          <View style={{ flex: 1 }} />
+        <View style={{ flex: 1 }} />
 
-          <Button
-            title="Save"
-            disabled={!token}
-            onPress={() => {
-              currentWallet?.currentAccount?.addToken(token!);
-              navigation.popToTop();
-            }}
-          />
-        </SafeViewContainer>
-      </SafeAreaView>
+        <Button
+          title="Save"
+          disabled={!token}
+          onPress={() => {
+            currentWallet?.currentAccount?.addToken(token!);
+            navigation.popToTop();
+          }}
+        />
+      </SafeViewContainer>
     </ScrollView>
   );
 });

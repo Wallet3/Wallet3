@@ -19,7 +19,7 @@ export default ({ children, style, paddingHeader, includeTopPadding }: Props) =>
       style={{
         flex: 1,
         padding: 16,
-        paddingTop: paddingHeader ? (includeTopPadding ? 16 : 0) + useHeaderHeight() : 0,
+        paddingTop: paddingHeader !== undefined ? (includeTopPadding ? 16 : 0) + useHeaderHeight() : 16,
         paddingBottom: bottom || 16,
         ...((style as any) || {}),
       }}
