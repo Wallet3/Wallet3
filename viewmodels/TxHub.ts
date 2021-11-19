@@ -13,10 +13,6 @@ class TxHub {
   pendingTxs: Transaction[] = [];
   txs: Transaction[] = [];
 
-  get chainTxs() {
-    return this.pendingTxs.concat(this.txs).filter((tx) => tx.chainId === Networks.current.chainId);
-  }
-
   get repository() {
     return Database.txRepository;
   }
@@ -26,7 +22,7 @@ class TxHub {
   }
 
   constructor() {
-    makeObservable(this, { pendingTxs: observable, pendingCount: computed, txs: observable, chainTxs: computed });
+    makeObservable(this, { pendingTxs: observable, pendingCount: computed, txs: observable });
   }
 
   async init() {

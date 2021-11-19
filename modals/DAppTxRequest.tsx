@@ -33,7 +33,7 @@ export default observer(({ client, request, close }: Props) => {
   };
 
   const sendTx = async (pin?: string) => {
-    const success = await App.currentWallet!.sendTx({
+    const { success, txHex } = await App.currentWallet!.sendTx({
       accountIndex: vm.account.index,
       tx: vm.txRequest,
       pin,
@@ -48,6 +48,7 @@ export default observer(({ client, request, close }: Props) => {
     setVerified(success);
 
     if (success) setTimeout(() => close(), 1700);
+    client.approveRequest(request.id, txHex);
 
     return success;
   };

@@ -139,7 +139,7 @@ export class Wallet {
 
   async sendTx(request: SendTxRequest) {
     const txHex = await this.signTx(request);
-    if (!txHex) return false;
+    if (!txHex) return { success: false };
 
     TxHub.broadcastTx({
       chainId: request.tx.chainId!,
@@ -147,7 +147,7 @@ export class Wallet {
       tx: { ...request.tx, readableInfo: request.readableInfo },
     });
 
-    return true;
+    return { success: true, txHex };
   }
 
   async getSecret(pin?: string) {
