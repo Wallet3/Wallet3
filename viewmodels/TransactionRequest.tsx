@@ -64,7 +64,7 @@ export class TransactionRequest extends BaseTransaction {
   constructor({ request, client }: IConstructor) {
     console.log('new transactionRequest');
     const [param, requestChainId] = request.params as [WCCallRequest_eth_sendTransaction, number?];
-    const account = App.currentWallet!.currentAccount!.address;
+    const account = App.currentWallet!.currentAccount!;
 
     const network =
       PublicNetworks.find((n) => n.chainId === requestChainId) ??
@@ -87,9 +87,10 @@ export class TransactionRequest extends BaseTransaction {
       tokenSymbol: observable,
       isValidParams: computed,
       setApproveAmount: action,
+      insufficientFee: computed,
     });
 
-    runInAction(() => this.parseRequest(param, account));
+    runInAction(() => this.parseRequest(param));
   }
 
   get appMeta(): WCClientMeta {
@@ -100,17 +101,17 @@ export class TransactionRequest extends BaseTransaction {
     return this.network.symbol;
   }
 
-  async parseRequest(param: WCCallRequest_eth_sendTransaction, account: string) {
+  async parseRequest(param: WCCallRequest_eth_sendTransaction) {
     const methodFunc = param.data.slice(0, 10);
 
     this.type = param.data ? Methods.get(methodFunc) ?? 'Contract Interaction' : 'Transfer';
-    const erc20 = new ERC20Token({ chainId: this.network.chainId, contract: param.to, owner: account });
+    const erc20 = new ERC20Token({ chainId: this.network.chainId, contract: param.to, owner: this.account.address });
     this.erc20 = erc20;
 
     switch (methodFunc) {
       case Transfer:
         const [to, transferAmount] = erc20.interface.decodeFunctionData('transfer', param.data) as [string, BigNumber];
-        console.log('transfer');
+
         this.to = to;
         this.tokenAmountWei = transferAmount;
 
@@ -119,7 +120,6 @@ export class TransactionRequest extends BaseTransaction {
         break;
       case Approve:
         const [spender, approveAmount] = erc20.interface.decodeFunctionData('approve', param.data) as [string, BigNumber];
-        console.log('approve');
 
         this.to = spender;
         this.tokenAmountWei = approveAmount;
@@ -137,7 +137,7 @@ export class TransactionRequest extends BaseTransaction {
     if (param.gas) {
       runInAction(() => this.setGasLimit(param.gas));
     } else {
-      this.estimateGas({ from: account, to: param.to, data: param.data, value: param.value });
+      this.estimateGas({ from: this.account.address, to: param.to, data: param.data, value: param.value });
     }
 
     if (param.nonce) runInAction(() => this.setNonce(param.nonce));
@@ -145,7 +145,6 @@ export class TransactionRequest extends BaseTransaction {
 
   setApproveAmount(amount: string) {
     if (!this.erc20 || this.erc20.decimals < 0) return;
-    this.txException = '';
 
     try {
       const data = this.erc20.interface.encodeFunctionData('approve', [
@@ -154,6 +153,7 @@ export class TransactionRequest extends BaseTransaction {
       ]);
 
       this.param.data = data;
+      this.txException = '';
     } catch (error: any) {
       this.txException = 'Invalid amount';
     }
@@ -166,8 +166,13 @@ export class TransactionRequest extends BaseTransaction {
       this.maxGasPrice > 0 &&
       this.gasLimit >= 21000 &&
       !this.isEstimatingGas &&
-      !this.txException
+      !this.txException &&
+      !this.insufficientFee
     );
+  }
+
+  get insufficientFee() {
+    return this.txFeeWei.gt(this.account.nativeToken.balance!);
   }
 
   get txRequest(): providers.TransactionRequest {

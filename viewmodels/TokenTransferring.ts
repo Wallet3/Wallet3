@@ -19,12 +19,12 @@ export class TokenTransferring extends BaseTransaction {
   amount = '0';
   isResolvingAddress = false;
 
-  get currentAccount() {
-    return App.currentWallet?.currentAccount!;
-  }
+  // get account() {
+  //   return App.currentWallet?.account!;
+  // }
 
   get allTokens() {
-    return [this.currentAccount.tokens[0], ...this.currentAccount.allTokens];
+    return [this.account.tokens[0], ...this.account.allTokens];
   }
 
   get isEns() {
@@ -39,8 +39,8 @@ export class TokenTransferring extends BaseTransaction {
     try {
       if (this.isNativeToken) {
         const ether = utils.parseEther(this.amount);
-        if (ether.eq(this.currentAccount.nativeToken.balance!)) {
-          return BigNumber.from(this.currentAccount.nativeToken.balance!).sub(this.txFeeWei);
+        if (ether.eq(this.account.nativeToken.balance!)) {
+          return BigNumber.from(this.account.nativeToken.balance!).sub(this.txFeeWei);
         }
       }
 
@@ -68,8 +68,8 @@ export class TokenTransferring extends BaseTransaction {
 
   get insufficientFee() {
     return this.isNativeToken
-      ? this.amountWei.add(this.txFeeWei).gt(this.currentAccount.nativeToken.balance!)
-      : this.txFeeWei.gt(this.currentAccount.nativeToken.balance!);
+      ? this.amountWei.add(this.txFeeWei).gt(this.account.nativeToken.balance!)
+      : this.txFeeWei.gt(this.account.nativeToken.balance!);
   }
 
   get isValidParams() {
@@ -91,7 +91,7 @@ export class TokenTransferring extends BaseTransaction {
 
     const tx: providers.TransactionRequest = {
       chainId: this.network.chainId,
-      from: this.currentAccount.address,
+      from: this.account.address,
       to: this.isNativeToken ? this.toAddress : this.token.address,
       value: this.isNativeToken ? this.amountWei : 0,
       nonce: this.nonce,
@@ -112,11 +112,11 @@ export class TokenTransferring extends BaseTransaction {
 
   constructor({ targetNetwork, defaultToken, to }: { targetNetwork: INetwork; defaultToken?: IToken; to?: string }) {
     super({
-      account: App.currentWallet!.currentAccount!.address,
+      account: App.currentWallet!.currentAccount!,
       network: targetNetwork,
     });
 
-    this.token = defaultToken || this.currentAccount.tokens[0];
+    this.token = defaultToken || this.account.tokens[0];
 
     makeObservable(this, {
       to: observable,
@@ -129,7 +129,6 @@ export class TokenTransferring extends BaseTransaction {
       amountWei: computed,
       isValidAmount: computed,
       allTokens: computed,
-      currentAccount: computed,
 
       setTo: action,
       setAmount: action,
@@ -140,11 +139,11 @@ export class TokenTransferring extends BaseTransaction {
       if (defaultToken) return;
 
       if (!v) {
-        runInAction(() => this.setToken(this.currentAccount.tokens[0]));
+        runInAction(() => this.setToken(this.account.tokens[0]));
         return;
       }
 
-      const token = this.currentAccount.allTokens.find((t) => t.address === v) || this.currentAccount.tokens[0];
+      const token = this.account.allTokens.find((t) => t.address === v) || this.account.tokens[0];
       runInAction(() => this.setToken(token));
     });
 

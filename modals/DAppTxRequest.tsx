@@ -55,7 +55,7 @@ export default observer(({ client, request, close }: Props) => {
   };
 
   return (
-    <SafeAreaProvider style={{ ...styles.safeArea, height: 490}}>
+    <SafeAreaProvider style={{ ...styles.safeArea, height: 500}}>
       <Swiper
         ref={swiper}
         showsPagination={false}

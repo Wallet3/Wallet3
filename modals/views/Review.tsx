@@ -11,6 +11,7 @@ import Currency from '../../viewmodels/Currency';
 import Fire from '../../assets/icons/app/fire.svg';
 import GasReview from './GasReview';
 import Image from 'react-native-expo-cached-image';
+import InsufficientFee from '../components/InsufficientFee';
 import Networks from '../../viewmodels/Networks';
 import { ScrollView } from 'react-native-gesture-handler';
 import Swiper from 'react-native-swiper';
@@ -113,13 +114,9 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
         </TouchableOpacity>
       </View>
 
-      {vm.txException ? <TxException exception={vm.txException} /> : undefined}
+      {vm.insufficientFee ? <InsufficientFee /> : undefined}
 
-      {vm.insufficientFee ? (
-        <Text style={{ color: 'crimson', textAlign: 'right', fontSize: 12, fontWeight: '600', marginEnd: 18, marginTop: 6 }}>
-          {'Insufficient funds'}
-        </Text>
-      ) : undefined}
+      {vm.txException ? <TxException exception={vm.txException} /> : undefined}
 
       <View style={{ flex: 1 }} />
 

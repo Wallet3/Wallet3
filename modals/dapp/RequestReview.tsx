@@ -1,13 +1,15 @@
+import { AntDesign, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Coin, SafeViewContainer, Skeleton } from '../../components';
 import React, { useRef } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { borderColor, fontColor } from '../../constants/styles';
 
 import AnimateNumber from 'react-native-animate-number';
 import Currency from '../../viewmodels/Currency';
 import GasReview from '../views/GasReview';
 import { INetwork } from '../../common/Networks';
 import Image from 'react-native-expo-cached-image';
-import { MaterialIcons } from '@expo/vector-icons';
+import InsufficientFee from '../components/InsufficientFee';
 import RejectApproveButtons from '../components/RejectApproveButtons';
 import Swiper from 'react-native-swiper';
 import { TransactionRequest } from '../../viewmodels/TransactionRequest';
@@ -15,7 +17,6 @@ import TxException from '../components/TxException';
 import { WCCallRequestRequest } from '../../models/WCSession_v1';
 import { WalletConnect_v1 } from '../../viewmodels/WalletConnect_v1';
 import { constants } from 'ethers';
-import { fontColor } from '../../constants/styles';
 import { formatAddress } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
@@ -68,11 +69,13 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress }: Props) => {
                 defaultValue={vm.maxUint256Amount ? 'Unlimited' : vm.tokenAmount}
                 keyboardType="decimal-pad"
                 onChangeText={(t) => vm.setApproveAmount(t)}
+                textAlign='right'
                 style={{
                   ...styles.reviewItemValue,
                   maxWidth: 120,
-                  marginEnd: 4,
                   color: vm.maxUint256Amount ? 'deeppink' : fontColor,
+                  marginEnd: 4,
+                  minWidth: 52
                 }}
               />
 
@@ -155,6 +158,8 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress }: Props) => {
           <MaterialIcons name="keyboard-arrow-right" size={15} />
         </TouchableOpacity>
       </View>
+
+      {vm.insufficientFee ? <InsufficientFee /> : undefined}
 
       {vm.txException ? <TxException exception={vm.txException} /> : undefined}
 

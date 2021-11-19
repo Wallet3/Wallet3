@@ -3,12 +3,14 @@ import { Gwei_1, MAX_GWEI_PRICE } from '../common/Constants';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { estimateGas, getGasPrice, getMaxPriorityFee, getNextBlockBaseFee, getTransactionCount } from '../common/RPC';
 
+import { Account } from './Account';
 import { INetwork } from '../common/Networks';
 
 export class BaseTransaction {
   private timer?: NodeJS.Timer;
 
   readonly network: INetwork;
+  readonly account: Account;
 
   isEstimatingGas = false;
   gasLimit = 21000;
@@ -18,8 +20,9 @@ export class BaseTransaction {
   nonce = 0;
   txException = '';
 
-  constructor(args: { network: INetwork; account: string }) {
+  constructor(args: { network: INetwork; account: Account }) {
     this.network = args.network;
+    this.account = args.account;
 
     makeObservable(this, {
       isEstimatingGas: observable,
@@ -40,7 +43,7 @@ export class BaseTransaction {
       setGas: action,
     });
 
-    this.initChainData(args);
+    this.initChainData({ ...args, account: args.account.address });
 
     if (this.network.eip1559) this.refreshEIP1559(this.network.chainId);
   }
