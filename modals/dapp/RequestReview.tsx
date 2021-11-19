@@ -163,6 +163,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress }: Props) => {
           <AnimateNumber
             style={{ ...styles.reviewItemValue, marginHorizontal: 2 }}
             numberOfLines={1}
+            timing={'linear'}
             value={vm.txFee}
             formatter={(val) => `${val.toFixed(5)} ${vm.feeTokenSymbol}`}
           />

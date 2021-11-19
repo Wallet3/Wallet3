@@ -1,5 +1,6 @@
 import { INetwork, PublicNetworks } from '../common/Networks';
 import React, { useEffect, useRef, useState } from 'react';
+import { TransactionRequest, parseRequestType } from '../viewmodels/TransactionRequest';
 import { WCCallRequestRequest, WCCallRequest_eth_sendTransaction } from '../models/WCSession_v1';
 
 import App from '../viewmodels/App';
@@ -10,7 +11,6 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { SafeAreaView } from 'react-native';
 import Success from './views/Success';
 import Swiper from 'react-native-swiper';
-import { TransactionRequest } from '../viewmodels/TransactionRequest';
 import { WalletConnect_v1 } from '../viewmodels/WalletConnect_v1';
 import { observer } from 'mobx-react-lite';
 import { showMessage } from 'react-native-flash-message';
@@ -26,7 +26,9 @@ export default observer(({ client, request, close }: Props) => {
   const swiper = useRef<Swiper>(null);
 
   const [vm] = useState(new TransactionRequest({ client, request }));
+  const [type] = useState(parseRequestType(request.params[0].data).type);
   const [verified, setVerified] = useState(false);
+  console.log('type', type);
 
   const reject = () => {
     client.rejectRequest(request.id, 'User rejected');
@@ -73,7 +75,7 @@ export default observer(({ client, request, close }: Props) => {
   };
 
   return (
-    <SafeAreaProvider style={{ ...styles.safeArea, height: 500 }}>
+    <SafeAreaProvider style={{ ...styles.safeArea, height: type !== 'Contract Interaction' ? 500 : 439 }}>
       {verified ? (
         <Success />
       ) : (

@@ -15,7 +15,7 @@ interface IConstructor {
   request: WCCallRequestRequest;
 }
 
-type RequestType = 'Transfer' | 'Contract Interaction' | 'Approve';
+type RequestType = 'Transfer' | 'Contract Interaction' | 'Approve' | 'Unknown';
 
 const Transfer = '0xa9059cbb';
 const Approve = '0x095ea7b3';
@@ -24,6 +24,12 @@ const Methods = new Map<string, RequestType>([
   ['0x', 'Transfer'],
   [Approve, 'Approve'],
 ]);
+
+export function parseRequestType(data: string): { type: RequestType; methodFunc: string } {
+  if (typeof data !== 'string') return { type: 'Unknown', methodFunc: '' };
+  const methodFunc = data.slice(0, 10);
+  return { type: data ? Methods.get(methodFunc) ?? 'Contract Interaction' : 'Transfer', methodFunc };
+}
 
 export class TransactionRequest extends BaseTransaction {
   private client: WalletConnect_v1;
@@ -102,9 +108,9 @@ export class TransactionRequest extends BaseTransaction {
   }
 
   async parseRequest(param: WCCallRequest_eth_sendTransaction) {
-    const methodFunc = param.data.slice(0, 10);
+    const { methodFunc, type } = parseRequestType(param.data);
 
-    this.type = param.data ? Methods.get(methodFunc) ?? 'Contract Interaction' : 'Transfer';
+    this.type = type;
     const erc20 = new ERC20Token({ chainId: this.network.chainId, contract: param.to, owner: this.account.address });
     this.erc20 = erc20;
 

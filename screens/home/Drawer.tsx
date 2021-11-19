@@ -15,6 +15,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import icons from '../../assets/icons/crypto';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
 import { observer } from 'mobx-react-lite';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { bottom, top } = initialWindowMetrics?.insets ?? { bottom: 0, top: 0 };
 const screenHeight = Dimensions.get('window').height - (bottom + top);
@@ -38,8 +39,12 @@ const Drawer = observer((props: DrawerProps) => {
     navigation.dispatch(DrawerActions.closeDrawer());
   };
 
+  const { bottom } = useSafeAreaInsets();
+
   return (
-    <SafeViewContainer style={{ flex: 1, height: screenHeight, paddingHorizontal: 0, paddingTop: 0, paddingBottom: 0 }}>
+    <SafeViewContainer
+      style={{ flex: 1, height: screenHeight, paddingHorizontal: 0, paddingTop: 0, paddingBottom: bottom ? 0 : 16 }}
+    >
       <View
         style={{
           marginHorizontal: 16,

@@ -52,34 +52,32 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-      <SafeViewContainer style={{ paddingBottom: 0 }}>
-        {authorized ? (
-          <View style={{ flex: 1 }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: -12, marginBottom: -8 }}>
-              <MaterialCommunityIcons name="shield-key" size={64} color={'#61D800'} />
-            </View>
-
-            <View style={{ marginVertical: 16 }}>
-              <Text style={{ fontSize: 16, fontWeight: '500', color: themeColor, marginBottom: 8 }}>Security Tips</Text>
-              <Text style={{ marginStart: 16, marginBottom: 8, color: secondaryFontColor }}>
-                The mnemonic consists of english words, please keep them safe.
-              </Text>
-              <Text style={{ marginStart: 16, color: secondaryFontColor }}>
-                Once the mnemonic gets lost, it cannot be retrieved, and you would lose all your funds.
-              </Text>
-            </View>
-
-            <Mnemonic phrase={words} />
-
-            <View style={{ flex: 1 }} />
-
-            <Button title="Verify" themeColor={themeColor} onPress={() => navigation.navigate('VerifySecret')} />
+    <SafeViewContainer paddingHeader includeTopPadding>
+      {authorized ? (
+        <View style={{ flex: 1 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: -12, marginBottom: -8 }}>
+            <MaterialCommunityIcons name="shield-key" size={64} color={'#61D800'} />
           </View>
-        ) : (
-          <View></View>
-        )}
-      </SafeViewContainer>
+
+          <View style={{ marginVertical: 16 }}>
+            <Text style={{ fontSize: 16, fontWeight: '500', color: themeColor, marginBottom: 8 }}>Security Tips</Text>
+            <Text style={{ marginStart: 16, marginBottom: 8, color: secondaryFontColor }}>
+              The mnemonic consists of english words, please keep them safe.
+            </Text>
+            <Text style={{ marginStart: 16, color: secondaryFontColor }}>
+              Once the mnemonic gets lost, it cannot be retrieved, and you would lose all your funds.
+            </Text>
+          </View>
+
+          <Mnemonic phrase={words} />
+
+          <View style={{ flex: 1 }} />
+
+          <Button title="Verify" themeColor={themeColor} onPress={() => navigation.navigate('VerifySecret')} />
+        </View>
+      ) : (
+        <View></View>
+      )}
 
       <Portal>
         <Modalize
@@ -96,6 +94,6 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
           <FullPasspad themeColor={themeColor} height={420} onCodeEntered={(code) => verify(code)} />
         </Modalize>
       </Portal>
-    </SafeAreaView>
+    </SafeViewContainer>
   );
 });

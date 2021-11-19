@@ -75,15 +75,15 @@
     "react-native-web": "0.17.5",
     "readable-stream": "^1.0.33",
     "stream-browserify": "^1.0.0",
-    "typeorm": "^0.2.40",
+    "typeorm": "^0.2.41",
     "url": "^0.10.3",
     "vm-browserify": "0.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
-    "@babel/plugin-proposal-decorators": "^7.16.0",
+    "@babel/plugin-proposal-decorators": "^7.16.4",
     "@types/lodash": "^4.14.177",
-    "@types/node": "^16.11.7",
+    "@types/node": "^16.11.9",
     "@types/pubsub-js": "^1.8.3",
     "@types/react": "~17.0.35",
     "@types/react-native": "~0.64.19",
@@ -91,7 +91,7 @@
     "babel-plugin-transform-typescript-metadata": "^0.3.2",
     "react-native-svg-transformer": "^0.14.3",
     "rn-nodeify": "^10.3.0",
-    "typescript": "~4.4.4"
+    "typescript": "~4.5.2"
   },
   "private": true,
   "name": "mobile",
