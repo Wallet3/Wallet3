@@ -81,12 +81,27 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress }: Props) => {
           </View>
         ) : undefined}
 
-        <View style={{ ...styles.reviewItem }}>
-          <Text style={styles.reviewItemTitle}>To</Text>
-          <Text style={{ ...styles.reviewItemValue }} numberOfLines={1}>
-            {formatAddress(vm.to, 9, 5)}
-          </Text>
-        </View>
+        {vm.type !== 'Contract Interaction' ? (
+          <View style={{ ...styles.reviewItem }}>
+            <Text style={styles.reviewItemTitle}>To</Text>
+            <Text style={{ ...styles.reviewItemValue }} numberOfLines={1}>
+              {formatAddress(vm.to, 9, 5)}
+            </Text>
+          </View>
+        ) : (
+          <View style={{ ...styles.reviewItem }}>
+            <Text style={styles.reviewItemTitle}>Value</Text>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={{ ...styles.reviewItemValue, maxWidth: 120, marginEnd: 4 }} numberOfLines={1}>
+                {vm.value}
+              </Text>
+
+              <Text style={{ ...styles.reviewItemValue }} numberOfLines={1}>
+                {vm.network.symbol}
+              </Text>
+            </View>
+          </View>
+        )}
 
         <View style={{ ...styles.reviewItem, borderBottomWidth: 0 }}>
           <Text style={styles.reviewItemTitle}>Network</Text>

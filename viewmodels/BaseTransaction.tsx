@@ -139,10 +139,10 @@ export class BaseTransaction {
     });
   }
 
-  protected async estimateGas(chainId: number, args: { from: string; to: string; data: string }) {
+  protected async estimateGas(args: { from: string; to: string; data: string; value?: string }) {
     runInAction(() => (this.isEstimatingGas = true));
 
-    const { gas, errorMessage } = await estimateGas(chainId, args);
+    const { gas, errorMessage } = await estimateGas(this.network.chainId, args);
 
     runInAction(() => {
       this.isEstimatingGas = false;

@@ -61,6 +61,9 @@ export class TransactionRequest extends BaseTransaction {
 
   constructor({ request, client }: IConstructor) {
     console.log('new transactionRequest');
+    const [param, requestChainId] = request.params as [WCCallRequest_eth_sendTransaction, number?];
+    const account = App.currentWallet!.currentAccount!.address;
+
     const network =
       PublicNetworks.find((n) => n.chainId === requestChainId) ??
       (client.enabledChains.includes(Networks.current.chainId)
@@ -68,8 +71,13 @@ export class TransactionRequest extends BaseTransaction {
         : PublicNetworks.find((n) => client.enabledChains[0] === n.chainId)) ??
       PublicNetworks[0];
 
-    const [param, requestChainId] = request.params as [WCCallRequest_eth_sendTransaction, number?];
-    const account = App.currentWallet!.currentAccount!.address;
+    console.log(
+      requestChainId,
+      Networks.current.chainId,
+      client.enabledChains.includes(Networks.current.chainId),
+      network.network,
+      client.enabledChains
+    );
 
     super({ network, account });
 
@@ -105,7 +113,7 @@ export class TransactionRequest extends BaseTransaction {
     switch (methodFunc) {
       case Transfer:
         const [to, transferAmount] = erc20.interface.decodeFunctionData('transfer', param.data) as [string, BigNumber];
-
+        console.log('transfer');
         this.to = to;
         this.tokenAmountWei = transferAmount;
 
@@ -114,6 +122,7 @@ export class TransactionRequest extends BaseTransaction {
         break;
       case Approve:
         const [spender, approveAmount] = erc20.interface.decodeFunctionData('approve', param.data) as [string, BigNumber];
+        console.log('approve');
 
         this.to = spender;
         this.tokenAmountWei = approveAmount;
@@ -124,8 +133,14 @@ export class TransactionRequest extends BaseTransaction {
 
       default:
         this.to = param.to;
-        this.valueWei = BigNumber.from(param.value);
+        this.valueWei = BigNumber.from(param.value || 0);
         break;
+    }
+
+    if (param.gas) {
+      runInAction(() => this.setGasLimit(param.gas));
+    } else {
+      this.estimateGas({ from: account, to: param.to, data: param.data, value: param.value });
     }
   }
 }

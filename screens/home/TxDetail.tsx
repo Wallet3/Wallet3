@@ -84,8 +84,15 @@ export default observer(({ tx }: { tx?: Transaction }) => {
         </Text>
       </View>
 
-      <View style={{ ...styles.itemContainer, justifyContent: 'flex-end', borderBottomWidth: 0 }}>
-        <TouchableOpacity onPress={() => openBrowserAsync(`${network.explorer}/tx/${tx.hash}`)}>
+      <View
+        style={{
+          ...styles.itemContainer,
+          justifyContent: 'flex-end',
+          borderBottomWidth: 0,
+          paddingBottom: 8,
+        }}
+      >
+        <TouchableOpacity onPressIn={() => Linking.openURL(`${network.explorer}/tx/${tx.hash}`)}>
           <Text style={{ fontSize: 12, color: network.color }}>View on Block Explorer</Text>
         </TouchableOpacity>
       </View>

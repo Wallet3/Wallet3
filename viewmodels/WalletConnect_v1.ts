@@ -62,6 +62,7 @@ export class WalletConnect_v1 extends EventEmitter {
 
   setStore(store: WCSession_v1) {
     this.store = store;
+    this.enabledChains = store.userChainIds.map((id) => Number(id));
     return this;
   }
 
