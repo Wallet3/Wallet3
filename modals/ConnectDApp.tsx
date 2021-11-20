@@ -60,6 +60,8 @@ const ConnectDApp = observer(({ client, close }: { client: WalletConnect_v1; clo
         onNetworksPress={() => swipeTo(1)}
         onAccountsPress={() => swipeTo(2)}
         onConnect={connect}
+        accounts={App.allAccounts}
+        currentAccount={App.currentWallet?.currentAccount!}
       />
 
       {panel === 1 ? (

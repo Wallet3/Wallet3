@@ -13,7 +13,7 @@ export default ({ loading, message }: Props) => {
       <View style={styles.modalBackground}>
         <View style={styles.activityIndicatorWrapper}>
           <ActivityIndicator animating={loading} />
-          <Text>{message}</Text>
+          <Text style={{ marginTop: 20 }}>{message}</Text>
         </View>
       </View>
     </Modal>
@@ -31,8 +31,8 @@ const styles = StyleSheet.create({
 
   activityIndicatorWrapper: {
     backgroundColor: '#FFFFFF',
-    height: 100,
-    width: 100,
+    padding: 16,
+    paddingTop: 21,
     borderRadius: 10,
     display: 'flex',
     alignItems: 'center',

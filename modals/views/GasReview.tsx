@@ -13,13 +13,14 @@ import styles from '../styles';
 interface GasProps {
   onBack?: () => void;
   vm: BaseTransaction;
+  themeColor?: string;
 }
 
-export default observer(({ onBack, vm }: GasProps) => {
+export default observer(({ onBack, vm, themeColor }: GasProps) => {
   return (
     <SafeViewContainer style={styles.container}>
       <View style={styles.navBar}>
-        <BackButton onPress={onBack} />
+        <BackButton onPress={onBack} color={themeColor} />
 
         <Text style={styles.navTitle}>Tx Fee</Text>
       </View>
@@ -121,7 +122,7 @@ export default observer(({ onBack, vm }: GasProps) => {
 
       <View style={{ flex: 1 }}></View>
 
-      <Button title="OK" txtStyle={{ textTransform: 'uppercase' }} onPress={onBack} themeColor={vm.network.color} />
+      <Button title="OK" txtStyle={{ textTransform: 'uppercase' }} onPress={onBack} themeColor={themeColor} />
     </SafeViewContainer>
   );
 });
