@@ -2,6 +2,7 @@ import { Button, SafeViewContainer } from '../components';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaView, Text, View } from 'react-native';
 
+import AccountSelector from './dapp/AccountSelector';
 import App from '../viewmodels/App';
 import DApp from './dapp/DApp';
 import DAppHub from '../viewmodels/DAppHub';
@@ -22,6 +23,7 @@ interface Props {
 
 const ConnectDApp = observer(({ client, close }: { client: WalletConnect_v1; close: Function }) => {
   const swiper = useRef<Swiper>(null);
+  const [panel, setPanel] = useState(1);
 
   const selectNetworks = (chains: number[]) => {
     swiper.current?.scrollTo(0);
@@ -38,6 +40,11 @@ const ConnectDApp = observer(({ client, close }: { client: WalletConnect_v1; clo
     close();
   };
 
+  const swipeTo = (index: number) => {
+    setPanel(index);
+    setTimeout(() => swiper.current?.scrollTo(1), 0);
+  };
+
   return (
     <Swiper
       ref={swiper}
@@ -47,8 +54,21 @@ const ConnectDApp = observer(({ client, close }: { client: WalletConnect_v1; clo
       loop={false}
       automaticallyAdjustContentInsets
     >
-      <DApp client={client} close={close} onNetworksPress={() => swiper.current?.scrollTo(1)} onConnect={connect} />
-      <NetworkSelector networks={PublicNetworks} selectedChains={client.enabledChains} onDone={selectNetworks} />
+      <DApp
+        client={client}
+        close={close}
+        onNetworksPress={() => swipeTo(1)}
+        onAccountsPress={() => swipeTo(2)}
+        onConnect={connect}
+      />
+
+      {panel === 1 ? (
+        <NetworkSelector networks={PublicNetworks} selectedChains={client.enabledChains} onDone={selectNetworks} />
+      ) : undefined}
+
+      {panel === 2 ? (
+        <AccountSelector accounts={App.allAccounts} selectedAccounts={client.accounts} onDone={selectAccounts} />
+      ) : undefined}
     </Swiper>
   );
 });

@@ -68,6 +68,7 @@ class DAppHub extends EventEmitter {
 
     client.once('disconnect', () => {
       client.store?.remove?.();
+      if (!this.clients.includes(client)) return;
       runInAction(() => (this.clients = this.clients.filter((c) => c !== client)));
     });
   }

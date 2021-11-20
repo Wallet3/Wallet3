@@ -1,18 +1,19 @@
-import { ActivityIndicator, Modal, StyleSheet, View } from 'react-native';
-import React, { Component } from 'react';
+import { ActivityIndicator, Modal, StyleSheet, Text, View } from 'react-native';
+
+import React from 'react';
 
 interface Props {
   loading?: boolean;
+  message?: string;
 }
 
-export default (props: Props) => {
-  const { loading } = props;
-
+export default ({ loading, message }: Props) => {
   return (
     <Modal transparent={true} animationType={'none'} visible={loading}>
       <View style={styles.modalBackground}>
         <View style={styles.activityIndicatorWrapper}>
           <ActivityIndicator animating={loading} />
+          <Text>{message}</Text>
         </View>
       </View>
     </Modal>

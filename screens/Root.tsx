@@ -47,12 +47,13 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
                 alignItems: 'center',
                 position: 'relative',
                 paddingStart: 8,
+                paddingEnd: 2,
                 marginEnd: 17,
               }}
             >
               <MaterialCommunityIcons name="scan-helper" size={18} style={{}} />
               <View
-                style={{ position: 'absolute', left: 2, right: 2.5, height: 1.5, backgroundColor: '#000', marginStart: 8 }}
+                style={{ position: 'absolute', left: 2, right: 4.5, height: 1.5, backgroundColor: '#000', marginStart: 8 }}
               />
             </TouchableOpacity>
           ),

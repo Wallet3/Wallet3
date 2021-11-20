@@ -33,6 +33,7 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
 
       setType(undefined);
       setCallRequest(undefined);
+      setClient(client);
 
       switch (request.method) {
         case 'eth_sign':
@@ -48,7 +49,6 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
           break;
       }
 
-      setClient(client);
       setTimeout(() => open(), 0);
     });
   }, []);

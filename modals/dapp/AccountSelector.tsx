@@ -4,7 +4,10 @@ import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 import { borderColor, fontColor, secondaryFontColor, themeColor } from '../../constants/styles';
 
+import { Account } from '../../viewmodels/Account';
 import { Feather } from '@expo/vector-icons';
+import Image from 'react-native-expo-cached-image';
+import { formatAddress } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
 
 export default observer(
@@ -13,7 +16,7 @@ export default observer(
     selectedAccounts,
     onDone,
   }: {
-    accounts: string[];
+    accounts: Account[];
     selectedAccounts: string[];
     onDone: (selectedAccounts: string[]) => void;
   }) => {
@@ -28,10 +31,10 @@ export default observer(
       }
     };
 
-    const renderItem = ({ item }: { item: string }) => {
+    const renderItem = ({ item }: { item: Account }) => {
       return (
         <TouchableOpacity
-          onPress={() => toggleNetwork(item)}
+          onPress={() => toggleNetwork(item.address)}
           style={{
             flexDirection: 'row',
             padding: 4,
@@ -40,9 +43,28 @@ export default observer(
             flex: 1,
           }}
         >
-          <Feather name="check" color={themeColor} size={15} style={{ opacity: selected.includes(item) ? 1 : 0 }} />
+          <Feather
+            name="check"
+            color={themeColor}
+            size={16}
+            style={{ opacity: selected.includes(item.address) ? 1 : 0, marginBottom: -1 }}
+          />
 
-          <Text style={{ color: fontColor, fontSize: 16, fontWeight: '500' }}>{item}</Text>
+          {item.avatar ? (
+            <Image source={{ uri: item.avatar }} style={{ width: 16, height: 16, marginStart: 12, borderRadius: 100 }} />
+          ) : undefined}
+
+          <Text
+            style={{
+              color: selected.includes(item.address) ? themeColor : fontColor,
+              fontSize: 17,
+              fontWeight: '500',
+              marginStart: 10,
+            }}
+            numberOfLines={1}
+          >
+            {item.ensName || formatAddress(item.address)}
+          </Text>
         </TouchableOpacity>
       );
     };

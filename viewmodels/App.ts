@@ -16,6 +16,10 @@ export class AppVM {
     return this.wallets.length > 0;
   }
 
+  get allAccounts() {
+    return this.wallets.map((wallet) => wallet.accounts).flat();
+  }
+
   constructor() {
     makeObservable(this, {
       initialized: observable,

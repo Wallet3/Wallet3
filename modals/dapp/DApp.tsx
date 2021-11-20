@@ -7,17 +7,19 @@ import Image from 'react-native-expo-cached-image';
 import { Networks } from '../../common/Networks';
 import React from 'react';
 import { WalletConnect_v1 } from '../../viewmodels/WalletConnect_v1';
+import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import { observer } from 'mobx-react-lite';
 
 interface DAppProps {
   client: WalletConnect_v1;
   onNetworksPress?: () => void;
+  onAccountsPress?: () => void;
   close: Function;
   onConnect: () => void;
 }
 
-export default observer(({ client, onNetworksPress, close, onConnect }: DAppProps) => {
+export default observer(({ client, onNetworksPress, onAccountsPress, close, onConnect }: DAppProps) => {
   const networks = Networks.filter((n) => client.enabledChains.includes(n.chainId));
   const [network] = networks;
   const app = client.appMeta!;
@@ -41,7 +43,11 @@ export default observer(({ client, onNetworksPress, close, onConnect }: DAppProp
 
   return (
     <SafeViewContainer style={{ flex: 1, alignItems: 'center' }}>
-      <View style={{ flexDirection: 'row', justifyContent: 'flex-end', width: '100%' }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+        <TouchableOpacity style={{ paddingVertical: 6 }} onPress={onAccountsPress}>
+          <Text style={{ color: thirdFontColor }}>{formatAddress(client.accounts[0], 6, 5)}</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity
           onPress={onNetworksPress}
           disabled={client.version > 1}
@@ -56,7 +62,7 @@ export default observer(({ client, onNetworksPress, close, onConnect }: DAppProp
           }}
         >
           {generateNetworkIcon({ chainId: network.chainId, width: 16, height: 16 })}
-          <Text style={{ color: network.color, marginStart: 8 }}>{`${network.network}`}</Text>
+          <Text style={{ color: network.color, marginStart: 6 }}>{`${network.network}`}</Text>
         </TouchableOpacity>
       </View>
 

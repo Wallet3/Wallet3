@@ -166,6 +166,4 @@ export class Account {
 
     return token;
   }
-
-  
 }

@@ -34,7 +34,13 @@ export class WalletConnect_v1 extends EventEmitter {
   constructor(uri?: string) {
     super();
 
-    makeObservable(this, { appMeta: observable, enabledChains: observable, accounts: observable, setChains: action });
+    makeObservable(this, {
+      appMeta: observable,
+      enabledChains: observable,
+      accounts: observable,
+      setChains: action,
+      setAccounts: action,
+    });
 
     if (uri) this.connect(uri);
   }
