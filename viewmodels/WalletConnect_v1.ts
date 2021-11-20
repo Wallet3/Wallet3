@@ -25,6 +25,7 @@ export class WalletConnect_v1 extends EventEmitter {
   peerId = '';
   appMeta: WCClientMeta | null = null;
   enabledChains: number[] = [1];
+  accounts: string[] = [];
 
   get session() {
     return this.client.session;
@@ -33,7 +34,8 @@ export class WalletConnect_v1 extends EventEmitter {
   constructor(uri?: string) {
     super();
 
-    makeObservable(this, { appMeta: observable, enabledChains: observable, setChains: action });
+    makeObservable(this, { appMeta: observable, enabledChains: observable, accounts: observable, setChains: action });
+
     if (uri) this.connect(uri);
   }
 
@@ -60,9 +62,16 @@ export class WalletConnect_v1 extends EventEmitter {
     this.enabledChains = chains;
   }
 
+  setAccounts(accounts: string[]) {
+    this.accounts = accounts;
+  }
+
   setStore(store: WCSession_v1) {
     this.store = store;
-    runInAction(() => (this.enabledChains = store.chains.map((id) => Number(id))));
+    runInAction(() => {
+      this.enabledChains = store.chains.map((id) => Number(id));
+      this.accounts = store.accounts;
+    });
     return this;
   }
 
@@ -111,9 +120,6 @@ export class WalletConnect_v1 extends EventEmitter {
     //   this.updateSession();
     //   return false;
     // };
-
-    console.log(request.method);
-    console.log(request.params);
 
     this.emit('sessionUpdated');
   };

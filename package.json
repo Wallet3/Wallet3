@@ -39,7 +39,7 @@
     "expo-status-bar": "~1.1.0",
     "expo-updates": "~0.10.13",
     "expo-web-browser": "^10.0.3",
-    "https-browserify": "~0.0.0",
+    "https-browserify": "^1.0.0",
     "linq": "^4.0.0",
     "lottie-react-native": "^5.0.0",
     "mobx": "^6.3.7",

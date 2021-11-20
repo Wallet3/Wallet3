@@ -63,6 +63,9 @@ export default class WCSession_v1 extends BaseEntity {
   @Column({ type: 'simple-json' })
   chains!: number[];
 
+  @Column({ type: 'simple-json' })
+  accounts!: string[];
+
   @Column()
   lastUsedTimestamp!: number;
 }
