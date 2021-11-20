@@ -157,7 +157,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress }: Props) => {
           }}
         >
           <Text style={{ ...styles.reviewItemTitle, fontSize: 15 }}>
-            {`(${Currency.tokenToUSD(vm.txFee, vm.network.symbol).toFixed(2)} USD)`}
+            {`(${Currency.tokenToUSD(vm.estimatedRealFee, vm.network.symbol).toFixed(2)} USD)`}
           </Text>
 
           <AnimateNumber
@@ -196,7 +196,7 @@ export default observer((props: Props) => {
   return (
     <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
       <TxReview {...props} onGasPress={() => swiper.current?.scrollTo(1)} />
-      <GasReview onBack={() => swiper.current?.scrollTo(0)} vm={props.vm} />
+      <GasReview onBack={() => swiper.current?.scrollTo(0)} vm={props.vm} themeColor={props.vm.network.color} />
     </Swiper>
   );
 });

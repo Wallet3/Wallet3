@@ -83,6 +83,14 @@ export class BaseTransaction {
     }
   }
 
+  get estimatedRealFee() {
+    try {
+      return Number(utils.formatEther(this.estimatedRealFeeWei));
+    } catch {
+      return 0;
+    }
+  }
+
   setNonce(nonce: string | number) {
     this.nonce = Number(nonce) || this.nonce;
   }
