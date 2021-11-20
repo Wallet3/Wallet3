@@ -128,11 +128,11 @@ class TxHub {
     }
 
     if (!hash) {
-      return;
+      return undefined;
     }
 
     const pendingTx = await this.saveTx({ ...tx, hash });
-    if (!pendingTx) return;
+    if (!pendingTx) return undefined;
 
     runInAction(() => {
       const sameNonces = [pendingTx, ...this.pendingTxs.filter((i) => i.nonce === pendingTx.nonce)];
@@ -140,6 +140,8 @@ class TxHub {
 
       this.pendingTxs = [maxPriTx, ...this.pendingTxs.filter((t) => t.nonce !== pendingTx.nonce)];
     });
+
+    return hash;
   }
 
   saveTx = async (tx: ITransaction) => {

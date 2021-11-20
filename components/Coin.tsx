@@ -107,7 +107,8 @@ interface CoinProps {
 }
 
 export default observer((props: CoinProps) => {
-  const symbol = props.symbol?.toLowerCase() ?? '';
+  let symbol = props.symbol?.toLowerCase() ?? '';
+  symbol = symbol.endsWith('.e') ? symbol.substring(0, symbol.length - 2) : symbol; // Avax
 
   const [source] = props.forceRefresh
     ? [props.iconUrl && !icons[symbol] ? { uri: props.iconUrl } : icons[symbol] || icons['_coin']]
