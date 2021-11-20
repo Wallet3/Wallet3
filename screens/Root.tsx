@@ -1,5 +1,6 @@
 import { Dimensions, TouchableOpacity, View } from 'react-native';
 
+import DAppsScreen from './dapps';
 import Drawer from './home/Drawer';
 import HomeScreen from './home';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -61,6 +62,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
       />
 
       <Screen name="Settings" component={SettingScreen} options={{ title: 'Settings' }} />
+      <Screen name="DApps" component={DAppsScreen} options={{ title: 'Connected DApps' }} />
     </Navigator>
   );
 });

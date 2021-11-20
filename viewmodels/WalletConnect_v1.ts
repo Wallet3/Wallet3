@@ -32,6 +32,10 @@ export class WalletConnect_v1 extends EventEmitter {
     return this.client.session;
   }
 
+  get lastUsedTimestamp() {
+    return this.store?.lastUsedTimestamp ? new Date(this.store?.lastUsedTimestamp) : new Date();
+  }
+
   constructor(uri?: string) {
     super();
 
@@ -61,6 +65,7 @@ export class WalletConnect_v1 extends EventEmitter {
     this.client.on('call_request', this.handleCallRequest);
     this.client.on('disconnect', () => this.emit('disconnect'));
     this.appMeta = session.peerMeta;
+    this.peerId = session.peerId;
 
     return this;
   }

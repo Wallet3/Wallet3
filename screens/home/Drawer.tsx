@@ -33,6 +33,7 @@ const Drawer = observer((props: DrawerProps) => {
 
   const homeHighlight = index === 0 ? current.color : fontColor;
   const settingsHighlight = index === 1 ? current.color : fontColor;
+  const dappsHighlight = index === 2 ? current.color : fontColor;
 
   const fastSwitchNetwork = (network: INetwork) => {
     Networks.switch(network);
@@ -57,7 +58,11 @@ const Drawer = observer((props: DrawerProps) => {
         }}
       >
         <Image
-          source={currentWallet?.currentAccount?.avatar ? { uri: currentWallet?.currentAccount?.avatar } : icons['eth']}
+          source={
+            currentWallet?.currentAccount?.avatar
+              ? { uri: currentWallet?.currentAccount?.avatar }
+              : icons[current.symbol.toLowerCase()]
+          }
           style={{
             width: 50,
             height: 50,
@@ -92,6 +97,13 @@ const Drawer = observer((props: DrawerProps) => {
           onPress={() => navigation.navigate('Settings')}
           labelStyle={{ ...styles.drawerLabel, color: settingsHighlight }}
           icon={() => <Feather color={settingsHighlight} size={21} name={'settings'} />}
+        />
+
+        <DrawerItem
+          label="DApps"
+          onPress={() => navigation.navigate('DApps')}
+          labelStyle={{ ...styles.drawerLabel, color: dappsHighlight }}
+          icon={() => <Feather name="layers" size={19} style={{ width: 21, paddingStart: 2 }} color={dappsHighlight} />}
         />
       </View>
 
