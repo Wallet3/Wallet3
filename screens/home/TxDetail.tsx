@@ -64,7 +64,7 @@ export default observer(({ tx }: { tx?: Transaction }) => {
 
       <View style={styles.itemContainer}>
         <Text style={styles.txt}>Type:</Text>
-        <Text style={styles.txt}>{tx.priorityPrice ? `2 (EIP 1559)` : `0 (Legacy)`}</Text>
+        <Text style={styles.txt}>{tx.priorityPrice ? `2 (EIP-1559)` : `0 (Legacy)`}</Text>
       </View>
 
       <View style={styles.itemContainer}>

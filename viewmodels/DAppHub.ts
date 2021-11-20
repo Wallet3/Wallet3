@@ -1,10 +1,11 @@
 import * as Linking from 'expo-linking';
 
-import { makeObservable, observable, runInAction } from 'mobx';
+import { autorun, makeObservable, observable, reaction, runInAction } from 'mobx';
 
 import App from './App';
 import Database from '../models/Database';
 import { EventEmitter } from '../utils/events';
+import Networks from './Networks';
 import WCSession_v1 from '../models/WCSession_v1';
 import { WalletConnect_v1 } from './WalletConnect_v1';
 
@@ -22,6 +23,20 @@ class DAppHub extends EventEmitter {
 
   async init() {
     const sessions = await Database.wcSessionV1Repository.find();
+
+    autorun(() => {
+      const { current } = Networks;
+      const { currentAccount } = App.currentWallet || {};
+      if (!currentAccount) return;
+
+      console.log('autorun');
+
+      const clients = this.clients.filter(
+        (c) => c.enabledChains.includes(current.chainId) && c.accounts.includes(currentAccount.address)
+      );
+
+      clients.forEach((c) => c.updateSession({ chainId: current.chainId, accounts: [currentAccount.address] }));
+    });
 
     runInAction(() => {
       this.clients = sessions.map((sessionStore) =>

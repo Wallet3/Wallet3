@@ -42,10 +42,13 @@ export default observer(({ style, address, balance, network, avatar, chainId, co
         }}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={{ ...styles.text, fontSize: 15 }}>{network}</Text>
+          <Text style={{ ...styles.text, fontSize: 16 }}>{network}</Text>
 
           {avatar ? (
-            <Image source={{ uri: avatar }} style={{ width: 15, height: 15, borderRadius: 100, marginHorizontal: 8 }} />
+            <Image
+              source={{ uri: avatar }}
+              style={{ width: 16, height: 16, borderRadius: 100, marginHorizontal: 8, borderWidth: 1, borderColor: '#ffffff90' }}
+            />
           ) : undefined}
           {/* {ens ? <Text style={{ fontSize: 12, color: '#fff', marginHorizontal: 0 }}>{ens}</Text> : undefined} */}
         </View>

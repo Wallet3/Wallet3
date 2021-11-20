@@ -7,6 +7,7 @@ import WCSession_v1, {
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import { EventEmitter } from 'events';
+import { ISessionStatus } from '@walletconnect/types';
 import PubSub from 'pubsub-js';
 import WalletConnectClient from '@walletconnect/client';
 
@@ -62,6 +63,10 @@ export class WalletConnect_v1 extends EventEmitter {
     this.appMeta = session.peerMeta;
 
     return this;
+  }
+
+  updateSession(session: ISessionStatus) {
+    this.client.updateSession(session);
   }
 
   setChains(chains: number[]) {

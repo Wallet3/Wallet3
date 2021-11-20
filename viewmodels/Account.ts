@@ -115,8 +115,6 @@ export class Account {
     if (this.ensName) return;
     const { MainnetWsProvider } = Networks;
 
-    // console.log(await getAvatar('xgg.eth', '0xA2b0E9Cb3cCa100D43Df9e80b345534F9b2b421e'));
-
     const ens = await MainnetWsProvider.lookupAddress(this.address);
     if (!ens) return;
 

@@ -10,7 +10,7 @@ import { Wallet } from './Wallet';
 export class AppVM {
   initialized = false;
   wallets: Wallet[] = [];
-  currentWallet?: Wallet = undefined;
+  currentWallet: Wallet | null = null;
 
   get hasWallet() {
     return this.wallets.length > 0;
@@ -33,9 +33,10 @@ export class AppVM {
     Coingecko.init();
 
     await Promise.all([Database.init(), Authentication.init()]);
-    await Promise.all([TxHub.init(), DAppHub.init()]);
 
     const wallets = await Promise.all((await Database.keyRepository.find()).map((key) => new Wallet(key).init()));
+
+    await Promise.all([TxHub.init(), DAppHub.init()]);
 
     runInAction(() => {
       this.initialized = true;
