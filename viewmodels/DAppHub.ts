@@ -1,6 +1,6 @@
 import * as Linking from 'expo-linking';
 
-import { autorun, makeObservable, observable, reaction, runInAction } from 'mobx';
+import { IReactionDisposer, autorun, makeObservable, observable, reaction, runInAction } from 'mobx';
 
 import App from './App';
 import Database from '../models/Database';
@@ -10,6 +10,8 @@ import WCSession_v1 from '../models/WCSession_v1';
 import { WalletConnect_v1 } from './WalletConnect_v1';
 
 class DAppHub extends EventEmitter {
+  private disposer?: IReactionDisposer;
+
   clients: WalletConnect_v1[] = [];
 
   get connectedCount() {
@@ -24,9 +26,11 @@ class DAppHub extends EventEmitter {
   async init() {
     const sessions = await Database.wcSessionV1Repository.find();
 
-    autorun(() => {
+    this.disposer = autorun(() => {
       const { current } = Networks;
-      const { currentAccount } = App.currentWallet || {};
+      const { currentWallet } = App;
+      const { currentAccount } = currentWallet ?? {};
+
       if (!currentAccount) return;
 
       console.log('autorun');
@@ -86,6 +90,11 @@ class DAppHub extends EventEmitter {
       if (!this.clients.includes(client)) return;
       runInAction(() => (this.clients = this.clients.filter((c) => c !== client)));
     });
+  }
+
+  dispose() {
+    this.disposer?.();
+    this.disposer = undefined;
   }
 }
 

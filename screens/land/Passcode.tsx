@@ -38,7 +38,7 @@ export default observer(({}: NativeStackScreenProps<LandScreenStack, 'Backup'>) 
         onDone={finishInitialization}
         themeColor={themeColor}
       />
-      <Loader loading={busy} message="Encrypting data......" />
+      <Loader loading={busy} message="Encrypting data..." />
     </SafeViewContainer>
   );
 });
