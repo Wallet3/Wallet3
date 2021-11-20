@@ -2,6 +2,7 @@ import * as Linking from 'expo-linking';
 
 import { makeObservable, observable, runInAction } from 'mobx';
 
+import App from './App';
 import Database from '../models/Database';
 import { EventEmitter } from '../utils/events';
 import WCSession_v1 from '../models/WCSession_v1';
@@ -37,6 +38,8 @@ class DAppHub extends EventEmitter {
 
     if (version === '1') {
       const client = new WalletConnect_v1(uri);
+      client.setAccounts([App.currentWallet!.currentAccount!.address!]);
+
       client.once('sessionApproved', () => {
         runInAction(() => this.clients.push(client));
 

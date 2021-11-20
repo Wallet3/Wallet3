@@ -7,7 +7,7 @@ import DApp from './dapp/DApp';
 import DAppHub from '../viewmodels/DAppHub';
 import { Ionicons } from '@expo/vector-icons';
 import Loading from './views/Loading';
-import NetworkSelector from './views/NetworkSelector';
+import NetworkSelector from './dapp/NetworkSelector';
 import { PublicNetworks } from '../common/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
@@ -28,8 +28,13 @@ const ConnectDApp = observer(({ client, close }: { client: WalletConnect_v1; clo
     client.setChains(chains);
   };
 
+  const selectAccounts = (accounts: string[]) => {
+    swiper.current?.scrollTo(0);
+    client.setAccounts(accounts);
+  };
+
   const connect = () => {
-    client.approveSession([App.currentWallet?.currentAccount?.address!]);
+    client.approveSession();
     close();
   };
 

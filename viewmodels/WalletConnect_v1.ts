@@ -89,8 +89,8 @@ export class WalletConnect_v1 extends EventEmitter {
     this.emit('sessionRequest');
   };
 
-  approveSession = async (accounts: string[]) => {
-    this.client.approveSession({ accounts, chainId: this.enabledChains[0] });
+  approveSession = async () => {
+    this.client.approveSession({ accounts: this.accounts, chainId: this.enabledChains[0] });
     this.emit('sessionApproved', this.client.session);
   };
 
