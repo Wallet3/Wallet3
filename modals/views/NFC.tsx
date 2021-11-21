@@ -139,14 +139,19 @@ const NFCView = observer((props: SubViewProps) => {
   );
 });
 
-interface QRViewProps extends SubViewProps {
+const base64 =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=';
+
+interface Props {
+  onBack?: () => void;
   tokenSymbol?: string;
+  tokenAddress?: string;
+  owner?: string;
   amount?: string;
   avatar?: string;
 }
 
-const QRView = observer((props: QRViewProps) => {
-  console.log(props.avatar);
+const QRView = observer((props: Props) => {
   return (
     <SafeViewContainer style={styles.container}>
       <View style={styles.navBar}>
@@ -159,42 +164,52 @@ const QRView = observer((props: QRViewProps) => {
       </View>
 
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
-        <QRCode
-          value="abc"
-          size={180}
-          backgroundColor="transparent"
-          enableLinearGradient
-          logoBorderRadius={7}
-          logo={{
-            uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=',
-          }}
-          logoSize={props.avatar ? 29 : 1}
-          linearGradient={['rgb(134, 65, 244)', 'rgb(66, 194, 244)']}
-        />
+        <View
+          style={{
+            position: 'relative',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 24,
+            borderRadius: 15,
 
-        {props.avatar ? (
-          <Image
-            source={{ uri: props.avatar }}
-            style={{
-              width: 24,
-              height: 24,
-              position: 'absolute',
-              backgroundColor: 'red',
-              borderRadius: 7,
-            }}
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.23,
+            shadowRadius: 2.62,
+            elevation: 5,
+          }}
+        >
+          <QRCode
+            value="abc"
+            size={180}
+            backgroundColor="transparent"
+            enableLinearGradient
+            logoBorderRadius={7}
+            logo={{ uri: base64 }}
+            logoSize={props.avatar ? 29 : 1}
+            linearGradient={['rgb(134, 65, 244)', 'rgb(66, 194, 244)']}
           />
-        ) : undefined}
+
+          {props.avatar ? (
+            <Image
+              source={{ uri: props.avatar }}
+              style={{
+                width: 24,
+                height: 24,
+                position: 'absolute',
+                backgroundColor: 'red',
+                borderRadius: 7,
+              }}
+            />
+          ) : undefined}
+        </View>
       </View>
     </SafeViewContainer>
   );
 });
-
-interface Props {
-  onBack?: () => void;
-  tokenSymbol?: string;
-  amount?: string;
-  avatar?: string;
-}
 
 export default observer((props: Props) => {
   const swiper = useRef<Swiper>(null);

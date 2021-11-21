@@ -155,7 +155,9 @@ export class BaseTransaction {
       this.setPriorityPrice(priFee);
 
       if (eip1559) {
-        this.setMaxGasPrice((nextBaseFee || Gwei_1) / Gwei_1 + priFee + 3);
+        const maxPrice = (nextBaseFee || Gwei_1) / Gwei_1 + priFee;
+        const suggestedGwei = Number(Math.min(maxPrice * 1.25, maxPrice + 20).toFixed(6));
+        this.setMaxGasPrice(suggestedGwei);
       } else {
         this.setMaxGasPrice((gasPrice || Gwei_1) / Gwei_1);
       }
