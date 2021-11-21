@@ -72,12 +72,7 @@ export class TransactionRequest extends BaseTransaction {
     const [param, requestChainId] = request.params as [WCCallRequest_eth_sendTransaction, number?];
     const account = App.currentWallet!.currentAccount!;
 
-    const network =
-      PublicNetworks.find((n) => n.chainId === requestChainId) ??
-      (client.enabledChains.includes(Networks.current.chainId)
-        ? Networks.current
-        : PublicNetworks.find((n) => client.enabledChains[0] === n.chainId)) ??
-      PublicNetworks[0];
+    const network = client.findTargetNetwork({ networks: PublicNetworks, requestChainId, defaultNetwork: Networks.current });
 
     super({ network, account });
 

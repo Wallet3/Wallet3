@@ -61,7 +61,6 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
       panGestureComponentEnabled={false}
       tapGestureEnabled={false}
       closeOnOverlayTap={false}
-      useNativeDriver={false}
       withHandle={false}
       disableScrollIfPossible
       modalStyle={styles.modalStyle}
@@ -102,7 +101,6 @@ const WalletConnectV1 = () => {
       panGestureComponentEnabled={false}
       tapGestureEnabled={false}
       closeOnOverlayTap={false}
-      useNativeDriver={false}
       withHandle={false}
       disableScrollIfPossible
       modalStyle={styles.modalStyle}
@@ -124,7 +122,6 @@ const NetworksMenuModal = () => {
     <Modalize
       ref={networksRef}
       adjustToContentHeight
-      useNativeDriver={false}
       disableScrollIfPossible
       modalStyle={styles.modalStyle}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
@@ -150,7 +147,6 @@ const RequestFundsModal = () => {
     <Modalize
       ref={requestRef}
       adjustToContentHeight
-      useNativeDriver={false}
       disableScrollIfPossible
       modalStyle={styles.modalStyle}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
@@ -185,7 +181,6 @@ const SendFundsModal = () => {
       ref={sendRef}
       adjustToContentHeight
       disableScrollIfPossible
-      useNativeDriver={false}
       modalStyle={styles.modalStyle}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >

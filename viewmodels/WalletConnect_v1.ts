@@ -7,6 +7,7 @@ import WCSession_v1, {
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import { EventEmitter } from 'events';
+import { INetwork } from '../common/Networks';
 import { ISessionStatus } from '@walletconnect/types';
 import PubSub from 'pubsub-js';
 import WalletConnectClient from '@walletconnect/client';
@@ -121,6 +122,24 @@ export class WalletConnect_v1 extends EventEmitter {
   approveRequest = (id: number, result: any) => {
     this.client.approveRequest({ id, result });
   };
+
+  findTargetNetwork({
+    networks,
+    requestChainId,
+    defaultNetwork,
+  }: {
+    networks: INetwork[];
+    requestChainId?: number;
+    defaultNetwork: INetwork;
+  }) {
+    return (
+      networks.find((n) => n.chainId === requestChainId) ??
+      (this.enabledChains.includes(defaultNetwork.chainId)
+        ? defaultNetwork
+        : networks.find((n) => this.enabledChains[0] === n.chainId)) ??
+      networks[0]
+    );
+  }
 
   private handleCallRequest = async (error: Error | null, request: WCCallRequestRequest) => {
     if (error || !request) {

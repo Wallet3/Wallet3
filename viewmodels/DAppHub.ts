@@ -1,6 +1,6 @@
 import * as Linking from 'expo-linking';
 
-import { IReactionDisposer, autorun, makeObservable, observable, reaction, runInAction } from 'mobx';
+import { IReactionDisposer, autorun, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
 
 import App from './App';
 import Database from '../models/Database';
@@ -20,7 +20,7 @@ class DAppHub extends EventEmitter {
 
   constructor() {
     super();
-    makeObservable(this, { clients: observable });
+    makeObservable(this, { clients: observable, connectedCount: computed });
   }
 
   async init() {
@@ -60,7 +60,7 @@ class DAppHub extends EventEmitter {
       client.setAccounts([App.currentWallet!.currentAccount!.address!]);
 
       client.once('sessionApproved', () => {
-        runInAction(() => this.clients.push(client));
+        runInAction(() => (this.clients = this.clients.concat(client)));
 
         const store = new WCSession_v1();
         store.id = Date.now();
