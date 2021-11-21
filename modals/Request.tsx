@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+import App from '../viewmodels/App';
 import { NFCPad } from './views';
 import { NFCRequesting } from '../viewmodels/NFCRequesting';
 import { RequestAmount } from './views';
@@ -12,6 +13,10 @@ import styles from './styles';
 export default observer(() => {
   const swiper = useRef<Swiper>(null);
   const [vm] = useState(new NFCRequesting());
+
+  const { avatar } = App.currentWallet?.currentAccount || {};
+
+  console.log(App.currentWallet?.currentAccount?.address, avatar);
 
   return (
     <SafeAreaProvider style={styles.safeArea}>
@@ -26,7 +31,7 @@ export default observer(() => {
         style={{ overflow: 'hidden' }}
       >
         <RequestAmount onNext={() => swiper.current?.scrollTo(1)} vm={vm} />
-        <NFCPad onBack={() => swiper.current?.scrollTo(0)} />
+        <NFCPad onBack={() => swiper.current?.scrollTo(0)} avatar={avatar} />
       </Swiper>
     </SafeAreaProvider>
   );

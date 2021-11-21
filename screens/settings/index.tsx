@@ -14,6 +14,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
 import { styles as appStyles } from '../../constants/styles';
 import { observer } from 'mobx-react-lite';
+import { openURL } from 'expo-linking';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 type SettingsStack = {
@@ -124,10 +125,20 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.itemContainer}>
+      <TouchableOpacity style={styles.itemContainer} onPress={() => openURL('https://chainbow.co.jp/privacy.html')}>
         <View style={styles.itemSubContainer}>
           <Ionicons name="magnet-outline" style={styles.itemStartSymbol} size={16} />
           <Text style={styles.itemText}>Privacy Policy</Text>
+        </View>
+        <View style={styles.itemSubContainer}>
+          <Entypo name="chevron-right" style={styles.itemEndSymbol} />
+        </View>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.itemContainer}>
+        <View style={styles.itemSubContainer}>
+          <Ionicons name="information-circle-outline" style={styles.itemStartSymbol} size={16} />
+          <Text style={styles.itemText}>About</Text>
         </View>
         <View style={styles.itemSubContainer}>
           <Entypo name="chevron-right" style={styles.itemEndSymbol} />

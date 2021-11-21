@@ -6,6 +6,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 
 import BackButton from '../components/BackButton';
 import IPhone from '../../assets/icons/app/IPhone.svg';
+import Image from 'react-native-expo-cached-image';
 import { Ionicons } from '@expo/vector-icons';
 import QRCode from 'react-native-qrcode-svg';
 import Swiper from 'react-native-swiper';
@@ -138,7 +139,14 @@ const NFCView = observer((props: SubViewProps) => {
   );
 });
 
-const QRView = observer((props: SubViewProps) => {
+interface QRViewProps extends SubViewProps {
+  tokenSymbol?: string;
+  amount?: string;
+  avatar?: string;
+}
+
+const QRView = observer((props: QRViewProps) => {
+  console.log(props.avatar);
   return (
     <SafeViewContainer style={styles.container}>
       <View style={styles.navBar}>
@@ -150,8 +158,32 @@ const QRView = observer((props: SubViewProps) => {
         </View>
       </View>
 
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <QRCode value="abc" size={180} backgroundColor="transparent" />
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
+        <QRCode
+          value="abc"
+          size={180}
+          backgroundColor="transparent"
+          enableLinearGradient
+          logoBorderRadius={7}
+          logo={{
+            uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=',
+          }}
+          logoSize={props.avatar ? 29 : 1}
+          linearGradient={['rgb(134, 65, 244)', 'rgb(66, 194, 244)']}
+        />
+
+        {props.avatar ? (
+          <Image
+            source={{ uri: props.avatar }}
+            style={{
+              width: 24,
+              height: 24,
+              position: 'absolute',
+              backgroundColor: 'red',
+              borderRadius: 7,
+            }}
+          />
+        ) : undefined}
       </View>
     </SafeViewContainer>
   );
@@ -159,6 +191,9 @@ const QRView = observer((props: SubViewProps) => {
 
 interface Props {
   onBack?: () => void;
+  tokenSymbol?: string;
+  amount?: string;
+  avatar?: string;
 }
 
 export default observer((props: Props) => {
@@ -167,7 +202,7 @@ export default observer((props: Props) => {
   return (
     <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
       <NFCView onBack={props.onBack} onQRPress={() => swiper.current?.scrollTo(1)} />
-      <QRView onBack={() => swiper.current?.scrollTo(0)} />
+      <QRView {...props} onBack={() => swiper.current?.scrollTo(0)} />
     </Swiper>
   );
 });
