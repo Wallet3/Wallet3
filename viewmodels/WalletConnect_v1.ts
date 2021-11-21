@@ -6,6 +6,7 @@ import WCSession_v1, {
 } from '../models/WCSession_v1';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
+import { Account } from './Account';
 import { EventEmitter } from 'events';
 import { INetwork } from '../common/Networks';
 import { ISessionStatus } from '@walletconnect/types';
@@ -82,6 +83,13 @@ export class WalletConnect_v1 extends EventEmitter {
     this.setChains(chains);
   }
 
+  updateAccounts(accounts: string[], currentAccount: string) {
+    const target = accounts.find((a) => a === currentAccount) ?? accounts[0];
+
+    this.updateSession({ accounts: [target] });
+    this.setAccounts(accounts);
+  }
+
   setChains(chains: number[]) {
     this.enabledChains = chains;
 
@@ -92,6 +100,10 @@ export class WalletConnect_v1 extends EventEmitter {
 
   setAccounts(accounts: string[]) {
     this.accounts = accounts;
+
+    if (!this.store) return;
+    this.store.accounts = accounts;
+    this.store.save();
   }
 
   setStore(store: WCSession_v1) {
