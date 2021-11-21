@@ -5,11 +5,13 @@ import React, { useRef, useState } from 'react';
 import { secondaryFontColor, thirdFontColor } from '../../constants/styles';
 
 import { Account } from '../../viewmodels/Account';
+import AccountSelector from '../../modals/dapp/AccountSelector';
 import App from '../../viewmodels/App';
 import DAppHub from '../../viewmodels/DAppHub';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import Image from 'react-native-expo-cached-image';
 import { Modalize } from 'react-native-modalize';
+import NetworkSelector from '../../modals/dapp/NetworkSelector';
 import Networks from '../../viewmodels/Networks';
 import { Portal } from 'react-native-portalize';
 import { PublicNetworks } from '../../common/Networks';
@@ -27,10 +29,14 @@ const DAppInfo = ({
   client,
   accounts,
   onDisconnect,
+  onNetworkPress,
+  onAccountsPress,
 }: {
   client: WalletConnect_v1;
   accounts: Account[];
   onDisconnect: () => void;
+  onNetworkPress?: () => void;
+  onAccountsPress?: () => void;
 }) => {
   const { appMeta } = client || {};
 
@@ -38,90 +44,104 @@ const DAppInfo = ({
   const defaultNetwork = client.findTargetNetwork({ networks: PublicNetworks, defaultNetwork: Networks.current });
 
   return (
-    <SafeAreaProvider style={{}}>
-      <SafeViewContainer>
-        <Text style={{ fontSize: 20, fontWeight: '600', marginBottom: 10, color: thirdFontColor }}>DApp Info</Text>
-        <View style={viewStyles.infoItem}>
-          <Text style={viewStyles.itemTxt}>DApp:</Text>
+    <SafeViewContainer>
+      <Text style={{ fontSize: 20, fontWeight: '600', marginBottom: 10, color: thirdFontColor }}>DApp Info</Text>
+      <View style={viewStyles.infoItem}>
+        <Text style={viewStyles.itemTxt}>DApp:</Text>
 
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Image source={{ uri: appMeta?.icons[0] }} style={{ width: 17, height: 17, marginEnd: 4 }} />
-            <Text style={viewStyles.itemTxt} numberOfLines={1}>
-              {appMeta?.name}
-            </Text>
-          </View>
-        </View>
-        <View style={viewStyles.infoItem}>
-          <Text style={viewStyles.itemTxt}>Description:</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Image source={{ uri: appMeta?.icons[0] }} style={{ width: 17, height: 17, marginEnd: 4 }} />
           <Text style={viewStyles.itemTxt} numberOfLines={1}>
-            {appMeta?.description || 'No Description'}
+            {appMeta?.name}
           </Text>
         </View>
-        <View style={viewStyles.infoItem}>
-          <Text style={viewStyles.itemTxt}>URL:</Text>
-          <TouchableOpacity>
-            <Text style={viewStyles.itemTxt} numberOfLines={1}>
-              {appMeta?.url}
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={viewStyles.infoItem}>
-          <Text style={viewStyles.itemTxt}>Last used:</Text>
+      </View>
+      <View style={viewStyles.infoItem}>
+        <Text style={viewStyles.itemTxt}>Description:</Text>
+        <Text style={viewStyles.itemTxt} numberOfLines={1}>
+          {appMeta?.description || 'No Description'}
+        </Text>
+      </View>
+      <View style={viewStyles.infoItem}>
+        <Text style={viewStyles.itemTxt}>URL:</Text>
+        <TouchableOpacity>
           <Text style={viewStyles.itemTxt} numberOfLines={1}>
-            {client.lastUsedTimestamp.toLocaleString(undefined, {})}
+            {appMeta?.url}
           </Text>
-        </View>
+        </TouchableOpacity>
+      </View>
 
-        <View style={viewStyles.infoItem}>
-          <Text style={viewStyles.itemTxt}>Accounts:</Text>
+      <View style={viewStyles.infoItem}>
+        <Text style={viewStyles.itemTxt}>Last used:</Text>
+        <Text style={viewStyles.itemTxt} numberOfLines={1}>
+          {client.lastUsedTimestamp.toLocaleString(undefined, {})}
+        </Text>
+      </View>
 
-          <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
-            {defaultAccount?.avatar ? (
-              <Image
-                source={{ uri: defaultAccount.avatar }}
-                style={{ width: 15, height: 15, borderRadius: 100, marginEnd: 4 }}
-              />
-            ) : undefined}
-            <Text style={viewStyles.itemTxt} numberOfLines={1}>
-              {defaultAccount?.ensName || formatAddress(defaultAccount?.address ?? '', 7, 5)}
-            </Text>
-            <Entypo name="chevron-right" style={viewStyles.arrow} />
-          </TouchableOpacity>
-        </View>
+      <View style={viewStyles.infoItem}>
+        <Text style={viewStyles.itemTxt}>Accounts:</Text>
 
-        <View style={viewStyles.infoItem}>
-          <Text style={viewStyles.itemTxt}>Networks:</Text>
+        <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={onAccountsPress}>
+          {defaultAccount?.avatar ? (
+            <Image
+              source={{ uri: defaultAccount.avatar }}
+              style={{ width: 15, height: 15, borderRadius: 100, marginEnd: 4 }}
+            />
+          ) : undefined}
+          <Text style={viewStyles.itemTxt} numberOfLines={1}>
+            {defaultAccount?.ensName || formatAddress(defaultAccount?.address ?? '', 7, 5)}
+          </Text>
+          <Entypo name="chevron-right" style={viewStyles.arrow} />
+        </TouchableOpacity>
+      </View>
 
-          <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
-            {generateNetworkIcon({ chainId: defaultNetwork.chainId, width: 15, height: 15, style: { marginHorizontal: 4 } })}
-            <Text style={viewStyles.itemTxt} numberOfLines={1}>
-              {defaultNetwork.network}
-            </Text>
+      <View style={viewStyles.infoItem}>
+        <Text style={viewStyles.itemTxt}>Networks:</Text>
 
-            <Entypo name="chevron-right" style={viewStyles.arrow} />
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={onNetworkPress}>
+          {generateNetworkIcon({ chainId: defaultNetwork.chainId, width: 15, height: 15, style: { marginHorizontal: 4 } })}
+          <Text style={viewStyles.itemTxt} numberOfLines={1}>
+            {defaultNetwork.network}
+          </Text>
 
-        <View style={{ flex: 1 }} />
+          <Entypo name="chevron-right" style={viewStyles.arrow} />
+        </TouchableOpacity>
+      </View>
 
-        <Button title="Disconnect" themeColor={'crimson'} onPress={onDisconnect} />
-      </SafeViewContainer>
-    </SafeAreaProvider>
+      <View style={{ flex: 1 }} />
+
+      <Button title="Disconnect" themeColor={'crimson'} onPress={onDisconnect} />
+    </SafeViewContainer>
   );
 };
 
 const DApp = observer(
   ({ client, allAccounts, close }: { client: WalletConnect_v1; allAccounts: Account[]; close: Function }) => {
     const swiper = useRef<Swiper>(null);
+    const [panel, setPanel] = useState(1);
 
     const disconnect = () => {
       client.killSession();
       close();
     };
 
+    const selectNetworks = (chains: number[]) => {
+      swiper.current?.scrollTo(0);
+      client.updateChains(chains, Networks.current);
+    };
+
+    const selectAccounts = (accounts: string[]) => {
+      swiper.current?.scrollTo(0);
+      client.setAccounts(accounts);
+    };
+
+    const swipeTo = (index: number) => {
+      setPanel(index);
+      setTimeout(() => swiper.current?.scrollTo(1), 0);
+    };
+
     return (
-      <View style={{ flex: 1, height: 429 }}>
+      <SafeAreaProvider style={{ flex: 1, height: 429 }}>
         <Swiper
           ref={swiper}
           showsPagination={false}
@@ -130,9 +150,23 @@ const DApp = observer(
           loop={false}
           automaticallyAdjustContentInsets
         >
-          <DAppInfo client={client} accounts={allAccounts} onDisconnect={disconnect} />
+          <DAppInfo
+            client={client}
+            accounts={allAccounts}
+            onDisconnect={disconnect}
+            onNetworkPress={() => swipeTo(1)}
+            onAccountsPress={() => swipeTo(2)}
+          />
+
+          {panel === 1 ? (
+            <NetworkSelector networks={PublicNetworks} selectedChains={client.enabledChains} onDone={selectNetworks} />
+          ) : undefined}
+
+          {panel === 2 ? (
+            <AccountSelector accounts={App.allAccounts} selectedAccounts={client.accounts} onDone={selectAccounts} />
+          ) : undefined}
         </Swiper>
-      </View>
+      </SafeAreaProvider>
     );
   }
 );

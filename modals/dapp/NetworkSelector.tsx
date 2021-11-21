@@ -1,7 +1,6 @@
 import { Button, SafeViewContainer } from '../../components';
-import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
+import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
 import { borderColor, secondaryFontColor } from '../../constants/styles';
 
 import { Feather } from '@expo/vector-icons';

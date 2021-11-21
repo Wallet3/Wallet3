@@ -26,20 +26,20 @@ class DAppHub extends EventEmitter {
   async init() {
     const sessions = await Database.wcSessionV1Repository.find();
 
-    this.disposer = autorun(() => {
+    autorun(() => {
       const { current } = Networks;
+
+      const clients = this.clients.filter((c) => c.enabledChains.includes(current.chainId));
+      clients.forEach((c) => c.updateSession({ chainId: current.chainId }));
+    });
+
+    autorun(() => {
       const { currentWallet } = App;
       const { currentAccount } = currentWallet ?? {};
-
       if (!currentAccount) return;
 
-      console.log('autorun');
-
-      const clients = this.clients.filter(
-        (c) => c.enabledChains.includes(current.chainId) && c.accounts.includes(currentAccount.address)
-      );
-
-      clients.forEach((c) => c.updateSession({ chainId: current.chainId, accounts: [currentAccount.address] }));
+      const clients = this.clients.filter((c) => c.accounts.includes(currentAccount.address));
+      clients.forEach((c) => c.updateSession({ accounts: [currentAccount.address] }));
     });
 
     runInAction(() => {

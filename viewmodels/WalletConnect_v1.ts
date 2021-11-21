@@ -71,12 +71,23 @@ export class WalletConnect_v1 extends EventEmitter {
     return this;
   }
 
-  updateSession(session: ISessionStatus) {
-    this.client?.updateSession(session);
+  updateSession(session: { chainId?: number; accounts?: string[] }) {
+    this.client?.updateSession(session as any);
+  }
+
+  updateChains(chains: number[], currentNetwork: INetwork) {
+    const target = chains.find((c) => c === currentNetwork.chainId) ?? chains[0];
+
+    this.updateSession({ chainId: target });
+    this.setChains(chains);
   }
 
   setChains(chains: number[]) {
     this.enabledChains = chains;
+
+    if (!this.store) return;
+    this.store.chains = chains;
+    this.store.save();
   }
 
   setAccounts(accounts: string[]) {

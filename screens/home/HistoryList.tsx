@@ -43,7 +43,11 @@ const Tx = observer(({ item, onPress }: { onPress?: (tx: Transaction) => void; i
     <TouchableOpacity style={{ paddingVertical: 12, paddingHorizontal: 8 }} onPress={() => onPress?.(item as Transaction)}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1, alignItems: 'center' }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Image source={{ uri: dappIcon }} style={{ width: 16, height: 16, marginEnd: 4 }} />
+          {dappIcon ? (
+            <Image source={{ uri: dappIcon }} style={{ width: 16, height: 16, marginEnd: 4 }} />
+          ) : (
+            <Coin symbol={tokenSymbol} size={16} style={{ marginEnd: 4 }} />
+          )}
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text style={{ fontSize: 16, marginEnd: 4 }} numberOfLines={1}>{`${methodName}`}</Text>
             {methodName === 'Contract Interaction' ? undefined : (
@@ -71,10 +75,10 @@ const Tx = observer(({ item, onPress }: { onPress?: (tx: Transaction) => void; i
           {dappIcon ? (
             generateNetworkIcon({ chainId, width: 12, style: { marginEnd: 6, marginStart: 2 } })
           ) : (
-            <Text style={{ fontWeight: '300' }}>To:</Text>
+            <Text style={{ fontWeight: '300', marginEnd: 2 }}>To:</Text>
           )}
           <Text style={{ fontWeight: '300', maxWidth: 250 }} numberOfLines={1}>
-            {to.length === 40 ? formatAddress(to!, 10, 5) : to}
+            {to.length === 42 ? formatAddress(to!, 10, 5) : to}
           </Text>
         </View>
         <Text style={{ fontWeight: '300' }}>
