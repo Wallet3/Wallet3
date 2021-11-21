@@ -67,14 +67,7 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
       {type === 'sign' ? (
-        <Sign
-          client={client!}
-          request={callRequest!}
-          themeColor={current.color}
-          close={close}
-          wallet={app.currentWallet!}
-          appAuth={appAuth}
-        />
+        <Sign client={client!} request={callRequest!} close={close} wallet={app.currentWallet!} appAuth={appAuth} />
       ) : undefined}
 
       {type === 'sendTx' ? <DAppTxRequest client={client!} request={callRequest!} close={close} /> : undefined}

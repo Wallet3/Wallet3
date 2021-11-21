@@ -3,8 +3,10 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Text, View } from 'react-native';
 
 import { Authentication } from '../viewmodels/Authentication';
+import Networks from '../viewmodels/Networks';
 import { Passpad } from './views';
 import PlainTextSign from './dapp/SignPlainText';
+import { PublicNetworks } from '../common/Networks';
 import SignTypedData from './dapp/SignTypedData';
 import Success from './views/Success';
 import Swiper from 'react-native-swiper';
@@ -19,16 +21,17 @@ interface Props {
   request: WCCallRequestRequest;
   close: Function;
   client: WalletConnect_v1;
-  themeColor: string;
   wallet: Wallet;
   appAuth: Authentication;
 }
 
-export default observer(({ request, themeColor, client, close, wallet, appAuth }: Props) => {
+export default observer(({ request, client, close, wallet, appAuth }: Props) => {
   const [msg, setMsg] = useState<string>();
   const [typedData, setTypedData] = useState();
   const [type, setType] = useState('');
   const [verified, setVerified] = useState(false);
+
+  const themeColor = client.findTargetNetwork({ networks: PublicNetworks, defaultNetwork: Networks.current }).color;
 
   const swiper = useRef<Swiper>(null);
 
