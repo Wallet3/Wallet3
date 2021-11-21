@@ -72,7 +72,7 @@ export class WalletConnect_v1 extends EventEmitter {
   }
 
   updateSession(session: ISessionStatus) {
-    this.client.updateSession(session);
+    this.client?.updateSession(session);
   }
 
   setChains(chains: number[]) {

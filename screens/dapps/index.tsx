@@ -1,4 +1,5 @@
-import { Entypo, FontAwesome } from '@expo/vector-icons';
+import { Button, SafeViewContainer } from '../../components';
+import { Entypo, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useRef, useState } from 'react';
 import { secondaryFontColor, thirdFontColor } from '../../constants/styles';
@@ -6,13 +7,13 @@ import { secondaryFontColor, thirdFontColor } from '../../constants/styles';
 import { Account } from '../../viewmodels/Account';
 import App from '../../viewmodels/App';
 import DAppHub from '../../viewmodels/DAppHub';
+import { DrawerScreenProps } from '@react-navigation/drawer';
 import Image from 'react-native-expo-cached-image';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
 import { Portal } from 'react-native-portalize';
 import { PublicNetworks } from '../../common/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { SafeViewContainer } from '../../components';
 import Swiper from 'react-native-swiper';
 import { WCClientMeta } from '../../models/WCSession_v1';
 import { WalletConnect_v1 } from '../../viewmodels/WalletConnect_v1';
@@ -22,7 +23,15 @@ import { observer } from 'mobx-react-lite';
 import { styles } from '../../constants/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
-const DAppInfo = ({ client, accounts }: { client: WalletConnect_v1; accounts: Account[] }) => {
+const DAppInfo = ({
+  client,
+  accounts,
+  onDisconnect,
+}: {
+  client: WalletConnect_v1;
+  accounts: Account[];
+  onDisconnect: () => void;
+}) => {
   const { appMeta } = client || {};
 
   const defaultAccount = accounts.find((a) => a.address === client.accounts[0]);
@@ -93,31 +102,42 @@ const DAppInfo = ({ client, accounts }: { client: WalletConnect_v1; accounts: Ac
             <Entypo name="chevron-right" style={viewStyles.arrow} />
           </TouchableOpacity>
         </View>
+
+        <View style={{ flex: 1 }} />
+
+        <Button title="Disconnect" themeColor={'crimson'} onPress={onDisconnect} />
       </SafeViewContainer>
     </SafeAreaProvider>
   );
 };
 
-const DApp = observer(({ client, allAccounts }: { client: WalletConnect_v1; allAccounts: Account[] }) => {
-  const swiper = useRef<Swiper>(null);
+const DApp = observer(
+  ({ client, allAccounts, close }: { client: WalletConnect_v1; allAccounts: Account[]; close: Function }) => {
+    const swiper = useRef<Swiper>(null);
 
-  return (
-    <View style={{ flex: 1, height: 429 }}>
-      <Swiper
-        ref={swiper}
-        showsPagination={false}
-        showsButtons={false}
-        scrollEnabled={false}
-        loop={false}
-        automaticallyAdjustContentInsets
-      >
-        <DAppInfo client={client} accounts={allAccounts} />
-      </Swiper>
-    </View>
-  );
-});
+    const disconnect = () => {
+      client.killSession();
+      close();
+    };
 
-export default observer(() => {
+    return (
+      <View style={{ flex: 1, height: 429 }}>
+        <Swiper
+          ref={swiper}
+          showsPagination={false}
+          showsButtons={false}
+          scrollEnabled={false}
+          loop={false}
+          automaticallyAdjustContentInsets
+        >
+          <DAppInfo client={client} accounts={allAccounts} onDisconnect={disconnect} />
+        </Swiper>
+      </View>
+    );
+  }
+);
+
+export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
   const [selectedClient, setSelectedClient] = useState<WalletConnect_v1>();
   const { ref, open, close } = useModalize();
 
@@ -154,11 +174,20 @@ export default observer(() => {
 
   return (
     <View style={{ backgroundColor: '#fff', flex: 1 }}>
-      <FlatList data={clients} renderItem={renderItem} keyExtractor={(i) => i.peerId} style={{ flex: 1 }} />
+      {clients.length > 0 ? (
+        <FlatList data={clients} renderItem={renderItem} keyExtractor={(i) => i.peerId} style={{ flex: 1 }} />
+      ) : (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <TouchableOpacity style={{ padding: 12 }} onPress={() => navigation.getParent()?.navigate('QRScan')}>
+            <MaterialCommunityIcons name="qrcode-scan" size={32} color={secondaryFontColor} />
+          </TouchableOpacity>
+          <Text style={{ color: secondaryFontColor, marginTop: 24 }}>No Connected Apps</Text>
+        </View>
+      )}
 
       <Portal>
         <Modalize adjustToContentHeight ref={ref} disableScrollIfPossible modalStyle={styles.modalStyle}>
-          {selectedClient ? <DApp client={selectedClient} allAccounts={App.allAccounts} /> : undefined}
+          {selectedClient ? <DApp client={selectedClient} allAccounts={App.allAccounts} close={close} /> : undefined}
         </Modalize>
       </Portal>
     </View>
