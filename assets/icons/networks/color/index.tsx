@@ -50,26 +50,26 @@ export function generateNetworkIcon(props: { chainId: number; width: number; hei
 
   switch (chainId) {
     case 1:
-      return <Ethereum width={width} height={height ?? width} style={style} />;
+      return <Ethereum key={chainId} width={width} height={height ?? width} style={style} />;
     case 42161:
-      return <Arbitrum width={width} height={height ?? width} style={style} />;
+      return <Arbitrum key={chainId} width={width} height={height ?? width} style={style} />;
     case 10:
-      return <Optimism width={width} height={height ?? width} style={style} />;
+      return <Optimism key={chainId} width={width} height={height ?? width} style={style} />;
     case 137:
-      return <Polygon width={width} height={height ?? width} style={style} />;
+      return <Polygon key={chainId} width={width} height={height ?? width} style={style} />;
     case 100:
-      return <XDai width={width} height={height ?? width} style={style} />;
+      return <XDai key={chainId} width={width} height={height ?? width} style={style} />;
     case 43114:
-      return <Avalanche width={width} height={height ?? width} style={style} />;
+      return <Avalanche key={chainId} width={width} height={height ?? width} style={style} />;
     case 56:
-      return <Bsc width={width} height={height ?? width} style={style} />;
+      return <Bsc key={chainId} width={width} height={height ?? width} style={style} />;
     case 42220:
-      return <Celo width={width} height={height ?? width} style={style} />;
+      return <Celo key={chainId} width={width} height={height ?? width} style={style} />;
     case 250:
-      return <Fantom width={width} height={height ?? width} style={style} />;
+      return <Fantom key={chainId} width={width} height={height ?? width} style={style} />;
     case 128:
-      return <Heco width={width} height={height ?? width} style={style} />;
+      return <Heco key={chainId} width={width} height={height ?? width} style={style} />;
     case 66:
-      return <OKEx width={width} height={height ?? width} style={style} />;
+      return <OKEx key={chainId} width={width} height={height ?? width} style={style} />;
   }
 }

@@ -15,8 +15,10 @@ import Networks from '../../viewmodels/Networks';
 import { Portal } from 'react-native-portalize';
 import { PublicNetworks } from '../../common/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { ScrollView } from 'react-native-gesture-handler';
 import Swiper from 'react-native-swiper';
 import { WalletConnect_v1 } from '../../viewmodels/WalletConnect_v1';
+import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import { observer } from 'mobx-react-lite';
 import { secondaryFontColor } from '../../constants/styles';
 import { styles } from '../../constants/styles';
@@ -88,6 +90,38 @@ const DApp = observer(
   }
 );
 
+const DAppItem = observer(({ item, openApp }: { item: WalletConnect_v1; openApp: (item: WalletConnect_v1) => void }) => {
+  const { appMeta, enabledChains } = item;
+
+  return (
+    <View style={{ paddingHorizontal: 16, paddingVertical: 12, flexDirection: 'row', alignItems: 'center' }}>
+      <TouchableOpacity style={{ flex: 1, alignItems: 'center', flexDirection: 'row' }} onPress={() => openApp(item)}>
+        <Image source={{ uri: appMeta?.icons[0] }} style={{ width: 27, height: 27, marginEnd: 12 }} />
+        <View style={{ flex: 1 }}>
+          <Text style={{ fontWeight: '500', fontSize: 17 }} numberOfLines={1}>
+            {appMeta?.name}
+          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={{ color: secondaryFontColor, fontSize: 12, marginTop: 4 }}>
+              {`Last used: ${item.lastUsedTimestamp.toLocaleDateString(undefined, {})}`}
+            </Text>
+
+            <ScrollView horizontal style={{ marginBottom: -4, marginStart: 4 }} showsHorizontalScrollIndicator={false}>
+              {item.enabledChains.map((c) =>
+                generateNetworkIcon({ chainId: c, width: 12, height: 12, style: { marginHorizontal: 4 } })
+              )}
+            </ScrollView>
+          </View>
+        </View>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={{ padding: 12, marginEnd: -12 }} onPress={() => item.killSession()}>
+        <FontAwesome name="trash-o" size={19} />
+      </TouchableOpacity>
+    </View>
+  );
+});
+
 export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
   const [selectedClient, setSelectedClient] = useState<WalletConnect_v1>();
   const { ref, open, close } = useModalize();
@@ -99,29 +133,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
     open();
   };
 
-  const renderItem = ({ item }: { item: WalletConnect_v1 }) => {
-    const { appMeta } = item;
-
-    return (
-      <View style={{ paddingHorizontal: 16, paddingVertical: 12, flexDirection: 'row', alignItems: 'center' }}>
-        <TouchableOpacity style={{ flex: 1, alignItems: 'center', flexDirection: 'row' }} onPress={() => openApp(item)}>
-          <Image source={{ uri: appMeta?.icons[0] }} style={{ width: 27, height: 27, marginEnd: 12 }} />
-          <View style={{ flex: 1 }}>
-            <Text style={{ fontWeight: '500', fontSize: 17 }} numberOfLines={1}>
-              {appMeta?.name}
-            </Text>
-            <Text style={{ color: secondaryFontColor, fontSize: 12, marginTop: 4 }}>
-              {`Last used: ${item.lastUsedTimestamp.toLocaleDateString(undefined, {})}`}
-            </Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={{ padding: 12, marginEnd: -12 }} onPress={() => item.killSession()}>
-          <FontAwesome name="trash-o" size={19} />
-        </TouchableOpacity>
-      </View>
-    );
-  };
+  const renderItem = ({ item }: { item: WalletConnect_v1 }) => <DAppItem item={item} openApp={openApp} />;
 
   return (
     <View style={{ backgroundColor: '#fff', flex: 1 }}>

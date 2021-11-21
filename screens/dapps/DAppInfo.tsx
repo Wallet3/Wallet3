@@ -6,7 +6,8 @@ import { Entypo } from '@expo/vector-icons';
 import Image from 'react-native-expo-cached-image';
 import Networks from '../../viewmodels/Networks';
 import { PublicNetworks } from '../../common/Networks';
-import React, {  } from 'react';
+import React from 'react';
+import { ScrollView } from 'react-native-gesture-handler';
 import { WalletConnect_v1 } from '../../viewmodels/WalletConnect_v1';
 import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
@@ -25,7 +26,7 @@ export default ({
   onNetworkPress?: () => void;
   onAccountsPress?: () => void;
 }) => {
-  const { appMeta } = client || {};
+  const { appMeta, enabledChains } = client || {};
 
   const defaultAccount = accounts.find((a) => a.address === client.accounts[0]);
   const defaultNetwork = client.findTargetNetwork({ networks: PublicNetworks, defaultNetwork: Networks.current });
@@ -86,10 +87,24 @@ export default ({
         <Text style={viewStyles.itemTxt}>Networks:</Text>
 
         <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={onNetworkPress}>
-          {generateNetworkIcon({ chainId: defaultNetwork.chainId, width: 15, height: 15, style: { marginHorizontal: 4 } })}
-          <Text style={viewStyles.itemTxt} numberOfLines={1}>
-            {defaultNetwork.network}
-          </Text>
+          {/* {generateNetworkIcon({ chainId: defaultNetwork.chainId, width: 15, height: 15, style: { marginHorizontal: 4 } })} */}
+
+          <ScrollView
+            horizontal
+            alwaysBounceHorizontal={false}
+            showsHorizontalScrollIndicator={false}
+            style={{ flexDirection: 'row-reverse', maxWidth: 185 }}
+          >
+            {enabledChains.map((c) =>
+              generateNetworkIcon({ chainId: c, width: 15, height: 15, style: { marginHorizontal: 4 } })
+            )}
+          </ScrollView>
+
+          {enabledChains.length === 1 ? (
+            <Text style={{ ...viewStyles.itemTxt, marginStart: 2 }} numberOfLines={1}>
+              {defaultNetwork.network}
+            </Text>
+          ) : undefined}
 
           <Entypo name="chevron-right" style={viewStyles.arrow} />
         </TouchableOpacity>
