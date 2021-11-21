@@ -6,6 +6,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 
 import BackButton from '../components/BackButton';
 import IPhone from '../../assets/icons/app/IPhone.svg';
+import { IToken } from '../../common/Tokens';
 import Image from 'react-native-expo-cached-image';
 import { Ionicons } from '@expo/vector-icons';
 import QRCode from 'react-native-qrcode-svg';
@@ -144,14 +145,16 @@ const base64 =
 
 interface Props {
   onBack?: () => void;
-  tokenSymbol?: string;
-  tokenAddress?: string;
+  token?: IToken;
   owner?: string;
   amount?: string;
   avatar?: string;
 }
 
 const QRView = observer((props: Props) => {
+  const { token, owner, amount, avatar } = props;
+  const link = `${owner}`;
+
   return (
     <SafeViewContainer style={styles.container}>
       <View style={styles.navBar}>
@@ -183,7 +186,7 @@ const QRView = observer((props: Props) => {
           }}
         >
           <QRCode
-            value="abc"
+            value={link}
             size={180}
             backgroundColor="transparent"
             enableLinearGradient

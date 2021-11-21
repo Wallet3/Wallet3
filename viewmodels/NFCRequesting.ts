@@ -4,6 +4,7 @@ import { makeAutoObservable } from 'mobx';
 
 export class NFCRequesting {
   token: IToken;
+  amount = '';
 
   get currentAccount() {
     return App.currentWallet?.currentAccount!;

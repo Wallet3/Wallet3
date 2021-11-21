@@ -14,9 +14,7 @@ export default observer(() => {
   const swiper = useRef<Swiper>(null);
   const [vm] = useState(new NFCRequesting());
 
-  const { avatar } = App.currentWallet?.currentAccount || {};
-
-  console.log(App.currentWallet?.currentAccount?.address, avatar);
+  const { avatar, address } = App.currentWallet?.currentAccount || {};
 
   return (
     <SafeAreaProvider style={styles.safeArea}>
@@ -31,7 +29,7 @@ export default observer(() => {
         style={{ overflow: 'hidden' }}
       >
         <RequestAmount onNext={() => swiper.current?.scrollTo(1)} vm={vm} />
-        <NFCPad onBack={() => swiper.current?.scrollTo(0)} avatar={avatar} />
+        <NFCPad onBack={() => swiper.current?.scrollTo(0)} avatar={avatar} owner={address} token={vm.token} />
       </Swiper>
     </SafeAreaProvider>
   );
