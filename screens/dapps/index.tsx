@@ -138,7 +138,13 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
   return (
     <View style={{ backgroundColor: '#fff', flex: 1 }}>
       {clients.length > 0 ? (
-        <FlatList data={clients} renderItem={renderItem} keyExtractor={(i) => i.peerId} style={{ flex: 1 }} />
+        <FlatList
+          data={clients}
+          renderItem={renderItem}
+          keyExtractor={(i) => i.peerId}
+          style={{ flex: 1 }}
+          alwaysBounceVertical={false}
+        />
       ) : (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <TouchableOpacity style={{ padding: 12 }} onPress={() => navigation.getParent()?.navigate('QRScan')}>

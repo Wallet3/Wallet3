@@ -48,7 +48,7 @@ class MnemonicOnce {
     const bip32XPubkey = xpubkeyFromHDNode(bip32);
 
     const key = new Key();
-    key.id = Date.now() + Number.parseInt(`${Math.random() * 1000000}`);
+    key.id = Date.now();
     key.secret = await Authentication.encrypt(this.secret);
     key.bip32Xprivkey = await Authentication.encrypt(bip32.extendedKey);
     key.bip32Xpubkey = bip32XPubkey;

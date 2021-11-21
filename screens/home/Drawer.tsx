@@ -1,5 +1,5 @@
 import App, { AppVM } from '../../viewmodels/App';
-import { Arbitrum, Ethereum, NetworkIcons, Optimism } from '../../assets/icons/networks/color';
+import { Arbitrum, Ethereum, NetworkIcons, Optimism, Polygon } from '../../assets/icons/networks/color';
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';

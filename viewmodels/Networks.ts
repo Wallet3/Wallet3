@@ -22,6 +22,10 @@ class Networks {
     return PublicNetworks[1];
   }
 
+  get Polygon() {
+    return PublicNetworks[3];
+  }
+  
   constructor() {
     makeObservable(this, { current: observable, switch: action });
 

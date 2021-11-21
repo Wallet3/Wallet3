@@ -38,7 +38,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
   };
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#fff', padding: 16 }}>
+    <ScrollView style={{ flex: 1, backgroundColor: '#fff', padding: 16 }} alwaysBounceVertical={false}>
       <Text style={{ ...styles.sectionTitle, marginTop: 0 }}>General</Text>
 
       <TouchableOpacity style={styles.itemContainer} onPress={() => parent?.navigate('Languages')}>
