@@ -6,6 +6,7 @@ import { Gwei_1 } from '../../common/Constants';
 import React from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { formatAddress } from '../../utils/formatter';
+import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import { observer } from 'mobx-react-lite';
 import { openBrowserAsync } from 'expo-web-browser';
 import { thirdFontColor } from '../../constants/styles';
@@ -20,7 +21,10 @@ export default observer(({ tx }: { tx?: Transaction }) => {
     <View style={{ padding: 16, paddingTop: 24, paddingBottom: 32 }}>
       <View style={styles.itemContainer}>
         <Text style={styles.txt}>Network:</Text>
-        <Text style={styles.txt}>{network.network}</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', width: '50%', justifyContent: 'flex-end' }}>
+          {generateNetworkIcon({ chainId: network.chainId, width: 16, height: 16, style: { marginEnd: 4 } })}
+          <Text style={styles.txt}>{network.network}</Text>
+        </View>
       </View>
 
       <View style={styles.itemContainer}>

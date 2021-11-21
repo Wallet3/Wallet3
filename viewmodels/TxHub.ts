@@ -150,6 +150,7 @@ class TxHub {
     }
 
     const t = new Transaction();
+    t.hash = tx.hash!;
     t.chainId = tx.chainId!;
     t.from = tx.from!;
     t.to = tx.to!;
@@ -157,7 +158,6 @@ class TxHub {
     t.gas = tx.gasLimit as number;
     t.gasPrice = (tx.gasPrice || tx.maxFeePerGas) as number;
     t.priorityPrice = tx.maxPriorityFeePerGas as number;
-    t.hash = tx.hash!;
     t.nonce = tx.nonce! as number;
     t.value = tx.value!.toString();
     t.timestamp = Date.now();
