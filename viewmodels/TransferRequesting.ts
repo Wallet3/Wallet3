@@ -1,5 +1,6 @@
 import { BigNumber, utils } from 'ethers';
 import { action, computed, makeAutoObservable, makeObservable, observable, runInAction } from 'mobx';
+import { build, parse } from 'eth-url-parser';
 
 import App from './App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -32,6 +33,28 @@ export class TransferRequesting {
     return this.amountWei.gte(0);
   }
 
+  get requestingUri() {
+    const basic = { scheme: 'ethereum', chain_id: this.network.chainId };
+
+    if (this.token.address) {
+      return build({
+        ...basic,
+        target_address: this.token.address,
+        function_name: 'transfer',
+        parameters: {
+          uint256: this.isValidAmount ? this.amountWei.toString() : '0',
+          address: this.currentAccount.address,
+        },
+      });
+    } else {
+      return build({
+        ...basic,
+        target_address: this.currentAccount.address,
+        parameters: { value: this.isValidAmount ? this.amountWei.toString() : '0' },
+      });
+    }
+  }
+
   constructor(network: INetwork) {
     this.network = network;
     this.token = this.allTokens[0];
@@ -42,6 +65,7 @@ export class TransferRequesting {
       allTokens: computed,
       amountWei: computed,
       isValidAmount: computed,
+      requestingUri: computed,
       setToken: action,
       setAmount: action,
     });
@@ -64,3 +88,14 @@ export class TransferRequesting {
     this.amount = amount;
   }
 }
+
+// console.log(
+//   'ethereum:0x89205a3a3b2a69de6dbf7f01ed13b2108b2c43e7/transfer?address=0x8e23ee67d1332ad560396262c48ffbb01f93d052&uint256=1'
+// );
+// console.log(
+//   parse(
+//     'ethereum:0x89205a3a3b2a69de6dbf7f01ed13b2108b2c43e7/transfer?address=0x8e23ee67d1332ad560396262c48ffbb01f93d052&uint256=1'
+//   )
+// );
+
+console.log(parse('ethereum:0x89205a3a3b2a69de6dbf7f01ed13b2108b2c43e7@137?value=2.8e20'));

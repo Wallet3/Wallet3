@@ -12,6 +12,7 @@ interface Props {
   onTokenSelected?: (token: IToken) => void;
   onBack?: () => void;
   tokens?: IToken[];
+  themeColor?: string;
 }
 
 export default observer((props: Props) => {
@@ -38,7 +39,7 @@ export default observer((props: Props) => {
   return (
     <SafeViewContainer style={{ ...styles.container, flexDirection: 'row' }}>
       <View style={{ ...styles.navBar, alignItems: 'flex-start', marginEnd: 8 }}>
-        <BackButton onPress={props.onBack} />
+        <BackButton onPress={props.onBack} color={props.themeColor} />
       </View>
 
       <FlatList

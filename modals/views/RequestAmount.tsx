@@ -10,9 +10,10 @@ import { observer } from 'mobx-react-lite';
 interface Props {
   onNext?: () => void;
   vm: TransferRequesting;
+  themeColor: string;
 }
 
-export default observer(({ vm, onNext }: Props) => {
+export default observer(({ vm, onNext, themeColor }: Props) => {
   const swiper = useRef<Swiper>(null);
 
   const selectToken = (token: IToken) => {
@@ -33,8 +34,15 @@ export default observer(({ vm, onNext }: Props) => {
         token={vm.token!}
         onNumChanged={setAmount}
         disableButton={!vm.isValidAmount}
+        themeColor={themeColor}
       />
-      <Tokenlist onBack={() => swiper.current?.scrollTo(0)} tokens={vm.allTokens} onTokenSelected={selectToken} />
+
+      <Tokenlist
+        onBack={() => swiper.current?.scrollTo(0)}
+        tokens={vm.allTokens}
+        onTokenSelected={selectToken}
+        themeColor={themeColor}
+      />
     </Swiper>
   );
 });

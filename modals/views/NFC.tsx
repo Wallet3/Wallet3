@@ -3,21 +3,24 @@ import * as Animatable from 'react-native-animatable';
 import { Coin, SafeViewContainer } from '../../components';
 import React, { useRef } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+import { secondaryFontColor, thirdFontColor } from '../../constants/styles';
 
 import BackButton from '../components/BackButton';
+import CopyableText from '../../components/CopyableText';
 import IPhone from '../../assets/icons/app/IPhone.svg';
 import { IToken } from '../../common/Tokens';
 import Image from 'react-native-expo-cached-image';
 import { Ionicons } from '@expo/vector-icons';
 import QRCode from 'react-native-qrcode-svg';
 import Swiper from 'react-native-swiper';
+import { TransferRequesting } from '../../viewmodels/TransferRequesting';
 import { observer } from 'mobx-react-lite';
-import { secondaryFontColor } from '../../constants/styles';
 import styles from '../styles';
 
 interface SubViewProps {
   onBack?: () => void;
   onQRPress?: () => void;
+  themeColor?: string;
 }
 
 const NFCView = observer((props: SubViewProps) => {
@@ -76,7 +79,7 @@ const NFCView = observer((props: SubViewProps) => {
   return (
     <SafeViewContainer style={styles.container}>
       <View style={styles.navBar}>
-        <BackButton onPress={props.onBack} />
+        <BackButton onPress={props.onBack} color={props.themeColor} />
 
         <TouchableOpacity style={styles.navMoreButton} onPress={props.onQRPress}>
           <Ionicons name="qr-code-outline" size={17} color={secondaryFontColor} />
@@ -145,24 +148,22 @@ const base64 =
 
 interface Props {
   onBack?: () => void;
-  token?: IToken;
-  owner?: string;
-  amount?: string;
-  avatar?: string;
+  vm: TransferRequesting;
+  themeColor?: string;
 }
 
-const QRView = observer((props: Props) => {
-  const { token, owner, amount, avatar } = props;
-  const link = `${owner}`;
+const QRView = observer(({ vm, onBack, themeColor }: Props) => {
+  const { token, amount, requestingUri } = vm;
+  const { avatar } = vm.currentAccount;
 
   return (
     <SafeViewContainer style={styles.container}>
       <View style={styles.navBar}>
-        <BackButton onPress={props.onBack} />
+        <BackButton onPress={onBack} color={themeColor} />
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={{ ...styles.navTitle, fontSize: 20, color: secondaryFontColor }}>150 USDC</Text>
-          <Coin symbol="usdc" style={{ width: 24, height: 24, marginStart: 4 }} />
+          <Text style={{ ...styles.navTitle, fontSize: 20, color: secondaryFontColor }}>{`${amount} ${token.symbol}`}</Text>
+          <Coin symbol={token.symbol} style={{ width: 24, height: 24, marginStart: 4 }} forceRefresh />
         </View>
       </View>
 
@@ -186,19 +187,19 @@ const QRView = observer((props: Props) => {
           }}
         >
           <QRCode
-            value={link}
+            value={requestingUri}
             size={180}
             backgroundColor="transparent"
             enableLinearGradient
             logoBorderRadius={7}
             logo={{ uri: base64 }}
-            logoSize={props.avatar ? 29 : 1}
+            logoSize={avatar ? 29 : 1}
             linearGradient={['rgb(134, 65, 244)', 'rgb(66, 194, 244)']}
           />
 
-          {props.avatar ? (
+          {avatar ? (
             <Image
-              source={{ uri: props.avatar }}
+              source={{ uri: avatar }}
               style={{
                 width: 24,
                 height: 24,
@@ -209,18 +210,32 @@ const QRView = observer((props: Props) => {
             />
           ) : undefined}
         </View>
+
+        <CopyableText
+          txt={requestingUri}
+          txtStyle={{ fontSize: 12, maxWidth: 190, color: thirdFontColor }}
+          iconColor={thirdFontColor}
+          iconSize={0.1}
+        />
       </View>
     </SafeViewContainer>
   );
 });
 
-export default observer((props: Props) => {
+interface DefaultProps {
+  onBack?: () => void;
+  vm: TransferRequesting;
+  themeColor?: string;
+}
+
+export default observer((props: DefaultProps) => {
   const swiper = useRef<Swiper>(null);
+  const { vm } = props;
 
   return (
     <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
-      <NFCView onBack={props.onBack} onQRPress={() => swiper.current?.scrollTo(1)} />
-      <QRView {...props} onBack={() => swiper.current?.scrollTo(0)} />
+      <NFCView onBack={props.onBack} onQRPress={() => swiper.current?.scrollTo(1)} themeColor={props.themeColor} />
+      <QRView {...props} onBack={() => swiper.current?.scrollTo(0)} vm={vm} />
     </Swiper>
   );
 });

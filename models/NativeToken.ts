@@ -1,9 +1,8 @@
 import { BigNumber, utils } from 'ethers';
-import { action, computed, makeAutoObservable, makeObservable, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { estimateGas, getBalance } from '../common/RPC';
 
 import { IToken } from '../common/Tokens';
-import { hexlify } from '@ethersproject/bytes';
 
 export class NativeToken implements IToken {
   readonly owner: string;

@@ -14,6 +14,7 @@ import styles from './styles';
 export default observer(() => {
   const swiper = useRef<Swiper>(null);
   const [vm] = useState(new TransferRequesting(Networks.current));
+  const themeColor = Networks.current.color;
 
   const { avatar, address } = App.currentWallet?.currentAccount || {};
 
@@ -29,8 +30,8 @@ export default observer(() => {
         removeClippedSubviews
         style={{ overflow: 'hidden' }}
       >
-        <RequestAmount onNext={() => swiper.current?.scrollTo(1)} vm={vm} />
-        <NFCPad onBack={() => swiper.current?.scrollTo(0)} avatar={avatar} owner={address} token={vm.token} />
+        <RequestAmount onNext={() => swiper.current?.scrollTo(1)} vm={vm} themeColor={themeColor} />
+        <NFCPad onBack={() => swiper.current?.scrollTo(0)} vm={vm} themeColor={themeColor} />
       </Swiper>
     </SafeAreaProvider>
   );

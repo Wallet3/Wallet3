@@ -21,6 +21,7 @@ interface SubViewProps {
   max?: string;
   onMaxPress?: () => void;
   onNumChanged?: (num: string) => void;
+  themeColor?: string;
 }
 
 export default observer((props: SubViewProps) => {
@@ -105,7 +106,7 @@ export default observer((props: SubViewProps) => {
         title="Next"
         onPress={props.onNext}
         disabled={props.disableButton}
-        themeColor={Networks.current.color}
+        themeColor={props.themeColor}
         style={{ marginTop: 12 }}
       />
     </SafeViewContainer>

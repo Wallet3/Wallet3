@@ -6,6 +6,7 @@ import { formatAddress, formatCurrency } from '../../utils/formatter';
 import { numericFontFamily, themeColor } from '../../constants/styles';
 
 import AnimateNumber from 'react-native-animate-number';
+import CopyableText from '../../components/CopyableText';
 import { Feather } from '@expo/vector-icons';
 import Image from 'react-native-expo-cached-image';
 import Logos from '../../assets/icons/networks/white';
@@ -47,7 +48,14 @@ export default observer(({ style, address, balance, network, avatar, chainId, co
           {avatar ? (
             <Image
               source={{ uri: avatar }}
-              style={{ width: 16, height: 16, borderRadius: 100, marginHorizontal: 8, borderWidth: 1, borderColor: '#ffffff90' }}
+              style={{
+                width: 16,
+                height: 16,
+                borderRadius: 100,
+                marginHorizontal: 8,
+                borderWidth: 1,
+                borderColor: '#ffffff90',
+              }}
             />
           ) : undefined}
           {/* {ens ? <Text style={{ fontSize: 12, color: '#fff', marginHorizontal: 0 }}>{ens}</Text> : undefined} */}
@@ -59,13 +67,14 @@ export default observer(({ style, address, balance, network, avatar, chainId, co
         </View>
       </View>
 
-      <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={() => writeAddressToClipboard()}>
-        <Animatable.Text ref={addressView as any} style={{ ...styles.text, fontSize: 12 }}>
-          {formatAddress(address ?? '', 7, 5)}
-        </Animatable.Text>
-
-        <Feather name="copy" size={10} color="#fff" style={{ marginHorizontal: 5 }} />
-      </TouchableOpacity>
+      <CopyableText
+        txt={address || ''}
+        format
+        iconSize={10}
+        iconColor="#fff"
+        iconStyle={{ marginHorizontal: 5 }}
+        txtStyle={{ ...styles.text, fontSize: 12 }}
+      />
 
       <View style={{ height: 54 }} />
 
