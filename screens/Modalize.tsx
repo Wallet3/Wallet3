@@ -1,5 +1,6 @@
 import { ConnectDApp, DAppTxRequest, NetworksMenu, Request, Send, Sign } from '../modals';
 import { Dimensions, SafeAreaView } from 'react-native';
+import { ERC681, TokenTransferring } from '../viewmodels/TokenTransferring';
 import { INetwork, PublicNetworks } from '../common/Networks';
 import React, { useEffect, useState } from 'react';
 import { WCCallRequestRequest, WCCallRequest_eth_sendTransaction } from '../models/WCSession_v1';
@@ -7,7 +8,6 @@ import { build, parse } from 'eth-url-parser';
 
 import { AppVM } from '../viewmodels/App';
 import { Authentication } from '../viewmodels/Authentication';
-import { ERC681 } from '../viewmodels/TokenTransferring';
 import { FullPasspad } from '../modals/views/Passpad';
 import { IToken } from '../common/Tokens';
 import { Modalize } from 'react-native-modalize';
@@ -152,15 +152,14 @@ const RequestFundsModal = () => {
 };
 
 const SendFundsModal = () => {
-  const [userSelectedToken, setUserSelectedToken] = useState<IToken>();
-  const [erc681, setERC681] = useState<ERC681>();
+  const [vm, setVM] = useState<TokenTransferring>();
 
   const { ref: sendRef, open: openSendModal, close: closeSendModal } = useModalize();
 
   useEffect(() => {
     PubSub.subscribe('openSendFundsModal', (_, data) => {
       const { token } = data || {};
-      setUserSelectedToken(token);
+      setVM(new TokenTransferring({ targetNetwork: Networks.current, defaultToken: token }));
       setTimeout(() => openSendModal(), 0);
     });
 
@@ -168,7 +167,8 @@ const SendFundsModal = () => {
 
     PubSub.subscribe(`CodeScan-ethereum`, (_, { data }) => {
       try {
-        setERC681(parse(data));
+        const erc681 = parse(data);
+        setVM(new TokenTransferring({ targetNetwork: Networks.current, erc681 }));
         setTimeout(() => openSendModal(), 0);
       } catch (error) {}
     });
@@ -180,8 +180,9 @@ const SendFundsModal = () => {
   }, []);
 
   const clear = () => {
-    setERC681(undefined);
-    setUserSelectedToken(undefined);
+    console.log('on release');
+    vm?.dispose();
+    setVM(undefined);
   };
 
   return (
@@ -193,7 +194,7 @@ const SendFundsModal = () => {
       modalStyle={styles.modalStyle}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
-      <Send initToken={userSelectedToken} targetNetwork={Networks.current} erc681={erc681} onRelease={clear} />
+      {vm ? <Send vm={vm} onClose={clear} /> : undefined}
     </Modalize>
   );
 };

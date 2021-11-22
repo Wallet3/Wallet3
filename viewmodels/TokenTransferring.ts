@@ -122,13 +122,16 @@ export class TokenTransferring extends BaseTransaction {
 
     super({ account, network });
 
-    const token =
+
+    const token = (
       erc681 && erc681.function_name === 'transfer'
         ? new ERC20Token({ contract: erc681.target_address!, owner: account.address, chainId: network.chainId })
-        : defaultToken;
+        : defaultToken
+    ) as ERC20Token;
 
     this.token = token || this.account.tokens[0];
-    (this.token as ERC20Token).getDecimals?.();
+    token?.getDecimals?.();
+    token?.getSymbol?.();
 
     makeObservable(this, {
       to: observable,
@@ -163,6 +166,7 @@ export class TokenTransferring extends BaseTransaction {
       this.setTo(erc681.parameters?.address);
 
       (this.token as ERC20Token)?.getDecimals?.()?.then((decimals) => {
+        console.log(decimals, erc681.parameters?.uint256);
         const amount = utils.formatUnits(erc681.parameters?.uint256 || '0', decimals);
         runInAction(() => this.setAmount(amount));
       });
