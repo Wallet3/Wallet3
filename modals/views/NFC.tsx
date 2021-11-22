@@ -6,6 +6,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { secondaryFontColor, thirdFontColor } from '../../constants/styles';
 
 import BackButton from '../components/BackButton';
+import { BlankPNG } from '../../common/Constants';
 import CopyableText from '../../components/CopyableText';
 import IPhone from '../../assets/icons/app/IPhone.svg';
 import { IToken } from '../../common/Tokens';
@@ -144,9 +145,6 @@ const NFCView = observer((props: SubViewProps) => {
   );
 });
 
-const base64 =
-  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=';
-
 interface Props {
   onBack?: () => void;
   vm: TransferRequesting;
@@ -201,7 +199,7 @@ const QRView = observer(({ vm, onBack, themeColor }: Props) => {
             backgroundColor="transparent"
             enableLinearGradient
             logoBorderRadius={7}
-            logo={{ uri: base64 }}
+            logo={{ uri: BlankPNG }}
             logoSize={avatar ? 29 : 1}
             linearGradient={['rgb(134, 65, 244)', 'rgb(66, 194, 244)']}
           />
@@ -245,8 +243,9 @@ export default observer((props: DefaultProps) => {
 
   return (
     <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
-      <NFCView onBack={props.onBack} onQRPress={() => swiper.current?.scrollTo(1)} themeColor={props.themeColor} />
-      <QRView {...props} onBack={() => swiper.current?.scrollTo(0)} vm={vm} />
+      {/* <NFCView onBack={props.onBack} onQRPress={() => swiper.current?.scrollTo(1)} themeColor={props.themeColor} /> */}
+      <QRView {...props} vm={vm} />
+      {/* onBack={() => swiper.current?.scrollTo(0)} */}
     </Swiper>
   );
 });
