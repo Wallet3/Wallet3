@@ -31,7 +31,6 @@ interface Props {
 }
 
 const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack }: Props) => {
-  console.log('disable', disableBack);
   const [busy, setBusy] = React.useState(false);
 
   return (

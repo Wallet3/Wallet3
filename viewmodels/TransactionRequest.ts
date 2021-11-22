@@ -68,7 +68,6 @@ export class TransactionRequest extends BaseTransaction {
   }
 
   constructor({ request, client }: IConstructor) {
-    console.log('new transactionRequest');
     const [param, requestChainId] = request.params as [WCCallRequest_eth_sendTransaction, number?];
     const account = App.currentWallet!.currentAccount!;
 

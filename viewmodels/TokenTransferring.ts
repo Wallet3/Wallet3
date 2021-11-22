@@ -27,6 +27,8 @@ export class TokenTransferring extends BaseTransaction {
   amount = '0';
   isResolvingAddress = false;
 
+  readonly erc681: boolean;
+
   get allTokens() {
     return [this.account.tokens[0], ...this.account.allTokens];
   }
@@ -56,7 +58,11 @@ export class TokenTransferring extends BaseTransaction {
 
   get isValidAmount() {
     try {
-      return this.amountWei.gt(0) && this.amountWei.lte(this.token.balance!) && !this.token.loading;
+      return (
+        (this.erc681 ? this.amountWei.gte(0) : this.amountWei.gt(0)) &&
+        this.amountWei.lte(this.token.balance!) &&
+        !this.token.loading
+      );
     } catch (error) {
       return false;
     }
@@ -116,12 +122,10 @@ export class TokenTransferring extends BaseTransaction {
 
   constructor({ targetNetwork, defaultToken, erc681 }: { targetNetwork: INetwork; defaultToken?: IToken; erc681?: ERC681 }) {
     const account = App.currentWallet!.currentAccount!;
-    const network = erc681
-      ? Networks.all.find((n) => n.chainId === Number(erc681.chain_id)) ?? Networks.Ethereum
-      : targetNetwork;
+    const network = erc681 ? Networks.all.find((n) => n.chainId === Number(erc681.chain_id)) ?? targetNetwork : targetNetwork;
 
     super({ account, network });
-    console.log(erc681);
+
     const token = (
       erc681 && erc681.function_name === 'transfer' && utils.isAddress(erc681.target_address)
         ? new ERC20Token({ contract: erc681.target_address, owner: account.address, chainId: network.chainId })
@@ -133,9 +137,12 @@ export class TokenTransferring extends BaseTransaction {
     this.token = token || this.account.tokens[0];
 
     if (erc681) {
+      this.erc681 = true;
       token?.getDecimals?.();
       token?.getSymbol?.();
       token?.getBalance?.(erc681.function_name ? true : false);
+    } else {
+      this.erc681 = false;
     }
 
     makeObservable(this, {
@@ -235,7 +242,6 @@ export class TokenTransferring extends BaseTransaction {
   }
 
   setToken(token: IToken) {
-    console.log('setToken', token.symbol);
     if (this.token.address === token.address) return;
 
     this.token = token;

@@ -25,8 +25,6 @@ export default observer(({ vm, onClose, reviewPage }: Props) => {
   const [verified, setVerified] = useState(false);
   const swiper = useRef<Swiper>(null);
 
-  console.log('review', reviewPage);
-
   useEffect(() => {
     if (reviewPage) setTimeout(() => swiper?.current?.scrollTo(2, false), 220);
     return () => onClose?.();
