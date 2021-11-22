@@ -2,6 +2,7 @@ import { StyleProp, ViewStyle } from 'react-native';
 
 import Arbitrum from './arbitrum.svg';
 import Avalanche from './avalanche.svg';
+import Boba from './boba.svg';
 import Bsc from './bsc.svg';
 import Celo from './celo.svg';
 import Ethereum from './ethereum2.svg';
@@ -28,6 +29,7 @@ const HECO = generateNetworkIcon({ chainId: 128, width: 32 });
 const OKX = generateNetworkIcon({ chainId: 66, width: 32 });
 const POLY = generateNetworkIcon({ chainId: 137, width: 27, height: 32 });
 const xDAI = generateNetworkIcon({ chainId: 100, width: 32 });
+const BOBA = generateNetworkIcon({ chainId: 288, width: 32 });
 // const ZSYNC = <ZKSync width={32} height={32} />;
 
 export const NetworkIcons = {
@@ -42,6 +44,7 @@ export const NetworkIcons = {
   66: OKX,
   137: POLY,
   100: xDAI,
+  288: BOBA,
   // zksync: ZSYNC,
 };
 
@@ -59,6 +62,8 @@ export function generateNetworkIcon(props: { chainId: number; width: number; hei
       return <Polygon key={chainId} width={width} height={height ?? width} style={style} />;
     case 100:
       return <XDai key={chainId} width={width} height={height ?? width} style={style} />;
+    case 288:
+      return <Boba key={chainId} width={width} height={height ?? width} style={style} />;
     case 43114:
       return <Avalanche key={chainId} width={width} height={height ?? width} style={style} />;
     case 56:

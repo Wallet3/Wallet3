@@ -1,6 +1,7 @@
 import Arbitrum from './arbitrum.svg';
 import Avalanche from './avalanche.svg';
 import BSC from './bsc.svg';
+import Boba from './boba.svg';
 import Celo from './celo.svg';
 import Ethereum from './ethereum.svg';
 import Fantom from './fantom.svg';
@@ -89,6 +90,13 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     opacity: 0.72,
   },
+
+  boba: {
+    marginTop: -50,
+    marginEnd: -6,
+    alignSelf: 'flex-end',
+    opacity: 1,
+  },
 });
 
 export default {
@@ -103,4 +111,5 @@ export default {
   128: <Heco width={52} height={52} style={styles.heco} />,
   66: <OKEx width={49} height={49} style={styles.okex} />,
   56: <BSC width={49} height={49} style={styles.bsc} />,
+  288: <Boba width={49} height={49} style={styles.boba} />,
 };

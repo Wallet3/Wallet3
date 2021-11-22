@@ -89,13 +89,13 @@ export default observer((props: SubViewProps) => {
 
       {props.max ? (
         <TouchableOpacity
+          style={{ justifyContent: 'flex-end', flexDirection: 'row', paddingEnd: 4 }}
           onPress={() => {
             props.onMaxPress?.();
             setAmount(props.max ?? '0');
           }}
-          style={{ justifyContent: 'flex-end', flexDirection: 'row', paddingEnd: 4 }}
         >
-          <Text style={{ color: secondaryFontColor }}>{`Max: ${props.max}`}</Text>
+          <Text style={{ color: secondaryFontColor }} numberOfLines={1}>{`Max: ${props.max}`}</Text>
         </TouchableOpacity>
       ) : undefined}
 

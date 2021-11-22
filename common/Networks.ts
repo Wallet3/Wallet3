@@ -90,6 +90,16 @@ export const PublicNetworks: INetwork[] = [
     eip1559: true,
   },
   {
+    symbol: 'ETH',
+    comm_id: 'boba',
+    network: 'Boba',
+    chainId: 288,
+    color: '#1CD8D2',
+    l2: true,
+    defaultTokens: [],
+    explorer: 'https://blockexplorer.boba.network',
+  },
+  {
     symbol: 'FTM',
     comm_id: 'ftm',
     chainId: 250,
