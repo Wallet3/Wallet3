@@ -56,7 +56,7 @@ export class TokenTransferring extends BaseTransaction {
 
   get isValidAmount() {
     try {
-      return this.amountWei.gte(0) && this.amountWei.lte(this.token.balance!) && !this.token.loading;
+      return this.amountWei.gt(0) && this.amountWei.lte(this.token.balance!) && !this.token.loading;
     } catch (error) {
       return false;
     }
@@ -121,17 +121,22 @@ export class TokenTransferring extends BaseTransaction {
       : targetNetwork;
 
     super({ account, network });
-
-
+    console.log(erc681);
     const token = (
-      erc681 && erc681.function_name === 'transfer'
-        ? new ERC20Token({ contract: erc681.target_address!, owner: account.address, chainId: network.chainId })
+      erc681 && erc681.function_name === 'transfer' && utils.isAddress(erc681.target_address)
+        ? new ERC20Token({ contract: erc681.target_address, owner: account.address, chainId: network.chainId })
+        : erc681
+        ? account.nativeToken
         : defaultToken
     ) as ERC20Token;
 
     this.token = token || this.account.tokens[0];
-    token?.getDecimals?.();
-    token?.getSymbol?.();
+
+    if (erc681) {
+      token?.getDecimals?.();
+      token?.getSymbol?.();
+      token?.getBalance?.(erc681.function_name ? true : false);
+    }
 
     makeObservable(this, {
       to: observable,
@@ -152,6 +157,7 @@ export class TokenTransferring extends BaseTransaction {
 
     AsyncStorage.getItem(`${this.network.chainId}-${this.account.address}-LastUsedToken`).then((v) => {
       if (defaultToken) return;
+      if (erc681) return;
 
       if (!v) {
         runInAction(() => this.setToken(this.account.tokens[0]));
@@ -162,17 +168,26 @@ export class TokenTransferring extends BaseTransaction {
       runInAction(() => this.setToken(token));
     });
 
-    if (erc681?.function_name === 'transfer') {
+    if (!erc681) return;
+
+    if (erc681.function_name === 'transfer') {
       this.setTo(erc681.parameters?.address);
 
       (this.token as ERC20Token)?.getDecimals?.()?.then((decimals) => {
-        console.log(decimals, erc681.parameters?.uint256);
-        const amount = utils.formatUnits(erc681.parameters?.uint256 || '0', decimals);
-        runInAction(() => this.setAmount(amount));
+        try {
+          const amount = utils.formatUnits(erc681.parameters?.uint256 || '0', decimals);
+          runInAction(() => {
+            this.setAmount(amount);
+            this.estimateGas();
+          });
+        } catch (error) {}
       });
     } else {
-      this.setTo(erc681?.target_address);
-      this.setAmount(utils.formatEther(erc681?.parameters?.value ?? '0'));
+      try {
+        this.setTo(erc681.target_address);
+        this.setAmount(utils.formatEther(erc681.parameters?.value ?? '0'));
+        this.estimateGas();
+      } catch (error) {}
     }
   }
 
@@ -220,6 +235,7 @@ export class TokenTransferring extends BaseTransaction {
   }
 
   setToken(token: IToken) {
+    console.log('setToken', token.symbol);
     if (this.token.address === token.address) return;
 
     this.token = token;

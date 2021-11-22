@@ -17,14 +17,18 @@ import styles from './styles';
 
 interface Props {
   vm: TokenTransferring;
+  reviewPage?: boolean;
   onClose?: () => void;
 }
 
-export default observer(({ vm, onClose }: Props) => {
+export default observer(({ vm, onClose, reviewPage }: Props) => {
   const [verified, setVerified] = useState(false);
   const swiper = useRef<Swiper>(null);
 
+  console.log('review', reviewPage);
+
   useEffect(() => {
+    if (reviewPage) setTimeout(() => swiper?.current?.scrollTo(2, false), 220);
     return () => onClose?.();
   }, []);
 
@@ -85,7 +89,7 @@ export default observer(({ vm, onClose }: Props) => {
               vm.estimateGas();
             }}
           />
-          <ReviewPad onBack={() => swiper.current?.scrollTo(1)} vm={vm} onSend={onSendClick} />
+          <ReviewPad onBack={() => swiper.current?.scrollTo(1)} vm={vm} onSend={onSendClick} disableBack={reviewPage} />
           <Passpad
             themeColor={vm.network.color}
             onCodeEntered={(c) => sendTx(c)}

@@ -91,7 +91,7 @@ export default observer((props: SubViewProps) => {
         <TouchableOpacity
           onPress={() => {
             props.onMaxPress?.();
-            setAmount(props.max!);
+            setAmount(props.max ?? '0');
           }}
           style={{ justifyContent: 'flex-end', flexDirection: 'row', paddingEnd: 4 }}
         >

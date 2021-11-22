@@ -153,6 +153,7 @@ const RequestFundsModal = () => {
 
 const SendFundsModal = () => {
   const [vm, setVM] = useState<TokenTransferring>();
+  const [isERC681, setIsERC681] = useState(false);
 
   const { ref: sendRef, open: openSendModal, close: closeSendModal } = useModalize();
 
@@ -167,8 +168,8 @@ const SendFundsModal = () => {
 
     PubSub.subscribe(`CodeScan-ethereum`, (_, { data }) => {
       try {
-        const erc681 = parse(data);
-        setVM(new TokenTransferring({ targetNetwork: Networks.current, erc681 }));
+        setIsERC681(true);
+        setVM(new TokenTransferring({ targetNetwork: Networks.current, erc681: parse(data) }));
         setTimeout(() => openSendModal(), 0);
       } catch (error) {}
     });
@@ -180,9 +181,9 @@ const SendFundsModal = () => {
   }, []);
 
   const clear = () => {
-    console.log('on release');
     vm?.dispose();
     setVM(undefined);
+    setIsERC681(false);
   };
 
   return (
@@ -194,7 +195,7 @@ const SendFundsModal = () => {
       modalStyle={styles.modalStyle}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
-      {vm ? <Send vm={vm} onClose={clear} /> : undefined}
+      {vm ? <Send vm={vm} onClose={clear} reviewPage={isERC681} /> : undefined}
     </Modalize>
   );
 };

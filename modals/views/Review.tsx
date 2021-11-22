@@ -26,16 +26,18 @@ interface Props {
   onBack?: () => void;
   onSend?: () => Promise<void>;
   onGasPress?: () => void;
+  disableBack?: boolean;
   vm: TokenTransferring;
 }
 
-const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
+const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack }: Props) => {
+  console.log('disable', disableBack);
   const [busy, setBusy] = React.useState(false);
 
   return (
     <SafeViewContainer style={styles.container}>
       <View style={styles.navBar}>
-        <BackButton onPress={onBack} color={Networks.current.color} />
+        {disableBack ? <View /> : <BackButton onPress={onBack} color={Networks.current.color} />}
 
         <Text style={styles.navTitle}>Tx Review</Text>
       </View>
@@ -134,12 +136,13 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend }: Props) => {
   );
 });
 
-export default observer(({ onBack, vm, onSend }: Props) => {
+export default observer((props: Props) => {
+  const { onBack, vm, onSend, disableBack } = props;
   const swiper = useRef<Swiper>(null);
 
   return (
     <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
-      <ReviewView onBack={onBack} onSend={onSend} onGasPress={() => swiper.current?.scrollTo(1)} vm={vm} />
+      <ReviewView {...props} onGasPress={() => swiper.current?.scrollTo(1)} />
       <GasReview onBack={() => swiper.current?.scrollTo(0)} vm={vm} themeColor={vm.network.color} />
     </Swiper>
   );
