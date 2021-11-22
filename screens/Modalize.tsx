@@ -179,6 +179,11 @@ const SendFundsModal = () => {
     };
   }, []);
 
+  const clear = () => {
+    setERC681(undefined);
+    setUserSelectedToken(undefined);
+  };
+
   return (
     <Modalize
       key="SendFunds"
@@ -188,7 +193,7 @@ const SendFundsModal = () => {
       modalStyle={styles.modalStyle}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
-      <Send initToken={userSelectedToken} targetNetwork={Networks.current} erc681={erc681} />
+      <Send initToken={userSelectedToken} targetNetwork={Networks.current} erc681={erc681} onRelease={clear} />
     </Modalize>
   );
 };

@@ -19,15 +19,19 @@ interface Props {
   initToken?: IToken;
   targetNetwork: INetwork;
   erc681?: ERC681;
+  onRelease?: () => void;
 }
 
-export default observer(({ initToken, targetNetwork, erc681 }: Props) => {
+export default observer(({ initToken, targetNetwork, erc681, onRelease }: Props) => {
   const [vm] = useState(new TokenTransferring({ targetNetwork, defaultToken: initToken, erc681 }));
   const [verified, setVerified] = useState(false);
   const swiper = useRef<Swiper>(null);
 
   useEffect(() => {
-    return () => vm.dispose();
+    return () => {
+      vm.dispose();
+      onRelease?.();
+    };
   }, []);
 
   const sendTx = async (pin?: string) => {
