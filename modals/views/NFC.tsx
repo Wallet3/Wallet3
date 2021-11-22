@@ -14,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import QRCode from 'react-native-qrcode-svg';
 import Swiper from 'react-native-swiper';
 import { TransferRequesting } from '../../viewmodels/TransferRequesting';
+import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 
@@ -153,7 +154,7 @@ interface Props {
 }
 
 const QRView = observer(({ vm, onBack, themeColor }: Props) => {
-  const { token, amount, requestingUri } = vm;
+  const { token, amount, requestingUri, network } = vm;
   const { avatar } = vm.currentAccount;
 
   return (
@@ -162,12 +163,20 @@ const QRView = observer(({ vm, onBack, themeColor }: Props) => {
         <BackButton onPress={onBack} color={themeColor} />
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={{ ...styles.navTitle, fontSize: 20, color: secondaryFontColor }}>{`${amount} ${token.symbol}`}</Text>
-          <Coin symbol={token.symbol} style={{ width: 24, height: 24, marginStart: 4 }} forceRefresh />
+          {generateNetworkIcon({ chainId: network.chainId, width: 17, height: 17, style: { marginEnd: 5 } })}
+          <Text style={{ fontSize: 16, fontWeight: '500', color: network.color }}>{network.network}</Text>
         </View>
       </View>
 
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Coin symbol={token.symbol} style={{ marginHorizontal: 8 }} size={22} forceRefresh />
+          <Text style={{ ...styles.navTitle, fontSize: 24, fontWeight: '300', color: thirdFontColor }}>{`${amount}`}</Text>
+          <Text style={{ ...styles.navTitle, fontSize: 24, fontWeight: '300', color: thirdFontColor }}>
+            {`${token.symbol}`}
+          </Text>
+        </View>
+
         <View
           style={{
             position: 'relative',
@@ -212,10 +221,12 @@ const QRView = observer(({ vm, onBack, themeColor }: Props) => {
         </View>
 
         <CopyableText
+          title="Copy Link"
           txt={requestingUri}
           txtStyle={{ fontSize: 12, maxWidth: 185, color: thirdFontColor }}
           iconColor={thirdFontColor}
-          iconSize={0.001}
+          iconStyle={{ marginHorizontal: 4 }}
+          iconSize={10}
         />
       </View>
     </SafeViewContainer>
