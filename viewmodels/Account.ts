@@ -21,7 +21,7 @@ export class Account {
   allTokens: UserToken[] = [];
   balanceUSD = 0;
   ensName = '';
-  avatar = 'https://pbs.twimg.com/profile_images/1381803073413210117/AY7Nr1ba_400x400.png';
+  avatar = 'https://pbs.twimg.com/profile_images/1437277327096827905/npwbrPue_400x400.png';
   nativeToken!: NativeToken;
 
   get displayName() {

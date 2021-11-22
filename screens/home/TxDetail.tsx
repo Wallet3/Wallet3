@@ -81,6 +81,11 @@ export default observer(({ tx }: { tx?: Transaction }) => {
         <Text style={styles.txt}>{tx.blockNumber}</Text>
       </View>
 
+      <View style={styles.itemContainer}>
+        <Text style={styles.txt}>Timestamp:</Text>
+        <Text style={styles.txt}>{new Date(tx.timestamp).toLocaleString()}</Text>
+      </View>
+
       <View style={{ ...styles.itemContainer, flexDirection: 'column' }}>
         <Text style={styles.txt}>Data:</Text>
         <Text style={{ ...styles.txt, maxWidth: '100%' }} numberOfLines={5}>

@@ -1,6 +1,7 @@
 import {
   AVAXPopularTokens,
   ArbiPopularTokens,
+  BobaPopularTokens,
   BscPopularTokens,
   CeloPopularTokens,
   EthereumPopularTokens,
@@ -96,7 +97,7 @@ export const PublicNetworks: INetwork[] = [
     chainId: 288,
     color: '#1CD8D2',
     l2: true,
-    defaultTokens: [],
+    defaultTokens: BobaPopularTokens,
     explorer: 'https://blockexplorer.boba.network',
   },
   {

@@ -213,7 +213,7 @@ const QRView = observer(({ vm, onBack, themeColor }: Props) => {
                 width: 24,
                 height: 24,
                 position: 'absolute',
-                backgroundColor: 'red',
+                backgroundColor: 'rgb(134, 194, 244)',
                 borderRadius: 7,
               }}
             />
