@@ -14,6 +14,7 @@ import { Modalize } from 'react-native-modalize';
 import Networks from '../viewmodels/Networks';
 import { WalletConnect_v1 } from '../viewmodels/WalletConnect_v1';
 import { autorun } from 'mobx';
+import { showMessage } from 'react-native-flash-message';
 import { styles } from '../constants/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
@@ -171,7 +172,9 @@ const SendFundsModal = () => {
         setIsERC681(true);
         setVM(new TokenTransferring({ targetNetwork: Networks.current, erc681: parse(data) }));
         setTimeout(() => openSendModal(), 0);
-      } catch (error) {}
+      } catch (error) {
+        showMessage({ message: (error as any)?.toString?.(), type: 'warning' });
+      }
     });
 
     return () => {
