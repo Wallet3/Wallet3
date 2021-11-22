@@ -96,7 +96,6 @@ export default observer(({ uri, close }: Props) => {
   useEffect(() => {
     if (!uri) return;
     if (client) return;
-    console.log('Connecting DApp');
 
     let wc_client = DAppHub.connect(uri);
     const timeout = setTimeout(async () => {

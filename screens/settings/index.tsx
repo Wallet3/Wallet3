@@ -163,7 +163,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
             onCodeEntered={async (code) => {
               const success = await Authentication.verifyPin(code);
               if (success) {
-                if (jumpToScreen === 'ResetApp') setTimeout(() => openReset(), 0);
+                if (jumpToScreen === 'ResetApp') setTimeout(() => openReset(), 25);
                 else parent?.navigate(jumpToScreen);
 
                 closePasscode();

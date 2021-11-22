@@ -12,11 +12,11 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
   const [scanned, setScanned] = useState(false);
 
   const handleBarCodeScanned: BarCodeScannedCallback = ({ data }) => {
-    const supportedSchemas = ['ethereum', 'wc:', '0x'];
-    const schema = supportedSchemas.find((schema) => data.startsWith(schema));
-    if (!schema) return;
+    const supportedSchemes = ['ethereum', 'wc:', '0x'];
+    const scheme = supportedSchemes.find((schema) => data.startsWith(schema));
+    if (!scheme) return;
 
-    PubSub.publish('CodeScan', { data });
+    PubSub.publish(`CodeScan-${scheme}`, { data });
     setScanned(true);
     navigation.pop();
   };

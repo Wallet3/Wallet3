@@ -80,7 +80,7 @@ const WalletConnectV1 = () => {
   const [connectUri, setConnectUri] = useState<string>();
 
   useEffect(() => {
-    PubSub.subscribe('CodeScan', (_, { data }) => {
+    PubSub.subscribe('CodeScan-wc:', (_, { data }) => {
       setConnectUri(data);
       openConnectDapp();
     });

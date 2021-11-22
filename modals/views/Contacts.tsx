@@ -59,7 +59,7 @@ export default observer(({ onNext, vm }: Props) => {
     <SafeViewContainer style={styles.container}>
       <TextBox
         title="To:"
-        placeholder="0xABC..., .eth"
+        placeholder="0xAbc..., .eth"
         value={addr}
         onChangeText={(t) => {
           setAddr(t);
