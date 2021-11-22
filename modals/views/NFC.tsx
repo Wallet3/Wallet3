@@ -213,9 +213,9 @@ const QRView = observer(({ vm, onBack, themeColor }: Props) => {
 
         <CopyableText
           txt={requestingUri}
-          txtStyle={{ fontSize: 12, maxWidth: 190, color: thirdFontColor }}
+          txtStyle={{ fontSize: 12, maxWidth: 185, color: thirdFontColor }}
           iconColor={thirdFontColor}
-          iconSize={0.1}
+          iconSize={0.001}
         />
       </View>
     </SafeViewContainer>

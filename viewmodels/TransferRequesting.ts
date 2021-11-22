@@ -1,5 +1,5 @@
 import { BigNumber, utils } from 'ethers';
-import { action, computed, makeAutoObservable, makeObservable, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { build, parse } from 'eth-url-parser';
 
 import App from './App';
@@ -9,7 +9,7 @@ import { IToken } from '../common/Tokens';
 
 export class TransferRequesting {
   token: IToken;
-  amount = '';
+  amount = '0';
 
   readonly network: INetwork;
 
@@ -88,14 +88,3 @@ export class TransferRequesting {
     this.amount = amount;
   }
 }
-
-// console.log(
-//   'ethereum:0x89205a3a3b2a69de6dbf7f01ed13b2108b2c43e7/transfer?address=0x8e23ee67d1332ad560396262c48ffbb01f93d052&uint256=1'
-// );
-// console.log(
-//   parse(
-//     'ethereum:0x89205a3a3b2a69de6dbf7f01ed13b2108b2c43e7/transfer?address=0x8e23ee67d1332ad560396262c48ffbb01f93d052&uint256=1'
-//   )
-// );
-
-console.log(parse('ethereum:0x89205a3a3b2a69de6dbf7f01ed13b2108b2c43e7@137?value=2.8e20'));

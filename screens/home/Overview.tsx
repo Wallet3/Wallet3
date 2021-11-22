@@ -1,8 +1,4 @@
-import * as Animatable from 'react-native-animatable';
-
-import React, { useRef } from 'react';
-import { StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
-import { formatAddress, formatCurrency } from '../../utils/formatter';
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import { numericFontFamily, themeColor } from '../../constants/styles';
 
 import AnimateNumber from 'react-native-animate-number';
@@ -10,8 +6,9 @@ import CopyableText from '../../components/CopyableText';
 import { Feather } from '@expo/vector-icons';
 import Image from 'react-native-expo-cached-image';
 import Logos from '../../assets/icons/networks/white';
+import React from 'react';
+import { formatCurrency } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
-import { setString } from 'expo-clipboard';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
@@ -26,13 +23,6 @@ interface Props {
 }
 
 export default observer(({ style, address, balance, network, avatar, chainId, connectedApps }: Props) => {
-  const addressView = useRef<Animatable.Text>(null);
-
-  const writeAddressToClipboard = () => {
-    setString(address || '');
-    addressView.current?.flash?.();
-  };
-
   return (
     <View style={{ ...styles.container, ...((style as any) || {}) }}>
       <View
@@ -58,7 +48,6 @@ export default observer(({ style, address, balance, network, avatar, chainId, co
               }}
             />
           ) : undefined}
-          {/* {ens ? <Text style={{ fontSize: 12, color: '#fff', marginHorizontal: 0 }}>{ens}</Text> : undefined} */}
         </View>
 
         <View style={{ flexDirection: 'row', alignItems: 'center', opacity: connectedApps || 0 }}>

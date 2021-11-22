@@ -1,7 +1,7 @@
 import { Button, Coin, Numpad, SafeViewContainer } from '../../components';
 import React, { useEffect, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { numericFontFamily, secondaryFontColor, themeColor } from '../../constants/styles';
+import { numericFontFamily, secondaryFontColor } from '../../constants/styles';
 
 import BackButton from '../components/BackButton';
 import { IToken } from '../../common/Tokens';
@@ -80,7 +80,7 @@ export default observer((props: SubViewProps) => {
           marginTop: 4,
           marginBottom: -14,
           textAlign: 'center',
-          color: themeColor,
+          color: props.themeColor,
         }}
       >
         {amount}

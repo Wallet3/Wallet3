@@ -14,6 +14,7 @@ interface Props {
 
 export default observer(({ onNext, onBack, vm }: Props) => {
   const swiper = useRef<Swiper>(null);
+  const themeColor = vm.network.color;
 
   return (
     <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
@@ -25,11 +26,13 @@ export default observer(({ onNext, onBack, vm }: Props) => {
         token={vm.token!}
         onNumChanged={(n) => vm.setAmount(n)}
         disableButton={!vm.isValidAmount}
+        themeColor={themeColor}
       />
 
       <Tokenlist
         onBack={() => swiper.current?.scrollTo(0)}
         tokens={vm.allTokens}
+        themeColor={themeColor}
         onTokenSelected={(token) => {
           swiper.current?.scrollTo(0);
           vm.setToken(token);
