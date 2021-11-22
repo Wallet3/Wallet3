@@ -2,17 +2,18 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import App from '../viewmodels/App';
 import { NFCPad } from './views';
-import { NFCRequesting } from '../viewmodels/NFCRequesting';
+import Networks from '../viewmodels/Networks';
 import { RequestAmount } from './views';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { SafeAreaView } from 'react-native';
 import Swiper from 'react-native-swiper';
+import { TransferRequesting } from '../viewmodels/TransferRequesting';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
 
 export default observer(() => {
   const swiper = useRef<Swiper>(null);
-  const [vm] = useState(new NFCRequesting());
+  const [vm] = useState(new TransferRequesting(Networks.current));
 
   const { avatar, address } = App.currentWallet?.currentAccount || {};
 

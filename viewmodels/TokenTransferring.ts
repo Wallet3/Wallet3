@@ -19,10 +19,6 @@ export class TokenTransferring extends BaseTransaction {
   amount = '0';
   isResolvingAddress = false;
 
-  // get account() {
-  //   return App.currentWallet?.account!;
-  // }
-
   get allTokens() {
     return [this.account.tokens[0], ...this.account.allTokens];
   }
@@ -135,7 +131,7 @@ export class TokenTransferring extends BaseTransaction {
       setToken: action,
     });
 
-    AsyncStorage.getItem(`${this.network.chainId}-LastUsedToken`).then((v) => {
+    AsyncStorage.getItem(`${this.network.chainId}-${this.account.address}-LastUsedToken`).then((v) => {
       if (defaultToken) return;
 
       if (!v) {
@@ -198,7 +194,7 @@ export class TokenTransferring extends BaseTransaction {
     this.txException = '';
 
     (token as ERC20Token)?.getBalance?.(false);
-    AsyncStorage.setItem(`${this.network.chainId}-LastUsedToken`, token.address);
+    AsyncStorage.setItem(`${this.network.chainId}-${this.account.address}-LastUsedToken`, token.address);
   }
 
   setAmount(amount: string) {
