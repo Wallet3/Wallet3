@@ -20,7 +20,7 @@ interface Props {
 }
 
 export default observer(({ onNext, vm }: Props) => {
-  const [addr, setAddr] = useState('');
+  const [addr, setAddr] = useState<string>();
 
   const renderContact = ({ item }: ListRenderItemInfo<IContact>) => {
     return (
@@ -60,6 +60,7 @@ export default observer(({ onNext, vm }: Props) => {
       <TextBox
         title="To:"
         placeholder="0xAbc..., .eth"
+        defaultValue={vm.to}
         value={addr}
         onChangeText={(t) => {
           setAddr(t);

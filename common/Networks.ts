@@ -147,7 +147,7 @@ export const PublicNetworks: INetwork[] = [
     symbol: 'OKB',
     comm_id: 'okt',
     chainId: 66,
-    network: 'OKEx',
+    network: 'OEC',
     order: 7,
     color: '#24c',
     defaultTokens: [],

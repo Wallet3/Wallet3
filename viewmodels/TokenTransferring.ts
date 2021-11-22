@@ -1,4 +1,5 @@
 import { BigNumber, providers, utils } from 'ethers';
+import { INetwork, PublicNetworks } from '../common/Networks';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
 import App from './App';
@@ -6,10 +7,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BaseTransaction } from './BaseTransaction';
 import { ERC20Token } from '../models/ERC20';
 import { Gwei_1 } from '../common/Constants';
-import { INetwork } from '../common/Networks';
 import { IToken } from '../common/Tokens';
 import Networks from './Networks';
 import { getGasPrice } from '../common/RPC';
+
+export interface ERC681 {
+  chain_id?: string;
+  function_name?: string;
+  parameters?: { address?: string; uint256?: string; value?: string };
+  scheme: string;
+  target_address: string;
+}
 
 export class TokenTransferring extends BaseTransaction {
   to = '';
@@ -48,7 +56,7 @@ export class TokenTransferring extends BaseTransaction {
 
   get isValidAmount() {
     try {
-      return this.amountWei.gt(0) && this.amountWei.lte(this.token.balance!) && !this.token.loading;
+      return this.amountWei.gte(0) && this.amountWei.lte(this.token.balance!) && !this.token.loading;
     } catch (error) {
       return false;
     }
@@ -106,13 +114,21 @@ export class TokenTransferring extends BaseTransaction {
     return tx;
   }
 
-  constructor({ targetNetwork, defaultToken, to }: { targetNetwork: INetwork; defaultToken?: IToken; to?: string }) {
-    super({
-      account: App.currentWallet!.currentAccount!,
-      network: targetNetwork,
-    });
+  constructor({ targetNetwork, defaultToken, erc681 }: { targetNetwork: INetwork; defaultToken?: IToken; erc681?: ERC681 }) {
+    const account = App.currentWallet!.currentAccount!;
+    const network = erc681
+      ? Networks.all.find((n) => n.chainId === Number(erc681.chain_id)) ?? Networks.Ethereum
+      : targetNetwork;
 
-    this.token = defaultToken || this.account.tokens[0];
+    super({ account, network });
+
+    const token =
+      erc681 && erc681.function_name === 'transfer'
+        ? new ERC20Token({ contract: erc681.target_address!, owner: account.address, chainId: network.chainId })
+        : defaultToken;
+
+    this.token = token || this.account.tokens[0];
+    (this.token as ERC20Token).getDecimals?.();
 
     makeObservable(this, {
       to: observable,
@@ -143,7 +159,17 @@ export class TokenTransferring extends BaseTransaction {
       runInAction(() => this.setToken(token));
     });
 
-    if (to) this.setTo(to);
+    if (erc681?.function_name === 'transfer') {
+      this.setTo(erc681.parameters?.address);
+
+      (this.token as ERC20Token)?.getDecimals?.()?.then((decimals) => {
+        const amount = utils.formatUnits(erc681.parameters?.uint256 || '0', decimals);
+        runInAction(() => this.setAmount(amount));
+      });
+    } else {
+      this.setTo(erc681?.target_address);
+      this.setAmount(utils.formatEther(erc681?.parameters?.value ?? '0'));
+    }
   }
 
   async estimateGas() {
@@ -158,7 +184,9 @@ export class TokenTransferring extends BaseTransaction {
     });
   }
 
-  async setTo(to: string, avatar?: string) {
+  async setTo(to?: string, avatar?: string) {
+    if (to === undefined || to === null) return;
+
     to = to.trim();
     this.avatar = avatar;
 

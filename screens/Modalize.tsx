@@ -1,15 +1,17 @@
 import { ConnectDApp, DAppTxRequest, NetworksMenu, Request, Send, Sign } from '../modals';
 import { Dimensions, SafeAreaView } from 'react-native';
+import { INetwork, PublicNetworks } from '../common/Networks';
 import React, { useEffect, useState } from 'react';
 import { WCCallRequestRequest, WCCallRequest_eth_sendTransaction } from '../models/WCSession_v1';
+import { build, parse } from 'eth-url-parser';
 
 import { AppVM } from '../viewmodels/App';
 import { Authentication } from '../viewmodels/Authentication';
+import { ERC681 } from '../viewmodels/TokenTransferring';
 import { FullPasspad } from '../modals/views/Passpad';
 import { IToken } from '../common/Tokens';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../viewmodels/Networks';
-import { PublicNetworks } from '../common/Networks';
 import { WalletConnect_v1 } from '../viewmodels/WalletConnect_v1';
 import { autorun } from 'mobx';
 import { styles } from '../constants/styles';
@@ -151,6 +153,8 @@ const RequestFundsModal = () => {
 
 const SendFundsModal = () => {
   const [userSelectedToken, setUserSelectedToken] = useState<IToken>();
+  const [erc681, setERC681] = useState<ERC681>();
+
   const { ref: sendRef, open: openSendModal, close: closeSendModal } = useModalize();
 
   useEffect(() => {
@@ -161,6 +165,13 @@ const SendFundsModal = () => {
     });
 
     PubSub.subscribe('closeSendFundsModal', () => closeSendModal());
+
+    PubSub.subscribe(`CodeScan-ethereum`, (_, { data }) => {
+      try {
+        setERC681(parse(data));
+        setTimeout(() => openSendModal(), 0);
+      } catch (error) {}
+    });
 
     return () => {
       PubSub.unsubscribe('openSendFundsModal');
@@ -177,7 +188,7 @@ const SendFundsModal = () => {
       modalStyle={styles.modalStyle}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
-      <Send initToken={userSelectedToken} />
+      <Send initToken={userSelectedToken} targetNetwork={Networks.current} erc681={erc681} />
     </Modalize>
   );
 };

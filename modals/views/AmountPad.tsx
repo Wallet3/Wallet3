@@ -22,10 +22,11 @@ interface SubViewProps {
   onMaxPress?: () => void;
   onNumChanged?: (num: string) => void;
   themeColor?: string;
+  initValue?: string;
 }
 
 export default observer((props: SubViewProps) => {
-  const [amount, setAmount] = useState('0');
+  const [amount, setAmount] = useState(props.initValue ?? '0');
 
   const onNumPress = (num: string) => {
     if (num === '.') {

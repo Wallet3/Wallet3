@@ -27,6 +27,7 @@ export default observer(({ onNext, onBack, vm }: Props) => {
         onNumChanged={(n) => vm.setAmount(n)}
         disableButton={!vm.isValidAmount}
         themeColor={themeColor}
+        initValue={vm.amount}
       />
 
       <Tokenlist

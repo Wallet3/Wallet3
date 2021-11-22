@@ -1,25 +1,28 @@
 import { ContactsPad, Passpad, ReviewPad, SendAmount } from './views';
+import { ERC681, TokenTransferring } from '../viewmodels/TokenTransferring';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaView, View } from 'react-native';
 
 import App from '../viewmodels/App';
 import Authentication from '../viewmodels/Authentication';
 import Contacts from '../viewmodels/Contacts';
+import { INetwork } from '../common/Networks';
 import { IToken } from '../common/Tokens';
 import Networks from '../viewmodels/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Success from './views/Success';
 import Swiper from 'react-native-swiper';
-import { TokenTransferring } from '../viewmodels/TokenTransferring';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
 
 interface Props {
   initToken?: IToken;
+  targetNetwork: INetwork;
+  erc681?: ERC681;
 }
 
-export default observer(({ initToken }: Props) => {
-  const [vm] = useState(new TokenTransferring({ targetNetwork: Networks.current, defaultToken: initToken }));
+export default observer(({ initToken, targetNetwork, erc681 }: Props) => {
+  const [vm] = useState(new TokenTransferring({ targetNetwork, defaultToken: initToken, erc681 }));
   const [verified, setVerified] = useState(false);
   const swiper = useRef<Swiper>(null);
 

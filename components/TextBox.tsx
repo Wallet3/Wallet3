@@ -8,12 +8,13 @@ import { getStringAsync } from 'expo-clipboard';
 interface Props {
   onChangeText: (text: string) => void;
   title: string;
-  value: string;
+  value?: string;
+  defaultValue?: string;
   placeholder?: string;
   style?: StyleProp<ViewStyle>;
 }
 
-export default ({ value, onChangeText, title, style, placeholder }: Props) => {
+export default ({ value, onChangeText, title, style, placeholder, defaultValue }: Props) => {
   const addrRef = useRef<TextInput>(null);
 
   const readClipboard = async () => {
@@ -45,6 +46,7 @@ export default ({ value, onChangeText, title, style, placeholder }: Props) => {
         style={{ fontSize: 20, flex: 1, color: fontColor }}
         value={value}
         placeholder={placeholder}
+        defaultValue={defaultValue}
         autoCapitalize="none"
         keyboardType="web-search"
         autoCorrect={false}
