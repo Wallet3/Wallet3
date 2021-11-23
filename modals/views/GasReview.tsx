@@ -4,7 +4,7 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 
 import AnimateNumber from 'react-native-animate-number';
 import BackButton from '../components/BackButton';
-import { BaseTransaction } from '../../viewmodels/BaseTransaction';
+import { BaseTransaction } from '../../viewmodels/transferring/BaseTransaction';
 import Fire from '../../assets/icons/app/fire.svg';
 import React from 'react';
 import { observer } from 'mobx-react-lite';
@@ -35,7 +35,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
             textAlign="right"
             style={{ ...styles.reviewItemValue, fontSize: 20 }}
             maxLength={12}
-            value={`${vm.gasLimit}`}
+            defaultValue={`${vm.gasLimit}`}
             onChangeText={(txt) => vm.setGasLimit(txt)}
           />
         </View>
@@ -50,7 +50,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
               textAlign="right"
               maxLength={12}
               style={{ ...styles.reviewItemValue, fontSize: 20 }}
-              value={`${Number(vm.maxGasPrice.toFixed(5))}`}
+              defaultValue={`${Number(vm.maxGasPrice.toFixed(5))}`}
               onChangeText={(txt) => vm.setMaxGasPrice(txt)}
             />
 
@@ -80,7 +80,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
                 textAlign="right"
                 maxLength={12}
                 style={{ ...styles.reviewItemValue, fontSize: 20 }}
-                value={`${vm.maxPriorityPrice.toFixed(6)}`}
+                defaultValue={`${vm.maxPriorityPrice.toFixed(6)}`}
                 onChangeText={(txt) => vm.setPriorityPrice(txt)}
               />
               <Text style={{ ...styles.gasGweiLabel, marginTop: -2 }}>Gwei</Text>
@@ -97,7 +97,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
             textAlign="right"
             style={{ ...styles.reviewItemValue, fontSize: 20 }}
             maxLength={12}
-            value={`${vm.nonce}`}
+            defaultValue={`${vm.nonce}`}
             onChangeText={(txt) => vm.setNonce(txt)}
           />
         </View>

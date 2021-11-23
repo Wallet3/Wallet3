@@ -179,7 +179,7 @@ export class BaseTransaction {
   protected refreshEIP1559(chainId: number) {
     getNextBlockBaseFee(chainId).then((nextBaseFee) => {
       runInAction(() => (this.nextBlockBaseFeeWei = nextBaseFee));
-      this.timer = setTimeout(() => this.refreshEIP1559(chainId), 1000 * 10);
+      this.timer = setTimeout(() => this.refreshEIP1559(chainId), 1000 * (chainId === 1 ? 10 : 5));
     });
   }
 }
