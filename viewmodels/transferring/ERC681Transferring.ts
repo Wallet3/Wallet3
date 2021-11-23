@@ -1,10 +1,10 @@
 import { computed, makeObservable, runInAction } from 'mobx';
 
-import App from './App';
-import { ERC20Token } from '../models/ERC20';
-import { INetwork } from '../common/Networks';
-import { NativeToken } from '../models/NativeToken';
-import Networks from './Networks';
+import App from '../App';
+import { ERC20Token } from '../../models/ERC20';
+import { INetwork } from '../../common/Networks';
+import { NativeToken } from '../../models/NativeToken';
+import Networks from '../Networks';
 import { TokenTransferring } from './TokenTransferring';
 import { utils } from 'ethers';
 

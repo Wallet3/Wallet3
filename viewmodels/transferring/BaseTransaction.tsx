@@ -1,11 +1,11 @@
 import { BigNumber, utils } from 'ethers';
-import { Gwei_1, MAX_GWEI_PRICE } from '../common/Constants';
+import { Gwei_1, MAX_GWEI_PRICE } from '../../common/Constants';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
-import { estimateGas, getGasPrice, getMaxPriorityFee, getNextBlockBaseFee, getTransactionCount } from '../common/RPC';
+import { estimateGas, getGasPrice, getMaxPriorityFee, getNextBlockBaseFee, getTransactionCount } from '../../common/RPC';
 
-import { Account } from './Account';
-import { INetwork } from '../common/Networks';
-import { NativeToken } from '../models/NativeToken';
+import { Account } from '../Account';
+import { INetwork } from '../../common/Networks';
+import { NativeToken } from '../../models/NativeToken';
 
 export class BaseTransaction {
   private timer?: NodeJS.Timer;

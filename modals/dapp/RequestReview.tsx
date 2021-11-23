@@ -12,7 +12,7 @@ import Image from 'react-native-expo-cached-image';
 import InsufficientFee from '../components/InsufficientFee';
 import RejectApproveButtons from '../components/RejectApproveButtons';
 import Swiper from 'react-native-swiper';
-import { TransactionRequest } from '../../viewmodels/TransactionRequest';
+import { TransactionRequest } from '../../viewmodels/transferring/TransactionRequest';
 import TxException from '../components/TxException';
 import { WCCallRequestRequest } from '../../models/WCSession_v1';
 import { WalletConnect_v1 } from '../../viewmodels/WalletConnect_v1';

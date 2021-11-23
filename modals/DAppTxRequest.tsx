@@ -1,6 +1,6 @@
 import { INetwork, PublicNetworks } from '../common/Networks';
 import React, { useEffect, useRef, useState } from 'react';
-import { TransactionRequest, parseRequestType } from '../viewmodels/TransactionRequest';
+import { TransactionRequest, parseRequestType } from '../viewmodels/transferring/TransactionRequest';
 import { WCCallRequestRequest, WCCallRequest_eth_sendTransaction } from '../models/WCSession_v1';
 
 import App from '../viewmodels/App';

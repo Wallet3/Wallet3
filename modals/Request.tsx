@@ -7,7 +7,7 @@ import { RequestAmount } from './views';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { SafeAreaView } from 'react-native';
 import Swiper from 'react-native-swiper';
-import { TransferRequesting } from '../viewmodels/TransferRequesting';
+import { TransferRequesting } from '../viewmodels/transferring/TransferRequesting';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
 

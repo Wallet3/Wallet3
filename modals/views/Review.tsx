@@ -6,7 +6,7 @@ import { borderColor, fontColor, secondaryFontColor } from '../../constants/styl
 
 import AnimateNumber from 'react-native-animate-number';
 import BackButton from '../components/BackButton';
-import { BaseTransaction } from '../../viewmodels/BaseTransaction';
+import { BaseTransaction } from '../../viewmodels/transferring/BaseTransaction';
 import Currency from '../../viewmodels/Currency';
 import Fire from '../../assets/icons/app/fire.svg';
 import GasReview from './GasReview';
@@ -15,7 +15,7 @@ import InsufficientFee from '../components/InsufficientFee';
 import Networks from '../../viewmodels/Networks';
 import { ScrollView } from 'react-native-gesture-handler';
 import Swiper from 'react-native-swiper';
-import { TokenTransferring } from '../../viewmodels/TokenTransferring';
+import { TokenTransferring } from '../../viewmodels/transferring/TokenTransferring';
 import TxException from '../components/TxException';
 import { formatAddress } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';

@@ -9,7 +9,7 @@ import Button from '../../components/Button';
 import { FlatList } from 'react-native-gesture-handler';
 import Image from 'react-native-expo-cached-image';
 import Networks from '../../viewmodels/Networks';
-import { TokenTransferring } from '../../viewmodels/TokenTransferring';
+import { TokenTransferring } from '../../viewmodels/transferring/TokenTransferring';
 import { formatAddress } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';

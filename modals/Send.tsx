@@ -7,7 +7,7 @@ import Contacts from '../viewmodels/Contacts';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Success from './views/Success';
 import Swiper from 'react-native-swiper';
-import { TokenTransferring } from '../viewmodels/TokenTransferring';
+import { TokenTransferring } from '../viewmodels/transferring/TokenTransferring';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
 

@@ -2,10 +2,10 @@ import { BigNumber, utils } from 'ethers';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { build, parse } from 'eth-url-parser';
 
-import App from './App';
+import App from '../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { INetwork } from '../common/Networks';
-import { IToken } from '../common/Tokens';
+import { INetwork } from '../../common/Networks';
+import { IToken } from '../../common/Tokens';
 
 export class TransferRequesting {
   token: IToken;

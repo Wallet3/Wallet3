@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 
 import AmountPad from './AmountPad';
 import Swiper from 'react-native-swiper';
-import { TokenTransferring } from '../../viewmodels/TokenTransferring';
+import { TokenTransferring } from '../../viewmodels/transferring/TokenTransferring';
 import Tokenlist from './Tokenlist';
 import { observer } from 'mobx-react-lite';
 

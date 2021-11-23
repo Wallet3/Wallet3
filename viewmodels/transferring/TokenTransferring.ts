@@ -1,15 +1,15 @@
 import { BigNumber, providers, utils } from 'ethers';
-import { INetwork, PublicNetworks } from '../common/Networks';
+import { INetwork, PublicNetworks } from '../../common/Networks';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
-import App from './App';
+import App from '../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BaseTransaction } from './BaseTransaction';
-import { ERC20Token } from '../models/ERC20';
-import { Gwei_1 } from '../common/Constants';
-import { IToken } from '../common/Tokens';
-import Networks from './Networks';
-import { getGasPrice } from '../common/RPC';
+import { ERC20Token } from '../../models/ERC20';
+import { Gwei_1 } from '../../common/Constants';
+import { IToken } from '../../common/Tokens';
+import Networks from '../Networks';
+import { getGasPrice } from '../../common/RPC';
 
 export class TokenTransferring extends BaseTransaction {
   to = '';
@@ -155,7 +155,6 @@ export class TokenTransferring extends BaseTransaction {
 
   async estimateGas() {
     if (!this.toAddress) return;
-    if (!this.isValidAmount) return;
 
     runInAction(() => (this.isEstimatingGas = true));
     const { gas, errorMessage } = await (this.token as ERC20Token).estimateGas(this.toAddress, this.amountWei);

@@ -14,7 +14,7 @@ import { IToken } from '../../common/Tokens';
 import { Ionicons } from '@expo/vector-icons';
 import QRCode from 'react-native-qrcode-svg';
 import Swiper from 'react-native-swiper';
-import { TransferRequesting } from '../../viewmodels/TransferRequesting';
+import { TransferRequesting } from '../../viewmodels/transferring/TransferRequesting';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
