@@ -115,7 +115,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack }: Pr
         </TouchableOpacity>
       </View>
 
-      {vm.insufficientFee || !vm.isValidAmount ? <InsufficientFee /> : undefined}
+      {vm.insufficientFee ? <InsufficientFee /> : undefined}
 
       {vm.txException ? <TxException exception={vm.txException} /> : undefined}
 

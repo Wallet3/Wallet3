@@ -12,19 +12,19 @@ export interface ERC681 {
   chain_id?: string;
   function_name?: string;
   parameters?: { address?: string; uint256?: string; value?: string };
-  scheme: string;
+  scheme?: string;
   target_address: string;
 }
 
 export class ERC681Transferring extends TokenTransferring {
-  get invalidAmount() {
+  get isValidAmount() {
     return this.amountWei.gte(0) && this.amountWei.lte(this.token.balance!) && !this.token.loading;
   }
 
-  constructor({ targetNetwork, erc681 }: { targetNetwork: INetwork; erc681: ERC681 }) {
+  constructor({ defaultNetwork, erc681 }: { defaultNetwork: INetwork; erc681: ERC681 }) {
     const account = App.currentWallet!.currentAccount!;
 
-    const network = erc681 ? Networks.all.find((n) => n.chainId === Number(erc681.chain_id)) ?? targetNetwork : targetNetwork;
+    const network = Networks.all.find((n) => n.chainId === Number(erc681.chain_id)) ?? defaultNetwork;
     const token = (
       erc681.function_name === 'transfer' && utils.isAddress(erc681.target_address)
         ? new ERC20Token({ contract: erc681.target_address, owner: account.address, chainId: network.chainId })
@@ -33,7 +33,7 @@ export class ERC681Transferring extends TokenTransferring {
 
     super({ targetNetwork: network, defaultToken: token, autoSetToken: false });
 
-    makeObservable(this, { invalidAmount: computed });
+    makeObservable(this, {});
 
     token?.getDecimals?.();
     token?.getSymbol?.();
@@ -54,7 +54,7 @@ export class ERC681Transferring extends TokenTransferring {
           );
 
           runInAction(() => {
-            this.setAmount(amount);
+            this.setAmount(amount.replace(/\.0$/g, ''));
             this.estimateGas();
           });
         } catch (error) {
@@ -64,9 +64,12 @@ export class ERC681Transferring extends TokenTransferring {
     } else {
       try {
         this.setTo(erc681.target_address);
-        this.setAmount(
-          utils.formatEther(Number(erc681.parameters?.value ?? '0').toLocaleString('fullwide', { useGrouping: false }))
+
+        const amount = utils.formatEther(
+          Number(erc681.parameters?.value ?? '0').toLocaleString('fullwide', { useGrouping: false })
         );
+
+        this.setAmount(amount.replace(/\.0$/g, ''));
         this.estimateGas();
       } catch (error) {}
     }

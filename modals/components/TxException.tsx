@@ -9,6 +9,7 @@ export default ({ exception }: { exception: string }) => {
       horizontal
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
+      alwaysBounceVertical={false}
       bounces={false}
       contentContainerStyle={{ alignItems: 'center', marginVertical: -12, paddingHorizontal: 16 }}
       style={{
@@ -17,7 +18,7 @@ export default ({ exception }: { exception: string }) => {
         backgroundColor: 'crimson',
       }}
     >
-      <Ionicons name="alert-circle" color="white" size={16} />
+      <Ionicons name="alert-circle" color="white" size={16} style={{ marginBottom: -1 }} />
       <Text style={{ color: 'white', marginStart: 8, fontSize: 12 }}>{exception}</Text>
     </ScrollView>
   );

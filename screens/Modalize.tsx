@@ -16,6 +16,7 @@ import { parse } from 'eth-url-parser';
 import { showMessage } from 'react-native-flash-message';
 import { styles } from '../constants/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
+import { utils } from 'ethers';
 
 const ScreenHeight = Dimensions.get('window').height;
 
@@ -169,11 +170,22 @@ const SendFundsModal = () => {
     PubSub.subscribe(`CodeScan-ethereum`, (_, { data }) => {
       try {
         setIsERC681(true);
-        setVM(new ERC681Transferring({ targetNetwork: Networks.current, erc681: parse(data) }));
+        setVM(new ERC681Transferring({ defaultNetwork: Networks.current, erc681: parse(data) }));
         setTimeout(() => openSendModal(), 0);
       } catch (error) {
         showMessage({ message: (error as any)?.toString?.(), type: 'warning' });
       }
+    });
+
+    PubSub.subscribe(`CodeScan-0x`, (_, { data }) => {
+      if (!utils.isAddress(data)) {
+        showMessage({ message: 'Invalid address', type: 'warning' });
+        return;
+      }
+
+      setIsERC681(true);
+      setVM(new ERC681Transferring({ defaultNetwork: Networks.current, erc681: { target_address: data } }));
+      setTimeout(() => openSendModal(), 0);
     });
 
     return () => {
@@ -197,7 +209,7 @@ const SendFundsModal = () => {
       modalStyle={styles.modalStyle}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
-      {vm ? <Send vm={vm} onClose={clear} reviewPage={isERC681} /> : undefined}
+      {vm ? <Send vm={vm} onClose={clear} erc681={isERC681} /> : undefined}
     </Modalize>
   );
 };

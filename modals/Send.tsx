@@ -13,11 +13,11 @@ import styles from './styles';
 
 interface Props {
   vm: TokenTransferring;
-  reviewPage?: boolean;
+  erc681?: boolean;
   onClose?: () => void;
 }
 
-export default observer(({ vm, onClose, reviewPage }: Props) => {
+export default observer(({ vm, onClose, erc681 }: Props) => {
   const [verified, setVerified] = useState(false);
   const swiper = useRef<Swiper>(null);
 
@@ -73,8 +73,8 @@ export default observer(({ vm, onClose, reviewPage }: Props) => {
           loop={false}
           automaticallyAdjustContentInsets
         >
-          {reviewPage ? undefined : <ContactsPad onNext={() => swiper.current?.scrollTo(1, true)} vm={vm} />}
-          {reviewPage ? undefined : (
+          {erc681 ? undefined : <ContactsPad onNext={() => swiper.current?.scrollTo(1, true)} vm={vm} />}
+          {erc681 ? undefined : (
             <SendAmount
               vm={vm}
               onBack={() => swiper.current?.scrollTo(0)}
@@ -84,7 +84,7 @@ export default observer(({ vm, onClose, reviewPage }: Props) => {
               }}
             />
           )}
-          <ReviewPad onBack={() => swiper.current?.scrollTo(1)} vm={vm} onSend={onSendClick} disableBack={reviewPage} />
+          <ReviewPad onBack={() => swiper.current?.scrollTo(1)} vm={vm} onSend={onSendClick} disableBack={erc681} />
           <Passpad
             themeColor={vm.network.color}
             onCodeEntered={(c) => sendTx(c)}
