@@ -3,6 +3,7 @@ import * as Debank from '../common/apis/Debank';
 import TokensMan, { UserToken } from './services/TokensMan';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
+import CurrencyViewmodel from './Currency';
 import { ERC20Token } from '../models/ERC20';
 import { IToken } from '../common/Tokens';
 import { NativeToken } from '../models/NativeToken';
@@ -21,11 +22,15 @@ export class Account {
   allTokens: UserToken[] = [];
   balanceUSD = 0;
   ensName = '';
-  avatar = 'https://pbs.twimg.com/profile_images/1437277327096827905/npwbrPue_400x400.png';
+  avatar = '';
   nativeToken!: NativeToken;
 
   get displayName() {
     return this.ensName || formatAddress(this.address, 7, 5);
+  }
+
+  get balance() {
+    return CurrencyViewmodel.usdToToken(this.balanceUSD);
   }
 
   constructor(address: string, index: number) {

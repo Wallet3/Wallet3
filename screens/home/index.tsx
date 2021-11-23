@@ -5,6 +5,7 @@ import Transaction, { ITransaction } from '../../models/Transaction';
 import Actions from './Actions';
 import App from '../../viewmodels/App';
 import Assets from './Assets';
+import CurrencyViewmodel from '../../viewmodels/Currency';
 import DAppHub from '../../viewmodels/DAppHub';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import { IToken } from '../../common/Tokens';
@@ -54,7 +55,8 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
       <Overview
         style={{ marginBottom: 2, backgroundColor: current.color }}
         address={currentWallet?.currentAccount?.address}
-        balance={currentWallet?.currentAccount?.balanceUSD}
+        balance={currentWallet?.currentAccount?.balance}
+        currency={CurrencyViewmodel.currentCurrency.symbol}
         network={current.network}
         chainId={current.chainId}
         avatar={currentWallet?.currentAccount?.avatar}
@@ -98,11 +100,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
           />
         </Modalize>
 
-        <Modalize
-          ref={txDetailModalize}
-          adjustToContentHeight
-          modalStyle={{ borderTopStartRadius: 5, borderTopEndRadius: 5 }}
-        >
+        <Modalize ref={txDetailModalize} adjustToContentHeight modalStyle={{ borderTopStartRadius: 5, borderTopEndRadius: 5 }}>
           <TxDetail tx={selectedTx} />
         </Modalize>
       </Portal>

@@ -3,6 +3,7 @@ import { numericFontFamily, themeColor } from '../../constants/styles';
 
 import AnimateNumber from 'react-native-animate-number';
 import CopyableText from '../../components/CopyableText';
+import { Currency } from '../../viewmodels/Currency';
 import { Feather } from '@expo/vector-icons';
 import Image from 'react-native-expo-cached-image';
 import Logos from '../../assets/icons/networks/white';
@@ -22,7 +23,7 @@ interface Props {
   chainId: number;
 }
 
-export default observer(({ style, address, balance, network, avatar, chainId, connectedApps }: Props) => {
+export default observer(({ style, address, balance, network, avatar, chainId, connectedApps, currency }: Props) => {
   return (
     <View style={{ ...styles.container, ...((style as any) || {}) }}>
       <View
@@ -68,7 +69,12 @@ export default observer(({ style, address, balance, network, avatar, chainId, co
       <View style={{ height: 54 }} />
 
       <View style={{ justifyContent: 'space-between' }}>
-        <AnimateNumber value={balance || 0} style={styles.headline} numberOfLines={1} formatter={formatCurrency} />
+        <AnimateNumber
+          value={balance || 0}
+          style={styles.headline}
+          numberOfLines={1}
+          formatter={(v) => formatCurrency(v, currency)}
+        />
 
         {Logos[chainId]}
       </View>

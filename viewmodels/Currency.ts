@@ -34,19 +34,23 @@ export class CurrencyViewmodel {
     AsyncStorage.setItem('currency', currency.currency);
   }
 
-  format(usd: number) {
-    let value = 0;
-    switch (this.currentCurrency.currency) {
-      case 'USD':
-        value = usd;
-        break;
-      case 'ETH':
-        value = usd / this.ethPrice;
-        break;
-    }
+  format = (usd: number) => {
+    let value = this.usdToToken(usd);
 
     const formatted = value.toLocaleString(undefined, { maximumFractionDigits: 2 });
-    return `${this.currentCurrency!.symbol} ${formatted === 'NaN' ? '0.00' : formatted}`.trim();
+    return `${this.currentCurrency.symbol} ${formatted === 'NaN' ? '0.00' : formatted}`.trim();
+  };
+
+  usdToToken(usd: number) {
+    switch (this.currentCurrency.currency) {
+      case 'USD':
+        return usd;
+
+      case 'ETH':
+        return usd / this.ethPrice;
+    }
+
+    return usd;
   }
 
   tokenToUSD(amount: number | string, tokenSymbol: string) {
