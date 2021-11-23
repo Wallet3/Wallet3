@@ -1,17 +1,13 @@
 import { ContactsPad, Passpad, ReviewPad, SendAmount } from './views';
-import { ERC681, TokenTransferring } from '../viewmodels/TokenTransferring';
 import React, { useEffect, useRef, useState } from 'react';
-import { SafeAreaView, View } from 'react-native';
 
 import App from '../viewmodels/App';
 import Authentication from '../viewmodels/Authentication';
 import Contacts from '../viewmodels/Contacts';
-import { INetwork } from '../common/Networks';
-import { IToken } from '../common/Tokens';
-import Networks from '../viewmodels/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Success from './views/Success';
 import Swiper from 'react-native-swiper';
+import { TokenTransferring } from '../viewmodels/TokenTransferring';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
 
@@ -26,7 +22,6 @@ export default observer(({ vm, onClose, reviewPage }: Props) => {
   const swiper = useRef<Swiper>(null);
 
   useEffect(() => {
-    if (reviewPage) setTimeout(() => swiper?.current?.scrollTo(2, false), 220);
     return () => onClose?.();
   }, []);
 
@@ -78,15 +73,17 @@ export default observer(({ vm, onClose, reviewPage }: Props) => {
           loop={false}
           automaticallyAdjustContentInsets
         >
-          <ContactsPad onNext={() => swiper.current?.scrollTo(1, true)} vm={vm} />
-          <SendAmount
-            vm={vm}
-            onBack={() => swiper.current?.scrollTo(0)}
-            onNext={() => {
-              swiper.current?.scrollTo(2);
-              vm.estimateGas();
-            }}
-          />
+          {reviewPage ? undefined : <ContactsPad onNext={() => swiper.current?.scrollTo(1, true)} vm={vm} />}
+          {reviewPage ? undefined : (
+            <SendAmount
+              vm={vm}
+              onBack={() => swiper.current?.scrollTo(0)}
+              onNext={() => {
+                swiper.current?.scrollTo(2);
+                vm.estimateGas();
+              }}
+            />
+          )}
           <ReviewPad onBack={() => swiper.current?.scrollTo(1)} vm={vm} onSend={onSendClick} disableBack={reviewPage} />
           <Passpad
             themeColor={vm.network.color}

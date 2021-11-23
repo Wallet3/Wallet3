@@ -11,14 +11,6 @@ import { IToken } from '../common/Tokens';
 import Networks from './Networks';
 import { getGasPrice } from '../common/RPC';
 
-export interface ERC681 {
-  chain_id?: string;
-  function_name?: string;
-  parameters?: { address?: string; uint256?: string; value?: string };
-  scheme: string;
-  target_address: string;
-}
-
 export class TokenTransferring extends BaseTransaction {
   to = '';
   toAddress = '';
@@ -26,8 +18,6 @@ export class TokenTransferring extends BaseTransaction {
   token: IToken;
   amount = '0';
   isResolvingAddress = false;
-
-  readonly erc681: boolean;
 
   get allTokens() {
     return [this.account.tokens[0], ...this.account.allTokens];
@@ -58,11 +48,7 @@ export class TokenTransferring extends BaseTransaction {
 
   get isValidAmount() {
     try {
-      return (
-        (this.erc681 ? this.amountWei.gte(0) : this.amountWei.gt(0)) &&
-        this.amountWei.lte(this.token.balance!) &&
-        !this.token.loading
-      );
+      return this.amountWei.gt(0) && this.amountWei.lte(this.token.balance!) && !this.token.loading;
     } catch (error) {
       return false;
     }
@@ -120,30 +106,20 @@ export class TokenTransferring extends BaseTransaction {
     return tx;
   }
 
-  constructor({ targetNetwork, defaultToken, erc681 }: { targetNetwork: INetwork; defaultToken?: IToken; erc681?: ERC681 }) {
+  constructor({
+    targetNetwork,
+    defaultToken,
+    autoSetToken,
+  }: {
+    targetNetwork: INetwork;
+    defaultToken?: IToken;
+    autoSetToken?: boolean;
+  }) {
     const account = App.currentWallet!.currentAccount!;
-    const network = erc681 ? Networks.all.find((n) => n.chainId === Number(erc681.chain_id)) ?? targetNetwork : targetNetwork;
 
-    super({ account, network });
+    super({ account, network: targetNetwork });
 
-    const token = (
-      erc681 && erc681.function_name === 'transfer' && utils.isAddress(erc681.target_address)
-        ? new ERC20Token({ contract: erc681.target_address, owner: account.address, chainId: network.chainId })
-        : erc681
-        ? account.nativeToken
-        : defaultToken
-    ) as ERC20Token;
-
-    this.token = token || this.account.tokens[0];
-
-    if (erc681) {
-      this.erc681 = true;
-      token?.getDecimals?.();
-      token?.getSymbol?.();
-      token?.getBalance?.(erc681.function_name ? true : false);
-    } else {
-      this.erc681 = false;
-    }
+    this.token = defaultToken || this.account.tokens[0];
 
     makeObservable(this, {
       to: observable,
@@ -162,10 +138,11 @@ export class TokenTransferring extends BaseTransaction {
       setToken: action,
     });
 
-    AsyncStorage.getItem(`${this.network.chainId}-${this.account.address}-LastUsedToken`).then((v) => {
-      if (defaultToken) return;
-      if (erc681) return;
+    if (autoSetToken || (autoSetToken === undefined && !defaultToken)) this.loadDefaultToken();
+  }
 
+  protected loadDefaultToken() {
+    AsyncStorage.getItem(`${this.network.chainId}-${this.account.address}-LastUsedToken`).then((v) => {
       if (!v) {
         runInAction(() => this.setToken(this.account.tokens[0]));
         return;
@@ -174,35 +151,15 @@ export class TokenTransferring extends BaseTransaction {
       const token = this.account.allTokens.find((t) => t.address === v) || this.account.tokens[0];
       runInAction(() => this.setToken(token));
     });
-
-    if (!erc681) return;
-
-    if (erc681.function_name === 'transfer') {
-      this.setTo(erc681.parameters?.address);
-
-      (this.token as ERC20Token)?.getDecimals?.()?.then((decimals) => {
-        try {
-          const amount = utils.formatUnits(erc681.parameters?.uint256 || '0', decimals);
-          runInAction(() => {
-            this.setAmount(amount);
-            this.estimateGas();
-          });
-        } catch (error) {}
-      });
-    } else {
-      try {
-        this.setTo(erc681.target_address);
-        this.setAmount(utils.formatEther(erc681.parameters?.value ?? '0'));
-        this.estimateGas();
-      } catch (error) {}
-    }
   }
 
   async estimateGas() {
     if (!this.toAddress) return;
+    if (!this.isValidAmount) return;
 
     runInAction(() => (this.isEstimatingGas = true));
     const { gas, errorMessage } = await (this.token as ERC20Token).estimateGas(this.toAddress, this.amountWei);
+
     runInAction(() => {
       this.isEstimatingGas = false;
       this.setGasLimit(gas || 0);

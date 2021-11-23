@@ -1,19 +1,18 @@
 import { ConnectDApp, DAppTxRequest, NetworksMenu, Request, Send, Sign } from '../modals';
-import { Dimensions, SafeAreaView } from 'react-native';
-import { ERC681, TokenTransferring } from '../viewmodels/TokenTransferring';
-import { INetwork, PublicNetworks } from '../common/Networks';
 import React, { useEffect, useState } from 'react';
-import { WCCallRequestRequest, WCCallRequest_eth_sendTransaction } from '../models/WCSession_v1';
-import { build, parse } from 'eth-url-parser';
 
 import { AppVM } from '../viewmodels/App';
 import { Authentication } from '../viewmodels/Authentication';
+import { Dimensions } from 'react-native';
+import { ERC681Transferring } from '../viewmodels/ERC681Transferring';
 import { FullPasspad } from '../modals/views/Passpad';
-import { IToken } from '../common/Tokens';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../viewmodels/Networks';
+import { TokenTransferring } from '../viewmodels/TokenTransferring';
+import { WCCallRequestRequest } from '../models/WCSession_v1';
 import { WalletConnect_v1 } from '../viewmodels/WalletConnect_v1';
 import { autorun } from 'mobx';
+import { parse } from 'eth-url-parser';
 import { showMessage } from 'react-native-flash-message';
 import { styles } from '../constants/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
@@ -170,7 +169,7 @@ const SendFundsModal = () => {
     PubSub.subscribe(`CodeScan-ethereum`, (_, { data }) => {
       try {
         setIsERC681(true);
-        setVM(new TokenTransferring({ targetNetwork: Networks.current, erc681: parse(data) }));
+        setVM(new ERC681Transferring({ targetNetwork: Networks.current, erc681: parse(data) }));
         setTimeout(() => openSendModal(), 0);
       } catch (error) {
         showMessage({ message: (error as any)?.toString?.(), type: 'warning' });
@@ -219,7 +218,6 @@ const LockScreen = ({ app, appAuth }: { app: AppVM; appAuth: Authentication }) =
     });
 
     return () => {
-      app.dispose();
       dispose();
     };
   }, []);
