@@ -57,9 +57,7 @@ export class ERC681Transferring extends TokenTransferring {
             this.setAmount(amount.replace(/\.0$/g, ''));
             this.estimateGas();
           });
-        } catch (error) {
-          console.log(error);
-        }
+        } catch (error) {}
       });
     } else {
       try {
