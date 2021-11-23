@@ -1,5 +1,6 @@
-import { computed, makeObservable, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Authentication from './Authentication';
 import Coingecko from '../common/apis/Coingecko';
 import DAppHub from './DAppHub';
@@ -26,6 +27,7 @@ export class AppVM {
       wallets: observable,
       currentWallet: observable,
       hasWallet: computed,
+      reset: action,
     });
   }
 
@@ -45,8 +47,11 @@ export class AppVM {
     });
   }
 
-  dispose() {
-    Database.dispose();
+  async reset() {
+    this.wallets.forEach((w) => w.dispose());
+    this.wallets = [];
+    this.currentWallet = null;
+    await Promise.all([Database.reset(), AsyncStorage.clear(), Authentication.reset()]);
   }
 }
 

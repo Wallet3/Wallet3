@@ -153,4 +153,8 @@ export class Wallet {
   async getSecret(pin?: string) {
     return await Authentication.decrypt(this.key.secret, pin);
   }
+
+  dispose() {
+    clearTimeout(this.refreshTimer);
+  }
 }

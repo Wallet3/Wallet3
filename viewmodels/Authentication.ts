@@ -38,6 +38,7 @@ export class Authentication {
       appAuthorized: observable,
       userSecretsVerified: observable,
       setBiometrics: action,
+      reset: action,
     });
 
     this.init();
@@ -54,7 +55,7 @@ export class Authentication {
     ]);
 
     if (!masterKey) {
-      SecureStore.setItemAsync(keys.masterKey, Buffer.from(Random.getRandomBytes(12)).toString('hex'));
+      SecureStore.setItemAsync(keys.masterKey, Buffer.from(Random.getRandomBytes(16)).toString('hex'));
     }
 
     runInAction(() => {
@@ -112,6 +113,12 @@ export class Authentication {
   setUserSecretsVerified(verified: boolean) {
     this.userSecretsVerified = verified;
     AsyncStorage.setItem(keys.userSecretsVerified, verified.toString());
+  }
+
+  reset() {
+    this.appAuthorized = false;
+    this.userSecretsVerified = false;
+    SecureStore.setItemAsync(keys.masterKey, Buffer.from(Random.getRandomBytes(16)).toString('hex'));
   }
 }
 

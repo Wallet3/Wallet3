@@ -3,6 +3,7 @@ import { Entypo, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { SafeAreaView, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { fontColor, secondaryFontColor } from '../../constants/styles';
 
+import App from '../../viewmodels/App';
 import Authentication from '../../viewmodels/Authentication';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import { FullPasspad } from '../../modals/views/Passpad';
@@ -115,7 +116,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
 
       <Text style={styles.sectionTitle}>Legal</Text>
 
-      <TouchableOpacity style={styles.itemContainer}>
+      {/* <TouchableOpacity style={styles.itemContainer}>
         <View style={styles.itemSubContainer}>
           <Ionicons name="flask-outline" style={styles.itemStartSymbol} size={16} />
           <Text style={styles.itemText}>Terms of Service</Text>
@@ -123,7 +124,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
         <View style={styles.itemSubContainer}>
           <Entypo name="chevron-right" style={styles.itemEndSymbol} />
         </View>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <TouchableOpacity style={styles.itemContainer} onPress={() => openURL('https://chainbow.co.jp/privacy.html')}>
         <View style={styles.itemSubContainer}>
@@ -193,7 +194,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
 
               <View style={{ flex: 1 }} />
 
-              <Button title="Confirm" themeColor="crimson" />
+              <Button title="Confirm" themeColor="crimson" onPress={() => App.reset()} />
             </SafeViewContainer>
           </SafeAreaProvider>
         </Modalize>

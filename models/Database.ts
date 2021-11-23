@@ -5,7 +5,7 @@ import Transaction from './Transaction';
 import WCSession_v1 from './WCSession_v1';
 
 class Database {
-  private _connection?: Connection;
+  private _connection!: Connection;
 
   keyRepository!: Repository<Key>;
   txRepository!: Repository<Transaction>;
@@ -27,9 +27,8 @@ class Database {
     this.wcSessionV1Repository = this._connection.getRepository(WCSession_v1);
   }
 
-  dispose() {
-    this._connection?.close();
-    this._connection = undefined;
+  async reset() {
+    await Promise.all([this.keyRepository.clear(), this.txRepository.clear(), this.wcSessionV1Repository.clear()]);
   }
 }
 
