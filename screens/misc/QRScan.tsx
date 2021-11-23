@@ -2,10 +2,12 @@ import { BarCodeScannedCallback, BarCodeScanner } from 'expo-barcode-scanner';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { Button } from '../../components';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import PubSub from 'pubsub-js';
 import { StatusBar } from 'expo-status-bar';
 import { observer } from 'mobx-react-lite';
+import { openSettings } from 'expo-linking';
 
 export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
   const [hasPermission, setHasPermission] = useState(false);
@@ -42,8 +44,10 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
 
   if (hasPermission === false) {
     return (
-      <View style={styles.container}>
-        <Text>No access to camera</Text>
+      <View style={{ ...styles.container, backgroundColor: '#000' }}>
+        <Text style={{ color: '#fff' }}>No access to camera</Text>
+        <Button title="Go to Settings" style={{ marginVertical: 12, paddingHorizontal: 12 }} onPress={() => openSettings()} />
+        <StatusBar style="light" />
       </View>
     );
   }
