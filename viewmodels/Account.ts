@@ -43,6 +43,7 @@ export class Account {
       ensName: observable,
       displayName: computed,
       balanceUSD: observable,
+      balance: computed,
       avatar: observable,
       toggleToken: action,
       sortTokens: action,

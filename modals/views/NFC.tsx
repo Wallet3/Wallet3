@@ -1,16 +1,16 @@
 import * as Animatable from 'react-native-animatable';
 
 import { Coin, SafeViewContainer } from '../../components';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useRef } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
 import { secondaryFontColor, thirdFontColor } from '../../constants/styles';
 
 import BackButton from '../components/BackButton';
 import { BlankPNG } from '../../common/Constants';
+import CachedImage from 'react-native-expo-cached-image';
 import CopyableText from '../../components/CopyableText';
 import IPhone from '../../assets/icons/app/IPhone.svg';
 import { IToken } from '../../common/Tokens';
-import Image from 'react-native-expo-cached-image';
 import { Ionicons } from '@expo/vector-icons';
 import QRCode from 'react-native-qrcode-svg';
 import Swiper from 'react-native-swiper';
@@ -200,22 +200,15 @@ const QRView = observer(({ vm, onBack, themeColor }: Props) => {
             enableLinearGradient
             logoBorderRadius={7}
             logo={{ uri: BlankPNG }}
-            logoSize={avatar ? 29 : 1}
+            logoSize={29}
             linearGradient={['rgb(134, 65, 244)', 'rgb(66, 194, 244)']}
           />
 
           {avatar ? (
-            <Image
-              source={{ uri: avatar }}
-              style={{
-                width: 24,
-                height: 24,
-                position: 'absolute',
-                backgroundColor: 'rgb(134, 194, 244)',
-                borderRadius: 7,
-              }}
-            />
-          ) : undefined}
+            <CachedImage source={{ uri: avatar }} style={viewStyles.avatar} />
+          ) : (
+            <Image source={require('../../assets/icon.png')} style={viewStyles.avatar} />
+          )}
         </View>
 
         <CopyableText
@@ -248,4 +241,14 @@ export default observer((props: DefaultProps) => {
       {/* onBack={() => swiper.current?.scrollTo(0)} */}
     </Swiper>
   );
+});
+
+const viewStyles = StyleSheet.create({
+  avatar: {
+    width: 24,
+    height: 24,
+    position: 'absolute',
+    backgroundColor: 'rgb(134, 194, 244)',
+    borderRadius: 6,
+  },
 });
