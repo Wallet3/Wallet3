@@ -110,10 +110,12 @@ export class TokenTransferring extends BaseTransaction {
     targetNetwork,
     defaultToken,
     autoSetToken,
+    to,
   }: {
     targetNetwork: INetwork;
     defaultToken?: IToken;
     autoSetToken?: boolean;
+    to?: string;
   }) {
     const account = App.currentWallet!.currentAccount!;
 
@@ -139,6 +141,8 @@ export class TokenTransferring extends BaseTransaction {
     });
 
     if (autoSetToken || (autoSetToken === undefined && !defaultToken)) this.loadDefaultToken();
+
+    if (to) this.setTo(to);
   }
 
   protected loadDefaultToken() {

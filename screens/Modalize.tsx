@@ -183,8 +183,8 @@ const SendFundsModal = () => {
         return;
       }
 
-      setIsERC681(true);
-      setVM(new ERC681Transferring({ defaultNetwork: Networks.current, erc681: { target_address: data } }));
+      setIsERC681(false);
+      setVM(new TokenTransferring({ targetNetwork: Networks.current, to: data }));
       setTimeout(() => openSendModal(), 0);
     });
 
