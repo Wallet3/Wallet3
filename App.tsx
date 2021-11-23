@@ -1,6 +1,7 @@
 import AppViewModel, { AppVM } from './viewmodels/App';
 import AuthViewModel, { Authentication } from './viewmodels/Authentication';
 
+import { About } from './screens/settings/About';
 import AddToken from './screens/tokens/AddToken';
 import Backup from './screens/settings/Backup';
 import ChangePasscode from './screens/settings/ChangePasscode';
@@ -53,6 +54,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
               <Screen name="Backup" component={Backup} options={{ title: 'Backup' }} />
               <Screen name="VerifySecret" component={VerifySecret} options={{ title: 'Verify' }} />
               <Screen name="AddToken" component={AddToken} />
+              <Screen name="About" component={About} />
               <Screen
                 name="QRScan"
                 component={QRScan}

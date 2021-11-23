@@ -137,7 +137,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.itemContainer}>
+      <TouchableOpacity style={styles.itemContainer} onPress={() => parent?.navigate('About')}>
         <View style={styles.itemSubContainer}>
           <Ionicons name="information-circle-outline" style={styles.itemStartSymbol} size={16} />
           <Text style={styles.itemText}>About</Text>
@@ -146,8 +146,6 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
           <Entypo name="chevron-right" style={styles.itemEndSymbol} />
         </View>
       </TouchableOpacity>
-
-      <Text style={{ marginTop: 24, fontSize: 12 }}>© 2021 ChainBow</Text>
 
       <Portal>
         <Modalize
