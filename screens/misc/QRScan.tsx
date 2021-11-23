@@ -15,7 +15,8 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
 
   const handleBarCodeScanned: BarCodeScannedCallback = ({ data }) => {
     const supportedSchemes = ['ethereum', 'wc:', '0x'];
-    const scheme = supportedSchemes.find((schema) => data.toLowerCase().startsWith(schema));
+    const scheme =
+      supportedSchemes.find((schema) => data.toLowerCase().startsWith(schema)) || (data.endsWith('.eth') ? '0x' : undefined);
     if (!scheme) return;
 
     PubSub.publish(`CodeScan-${scheme}`, { data });

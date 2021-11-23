@@ -178,7 +178,7 @@ const SendFundsModal = () => {
     });
 
     PubSub.subscribe(`CodeScan-0x`, (_, { data }) => {
-      if (!utils.isAddress(data)) {
+      if (!utils.isAddress(data) && !data.endsWith('.eth')) {
         showMessage({ message: 'Invalid address', type: 'warning' });
         return;
       }

@@ -69,7 +69,11 @@ export class TransactionRequest extends BaseTransaction {
 
   constructor({ request, client }: IConstructor) {
     const [param, requestChainId] = request.params as [WCCallRequest_eth_sendTransaction, number?];
-    const account = App.currentWallet!.currentAccount!;
+
+    const { currentAccount } = App.currentWallet || {};
+    const account = client.accounts.includes(currentAccount?.address ?? '')
+      ? currentAccount!
+      : App.allAccounts.find((a) => a.address === client.accounts[0]) ?? App.allAccounts[0];
 
     const network = client.findTargetNetwork({ networks: PublicNetworks, requestChainId, defaultNetwork: Networks.current });
 
