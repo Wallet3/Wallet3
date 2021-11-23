@@ -1,27 +1,31 @@
+import { action, makeAutoObservable, makeObservable, observable } from 'mobx';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Coingecko from '../common/apis/Coingecko';
-import { makeAutoObservable } from 'mobx';
 
-interface Currency {
+export interface Currency {
   currency: string;
   symbol: string;
   flag: string;
 }
 
 export class CurrencyViewmodel {
-  currentCurrency: Currency | null = null;
+  currentCurrency: Currency;
 
   supportedCurrencies: Currency[] = [
-    { currency: 'USD', symbol: '$', flag: 'usa' },
     { currency: 'ETH', symbol: 'Ξ', flag: 'eth' },
+    { currency: 'USD', symbol: '$', flag: 'usa' },
   ];
 
   constructor() {
-    makeAutoObservable(this);
     Coingecko.start();
 
+    this.currentCurrency = this.supportedCurrencies[1];
+
+    makeObservable(this, { currentCurrency: observable, setCurrency: action });
+
     AsyncStorage.getItem('currency').then((currency) => {
-      this.currentCurrency = this.supportedCurrencies.find((c) => c.currency === currency) || this.supportedCurrencies[0];
+      this.currentCurrency = this.supportedCurrencies.find((c) => c.currency === currency) || this.supportedCurrencies[1];
     });
   }
 
@@ -32,7 +36,7 @@ export class CurrencyViewmodel {
 
   format(usd: number) {
     let value = 0;
-    switch (this.currentCurrency!.currency) {
+    switch (this.currentCurrency.currency) {
       case 'USD':
         value = usd;
         break;

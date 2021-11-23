@@ -5,6 +5,7 @@ import { fontColor, secondaryFontColor } from '../../constants/styles';
 
 import App from '../../viewmodels/App';
 import Authentication from '../../viewmodels/Authentication';
+import CurrencyViewmodel from '../../viewmodels/Currency';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import { FullPasspad } from '../../modals/views/Passpad';
 import { Modalize } from 'react-native-modalize';
@@ -59,7 +60,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
           <Text style={styles.itemText}>Currency</Text>
         </View>
         <View style={styles.itemSubContainer}>
-          <Text style={styles.itemText2}>USD</Text>
+          <Text style={styles.itemText2}>{CurrencyViewmodel.currentCurrency?.currency}</Text>
           <Entypo name="chevron-right" style={styles.itemEndSymbol} />
         </View>
       </TouchableOpacity>
