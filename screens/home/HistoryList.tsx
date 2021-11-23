@@ -5,6 +5,7 @@ import Transaction, { ITransaction } from '../../models/Transaction';
 import { ChainIdsSymbol } from '../../common/Networks';
 import { Coin } from '../../components';
 import Image from 'react-native-expo-cached-image';
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
@@ -91,6 +92,15 @@ const Tx = observer(({ item, onPress }: { onPress?: (tx: Transaction) => void; i
 
 export default observer(({ data, onTxPress }: Props) => {
   const renderItem = ({ item, index }: ListRenderItemInfo<Transaction>) => <Tx item={item} onPress={onTxPress} />;
+
+  if (data.length === 0) {
+    return (
+      <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+        <Ionicons name="server-outline" size={32} color={secondaryFontColor} />
+        <Text style={{ color: secondaryFontColor, marginVertical: 12 }}>No Transactions Yet</Text>
+      </View>
+    );
+  }
 
   return (
     <FlatList

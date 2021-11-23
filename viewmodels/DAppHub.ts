@@ -1,6 +1,6 @@
 import * as Linking from 'expo-linking';
 
-import { IReactionDisposer, autorun, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
+import { IReactionDisposer, action, autorun, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
 
 import App from './App';
 import Database from '../models/Database';
@@ -10,8 +10,6 @@ import WCSession_v1 from '../models/WCSession_v1';
 import { WalletConnect_v1 } from './WalletConnect_v1';
 
 class DAppHub extends EventEmitter {
-  private disposer?: IReactionDisposer;
-
   clients: WalletConnect_v1[] = [];
 
   get connectedCount() {
@@ -20,7 +18,7 @@ class DAppHub extends EventEmitter {
 
   constructor() {
     super();
-    makeObservable(this, { clients: observable, connectedCount: computed });
+    makeObservable(this, { clients: observable, connectedCount: computed, reset: action });
   }
 
   async init() {
@@ -92,9 +90,13 @@ class DAppHub extends EventEmitter {
     });
   }
 
-  dispose() {
-    this.disposer?.();
-    this.disposer = undefined;
+  reset() {
+    this.clients.forEach((c) => {
+      c.killSession();
+      c.dispose();
+    });
+
+    this.clients = [];
   }
 }
 
