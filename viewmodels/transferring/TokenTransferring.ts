@@ -41,9 +41,9 @@ export class TokenTransferring extends BaseTransaction {
       }
 
       return utils.parseUnits(this.amount, this.token.decimals || 18);
-    } catch (error) {}
-
-    return BigNumber.from(0);
+    } catch (error) {
+      return BigNumber.from(-1);
+    }
   }
 
   get isValidAmount() {

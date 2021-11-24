@@ -25,6 +25,7 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
+          <string>wallet3</string>
           <string>jp.co.chainbow.wallet3.mobile</string>
         </array>
       </dict>
