@@ -39,7 +39,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
         <View style={styles.item}>
           <Text style={styles.itemText}>Name:</Text>
           {loading ? (
-            <Skeleton />
+            <Skeleton style={{ height: 17 }} />
           ) : (
             <Text style={styles.itemText} numberOfLines={1}>
               {token?.name || '---'}
@@ -50,7 +50,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
         <View style={styles.item}>
           <Text style={styles.itemText}>Symbol:</Text>
           {loading ? (
-            <Skeleton />
+            <Skeleton style={{ height: 17 }} />
           ) : (
             <Text style={styles.itemText} numberOfLines={1}>
               {token?.symbol || '---'}
@@ -61,7 +61,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
         <View style={styles.item}>
           <Text style={styles.itemText}>Decimals:</Text>
           {loading ? (
-            <Skeleton />
+            <Skeleton style={{ height: 17 }} />
           ) : (
             <Text style={styles.itemText} numberOfLines={1}>
               {token?.decimals || '---'}
@@ -72,7 +72,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
         <View style={styles.item}>
           <Text style={styles.itemText}>Balance:</Text>
           {loading ? (
-            <Skeleton />
+            <Skeleton style={{ height: 17 }} />
           ) : (
             <Text style={styles.itemText} numberOfLines={1}>
               {token?.amount || '---'}
@@ -99,6 +99,7 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     borderBottomColor: borderColor,
     borderBottomWidth: 1,
     paddingVertical: 8,

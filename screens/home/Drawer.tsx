@@ -96,7 +96,7 @@ const Drawer = observer((props: DrawerProps) => {
           label="DApps"
           onPress={() => navigation.navigate('DApps')}
           labelStyle={{ ...styles.drawerLabel, color: dappsHighlight }}
-          icon={() => <Feather name="layers" size={19} style={{ width: 21, paddingStart: 2 }} color={dappsHighlight} />}
+          icon={() => <Feather name="layers" size={20} style={{ width: 21, paddingStart: 1 }} color={dappsHighlight} />}
         />
 
         <DrawerItem

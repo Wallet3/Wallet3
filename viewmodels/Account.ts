@@ -166,7 +166,11 @@ export class Account {
       chainId: Networks.current.chainId,
     });
 
-    await Promise.all([token.getBalance(), token.getBalance(), token.getDecimals(), token.getName(), token.getSymbol()]);
+    try {
+      await Promise.all([token.getBalance(), token.getBalance(), token.getDecimals(), token.getName(), token.getSymbol()]);
+    } catch (error) {
+      return;
+    }
 
     return token;
   }
