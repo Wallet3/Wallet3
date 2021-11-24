@@ -7,9 +7,11 @@ import App from '../../viewmodels/App';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStack } from '../navigations';
 import { UserToken } from '../../viewmodels/services/TokensMan';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 
 export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Tokens'>) => {
+  const { t } = i18n;
   const [addr, setAddr] = useState('');
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState<UserToken | undefined>();
@@ -29,15 +31,14 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
     <ScrollView style={{ flex: 1, backgroundColor: '#fff' }} scrollEnabled={false} contentContainerStyle={{ flex: 1 }}>
       <SafeViewContainer style={{ flex: 1 }} paddingHeader>
         <TextBox
-          title="Address:"
+          title={`${t('home-addToken-Address')}:`}
+          placeholder={t('home-addToken-InputPlaceholder')}
           value={addr}
-          onChangeText={(t) => {
-            setAddr(t);
-          }}
+          onChangeText={(t) => setAddr(t)}
         />
 
         <View style={styles.item}>
-          <Text style={styles.itemText}>Name:</Text>
+          <Text style={styles.itemText}>{t('home-addToken-Name')}:</Text>
           {loading ? (
             <Skeleton style={{ height: 17 }} />
           ) : (
@@ -48,7 +49,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
         </View>
 
         <View style={styles.item}>
-          <Text style={styles.itemText}>Symbol:</Text>
+          <Text style={styles.itemText}>{t('home-addToken-Symbol')}:</Text>
           {loading ? (
             <Skeleton style={{ height: 17 }} />
           ) : (
@@ -59,7 +60,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
         </View>
 
         <View style={styles.item}>
-          <Text style={styles.itemText}>Decimals:</Text>
+          <Text style={styles.itemText}>{t('home-addToken-Decimals')}:</Text>
           {loading ? (
             <Skeleton style={{ height: 17 }} />
           ) : (
@@ -70,7 +71,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
         </View>
 
         <View style={styles.item}>
-          <Text style={styles.itemText}>Balance:</Text>
+          <Text style={styles.itemText}>{t('home-addToken-Balance')}:</Text>
           {loading ? (
             <Skeleton style={{ height: 17 }} />
           ) : (
@@ -83,7 +84,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
         <View style={{ flex: 1 }} />
 
         <Button
-          title="Save"
+          title={t('button-save')}
           disabled={!token}
           onPress={() => {
             currentWallet?.currentAccount?.addToken(token!);

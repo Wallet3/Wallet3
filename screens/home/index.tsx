@@ -16,6 +16,7 @@ import { Portal } from 'react-native-portalize';
 import { StatusBar } from 'expo-status-bar';
 import TokenDetail from './TokenDetail';
 import TxDetail from './TxDetail';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
@@ -25,6 +26,7 @@ type RootStackParamList = {
 };
 
 export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, 'Home'>) => {
+  const { t } = i18n;
   const { currentWallet } = App;
   const { current } = Networks;
   const { ref: tokenDetailModalize, open: openTokenDetail, close: closeTokenDetail } = useModalize();

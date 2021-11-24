@@ -9,6 +9,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/Networks';
 import { RootStack } from '../navigations';
 import { UserToken } from '../../viewmodels/services/TokensMan';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 
 const DraggableToken = observer(
@@ -43,6 +44,7 @@ const DraggableToken = observer(
 );
 
 export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Tokens'>) => {
+  const { t } = i18n;
   const { currentWallet } = App;
   const { allTokens } = currentWallet?.currentAccount ?? { allTokens: [] };
   const [data, setData] = useState(allTokens);
@@ -53,9 +55,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
 
   return (
     <SafeAreaView style={{ backgroundColor: '#fff', flex: 1 }}>
-      <Text style={{ paddingHorizontal: 16, color: secondaryFontColor, paddingBottom: 4 }}>
-        Move tokens with drag and drop
-      </Text>
+      <Text style={{ paddingHorizontal: 16, color: secondaryFontColor, paddingBottom: 4 }}>{t('home-tokens-DragTip')}</Text>
       <DraggableFlatList
         style={{ flex: 1, marginBottom: -36 }}
         contentContainerStyle={{ paddingBottom: 36 }}

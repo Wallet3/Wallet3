@@ -9,6 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { secondaryFontColor } from '../../constants/styles';
 import { utils } from 'ethers';
@@ -91,13 +92,14 @@ const Tx = observer(({ item, onPress }: { onPress?: (tx: Transaction) => void; i
 });
 
 export default observer(({ data, onTxPress }: Props) => {
+  const { t } = i18n;
   const renderItem = ({ item, index }: ListRenderItemInfo<Transaction>) => <Tx item={item} onPress={onTxPress} />;
 
   if (data.length === 0) {
     return (
       <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
         <Ionicons name="server-outline" size={32} color={secondaryFontColor} />
-        <Text style={{ color: secondaryFontColor, marginVertical: 12 }}>No Transactions Yet</Text>
+        <Text style={{ color: secondaryFontColor, marginVertical: 12 }}>{t('home-history-NoTxsYet')}</Text>
       </View>
     );
   }

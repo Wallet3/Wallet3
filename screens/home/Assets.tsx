@@ -13,6 +13,7 @@ import { RootNavigationProps } from '../navigations';
 import Swiper from 'react-native-swiper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import TxHub from '../../viewmodels/TxHub';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useNavigation } from '@react-navigation/core';
 
@@ -35,6 +36,8 @@ const rotate = {
 };
 
 export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, onTokenPress, onTxPress }: Props) => {
+  const { t } = i18n;
+
   const [activeTab, setActiveTab] = useState(0);
   const swiper = React.useRef<Swiper>(null);
 
@@ -57,13 +60,13 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
             }}
             onPress={() => swipeTo(0)}
           >
-            Assets
+            {t('home-tabs-Assets')}
           </Text>
           {/* <Text
             style={{ ...styles.headerLabel, ...(activeTab === 1 ? { ...styles.headerLabelActive, color: themeColor } : {}) }}
             onPress={() => swipeTo(1)}
           >
-            NFTs
+            {t('home-tabs-NFTs')}
           </Text> */}
           <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12 }}>
             <Text
@@ -74,7 +77,7 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
               }}
               onPress={() => swipeTo(2)}
             >
-              {TxHub.pendingCount > 0 ? `History (${TxHub.pendingCount}` : `History`}
+              {TxHub.pendingCount > 0 ? `${t('home-tabs-History')} (${TxHub.pendingCount}` : t('home-tabs-History')}
             </Text>
             {TxHub.pendingCount > 0 && (
               <Animatable.View

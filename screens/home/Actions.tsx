@@ -3,6 +3,7 @@ import { SafeAreaView, StyleProp, StyleSheet, Text, View, ViewStyle } from 'reac
 
 import React from 'react';
 import Ripple from 'react-native-material-ripple';
+import i18n from '../../i18n';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
@@ -13,6 +14,8 @@ interface Props {
 }
 
 export default ({ style, onSendPress, onRequestPress, themeColor, disabled }: Props) => {
+  const { t } = i18n;
+
   return (
     <SafeAreaView style={{ ...styles.container, ...((style as any) || {}) }}>
       <Ripple
@@ -21,7 +24,7 @@ export default ({ style, onSendPress, onRequestPress, themeColor, disabled }: Pr
         onPress={(_) => (disabled ? undefined : onSendPress?.())}
       >
         <Ionicons name="md-arrow-up-circle-outline" size={20} color="white" />
-        <Text style={styles.text}>Send</Text>
+        <Text style={styles.text}>{t('home-button-Send')}</Text>
       </Ripple>
 
       <View style={{ flex: 1 }}></View>
@@ -32,7 +35,7 @@ export default ({ style, onSendPress, onRequestPress, themeColor, disabled }: Pr
         onPress={(_) => (disabled ? undefined : onRequestPress?.())}
       >
         <Ionicons name="md-arrow-down-circle-outline" size={20} color="white" />
-        <Text style={styles.text}>Request</Text>
+        <Text style={styles.text}>{t('home-button-Request')}</Text>
       </Ripple>
     </SafeAreaView>
   );

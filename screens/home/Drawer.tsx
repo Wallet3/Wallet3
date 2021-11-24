@@ -12,6 +12,7 @@ import PubSub from 'pubsub-js';
 import React from 'react';
 import { SafeViewContainer } from '../../components';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import i18n from '../../i18n';
 import icons from '../../assets/icons/crypto';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
 import { observer } from 'mobx-react-lite';
@@ -25,6 +26,7 @@ interface DrawerProps extends DrawerContentComponentProps {
 }
 
 const Drawer = observer((props: DrawerProps) => {
+  const { t } = i18n;
   const { navigation, appVM } = props;
   const { currentWallet } = appVM;
   const { current } = Networks;
@@ -86,21 +88,21 @@ const Drawer = observer((props: DrawerProps) => {
 
       <View style={{ paddingBottom: 12 }}>
         <DrawerItem
-          label="Wallet"
+          label={t('home-drawer-Wallet')}
           onPress={() => navigation.navigate('Home')}
           labelStyle={{ ...styles.drawerLabel, color: homeHighlight }}
           icon={() => <Feather color={homeHighlight} size={21} name={'credit-card'} />}
         />
 
         <DrawerItem
-          label="DApps"
+          label={t('home-drawer-DApps')}
           onPress={() => navigation.navigate('DApps')}
           labelStyle={{ ...styles.drawerLabel, color: dappsHighlight }}
           icon={() => <Feather name="layers" size={20} style={{ width: 21, paddingStart: 1 }} color={dappsHighlight} />}
         />
 
         <DrawerItem
-          label="Settings"
+          label={t('home-drawer-Settings')}
           onPress={() => navigation.navigate('Settings')}
           labelStyle={{ ...styles.drawerLabel, color: settingsHighlight }}
           icon={() => <Feather color={settingsHighlight} size={21} name={'settings'} />}
@@ -111,7 +113,7 @@ const Drawer = observer((props: DrawerProps) => {
 
       <View style={{ padding: 16, paddingBottom: 12 }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Text style={{ color: secondaryFontColor, fontSize: 14 }}>Networks</Text>
+          <Text style={{ color: secondaryFontColor, fontSize: 14 }}>{t('home-drawer-Networks')}</Text>
 
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <TouchableOpacity onPress={() => fastSwitchNetwork(Networks.Ethereum)} style={styles.smallNetworkContainer}>
