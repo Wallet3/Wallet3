@@ -2461,6 +2461,11 @@
   resolved "https://registry.npmjs.org/@types/hammerjs/-/hammerjs-2.0.40.tgz"
   integrity sha512-VbjwR1fhsn2h2KXAY4oy1fm7dCxaKy0D+deTb8Ilc3Eo3rc5+5eA4rfYmZaHgNJKxVyI0f6WIXzO2zLkVmQPHA==
 
+"@types/i18n-js@^3.8.2":
+  version "3.8.2"
+  resolved "https://registry.yarnpkg.com/@types/i18n-js/-/i18n-js-3.8.2.tgz#957a3fa268124d09e3b3b34695f0184118f4bc4f"
+  integrity sha512-F+AuFCjllE1A0W/YUxJB13q2t7cWITMqXOTXQ/InfXxxT8nXrrqL7s/8Pv6XThGjFPemukElwk6QlMOKCEg7eQ==
+
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0":
   version "2.0.3"
   resolved "https://registry.npmjs.org/@types/istanbul-lib-coverage/-/istanbul-lib-coverage-2.0.3.tgz"
@@ -4532,7 +4537,7 @@ expo-local-authentication@^12.0.1:
 
 expo-localization@^11.0.0:
   version "11.0.0"
-  resolved "https://registry.npmjs.org/expo-localization/-/expo-localization-11.0.0.tgz"
+  resolved "https://registry.yarnpkg.com/expo-localization/-/expo-localization-11.0.0.tgz#ae384c59ae708a4b2e7ff7dfead1d9ee9c06b482"
   integrity sha512-LLK7+pYScM5ob8/IsnCb4JVQb6AvWP5anTIikaZmpz7XCUJ0KHaCPY8YfUjVSSwWspSMLxpqKEZtAra+bHxYZA==
   dependencies:
     rtl-detect "^1.0.2"
@@ -5195,6 +5200,11 @@ hyphenate-style-name@^1.0.2, hyphenate-style-name@^1.0.4:
   version "1.0.4"
   resolved "https://registry.npmjs.org/hyphenate-style-name/-/hyphenate-style-name-1.0.4.tgz"
   integrity sha512-ygGZLjmXfPHj+ZWh6LwbC37l43MhfztxetbFCoYTM2VjkIUpeHgSNn7QIyVFj7YQ1Wl9Cbw5sholVJPzWvC2MQ==
+
+i18n-js@^3.8.0:
+  version "3.8.0"
+  resolved "https://registry.yarnpkg.com/i18n-js/-/i18n-js-3.8.0.tgz#b8fd6b12e1d88cb71f9806c29bca7c31c012e504"
+  integrity sha512-hDsGgPuvw/2P+lXSbOafAwspK8Ste8YrwuuUg17W3wEcO1JkQxBlPgsN1t2+852nTnz4YSYTjZc/1nAA2PC/nw==
 
 iconv-lite@^0.6.2:
   version "0.6.3"

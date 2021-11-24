@@ -86,7 +86,7 @@ export default observer(({ biometricsSupported, biometricsEnabled, themeColor, o
             alignItems: 'center',
           }}
         >
-          <Text style={{ marginBottom: -2, color: secondaryFontColor }}>Enable Biometrics</Text>
+          <Text style={{ marginBottom: -2, color: secondaryFontColor }}>Enable Biometric</Text>
 
           <Switch value={biometricsEnabled} trackColor={{ true: themeColor }} onValueChange={onBiometricValueChange} />
         </View>

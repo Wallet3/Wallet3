@@ -40,21 +40,21 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
         <TextInput
           multiline={true}
           numberOfLines={5}
-          placeholder="Enter your recovery phrase"
+          placeholder="Enter your recovery phrase here"
+          onChangeText={(txt) => setMnemonic(txt)}
+          autoCapitalize="none"
+          keyboardType="default"
+          secureTextEntry={true}
           style={{
             height: 200,
             textAlignVertical: 'top',
             borderWidth: 1,
-            lineHeight: 22,
             borderColor: themeColor,
             borderRadius: 10,
             padding: 8,
             paddingVertical: 24,
             fontSize: 16,
           }}
-          onChangeText={(txt) => setMnemonic(txt)}
-          autoCapitalize="none"
-          keyboardType="default"
         />
 
         <View

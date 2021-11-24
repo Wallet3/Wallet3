@@ -41,6 +41,7 @@
     "expo-updates": "~0.10.13",
     "expo-web-browser": "^10.0.3",
     "https-browserify": "^1.0.0",
+    "i18n-js": "^3.8.0",
     "linq": "^4.0.0",
     "lottie-react-native": "^5.0.1",
     "mobx": "^6.3.7",
@@ -83,6 +84,7 @@
   "devDependencies": {
     "@babel/core": "^7.16.0",
     "@babel/plugin-proposal-decorators": "^7.16.4",
+    "@types/i18n-js": "^3.8.2",
     "@types/lodash": "^4.14.177",
     "@types/node": "^16.11.10",
     "@types/pubsub-js": "^1.8.3",

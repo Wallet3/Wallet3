@@ -49,6 +49,7 @@ export default ({ value, onChangeText, title, style, placeholder, defaultValue }
         defaultValue={defaultValue}
         autoCapitalize="none"
         keyboardType="web-search"
+        placeholderTextColor="#dfdfdf"
         autoCorrect={false}
         onChangeText={(t) => onChangeText(t)}
       />

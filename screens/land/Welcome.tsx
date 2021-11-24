@@ -1,5 +1,3 @@
-import {} from 'react-native';
-
 import { Button, SafeViewContainer } from '../../components';
 import { Text, View } from 'react-native-animatable';
 import { secondaryFontColor, themeColor } from '../../constants/styles';
@@ -7,13 +5,13 @@ import { secondaryFontColor, themeColor } from '../../constants/styles';
 import { LandScreenStack } from '../navigations';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
-import { SafeAreaView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet } from 'react-native';
-import styles from './styles';
+import i18n from '../../i18n';
 import { useFonts } from 'expo-font';
 
 export default ({ navigation }: NativeStackScreenProps<LandScreenStack, 'Welcome'>) => {
+  const { t } = i18n;
+
   const [loaded] = useFonts({
     Questrial: require('../../assets/fonts/Questrial.ttf'),
   });
@@ -36,7 +34,7 @@ export default ({ navigation }: NativeStackScreenProps<LandScreenStack, 'Welcome
       <View style={{ width: '100%' }}>
         <View animation="fadeInUp" delay={300}>
           <Button
-            title="Import a wallet"
+            title={t('land-welcome-ImportWallet')}
             onPress={() => navigation.navigate('ImportWallet')}
             themeColor={themeColor}
             style={{ marginBottom: 12 }}
@@ -47,7 +45,7 @@ export default ({ navigation }: NativeStackScreenProps<LandScreenStack, 'Welcome
 
         <View animation="fadeInUp" delay={500}>
           <Button
-            title="Create a new wallet"
+            title={t('land-welcome-CreateWallet')}
             onPress={() => navigation.navigate('CreateWallet')}
             txtStyle={{ textTransform: 'none' }}
           />
