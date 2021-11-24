@@ -36,34 +36,42 @@ export default observer(({ tx }: { tx?: Transaction }) => {
 
       <View style={styles.itemContainer}>
         <Text style={styles.txt}>From:</Text>
-        <Text style={styles.txt}>{formatAddress(tx.from!, 10, 7)}</Text>
+        <Text style={styles.txt} numberOfLines={1}>
+          {formatAddress(tx.from!, 9, 7)}
+        </Text>
       </View>
 
       <View style={styles.itemContainer}>
         <Text style={styles.txt}>To:</Text>
-        <Text style={styles.txt}>{formatAddress(tx.readableInfo?.recipient ?? tx.to!, 10, 7)}</Text>
+        <Text style={styles.txt} numberOfLines={1}>
+          {formatAddress(tx.readableInfo?.recipient ?? tx.to!, 9, 7)}
+        </Text>
       </View>
 
       <View style={styles.itemContainer}>
         <Text style={styles.txt}>Value:</Text>
-        <Text style={styles.txt}>
+        <Text style={styles.txt} numberOfLines={1}>
           {`${tx.readableInfo?.amount ?? utils.formatEther(tx.value ?? '0')} ${tx.readableInfo?.symbol ?? network.symbol}`}
         </Text>
       </View>
 
       <View style={styles.itemContainer}>
         <Text style={styles.txt}>Gas Limit:</Text>
-        <Text style={styles.txt}>{tx.gas}</Text>
+        <Text style={styles.txt} numberOfLines={1}>
+          {tx.gas}
+        </Text>
       </View>
 
       <View style={styles.itemContainer}>
         <Text style={styles.txt}>Gas Price:</Text>
-        <Text style={styles.txt}>{`${Number(`${tx.gasPrice?.toString() || 0}`) / Gwei_1} Gwei`}</Text>
+        <Text style={styles.txt} numberOfLines={1}>{`${Number(`${tx.gasPrice?.toString() || 0}`) / Gwei_1} Gwei`}</Text>
       </View>
 
       <View style={styles.itemContainer}>
         <Text style={styles.txt}>Nonce:</Text>
-        <Text style={styles.txt}>{tx.nonce}</Text>
+        <Text style={styles.txt} numberOfLines={1}>
+          {tx.nonce}
+        </Text>
       </View>
 
       <View style={styles.itemContainer}>
@@ -78,12 +86,16 @@ export default observer(({ tx }: { tx?: Transaction }) => {
 
       <View style={styles.itemContainer}>
         <Text style={styles.txt}>Block Height:</Text>
-        <Text style={styles.txt}>{tx.blockNumber}</Text>
+        <Text style={styles.txt} numberOfLines={1}>
+          {tx.blockNumber}
+        </Text>
       </View>
 
       <View style={styles.itemContainer}>
         <Text style={styles.txt}>Timestamp:</Text>
-        <Text style={styles.txt}>{new Date(tx.timestamp).toLocaleString()}</Text>
+        <Text style={styles.txt} numberOfLines={1}>
+          {new Date(tx.timestamp).toLocaleString()}
+        </Text>
       </View>
 
       <View style={{ ...styles.itemContainer, flexDirection: 'column' }}>
@@ -122,6 +134,6 @@ const styles = StyleSheet.create({
   txt: {
     fontSize: 15,
     color: thirdFontColor,
-    maxWidth: '50%',
+    maxWidth: '60%',
   },
 });

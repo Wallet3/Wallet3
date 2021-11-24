@@ -12,11 +12,16 @@ import { ReadableInfo } from '../models/Transaction';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import TxHub from './TxHub';
 
-type SendTxRequest = {
+type SignTxRequest = {
   accountIndex: number;
   tx: providers.TransactionRequest;
-  readableInfo: ReadableInfo;
   pin?: string;
+};
+
+type SendTxRequest = {
+  tx: providers.TransactionRequest;
+  txHex: string;
+  readableInfo: ReadableInfo;
 };
 
 type SignMessageRequest = {
@@ -110,11 +115,12 @@ export class Wallet {
     return new EthersWallet(key);
   }
 
-  async signTx({ accountIndex, tx, pin }: SendTxRequest) {
+  async signTx({ accountIndex, tx, pin }: SignTxRequest) {
     try {
-      return (await this.openWallet({ accountIndex, pin }))?.signTransaction(tx);
-    } catch (error) {
-      console.log(error);
+      const txHex = await (await this.openWallet({ accountIndex, pin }))?.signTransaction(tx);
+      return { txHex };
+    } catch (error: any) {
+      return { error: error.message };
     }
   }
 
@@ -138,12 +144,9 @@ export class Wallet {
   }
 
   async sendTx(request: SendTxRequest) {
-    const txHex = await this.signTx(request);
-    if (!txHex) return { success: false, error: 'Failed to sign transaction' };
-
     const hash = await TxHub.broadcastTx({
       chainId: request.tx.chainId!,
-      txHex,
+      txHex: request.txHex,
       tx: { ...request.tx, readableInfo: request.readableInfo },
     });
 

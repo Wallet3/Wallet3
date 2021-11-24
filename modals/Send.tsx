@@ -9,6 +9,7 @@ import Success from './views/Success';
 import Swiper from 'react-native-swiper';
 import { TokenTransferring } from '../viewmodels/transferring/TokenTransferring';
 import { observer } from 'mobx-react-lite';
+import { showMessage } from 'react-native-flash-message';
 import styles from './styles';
 
 interface Props {
@@ -26,11 +27,24 @@ export default observer(({ vm, onClose, erc681 }: Props) => {
   }, []);
 
   const sendTx = async (pin?: string) => {
-    const { success } = await App.currentWallet!.sendTx({
+    const tx = vm.txRequest;
+    const { txHex, error } = await App.currentWallet!.signTx({
       accountIndex: vm.account.index,
-      tx: vm.txRequest,
+      tx,
       pin,
+    });
 
+    if (!txHex || error) {
+      showMessage({ message: error, type: 'warning' });
+      return false;
+    }
+
+    setVerified(true);
+    setTimeout(() => PubSub.publish('closeSendFundsModal'), 1700);
+
+    App.currentWallet?.sendTx({
+      tx,
+      txHex,
       readableInfo: {
         type: 'transfer',
         symbol: vm.token.symbol,
@@ -41,11 +55,7 @@ export default observer(({ vm, onClose, erc681 }: Props) => {
       },
     });
 
-    setVerified(success);
-
-    if (success) setTimeout(() => PubSub.publish('closeSendFundsModal'), 1700);
-
-    return success;
+    return true;
   };
 
   const onSendClick = async () => {

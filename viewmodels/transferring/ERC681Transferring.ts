@@ -42,18 +42,15 @@ export class ERC681Transferring extends TokenTransferring {
     this.initERC681(erc681);
   }
 
-  private async initERC681(erc681: ERC681) {
-    if (erc681.function_name === 'transfer') {
-      await this.setTo(erc681.parameters?.address);
+  private async initERC681({ function_name, parameters, target_address }: ERC681) {
+    if (function_name === 'transfer') {
+      await this.setTo(parameters?.address);
 
       (this.token as ERC20Token)?.getDecimals?.()?.then((decimals) => {
         try {
           const amount =
-            Number(erc681.parameters?.amount).toLocaleString('fullwide', { useGrouping: false }) ||
-            utils.formatUnits(
-              Number(erc681.parameters?.uint256 || '0').toLocaleString('fullwide', { useGrouping: false }),
-              decimals
-            );
+            parameters?.amount ||
+            utils.formatUnits(Number(parameters?.uint256 || '0').toLocaleString('fullwide', { useGrouping: false }), decimals);
 
           runInAction(() => {
             this.setAmount(amount.replace(/\.0$/g, ''));
@@ -63,11 +60,11 @@ export class ERC681Transferring extends TokenTransferring {
       });
     } else {
       try {
-        this.setTo(erc681.target_address);
+        this.setTo(target_address);
 
         const amount =
-          Number(erc681.parameters?.amount).toLocaleString('fullwide', { useGrouping: false }) ||
-          utils.formatEther(Number(erc681.parameters?.value ?? '0').toLocaleString('fullwide', { useGrouping: false }));
+          parameters?.amount ||
+          utils.formatEther(Number(parameters?.value ?? '0').toLocaleString('fullwide', { useGrouping: false }));
 
         this.setAmount(amount.replace(/\.0$/g, ''));
         this.estimateGas();
