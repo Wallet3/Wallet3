@@ -19,6 +19,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Swiper from 'react-native-swiper';
 import { WalletConnect_v1 } from '../../viewmodels/WalletConnect_v1';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { secondaryFontColor } from '../../constants/styles';
 import { styles } from '../../constants/styles';
@@ -91,7 +92,8 @@ const DApp = observer(
 );
 
 const DAppItem = observer(({ item, openApp }: { item: WalletConnect_v1; openApp: (item: WalletConnect_v1) => void }) => {
-  const { appMeta, enabledChains } = item;
+  const { appMeta } = item;
+  const { t } = i18n;
 
   return (
     <View style={{ paddingHorizontal: 16, paddingVertical: 12, flexDirection: 'row', alignItems: 'center' }}>
@@ -103,7 +105,7 @@ const DAppItem = observer(({ item, openApp }: { item: WalletConnect_v1; openApp:
           </Text>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text style={{ color: secondaryFontColor, fontSize: 12, marginTop: 4 }}>
-              {`Last used: ${item.lastUsedTimestamp.toLocaleDateString(undefined, {})}`}
+              {`${t('connectedApps-list-LastUsed')}: ${item.lastUsedTimestamp.toLocaleDateString(undefined, {})}`}
             </Text>
 
             <ScrollView horizontal style={{ marginBottom: -4, marginStart: 4 }} showsHorizontalScrollIndicator={false}>
@@ -123,6 +125,7 @@ const DAppItem = observer(({ item, openApp }: { item: WalletConnect_v1; openApp:
 });
 
 export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
+  const { t } = i18n;
   const [selectedClient, setSelectedClient] = useState<WalletConnect_v1>();
   const { ref, open, close } = useModalize();
 
@@ -150,7 +153,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
           <TouchableOpacity style={{ padding: 12 }} onPress={() => navigation.getParent()?.navigate('QRScan')}>
             <MaterialCommunityIcons name="qrcode-scan" size={32} color={secondaryFontColor} />
           </TouchableOpacity>
-          <Text style={{ color: secondaryFontColor, marginTop: 24 }}>No Connected Apps</Text>
+          <Text style={{ color: secondaryFontColor, marginTop: 24 }}>{t('connectedApps-NoApps')}</Text>
         </View>
       )}
 

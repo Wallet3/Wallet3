@@ -9,6 +9,7 @@ import React from 'react';
 import SettingScreen from './settings';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { fontColor } from '../constants/styles';
+import i18n from '../i18n';
 import { observer } from 'mobx-react-lite';
 
 const DrawerRoot = createDrawerNavigator();
@@ -21,6 +22,7 @@ type RootStackParamList = {
 
 export default observer(({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>) => {
   const { Navigator, Screen } = DrawerRoot;
+  const { t } = i18n;
 
   return (
     <Navigator
@@ -61,8 +63,8 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
         }}
       />
 
-      <Screen name="Settings" component={SettingScreen} options={{ title: 'Settings' }} />
-      <Screen name="DApps" component={DAppsScreen} options={{ title: 'Connected DApps' }} />
+      <Screen name="Settings" component={SettingScreen} options={{ title: t('home-drawer-Settings') }} />
+      <Screen name="DApps" component={DAppsScreen} options={{ title: t('connectedApps-Title') }} />
     </Navigator>
   );
 });

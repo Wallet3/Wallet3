@@ -11,22 +11,20 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { WalletConnect_v1 } from '../../viewmodels/WalletConnect_v1';
 import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
+import i18n from '../../i18n';
 import { thirdFontColor } from '../../constants/styles';
 
-export default ({
-  client,
-  accounts,
-  onDisconnect,
-  onNetworkPress,
-  onAccountsPress,
-}: {
+interface Props {
   client: WalletConnect_v1;
   accounts: Account[];
   onDisconnect: () => void;
   onNetworkPress?: () => void;
   onAccountsPress?: () => void;
-}) => {
+}
+
+export default ({ client, accounts, onDisconnect, onNetworkPress, onAccountsPress }: Props) => {
   const { appMeta, enabledChains } = client || {};
+  const { t } = i18n;
 
   const defaultAccount = accounts.find((a) => a.address === client.accounts[0]);
   const defaultNetwork = client.findTargetNetwork({ networks: PublicNetworks, defaultNetwork: Networks.current });
@@ -45,7 +43,7 @@ export default ({
         </View>
       </View>
       <View style={viewStyles.infoItem}>
-        <Text style={viewStyles.itemTxt}>Description:</Text>
+        <Text style={viewStyles.itemTxt}>{t('connectedApps-modal-Description')}:</Text>
         <Text style={viewStyles.itemTxt} numberOfLines={1}>
           {appMeta?.description || 'No Description'}
         </Text>
@@ -60,14 +58,14 @@ export default ({
       </View>
 
       <View style={viewStyles.infoItem}>
-        <Text style={viewStyles.itemTxt}>Last used:</Text>
+        <Text style={viewStyles.itemTxt}>{t('connectedApps-modal-LastUsed')}:</Text>
         <Text style={viewStyles.itemTxt} numberOfLines={1}>
           {client.lastUsedTimestamp.toLocaleString(undefined, {})}
         </Text>
       </View>
 
       <View style={viewStyles.infoItem}>
-        <Text style={viewStyles.itemTxt}>Accounts:</Text>
+        <Text style={viewStyles.itemTxt}>{t('connectedApps-modal-Accounts')}:</Text>
 
         <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={onAccountsPress}>
           {defaultAccount?.avatar ? (
@@ -84,11 +82,9 @@ export default ({
       </View>
 
       <View style={viewStyles.infoItem}>
-        <Text style={viewStyles.itemTxt}>Networks:</Text>
+        <Text style={viewStyles.itemTxt}>{t('connectedApps-modal-Networks')}:</Text>
 
         <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={onNetworkPress}>
-          {/* {generateNetworkIcon({ chainId: defaultNetwork.chainId, width: 15, height: 15, style: { marginHorizontal: 4 } })} */}
-
           <ScrollView
             horizontal
             alwaysBounceHorizontal={false}
@@ -112,7 +108,7 @@ export default ({
 
       <View style={{ flex: 1 }} />
 
-      <Button title="Disconnect" themeColor={'crimson'} onPress={onDisconnect} />
+      <Button title={t('connectedApps-modal-button-Disconnect')} themeColor={'crimson'} onPress={onDisconnect} />
     </SafeViewContainer>
   );
 };

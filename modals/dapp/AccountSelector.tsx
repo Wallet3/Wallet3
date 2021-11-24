@@ -8,6 +8,7 @@ import { Account } from '../../viewmodels/Account';
 import { Feather } from '@expo/vector-icons';
 import Image from 'react-native-expo-cached-image';
 import { formatAddress } from '../../utils/formatter';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 
 export default observer(
@@ -21,6 +22,7 @@ export default observer(
     onDone: (selectedAccounts: string[]) => void;
   }) => {
     const [selected, setSelected] = useState(selectedAccounts);
+    const { t } = i18n;
 
     const toggleNetwork = (account: string) => {
       if (selected.includes(account)) {
@@ -72,7 +74,7 @@ export default observer(
     return (
       <SafeViewContainer style={{ flex: 1 }}>
         <View style={{ borderBottomColor: borderColor, borderBottomWidth: 1, paddingBottom: 2 }}>
-          <Text style={{ color: secondaryFontColor }}>Select accounts:</Text>
+          <Text style={{ color: secondaryFontColor }}>{t('modal-accountsSelector-Title')}:</Text>
         </View>
 
         <FlatList

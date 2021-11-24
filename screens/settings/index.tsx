@@ -15,6 +15,7 @@ import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
 import { styles as appStyles } from '../../constants/styles';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { openURL } from 'expo-linking';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
@@ -24,6 +25,8 @@ type SettingsStack = {
 };
 
 export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Settings'>) => {
+  const { t } = i18n;
+
   const parent = navigation.getParent();
   const [jumpToScreen, setJumpToScreen] = React.useState('');
   const { ref: passcodeRef, open: openPasscode, close: closePasscode } = useModalize();
@@ -41,12 +44,12 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: '#fff', padding: 16 }} alwaysBounceVertical={false}>
-      <Text style={{ ...styles.sectionTitle, marginTop: 0 }}>General</Text>
+      <Text style={{ ...styles.sectionTitle, marginTop: 0 }}>{t('settings-general')}</Text>
 
       <TouchableOpacity style={styles.itemContainer} onPress={() => parent?.navigate('Languages')}>
         <View style={styles.itemSubContainer}>
           <Ionicons name="language-outline" style={styles.itemStartSymbol} size={16} />
-          <Text style={styles.itemText}>Languages</Text>
+          <Text style={styles.itemText}>{t('settings-general-language')}</Text>
         </View>
         <View style={styles.itemSubContainer}>
           <Text style={styles.itemText2}>English</Text>
@@ -57,7 +60,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
       <TouchableOpacity style={styles.itemContainer} onPress={() => parent?.navigate('Currencies')}>
         <View style={styles.itemSubContainer}>
           <MaterialCommunityIcons name="currency-eth" style={styles.itemStartSymbol} size={16} />
-          <Text style={styles.itemText}>Currency</Text>
+          <Text style={styles.itemText}>{t('settings-general-currency')}</Text>
         </View>
         <View style={styles.itemSubContainer}>
           <Text style={styles.itemText2}>{CurrencyViewmodel.currentCurrency?.currency}</Text>
@@ -65,13 +68,13 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
         </View>
       </TouchableOpacity>
 
-      <Text style={styles.sectionTitle}>Security</Text>
+      <Text style={styles.sectionTitle}>{t('settings-security')}</Text>
 
       {Authentication.biometricsSupported ? (
         <View style={styles.itemContainer}>
           <View style={styles.itemSubContainer}>
             <Ionicons name="finger-print-outline" style={styles.itemStartSymbol} size={16} />
-            <Text style={styles.itemText}>Biometric</Text>
+            <Text style={styles.itemText}>{t('settings-security-biometric')}</Text>
           </View>
 
           <View>
@@ -87,7 +90,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
       <TouchableOpacity style={styles.itemContainer} onPress={() => openChangePasscode()}>
         <View style={styles.itemSubContainer}>
           <Ionicons name="keypad-outline" style={styles.itemStartSymbol} size={16} />
-          <Text style={styles.itemText}>Change Passcode</Text>
+          <Text style={styles.itemText}>{t('settings-security-passcode')}</Text>
         </View>
 
         <View style={styles.itemSubContainer}>
@@ -98,7 +101,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
       <TouchableOpacity style={styles.itemContainer} onPress={() => parent?.navigate('Backup')}>
         <View style={styles.itemSubContainer}>
           <Ionicons name="file-tray-outline" style={styles.itemStartSymbol} size={16} />
-          <Text style={styles.itemText}>Backup</Text>
+          <Text style={styles.itemText}>{t('settings-security-backup')}</Text>
           {!Authentication.userSecretsVerified ? (
             <Ionicons name="alert-circle" size={15} color="darkorange" style={{ marginStart: 4, marginTop: -8 }} />
           ) : undefined}
@@ -111,11 +114,11 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
       <TouchableOpacity style={styles.itemContainer} onPress={() => openResetApp()}>
         <View style={styles.itemSubContainer}>
           <Ionicons name="backspace-outline" style={styles.itemStartSymbol} size={16} />
-          <Text style={styles.itemText}>Reset App</Text>
+          <Text style={styles.itemText}>{t('settings-security-resetApp')}</Text>
         </View>
       </TouchableOpacity>
 
-      <Text style={styles.sectionTitle}>Legal</Text>
+      <Text style={styles.sectionTitle}>{t('settings-legal')}</Text>
 
       {/* <TouchableOpacity style={styles.itemContainer}>
         <View style={styles.itemSubContainer}>
@@ -130,7 +133,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
       <TouchableOpacity style={styles.itemContainer} onPress={() => openURL('https://chainbow.co.jp/privacy.html')}>
         <View style={styles.itemSubContainer}>
           <Ionicons name="magnet-outline" style={styles.itemStartSymbol} size={16} />
-          <Text style={styles.itemText}>Privacy Policy</Text>
+          <Text style={styles.itemText}>{t('settings-legal-privacy')}</Text>
         </View>
         <View style={styles.itemSubContainer}>
           <Entypo name="chevron-right" style={styles.itemEndSymbol} />
@@ -140,7 +143,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
       <TouchableOpacity style={styles.itemContainer} onPress={() => parent?.navigate('About')}>
         <View style={styles.itemSubContainer}>
           <Ionicons name="information-circle-outline" style={styles.itemStartSymbol} size={16} />
-          <Text style={styles.itemText}>About</Text>
+          <Text style={styles.itemText}>{t('settings-legal-about')}</Text>
         </View>
         <View style={styles.itemSubContainer}>
           <Entypo name="chevron-right" style={styles.itemEndSymbol} />
@@ -162,13 +165,16 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
             height={420}
             onCodeEntered={async (code) => {
               const success = await Authentication.verifyPin(code);
-              if (success) {
-                if (jumpToScreen === 'ResetApp') setTimeout(() => openReset(), 25);
-                else parent?.navigate(jumpToScreen);
+              if (!success) return false;
 
-                closePasscode();
+              if (jumpToScreen === 'ResetApp') {
+                setTimeout(() => openReset(), 25);
+              } else {
+                parent?.navigate(jumpToScreen);
               }
-              return success;
+
+              closePasscode();
+              return true;
             }}
           />
         </Modalize>
@@ -188,12 +194,12 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
 
               <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                 <Ionicons name="warning" size={72} color="crimson" />
-                <Text style={{ color: 'crimson' }}>I'm sure to erase all data.</Text>
+                <Text style={{ color: 'crimson' }}>{t('settings-modal-erase')}</Text>
               </View>
 
               <View style={{ flex: 1 }} />
 
-              <Button title="Confirm" themeColor="crimson" onPress={() => App.reset()} />
+              <Button title={t('settings-modal-button-confirm')} themeColor="crimson" onPress={() => App.reset()} />
             </SafeViewContainer>
           </SafeAreaProvider>
         </Modalize>
