@@ -88,21 +88,21 @@ const Drawer = observer((props: DrawerProps) => {
 
       <View style={{ paddingBottom: 12 }}>
         <DrawerItem
-          label={t('home-drawer-Wallet')}
+          label={t('home-drawer-wallet')}
           onPress={() => navigation.navigate('Home')}
           labelStyle={{ ...styles.drawerLabel, color: homeHighlight }}
           icon={() => <Feather color={homeHighlight} size={21} name={'credit-card'} />}
         />
 
         <DrawerItem
-          label={t('home-drawer-DApps')}
+          label={t('home-drawer-dapps')}
           onPress={() => navigation.navigate('DApps')}
           labelStyle={{ ...styles.drawerLabel, color: dappsHighlight }}
           icon={() => <Feather name="layers" size={20} style={{ width: 21, paddingStart: 1 }} color={dappsHighlight} />}
         />
 
         <DrawerItem
-          label={t('home-drawer-Settings')}
+          label={t('home-drawer-settings')}
           onPress={() => navigation.navigate('Settings')}
           labelStyle={{ ...styles.drawerLabel, color: settingsHighlight }}
           icon={() => <Feather color={settingsHighlight} size={21} name={'settings'} />}
@@ -113,7 +113,7 @@ const Drawer = observer((props: DrawerProps) => {
 
       <View style={{ padding: 16, paddingBottom: 12 }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Text style={{ color: secondaryFontColor, fontSize: 14 }}>{t('home-drawer-Networks')}</Text>
+          <Text style={{ color: secondaryFontColor, fontSize: 14 }}>{t('home-drawer-networks')}</Text>
 
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <TouchableOpacity onPress={() => fastSwitchNetwork(Networks.Ethereum)} style={styles.smallNetworkContainer}>

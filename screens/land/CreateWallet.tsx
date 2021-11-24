@@ -34,10 +34,10 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
 
       <View style={{ marginVertical: 16 }}>
         <Text style={{ fontSize: 16, fontWeight: '500', color: themeColor, marginBottom: 8 }}>
-          {t('land-create-SecurityTips')}
+          {t('land-create-security-tips')}
         </Text>
-        <Text style={{ marginStart: 16, marginBottom: 8, color: secondaryFontColor }}>{t('land-create-SecurityTips-1')}</Text>
-        <Text style={{ marginStart: 16, color: secondaryFontColor }}>{t('land-create-SecurityTips-2')}</Text>
+        <Text style={{ marginStart: 16, marginBottom: 8, color: secondaryFontColor }}>{t('land-create-security-tips-1')}</Text>
+        <Text style={{ marginStart: 16, color: secondaryFontColor }}>{t('land-create-security-tips-2')}</Text>
       </View>
 
       <Mnemonic phrase={MnemonicOnce.secretWords} />
@@ -58,7 +58,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
       <View style={{ flex: 1 }} />
 
       <Button
-        title={t('land-create-BackupLater')}
+        title={t('land-create-backup-later')}
         disabled={MnemonicOnce.secretWords.length < 12}
         themeColor={themeColor}
         reverse
@@ -68,7 +68,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
       />
 
       <Button
-        title={t('land-create-BackupNow')}
+        title={t('land-create-backup-now')}
         disabled={MnemonicOnce.secretWords.length < 12}
         txtStyle={{ textTransform: 'none' }}
         onPress={() => navigation.navigate('Backup')}

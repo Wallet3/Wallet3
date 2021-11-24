@@ -40,7 +40,7 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
         </View>
       ) : (
         <View>
-          <Text>{t('land-backup-SortWords')}</Text>
+          <Text>{t('land-backup-sort-words')}</Text>
           <SortWords
             words={MnemonicOnce.secretWords}
             onVerified={(v) => {

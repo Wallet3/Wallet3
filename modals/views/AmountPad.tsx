@@ -6,6 +6,7 @@ import { numericFontFamily, secondaryFontColor } from '../../constants/styles';
 import BackButton from '../components/BackButton';
 import { IToken } from '../../common/Tokens';
 import Networks from '../../viewmodels/Networks';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 
@@ -26,6 +27,7 @@ interface SubViewProps {
 }
 
 export default observer((props: SubViewProps) => {
+  const { t } = i18n;
   const [amount, setAmount] = useState(props.initValue ?? '0');
 
   const onNumPress = (num: string) => {
@@ -104,7 +106,7 @@ export default observer((props: SubViewProps) => {
       <Numpad onPress={onNumPress} />
 
       <Button
-        title="Next"
+        title={t('button-next')}
         onPress={props.onNext}
         disabled={props.disableButton}
         themeColor={props.themeColor}

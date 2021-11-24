@@ -40,7 +40,7 @@ export default observer(({}: NativeStackScreenProps<LandScreenStack, 'Backup'>) 
         onDone={finishInitialization}
         themeColor={themeColor}
       />
-      <Loader loading={busy} message={t('land-passcode-Encrypting')} />
+      <Loader loading={busy} message={t('land-passcode-encrypting')} />
     </SafeViewContainer>
   );
 });

@@ -114,7 +114,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
       <TouchableOpacity style={styles.itemContainer} onPress={() => openResetApp()}>
         <View style={styles.itemSubContainer}>
           <Ionicons name="backspace-outline" style={styles.itemStartSymbol} size={16} />
-          <Text style={styles.itemText}>{t('settings-security-resetApp')}</Text>
+          <Text style={styles.itemText}>{t('settings-security-reset')}</Text>
         </View>
       </TouchableOpacity>
 

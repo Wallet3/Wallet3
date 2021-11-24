@@ -17,7 +17,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
 
   return (
     <SafeViewContainer style={{ ...styles.rootContainer }} paddingHeader>
-      <Text>{t('land-backup-SortWords')}</Text>
+      <Text>{t('land-backup-sort-words')}</Text>
 
       <SortWords
         words={MnemonicOnce.secretWords}

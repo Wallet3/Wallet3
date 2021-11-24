@@ -35,10 +35,10 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
       initialRouteName="Welcome"
     >
       <Screen name="Welcome" component={Welcome} options={{ headerShown: false }} />
-      <Screen name="ImportWallet" component={ImportWallet} options={{ title: t('land-welcome-ImportWallet') }} />
-      <Screen name="CreateWallet" component={CreateWallet} options={{ title: t('land-welcome-CreateWallet') }} />
-      <Screen name="Backup" component={Backup} options={{ title: t('land-backup-Title') }} />
-      <Screen name="SetupPasscode" component={SetupPasscode} options={{ title: t('land-passcode-Title') }} />
+      <Screen name="ImportWallet" component={ImportWallet} options={{ title: t('land-welcome-import-wallet') }} />
+      <Screen name="CreateWallet" component={CreateWallet} options={{ title: t('land-welcome-create-wallet') }} />
+      <Screen name="Backup" component={Backup} options={{ title: t('land-backup-title') }} />
+      <Screen name="SetupPasscode" component={SetupPasscode} options={{ title: t('land-passcode-title') }} />
     </Navigator>
   );
 });

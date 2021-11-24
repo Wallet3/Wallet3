@@ -42,7 +42,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
         <TextInput
           multiline={true}
           numberOfLines={5}
-          placeholder={t('land-import-PhrasePlaceholder')}
+          placeholder={t('land-import-placeholder')}
           onChangeText={(txt) => setMnemonic(txt)}
           autoCapitalize="none"
           keyboardType="default"
@@ -70,7 +70,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
             paddingHorizontal: 2,
           }}
         >
-          <Text style={{ fontSize: 17, color: secondaryFontColor }}>{t('land-import-DerivationPath')}</Text>
+          <Text style={{ fontSize: 17, color: secondaryFontColor }}>{t('land-import-derivation-path')}</Text>
           <TextInput
             style={{ fontSize: 17, color: themeColor }}
             defaultValue={`m/44'/60'/0'/0/0`}

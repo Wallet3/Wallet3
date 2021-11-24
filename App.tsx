@@ -56,7 +56,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
               <Screen name="ChangePasscode" component={ChangePasscode} options={{ title: t('settings-security-passcode') }} />
               <Screen name="Backup" component={Backup} options={{ title: t('settings-security-backup') }} />
               <Screen name="VerifySecret" component={VerifySecret} options={{ title: t('settings-security-backup-verify') }} />
-              <Screen name="AddToken" component={AddToken} options={{ title: t('home-addToken-Title') }} />
+              <Screen name="AddToken" component={AddToken} options={{ title: t('home-add-token-title') }} />
               <Screen name="About" component={About} />
               <Screen
                 name="QRScan"
@@ -65,7 +65,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
                   return {
                     animation: 'slide_from_bottom',
                     headerTintColor: '#ffffff',
-                    title: t('home-qrscan-Title'),
+                    title: t('home-qrscan-title'),
                     headerLeft: () => (
                       <TouchableOpacity onPress={() => navigation.pop()}>
                         <Ionicons name="arrow-back-outline" size={20} color="#ffffff" />
@@ -79,7 +79,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
                 component={Tokens}
                 options={({ navigation }) => {
                   return {
-                    title: t('home-tokens-Title'),
+                    title: t('home-tokens-title'),
                     headerRight: () => (
                       <TouchableOpacity onPress={() => navigation.navigate('AddToken')}>
                         <Ionicons name="add-circle-outline" size={24} />

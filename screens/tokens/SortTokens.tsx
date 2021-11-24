@@ -55,7 +55,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
 
   return (
     <SafeAreaView style={{ backgroundColor: '#fff', flex: 1 }}>
-      <Text style={{ paddingHorizontal: 16, color: secondaryFontColor, paddingBottom: 4 }}>{t('home-tokens-DragTip')}</Text>
+      <Text style={{ paddingHorizontal: 16, color: secondaryFontColor, paddingBottom: 4 }}>{t('home-tokens-drag-tip')}</Text>
       <DraggableFlatList
         style={{ flex: 1, marginBottom: -36 }}
         contentContainerStyle={{ paddingBottom: 36 }}

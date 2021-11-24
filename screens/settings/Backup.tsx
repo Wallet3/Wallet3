@@ -63,12 +63,12 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
 
           <View style={{ marginVertical: 16 }}>
             <Text style={{ fontSize: 16, fontWeight: '500', color: themeColor, marginBottom: 8 }}>
-              {t('land-create-SecurityTips')}
+              {t('land-create-security-tips')}
             </Text>
             <Text style={{ marginStart: 16, marginBottom: 8, color: secondaryFontColor }}>
-              {t('land-create-SecurityTips-1')}
+              {t('land-create-security-tips-1')}
             </Text>
-            <Text style={{ marginStart: 16, color: secondaryFontColor }}>{t('land-create-SecurityTips-2')}</Text>
+            <Text style={{ marginStart: 16, color: secondaryFontColor }}>{t('land-create-security-tips-2')}</Text>
           </View>
 
           <Mnemonic phrase={words} />

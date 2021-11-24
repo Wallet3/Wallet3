@@ -11,6 +11,7 @@ import Image from 'react-native-expo-cached-image';
 import Networks from '../../viewmodels/Networks';
 import { TokenTransferring } from '../../viewmodels/transferring/TokenTransferring';
 import { formatAddress } from '../../utils/formatter';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 
@@ -20,6 +21,7 @@ interface Props {
 }
 
 export default observer(({ onNext, vm }: Props) => {
+  const { t } = i18n;
   const [addr, setAddr] = useState<string>();
 
   const renderContact = ({ item }: ListRenderItemInfo<IContact>) => {
@@ -58,7 +60,7 @@ export default observer(({ onNext, vm }: Props) => {
   return (
     <SafeViewContainer style={styles.container}>
       <TextBox
-        title="To:"
+        title={`${t('modal-review-to')}:`}
         placeholder="0xabc..., .eth"
         defaultValue={vm.to}
         value={addr}
@@ -69,7 +71,7 @@ export default observer(({ onNext, vm }: Props) => {
       />
 
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Text style={{ color: secondaryFontColor }}>Recent contacts:</Text>
+        <Text style={{ color: secondaryFontColor }}>{t('modal-contacts-recent')}:</Text>
         {vm.isResolvingAddress ? (
           <Skeleton style={{ height: 14, width: 96 }} />
         ) : vm.isEns ? (
@@ -86,7 +88,7 @@ export default observer(({ onNext, vm }: Props) => {
       />
 
       <Button
-        title="Next"
+        title={t('button-next')}
         disabled={!vm.isValidAddress}
         style={{ marginTop: 12 }}
         onPress={onNext}

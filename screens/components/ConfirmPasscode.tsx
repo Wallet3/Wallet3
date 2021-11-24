@@ -70,7 +70,7 @@ export default observer(({ biometricsSupported, biometricsEnabled, themeColor, o
       <View style={{ flex: 1 }} />
 
       <Animatable.Text ref={tipView as any} style={{ textAlign: 'center', marginBottom: 16, color: secondaryFontColor }}>
-        {confirm ? t('land-passcode-EnterAgain') : ' '}
+        {confirm ? t('land-passcode-enter-again') : ' '}
       </Animatable.Text>
 
       <Animatable.View ref={passcodeView as any} style={{ flexDirection: 'row', justifyContent: 'center' }}>
@@ -89,7 +89,7 @@ export default observer(({ biometricsSupported, biometricsEnabled, themeColor, o
             alignItems: 'center',
           }}
         >
-          <Text style={{ marginBottom: -2, color: secondaryFontColor }}>{t('land-passcode-EnableBiometric')}</Text>
+          <Text style={{ marginBottom: -2, color: secondaryFontColor }}>{t('land-passcode-enable-biometric')}</Text>
 
           <Switch value={biometricsEnabled} trackColor={{ true: themeColor }} onValueChange={onBiometricValueChange} />
         </View>

@@ -43,7 +43,7 @@ export default ({ client, accounts, onDisconnect, onNetworkPress, onAccountsPres
         </View>
       </View>
       <View style={viewStyles.infoItem}>
-        <Text style={viewStyles.itemTxt}>{t('connectedApps-modal-Description')}:</Text>
+        <Text style={viewStyles.itemTxt}>{t('connectedapps-modal-description')}:</Text>
         <Text style={viewStyles.itemTxt} numberOfLines={1}>
           {appMeta?.description || 'No Description'}
         </Text>
@@ -58,14 +58,14 @@ export default ({ client, accounts, onDisconnect, onNetworkPress, onAccountsPres
       </View>
 
       <View style={viewStyles.infoItem}>
-        <Text style={viewStyles.itemTxt}>{t('connectedApps-modal-LastUsed')}:</Text>
+        <Text style={viewStyles.itemTxt}>{t('connectedapps-modal-last-used')}:</Text>
         <Text style={viewStyles.itemTxt} numberOfLines={1}>
           {client.lastUsedTimestamp.toLocaleString(undefined, {})}
         </Text>
       </View>
 
       <View style={viewStyles.infoItem}>
-        <Text style={viewStyles.itemTxt}>{t('connectedApps-modal-Accounts')}:</Text>
+        <Text style={viewStyles.itemTxt}>{t('connectedapps-modal-accounts')}:</Text>
 
         <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={onAccountsPress}>
           {defaultAccount?.avatar ? (
@@ -82,7 +82,7 @@ export default ({ client, accounts, onDisconnect, onNetworkPress, onAccountsPres
       </View>
 
       <View style={viewStyles.infoItem}>
-        <Text style={viewStyles.itemTxt}>{t('connectedApps-modal-Networks')}:</Text>
+        <Text style={viewStyles.itemTxt}>{t('connectedapps-modal-networks')}:</Text>
 
         <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={onNetworkPress}>
           <ScrollView
@@ -108,7 +108,7 @@ export default ({ client, accounts, onDisconnect, onNetworkPress, onAccountsPres
 
       <View style={{ flex: 1 }} />
 
-      <Button title={t('connectedApps-modal-button-Disconnect')} themeColor={'crimson'} onPress={onDisconnect} />
+      <Button title={t('connectedapps-modal-button-disconnect')} themeColor={'crimson'} onPress={onDisconnect} />
     </SafeViewContainer>
   );
 };

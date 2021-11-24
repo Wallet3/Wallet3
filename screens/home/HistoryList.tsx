@@ -99,7 +99,7 @@ export default observer(({ data, onTxPress }: Props) => {
     return (
       <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
         <Ionicons name="server-outline" size={32} color={secondaryFontColor} />
-        <Text style={{ color: secondaryFontColor, marginVertical: 12 }}>{t('home-history-NoTxsYet')}</Text>
+        <Text style={{ color: secondaryFontColor, marginVertical: 12 }}>{t('home-history-notxs')}</Text>
       </View>
     );
   }

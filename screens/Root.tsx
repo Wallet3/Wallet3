@@ -63,8 +63,8 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
         }}
       />
 
-      <Screen name="Settings" component={SettingScreen} options={{ title: t('home-drawer-Settings') }} />
-      <Screen name="DApps" component={DAppsScreen} options={{ title: t('connectedApps-Title') }} />
+      <Screen name="Settings" component={SettingScreen} options={{ title: t('home-drawer-settings') }} />
+      <Screen name="DApps" component={DAppsScreen} options={{ title: t('connectedapps-title') }} />
     </Navigator>
   );
 });

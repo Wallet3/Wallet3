@@ -19,6 +19,7 @@ import Swiper from 'react-native-swiper';
 import { TokenTransferring } from '../../viewmodels/transferring/TokenTransferring';
 import TxException from '../components/TxException';
 import { formatAddress } from '../../utils/formatter';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 import { utils } from 'ethers';
@@ -32,6 +33,7 @@ interface Props {
 }
 
 const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack }: Props) => {
+  const { t } = i18n;
   const [busy, setBusy] = React.useState(false);
 
   const send = async () => {

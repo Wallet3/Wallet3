@@ -60,13 +60,13 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
             }}
             onPress={() => swipeTo(0)}
           >
-            {t('home-tabs-Assets')}
+            {t('home-tabs-assets')}
           </Text>
           {/* <Text
             style={{ ...styles.headerLabel, ...(activeTab === 1 ? { ...styles.headerLabelActive, color: themeColor } : {}) }}
             onPress={() => swipeTo(1)}
           >
-            {t('home-tabs-NFTs')}
+            {t('home-tabs-nfts')}
           </Text> */}
           <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12 }}>
             <Text
@@ -77,7 +77,7 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
               }}
               onPress={() => swipeTo(2)}
             >
-              {TxHub.pendingCount > 0 ? `${t('home-tabs-History')} (${TxHub.pendingCount}` : t('home-tabs-History')}
+              {TxHub.pendingCount > 0 ? `${t('home-tabs-history')} (${TxHub.pendingCount}` : t('home-tabs-history')}
             </Text>
             {TxHub.pendingCount > 0 && (
               <Animatable.View

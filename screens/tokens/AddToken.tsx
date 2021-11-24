@@ -31,14 +31,14 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
     <ScrollView style={{ flex: 1, backgroundColor: '#fff' }} scrollEnabled={false} contentContainerStyle={{ flex: 1 }}>
       <SafeViewContainer style={{ flex: 1 }} paddingHeader>
         <TextBox
-          title={`${t('home-addToken-Address')}:`}
-          placeholder={t('home-addToken-InputPlaceholder')}
+          title={`${t('home-add-token-address')}:`}
+          placeholder={t('home-add-token-placeholder')}
           value={addr}
           onChangeText={(t) => setAddr(t)}
         />
 
         <View style={styles.item}>
-          <Text style={styles.itemText}>{t('home-addToken-Name')}:</Text>
+          <Text style={styles.itemText}>{t('home-add-token-name')}:</Text>
           {loading ? (
             <Skeleton style={{ height: 17 }} />
           ) : (
@@ -49,7 +49,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
         </View>
 
         <View style={styles.item}>
-          <Text style={styles.itemText}>{t('home-addToken-Symbol')}:</Text>
+          <Text style={styles.itemText}>{t('home-add-token-symbol')}:</Text>
           {loading ? (
             <Skeleton style={{ height: 17 }} />
           ) : (
@@ -60,7 +60,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
         </View>
 
         <View style={styles.item}>
-          <Text style={styles.itemText}>{t('home-addToken-Decimals')}:</Text>
+          <Text style={styles.itemText}>{t('home-add-token-decimals')}:</Text>
           {loading ? (
             <Skeleton style={{ height: 17 }} />
           ) : (
@@ -71,7 +71,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
         </View>
 
         <View style={styles.item}>
-          <Text style={styles.itemText}>{t('home-addToken-Balance')}:</Text>
+          <Text style={styles.itemText}>{t('home-add-token-balance')}:</Text>
           {loading ? (
             <Skeleton style={{ height: 17 }} />
           ) : (

@@ -24,7 +24,7 @@ export default ({ style, onSendPress, onRequestPress, themeColor, disabled }: Pr
         onPress={(_) => (disabled ? undefined : onSendPress?.())}
       >
         <Ionicons name="md-arrow-up-circle-outline" size={20} color="white" />
-        <Text style={styles.text}>{t('home-button-Send')}</Text>
+        <Text style={styles.text}>{t('home-button-send')}</Text>
       </Ripple>
 
       <View style={{ flex: 1 }}></View>
@@ -35,7 +35,7 @@ export default ({ style, onSendPress, onRequestPress, themeColor, disabled }: Pr
         onPress={(_) => (disabled ? undefined : onRequestPress?.())}
       >
         <Ionicons name="md-arrow-down-circle-outline" size={20} color="white" />
-        <Text style={styles.text}>{t('home-button-Request')}</Text>
+        <Text style={styles.text}>{t('home-button-request')}</Text>
       </Ripple>
     </SafeAreaView>
   );

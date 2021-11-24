@@ -105,7 +105,7 @@ const DAppItem = observer(({ item, openApp }: { item: WalletConnect_v1; openApp:
           </Text>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text style={{ color: secondaryFontColor, fontSize: 12, marginTop: 4 }}>
-              {`${t('connectedApps-list-LastUsed')}: ${item.lastUsedTimestamp.toLocaleDateString(undefined, {})}`}
+              {`${t('connectedapps-list-last-used')}: ${item.lastUsedTimestamp.toLocaleDateString(undefined, {})}`}
             </Text>
 
             <ScrollView horizontal style={{ marginBottom: -4, marginStart: 4 }} showsHorizontalScrollIndicator={false}>
@@ -153,7 +153,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
           <TouchableOpacity style={{ padding: 12 }} onPress={() => navigation.getParent()?.navigate('QRScan')}>
             <MaterialCommunityIcons name="qrcode-scan" size={32} color={secondaryFontColor} />
           </TouchableOpacity>
-          <Text style={{ color: secondaryFontColor, marginTop: 24 }}>{t('connectedApps-NoApps')}</Text>
+          <Text style={{ color: secondaryFontColor, marginTop: 24 }}>{t('connectedapps-noapps')}</Text>
         </View>
       )}
 

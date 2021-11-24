@@ -34,7 +34,7 @@ export default ({ navigation }: NativeStackScreenProps<LandScreenStack, 'Welcome
       <View style={{ width: '100%' }}>
         <View animation="fadeInUp" delay={300}>
           <Button
-            title={t('land-welcome-ImportWallet')}
+            title={t('land-welcome-import-wallet')}
             onPress={() => navigation.navigate('ImportWallet')}
             themeColor={themeColor}
             style={{ marginBottom: 12 }}
@@ -45,7 +45,7 @@ export default ({ navigation }: NativeStackScreenProps<LandScreenStack, 'Welcome
 
         <View animation="fadeInUp" delay={500}>
           <Button
-            title={t('land-welcome-CreateWallet')}
+            title={t('land-welcome-create-wallet')}
             onPress={() => navigation.navigate('CreateWallet')}
             txtStyle={{ textTransform: 'none' }}
           />
