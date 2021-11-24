@@ -63,11 +63,15 @@
   "modal-networksSelector-Title": "Select networks",
   "modal-contacts-recent": "Recent contacts",
   "modal-review-title": "Tx Review",
+  "modal-review-send": "Send",
   "modal-review-to": "To",
   "modal-review-amount": "Amount",
-  "modal-review-txFee": "Tx Fee",
   "modal-review-network": "Network",
+  "modal-review-fee": "Tx Fee",
+  "modal-review-button-send": "Send",
+  "modal-review-button-hold-to-send": "Hold to Send",
   "button-next": "Next",
   "button-save": "Save",
-  "button-done": "Done"
+  "button-done": "Done",
+  "button-cancel": "Cancel"
 }

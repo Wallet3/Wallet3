@@ -7,6 +7,7 @@ import { SafeAreaView, StyleProp, View, ViewStyle } from 'react-native';
 import { renderEmptyCircle, renderFilledCircle } from '../../components/PasscodeCircle';
 
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import i18n from '../../i18n';
 import styles from '../styles';
 
 interface Props {
@@ -18,6 +19,7 @@ interface Props {
 }
 
 const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style }: Props) => {
+  const { t } = i18n;
   const passcodeLength = 6;
   const [passcode, setPasscode] = useState('');
 
@@ -50,7 +52,7 @@ const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style }: 
       <Numpad onPress={(value) => DefaultNumpadHandler(value, passcode, setPasscode)} disableDot />
 
       {disableCancel ? undefined : (
-        <Button title="Cancel" onPress={() => onCancel?.()} themeColor={themeColor} style={{ marginTop: 12 }} />
+        <Button title={t('button-cancel')} onPress={() => onCancel?.()} themeColor={themeColor} style={{ marginTop: 12 }} />
       )}
     </SafeViewContainer>
   );

@@ -42,7 +42,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack }: Pr
     setBusy(false);
   };
 
-  const sendTitle = Authentication.biometricsEnabled ? 'Hold to Send' : 'Send';
+  const sendTitle = Authentication.biometricsEnabled ? t('modal-review-button-hold-to-send') : t('modal-review-button-send');
   const onLongSendPress = Authentication.biometricsEnabled ? send : undefined;
   const onSendPress = Authentication.biometricsEnabled ? undefined : send;
 
@@ -51,12 +51,12 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack }: Pr
       <View style={styles.navBar}>
         {disableBack ? <View /> : <BackButton onPress={onBack} color={Networks.current.color} />}
 
-        <Text style={styles.navTitle}>Tx Review</Text>
+        <Text style={styles.navTitle}>{t('modal-review-title')}</Text>
       </View>
 
       <View style={styles.reviewItemsContainer}>
         <View style={styles.reviewItem}>
-          <Text style={styles.reviewItemTitle}>Send</Text>
+          <Text style={styles.reviewItemTitle}>{t('modal-review-send')}</Text>
 
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
             <Text style={{ ...styles.reviewItemValue, marginEnd: 8, maxWidth: '50%' }} numberOfLines={1}>
@@ -68,7 +68,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack }: Pr
         </View>
 
         <View style={styles.reviewItem}>
-          <Text style={styles.reviewItemTitle}>To</Text>
+          <Text style={styles.reviewItemTitle}>{t('modal-review-to')}</Text>
 
           <View style={{ flexDirection: 'row', maxWidth: '72%', alignItems: 'center' }}>
             {vm.avatar ? (
@@ -81,7 +81,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack }: Pr
         </View>
 
         <View style={{ ...styles.reviewItem, borderBottomWidth: 0 }}>
-          <Text style={styles.reviewItemTitle}>Network</Text>
+          <Text style={styles.reviewItemTitle}>{t('modal-review-network')}</Text>
 
           <View>
             <Text style={{ ...styles.reviewItemValue, color: vm.network.color }}>{vm.network.network}</Text>
@@ -98,7 +98,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack }: Pr
           paddingStart: 16,
         }}
       >
-        <Text style={styles.reviewItemTitle}>Tx Fee</Text>
+        <Text style={styles.reviewItemTitle}>{t('modal-review-fee')}</Text>
 
         <TouchableOpacity
           style={{
