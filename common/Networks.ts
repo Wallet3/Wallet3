@@ -68,6 +68,16 @@ export const PublicNetworks: INetwork[] = [
     explorer: 'https://optimistic.etherscan.io',
   },
   {
+    symbol: 'ETH',
+    comm_id: 'boba',
+    network: 'Boba',
+    chainId: 288,
+    color: '#1CD8D2',
+    l2: true,
+    defaultTokens: BobaPopularTokens,
+    explorer: 'https://blockexplorer.boba.network',
+  },
+  {
     symbol: 'MATIC',
     comm_id: 'matic',
     network: 'Polygon',
@@ -89,16 +99,6 @@ export const PublicNetworks: INetwork[] = [
     blockTimeMs: 5 * 1000,
     explorer: 'https://blockscout.com/xdai/mainnet',
     eip1559: true,
-  },
-  {
-    symbol: 'ETH',
-    comm_id: 'boba',
-    network: 'Boba',
-    chainId: 288,
-    color: '#1CD8D2',
-    l2: true,
-    defaultTokens: BobaPopularTokens,
-    explorer: 'https://blockexplorer.boba.network',
   },
   {
     symbol: 'FTM',

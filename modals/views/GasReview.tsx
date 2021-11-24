@@ -7,6 +7,7 @@ import BackButton from '../components/BackButton';
 import { BaseTransaction } from '../../viewmodels/transferring/BaseTransaction';
 import Fire from '../../assets/icons/app/fire.svg';
 import React from 'react';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 
@@ -17,17 +18,19 @@ interface GasProps {
 }
 
 export default observer(({ onBack, vm, themeColor }: GasProps) => {
+  const { t } = i18n;
+
   return (
     <SafeViewContainer style={styles.container}>
       <View style={styles.navBar}>
         <BackButton onPress={onBack} color={themeColor} />
 
-        <Text style={styles.navTitle}>Tx Fee</Text>
+        <Text style={styles.navTitle}>{t('modal-review-fee')}</Text>
       </View>
 
       <View style={styles.reviewItemsContainer}>
         <View style={{ ...styles.reviewItem, paddingBottom: 12 }}>
-          <Text style={styles.reviewItemTitle}>Gas Limit</Text>
+          <Text style={styles.reviewItemTitle}>{t('modal-gas-review-limit')}</Text>
 
           <TextInput
             keyboardType="number-pad"
@@ -41,7 +44,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
         </View>
 
         <View style={{ ...styles.reviewItem, paddingBottom: 12 }}>
-          <Text style={styles.reviewItemTitle}>Max Gas Price</Text>
+          <Text style={styles.reviewItemTitle}>{t('modal-gas-review-max-price')}</Text>
 
           <View style={{ marginBottom: -8 }}>
             <TextInput
@@ -71,7 +74,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
 
         {vm.network.eip1559 ? (
           <View style={{ ...styles.reviewItem, paddingBottom: 12 }}>
-            <Text style={styles.reviewItemTitle}>Priority Price</Text>
+            <Text style={styles.reviewItemTitle}>{t('modal-gas-review-priority-price')}</Text>
 
             <View style={{ marginBottom: -8 }}>
               <TextInput
@@ -89,7 +92,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
         ) : undefined}
 
         <View style={{ ...styles.reviewItem, borderBottomWidth: 0, paddingBottom: 12 }}>
-          <Text style={styles.reviewItemTitle}>Nonce</Text>
+          <Text style={styles.reviewItemTitle}>{t('modal-gas-review-nonce')}</Text>
 
           <TextInput
             keyboardType="number-pad"
@@ -106,17 +109,17 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
       <View style={{ ...styles.reviewItemsContainer, flexDirection: 'row' }}>
         <TouchableOpacity style={styles.gasItem} onPress={() => vm.setGas('rapid')}>
           <Ionicons name="rocket" size={12} color="tomato" />
-          <Text style={{ ...styles.gasItemText, color: 'tomato' }}>Rapid</Text>
+          <Text style={{ ...styles.gasItemText, color: 'tomato' }}>{t('modal-gas-review-rapid')}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.gasItem} onPress={() => vm.setGas('fast')}>
           <Ionicons name="car-sport" size={13} color="dodgerblue" />
-          <Text style={{ ...styles.gasItemText, color: 'dodgerblue' }}>Fast</Text>
+          <Text style={{ ...styles.gasItemText, color: 'dodgerblue' }}>{t('modal-gas-review-fast')}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.gasItem} onPress={() => vm.setGas('standard')}>
           <FontAwesome5 name="walking" size={12} color="darkorchid" />
-          <Text style={{ ...styles.gasItemText, color: 'darkorchid' }}>Standard</Text>
+          <Text style={{ ...styles.gasItemText, color: 'darkorchid' }}>{t('modal-gas-review-standard')}</Text>
         </TouchableOpacity>
       </View>
 
