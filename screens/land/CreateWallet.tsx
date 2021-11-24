@@ -1,19 +1,20 @@
 import { Button, Mnemonic, SafeViewContainer } from '../../components';
 import React, { useEffect } from 'react';
-import { SafeAreaView, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { fontColor, secondaryFontColor, themeColor } from '../../constants/styles';
 
 import { LandScreenStack } from '../navigations';
-import LottieView from 'lottie-react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import MnemonicOnce from '../../viewmodels/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { formatAddress } from '../../utils/formatter';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
 
 export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack, 'Backup'>) => {
+  const { t } = i18n;
+
   useEffect(() => {
     MnemonicOnce.generate();
   }, []);
@@ -32,13 +33,11 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
       </View>
 
       <View style={{ marginVertical: 16 }}>
-        <Text style={{ fontSize: 16, fontWeight: '500', color: themeColor, marginBottom: 8 }}>Security Tips</Text>
-        <Text style={{ marginStart: 16, marginBottom: 8, color: secondaryFontColor }}>
-          The mnemonic consists of english words, please keep them safe.
+        <Text style={{ fontSize: 16, fontWeight: '500', color: themeColor, marginBottom: 8 }}>
+          {t('land-create-SecurityTips')}
         </Text>
-        <Text style={{ marginStart: 16, color: secondaryFontColor }}>
-          Once the mnemonic gets lost, it cannot be retrieved, and you would lose all your funds.
-        </Text>
+        <Text style={{ marginStart: 16, marginBottom: 8, color: secondaryFontColor }}>{t('land-create-SecurityTips-1')}</Text>
+        <Text style={{ marginStart: 16, color: secondaryFontColor }}>{t('land-create-SecurityTips-2')}</Text>
       </View>
 
       <Mnemonic phrase={MnemonicOnce.secretWords} />
@@ -59,7 +58,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
       <View style={{ flex: 1 }} />
 
       <Button
-        title="Backup later"
+        title={t('land-create-BackupLater')}
         disabled={MnemonicOnce.secretWords.length < 12}
         themeColor={themeColor}
         reverse
@@ -69,7 +68,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
       />
 
       <Button
-        title="Backup now"
+        title={t('land-create-BackupNow')}
         disabled={MnemonicOnce.secretWords.length < 12}
         txtStyle={{ textTransform: 'none' }}
         onPress={() => navigation.navigate('Backup')}

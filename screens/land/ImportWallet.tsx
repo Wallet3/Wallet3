@@ -9,11 +9,13 @@ import { Button } from '../../components';
 import { LandScreenStack } from '../navigations';
 import MnemonicOnce from '../../viewmodels/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import i18n from '../../i18n';
 import { langToWordlist } from '../../utils/mnemonic';
 import { observer } from 'mobx-react-lite';
 import { useHeaderHeight } from '@react-navigation/elements';
 
 export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack, 'Backup'>) => {
+  const { t } = i18n;
   const headerHeight = useHeaderHeight();
   const { top, bottom } = useSafeAreaInsets();
 
@@ -40,7 +42,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
         <TextInput
           multiline={true}
           numberOfLines={5}
-          placeholder="Enter your recovery phrase here"
+          placeholder={t('land-import-PhrasePlaceholder')}
           onChangeText={(txt) => setMnemonic(txt)}
           autoCapitalize="none"
           keyboardType="default"
@@ -68,7 +70,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
             paddingHorizontal: 2,
           }}
         >
-          <Text style={{ fontSize: 17, color: secondaryFontColor }}>Derivation Path</Text>
+          <Text style={{ fontSize: 17, color: secondaryFontColor }}>{t('land-import-DerivationPath')}</Text>
           <TextInput
             style={{ fontSize: 17, color: themeColor }}
             defaultValue={`m/44'/60'/0'/0/0`}
@@ -78,7 +80,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
 
         <View style={{ flex: 1 }} />
 
-        <Button title="Next" disabled={!verified} onPress={() => navigation.navigate('SetupPasscode')} />
+        <Button title={t('button-next')} disabled={!verified} onPress={() => navigation.navigate('SetupPasscode')} />
       </ScrollView>
     </SafeAreaView>
   );

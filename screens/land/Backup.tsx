@@ -7,15 +7,17 @@ import { LandScreenStack } from '../navigations';
 import MnemonicOnce from '../../viewmodels/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SortWords } from '../components/SecretWords';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
 
 export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack, 'Backup'>) => {
   const [verified, setVerified] = useState(false);
+  const { t } = i18n;
 
   return (
     <SafeViewContainer style={{ ...styles.rootContainer }} paddingHeader>
-      <Text>Please sort the words correctly. </Text>
+      <Text>{t('land-backup-SortWords')}</Text>
 
       <SortWords
         words={MnemonicOnce.secretWords}
@@ -27,7 +29,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
 
       <View style={{ flex: 1 }} />
 
-      <Button title="Next" disabled={!verified} onPress={() => navigation.navigate('SetupPasscode')} />
+      <Button title={t('button-next')} disabled={!verified} onPress={() => navigation.navigate('SetupPasscode')} />
     </SafeViewContainer>
   );
 });

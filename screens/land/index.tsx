@@ -8,6 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import SetupPasscode from './Passcode';
 import { TouchableOpacity } from 'react-native';
 import Welcome from './Welcome';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 
 type RootStackParamList = {
@@ -19,6 +20,8 @@ type RootStackParamList = {
 const { Navigator, Screen } = createNativeStackNavigator();
 
 export default observer(({ navigation }: NativeStackScreenProps<RootStackParamList, 'Welcome'>) => {
+  const { t } = i18n;
+
   return (
     <Navigator
       screenOptions={{
@@ -32,10 +35,10 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
       initialRouteName="Welcome"
     >
       <Screen name="Welcome" component={Welcome} options={{ headerShown: false }} />
-      <Screen name="ImportWallet" component={ImportWallet} options={{ title: 'Import a wallet' }} />
-      <Screen name="CreateWallet" component={CreateWallet} options={{ title: 'Create a new wallet' }} />
-      <Screen name="Backup" component={Backup} options={{ title: 'Backup your secret' }} />
-      <Screen name="SetupPasscode" component={SetupPasscode} options={{ title: 'Set up passcode' }} />
+      <Screen name="ImportWallet" component={ImportWallet} options={{ title: t('land-welcome-ImportWallet') }} />
+      <Screen name="CreateWallet" component={CreateWallet} options={{ title: t('land-welcome-CreateWallet') }} />
+      <Screen name="Backup" component={Backup} options={{ title: t('land-backup-Title') }} />
+      <Screen name="SetupPasscode" component={SetupPasscode} options={{ title: t('land-passcode-Title') }} />
     </Navigator>
   );
 });

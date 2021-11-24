@@ -1,4 +1,19 @@
 {
   "land-welcome-ImportWallet": "Import a wallet",
-  "land-welcome-CreateWallet": "Create a wallet"
+  "land-welcome-CreateWallet": "Create a wallet",
+  "land-import-PhrasePlaceholder": "Enter your recovery phrase here",
+  "land-import-DerivationPath": "Derivation Path",
+  "land-create-SecurityTips": "Security Tips",
+  "land-create-SecurityTips-1": "The mnemonic consists of english words, please keep them safe.",
+  "land-create-SecurityTips-2": "Once the mnemonic gets lost, it cannot be retrieved, and you would lose all your funds.",
+  "land-create-BackupNow": "Backup now",
+  "land-create-BackupLater": "Backup Later",
+  "land-backup-Title": "Backup your secret",
+  "land-backup-SortWords": "Please sort the words correctly.",
+  "land-passcode-Title": "Set up passcode",
+  "land-passcode-EnterAgain": "Please enter again",
+  "land-passcode-EnableBiometric": "Enable Biometric",
+  "land-passcode-Encrypting": "Encrypting data",
+  "button-next": "Next",
+  "button-done": "Done"
 }

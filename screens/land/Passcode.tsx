@@ -8,11 +8,13 @@ import { LandScreenStack } from '../navigations';
 import MnemonicOnce from '../../viewmodels/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
 import { themeColor } from '../../constants/styles';
 
 export default observer(({}: NativeStackScreenProps<LandScreenStack, 'Backup'>) => {
+  const { t } = i18n;
   const [busy, setBusy] = useState(false);
 
   const finishInitialization = async (passcode: string) => {
@@ -38,7 +40,7 @@ export default observer(({}: NativeStackScreenProps<LandScreenStack, 'Backup'>) 
         onDone={finishInitialization}
         themeColor={themeColor}
       />
-      <Loader loading={busy} message="Encrypting data..." />
+      <Loader loading={busy} message={t('land-passcode-Encrypting')} />
     </SafeViewContainer>
   );
 });

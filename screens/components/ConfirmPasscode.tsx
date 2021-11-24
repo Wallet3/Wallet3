@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Switch, Text, View } from 'react-native';
 import { renderEmptyCircle, renderFilledCircle } from '../../components/PasscodeCircle';
 
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { secondaryFontColor } from '../../constants/styles';
 
@@ -17,6 +18,8 @@ interface Props {
 }
 
 export default observer(({ biometricsSupported, biometricsEnabled, themeColor, onBiometricValueChange, onDone }: Props) => {
+  const { t } = i18n;
+
   const passcodeLength = 6;
   const [passcode, setPasscode] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -67,7 +70,7 @@ export default observer(({ biometricsSupported, biometricsEnabled, themeColor, o
       <View style={{ flex: 1 }} />
 
       <Animatable.Text ref={tipView as any} style={{ textAlign: 'center', marginBottom: 16, color: secondaryFontColor }}>
-        {confirm ? 'Please enter again' : ' '}
+        {confirm ? t('land-passcode-EnterAgain') : ' '}
       </Animatable.Text>
 
       <Animatable.View ref={passcodeView as any} style={{ flexDirection: 'row', justifyContent: 'center' }}>
@@ -86,7 +89,7 @@ export default observer(({ biometricsSupported, biometricsEnabled, themeColor, o
             alignItems: 'center',
           }}
         >
-          <Text style={{ marginBottom: -2, color: secondaryFontColor }}>Enable Biometric</Text>
+          <Text style={{ marginBottom: -2, color: secondaryFontColor }}>{t('land-passcode-EnableBiometric')}</Text>
 
           <Switch value={biometricsEnabled} trackColor={{ true: themeColor }} onValueChange={onBiometricValueChange} />
         </View>
@@ -95,7 +98,7 @@ export default observer(({ biometricsSupported, biometricsEnabled, themeColor, o
       <Numpad onPress={onNumpadPress} disableDot />
 
       <Button
-        title="Done"
+        title={t('button-done')}
         disabled={!verified}
         onPress={() => onDone?.(passcode)}
         style={{ marginTop: 12 }}
