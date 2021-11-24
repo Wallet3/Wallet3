@@ -150,7 +150,7 @@ export class Wallet {
       tx: { ...request.tx, readableInfo: request.readableInfo },
     });
 
-    return { success: true, hash };
+    return hash;
   }
 
   async getSecret(pin?: string) {

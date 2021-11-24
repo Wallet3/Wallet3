@@ -1,6 +1,6 @@
 import { IsNull, LessThanOrEqual, MoreThan, Not } from 'typeorm';
 import Transaction, { ITransaction } from '../models/Transaction';
-import { computed, makeObservable, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { getTransactionReceipt, sendTransaction } from '../common/RPC';
 
 import Database from '../models/Database';
@@ -26,7 +26,7 @@ class TxHub {
   }
 
   constructor() {
-    makeObservable(this, { pendingTxs: observable, pendingCount: computed, txs: observable });
+    makeObservable(this, { pendingTxs: observable, pendingCount: computed, txs: observable, reset: action });
   }
 
   async init() {
@@ -167,6 +167,11 @@ class TxHub {
 
     return t;
   };
+
+  reset() {
+    this.pendingTxs = [];
+    this.txs = [];
+  }
 }
 
 export default new TxHub();

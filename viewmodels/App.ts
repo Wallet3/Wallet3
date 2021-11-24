@@ -51,6 +51,7 @@ export class AppVM {
     this.wallets.forEach((w) => w.dispose());
     this.wallets = [];
     this.currentWallet = null;
+    TxHub.reset();
     await Promise.all([Database.reset(), AsyncStorage.clear(), Authentication.reset(), DAppHub.reset()]);
   }
 }
