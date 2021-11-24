@@ -51,11 +51,11 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
               }}
             >
               <Screen name="Root" component={Root} options={{ headerShown: false }} />
-              <Screen name="Languages" component={Languages} />
-              <Screen name="Currencies" component={Currencies} />
-              <Screen name="ChangePasscode" component={ChangePasscode} options={{ title: 'Change Passcode' }} />
-              <Screen name="Backup" component={Backup} options={{ title: 'Backup' }} />
-              <Screen name="VerifySecret" component={VerifySecret} options={{ title: 'Verify' }} />
+              <Screen name="Languages" component={Languages} options={{ title: t('settings-languages') }} />
+              <Screen name="Currencies" component={Currencies} options={{ title: t('settings-currencies') }} />
+              <Screen name="ChangePasscode" component={ChangePasscode} options={{ title: t('settings-security-passcode') }} />
+              <Screen name="Backup" component={Backup} options={{ title: t('settings-security-backup') }} />
+              <Screen name="VerifySecret" component={VerifySecret} options={{ title: t('settings-security-backup-verify') }} />
               <Screen name="AddToken" component={AddToken} options={{ title: t('home-addToken-Title') }} />
               <Screen name="About" component={About} />
               <Screen

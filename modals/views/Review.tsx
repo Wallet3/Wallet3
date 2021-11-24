@@ -5,6 +5,7 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
 import AnimateNumber from 'react-native-animate-number';
+import Authentication from '../../viewmodels/Authentication';
 import BackButton from '../components/BackButton';
 import { BaseTransaction } from '../../viewmodels/transferring/BaseTransaction';
 import Currency from '../../viewmodels/Currency';
@@ -32,6 +33,16 @@ interface Props {
 
 const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack }: Props) => {
   const [busy, setBusy] = React.useState(false);
+
+  const send = async () => {
+    setBusy(true);
+    await onSend?.();
+    setBusy(false);
+  };
+
+  const sendTitle = Authentication.biometricsEnabled ? 'Hold to Send' : 'Send';
+  const onLongSendPress = Authentication.biometricsEnabled ? send : undefined;
+  const onSendPress = Authentication.biometricsEnabled ? undefined : send;
 
   return (
     <SafeViewContainer style={styles.container}>
@@ -122,14 +133,11 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack }: Pr
       <View style={{ flex: 1 }} />
 
       <Button
-        title="Hold to Send"
-        themeColor={Networks.current.color}
+        title={sendTitle}
+        themeColor={vm.network.color}
         disabled={!vm.isValidParams || busy}
-        onLongPress={async () => {
-          setBusy(true);
-          await onSend?.();
-          setBusy(false);
-        }}
+        onPress={onSendPress}
+        onLongPress={onLongSendPress}
       />
     </SafeViewContainer>
   );

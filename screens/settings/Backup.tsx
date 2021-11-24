@@ -12,10 +12,12 @@ import { Modalize } from 'react-native-modalize';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/Networks';
 import { Portal } from 'react-native-portalize';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 export default observer(({ navigation }: NativeStackScreenProps<any, never>) => {
+  const { t } = i18n;
   const { ref: authModalRef, open, close } = useModalize();
   const [retried, setRetried] = useState(0);
   const [authorized, setAuthorized] = useState(false);
@@ -60,20 +62,24 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
           </View>
 
           <View style={{ marginVertical: 16 }}>
-            <Text style={{ fontSize: 16, fontWeight: '500', color: themeColor, marginBottom: 8 }}>Security Tips</Text>
+            <Text style={{ fontSize: 16, fontWeight: '500', color: themeColor, marginBottom: 8 }}>
+              {t('land-create-SecurityTips')}
+            </Text>
             <Text style={{ marginStart: 16, marginBottom: 8, color: secondaryFontColor }}>
-              The mnemonic consists of english words, please keep them safe.
+              {t('land-create-SecurityTips-1')}
             </Text>
-            <Text style={{ marginStart: 16, color: secondaryFontColor }}>
-              Once the mnemonic gets lost, it cannot be retrieved, and you would lose all your funds.
-            </Text>
+            <Text style={{ marginStart: 16, color: secondaryFontColor }}>{t('land-create-SecurityTips-2')}</Text>
           </View>
 
           <Mnemonic phrase={words} />
 
           <View style={{ flex: 1 }} />
 
-          <Button title="Verify" themeColor={themeColor} onPress={() => navigation.navigate('VerifySecret')} />
+          <Button
+            title={t('settings-security-backup-button-verify')}
+            themeColor={themeColor}
+            onPress={() => navigation.navigate('VerifySecret')}
+          />
         </View>
       ) : (
         <View></View>
