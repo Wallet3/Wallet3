@@ -1,20 +1,15 @@
 import { Button, Coin, SafeViewContainer } from '../../components';
-import { FontAwesome5, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import React, { useRef } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
+import { Text, TouchableOpacity, View } from 'react-native';
 
 import AnimateNumber from 'react-native-animate-number';
-import Authentication from '../../viewmodels/Authentication';
 import BackButton from '../components/BackButton';
-import { BaseTransaction } from '../../viewmodels/transferring/BaseTransaction';
 import Currency from '../../viewmodels/Currency';
-import Fire from '../../assets/icons/app/fire.svg';
 import GasReview from './GasReview';
 import Image from 'react-native-expo-cached-image';
 import InsufficientFee from '../components/InsufficientFee';
+import { MaterialIcons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/Networks';
-import { ScrollView } from 'react-native-gesture-handler';
 import Swiper from 'react-native-swiper';
 import { TokenTransferring } from '../../viewmodels/transferring/TokenTransferring';
 import TxException from '../components/TxException';
@@ -30,9 +25,10 @@ interface Props {
   onGasPress?: () => void;
   disableBack?: boolean;
   vm: TokenTransferring;
+  biometricEnabled?: boolean;
 }
 
-const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack }: Props) => {
+const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biometricEnabled }: Props) => {
   const { t } = i18n;
   const [busy, setBusy] = React.useState(false);
 
@@ -42,9 +38,9 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack }: Pr
     setBusy(false);
   };
 
-  const sendTitle = Authentication.biometricsEnabled ? t('modal-review-button-hold-to-send') : t('modal-review-button-send');
-  const onLongSendPress = Authentication.biometricsEnabled ? send : undefined;
-  const onSendPress = Authentication.biometricsEnabled ? undefined : send;
+  const sendTitle = biometricEnabled ? t('modal-review-button-hold-to-send') : t('modal-review-button-send');
+  const onLongSendPress = biometricEnabled ? send : undefined;
+  const onSendPress = biometricEnabled ? undefined : send;
 
   return (
     <SafeViewContainer style={styles.container}>
@@ -101,6 +97,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack }: Pr
         <Text style={styles.reviewItemTitle}>{t('modal-review-fee')}</Text>
 
         <TouchableOpacity
+          onPress={onGasPress}
           style={{
             flexDirection: 'row',
             alignItems: 'center',
@@ -110,7 +107,6 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack }: Pr
             justifyContent: 'flex-end',
             width: '75%',
           }}
-          onPress={onGasPress}
         >
           <Text style={{ ...styles.reviewItemTitle, fontSize: 15 }}>
             {`(${Currency.tokenToUSD(vm.estimatedRealFee, vm.network.symbol).toFixed(2)} USD)`}

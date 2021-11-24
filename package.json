@@ -10,7 +10,7 @@
   "dependencies": {
     "@expo/vector-icons": "^12.0.5",
     "@metamask/eth-sig-util": "^4.0.0",
-    "@react-native-async-storage/async-storage": "^1.15.11",
+    "@react-native-async-storage/async-storage": "^1.15.13",
     "@react-navigation/drawer": "^6.1.8",
     "@react-navigation/elements": "^1.2.1",
     "@react-navigation/native": "^6.0.6",
@@ -88,7 +88,7 @@
     "@types/lodash": "^4.14.177",
     "@types/node": "^16.11.10",
     "@types/pubsub-js": "^1.8.3",
-    "@types/react": "~17.0.36",
+    "@types/react": "~17.0.37",
     "@types/react-native": "~0.64.19",
     "@types/react-native-svg-charts": "^5.0.12",
     "babel-plugin-transform-typescript-metadata": "^0.3.2",

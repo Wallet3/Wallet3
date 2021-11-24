@@ -7,6 +7,7 @@ import { borderColor, thirdFontColor } from '../../constants/styles';
 import RejectApproveButtons from '../components/RejectApproveButtons';
 import { ScrollView } from 'react-native-gesture-handler';
 import { WCCallRequestRequest } from '../../models/WCSession_v1';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 import { utils } from 'ethers';
@@ -19,6 +20,8 @@ interface Props {
 }
 
 export default observer(({ msg, themeColor, onReject, onSign }: Props) => {
+  const { t } = i18n;
+
   return (
     <SafeViewContainer style={{}}>
       <View style={{ paddingBottom: 5, borderBottomWidth: 1, borderBottomColor: borderColor }}>
@@ -37,8 +40,8 @@ export default observer(({ msg, themeColor, onReject, onSign }: Props) => {
         onReject={onReject}
         onApprove={onSign}
         themeColor={themeColor}
-        rejectTitle="Reject"
-        approveTitle="Sign"
+        rejectTitle={t('button-reject')}
+        approveTitle={t('button-sign')}
       />
     </SafeViewContainer>
   );

@@ -1,15 +1,15 @@
 import { Button, SafeViewContainer } from '../../components';
-import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { themeColor, thirdFontColor } from '../../constants/styles';
 
 import { Account } from '../../viewmodels/Account';
-import App from '../../App';
 import Image from 'react-native-expo-cached-image';
 import { Networks } from '../../common/Networks';
+import React from 'react';
 import { WalletConnect_v1 } from '../../viewmodels/WalletConnect_v1';
 import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 
 interface DAppProps {
@@ -24,6 +24,7 @@ interface DAppProps {
 
 export default observer(
   ({ client, onNetworksPress, onAccountsPress, close, onConnect, accounts, currentAccount }: DAppProps) => {
+    const { t } = i18n;
     const networks = Networks.filter((n) => client.enabledChains.includes(n.chainId));
     const [network] = networks;
 
@@ -103,8 +104,8 @@ export default observer(
         <View style={{ flex: 1 }} />
 
         <View style={{ width: '100%' }}>
-          <Button title="Connect" onPress={onConnect} />
-          <Button title="Reject" themeColor={themeColor} onPress={reject} style={{ marginTop: 12 }} reverse />
+          <Button title={t('button-connect')} onPress={onConnect} />
+          <Button title={t('button-reject')} themeColor={themeColor} onPress={reject} style={{ marginTop: 12 }} reverse />
         </View>
       </SafeViewContainer>
     );

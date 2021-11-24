@@ -18,6 +18,7 @@ import { WCCallRequestRequest } from '../../models/WCSession_v1';
 import { WalletConnect_v1 } from '../../viewmodels/WalletConnect_v1';
 import { constants } from 'ethers';
 import { formatAddress } from '../../utils/formatter';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 
@@ -30,6 +31,7 @@ interface Props {
 
 const TxReview = observer(({ vm, onReject, onApprove, onGasPress }: Props) => {
   const { appMeta, network } = vm;
+  const { t } = i18n;
 
   return (
     <SafeViewContainer>
@@ -163,7 +165,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress }: Props) => {
           <AnimateNumber
             style={{ ...styles.reviewItemValue, marginHorizontal: 2 }}
             numberOfLines={1}
-            timing='linear'
+            timing="linear"
             value={vm.txFee}
             formatter={(val) => `${val.toFixed(5)} ${vm.feeTokenSymbol}`}
           />
@@ -182,8 +184,8 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress }: Props) => {
         onReject={onReject}
         onApprove={onApprove}
         themeColor={network?.color}
-        rejectTitle="Reject"
-        approveTitle="Send"
+        rejectTitle={t('button-reject')}
+        approveTitle={t('button-send')}
         disabledApprove={!vm.isValidParams}
       />
     </SafeViewContainer>

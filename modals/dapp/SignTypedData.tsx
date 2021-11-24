@@ -6,6 +6,7 @@ import React from 'react';
 import RejectApproveButtons from '../components/RejectApproveButtons';
 import { ScrollView } from 'react-native-gesture-handler';
 import { borderColor } from '../../constants/styles';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 
 const theme = {
@@ -31,10 +32,12 @@ const theme = {
 
 export default observer(
   ({ themeColor, data, onReject, onSign }: { themeColor: string; data: any; onReject: () => void; onSign: () => void }) => {
+    const { t } = i18n;
+
     return (
       <SafeViewContainer style={{ flex: 1 }}>
         <View style={{ paddingBottom: 5, borderBottomWidth: 1, borderBottomColor: borderColor }}>
-          <Text style={{ fontSize: 21, color: themeColor, fontWeight: '500' }}>Typed Data Signing</Text>
+          <Text style={{ fontSize: 21, color: themeColor, fontWeight: '500' }}>{t('modal-message-signing')}</Text>
         </View>
 
         <ScrollView
@@ -49,8 +52,8 @@ export default observer(
           onReject={onReject}
           onApprove={onSign}
           themeColor={themeColor}
-          rejectTitle="Reject"
-          approveTitle="Sign"
+          rejectTitle={t('button-reject')}
+          approveTitle={t('button-sign')}
         />
       </SafeViewContainer>
     );

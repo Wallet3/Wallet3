@@ -16,6 +16,7 @@ import QRCode from 'react-native-qrcode-svg';
 import Swiper from 'react-native-swiper';
 import { TransferRequesting } from '../../viewmodels/transferring/TransferRequesting';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 
@@ -154,6 +155,7 @@ interface Props {
 const QRView = observer(({ vm, onBack, themeColor }: Props) => {
   const { token, amount, requestingUri, network } = vm;
   const { avatar } = vm.currentAccount;
+  const { t } = i18n;
 
   return (
     <SafeViewContainer style={styles.container}>
@@ -212,7 +214,7 @@ const QRView = observer(({ vm, onBack, themeColor }: Props) => {
         </View>
 
         <CopyableText
-          title="Copy Link"
+          title={t('tip-copy-link')}
           txt={requestingUri}
           txtStyle={{ fontSize: 12, maxWidth: 185, color: thirdFontColor }}
           iconColor={thirdFontColor}

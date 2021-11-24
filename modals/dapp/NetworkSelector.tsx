@@ -65,7 +65,7 @@ export default observer(({ networks, selectedChains, onDone }: Props) => {
         style={{ flex: 1, marginHorizontal: -16, paddingHorizontal: 16, marginBottom: 12 }}
       />
 
-      <Button title="Done" disabled={selected.length === 0} onPress={() => onDone(selected)} />
+      <Button title={t('button-done')} disabled={selected.length === 0} onPress={() => onDone(selected)} />
     </SafeViewContainer>
   );
 });

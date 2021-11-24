@@ -94,7 +94,15 @@ export default observer(({ vm, onClose, erc681 }: Props) => {
               }}
             />
           )}
-          <ReviewPad onBack={() => swiper.current?.scrollTo(1)} vm={vm} onSend={onSendClick} disableBack={erc681} />
+
+          <ReviewPad
+            onBack={() => swiper.current?.scrollTo(1)}
+            vm={vm}
+            onSend={onSendClick}
+            disableBack={erc681}
+            biometricEnabled={Authentication.biometricsEnabled}
+          />
+
           <Passpad
             themeColor={vm.network.color}
             onCodeEntered={(c) => sendTx(c)}

@@ -32,8 +32,6 @@
   "home-add-token-decimals": "Decimals",
   "home-add-token-balance": "Balance",
   "home-qrscan-title": "Scan",
-  "home-button-send": "Send",
-  "home-button-request": "Request",
   "connectedapps-title": "Connected DApps",
   "connectedapps-noapps": "No Connected Apps",
   "connectedapps-list-last-used": "Last used",
@@ -77,8 +75,16 @@
   "modal-gas-review-rapid": "Rapid",
   "modal-gas-review-fast": "Fast",
   "modal-gas-review-standard": "Standard",
+  "modal-message-signing": "Message Signing",
+  "tip-insufficient-funds": "Insufficient funds",
+  "tip-copy-link": "Copy Link",
   "button-next": "Next",
   "button-save": "Save",
   "button-done": "Done",
-  "button-cancel": "Cancel"
+  "button-cancel": "Cancel",
+  "button-connect": "Connect",
+  "button-reject": "Reject",
+  "button-sign": "Sign",
+  "button-send": "Send",
+  "button-request": "Request"
 }
