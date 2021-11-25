@@ -15,7 +15,7 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
   const [verified, setVerified] = useState(false);
 
   return (
-    <SafeViewContainer style={{ flex: 1, paddingTop: 0, backgroundColor: '#fff' }}>
+    <SafeViewContainer style={{ flex: 1, backgroundColor: '#fff' }} paddingHeader>
       {verified ? (
         <View style={{ flex: 1 }}>
           <View style={{ flex: 1 }} />

@@ -31,7 +31,9 @@ export default ({ client, accounts, onDisconnect, onNetworkPress, onAccountsPres
 
   return (
     <SafeViewContainer>
-      <Text style={{ fontSize: 20, fontWeight: '600', marginBottom: 10, color: thirdFontColor }}>DApp Info</Text>
+      <Text style={{ fontSize: 20, fontWeight: '600', marginBottom: 10, color: thirdFontColor }}>
+        {t('connectedapps-modal-title')}
+      </Text>
       <View style={viewStyles.infoItem}>
         <Text style={viewStyles.itemTxt}>DApp:</Text>
 

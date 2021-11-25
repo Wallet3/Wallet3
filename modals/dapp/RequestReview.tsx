@@ -47,7 +47,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress }: Props) => {
         </View>
 
         <View style={{ ...styles.reviewItem }}>
-          <Text style={styles.reviewItemTitle}>Type</Text>
+          <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-type')}</Text>
           <Text style={{ ...styles.reviewItemValue }} numberOfLines={1}>
             {vm.type}
           </Text>
@@ -55,7 +55,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress }: Props) => {
 
         {vm.type === 'Transfer' ? (
           <View style={{ ...styles.reviewItem }}>
-            <Text style={styles.reviewItemTitle}>Amount</Text>
+            <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-amount')}</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               {vm.tokenAmountWei.gt(0) ? (
                 <Text style={{ ...styles.reviewItemValue }} numberOfLines={1}>
@@ -76,7 +76,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress }: Props) => {
 
         {vm.type === 'Approve' ? (
           <View style={{ ...styles.reviewItem }}>
-            <Text style={styles.reviewItemTitle}>Max</Text>
+            <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-max-approve')}</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <TextInput
                 numberOfLines={1}
@@ -107,14 +107,14 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress }: Props) => {
 
         {vm.type !== 'Contract Interaction' ? (
           <View style={{ ...styles.reviewItem }}>
-            <Text style={styles.reviewItemTitle}>To</Text>
+            <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-to')}</Text>
             <Text style={{ ...styles.reviewItemValue }} numberOfLines={1}>
               {formatAddress(vm.to, 9, 5)}
             </Text>
           </View>
         ) : (
           <View style={{ ...styles.reviewItem }}>
-            <Text style={styles.reviewItemTitle}>Value</Text>
+            <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-value')}</Text>
             <View style={{ flexDirection: 'row' }}>
               <Text style={{ ...styles.reviewItemValue, maxWidth: 120, marginEnd: 4 }} numberOfLines={1}>
                 {vm.value}
@@ -128,7 +128,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress }: Props) => {
         )}
 
         <View style={{ ...styles.reviewItem, borderBottomWidth: 0 }}>
-          <Text style={styles.reviewItemTitle}>Network</Text>
+          <Text style={styles.reviewItemTitle}>{t('modal-review-network')}</Text>
           <Text style={{ ...styles.reviewItemValue, color: network?.color }} numberOfLines={1}>
             {network?.network}
           </Text>
@@ -144,7 +144,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress }: Props) => {
           paddingStart: 16,
         }}
       >
-        <Text style={styles.reviewItemTitle}>Tx Fee</Text>
+        <Text style={styles.reviewItemTitle}>{t('modal-review-fee')}</Text>
 
         <TouchableOpacity
           onPress={onGasPress}

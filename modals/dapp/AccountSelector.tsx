@@ -74,7 +74,7 @@ export default observer(
     return (
       <SafeViewContainer style={{ flex: 1 }}>
         <View style={{ borderBottomColor: borderColor, borderBottomWidth: 1, paddingBottom: 2 }}>
-          <Text style={{ color: secondaryFontColor }}>{t('modal-accountsSelector-Title')}:</Text>
+          <Text style={{ color: secondaryFontColor }}>{t('modal-accounts-selector-title')}:</Text>
         </View>
 
         <FlatList

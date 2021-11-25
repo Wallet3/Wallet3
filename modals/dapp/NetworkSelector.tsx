@@ -54,7 +54,7 @@ export default observer(({ networks, selectedChains, onDone }: Props) => {
   return (
     <SafeViewContainer style={{ flex: 1 }}>
       <View style={{ borderBottomColor: borderColor, borderBottomWidth: 1, paddingBottom: 2 }}>
-        <Text style={{ color: secondaryFontColor }}>{t('modal-networksSelector-Title')}:</Text>
+        <Text style={{ color: secondaryFontColor }}>{t('modal-networks-selector-title')}:</Text>
       </View>
 
       <FlatList

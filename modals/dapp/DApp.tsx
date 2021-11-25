@@ -44,7 +44,7 @@ export default observer(
       return (
         <View style={{ flex: 1 }}>
           <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-            <Text style={{ color: 'crimson', fontSize: 24 }}>Not Supported Network</Text>
+            <Text style={{ color: 'crimson', fontSize: 24 }}>{t('modal-dapp-not-supported-network')}</Text>
           </View>
           <Button title="Close" onPress={() => close()} />
         </View>
