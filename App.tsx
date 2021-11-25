@@ -57,7 +57,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
               <Screen name="Backup" component={Backup} options={{ title: t('settings-security-backup') }} />
               <Screen name="VerifySecret" component={VerifySecret} options={{ title: t('settings-security-backup-verify') }} />
               <Screen name="AddToken" component={AddToken} options={{ title: t('home-add-token-title') }} />
-              <Screen name="About" component={About} />
+              <Screen name="About" component={About} options={{ title: t('about-title') }} />
               <Screen
                 name="QRScan"
                 component={QRScan}

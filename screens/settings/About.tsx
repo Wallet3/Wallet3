@@ -4,36 +4,41 @@ import { secondaryFontColor, themeColor, thirdFontColor } from '../../constants/
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import { SafeViewContainer } from '../../components';
+import i18n from '../../i18n';
 
 export function About() {
+  const { t } = i18n;
+
   return (
     <SafeViewContainer paddingHeader style={{ backgroundColor: '#fff' }}>
-      <Text style={{ fontWeight: '500', color: thirdFontColor, fontSize: 16 }}>A Secure Wallet for Web3 Era.</Text>
+      <Text style={{ fontWeight: '500', color: thirdFontColor, fontSize: 16 }}>{t('about-slogan')}</Text>
 
-      <Text style={{ marginTop: 24, marginBottom: 4, fontWeight: '500', fontSize: 19, color: thirdFontColor }}>Features</Text>
+      <Text style={{ marginTop: 24, marginBottom: 4, fontWeight: '500', fontSize: 19, color: thirdFontColor }}>
+        {t('Features')}
+      </Text>
 
       <View style={styles.item}>
         <Feather name="box" size={16} color={thirdFontColor} />
-        <Text style={styles.txt}>Manage all your Ethereum assets in one place.</Text>
+        <Text style={styles.txt}>{t('about-features-1')}</Text>
       </View>
 
       <View style={styles.item}>
         <Feather name="link-2" size={16} color={thirdFontColor} />
-        <Text style={styles.txt}>Connect DApps with WalletConnect.</Text>
+        <Text style={styles.txt}>{t('about-features-2')}</Text>
       </View>
 
       <View style={styles.item}>
         <Feather name="cpu" size={16} color={thirdFontColor} />
-        <Text style={styles.txt}>Support Layer2 and EVM-compatible chains.</Text>
+        <Text style={styles.txt}>{t('about-features-3')}</Text>
       </View>
 
       <View style={styles.item}>
         <Feather name="shield" size={16} color={thirdFontColor} />
-        <Text style={styles.txt}>Built for Security.</Text>
+        <Text style={styles.txt}>{t('about-features-4')}</Text>
       </View>
 
       <Text style={{ marginTop: 24, marginBottom: 4, fontWeight: '500', fontSize: 19, color: thirdFontColor }}>
-        Data Providers
+        {t('about-data-providers')}
       </Text>
 
       <View style={{ ...styles.item, height: 40 }}>
