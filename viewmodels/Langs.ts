@@ -14,7 +14,7 @@ class Langs {
 
   supportedLangs: Lang[] = [
     { flag: 'usa', name: 'English', value: 'en' },
-    { flag: 'jp', name: '日本語', value: 'jp' },
+    { flag: 'jp', name: '日本語', value: 'ja' },
     { flag: 'tw', name: '繁体中文', value: 'zh-tw' },
     { flag: 'cn', name: '简体中文', value: 'zh-cn' },
   ];

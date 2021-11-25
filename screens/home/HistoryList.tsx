@@ -55,7 +55,7 @@ const Tx = observer(({ item, onPress }: { onPress?: (tx: Transaction) => void; i
             <Coin symbol={tokenSymbol} size={16} style={{ marginEnd: 4 }} />
           )}
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ fontSize: 16, marginEnd: 4 }} numberOfLines={1}>{`${methodName}`}</Text>
+            <Text style={{ fontSize: 16, marginEnd: 4, maxWidth: 120 }} numberOfLines={1}>{`${methodName}`}</Text>
             {methodName === 'Contract Interaction' ? undefined : (
               <Text style={{ fontSize: 16 }}>{`${amount} ${tokenSymbol}`}</Text>
             )}
