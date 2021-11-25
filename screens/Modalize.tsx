@@ -12,6 +12,7 @@ import { TokenTransferring } from '../viewmodels/transferring/TokenTransferring'
 import { WCCallRequestRequest } from '../models/WCSession_v1';
 import { WalletConnect_v1 } from '../viewmodels/WalletConnect_v1';
 import { autorun } from 'mobx';
+import i18n from '../i18n';
 import { parse } from 'eth-url-parser';
 import { showMessage } from 'react-native-flash-message';
 import { styles } from '../constants/styles';
@@ -25,7 +26,6 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
   const [type, setType] = useState<string>();
   const [client, setClient] = useState<WalletConnect_v1>();
   const [callRequest, setCallRequest] = useState<WCCallRequestRequest>();
-  const { current } = Networks;
 
   useEffect(() => {
     PubSub.subscribe('wc_request', (_, { client, request }: { client: WalletConnect_v1; request: WCCallRequestRequest }) => {
@@ -179,7 +179,7 @@ const SendFundsModal = () => {
 
     PubSub.subscribe(`CodeScan-0x`, (_, { data }) => {
       if (!utils.isAddress(data) && !data.endsWith('.eth')) {
-        showMessage({ message: 'Invalid address', type: 'warning' });
+        showMessage({ message: i18n.t('msg-invalid-address'), type: 'warning' });
         return;
       }
 

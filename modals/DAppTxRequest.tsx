@@ -49,7 +49,7 @@ export default observer(({ client, request, close }: Props) => {
 
     if (!txHex || error) {
       client.rejectRequest(request.id, error);
-      showMessage({ message: error });
+      showMessage({ message: error, type: 'warning' });
       close();
       return false;
     }

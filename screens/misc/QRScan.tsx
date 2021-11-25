@@ -6,8 +6,10 @@ import { Button } from '../../components';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import PubSub from 'pubsub-js';
 import { StatusBar } from 'expo-status-bar';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { openSettings } from 'expo-linking';
+import { showMessage } from 'react-native-flash-message';
 
 export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
   const [hasPermission, setHasPermission] = useState(false);
@@ -17,7 +19,11 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
     const supportedSchemes = ['ethereum', 'wc:', '0x'];
     const scheme =
       supportedSchemes.find((schema) => data.toLowerCase().startsWith(schema)) || (data.endsWith('.eth') ? '0x' : undefined);
-    if (!scheme) return;
+
+    if (!scheme) {
+      showMessage({ message: i18n.t('msg-invalid-qr-code'), type: 'warning' });
+      return;
+    }
 
     PubSub.publish(`CodeScan-${scheme}`, { data });
     setScanned(true);

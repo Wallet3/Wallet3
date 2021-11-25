@@ -5,8 +5,8 @@ import { getTransactionReceipt, sendTransaction } from '../common/RPC';
 
 import Database from '../models/Database';
 import Enumerable from 'linq';
-import Networks from './Networks';
 import { formatAddress } from '../utils/formatter';
+import i18n from '../i18n';
 import { showMessage } from 'react-native-flash-message';
 
 class TxHub {
@@ -79,8 +79,8 @@ class TxHub {
       tx.blockHash = receipt.blockHash;
 
       showMessage({
-        message: tx.status ? 'Transaction confirmed' : 'Transaction failed',
-        description: `Tx: ${formatAddress(tx.hash, 7, 5)} has been confirmed at block: ${tx.blockNumber}`,
+        message: tx.status ? i18n.t('tx-hub-transaction-confirmed') : i18n.t('tx-hub-transaction-failed'),
+        description: i18n.t('tx-hub-confirmed-msg', { hash: formatAddress(tx.hash, 7, 5), block: tx.blockNumber }),
         type: tx.status ? 'success' : 'danger',
         duration: 3000,
       });
@@ -118,7 +118,7 @@ class TxHub {
 
     if (error || !hash) {
       showMessage({
-        message: error?.message ?? 'Transaction failed',
+        message: error?.message ?? i18n.t('tx-hub-transaction-failed'),
         animated: true,
         autoHide: true,
         backgroundColor: 'orange',
