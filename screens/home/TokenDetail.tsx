@@ -10,6 +10,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { IToken } from '../../common/Tokens';
 import { LineChart } from 'react-native-svg-charts';
 import { TokenData } from '../../viewmodels/TokenData';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 
 interface Props {
@@ -20,6 +21,7 @@ interface Props {
 
 export default observer(({ token, themeColor, onSendPress }: Props) => {
   const [vm] = useState<TokenData>(new TokenData({ token: token! }));
+  const { t } = i18n;
 
   const Gradient = () => (
     <Defs key={'gradient'}>
@@ -68,8 +70,8 @@ export default observer(({ token, themeColor, onSendPress }: Props) => {
       </LineChart>
 
       <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
-        <Text style={styles.subTitle}>Value</Text>
-        <Text style={styles.subTitle}>Balance</Text>
+        <Text style={styles.subTitle}>{t('modal-token-details-value')}</Text>
+        <Text style={styles.subTitle}>{t('modal-token-details-balance')}</Text>
       </View>
 
       <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
@@ -88,14 +90,14 @@ export default observer(({ token, themeColor, onSendPress }: Props) => {
 
       <Button
         themeColor={themeColor}
-        title="Send"
+        title={t('button-send')}
         style={{ borderRadius: 50, marginVertical: 16 }}
         icon={() => <FontAwesome name="send-o" color="white" size={14} />}
         onPress={() => onSendPress?.(token)}
       />
 
       <Text style={{ fontSize: 21, marginTop: 12, color: '#75869c', fontWeight: '600', opacity: 0.72 }}>
-        {`About ${token?.symbol}`}
+        {`${t('modal-token-details-about')} ${token?.symbol}`}
       </Text>
 
       <View style={{ marginTop: 8 }}>

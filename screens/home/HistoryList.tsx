@@ -20,26 +20,30 @@ interface Props {
 }
 
 const Methods = new Map([
-  ['0xa9059cbb', 'Sent'],
-  ['0x095ea7b3', 'Approve'],
+  ['0xa9059cbb', 'sent'],
+  ['0x095ea7b3', 'approve'],
 ]);
 
 const StatusColor = {
-  Confirmed: 'yellowgreen',
-  Failed: 'crimson',
-  Pending: 'deepskyblue',
+  confirmed: 'yellowgreen',
+  failed: 'crimson',
+  pending: 'deepskyblue',
 };
 
 const Tx = observer(({ item, onPress }: { onPress?: (tx: Transaction) => void; item: Transaction }) => {
   const method = (item.data as string).substring(0, 10);
+  const { t } = i18n;
 
   const { chainId } = item;
   const tokenSymbol = item.readableInfo?.symbol ?? ChainIdsSymbol.get(chainId);
   const dappIcon = item.readableInfo?.icon;
   const amount = item.readableInfo?.amount ?? utils.formatEther(item.value ?? '0');
-  const methodName = Methods.get(method) ?? (item.data !== '0x' ? 'Contract Interaction' : `Sent`);
+
   const to: string = item.readableInfo?.recipient ?? item.readableInfo.dapp ?? item.to;
-  const status = item.blockNumber ? (item.status ? 'Confirmed' : 'Failed') : 'Pending';
+  const status = item.blockNumber ? (item.status ? 'confirmed' : 'failed') : 'pending';
+  const methodName = t(
+    `home-history-item-type-${Methods.get(method) ?? (item.data !== '0x' ? 'contract-interaction' : 'sent')}`
+  );
 
   return (
     <TouchableOpacity style={{ paddingVertical: 12, paddingHorizontal: 8 }} onPress={() => onPress?.(item as Transaction)}>
@@ -68,7 +72,7 @@ const Tx = observer(({ item, onPress }: { onPress?: (tx: Transaction) => void; i
             borderRadius: 4,
           }}
         >
-          <Text style={{ color: 'white', fontWeight: '300', fontSize: 12 }}>{status}</Text>
+          <Text style={{ color: 'white', fontWeight: '300', fontSize: 12 }}>{t(`modal-tx-details-status-${status}`)}</Text>
         </View>
       </View>
 
@@ -77,7 +81,7 @@ const Tx = observer(({ item, onPress }: { onPress?: (tx: Transaction) => void; i
           {dappIcon ? (
             generateNetworkIcon({ chainId, width: 12, style: { marginEnd: 6, marginStart: 2 } })
           ) : (
-            <Text style={{ fontWeight: '300', marginEnd: 2 }}>To:</Text>
+            <Text style={{ fontWeight: '300', marginEnd: 2 }}>{t('home-history-item-to')}:</Text>
           )}
           <Text style={{ fontWeight: '300', maxWidth: 250 }} numberOfLines={1}>
             {to.length === 42 ? formatAddress(to!, 10, 5) : to}

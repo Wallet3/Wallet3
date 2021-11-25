@@ -39,11 +39,24 @@ export default observer(({ client, request, close }: Props) => {
   };
 
   const sendTx = async (pin?: string) => {
-    const { success, hash, error } = await App.currentWallet!.sendTx({
-      accountIndex: vm.account.index,
-      tx: vm.txRequest,
-      pin,
+    const tx = vm.txRequest;
 
+    const { txHex, error } = await App.currentWallet!.signTx({
+      accountIndex: vm.account.index,
+      tx,
+      pin,
+    });
+
+    if (!txHex || error) {
+      client.rejectRequest(request.id, error);
+      showMessage({ message: error });
+      close();
+      return false;
+    }
+
+    const hash = await App.currentWallet!.sendTx({
+      txHex,
+      tx,
       readableInfo: {
         type: 'dapp-interaction',
         dapp: vm.appMeta.name,
@@ -51,20 +64,11 @@ export default observer(({ client, request, close }: Props) => {
       },
     });
 
-    setVerified(success);
+    setVerified(true);
+    client.approveRequest(request.id, hash);
+    setTimeout(() => close(), 1700);
 
-    if (success) {
-      client.approveRequest(request.id, hash);
-      setTimeout(() => close(), 1700);
-    }
-
-    if (error) {
-      client.rejectRequest(request.id, error);
-      close();
-      showMessage({ message: error });
-    }
-
-    return success;
+    return true;
   };
 
   const onSendClick = async () => {
