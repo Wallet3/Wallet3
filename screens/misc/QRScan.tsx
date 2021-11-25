@@ -14,6 +14,7 @@ import { showMessage } from 'react-native-flash-message';
 export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
   const [hasPermission, setHasPermission] = useState(false);
   const [scanned, setScanned] = useState(false);
+  const [lastShown, setLastShown] = useState(0);
 
   const handleBarCodeScanned: BarCodeScannedCallback = ({ data }) => {
     const supportedSchemes = ['ethereum', 'wc:', '0x'];
@@ -21,7 +22,9 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
       supportedSchemes.find((schema) => data.toLowerCase().startsWith(schema)) || (data.endsWith('.eth') ? '0x' : undefined);
 
     if (!scheme) {
+      if (Date.now() - lastShown < 3000) return;
       showMessage({ message: i18n.t('msg-invalid-qr-code'), type: 'warning' });
+      setLastShown(Date.now());
       return;
     }
 
