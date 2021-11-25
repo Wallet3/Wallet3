@@ -1,7 +1,7 @@
+import { Feather, Ionicons } from '@expo/vector-icons';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { secondaryFontColor, themeColor, thirdFontColor } from '../../constants/styles';
 
-import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import { SafeViewContainer } from '../../components';
 import i18n from '../../i18n';
@@ -14,7 +14,7 @@ export function About() {
       <Text style={{ fontWeight: '500', color: thirdFontColor, fontSize: 16 }}>{t('about-slogan')}</Text>
 
       <Text style={{ marginTop: 24, marginBottom: 4, fontWeight: '500', fontSize: 19, color: thirdFontColor }}>
-        {t('Features')}
+        {t('about-features')}
       </Text>
 
       <View style={styles.item}>
@@ -33,7 +33,7 @@ export function About() {
       </View>
 
       <View style={styles.item}>
-        <Feather name="shield" size={16} color={thirdFontColor} />
+        <Ionicons name="shield-checkmark-outline" size={16} color={thirdFontColor} />
         <Text style={styles.txt}>{t('about-features-4')}</Text>
       </View>
 

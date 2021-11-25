@@ -25,7 +25,7 @@ export default observer(({ msg, themeColor, onReject, onSign }: Props) => {
   return (
     <SafeViewContainer style={{}}>
       <View style={{ paddingBottom: 5, borderBottomWidth: 1, borderBottomColor: borderColor }}>
-        <Text style={{ fontSize: 21, color: themeColor, fontWeight: '500' }}>Message Signing</Text>
+        <Text style={{ fontSize: 21, color: themeColor, fontWeight: '500' }}>{t('modal-message-signing')}</Text>
       </View>
 
       <ScrollView

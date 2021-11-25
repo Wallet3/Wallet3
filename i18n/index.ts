@@ -2,10 +2,12 @@ import * as Localization from 'expo-localization';
 
 import en from './langs/en.json';
 import i18n from 'i18n-js';
+import zh_cn from './langs/zh-cn.json';
 
 // Set the key-value pairs for the different languages you want to support.
 i18n.translations = {
   en,
+  'zh-cn': zh_cn,
 };
 
 i18n.defaultLocale = 'en';

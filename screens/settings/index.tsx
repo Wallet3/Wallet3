@@ -8,6 +8,7 @@ import Authentication from '../../viewmodels/Authentication';
 import CurrencyViewmodel from '../../viewmodels/Currency';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import { FullPasspad } from '../../modals/views/Passpad';
+import Langs from '../../viewmodels/Langs';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
 import { Portal } from 'react-native-portalize';
@@ -52,7 +53,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
           <Text style={styles.itemText}>{t('settings-general-language')}</Text>
         </View>
         <View style={styles.itemSubContainer}>
-          <Text style={styles.itemText2}>English</Text>
+          <Text style={styles.itemText2}>{Langs.currentLang.name}</Text>
           <Entypo name="chevron-right" style={styles.itemEndSymbol} />
         </View>
       </TouchableOpacity>
