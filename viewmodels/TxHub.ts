@@ -101,7 +101,7 @@ class TxHub {
     if (confirmedTxs.length === 0) return;
 
     runInAction(() => {
-      this.txs.unshift(...confirmedTxs.filter((t) => t.blockHash));
+      this.txs.unshift(...confirmedTxs.filter((t) => t.blockHash && !this.txs.find((t2) => t2.hash === t.hash)));
 
       const latestNonce = Enumerable.from(this.txs)
         .take(10)
