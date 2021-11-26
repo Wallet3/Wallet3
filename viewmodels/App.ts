@@ -6,6 +6,7 @@ import Coingecko from '../common/apis/Coingecko';
 import DAppHub from './DAppHub';
 import Database from '../models/Database';
 import TxHub from './TxHub';
+import UrlHub from './UrlHub';
 import { Wallet } from './Wallet';
 
 export class AppVM {
@@ -38,7 +39,12 @@ export class AppVM {
 
     const wallets = await Promise.all((await Database.keyRepository.find()).map((key) => new Wallet(key).init()));
 
-    await Promise.all([TxHub.init(), DAppHub.init()]);
+    await Promise.all([TxHub.init()]);
+
+    Authentication.once('appAuthorized', () => {
+      DAppHub.init();
+      UrlHub.start();
+    });
 
     runInAction(() => {
       this.initialized = true;

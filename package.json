@@ -100,7 +100,7 @@
   },
   "private": true,
   "name": "mobile",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "react-native": {
     "crypto": "react-native-crypto",
     "_stream_transform": "readable-stream/transform",

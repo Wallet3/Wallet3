@@ -14,6 +14,7 @@ import { appEncryptKey, pinEncryptKey } from '../configs/secret';
 import { decrypt, encrypt, sha256 } from '../utils/cipher';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import EventEmitter from 'events';
 
 const keys = {
   enableBiometrics: 'enableBiometrics',
@@ -22,7 +23,7 @@ const keys = {
   pin: 'pin',
 };
 
-export class Authentication {
+export class Authentication extends EventEmitter {
   biometricsSupported = false;
   supportedTypes: AuthenticationType[] = [];
   biometricsEnabled = true;
@@ -31,6 +32,8 @@ export class Authentication {
   userSecretsVerified = false;
 
   constructor() {
+    super();
+
     makeObservable(this, {
       biometricsSupported: observable,
       supportedTypes: observable,
@@ -97,7 +100,10 @@ export class Authentication {
 
   async authorize(pin?: string) {
     const success = await this.authenticate({ pin });
-    if (!this.appAuthorized) runInAction(() => (this.appAuthorized = success));
+    if (!this.appAuthorized) {
+      runInAction(() => (this.appAuthorized = success));
+      if (success) this.emit('appAuthorized');
+    }
     return success;
   }
 

@@ -200,7 +200,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
 
               <View style={{ flex: 1 }} />
 
-              <Button title={t('settings-modal-button-confirm')} themeColor="crimson" onPress={() => App.reset()} />
+              <Button title={t('settings-modal-button-confirm')} themeColor="crimson" onLongPress={() => App.reset()} />
             </SafeViewContainer>
           </SafeAreaProvider>
         </Modalize>

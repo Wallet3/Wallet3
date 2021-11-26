@@ -6,6 +6,7 @@ import { Button } from '../../components';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import PubSub from 'pubsub-js';
 import { StatusBar } from 'expo-status-bar';
+import UrlHub from '../../viewmodels/UrlHub';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { openSettings } from 'expo-linking';
@@ -14,23 +15,12 @@ import { showMessage } from 'react-native-flash-message';
 export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
   const [hasPermission, setHasPermission] = useState(false);
   const [scanned, setScanned] = useState(false);
-  const [lastShown, setLastShown] = useState(0);
 
   const handleBarCodeScanned: BarCodeScannedCallback = ({ data }) => {
-    const supportedSchemes = ['ethereum', 'wc:', '0x'];
-    const scheme =
-      supportedSchemes.find((schema) => data.toLowerCase().startsWith(schema)) || (data.endsWith('.eth') ? '0x' : undefined);
+    const handled = UrlHub.handleURL(data);
+    setScanned(handled);
 
-    if (!scheme) {
-      if (Date.now() - lastShown < 3000) return;
-      showMessage({ message: i18n.t('msg-invalid-qr-code'), type: 'warning' });
-      setLastShown(Date.now());
-      return;
-    }
-
-    PubSub.publish(`CodeScan-${scheme}`, { data });
-    setScanned(true);
-    navigation.pop();
+    if (handled) navigation.pop();
   };
 
   useEffect(() => {
