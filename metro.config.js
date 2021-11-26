@@ -7,6 +7,7 @@ module.exports = (async () => {
   return {
     transformer: {
       babelTransformerPath: require.resolve('react-native-svg-transformer'),
+      assetPlugins: ['expo-asset/tools/hashAssetFiles'],
       // minifierConfig: {
       //   keep_classnames: true, // FIX typeorm
       //   keep_fnames: true, // FIX typeorm

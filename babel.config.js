@@ -5,6 +5,7 @@ module.exports = function (api) {
     plugins: [
       'react-native-reanimated/plugin',
       'babel-plugin-transform-typescript-metadata',
+      '@babel/plugin-proposal-numeric-separator',
       ['@babel/plugin-proposal-decorators', { legacy: true }],
     ],
   };

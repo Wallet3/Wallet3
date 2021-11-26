@@ -25,6 +25,7 @@
     "ethers": "^5.5.1",
     "events": "^3.3.0",
     "expo": "~43.0.3",
+    "expo-asset": "^8.4.3",
     "expo-barcode-scanner": "^11.1.2",
     "expo-clipboard": "^2.0.3",
     "expo-crypto": "^10.0.3",
@@ -84,6 +85,7 @@
   "devDependencies": {
     "@babel/core": "^7.16.0",
     "@babel/plugin-proposal-decorators": "^7.16.4",
+    "@babel/plugin-proposal-numeric-separator": "^7.16.0",
     "@types/i18n-js": "^3.8.2",
     "@types/lodash": "^4.14.177",
     "@types/node": "^16.11.10",
