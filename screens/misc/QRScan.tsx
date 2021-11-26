@@ -15,6 +15,7 @@ import { showMessage } from 'react-native-flash-message';
 export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
   const [hasPermission, setHasPermission] = useState(false);
   const [scanned, setScanned] = useState(false);
+  const { t } = i18n;
 
   const handleBarCodeScanned: BarCodeScannedCallback = ({ data }) => {
     const handled = UrlHub.handleURL(data);
@@ -45,8 +46,12 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
   if (hasPermission === false) {
     return (
       <View style={{ ...styles.container, backgroundColor: '#000' }}>
-        <Text style={{ color: '#fff' }}>No access to camera</Text>
-        <Button title="Go to Settings" style={{ marginVertical: 12, paddingHorizontal: 12 }} onPress={() => openSettings()} />
+        <Text style={{ color: '#fff' }}>{t('qrscan-no-permission')}</Text>
+        <Button
+          title={t('qrscan-go-to-settings')}
+          style={{ marginVertical: 12, paddingHorizontal: 12 }}
+          onPress={() => openSettings()}
+        />
         <StatusBar style="light" />
       </View>
     );

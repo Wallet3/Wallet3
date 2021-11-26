@@ -65,7 +65,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
                   return {
                     animation: 'slide_from_bottom',
                     headerTintColor: '#ffffff',
-                    title: t('home-qrscan-title'),
+                    title: t('qrscan-title'),
                     headerLeft: () => (
                       <TouchableOpacity onPress={() => navigation.pop()}>
                         <Ionicons name="arrow-back-outline" size={20} color="#ffffff" />
