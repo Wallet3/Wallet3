@@ -56,7 +56,7 @@ export class Account {
     const { current } = Networks;
     this.loadingTokens = true;
 
-    const [native, userTokens, { usd_value }] = await Promise.all([
+    const [native, userTokens, userBalance] = await Promise.all([
       this.createNativeToken(),
       TokensMan.loadUserTokens(current.chainId, this.address, Networks.currentProvider),
       Debank.getBalance(this.address, current.comm_id),
@@ -69,7 +69,7 @@ export class Account {
 
     runInAction(() => {
       this.tokens = favTokens;
-      this.balanceUSD = usd_value;
+      this.balanceUSD = userBalance?.usd_value ?? this.balanceUSD;
       this.allTokens = [...userTokens];
       this.loadingTokens = false;
     });
@@ -109,12 +109,13 @@ export class Account {
   }
 
   async refreshTokensBalance() {
-    const [{ usd_value }, _] = await Promise.all([
+    const [balance, _] = await Promise.all([
       Debank.getBalance(this.address, Networks.current.comm_id),
       this.tokens.map((t) => (t as ERC20Token).getBalance?.(false)),
     ]);
 
-    runInAction(() => (this.balanceUSD = usd_value));
+    if (!balance) return;
+    runInAction(() => (this.balanceUSD = balance.usd_value));
   }
 
   async fetchBasicInfo() {

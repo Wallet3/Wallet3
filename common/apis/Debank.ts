@@ -12,7 +12,7 @@ export async function getBalance(address: string, chain: chain) {
     const data = (await resp.json()) as { usd_value: number };
     return data;
   } catch (error) {
-    return { usd_value: 0 };
+    return undefined;
   }
 }
 
