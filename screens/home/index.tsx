@@ -55,7 +55,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
       }}
     >
       <Overview
-        style={{ marginBottom: 2, backgroundColor: current.color }}
+        style={{ backgroundColor: current.color }}
         address={currentWallet?.currentAccount?.address}
         balance={currentWallet?.currentAccount?.balance}
         currency={CurrencyViewmodel.currentCurrency.symbol}

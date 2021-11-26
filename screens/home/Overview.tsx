@@ -66,9 +66,9 @@ export default observer(({ style, address, balance, network, avatar, chainId, co
         txtStyle={{ ...styles.text, fontSize: 12 }}
       />
 
-      <View style={{ height: 54 }} />
+      <View style={{ height: 54, backgroundColor: 'transparent' }} />
 
-      <View style={{ justifyContent: 'space-between' }}>
+      <View style={{ justifyContent: 'space-between', marginBottom: 10, backgroundColor: 'transparent', height: 31 }}>
         <AnimateNumber
           value={balance || 0}
           style={styles.headline}
@@ -86,8 +86,8 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 9,
     paddingVertical: 10,
+    paddingBottom: 0,
     paddingHorizontal: 16,
-    height: 142,
     backgroundColor: themeColor,
     overflow: 'hidden',
   },
