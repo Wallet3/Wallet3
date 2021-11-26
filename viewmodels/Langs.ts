@@ -1,3 +1,5 @@
+import * as Localization from 'expo-localization';
+
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -20,8 +22,8 @@ class Langs {
   ];
 
   constructor() {
-    this.currentLang = this.supportedLangs[0];
-    i18n.locale = this.currentLang.value;
+    this.currentLang =
+      this.supportedLangs.find((l) => Localization.locale.toLowerCase().includes(l.value)) ?? this.supportedLangs[0];
 
     makeObservable(this, { currentLang: observable, setLang: action });
 
