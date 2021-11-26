@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
 
   arbitrum: {
     marginTop: -50,
-    marginEnd: -9,
+    marginEnd: -5,
     alignSelf: 'flex-end',
     opacity: 0.8,
   },

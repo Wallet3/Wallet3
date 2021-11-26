@@ -84,10 +84,10 @@ export default observer(({ style, address, balance, network, avatar, chainId, co
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 9,
+    borderRadius: 10,
     paddingVertical: 10,
     paddingBottom: 0,
-    paddingHorizontal: 14,
+    paddingHorizontal: 12,
     backgroundColor: themeColor,
     overflow: 'hidden',
   },
