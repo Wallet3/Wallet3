@@ -7,19 +7,13 @@ class UrlHub {
   private lastHandled = 0;
 
   start() {
-    console.log(
-      Linking.parse(
-        'wallet3://wc?uri=wc%3A445aee77-4115-47d1-8d05-3f2abb88ebd7%401%3Fbridge%3Dhttps%253A%252F%252Fw.bridge.walletconnect.org%26key%3Da3f9fd25769a0339692d1eca55268942ec7c11f65c76a8348eee9f2b0db09af0'
-      )
-    );
-
     Linking.getInitialURL().then((url) => this.handleURL(url!));
     Linking.addEventListener('url', ({ url }) => this.handleURL(url));
   }
 
   handleURL = (url: string) => {
     if (!url) return false;
-    
+
     const appSchemes = ['wallet3:', 'ledgerlive', 'dharma', 'huobiwallet', 'imtokenv2', 'tpoutside'];
     const supportedSchemes = ['ethereum', 'wc:', '0x'].concat(appSchemes);
     const scheme =
@@ -36,6 +30,8 @@ class UrlHub {
     if (appSchemes.includes(scheme)) {
       try {
         const { queryParams } = Linking.parse(url);
+        if (Object.getOwnPropertyNames(queryParams).length === 0) return; // ignore empty query params
+
         PubSub.publish(`CodeScan-wc:`, { data: queryParams.uri });
       } catch (error) {}
     } else {
