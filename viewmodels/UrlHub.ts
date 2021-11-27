@@ -35,7 +35,7 @@ class UrlHub {
         PubSub.publish(`CodeScan-wc:`, { data: queryParams.uri });
       } catch (error) {}
     } else {
-      PubSub.publish(`CodeScan-${scheme}`, { data: url });
+      PubSub.publish(`CodeScan-${scheme}`, { data: url.replace('Ethereum', 'ethereum') });
     }
 
     return true;

@@ -1,10 +1,10 @@
 import { ConnectDApp, DAppTxRequest, NetworksMenu, Request, Send, Sign } from '../modals';
+import { ERC681, ERC681Transferring } from '../viewmodels/transferring/ERC681Transferring';
 import React, { useEffect, useState } from 'react';
 
 import { AppVM } from '../viewmodels/App';
 import { Authentication } from '../viewmodels/Authentication';
 import { Dimensions } from 'react-native';
-import { ERC681Transferring } from '../viewmodels/transferring/ERC681Transferring';
 import { FullPasspad } from '../modals/views/Passpad';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../viewmodels/Networks';
@@ -169,8 +169,9 @@ const SendFundsModal = () => {
 
     PubSub.subscribe(`CodeScan-ethereum`, (_, { data }) => {
       try {
-        setIsERC681(true);
-        setVM(new ERC681Transferring({ defaultNetwork: Networks.current, erc681: parse(data) }));
+        const erc681 = parse(data) as ERC681;
+        setIsERC681(erc681.parameters?.amount || erc681.parameters?.value || erc681.function_name ? true : false);
+        setVM(new ERC681Transferring({ defaultNetwork: Networks.current, erc681 }));
         setTimeout(() => openSendModal(), 0);
       } catch (error) {
         showMessage({ message: (error as any)?.toString?.(), type: 'warning' });

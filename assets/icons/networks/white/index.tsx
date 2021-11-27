@@ -15,14 +15,14 @@ import XDai from './xdai.svg';
 
 const styles = StyleSheet.create({
   ethereum: {
-    marginTop: -54,
-    marginEnd: -19,
+    marginTop: -57,
+    marginEnd: -17,
     alignSelf: 'flex-end',
     opacity: 0.72,
   },
 
   arbitrum: {
-    marginTop: -50,
+    marginTop: -52,
     marginEnd: -5,
     alignSelf: 'flex-end',
     opacity: 0.8,
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
 
   optimism: {
     marginTop: -57,
-    marginEnd: -6,
+    marginEnd: -2,
     alignSelf: 'flex-end',
     opacity: 0.8,
   },
@@ -50,8 +50,8 @@ const styles = StyleSheet.create({
   },
 
   xdai: {
-    marginTop: -49,
-    marginEnd: -6,
+    marginTop: -52,
+    marginEnd: -2,
     alignSelf: 'flex-end',
     opacity: 0.8,
   },
@@ -64,21 +64,21 @@ const styles = StyleSheet.create({
   },
 
   avalanche: {
-    marginTop: -47,
-    marginEnd: -10,
+    marginTop: -48,
+    marginEnd: -8,
     alignSelf: 'flex-end',
     opacity: 0.72,
   },
 
   celo: {
-    marginTop: -47,
+    marginTop: -50,
     marginEnd: -5,
     alignSelf: 'flex-end',
     opacity: 0.72,
   },
 
   heco: {
-    marginTop: -47,
+    marginTop: -49,
     marginEnd: -10,
     alignSelf: 'flex-end',
     opacity: 0.72,
@@ -86,14 +86,14 @@ const styles = StyleSheet.create({
 
   okex: {
     marginTop: -52,
-    marginEnd: -6,
+    marginEnd: -2,
     alignSelf: 'flex-end',
     opacity: 0.72,
   },
 
   bsc: {
-    marginTop: -47,
-    marginEnd: -6,
+    marginTop: -50,
+    marginEnd: -3,
     alignSelf: 'flex-end',
     opacity: 0.72,
   },
