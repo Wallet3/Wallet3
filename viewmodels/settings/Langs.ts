@@ -3,7 +3,7 @@ import * as Localization from 'expo-localization';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import i18n from '../i18n';
+import i18n from '../../i18n';
 
 export interface Lang {
   flag: string;

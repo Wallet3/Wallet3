@@ -3,7 +3,7 @@ import { numericFontFamily, themeColor } from '../../constants/styles';
 
 import AnimateNumber from 'react-native-animate-number';
 import CopyableText from '../../components/CopyableText';
-import { Currency } from '../../viewmodels/Currency';
+import { Currency } from '../../viewmodels/settings/Currency';
 import { Feather } from '@expo/vector-icons';
 import Image from 'react-native-expo-cached-image';
 import Logos from '../../assets/icons/networks/white';

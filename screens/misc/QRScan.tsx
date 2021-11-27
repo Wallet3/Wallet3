@@ -6,7 +6,7 @@ import { Button } from '../../components';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import PubSub from 'pubsub-js';
 import { StatusBar } from 'expo-status-bar';
-import UrlHub from '../../viewmodels/UrlHub';
+import UrlHub from '../../viewmodels/hubs/UrlHub';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { openSettings } from 'expo-linking';

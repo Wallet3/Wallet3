@@ -1,5 +1,5 @@
 import { FlatList, ListRenderItemInfo, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
-import Langs, { Lang } from '../../viewmodels/Langs';
+import Langs, { Lang } from '../../viewmodels/settings/Langs';
 
 import { Feather } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';

@@ -4,7 +4,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 
 import AnimateNumber from 'react-native-animate-number';
 import BackButton from '../components/BackButton';
-import Currency from '../../viewmodels/Currency';
+import Currency from '../../viewmodels/settings/Currency';
 import GasReview from './GasReview';
 import Image from 'react-native-expo-cached-image';
 import InsufficientFee from '../components/InsufficientFee';

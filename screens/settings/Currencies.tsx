@@ -1,4 +1,4 @@
-import CurrencyViewmodel, { Currency } from '../../viewmodels/Currency';
+import CurrencyViewmodel, { Currency } from '../../viewmodels/settings/Currency';
 import { FlatList, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';

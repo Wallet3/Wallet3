@@ -12,7 +12,7 @@ import { IToken } from '../../common/Tokens';
 import { RootNavigationProps } from '../navigations';
 import Swiper from 'react-native-swiper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import TxHub from '../../viewmodels/TxHub';
+import TxHub from '../../viewmodels/hubs/TxHub';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useNavigation } from '@react-navigation/core';

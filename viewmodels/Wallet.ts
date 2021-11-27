@@ -10,7 +10,7 @@ import Key from '../models/Key';
 import Networks from './Networks';
 import { ReadableInfo } from '../models/Transaction';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
-import TxHub from './TxHub';
+import TxHub from './hubs/TxHub';
 
 type SignTxRequest = {
   accountIndex: number;

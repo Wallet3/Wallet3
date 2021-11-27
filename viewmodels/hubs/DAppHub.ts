@@ -2,12 +2,12 @@ import * as Linking from 'expo-linking';
 
 import { IReactionDisposer, action, autorun, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
 
-import App from './App';
-import Database from '../models/Database';
-import { EventEmitter } from '../utils/events';
-import Networks from './Networks';
-import WCSession_v1 from '../models/WCSession_v1';
-import { WalletConnect_v1 } from './WalletConnect_v1';
+import App from '../App';
+import Database from '../../models/Database';
+import { EventEmitter } from '../../utils/events';
+import Networks from '../Networks';
+import WCSession_v1 from '../../models/WCSession_v1';
+import { WalletConnect_v1 } from '../WalletConnect_v1';
 
 class DAppHub extends EventEmitter {
   clients: WalletConnect_v1[] = [];

@@ -5,7 +5,7 @@ import React, { useRef, useState } from 'react';
 import { Account } from '../../viewmodels/Account';
 import AccountSelector from '../../modals/dapp/AccountSelector';
 import App from '../../viewmodels/App';
-import DAppHub from '../../viewmodels/DAppHub';
+import DAppHub from '../../viewmodels/hubs/DAppHub';
 import DAppInfo from './DAppInfo';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import Image from 'react-native-expo-cached-image';

@@ -1,7 +1,7 @@
 import { action, makeAutoObservable, makeObservable, observable } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Coingecko from '../common/apis/Coingecko';
+import Coingecko from '../../common/apis/Coingecko';
 
 export interface Currency {
   currency: string;

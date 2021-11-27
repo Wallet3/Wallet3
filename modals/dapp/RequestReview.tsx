@@ -5,7 +5,7 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 import { borderColor, fontColor } from '../../constants/styles';
 
 import AnimateNumber from 'react-native-animate-number';
-import Currency from '../../viewmodels/Currency';
+import Currency from '../../viewmodels/settings/Currency';
 import GasReview from '../views/GasReview';
 import { INetwork } from '../../common/Networks';
 import Image from 'react-native-expo-cached-image';

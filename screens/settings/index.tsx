@@ -5,10 +5,10 @@ import { fontColor, secondaryFontColor } from '../../constants/styles';
 
 import App from '../../viewmodels/App';
 import Authentication from '../../viewmodels/Authentication';
-import CurrencyViewmodel from '../../viewmodels/Currency';
+import CurrencyViewmodel from '../../viewmodels/settings/Currency';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import { FullPasspad } from '../../modals/views/Passpad';
-import Langs from '../../viewmodels/Langs';
+import Langs from '../../viewmodels/settings/Langs';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
 import { Portal } from 'react-native-portalize';

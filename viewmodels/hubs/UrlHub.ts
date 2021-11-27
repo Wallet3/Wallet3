@@ -1,6 +1,6 @@
 import * as Linking from 'expo-linking';
 
-import i18n from '../i18n';
+import i18n from '../../i18n';
 import { showMessage } from 'react-native-flash-message';
 
 class UrlHub {

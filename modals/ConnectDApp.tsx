@@ -5,7 +5,7 @@ import { SafeAreaView, Text, View } from 'react-native';
 import AccountSelector from './dapp/AccountSelector';
 import App from '../viewmodels/App';
 import DApp from './dapp/DApp';
-import DAppHub from '../viewmodels/DAppHub';
+import DAppHub from '../viewmodels/hubs/DAppHub';
 import { Ionicons } from '@expo/vector-icons';
 import Loading from './views/Loading';
 import NetworkSelector from './dapp/NetworkSelector';

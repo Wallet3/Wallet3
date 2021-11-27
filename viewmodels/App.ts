@@ -3,10 +3,10 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Authentication from './Authentication';
 import Coingecko from '../common/apis/Coingecko';
-import DAppHub from './DAppHub';
+import DAppHub from './hubs/DAppHub';
 import Database from '../models/Database';
-import TxHub from './TxHub';
-import UrlHub from './UrlHub';
+import TxHub from './hubs/TxHub';
+import UrlHub from './hubs/UrlHub';
 import { Wallet } from './Wallet';
 
 export class AppVM {
