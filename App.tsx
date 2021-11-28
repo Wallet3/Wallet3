@@ -1,3 +1,5 @@
+import * as SplashScreen from 'expo-splash-screen';
+
 import AppViewModel, { AppVM } from './viewmodels/App';
 import AuthViewModel, { Authentication } from './viewmodels/Authentication';
 
@@ -22,8 +24,8 @@ import VerifySecret from './screens/settings/VerifySecret';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import i18n from './i18n';
 import { observer } from 'mobx-react-lite';
-import { title } from 'process';
 
+SplashScreen.hideAsync();
 AppViewModel.init();
 
 const StackRoot = createNativeStackNavigator();

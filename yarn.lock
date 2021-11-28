@@ -4607,9 +4607,9 @@ expo-secure-store@~11.0.3:
   dependencies:
     expo-modules-core "~0.4.4"
 
-expo-splash-screen@~0.13.5:
+expo-splash-screen@^0.13.5:
   version "0.13.5"
-  resolved "https://registry.npmjs.org/expo-splash-screen/-/expo-splash-screen-0.13.5.tgz"
+  resolved "https://registry.yarnpkg.com/expo-splash-screen/-/expo-splash-screen-0.13.5.tgz#ece76c092f2ce88e4660a70e532ed47909a01ddd"
   integrity sha512-L/L0XlmmxSoyuooCVvbPBO4xUF9kAs+F0+fML3pf7miBOnTd/v9j5riKSmaDthNtM4AarXxgi0AXzSHQ1M3rZg==
   dependencies:
     "@expo/configure-splash-screen" "^0.6.0"
