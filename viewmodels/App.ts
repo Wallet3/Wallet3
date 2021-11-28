@@ -3,8 +3,10 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Authentication from './Authentication';
 import Coingecko from '../common/apis/Coingecko';
+import Contacts from './Contacts';
 import DAppHub from './hubs/DAppHub';
 import Database from '../models/Database';
+import Networks from './Networks';
 import TxHub from './hubs/TxHub';
 import UrlHub from './hubs/UrlHub';
 import { Wallet } from './Wallet';
@@ -58,6 +60,8 @@ export class AppVM {
     this.wallets = [];
     this.currentWallet = null;
     TxHub.reset();
+    Contacts.reset();
+    Networks.reset();
     await Promise.all([Database.reset(), AsyncStorage.clear(), Authentication.reset(), DAppHub.reset()]);
   }
 }

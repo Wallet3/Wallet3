@@ -31,7 +31,7 @@ class Networks {
   }
 
   constructor() {
-    makeObservable(this, { current: observable, switch: action });
+    makeObservable(this, { current: observable, switch: action, reset: action });
 
     AsyncStorage.getItem('network').then((chainId) => {
       const chain = Number(chainId || 1);
@@ -44,6 +44,10 @@ class Networks {
 
     this.current = network;
     AsyncStorage.setItem('network', JSON.stringify(network.chainId));
+  }
+
+  reset() {
+    this.switch(this.Ethereum);
   }
 
   get currentProvider() {
