@@ -45,7 +45,7 @@
     "i18n-js": "^3.8.0",
     "linq": "^4.0.0",
     "lottie-react-native": "^5.0.1",
-    "mobx": "^6.3.7",
+    "mobx": "^6.3.8",
     "mobx-react-lite": "^3.2.2",
     "process": "^0.11.0",
     "pubsub-js": "^1.9.4",

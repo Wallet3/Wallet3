@@ -46,8 +46,8 @@ export default observer((props: Props) => {
         data={props.tokens}
         renderItem={renderItem}
         keyExtractor={(i) => i.address}
-        contentContainerStyle={{ paddingBottom: 36 }}
-        style={{ marginTop: -6, marginEnd: -16, paddingEnd: 16, marginBottom: -36 }}
+        contentContainerStyle={{ paddingBottom: 36, paddingTop: 9 }}
+        style={{ marginTop: -16, marginEnd: -16, paddingEnd: 16, marginBottom: -36 }}
       />
     </SafeViewContainer>
   );
