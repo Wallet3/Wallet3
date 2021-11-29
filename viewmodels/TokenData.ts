@@ -57,17 +57,17 @@ export class TokenData implements ITokenData {
 
     const { description, links, market_data, error } = result;
 
-    if (error || !description) return;
+    if (error || !description || !market_data) return;
 
-    const en = description.en.replace(/<[^>]*>?/gm, '');
-    const [first] = en.split(/(?:\r?\n)+/);
+    const en = description.en?.replace(/<[^>]*>?/gm, '');
+    const [first] = en?.split(/(?:\r?\n)+/);
 
     runInAction(() => {
-      this.firstDescription = first;
-      this.description = en;
-      this.price = market_data.current_price.usd;
-      this.priceChangeIn24 = market_data.price_change_24h;
-      this.priceChangePercentIn24 = market_data.price_change_percentage_24h;
+      this.firstDescription = first || '';
+      this.description = en || '';
+      this.price = market_data.current_price?.usd ?? 0;
+      this.priceChangeIn24 = market_data.price_change_24h || 0;
+      this.priceChangePercentIn24 = market_data.price_change_percentage_24h || 0;
       this.loading = false;
     });
   }
