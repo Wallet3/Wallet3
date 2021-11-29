@@ -35,7 +35,7 @@ export default observer(({ token, themeColor, onSendPress }: Props) => {
   return (
     <View style={{ padding: 16 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Coin symbol={token?.symbol} size={39} />
+        <Coin symbol={token?.symbol} size={39} iconUrl={token?.iconUrl} />
 
         <View style={{ marginStart: 16 }}>
           <Text style={{ fontWeight: '500', fontSize: 19, color: fontColor }} numberOfLines={1}>

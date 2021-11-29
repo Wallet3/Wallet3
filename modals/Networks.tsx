@@ -22,7 +22,7 @@ export default observer((props: Props) => {
   const renderItem = ({ item }: ListRenderItemInfo<INetwork>) => {
     return (
       <TouchableOpacity
-        style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 8 }}
+        style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 9 }}
         onPress={() => props.onNetworkPress?.(item)}
       >
         <Feather
