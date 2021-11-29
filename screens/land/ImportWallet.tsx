@@ -9,8 +9,8 @@ import { Button } from '../../components';
 import { LandScreenStack } from '../navigations';
 import MnemonicOnce from '../../viewmodels/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { decode } from 'js-base64';
 import i18n from '../../i18n';
-import { langToWordlist } from '../../utils/mnemonic';
 import { observer } from 'mobx-react-lite';
 import { useHeaderHeight } from '@react-navigation/elements';
 
@@ -25,6 +25,23 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
   useEffect(() => {
     setVerified(MnemonicOnce.setMnemonic(mnemonic));
   }, [mnemonic]);
+
+  useEffect(() => {
+    PubSub.subscribe('CodeScan-wallet3sync:', (_, { data }: { data: string }) => {
+      const encoded = data.substring(12);
+      const decoded = decode(encoded).replaceAll(',', ' ');
+
+      console.log(data, encoded, decoded);
+
+      if (!ethers.utils.isValidMnemonic(decoded)) return;
+      MnemonicOnce.setMnemonic(decoded);
+      navigation.navigate('SetupPasscode');
+    });
+
+    return () => {
+      PubSub.unsubscribe('CodeScan-wallet3sync:');
+    };
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
@@ -79,6 +96,15 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
         </View>
 
         <View style={{ flex: 1 }} />
+
+        <Button
+          reverse
+          title={t('land-import-button-sync')}
+          onPress={() => navigation.navigate('QRScan')}
+          style={{ marginBottom: 12 }}
+          themeColor={themeColor}
+          txtStyle={{ textTransform: 'none' }}
+        />
 
         <Button title={t('button-next')} disabled={!verified} onPress={() => navigation.navigate('SetupPasscode')} />
       </ScrollView>

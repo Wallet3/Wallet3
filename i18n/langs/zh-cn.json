@@ -3,6 +3,7 @@
   "land-welcome-create-wallet": "创建钱包",
   "land-import-placeholder": "输入助记词组",
   "land-import-derivation-path": "地址派生路径",
+  "land-import-button-sync": "使用 Wallet 3 桌面版同步",
   "land-create-security-tips": "安全提示",
   "land-create-security-tips-1": "助记词组由一串英语单词组成，请安全保存",
   "land-create-security-tips-2": "一旦助记词丢失，钱包将无法恢复，并且您的所有资产也将永久丢失",

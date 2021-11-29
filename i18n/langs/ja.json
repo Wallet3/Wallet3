@@ -3,6 +3,7 @@
   "land-welcome-create-wallet": "新規ウォレットの作成",
   "land-import-placeholder": "ニーモニックを入力してください。",
   "land-import-derivation-path": "派生パス",
+  "land-import-button-sync": "Wallet 3 デスクトップとの同期",
   "land-create-security-tips": "セキュリティについて",
   "land-create-security-tips-1": "ニーモニックは英語の単語で構成されており、安全なところで書いてください",
   "land-create-security-tips-2": "ニーモニックが失われてしまうと、それを取り戻すことはできず、すべての資金を失ってしまうことになります。",

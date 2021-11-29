@@ -7,6 +7,7 @@ export type LandScreenStack = {
   Backup: undefined;
   SetupPasscode: undefined;
   Home: undefined;
+  QRScan: undefined;
   Root: undefined;
 };
 

@@ -15,84 +15,84 @@ import XDai from './xdai.svg';
 
 const styles = StyleSheet.create({
   ethereum: {
-    marginTop: -57,
+    marginTop: -52,
     marginEnd: -17,
     alignSelf: 'flex-end',
     opacity: 0.72,
   },
 
   arbitrum: {
-    marginTop: -52,
+    marginTop: -50,
     marginEnd: -5,
     alignSelf: 'flex-end',
     opacity: 0.8,
   },
 
   optimism: {
-    marginTop: -57,
+    marginTop: -52,
     marginEnd: -2,
     alignSelf: 'flex-end',
     opacity: 0.8,
   },
 
   boba: {
-    marginTop: -42,
+    marginTop: -40,
     marginEnd: -12,
     alignSelf: 'flex-end',
     opacity: 1,
   },
 
   polygon: {
-    marginTop: -42,
+    marginTop: -40,
     marginEnd: -0,
     alignSelf: 'flex-end',
     opacity: 0.72,
   },
 
   xdai: {
-    marginTop: -52,
+    marginTop: -48,
     marginEnd: -2,
     alignSelf: 'flex-end',
     opacity: 0.8,
   },
 
   fantom: {
-    marginTop: -49,
+    marginTop: -46,
     marginEnd: -14,
     alignSelf: 'flex-end',
     opacity: 0.72,
   },
 
   avalanche: {
-    marginTop: -48,
+    marginTop: -45,
     marginEnd: -8,
     alignSelf: 'flex-end',
     opacity: 0.72,
   },
 
   celo: {
-    marginTop: -50,
+    marginTop: -47,
     marginEnd: -5,
     alignSelf: 'flex-end',
     opacity: 0.72,
   },
 
   heco: {
-    marginTop: -49,
+    marginTop: -46,
     marginEnd: -10,
     alignSelf: 'flex-end',
     opacity: 0.72,
   },
 
   okex: {
-    marginTop: -52,
+    marginTop: -48,
     marginEnd: -2,
     alignSelf: 'flex-end',
     opacity: 0.72,
   },
 
   bsc: {
-    marginTop: -50,
+    marginTop: -47,
     marginEnd: -3,
     alignSelf: 'flex-end',
     opacity: 0.72,

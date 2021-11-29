@@ -15,7 +15,7 @@ class UrlHub {
     if (!url) return false;
 
     const appSchemes = ['wallet3:', 'ledgerlive', 'dharma', 'huobiwallet', 'imtokenv2', 'tpoutside'];
-    const supportedSchemes = ['ethereum', 'wc:', '0x'].concat(appSchemes);
+    const supportedSchemes = ['ethereum', 'wc:', '0x', 'wallet3sync:'].concat(appSchemes);
     const scheme =
       supportedSchemes.find((schema) => url.toLowerCase().startsWith(schema)) || (url.endsWith('.eth') ? '0x' : undefined);
 
@@ -30,7 +30,7 @@ class UrlHub {
     if (appSchemes.includes(scheme)) {
       try {
         const { queryParams } = Linking.parse(url);
-        if (Object.getOwnPropertyNames(queryParams).length === 0) return; // ignore empty query params
+        if (Object.getOwnPropertyNames(queryParams).length === 0) return false; // ignore empty query params
 
         PubSub.publish(`CodeScan-wc:`, { data: queryParams.uri });
       } catch (error) {}
