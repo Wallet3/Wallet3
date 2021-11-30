@@ -2,6 +2,7 @@ import { action, makeAutoObservable, makeObservable, observable } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Coingecko from '../../common/apis/Coingecko';
+import numeral from 'numeral';
 
 export interface Currency {
   currency: string;
@@ -37,7 +38,7 @@ export class CurrencyViewmodel {
   format = (usd: number) => {
     let value = this.usdToToken(usd);
 
-    const formatted = value.toLocaleString(undefined, { maximumFractionDigits: 2 });
+    const formatted = numeral(value).format('0,0.00');
     return `${this.currentCurrency.symbol} ${formatted === 'NaN' ? '0.00' : formatted}`.trim();
   };
 

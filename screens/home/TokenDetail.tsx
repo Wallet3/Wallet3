@@ -10,7 +10,9 @@ import { FontAwesome } from '@expo/vector-icons';
 import { IToken } from '../../common/Tokens';
 import { LineChart } from 'react-native-svg-charts';
 import { TokenData } from '../../viewmodels/TokenData';
+import { formatCurrency } from '../../utils/formatter';
 import i18n from '../../i18n';
+import numeral from 'numeral';
 import { observer } from 'mobx-react-lite';
 
 interface Props {
@@ -76,13 +78,11 @@ export default observer(({ token, themeColor, onSendPress }: Props) => {
 
       <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
         <Text style={styles.subValue} numberOfLines={1}>
-          {`$ ${(Number(token?.amount || 0) * vm.price).toLocaleString(undefined, {
-            maximumFractionDigits: 2,
-          })}`}
+          {formatCurrency(Number(token?.amount || 0) * vm.price)}
         </Text>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={{ ...styles.subValue, marginEnd: 8 }}>
-            {`${Number(token?.amount).toLocaleString(undefined, { maximumFractionDigits: 6 })} ${token?.symbol}`}
+            {`${numeral(token?.amount ?? 0).format('0,0.000000')} ${token?.symbol}`}
           </Text>
           <Coin symbol={token?.symbol} iconUrl={token?.iconUrl} />
         </View>

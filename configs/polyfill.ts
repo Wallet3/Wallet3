@@ -29,4 +29,3 @@ if (!global.crypto) {
     writable: false,
   });
 }
-
