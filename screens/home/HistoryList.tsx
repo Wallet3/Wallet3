@@ -7,6 +7,7 @@ import { Coin } from '../../components';
 import Image from 'react-native-expo-cached-image';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
+import dayjs from 'dayjs';
 import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
@@ -87,9 +88,7 @@ const Tx = observer(({ item, onPress }: { onPress?: (tx: Transaction) => void; i
             {to.length === 42 ? formatAddress(to!, 10, 5) : to}
           </Text>
         </View>
-        <Text style={{ fontWeight: '300' }}>
-          {new Date(item.timestamp ?? 0).toLocaleString(undefined, { dateStyle: 'short' })}
-        </Text>
+        <Text style={{ fontWeight: '300' }}>{dayjs(item.timestamp ?? 0).format('YYYY-MM-DD')}</Text>
       </View>
     </TouchableOpacity>
   );

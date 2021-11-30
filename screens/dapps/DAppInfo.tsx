@@ -9,6 +9,7 @@ import { PublicNetworks } from '../../common/Networks';
 import React from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { WalletConnect_v1 } from '../../viewmodels/WalletConnect_v1';
+import dayjs from 'dayjs';
 import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
@@ -62,7 +63,7 @@ export default ({ client, accounts, onDisconnect, onNetworkPress, onAccountsPres
       <View style={viewStyles.infoItem}>
         <Text style={viewStyles.itemTxt}>{t('connectedapps-modal-last-used')}:</Text>
         <Text style={viewStyles.itemTxt} numberOfLines={1}>
-          {client.lastUsedTimestamp.toLocaleString(undefined, {})}
+          {dayjs(client.lastUsedTimestamp).format('YYYY-MM-DD HH:mm:ss')}
         </Text>
       </View>
 
