@@ -21,7 +21,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
     if (!addr) return;
     setLoading(true);
 
-    currentWallet?.currentAccount?.fetchToken(addr).then((t) => {
+    currentWallet?.currentAccount?.tokens.fetchToken(addr).then((t) => {
       setLoading(false);
       setToken(t);
     });
@@ -87,7 +87,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
           title={t('button-save')}
           disabled={!token}
           onPress={() => {
-            currentWallet?.currentAccount?.addToken(token!);
+            currentWallet?.currentAccount?.tokens.addToken(token!);
             navigation.popToTop();
           }}
         />

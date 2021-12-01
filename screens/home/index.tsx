@@ -67,9 +67,9 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
       />
 
       <Assets
-        tokens={currentWallet?.currentAccount?.tokens}
+        tokens={currentWallet?.currentAccount?.tokens.tokens}
         themeColor={current.color}
-        loadingTokens={currentWallet?.currentAccount?.loadingTokens}
+        loadingTokens={currentWallet?.currentAccount?.tokens.loadingTokens}
         onRefreshRequest={async () => await currentWallet?.refreshAccount()}
         onTokenPress={onTokenPress}
         onTxPress={onTxPress}
@@ -77,7 +77,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
 
       <Actions
         style={{ marginTop: 8 }}
-        disabled={currentWallet?.currentAccount?.loadingTokens}
+        disabled={currentWallet?.currentAccount?.tokens.loadingTokens}
         onSendPress={() => PubSub.publish('openSendFundsModal')}
         onRequestPress={() => PubSub.publish('openRequestFundsModal')}
         themeColor={current.color}

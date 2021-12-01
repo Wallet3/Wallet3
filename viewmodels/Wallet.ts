@@ -55,7 +55,7 @@ export class Wallet {
     reaction(
       () => Networks.current,
       () => {
-        this.currentAccount?.refreshOverview();
+        this.currentAccount?.tokens.refreshOverview();
       }
     );
   }
@@ -84,7 +84,7 @@ export class Wallet {
     this.lastRefreshedTime = Date.now();
 
     clearTimeout(this.refreshTimer);
-    await this.currentAccount?.refreshTokensBalance();
+    await this.currentAccount?.tokens.refreshTokensBalance();
 
     this.refreshTimer = setTimeout(() => this.refreshAccount(), 15 * 1000);
   }
@@ -92,7 +92,7 @@ export class Wallet {
   switchAccount(account: Account) {
     if (!account) return;
     this.currentAccount = account;
-    this.currentAccount.refreshOverview();
+    this.currentAccount.tokens.refreshOverview();
     this.currentAccount.fetchBasicInfo();
 
     clearTimeout(this.refreshTimer);
