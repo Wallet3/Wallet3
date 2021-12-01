@@ -3,7 +3,7 @@ import { Gwei_1, MAX_GWEI_PRICE } from '../../common/Constants';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { estimateGas, getGasPrice, getMaxPriorityFee, getNextBlockBaseFee, getTransactionCount } from '../../common/RPC';
 
-import { Account } from '../Account';
+import { Account } from '../account/Account';
 import { INetwork } from '../../common/Networks';
 import { NativeToken } from '../../models/NativeToken';
 

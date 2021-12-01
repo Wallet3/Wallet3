@@ -2,7 +2,7 @@ import { Button, SafeViewContainer } from '../../components';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { themeColor, thirdFontColor } from '../../constants/styles';
 
-import { Account } from '../../viewmodels/Account';
+import { Account } from '../../viewmodels/account/Account';
 import Image from 'react-native-expo-cached-image';
 import { Networks } from '../../common/Networks';
 import React from 'react';

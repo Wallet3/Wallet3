@@ -8,7 +8,7 @@
   "land-create-security-tips-1": "The mnemonic consists of english words, please keep them safe.",
   "land-create-security-tips-2": "Once the mnemonic gets lost, it cannot be retrieved, and you would lose all your funds.",
   "land-create-backup-now": "Backup now",
-  "land-create-backup-later": "Backup Later",
+  "land-create-backup-later": "Backup later",
   "land-backup-title": "Backup your secret",
   "land-backup-sort-words": "Please sort the words correctly.",
   "land-passcode-title": "Set up passcode",

@@ -1,15 +1,15 @@
-import * as Debank from '../common/apis/Debank';
+import * as Debank from '../../common/apis/Debank';
 
-import TokensMan, { UserToken } from './services/TokensMan';
+import TokensMan, { UserToken } from '../services/TokensMan';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
-import CurrencyViewmodel from './settings/Currency';
-import { ERC20Token } from '../models/ERC20';
-import { IToken } from '../common/Tokens';
-import { NativeToken } from '../models/NativeToken';
-import Networks from './Networks';
-import { formatAddress } from '../utils/formatter';
-import { getAvatar } from '../common/ENS';
+import CurrencyViewmodel from '../settings/Currency';
+import { ERC20Token } from '../../models/ERC20';
+import { IToken } from '../../common/Tokens';
+import { NativeToken } from '../../models/NativeToken';
+import Networks from '../Networks';
+import { formatAddress } from '../../utils/formatter';
+import { getAvatar } from '../../common/ENS';
 import { utils } from 'ethers';
 
 export class Account {

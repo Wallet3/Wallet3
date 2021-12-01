@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 import { borderColor, fontColor, secondaryFontColor, themeColor } from '../../constants/styles';
 
-import { Account } from '../../viewmodels/Account';
+import { Account } from '../../viewmodels/account/Account';
 import { Feather } from '@expo/vector-icons';
 import Image from 'react-native-expo-cached-image';
 import { formatAddress } from '../../utils/formatter';

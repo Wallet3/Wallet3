@@ -6,7 +6,7 @@ import WCSession_v1, {
 } from '../models/WCSession_v1';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
-import { Account } from './Account';
+import { Account } from './account/Account';
 import { EventEmitter } from 'events';
 import { INetwork } from '../common/Networks';
 import { ISessionStatus } from '@walletconnect/types';

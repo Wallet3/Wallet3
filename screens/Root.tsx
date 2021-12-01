@@ -5,6 +5,7 @@ import Drawer from './home/Drawer';
 import HomeScreen from './home';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import PortfolioScreen from './portfolio';
 import React from 'react';
 import SettingScreen from './settings';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -18,6 +19,7 @@ const ScreenWidth = Dimensions.get('window').width;
 type RootStackParamList = {
   Home: undefined;
   QRScan: undefined;
+  Portfolio: undefined;
 };
 
 export default observer(({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>) => {
@@ -35,6 +37,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
       }}
       drawerContent={Drawer}
     >
+
       <Screen
         name="Home"
         component={HomeScreen}
@@ -65,6 +68,13 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
 
       <Screen name="Settings" component={SettingScreen} options={{ title: t('home-drawer-settings') }} />
       <Screen name="DApps" component={DAppsScreen} options={{ title: t('connectedapps-title') }} />
+
+
+      <Screen
+        name="Portfolio"
+        component={PortfolioScreen}
+        options={{ headerTransparent: true, headerTitleStyle: { display: 'none' } }}
+      />
     </Navigator>
   );
 });

@@ -22,8 +22,11 @@ class Langs {
   ];
 
   constructor() {
+    const userLocale = Localization.locale.toLowerCase();
+
     this.currentLang =
-      this.supportedLangs.find((l) => Localization.locale.toLowerCase().includes(l.value)) ?? this.supportedLangs[0];
+      this.supportedLangs.find((l) => userLocale.includes(l.value) || l.value.toLowerCase().includes(userLocale)) ??
+      this.supportedLangs[0];
 
     makeObservable(this, { currentLang: observable, setLang: action });
 

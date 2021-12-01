@@ -1,7 +1,7 @@
 import { Button, SafeViewContainer } from '../../components';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { Account } from '../../viewmodels/Account';
+import { Account } from '../../viewmodels/account/Account';
 import { Entypo } from '@expo/vector-icons';
 import Image from 'react-native-expo-cached-image';
 import Networks from '../../viewmodels/Networks';

@@ -2,7 +2,7 @@ import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useRef, useState } from 'react';
 
-import { Account } from '../../viewmodels/Account';
+import { Account } from '../../viewmodels/account/Account';
 import AccountSelector from '../../modals/dapp/AccountSelector';
 import App from '../../viewmodels/App';
 import DAppHub from '../../viewmodels/hubs/DAppHub';
