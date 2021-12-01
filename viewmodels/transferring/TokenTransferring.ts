@@ -20,7 +20,7 @@ export class TokenTransferring extends BaseTransaction {
   isResolvingAddress = false;
 
   get allTokens() {
-    return [this.account.tokens[0], ...this.account.allTokens];
+    return [this.account.tokens.tokens[0], ...this.account.tokens.allTokens];
   }
 
   get isEns() {
@@ -121,7 +121,7 @@ export class TokenTransferring extends BaseTransaction {
 
     super({ account, network: targetNetwork });
 
-    this.token = defaultToken || this.account.tokens[0];
+    this.token = defaultToken || this.account.tokens.tokens[0];
 
     makeObservable(this, {
       to: observable,
@@ -148,11 +148,11 @@ export class TokenTransferring extends BaseTransaction {
   protected loadDefaultToken() {
     AsyncStorage.getItem(`${this.network.chainId}-${this.account.address}-LastUsedToken`).then((v) => {
       if (!v) {
-        runInAction(() => this.setToken(this.account.tokens[0]));
+        runInAction(() => this.setToken(this.account.tokens.tokens[0]));
         return;
       }
 
-      const token = this.account.allTokens.find((t) => t.address === v) || this.account.tokens[0];
+      const token = this.account.tokens.allTokens.find((t) => t.address === v) || this.account.tokens.tokens[0];
       runInAction(() => this.setToken(token));
     });
   }

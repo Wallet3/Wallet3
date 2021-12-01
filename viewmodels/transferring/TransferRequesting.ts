@@ -18,7 +18,7 @@ export class TransferRequesting {
   }
 
   get allTokens() {
-    return [this.currentAccount.tokens[0], ...this.currentAccount.allTokens];
+    return [this.currentAccount.tokens.tokens[0], ...this.currentAccount.tokens.allTokens];
   }
 
   get amountWei() {
