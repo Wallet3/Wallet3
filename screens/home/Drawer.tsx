@@ -48,7 +48,8 @@ const Drawer = observer((props: DrawerProps) => {
     <SafeViewContainer
       style={{ flex: 1, height: screenHeight, paddingHorizontal: 0, paddingTop: 0, paddingBottom: bottom ? 0 : 16 }}
     >
-      <View
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Profile')}
         style={{
           marginHorizontal: 16,
           alignItems: 'center',
@@ -84,7 +85,7 @@ const Drawer = observer((props: DrawerProps) => {
         >
           {currentWallet?.currentAccount?.displayName}
         </Text>
-      </View>
+      </TouchableOpacity>
 
       <View style={{ paddingBottom: 12 }}>
         <DrawerItem

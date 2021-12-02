@@ -1,11 +1,12 @@
 import { Dimensions, TouchableOpacity, View } from 'react-native';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import DAppsScreen from './dapps';
 import Drawer from './home/Drawer';
 import HomeScreen from './home';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import PortfolioScreen from './portfolio';
+import ProfileScreen from './profile';
 import React from 'react';
 import SettingScreen from './settings';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -37,7 +38,6 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
       }}
       drawerContent={Drawer}
     >
-
       <Screen
         name="Home"
         component={HomeScreen}
@@ -69,11 +69,24 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
       <Screen name="Settings" component={SettingScreen} options={{ title: t('home-drawer-settings') }} />
       <Screen name="DApps" component={DAppsScreen} options={{ title: t('connectedapps-title') }} />
 
-
       <Screen
         name="Portfolio"
         component={PortfolioScreen}
         options={{ headerTransparent: true, headerTitleStyle: { display: 'none' } }}
+      />
+
+      <Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          headerTransparent: true,
+          headerTitleStyle: { display: 'none' },
+          headerLeft: () => (
+            <TouchableOpacity style={{}}>
+              <Ionicons name="arrow-back-circle" size={32} color="white" style={{ padding: 16, paddingTop: 8 }} />
+            </TouchableOpacity>
+          ),
+        }}
       />
     </Navigator>
   );
