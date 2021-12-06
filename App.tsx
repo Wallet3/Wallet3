@@ -15,6 +15,7 @@ import LandScreen from './screens/land';
 import Languages from './screens/settings/Languages';
 import Modals from './screens/Modalize';
 import { NavigationContainer } from '@react-navigation/native';
+import ProfileScreen from './screens/profile';
 import QRScan from './screens/misc/QRScan';
 import React from 'react';
 import Root from './screens/Root';
@@ -60,6 +61,21 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
               <Screen name="VerifySecret" component={VerifySecret} options={{ title: t('settings-security-backup-verify') }} />
               <Screen name="AddToken" component={AddToken} options={{ title: t('home-add-token-title') }} />
               <Screen name="About" component={About} options={{ title: t('about-title') }} />
+              <Screen
+                name="Profile"
+                component={ProfileScreen}
+                options={({ navigation }) => {
+                  return {
+                    headerTransparent: true,
+                    title: '',
+                    headerLeft: () => (
+                      <TouchableOpacity onPress={() => navigation.pop()} style={{ margin: -12, padding: 12, zIndex: 99 }}>
+                        <Ionicons name="arrow-back-outline" size={20} color="white" />
+                      </TouchableOpacity>
+                    ),
+                  };
+                }}
+              />
               <Screen
                 name="QRScan"
                 component={QRScan}

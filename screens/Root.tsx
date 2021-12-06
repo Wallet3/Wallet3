@@ -6,7 +6,6 @@ import Drawer from './home/Drawer';
 import HomeScreen from './home';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import PortfolioScreen from './portfolio';
-import ProfileScreen from './profile';
 import React from 'react';
 import SettingScreen from './settings';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -30,13 +29,13 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
   return (
     <Navigator
       initialRouteName="Home"
+      drawerContent={Drawer}
       screenOptions={{
         headerTransparent: false,
         headerTintColor: fontColor,
         swipeEdgeWidth: ScreenWidth * 0.37,
         drawerType: 'slide',
       }}
-      drawerContent={Drawer}
     >
       <Screen
         name="Home"
@@ -75,19 +74,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
         options={{ headerTransparent: true, headerTitleStyle: { display: 'none' } }}
       />
 
-      <Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{
-          headerTransparent: true,
-          headerTitleStyle: { display: 'none' },
-          headerLeft: () => (
-            <TouchableOpacity style={{}}>
-              <Ionicons name="arrow-back-circle" size={32} color="white" style={{ padding: 16, paddingTop: 8 }} />
-            </TouchableOpacity>
-          ),
-        }}
-      />
+     
     </Navigator>
   );
 });
