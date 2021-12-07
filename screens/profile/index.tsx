@@ -1,9 +1,11 @@
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Opensea, Twitter } from '../../assets/3rd';
 import React, { useEffect } from 'react';
-import { Text, View } from 'react-native';
 import { secondaryFontColor, thirdFontColor } from '../../constants/styles';
 
 import App from '../../viewmodels/App';
-import Image from 'react-native-expo-cached-image';
+import CachedImage from 'react-native-expo-cached-image';
+import CopyableText from '../../components/CopyableText';
 import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/Networks';
 import { StatusBar } from 'expo-status-bar';
@@ -47,7 +49,7 @@ export default observer(() => {
             borderColor: '#fff',
           }}
         >
-          <Image
+          <CachedImage
             source={
               currentWallet?.currentAccount?.avatar
                 ? { uri: currentWallet?.currentAccount?.avatar }
@@ -87,8 +89,35 @@ export default observer(() => {
 
       <Text style={{ marginTop: 24, color: secondaryFontColor }}>Accounts</Text>
 
-      <View></View>
+      <View style={{ flexWrap: 'wrap', alignContent: 'flex-start', flexDirection: 'row' }}>
+        <TouchableOpacity style={styles.socialContainer}>
+          <Twitter width={20} height={20} />
+          <Text style={styles.socialTxt}>@brankly</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.socialContainer}>
+          <Opensea width={20} height={20} />
+          <Text style={styles.socialTxt}>brankly.eth</Text>
+        </TouchableOpacity>
+      </View>
       <StatusBar style="light" />
     </View>
   );
+});
+
+const styles = StyleSheet.create({
+  socialContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    backgroundColor: '#efefef',
+    borderRadius: 15,
+    marginEnd: 16,
+  },
+
+  socialTxt: {
+    marginStart: 8,
+  },
 });
