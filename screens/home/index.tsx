@@ -62,7 +62,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         network={current.network}
         chainId={current.chainId}
         avatar={currentWallet?.currentAccount?.avatar}
-        ens={currentWallet?.currentAccount?.ensName}
+        ens={currentWallet?.currentAccount?.ens.name}
         connectedApps={DAppHub.connectedCount}
       />
 

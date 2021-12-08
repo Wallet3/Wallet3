@@ -2,6 +2,7 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 
 import { AccountTokens } from './AccountTokens';
 import CurrencyViewmodel from '../settings/Currency';
+import { ENSViewer } from './ENSViewer';
 import Networks from '../Networks';
 import { formatAddress } from '../../utils/formatter';
 import { getAvatar } from '../../common/ENS';
@@ -11,15 +12,18 @@ export class Account {
   readonly index: number;
 
   tokens: AccountTokens;
-  ensName = '';
-  avatar = '';
+  ens: ENSViewer;
 
   get nativeToken() {
     return this.tokens.nativeToken;
   }
 
   get displayName() {
-    return this.ensName || formatAddress(this.address, 7, 5);
+    return this.ens.name || formatAddress(this.address, 7, 5);
+  }
+
+  get avatar() {
+    return this.ens.avatar;
   }
 
   get balance() {
@@ -31,26 +35,17 @@ export class Account {
     this.index = index;
 
     this.tokens = new AccountTokens(this.address);
+    this.ens = new ENSViewer(this.address);
 
     makeObservable(this, {
       tokens: observable,
-      ensName: observable,
+
       displayName: computed,
       balance: computed,
-      avatar: observable,
     });
   }
 
   async fetchBasicInfo() {
-    if (this.ensName) return;
-    const { MainnetWsProvider } = Networks;
-
-    const ens = await MainnetWsProvider.lookupAddress(this.address);
-    if (!ens) return;
-
-    runInAction(() => (this.ensName = ens));
-    getAvatar(ens, this.address).then((v) => {
-      runInAction(() => (this.avatar = v?.url || ''));
-    });
+    return this.ens.fetchBasicInfo();
   }
 }

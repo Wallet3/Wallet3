@@ -63,7 +63,7 @@ export default observer(
             ) : undefined}
 
             <Text style={{ color: thirdFontColor, maxWidth: 150 }}>
-              {account?.ensName || formatAddress(client.accounts[0], 6, 5)}
+              {account?.ens.name || formatAddress(client.accounts[0], 6, 5)}
             </Text>
           </TouchableOpacity>
 

@@ -78,7 +78,7 @@ export default ({ client, accounts, onDisconnect, onNetworkPress, onAccountsPres
             />
           ) : undefined}
           <Text style={viewStyles.itemTxt} numberOfLines={1}>
-            {defaultAccount?.ensName || formatAddress(defaultAccount?.address ?? '', 7, 5)}
+            {defaultAccount?.ens.name || formatAddress(defaultAccount?.address ?? '', 7, 5)}
           </Text>
           <Entypo name="chevron-right" style={viewStyles.arrow} />
         </TouchableOpacity>

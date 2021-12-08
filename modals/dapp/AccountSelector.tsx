@@ -65,7 +65,7 @@ export default observer(
             }}
             numberOfLines={1}
           >
-            {item.ensName || formatAddress(item.address)}
+            {item.ens.name || formatAddress(item.address)}
           </Text>
         </TouchableOpacity>
       );
