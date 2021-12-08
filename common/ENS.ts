@@ -65,6 +65,24 @@ export async function getAvatar(name: string, owner: string) {
   } catch (error) {}
 }
 
+export async function getText(name: string, field: string) {
+  try {
+    let nodehash = utils.namehash(name);
+    const data = ENSResolver.interface.encodeFunctionData('text', [nodehash, field]);
+
+    const [result] = ENSResolver.interface.decodeFunctionResult(
+      'text',
+      (await call<string>(1, { to: ENSResolverAddress, data }))!
+    );
+
+    console.log('result', result);
+    
+    return result;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 async function fetchAvatar(nodehash: string, owner: string, resolver = ENSResolverAddress) {
   const avatarData = ENSResolver.interface.encodeFunctionData('text', [nodehash, 'avatar']);
   const [avatar] = ENSResolver.interface.decodeFunctionResult(

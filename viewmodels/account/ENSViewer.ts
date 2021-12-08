@@ -1,7 +1,7 @@
+import { getAvatar, getText } from '../../common/ENS';
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import Networks from '../Networks';
-import { getAvatar } from '../../common/ENS';
 
 export class ENSViewer {
   readonly owner: string;
@@ -26,5 +26,10 @@ export class ENSViewer {
     getAvatar(ens, this.owner).then((v) => {
       runInAction(() => (this.avatar = v?.url || ''));
     });
+
+    const resolver = await MainnetWsProvider.getResolver(ens);
+    console.log(await resolver?.getAddress(0));
+
+    getText(ens, 'email');
   }
 }

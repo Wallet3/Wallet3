@@ -93,7 +93,9 @@ export async function call<T>(
       });
 
       return resp.result as T;
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return undefined;
