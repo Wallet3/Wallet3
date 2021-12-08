@@ -1,5 +1,5 @@
+import { Github, Opensea, Twitter } from '../../assets/3rd';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Opensea, Twitter } from '../../assets/3rd';
 import React, { useEffect } from 'react';
 import { secondaryFontColor, thirdFontColor } from '../../constants/styles';
 
@@ -87,9 +87,9 @@ export default observer(() => {
         </Text>
       </View>
 
-      <Text style={{ marginTop: 24, color: secondaryFontColor }}>Accounts</Text>
+      <Text style={styles.subtitle}>Accounts</Text>
 
-      <View style={{ flexWrap: 'wrap', alignContent: 'flex-start', flexDirection: 'row' }}>
+      <View style={styles.contentWrapper}>
         <TouchableOpacity style={styles.socialContainer}>
           <Twitter width={20} height={20} />
           <Text style={styles.socialTxt}>@brankly</Text>
@@ -99,7 +99,40 @@ export default observer(() => {
           <Opensea width={20} height={20} />
           <Text style={styles.socialTxt}>brankly.eth</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity style={styles.socialContainer}>
+          <Github width={20} height={20} />
+          <Text style={styles.socialTxt}>brankly</Text>
+        </TouchableOpacity>
       </View>
+
+      <Text style={styles.subtitle}>Addresses</Text>
+
+      <View style={styles.contentWrapper}>
+        <View style={styles.socialContainer}>
+          <Image source={icons['eth']} style={styles.coin} />
+          <CopyableText
+            txt={formatAddress('0x983110309620D911731Ac0932219af06091b6744', 6, 4)}
+            iconStyle={{ marginStart: 5 }}
+            iconColor="black"
+          />
+        </View>
+
+        <View style={styles.socialContainer}>
+          <Image source={icons['btc']} style={styles.coin} />
+          <CopyableText
+            txt={formatAddress('bc1qjqg9slurvjukfl92wp58y94480fvh4uc2pwa6n', 6, 3)}
+            iconStyle={{ marginStart: 5 }}
+            iconColor="black"
+          />
+        </View>
+      </View>
+
+      <Text style={styles.subtitle}>More records</Text>
+      <View style={styles.contentWrapper}>
+        
+      </View>
+
       <StatusBar style="light" />
     </View>
   );
@@ -109,15 +142,32 @@ const styles = StyleSheet.create({
   socialContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 12,
+    marginTop: 12,
     paddingHorizontal: 12,
     paddingVertical: 6,
     backgroundColor: '#efefef',
     borderRadius: 15,
-    marginEnd: 16,
+    marginEnd: 12,
   },
 
   socialTxt: {
     marginStart: 8,
+  },
+
+  subtitle: {
+    marginTop: 24,
+    color: secondaryFontColor,
+  },
+
+  contentWrapper: {
+    flexWrap: 'wrap',
+    alignContent: 'flex-start',
+    flexDirection: 'row',
+  },
+
+  coin: {
+    width: 20,
+    height: 20,
+    marginEnd: 8,
   },
 });
