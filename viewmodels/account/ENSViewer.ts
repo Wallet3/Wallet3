@@ -8,6 +8,7 @@ export class ENSViewer {
 
   name = '';
   avatar = '';
+  coins: { [index: string]: string } = {};
 
   constructor(owner: string) {
     this.owner = owner;
@@ -26,10 +27,35 @@ export class ENSViewer {
     getAvatar(ens, this.owner).then((v) => {
       runInAction(() => (this.avatar = v?.url || ''));
     });
+  }
+
+  async fetchMoreInfo() {
+    const { MainnetWsProvider } = Networks;
+    if (!this.name) return;
+
+    const ens = this.name;
 
     const resolver = await MainnetWsProvider.getResolver(ens);
-    console.log(await resolver?.getAddress(0));
+    const [btc, ltc, doge, bch, atom] = await Promise.all([
+      resolver?.getAddress(0),
+      resolver?.getAddress(2),
+      resolver?.getAddress(3),
+      resolver?.getAddress(145),
+      resolver?.getAddress(118),
+    ]);
 
-    getText(ens, 'email');
+    this.coins['BTC'] = btc || '';
+    this.coins['LTC'] = ltc || '';
+    this.coins['DOGE'] = doge || '';
+    this.coins['BCH'] = bch || '';
+    this.coins['ATOM'] = atom || '';
+
+    Promise.all([
+      getText(ens, 'email'),
+      getText(ens, 'description'),
+      getText(ens, 'location'),
+      getText(ens, 'com.twitter'),
+      getText(ens, 'com.github'),
+    ]);
   }
 }

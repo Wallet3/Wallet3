@@ -97,14 +97,14 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
 
         <View style={{ flex: 1 }} />
 
-        <Button
+        {/* <Button
           reverse
           title={t('land-import-button-sync')}
           onPress={() => navigation.navigate('QRScan')}
           style={{ marginBottom: 12 }}
           themeColor={themeColor}
           txtStyle={{ textTransform: 'none' }}
-        />
+        /> */}
 
         <Button title={t('button-next')} disabled={!verified} onPress={() => navigation.navigate('SetupPasscode')} />
       </ScrollView>
