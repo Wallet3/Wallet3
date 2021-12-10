@@ -65,9 +65,9 @@ export async function getAvatar(name: string, owner: string) {
   } catch (error) {}
 }
 
-export async function getText(name: string, field: string) {
+export async function getText(ens: string, field: string, resolver?: string) {
   try {
-    let nodehash = utils.namehash(name);
+    let nodehash = utils.namehash(ens);
     const data = ENSResolver.interface.encodeFunctionData('text', [nodehash, field]);
 
     const [result] = ENSResolver.interface.decodeFunctionResult(
@@ -75,9 +75,17 @@ export async function getText(name: string, field: string) {
       (await call<string>(1, { to: ENSResolverAddress, data }))!
     );
 
-    console.log('result', result);
-    
-    return result;
+    if (result) return result;
+    if (resolver) return undefined;
+
+    const resolverCallData = ENSRegistry.interface.encodeFunctionData('resolver', [nodehash]);
+
+    const [resolverAddress] = ENSRegistry.interface.decodeFunctionResult(
+      'resolver',
+      (await call<string>(1, { to: ENSRegistryAddress, data: resolverCallData }))!
+    );
+
+    return getText(ens, field, resolverAddress);
   } catch (error) {
     console.log(error);
   }

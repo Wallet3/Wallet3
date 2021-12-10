@@ -8,6 +8,11 @@ export class ENSViewer {
 
   name = '';
   avatar = '';
+  email = '';
+  description = '';
+  location = '';
+  twitter = '';
+  github = '';
   coins: { [index: string]: string } = {};
 
   constructor(owner: string) {
@@ -50,12 +55,18 @@ export class ENSViewer {
     this.coins['BCH'] = bch || '';
     this.coins['ATOM'] = atom || '';
 
-    Promise.all([
+    const [email, desc, location, twitter, github] = await Promise.all([
       getText(ens, 'email'),
       getText(ens, 'description'),
       getText(ens, 'location'),
       getText(ens, 'com.twitter'),
       getText(ens, 'com.github'),
     ]);
+
+    this.email = email;
+    this.description = desc;
+    this.location = location;
+    this.twitter = twitter;
+    this.github = github;
   }
 }
