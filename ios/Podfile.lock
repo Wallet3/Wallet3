@@ -32,7 +32,7 @@ PODS:
     - ExpoModulesCore
   - EXManifests (0.2.2):
     - EXJSONUtils
-  - Expo (43.0.3):
+  - Expo (43.0.4):
     - ExpoModulesCore
   - ExpoModulesCore (0.4.4):
     - React-Core
@@ -366,7 +366,7 @@ PODS:
     - React-RCTVibration
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.10.0):
+  - RNScreens (3.10.1):
     - React-Core
     - React-RCTImage
   - RNSharedElement (0.8.3):
@@ -603,7 +603,7 @@ SPEC CHECKSUMS:
   EXLocalAuthentication: c0ec9379a81c3c823a362382b6a2145e880d9840
   EXLocalization: bb38414618b30a177482c9a6f5594ec6eb0898c1
   EXManifests: 50e42e01335df4e54109dee7be5a91bfd37347db
-  Expo: 5316c3ecdc34eb0cad340d01dc8beec97c7e879e
+  Expo: 363a3f3c60d5a1d4f8badb29a869005487f2d9e4
   ExpoModulesCore: 47b403a33ad73770c49d7559615b3ea121a36116
   EXRandom: 64c954ae24619b8d0c18ff46aa96401e98efc977
   EXSecureStore: 919bf7c28472862020d2cd7b59b69aae160b5d40
@@ -648,7 +648,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
   RNReanimated: 024eff8202342abf4b24e11575a16afc441dabfe
-  RNScreens: 03ba504f8c98607ad1f07808e71040e0afa335ec
+  RNScreens: 522705f2e5c9d27efb17f24aceb2bf8335bc7b8e
   RNSharedElement: 381b5e33366513cc3f449f2dc3a42c5df0f54021
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   TcpSockets: 4ef55305239923b343ed0a378b1fac188b1373b0
