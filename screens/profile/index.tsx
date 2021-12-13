@@ -10,6 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/Networks';
 import { StatusBar } from 'expo-status-bar';
 import { formatAddress } from '../../utils/formatter';
+import i18n from '../../i18n';
 import icons from '../../assets/icons/crypto';
 import { observer } from 'mobx-react-lite';
 import { useHeaderHeight } from '@react-navigation/elements';
@@ -20,12 +21,19 @@ export default observer(() => {
   const headerHeight = useHeaderHeight();
   const { currentWallet } = App;
   const { currentAccount } = currentWallet || {};
+  const { ens } = currentAccount || {};
 
+  const { t } = i18n;
   const { current } = Networks;
 
   useEffect(() => {
     return () => {};
   }, []);
+
+  const addresses = [
+    ['eth', currentAccount?.address || ''],
+    ['btc', ens?.coins['btc'] || ''],
+  ];
 
   return (
     <View style={{ backgroundColor: '#fff', flex: 1, paddingHorizontal: 16 }}>
@@ -68,55 +76,57 @@ export default observer(() => {
       <View>
         <View style={{ flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between' }}>
           <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
-            <Text style={{ fontSize: 17, fontWeight: '500' }}>nick.eth</Text>
+            <Text style={{ fontSize: 17, fontWeight: '500' }}>{ens?.name}</Text>
             <Text style={{ marginStart: 8, fontSize: 15, color: secondaryFontColor }}>
-              {formatAddress('0x983110309620D911731Ac0932219af06091b6744', 7, 5)}
+              {formatAddress(currentAccount?.address || '', 7, 5)}
             </Text>
           </View>
 
           <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
             <Ionicons name="location" size={15} color="dodgerblue" style={{ marginEnd: 4 }} />
-            <Text style={{ fontSize: 14, color: 'dodgerblue' }}>USA</Text>
+            <Text style={{ fontSize: 14, color: 'dodgerblue' }}>{ens?.location || 'Unknown'}</Text>
           </View>
         </View>
 
         <Text style={{ lineHeight: 19, marginTop: 8, color: thirdFontColor }} numberOfLines={2}>
-          "If anyone would come after me, let him deny himself and take up his cross daily and follow me. For whoever would
-          save his life will lose it, but whoever loses his life for my sake will save it. For what does it profit a man if he
-          gains the whole world and loses or forfeits himself?" - Jesus, Luke 9.23-25
+          {ens?.description || 'No description'}
         </Text>
       </View>
 
       <Text style={styles.subtitle}>Accounts</Text>
 
       <View style={styles.contentWrapper}>
-        <TouchableOpacity style={styles.socialContainer}>
-          <Twitter width={20} height={20} />
-          <Text style={styles.socialTxt}>@brankly</Text>
-        </TouchableOpacity>
+        {ens?.twitter ? (
+          <TouchableOpacity style={styles.socialContainer}>
+            <Twitter width={20} height={20} />
+            <Text style={styles.socialTxt}>{ens?.twitter}</Text>
+          </TouchableOpacity>
+        ) : undefined}
 
         <TouchableOpacity style={styles.socialContainer}>
           <Opensea width={20} height={20} />
-          <Text style={styles.socialTxt}>brankly.eth</Text>
+          <Text style={styles.socialTxt}>{ens?.name || formatAddress(currentAccount?.address ?? '', 9, 5)}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.socialContainer}>
-          <Github width={20} height={20} />
-          <Text style={styles.socialTxt}>brankly</Text>
-        </TouchableOpacity>
+        {ens?.github ? (
+          <TouchableOpacity style={styles.socialContainer}>
+            <Github width={20} height={20} />
+            <Text style={styles.socialTxt}>{ens?.github}</Text>
+          </TouchableOpacity>
+        ) : undefined}
       </View>
 
       <Text style={styles.subtitle}>Addresses</Text>
 
       <View style={styles.contentWrapper}>
-        <View style={styles.socialContainer}>
-          <Image source={icons['eth']} style={styles.coin} />
-          <CopyableText
-            txt={formatAddress('0x983110309620D911731Ac0932219af06091b6744', 6, 4)}
-            iconStyle={{ marginStart: 5 }}
-            iconColor="black"
-          />
-        </View>
+        {addresses.map(([symbol, address]) => {
+          return (
+            <View style={styles.socialContainer}>
+              <Image source={icons[symbol]} style={styles.coin} />
+              <CopyableText txt={formatAddress(address || '', 6, 4)} iconStyle={{ marginStart: 5 }} iconColor="black" />
+            </View>
+          );
+        })}
 
         <View style={styles.socialContainer}>
           <Image source={icons['btc']} style={styles.coin} />
@@ -129,9 +139,7 @@ export default observer(() => {
       </View>
 
       <Text style={styles.subtitle}>More records</Text>
-      <View style={styles.contentWrapper}>
-        
-      </View>
+      <View style={styles.contentWrapper}></View>
 
       <StatusBar style="light" />
     </View>
