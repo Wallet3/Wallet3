@@ -111,6 +111,15 @@ export const PublicNetworks: INetwork[] = [
     blockTimeMs: 10 * 1000,
     explorer: 'https://ftmscan.com',
   },
+  // {
+  //   symbol: 'ONE',
+  //   comm_id: 'one',
+  //   network: 'Harmony',
+  //   chainId: 1666600000,
+  //   explorer: 'https://explorer.harmony.one',
+  //   color: '#00B0FF',
+  //   defaultTokens: [],
+  // },
   {
     symbol: 'CELO',
     comm_id: 'celo',

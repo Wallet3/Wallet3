@@ -1,5 +1,6 @@
 import * as Linking from 'expo-linking';
 
+import Authentication from '../Authentication';
 import i18n from '../../i18n';
 import { showMessage } from 'react-native-flash-message';
 
@@ -13,6 +14,7 @@ class UrlHub {
 
   handleURL = (url: string) => {
     if (!url) return false;
+    if (!Authentication.appAuthorized) return;
 
     const appSchemes = ['wallet3:', 'ledgerlive', 'dharma', 'huobiwallet', 'imtokenv2', 'tpoutside'];
     const supportedSchemes = ['ethereum', 'wc:', '0x', 'wallet3sync:'].concat(appSchemes);

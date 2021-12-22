@@ -49,5 +49,6 @@
   "10000": ["https://smartbch.fountainhead.cash/mainnet", "https://smartbch.greyh.at"],
 
   "272": ["https://stage2-api.zksync.dev/web3"],
-  "288": ["https://mainnet.boba.network"]
+  "288": ["https://mainnet.boba.network"],
+  "1666600000": ["https://api.harmony.one"]
 }
