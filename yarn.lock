@@ -2637,10 +2637,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-native@~0.64.19":
-  version "0.64.19"
-  resolved "https://registry.npmjs.org/@types/react-native/-/react-native-0.64.19.tgz"
-  integrity sha512-bT62QhaPvOKFGmlfURIC98ILjUDoIFrc2Bn5EzL3qciZrT91vHwkxFOkuEyQJy+DWaHCa2z3IrtIEJywkGu/Bg==
+"@types/react-native@~0.64.20":
+  version "0.64.20"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.64.20.tgz#e2dc17acdd77e6814f97758cd3ef993c71e19bd6"
+  integrity sha512-wEEDbU6ePTsfl4PVY+KxuZBHBrz2wYfLD0ssi68qiE0MXmJW8qcmVEY6QOV6alSq9h7iSH5Lgy7+YaKULz7VXQ==
   dependencies:
     "@types/react" "*"
 
@@ -2653,10 +2653,10 @@
     "@types/scheduler" "*"
     csstype "^3.0.2"
 
-"@types/react@~17.0.37":
-  version "17.0.37"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.37.tgz#6884d0aa402605935c397ae689deed115caad959"
-  integrity sha512-2FS1oTqBGcH/s0E+CjrCCR9+JMpsu9b69RTFO+40ua43ZqP5MmQ4iUde/dMjWR909KxZwmOQIFq6AV6NjEG5xg==
+"@types/react@~17.0.38":
+  version "17.0.38"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.38.tgz#f24249fefd89357d5fa71f739a686b8d7c7202bd"
+  integrity sha512-SI92X1IA+FMnP3qM5m4QReluXzhcmovhZnLNm3pyeQlooi02qI7sLiepEYqT678uNiyc25XfCqxREFpy3W7YhQ==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -4523,7 +4523,18 @@ expo-application@~4.0.0:
   resolved "https://registry.npmjs.org/expo-application/-/expo-application-4.0.0.tgz"
   integrity sha512-7n8i0O9n/YCCkP3rU0udC4qdG4Sn4lOzNxFyG9eTwJ5SyCdDNxKdz22j+sUmYYhtx6fjcJLKR0sjq3zSGAwZag==
 
-expo-asset@^8.4.3, expo-asset@~8.4.3:
+expo-asset@^8.4.5:
+  version "8.4.5"
+  resolved "https://registry.yarnpkg.com/expo-asset/-/expo-asset-8.4.5.tgz#730579b48408222c210beface7508224683f1740"
+  integrity sha512-4E+VzFdgSjeCC+x80VuL+moY04U19SRV6vrL8DekQSyPbwkNR1QdvSx/7O7XTOspB9duwebQ1ue7JHFWOwyaMQ==
+  dependencies:
+    blueimp-md5 "^2.10.0"
+    invariant "^2.2.4"
+    md5-file "^3.2.3"
+    path-browserify "^1.0.0"
+    url-parse "^1.4.4"
+
+expo-asset@~8.4.3:
   version "8.4.3"
   resolved "https://registry.npmjs.org/expo-asset/-/expo-asset-8.4.3.tgz"
   integrity sha512-cnMXzmJUndLFocflq1d/WzmGB5cbzoDhwqs8v9eNwkZVY/BOIODvsI56fY+s0mKL4KpmE3+sV2VTbyYFBbF3Tw==
@@ -4534,21 +4545,18 @@ expo-asset@^8.4.3, expo-asset@~8.4.3:
     path-browserify "^1.0.0"
     url-parse "^1.4.4"
 
-expo-barcode-scanner@^11.1.2:
-  version "11.1.2"
-  resolved "https://registry.npmjs.org/expo-barcode-scanner/-/expo-barcode-scanner-11.1.2.tgz"
-  integrity sha512-qRr6lf4jmNAQQm7iaocXzZ88J+QP2EAzjpR3c64woLa8upry4BRGKcaLcKuQ4eyM9F1x43RW24G+m34hFbPAnw==
+expo-barcode-scanner@^11.2.0:
+  version "11.2.0"
+  resolved "https://registry.yarnpkg.com/expo-barcode-scanner/-/expo-barcode-scanner-11.2.0.tgz#9d316a36962f74f117f19f7c722de1334a4fd8d2"
+  integrity sha512-Dmp6KTzkMa9E561gR7kRP8ZXfVdAn9SLUwQ5DdeEGTC7D1NIqEO8WmyfVtWSLUUSArF6QxL+oYOZyzJ+LVjkHA==
   dependencies:
     "@expo/config-plugins" "^4.0.2"
-    expo-image-loader "~3.0.0"
-    expo-modules-core "~0.4.4"
+    expo-image-loader "~3.1.0"
 
-expo-clipboard@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.npmjs.org/expo-clipboard/-/expo-clipboard-2.0.3.tgz"
-  integrity sha512-fcv9rUFoKSMWknL4wJnln+DGnPQdYKYjILap58k9MPsywZ5Gp2PRI17oqMVyM9r/yIhsr5PKUsSGGIjvxUBYrA==
-  dependencies:
-    expo-modules-core "~0.4.4"
+expo-clipboard@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/expo-clipboard/-/expo-clipboard-2.1.0.tgz#33e32ca453cdc2e3da8ccecc86b197da554c3387"
+  integrity sha512-wJLATd1roEUsatx+GNREBtS8g5vkPWS/0jsLoaPTDVjBVib7RgavaMHj5Wob430qujg+leQmnhPViFk1BXzLYw==
 
 expo-constants@~12.1.1, expo-constants@~12.1.3:
   version "12.1.3"
@@ -4559,12 +4567,17 @@ expo-constants@~12.1.1, expo-constants@~12.1.3:
     expo-modules-core "~0.4.4"
     uuid "^3.3.2"
 
-expo-crypto@>8.0.0, expo-crypto@^10.0.3:
+expo-crypto@>8.0.0:
   version "10.0.3"
   resolved "https://registry.npmjs.org/expo-crypto/-/expo-crypto-10.0.3.tgz"
   integrity sha512-sTxJHMlRVqmMTKuz0EVbigFOpUUCCNQiCUZQJIJA+m7c5RwJqTahkDJBp+ZfWgRWCiSZo+01EsJNigF4/HQvPg==
   dependencies:
     expo-modules-core "~0.4.4"
+
+expo-crypto@^10.1.1:
+  version "10.1.1"
+  resolved "https://registry.yarnpkg.com/expo-crypto/-/expo-crypto-10.1.1.tgz#2dccb10c5d41c4e48a29c211a926b4468547ff7a"
+  integrity sha512-QSakmCNwSQw7VJKz32eKoBsNCQ9E4qT3wzOzFWzYyJQnJXHak3V6S+YcoQtK/K/oJxXPxK7T4gcOeeAk1VzRdw==
 
 expo-error-recovery@~3.0.3:
   version "3.0.3"
@@ -4582,7 +4595,14 @@ expo-file-system@>8.0.0, expo-file-system@~13.0.3:
     expo-modules-core "~0.4.4"
     uuid "^3.4.0"
 
-expo-font@^10.0.3, expo-font@~10.0.3:
+expo-font@^10.0.4:
+  version "10.0.4"
+  resolved "https://registry.yarnpkg.com/expo-font/-/expo-font-10.0.4.tgz#c06ff88079c857ef71c24414a583fd270b3f34e7"
+  integrity sha512-ieEsT6tD6yD6qT7WUzzJ5el0UvACr53RqICu0GI9GUiWuwDFPM2Oi5WfWwYFFStCRuaP6kEtpkJDUZ9cjT5F+w==
+  dependencies:
+    fontfaceobserver "^2.1.0"
+
+expo-font@~10.0.3:
   version "10.0.3"
   resolved "https://registry.npmjs.org/expo-font/-/expo-font-10.0.3.tgz"
   integrity sha512-xM5oqIduGvJ+qbsZHjMNNt+3hhjOMTunHUtOx5rAmW/D1ZVdfLwjDwOyWBVkH8ChoBRAZy9gsC2cRs7naw8NIw==
@@ -4590,10 +4610,10 @@ expo-font@^10.0.3, expo-font@~10.0.3:
     expo-modules-core "~0.4.4"
     fontfaceobserver "^2.1.0"
 
-expo-image-loader@~3.0.0:
-  version "3.0.0"
-  resolved "https://registry.npmjs.org/expo-image-loader/-/expo-image-loader-3.0.0.tgz"
-  integrity sha512-r4D+uLCf5vm5A2JIbF1Bc9FjYKrYGSLShbFB1MUvZ4BpSXJPRsprYZ9veUBVzzhh8hr23ahTFjMzp3nC57iREw==
+expo-image-loader@~3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/expo-image-loader/-/expo-image-loader-3.1.0.tgz#d60d57d6d36d1ea9b07ed2e8bed87574edd2ad1e"
+  integrity sha512-86oT25SDTO018hWO61HGnoB4l+DEgT9sOoW24rvXX99VBe/MPheGo+DDNKtLNf6k06n/OFL3LgtR0m9YpOCT8Q==
 
 expo-json-utils@~0.2.0:
   version "0.2.0"
@@ -4615,10 +4635,10 @@ expo-linking@^2.4.2:
     qs "^6.5.0"
     url-parse "^1.4.4"
 
-expo-local-authentication@^12.0.1:
-  version "12.0.1"
-  resolved "https://registry.npmjs.org/expo-local-authentication/-/expo-local-authentication-12.0.1.tgz"
-  integrity sha512-TQb/qwU4E5W04AOfy54+jyl1BcOFp+Tnj1k9QgUUOuJpogDpBDwTXFzxrM7wa7kd/LAAuIuuqei9wTs7D/9ShQ==
+expo-local-authentication@^12.1.0:
+  version "12.1.0"
+  resolved "https://registry.yarnpkg.com/expo-local-authentication/-/expo-local-authentication-12.1.0.tgz#d5da88df144b0fa33192600ef729cfbf03700af9"
+  integrity sha512-RR87mwop47GKHucgYwdwVKbF257i1XyByCDZRwgJswXebhpQ5Lk25Qg6MGqoexTimlV1d4jnKCWHCwSGEoFvKA==
   dependencies:
     "@expo/config-plugins" "^4.0.2"
     invariant "^2.2.4"
@@ -4656,14 +4676,6 @@ expo-modules-core@~0.4.4:
     compare-versions "^3.4.0"
     invariant "^2.2.4"
 
-expo-modules-core@~0.4.6:
-  version "0.4.6"
-  resolved "https://registry.npmjs.org/expo-modules-core/-/expo-modules-core-0.4.6.tgz"
-  integrity sha512-ns9kQn1titPlDsmuKNfyxUui1Nf338d+oIHb/N8jlneKukFwgQxxc5CwyKHrNKNxcUVzumpStSi4sHquKBmOiA==
-  dependencies:
-    compare-versions "^3.4.0"
-    invariant "^2.2.4"
-
 expo-modules-core@~0.4.7, expo-modules-core@~0.4.8:
   version "0.4.8"
   resolved "https://registry.npmjs.org/expo-modules-core/-/expo-modules-core-0.4.8.tgz"
@@ -4680,20 +4692,17 @@ expo-modules-core@~0.4.9:
     compare-versions "^3.4.0"
     invariant "^2.2.4"
 
-expo-random@^12.0.1:
-  version "12.0.1"
-  resolved "https://registry.npmjs.org/expo-random/-/expo-random-12.0.1.tgz"
-  integrity sha512-TX1qLnV2cqyefK8nfxz6MK/YD/49QkQbGgtM5gkWbYFQVIlFhzctRzAhaR3/bix5809m7s3mc+Mm0du3jIyA8g==
+expo-random@^12.1.1:
+  version "12.1.1"
+  resolved "https://registry.yarnpkg.com/expo-random/-/expo-random-12.1.1.tgz#75f6eec8d4b9026a27eb90ed4b60d56dab414106"
+  integrity sha512-AxxP9aqgCgGQsUC9jvMaaMXLmdkwbeil1MYqLJVMsueeAifsRDAroSGcpkbuXjK7lgNFdfdJNU/+4Z7ybBev/A==
   dependencies:
     base64-js "^1.3.0"
-    expo-modules-core "~0.4.6"
 
-expo-secure-store@~11.0.3:
-  version "11.0.3"
-  resolved "https://registry.npmjs.org/expo-secure-store/-/expo-secure-store-11.0.3.tgz"
-  integrity sha512-/YJV+kUWdDFYzwNibJx/noLGFG/0nN7TjoF67lpLBxd+X3KwbwrSJo6jy2LBZT49qBlptx4dPFLCjtnx6uaUiw==
-  dependencies:
-    expo-modules-core "~0.4.4"
+expo-secure-store@~11.1.0:
+  version "11.1.0"
+  resolved "https://registry.yarnpkg.com/expo-secure-store/-/expo-secure-store-11.1.0.tgz#2eb6e793a459e178feeb72bbeb40afc97e412bf6"
+  integrity sha512-LyCLqsoibP90Td4mSWc+un+xGNYnIuGOrfbp2aG2KAn1ZGcDL6muxIaFj7a/4Kh+EiCIoU5EPb1YjOATbmaBnQ==
 
 expo-splash-screen@^0.13.5:
   version "0.13.5"
@@ -4704,24 +4713,22 @@ expo-splash-screen@^0.13.5:
     "@expo/prebuild-config" "^3.0.6"
     expo-modules-core "~0.4.7"
 
-expo-sqlite@~10.0.3:
-  version "10.0.3"
-  resolved "https://registry.npmjs.org/expo-sqlite/-/expo-sqlite-10.0.3.tgz"
-  integrity sha512-uQEb98iW7POCul3rrpamc8qZNvhoPwfqa457loSSt2HHJXCU7cnc5Ll7Xxdi+Yy1X5GGxmVlgss+DBT6A/K06g==
+expo-sqlite@~10.1.0:
+  version "10.1.0"
+  resolved "https://registry.yarnpkg.com/expo-sqlite/-/expo-sqlite-10.1.0.tgz#90bd33a45ef9982c2a204511c989df8ccf884217"
+  integrity sha512-l41SVPdOeigHiDnVTRI94pyxtRUuKtYbK94qWST961jP7ixs3kOLyisMC4mYqARKcypWpaAqLf6er7EcR1F9xQ==
   dependencies:
     "@expo/websql" "^1.0.1"
-    expo-modules-core "~0.4.4"
-    lodash "^4.17.15"
 
-expo-standard-web-crypto@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.npmjs.org/expo-standard-web-crypto/-/expo-standard-web-crypto-1.1.1.tgz"
-  integrity sha512-rn+UMNyBS6MnHFvLTnQ94nPjSLMqg4B1heMyiTVhRaomKcKpVsmykUjyR6vYKjFlef7E17nsAfHcqBNRxIfsIQ==
+expo-standard-web-crypto@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/expo-standard-web-crypto/-/expo-standard-web-crypto-1.2.0.tgz#a1ba57ef5e001b65013a0fcd5e2aa390a78f7e4d"
+  integrity sha512-ZAVOockekqtnHRtJjGLB079MGXwVe1tDdEpsrW5/Hz3S8nAqkzC8wCef/EKea6UeEDhUFehfcjKIebmqN9gtCw==
 
-expo-status-bar@~1.1.0:
-  version "1.1.0"
-  resolved "https://registry.npmjs.org/expo-status-bar/-/expo-status-bar-1.1.0.tgz"
-  integrity sha512-XgAbGfDV/Q6br2h4yzQwcZRYi37bZ/nvc06vvaJ7i7w9tRxb05OJmXBxl7ywkKlFCMcN6q3Miaf2wnzEgMwJoQ==
+expo-status-bar@~1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/expo-status-bar/-/expo-status-bar-1.2.0.tgz#16e73205da563f9536f562e439081e30e318a82e"
+  integrity sha512-pVZZ/kDCXFK79E4dCtRecs3XLC8aiwlciutSd/fFmUPJSQZ1Txia6hlKajPt0GAYft8/YnT0V3URXzWZOBniYQ==
 
 expo-structured-headers@~2.0.0:
   version "2.0.0"
@@ -4749,13 +4756,12 @@ expo-updates@~0.10.13:
     resolve-from "^5.0.0"
     uuid "^3.4.0"
 
-expo-web-browser@^10.0.3:
-  version "10.0.3"
-  resolved "https://registry.npmjs.org/expo-web-browser/-/expo-web-browser-10.0.3.tgz"
-  integrity sha512-Tvx4yk7aROS6Yzy9obBMpcwtmIl2NY8YIOCUo1HwCB8KwTN7gQBKvI/GSOVYPMeIx/nPRg3ySELlUpv9JoGNag==
+expo-web-browser@^10.1.0:
+  version "10.1.0"
+  resolved "https://registry.yarnpkg.com/expo-web-browser/-/expo-web-browser-10.1.0.tgz#fd91695c44e0f3006da3089f230573c1cb3b026a"
+  integrity sha512-/sT+YovMxtR2AYVtZdeyjJLPYQrUXr06KAee2bbLeiPQbk0PPwVJNBK6w5/3GoQZIhNScR3K3P3xx6pNfm4X1A==
   dependencies:
     compare-urls "^2.0.0"
-    expo-modules-core "~0.4.4"
 
 expo@~43.0.4:
   version "43.0.4"
@@ -6942,10 +6948,10 @@ mobx-react-lite@^3.2.2:
   resolved "https://registry.npmjs.org/mobx-react-lite/-/mobx-react-lite-3.2.2.tgz"
   integrity sha512-FxJJMqmHcnQYOVVs2DdjNHioGlFsXF5/9VHztS9NAfIT3DYrxNZzVi119Zr/OmlWKkWNkAsssSNzPkqautfL4A==
 
-mobx@^6.3.8:
-  version "6.3.8"
-  resolved "https://registry.yarnpkg.com/mobx/-/mobx-6.3.8.tgz#a4654b1b69c683237f2444cf0af39a621d4611af"
-  integrity sha512-RfG2y766P1o9u9xrQht/HBXEoUPIr4B3Gjri3reLW/TuHm3I/3TfBBS0OaeMbw19RIF0AymqjDNlJgakN4ZK7g==
+mobx@^6.3.10:
+  version "6.3.10"
+  resolved "https://registry.yarnpkg.com/mobx/-/mobx-6.3.10.tgz#c3bc715c8f03717b9a2329f9697d42b7998d42e0"
+  integrity sha512-lfuIN5TGXBNy/5s3ggr1L+IbD+LvfZVlj5q1ZuqyV9AfMtunYQvE8G0WfewS9tgIR3I1q8HJEEbcAOsxEgLwRw==
 
 mockdate@^3.0.2:
   version "3.0.5"
@@ -7819,10 +7825,10 @@ react-native-material-ripple@^0.9.1:
   dependencies:
     prop-types "^15.5.10"
 
-react-native-modalize@^2.0.12:
-  version "2.0.12"
-  resolved "https://registry.npmjs.org/react-native-modalize/-/react-native-modalize-2.0.12.tgz"
-  integrity sha512-IKPBM4RXLNLaH1WFX8/yPHlbRei15TNcMMftQzi+juG0ibbsAPbEXkbt+KKs7O1dvmOF8sZwRH3SbWjFlcxtAw==
+react-native-modalize@^2.0.13:
+  version "2.0.13"
+  resolved "https://registry.yarnpkg.com/react-native-modalize/-/react-native-modalize-2.0.13.tgz#51517cddd726ddbc19c080d15e7721ade4ee7a66"
+  integrity sha512-BMJlpTnpeDVp5LbbE6kdO+3+yLzowRvPgcIu1QCCM+//uY7oON4VcL8ISilSgAfOYeNQc6vhaD5chVtmpTl/dw==
 
 react-native-nfc-manager@^3.11.2:
   version "3.11.2"
