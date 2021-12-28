@@ -80,7 +80,8 @@ export class ERC20Token {
   async getBalance(setLoading = true): Promise<BigNumber> {
     this.loading = setLoading;
 
-    const balance = BigNumber.from((await call(this.chainId, { to: this.address, data: this.call_balanceOfOwner })) || '0');
+    let result: string = (await call(this.chainId, { to: this.address, data: this.call_balanceOfOwner })) || '0';
+    const balance = BigNumber.from(result.substring(0, 66));
 
     runInAction(() => {
       this.balance = balance;
