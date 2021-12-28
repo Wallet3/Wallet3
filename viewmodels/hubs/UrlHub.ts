@@ -14,7 +14,6 @@ class UrlHub {
 
   handleURL = (url: string) => {
     if (!url) return false;
-    if (!Authentication.appAuthorized) return;
 
     const appSchemes = ['wallet3:', 'ledgerlive', 'dharma', 'huobiwallet', 'imtokenv2', 'tpoutside'];
     const supportedSchemes = ['ethereum', 'wc:', '0x', 'wallet3sync:'].concat(appSchemes);
@@ -27,6 +26,13 @@ class UrlHub {
       showMessage({ message: i18n.t('msg-invalid-qr-code'), type: 'warning' });
       this.lastHandled = Date.now();
       return false;
+    }
+
+    if (!Authentication.appAuthorized) {
+      if (scheme === 'wallet3sync:') {
+      } else {
+        return;
+      }
     }
 
     if (appSchemes.includes(scheme)) {

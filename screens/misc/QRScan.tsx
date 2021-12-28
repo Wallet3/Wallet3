@@ -17,7 +17,7 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
 
   const handleBarCodeScanned: BarCodeScannedCallback = ({ data }) => {
     const handled = UrlHub.handleURL(data);
-    setScanned(handled);
+    setScanned(handled || false);
 
     if (handled) navigation.pop();
   };
@@ -60,7 +60,9 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
         style={{ flex: 1, width: '100%', height: '100%', position: 'absolute' }}
-      />
+      >
+        
+      </BarCodeScanner>
 
       <StatusBar style="light" />
     </View>
