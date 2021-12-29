@@ -98,7 +98,7 @@ export default observer(
           {Logos[chainId]}
         </View>
 
-        <View style={{ height: 1, backgroundColor: '#ffffff20', marginTop: 2, marginHorizontal: -12 }} />
+        <View style={{ height: 1, backgroundColor: '#ffffff25', marginTop: 2, marginHorizontal: -12 }} />
 
         <View style={styles.buttonsContainer}>
           <Ripple style={styles.button} onPress={(_) => (disabled ? undefined : onSendPress?.())}>
@@ -106,7 +106,7 @@ export default observer(
             <Text style={styles.buttonText}>{t('button-send')}</Text>
           </Ripple>
 
-          <View style={{ width: 1, backgroundColor: '#ffffff20' }}></View>
+          <View style={{ width: 1, backgroundColor: '#ffffff25' }}></View>
           <Ripple style={styles.button} onPress={(_) => (disabled ? undefined : onRequestPress?.())}>
             <Ionicons name="md-arrow-down-circle-outline" size={18} color="white" />
             <Text style={styles.buttonText}>{t('button-request')}</Text>

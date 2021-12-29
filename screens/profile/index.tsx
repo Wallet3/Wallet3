@@ -119,23 +119,16 @@ export default observer(() => {
       <Text style={styles.subtitle}>Addresses</Text>
 
       <View style={styles.contentWrapper}>
-        {addresses.map(([symbol, address]) => {
-          return (
-            <View style={styles.socialContainer}>
-              <Image source={icons[symbol]} style={styles.coin} />
-              <CopyableText txt={formatAddress(address || '', 6, 4)} iconStyle={{ marginStart: 5 }} iconColor="black" />
-            </View>
-          );
-        })}
-
-        <View style={styles.socialContainer}>
-          <Image source={icons['btc']} style={styles.coin} />
-          <CopyableText
-            txt={formatAddress('bc1qjqg9slurvjukfl92wp58y94480fvh4uc2pwa6n', 6, 3)}
-            iconStyle={{ marginStart: 5 }}
-            iconColor="black"
-          />
-        </View>
+        {addresses
+          .filter(([_, addr]) => addr)
+          .map(([symbol, address]) => {
+            return (
+              <View style={styles.socialContainer} key={`${symbol}-${address}`}>
+                <Image source={icons[symbol]} style={styles.coin} />
+                <CopyableText txt={formatAddress(address || '', 6, 4)} iconStyle={{ marginStart: 5 }} iconColor="black" />
+              </View>
+            );
+          })}
       </View>
 
       <Text style={styles.subtitle}>More records</Text>

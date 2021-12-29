@@ -88,7 +88,7 @@ const RootTab = observer(() => {
         }}
       />
 
-      <Screen name="Explore" component={BrowserScreen} options={{ tabBarLabel: 'Explore' }} />
+      <Screen name="Explore" component={BrowserScreen} options={{ tabBarLabel: 'Web3', headerShown: false }} />
     </Navigator>
   );
 });
