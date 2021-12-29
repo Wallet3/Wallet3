@@ -1,14 +1,17 @@
+import { Feather, Ionicons } from '@expo/vector-icons';
 import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import { numericFontFamily, themeColor } from '../../constants/styles';
 
 import AnimateNumber from 'react-native-animate-number';
 import CopyableText from '../../components/CopyableText';
 import { Currency } from '../../viewmodels/settings/Currency';
-import { Feather } from '@expo/vector-icons';
 import Image from 'react-native-expo-cached-image';
 import Logos from '../../assets/icons/networks/white';
 import React from 'react';
+import Ripple from 'react-native-material-ripple';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { formatCurrency } from '../../utils/formatter';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 
 interface Props {
@@ -24,6 +27,8 @@ interface Props {
 }
 
 export default observer(({ style, address, balance, network, avatar, chainId, connectedApps, currency }: Props) => {
+  const { t } = i18n;
+
   return (
     <View style={{ ...styles.container, ...((style as any) || {}) }}>
       <View
@@ -66,7 +71,7 @@ export default observer(({ style, address, balance, network, avatar, chainId, co
         txtStyle={{ ...styles.text, fontSize: 12 }}
       />
 
-      <View style={{ height: 54, backgroundColor: 'transparent' }} />
+      <View style={{ height: 36, backgroundColor: 'transparent' }} />
 
       <View style={{ justifyContent: 'space-between', marginBottom: 9, backgroundColor: 'transparent', height: 31 }}>
         <AnimateNumber
@@ -77,6 +82,21 @@ export default observer(({ style, address, balance, network, avatar, chainId, co
         />
 
         {Logos[chainId]}
+      </View>
+
+      <View style={{ height: 1, backgroundColor: '#ffffff50', marginTop: 2, marginHorizontal: -12 }} />
+
+      <View style={styles.buttonsContainer}>
+        <Ripple style={styles.button}>
+          <Ionicons name="md-arrow-up-circle-outline" size={18} color="white" />
+          <Text style={styles.buttonText}>{t('button-send')}</Text>
+        </Ripple>
+
+        <View style={{ width: 1, backgroundColor: '#ffffff50' }}></View>
+        <Ripple style={styles.button}>
+          <Ionicons name="md-arrow-down-circle-outline" size={18} color="white" />
+          <Text style={styles.buttonText}>{t('button-request')}</Text>
+        </Ripple>
       </View>
     </View>
   );
@@ -101,5 +121,30 @@ const styles = StyleSheet.create({
     fontSize: 29,
     lineHeight: 39,
     fontFamily: numericFontFamily,
+  },
+
+  buttonsContainer: {
+    flexDirection: 'row',
+    marginHorizontal: -12,
+    // justifyContent: 'space-around',
+    // width: '100%',
+    position: 'relative',
+  },
+
+  button: {
+    // backgroundColor: 'pink',
+    flex: 1,
+
+    padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  buttonText: {
+    color: 'white',
+    marginStart: 6,
+    fontSize: 16,
+    fontWeight: '500',
   },
 });

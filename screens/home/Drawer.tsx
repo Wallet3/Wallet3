@@ -92,7 +92,7 @@ const Drawer = observer((props: DrawerProps) => {
           label={t('home-drawer-wallet')}
           onPress={() => navigation.navigate('Home')}
           labelStyle={{ ...styles.drawerLabel, color: homeHighlight }}
-          icon={() => <Feather color={homeHighlight} size={21} name={'credit-card'} />}
+          icon={() => <Feather color={homeHighlight} size={21} name={'home'} />}
         />
 
         <DrawerItem
