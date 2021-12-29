@@ -112,7 +112,7 @@ const Drawer = observer((props: DrawerProps) => {
 
       <View style={{ flex: 1 }} />
 
-      <View style={{ padding: 16, paddingBottom: 12 }}>
+      <View style={{ padding: 16, paddingBottom: 8 }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
           <Text style={{ color: secondaryFontColor, fontSize: 14 }}>{t('home-drawer-networks')}</Text>
 
@@ -130,7 +130,9 @@ const Drawer = observer((props: DrawerProps) => {
             </TouchableOpacity>
           </View>
         </View>
+
         <View style={{ height: 1, backgroundColor: borderColor, marginVertical: 4, marginBottom: 8 }} />
+
         <TouchableOpacity
           style={{ flexDirection: 'row', alignItems: 'center' }}
           onPress={() => {

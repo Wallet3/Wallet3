@@ -43,7 +43,10 @@ class Contacts {
         if (!v?.url) return;
 
         const target = this.contacts.find((c) => c.address === address);
-        if (target) target.avatar = v.url;
+        if (target) {
+          target.avatar = v.url;
+          target.ens = ens;
+        }
 
         AsyncStorage.setItem(`contacts`, JSON.stringify(this.contacts));
       });

@@ -1,6 +1,7 @@
 import { Dimensions, TouchableOpacity, View } from 'react-native';
 import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
+import BrowserScreen from './browser';
 import DAppsScreen from './dapps';
 import Drawer from './drawer';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -29,29 +30,27 @@ const { Navigator, Screen } = Tab;
 
 const RootTab = observer(() => {
   const { current } = Networks;
+  const { t } = i18n;
 
   return (
     <Navigator
       initialRouteName="Wallet"
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
+          const icons = {
+            Wallet: 'credit-card',
+            Explore: 'compass',
+          };
 
-          switch (route.name) {
-            case 'Wallet':
-              iconName = 'credit-card';
-              break;
-          }
-
-          // You can return any component that you like here!
-          return <Feather name={iconName} size={size} color={focused ? current.color : 'gray'} />;
+          return <Feather name={icons[route.name]} size={size} color={focused ? current.color : 'gray'} />;
         },
         tabBarActiveTintColor: current.color,
         tabBarInactiveTintColor: 'gray',
         headerShown: false,
       })}
     >
-      <Screen name="Wallet" component={WalletScreen} />
+      <Screen name="Wallet" component={WalletScreen} options={{ tabBarLabel: 'Wallet' }} />
+      <Screen name="Explore" component={BrowserScreen} options={{ tabBarLabel: 'Explore' }} />
     </Navigator>
   );
 });
