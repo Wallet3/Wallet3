@@ -1,9 +1,11 @@
 import { Dimensions, TouchableOpacity, View } from 'react-native';
+import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import BrowserScreen from './browser';
 import DAppsScreen from './dapps';
 import Drawer from './drawer';
+import { DrawerNavigationHelpers } from '@react-navigation/drawer/lib/typescript/src/types';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../viewmodels/Networks';
 import PortfolioScreen from './portfolio';
@@ -29,8 +31,9 @@ const Tab = createBottomTabNavigator();
 const { Navigator, Screen } = Tab;
 
 const RootTab = observer(() => {
-  const { current } = Networks;
   const { t } = i18n;
+  const { current } = Networks;
+  const navigation = useNavigation() as DrawerNavigationHelpers;
 
   return (
     <Navigator
@@ -46,38 +49,25 @@ const RootTab = observer(() => {
         },
         tabBarActiveTintColor: current.color,
         tabBarInactiveTintColor: 'gray',
-        headerShown: false,
       })}
     >
-      <Screen name="Wallet" component={WalletScreen} options={{ tabBarLabel: 'Wallet' }} />
-      <Screen name="Explore" component={BrowserScreen} options={{ tabBarLabel: 'Explore' }} />
-    </Navigator>
-  );
-});
-
-export default observer(({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>) => {
-  const { Navigator, Screen } = DrawerRoot;
-  const { t } = i18n;
-
-  return (
-    <Navigator
-      initialRouteName="Home"
-      drawerContent={Drawer}
-      screenOptions={{
-        headerTransparent: false,
-        headerTintColor: fontColor,
-        swipeEdgeWidth: ScreenWidth * 0.37,
-        drawerType: 'slide',
-      }}
-    >
       <Screen
-        name="Home"
-        component={RootTab}
+        name="Wallet"
+        component={WalletScreen}
         options={{
+          tabBarLabel: 'Wallet',
           title: 'Wallet 3',
+          headerLeft: () => (
+            <TouchableOpacity
+              style={{ padding: 16, paddingVertical: 0 }}
+              onPress={() => navigation.dispatch(DrawerActions.openDrawer)}
+            >
+              <Feather name="menu" size={21} />
+            </TouchableOpacity>
+          ),
           headerRight: () => (
             <TouchableOpacity
-              onPress={() => navigation.navigate('QRScan')}
+              onPress={() => navigation.getParent()?.navigate('QRScan')}
               style={{
                 zIndex: 5,
                 flexDirection: 'row',
@@ -97,6 +87,36 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
           ),
         }}
       />
+
+      <Screen name="Explore" component={BrowserScreen} options={{ tabBarLabel: 'Explore' }} />
+    </Navigator>
+  );
+});
+
+export default observer(({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>) => {
+  const { Navigator, Screen } = DrawerRoot;
+  const { t } = i18n;
+
+  return (
+    <Navigator
+      initialRouteName="Home"
+      drawerContent={Drawer}
+      screenOptions={{
+        headerTransparent: false,
+        headerTintColor: fontColor,
+        swipeEdgeWidth: ScreenWidth * 0.37,
+        drawerType: 'slide',
+        headerLeft: () => (
+          <TouchableOpacity
+            style={{ padding: 16, paddingVertical: 0 }}
+            onPress={() => navigation.dispatch(DrawerActions.openDrawer)}
+          >
+            <Feather name="menu" size={21} />
+          </TouchableOpacity>
+        ),
+      }}
+    >
+      <Screen name="Home" component={RootTab} options={{ headerShown: false }} />
 
       <Screen name="Settings" component={SettingScreen} options={{ title: t('home-drawer-settings') }} />
       <Screen name="DApps" component={DAppsScreen} options={{ title: t('connectedapps-title') }} />
