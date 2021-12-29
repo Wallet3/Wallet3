@@ -64,6 +64,9 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         avatar={currentWallet?.currentAccount?.avatar}
         ens={currentWallet?.currentAccount?.ens.name}
         connectedApps={DAppHub.connectedCount}
+        disabled={currentWallet?.currentAccount?.tokens.loadingTokens}
+        onSendPress={() => PubSub.publish('openSendFundsModal')}
+        onRequestPress={() => PubSub.publish('openRequestFundsModal')}
       />
 
       <Assets
