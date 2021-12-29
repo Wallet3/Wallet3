@@ -1,13 +1,15 @@
 import { Dimensions, TouchableOpacity, View } from 'react-native';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import DAppsScreen from './dapps';
-import Drawer from './home/Drawer';
-import HomeScreen from './home/root';
+import Drawer from './drawer';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import Networks from '../viewmodels/Networks';
 import PortfolioScreen from './portfolio';
 import React from 'react';
 import SettingScreen from './settings';
+import WalletScreen from './home';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { fontColor } from '../constants/styles';
 import i18n from '../i18n';
@@ -21,6 +23,38 @@ type RootStackParamList = {
   QRScan: undefined;
   Portfolio: undefined;
 };
+
+const Tab = createBottomTabNavigator();
+const { Navigator, Screen } = Tab;
+
+const RootTab = observer(() => {
+  const { current } = Networks;
+
+  return (
+    <Navigator
+      initialRouteName="Wallet"
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          switch (route.name) {
+            case 'Wallet':
+              iconName = 'credit-card';
+              break;
+          }
+
+          // You can return any component that you like here!
+          return <Feather name={iconName} size={size} color={focused ? current.color : 'gray'} />;
+        },
+        tabBarActiveTintColor: current.color,
+        tabBarInactiveTintColor: 'gray',
+        headerShown: false,
+      })}
+    >
+      <Screen name="Wallet" component={WalletScreen} />
+    </Navigator>
+  );
+});
 
 export default observer(({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>) => {
   const { Navigator, Screen } = DrawerRoot;
@@ -39,7 +73,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
     >
       <Screen
         name="Home"
-        component={HomeScreen}
+        component={RootTab}
         options={{
           title: 'Wallet 3',
           headerRight: () => (
@@ -73,8 +107,6 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
         component={PortfolioScreen}
         options={{ headerTransparent: true, headerTitleStyle: { display: 'none' } }}
       />
-
-     
     </Navigator>
   );
 });

@@ -17,7 +17,6 @@ import { Portal } from 'react-native-portalize';
 import { StatusBar } from 'expo-status-bar';
 import TokenDetail from './TokenDetail';
 import TxDetail from './TxDetail';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
@@ -26,9 +25,6 @@ type RootStackParamList = {
   Home: undefined;
   Settings: undefined;
 };
-
-const Tab = createBottomTabNavigator();
-const { Navigator } = Tab;
 
 export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, 'Home'>) => {
   const { t } = i18n;
@@ -54,6 +50,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
       style={{
         flex: 1,
         padding: 16,
+        paddingBottom: 0,
         alignItems: 'stretch',
         justifyContent: 'flex-start',
         backgroundColor: '#fff',

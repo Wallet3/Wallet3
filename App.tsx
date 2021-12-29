@@ -22,6 +22,7 @@ import Root from './screens/Root';
 import Tokens from './screens/tokens/SortTokens';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import VerifySecret from './screens/settings/VerifySecret';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import i18n from './i18n';
 import { observer } from 'mobx-react-lite';

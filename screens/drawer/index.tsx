@@ -49,7 +49,7 @@ const Drawer = observer((props: DrawerProps) => {
       style={{ flex: 1, height: screenHeight, paddingHorizontal: 0, paddingTop: 0, paddingBottom: bottom ? 0 : 16 }}
     >
       <TouchableOpacity
-        // onPress={() => navigation.navigate('Profile')}
+        onPress={() => navigation.navigate('Profile')}
         style={{
           marginHorizontal: 16,
           alignItems: 'center',
