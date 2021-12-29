@@ -3,7 +3,7 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import DAppsScreen from './dapps';
 import Drawer from './home/Drawer';
-import HomeScreen from './home';
+import HomeScreen from './home/root';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import PortfolioScreen from './portfolio';
 import React from 'react';

@@ -10,12 +10,14 @@ import DAppHub from '../../viewmodels/hubs/DAppHub';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import { IToken } from '../../common/Tokens';
 import { Modalize } from 'react-native-modalize';
+import { NavigationContainer } from '@react-navigation/native';
 import Networks from '../../viewmodels/Networks';
 import Overview from './Overview';
 import { Portal } from 'react-native-portalize';
 import { StatusBar } from 'expo-status-bar';
 import TokenDetail from './TokenDetail';
 import TxDetail from './TxDetail';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
@@ -24,6 +26,9 @@ type RootStackParamList = {
   Home: undefined;
   Settings: undefined;
 };
+
+const Tab = createBottomTabNavigator();
+const { Navigator } = Tab;
 
 export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, 'Home'>) => {
   const { t } = i18n;
