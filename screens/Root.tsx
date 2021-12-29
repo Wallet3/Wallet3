@@ -8,7 +8,7 @@ import Networks from '../viewmodels/Networks';
 import PortfolioScreen from './portfolio';
 import React from 'react';
 import SettingScreen from './settings';
-import WalletScreen from './home';
+import WalletScreen from './wallet';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { fontColor } from '../constants/styles';

@@ -50,7 +50,7 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={styles.header}>
+      <View style={{ ...styles.header }}>
         <View style={styles.tabsContainer}>
           <Text
             style={{
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: borderColor,
+    borderBottomColor: '#efefef80',
   },
 
   tabsContainer: {
