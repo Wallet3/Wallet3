@@ -7,7 +7,7 @@ import { getStringAsync } from 'expo-clipboard';
 
 interface Props {
   onChangeText: (text: string) => void;
-  title: string;
+  title?: string;
   value?: string;
   defaultValue?: string;
   placeholder?: string;

@@ -15,7 +15,19 @@ class UrlHub {
   handleURL = (url: string) => {
     if (!url) return false;
 
-    const appSchemes = ['wallet3:', 'ledgerlive', 'dharma', 'huobiwallet', 'imtokenv2', 'tpoutside'];
+    const appSchemes = [
+      'wallet3:',
+      'ledgerlive:',
+      'dharma:',
+      'huobiwallet:',
+      'imtokenv2:',
+      'tpoutside:',
+      'pillarwallet:',
+      'celowallet:',
+      'bitpie:',
+      'abt:',
+    ];
+    
     const supportedSchemes = ['ethereum', 'wc:', '0x', 'wallet3sync:'].concat(appSchemes);
     const scheme =
       supportedSchemes.find((schema) => url.toLowerCase().startsWith(schema)) || (url.endsWith('.eth') ? '0x' : undefined);
