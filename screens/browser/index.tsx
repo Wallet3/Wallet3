@@ -9,7 +9,6 @@ import Constants from 'expo-constants';
 import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/Networks';
 import { borderColor } from '../../constants/styles';
-import { isURL } from '../../utils/url';
 import { observer } from 'mobx-react-lite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -30,10 +29,10 @@ export default observer(() => {
   const [addr, setAddr] = useState('');
   const [uri, setUri] = useState<string>('');
 
-  const onAddrSubmit = () => {
-    if (!isURL(addr)) return;
-    if (addr === uri) webview.current?.reload();
-    addr.toLowerCase().startsWith('http') ? setUri(addr) : setUri(`http://${addr}`);
+  const onAddrSubmit = async () => {
+    const url = addr.toLowerCase().startsWith('http') ? addr : `http://${addr}`;
+    if (url === uri) webview.current?.reload();
+    setUri(url);
   };
 
   const onNavigationStateChange = (event: WebViewNavigation) => {
@@ -53,8 +52,7 @@ export default observer(() => {
       <View
         style={{
           flexDirection: 'row',
-          marginHorizontal: 16,
-          marginStart: 6,
+          marginHorizontal: 6,
           paddingBottom: 8,
           position: 'relative',
           alignItems: 'center',
@@ -99,6 +97,10 @@ export default observer(() => {
             textAlign: isFocus ? 'auto' : 'center',
           }}
         />
+
+        <TouchableOpacity style={{ paddingHorizontal: 8 }}>
+          <Ionicons name="home-outline" size={17} />
+        </TouchableOpacity>
 
         {loadingProgress > 0 && loadingProgress < 1 ? (
           <Bar
