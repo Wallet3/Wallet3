@@ -4,17 +4,19 @@ import Bookmarks, { Bookmark, getFaviconJs } from '../../viewmodels/hubs/Bookmar
 import { Dimensions, FlatList, Image, ListRenderItemInfo, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import React, { useRef, useState } from 'react';
 import { WebView, WebViewNavigation } from 'react-native-webview';
+import { borderColor, secondaryFontColor, thirdFontColor } from '../../constants/styles';
 
 import { Bar } from 'react-native-progress';
 import CollapsibleView from '@eliav2/react-native-collapsible-view';
 import Constants from 'expo-constants';
 import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/Networks';
-import { borderColor } from '../../constants/styles';
 import { observer } from 'mobx-react-lite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const ScreenWidth = Dimensions.get('window').width;
+console.log((ScreenWidth - 16 * 2) / (48 + 16));
+const NumOfColumns = Math.ceil((ScreenWidth - 16 * 2) / (48 + 16));
 
 export default observer(() => {
   const { top } = useSafeAreaInsets();
@@ -41,6 +43,7 @@ export default observer(() => {
       setCanGoBack(false);
       setCanGoForward(false);
       setLoadingProgress(0);
+      webview.current?.clearHistory();
       return;
     }
 
@@ -63,10 +66,10 @@ export default observer(() => {
 
   const renderItem = ({ item }: ListRenderItemInfo<Bookmark>) => {
     return (
-      <TouchableOpacity style={{ backgroundColor: 'yellowgreen' }}>
+      <TouchableOpacity style={{ padding: 8 }} onPress={() => setUri(item.url)}>
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
           <Image source={{ uri: item.icon }} style={{ width: 48, height: 48 }} />
-          <Text numberOfLines={1} style={{ maxWidth: 24 }}>
+          <Text numberOfLines={1} style={{ maxWidth: 48, marginTop: 4, fontSize: 10, color: thirdFontColor }}>
             {item.title}
           </Text>
         </View>
@@ -126,11 +129,17 @@ export default observer(() => {
           />
 
           <TouchableOpacity
-            style={{ paddingHorizontal: 8 }}
+            style={{ padding: 8 }}
             disabled={loadingProgress < 1}
-            onPress={() => Bookmarks.add({ ...pageMetadata, url: webUrl })}
+            onPress={() =>
+              Bookmarks.has(webUrl) ? Bookmarks.remove(webUrl) : Bookmarks.add({ ...pageMetadata, url: webUrl })
+            }
           >
-            <Ionicons name="bookmark-outline" size={17} color={loadingProgress < 1 ? 'lightgrey' : '#000'} />
+            <Ionicons
+              name={Bookmarks.has(webUrl) ? 'bookmark' : 'bookmark-outline'}
+              size={17}
+              color={loadingProgress < 1 ? 'lightgrey' : '#000'}
+            />
           </TouchableOpacity>
         </View>
 
@@ -167,6 +176,7 @@ export default observer(() => {
           ref={webview}
           applicationNameForUserAgent={appName}
           source={{ uri }}
+          allowsFullscreenVideo={false}
           onLoadProgress={({ nativeEvent }) => setLoadingProgress(nativeEvent.progress)}
           onLoadEnd={() => setLoadingProgress(1)}
           onNavigationStateChange={onNavigationStateChange}
@@ -176,9 +186,11 @@ export default observer(() => {
       ) : (
         <FlatList
           data={Bookmarks.items}
+          bounces={false}
           renderItem={renderItem}
-          numColumns={7}
-          contentContainerStyle={{ padding: 16 }}
+          numColumns={NumOfColumns}
+          contentContainerStyle={{ paddingHorizontal: 4, paddingVertical: 8 }}
+          style={{ marginTop: 4 }}
           keyExtractor={(v, index) => `v.url-${index}`}
         />
       )}

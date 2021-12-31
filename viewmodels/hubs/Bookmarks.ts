@@ -1,6 +1,6 @@
 import * as Linking from 'expo-linking';
 
-import { makeObservable, observable, runInAction } from 'mobx';
+import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -14,17 +14,25 @@ class Bookmarks {
   items: Bookmark[] = [];
 
   constructor() {
-    makeObservable(this, { items: observable });
+    makeObservable(this, { items: observable, remove: action, add: action });
 
     AsyncStorage.getItem(`bookmarks`).then((v) => {
       runInAction(() => this.items.push(...JSON.parse(v || '[]')));
-      setTimeout(() => console.log(this.items), 1000);
     });
   }
 
   add(obj: Bookmark) {
     this.items.push(obj);
     AsyncStorage.setItem(`bookmarks`, JSON.stringify(this.items));
+  }
+
+  remove(url: string) {
+    this.items = this.items.filter((i) => !i.url.startsWith(url) && !url.startsWith(i.url));
+    AsyncStorage.setItem(`bookmarks`, JSON.stringify(this.items));
+  }
+
+  has(url: string) {
+    return this.items.find((i) => i.url.startsWith(url) || url.startsWith(i.url)) ? true : false;
   }
 }
 
@@ -98,7 +106,7 @@ export const getFaviconJs = `function getIcons() {
         }
     }
 
-    return icons.filter(i => i.startsWith('http') && !i.endsWith('.svg'))[0] || '';
+    return icons.sort((a1, a2) => a2.length - a1.length).filter(i => i.startsWith('http') && !i.endsWith('.svg'))[0] || '';
 }
 
 window.ReactNativeWebView.postMessage(JSON.stringify({icon: getIcons(), title: document.title}));`;
