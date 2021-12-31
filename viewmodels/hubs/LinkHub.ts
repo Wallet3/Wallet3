@@ -4,7 +4,7 @@ import Authentication from '../Authentication';
 import i18n from '../../i18n';
 import { showMessage } from 'react-native-flash-message';
 
-class UrlHub {
+class LinkHub {
   private lastHandled = 0;
 
   start() {
@@ -62,4 +62,4 @@ class UrlHub {
   };
 }
 
-export default new UrlHub();
+export default new LinkHub();

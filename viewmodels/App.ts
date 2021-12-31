@@ -6,9 +6,9 @@ import Coingecko from '../common/apis/Coingecko';
 import Contacts from './Contacts';
 import DAppHub from './hubs/DAppHub';
 import Database from '../models/Database';
+import LinkHub from './hubs/LinkHub';
 import Networks from './Networks';
 import TxHub from './hubs/TxHub';
-import UrlHub from './hubs/UrlHub';
 import { Wallet } from './Wallet';
 
 export class AppVM {
@@ -45,7 +45,7 @@ export class AppVM {
 
     Authentication.once('appAuthorized', () => {
       DAppHub.init();
-      UrlHub.start();
+      LinkHub.start();
     });
 
     runInAction(() => {

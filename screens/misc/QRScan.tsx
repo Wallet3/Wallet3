@@ -3,9 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '../../components';
+import LinkHub from '../../viewmodels/hubs/LinkHub';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
-import UrlHub from '../../viewmodels/hubs/UrlHub';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { openSettings } from 'expo-linking';
@@ -16,7 +16,7 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
   const { t } = i18n;
 
   const handleBarCodeScanned: BarCodeScannedCallback = ({ data }) => {
-    const handled = UrlHub.handleURL(data);
+    const handled = LinkHub.handleURL(data);
     setScanned(handled || false);
 
     if (handled) navigation.pop();
