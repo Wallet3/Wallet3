@@ -50,7 +50,7 @@ export default observer(() => {
 
   return (
     <View style={{ backgroundColor: `#fff`, flex: 1, paddingTop: top, position: 'relative' }}>
-      <View style={{ position: 'relative', paddingBottom: 8 }}>
+      <View style={{ position: 'relative', paddingTop: 4, paddingBottom: 0 }}>
         <View
           style={{
             flexDirection: 'row',
@@ -107,11 +107,13 @@ export default observer(() => {
         {uri ? (
           <CollapsibleView
             noArrow
-            arrowStyling={{ display: 'none' }}
-            titleStyle={{ display: 'none' }}
+            arrowStyling={{ display: 'none', margin: 0, padding: 0 }}
+            titleStyle={{ display: 'none', margin: 0, padding: 0 }}
             expanded={isFocus}
-            style={{ borderWidth: 0, padding: 0, paddingHorizontal: 6 }}
-            collapsibleContainerStyle={{}}
+            style={{ borderWidth: 0, padding: 0, margin: 0 }}
+            collapsibleContainerStyle={{ padding: 0, margin: 0 }}
+            touchableWrapperStyle={{ padding: 0, margin: 0 }}
+            TouchableComponent={View}
           >
             <Text>hey there!</Text>
           </CollapsibleView>
@@ -125,10 +127,7 @@ export default observer(() => {
             borderWidth={0}
             borderRadius={0}
             progress={loadingProgress}
-            style={{
-              position: 'absolute',
-              bottom: 0,
-            }}
+            style={{ position: 'absolute', bottom: 0 }}
           />
         ) : undefined}
       </View>

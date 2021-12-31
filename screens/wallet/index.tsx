@@ -80,14 +80,6 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         onTxPress={onTxPress}
       />
 
-      {/* <Actions
-        style={{ marginTop: 8 }}
-        disabled={currentWallet?.currentAccount?.tokens.loadingTokens}
-        onSendPress={() => PubSub.publish('openSendFundsModal')}
-        onRequestPress={() => PubSub.publish('openRequestFundsModal')}
-        themeColor={current.color}
-      /> */}
-
       <StatusBar style="dark" />
 
       <Portal>
