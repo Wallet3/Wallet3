@@ -4,10 +4,10 @@ import Bookmarks, { Bookmark, getFaviconJs } from '../../viewmodels/hubs/Bookmar
 import { Dimensions, FlatList, Image, ListRenderItemInfo, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import React, { useRef, useState } from 'react';
 import { WebView, WebViewNavigation } from 'react-native-webview';
-import { borderColor, secondaryFontColor, thirdFontColor } from '../../constants/styles';
+import { borderColor, thirdFontColor } from '../../constants/styles';
 
 import { Bar } from 'react-native-progress';
-import CollapsibleView from '@eliav2/react-native-collapsible-view';
+import Collapsible from 'react-native-collapsible';
 import Constants from 'expo-constants';
 import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/Networks';
@@ -15,7 +15,6 @@ import { observer } from 'mobx-react-lite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const ScreenWidth = Dimensions.get('window').width;
-console.log((ScreenWidth - 16 * 2) / (48 + 16));
 const NumOfColumns = Math.ceil((ScreenWidth - 16 * 2) / (48 + 16));
 
 export default observer(() => {
@@ -34,16 +33,26 @@ export default observer(() => {
   const [uri, setUri] = useState<string>('');
   const [pageMetadata, setPageMetadata] = useState<any>();
 
+  const goHome = () => {
+    setUri('');
+    setAddr('');
+    setWebUrl('');
+    setHostname('');
+    setCanGoBack(false);
+    setCanGoForward(false);
+    setLoadingProgress(0);
+    webview.current?.clearHistory?.();
+    addrRef.current?.blur();
+  };
+
+  const goTo = (url: string) => {
+    setUri(url);
+    addrRef.current?.blur();
+  };
+
   const onAddrSubmit = async () => {
     if (!addr) {
-      setUri('');
-      setAddr('');
-      setWebUrl('');
-      setHostname('');
-      setCanGoBack(false);
-      setCanGoForward(false);
-      setLoadingProgress(0);
-      webview.current?.clearHistory();
+      goHome();
       return;
     }
 
@@ -79,7 +88,7 @@ export default observer(() => {
 
   return (
     <View style={{ backgroundColor: `#fff`, flex: 1, paddingTop: top, position: 'relative' }}>
-      <View style={{ position: 'relative', paddingTop: 4, paddingBottom: 0 }}>
+      <View style={{ position: 'relative', paddingTop: 4, paddingBottom: 8 }}>
         <View
           style={{
             flexDirection: 'row',
@@ -143,20 +152,23 @@ export default observer(() => {
           </TouchableOpacity>
         </View>
 
-        {uri ? (
-          <CollapsibleView
-            noArrow
-            arrowStyling={{ display: 'none', margin: 0, padding: 0 }}
-            titleStyle={{ display: 'none', margin: 0, padding: 0 }}
-            expanded={isFocus}
-            style={{ borderWidth: 0, padding: 0, margin: 0 }}
-            collapsibleContainerStyle={{ padding: 0, margin: 0 }}
-            touchableWrapperStyle={{ padding: 0, margin: 0 }}
-            TouchableComponent={View}
-          >
-            <Text>hey there!</Text>
-          </CollapsibleView>
-        ) : undefined}
+        <Collapsible collapsed={!isFocus} style={{ borderWidth: 0, padding: 0, margin: 0 }} enablePointerEvents>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', padding: 8 }}>
+            {Bookmarks.items.map((item, i) => (
+              <TouchableOpacity style={{ margin: 8 }} key={`${item.url}-${i}`} onPress={() => goTo(item.url)}>
+                <Image source={{ uri: item.icon }} style={{ width: 32, height: 32 }} />
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          <View style={{ height: 1, backgroundColor: borderColor, marginBottom: 4 }} />
+
+          <View style={{ flexDirection: 'row', paddingHorizontal: 16, paddingTop: 2 }}>
+            <TouchableOpacity style={{ width: 48 }} onPress={() => goHome()}>
+              <Ionicons name="home-outline" size={20} />
+            </TouchableOpacity>
+          </View>
+        </Collapsible>
 
         {loadingProgress > 0 && loadingProgress < 1 ? (
           <Bar
