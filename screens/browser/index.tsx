@@ -152,23 +152,25 @@ export default observer(() => {
           </TouchableOpacity>
         </View>
 
-        <Collapsible collapsed={!isFocus} style={{ borderWidth: 0, padding: 0, margin: 0 }} enablePointerEvents>
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', padding: 8 }}>
-            {Bookmarks.items.map((item, i) => (
-              <TouchableOpacity style={{ margin: 8 }} key={`${item.url}-${i}`} onPress={() => goTo(item.url)}>
-                <Image source={{ uri: item.icon }} style={{ width: 32, height: 32 }} />
+        {uri ? (
+          <Collapsible collapsed={!isFocus} style={{ borderWidth: 0, padding: 0, margin: 0 }} enablePointerEvents>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', padding: 8 }}>
+              {Bookmarks.items.map((item, i) => (
+                <TouchableOpacity style={{ margin: 8 }} key={`${item.url}-${i}`} onPress={() => goTo(item.url)}>
+                  <Image source={{ uri: item.icon }} style={{ width: 32, height: 32 }} />
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <View style={{ height: 1, backgroundColor: borderColor, marginBottom: 4 }} />
+
+            <View style={{ flexDirection: 'row', paddingHorizontal: 16, paddingTop: 2 }}>
+              <TouchableOpacity style={{ width: 48 }} onPress={() => goHome()}>
+                <Ionicons name="home-outline" size={20} />
               </TouchableOpacity>
-            ))}
-          </View>
-
-          <View style={{ height: 1, backgroundColor: borderColor, marginBottom: 4 }} />
-
-          <View style={{ flexDirection: 'row', paddingHorizontal: 16, paddingTop: 2 }}>
-            <TouchableOpacity style={{ width: 48 }} onPress={() => goHome()}>
-              <Ionicons name="home-outline" size={20} />
-            </TouchableOpacity>
-          </View>
-        </Collapsible>
+            </View>
+          </Collapsible>
+        ) : undefined}
 
         {loadingProgress > 0 && loadingProgress < 1 ? (
           <Bar
