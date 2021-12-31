@@ -1263,6 +1263,13 @@
     pirates "^4.0.0"
     source-map-support "^0.5.16"
 
+"@babel/runtime@^7.13.10":
+  version "7.16.5"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.16.5.tgz#7f3e34bf8bdbbadf03fbb7b1ea0d929569c9487a"
+  integrity sha512-TXWihFIS3Pyv5hzR7j6ihmeLkZfrXGxAr5UfSl8CHf+6q/wpiYDkUau0czckpYG8QmnCIuPpdLtuA9VmuGGyMA==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/runtime@^7.14.0", "@babel/runtime@^7.8.4":
   version "7.15.4"
   resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.15.4.tgz"
@@ -1379,6 +1386,15 @@
   integrity sha512-XQsZgjm2EcVUiZQf11UBJQfmZeEmOW8DpI1gsFeln6w0ae0ii4dMQEQ0kjl6DspdWX1aGY1/loyXnP0JS06e/A==
   dependencies:
     "@types/hammerjs" "^2.0.36"
+
+"@eliav2/react-native-collapsible-view@^1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@eliav2/react-native-collapsible-view/-/react-native-collapsible-view-1.4.0.tgz#f9ec5ea53f73d34a8634a6e23b361abc027405b2"
+  integrity sha512-iN1/mwN+Tugi3ct+30IK2GM+qNWepgJXV8EbbnOTuuDLYD/fIqMfezH0J5X+SA1L1aaJDKMbi1Qyi2TVYNNN0g==
+  dependencies:
+    "@babel/runtime" "^7.13.10"
+    react-native-collapsible "^1.5.3"
+    react-native-svg "^12.1.0"
 
 "@ethersproject/abi@5.5.0", "@ethersproject/abi@^5.5.0":
   version "5.5.0"
@@ -7820,6 +7836,11 @@ react-native-codegen@^0.0.7:
     jscodeshift "^0.11.0"
     nullthrows "^1.1.1"
 
+react-native-collapsible@^1.5.3:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/react-native-collapsible/-/react-native-collapsible-1.6.0.tgz#ca261ffff16914f872059bb0972e3a78c4b37f9c"
+  integrity sha512-beZjdgbT9Y/Pg591Xy5XkKG20HffJiVad4n9bfcUF/f783A+tvOVXnqvbS58Lkaym93mi4jcDPMuW9Vc1t6rqg==
+
 react-native-crypto@^2.2.0:
   version "2.2.0"
   resolved "https://registry.npmjs.org/react-native-crypto/-/react-native-crypto-2.2.0.tgz"
@@ -7991,7 +8012,7 @@ react-native-svg-transformer@^0.14.3:
     path-dirname "^1.0.2"
     semver "^5.6.0"
 
-react-native-svg@12.1.1:
+react-native-svg@12.1.1, react-native-svg@^12.1.0:
   version "12.1.1"
   resolved "https://registry.npmjs.org/react-native-svg/-/react-native-svg-12.1.1.tgz"
   integrity sha512-NIAJ8jCnXGCqGWXkkJ1GTzO4a3Md5at5sagYV8Vh4MXYnL4z5Rh428Wahjhh+LIjx40EE5xM5YtwyJBqOIba2Q==
