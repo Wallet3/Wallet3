@@ -55,7 +55,7 @@ const RootTab = observer(() => {
         name="Wallet"
         component={WalletScreen}
         options={{
-          tabBarLabel: 'Wallet',
+          tabBarLabel: t('home-tab-wallet'),
           title: 'Wallet 3',
           headerLeft: () => (
             <TouchableOpacity
