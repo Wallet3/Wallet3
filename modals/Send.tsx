@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import App from '../viewmodels/App';
 import Authentication from '../viewmodels/Authentication';
-import Contacts from '../viewmodels/Contacts';
+import Contacts from '../viewmodels/hubs/Contacts';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Success from './views/Success';
 import Swiper from 'react-native-swiper';

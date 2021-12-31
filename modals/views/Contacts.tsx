@@ -1,4 +1,4 @@
-import Contacts, { IContact } from '../../viewmodels/Contacts';
+import Contacts, { IContact } from '../../viewmodels/hubs/Contacts';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { ListRenderItemInfo, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';

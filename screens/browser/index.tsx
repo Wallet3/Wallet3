@@ -1,6 +1,7 @@
 import * as Linking from 'expo-linking';
 
-import { Dimensions, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import Bookmarks, { Bookmark, getFaviconJs } from '../../viewmodels/hubs/Bookmarks';
+import { Dimensions, FlatList, Image, ListRenderItemInfo, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import React, { useRef, useState } from 'react';
 import { WebView, WebViewNavigation } from 'react-native-webview';
 
@@ -29,8 +30,20 @@ export default observer(() => {
   const [webUrl, setWebUrl] = useState('');
   const [addr, setAddr] = useState('');
   const [uri, setUri] = useState<string>('');
+  const [pageMetadata, setPageMetadata] = useState<any>();
 
   const onAddrSubmit = async () => {
+    if (!addr) {
+      setUri('');
+      setAddr('');
+      setWebUrl('');
+      setHostname('');
+      setCanGoBack(false);
+      setCanGoForward(false);
+      setLoadingProgress(0);
+      return;
+    }
+
     const url = addr.toLowerCase().startsWith('http') ? addr : `http://${addr}`;
     if (url === uri) webview.current?.reload();
     setUri(url);
@@ -47,6 +60,19 @@ export default observer(() => {
   };
 
   const appName = `Wallet3/${Constants?.manifest?.version ?? '0.0.0'}`;
+
+  const renderItem = ({ item }: ListRenderItemInfo<Bookmark>) => {
+    return (
+      <TouchableOpacity style={{ backgroundColor: 'yellowgreen' }}>
+        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+          <Image source={{ uri: item.icon }} style={{ width: 48, height: 48 }} />
+          <Text numberOfLines={1} style={{ maxWidth: 24 }}>
+            {item.title}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={{ backgroundColor: `#fff`, flex: 1, paddingTop: top, position: 'relative' }}>
@@ -99,8 +125,12 @@ export default observer(() => {
             }}
           />
 
-          <TouchableOpacity style={{ paddingHorizontal: 8 }}>
-            <Ionicons name="bookmark-outline" size={17} />
+          <TouchableOpacity
+            style={{ paddingHorizontal: 8 }}
+            disabled={loadingProgress < 1}
+            onPress={() => Bookmarks.add({ ...pageMetadata, url: webUrl })}
+          >
+            <Ionicons name="bookmark-outline" size={17} color={loadingProgress < 1 ? 'lightgrey' : '#000'} />
           </TouchableOpacity>
         </View>
 
@@ -132,14 +162,26 @@ export default observer(() => {
         ) : undefined}
       </View>
 
-      <WebView
-        ref={webview}
-        applicationNameForUserAgent={appName}
-        source={{ uri }}
-        onLoadProgress={({ nativeEvent }) => setLoadingProgress(nativeEvent.progress)}
-        onLoadEnd={() => setLoadingProgress(1)}
-        onNavigationStateChange={onNavigationStateChange}
-      />
+      {uri ? (
+        <WebView
+          ref={webview}
+          applicationNameForUserAgent={appName}
+          source={{ uri }}
+          onLoadProgress={({ nativeEvent }) => setLoadingProgress(nativeEvent.progress)}
+          onLoadEnd={() => setLoadingProgress(1)}
+          onNavigationStateChange={onNavigationStateChange}
+          injectedJavaScript={getFaviconJs}
+          onMessage={(e) => setPageMetadata(JSON.parse(e.nativeEvent.data))}
+        />
+      ) : (
+        <FlatList
+          data={Bookmarks.items}
+          renderItem={renderItem}
+          numColumns={7}
+          contentContainerStyle={{ padding: 16 }}
+          keyExtractor={(v, index) => `v.url-${index}`}
+        />
+      )}
     </View>
   );
 });
