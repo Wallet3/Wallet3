@@ -50,13 +50,16 @@ export default observer(() => {
   const goTo = (url: string) => {
     url = url.toLowerCase().startsWith('http') ? url : `http://${url}`;
 
-    if (url === uri) {
-      webview.current?.reload();
-      return;
-    }
+    try {
+      if (url === uri) {
+        webview.current?.reload();
+        return;
+      }
 
-    setUri(url);
-    addrRef.current?.blur();
+      setUri(url);
+    } finally {
+      addrRef.current?.blur();
+    }
   };
 
   const onAddrSubmit = async () => {
@@ -170,6 +173,7 @@ export default observer(() => {
                 .slice(0, 5)
                 .map((url) => (
                   <TouchableOpacity
+                    key={url}
                     onPress={() => goTo(url)}
                     style={{
                       paddingHorizontal: 16,
