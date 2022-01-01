@@ -11,6 +11,7 @@ import Collapsible from 'react-native-collapsible';
 import Constants from 'expo-constants';
 import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/Networks';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -18,6 +19,7 @@ const ScreenWidth = Dimensions.get('window').width;
 const NumOfColumns = Math.ceil((ScreenWidth - 16 * 2) / (48 + 16));
 
 export default observer(() => {
+  const { t } = i18n;
   const { top } = useSafeAreaInsets();
   const { current } = Networks;
   const webview = useRef<WebView>(null);
@@ -115,7 +117,7 @@ export default observer(() => {
             keyboardType="web-search"
             placeholderTextColor="#dfdfdf"
             autoCorrect={false}
-            placeholder="enter website address"
+            placeholder={t('browser-enter-address')}
             selectTextOnFocus={true}
             onFocus={() => setFocus(true)}
             onBlur={() => setFocus(false)}

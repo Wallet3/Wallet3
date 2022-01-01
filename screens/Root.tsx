@@ -19,6 +19,7 @@ import i18n from '../i18n';
 import { observer } from 'mobx-react-lite';
 
 const DrawerRoot = createDrawerNavigator();
+const TabNavigation = createBottomTabNavigator();
 const ScreenWidth = Dimensions.get('window').width;
 
 type RootStackParamList = {
@@ -27,13 +28,11 @@ type RootStackParamList = {
   Portfolio: undefined;
 };
 
-const Tab = createBottomTabNavigator();
-const { Navigator, Screen } = Tab;
-
 const RootTab = observer(() => {
   const { t } = i18n;
   const { current } = Networks;
   const navigation = useNavigation() as DrawerNavigationHelpers;
+  const { Navigator, Screen } = TabNavigation;
 
   return (
     <Navigator
@@ -49,6 +48,7 @@ const RootTab = observer(() => {
         },
         tabBarActiveTintColor: current.color,
         tabBarInactiveTintColor: 'gray',
+        tabBarLabelStyle: { marginBottom: 3, marginTop: -3 },
       })}
     >
       <Screen
