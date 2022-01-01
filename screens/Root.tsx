@@ -49,6 +49,7 @@ const RootTab = observer(() => {
         tabBarActiveTintColor: current.color,
         tabBarInactiveTintColor: 'gray',
         tabBarLabelStyle: { marginBottom: 3, marginTop: -3 },
+        // tabBarShowLabel: false,
       })}
     >
       <Screen

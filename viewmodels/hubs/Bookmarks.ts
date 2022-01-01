@@ -12,16 +12,26 @@ export interface Bookmark {
 
 class Bookmarks {
   items: Bookmark[] = [];
+  history: string[] = [];
 
   constructor() {
-    makeObservable(this, { items: observable, remove: action, add: action });
+    makeObservable(this, { history: observable, items: observable, remove: action, add: action, submitHistory: action });
 
-    AsyncStorage.getItem(`bookmarks`).then((v) => {
-      runInAction(() => this.items.push(...JSON.parse(v || '[]')));
-    });
+    AsyncStorage.getItem(`bookmarks`)
+      .then((v) => {
+        runInAction(() => this.items.push(...JSON.parse(v || '[]')));
+      })
+      .catch(() => {});
+
+    AsyncStorage.getItem(`history-urls`)
+      .then((v) => {
+        runInAction(() => this.history.push(...JSON.parse(v || '[]')));
+      })
+      .catch(() => {});
   }
 
   add(obj: Bookmark) {
+    obj.title = obj.title || Linking.parse(obj.url).hostname || obj.url;
     this.items.push(obj);
     AsyncStorage.setItem(`bookmarks`, JSON.stringify(this.items));
   }
@@ -34,9 +44,31 @@ class Bookmarks {
   has(url: string) {
     return this.items.find((i) => i.url.startsWith(url) || url.startsWith(i.url)) ? true : false;
   }
+
+  submitHistory(url: string) {
+    this.history = [url, ...this.history.filter((i) => !i.includes(url) || !url.includes(i))];
+    AsyncStorage.setItem(`history-urls`, JSON.stringify(this.history.slice(0, 32)));
+  }
 }
 
 export default new Bookmarks();
+
+export const SuggestUrls = [
+  'https://app.uniswap.org',
+  'https://curve.fi',
+  'https://oasis.app',
+  'https://makerdao.com',
+  'https://app.sushi.com',
+  'http://app.compound.finance',
+  'https://app.aave.com',
+  'https://app.balancer.fi',
+  'https://yearn.finance',
+  'https://trade.dydx.exchange',
+  'https://app.dodoex.io',
+  'https://app.hashflow.com',
+  'https://axieinfinity.com',
+  'https://tornadocash.eth.link'
+];
 
 export const getFaviconJs = `function getIcons() {
     var links = document.getElementsByTagName('link');

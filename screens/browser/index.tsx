@@ -1,7 +1,8 @@
 import * as Linking from 'expo-linking';
 
-import Bookmarks, { Bookmark, getFaviconJs } from '../../viewmodels/hubs/Bookmarks';
+import Bookmarks, { Bookmark, SuggestUrls, getFaviconJs } from '../../viewmodels/hubs/Bookmarks';
 import { Dimensions, FlatList, Image, ListRenderItemInfo, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Feather, Ionicons } from '@expo/vector-icons';
 import React, { useRef, useState } from 'react';
 import { WebView, WebViewNavigation } from 'react-native-webview';
 import { borderColor, thirdFontColor } from '../../constants/styles';
@@ -9,7 +10,6 @@ import { borderColor, thirdFontColor } from '../../constants/styles';
 import { Bar } from 'react-native-progress';
 import Collapsible from 'react-native-collapsible';
 import Constants from 'expo-constants';
-import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/Networks';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -48,6 +48,13 @@ export default observer(() => {
   };
 
   const goTo = (url: string) => {
+    url = url.toLowerCase().startsWith('http') ? url : `http://${url}`;
+
+    if (url === uri) {
+      webview.current?.reload();
+      return;
+    }
+
     setUri(url);
     addrRef.current?.blur();
   };
@@ -58,9 +65,7 @@ export default observer(() => {
       return;
     }
 
-    const url = addr.toLowerCase().startsWith('http') ? addr : `http://${addr}`;
-    if (url === uri) webview.current?.reload();
-    setUri(url);
+    goTo(addr);
   };
 
   const onNavigationStateChange = (event: WebViewNavigation) => {
@@ -68,6 +73,8 @@ export default observer(() => {
     setCanGoForward(event.canGoForward);
 
     if (!event.url) return;
+    if (!event.loading) Bookmarks.submitHistory(event.url);
+
     setWebUrl(event.url);
     const hn = Linking.parse(event.url).hostname!;
     setHostname(hn.startsWith('www.') ? hn.substring(4) : hn);
@@ -154,25 +161,55 @@ export default observer(() => {
           </TouchableOpacity>
         </View>
 
-        {uri ? (
-          <Collapsible collapsed={!isFocus} style={{ borderWidth: 0, padding: 0, margin: 0 }} enablePointerEvents>
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', padding: 8 }}>
-              {Bookmarks.items.map((item, i) => (
+        <Collapsible collapsed={!isFocus} style={{ borderWidth: 0, padding: 0, margin: 0 }} enablePointerEvents>
+          {addr && isFocus ? (
+            <View style={{ marginTop: 8, paddingBottom: 4, borderBottomWidth: 1, borderBottomColor: borderColor }}>
+              {Bookmarks.history
+                .concat(SuggestUrls.filter((u) => !Bookmarks.history.find((hurl) => hurl.includes(u) || u.includes(hurl))))
+                .filter((url) => url.includes(addr) || addr.includes(url))
+                .slice(0, 5)
+                .map((url) => (
+                  <TouchableOpacity
+                    onPress={() => goTo(url)}
+                    style={{
+                      paddingHorizontal: 16,
+                      paddingVertical: 6,
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Text style={{ fontSize: 16, color: thirdFontColor }}>{url}</Text>
+                    <Feather name="arrow-right" size={15} color="lightgrey" />
+                  </TouchableOpacity>
+                ))}
+            </View>
+          ) : undefined}
+
+          {uri ? (
+            <View
+              style={{
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                padding: 8,
+                borderBottomWidth: 1,
+                borderBottomColor: borderColor,
+              }}
+            >
+              {Bookmarks.items.slice(0, 24).map((item, i) => (
                 <TouchableOpacity style={{ margin: 8 }} key={`${item.url}-${i}`} onPress={() => goTo(item.url)}>
                   <Image source={{ uri: item.icon }} style={{ width: 32, height: 32 }} />
                 </TouchableOpacity>
               ))}
             </View>
+          ) : undefined}
 
-            <View style={{ height: 1, backgroundColor: borderColor, marginBottom: 4 }} />
-
-            <View style={{ flexDirection: 'row', paddingHorizontal: 16, paddingTop: 2 }}>
-              <TouchableOpacity style={{ width: 48 }} onPress={() => goHome()}>
-                <Ionicons name="home-outline" size={20} />
-              </TouchableOpacity>
-            </View>
-          </Collapsible>
-        ) : undefined}
+          <View style={{ flexDirection: 'row', paddingHorizontal: 16, paddingTop: 2, marginTop: 4 }}>
+            <TouchableOpacity style={{ width: 48 }} onPress={() => goHome()}>
+              <Ionicons name="home-outline" size={20} />
+            </TouchableOpacity>
+          </View>
+        </Collapsible>
 
         {loadingProgress > 0 && loadingProgress < 1 ? (
           <Bar
