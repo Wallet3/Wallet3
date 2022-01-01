@@ -201,7 +201,12 @@ export default observer(() => {
                     alignItems: 'center',
                   }}
                 >
-                  <Text style={{ fontSize: 16, color: index === 0 ? '#fff' : thirdFontColor }}>{url}</Text>
+                  <Text
+                    numberOfLines={1}
+                    style={{ maxWidth: '80%', fontSize: 16, color: index === 0 ? '#fff' : thirdFontColor }}
+                  >
+                    {url}
+                  </Text>
                   {index === 0 ? <Ionicons name="return-down-back" size={15} color="#fff" /> : undefined}
                 </TouchableOpacity>
               ))}
