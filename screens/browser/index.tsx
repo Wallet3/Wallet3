@@ -1,17 +1,19 @@
 import * as Linking from 'expo-linking';
 
+import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
 import Bookmarks, { Bookmark, SuggestUrls, getFaviconJs } from '../../viewmodels/hubs/Bookmarks';
-import { Dimensions, FlatList, Image, ListRenderItemInfo, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { Feather, Ionicons } from '@expo/vector-icons';
-import React, { useRef, useState } from 'react';
+import { Dimensions, FlatList, ListRenderItemInfo, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
 import { WebView, WebViewNavigation } from 'react-native-webview';
 import { borderColor, thirdFontColor } from '../../constants/styles';
 
 import { Bar } from 'react-native-progress';
 import Collapsible from 'react-native-collapsible';
 import Constants from 'expo-constants';
+import Image from 'react-native-expo-cached-image';
 import Networks from '../../viewmodels/Networks';
 import i18n from '../../i18n';
+import { isURL } from '../../utils/url';
 import { observer } from 'mobx-react-lite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -34,6 +36,7 @@ export default observer(() => {
   const [addr, setAddr] = useState('');
   const [uri, setUri] = useState<string>('');
   const [pageMetadata, setPageMetadata] = useState<any>();
+  const [suggests, setSuggests] = useState<string[]>([]);
 
   const goHome = () => {
     setUri('');
@@ -56,6 +59,7 @@ export default observer(() => {
         return;
       }
 
+      setAddr(url);
       setUri(url);
     } finally {
       addrRef.current?.blur();
@@ -65,6 +69,11 @@ export default observer(() => {
   const onAddrSubmit = async () => {
     if (!addr) {
       goHome();
+      return;
+    }
+
+    if (!addr.startsWith('http') && suggests[0]) {
+      goTo(suggests[0]);
       return;
     }
 
@@ -97,6 +106,15 @@ export default observer(() => {
       </TouchableOpacity>
     );
   };
+
+  useEffect(() => {
+    setSuggests(
+      Bookmarks.history
+        .concat(SuggestUrls.filter((u) => !Bookmarks.history.find((hurl) => hurl.includes(u) || u.includes(hurl))))
+        .filter((url) => url.includes(addr) || addr.includes(url))
+        .slice(0, 5)
+    );
+  }, [addr]);
 
   return (
     <View style={{ backgroundColor: `#fff`, flex: 1, paddingTop: top, position: 'relative' }}>
@@ -167,26 +185,23 @@ export default observer(() => {
         <Collapsible collapsed={!isFocus} style={{ borderWidth: 0, padding: 0, margin: 0 }} enablePointerEvents>
           {addr && isFocus ? (
             <View style={{ marginTop: 8, paddingBottom: 4, borderBottomWidth: 1, borderBottomColor: borderColor }}>
-              {Bookmarks.history
-                .concat(SuggestUrls.filter((u) => !Bookmarks.history.find((hurl) => hurl.includes(u) || u.includes(hurl))))
-                .filter((url) => url.includes(addr) || addr.includes(url))
-                .slice(0, 5)
-                .map((url) => (
-                  <TouchableOpacity
-                    key={url}
-                    onPress={() => goTo(url)}
-                    style={{
-                      paddingHorizontal: 16,
-                      paddingVertical: 6,
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <Text style={{ fontSize: 16, color: thirdFontColor }}>{url}</Text>
-                    <Feather name="arrow-right" size={15} color="lightgrey" />
-                  </TouchableOpacity>
-                ))}
+              {suggests.map((url, index) => (
+                <TouchableOpacity
+                  key={url}
+                  onPress={() => goTo(url)}
+                  style={{
+                    backgroundColor: index === 0 ? `${current.color}` : undefined,
+                    paddingHorizontal: 16,
+                    paddingVertical: 6,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Text style={{ fontSize: 16, color: index === 0 ? '#fff' : thirdFontColor }}>{url}</Text>
+                  {index === 0 ? <Ionicons name="return-down-back" size={15} color="#fff" /> : undefined}
+                </TouchableOpacity>
+              ))}
             </View>
           ) : undefined}
 

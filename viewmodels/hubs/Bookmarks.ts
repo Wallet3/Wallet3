@@ -62,12 +62,11 @@ export const SuggestUrls = [
   'http://app.compound.finance',
   'https://app.aave.com',
   'https://app.balancer.fi',
-  'https://yearn.finance',
   'https://trade.dydx.exchange',
   'https://app.dodoex.io',
   'https://app.hashflow.com',
   'https://axieinfinity.com',
-  'https://tornadocash.eth.link'
+  'https://tornadocash.eth.link',
 ];
 
 export const getFaviconJs = `function getIcons() {
