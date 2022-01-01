@@ -1,7 +1,6 @@
 import * as Linking from 'expo-linking';
 
-import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
-import Bookmarks, { Bookmark, SuggestUrls, getFaviconJs } from '../../viewmodels/hubs/Bookmarks';
+import Bookmarks, { Bookmark } from '../../viewmodels/hubs/Bookmarks';
 import { Dimensions, FlatList, ListRenderItemInfo, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { WebView, WebViewNavigation } from 'react-native-webview';
@@ -10,10 +9,12 @@ import { borderColor, thirdFontColor } from '../../constants/styles';
 import { Bar } from 'react-native-progress';
 import Collapsible from 'react-native-collapsible';
 import Constants from 'expo-constants';
+import GetPageMetadata from '../../utils/scripts/Metadata';
 import Image from 'react-native-expo-cached-image';
+import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/Networks';
+import SuggestUrls from '../../configs/urls.json';
 import i18n from '../../i18n';
-import { isURL } from '../../utils/url';
 import { observer } from 'mobx-react-lite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -51,7 +52,7 @@ export default observer(() => {
   };
 
   const goTo = (url: string) => {
-    url = url.toLowerCase().startsWith('http') ? url : `http://${url}`;
+    url = url.toLowerCase().startsWith('http') ? url : `https://${url}`;
 
     try {
       if (url === uri) {
@@ -110,7 +111,9 @@ export default observer(() => {
   useEffect(() => {
     setSuggests(
       Bookmarks.history
-        .concat(SuggestUrls.filter((u) => !Bookmarks.history.find((hurl) => hurl.includes(u) || u.includes(hurl))))
+        .concat(
+          (SuggestUrls as string[]).filter((u) => !Bookmarks.history.find((hurl) => hurl.includes(u) || u.includes(hurl)))
+        )
         .filter((url) => url.includes(addr) || addr.includes(url))
         .slice(0, 5)
     );
@@ -252,7 +255,7 @@ export default observer(() => {
           onLoadProgress={({ nativeEvent }) => setLoadingProgress(nativeEvent.progress)}
           onLoadEnd={() => setLoadingProgress(1)}
           onNavigationStateChange={onNavigationStateChange}
-          injectedJavaScript={getFaviconJs}
+          injectedJavaScript={GetPageMetadata}
           onMessage={(e) => setPageMetadata(JSON.parse(e.nativeEvent.data))}
         />
       ) : (
