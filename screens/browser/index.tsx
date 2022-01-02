@@ -19,7 +19,9 @@ import { observer } from 'mobx-react-lite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const ScreenWidth = Dimensions.get('window').width;
-const NumOfColumns = Math.ceil((ScreenWidth - 16 * 2) / (48 + 16));
+const NumOfColumns = 6;
+const LargeIconSize = (ScreenWidth - 8 - 16 * NumOfColumns) / NumOfColumns;
+const SmallIconSize = (ScreenWidth - 16 - 16 * 8) / 8;
 
 export default observer(() => {
   const { t } = i18n;
@@ -39,6 +41,15 @@ export default observer(() => {
   const [pageMetadata, setPageMetadata] = useState<any>();
   const [suggests, setSuggests] = useState<string[]>([]);
 
+  const refresh = () => {
+    webview.current?.reload();
+  };
+
+  const stopLoading = () => {
+    webview.current?.stopLoading();
+    setLoadingProgress(1);
+  };
+
   const goHome = () => {
     setUri('');
     setAddr('');
@@ -56,12 +67,14 @@ export default observer(() => {
 
     try {
       if (url === uri) {
-        webview.current?.reload();
+        refresh();
         return;
       }
 
       setAddr(url);
       setUri(url);
+      setWebUrl(url);
+      setHostname(Linking.parse(url).hostname!);
     } finally {
       addrRef.current?.blur();
     }
@@ -99,7 +112,7 @@ export default observer(() => {
     return (
       <TouchableOpacity style={{ padding: 8 }} onPress={() => setUri(item.url)}>
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-          <Image source={{ uri: item.icon }} style={{ width: 48, height: 48 }} />
+          <Image source={{ uri: item.icon }} style={{ width: LargeIconSize, height: LargeIconSize }} />
           <Text numberOfLines={1} style={{ maxWidth: 48, marginTop: 4, fontSize: 10, color: thirdFontColor }}>
             {item.title}
           </Text>
@@ -142,33 +155,45 @@ export default observer(() => {
             <Ionicons name="chevron-forward-outline" size={17} color={canGoForward ? '#000' : 'lightgrey'} />
           </TouchableOpacity>
 
-          <TextInput
-            ref={addrRef}
-            autoCapitalize="none"
-            keyboardType="web-search"
-            placeholderTextColor="#dfdfdf"
-            autoCorrect={false}
-            placeholder={t('browser-enter-address')}
-            selectTextOnFocus={true}
-            onFocus={() => setFocus(true)}
-            onBlur={() => setFocus(false)}
-            defaultValue={isFocus ? webUrl : undefined}
-            value={isFocus ? undefined : hostname}
-            onChangeText={(t) => setAddr(t)}
-            onSubmitEditing={() => onAddrSubmit()}
-            style={{
-              backgroundColor: isFocus ? '#fff' : '#f5f5f5',
-              fontSize: 16,
-              color: webUrl.startsWith('https') && !isFocus ? '#76B947' : undefined,
-              paddingHorizontal: 8,
-              flex: 1,
-              paddingVertical: 6,
-              borderWidth: 1,
-              borderColor: isFocus ? borderColor : 'transparent',
-              borderRadius: 7,
-              textAlign: isFocus ? 'auto' : 'center',
-            }}
-          />
+          <View style={{ position: 'relative', flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+            <TextInput
+              ref={addrRef}
+              autoCapitalize="none"
+              keyboardType="web-search"
+              placeholderTextColor="#dfdfdf"
+              autoCorrect={false}
+              placeholder={t('browser-enter-address')}
+              selectTextOnFocus={true}
+              onFocus={() => setFocus(true)}
+              onBlur={() => setFocus(false)}
+              defaultValue={isFocus ? webUrl : undefined}
+              value={isFocus ? undefined : hostname}
+              onChangeText={(t) => setAddr(t)}
+              onSubmitEditing={() => onAddrSubmit()}
+              style={{
+                backgroundColor: isFocus ? '#fff' : '#f5f5f5',
+                fontSize: 16,
+                color: webUrl.startsWith('https') && !isFocus ? '#76B947' : undefined,
+                paddingHorizontal: 8,
+                flex: 1,
+                paddingVertical: 6,
+                borderWidth: 1,
+                borderColor: isFocus ? borderColor : 'transparent',
+                borderRadius: 7,
+                textAlign: isFocus ? 'auto' : 'center',
+              }}
+            />
+
+            {isFocus ? undefined : (
+              <TouchableOpacity
+                style={{ padding: 8, paddingHorizontal: 9, position: 'absolute', right: 0 }}
+                onPress={() => (loadingProgress === 1 ? refresh() : stopLoading())}
+              >
+                {loadingProgress === 1 ? <Ionicons name="refresh" size={17} /> : undefined}
+                {loadingProgress > 0 && loadingProgress < 1 ? <Ionicons name="close-outline" size={17} /> : undefined}
+              </TouchableOpacity>
+            )}
+          </View>
 
           <TouchableOpacity
             style={{ padding: 8 }}
@@ -225,7 +250,7 @@ export default observer(() => {
             >
               {Bookmarks.items.slice(0, 24).map((item, i) => (
                 <TouchableOpacity style={{ margin: 8 }} key={`${item.url}-${i}`} onPress={() => goTo(item.url)}>
-                  <Image source={{ uri: item.icon }} style={{ width: 32, height: 32 }} />
+                  <Image source={{ uri: item.icon }} style={{ width: SmallIconSize, height: SmallIconSize }} />
                 </TouchableOpacity>
               ))}
             </View>
@@ -262,6 +287,7 @@ export default observer(() => {
           onNavigationStateChange={onNavigationStateChange}
           injectedJavaScript={GetPageMetadata}
           onMessage={(e) => setPageMetadata(JSON.parse(e.nativeEvent.data))}
+          mediaPlaybackRequiresUserAction
         />
       ) : (
         <FlatList
