@@ -24,9 +24,12 @@ const CurrencyItem = observer(({ item, onPress }: { item: Currency; onPress: () 
 });
 
 export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
-  const renderItem = ({ item }: { item: Currency }) => (
-    <CurrencyItem item={item} onPress={() => CurrencyViewmodel.setCurrency(item)} />
-  );
+  const setCurrency = (item: Currency) => {
+    CurrencyViewmodel.setCurrency(item);
+    navigation?.goBack();
+  };
+
+  const renderItem = ({ item }: { item: Currency }) => <CurrencyItem item={item} onPress={() => setCurrency(item)} />;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>

@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     maxWidth: '85%',
     fontSize: 29,
     lineHeight: 39,
-    fontFamily: Langs.systemLang.includes('ja') ? undefined : numericFontFamily,
+    fontFamily: Langs.systemLang.includes('ja') && Langs.currentLang.value.includes('zh') ? undefined : numericFontFamily,
   },
 
   buttonsContainer: {

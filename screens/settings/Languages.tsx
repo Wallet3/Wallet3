@@ -19,7 +19,12 @@ const LangItem = observer(({ item, onPress }: { onPress: () => void; item: Lang 
 });
 
 export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
-  const renderItem = ({ item }: ListRenderItemInfo<Lang>) => <LangItem item={item} onPress={() => Langs.setLang(item)} />;
+  const setLang = (item: Lang) => {
+    Langs.setLang(item);
+    navigation?.goBack();
+  };
+
+  const renderItem = ({ item }: ListRenderItemInfo<Lang>) => <LangItem item={item} onPress={() => setLang(item)} />;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
