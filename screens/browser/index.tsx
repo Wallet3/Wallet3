@@ -112,7 +112,7 @@ export default observer(() => {
     return (
       <TouchableOpacity style={{ padding: 8 }} onPress={() => setUri(item.url)}>
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-          <Image source={{ uri: item.icon }} style={{ width: LargeIconSize, height: LargeIconSize }} />
+          <Image source={{ uri: item.icon }} style={{ width: LargeIconSize, height: LargeIconSize, borderRadius: 7 }} />
           <Text numberOfLines={1} style={{ maxWidth: 48, marginTop: 4, fontSize: 10, color: thirdFontColor }}>
             {item.title}
           </Text>
@@ -250,7 +250,10 @@ export default observer(() => {
             >
               {Bookmarks.items.slice(0, 24).map((item, i) => (
                 <TouchableOpacity style={{ margin: 8 }} key={`${item.url}-${i}`} onPress={() => goTo(item.url)}>
-                  <Image source={{ uri: item.icon }} style={{ width: SmallIconSize, height: SmallIconSize }} />
+                  <Image
+                    source={{ uri: item.icon }}
+                    style={{ width: SmallIconSize, height: SmallIconSize, borderRadius: 3 }}
+                  />
                 </TouchableOpacity>
               ))}
             </View>
