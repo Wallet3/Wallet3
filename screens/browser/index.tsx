@@ -238,7 +238,7 @@ export default observer(() => {
             </View>
           ) : undefined}
 
-          {uri ? (
+          {uri && Bookmarks.favs.length > 0 ? (
             <View
               style={{
                 flexDirection: 'row',
