@@ -1,6 +1,6 @@
 import * as Linking from 'expo-linking';
 
-import Bookmarks, { Bookmark } from '../../viewmodels/hubs/Bookmarks';
+import Bookmarks, { Bookmark, PopularDApps } from '../../viewmodels/hubs/Bookmarks';
 import { Dimensions, FlatList, ListRenderItemInfo, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { WebView, WebViewNavigation } from 'react-native-webview';
@@ -293,15 +293,18 @@ export default observer(() => {
           mediaPlaybackRequiresUserAction
         />
       ) : (
-        <FlatList
-          data={Bookmarks.favs}
-          bounces={false}
-          renderItem={renderItem}
-          numColumns={NumOfColumns}
-          contentContainerStyle={{ paddingHorizontal: 4, paddingVertical: 8 }}
-          style={{ marginTop: 4 }}
-          keyExtractor={(v, index) => `v.url-${index}`}
-        />
+        <View>
+          {Bookmarks.favs.length === 0 ? <Text style={{ marginHorizontal: 16, marginTop: 12 }}>Popular DApps</Text> : undefined}
+          <FlatList
+            data={Bookmarks.favs.length > 0 ? Bookmarks.favs : PopularDApps}
+            bounces={false}
+            renderItem={renderItem}
+            numColumns={NumOfColumns}
+            contentContainerStyle={{ paddingHorizontal: 4, paddingVertical: 8 }}
+            style={{ marginTop: 4 }}
+            keyExtractor={(v, index) => `v.url-${index}`}
+          />
+        </View>
       )}
     </View>
   );

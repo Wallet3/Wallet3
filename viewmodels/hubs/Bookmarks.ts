@@ -10,6 +10,19 @@ export interface Bookmark {
   title: string;
 }
 
+export const PopularDApps = [
+  { url: 'https://app.uniswap.org', icon: 'https://app.uniswap.org/favicon.png', title: 'Uniswap' },
+  { url: 'https://curve.fi', icon: 'https://curve.fi/apple-touch-icon.png', title: 'Curve' },
+  { url: 'https://app.compound.finance', icon: 'https://compound.finance/images/compound-512.png', title: 'Compound' },
+  { url: 'https://app.sushi.com', icon: 'https://sushi.com/static/media/logo.dec926df.png', title: 'Sushiswap' },
+  {
+    url: 'https://opensea.io',
+    icon: 'https://storage.googleapis.com/opensea-static/Logomark/Logomark-Blue.png',
+    title: 'Opensea',
+  },
+  { url: 'https://foundation.app', icon: 'https://foundation.app/apple-touch-icon.png', title: 'Foundation' },
+];
+
 class Bookmarks {
   favs: Bookmark[] = [];
   history: string[] = [];
