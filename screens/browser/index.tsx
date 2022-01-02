@@ -248,7 +248,7 @@ export default observer(() => {
                 borderBottomColor: borderColor,
               }}
             >
-              {Bookmarks.items.slice(0, 24).map((item, i) => (
+              {Bookmarks.favs.slice(0, 24).map((item, i) => (
                 <TouchableOpacity style={{ margin: 8 }} key={`${item.url}-${i}`} onPress={() => goTo(item.url)}>
                   <Image
                     source={{ uri: item.icon }}
@@ -294,7 +294,7 @@ export default observer(() => {
         />
       ) : (
         <FlatList
-          data={Bookmarks.items}
+          data={Bookmarks.favs}
           bounces={false}
           renderItem={renderItem}
           numColumns={NumOfColumns}

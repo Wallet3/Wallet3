@@ -12,6 +12,7 @@ export interface Lang {
 }
 
 class Langs {
+  readonly systemLang: string;
   currentLang: Lang;
 
   supportedLangs: Lang[] = [
@@ -23,6 +24,7 @@ class Langs {
 
   constructor() {
     const userLocale = Localization.locale.toLowerCase();
+    this.systemLang = userLocale;
 
     this.currentLang =
       this.supportedLangs.find((l) => userLocale.includes(l.value) || l.value.toLowerCase().includes(userLocale)) ??

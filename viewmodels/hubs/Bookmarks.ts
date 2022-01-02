@@ -11,15 +11,22 @@ export interface Bookmark {
 }
 
 class Bookmarks {
-  items: Bookmark[] = [];
+  favs: Bookmark[] = [];
   history: string[] = [];
 
   constructor() {
-    makeObservable(this, { history: observable, items: observable, remove: action, add: action, submitHistory: action });
+    makeObservable(this, {
+      history: observable,
+      favs: observable,
+      remove: action,
+      add: action,
+      submitHistory: action,
+      reset: action,
+    });
 
     AsyncStorage.getItem(`bookmarks`)
       .then((v) => {
-        runInAction(() => this.items.push(...JSON.parse(v || '[]')));
+        runInAction(() => this.favs.push(...JSON.parse(v || '[]')));
       })
       .catch(() => {});
 
@@ -32,22 +39,27 @@ class Bookmarks {
 
   add(obj: Bookmark) {
     obj.title = obj.title || Linking.parse(obj.url).hostname || obj.url;
-    this.items.push(obj);
-    AsyncStorage.setItem(`bookmarks`, JSON.stringify(this.items));
+    this.favs.push(obj);
+    AsyncStorage.setItem(`bookmarks`, JSON.stringify(this.favs));
   }
 
   remove(url: string) {
-    this.items = this.items.filter((i) => !i.url.startsWith(url) && !url.startsWith(i.url));
-    AsyncStorage.setItem(`bookmarks`, JSON.stringify(this.items));
+    this.favs = this.favs.filter((i) => !i.url.startsWith(url) && !url.startsWith(i.url));
+    AsyncStorage.setItem(`bookmarks`, JSON.stringify(this.favs));
   }
 
   has(url: string) {
-    return this.items.find((i) => i.url.startsWith(url) || url.startsWith(i.url)) ? true : false;
+    return this.favs.find((i) => i.url.startsWith(url) || url.startsWith(i.url)) ? true : false;
   }
 
   submitHistory(url: string) {
     this.history = [url, ...this.history.filter((i) => !i.includes(url) || !url.includes(i))];
     AsyncStorage.setItem(`history-urls`, JSON.stringify(this.history.slice(0, 32)));
+  }
+
+  reset() {
+    this.favs = [];
+    this.history = [];
   }
 }
 

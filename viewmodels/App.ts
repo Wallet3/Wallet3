@@ -2,6 +2,7 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Authentication from './Authentication';
+import Bookmarks from './hubs/Bookmarks';
 import Coingecko from '../common/apis/Coingecko';
 import Contacts from './hubs/Contacts';
 import DAppHub from './hubs/DAppHub';
@@ -62,6 +63,7 @@ export class AppVM {
     TxHub.reset();
     Contacts.reset();
     Networks.reset();
+    Bookmarks.reset();
     await Promise.all([Database.reset(), AsyncStorage.clear(), Authentication.reset(), DAppHub.reset()]);
   }
 }

@@ -5,6 +5,7 @@ import { numericFontFamily, themeColor } from '../../constants/styles';
 import AnimateNumber from 'react-native-animate-number';
 import CopyableText from '../../components/CopyableText';
 import Image from 'react-native-expo-cached-image';
+import Langs from '../../viewmodels/settings/Langs';
 import Logos from '../../assets/icons/networks/white';
 import React from 'react';
 import Ripple from 'react-native-material-ripple';
@@ -135,7 +136,7 @@ const styles = StyleSheet.create({
     maxWidth: '85%',
     fontSize: 29,
     lineHeight: 39,
-    fontFamily: numericFontFamily,
+    fontFamily: Langs.systemLang.includes('ja') ? undefined : numericFontFamily,
   },
 
   buttonsContainer: {
