@@ -6,13 +6,7 @@ platform :ios, '12.0'
 
 require 'json'
 
-target :debug do
-  podfile_properties = JSON.parse(File.read('./Podfile.properties.json')) rescue {}
-end
-
-target :release do
-  podfile_properties = JSON.parse(File.read('./Podfile.properties.release.json')) rescue {}
-end
+podfile_properties = JSON.parse(File.read('./Podfile.properties.json')) rescue {}
 
 target 'Wallet3' do
   use_expo_modules!
