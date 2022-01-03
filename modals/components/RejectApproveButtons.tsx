@@ -9,6 +9,7 @@ export default ({
   rejectTitle,
   approveTitle,
   disabledApprove,
+  longConfirm,
 }: {
   onReject?: () => void;
   onApprove?: () => void;
@@ -16,6 +17,7 @@ export default ({
   approveTitle?: string;
   themeColor?: string;
   disabledApprove?: boolean;
+  longConfirm?: boolean;
 }) => {
   return (
     <View style={{ flexDirection: 'row', marginTop: 12 }}>
@@ -26,7 +28,8 @@ export default ({
       <Button
         title={approveTitle}
         disabled={disabledApprove}
-        onPress={onApprove}
+        onPress={longConfirm ? undefined : onApprove}
+        onLongPress={longConfirm ? onApprove : undefined}
         style={{ flex: 10 }}
         themeColor={themeColor}
       />

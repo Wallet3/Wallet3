@@ -185,8 +185,9 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress }: Props) => {
         onApprove={onApprove}
         themeColor={network?.color}
         rejectTitle={t('button-reject')}
-        approveTitle={t('button-send')}
+        approveTitle={t('modal-review-button-hold-to-send')}
         disabledApprove={!vm.isValidParams}
+        longConfirm
       />
     </SafeViewContainer>
   );
