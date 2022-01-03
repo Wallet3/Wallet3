@@ -3,7 +3,7 @@ import * as Linking from 'expo-linking';
 import Bookmarks, { Bookmark, PopularDApps } from '../../viewmodels/hubs/Bookmarks';
 import { Dimensions, FlatList, ListRenderItemInfo, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
-import { WebView, WebViewNavigation } from 'react-native-webview';
+import { WebView, WebViewMessageEvent, WebViewNavigation } from 'react-native-webview';
 import { borderColor, thirdFontColor } from '../../constants/styles';
 
 import { Bar } from 'react-native-progress';
@@ -131,6 +131,16 @@ export default observer(() => {
         .slice(0, 5)
     );
   }, [addr]);
+
+  const onMessage = (e: WebViewMessageEvent) => {
+    const data = JSON.parse(e.nativeEvent.data) as { type: string; payload: any };
+
+    switch (data.type) {
+      case 'metadata':
+        setPageMetadata(data.payload);
+        break;
+    }
+  };
 
   return (
     <View style={{ backgroundColor: `#fff`, flex: 1, paddingTop: top, position: 'relative' }}>
@@ -289,12 +299,14 @@ export default observer(() => {
           onLoadEnd={() => setLoadingProgress(1)}
           onNavigationStateChange={onNavigationStateChange}
           injectedJavaScript={GetPageMetadata}
-          onMessage={(e) => setPageMetadata(JSON.parse(e.nativeEvent.data))}
+          onMessage={(e) => onMessage(e)}
           mediaPlaybackRequiresUserAction
         />
       ) : (
         <View>
-          {Bookmarks.favs.length === 0 ? <Text style={{ marginHorizontal: 16, marginTop: 12 }}>Popular DApps</Text> : undefined}
+          {Bookmarks.favs.length === 0 ? (
+            <Text style={{ marginHorizontal: 16, marginTop: 12 }}>Popular DApps</Text>
+          ) : undefined}
           <FlatList
             data={Bookmarks.favs.length > 0 ? Bookmarks.favs : PopularDApps}
             bounces={false}
