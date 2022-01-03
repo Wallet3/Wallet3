@@ -255,7 +255,7 @@ export default observer(() => {
             </View>
           ) : undefined}
 
-          {uri && Bookmarks.favs.length > 0 ? (
+          {uri ? (
             <View
               style={{
                 flexDirection: 'row',
@@ -265,7 +265,7 @@ export default observer(() => {
                 borderBottomColor: borderColor,
               }}
             >
-              {Bookmarks.favs.slice(0, 24).map((item, i) => (
+              {(Bookmarks.favs.length > 0 ? Bookmarks.favs.slice(0, 16) : PopularDApps).map((item, i) => (
                 <TouchableOpacity style={{ margin: 8 }} key={`${item.url}-${i}`} onPress={() => goTo(item.url)}>
                   <Image
                     source={{ uri: item.icon }}
@@ -322,7 +322,9 @@ export default observer(() => {
             contentContainerStyle={{ paddingHorizontal: 4, paddingVertical: 8 }}
           />
 
-          {Bookmarks.favs.length > 0 ? <Text style={{ marginHorizontal: 16, marginTop: 12 }}>{t('browser-favorites')}</Text> : undefined}
+          {Bookmarks.favs.length > 0 ? (
+            <Text style={{ marginHorizontal: 16, marginTop: 12 }}>{t('browser-favorites')}</Text>
+          ) : undefined}
 
           <FlatList
             data={Bookmarks.favs}
