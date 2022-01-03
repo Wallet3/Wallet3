@@ -1,6 +1,7 @@
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useRef, useState } from 'react';
+import { borderColor, secondaryFontColor } from '../../constants/styles';
 
 import { Account } from '../../viewmodels/account/Account';
 import AccountSelector from '../../modals/dapp/AccountSelector';
@@ -21,7 +22,6 @@ import { WalletConnect_v1 } from '../../viewmodels/WalletConnect_v1';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import { secondaryFontColor } from '../../constants/styles';
 import { styles } from '../../constants/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
@@ -98,10 +98,13 @@ const DAppItem = observer(({ item, openApp }: { item: WalletConnect_v1; openApp:
   return (
     <View style={{ paddingHorizontal: 16, paddingVertical: 12, flexDirection: 'row', alignItems: 'center' }}>
       <TouchableOpacity style={{ flex: 1, alignItems: 'center', flexDirection: 'row' }} onPress={() => openApp(item)}>
-        <Image source={{ uri: appMeta?.icons[0] }} style={{ width: 27, height: 27, marginEnd: 12 }} />
+        <Image
+          source={{ uri: appMeta?.icons[0] }}
+          style={{ width: 27, height: 27, marginEnd: 12, borderWidth: 1, borderRadius: 5, borderColor }}
+        />
         <View style={{ flex: 1 }}>
           <Text style={{ fontWeight: '500', fontSize: 17 }} numberOfLines={1}>
-            {appMeta?.name}
+            {appMeta?.name || appMeta?.url}
           </Text>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text style={{ color: secondaryFontColor, fontSize: 12, marginTop: 4 }}>

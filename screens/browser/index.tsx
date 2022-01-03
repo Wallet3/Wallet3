@@ -21,7 +21,7 @@ import { observer } from 'mobx-react-lite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const ScreenWidth = Dimensions.get('window').width;
-const NumOfColumns = 6;
+const NumOfColumns = 7;
 const LargeIconSize = (ScreenWidth - 8 - 16 * NumOfColumns) / NumOfColumns;
 const SmallIconSize = (ScreenWidth - 16 - 16 * 8) / 8;
 
@@ -115,7 +115,7 @@ export default observer(() => {
       <TouchableOpacity style={{ padding: 8 }} onPress={() => setUri(item.url)}>
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
           <Image source={{ uri: item.icon }} style={{ width: LargeIconSize, height: LargeIconSize, borderRadius: 7 }} />
-          <Text numberOfLines={1} style={{ maxWidth: 48, marginTop: 4, fontSize: 10, color: thirdFontColor }}>
+          <Text numberOfLines={1} style={{ maxWidth: LargeIconSize, marginTop: 4, fontSize: 9, color: thirdFontColor }}>
             {item.title}
           </Text>
         </View>
@@ -311,11 +311,21 @@ export default observer(() => {
         />
       ) : (
         <View>
-          {Bookmarks.favs.length === 0 ? (
-            <Text style={{ marginHorizontal: 16, marginTop: 12 }}>Popular DApps</Text>
-          ) : undefined}
+          <Text style={{ marginHorizontal: 16, marginTop: 12 }}>{t('browser-popular-dapps')}</Text>
           <FlatList
-            data={Bookmarks.favs.length > 0 ? Bookmarks.favs : PopularDApps}
+            data={PopularDApps}
+            bounces={false}
+            renderItem={renderItem}
+            numColumns={NumOfColumns}
+            style={{ marginTop: 4 }}
+            keyExtractor={(v, index) => `v.url-${index}`}
+            contentContainerStyle={{ paddingHorizontal: 4, paddingVertical: 8 }}
+          />
+
+          {Bookmarks.favs.length > 0 ? <Text style={{ marginHorizontal: 16, marginTop: 12 }}>{t('browser-favorites')}</Text> : undefined}
+
+          <FlatList
+            data={Bookmarks.favs}
             bounces={false}
             renderItem={renderItem}
             numColumns={NumOfColumns}

@@ -172,13 +172,6 @@ export class WalletConnect_v1 extends EventEmitter {
 
     PubSub.publish('wc_request', { client: this, request });
 
-    // const checkAccount = (from: string) => {
-    //   if (from?.toLowerCase() === this.wallet.currentAddress.toLowerCase()) return true;
-    //   this.connector.rejectRequest({ id: request.id, error: { message: 'Update session' } });
-    //   this.updateSession();
-    //   return false;
-    // };
-
     this.emit('sessionUpdated');
   };
 

@@ -22,8 +22,7 @@ class DAppHub extends EventEmitter {
   }
 
   async init() {
-    const sessions = await Database.wcSessionV1Repository.find();
-
+    // Notify dapps to switch current network
     autorun(() => {
       const { current } = Networks;
 
@@ -31,6 +30,7 @@ class DAppHub extends EventEmitter {
       clients.forEach((c) => c.updateSession({ chainId: current.chainId }));
     });
 
+    // Notify dapps to update current account
     autorun(() => {
       const { currentWallet } = App;
       const { currentAccount } = currentWallet ?? {};
@@ -40,10 +40,12 @@ class DAppHub extends EventEmitter {
       clients.forEach((c) => c.updateSession({ accounts: [currentAccount.address] }));
     });
 
+    // Restore sessions
+    const sessions = await Database.wcSessionV1Repository.find();
     runInAction(() => {
-      this.clients = sessions.map((sessionStore) =>
-        new WalletConnect_v1().connectSession(sessionStore.session).setStore(sessionStore)
-      );
+      this.clients = sessions
+        .reverse()
+        .map((sessionStore) => new WalletConnect_v1().connectSession(sessionStore.session).setStore(sessionStore));
 
       this.clients.forEach((client) => this.handleLifecycle(client));
     });
