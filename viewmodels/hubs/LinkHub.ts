@@ -6,6 +6,7 @@ import { showMessage } from 'react-native-flash-message';
 
 class LinkHub {
   private lastHandled = 0;
+  private handledUrls = new Set<string>();
 
   start() {
     Linking.getInitialURL().then((url) => this.handleURL(url!));
@@ -14,6 +15,7 @@ class LinkHub {
 
   handleURL = (url: string) => {
     if (!url) return false;
+    if (this.handledUrls.has(url)) return false;
 
     const appSchemes = [
       'wallet3:',
@@ -27,8 +29,8 @@ class LinkHub {
       'bitpie:',
       'abt:',
     ];
-    
-    const supportedSchemes = ['ethereum', 'wc:', '0x', 'wallet3sync:'].concat(appSchemes);
+
+    const supportedSchemes = ['ethereum', '0x', 'wc:', 'wallet3sync:'].concat(appSchemes);
     const scheme =
       supportedSchemes.find((schema) => url.toLowerCase().startsWith(schema)) || (url.endsWith('.eth') ? '0x' : undefined);
 
@@ -52,9 +54,12 @@ class LinkHub {
         const { queryParams } = Linking.parse(url);
         if (Object.getOwnPropertyNames(queryParams).length === 0) return false; // ignore empty query params
 
+        this.handledUrls.add(url);
+
         PubSub.publish(`CodeScan-wc:`, { data: queryParams.uri });
       } catch (error) {}
     } else {
+      if (scheme === 'wc:') this.handledUrls.add(url);
       PubSub.publish(`CodeScan-${scheme}`, { data: url.replace('Ethereum', 'ethereum') });
     }
 

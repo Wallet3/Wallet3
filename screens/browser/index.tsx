@@ -9,9 +9,11 @@ import { borderColor, thirdFontColor } from '../../constants/styles';
 import { Bar } from 'react-native-progress';
 import Collapsible from 'react-native-collapsible';
 import Constants from 'expo-constants';
-import GetPageMetadata from '../../utils/scripts/Metadata';
+import GetPageMetadata from './scripts/Metadata';
+import HookWalletConnect from './scripts/InjectWalletConnectObserver';
 import Image from 'react-native-expo-cached-image';
 import { Ionicons } from '@expo/vector-icons';
+import LinkHub from '../../viewmodels/hubs/LinkHub';
 import Networks from '../../viewmodels/Networks';
 import SuggestUrls from '../../configs/urls.json';
 import i18n from '../../i18n';
@@ -135,9 +137,14 @@ export default observer(() => {
   const onMessage = (e: WebViewMessageEvent) => {
     const data = JSON.parse(e.nativeEvent.data) as { type: string; payload: any };
 
+    console.log(data);
+
     switch (data.type) {
       case 'metadata':
         setPageMetadata(data.payload);
+        break;
+      case 'wcuri':
+        console.log(LinkHub.handleURL(data.payload.uri));
         break;
     }
   };
@@ -298,7 +305,7 @@ export default observer(() => {
           onLoadProgress={({ nativeEvent }) => setLoadingProgress(nativeEvent.progress)}
           onLoadEnd={() => setLoadingProgress(1)}
           onNavigationStateChange={onNavigationStateChange}
-          injectedJavaScript={GetPageMetadata}
+          injectedJavaScript={`${GetPageMetadata} ${HookWalletConnect}`}
           onMessage={(e) => onMessage(e)}
           mediaPlaybackRequiresUserAction
         />

@@ -21,6 +21,7 @@ export const PopularDApps = [
     title: 'Opensea',
   },
   { url: 'https://foundation.app', icon: 'https://foundation.app/apple-touch-icon.png', title: 'Foundation' },
+  { url: 'https://oncyber.io', icon: 'https://oncyber.io/images/logo-black.png', title: 'Cyber' },
 ];
 
 class Bookmarks {
