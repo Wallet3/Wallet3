@@ -44,6 +44,7 @@ export default observer(({ networks, selectedChains, onDone }: Props) => {
         {generateNetworkIcon({
           chainId: item.chainId,
           width: 23,
+          color: item.color,
           style: { marginHorizontal: 10, marginStart: item.chainId === 1 ? 9 : undefined },
         })}
         <Text style={{ color: item.color, fontSize: 16, fontWeight: '500' }}>{item.network}</Text>

@@ -18,10 +18,10 @@ import React from 'react';
 import XDai from './xdai.svg';
 import ZKSync from './zksync.svg';
 
-export const EVMIcon = ({ title, color }: { title?: string; color: string }) => {
+export const EVMIcon = ({ title, color, size, style }: { title?: string; color: string; size?: number; style?: any }) => {
   return (
-    <View style={{ position: 'relative', justifyContent: 'center', alignItems: 'center' }}>
-      <Entypo name="network" size={27} color={color} />
+    <View style={{ ...style, position: 'relative', justifyContent: 'center', alignItems: 'center' }}>
+      <Entypo name="network" size={size ?? 27} color={color} />
       <Text style={{ fontSize: 5, fontWeight: '500', color }}>EVM</Text>
     </View>
   );
@@ -62,8 +62,14 @@ export const NetworkIcons = {
   // zksync: ZSYNC,
 };
 
-export function generateNetworkIcon(props: { chainId: number; width: number; height?: number; style?: StyleProp<ViewStyle> }) {
-  const { chainId, width, height, style } = props;
+export function generateNetworkIcon(props: {
+  chainId: number;
+  color?: string;
+  width: number;
+  height?: number;
+  style?: StyleProp<ViewStyle>;
+}) {
+  const { chainId, width, height, style, color } = props;
 
   switch (chainId) {
     case 1:
@@ -90,5 +96,7 @@ export function generateNetworkIcon(props: { chainId: number; width: number; hei
       return <Heco key={chainId} width={width} height={height ?? width} style={style} />;
     case 66:
       return <OKEx key={chainId} width={width} height={height ?? width} style={style} />;
+    default:
+      return <EVMIcon key={chainId} size={width} color={color!} style={style} />;
   }
 }
