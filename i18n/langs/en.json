@@ -102,7 +102,7 @@
   "modal-message-signing": "Message Signing",
   "modal-dapp-request-type": "Type",
   "modal-dapp-request-type-approve": "Approve",
-  "modal-dapp-request-max-approve": "Max",
+  "modal-dapp-request-max-approve": "Amount",
   "modal-dapp-request-type-transfer": "Transfer",
   "modal-dapp-request-type-contract-interaction": "Contract Interaction",
   "modal-dapp-request-amount": "Amount",

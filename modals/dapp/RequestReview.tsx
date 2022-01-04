@@ -5,6 +5,7 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 import { borderColor, fontColor } from '../../constants/styles';
 
 import AnimateNumber from 'react-native-animate-number';
+import Authentication from '../../viewmodels/Authentication';
 import Currency from '../../viewmodels/settings/Currency';
 import GasReview from '../views/GasReview';
 import { INetwork } from '../../common/Networks';
@@ -185,9 +186,13 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress }: Props) => {
         onApprove={onApprove}
         themeColor={network?.color}
         rejectTitle={t('button-reject')}
-        approveTitle={t('modal-review-button-hold-to-send')}
+        approveTitle={t(
+          Authentication.biometricsEnabled && Authentication.biometricsSupported
+            ? 'modal-review-button-hold-to-send'
+            : 'button-send'
+        )}
         disabledApprove={!vm.isValidParams}
-        longConfirm
+        longConfirm={Authentication.biometricsEnabled && Authentication.biometricsSupported ? true : false}
       />
     </SafeViewContainer>
   );
