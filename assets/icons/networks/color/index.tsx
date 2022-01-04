@@ -22,7 +22,7 @@ import ZKSync from './zksync.svg';
 export const EVMIcon = ({ title, color, size, style }: { title?: string; color: string; size?: number; style?: any }) => {
   return (
     <View style={{ ...style, position: 'relative', justifyContent: 'center', alignItems: 'center' }}>
-      <Entypo name="network" size={size ?? 27} color={color} />
+      <Entypo name="network" size={size ?? 30} color={color} />
       <Text style={{ fontSize: 5, fontWeight: '500', color }}>EVM</Text>
     </View>
   );
