@@ -50,7 +50,7 @@ const RootTab = observer(() => {
         tabBarActiveTintColor: current.color,
         tabBarInactiveTintColor: 'gray',
         tabBarLabelStyle: { marginBottom: 3, marginTop: -3 },
-        tabBarStyle: { borderWidth: 1, borderColor },
+        tabBarStyle: {},
         // tabBarBackground: () => <BlurView />,
       })}
     >

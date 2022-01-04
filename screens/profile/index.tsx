@@ -93,7 +93,7 @@ export default observer(() => {
         </Text>
       </View>
 
-      <Text style={styles.subtitle}>Accounts</Text>
+      <Text style={styles.subtitle}>{t('profile-accounts')}</Text>
 
       <View style={styles.contentWrapper}>
         {ens?.twitter ? (
@@ -116,7 +116,7 @@ export default observer(() => {
         ) : undefined}
       </View>
 
-      <Text style={styles.subtitle}>Addresses</Text>
+      <Text style={styles.subtitle}>{t('profile-addresses')}</Text>
 
       <View style={styles.contentWrapper}>
         {addresses
@@ -131,7 +131,7 @@ export default observer(() => {
           })}
       </View>
 
-      <Text style={styles.subtitle}>More records</Text>
+      <Text style={styles.subtitle}>{t('profile-more-records')}</Text>
       <View style={styles.contentWrapper}></View>
 
       <StatusBar style="light" />

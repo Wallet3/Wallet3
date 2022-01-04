@@ -19,6 +19,7 @@ import TokenDetail from './TokenDetail';
 import TxDetail from './TxDetail';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { useIsFocused } from '@react-navigation/native';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 type RootStackParamList = {
@@ -28,6 +29,7 @@ type RootStackParamList = {
 
 export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, 'Home'>) => {
   const { t } = i18n;
+
   const { currentWallet } = App;
   const { current } = Networks;
   const { ref: tokenDetailModalize, open: openTokenDetail, close: closeTokenDetail } = useModalize();

@@ -29,6 +29,7 @@ const SmallIconSize = (ScreenWidth - 16 - 16 * 8) / 8;
 
 export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   const [tabBarHeight] = useState(useBottomTabBarHeight());
+
   const [tabBarHidden, setTabBarHidden] = useState(false);
 
   const [lastBaseY, setLastBaseY] = useState(0);
@@ -343,6 +344,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
           onMessage={(e) => onMessage(e)}
           mediaPlaybackRequiresUserAction
           onScroll={onScroll}
+          pullToRefreshEnabled
           // style={{ marginBottom: -tabBarHeight }}
         />
       ) : (
