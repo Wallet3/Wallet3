@@ -122,15 +122,6 @@ export const PublicNetworks: INetwork[] = [
     blockTimeMs: 10 * 1000,
     explorer: 'https://ftmscan.com',
   },
-  // {
-  //   symbol: 'ONE',
-  //   comm_id: 'one',
-  //   network: 'Harmony',
-  //   chainId: 1666600000,
-  //   explorer: 'https://explorer.harmony.one',
-  //   color: '#00B0FF',
-  //   defaultTokens: [],
-  // },
   {
     symbol: 'CELO',
     comm_id: 'celo',
@@ -164,6 +155,15 @@ export const PublicNetworks: INetwork[] = [
     explorer: 'https://moonriver.moonscan.io',
   },
   {
+    symbol: 'ETH',
+    comm_id: 'aurora',
+    chainId: 1313161554,
+    network: 'Aurora',
+    color: '#70d44b',
+    defaultTokens: [],
+    explorer: 'https://explorer.aurora.dev',
+  },
+  {
     symbol: 'HT',
     comm_id: 'heco',
     chainId: 128,
@@ -185,6 +185,16 @@ export const PublicNetworks: INetwork[] = [
     blockTimeMs: 5 * 1000,
     explorer: 'https://www.oklink.com/okexchain',
   },
+
+  // {
+  //   symbol: 'ONE',
+  //   comm_id: 'one',
+  //   network: 'Harmony',
+  //   chainId: 1666600000,
+  //   explorer: 'https://explorer.harmony.one',
+  //   color: '#00B0FF',
+  //   defaultTokens: [],
+  // },
 ];
 
 export const Testnets: INetwork[] = [

@@ -1,4 +1,5 @@
 import Arbitrum from './arbitrum.svg';
+import Aurora from './aurora.svg';
 import Avalanche from './avalanche.svg';
 import BSC from './bsc.svg';
 import Boba from './boba.svg';
@@ -97,6 +98,13 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     opacity: 0.72,
   },
+
+  aurora: {
+    marginTop: -45,
+    marginEnd: 0,
+    alignSelf: 'flex-end',
+    opacity: 0.72,
+  },
 });
 
 export default {
@@ -112,4 +120,5 @@ export default {
   66: <OKEx width={49} height={49} style={styles.okex} />,
   56: <BSC width={49} height={49} style={styles.bsc} />,
   288: <Boba width={49} height={49} style={styles.boba} />,
+  1313161554: <Aurora width={49} height={49} style={styles.aurora} />,
 };

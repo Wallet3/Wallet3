@@ -2,6 +2,7 @@ import { Entypo, Feather } from '@expo/vector-icons';
 import { StyleProp, Text, View, ViewStyle } from 'react-native';
 
 import Arbitrum from './arbitrum.svg';
+import Aurora from './aurora.svg';
 import Avalanche from './avalanche.svg';
 import Boba from './boba.svg';
 import Bsc from './bsc.svg';
@@ -43,6 +44,7 @@ const OKX = generateNetworkIcon({ chainId: 66, width: 32 });
 const POLY = generateNetworkIcon({ chainId: 137, width: 27, height: 32 });
 const xDAI = generateNetworkIcon({ chainId: 100, width: 32 });
 const BOBA = generateNetworkIcon({ chainId: 288, width: 32 });
+const AURORA = generateNetworkIcon({ chainId: 1313161554, width: 32 });
 // const ZSYNC = <ZKSync width={32} height={32} />;
 
 export const NetworkIcons = {
@@ -58,6 +60,7 @@ export const NetworkIcons = {
   137: POLY,
   100: xDAI,
   288: BOBA,
+  1313161554: AURORA,
 
   // zksync: ZSYNC,
 };
@@ -96,6 +99,8 @@ export function generateNetworkIcon(props: {
       return <Heco key={chainId} width={width} height={height ?? width} style={style} />;
     case 66:
       return <OKEx key={chainId} width={width} height={height ?? width} style={style} />;
+    case 1313161554:
+      return <Aurora key={chainId} width={width} height={height ?? width} style={style} />;
     default:
       return <EVMIcon key={chainId} size={width} color={color!} style={style} />;
   }
