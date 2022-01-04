@@ -33,8 +33,10 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
 
   const [lastBaseY, setLastBaseY] = useState(0);
   const onScroll = ({ nativeEvent }: WebViewScrollEvent) => {
-    const { contentOffset } = nativeEvent;
+    const { contentOffset, contentSize, layoutMeasurement } = nativeEvent;
     const { y } = contentOffset;
+
+    if (layoutMeasurement.height + y >= contentSize.height) return;
 
     try {
       if (y > lastBaseY) {
