@@ -1,5 +1,5 @@
 import App, { AppVM } from '../../viewmodels/App';
-import { Arbitrum, Ethereum, NetworkIcons, Optimism, Polygon } from '../../assets/icons/networks/color';
+import { Arbitrum, EVMIcon, Ethereum, NetworkIcons, Optimism, Polygon } from '../../assets/icons/networks/color';
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
@@ -140,7 +140,7 @@ const Drawer = observer((props: DrawerProps) => {
             PubSub.publish('openNetworksModal');
           }}
         >
-          {NetworkIcons[current.chainId]}
+          {NetworkIcons[current.chainId]|| <EVMIcon color={current.color} />}
           <Text style={{ marginStart: 8, fontSize: 16, color: current.color, fontWeight: '500' }}>{current.network}</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}></View>
 

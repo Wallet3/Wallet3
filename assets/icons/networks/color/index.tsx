@@ -1,4 +1,5 @@
-import { StyleProp, ViewStyle } from 'react-native';
+import { Entypo, Feather } from '@expo/vector-icons';
+import { StyleProp, Text, View, ViewStyle } from 'react-native';
 
 import Arbitrum from './arbitrum.svg';
 import Avalanche from './avalanche.svg';
@@ -7,6 +8,7 @@ import Bsc from './bsc.svg';
 import Celo from './celo.svg';
 import Ethereum from './ethereum2.svg';
 import Fantom from './fantom.svg';
+import HarmonyOne from './harmony-one.svg';
 import Heco from './heco.svg';
 import Mumbai from './mumbai.svg';
 import OKEx from './okex.svg';
@@ -16,9 +18,20 @@ import React from 'react';
 import XDai from './xdai.svg';
 import ZKSync from './zksync.svg';
 
-export { Arbitrum, Avalanche, Bsc, Celo, Ethereum, Fantom, Heco, Mumbai, OKEx, Optimism, Polygon, XDai, ZKSync };
+export const EVMIcon = ({ title, color }: { title?: string; color: string }) => {
+  return (
+    <View style={{ position: 'relative', justifyContent: 'center', alignItems: 'center' }}>
+      <Entypo name="network" size={27} color={color} />
+      <Text style={{ fontSize: 5, fontWeight: '500', color }}>EVM</Text>
+    </View>
+  );
+};
 
-const ETH = generateNetworkIcon({ chainId: 1, width: 32, style: { marginHorizontal: -5 } }); // <Ethereum width={32} height={32} style={{ marginHorizontal: -5 }} />;
+const Moonriver = () => <EVMIcon title="Moonriver" color="#53cbc9" />;
+
+export { Arbitrum, Avalanche, Bsc, Celo, Ethereum, Fantom, Heco, Mumbai, OKEx, Optimism, Polygon, XDai, ZKSync, Moonriver };
+
+const ETH = generateNetworkIcon({ chainId: 1, width: 32, style: { marginHorizontal: -5 } });
 const ARB = generateNetworkIcon({ chainId: 42161, width: 32 });
 const OPT = generateNetworkIcon({ chainId: 10, width: 32 });
 const AVL = generateNetworkIcon({ chainId: 43114, width: 32 });
@@ -45,6 +58,7 @@ export const NetworkIcons = {
   137: POLY,
   100: xDAI,
   288: BOBA,
+
   // zksync: ZSYNC,
 };
 
