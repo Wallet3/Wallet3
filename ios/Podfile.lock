@@ -8,6 +8,8 @@ PODS:
     - ExpoModulesCore
     - ZXingObjC/OneD
     - ZXingObjC/PDF417
+  - EXBlur (11.0.0):
+    - ExpoModulesCore
   - EXClipboard (2.0.3):
     - ExpoModulesCore
   - EXConstants (13.0.0):
@@ -335,6 +337,8 @@ PODS:
     - React-perflogger (= 0.64.3)
   - RNCAsyncStorage (1.15.14):
     - React-Core
+  - RNDeviceInfo (8.4.8):
+    - React-Core
   - RNGestureHandler (1.10.3):
     - React-Core
   - RNOS (1.2.6):
@@ -388,6 +392,7 @@ DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - EXApplication (from `../node_modules/expo-application/ios`)
   - EXBarCodeScanner (from `../node_modules/expo-barcode-scanner/ios`)
+  - EXBlur (from `../node_modules/expo-blur/ios`)
   - EXClipboard (from `../node_modules/expo-clipboard/ios`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
   - EXCrypto (from `../node_modules/expo-crypto/ios`)
@@ -444,6 +449,7 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
+  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNOS (from `../node_modules/react-native-os`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
@@ -466,6 +472,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-application/ios"
   EXBarCodeScanner:
     :path: "../node_modules/expo-barcode-scanner/ios"
+  EXBlur:
+    :path: "../node_modules/expo-blur/ios"
   EXClipboard:
     :path: "../node_modules/expo-clipboard/ios"
   EXConstants:
@@ -574,6 +582,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNOS:
@@ -596,6 +606,7 @@ SPEC CHECKSUMS:
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   EXApplication: bdc8dc27713235565da1029a34385229f31b8e08
   EXBarCodeScanner: 7deeeb35f396ce9a13434a75b581c19fc2564205
+  EXBlur: 82055865de17cf2cf797ff064c50fb59fcbe703f
   EXClipboard: ead52260683fc856e58f5cc70f5ea5999bb9c049
   EXConstants: 5d18484e38e8eacef7695a82214b6ac90133dedf
   EXCrypto: e3c0853c2a9ef885928f6227b967b9598132f727
@@ -651,6 +662,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 493d9abb8b23c3f84e19ae221eeba92cadcb70dc
   ReactCommon: 8fea6422328e2fc093e25c9fac67adbcf0f04fb4
   RNCAsyncStorage: ea6b5c280997b2b32a587793163b1f10e580c4f7
+  RNDeviceInfo: 0400a6d0c94186d1120c3cbd97b23abc022187a9
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
   RNReanimated: 024eff8202342abf4b24e11575a16afc441dabfe

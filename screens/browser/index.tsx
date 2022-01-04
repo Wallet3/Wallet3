@@ -1,14 +1,15 @@
 import * as Linking from 'expo-linking';
 
+import { Animated, Dimensions, FlatList, ListRenderItemInfo, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Bookmarks, { Bookmark, PopularDApps } from '../../viewmodels/hubs/Bookmarks';
-import { Dimensions, FlatList, ListRenderItemInfo, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { BottomTabScreenProps, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import React, { useEffect, useRef, useState } from 'react';
 import { WebView, WebViewMessageEvent, WebViewNavigation } from 'react-native-webview';
 import { borderColor, thirdFontColor } from '../../constants/styles';
 
 import { Bar } from 'react-native-progress';
 import Collapsible from 'react-native-collapsible';
-import Constants from 'expo-constants';
+import DeviceInfo from 'react-native-device-info';
 import GetPageMetadata from './scripts/Metadata';
 import HookWalletConnect from './scripts/InjectWalletConnectObserver';
 import Image from 'react-native-expo-cached-image';
@@ -16,6 +17,7 @@ import { Ionicons } from '@expo/vector-icons';
 import LinkHub from '../../viewmodels/hubs/LinkHub';
 import Networks from '../../viewmodels/Networks';
 import SuggestUrls from '../../configs/urls.json';
+import { WebViewScrollEvent } from 'react-native-webview/lib/WebViewTypes';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -25,7 +27,37 @@ const NumOfColumns = 7;
 const LargeIconSize = (ScreenWidth - 8 - 16 * NumOfColumns) / NumOfColumns;
 const SmallIconSize = (ScreenWidth - 16 - 16 * 8) / 8;
 
-export default observer(() => {
+export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
+  const [tabBarHeight] = useState(useBottomTabBarHeight());
+  const [tabBarHidden, setTabBarHidden] = useState(false);
+
+  const [lastBaseY, setLastBaseY] = useState(0);
+  const onScroll = ({ nativeEvent }: WebViewScrollEvent) => {
+    const { contentOffset } = nativeEvent;
+    const { y } = contentOffset;
+
+    try {
+      if (y > lastBaseY) {
+        if (tabBarHidden) return;
+        setTabBarHidden(true);
+
+        const translateY = new Animated.Value(0);
+        Animated.spring(translateY, { toValue: tabBarHeight, useNativeDriver: true }).start();
+        setTimeout(() => navigation.setOptions({ tabBarStyle: { height: 0 } }), 100);
+        navigation.setOptions({ tabBarStyle: { transform: [{ translateY }] } });
+      } else {
+        if (!tabBarHidden) return;
+        setTabBarHidden(false);
+
+        const translateY = new Animated.Value(tabBarHeight);
+        Animated.spring(translateY, { toValue: 0, useNativeDriver: true }).start();
+        navigation.setOptions({ tabBarStyle: { transform: [{ translateY }], height: tabBarHeight } });
+      }
+    } finally {
+      setLastBaseY(Math.max(0, y));
+    }
+  };
+
   const { t } = i18n;
   const { top } = useSafeAreaInsets();
   const { current } = Networks;
@@ -108,7 +140,7 @@ export default observer(() => {
     setHostname(hn.startsWith('www.') ? hn.substring(4) : hn);
   };
 
-  const appName = `Wallet3/${Constants?.manifest?.version ?? '0.0.0'}`;
+  const appName = `Wallet3/${DeviceInfo.getVersion() ?? '0.0.0'}`;
 
   const renderItem = ({ item }: ListRenderItemInfo<Bookmark>) => {
     return (
@@ -137,14 +169,14 @@ export default observer(() => {
   const onMessage = (e: WebViewMessageEvent) => {
     const data = JSON.parse(e.nativeEvent.data) as { type: string; payload: any };
 
-    console.log(data);
+    // console.log(data);
 
     switch (data.type) {
       case 'metadata':
         setPageMetadata(data.payload);
         break;
       case 'wcuri':
-        console.log(LinkHub.handleURL(data.payload.uri));
+        LinkHub.handleURL(data.payload.uri);
         break;
     }
   };
@@ -308,6 +340,8 @@ export default observer(() => {
           injectedJavaScript={`${GetPageMetadata} ${HookWalletConnect}`}
           onMessage={(e) => onMessage(e)}
           mediaPlaybackRequiresUserAction
+          onScroll={onScroll}
+          // style={{ marginBottom: -tabBarHeight }}
         />
       ) : (
         <View>

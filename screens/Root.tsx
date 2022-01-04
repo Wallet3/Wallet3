@@ -1,7 +1,10 @@
-import { Dimensions, TouchableOpacity, View } from 'react-native';
+import { Animated, Dimensions, TouchableOpacity, View } from 'react-native';
+import { BottomTabBar, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { borderColor, fontColor } from '../constants/styles';
 
+import { BlurView } from 'expo-blur';
 import BrowserScreen from './browser';
 import DAppsScreen from './dapps';
 import Drawer from './drawer';
@@ -12,9 +15,7 @@ import PortfolioScreen from './portfolio';
 import React from 'react';
 import SettingScreen from './settings';
 import WalletScreen from './wallet';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { fontColor } from '../constants/styles';
 import i18n from '../i18n';
 import { observer } from 'mobx-react-lite';
 
@@ -49,7 +50,8 @@ const RootTab = observer(() => {
         tabBarActiveTintColor: current.color,
         tabBarInactiveTintColor: 'gray',
         tabBarLabelStyle: { marginBottom: 3, marginTop: -3 },
-        // tabBarShowLabel: false,
+        tabBarStyle: { borderWidth: 1, borderColor },
+        // tabBarBackground: () => <BlurView />,
       })}
     >
       <Screen
@@ -103,6 +105,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
       initialRouteName="Home"
       drawerContent={Drawer}
       screenOptions={{
+        sceneContainerStyle: { backgroundColor: '#fff' },
         headerTransparent: false,
         headerTintColor: fontColor,
         swipeEdgeWidth: ScreenWidth * 0.37,
