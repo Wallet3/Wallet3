@@ -93,9 +93,16 @@ export default ({ client, accounts, onDisconnect, onNetworkPress, onAccountsPres
             alwaysBounceHorizontal={false}
             showsHorizontalScrollIndicator={false}
             style={{ flexDirection: 'row-reverse', maxWidth: 185 }}
+            contentContainerStyle={{ alignItems: 'center' }}
           >
             {enabledChains.map((c) =>
-              generateNetworkIcon({ chainId: c, width: 15, height: 15, style: { marginHorizontal: 4 } })
+              generateNetworkIcon({
+                color: PublicNetworks.find((n) => n.chainId === c)?.color,
+                chainId: c,
+                width: 15,
+                height: 15,
+                style: { marginHorizontal: 4 },
+              })
             )}
           </ScrollView>
 

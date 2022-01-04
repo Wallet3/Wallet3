@@ -80,7 +80,7 @@ export default observer(
               alignItems: 'center',
             }}
           >
-            {generateNetworkIcon({ chainId: network.chainId, width: 16, height: 16 })}
+            {generateNetworkIcon({ chainId: network.chainId, width: 16, height: 16, color: network.color })}
             <Text style={{ color: network.color, marginStart: 6 }}>{`${network.network}`}</Text>
           </TouchableOpacity>
         </View>

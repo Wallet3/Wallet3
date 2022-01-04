@@ -163,7 +163,13 @@ const QRView = observer(({ vm, onBack, themeColor }: Props) => {
         <BackButton onPress={onBack} color={themeColor} />
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          {generateNetworkIcon({ chainId: network.chainId, width: 17, height: 17, style: { marginEnd: 5 } })}
+          {generateNetworkIcon({
+            chainId: network.chainId,
+            color: network.color,
+            width: 17,
+            height: 17,
+            style: { marginEnd: 5 },
+          })}
           <Text style={{ fontSize: 16, fontWeight: '500', color: network.color }}>{network.network}</Text>
         </View>
       </View>

@@ -111,9 +111,20 @@ const DAppItem = observer(({ item, openApp }: { item: WalletConnect_v1; openApp:
               {`${t('connectedapps-list-last-used')}: ${item.lastUsedTimestamp.toLocaleDateString()}`}
             </Text>
 
-            <ScrollView horizontal style={{ marginBottom: -4, marginStart: 4 }} showsHorizontalScrollIndicator={false}>
+            <ScrollView
+              horizontal
+              style={{ marginBottom: -4, marginStart: 4 }}
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ alignItems: 'center' }}
+            >
               {item.enabledChains.map((c) =>
-                generateNetworkIcon({ chainId: c, width: 12, height: 12, style: { marginHorizontal: 4 } })
+                generateNetworkIcon({
+                  color: PublicNetworks.find((n) => n.chainId === c)?.color,
+                  chainId: c,
+                  width: 12,
+                  height: 12,
+                  style: { marginHorizontal: 4 },
+                })
               )}
             </ScrollView>
           </View>

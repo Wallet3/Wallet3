@@ -1,8 +1,8 @@
+import { ChainIdsSymbol, Networks } from '../../common/Networks';
 import { FlatList, ListRenderItemInfo, Text, View } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import Transaction, { ITransaction } from '../../models/Transaction';
 
-import { ChainIdsSymbol } from '../../common/Networks';
 import { Coin } from '../../components';
 import Image from 'react-native-expo-cached-image';
 import { Ionicons } from '@expo/vector-icons';
@@ -80,7 +80,12 @@ const Tx = observer(({ item, onPress }: { onPress?: (tx: Transaction) => void; i
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 6 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           {dappIcon ? (
-            generateNetworkIcon({ chainId, width: 12, style: { marginEnd: 6, marginStart: 2 } })
+            generateNetworkIcon({
+              color: Networks.find((n) => n.chainId === chainId)?.color,
+              chainId,
+              width: 12,
+              style: { marginEnd: 6, marginStart: 2 },
+            })
           ) : (
             <Text style={{ fontWeight: '300', marginEnd: 2 }}>{t('home-history-item-to')}:</Text>
           )}
