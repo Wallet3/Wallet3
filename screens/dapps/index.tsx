@@ -143,7 +143,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
   const [selectedClient, setSelectedClient] = useState<WalletConnect_v1>();
   const { ref, open, close } = useModalize();
 
-  const { clients } = DAppHub;
+  const { sortedClients, connectedCount } = DAppHub;
 
   const openApp = (client: WalletConnect_v1) => {
     setSelectedClient(client);
@@ -154,9 +154,9 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
 
   return (
     <View style={{ backgroundColor: '#fff', flex: 1 }}>
-      {clients.length > 0 ? (
+      {connectedCount > 0 ? (
         <FlatList
-          data={clients}
+          data={sortedClients}
           renderItem={renderItem}
           keyExtractor={(i) => i.peerId}
           style={{ flex: 1 }}

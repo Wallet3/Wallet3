@@ -1,10 +1,11 @@
 import * as Linking from 'expo-linking';
 
-import { IReactionDisposer, action, autorun, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
+import { action, autorun, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
 
 import App from '../App';
 import Database from '../../models/Database';
 import { EventEmitter } from '../../utils/events';
+import LINQ from 'linq';
 import Networks from '../Networks';
 import WCSession_v1 from '../../models/WCSession_v1';
 import { WalletConnect_v1 } from '../WalletConnect_v1';
@@ -16,9 +17,15 @@ class DAppHub extends EventEmitter {
     return this.clients.length;
   }
 
+  get sortedClients() {
+    return LINQ.from(this.clients)
+      .orderByDescending((i) => i.lastUsedTimestamp)
+      .toArray();
+  }
+
   constructor() {
     super();
-    makeObservable(this, { clients: observable, connectedCount: computed, reset: action });
+    makeObservable(this, { clients: observable, sortedClients: computed, connectedCount: computed, reset: action });
   }
 
   async init() {
@@ -43,9 +50,9 @@ class DAppHub extends EventEmitter {
     // Restore sessions
     const sessions = await Database.wcSessionV1Repository.find();
     runInAction(() => {
-      this.clients = sessions
-        .reverse()
-        .map((sessionStore) => new WalletConnect_v1().connectSession(sessionStore.session).setStore(sessionStore));
+      this.clients = sessions.map((sessionStore) =>
+        new WalletConnect_v1().connectSession(sessionStore.session).setStore(sessionStore)
+      );
 
       this.clients.forEach((client) => this.handleLifecycle(client));
     });
