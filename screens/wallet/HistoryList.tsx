@@ -50,11 +50,7 @@ const Tx = observer(({ item, onPress }: { onPress?: (tx: Transaction) => void; i
     <TouchableOpacity style={{ paddingVertical: 12, paddingHorizontal: 8 }} onPress={() => onPress?.(item as Transaction)}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1, alignItems: 'center' }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          {dappIcon ? (
-            <Image source={{ uri: dappIcon }} style={{ width: 16, height: 16, marginEnd: 4 }} />
-          ) : (
-            <Coin symbol={tokenSymbol} size={16} style={{ marginEnd: 4 }} />
-          )}
+          <Coin symbol={tokenSymbol} size={16} style={{ marginEnd: 4 }} />
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text style={{ fontSize: 16, marginEnd: 4, maxWidth: 120 }} numberOfLines={1}>{`${methodName}`}</Text>
             {methodName === 'Contract Interaction' ? undefined : (
@@ -80,12 +76,7 @@ const Tx = observer(({ item, onPress }: { onPress?: (tx: Transaction) => void; i
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 6 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           {dappIcon ? (
-            generateNetworkIcon({
-              color: Networks.find((n) => n.chainId === chainId)?.color,
-              chainId,
-              width: 12,
-              style: { marginEnd: 6, marginStart: 2 },
-            })
+            <Image source={{ uri: dappIcon }} style={{ width: 16, height: 16, marginEnd: 4 }} />
           ) : (
             <Text style={{ fontWeight: '300', marginEnd: 2 }}>{t('home-history-item-to')}:</Text>
           )}
