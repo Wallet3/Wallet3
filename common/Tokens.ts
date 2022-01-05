@@ -626,6 +626,10 @@ const Boba_DAI = {
 
 export const BobaPopularTokens = [Boba_DAI, Boba_USDC, Boba_USDT];
 
+const Aurora_DAI = {
+  address: ''
+}
+
 const zkSyncTest_USDC = {
   address: '0xeb8f08a975Ab53E34D8a0330E0D34de942C95926',
   decimals: 6,
