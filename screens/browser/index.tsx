@@ -29,10 +29,26 @@ const SmallIconSize = (ScreenWidth - 16 - 16 * 8) / 8;
 
 export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   const [tabBarHeight] = useState(useBottomTabBarHeight());
-
   const [tabBarHidden, setTabBarHidden] = useState(false);
-
   const [lastBaseY, setLastBaseY] = useState(0);
+
+  const hideTabBar = () => {
+    setTabBarHidden(true);
+
+    const translateY = new Animated.Value(0);
+    Animated.spring(translateY, { toValue: tabBarHeight, useNativeDriver: true }).start();
+    setTimeout(() => navigation.setOptions({ tabBarStyle: { height: 0 } }), 100);
+    navigation.setOptions({ tabBarStyle: { transform: [{ translateY }] } });
+  };
+
+  const showTabBar = () => {
+    setTabBarHidden(false);
+
+    const translateY = new Animated.Value(tabBarHeight);
+    Animated.spring(translateY, { toValue: 0, useNativeDriver: true }).start();
+    navigation.setOptions({ tabBarStyle: { transform: [{ translateY }], height: tabBarHeight } });
+  };
+
   const onScroll = ({ nativeEvent }: WebViewScrollEvent) => {
     const { contentOffset, contentSize, layoutMeasurement } = nativeEvent;
     const { y } = contentOffset;
@@ -42,19 +58,10 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
     try {
       if (y > lastBaseY) {
         if (tabBarHidden) return;
-        setTabBarHidden(true);
-
-        const translateY = new Animated.Value(0);
-        Animated.spring(translateY, { toValue: tabBarHeight, useNativeDriver: true }).start();
-        setTimeout(() => navigation.setOptions({ tabBarStyle: { height: 0 } }), 100);
-        navigation.setOptions({ tabBarStyle: { transform: [{ translateY }] } });
+        hideTabBar();
       } else {
         if (!tabBarHidden) return;
-        setTabBarHidden(false);
-
-        const translateY = new Animated.Value(tabBarHeight);
-        Animated.spring(translateY, { toValue: 0, useNativeDriver: true }).start();
-        navigation.setOptions({ tabBarStyle: { transform: [{ translateY }], height: tabBarHeight } });
+        showTabBar();
       }
     } finally {
       setLastBaseY(Math.max(0, y));
@@ -97,6 +104,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
     setLoadingProgress(0);
     webview.current?.clearHistory?.();
     addrRef.current?.blur();
+    showTabBar();
   };
 
   const goTo = (url: string) => {
