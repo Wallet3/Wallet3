@@ -179,10 +179,10 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
     );
   }, [addr]);
 
-  const onMessage = (e: WebViewMessageEvent) => {
+  const onMessage = async (e: WebViewMessageEvent) => {
     const data = JSON.parse(e.nativeEvent.data) as { type: string; payload: any; origin?: string };
 
-    // console.log(data);
+    console.log(data);
 
     switch (data.type) {
       case 'metadata':
@@ -193,7 +193,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
         LinkHub.handleURL(data.payload.uri);
         break;
       case 'INPAGE_REQUEST':
-        InpageDAppHub.handle(data.origin!, { ...data.payload, pageMetadata });
+        webview.current?.postMessage(await InpageDAppHub.handle(data.origin!, { ...data.payload, pageMetadata }));
         break;
     }
   };

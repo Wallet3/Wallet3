@@ -7,15 +7,25 @@ import { observer } from 'mobx-react-lite';
 import styles from './styles';
 
 interface Props {
-  onConnect?: () => void;
-  onReject?: () => void;
+  close: () => void;
+  resolve?: (accounts: string[]) => void;
   appName?: string;
   appDesc?: string;
   appIcon?: string;
   appUrl?: string;
 }
 
-export default observer(({ onConnect, onReject, appName, appDesc, appIcon, appUrl }: Props) => {
+export default observer(({ resolve, close, appName, appDesc, appIcon, appUrl }: Props) => {
+  const onConnect = () => {
+    resolve?.([App.currentWallet?.currentAccount?.address ?? '']);
+    close();
+  };
+
+  const onReject = () => {
+    resolve?.([]);
+    close();
+  };
+
   return (
     <SafeAreaProvider style={styles.safeArea}>
       <DAppConnectView

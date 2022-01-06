@@ -22,6 +22,7 @@ interface Props {
   onConnect?: () => void;
   onReject?: () => void;
   disableNetworksButton?: boolean;
+  disableAccountsButton?: boolean;
 }
 
 export default ({
@@ -36,13 +37,18 @@ export default ({
   onConnect,
   onReject,
   disableNetworksButton,
+  disableAccountsButton,
 }: Props) => {
   const { t } = i18n;
 
   return (
     <SafeViewContainer style={{ flex: 1, alignItems: 'center' }}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
-        <TouchableOpacity style={{ paddingVertical: 6, flexDirection: 'row', alignItems: 'center' }} onPress={onAccountsPress}>
+        <TouchableOpacity
+          style={{ paddingVertical: 6, flexDirection: 'row', alignItems: 'center' }}
+          onPress={onAccountsPress}
+          disabled={disableAccountsButton}
+        >
           {account?.avatar ? (
             <Image source={{ uri: account.avatar }} style={{ width: 16, height: 16, marginEnd: 6, borderRadius: 100 }} />
           ) : undefined}

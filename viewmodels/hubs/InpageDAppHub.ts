@@ -12,6 +12,7 @@ interface Payload {
 
 export interface ConnectInpageDApp extends Payload {
   origin: string;
+  resolve: (accounts: string[]) => void;
 }
 
 class InpageDAppHub {
@@ -19,13 +20,19 @@ class InpageDAppHub {
     return Database.inpageDApps;
   }
 
-  handle(origin: string, payload: Payload) {
-    const { method, params } = payload;
+  async handle(origin: string, payload: Payload) {
+    const { method, params, __mmID } = payload;
+    let response: any;
 
     switch (method) {
       case 'eth_accounts':
-        return this.eth_accounts(origin, payload);
+      case 'eth_requestAccounts':
+        response = await this.eth_accounts(origin, payload);
+        console.log('eth_accounts', response);
+        break;
     }
+
+    return JSON.stringify({ type: 'INPAGE_RESPONSE', payload: { __mmID, error: undefined, response } });
   }
 
   private async eth_accounts(origin: string, payload: Payload) {
@@ -34,9 +41,9 @@ class InpageDAppHub {
     const dapp = await this.inpageDApps.findOne({ where: { origin } });
     if (dapp) return [dapp.lastUsedAccount];
 
-    PubSub.publish('openConnectInpageDApp', { origin, ...payload } as ConnectInpageDApp);
-    // PubSub.
-    // return [App.currentWallet?.currentAccount?.address];
+    return new Promise<string[]>((resolve) => {
+      PubSub.publish('openConnectInpageDApp', { resolve, origin, ...payload } as ConnectInpageDApp);
+    });
   }
 }
 
