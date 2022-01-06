@@ -14,6 +14,7 @@ import GetPageMetadata from './scripts/Metadata';
 import HookWalletConnect from './scripts/InjectWalletConnectObserver';
 import Image from 'react-native-expo-cached-image';
 import InjectInpageProvider from './scripts/InjectInpageProvider';
+import InpageDAppHub from '../../viewmodels/hubs/InpageDAppHub';
 import { Ionicons } from '@expo/vector-icons';
 import LinkHub from '../../viewmodels/hubs/LinkHub';
 import Networks from '../../viewmodels/Networks';
@@ -191,6 +192,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
         LinkHub.handleURL(data.payload.uri);
         break;
       case 'INPAGE_REQUEST':
+        InpageDAppHub.handle(data.origin!, data.payload);
         break;
     }
   };
