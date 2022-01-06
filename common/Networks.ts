@@ -102,7 +102,7 @@ export const PublicNetworks: INetwork[] = [
   {
     symbol: 'xDAI',
     comm_id: 'xdai',
-    network: 'xDai',
+    network: 'Gnosis Chain',
     chainId: 100,
     color: '#48A9A6',
     order: 3,

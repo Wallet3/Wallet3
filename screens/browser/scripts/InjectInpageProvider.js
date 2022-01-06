@@ -1,4 +1,3 @@
-export default `
 /**
  * Module that listens for and responds to messages from an BackgroundBridge using postMessage
  * and exposes an Ethereum provider API to the dapp context
@@ -22,7 +21,7 @@ class InpageBridge {
   }
 
   _onBackgroundResponse({ __mmID, error, response }) {
-    const callback = this._pending[\`\${__mmID}\`];
+    const callback = this._pending[`${__mmID}`];
     if (!error && response.error) {
       error = response.error;
     }
@@ -34,7 +33,7 @@ class InpageBridge {
       };
     }
     callback && callback(error, response);
-    delete this._pending[\`\${__mmID}\`];
+    delete this._pending[`${__mmID}`];
   }
 
   _onStateUpdate(state) {
@@ -100,7 +99,7 @@ class InpageBridge {
 
       default:
         throw new Error(
-          \`This provider requires a callback to be passed when executing methods like \${action.method}. This is because all methods are always executed asynchronously. See https://git.io/fNi6S for more information.\`
+          `This provider requires a callback to be passed when executing methods like ${action.method}. This is because all methods are always executed asynchronously. See https://git.io/fNi6S for more information.`
         );
     }
 
@@ -276,7 +275,7 @@ class InpageBridge {
         hostname: window.location.hostname,
       }));
     }
-    this._pending[\`\${payload.__mmID}\`] = callback;
+    this._pending[`${payload.__mmID}`] = callback;
     window.ReactNativeWebView.postMessage(
       JSON.stringify({
         payload,
@@ -424,4 +423,3 @@ window.web3 = new Web3(window.ethereum);
 if (!window.chrome) {
   window.chrome = { webstore: true };
 }
-`

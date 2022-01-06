@@ -13,6 +13,7 @@ import DeviceInfo from 'react-native-device-info';
 import GetPageMetadata from './scripts/Metadata';
 import HookWalletConnect from './scripts/InjectWalletConnectObserver';
 import Image from 'react-native-expo-cached-image';
+import InjectInpageProvider from './scripts/InjectInpageProvider';
 import { Ionicons } from '@expo/vector-icons';
 import LinkHub from '../../viewmodels/hubs/LinkHub';
 import Networks from '../../viewmodels/Networks';
@@ -180,7 +181,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   const onMessage = (e: WebViewMessageEvent) => {
     const data = JSON.parse(e.nativeEvent.data) as { type: string; payload: any };
 
-    // console.log(data);
+    console.log(data);
 
     switch (data.type) {
       case 'metadata':
@@ -353,6 +354,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
           mediaPlaybackRequiresUserAction
           onScroll={onScroll}
           pullToRefreshEnabled
+          injectedJavaScriptBeforeContentLoaded={InjectInpageProvider}
           // style={{ marginBottom: -tabBarHeight }}
         />
       ) : (
