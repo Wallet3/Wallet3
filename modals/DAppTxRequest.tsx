@@ -11,7 +11,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { SafeAreaView } from 'react-native';
 import Success from './views/Success';
 import Swiper from 'react-native-swiper';
-import { WalletConnect_v1 } from '../viewmodels/services/WalletConnect_v1';
+import { WalletConnect_v1 } from '../viewmodels/walletconnect/WalletConnect_v1';
 import { observer } from 'mobx-react-lite';
 import { showMessage } from 'react-native-flash-message';
 import styles from './styles';

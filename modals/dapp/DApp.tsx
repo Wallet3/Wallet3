@@ -6,7 +6,7 @@ import { Account } from '../../viewmodels/account/Account';
 import Image from 'react-native-expo-cached-image';
 import { Networks } from '../../common/Networks';
 import React from 'react';
-import { WalletConnect_v1 } from '../../viewmodels/services/WalletConnect_v1';
+import { WalletConnect_v1 } from '../../viewmodels/walletconnect/WalletConnect_v1';
 import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';

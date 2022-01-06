@@ -10,7 +10,7 @@ import { Modalize } from 'react-native-modalize';
 import Networks from '../viewmodels/Networks';
 import { TokenTransferring } from '../viewmodels/transferring/TokenTransferring';
 import { WCCallRequestRequest } from '../models/WCSession_v1';
-import { WalletConnect_v1 } from '../viewmodels/services/WalletConnect_v1';
+import { WalletConnect_v1 } from '../viewmodels/walletconnect/WalletConnect_v1';
 import { autorun } from 'mobx';
 import i18n from '../i18n';
 import { parse } from 'eth-url-parser';

@@ -10,7 +10,7 @@ import LinkHub from './hubs/LinkHub';
 import Networks from './Networks';
 import TxHub from './hubs/TxHub';
 import { Wallet } from './Wallet';
-import WalletConnectV1ClientHub from './hubs/WalletConnectV1ClientHub';
+import WalletConnectV1ClientHub from './walletconnect/WalletConnectV1ClientHub';
 
 export class AppVM {
   initialized = false;
