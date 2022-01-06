@@ -1,7 +1,7 @@
-import Coingecko, { getMarketChart } from '../common/apis/Coingecko';
+import Coingecko, { getMarketChart } from '../../common/apis/Coingecko';
 import { makeObservable, observable, runInAction } from 'mobx';
 
-import { IToken } from '../common/Tokens';
+import { IToken } from '../../common/Tokens';
 
 interface ITokenData {
   description: string;

@@ -9,7 +9,7 @@ import { fontColor, thirdFontColor } from '../../constants/styles';
 import { FontAwesome } from '@expo/vector-icons';
 import { IToken } from '../../common/Tokens';
 import { LineChart } from 'react-native-svg-charts';
-import { TokenData } from '../../viewmodels/TokenData';
+import { TokenData } from '../../viewmodels/services/TokenData';
 import { formatCurrency } from '../../utils/formatter';
 import i18n from '../../i18n';
 import numeral from 'numeral';
