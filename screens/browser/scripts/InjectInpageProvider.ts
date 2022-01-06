@@ -26,13 +26,14 @@ class InpageBridge {
     if (!error && response.error) {
       error = response.error;
     }
-    if (!Array.isArray(response)) {
-      response = {
-        id: '',
-        jsonrpc: '2.0',
-        ...response,
-      };
-    }
+    // if (!Array.isArray(response)) {
+    //   response = {
+    //     id: '',
+    //     jsonrpc: '2.0',
+    //     ...response,
+    //   };
+    // }
+    alert(__mmID+JSON.stringify(response));
     callback && callback(error, response);
     delete this._pending[\`\${__mmID}\`];
   }

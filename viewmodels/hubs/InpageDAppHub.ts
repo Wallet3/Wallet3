@@ -1,5 +1,7 @@
 import App from '../App';
 import Database from '../../models/Database';
+import InpageDApp from '../../models/InpageDApp';
+import Networks from '../Networks';
 
 interface Payload {
   method: string;
@@ -16,6 +18,8 @@ export interface ConnectInpageDApp extends Payload {
 }
 
 class InpageDAppHub {
+  apps = new Map<string, InpageDApp>();
+
   get inpageDApps() {
     return Database.inpageDApps;
   }
@@ -30,6 +34,10 @@ class InpageDAppHub {
         response = await this.eth_accounts(origin, payload);
         console.log('eth_accounts', response);
         break;
+      case 'eth_chainId':
+        response = `0x${Number(42161).toString(16)}`; //`0x${Number(this.apps.get(origin)?.lastUsedChainId ?? 1).toString(16)}`;
+        console.log('eth_chainId', response)
+        break;
     }
 
     return JSON.stringify({ type: 'INPAGE_RESPONSE', payload: { __mmID, error: undefined, response } });
@@ -38,10 +46,19 @@ class InpageDAppHub {
   private async eth_accounts(origin: string, payload: Payload) {
     if (!App.currentWallet) return [];
 
-    const dapp = await this.inpageDApps.findOne({ where: { origin } });
+    const dapp = this.apps.get(origin) || (await this.inpageDApps.findOne({ where: { origin } }));
     if (dapp) return [dapp.lastUsedAccount];
 
-    return new Promise<string[]>((resolve) => {
+    return new Promise<string[]>((approve) => {
+      const resolve = (accounts: string[]) => {
+        const app = new InpageDApp();
+        app.origin = origin;
+        app.lastUsedAccount = accounts[0];
+        app.lastUsedChainId = Networks.current.chainId;
+        this.apps.set(origin, app);
+        approve(accounts);
+      };
+
       PubSub.publish('openConnectInpageDApp', { resolve, origin, ...payload } as ConnectInpageDApp);
     });
   }
