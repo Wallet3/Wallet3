@@ -6,7 +6,6 @@ import Actions from './Actions';
 import App from '../../viewmodels/App';
 import Assets from './Assets';
 import CurrencyViewmodel from '../../viewmodels/settings/Currency';
-import DAppHub from '../../viewmodels/hubs/DAppHub';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import { IToken } from '../../common/Tokens';
 import { Modalize } from 'react-native-modalize';
@@ -17,6 +16,7 @@ import { Portal } from 'react-native-portalize';
 import { StatusBar } from 'expo-status-bar';
 import TokenDetail from './TokenDetail';
 import TxDetail from './TxDetail';
+import WalletConnectV1ClientHub from '../../viewmodels/hubs/WalletConnectV1ClientHub';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useIsFocused } from '@react-navigation/native';
@@ -67,7 +67,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         chainId={current.chainId}
         avatar={currentWallet?.currentAccount?.avatar}
         ens={currentWallet?.currentAccount?.ens.name}
-        connectedApps={DAppHub.connectedCount}
+        connectedApps={WalletConnectV1ClientHub.connectedCount}
         disabled={currentWallet?.currentAccount?.tokens.loadingTokens}
         onSendPress={() => PubSub.publish('openSendFundsModal')}
         onRequestPress={() => PubSub.publish('openRequestFundsModal')}

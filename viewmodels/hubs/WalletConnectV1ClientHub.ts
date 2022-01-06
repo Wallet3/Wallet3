@@ -10,7 +10,7 @@ import Networks from '../Networks';
 import WCSession_v1 from '../../models/WCSession_v1';
 import { WalletConnect_v1 } from '../services/WalletConnect_v1';
 
-class DAppHub extends EventEmitter {
+class WalletConnectV1ClientHub extends EventEmitter {
   clients: WalletConnect_v1[] = [];
 
   get connectedCount() {
@@ -109,4 +109,4 @@ class DAppHub extends EventEmitter {
   }
 }
 
-export default new DAppHub();
+export default new WalletConnectV1ClientHub();

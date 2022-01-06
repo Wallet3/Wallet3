@@ -5,13 +5,13 @@ import { SafeAreaView, Text, View } from 'react-native';
 import AccountSelector from './dapp/AccountSelector';
 import App from '../viewmodels/App';
 import DApp from './dapp/DApp';
-import DAppHub from '../viewmodels/hubs/DAppHub';
 import { Ionicons } from '@expo/vector-icons';
 import Loading from './views/Loading';
 import NetworkSelector from './dapp/NetworkSelector';
 import { PublicNetworks } from '../common/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
+import WalletConnectV1ClientHub from '../viewmodels/hubs/WalletConnectV1ClientHub';
 import { WalletConnect_v1 } from '../viewmodels/services/WalletConnect_v1';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
@@ -97,7 +97,7 @@ export default observer(({ uri, close }: Props) => {
     if (!uri) return;
     if (client) return;
 
-    let wc_client = DAppHub.connect(uri);
+    let wc_client = WalletConnectV1ClientHub.connect(uri);
     const timeout = setTimeout(async () => {
       console.log('timeout');
       setConnectTimeout(true);

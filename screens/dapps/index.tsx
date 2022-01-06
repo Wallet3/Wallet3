@@ -6,7 +6,6 @@ import { borderColor, secondaryFontColor } from '../../constants/styles';
 import { Account } from '../../viewmodels/account/Account';
 import AccountSelector from '../../modals/dapp/AccountSelector';
 import App from '../../viewmodels/App';
-import DAppHub from '../../viewmodels/hubs/DAppHub';
 import DAppInfo from './DAppInfo';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import Image from 'react-native-expo-cached-image';
@@ -18,6 +17,7 @@ import { PublicNetworks } from '../../common/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
 import Swiper from 'react-native-swiper';
+import WalletConnectV1ClientHub from '../../viewmodels/hubs/WalletConnectV1ClientHub';
 import { WalletConnect_v1 } from '../../viewmodels/services/WalletConnect_v1';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
@@ -143,7 +143,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
   const [selectedClient, setSelectedClient] = useState<WalletConnect_v1>();
   const { ref, open, close } = useModalize();
 
-  const { sortedClients, connectedCount } = DAppHub;
+  const { sortedClients, connectedCount } = WalletConnectV1ClientHub;
 
   const openApp = (client: WalletConnect_v1) => {
     setSelectedClient(client);

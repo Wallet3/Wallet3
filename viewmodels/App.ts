@@ -5,12 +5,12 @@ import Authentication from './Authentication';
 import Bookmarks from './hubs/Bookmarks';
 import Coingecko from '../common/apis/Coingecko';
 import Contacts from './hubs/Contacts';
-import DAppHub from './hubs/DAppHub';
 import Database from '../models/Database';
 import LinkHub from './hubs/LinkHub';
 import Networks from './Networks';
 import TxHub from './hubs/TxHub';
 import { Wallet } from './Wallet';
+import WalletConnectV1ClientHub from './hubs/WalletConnectV1ClientHub';
 
 export class AppVM {
   initialized = false;
@@ -45,7 +45,7 @@ export class AppVM {
     await Promise.all([TxHub.init()]);
 
     Authentication.once('appAuthorized', () => {
-      DAppHub.init();
+      WalletConnectV1ClientHub.init();
       LinkHub.start();
     });
 
@@ -64,7 +64,7 @@ export class AppVM {
     Contacts.reset();
     Networks.reset();
     Bookmarks.reset();
-    await Promise.all([Database.reset(), AsyncStorage.clear(), Authentication.reset(), DAppHub.reset()]);
+    await Promise.all([Database.reset(), AsyncStorage.clear(), Authentication.reset(), WalletConnectV1ClientHub.reset()]);
   }
 }
 
