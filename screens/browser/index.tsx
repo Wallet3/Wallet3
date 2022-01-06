@@ -1,7 +1,7 @@
 import * as Linking from 'expo-linking';
 
 import { Animated, Dimensions, FlatList, ListRenderItemInfo, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import Bookmarks, { Bookmark, PopularDApps } from '../../viewmodels/hubs/Bookmarks';
+import Bookmarks, { Bookmark, PopularDApps } from '../../viewmodels/customs/Bookmarks';
 import { BottomTabScreenProps, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import React, { useEffect, useRef, useState } from 'react';
 import { WebView, WebViewMessageEvent, WebViewNavigation } from 'react-native-webview';

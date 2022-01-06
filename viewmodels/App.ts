@@ -2,9 +2,9 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Authentication from './Authentication';
-import Bookmarks from './hubs/Bookmarks';
+import Bookmarks from './customs/Bookmarks';
 import Coingecko from '../common/apis/Coingecko';
-import Contacts from './hubs/Contacts';
+import Contacts from './customs/Contacts';
 import Database from '../models/Database';
 import LinkHub from './hubs/LinkHub';
 import Networks from './Networks';
