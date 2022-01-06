@@ -358,7 +358,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
           mediaPlaybackRequiresUserAction
           onScroll={onScroll}
           pullToRefreshEnabled
-          injectedJavaScriptBeforeContentLoaded={InjectInpageProvider}
+          // injectedJavaScriptBeforeContentLoaded={InjectInpageProvider}
           // style={{ marginBottom: -tabBarHeight }}
         />
       ) : (

@@ -1,4 +1,4 @@
-import { ConnectDApp, DAppTxRequest, NetworksMenu, Request, Send, Sign } from '../modals';
+import { DAppTxRequest, NetworksMenu, Request, Send, Sign, WalletConnectDApp } from '../modals';
 import { ERC681, ERC681Transferring } from '../viewmodels/transferring/ERC681Transferring';
 import React, { useEffect, useState } from 'react';
 
@@ -102,7 +102,7 @@ const WalletConnectV1 = () => {
       modalStyle={styles.modalStyle}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
-      <ConnectDApp uri={connectUri} close={closeConnectDapp} />
+      <WalletConnectDApp uri={connectUri} close={closeConnectDapp} />
     </Modalize>
   );
 };
