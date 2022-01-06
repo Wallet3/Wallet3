@@ -179,7 +179,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   }, [addr]);
 
   const onMessage = (e: WebViewMessageEvent) => {
-    const data = JSON.parse(e.nativeEvent.data) as { type: string; payload: any };
+    const data = JSON.parse(e.nativeEvent.data) as { type: string; payload: any; origin?: string };
 
     console.log(data);
 
@@ -189,6 +189,8 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
         break;
       case 'wcuri':
         LinkHub.handleURL(data.payload.uri);
+        break;
+      case 'INPAGE_REQUEST':
         break;
     }
   };
