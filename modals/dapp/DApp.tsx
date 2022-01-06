@@ -4,6 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { themeColor, thirdFontColor } from '../../constants/styles';
 
 import { Account } from '../../viewmodels/account/Account';
+import DAppConnectView from '../views/DAppConnectView';
 import Image from 'react-native-expo-cached-image';
 import React from 'react';
 import { WalletConnect_v1 } from '../../viewmodels/walletconnect/WalletConnect_v1';
@@ -21,88 +22,6 @@ interface DAppProps {
   accounts: Account[];
   currentAccount?: Account;
 }
-
-export const DAppConnectView = ({
-  account,
-  network,
-  onAccountsPress,
-  onNetworksPress,
-  appName,
-  appIcon,
-  appDesc,
-  appUrl,
-  onConnect,
-  onReject,
-  disableNetworksButton,
-}: {
-  account?: Account;
-  network: INetwork;
-  onAccountsPress?: () => void;
-  onNetworksPress?: () => void;
-  appName?: string;
-  appIcon?: string;
-  appDesc?: string;
-  appUrl?: string;
-  onConnect?: () => void;
-  onReject?: () => void;
-  disableNetworksButton?: boolean;
-}) => {
-  const { t } = i18n;
-
-  <SafeViewContainer style={{ flex: 1, alignItems: 'center' }}>
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
-      <TouchableOpacity style={{ paddingVertical: 6, flexDirection: 'row', alignItems: 'center' }} onPress={onAccountsPress}>
-        {account?.avatar ? (
-          <Image source={{ uri: account.avatar }} style={{ width: 16, height: 16, marginEnd: 6, borderRadius: 100 }} />
-        ) : undefined}
-
-        <Text style={{ color: thirdFontColor, maxWidth: 150 }}>
-          {account?.ens.name || formatAddress(account?.address ?? '', 6, 5)}
-        </Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        onPress={onNetworksPress}
-        disabled={disableNetworksButton}
-        style={{
-          padding: 6,
-          paddingHorizontal: 12,
-          borderColor: `${network.color}90`,
-          borderWidth: 1,
-          borderRadius: 100,
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}
-      >
-        {generateNetworkIcon({ chainId: network.chainId, width: 16, height: 16, color: network.color })}
-        <Text style={{ color: network.color, marginStart: 6 }}>{`${network.network}`}</Text>
-      </TouchableOpacity>
-    </View>
-
-    <View style={{ flex: 1 }} />
-
-    <Image source={{ uri: appIcon }} style={{ width: 72, height: 72, marginBottom: 12 }} />
-
-    <Text style={{ ...viewStyles.txt, fontSize: 24, fontWeight: '500', opacity: 1 }}>{appName}</Text>
-
-    <Text style={viewStyles.txt} numberOfLines={1}>
-      {appUrl}
-    </Text>
-
-    {appDesc ? (
-      <Text style={viewStyles.txt} numberOfLines={2}>
-        {appDesc}
-      </Text>
-    ) : undefined}
-
-    <View style={{ flex: 1 }} />
-
-    <View style={{ width: '100%' }}>
-      <Button title={t('button-connect')} onPress={onConnect} />
-      <Button title={t('button-reject')} themeColor={themeColor} onPress={onReject} style={{ marginTop: 12 }} reverse />
-    </View>
-  </SafeViewContainer>;
-};
 
 export default observer(
   ({ client, onNetworksPress, onAccountsPress, close, onConnect, accounts, currentAccount }: DAppProps) => {
@@ -134,62 +53,19 @@ export default observer(
     }
 
     return (
-      <SafeViewContainer style={{ flex: 1, alignItems: 'center' }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
-          <TouchableOpacity
-            style={{ paddingVertical: 6, flexDirection: 'row', alignItems: 'center' }}
-            onPress={onAccountsPress}
-          >
-            {account?.avatar ? (
-              <Image source={{ uri: account.avatar }} style={{ width: 16, height: 16, marginEnd: 6, borderRadius: 100 }} />
-            ) : undefined}
-
-            <Text style={{ color: thirdFontColor, maxWidth: 150 }}>
-              {account?.ens.name || formatAddress(client.accounts[0], 6, 5)}
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={onNetworksPress}
-            disabled={client.version > 1}
-            style={{
-              padding: 6,
-              paddingHorizontal: 12,
-              borderColor: `${network.color}90`,
-              borderWidth: 1,
-              borderRadius: 100,
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}
-          >
-            {generateNetworkIcon({ chainId: network.chainId, width: 16, height: 16, color: network.color })}
-            <Text style={{ color: network.color, marginStart: 6 }}>{`${network.network}`}</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={{ flex: 1 }} />
-
-        <Image source={{ uri: app.icons[0] }} style={{ width: 72, height: 72, marginBottom: 12 }} />
-
-        <Text style={{ ...viewStyles.txt, fontSize: 24, fontWeight: '500', opacity: 1 }}>{app.name}</Text>
-
-        <Text style={viewStyles.txt} numberOfLines={1}>
-          {app.url}
-        </Text>
-
-        {app.description ? (
-          <Text style={viewStyles.txt} numberOfLines={2}>
-            {app.description}
-          </Text>
-        ) : undefined}
-
-        <View style={{ flex: 1 }} />
-
-        <View style={{ width: '100%' }}>
-          <Button title={t('button-connect')} onPress={onConnect} />
-          <Button title={t('button-reject')} themeColor={themeColor} onPress={reject} style={{ marginTop: 12 }} reverse />
-        </View>
-      </SafeViewContainer>
+      <DAppConnectView
+        network={network}
+        account={account}
+        appDesc={app.description}
+        appIcon={app.icons[0]}
+        appName={app.name}
+        appUrl={app.url}
+        disableNetworksButton={client.version > 1}
+        onAccountsPress={onAccountsPress}
+        onNetworksPress={onNetworksPress}
+        onConnect={onConnect}
+        onReject={reject}
+      />
     );
   }
 );
