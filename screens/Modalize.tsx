@@ -1,13 +1,17 @@
+import App, { AppVM } from '../viewmodels/App';
 import { DAppTxRequest, NetworksMenu, Request, Send, Sign, WalletConnectDApp } from '../modals';
 import { ERC681, ERC681Transferring } from '../viewmodels/transferring/ERC681Transferring';
 import React, { useEffect, useState } from 'react';
 
-import { AppVM } from '../viewmodels/App';
 import { Authentication } from '../viewmodels/Authentication';
+import { ConnectInpageDApp } from '../viewmodels/hubs/InpageDAppHub';
+import DAppConnectView from '../modals/dapp/DAppConnectView';
 import { Dimensions } from 'react-native';
 import { FullPasspad } from '../modals/views/Passpad';
+import InpageDAppConnector from '../modals/InpageDAppConnector';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../viewmodels/Networks';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { TokenTransferring } from '../viewmodels/transferring/TokenTransferring';
 import { WCCallRequestRequest } from '../models/WCSession_v1';
 import { WalletConnect_v1 } from '../viewmodels/walletconnect/WalletConnect_v1';
@@ -103,6 +107,44 @@ const WalletConnectV1 = () => {
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
       <WalletConnectDApp uri={connectUri} close={closeConnectDapp} />
+    </Modalize>
+  );
+};
+
+const InpageDAppConnect = () => {
+  const { ref: connectDappRef, open: openConnectDapp, close: closeConnectDapp } = useModalize();
+  const [info, setInfo] = useState<any>({});
+
+  useEffect(() => {
+    const updatePageInfo = (_, payload: any) => {
+      console.log(payload);
+      setInfo({ appUrl: payload.origin, appName: payload.title, appIcon: payload.icon, appDesc: payload.desc });
+    };
+
+    PubSub.subscribe('openConnectInpageDApp', (_, data: ConnectInpageDApp) => {
+      PubSub.subscribeOnce('page-metadata', updatePageInfo);
+      openConnectDapp();
+    });
+
+    return () => {
+      PubSub.unsubscribe('page-metadata');
+    };
+  }, []);
+
+  return (
+    <Modalize
+      ref={connectDappRef}
+      adjustToContentHeight
+      panGestureEnabled={false}
+      panGestureComponentEnabled={false}
+      tapGestureEnabled={false}
+      closeOnOverlayTap={false}
+      withHandle={false}
+      disableScrollIfPossible
+      modalStyle={styles.modalStyle}
+      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+    >
+      <InpageDAppConnector {...info} />
     </Modalize>
   );
 };
@@ -267,5 +309,6 @@ export default (props: { app: AppVM; appAuth: Authentication }) => {
     <NetworksMenuModal key="networks-menu" />,
     <WalletConnectV1 key="walletconnect" />,
     <WalletConnectRequests key="walletconnect-requests" {...props} />,
+    <InpageDAppConnect key="inpage-dapp-connect" />,
   ];
 };

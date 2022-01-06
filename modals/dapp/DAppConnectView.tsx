@@ -72,7 +72,7 @@ export default ({
 
       <View style={{ flex: 1 }} />
 
-      <Image source={{ uri: appIcon }} style={{ width: 72, height: 72, marginBottom: 12 }} />
+      <Image source={{ uri: appIcon }} style={{ width: 72, height: 72, marginBottom: 12, borderRadius: 7 }} />
 
       <Text style={{ ...viewStyles.txt, fontSize: 24, fontWeight: '500', opacity: 1 }}>{appName}</Text>
 

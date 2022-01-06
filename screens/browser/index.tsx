@@ -182,17 +182,18 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   const onMessage = (e: WebViewMessageEvent) => {
     const data = JSON.parse(e.nativeEvent.data) as { type: string; payload: any; origin?: string };
 
-    console.log(data);
+    // console.log(data);
 
     switch (data.type) {
       case 'metadata':
         setPageMetadata(data.payload);
+        PubSub.publish('page-metadata', data.payload);
         break;
       case 'wcuri':
         LinkHub.handleURL(data.payload.uri);
         break;
       case 'INPAGE_REQUEST':
-        InpageDAppHub.handle(data.origin!, data.payload);
+        InpageDAppHub.handle(data.origin!, { ...data.payload, pageMetadata });
         break;
     }
   };
@@ -358,7 +359,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
           mediaPlaybackRequiresUserAction
           onScroll={onScroll}
           pullToRefreshEnabled
-          // injectedJavaScriptBeforeContentLoaded={InjectInpageProvider}
+          injectedJavaScriptBeforeContentLoaded={InjectInpageProvider}
           // style={{ marginBottom: -tabBarHeight }}
         />
       ) : (

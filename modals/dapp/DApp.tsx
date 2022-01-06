@@ -4,7 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { themeColor, thirdFontColor } from '../../constants/styles';
 
 import { Account } from '../../viewmodels/account/Account';
-import DAppConnectView from '../views/DAppConnectView';
+import DAppConnectView from './DAppConnectView';
 import Image from 'react-native-expo-cached-image';
 import React from 'react';
 import { WalletConnect_v1 } from '../../viewmodels/walletconnect/WalletConnect_v1';
