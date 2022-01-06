@@ -8,7 +8,7 @@ import Networks from '../../viewmodels/Networks';
 import { PublicNetworks } from '../../common/Networks';
 import React from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
-import { WalletConnect_v1 } from '../../viewmodels/WalletConnect_v1';
+import { WalletConnect_v1 } from '../../viewmodels/services/WalletConnect_v1';
 import dayjs from 'dayjs';
 import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';

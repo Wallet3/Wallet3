@@ -8,7 +8,7 @@ import { EventEmitter } from '../../utils/events';
 import LINQ from 'linq';
 import Networks from '../Networks';
 import WCSession_v1 from '../../models/WCSession_v1';
-import { WalletConnect_v1 } from '../WalletConnect_v1';
+import { WalletConnect_v1 } from '../services/WalletConnect_v1';
 
 class DAppHub extends EventEmitter {
   clients: WalletConnect_v1[] = [];

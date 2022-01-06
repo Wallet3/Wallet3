@@ -12,7 +12,7 @@ import Success from './views/Success';
 import Swiper from 'react-native-swiper';
 import { WCCallRequestRequest } from '../models/WCSession_v1';
 import { Wallet } from '../viewmodels/Wallet';
-import { WalletConnect_v1 } from '../viewmodels/WalletConnect_v1';
+import { WalletConnect_v1 } from '../viewmodels/services/WalletConnect_v1';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
 import { utils } from 'ethers';

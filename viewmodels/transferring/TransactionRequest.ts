@@ -8,7 +8,7 @@ import { BaseTransaction } from './BaseTransaction';
 import { ERC20Token } from '../../models/ERC20';
 import { Gwei_1 } from '../../common/Constants';
 import Networks from '../Networks';
-import { WalletConnect_v1 } from '../WalletConnect_v1';
+import { WalletConnect_v1 } from '../services/WalletConnect_v1';
 
 interface IConstructor {
   client: WalletConnect_v1;

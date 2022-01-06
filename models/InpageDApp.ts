@@ -1,7 +1,7 @@
 import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
 
-@Entity({ name: 'inpage_apps' })
-export default class Transaction extends BaseEntity {
+@Entity({ name: 'inpage_dapps' })
+export default class InpageDApp extends BaseEntity {
   @PrimaryColumn()
   href!: string;
 

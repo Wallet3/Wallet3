@@ -12,7 +12,7 @@ import NetworkSelector from './dapp/NetworkSelector';
 import { PublicNetworks } from '../common/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
-import { WalletConnect_v1 } from '../viewmodels/WalletConnect_v1';
+import { WalletConnect_v1 } from '../viewmodels/services/WalletConnect_v1';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
 

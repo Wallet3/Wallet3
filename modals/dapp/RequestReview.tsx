@@ -16,7 +16,7 @@ import Swiper from 'react-native-swiper';
 import { TransactionRequest } from '../../viewmodels/transferring/TransactionRequest';
 import TxException from '../components/TxException';
 import { WCCallRequestRequest } from '../../models/WCSession_v1';
-import { WalletConnect_v1 } from '../../viewmodels/WalletConnect_v1';
+import { WalletConnect_v1 } from '../../viewmodels/services/WalletConnect_v1';
 import { constants } from 'ethers';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
