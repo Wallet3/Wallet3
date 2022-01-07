@@ -118,6 +118,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
         return;
       }
 
+      setPageMetadata(undefined);
       setAddr(url);
       setUri(url);
       setWebUrl(url);
@@ -186,9 +187,8 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
 
     switch (data.type) {
       case 'metadata':
-        console.log('metadata', data.payload);
         setPageMetadata(data.payload);
-        setTimeout(() => PubSub.publish('page-metadata', data.payload), 700);
+        // setTimeout(() => PubSub.publish('page-metadata', data.payload), 700);
         break;
       case 'wcuri':
         LinkHub.handleURL(data.payload.uri);
@@ -201,10 +201,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   };
 
   useEffect(() => {
-    InpageDAppHub.on('appStateUpdated', (appState) => {
-      console.log('appstateupdate', appState);
-      webview.current?.postMessage(JSON.stringify(appState));
-    });
+    InpageDAppHub.on('appStateUpdated', (appState) => webview.current?.postMessage(JSON.stringify(appState)));
   }, []);
 
   return (

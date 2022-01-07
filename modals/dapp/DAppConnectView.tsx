@@ -80,7 +80,7 @@ export default ({
 
       <Image source={{ uri: appIcon }} style={{ width: 72, height: 72, marginBottom: 12, borderRadius: 7 }} />
 
-      <Text style={{ ...viewStyles.txt, fontSize: 24, fontWeight: '500', opacity: 1 }}>{appName}</Text>
+      <Text style={{ ...viewStyles.txt, fontSize: 24, fontWeight: '500', opacity: 1 }} numberOfLines={1}>{appName}</Text>
 
       <Text style={viewStyles.txt} numberOfLines={1}>
         {appUrl}

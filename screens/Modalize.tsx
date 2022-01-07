@@ -110,23 +110,25 @@ const WalletConnectV1 = () => {
 };
 
 const InpageDAppConnect = () => {
-  const { ref: connectDappRef, open: openConnectDapp, close } = useModalize();
+  const { ref: connectDappRef, open: openConnectDapp, close: closeModal } = useModalize();
   const [info, setInfo] = useState<any>({});
   const [data, setData] = useState<ConnectInpageDApp>();
+
+  const close = () => {
+    setInfo({});
+    closeModal();
+  };
 
   useEffect(() => {
     const updatePageInfo = (_, payload: any) =>
       setInfo({ appUrl: payload.origin, appName: payload.title, appIcon: payload.icon, appDesc: payload.desc });
 
     PubSub.subscribe('openConnectInpageDApp', (_, data: ConnectInpageDApp) => {
-      PubSub.subscribeOnce('page-metadata', updatePageInfo);
+      if (data.pageMetadata) updatePageInfo(undefined, data.pageMetadata);
+
       setData(data);
       openConnectDapp();
     });
-
-    return () => {
-      PubSub.unsubscribe('page-metadata');
-    };
   }, []);
 
   return (

@@ -21,7 +21,7 @@ class InpageBridge {
     }
   }
 
-  _onBackgroundResponse({ __mmID, error, response }) {
+  _onBackgroundResponse({ __mmID, error, response, id, jsonrpc }) {
     const callback = this._pending[\`\${__mmID}\`];
     if (!error && response.error) {
       error = response.error;
@@ -33,7 +33,14 @@ class InpageBridge {
     //     ...response,
     //   };
     // }
-    // alert(__mmID+JSON.stringify(response));
+    if (id && jsonrpc) {
+      response = {
+        id,
+        jsonrpc,
+        result: response
+      }
+    }
+    // alert(__mmID+JSON.stringify(response)+' '+JSON.stringify(error));
     callback && callback(error, response);
     delete this._pending[\`\${__mmID}\`];
   }

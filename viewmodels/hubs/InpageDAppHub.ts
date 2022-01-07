@@ -6,6 +6,8 @@ import Networks from '../Networks';
 import { rawCall } from '../../common/RPC';
 
 interface Payload {
+  id?: string;
+  jsonrpc?: string;
   method: string;
   params: any[] | any;
   __mmID: string;
@@ -28,13 +30,16 @@ class InpageDAppHub extends EventEmitter {
   }
 
   async handle(origin: string, payload: Payload) {
-    const { method, params, __mmID } = payload;
+    const { method, params, __mmID, id, jsonrpc } = payload;
     let response: any;
 
     switch (method) {
       case 'eth_accounts':
+        const account = (await this.getDApp(origin))?.lastUsedAccount;
+        response = account ? [account] : [];
+        break;
       case 'eth_requestAccounts':
-        response = await this.eth_accounts(origin, payload);
+        response = await this.eth_requestAccounts(origin, payload);
         break;
       case 'eth_chainId':
         response = `0x${Number(this.apps.get(origin)?.lastUsedChainId ?? Networks.current.chainId).toString(16)}`;
@@ -42,20 +47,26 @@ class InpageDAppHub extends EventEmitter {
       case 'wallet_switchEthereumChain':
         response = await this.wallet_switchEthereumChain(origin, params);
         break;
+      case 'net_version':
+        const app = this.apps.get(origin);
+        if (app) {
+          response = Number(app.lastUsedChainId);
+          break;
+        }
       default:
         const dapp = await this.getDApp(origin);
         if (dapp) response = await rawCall(dapp.lastUsedChainId, { method, params });
         break;
     }
 
-    return JSON.stringify({ type: 'INPAGE_RESPONSE', payload: { __mmID, error: undefined, response } });
+    return JSON.stringify({ type: 'INPAGE_RESPONSE', payload: { id, jsonrpc, __mmID, error: undefined, response } });
   }
 
   private async getDApp(origin: string) {
     return this.apps.get(origin) || (await this.inpageDApps.findOne({ where: { origin } }));
   }
 
-  private async eth_accounts(origin: string, payload: Payload) {
+  private async eth_requestAccounts(origin: string, payload: Payload) {
     if (!App.currentWallet) return [];
 
     const dapp = await this.getDApp(origin);
@@ -77,7 +88,6 @@ class InpageDAppHub extends EventEmitter {
       };
 
       const reject = () => resolve({ error: { code: 4001, message: 'User rejected' } });
-
       PubSub.publish('openConnectInpageDApp', { approve, reject, origin, ...payload } as ConnectInpageDApp);
     });
   }
