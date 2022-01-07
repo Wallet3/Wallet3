@@ -1,4 +1,4 @@
-import { DAppTxRequest, NetworksMenu, Request, Send, Sign, WalletConnectDApp } from '../modals';
+import { DAppTxRequest, NetworksMenu, Request, Send, WalletConnectDApp, WalletConnectSign } from '../modals';
 import { ERC681, ERC681Transferring } from '../viewmodels/transferring/ERC681Transferring';
 import React, { useEffect, useState } from 'react';
 
@@ -72,7 +72,7 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
       {type === 'sign' ? (
-        <Sign client={client!} request={callRequest!} close={close} wallet={app.currentWallet!} appAuth={appAuth} />
+        <WalletConnectSign client={client!} request={callRequest!} close={close} wallet={app.currentWallet!} appAuth={appAuth} />
       ) : undefined}
 
       {type === 'sendTx' ? <DAppTxRequest client={client!} request={callRequest!} close={close} /> : undefined}
