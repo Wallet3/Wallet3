@@ -10,13 +10,25 @@ interface Props {
   msg?: string;
   themeColor: string;
   onReject: () => void;
-  onSignPress: () => void;
+  onSign: () => Promise<boolean>;
   sign: (pin: string) => Promise<boolean>;
   typedData?: any;
+  biometricEnabled?: boolean;
 }
 
-export default ({ type, msg, themeColor, onReject, onSignPress, typedData, sign }: Props) => {
+export default ({ type, msg, themeColor, onReject, typedData, sign, biometricEnabled, onSign }: Props) => {
   const swiper = useRef<Swiper>(null);
+
+  const onSignPress = async () => {
+    if (!biometricEnabled) {
+      swiper.current?.scrollTo(1);
+      return;
+    }
+
+    if (await onSign()) return;
+
+    swiper.current?.scrollTo(1);
+  };
 
   return (
     <Swiper

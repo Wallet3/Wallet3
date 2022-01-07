@@ -35,6 +35,13 @@ export class AppVM {
     });
   }
 
+  findWallet(account: string) {
+    const wallet = this.wallets.find((w) => w.accounts.find((a) => a.address === account));
+    if (!wallet) return;
+
+    return { wallet, accountIndex: wallet.accounts.findIndex((a) => a.address === account) };
+  }
+
   async init() {
     Coingecko.init();
 

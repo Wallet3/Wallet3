@@ -1,13 +1,14 @@
+import { ConnectInpageDApp, InpageDAppSignRequest } from '../viewmodels/hubs/InpageDAppHub';
 import { ERC681, ERC681Transferring } from '../viewmodels/transferring/ERC681Transferring';
 import { NetworksMenu, Request, Send, WalletConnectDApp, WalletConnectSign, WalletConnectTxRequest } from '../modals';
 import React, { useEffect, useState } from 'react';
 
 import { AppVM } from '../viewmodels/App';
 import { Authentication } from '../viewmodels/Authentication';
-import { ConnectInpageDApp } from '../viewmodels/hubs/InpageDAppHub';
 import { Dimensions } from 'react-native';
 import { FullPasspad } from '../modals/views/Passpad';
 import InpageDAppConnector from '../modals/InpageDAppConnector';
+import InpageDAppSign from '../modals/InpageDAppSign';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../viewmodels/Networks';
 import { TokenTransferring } from '../viewmodels/transferring/TokenTransferring';
@@ -71,15 +72,7 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
       modalStyle={styles.modalStyle}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
-      {type === 'sign' ? (
-        <WalletConnectSign
-          client={client!}
-          request={callRequest!}
-          close={close}
-          wallet={app.currentWallet!}
-          appAuth={appAuth}
-        />
-      ) : undefined}
+      {type === 'sign' ? <WalletConnectSign client={client!} request={callRequest!} close={close} /> : undefined}
 
       {type === 'sendTx' ? <WalletConnectTxRequest client={client!} request={callRequest!} close={close} /> : undefined}
     </Modalize>
@@ -151,6 +144,37 @@ const InpageDAppConnect = () => {
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
       <InpageDAppConnector {...info} close={close} approve={data?.approve} reject={data?.reject} />
+    </Modalize>
+  );
+};
+
+const InpageDAppRequests = () => {
+  const { ref, open, close } = useModalize();
+  const [signRequest, setSignRequest] = useState<InpageDAppSignRequest>();
+  const [type, setType] = useState('');
+
+  useEffect(() => {
+    PubSub.subscribe('openInpageDAppSign', (_, data: InpageDAppSignRequest) => {
+      setSignRequest(data);
+      setType('sign');
+      open();
+    });
+  }, []);
+
+  return (
+    <Modalize
+      ref={ref}
+      adjustToContentHeight
+      panGestureEnabled={false}
+      panGestureComponentEnabled={false}
+      tapGestureEnabled={false}
+      closeOnOverlayTap={false}
+      withHandle={false}
+      disableScrollIfPossible
+      modalStyle={styles.modalStyle}
+      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+    >
+      {type === 'sign' ? <InpageDAppSign {...signRequest!} close={close} /> : undefined}
     </Modalize>
   );
 };
@@ -316,5 +340,6 @@ export default (props: { app: AppVM; appAuth: Authentication }) => {
     <WalletConnectV1 key="walletconnect" />,
     <WalletConnectRequests key="walletconnect-requests" {...props} />,
     <InpageDAppConnect key="inpage-dapp-connect" />,
+    <InpageDAppRequests key="inpage-dapp-requests" />,
   ];
 };

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+import Authentication from '../viewmodels/Authentication';
 import { InpageDAppSignRequest } from '../viewmodels/hubs/InpageDAppHub';
 import Networks from '../viewmodels/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -8,9 +9,25 @@ import Success from './views/Success';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
 
-export default observer(({ msg, type, chainId, typedData, approve, reject }: InpageDAppSignRequest) => {
+interface Props extends InpageDAppSignRequest {
+  close: () => void;
+}
+
+export default observer(({ msg, type, chainId, typedData, approve, reject, close }: Props) => {
   const [verified, setVerified] = useState(false);
   const [themeColor] = useState(Networks.find(chainId)?.color ?? Networks.Ethereum.color);
+
+  const onReject = () => {
+    reject();
+    close();
+  };
+
+  const onApprove = async (pin?: string) => {
+    const result = await approve(pin);
+    setVerified(result);
+    if (result) setTimeout(() => close(), 1750);
+    return result;
+  };
 
   return (
     <SafeAreaProvider style={styles.safeArea}>
@@ -21,10 +38,11 @@ export default observer(({ msg, type, chainId, typedData, approve, reject }: Inp
           msg={msg}
           type={type}
           themeColor={themeColor}
-          onReject={reject}
-          onSignPress={approve}
-          sign={approve}
+          onReject={() => onReject}
+          onSign={() => onApprove()}
+          sign={(p) => onApprove(p)}
           typedData={typedData}
+          biometricEnabled={Authentication.biometricsEnabled}
         />
       )}
     </SafeAreaProvider>

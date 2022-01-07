@@ -183,18 +183,14 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   const onMessage = async (e: WebViewMessageEvent) => {
     const data = JSON.parse(e.nativeEvent.data) as { type: string; payload: any; origin?: string };
 
-    // console.log(data);
-
     switch (data.type) {
       case 'metadata':
         setPageMetadata(data.payload);
-        // setTimeout(() => PubSub.publish('page-metadata', data.payload), 700);
         break;
       case 'wcuri':
         LinkHub.handleURL(data.payload.uri);
         break;
       case 'INPAGE_REQUEST':
-        console.log('inpage request', data.payload);
         webview.current?.postMessage(await InpageDAppHub.handle(data.origin!, { ...data.payload, pageMetadata }));
         break;
     }

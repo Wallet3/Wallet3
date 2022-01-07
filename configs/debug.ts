@@ -6,4 +6,5 @@ LogBox.ignoreLogs([
   'componentWillUpdate has been renamed, and is not recommended for use. See https://reactjs.org/link/unsafe-component-lifecycles for details.',
   'Face ID is not available in Expo Go. You can use it in a standalone Expo app by providing `NSFaceIDUsageDescription`.',
   '[mobx] Out of bounds read',
+  'Webview Process Terminated',
 ]);

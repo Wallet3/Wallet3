@@ -129,8 +129,21 @@ class InpageDAppHub extends EventEmitter {
     if (!dapp) return;
 
     return new Promise((resolve) => {
-      const approve = (pin?: string) => {};
-      const reject = () => resolve(null);
+      const approve = async (pin?: string) => {
+        const { wallet, accountIndex } = App.findWallet(dapp.lastUsedAccount) || {};
+        if (!wallet) return resolve({ error: { code: 4001, message: 'Invalid account' } });
+
+        const signed =
+          method === 'sign_typedData'
+            ? await wallet.signTypedData({ typedData, pin, accountIndex })
+            : await wallet.signMessage({ msg: msg!, pin, accountIndex });
+
+        if (signed) resolve(signed);
+
+        return signed ? true : false;
+      };
+
+      const reject = () => resolve({ error: { code: 1, message: 'User rejected' } });
 
       let msg: string | undefined = undefined;
       let typedData: any;

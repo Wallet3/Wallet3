@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Text, View } from 'react-native';
 
+import App from '../viewmodels/App';
 import { Authentication } from '../viewmodels/Authentication';
 import Networks from '../viewmodels/Networks';
 import { Passpad } from './views';
@@ -22,11 +23,10 @@ interface Props {
   request: WCCallRequestRequest;
   close: Function;
   client: WalletConnect_v1;
-  wallet: Wallet;
-  appAuth: Authentication;
+  biometricEnabled?: boolean;
 }
 
-export default observer(({ request, client, close, wallet, appAuth }: Props) => {
+export default observer(({ request, client, close, biometricEnabled }: Props) => {
   const [msg, setMsg] = useState<string>();
   const [typedData, setTypedData] = useState();
   const [type, setType] = useState('');
@@ -67,6 +67,11 @@ export default observer(({ request, client, close, wallet, appAuth }: Props) => 
   };
 
   const sign = async (pin?: string) => {
+    if (!client.accounts.includes(App.currentWallet?.currentAccount?.address ?? '')) {
+      return false;
+    }
+
+    const wallet = App.currentWallet!;
     const signed = typedData ? await wallet.signTypedData({ typedData, pin }) : await wallet.signMessage({ msg: msg!, pin });
 
     if (signed) {
@@ -79,17 +84,6 @@ export default observer(({ request, client, close, wallet, appAuth }: Props) => 
     return signed ? true : false;
   };
 
-  const onSignPress = async () => {
-    if (!appAuth.biometricsEnabled) {
-      swiper.current?.scrollTo(1);
-      return;
-    }
-
-    if (await sign()) return;
-
-    swiper.current?.scrollTo(1);
-  };
-
   return (
     <SafeAreaProvider style={styles.safeArea}>
       {verified ? (
@@ -100,9 +94,10 @@ export default observer(({ request, client, close, wallet, appAuth }: Props) => 
           type={type}
           themeColor={themeColor}
           onReject={reject}
-          onSignPress={onSignPress}
+          onSign={sign}
           sign={sign}
           typedData={typedData}
+          biometricEnabled
         />
       )}
     </SafeAreaProvider>
