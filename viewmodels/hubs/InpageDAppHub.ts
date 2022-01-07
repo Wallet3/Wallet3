@@ -34,11 +34,9 @@ class InpageDAppHub extends EventEmitter {
       case 'eth_accounts':
       case 'eth_requestAccounts':
         response = await this.eth_accounts(origin, payload);
-        console.log('eth_accounts', response);
         break;
       case 'eth_chainId':
         response = `0x${Number(this.apps.get(origin)?.lastUsedChainId ?? Networks.current.chainId).toString(16)}`;
-        console.log('eth_chainId', response);
         break;
       case 'wallet_switchEthereumChain':
         response = await this.wallet_switchEthereumChain(origin, params);
@@ -62,7 +60,7 @@ class InpageDAppHub extends EventEmitter {
       return [account?.address ?? App.allAccounts[0].address];
     }
 
-    return new Promise<string[]>((resolve) => {
+    return new Promise<string[] | any>((resolve) => {
       const approve = () => {
         const account = App.currentWallet?.currentAccount?.address!;
         const app = new InpageDApp();
@@ -73,7 +71,7 @@ class InpageDAppHub extends EventEmitter {
         resolve([account]);
       };
 
-      const reject = () => {};
+      const reject = () => resolve({ error: { code: 4001, message: 'User rejected' } });
 
       PubSub.publish('openConnectInpageDApp', { approve, reject, origin, ...payload } as ConnectInpageDApp);
     });
@@ -86,7 +84,6 @@ class InpageDAppHub extends EventEmitter {
     const targetChainId = params[0].chainId;
     if (!Networks.has(targetChainId)) return null;
 
-    console.log('targetChainId', targetChainId);
     dapp.lastUsedChainId = targetChainId;
 
     this.emit('appStateUpdated', {

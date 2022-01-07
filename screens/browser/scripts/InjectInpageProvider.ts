@@ -33,7 +33,7 @@ class InpageBridge {
     //     ...response,
     //   };
     // }
-    // alert(__mmID+JSON.stringify(response));
+    alert(__mmID+JSON.stringify(response));
     callback && callback(error, response);
     delete this._pending[\`\${__mmID}\`];
   }
