@@ -269,7 +269,7 @@ PODS:
     - React-Core
   - react-native-safe-area-context (3.3.2):
     - React-Core
-  - react-native-webview (11.15.0):
+  - react-native-webview (11.15.1):
     - React-Core
   - React-perflogger (0.64.3)
   - React-RCTActionSheet (0.64.3):
@@ -648,7 +648,7 @@ SPEC CHECKSUMS:
   react-native-nfc-manager: f47786b7e0d959bf2a8a3633f78ba2a560024a17
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
-  react-native-webview: e89bf2dba26a04cda967814df3ed1be99f291233
+  react-native-webview: ea4899a1056c782afa96dd082179a66cbebf5504
   React-perflogger: cc76a4254d19640f1d8ad1c66fdee800414b805c
   React-RCTActionSheet: 7448f049318d8d7e8a9a1ebb742ada721757eea8
   React-RCTAnimation: fb9b3fa1a4a9f5e6ab01b3368693ce69860ba76a

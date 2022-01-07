@@ -8,21 +8,22 @@ import styles from './styles';
 
 interface Props {
   close: () => void;
-  resolve?: (accounts: string[]) => void;
+  approve?: () => void;
+  reject?: () => void;
   appName?: string;
   appDesc?: string;
   appIcon?: string;
   appUrl?: string;
 }
 
-export default observer(({ resolve, close, appName, appDesc, appIcon, appUrl }: Props) => {
+export default observer(({ approve, reject, close, appName, appDesc, appIcon, appUrl }: Props) => {
   const onConnect = () => {
-    resolve?.([App.currentWallet?.currentAccount?.address ?? '']);
+    approve?.();
     close();
   };
 
   const onReject = () => {
-    resolve?.([]);
+    reject?.();
     close();
   };
 

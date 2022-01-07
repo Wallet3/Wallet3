@@ -1,5 +1,6 @@
 import App from '../App';
 import Database from '../../models/Database';
+import EventEmitter from 'events';
 import InpageDApp from '../../models/InpageDApp';
 import Networks from '../Networks';
 
@@ -14,10 +15,11 @@ interface Payload {
 
 export interface ConnectInpageDApp extends Payload {
   origin: string;
-  resolve: (accounts: string[]) => void;
+  approve: () => void;
+  reject: () => void;
 }
 
-class InpageDAppHub {
+class InpageDAppHub extends EventEmitter {
   apps = new Map<string, InpageDApp>();
 
   get inpageDApps() {
@@ -35,32 +37,54 @@ class InpageDAppHub {
         console.log('eth_accounts', response);
         break;
       case 'eth_chainId':
-        response = `0x${Number(42161).toString(16)}`; //`0x${Number(this.apps.get(origin)?.lastUsedChainId ?? 1).toString(16)}`;
-        console.log('eth_chainId', response)
+        response = `0x${Number(this.apps.get(origin)?.lastUsedChainId ?? Networks.current.chainId).toString(16)}`;
+        console.log('eth_chainId', response);
+        break;
+      case 'wallet_switchEthereumChain':
+        response = await this.wallet_switchEthereumChain(origin, params);
         break;
     }
 
     return JSON.stringify({ type: 'INPAGE_RESPONSE', payload: { __mmID, error: undefined, response } });
   }
 
+  private async getDApp(origin: string) {
+    return this.apps.get(origin) || (await this.inpageDApps.findOne({ where: { origin } }));
+  }
+
   private async eth_accounts(origin: string, payload: Payload) {
     if (!App.currentWallet) return [];
 
-    const dapp = this.apps.get(origin) || (await this.inpageDApps.findOne({ where: { origin } }));
-    if (dapp) return [dapp.lastUsedAccount];
+    const dapp = await this.getDApp(origin);
+    if (dapp) {
+      this.apps.set(origin, dapp);
+      const account = App.allAccounts.find((a) => a.address === dapp.lastUsedAccount); // Ensure last used account is still available
+      return [account?.address ?? App.allAccounts[0].address];
+    }
 
-    return new Promise<string[]>((approve) => {
-      const resolve = (accounts: string[]) => {
+    return new Promise<string[]>((resolve) => {
+      const approve = () => {
+        const account = App.currentWallet?.currentAccount?.address!;
         const app = new InpageDApp();
         app.origin = origin;
-        app.lastUsedAccount = accounts[0];
-        app.lastUsedChainId = Networks.current.chainId;
+        app.lastUsedAccount = account;
+        app.lastUsedChainId = `0x${Number(Networks.current.chainId).toString(16)}`;
         this.apps.set(origin, app);
-        approve(accounts);
+        resolve([account]);
       };
 
-      PubSub.publish('openConnectInpageDApp', { resolve, origin, ...payload } as ConnectInpageDApp);
+      const reject = () => {};
+
+      PubSub.publish('openConnectInpageDApp', { approve, reject, origin, ...payload } as ConnectInpageDApp);
     });
+  }
+
+  private async wallet_switchEthereumChain(origin: string, params: { chainId: string }[]) {
+    const dapp = await this.getDApp(origin);
+    if (!dapp) return null;
+
+    dapp.lastUsedChainId = params[0].chainId;
+    return null;
   }
 }
 

@@ -5,8 +5,8 @@ export default class InpageDApp extends BaseEntity {
   @PrimaryColumn()
   origin!: string;
 
-  @Column({ default: 1 })
-  lastUsedChainId!: number;
+  @Column({ default: '0x1' })
+  lastUsedChainId!: string;
 
   @Column()
   lastUsedAccount!: string;

@@ -142,7 +142,7 @@ const InpageDAppConnect = () => {
       modalStyle={styles.modalStyle}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
-      <InpageDAppConnector {...info} close={close} resolve={data?.resolve} />
+      <InpageDAppConnector {...info} close={close} approve={data?.approve} reject={data?.reject} />
     </Modalize>
   );
 };
