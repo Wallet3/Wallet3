@@ -50,5 +50,7 @@
 
   "272": ["https://stage2-api.zksync.dev/web3"],
   "288": ["https://mainnet.boba.network"],
-  "1666600000": ["https://api.harmony.one"]
+  "1666600000": ["https://api.harmony.one"],
+  "1285": ["https://moonriver.api.onfinality.io/public", "https://rpc.moonriver.moonbeam.network"],
+  "1313161554": ["https://mainnet.aurora.dev"]
 }

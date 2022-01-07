@@ -2,8 +2,8 @@ import { BigNumber } from 'ethers';
 import Providers from '../configs/providers.json';
 import { post } from '../utils/fetch';
 
-function getUrls(chainId: number): string[] {
-  return Providers[`${chainId}`].filter((p) => p.startsWith('http'));
+function getUrls(chainId: number | string): string[] {
+  return Providers[`${Number(chainId)}`].filter((p) => p.startsWith('http'));
 }
 
 export async function getBalance(chainId: number, address: string): Promise<BigNumber> {
@@ -71,7 +71,7 @@ export async function getTransactionCount(chainId: number, address: string) {
 }
 
 export async function call<T>(
-  chainId: number,
+  chainId: number | string,
   args: {
     from?: string;
     to: string;
@@ -99,6 +99,17 @@ export async function call<T>(
   }
 
   return undefined;
+}
+
+export async function rawCall(chainId: number | string, payload: any) {
+  const urls = getUrls(chainId);
+
+  for (let url of urls) {
+    try {
+      const resp = await post(url, { jsonrpc: '2.0', id: Date.now(), ...payload });
+      return resp.result;
+    } catch (error) {}
+  }
 }
 
 export async function estimateGas(

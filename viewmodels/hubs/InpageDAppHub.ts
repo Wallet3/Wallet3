@@ -3,6 +3,7 @@ import Database from '../../models/Database';
 import EventEmitter from 'events';
 import InpageDApp from '../../models/InpageDApp';
 import Networks from '../Networks';
+import { rawCall } from '../../common/RPC';
 
 interface Payload {
   method: string;
@@ -40,6 +41,10 @@ class InpageDAppHub extends EventEmitter {
         break;
       case 'wallet_switchEthereumChain':
         response = await this.wallet_switchEthereumChain(origin, params);
+        break;
+      default:
+        const dapp = await this.getDApp(origin);
+        if (dapp) response = await rawCall(dapp.lastUsedChainId, { method, params });
         break;
     }
 
