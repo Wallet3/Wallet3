@@ -24,6 +24,10 @@ const observeDOM = (function () {
 })();
 
 const observer = observeDOM(document.body, function (m) {
+  if (window.ethereum && window.ethereum._wallet3 && window.ethereum._wallet3.defaultAccount) {
+    observer.disconnect();
+    return;
+  }
 
   const wcapp =
     document.querySelector("a[href^='https://rnbwapp.com/wc?uri=']") ||

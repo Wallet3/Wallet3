@@ -3,6 +3,7 @@ import Database from '../../models/Database';
 import EventEmitter from 'events';
 import InpageDApp from '../../models/InpageDApp';
 import Networks from '../Networks';
+import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import { rawCall } from '../../common/RPC';
 import { utils } from 'ethers';
 
@@ -42,6 +43,7 @@ class InpageDAppHub extends EventEmitter {
   async handle(origin: string, payload: Payload) {
     const { method, params, __mmID, id, jsonrpc } = payload;
     let response: any;
+    console.log(payload);
 
     switch (method) {
       case 'eth_accounts':
@@ -59,7 +61,8 @@ class InpageDAppHub extends EventEmitter {
         break;
       case 'personal_sign':
       case 'eth_sign':
-      case 'sign_typedData':
+      case 'eth_signTypedData_v3':
+      case 'eth_signTypedData_v4':
         response = await this.sign(origin, params, method);
         break;
       case 'net_version':
@@ -129,13 +132,18 @@ class InpageDAppHub extends EventEmitter {
     if (!dapp) return;
 
     return new Promise((resolve) => {
+      let msg: string | undefined = undefined;
+      let typedData: any;
+      let type: 'plaintext' | 'typedData' = 'plaintext';
+      let typedVersion = SignTypedDataVersion.V4;
+
       const approve = async (pin?: string) => {
         const { wallet, accountIndex } = App.findWallet(dapp.lastUsedAccount) || {};
         if (!wallet) return resolve({ error: { code: 4001, message: 'Invalid account' } });
 
         const signed =
-          method === 'sign_typedData'
-            ? await wallet.signTypedData({ typedData, pin, accountIndex })
+          type === 'typedData'
+            ? await wallet.signTypedData({ typedData, pin, accountIndex, version: typedVersion })
             : await wallet.signMessage({ msg: msg!, pin, accountIndex });
 
         if (signed) resolve(signed);
@@ -144,10 +152,6 @@ class InpageDAppHub extends EventEmitter {
       };
 
       const reject = () => resolve({ error: { code: 1, message: 'User rejected' } });
-
-      let msg: string | undefined = undefined;
-      let typedData: any;
-      let type: 'plaintext' | 'typedData' = 'plaintext';
 
       switch (method) {
         case 'eth_sign':
@@ -158,9 +162,15 @@ class InpageDAppHub extends EventEmitter {
           msg = Buffer.from(utils.arrayify(params[0])).toString('utf8');
           type = 'plaintext';
           break;
-        case 'eth_signTypedData':
+        case 'eth_signTypedData_v3':
           typedData = JSON.parse(params[1]);
           type = 'typedData';
+          typedVersion = SignTypedDataVersion.V3;
+          break;
+        case 'eth_signTypedData_v4':
+          typedData = JSON.parse(params[1]);
+          type = 'typedData';
+          typedVersion = SignTypedDataVersion.V4;
           break;
       }
 

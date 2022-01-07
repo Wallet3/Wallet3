@@ -34,6 +34,7 @@ type SignTypedDataRequest = {
   accountIndex?: number;
   typedData: any;
   pin?: string;
+  version?: SignTypedDataVersion;
 };
 
 export class Wallet {
@@ -137,7 +138,7 @@ export class Wallet {
 
       return ethSignUtil.signTypedData({
         privateKey: Buffer.from(utils.arrayify(key)),
-        version: SignTypedDataVersion.V4,
+        version: request.version ?? SignTypedDataVersion.V4,
         data: request.typedData,
       });
     } catch (error) {}

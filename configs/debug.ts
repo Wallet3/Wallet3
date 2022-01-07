@@ -7,4 +7,5 @@ LogBox.ignoreLogs([
   'Face ID is not available in Expo Go. You can use it in a standalone Expo app by providing `NSFaceIDUsageDescription`.',
   '[mobx] Out of bounds read',
   'Webview Process Terminated',
+  'source.uri should not be an empty string',
 ]);

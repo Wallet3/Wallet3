@@ -38,7 +38,7 @@ export default observer(({ msg, type, chainId, typedData, approve, reject, close
           msg={msg}
           type={type}
           themeColor={themeColor}
-          onReject={() => onReject}
+          onReject={onReject}
           onSign={() => onApprove()}
           sign={(p) => onApprove(p)}
           typedData={typedData}
