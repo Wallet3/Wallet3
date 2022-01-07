@@ -5,8 +5,9 @@ import { Text, View } from 'react-native';
 import { Authentication } from '../viewmodels/Authentication';
 import Networks from '../viewmodels/Networks';
 import { Passpad } from './views';
-import PlainTextSign from './dapp/SignPlainText';
 import { PublicNetworks } from '../common/Networks';
+import Sign from './compositions/Sign';
+import SignPlainText from './dapp/SignPlainText';
 import SignTypedData from './dapp/SignTypedData';
 import Success from './views/Success';
 import Swiper from 'react-native-swiper';
@@ -94,24 +95,15 @@ export default observer(({ request, client, close, wallet, appAuth }: Props) => 
       {verified ? (
         <Success />
       ) : (
-        <Swiper
-          ref={swiper}
-          showsPagination={false}
-          showsButtons={false}
-          scrollEnabled={false}
-          loop={false}
-          automaticallyAdjustContentInsets
-        >
-          {type === 'plaintext' ? (
-            <PlainTextSign msg={msg!} themeColor={themeColor} onReject={reject} onSign={onSignPress} />
-          ) : undefined}
-
-          {type === 'typedData' ? (
-            <SignTypedData data={typedData!} onReject={reject} onSign={onSignPress} themeColor={themeColor} />
-          ) : undefined}
-
-          <Passpad themeColor={themeColor} onCodeEntered={(c) => sign(c)} onCancel={() => swiper.current?.scrollTo(0)} />
-        </Swiper>
+        <Sign
+          msg={msg}
+          type={type}
+          themeColor={themeColor}
+          onReject={reject}
+          onSignPress={onSignPress}
+          sign={sign}
+          typedData={typedData}
+        />
       )}
     </SafeAreaProvider>
   );

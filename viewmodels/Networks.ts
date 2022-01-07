@@ -50,6 +50,10 @@ class Networks {
     return PublicNetworks.some((n) => n.chainId === Number(chainId));
   }
 
+  find(chainId: number | string) {
+    return PublicNetworks.find((n) => n.chainId === Number(chainId));
+  }
+
   reset() {
     this.switch(this.Ethereum);
   }

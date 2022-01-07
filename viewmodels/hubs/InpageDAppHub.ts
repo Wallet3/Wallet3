@@ -4,6 +4,7 @@ import EventEmitter from 'events';
 import InpageDApp from '../../models/InpageDApp';
 import Networks from '../Networks';
 import { rawCall } from '../../common/RPC';
+import { utils } from 'ethers';
 
 interface Payload {
   id?: string;
@@ -19,6 +20,15 @@ interface Payload {
 export interface ConnectInpageDApp extends Payload {
   origin: string;
   approve: () => void;
+  reject: () => void;
+}
+
+export interface InpageDAppSignRequest {
+  type: 'plaintext' | 'typedData';
+  chainId: number;
+  msg?: string;
+  typedData?: any;
+  approve: (pin?: string) => Promise<boolean>;
   reject: () => void;
 }
 
@@ -46,6 +56,11 @@ class InpageDAppHub extends EventEmitter {
         break;
       case 'wallet_switchEthereumChain':
         response = await this.wallet_switchEthereumChain(origin, params);
+        break;
+      case 'personal_sign':
+      case 'eth_sign':
+      case 'sign_typedData':
+        response = await this.sign(origin, params, method);
         break;
       case 'net_version':
         const app = this.apps.get(origin);
@@ -107,6 +122,44 @@ class InpageDAppHub extends EventEmitter {
     });
 
     return null;
+  }
+
+  private async sign(origin: string, params: string[], method: string) {
+    const dapp = await this.getDApp(origin);
+    if (!dapp) return;
+
+    return new Promise((resolve) => {
+      const approve = (pin?: string) => {};
+      const reject = () => resolve(null);
+
+      let msg: string | undefined = undefined;
+      let typedData: any;
+      let type: 'plaintext' | 'typedData' = 'plaintext';
+
+      switch (method) {
+        case 'eth_sign':
+          msg = Buffer.from(utils.arrayify(params[1])).toString('utf8');
+          type = 'plaintext';
+          break;
+        case 'personal_sign':
+          msg = Buffer.from(utils.arrayify(params[0])).toString('utf8');
+          type = 'plaintext';
+          break;
+        case 'eth_signTypedData':
+          typedData = JSON.parse(params[1]);
+          type = 'typedData';
+          break;
+      }
+
+      PubSub.publish('openInpageDAppSign', {
+        msg,
+        typedData,
+        type,
+        approve,
+        reject,
+        chainId: Number(dapp.lastUsedChainId),
+      } as InpageDAppSignRequest);
+    });
   }
 }
 
