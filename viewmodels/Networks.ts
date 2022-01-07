@@ -46,6 +46,10 @@ class Networks {
     AsyncStorage.setItem('network', JSON.stringify(network.chainId));
   }
 
+  has(chainId: number | string) {
+    return PublicNetworks.some((n) => n.chainId === Number(chainId));
+  }
+
   reset() {
     this.switch(this.Ethereum);
   }

@@ -33,7 +33,7 @@ class InpageBridge {
     //     ...response,
     //   };
     // }
-    alert(__mmID+JSON.stringify(response));
+    // alert(__mmID+JSON.stringify(response));
     callback && callback(error, response);
     delete this._pending[\`\${__mmID}\`];
   }
@@ -48,10 +48,10 @@ class InpageBridge {
     if (!isNaN(this._network)) {
       this.chainId = 'Ox' + parseInt(this._network, 10).toString(16);
     }
-
-    oldAddress !== undefined && this._selectedAddress !== oldAddress && this.emit('accountsChanged', [this._selectedAddress]);
-    oldNetwork !== undefined && this._network !== oldNetwork && this.emit('networkChanged', this._network);
-    oldNetwork !== undefined && this._network !== oldNetwork && this.emit('chainChanged', this._network);
+    
+    this._selectedAddress !== oldAddress && this.emit('accountsChanged', [this._selectedAddress]);
+    this._network !== oldNetwork && this.emit('networkChanged', this._network);
+    this._network !== oldNetwork && this.emit('chainChanged', this._network);
 
     // Legacy web3 support
     if (window.web3 && window.web3.eth) {
@@ -425,4 +425,4 @@ window.web3 = new Web3(window.ethereum);
 if (!window.chrome) {
   window.chrome = { webstore: true };
 }
-`
+`;

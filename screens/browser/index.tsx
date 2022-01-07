@@ -84,7 +84,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   const [webUrl, setWebUrl] = useState('');
   const [addr, setAddr] = useState('');
   const [uri, setUri] = useState<string>('');
-  const [pageMetadata, setPageMetadata] = useState<any>();
+  const [pageMetadata, setPageMetadata] = useState<{ icon: string; title: string; desc?: string; origin: string }>();
   const [suggests, setSuggests] = useState<string[]>([]);
 
   const refresh = () => {
@@ -198,6 +198,13 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
     }
   };
 
+  useEffect(() => {
+    InpageDAppHub.on('appStateUpdated', (appState) => {
+      console.log('appstateupdate', appState);
+      webview.current?.postMessage(JSON.stringify(appState));
+    });
+  }, []);
+
   return (
     <View style={{ backgroundColor: `#fff`, flex: 1, paddingTop: top, position: 'relative' }}>
       <View style={{ position: 'relative', paddingTop: 4, paddingBottom: 8 }}>
@@ -263,9 +270,9 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
 
           <TouchableOpacity
             style={{ padding: 8 }}
-            disabled={loadingProgress < 1}
+            disabled={loadingProgress < 1 || !pageMetadata}
             onPress={() =>
-              Bookmarks.has(webUrl) ? Bookmarks.remove(webUrl) : Bookmarks.add({ ...pageMetadata, url: webUrl })
+              Bookmarks.has(webUrl) ? Bookmarks.remove(webUrl) : Bookmarks.add({ ...pageMetadata!, url: webUrl })
             }
           >
             <Ionicons

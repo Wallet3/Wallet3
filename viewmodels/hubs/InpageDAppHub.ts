@@ -83,7 +83,17 @@ class InpageDAppHub extends EventEmitter {
     const dapp = await this.getDApp(origin);
     if (!dapp) return null;
 
-    dapp.lastUsedChainId = params[0].chainId;
+    const targetChainId = params[0].chainId;
+    if (!Networks.has(targetChainId)) return null;
+
+    console.log('targetChainId', targetChainId);
+    dapp.lastUsedChainId = targetChainId;
+
+    this.emit('appStateUpdated', {
+      type: 'STATE_UPDATE',
+      payload: { origin, selectedAddress: dapp.lastUsedAccount, network: targetChainId },
+    });
+
     return null;
   }
 }
