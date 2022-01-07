@@ -1,3 +1,5 @@
+import * as Linking from 'expo-linking';
+
 import { ConnectInpageDApp, InpageDAppSignRequest } from '../viewmodels/hubs/InpageDAppHub';
 import { ERC681, ERC681Transferring } from '../viewmodels/transferring/ERC681Transferring';
 import { NetworksMenu, Request, Send, WalletConnectDApp, WalletConnectSign, WalletConnectTxRequest } from '../modals';
@@ -119,8 +121,16 @@ const InpageDAppConnect = () => {
   };
 
   useEffect(() => {
-    const updatePageInfo = (_, payload: any) =>
-      setInfo({ appUrl: payload.origin, appName: payload.title, appIcon: payload.icon, appDesc: payload.desc });
+    const updatePageInfo = (_, payload: any) => {
+      const { scheme, hostname } = Linking.parse(payload.origin);
+
+      setInfo({
+        appUrl: `${scheme}://${hostname}`,
+        appName: payload.title,
+        appIcon: payload.icon,
+        appDesc: payload.desc,
+      });
+    };
 
     PubSub.subscribe('openConnectInpageDApp', (_, data: ConnectInpageDApp) => {
       if (data.pageMetadata) updatePageInfo(undefined, data.pageMetadata);
