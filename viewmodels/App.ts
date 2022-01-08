@@ -42,6 +42,10 @@ export class AppVM {
     return { wallet, accountIndex: wallet.accounts.findIndex((a) => a.address === account) };
   }
 
+  findAccount(account: string) {
+    return this.allAccounts.find((a) => a.address === account);
+  }
+
   async init() {
     Coingecko.init();
 

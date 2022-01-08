@@ -1,11 +1,13 @@
+import { providers, utils } from 'ethers';
+
 import App from '../App';
 import Database from '../../models/Database';
 import EventEmitter from 'events';
 import InpageDApp from '../../models/InpageDApp';
 import Networks from '../Networks';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
+import { WCCallRequest_eth_sendTransaction } from '../../models/WCSession_v1';
 import { rawCall } from '../../common/RPC';
-import { utils } from 'ethers';
 
 interface Payload {
   id?: string;
@@ -33,6 +35,15 @@ export interface InpageDAppSignRequest {
   reject: () => void;
 }
 
+export interface InpageDAppTxRequest {
+  chainId: number;
+  param: WCCallRequest_eth_sendTransaction;
+  account: string;
+  app: { name: string; icon: string };
+  approve: (obj: { pin?: string; tx: providers.TransactionRequest }) => Promise<boolean>;
+  reject: () => void;
+}
+
 class InpageDAppHub extends EventEmitter {
   apps = new Map<string, InpageDApp>();
 
@@ -42,8 +53,7 @@ class InpageDAppHub extends EventEmitter {
 
   async handle(origin: string, payload: Payload) {
     const { method, params, __mmID, id, jsonrpc } = payload;
-    let response: any;
-    console.log(payload);
+    let response: any = null;
 
     switch (method) {
       case 'eth_accounts':
@@ -53,6 +63,7 @@ class InpageDAppHub extends EventEmitter {
       case 'eth_requestAccounts':
         response = await this.eth_requestAccounts(origin, payload);
         break;
+      case 'net_version':
       case 'eth_chainId':
         response = `0x${Number(this.apps.get(origin)?.lastUsedChainId ?? Networks.current.chainId).toString(16)}`;
         break;
@@ -65,12 +76,9 @@ class InpageDAppHub extends EventEmitter {
       case 'eth_signTypedData_v4':
         response = await this.sign(origin, params, method);
         break;
-      case 'net_version':
-        const app = this.apps.get(origin);
-        if (app) {
-          response = Number(app.lastUsedChainId);
-          break;
-        }
+      case 'eth_sendTransaction':
+        response = await this.eth_sendTransaction(origin, payload);
+        break;
       default:
         const dapp = await this.getDApp(origin);
         if (dapp) response = await rawCall(dapp.lastUsedChainId, { method, params });
@@ -182,6 +190,49 @@ class InpageDAppHub extends EventEmitter {
         reject,
         chainId: Number(dapp.lastUsedChainId),
       } as InpageDAppSignRequest);
+    });
+  }
+
+  private async eth_sendTransaction(origin: string, payload: Payload) {
+    const dapp = await this.getDApp(origin);
+    if (!dapp) return null;
+
+    const { params, pageMetadata } = payload;
+
+    return new Promise<string | any>((resolve) => {
+      const approve = async ({ pin, tx }: { pin?: string; tx: providers.TransactionRequest }) => {
+        const { wallet, accountIndex } = App.findWallet(dapp.lastUsedAccount) || {};
+        if (!wallet) return resolve({ error: { code: 4001, message: 'Invalid account' } });
+
+        const { txHex, error } = await wallet.signTx({
+          tx,
+          pin,
+          accountIndex: accountIndex!,
+        });
+        console.log('txHex', txHex, error, tx);
+        if (!txHex) return false;
+
+        const hash = await wallet.sendTx({
+          txHex,
+          readableInfo: { dapp: pageMetadata?.title ?? '', type: 'dapp-interaction' },
+          tx,
+        });
+
+        resolve(hash);
+
+        return hash ? true : false;
+      };
+
+      const reject = () => resolve({ error: { code: 1, message: 'User rejected' } });
+
+      PubSub.publish('openInpageDAppSendTransaction', {
+        approve,
+        reject,
+        param: params[0] as WCCallRequest_eth_sendTransaction,
+        chainId: Number(dapp.lastUsedChainId),
+        account: dapp.lastUsedAccount,
+        app: { name: pageMetadata!.title, icon: pageMetadata!.icon },
+      } as InpageDAppTxRequest);
     });
   }
 }

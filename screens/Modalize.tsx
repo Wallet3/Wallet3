@@ -1,6 +1,6 @@
 import * as Linking from 'expo-linking';
 
-import { ConnectInpageDApp, InpageDAppSignRequest } from '../viewmodels/hubs/InpageDAppHub';
+import { ConnectInpageDApp, InpageDAppSignRequest, InpageDAppTxRequest } from '../viewmodels/hubs/InpageDAppHub';
 import { ERC681, ERC681Transferring } from '../viewmodels/transferring/ERC681Transferring';
 import { NetworksMenu, Request, Send, WalletConnectDApp, WalletConnectSign, WalletConnectTxRequest } from '../modals';
 import React, { useEffect, useState } from 'react';
@@ -10,6 +10,7 @@ import { Authentication } from '../viewmodels/Authentication';
 import { Dimensions } from 'react-native';
 import { FullPasspad } from '../modals/views/Passpad';
 import InpageConnectDApp from '../modals/InpageConnectDApp';
+import InpageDAppSendTx from '../modals/InpageDAppTxRequest';
 import InpageDAppSign from '../modals/InpageDAppSign';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../viewmodels/Networks';
@@ -161,12 +162,19 @@ const InpageDAppConnect = () => {
 const InpageDAppRequests = () => {
   const { ref, open, close } = useModalize();
   const [signRequest, setSignRequest] = useState<InpageDAppSignRequest>();
+  const [txRequest, setTxRequest] = useState<InpageDAppTxRequest>();
   const [type, setType] = useState('');
 
   useEffect(() => {
     PubSub.subscribe('openInpageDAppSign', (_, data: InpageDAppSignRequest) => {
       setSignRequest(data);
       setType('sign');
+      open();
+    });
+
+    PubSub.subscribe('openInpageDAppSendTransaction', (_, data: InpageDAppTxRequest) => {
+      setTxRequest(data);
+      setType('sendTx');
       open();
     });
   }, []);
@@ -185,6 +193,7 @@ const InpageDAppRequests = () => {
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
       {type === 'sign' ? <InpageDAppSign {...signRequest!} close={close} /> : undefined}
+      {type === 'sendTx' ? <InpageDAppSendTx {...txRequest!} close={close} /> : undefined}
     </Modalize>
   );
 };
