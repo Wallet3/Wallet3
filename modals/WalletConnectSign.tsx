@@ -1,19 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { Text, View } from 'react-native';
 
 import App from '../viewmodels/App';
-import { Authentication } from '../viewmodels/Authentication';
 import Networks from '../viewmodels/Networks';
-import { Passpad } from './views';
 import { PublicNetworks } from '../common/Networks';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Sign from './compositions/Sign';
-import SignPlainText from './dapp/SignPlainText';
-import SignTypedData from './dapp/SignTypedData';
 import Success from './views/Success';
 import Swiper from 'react-native-swiper';
 import { WCCallRequestRequest } from '../models/WCSession_v1';
-import { Wallet } from '../viewmodels/Wallet';
 import { WalletConnect_v1 } from '../viewmodels/walletconnect/WalletConnect_v1';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
@@ -33,8 +27,6 @@ export default observer(({ request, client, close, biometricEnabled }: Props) =>
   const [verified, setVerified] = useState(false);
 
   const themeColor = client.findTargetNetwork({ networks: PublicNetworks, defaultNetwork: Networks.current }).color;
-
-  const swiper = useRef<Swiper>(null);
 
   useEffect(() => {
     const { params, method } = request;
