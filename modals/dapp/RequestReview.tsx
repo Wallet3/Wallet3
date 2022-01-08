@@ -1,25 +1,21 @@
-import { AntDesign, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Coin, SafeViewContainer, Skeleton } from '../../components';
 import React, { useRef } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { borderColor, fontColor } from '../../constants/styles';
+import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import AnimateNumber from 'react-native-animate-number';
 import Authentication from '../../viewmodels/Authentication';
 import Currency from '../../viewmodels/settings/Currency';
 import GasReview from '../views/GasReview';
-import { INetwork } from '../../common/Networks';
 import Image from 'react-native-expo-cached-image';
 import InsufficientFee from '../components/InsufficientFee';
+import { MaterialIcons } from '@expo/vector-icons';
 import { RawTransactionRequest } from '../../viewmodels/transferring/RawTransactionRequest';
 import RejectApproveButtons from '../components/RejectApproveButtons';
 import Swiper from 'react-native-swiper';
-import { TransactionRequest } from '../../viewmodels/transferring/TransactionRequest';
 import TxException from '../components/TxException';
-import { WCCallRequestRequest } from '../../models/WCSession_v1';
-import { WalletConnect_v1 } from '../../viewmodels/walletconnect/WalletConnect_v1';
-import { constants } from 'ethers';
+import { fontColor } from '../../constants/styles';
 import { formatAddress } from '../../utils/formatter';
+import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
@@ -132,9 +128,12 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app }: Props) 
 
         <View style={{ ...styles.reviewItem, borderBottomWidth: 0 }}>
           <Text style={styles.reviewItemTitle}>{t('modal-review-network')}</Text>
-          <Text style={{ ...styles.reviewItemValue, color: network?.color }} numberOfLines={1}>
-            {network?.network}
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            {generateNetworkIcon({ ...network, width: 15, style: { marginEnd: 6 } })}
+            <Text style={{ ...styles.reviewItemValue, color: network?.color }} numberOfLines={1}>
+              {network?.network}
+            </Text>
+          </View>
         </View>
       </View>
 

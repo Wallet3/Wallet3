@@ -27,9 +27,9 @@ const Methods = new Map<string, RequestType>([
   [Approve, 'Approve'],
 ]);
 
-export function parseRequestType(data: string): { type: RequestType; methodFunc: string } {
+export function parseRequestType(data = ''): { type: RequestType; methodFunc: string } {
   if (typeof data !== 'string') return { type: 'Unknown', methodFunc: '' };
-  const methodFunc = data.slice(0, 10);
+  const methodFunc = (data || '').slice(0, 10);
   return { type: data ? Methods.get(methodFunc) ?? 'Contract Interaction' : 'Transfer', methodFunc };
 }
 
@@ -156,6 +156,7 @@ export class RawTransactionRequest extends BaseTransaction {
       this.nonce >= 0 &&
       this.maxGasPrice > 0 &&
       this.gasLimit >= 21000 &&
+      this.nativeToken.balance.gte(this.valueWei) &&
       !this.isEstimatingGas &&
       !this.txException &&
       !this.insufficientFee &&

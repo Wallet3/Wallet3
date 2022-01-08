@@ -1,6 +1,16 @@
 import * as Linking from 'expo-linking';
 
-import { Animated, Dimensions, FlatList, ListRenderItemInfo, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  Animated,
+  Dimensions,
+  FlatList,
+  Image,
+  ListRenderItemInfo,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Bookmarks, { Bookmark, PopularDApps } from '../../viewmodels/customs/Bookmarks';
 import { BottomTabScreenProps, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import React, { useEffect, useRef, useState } from 'react';
@@ -8,11 +18,11 @@ import { WebView, WebViewMessageEvent, WebViewNavigation } from 'react-native-we
 import { borderColor, thirdFontColor } from '../../constants/styles';
 
 import { Bar } from 'react-native-progress';
+import CachedImage from 'react-native-expo-cached-image';
 import Collapsible from 'react-native-collapsible';
 import DeviceInfo from 'react-native-device-info';
 import GetPageMetadata from './scripts/Metadata';
 import HookWalletConnect from './scripts/InjectWalletConnectObserver';
-import Image from 'react-native-expo-cached-image';
 import InjectInpageProvider from './scripts/InjectInpageProvider';
 import InpageDAppHub from '../../viewmodels/hubs/InpageDAppHub';
 import { Ionicons } from '@expo/vector-icons';
@@ -23,6 +33,8 @@ import { WebViewScrollEvent } from 'react-native-webview/lib/WebViewTypes';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+const DefaultIcon = require('../../assets/default-icon.png');
 
 const ScreenWidth = Dimensions.get('window').width;
 const NumOfColumns = 7;
@@ -160,7 +172,15 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
     return (
       <TouchableOpacity style={{ padding: 8 }} onPress={() => setUri(item.url)}>
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-          <Image source={{ uri: item.icon }} style={{ width: LargeIconSize, height: LargeIconSize, borderRadius: 7 }} />
+          {item.icon ? (
+            <CachedImage
+              source={{ uri: item.icon }}
+              style={{ width: LargeIconSize, height: LargeIconSize, borderRadius: 7 }}
+            />
+          ) : (
+            <Image source={DefaultIcon} style={{ width: LargeIconSize, height: LargeIconSize, borderRadius: 7 }} />
+          )}
+
           <Text numberOfLines={1} style={{ maxWidth: LargeIconSize, marginTop: 4, fontSize: 9, color: thirdFontColor }}>
             {item.title}
           </Text>
@@ -321,10 +341,14 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
             >
               {(Bookmarks.favs.length > 0 ? Bookmarks.favs.slice(0, 16) : PopularDApps).map((item, i) => (
                 <TouchableOpacity style={{ margin: 8 }} key={`${item.url}-${i}`} onPress={() => goTo(item.url)}>
-                  <Image
-                    source={{ uri: item.icon }}
-                    style={{ width: SmallIconSize, height: SmallIconSize, borderRadius: 3 }}
-                  />
+                  {item.icon ? (
+                    <CachedImage
+                      source={{ uri: item.icon }}
+                      style={{ width: SmallIconSize, height: SmallIconSize, borderRadius: 3 }}
+                    />
+                  ) : (
+                    <Image source={DefaultIcon} style={{ width: SmallIconSize, height: SmallIconSize, borderRadius: 3 }} />
+                  )}
                 </TouchableOpacity>
               ))}
             </View>
