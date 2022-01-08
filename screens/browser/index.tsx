@@ -211,7 +211,11 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
         LinkHub.handleURL(data.payload.uri);
         break;
       case 'INPAGE_REQUEST':
-        webview.current?.postMessage(await InpageDAppHub.handle(data.origin!, { ...data.payload, pageMetadata }));
+        try {
+          webview.current?.postMessage(await InpageDAppHub.handle(data.origin!, { ...data.payload, pageMetadata }));
+        } catch (error) {
+          console.log(error);
+        }
         break;
     }
   };

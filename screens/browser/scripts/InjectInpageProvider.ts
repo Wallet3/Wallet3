@@ -291,7 +291,7 @@ class InpageBridge {
       JSON.stringify({
         payload,
         type: 'INPAGE_REQUEST',
-        origin: window.location.href,
+        origin: window.location.hostname,
       })
     );
   }

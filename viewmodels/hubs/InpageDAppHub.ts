@@ -1,3 +1,5 @@
+import * as Linking from 'expo-linking';
+
 import { providers, utils } from 'ethers';
 
 import App from '../App';
@@ -85,6 +87,17 @@ class InpageDAppHub extends EventEmitter {
         break;
     }
 
+    // delete (params || {})[0]?.data;
+    // console.log(
+    //   origin,
+    //   __mmID,
+    //   method,
+    //   JSON.stringify(params || {}).substring(0, 200),
+    //   JSON.stringify(response || null).substring(0, 200)
+    // );
+
+    // if (response === null) console.log('null resp', hostname, this.apps.has(hostname ?? ''), origin);
+
     return JSON.stringify({ type: 'INPAGE_RESPONSE', payload: { id, jsonrpc, __mmID, error: undefined, response } });
   }
 
@@ -123,7 +136,7 @@ class InpageDAppHub extends EventEmitter {
     if (!dapp) return null;
 
     const targetChainId = params[0].chainId;
-    if (!Networks.has(targetChainId)) return null;
+    if (!Networks.has(targetChainId)) return { error: { code: 4092, message: 'the chain has not been added to Wallet 3' } };
 
     dapp.lastUsedChainId = targetChainId;
 
@@ -209,7 +222,7 @@ class InpageDAppHub extends EventEmitter {
           pin,
           accountIndex: accountIndex!,
         });
-        console.log('txHex', txHex, error, tx);
+
         if (!txHex) return false;
 
         const hash = await wallet.sendTx({

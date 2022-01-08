@@ -2,7 +2,7 @@ import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity({ name: 'inpage_dapps' })
 export default class InpageDApp extends BaseEntity {
-  @PrimaryColumn()
+  @PrimaryColumn({ type: 'text' })
   origin!: string;
 
   @Column({ default: '0x1' })
