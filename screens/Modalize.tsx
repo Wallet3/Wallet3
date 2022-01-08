@@ -9,7 +9,7 @@ import { AppVM } from '../viewmodels/App';
 import { Authentication } from '../viewmodels/Authentication';
 import { Dimensions } from 'react-native';
 import { FullPasspad } from '../modals/views/Passpad';
-import InpageDAppConnector from '../modals/InpageDAppConnector';
+import InpageConnectDApp from '../modals/InpageConnectDApp';
 import InpageDAppSign from '../modals/InpageDAppSign';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../viewmodels/Networks';
@@ -153,7 +153,7 @@ const InpageDAppConnect = () => {
       modalStyle={styles.modalStyle}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
-      <InpageDAppConnector {...info} close={close} approve={data?.approve} reject={data?.reject} />
+      <InpageConnectDApp {...info} close={close} approve={data?.approve} reject={data?.reject} />
     </Modalize>
   );
 };
