@@ -35,7 +35,7 @@ export default observer(({ vm, onClose, erc681 }: Props) => {
     });
 
     if (!txHex || error) {
-      showMessage({ message: error, type: 'warning' });
+      if (error) showMessage({ message: error, type: 'warning' });
       return false;
     }
 

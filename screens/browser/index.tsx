@@ -197,7 +197,10 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   };
 
   useEffect(() => {
-    InpageDAppHub.on('appStateUpdated', (appState) => webview.current?.postMessage(JSON.stringify(appState)));
+    InpageDAppHub.on('appStateUpdated', (appState) => {
+      if (pageMetadata?.origin !== appState.origin) return;
+      webview.current?.postMessage(JSON.stringify(appState));
+    });
   }, []);
 
   return (
