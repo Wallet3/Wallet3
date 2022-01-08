@@ -1,6 +1,6 @@
 import * as ethSignUtil from '@metamask/eth-sig-util';
 
-import { Wallet as EthersWallet, providers, utils } from 'ethers';
+import { Bytes, Wallet as EthersWallet, providers, utils } from 'ethers';
 import { action, makeObservable, observable, reaction, runInAction } from 'mobx';
 
 import { Account } from './account/Account';

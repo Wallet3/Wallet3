@@ -69,11 +69,11 @@ class InpageBridge {
   }
 
   _sendStandard(method, params = []) {
-    if (method === 'eth_requestAccounts') return this.enable();
+    // if (method === 'eth_requestAccounts') return this.enable();
 
     return new Promise((resolve, reject) => {
       try {
-        this.sendAsync({ method, params, beta: true }, (error, response) => {
+        this.sendAsync({ method, params, beta: true, jsonrpc: '2.0', id: Date.now() *  Math.floor(Math.random() * 100 + 1) }, (error, response) => {
           error = error || response.error;
           error ? reject(error) : resolve(response);
         });

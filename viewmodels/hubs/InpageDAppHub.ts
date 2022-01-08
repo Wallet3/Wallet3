@@ -1,6 +1,6 @@
 import * as Linking from 'expo-linking';
 
-import { providers, utils } from 'ethers';
+import { Bytes, providers, utils } from 'ethers';
 
 import App from '../App';
 import Database from '../../models/Database';
@@ -9,6 +9,7 @@ import InpageDApp from '../../models/InpageDApp';
 import Networks from '../Networks';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import { WCCallRequest_eth_sendTransaction } from '../../models/WCSession_v1';
+import { hashPersonalMessage } from 'ethereumjs-util';
 import { rawCall } from '../../common/RPC';
 
 interface Payload {
@@ -73,13 +74,17 @@ class InpageDAppHub extends EventEmitter {
         response = await this.wallet_switchEthereumChain(origin, params);
         break;
       case 'personal_sign':
-      case 'eth_sign':
       case 'eth_signTypedData_v3':
       case 'eth_signTypedData_v4':
         response = await this.sign(origin, params, method);
         break;
+      case 'eth_sign':
+        response = { error: { message: 'eth_sign is not supported' } };
+        break;
       case 'eth_sendTransaction':
         response = await this.eth_sendTransaction(origin, payload);
+        break;
+      case 'eth_getEncryptionPublicKey':
         break;
       default:
         const dapp = await this.getDApp(origin);
@@ -92,9 +97,11 @@ class InpageDAppHub extends EventEmitter {
     //   origin,
     //   __mmID,
     //   method,
-    //   JSON.stringify(params || {}).substring(0, 200),
-    //   JSON.stringify(response || null).substring(0, 200)
+    //   // response,
+    //   // JSON.stringify(params || {}).substring(0, 200),
+    //   JSON.stringify(response || null).substring(0, 64)
     // );
+    console.log(payload);
 
     // if (response === null) console.log('null resp', hostname, this.apps.has(hostname ?? ''), origin);
 
@@ -175,10 +182,6 @@ class InpageDAppHub extends EventEmitter {
       const reject = () => resolve({ error: { code: 1, message: 'User rejected' } });
 
       switch (method) {
-        case 'eth_sign':
-          msg = Buffer.from(utils.arrayify(params[1])).toString('utf8');
-          type = 'plaintext';
-          break;
         case 'personal_sign':
           msg = Buffer.from(utils.arrayify(params[0])).toString('utf8');
           type = 'plaintext';
