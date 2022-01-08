@@ -10,6 +10,7 @@ import i18n from '../../i18n';
 import { showMessage } from 'react-native-flash-message';
 
 class TxHub {
+  private watchTimer!: NodeJS.Timeout;
   pendingTxs: Transaction[] = [];
   txs: Transaction[] = [];
 
@@ -63,6 +64,8 @@ class TxHub {
   }
 
   async watchPendingTxs() {
+    clearTimeout(this.watchTimer);
+
     const confirmedTxs: Transaction[] = [];
 
     for (let tx of this.pendingTxs) {
@@ -96,7 +99,7 @@ class TxHub {
       await Promise.all(invalidTxs.map((t) => t.remove()));
     }
 
-    setTimeout(() => this.watchPendingTxs(), 1000 * 5);
+    if (this.pendingTxs.length > 0) this.watchTimer = setTimeout(() => this.watchPendingTxs(), 1000 * 3);
 
     if (confirmedTxs.length === 0) return;
 
@@ -140,6 +143,8 @@ class TxHub {
 
       this.pendingTxs = [maxPriTx, ...this.pendingTxs.filter((t) => t.nonce !== pendingTx.nonce)];
     });
+
+    setTimeout(() => this.watchPendingTxs(), 100);
 
     return hash;
   }
