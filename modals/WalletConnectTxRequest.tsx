@@ -60,7 +60,7 @@ export default observer(({ client, request, close }: Props) => {
       readableInfo: {
         type: 'dapp-interaction',
         dapp: vm.appMeta.name,
-        icon: vm.appMeta.icons[0],
+        icon: vm.appMeta.icon,
       },
     });
 
@@ -94,7 +94,7 @@ export default observer(({ client, request, close }: Props) => {
           loop={false}
           automaticallyAdjustContentInsets
         >
-          <RequestReview vm={vm} onReject={reject} onApprove={onSendClick} />
+          <RequestReview vm={vm} app={vm.appMeta} onReject={reject} onApprove={onSendClick} />
           <Passpad
             themeColor={vm.network.color}
             onCodeEntered={(c) => sendTx(c)}

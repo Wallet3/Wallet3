@@ -50,7 +50,8 @@ export class TransactionRequest extends RawTransactionRequest {
     this.client = client;
   }
 
-  get appMeta(): WCClientMeta {
-    return this.client.appMeta!;
+  get appMeta() {
+    const { description, icons, name, url } = this.client.appMeta!;
+    return { desc: description, icon: icons[0], name, url };
   }
 }

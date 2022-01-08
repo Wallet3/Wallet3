@@ -11,6 +11,7 @@ import GasReview from '../views/GasReview';
 import { INetwork } from '../../common/Networks';
 import Image from 'react-native-expo-cached-image';
 import InsufficientFee from '../components/InsufficientFee';
+import { RawTransactionRequest } from '../../viewmodels/transferring/RawTransactionRequest';
 import RejectApproveButtons from '../components/RejectApproveButtons';
 import Swiper from 'react-native-swiper';
 import { TransactionRequest } from '../../viewmodels/transferring/TransactionRequest';
@@ -24,14 +25,15 @@ import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 
 interface Props {
-  vm: TransactionRequest;
+  vm: RawTransactionRequest;
+  app: { name: string; icon: string };
   onReject?: () => void;
   onApprove?: () => void;
   onGasPress?: () => void;
 }
 
-const TxReview = observer(({ vm, onReject, onApprove, onGasPress }: Props) => {
-  const { appMeta, network } = vm;
+const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app }: Props) => {
+  const { network } = vm;
   const { t } = i18n;
 
   return (
@@ -40,9 +42,9 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress }: Props) => {
         <View style={styles.reviewItem}>
           <Text style={styles.reviewItemTitle}>DApp</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Image source={{ uri: appMeta?.icons[0] }} style={{ width: 19, height: 19, marginEnd: 4 }} />
+            <Image source={{ uri: app.icon }} style={{ width: 19, height: 19, marginEnd: 4 }} />
             <Text style={{ ...styles.reviewItemValue, maxWidth: 180 }} numberOfLines={1}>
-              {appMeta?.name}
+              {app.name}
             </Text>
           </View>
         </View>
