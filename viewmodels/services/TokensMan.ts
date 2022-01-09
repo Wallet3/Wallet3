@@ -25,7 +25,7 @@ export default class TokensMan {
     await AsyncStorage.setItem(`${chainId}-${account}`, JSON.stringify(plainTokens));
   }
 
-  static async loadUserTokens(chainId: number, account: string, provider: providers.BaseProvider) {
+  static async loadUserTokens(chainId: number, account: string) {
     const popTokens = Networks.find((n) => n.chainId === chainId)?.defaultTokens ?? [];
     const customized: UserToken[] = JSON.parse((await AsyncStorage.getItem(`${chainId}-${account}`)) || '[]');
 

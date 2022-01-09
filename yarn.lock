@@ -4304,10 +4304,10 @@ d3-shape@^1.0.6:
   dependencies:
     d3-path "1"
 
-d3-shape@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.npmjs.org/d3-shape/-/d3-shape-3.0.1.tgz"
-  integrity sha512-HNZNEQoDhuCrDWEc/BMbF/hKtzMZVoe64TvisFLDp2Iyj0UShB/E6/lBsLlJTfBMbYgftHj90cXJ0SEitlE6Xw==
+d3-shape@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/d3-shape/-/d3-shape-3.1.0.tgz#c8a495652d83ea6f524e482fca57aa3f8bc32556"
+  integrity sha512-tGDh1Muf8kWjEDT/LswZJ8WF85yDZLvVJpYU9Nq+8+yW1Z5enxrmXOhTArlkaElU+CTn0OTVNli+/i+HP45QEQ==
   dependencies:
     d3-path "1 - 3"
 
@@ -8140,10 +8140,10 @@ react-native-modalize@^2.0.13:
   resolved "https://registry.yarnpkg.com/react-native-modalize/-/react-native-modalize-2.0.13.tgz#51517cddd726ddbc19c080d15e7721ade4ee7a66"
   integrity sha512-BMJlpTnpeDVp5LbbE6kdO+3+yLzowRvPgcIu1QCCM+//uY7oON4VcL8ISilSgAfOYeNQc6vhaD5chVtmpTl/dw==
 
-react-native-nfc-manager@^3.11.2:
-  version "3.11.2"
-  resolved "https://registry.yarnpkg.com/react-native-nfc-manager/-/react-native-nfc-manager-3.11.2.tgz#a46c3416790cc9e75dce18b66da6d4a1b383af71"
-  integrity sha512-ecELCniq6l+iXCG0J5hM/LIKmYmNJGjFH55vm0+UuKLX87d5Ds/A94QTsJRPdU0Ry0buBkJf/LATaXWADtySlw==
+react-native-nfc-manager@^3.11.4:
+  version "3.11.4"
+  resolved "https://registry.yarnpkg.com/react-native-nfc-manager/-/react-native-nfc-manager-3.11.4.tgz#28206e6fa6f733281ce495a6a6c55e060eaf7292"
+  integrity sha512-aHuoOWLet9vmEIUeD18T8V2rug6t70UzkrWbNQMU86y/lROyI88W0thjctqrFPwlDP+MvYBUOnN/hXO33Mv7xg==
   dependencies:
     "@expo/config-plugins" "^3.0.6"
 
@@ -8284,10 +8284,10 @@ react-native-web@0.17.5:
     normalize-css-color "^1.0.2"
     prop-types "^15.6.0"
 
-react-native-webview@^11.15.1:
-  version "11.15.1"
-  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-11.15.1.tgz#6add96751542a85016f46b60db582b9f31b682e2"
-  integrity sha512-AA8aYXH+uJxyGkU8eyuzWeebt9hq2P3VjItxJv8ejdxZBH0w2rvtyuVb1RnIxS9EoIk0oTf2TlK/ZsfMMURnng==
+react-native-webview@^11.16.0:
+  version "11.16.0"
+  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-11.16.0.tgz#51dce13480aa4f8f727307df05b8bfaf74ca3d14"
+  integrity sha512-yap3dO3adMQp4z5oDzlcgcv6XPsfHAtt1E3ort94GthrunswaZhL6AfMiDOsNnKQmlUA+o4LNJsnlAy1b10rUg==
   dependencies:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"

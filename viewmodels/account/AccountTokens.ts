@@ -38,7 +38,7 @@ export class AccountTokens {
 
     const [native, userTokens, userBalance] = await Promise.all([
       this.createNativeToken(),
-      TokensMan.loadUserTokens(current.chainId, this.owner, Networks.currentProvider),
+      TokensMan.loadUserTokens(current.chainId, this.owner),
       Debank.getBalance(this.owner, current.comm_id),
     ]);
 
@@ -113,16 +113,21 @@ export class AccountTokens {
     TokensMan.saveUserTokens(Networks.current.chainId, this.owner, tokens);
   }
 
-  addToken(token: UserToken, targetChainId = Networks.current.chainId) {
+  async addToken(token: UserToken, targetChainId = Networks.current.chainId) {
     if (this.allTokens.find((t) => t.address === token.address)) return;
     if (this.tokens.find((t) => t.address === token.address)) return;
 
     token.shown = true;
 
-    this.allTokens = [token, ...this.allTokens];
-    this.tokens = [this.tokens[0], token, ...this.tokens.slice(1)];
+    if (targetChainId === Networks.current.chainId) {
+      this.allTokens = [token, ...this.allTokens];
+      this.tokens = [this.tokens[0], token, ...this.tokens.slice(1)];
+    }
 
-    TokensMan.saveUserTokens(targetChainId, this.owner, this.allTokens);
+    TokensMan.saveUserTokens(targetChainId, this.owner, [
+      token,
+      ...(await TokensMan.loadUserTokens(targetChainId, this.owner)),
+    ]);
   }
 
   async fetchToken(address: string) {

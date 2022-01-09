@@ -263,13 +263,13 @@ PODS:
     - React-jsi (= 0.64.3)
     - React-perflogger (= 0.64.3)
   - React-jsinspector (0.64.3)
-  - react-native-nfc-manager (3.11.2):
+  - react-native-nfc-manager (3.11.4):
     - React
   - react-native-randombytes (3.6.1):
     - React-Core
   - react-native-safe-area-context (3.3.2):
     - React-Core
-  - react-native-webview (11.15.1):
+  - react-native-webview (11.16.0):
     - React-Core
   - React-perflogger (0.64.3)
   - React-RCTActionSheet (0.64.3):
@@ -645,10 +645,10 @@ SPEC CHECKSUMS:
   React-jsi: a8b09c29521c798f1783348b37b511ba7b3dbeb3
   React-jsiexecutor: df6abc9fafbecb8e5b7a5fbc5e6d4bd017d594d5
   React-jsinspector: 34e23860273a23695342f58eed3ffd3ba10c31e0
-  react-native-nfc-manager: f47786b7e0d959bf2a8a3633f78ba2a560024a17
+  react-native-nfc-manager: 8dac41f240201754932ad58388adeae02865effb
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
-  react-native-webview: ea4899a1056c782afa96dd082179a66cbebf5504
+  react-native-webview: 28a8636d97ee641f2ee8f20492d7a6c269c1d703
   React-perflogger: cc76a4254d19640f1d8ad1c66fdee800414b805c
   React-RCTActionSheet: 7448f049318d8d7e8a9a1ebb742ada721757eea8
   React-RCTAnimation: fb9b3fa1a4a9f5e6ab01b3368693ce69860ba76a
