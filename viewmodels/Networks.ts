@@ -67,7 +67,7 @@ class Networks {
           return {
             chainId: Number(c.id),
             color: c.customize?.color || '#7B68EE',
-            comm_id: '',
+            comm_id: c.symbol.toLowerCase(),
             explorer: c.explorer,
             symbol: c.symbol,
             defaultTokens: [],
@@ -107,17 +107,17 @@ class Networks {
 
     const nc = new Chain();
     nc.id = chain.chainId;
-    nc.name = chain.chainName;
+    nc.name = chain.chainName || 'EVM-Compatible';
     nc.explorer = chain.blockExplorerUrls?.[0] || '';
     nc.rpcUrls = chain.rpcUrls;
     nc.customize = { color: '#7B68EE' };
-    nc.symbol = chain.nativeCurrency.symbol;
+    nc.symbol = chain.nativeCurrency.symbol || 'ETH';
 
     this.userChains.push({
       chainId: Number(chain.chainId),
       color: nc.customize.color!,
       network: nc.name,
-      comm_id: '',
+      comm_id: nc.symbol.toLowerCase(),
       defaultTokens: [],
       explorer: nc.explorer,
       symbol: nc.symbol,

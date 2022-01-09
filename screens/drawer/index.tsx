@@ -140,8 +140,10 @@ const Drawer = observer((props: DrawerProps) => {
             PubSub.publish('openNetworksModal');
           }}
         >
-          {NetworkIcons[current.chainId]|| <EVMIcon color={current.color} />}
-          <Text style={{ marginStart: 8, fontSize: 16, color: current.color, fontWeight: '500' }}>{current.network}</Text>
+          {NetworkIcons[current.chainId] || <EVMIcon color={current.color} />}
+          <Text style={{ marginStart: 8, fontSize: 16, color: current.color, fontWeight: '500' }} numberOfLines={1}>
+            {current.network}
+          </Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}></View>
 
           <Feather name="chevron-right" size={16} color={current.color} style={{ marginBottom: -2 }} />
