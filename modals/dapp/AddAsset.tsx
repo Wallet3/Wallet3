@@ -8,6 +8,7 @@ import { borderColor } from '../../constants/styles';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 import styles from '../styles';
+import { utils } from 'ethers';
 
 interface Props extends InpageDAppAddAsset {
   themeColor: string;
@@ -50,7 +51,7 @@ export default ({ themeColor, approve, reject, asset }: Props) => {
         <View style={{ ...styles.reviewItem, borderBottomWidth: 0 }}>
           <Text style={styles.reviewItemTitle}>Address</Text>
           <Text style={{ ...styles.reviewItemValue, maxWidth: 200 }} numberOfLines={1}>
-            {formatAddress(asset.options.address, 7, 5)}
+            {formatAddress(utils.getAddress(asset.options.address), 7, 5)}
           </Text>
         </View>
       </View>

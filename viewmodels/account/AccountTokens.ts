@@ -113,7 +113,7 @@ export class AccountTokens {
     TokensMan.saveUserTokens(Networks.current.chainId, this.owner, tokens);
   }
 
-  addToken(token: UserToken) {
+  addToken(token: UserToken, targetChainId = Networks.current.chainId) {
     if (this.allTokens.find((t) => t.address === token.address)) return;
     if (this.tokens.find((t) => t.address === token.address)) return;
 
@@ -122,7 +122,7 @@ export class AccountTokens {
     this.allTokens = [token, ...this.allTokens];
     this.tokens = [this.tokens[0], token, ...this.tokens.slice(1)];
 
-    TokensMan.saveUserTokens(Networks.current.chainId, this.owner, this.allTokens);
+    TokensMan.saveUserTokens(targetChainId, this.owner, this.allTokens);
   }
 
   async fetchToken(address: string) {

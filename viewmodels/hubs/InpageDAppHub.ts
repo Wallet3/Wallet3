@@ -315,13 +315,36 @@ class InpageDAppHub extends EventEmitter {
   }
 
   private async wallet_watchAsset(origin: string, asset: WatchAssetParams) {
-    if (!asset) return { error: { message: 'Invalid request' } };
+    if (!asset || !asset.options || !asset.options.address) return { error: { message: 'Invalid request' } };
+    const dapp = await this.getDApp(origin);
 
     return new Promise((resolve) => {
-      const approve = () => {};
-      const reject = () => {};
+      const approve = () => {
+        const account = App.allAccounts.find((a) => a.address === dapp?.lastUsedAccount) ?? App.currentWallet?.currentAccount;
 
-      PubSub.publish('openAddAsset', { asset, approve, reject } as InpageDAppAddAsset);
+        account?.tokens.addToken(
+          {
+            address: utils.getAddress(asset.options.address),
+            decimals: asset.options.decimals,
+            symbol: asset.options.symbol,
+            iconUrl: asset.options.image,
+            shown: true,
+          },
+          Number(dapp?.lastUsedChainId || 0)
+        );
+
+        resolve(null);
+      };
+
+      const reject = () => {
+        resolve(null);
+      };
+
+      PubSub.publish('openAddAsset', {
+        asset,
+        approve,
+        reject,
+      } as InpageDAppAddAsset);
     });
   }
 }

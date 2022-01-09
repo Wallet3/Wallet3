@@ -2,7 +2,6 @@ export interface IToken {
   address: string;
   decimals: number;
   symbol: string;
-  minGas?: number;
   price?: number;
   balance?: BigNumberish;
   iconUrl?: string;
@@ -214,7 +213,6 @@ export const LDO = {
   address: '0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32',
   decimals: 18,
   symbol: 'LDO',
-  minGas: 150_000,
 };
 
 export const RAI = {
@@ -627,8 +625,8 @@ const Boba_DAI = {
 export const BobaPopularTokens = [Boba_DAI, Boba_USDC, Boba_USDT];
 
 const Aurora_DAI = {
-  address: ''
-}
+  address: '',
+};
 
 const zkSyncTest_USDC = {
   address: '0xeb8f08a975Ab53E34D8a0330E0D34de942C95926',

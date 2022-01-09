@@ -20,7 +20,6 @@ export class ERC20Token {
   decimals = -1;
   price = 0;
   balance = BigNumber.from(0);
-  minGas?: number;
   iconUrl?: string;
   shown?: boolean;
   order?: number;
@@ -44,7 +43,6 @@ export class ERC20Token {
     symbol?: string;
     decimals?: number;
     price?: number;
-    minGas?: number;
     iconUrl?: string;
     shown?: boolean;
     order?: number;
@@ -57,7 +55,6 @@ export class ERC20Token {
     this.name = props.name || '';
     this.decimals = props.decimals || -1;
     this.price = props.price || 0;
-    this.minGas = props.minGas;
     this.iconUrl = props.iconUrl;
     this.owner = props.owner || '';
     this.shown = props.shown;
