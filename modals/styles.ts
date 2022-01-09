@@ -41,7 +41,7 @@ export default StyleSheet.create({
     borderWidth: 1,
     borderColor,
     borderRadius: 10,
-    marginTop: 12,
+    marginTop: 10,
   },
 
   reviewItem: {

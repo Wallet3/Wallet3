@@ -2,6 +2,7 @@ import * as Linking from 'expo-linking';
 
 import {
   ConnectInpageDApp,
+  InpageDAppAddAsset,
   InpageDAppAddEthereumChain,
   InpageDAppSignRequest,
   InpageDAppTxRequest,
@@ -15,6 +16,7 @@ import { Authentication } from '../viewmodels/Authentication';
 import { Dimensions } from 'react-native';
 import { FullPasspad } from '../modals/views/Passpad';
 import InpageConnectDApp from '../modals/InpageConnectDApp';
+import InpageDAppAddAssetModal from '../modals/InpageDAppAddAsset';
 import InpageDAppAddChain from '../modals/InpageDAppAddChain';
 import InpageDAppSendTx from '../modals/InpageDAppTxRequest';
 import InpageDAppSign from '../modals/InpageDAppSign';
@@ -170,6 +172,7 @@ const InpageDAppRequests = () => {
   const [signRequest, setSignRequest] = useState<InpageDAppSignRequest>();
   const [txRequest, setTxRequest] = useState<InpageDAppTxRequest>();
   const [addChain, setAddChain] = useState<InpageDAppAddEthereumChain>();
+  const [addAsset, setAddAsset] = useState<InpageDAppAddAsset>();
   const [type, setType] = useState('');
 
   useEffect(() => {
@@ -190,6 +193,12 @@ const InpageDAppRequests = () => {
       setType('addChain');
       open();
     });
+
+    PubSub.subscribe('openAddAsset', (_, data: InpageDAppAddAsset) => {
+      setAddAsset(data);
+      setType('addAsset');
+      open();
+    });
   }, []);
 
   return (
@@ -208,6 +217,7 @@ const InpageDAppRequests = () => {
       {type === 'sign' ? <InpageDAppSign {...signRequest!} close={close} /> : undefined}
       {type === 'sendTx' ? <InpageDAppSendTx {...txRequest!} close={close} /> : undefined}
       {type === 'addChain' ? <InpageDAppAddChain {...addChain!} close={close} /> : undefined}
+      {type === 'addAsset' ? <InpageDAppAddAssetModal {...addAsset!} close={close} /> : undefined}
     </Modalize>
   );
 };

@@ -65,6 +65,12 @@ export interface InpageDAppAddEthereumChain {
   chain: AddEthereumChainParameter;
 }
 
+export interface InpageDAppAddAsset {
+  approve: () => void;
+  reject: () => void;
+  asset: WatchAssetParams;
+}
+
 class InpageDAppHub extends EventEmitter {
   apps = new Map<string, InpageDApp>();
 
@@ -308,7 +314,16 @@ class InpageDAppHub extends EventEmitter {
     });
   }
 
-  private async wallet_watchAsset(origin: string, params: WatchAssetParams) {}
+  private async wallet_watchAsset(origin: string, asset: WatchAssetParams) {
+    if (!asset) return { error: { message: 'Invalid request' } };
+
+    return new Promise((resolve) => {
+      const approve = () => {};
+      const reject = () => {};
+
+      PubSub.publish('openAddAsset', { asset, approve, reject } as InpageDAppAddAsset);
+    });
+  }
 }
 
 export default new InpageDAppHub();

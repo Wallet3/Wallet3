@@ -5,6 +5,8 @@ export default `
  */
 class InpageBridge {
   _onMessage(data) {
+    if (!data) return;
+    
     try {
       const { payload, type } = JSON.parse(data);
       switch (type) {
@@ -18,6 +20,7 @@ class InpageBridge {
       }
     } catch (error) {
       console.error(error); // eslint-disable-line no-console
+      // alert(JSON.stringify(data)+error.message, error); // eslint-disable-line no-alert
     }
   }
 
@@ -428,7 +431,7 @@ if (window.location.protocol === 'http:' || window.location.protocol === 'https:
     }
   );
 
-  window.postMessage({ type: 'ETHEREUM_PROVIDER_SUCCESS' }, '*');
+  // window.postMessage({ type: 'ETHEREUM_PROVIDER_SUCCESS' }, '*');
 }
 
 /* globals Web3 */
