@@ -51,9 +51,9 @@ export class AppVM {
 
     await Promise.all([Database.init(), Authentication.init()]);
 
-    const wallets = await Promise.all((await Database.keyRepository.find()).map((key) => new Wallet(key).init()));
+    const wallets = await Promise.all((await Database.keys.find()).map((key) => new Wallet(key).init()));
 
-    await Promise.all([TxHub.init()]);
+    await Promise.all([TxHub.init(), Networks.init()]);
 
     Authentication.once('appAuthorized', () => {
       WalletConnectV1ClientHub.init();

@@ -48,7 +48,7 @@ class WalletConnectV1ClientHub extends EventEmitter {
     });
 
     // Restore sessions
-    const sessions = await Database.wcSessionV1Repository.find();
+    const sessions = await Database.wcV1Sessions.find();
     runInAction(() => {
       this.clients = sessions.map((sessionStore) =>
         new WalletConnect_v1().connectSession(sessionStore.session).setStore(sessionStore)

@@ -1,5 +1,6 @@
 import { Connection, Repository, createConnection } from 'typeorm';
 
+import Chain from './Chain';
 import InpageDApp from './InpageDApp';
 import Key from './Key';
 import Transaction from './Transaction';
@@ -8,10 +9,11 @@ import WCSession_v1 from './WCSession_v1';
 class Database {
   private _connection!: Connection;
 
-  keyRepository!: Repository<Key>;
-  txRepository!: Repository<Transaction>;
-  wcSessionV1Repository!: Repository<WCSession_v1>;
+  keys!: Repository<Key>;
+  txs!: Repository<Transaction>;
+  wcV1Sessions!: Repository<WCSession_v1>;
   inpageDApps!: Repository<InpageDApp>;
+  chains!: Repository<Chain>;
 
   async init() {
     if (this._connection) return;
@@ -21,17 +23,24 @@ class Database {
       database: __DEV__ ? 'dev2' : 'appdata',
       driver: require('expo-sqlite'),
       synchronize: true,
-      entities: [Key, Transaction, WCSession_v1, InpageDApp],
+      entities: [Key, Transaction, WCSession_v1, InpageDApp, Chain],
     });
 
-    this.keyRepository = this._connection.getRepository(Key);
-    this.txRepository = this._connection.getRepository(Transaction);
-    this.wcSessionV1Repository = this._connection.getRepository(WCSession_v1);
+    this.keys = this._connection.getRepository(Key);
+    this.txs = this._connection.getRepository(Transaction);
+    this.wcV1Sessions = this._connection.getRepository(WCSession_v1);
     this.inpageDApps = this._connection.getRepository(InpageDApp);
+    this.chains = this._connection.getRepository(Chain);
   }
 
   async reset() {
-    await Promise.all([this.keyRepository.clear(), this.txRepository.clear(), this.wcSessionV1Repository.clear()]);
+    await Promise.all([
+      this.keys.clear(),
+      this.txs.clear(),
+      this.wcV1Sessions.clear(),
+      this.inpageDApps.clear(),
+      this.chains.clear(),
+    ]);
   }
 }
 

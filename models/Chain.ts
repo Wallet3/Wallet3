@@ -19,4 +19,10 @@ export default class Chain extends BaseEntity {
 
   @Column()
   explorer!: string;
+
+  @Column({ nullable: true })
+  iconUrl?: string;
+
+  @Column({ nullable: true, type: 'simple-json' })
+  customize?: { color?: string };
 }

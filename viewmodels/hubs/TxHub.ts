@@ -19,7 +19,7 @@ class TxHub {
   }
 
   get repository() {
-    return Database.txRepository;
+    return Database.txs;
   }
 
   get pendingCount() {

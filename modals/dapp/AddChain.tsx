@@ -47,17 +47,17 @@ export default ({ themeColor, chain, approve, reject }: Props) => {
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Image source={{ uri: chain.iconUrls?.[0] }} style={{ width: 19, height: 19, marginEnd: 4 }} />
             <Text style={{ ...styles.reviewItemValue, maxWidth: 180 }} numberOfLines={1}>
-              {chain.nativeCurrency.symbol}
+              {chain.nativeCurrency?.symbol}
             </Text>
           </View>
         </View>
 
         <View style={styles.reviewItem}>
-          <Text style={styles.reviewItemTitle}>RPC</Text>
+          <Text style={styles.reviewItemTitle}>RPC Url</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Image source={{ uri: chain.iconUrls?.[0] }} style={{ width: 19, height: 19, marginEnd: 4 }} />
             <Text style={{ ...styles.reviewItemValue, maxWidth: 180 }} numberOfLines={1}>
-              {chain.rpcUrls?.[0]}
+              {chain.rpcUrls?.[0] || chain.rpcUrls?.toString()}
             </Text>
           </View>
         </View>

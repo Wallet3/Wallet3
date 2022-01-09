@@ -4,11 +4,13 @@ import { INetwork, PublicNetworks } from '../common/Networks';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Database from '../models/Database';
 import providers from '../configs/providers.json';
 
 class Networks {
   current: INetwork = PublicNetworks[0];
   cache = new Map<number, ethers.providers.JsonRpcProvider | ethers.providers.WebSocketProvider>();
+  userChains: INetwork[] = [];
 
   get Ethereum() {
     return PublicNetworks[0];
@@ -31,7 +33,25 @@ class Networks {
   }
 
   constructor() {
-    makeObservable(this, { current: observable, switch: action, reset: action });
+    makeObservable(this, { current: observable, switch: action, reset: action, userChains: observable });
+  }
+
+  async init() {
+    const chains = await Database.chains.find();
+
+    runInAction(() => {
+      this.userChains = chains.map<INetwork>((c) => {
+        return {
+          chainId: Number(c.id),
+          color: '#7B68EE',
+          comm_id: '',
+          explorer: c.explorer,
+          symbol: c.symbol,
+          defaultTokens: [],
+          network: c.name,
+        };
+      });
+    });
 
     AsyncStorage.getItem('network').then((chainId) => {
       const chain = Number(chainId || 1);

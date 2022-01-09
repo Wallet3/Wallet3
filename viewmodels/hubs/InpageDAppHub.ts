@@ -275,13 +275,19 @@ class InpageDAppHub extends EventEmitter {
     });
   }
 
-  private async wallet_addEthereumChain(_: string, params: AddEthereumChainParameter[]) {
-    if (Networks.has(params[0].chainId)) return null;
+  private async wallet_addEthereumChain(origin: string, params: AddEthereumChainParameter[]) {
     if (!params || !params.length) return { error: { message: 'Invalid request' } };
+
+    const chain = params[0];
+    if (Networks.has(chain?.chainId)) return null;
+
+    if (!Array.isArray(chain.rpcUrls) || !Array.isArray(chain.blockExplorerUrls) || !chain.nativeCurrency)
+      return { error: { message: 'Invalid request' } };
 
     return new Promise((resolve) => {
       const approve = () => {
         resolve(null);
+        this.wallet_switchEthereumChain(origin, [{ chainId: params[0].chainId }]);
       };
 
       const reject = () => {

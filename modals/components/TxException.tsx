@@ -16,6 +16,7 @@ export default ({ exception }: { exception: string }) => {
         borderRadius: 10,
         marginTop: 12,
         backgroundColor: 'crimson',
+        minHeight: 17,
       }}
     >
       <Ionicons name="alert-circle" color="white" size={16} style={{ marginBottom: -1 }} />
