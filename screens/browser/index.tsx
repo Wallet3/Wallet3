@@ -127,7 +127,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
     try {
       if (url === uri) {
         refresh();
-        return;
+        return url;
       }
 
       setPageMetadata(undefined);
@@ -138,6 +138,8 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
     } finally {
       addrRef.current?.blur();
     }
+
+    return url;
   };
 
   const onAddrSubmit = async () => {
@@ -151,7 +153,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
       return;
     }
 
-    goTo(addr);
+    Bookmarks.submitHistory(goTo(addr));
   };
 
   const onNavigationStateChange = (event: WebViewNavigation) => {
@@ -159,7 +161,6 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
     setCanGoForward(event.canGoForward);
 
     if (!event.url) return;
-    if (!event.loading) Bookmarks.submitHistory(event.url);
 
     setWebUrl(event.url);
     const hn = Linking.parse(event.url).hostname!;

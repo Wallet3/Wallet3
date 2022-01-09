@@ -230,8 +230,8 @@ class InpageDAppHub extends EventEmitter {
 
         const hash = await wallet.sendTx({
           txHex,
-          readableInfo: { dapp: pageMetadata?.title ?? '', type: 'dapp-interaction' },
           tx,
+          readableInfo: { dapp: pageMetadata?.title ?? '', type: 'dapp-interaction', icon: pageMetadata?.icon },
         });
 
         resolve(hash);
