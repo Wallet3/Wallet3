@@ -153,6 +153,7 @@ class InpageDAppHub extends EventEmitter {
     if (!dapp) return null;
 
     const targetChainId = params[0].chainId;
+    if (Number(dapp.lastUsedChainId) === Number(targetChainId)) return null;
     if (!Networks.has(targetChainId)) return { error: { code: 4092, message: 'the chain has not been added to Wallet 3' } };
 
     dapp.lastUsedChainId = targetChainId;
