@@ -266,7 +266,6 @@ class InpageDAppHub extends EventEmitter {
     if (!params || !params.length) return { error: { message: 'Invalid request' } };
 
     const chain = params[0];
-    if (Networks.has(chain?.chainId)) return null;
 
     if (!Array.isArray(chain.rpcUrls) || !Array.isArray(chain.blockExplorerUrls) || !chain.nativeCurrency)
       return { error: { message: 'Invalid request' } };

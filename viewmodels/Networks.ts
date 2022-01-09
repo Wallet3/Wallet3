@@ -52,7 +52,6 @@ class Networks {
       switch: action,
       reset: action,
       userChains: observable,
-      add: action,
       all: computed,
     });
   }
@@ -102,25 +101,26 @@ class Networks {
     this.switch(this.Ethereum);
   }
 
-  add(chain: AddEthereumChainParameter) {
-    if (this.has(chain.chainId)) return;
+  async add(chain: AddEthereumChainParameter) {
+    const nc = (await Database.chains.findOne({ where: { id: chain.chainId } })) || new Chain();
 
-    const nc = new Chain();
     nc.id = chain.chainId;
     nc.name = chain.chainName || 'EVM-Compatible';
     nc.explorer = chain.blockExplorerUrls?.[0] || '';
     nc.rpcUrls = chain.rpcUrls;
-    nc.customize = { color: '#7B68EE' };
+    nc.customize = nc.customize ?? { color: '#7B68EE' };
     nc.symbol = chain.nativeCurrency.symbol || 'ETH';
 
-    this.userChains.push({
-      chainId: Number(chain.chainId),
-      color: nc.customize.color!,
-      network: nc.name,
-      comm_id: nc.symbol.toLowerCase(),
-      defaultTokens: [],
-      explorer: nc.explorer,
-      symbol: nc.symbol,
+    runInAction(() => {
+      this.userChains.push({
+        chainId: Number(chain.chainId),
+        color: nc.customize!.color!,
+        network: nc.name,
+        comm_id: nc.symbol.toLowerCase(),
+        defaultTokens: [],
+        explorer: nc.explorer,
+        symbol: nc.symbol,
+      });
     });
 
     return nc.save();
