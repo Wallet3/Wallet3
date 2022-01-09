@@ -10,7 +10,9 @@ import InpageDApp from '../../models/InpageDApp';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import { WCCallRequest_eth_sendTransaction } from '../../models/WCSession_v1';
 import { hashPersonalMessage } from 'ethereumjs-util';
+import i18n from '../../i18n';
 import { rawCall } from '../../common/RPC';
+import { showMessage } from 'react-native-flash-message';
 
 interface Payload {
   id?: string;
@@ -21,6 +23,16 @@ interface Payload {
   hostname?: string;
 
   pageMetadata?: { icon: string; title: string; desc?: string };
+}
+
+interface WatchAssetParams {
+  type: 'ERC20'; // In the future, other standards will be supported
+  options: {
+    address: string; // The address of the token contract
+    symbol: string; // A ticker symbol or shorthand, up to 5 characters
+    decimals: number; // The number of token decimals
+    image: string; // A string url of the token logo
+  };
 }
 
 export interface ConnectInpageDApp extends Payload {
@@ -93,6 +105,9 @@ class InpageDAppHub extends EventEmitter {
       case 'wallet_addEthereumChain':
         response = await this.wallet_addEthereumChain(origin, params);
         break;
+      case 'wallet_watchAsset':
+        response = await this.wallet_watchAsset(origin, params);
+        break;
       case 'eth_getEncryptionPublicKey':
       case 'eth_decrypt':
         break;
@@ -111,7 +126,7 @@ class InpageDAppHub extends EventEmitter {
     //   // JSON.stringify(params || {}).substring(0, 200),
     //   JSON.stringify(response || null).substring(0, 64)
     // );
-    // console.log(payload);
+    console.log(payload);
 
     // if (response === null) console.log('null resp', hostname, this.apps.has(hostname ?? ''), origin);
 
@@ -157,6 +172,7 @@ class InpageDAppHub extends EventEmitter {
     if (!Networks.has(targetChainId)) return { error: { code: 4092, message: 'the chain has not been added to Wallet 3' } };
 
     dapp.lastUsedChainId = targetChainId;
+    dapp.save();
 
     this.emit('appStateUpdated', {
       type: 'STATE_UPDATE',
@@ -277,6 +293,7 @@ class InpageDAppHub extends EventEmitter {
 
         resolve(null);
         this.wallet_switchEthereumChain(origin, [{ chainId: params[0].chainId }]);
+        showMessage({ message: i18n.t('msg-chain-added', { name: chain.chainName }), type: 'success' });
       };
 
       const reject = () => {
@@ -290,6 +307,8 @@ class InpageDAppHub extends EventEmitter {
       } as InpageDAppAddEthereumChain);
     });
   }
+
+  private async wallet_watchAsset(origin: string, params: WatchAssetParams) {}
 }
 
 export default new InpageDAppHub();

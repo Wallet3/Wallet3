@@ -141,6 +141,7 @@
   "tip-copy-link": "Copy Link",
   "msg-invalid-address": "Invalid address",
   "msg-invalid-qr-code": "Invalid QR code",
+  "msg-chain-added": "{{name}} network added",
   "button-next": "Next",
   "button-save": "Save",
   "button-done": "Done",
