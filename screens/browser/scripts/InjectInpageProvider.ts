@@ -73,7 +73,7 @@ class InpageBridge {
 
     return new Promise((resolve, reject) => {
       try {
-        this.sendAsync({ method, params, beta: true, jsonrpc: '2.0', id: Date.now() *  Math.floor(Math.random() * 100 + 1) }, (error, response) => {
+        this.sendAsync({ method, params }, (error, response) => {
           error = error || response.error;
           error ? reject(error) : resolve(response);
         });
@@ -226,6 +226,7 @@ class InpageBridge {
    * @returns - Standard Promise or legacy object containing RPC result
    */
   send(action, meta) {
+    // alert('send'+JSON.stringify(action)+' '+JSON.stringify(meta));
     if (typeof action === 'string') {
       return this._sendStandard(action, meta);
     }
@@ -274,6 +275,7 @@ class InpageBridge {
       };
     } else if (!Array.isArray(payload)) {
       payload = {
+        params: [],
         ...payload,
         __mmID: Date.now() * random,
         hostname: window.location.hostname,
