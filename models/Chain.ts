@@ -1,9 +1,12 @@
 import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity({ name: 'chains' })
-export default class Transaction extends BaseEntity {
+export default class Chain extends BaseEntity {
   @PrimaryColumn()
   id!: string;
+
+  @Column()
+  name!: string;
 
   @Column()
   symbol!: string;

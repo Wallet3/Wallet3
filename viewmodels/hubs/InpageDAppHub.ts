@@ -23,6 +23,19 @@ interface Payload {
   pageMetadata?: { icon: string; title: string; desc?: string };
 }
 
+interface AddEthereumChainParameter {
+  chainId: string; // A 0x-prefixed hexadecimal string
+  chainName: string;
+  nativeCurrency: {
+    name: string;
+    symbol: string; // 2-6 characters long
+    decimals: 18;
+  };
+  rpcUrls: string[];
+  blockExplorerUrls?: string[];
+  iconUrls?: string[]; // Currently ignored.
+}
+
 export interface ConnectInpageDApp extends Payload {
   origin: string;
   approve: () => void;
@@ -45,6 +58,12 @@ export interface InpageDAppTxRequest {
   app: { name: string; icon: string };
   approve: (obj: { pin?: string; tx: providers.TransactionRequest }) => Promise<boolean>;
   reject: () => void;
+}
+
+export interface InpageDAppAddEthereumChain {
+  approve: () => void;
+  reject: () => void;
+  chain: AddEthereumChainParameter;
 }
 
 class InpageDAppHub extends EventEmitter {
@@ -84,7 +103,11 @@ class InpageDAppHub extends EventEmitter {
       case 'eth_sendTransaction':
         response = await this.eth_sendTransaction(origin, payload);
         break;
+      case 'wallet_addEthereumChain':
+        response = await this.wallet_addEthereumChain(origin, params);
+        break;
       case 'eth_getEncryptionPublicKey':
+      case 'eth_decrypt':
         break;
       default:
         const dapp = await this.getDApp(origin);
@@ -249,6 +272,27 @@ class InpageDAppHub extends EventEmitter {
         account: dapp.lastUsedAccount,
         app: { name: pageMetadata!.title, icon: pageMetadata!.icon },
       } as InpageDAppTxRequest);
+    });
+  }
+
+  private async wallet_addEthereumChain(_: string, params: AddEthereumChainParameter[]) {
+    if (Networks.has(params[0].chainId)) return null;
+    if (!params || !params.length) return { error: { message: 'Invalid request' } };
+
+    return new Promise((resolve) => {
+      const approve = () => {
+        resolve(null);
+      };
+
+      const reject = () => {
+        resolve({ error: { code: 1, message: 'User rejected' } });
+      };
+
+      PubSub.publish('openAddEthereumChain', {
+        approve,
+        reject,
+        chain: params[0],
+      } as InpageDAppAddEthereumChain);
     });
   }
 }
