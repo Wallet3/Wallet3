@@ -20,7 +20,6 @@ interface Props {
 
 export default observer(({ client, request, close }: Props) => {
   const [vm] = useState(new TransactionRequest({ client, request }));
-  const [type] = useState(parseRequestType(request.params[0]?.data).type);
   const [verified, setVerified] = useState(false);
 
   useEffect(() => {
@@ -64,7 +63,7 @@ export default observer(({ client, request, close }: Props) => {
   };
 
   return (
-    <SafeAreaProvider style={{ ...styles.safeArea, height: type !== 'Contract Interaction' ? 500 : 439 }}>
+    <SafeAreaProvider style={{ ...styles.safeArea, height: 500 }}>
       {verified ? (
         <Success />
       ) : (

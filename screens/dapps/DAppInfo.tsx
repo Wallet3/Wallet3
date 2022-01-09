@@ -5,7 +5,6 @@ import { Account } from '../../viewmodels/account/Account';
 import { Entypo } from '@expo/vector-icons';
 import Image from 'react-native-expo-cached-image';
 import Networks from '../../viewmodels/Networks';
-import { PublicNetworks } from '../../common/Networks';
 import React from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { WalletConnect_v1 } from '../../viewmodels/walletconnect/WalletConnect_v1';
@@ -28,7 +27,7 @@ export default ({ client, accounts, onDisconnect, onNetworkPress, onAccountsPres
   const { t } = i18n;
 
   const defaultAccount = accounts.find((a) => a.address === client.accounts[0]);
-  const defaultNetwork = client.findTargetNetwork({ networks: PublicNetworks, defaultNetwork: Networks.current });
+  const defaultNetwork = client.findTargetNetwork({ networks: Networks.all, defaultNetwork: Networks.current });
 
   return (
     <SafeViewContainer>
@@ -97,7 +96,7 @@ export default ({ client, accounts, onDisconnect, onNetworkPress, onAccountsPres
           >
             {enabledChains.map((c) =>
               generateNetworkIcon({
-                color: PublicNetworks.find((n) => n.chainId === c)?.color,
+                color: Networks.all.find((n) => n.chainId === c)?.color,
                 chainId: c,
                 width: 15,
                 height: 15,

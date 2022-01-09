@@ -27,6 +27,7 @@ export interface INetwork {
   showOverview?: boolean;
   blockTimeMs?: number;
   explorer: string;
+  rpcUrls?: string[];
 }
 
 export const PublicNetworks: INetwork[] = [

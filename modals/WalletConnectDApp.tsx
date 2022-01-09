@@ -8,7 +8,7 @@ import DApp from './dapp/DApp';
 import { Ionicons } from '@expo/vector-icons';
 import Loading from './views/Loading';
 import NetworkSelector from './dapp/NetworkSelector';
-import { PublicNetworks } from '../common/Networks';
+import Networks from '../viewmodels/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
 import WalletConnectV1ClientHub from '../viewmodels/walletconnect/WalletConnectV1ClientHub';
@@ -65,7 +65,7 @@ const ConnectDApp = observer(({ client, close }: { client: WalletConnect_v1; clo
       />
 
       {panel === 1 ? (
-        <NetworkSelector networks={PublicNetworks} selectedChains={client.enabledChains} onDone={selectNetworks} />
+        <NetworkSelector networks={Networks.all} selectedChains={client.enabledChains} onDone={selectNetworks} />
       ) : undefined}
 
       {panel === 2 ? (

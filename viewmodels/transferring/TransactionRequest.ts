@@ -1,12 +1,6 @@
-import { BigNumber, constants, ethers, providers, utils } from 'ethers';
-import { INetwork, PublicNetworks } from '../../common/Networks';
-import { WCCallRequestRequest, WCCallRequest_eth_sendTransaction, WCClientMeta } from '../../models/WCSession_v1';
-import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { WCCallRequestRequest, WCCallRequest_eth_sendTransaction } from '../../models/WCSession_v1';
 
 import App from '../App';
-import { BaseTransaction } from './BaseTransaction';
-import { ERC20Token } from '../../models/ERC20';
-import { Gwei_1 } from '../../common/Constants';
 import Networks from '../Networks';
 import { RawTransactionRequest } from './RawTransactionRequest';
 import { WalletConnect_v1 } from '../walletconnect/WalletConnect_v1';
@@ -43,7 +37,7 @@ export class TransactionRequest extends RawTransactionRequest {
       ? currentAccount!
       : App.allAccounts.find((a) => a.address === client.accounts[0]) ?? App.allAccounts[0];
 
-    const network = client.findTargetNetwork({ networks: PublicNetworks, requestChainId, defaultNetwork: Networks.current });
+    const network = client.findTargetNetwork({ networks: Networks.all, requestChainId, defaultNetwork: Networks.current });
 
     super({ network, account, param });
 

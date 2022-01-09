@@ -1,9 +1,20 @@
 import { BigNumber } from 'ethers';
+import Networks from '../viewmodels/Networks';
 import Providers from '../configs/providers.json';
 import { post } from '../utils/fetch';
 
+const cache = new Map<string | number, string[]>();
+
 function getUrls(chainId: number | string): string[] {
-  return Providers[`${Number(chainId)}`].filter((p) => p.startsWith('http'));
+  if (cache.has(chainId)) return cache.get(chainId) || [];
+
+  let urls: string[] =
+    Providers[`${Number(chainId)}`]?.filter((p) => p.startsWith('http')) ?? (Networks.find(chainId)?.rpcUrls || []);
+
+  if (urls.length === 0) return [];
+
+  cache.set(chainId, urls);
+  return urls;
 }
 
 export async function getBalance(chainId: number, address: string): Promise<BigNumber> {

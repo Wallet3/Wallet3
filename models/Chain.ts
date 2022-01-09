@@ -11,9 +11,6 @@ export default class Chain extends BaseEntity {
   @Column()
   symbol!: string;
 
-  @Column()
-  color!: string;
-
   @Column({ type: 'simple-json' })
   rpcUrls!: string[];
 

@@ -1,5 +1,4 @@
 import { BigNumber, constants, ethers, providers, utils } from 'ethers';
-import { INetwork, PublicNetworks } from '../../common/Networks';
 import { WCCallRequestRequest, WCCallRequest_eth_sendTransaction, WCClientMeta } from '../../models/WCSession_v1';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
@@ -8,6 +7,7 @@ import App from '../App';
 import { BaseTransaction } from './BaseTransaction';
 import { ERC20Token } from '../../models/ERC20';
 import { Gwei_1 } from '../../common/Constants';
+import { INetwork } from '../../common/Networks';
 import Networks from '../Networks';
 import { WalletConnect_v1 } from '../walletconnect/WalletConnect_v1';
 

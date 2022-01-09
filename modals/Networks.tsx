@@ -1,9 +1,9 @@
 import { EVMIcon, NetworkIcons } from '../assets/icons/networks/color';
 import { FlatList, ListRenderItemInfo, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { INetwork, PublicNetworks } from '../common/Networks';
 import { SafeViewContainer, Separator } from '../components';
 
 import { Feather } from '@expo/vector-icons';
+import { INetwork } from '../common/Networks';
 import Networks from '../viewmodels/Networks';
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -36,7 +36,9 @@ export default observer((props: Props) => {
           {NetworkIcons[item.chainId] || <EVMIcon title={item.network} color={item.color} />}
         </View>
 
-        <Text style={{ fontSize: 16, marginStart: 12, fontWeight: '500', color: item.color }}>{item.network}</Text>
+        <Text style={{ fontSize: 16, marginStart: 12, fontWeight: '500', color: item.color, maxWidth: 300 }} numberOfLines={1}>
+          {item.network}
+        </Text>
 
         <View style={{ flex: 1 }} />
 
@@ -56,7 +58,7 @@ export default observer((props: Props) => {
         <Separator style={{ marginVertical: 4 }} />
         <FlatList
           keyExtractor={(i) => i.network}
-          data={PublicNetworks}
+          data={Networks.all}
           renderItem={renderItem}
           contentContainerStyle={{ paddingBottom: 36 }}
           style={{ marginHorizontal: -16, paddingHorizontal: 16, marginTop: -4, marginBottom: -36 }}

@@ -1,11 +1,25 @@
 import * as ethers from 'ethers';
 
 import { INetwork, PublicNetworks } from '../common/Networks';
-import { action, makeObservable, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Chain from '../models/Chain';
 import Database from '../models/Database';
 import providers from '../configs/providers.json';
+
+export interface AddEthereumChainParameter {
+  chainId: string; // A 0x-prefixed hexadecimal string
+  chainName: string;
+  nativeCurrency: {
+    name: string;
+    symbol: string; // 2-6 characters long
+    decimals: 18;
+  };
+  rpcUrls: string[];
+  blockExplorerUrls?: string[];
+  iconUrls?: string[]; // Currently ignored.
+}
 
 class Networks {
   current: INetwork = PublicNetworks[0];
@@ -29,33 +43,43 @@ class Networks {
   }
 
   get all() {
-    return PublicNetworks;
+    return PublicNetworks.concat(this.userChains);
   }
 
   constructor() {
-    makeObservable(this, { current: observable, switch: action, reset: action, userChains: observable });
+    makeObservable(this, {
+      current: observable,
+      switch: action,
+      reset: action,
+      userChains: observable,
+      add: action,
+      all: computed,
+    });
   }
 
   async init() {
     const chains = await Database.chains.find();
 
     runInAction(() => {
-      this.userChains = chains.map<INetwork>((c) => {
-        return {
-          chainId: Number(c.id),
-          color: '#7B68EE',
-          comm_id: '',
-          explorer: c.explorer,
-          symbol: c.symbol,
-          defaultTokens: [],
-          network: c.name,
-        };
-      });
+      this.userChains = chains
+        .filter((c) => !PublicNetworks.find((n) => n.chainId === Number(c.id)))
+        .map<INetwork>((c) => {
+          return {
+            chainId: Number(c.id),
+            color: c.customize?.color || '#7B68EE',
+            comm_id: '',
+            explorer: c.explorer,
+            symbol: c.symbol,
+            defaultTokens: [],
+            network: c.name,
+            rpcUrls: c.rpcUrls,
+          };
+        });
     });
 
     AsyncStorage.getItem('network').then((chainId) => {
       const chain = Number(chainId || 1);
-      runInAction(() => (this.current = PublicNetworks.find((n) => n.chainId === chain) || PublicNetworks[0]));
+      runInAction(() => (this.current = this.all.find((n) => n.chainId === chain) || PublicNetworks[0]));
     });
   }
 
@@ -67,15 +91,39 @@ class Networks {
   }
 
   has(chainId: number | string) {
-    return PublicNetworks.some((n) => n.chainId === Number(chainId));
+    return this.all.some((n) => n.chainId === Number(chainId));
   }
 
   find(chainId: number | string) {
-    return PublicNetworks.find((n) => n.chainId === Number(chainId));
+    return this.all.find((n) => n.chainId === Number(chainId));
   }
 
   reset() {
     this.switch(this.Ethereum);
+  }
+
+  add(chain: AddEthereumChainParameter) {
+    if (this.has(chain.chainId)) return;
+
+    const nc = new Chain();
+    nc.id = chain.chainId;
+    nc.name = chain.chainName;
+    nc.explorer = chain.blockExplorerUrls?.[0] || '';
+    nc.rpcUrls = chain.rpcUrls;
+    nc.customize = { color: '#7B68EE' };
+    nc.symbol = chain.nativeCurrency.symbol;
+
+    this.userChains.push({
+      chainId: Number(chain.chainId),
+      color: nc.customize.color!,
+      network: nc.name,
+      comm_id: '',
+      defaultTokens: [],
+      explorer: nc.explorer,
+      symbol: nc.symbol,
+    });
+
+    return nc.save();
   }
 
   get currentProvider() {

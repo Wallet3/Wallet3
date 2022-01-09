@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import App from '../viewmodels/App';
 import Networks from '../viewmodels/Networks';
-import { PublicNetworks } from '../common/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Sign from './compositions/Sign';
 import Success from './views/Success';
@@ -26,7 +25,7 @@ export default observer(({ request, client, close, biometricEnabled }: Props) =>
   const [type, setType] = useState('');
   const [verified, setVerified] = useState(false);
 
-  const themeColor = client.findTargetNetwork({ networks: PublicNetworks, defaultNetwork: Networks.current }).color;
+  const themeColor = client.findTargetNetwork({ networks: Networks.all, defaultNetwork: Networks.current }).color;
 
   useEffect(() => {
     const { params, method } = request;

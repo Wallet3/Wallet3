@@ -13,7 +13,6 @@ import { Modalize } from 'react-native-modalize';
 import NetworkSelector from '../../modals/dapp/NetworkSelector';
 import Networks from '../../viewmodels/Networks';
 import { Portal } from 'react-native-portalize';
-import { PublicNetworks } from '../../common/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
 import Swiper from 'react-native-swiper';
@@ -79,7 +78,7 @@ const DApp = observer(
           />
 
           {panel === 1 ? (
-            <NetworkSelector networks={PublicNetworks} selectedChains={client.enabledChains} onDone={selectNetworks} />
+            <NetworkSelector networks={Networks.all} selectedChains={client.enabledChains} onDone={selectNetworks} />
           ) : undefined}
 
           {panel === 2 ? (
@@ -119,7 +118,7 @@ const DAppItem = observer(({ item, openApp }: { item: WalletConnect_v1; openApp:
             >
               {item.enabledChains.map((c) =>
                 generateNetworkIcon({
-                  color: PublicNetworks.find((n) => n.chainId === c)?.color,
+                  color: Networks.find(c)?.color,
                   chainId: c,
                   width: 12,
                   height: 12,

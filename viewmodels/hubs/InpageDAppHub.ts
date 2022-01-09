@@ -1,12 +1,12 @@
 import * as Linking from 'expo-linking';
 
 import { Bytes, providers, utils } from 'ethers';
+import Networks, { AddEthereumChainParameter } from '../Networks';
 
 import App from '../App';
 import Database from '../../models/Database';
 import EventEmitter from 'events';
 import InpageDApp from '../../models/InpageDApp';
-import Networks from '../Networks';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import { WCCallRequest_eth_sendTransaction } from '../../models/WCSession_v1';
 import { hashPersonalMessage } from 'ethereumjs-util';
@@ -21,19 +21,6 @@ interface Payload {
   hostname?: string;
 
   pageMetadata?: { icon: string; title: string; desc?: string };
-}
-
-interface AddEthereumChainParameter {
-  chainId: string; // A 0x-prefixed hexadecimal string
-  chainName: string;
-  nativeCurrency: {
-    name: string;
-    symbol: string; // 2-6 characters long
-    decimals: 18;
-  };
-  rpcUrls: string[];
-  blockExplorerUrls?: string[];
-  iconUrls?: string[]; // Currently ignored.
 }
 
 export interface ConnectInpageDApp extends Payload {
@@ -285,7 +272,9 @@ class InpageDAppHub extends EventEmitter {
       return { error: { message: 'Invalid request' } };
 
     return new Promise((resolve) => {
-      const approve = () => {
+      const approve = async () => {
+        await Networks.add(chain);
+
         resolve(null);
         this.wallet_switchEthereumChain(origin, [{ chainId: params[0].chainId }]);
       };

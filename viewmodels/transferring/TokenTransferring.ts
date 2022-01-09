@@ -1,5 +1,4 @@
 import { BigNumber, providers, utils } from 'ethers';
-import { INetwork, PublicNetworks } from '../../common/Networks';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
 import App from '../App';
@@ -7,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BaseTransaction } from './BaseTransaction';
 import { ERC20Token } from '../../models/ERC20';
 import { Gwei_1 } from '../../common/Constants';
+import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/Tokens';
 import Networks from '../Networks';
 import { getGasPrice } from '../../common/RPC';
