@@ -1,35 +1,21 @@
 import * as Linking from 'expo-linking';
 
-import {
-  Animated,
-  Dimensions,
-  FlatList,
-  Image,
-  ListRenderItemInfo,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
 import Bookmarks, { Bookmark, PopularDApps } from '../../viewmodels/customs/Bookmarks';
-import { BottomTabScreenProps, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { Dimensions, FlatList, Image, ListRenderItemInfo, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { WebView, WebViewMessageEvent, WebViewNavigation } from 'react-native-webview';
 import { borderColor, thirdFontColor } from '../../constants/styles';
 
 import { Bar } from 'react-native-progress';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import CachedImage from 'react-native-expo-cached-image';
 import Collapsible from 'react-native-collapsible';
-import DeviceInfo from 'react-native-device-info';
-import GetPageMetadata from './scripts/Metadata';
-import HookWalletConnect from './scripts/InjectWalletConnectObserver';
-import InjectInpageProvider from './scripts/InjectInpageProvider';
 import InpageDAppHub from '../../viewmodels/hubs/InpageDAppHub';
 import { Ionicons } from '@expo/vector-icons';
 import LinkHub from '../../viewmodels/hubs/LinkHub';
 import Networks from '../../viewmodels/Networks';
 import SuggestUrls from '../../configs/urls.json';
-import { WebViewScrollEvent } from 'react-native-webview/lib/WebViewTypes';
+import Web3View from './Web3View';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -42,46 +28,6 @@ const LargeIconSize = (ScreenWidth - 8 - 16 * NumOfColumns) / NumOfColumns;
 const SmallIconSize = (ScreenWidth - 16 - 16 * 8) / 8;
 
 export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
-  const [tabBarHeight] = useState(useBottomTabBarHeight());
-  const [tabBarHidden, setTabBarHidden] = useState(false);
-  const [lastBaseY, setLastBaseY] = useState(0);
-
-  const hideTabBar = () => {
-    setTabBarHidden(true);
-
-    const translateY = new Animated.Value(0);
-    Animated.spring(translateY, { toValue: tabBarHeight, useNativeDriver: true }).start();
-    setTimeout(() => navigation.setOptions({ tabBarStyle: { height: 0 } }), 100);
-    navigation.setOptions({ tabBarStyle: { transform: [{ translateY }] } });
-  };
-
-  const showTabBar = () => {
-    setTabBarHidden(false);
-
-    const translateY = new Animated.Value(tabBarHeight);
-    Animated.spring(translateY, { toValue: 0, useNativeDriver: true }).start();
-    navigation.setOptions({ tabBarStyle: { transform: [{ translateY }], height: tabBarHeight } });
-  };
-
-  const onScroll = ({ nativeEvent }: WebViewScrollEvent) => {
-    const { contentOffset, contentSize, layoutMeasurement } = nativeEvent;
-    const { y } = contentOffset;
-
-    if (layoutMeasurement.height + y >= contentSize.height) return;
-
-    try {
-      if (y > lastBaseY) {
-        if (tabBarHidden) return;
-        hideTabBar();
-      } else {
-        if (!tabBarHidden) return;
-        showTabBar();
-      }
-    } finally {
-      setLastBaseY(Math.max(0, y));
-    }
-  };
-
   const { t } = i18n;
   const { top } = useSafeAreaInsets();
   const { current } = Networks;
@@ -118,7 +64,6 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
     setLoadingProgress(0);
     webview.current?.clearHistory?.();
     addrRef.current?.blur();
-    showTabBar();
   };
 
   const goTo = (url: string) => {
@@ -167,8 +112,6 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
     setHostname(hn.startsWith('www.') ? hn.substring(4) : hn);
   };
 
-  const appName = `Wallet3/${DeviceInfo.getVersion() ?? '0.0.0'}`;
-
   const renderItem = ({ item }: ListRenderItemInfo<Bookmark>) => {
     return (
       <TouchableOpacity style={{ padding: 8 }} onPress={() => setUri(item.url)}>
@@ -200,33 +143,6 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
         .slice(0, 5)
     );
   }, [addr]);
-
-  const onMessage = async (e: WebViewMessageEvent) => {
-    const data = JSON.parse(e.nativeEvent.data) as { type: string; payload: any; origin?: string };
-
-    switch (data.type) {
-      case 'metadata':
-        setPageMetadata(data.payload);
-        break;
-      case 'wcuri':
-        LinkHub.handleURL(data.payload.uri);
-        break;
-      case 'INPAGE_REQUEST':
-        try {
-          webview.current?.postMessage(await InpageDAppHub.handle(data.origin!, { ...data.payload, pageMetadata }));
-        } catch (error) {
-          console.log(error);
-        }
-        break;
-    }
-  };
-
-  useEffect(() => {
-    InpageDAppHub.on('appStateUpdated', (appState) => {
-      if (pageMetadata?.origin !== appState.origin) return;
-      webview.current?.postMessage(JSON.stringify(appState));
-    });
-  }, []);
 
   return (
     <View style={{ backgroundColor: `#fff`, flex: 1, paddingTop: top, position: 'relative' }}>
@@ -380,21 +296,13 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
       </View>
 
       {uri ? (
-        <WebView
+        <Web3View
           ref={webview}
-          applicationNameForUserAgent={appName}
+          navigation={navigation}
           source={{ uri }}
-          allowsFullscreenVideo={false}
           onLoadProgress={({ nativeEvent }) => setLoadingProgress(nativeEvent.progress)}
           onLoadEnd={() => setLoadingProgress(1)}
           onNavigationStateChange={onNavigationStateChange}
-          injectedJavaScript={`${GetPageMetadata} ${HookWalletConnect}`}
-          onMessage={(e) => onMessage(e)}
-          mediaPlaybackRequiresUserAction
-          onScroll={onScroll}
-          pullToRefreshEnabled
-          injectedJavaScriptBeforeContentLoaded={InjectInpageProvider}
-          // style={{ marginBottom: -tabBarHeight }}
         />
       ) : (
         <View>

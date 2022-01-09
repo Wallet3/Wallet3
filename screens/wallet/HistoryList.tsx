@@ -52,7 +52,7 @@ const Tx = observer(({ item, onPress }: { onPress?: (tx: Transaction) => void; i
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Coin symbol={tokenSymbol} size={16} style={{ marginEnd: 4 }} />
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ fontSize: 16, marginEnd: 4, maxWidth: 120 }} numberOfLines={1}>{`${methodName}`}</Text>
+            <Text style={{ fontSize: 16, marginEnd: 4, maxWidth: 180 }} numberOfLines={1}>{`${methodName}`}</Text>
             {methodName === 'Contract Interaction' ? undefined : (
               <Text style={{ fontSize: 16 }}>{`${amount} ${tokenSymbol}`}</Text>
             )}
@@ -80,7 +80,7 @@ const Tx = observer(({ item, onPress }: { onPress?: (tx: Transaction) => void; i
           ) : (
             <Text style={{ fontWeight: '300', marginEnd: 2 }}>{t('home-history-item-to')}:</Text>
           )}
-          <Text style={{ fontWeight: '300', maxWidth: 250 }} numberOfLines={1}>
+          <Text style={{ fontWeight: '300', maxWidth: 210 }} numberOfLines={1}>
             {to.length === 42 ? formatAddress(to!, 10, 5) : to}
           </Text>
         </View>
