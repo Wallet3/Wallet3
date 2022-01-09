@@ -315,7 +315,9 @@ class InpageDAppHub extends EventEmitter {
   }
 
   private async wallet_watchAsset(origin: string, asset: WatchAssetParams) {
-    if (!asset || !asset.options || !asset.options.address) return { error: { message: 'Invalid request' } };
+    if (!asset || !asset.options || !asset.options.address || asset.type !== 'ERC20')
+      return { error: { message: 'Invalid request' } };
+
     const dapp = await this.getDApp(origin);
 
     return new Promise((resolve) => {
@@ -330,8 +332,10 @@ class InpageDAppHub extends EventEmitter {
             iconUrl: asset.options.image,
             shown: true,
           },
-          Number(dapp?.lastUsedChainId || 0)
+          dapp ? Number(dapp?.lastUsedChainId) : undefined
         );
+
+        showMessage({ message: 'Token added', type: 'success' });
 
         resolve(null);
       };
