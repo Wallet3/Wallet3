@@ -25,6 +25,7 @@ import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 type RootStackParamList = {
   Home: undefined;
   Settings: undefined;
+  DApps: undefined;
 };
 
 export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, 'Home'>) => {
@@ -71,6 +72,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         disabled={currentWallet?.currentAccount?.tokens.loadingTokens}
         onSendPress={() => PubSub.publish('openSendFundsModal')}
         onRequestPress={() => PubSub.publish('openRequestFundsModal')}
+        onDAppsPress={() => navigation.navigate('DApps')}
       />
 
       <Assets

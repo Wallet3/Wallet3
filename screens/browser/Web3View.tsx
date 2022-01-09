@@ -72,6 +72,11 @@ export default forwardRef(
         if (pageMetadata?.origin !== appState.origin) return;
         ((ref as any).current as WebView)?.postMessage(JSON.stringify(appState));
       });
+
+      return () => {
+        InpageDAppHub.removeAllListeners();
+        showTabBar();
+      };
     }, []);
 
     const onMessage = async (e: WebViewMessageEvent) => {
@@ -86,13 +91,9 @@ export default forwardRef(
           LinkHub.handleURL(data.payload.uri);
           break;
         case 'INPAGE_REQUEST':
-          try {
-            ((ref as any).current as WebView).postMessage(
-              await InpageDAppHub.handle(data.origin!, { ...data.payload, pageMetadata })
-            );
-          } catch (error) {
-            console.log(error);
-          }
+          ((ref as any).current as WebView).postMessage(
+            await InpageDAppHub.handle(data.origin!, { ...data.payload, pageMetadata })
+          );
           break;
       }
     };

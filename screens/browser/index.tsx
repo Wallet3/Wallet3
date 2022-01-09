@@ -303,6 +303,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
           onLoadProgress={({ nativeEvent }) => setLoadingProgress(nativeEvent.progress)}
           onLoadEnd={() => setLoadingProgress(1)}
           onNavigationStateChange={onNavigationStateChange}
+          onMetadataChange={setPageMetadata}
         />
       ) : (
         <View>

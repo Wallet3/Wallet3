@@ -1,5 +1,5 @@
 import { Feather, Ionicons } from '@expo/vector-icons';
-import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { numericFontFamily, themeColor } from '../../constants/styles';
 
 import AnimateNumber from 'react-native-animate-number';
@@ -26,6 +26,7 @@ interface Props {
   disabled?: boolean;
   onSendPress?: () => void;
   onRequestPress?: () => void;
+  onDAppsPress?: () => void;
 }
 
 export default observer(
@@ -40,6 +41,7 @@ export default observer(
     currency,
     onSendPress,
     onRequestPress,
+    onDAppsPress,
     disabled,
   }: Props) => {
     const { t } = i18n;
@@ -71,10 +73,13 @@ export default observer(
             ) : undefined}
           </View>
 
-          <View style={{ flexDirection: 'row', alignItems: 'center', opacity: connectedApps || 0 }}>
+          <TouchableOpacity
+            style={{ flexDirection: 'row', alignItems: 'center', opacity: connectedApps || 0 }}
+            onPress={onDAppsPress}
+          >
             <Text style={{ ...styles.text, fontSize: 14, marginEnd: 5 }}>{connectedApps}</Text>
             <Feather name="layers" size={14} color="#fff" />
-          </View>
+          </TouchableOpacity>
         </View>
 
         <CopyableText
