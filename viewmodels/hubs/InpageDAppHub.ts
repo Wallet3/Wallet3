@@ -74,8 +74,13 @@ export interface InpageDAppAddAsset {
 class InpageDAppHub extends EventEmitter {
   apps = new Map<string, InpageDApp>();
 
-  get inpageDApps() {
+  private get dbTable() {
     return Database.inpageDApps;
+  }
+
+  constructor() {
+    super();
+    // this.dbTable.clear();
   }
 
   async handle(origin: string, payload: Payload) {
@@ -132,23 +137,29 @@ class InpageDAppHub extends EventEmitter {
     //   // JSON.stringify(params || {}).substring(0, 200),
     //   JSON.stringify(response || null).substring(0, 64)
     // );
-    console.log(payload);
+    // console.log(payload);
 
     // if (response === null) console.log('null resp', hostname, this.apps.has(hostname ?? ''), origin);
 
     return JSON.stringify({ type: 'INPAGE_RESPONSE', payload: { id, jsonrpc, __mmID, error: undefined, response } });
   }
 
-  private async getDApp(origin: string) {
-    return this.apps.get(origin) || (await this.inpageDApps.findOne({ where: { origin } }));
+  async getDApp(hostname: string) {
+    let dapp = this.apps.get(hostname);
+    if (dapp) return dapp;
+
+    dapp = await this.dbTable.findOne({ where: { origin: hostname } });
+    if (dapp) this.apps.set(hostname, dapp);
+
+    return dapp;
   }
 
   private async eth_requestAccounts(origin: string, payload: Payload) {
     if (!App.currentWallet) return [];
 
     const dapp = await this.getDApp(origin);
+
     if (dapp) {
-      this.apps.set(origin, dapp);
       const account = App.allAccounts.find((a) => a.address === dapp.lastUsedAccount); // Ensure last used account is still available
       return [account?.address ?? App.allAccounts[0].address];
     }
@@ -162,6 +173,9 @@ class InpageDAppHub extends EventEmitter {
         app.lastUsedChainId = `0x${Number(Networks.current.chainId).toString(16)}`;
         this.apps.set(origin, app);
         resolve([account]);
+
+        this.emit('dappConnected', app);
+        app.save();
       };
 
       const reject = () => resolve({ error: { code: 4001, message: 'User rejected' } });

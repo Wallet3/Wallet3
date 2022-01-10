@@ -36,8 +36,6 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
 
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [isFocus, setFocus] = useState(false);
-  const [canGoBack, setCanGoBack] = useState(false);
-  const [canGoForward, setCanGoForward] = useState(false);
   const [hostname, setHostname] = useState('');
   const [webUrl, setWebUrl] = useState('');
   const [addr, setAddr] = useState('');
@@ -59,8 +57,6 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
     setAddr('');
     setWebUrl('');
     setHostname('');
-    setCanGoBack(false);
-    setCanGoForward(false);
     setLoadingProgress(0);
     webview.current?.clearHistory?.();
     addrRef.current?.blur();
@@ -102,9 +98,6 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   };
 
   const onNavigationStateChange = (event: WebViewNavigation) => {
-    setCanGoBack(event.canGoBack);
-    setCanGoForward(event.canGoForward);
-
     if (!event.url) return;
 
     setWebUrl(event.url);
@@ -151,22 +144,11 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
           style={{
             flexDirection: 'row',
             marginHorizontal: 6,
+            paddingStart: 8,
             position: 'relative',
             alignItems: 'center',
           }}
         >
-          <TouchableOpacity style={{ paddingHorizontal: 8 }} onPress={() => webview.current?.goBack()} disabled={!canGoBack}>
-            <Ionicons name="chevron-back-outline" size={17} color={canGoBack ? '#000' : 'lightgrey'} />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={{ paddingHorizontal: 8 }}
-            onPress={() => webview.current?.goForward()}
-            disabled={!canGoForward}
-          >
-            <Ionicons name="chevron-forward-outline" size={17} color={canGoForward ? '#000' : 'lightgrey'} />
-          </TouchableOpacity>
-
           <View style={{ position: 'relative', flex: 1, flexDirection: 'row', alignItems: 'center' }}>
             <TextInput
               ref={addrRef}

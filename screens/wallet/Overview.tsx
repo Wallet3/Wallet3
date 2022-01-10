@@ -73,12 +73,9 @@ export default observer(
             ) : undefined}
           </View>
 
-          <TouchableOpacity
-            style={{ flexDirection: 'row', alignItems: 'center', opacity: connectedApps || 0 }}
-            onPress={onDAppsPress}
-          >
-            <Text style={{ ...styles.text, fontSize: 14, marginEnd: 5 }}>{connectedApps}</Text>
-            <Feather name="layers" size={14} color="#fff" />
+          <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={onDAppsPress}>
+            <Text style={{ ...styles.text, fontSize: 14, marginEnd: 5, opacity: connectedApps || 0 }}>{connectedApps}</Text>
+            <Feather name="layers" size={14} color="#fff" style={{ opacity: connectedApps || 0 }} />
           </TouchableOpacity>
         </View>
 

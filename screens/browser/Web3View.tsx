@@ -1,16 +1,23 @@
+import * as Animatable from 'react-native-animatable';
+import * as Linking from 'expo-linking';
+
+import { Animated, TouchableOpacity, View } from 'react-native';
 import { BottomTabNavigationProp, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import React, { forwardRef, useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
 import { WebView, WebViewMessageEvent, WebViewNavigation, WebViewProps } from 'react-native-webview';
 
-import { Animated } from 'react-native';
+import { BlurView } from 'expo-blur';
 import DeviceInfo from 'react-native-device-info';
 import GetPageMetadata from './scripts/Metadata';
 import HookWalletConnect from './scripts/InjectWalletConnectObserver';
+import { INetwork } from '../../common/Networks';
 import InjectInpageProvider from './scripts/InjectInpageProvider';
 import InpageDAppHub from '../../viewmodels/hubs/InpageDAppHub';
+import { Ionicons } from '@expo/vector-icons';
 import LinkHub from '../../viewmodels/hubs/LinkHub';
-import { View } from 'react-native';
+import Networks from '../../viewmodels/Networks';
 import { WebViewScrollEvent } from 'react-native-webview/lib/WebViewTypes';
+import { generateNetworkIcon } from '../../assets/icons/networks/color';
 
 export default forwardRef(
   (
@@ -20,12 +27,16 @@ export default forwardRef(
     },
     ref: React.Ref<WebView>
   ) => {
+    const [canGoBack, setCanGoBack] = useState(false);
+    const [canGoForward, setCanGoForward] = useState(false);
     const { navigation, onMetadataChange, source } = props;
     const [appName] = useState(`Wallet3/${DeviceInfo.getVersion() ?? '0.0.0'}`);
     const [lastBaseY, setLastBaseY] = useState(0);
     const [tabBarHidden, setTabBarHidden] = useState(false);
     const [tabBarHeight] = useState(useBottomTabBarHeight());
     const [pageMetadata, setPageMetadata] = useState<{ icon: string; title: string; desc?: string; origin: string }>();
+    const [appNetwork, setAppNetwork] = useState<INetwork>();
+    const [dapp, setDApp] = useState<{ origin: string; lastUsedChainId: string; lastUsedAccount: string }>();
 
     const hideTabBar = () => {
       setTabBarHidden(true);
@@ -73,11 +84,26 @@ export default forwardRef(
         ((ref as any).current as WebView)?.postMessage(JSON.stringify(appState));
       });
 
+      InpageDAppHub.on('dappConnected', (app) => {
+        console.log('dappconnected', app);
+        setDApp(app);
+      });
+
       return () => {
         InpageDAppHub.removeAllListeners();
         showTabBar();
       };
     }, []);
+
+    useEffect(() => {
+      const { hostname } = Linking.parse(pageMetadata?.origin ?? 'http://');
+
+      InpageDAppHub.getDApp(hostname ?? dapp?.origin ?? '').then((dapp) => {
+        setDApp(dapp);
+        const appNetworkId = dapp?.lastUsedChainId ?? -1;
+        setAppNetwork(Networks.find(appNetworkId));
+      });
+    }, [pageMetadata, dapp]);
 
     const onMessage = async (e: WebViewMessageEvent) => {
       const data = JSON.parse(e.nativeEvent.data) as { type: string; payload: any; origin?: string };
@@ -98,11 +124,22 @@ export default forwardRef(
       }
     };
 
+    const onNavigationStateChange = (event: WebViewNavigation) => {
+      setCanGoBack(event.canGoBack);
+      setCanGoForward(event.canGoForward);
+
+      props?.onNavigationStateChange?.(event);
+    };
+
+    const tintColor = `${appNetwork?.color ?? '#000000'}dd`;
+
     return (
       <View style={{ flex: 1, position: 'relative' }}>
         <WebView
           {...props}
           ref={ref}
+          contentInset={{ bottom: dapp ? 0 : 36 }}
+          onNavigationStateChange={onNavigationStateChange}
           applicationNameForUserAgent={appName}
           allowsFullscreenVideo={false}
           injectedJavaScript={`${GetPageMetadata} ${HookWalletConnect}`}
@@ -112,6 +149,74 @@ export default forwardRef(
           pullToRefreshEnabled
           injectedJavaScriptBeforeContentLoaded={InjectInpageProvider}
         />
+
+        <BlurView
+          intensity={25}
+          tint="light"
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingHorizontal: 4,
+            paddingVertical: 8,
+            position: dapp ? 'relative' : 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+
+            shadowColor: `#00000060`,
+            shadowOffset: {
+              width: 0,
+              height: -2,
+            },
+            shadowOpacity: dapp ? 0 : 0.25,
+            shadowRadius: 3.14,
+
+            elevation: 5,
+            backgroundColor: '#ffffff20',
+            borderTopColor: '#00000020',
+            borderTopWidth: dapp ? 0.33 : 0,
+          }}
+        >
+          <TouchableOpacity
+            style={{ paddingHorizontal: 12 }}
+            onPress={() => ((ref as any)?.current as WebView)?.goBack()}
+            disabled={!canGoBack}
+          >
+            <Ionicons name="chevron-back-outline" size={22} color={canGoBack ? tintColor : '#dddddd50'} />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={{ paddingHorizontal: 12 }}
+            onPress={() => ((ref as any)?.current as WebView)?.goForward()}
+            disabled={!canGoForward}
+          >
+            <Ionicons name="chevron-forward-outline" size={22} color={canGoForward ? tintColor : '#dddddd50'} />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={{ paddingHorizontal: 12 }}>
+            <Ionicons name="md-home-outline" size={22} color={tintColor} />
+          </TouchableOpacity>
+
+          <View style={{ flex: 1 }} />
+
+          {dapp && appNetwork ? (
+            <Animatable.View
+              animation={'fadeInUp'}
+              style={{ paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center' }}
+            >
+              <TouchableOpacity>
+                {generateNetworkIcon({
+                  chainId: appNetwork.chainId,
+                  color: `${appNetwork.color}`,
+                  width: 22,
+                  style: {},
+                })}
+              </TouchableOpacity>
+
+              {/* <Text style={{ paddingStart: 4, fontSize: 15, color: tintColor }}>{appNetwork.symbol}</Text> */}
+            </Animatable.View>
+          ) : undefined}
+        </BlurView>
       </View>
     );
   }
