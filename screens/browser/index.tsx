@@ -168,7 +168,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
                 backgroundColor: isFocus ? '#fff' : '#f5f5f5',
                 fontSize: 16,
                 color: webUrl.startsWith('https') && !isFocus ? '#76B947' : undefined,
-                paddingHorizontal: 8,
+                paddingHorizontal: isFocus ? 8 : 20,
                 flex: 1,
                 paddingVertical: 6,
                 borderWidth: 1,
@@ -181,9 +181,9 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
             {isFocus ? undefined : webUrl.startsWith('https') ? (
               <TouchableOpacity style={{ position: 'absolute', left: 0, paddingStart: 8 }}>
                 {Bookmarks.isSecureSite(webUrl) ? (
-                  <Ionicons name="shield-checkmark" color={'#76B947'} size={12} />
+                  <Ionicons name="shield-checkmark" color={'#76B947'} size={12} style={{ marginTop: 2 }} />
                 ) : (
-                  <Ionicons name="lock-closed" color={'#76B947'} size={12} />
+                  <Ionicons name="lock-closed" color={'#111'} size={12} />
                 )}
               </TouchableOpacity>
             ) : undefined}
@@ -251,7 +251,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
                 borderBottomColor: borderColor,
               }}
             >
-              {PopularDApps.concat(Bookmarks.favs).map((item, i) => (
+              {PopularDApps.concat(Bookmarks.favs.slice(0, 24)).map((item, i) => (
                 <TouchableOpacity style={{ margin: 8 }} key={`${item.url}-${i}`} onPress={() => goTo(item.url)}>
                   {item.icon ? (
                     <CachedImage

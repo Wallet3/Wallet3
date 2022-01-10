@@ -79,6 +79,7 @@ class InpageDAppHub extends EventEmitter {
 
   constructor() {
     super();
+    // this.dbTable.clear()
   }
 
   async handle(origin: string, payload: Payload) {

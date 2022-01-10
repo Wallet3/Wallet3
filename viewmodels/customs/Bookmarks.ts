@@ -3,6 +3,7 @@ import * as Linking from 'expo-linking';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import RiskyUrls from '../../configs/riskyurls.json';
 import SecureUrls from '../../configs/urls.json';
 
 export interface Bookmark {
@@ -73,6 +74,10 @@ class Bookmarks {
 
   isSecureSite(url: string) {
     return SecureUrls.some((i) => url.startsWith(i));
+  }
+
+  isRiskySite(url: string) {
+    return RiskyUrls.some((i) => url.startsWith(i));
   }
 
   submitHistory(url: string) {

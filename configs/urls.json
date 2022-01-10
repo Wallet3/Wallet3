@@ -12,7 +12,7 @@
   "https://app.hashflow.com",
   "https://axieinfinity.com",
   "https://tornadocash.eth.link",
-  "https://pancakeswap.finance/swap",
+  "https://pancakeswap.finance",
   "https://gateway.optimism.io",
   "https://bridge.arbitrum.io",
   "https://www.sandbox.game",
@@ -50,5 +50,8 @@
   "https://gnosis-safe.io/app",
   "https://www.tokensets.com",
   "https://pay.sablier.finance",
-  "https://debank.com"
+  "https://debank.com",
+  "https://yearn.finance",
+  "https://kyberswap.com",
+  "https://wallet.zksync.io"
 ]

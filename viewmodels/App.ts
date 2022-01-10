@@ -50,10 +50,10 @@ export class AppVM {
     Coingecko.init();
 
     await Promise.all([Database.init(), Authentication.init()]);
+    await Promise.all([TxHub.init(), Networks.init()]);
 
     const wallets = await Promise.all((await Database.keys.find()).map((key) => new Wallet(key).init()));
 
-    await Promise.all([TxHub.init(), Networks.init()]);
 
     Authentication.once('appAuthorized', () => {
       WalletConnectV1ClientHub.init();
