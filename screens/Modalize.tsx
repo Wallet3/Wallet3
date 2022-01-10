@@ -222,8 +222,9 @@ const InpageDAppRequests = () => {
   );
 };
 
-const NetworksMenuModal = () => {
+const GlobalNetworksMenuModal = () => {
   const { ref: networksRef, open: openNetworksModal, close: closeNetworksModal } = useModalize();
+  const [selectedNetwork, setSelectedNetwork] = useState(Networks.current);
 
   useEffect(() => {
     PubSub.subscribe('openNetworksModal', () => openNetworksModal());
@@ -238,9 +239,12 @@ const NetworksMenuModal = () => {
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
       <NetworksMenu
+        networks={Networks.all}
+        selectedNetwork={selectedNetwork}
         onNetworkPress={(network) => {
           closeNetworksModal();
           Networks.switch(network);
+          setSelectedNetwork(network);
         }}
       />
     </Modalize>
@@ -379,7 +383,7 @@ export default (props: { app: AppVM; appAuth: Authentication }) => {
     <LockScreen key="lock-screen" {...props} />,
     <SendFundsModal key="send-funds" />,
     <RequestFundsModal key="request-funds" />,
-    <NetworksMenuModal key="networks-menu" />,
+    <GlobalNetworksMenuModal key="networks-menu" />,
     <WalletConnectV1 key="walletconnect" />,
     <WalletConnectRequests key="walletconnect-requests" {...props} />,
     <InpageDAppConnect key="inpage-dapp-connect" />,

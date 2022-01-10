@@ -14,22 +14,24 @@ import styles from './styles';
 
 interface Props {
   onNetworkPress?: (network: INetwork) => void;
+  networks: INetwork[];
+  selectedNetwork?: INetwork;
 }
 
-export default observer((props: Props) => {
+export default observer(({ onNetworkPress, networks, selectedNetwork }: Props) => {
   const { t } = i18n;
 
   const renderItem = ({ item }: ListRenderItemInfo<INetwork>) => {
     return (
       <TouchableOpacity
         style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 9 }}
-        onPress={() => props.onNetworkPress?.(item)}
+        onPress={() => onNetworkPress?.(item)}
       >
         <Feather
           name="check"
           color={item.color}
           size={15}
-          style={{ opacity: Networks.current.network === item.network ? 1 : 0 }}
+          style={{ opacity: selectedNetwork?.network === item.network ? 1 : 0 }}
         />
 
         <View style={{ width: 32, alignItems: 'center', justifyContent: 'center', marginStart: 8 }}>
@@ -58,7 +60,7 @@ export default observer((props: Props) => {
         <Separator style={{ marginVertical: 4 }} />
         <FlatList
           keyExtractor={(i) => i.network}
-          data={Networks.all}
+          data={networks}
           renderItem={renderItem}
           contentContainerStyle={{ paddingBottom: 36 }}
           style={{ marginHorizontal: -16, paddingHorizontal: 16, marginTop: -4, marginBottom: -36 }}

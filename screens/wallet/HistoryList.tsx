@@ -38,7 +38,7 @@ const Tx = observer(({ item, onPress }: { onPress?: (tx: Transaction) => void; i
   const { chainId } = item;
   const tokenSymbol = item.readableInfo?.symbol ?? ChainIdsSymbol.get(chainId);
   const dappIcon = item.readableInfo?.icon;
-  const amount = item.readableInfo?.amount ?? utils.formatEther(item.value ?? '0');
+  const amount: string = item.readableInfo?.amount ?? utils.formatEther(item.value ?? '0');
 
   const to: string = item.readableInfo?.recipient ?? item.readableInfo.dapp ?? item.to;
   const status = item.blockNumber ? (item.status ? 'confirmed' : 'failed') : 'pending';
@@ -54,7 +54,9 @@ const Tx = observer(({ item, onPress }: { onPress?: (tx: Transaction) => void; i
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text style={{ fontSize: 16, marginEnd: 4, maxWidth: 180 }} numberOfLines={1}>{`${methodName}`}</Text>
             {methodName === 'Contract Interaction' ? undefined : (
-              <Text style={{ fontSize: 16 }}>{`${amount} ${tokenSymbol}`}</Text>
+              <Text style={{ fontSize: 16, maxWidth: 150 }} numberOfLines={1}>
+                {`${amount?.substring?.(0, 7)} ${tokenSymbol}`}
+              </Text>
             )}
           </View>
         </View>

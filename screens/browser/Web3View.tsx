@@ -3,6 +3,7 @@ import * as Linking from 'expo-linking';
 
 import { Animated, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { BottomTabNavigationProp, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { forwardRef, useEffect, useState } from 'react';
 import { WebView, WebViewMessageEvent, WebViewNavigation, WebViewProps } from 'react-native-webview';
 
@@ -13,12 +14,15 @@ import HookWalletConnect from './scripts/InjectWalletConnectObserver';
 import { INetwork } from '../../common/Networks';
 import InjectInpageProvider from './scripts/InjectInpageProvider';
 import InpageDAppHub from '../../viewmodels/hubs/InpageDAppHub';
-import { Ionicons } from '@expo/vector-icons';
 import LinkHub from '../../viewmodels/hubs/LinkHub';
+import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
+import { NetworksMenu } from '../../modals';
+import { Portal } from 'react-native-portalize';
 import { WebViewScrollEvent } from 'react-native-webview/lib/WebViewTypes';
 import { borderColor } from '../../constants/styles';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
+import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 export default forwardRef(
   (
@@ -138,6 +142,7 @@ export default forwardRef(
     };
 
     const tintColor = `${appNetwork?.color ?? '#000000'}aa`;
+    const { ref: networksRef, open: openNetworksModal, close: closeNetworksModal } = useModalize();
 
     return (
       <View style={{ flex: 1, position: 'relative' }}>
@@ -183,7 +188,7 @@ export default forwardRef(
           </TouchableOpacity>
 
           <TouchableOpacity style={{ paddingHorizontal: 12 }} onPress={onGoHome}>
-            <Ionicons name="md-home-outline" size={22} color={tintColor} />
+            <Ionicons name="radio-button-off" size={22} color={tintColor} />
           </TouchableOpacity>
 
           <View style={{ flex: 1 }} />
@@ -193,7 +198,7 @@ export default forwardRef(
               animation={'fadeInUp'}
               style={{ paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center' }}
             >
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => openNetworksModal()}>
                 {generateNetworkIcon({
                   chainId: appNetwork.chainId,
                   color: `${appNetwork.color}`,
@@ -204,6 +209,25 @@ export default forwardRef(
             </Animatable.View>
           ) : undefined}
         </BlurView>
+
+        <Portal>
+          <Modalize
+            ref={networksRef}
+            adjustToContentHeight
+            disableScrollIfPossible
+            modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
+            scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+          >
+            <NetworksMenu
+              networks={Networks.all}
+              selectedNetwork={appNetwork}
+              onNetworkPress={(network) => {
+                closeNetworksModal();
+                // Networks.switch(network);
+              }}
+            />
+          </Modalize>
+        </Portal>
       </View>
     );
   }
