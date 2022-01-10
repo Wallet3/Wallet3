@@ -1,7 +1,7 @@
 import * as Animatable from 'react-native-animatable';
 import * as Linking from 'expo-linking';
 
-import { Animated, TouchableOpacity, View } from 'react-native';
+import { Animated, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { BottomTabNavigationProp, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import React, { forwardRef, useEffect, useState } from 'react';
 import { WebView, WebViewMessageEvent, WebViewNavigation, WebViewProps } from 'react-native-webview';
@@ -74,20 +74,23 @@ export default forwardRef(
       }
     };
 
+    const updateDAppState = (dapp) => {
+      setDApp(dapp);
+      const appNetworkId = dapp?.lastUsedChainId ?? -1;
+      setAppNetwork(Networks.find(appNetworkId));
+    };
+
     useEffect(() => {
       if (!source?.['uri']) showTabBar();
     }, [source]);
 
     useEffect(() => {
-      InpageDAppHub.on('appStateUpdated', (appState) => {
-        if (pageMetadata?.origin !== appState.origin) return;
+      InpageDAppHub.on('appStateUpdated', async (appState) => {
         ((ref as any).current as WebView)?.postMessage(JSON.stringify(appState));
+        updateDAppState(await InpageDAppHub.getDApp(appState.payload.origin));
       });
 
-      InpageDAppHub.on('dappConnected', (app) => {
-        console.log('dappconnected', app);
-        setDApp(app);
-      });
+      InpageDAppHub.on('dappConnected', (app) => setDApp(app));
 
       return () => {
         InpageDAppHub.removeAllListeners();
@@ -96,13 +99,8 @@ export default forwardRef(
     }, []);
 
     useEffect(() => {
-      const { hostname } = Linking.parse(pageMetadata?.origin ?? 'http://');
-
-      InpageDAppHub.getDApp(hostname ?? dapp?.origin ?? '').then((dapp) => {
-        setDApp(dapp);
-        const appNetworkId = dapp?.lastUsedChainId ?? -1;
-        setAppNetwork(Networks.find(appNetworkId));
-      });
+      const hostname = Linking.parse(pageMetadata?.origin ?? 'http://').hostname ?? dapp?.origin;
+      InpageDAppHub.getDApp(hostname || '').then((app) => updateDAppState(app));
     }, [pageMetadata, dapp]);
 
     const onMessage = async (e: WebViewMessageEvent) => {
@@ -154,27 +152,10 @@ export default forwardRef(
           intensity={25}
           tint="light"
           style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingHorizontal: 4,
-            paddingVertical: 8,
-            position: dapp ? 'relative' : 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-
-            shadowColor: `#00000060`,
-            shadowOffset: {
-              width: 0,
-              height: -2,
-            },
-            shadowOpacity: dapp ? 0 : 0.25,
-            shadowRadius: 3.14,
-
-            elevation: 5,
-            backgroundColor: '#ffffff20',
-            borderTopColor: '#00000020',
+            ...styles.blurView,
             borderTopWidth: dapp ? 0.33 : 0,
+            position: dapp ? 'relative' : 'absolute',
+            shadowOpacity: dapp ? 0 : 0.25,
           }}
         >
           <TouchableOpacity
@@ -212,8 +193,6 @@ export default forwardRef(
                   style: {},
                 })}
               </TouchableOpacity>
-
-              {/* <Text style={{ paddingStart: 4, fontSize: 15, color: tintColor }}>{appNetwork.symbol}</Text> */}
             </Animatable.View>
           ) : undefined}
         </BlurView>
@@ -221,3 +200,27 @@ export default forwardRef(
     );
   }
 );
+
+const styles = StyleSheet.create({
+  blurView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 4,
+    paddingVertical: 8,
+    bottom: 0,
+    left: 0,
+    right: 0,
+
+    shadowColor: `#00000060`,
+    shadowOffset: {
+      width: 0,
+      height: -2,
+    },
+
+    shadowRadius: 3.14,
+
+    elevation: 5,
+    backgroundColor: '#ffffff20',
+    borderTopColor: '#00000020',
+  },
+});

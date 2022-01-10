@@ -273,17 +273,20 @@ class InpageDAppHub extends EventEmitter {
           accountIndex: accountIndex!,
         });
 
-        if (!txHex) return false;
+        if (!txHex || error) {
+          if (error) showMessage({ type: 'warning', message: error.message });
+          return false;
+        }
 
-        const hash = await wallet.sendTx({
+        const broadcastTx = {
           txHex,
           tx,
-          readableInfo: { dapp: pageMetadata?.title ?? '', type: 'dapp-interaction', icon: pageMetadata?.icon },
-        });
+          readableInfo: { dapp: pageMetadata?.title ?? '', type: 'dapp-interaction', icon: pageMetadata?.icon } as any,
+        };
 
-        resolve(hash);
+        wallet.sendTx(broadcastTx).then((hash) => resolve(hash));
 
-        return hash ? true : false;
+        return true;
       };
 
       const reject = () => resolve({ error: { code: 1, message: 'User rejected' } });
