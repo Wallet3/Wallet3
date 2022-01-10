@@ -9,7 +9,6 @@ import EventEmitter from 'events';
 import InpageDApp from '../../models/InpageDApp';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import { WCCallRequest_eth_sendTransaction } from '../../models/WCSession_v1';
-import { hashPersonalMessage } from 'ethereumjs-util';
 import i18n from '../../i18n';
 import { rawCall } from '../../common/RPC';
 import { showMessage } from 'react-native-flash-message';
@@ -80,7 +79,6 @@ class InpageDAppHub extends EventEmitter {
 
   constructor() {
     super();
-    // this.dbTable.clear();
   }
 
   async handle(origin: string, payload: Payload) {
@@ -352,7 +350,7 @@ class InpageDAppHub extends EventEmitter {
           dapp ? Number(dapp?.lastUsedChainId) : undefined
         );
 
-        showMessage({ message: 'Token added', type: 'success' });
+        showMessage({ message: i18n.t('msg-token-added', { name: asset.options.symbol }), type: 'success' });
 
         resolve(null);
       };
