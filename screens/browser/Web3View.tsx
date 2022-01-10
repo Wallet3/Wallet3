@@ -17,6 +17,7 @@ import { Ionicons } from '@expo/vector-icons';
 import LinkHub from '../../viewmodels/hubs/LinkHub';
 import Networks from '../../viewmodels/Networks';
 import { WebViewScrollEvent } from 'react-native-webview/lib/WebViewTypes';
+import { borderColor } from '../../constants/styles';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 
 export default forwardRef(
@@ -24,19 +25,20 @@ export default forwardRef(
     props: WebViewProps & {
       onMetadataChange?: (metadata: { icon: string; title: string; desc?: string; origin: string }) => void;
       navigation: BottomTabNavigationProp<any, any>;
+      onGoHome?: () => void;
     },
     ref: React.Ref<WebView>
   ) => {
+    const { navigation, onMetadataChange, source, onGoHome } = props;
     const [canGoBack, setCanGoBack] = useState(false);
     const [canGoForward, setCanGoForward] = useState(false);
-    const { navigation, onMetadataChange, source } = props;
     const [appName] = useState(`Wallet3/${DeviceInfo.getVersion() ?? '0.0.0'}`);
     const [lastBaseY, setLastBaseY] = useState(0);
     const [tabBarHidden, setTabBarHidden] = useState(false);
     const [tabBarHeight] = useState(useBottomTabBarHeight());
     const [pageMetadata, setPageMetadata] = useState<{ icon: string; title: string; desc?: string; origin: string }>();
     const [appNetwork, setAppNetwork] = useState<INetwork>();
-    const [dapp, setDApp] = useState<{ origin: string; lastUsedChainId: string; lastUsedAccount: string }>();
+    const [dapp, setDApp] = useState<{ origin: string; lastUsedChainId: string; lastUsedAccount: string } | undefined>();
 
     const hideTabBar = () => {
       setTabBarHidden(true);
@@ -104,7 +106,13 @@ export default forwardRef(
     }, [pageMetadata, dapp]);
 
     const onMessage = async (e: WebViewMessageEvent) => {
-      const data = JSON.parse(e.nativeEvent.data) as { type: string; payload: any; origin?: string };
+      let data: { type: string; payload: any; origin?: string };
+
+      try {
+        data = JSON.parse(e.nativeEvent.data);
+      } catch (error) {
+        return;
+      }
 
       switch (data.type) {
         case 'metadata':
@@ -129,7 +137,7 @@ export default forwardRef(
       props?.onNavigationStateChange?.(event);
     };
 
-    const tintColor = `${appNetwork?.color ?? '#000000'}dd`;
+    const tintColor = `${appNetwork?.color ?? '#000000'}aa`;
 
     return (
       <View style={{ flex: 1, position: 'relative' }}>
@@ -174,7 +182,7 @@ export default forwardRef(
             <Ionicons name="chevron-forward-outline" size={22} color={canGoForward ? tintColor : '#dddddd50'} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={{ paddingHorizontal: 12 }}>
+          <TouchableOpacity style={{ paddingHorizontal: 12 }} onPress={onGoHome}>
             <Ionicons name="md-home-outline" size={22} color={tintColor} />
           </TouchableOpacity>
 
@@ -221,6 +229,6 @@ const styles = StyleSheet.create({
 
     elevation: 5,
     backgroundColor: '#ffffff20',
-    borderTopColor: '#00000020',
+    borderTopColor: borderColor,
   },
 });

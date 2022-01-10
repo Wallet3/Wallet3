@@ -24,7 +24,7 @@ const observeDOM = (function () {
 })();
 
 const observer = observeDOM(document.body, function (m) {
-  if (window.ethereum && window.ethereum._wallet3 && window.ethereum._wallet3.defaultAccount) {
+  if (window.ethereum && window.ethereum._selectedAddress) {
     observer.disconnect();
     return;
   }

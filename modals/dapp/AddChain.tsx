@@ -66,10 +66,11 @@ export default ({ themeColor, chain, approve, reject }: Props) => {
       <View style={{ flex: 1 }} />
 
       <RejectApproveButtons
+        disabledApprove={!chain?.rpcUrls?.[0]}
         onReject={reject}
         onApprove={approve}
         themeColor={themeColor}
-        rejectTitle={t('button-cancel')}
+        rejectTitle={t('button-reject')}
         approveTitle={t('button-save')}
       />
     </SafeViewContainer>

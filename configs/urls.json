@@ -4,7 +4,7 @@
   "https://oasis.app",
   "https://makerdao.com",
   "https://app.sushi.com",
-  "http://app.compound.finance",
+  "https://app.compound.finance",
   "https://app.aave.com",
   "https://app.balancer.fi",
   "https://trade.dydx.exchange",
@@ -47,5 +47,8 @@
   "https://chainlist.org",
   "https://ellipsis.finance",
   "https://etherscan.io",
-  "https://gnosis-safe.io/app"
+  "https://gnosis-safe.io/app",
+  "https://www.tokensets.com",
+  "https://pay.sablier.finance",
+  "https://debank.com"
 ]

@@ -178,6 +178,15 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
               }}
             />
 
+            {isFocus ? undefined : webUrl.startsWith('https') ? (
+              <TouchableOpacity style={{ position: 'absolute', left: 0, paddingStart: 8 }}>
+                {Bookmarks.isSecureSite(webUrl) ? (
+                  <Ionicons name="shield-checkmark" color={'#76B947'} size={12} />
+                ) : (
+                  <Ionicons name="lock-closed" color={'#76B947'} size={12} />
+                )}
+              </TouchableOpacity>
+            ) : undefined}
             {isFocus ? undefined : (
               <TouchableOpacity
                 style={{ padding: 8, paddingHorizontal: 9, position: 'absolute', right: 0 }}
@@ -242,7 +251,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
                 borderBottomColor: borderColor,
               }}
             >
-              {(Bookmarks.favs.length > 0 ? Bookmarks.favs.slice(0, 16) : PopularDApps).map((item, i) => (
+              {PopularDApps.concat(Bookmarks.favs).map((item, i) => (
                 <TouchableOpacity style={{ margin: 8 }} key={`${item.url}-${i}`} onPress={() => goTo(item.url)}>
                   {item.icon ? (
                     <CachedImage
@@ -286,6 +295,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
           onLoadEnd={() => setLoadingProgress(1)}
           onNavigationStateChange={onNavigationStateChange}
           onMetadataChange={setPageMetadata}
+          onGoHome={goHome}
         />
       ) : (
         <View>

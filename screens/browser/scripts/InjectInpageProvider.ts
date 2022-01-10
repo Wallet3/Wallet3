@@ -64,11 +64,9 @@ class InpageBridge {
     this._network !== oldNetwork && this.emit('chainChanged', this._network);
 
     // Legacy web3 support
-    if (window.web3 && window.web3.eth) {
-      window.web3.eth.defaultAccount = this._selectedAddress;
-    }
-
-    window.ethereum._wallet3.defaultAccount = this._selectedAddress;
+    // if (window.web3 && window.web3.eth) {
+    //   window.web3.eth.defaultAccount = this._selectedAddress;
+    // }
   }
 
   _sendStandard(method, params = []) {
@@ -435,8 +433,8 @@ if (window.location.protocol === 'http:' || window.location.protocol === 'https:
 }
 
 /* globals Web3 */
-window.web3 = new Web3(window.ethereum);
-if (!window.chrome) {
-  window.chrome = { webstore: true };
-}
+// window.web3 = new Web3(window.ethereum);
+// if (!window.chrome) {
+//   window.chrome = { webstore: true };
+// }
 `;
