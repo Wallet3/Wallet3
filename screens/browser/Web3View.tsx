@@ -24,6 +24,13 @@ import { borderColor } from '../../constants/styles';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
+interface PageMetadata {
+  icon: string;
+  title: string;
+  desc?: string;
+  origin: string;
+}
+
 export default forwardRef(
   (
     props: WebViewProps & {
@@ -40,7 +47,7 @@ export default forwardRef(
     const [lastBaseY, setLastBaseY] = useState(0);
     const [tabBarHidden, setTabBarHidden] = useState(false);
     const [tabBarHeight] = useState(useBottomTabBarHeight());
-    const [pageMetadata, setPageMetadata] = useState<{ icon: string; title: string; desc?: string; origin: string }>();
+    const [pageMetadata, setPageMetadata] = useState<PageMetadata>();
     const [appNetwork, setAppNetwork] = useState<INetwork>();
     const [dapp, setDApp] = useState<{ origin: string; lastUsedChainId: string; lastUsedAccount: string } | undefined>();
 
@@ -110,7 +117,7 @@ export default forwardRef(
     }, [pageMetadata, dapp]);
 
     const onMessage = async (e: WebViewMessageEvent) => {
-      let data: { type: string; payload: any; origin?: string };
+      let data: { type: string; payload: any; origin?: string; pageMetadata?: PageMetadata };
 
       try {
         data = JSON.parse(e.nativeEvent.data);
@@ -128,7 +135,7 @@ export default forwardRef(
           break;
         case 'INPAGE_REQUEST':
           ((ref as any).current as WebView).postMessage(
-            await InpageDAppHub.handle(data.origin!, { ...data.payload, pageMetadata })
+            await InpageDAppHub.handle(data.origin!, { ...data.payload, pageMetadata: data.pageMetadata ?? pageMetadata })
           );
           break;
       }

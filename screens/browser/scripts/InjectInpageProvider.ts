@@ -170,6 +170,7 @@ class InpageBridge {
     this._network = undefined; // INITIAL_NETWORK
     this._selectedAddress = undefined; // INITIAL_SELECTED_ADDRESS
     this._subscribe();
+    this._requests = 0;
 
     /**
      * Called by dapps to request access to user accounts
@@ -287,12 +288,28 @@ class InpageBridge {
         hostname: window.location.hostname,
       }));
     }
+    
     this._pending[\`\${payload.__mmID}\`] = callback;
+    this._requests++;
+
+    let pageMetadata = undefined;
+
+    if (this._requests < 3) {
+      const iconMeta = document.querySelector('link[rel="shortcut icon"]') || document.querySelector('link[rel="apple-touch-icon"]');
+      
+      pageMetadata = {
+        title: document.title || location.hostname,
+        origin: window.location.href,
+        icon: iconMeta && iconMeta.href
+      }
+    }
+    
     window.ReactNativeWebView.postMessage(
       JSON.stringify({
         payload,
         type: 'INPAGE_REQUEST',
         origin: window.location.hostname,
+        pageMetadata,
       })
     );
   }
