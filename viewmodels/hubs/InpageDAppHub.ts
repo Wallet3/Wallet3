@@ -121,6 +121,9 @@ class InpageDAppHub extends EventEmitter {
       case 'eth_getEncryptionPublicKey':
       case 'eth_decrypt':
         break;
+      case 'personal_ecRecover':
+        response = await this.personal_ecRecover(origin, params);
+        break;
       default:
         const dapp = await this.getDApp(origin);
         if (dapp) response = await rawCall(dapp.lastUsedChainId, { method, params });
@@ -128,14 +131,15 @@ class InpageDAppHub extends EventEmitter {
     }
 
     // delete (params || {})[0]?.data;
-    // console.log(
-    //   origin,
-    //   __mmID,
-    //   method,
-    //   // response,
-    //   // JSON.stringify(params || {}).substring(0, 200),
-    //   JSON.stringify(response || null).substring(0, 64)
-    // );
+    console.log(
+      origin,
+      __mmID,
+      method,
+
+      // response,
+      JSON.stringify(params || {}).substring(0, 200),
+      JSON.stringify(response || null).substring(0, 64)
+    );
     // console.log(payload);
 
     // if (response === null) console.log('null resp', hostname, this.apps.has(hostname ?? ''), origin);
@@ -311,11 +315,11 @@ class InpageDAppHub extends EventEmitter {
 
     return new Promise((resolve) => {
       const approve = async () => {
-        await Networks.add(chain);
+        if (await Networks.add(chain))
+          showMessage({ message: i18n.t('msg-chain-added', { name: chain.chainName }), type: 'success' });
 
         resolve(null);
         this.wallet_switchEthereumChain(origin, [{ chainId: params[0].chainId }]);
-        showMessage({ message: i18n.t('msg-chain-added', { name: chain.chainName }), type: 'success' });
       };
 
       const reject = () => {
@@ -366,6 +370,32 @@ class InpageDAppHub extends EventEmitter {
         reject,
       } as InpageDAppAddAsset);
     });
+  }
+
+  private async personal_ecRecover(origin: string, params: string[]) {
+    const dapp = await this.getDApp(origin);
+    if (!dapp) return null;
+
+    const [hexMsg, signature] = params;
+    const msg = Buffer.from(utils.arrayify(hexMsg)).toString('utf-8');
+
+    const address = utils.verifyMessage(msg, signature);
+    return dapp.lastUsedAccount === address ? address : null;
+  }
+
+  async setDAppConfigs(origin: string, configs: { account?: string; chainId?: string }) {
+    const dapp = await this.getDApp(origin);
+    if (!dapp) return;
+
+    dapp.lastUsedAccount = configs.account || dapp.lastUsedAccount;
+    dapp.lastUsedChainId = configs.chainId || dapp.lastUsedChainId;
+
+    this.emit('appStateUpdated', {
+      type: 'STATE_UPDATE',
+      payload: { origin, selectedAddress: dapp.lastUsedAccount, network: dapp.lastUsedChainId },
+    });
+
+    dapp.save();
   }
 }
 

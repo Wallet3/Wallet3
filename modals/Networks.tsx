@@ -16,9 +16,10 @@ interface Props {
   onNetworkPress?: (network: INetwork) => void;
   networks: INetwork[];
   selectedNetwork?: INetwork;
+  title?: string;
 }
 
-export default observer(({ onNetworkPress, networks, selectedNetwork }: Props) => {
+export default observer(({ title, onNetworkPress, networks, selectedNetwork }: Props) => {
   const { t } = i18n;
 
   const renderItem = ({ item }: ListRenderItemInfo<INetwork>) => {
@@ -56,7 +57,9 @@ export default observer(({ onNetworkPress, networks, selectedNetwork }: Props) =
   return (
     <SafeAreaProvider style={styles.safeArea}>
       <SafeViewContainer style={{ padding: 16 }}>
-        <Text style={{ color: secondaryFontColor }}>{t('modal-networks-switch')}</Text>
+        <Text style={{ color: secondaryFontColor }} numberOfLines={1}>
+          {title ?? t('modal-networks-switch')}
+        </Text>
         <Separator style={{ marginVertical: 4 }} />
         <FlatList
           keyExtractor={(i) => i.network}

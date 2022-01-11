@@ -119,6 +119,7 @@
   "modal-dapp-add-asset-type": "Type",
   "modal-dapp-add-asset-decimals": "Decimals",
   "modal-dapp-add-asset-address": "Address",
+  "modal-dapp-switch-network": "Switch {{app}} network",
   "modal-token-details-about": "About",
   "modal-token-details-value": "Value",
   "modal-token-details-balance": "Balance",

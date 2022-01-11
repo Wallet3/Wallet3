@@ -22,6 +22,7 @@ import { Portal } from 'react-native-portalize';
 import { WebViewScrollEvent } from 'react-native-webview/lib/WebViewTypes';
 import { borderColor } from '../../constants/styles';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
+import i18n from '../../i18n';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 interface PageMetadata {
@@ -40,6 +41,7 @@ export default forwardRef(
     },
     ref: React.Ref<WebView>
   ) => {
+    const { t } = i18n;
     const { navigation, onMetadataChange, source, onGoHome } = props;
     const [canGoBack, setCanGoBack] = useState(false);
     const [canGoForward, setCanGoForward] = useState(false);
@@ -211,6 +213,7 @@ export default forwardRef(
                   color: `${appNetwork.color}`,
                   width: 22,
                   style: {},
+                  hideEVMTitle: true,
                 })}
               </TouchableOpacity>
             </Animatable.View>
@@ -226,11 +229,12 @@ export default forwardRef(
             scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
           >
             <NetworksMenu
+              title={t('modal-dapp-switch-network', { app: pageMetadata?.title?.split(' ')?.[0] ?? '' })}
               networks={Networks.all}
               selectedNetwork={appNetwork}
               onNetworkPress={(network) => {
                 closeNetworksModal();
-                // Networks.switch(network);
+                InpageDAppHub.setDAppConfigs(dapp?.origin!, { chainId: `${network.chainId}` });
               }}
             />
           </Modalize>

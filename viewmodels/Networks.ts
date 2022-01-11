@@ -102,7 +102,7 @@ class Networks {
   }
 
   async add(chain: AddEthereumChainParameter) {
-    if (PublicNetworks.find((n) => n.chainId === Number(chain.chainId))) return;
+    if (PublicNetworks.find((n) => n.chainId === Number(chain.chainId))) return false;
 
     const nc = (await Database.chains.findOne({ where: { id: chain.chainId } })) || new Chain();
 
@@ -125,7 +125,9 @@ class Networks {
       });
     });
 
-    return nc.save();
+    await nc.save();
+
+    return true;
   }
 
   get currentProvider() {

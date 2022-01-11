@@ -19,11 +19,22 @@ import React from 'react';
 import XDai from './xdai.svg';
 import ZKSync from './zksync.svg';
 
-export const EVMIcon = ({ title, color, size, style }: { title?: string; color: string; size?: number; style?: any }) => {
+export const EVMIcon = ({
+  color,
+  size,
+  style,
+  hideEVMTitle,
+}: {
+  title?: string;
+  color: string;
+  size?: number;
+  style?: any;
+  hideEVMTitle?: boolean;
+}) => {
   return (
     <View style={{ ...style, position: 'relative', justifyContent: 'center', alignItems: 'center' }}>
       <Entypo name="network" size={size ?? 30} color={color} />
-      <Text style={{ fontSize: 5, fontWeight: '500', color }}>EVM</Text>
+      {hideEVMTitle ? undefined : <Text style={{ fontSize: 5, fontWeight: '500', color }}>{'EVM'}</Text>}
     </View>
   );
 };
@@ -71,8 +82,9 @@ export function generateNetworkIcon(props: {
   width: number;
   height?: number;
   style?: StyleProp<ViewStyle>;
+  hideEVMTitle?: boolean;
 }) {
-  const { chainId, width, height, style, color } = props;
+  const { chainId, width, height, style, color, hideEVMTitle } = props;
 
   switch (chainId) {
     case 1:
@@ -102,6 +114,6 @@ export function generateNetworkIcon(props: {
     case 1313161554:
       return <Aurora key={chainId} width={width} height={height ?? width} style={style} />;
     default:
-      return <EVMIcon key={chainId} size={width} color={color!} style={style} />;
+      return <EVMIcon key={chainId} size={width} color={color!} style={style} hideEVMTitle={hideEVMTitle} />;
   }
 }
