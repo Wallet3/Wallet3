@@ -76,7 +76,7 @@ export default class WCSession_v1 extends BaseEntity {
   hostname!: string;
 
   @Column({ default: '0x1' })
-  lastUsedChainId!: number;
+  lastUsedChainId!: string;
 
   @Column()
   lastUsedAccount!: string;

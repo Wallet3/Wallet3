@@ -93,10 +93,12 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
 const WalletConnectV1 = () => {
   const { ref: connectDappRef, open: openConnectDapp, close: closeConnectDapp } = useModalize();
   const [connectUri, setConnectUri] = useState<string>();
+  const [extra, setExtra] = useState<any>();
 
   useEffect(() => {
-    PubSub.subscribe('CodeScan-wc:', (_, { data }) => {
+    PubSub.subscribe('CodeScan-wc:', (_, { data, extra }) => {
       setConnectUri(data);
+      setExtra(extra);
       openConnectDapp();
     });
   }, []);
@@ -114,7 +116,7 @@ const WalletConnectV1 = () => {
       modalStyle={styles.modalStyle}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
-      <WalletConnectDApp uri={connectUri} close={closeConnectDapp} />
+      <WalletConnectDApp uri={connectUri} close={closeConnectDapp} extra={extra} />
     </Modalize>
   );
 };

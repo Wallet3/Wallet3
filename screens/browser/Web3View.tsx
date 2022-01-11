@@ -19,6 +19,7 @@ import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
 import { NetworksMenu } from '../../modals';
 import { Portal } from 'react-native-portalize';
+import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectV1ClientHub';
 import { WebViewScrollEvent } from 'react-native-webview/lib/WebViewTypes';
 import { borderColor } from '../../constants/styles';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
@@ -30,6 +31,13 @@ interface PageMetadata {
   title: string;
   desc?: string;
   origin: string;
+}
+
+interface ConnectedBrowserDApp {
+  origin: string;
+  lastUsedChainId: string;
+  lastUsedAccount: string;
+  isWalletConnect?: boolean;
 }
 
 export default forwardRef(
@@ -51,7 +59,7 @@ export default forwardRef(
     const [tabBarHeight] = useState(useBottomTabBarHeight());
     const [pageMetadata, setPageMetadata] = useState<PageMetadata>();
     const [appNetwork, setAppNetwork] = useState<INetwork>();
-    const [dapp, setDApp] = useState<{ origin: string; lastUsedChainId: string; lastUsedAccount: string } | undefined>();
+    const [dapp, setDApp] = useState<ConnectedBrowserDApp | undefined>();
 
     const hideTabBar = () => {
       setTabBarHidden(true);
@@ -89,8 +97,9 @@ export default forwardRef(
       }
     };
 
-    const updateDAppState = (dapp) => {
+    const updateDAppState = (dapp?: ConnectedBrowserDApp) => {
       setDApp(dapp);
+
       const appNetworkId = dapp?.lastUsedChainId ?? -1;
       setAppNetwork(Networks.find(appNetworkId));
     };
@@ -114,8 +123,23 @@ export default forwardRef(
     }, []);
 
     useEffect(() => {
-      const hostname = Linking.parse(pageMetadata?.origin ?? 'http://').hostname ?? dapp?.origin;
-      InpageDAppHub.getDApp(hostname || '').then((app) => updateDAppState(app));
+      const hostname = (Linking.parse(pageMetadata?.origin ?? 'http://').hostname ?? dapp?.origin) || '';
+      if (dapp?.origin === hostname) return;
+
+      const wcApp = WalletConnectV1ClientHub.find(hostname);
+
+      if (wcApp) {
+        updateDAppState({
+          lastUsedChainId: wcApp.lastUsedChainId,
+          lastUsedAccount: wcApp.lastUsedAccount,
+          origin: wcApp.origin,
+          isWalletConnect: true,
+        });
+
+        return;
+      }
+
+      InpageDAppHub.getDApp(hostname).then((app) => updateDAppState(app));
     }, [pageMetadata, dapp]);
 
     const onMessage = async (e: WebViewMessageEvent) => {
@@ -133,7 +157,10 @@ export default forwardRef(
           setPageMetadata(data.payload);
           break;
         case 'wcuri':
-          LinkHub.handleURL(data.payload.uri, true);
+          LinkHub.handleURL(data.payload.uri, {
+            fromMobile: true,
+            hostname: Linking.parse(pageMetadata?.origin ?? 'https://').hostname ?? '',
+          });
           break;
         case 'INPAGE_REQUEST':
           ((ref as any).current as WebView).postMessage(
@@ -148,6 +175,13 @@ export default forwardRef(
       setCanGoForward(event.canGoForward);
 
       props?.onNavigationStateChange?.(event);
+    };
+
+    const updateDAppNetworkConfig = (network: INetwork) => {
+      if (dapp?.isWalletConnect) {
+      } else {
+        InpageDAppHub.setDAppConfigs(dapp?.origin!, { chainId: `${network.chainId}` });
+      }
     };
 
     const tintColor = `${appNetwork?.color ?? '#000000'}`;
@@ -234,7 +268,7 @@ export default forwardRef(
               selectedNetwork={appNetwork}
               onNetworkPress={(network) => {
                 closeNetworksModal();
-                InpageDAppHub.setDAppConfigs(dapp?.origin!, { chainId: `${network.chainId}` });
+                updateDAppNetworkConfig(network);
               }}
             />
           </Modalize>

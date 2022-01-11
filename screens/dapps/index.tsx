@@ -1,5 +1,5 @@
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
-import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useRef, useState } from 'react';
 import { borderColor, secondaryFontColor } from '../../constants/styles';
 
@@ -106,6 +106,10 @@ const DAppItem = observer(({ item, openApp }: { item: WalletConnect_v1; openApp:
             {appMeta?.name || appMeta?.url}
           </Text>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            {item.isMobileApp ? (
+              <Ionicons name="ios-phone-portrait-outline" size={9} style={{ marginTop: 4, marginEnd: 3 }} />
+            ) : undefined}
+
             <Text style={{ color: secondaryFontColor, fontSize: 12, marginTop: 4 }}>
               {`${t('connectedapps-list-last-used')}: ${item.lastUsedTimestamp.toLocaleDateString()}`}
             </Text>

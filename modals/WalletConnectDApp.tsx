@@ -18,6 +18,7 @@ import styles from './styles';
 
 interface Props {
   uri?: string;
+  extra: { fromMobile?: boolean; hostname?: string };
   close: Function;
 }
 
@@ -88,7 +89,7 @@ const TimeoutView = ({ close }: { close: Function }) => {
   );
 };
 
-export default observer(({ uri, close }: Props) => {
+export default observer(({ uri, close, extra }: Props) => {
   const [connecting, setConnecting] = useState(true);
   const [connectTimeout, setConnectTimeout] = useState(false);
   const [client, setClient] = useState<WalletConnect_v1>();
@@ -97,7 +98,7 @@ export default observer(({ uri, close }: Props) => {
     if (!uri) return;
     if (client) return;
 
-    let wc_client = WalletConnectV1ClientHub.connect(uri);
+    let wc_client = WalletConnectV1ClientHub.connect(uri, extra);
     const timeout = setTimeout(async () => {
       console.log('timeout');
       setConnectTimeout(true);

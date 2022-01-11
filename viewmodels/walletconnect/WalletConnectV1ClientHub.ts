@@ -33,7 +33,7 @@ class WalletConnectV1ClientHub extends EventEmitter {
     autorun(() => {
       const { current } = Networks;
 
-      const clients = this.clients.filter((c) => c.enabledChains.includes(current.chainId));
+      const clients = this.clients.filter((c) => !c.isMobileApp).filter((c) => c.enabledChains.includes(current.chainId));
       clients.forEach((c) => c.updateSession({ chainId: current.chainId }));
     });
 
@@ -43,7 +43,7 @@ class WalletConnectV1ClientHub extends EventEmitter {
       const { currentAccount } = currentWallet ?? {};
       if (!currentAccount) return;
 
-      const clients = this.clients.filter((c) => c.accounts.includes(currentAccount.address));
+      const clients = this.clients.filter((c) => c!.isMobileApp).filter((c) => c.accounts.includes(currentAccount.address));
       clients.forEach((c) => c.updateSession({ accounts: [currentAccount.address] }));
     });
 
@@ -58,7 +58,7 @@ class WalletConnectV1ClientHub extends EventEmitter {
     });
   }
 
-  connect(uri: string) {
+  connect(uri: string, extra?: { hostname?: string; fromMobile?: boolean }) {
     const linking = Linking.parse(uri);
     const [_, version] = linking.path?.split('@') ?? [];
 
@@ -75,6 +75,10 @@ class WalletConnectV1ClientHub extends EventEmitter {
         store.lastUsedTimestamp = Date.now();
         store.chains = client.enabledChains;
         store.accounts = client.accounts;
+        store.isMobile = extra?.fromMobile ?? false;
+        store.hostname = extra?.hostname ?? '';
+        store.lastUsedAccount = client.accounts[0];
+        store.lastUsedChainId = `${client.enabledChains[0]}`;
 
         store.save();
         client.setStore(store);
@@ -97,6 +101,10 @@ class WalletConnectV1ClientHub extends EventEmitter {
       if (!this.clients.includes(client)) return;
       runInAction(() => (this.clients = this.clients.filter((c) => c !== client)));
     });
+  }
+
+  find(hostname: string) {
+    return this.clients.find((c) => c.origin === hostname);
   }
 
   reset() {

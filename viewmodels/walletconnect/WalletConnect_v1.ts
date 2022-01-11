@@ -42,8 +42,16 @@ export class WalletConnect_v1 extends EventEmitter {
     return this.store?.isMobile ?? false;
   }
 
-  get hostname() {
-    return this.store?.hostname;
+  get origin() {
+    return this.store?.hostname ?? '';
+  }
+
+  get lastUsedChainId() {
+    return this.store?.lastUsedChainId ?? '0x1';
+  }
+
+  get lastUsedAccount() {
+    return this.store?.lastUsedAccount ?? '';
   }
 
   constructor(uri?: string) {
