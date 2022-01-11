@@ -132,15 +132,15 @@ class InpageDAppHub extends EventEmitter {
     }
 
     // delete (params || {})[0]?.data;
-    console.log(
-      origin,
-      __mmID,
-      method,
+    // console.log(
+    //   origin,
+    //   __mmID,
+    //   method,
 
-      // response,
-      JSON.stringify(params || {}).substring(0, 200),
-      JSON.stringify(response || null).substring(0, 64)
-    );
+    //   // response,
+    //   JSON.stringify(params || {}).substring(0, 200),
+    //   JSON.stringify(response || null).substring(0, 64)
+    // );
     // console.log(payload);
 
     // if (response === null) console.log('null resp', hostname, this.apps.has(hostname ?? ''), origin);

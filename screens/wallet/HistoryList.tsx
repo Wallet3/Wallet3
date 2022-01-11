@@ -23,6 +23,7 @@ interface Props {
 const Methods = new Map([
   ['0xa9059cbb', 'sent'],
   ['0x095ea7b3', 'approve'],
+  ['0x', 'sent'],
 ]);
 
 const StatusColor = {
@@ -32,7 +33,7 @@ const StatusColor = {
 };
 
 const Tx = observer(({ item, onPress }: { onPress?: (tx: Transaction) => void; item: Transaction }) => {
-  const method = (item.data as string).substring(0, 10);
+  const method = Methods.get((item.data as string)?.substring(0, 10)) ?? 'contract-interaction';
   const { t } = i18n;
 
   const { chainId } = item;
@@ -42,9 +43,7 @@ const Tx = observer(({ item, onPress }: { onPress?: (tx: Transaction) => void; i
 
   const to: string = item.readableInfo?.recipient ?? item.readableInfo.dapp ?? item.to;
   const status = item.blockNumber ? (item.status ? 'confirmed' : 'failed') : 'pending';
-  const methodName = t(
-    `home-history-item-type-${Methods.get(method) ?? (item.data !== '0x' ? 'contract-interaction' : 'sent')}`
-  );
+  const methodName = t(`home-history-item-type-${method ?? (item.data !== '0x' ? 'contract-interaction' : 'sent')}`);
 
   return (
     <TouchableOpacity style={{ paddingVertical: 12, paddingHorizontal: 8 }} onPress={() => onPress?.(item as Transaction)}>
@@ -53,11 +52,11 @@ const Tx = observer(({ item, onPress }: { onPress?: (tx: Transaction) => void; i
           <Coin symbol={tokenSymbol} size={16} style={{ marginEnd: 4 }} />
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text style={{ fontSize: 16, marginEnd: 4, maxWidth: 180 }} numberOfLines={1}>{`${methodName}`}</Text>
-            {/* {methodName === 'Contract Interaction' ? undefined : (
+            {method === 'contract-interaction' ? undefined : (
               <Text style={{ fontSize: 16, maxWidth: 150 }} numberOfLines={1}>
                 {`${amount?.substring?.(0, 7)} ${tokenSymbol}`}
               </Text>
-            )} */}
+            )}
           </View>
         </View>
 

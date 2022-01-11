@@ -42,6 +42,17 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   const [uri, setUri] = useState<string>('');
   const [pageMetadata, setPageMetadata] = useState<{ icon: string; title: string; desc?: string; origin: string }>();
   const [suggests, setSuggests] = useState<string[]>([]);
+  const [webRiskLevel, setWebRiskLevel] = useState('');
+
+  useEffect(() => {
+    Bookmarks.isSecureSite(webUrl)
+      ? setWebRiskLevel('verified')
+      : Bookmarks.isRiskySite(webUrl)
+      ? setWebRiskLevel('risky')
+      : webUrl.startsWith('https://')
+      ? setWebRiskLevel('tls')
+      : setWebRiskLevel('insecure');
+  }, [webUrl]);
 
   const refresh = () => {
     webview.current?.reload();
@@ -167,7 +178,6 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
               style={{
                 backgroundColor: isFocus ? '#fff' : '#f5f5f5',
                 fontSize: 16,
-                color: webUrl.startsWith('https') && !isFocus ? '#76B947' : undefined,
                 paddingHorizontal: isFocus ? 8 : 20,
                 flex: 1,
                 paddingVertical: 6,
@@ -175,16 +185,24 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
                 borderColor: isFocus ? borderColor : 'transparent',
                 borderRadius: 7,
                 textAlign: isFocus ? 'auto' : 'center',
+                color:
+                  (webRiskLevel === 'verified' || webRiskLevel === 'tls') && !isFocus
+                    ? '#76B947'
+                    : webRiskLevel === 'risky'
+                    ? 'red'
+                    : undefined,
               }}
             />
 
             {isFocus ? undefined : webUrl.startsWith('https') ? (
               <TouchableOpacity style={{ position: 'absolute', left: 0, paddingStart: 8 }}>
-                {Bookmarks.isSecureSite(webUrl) ? (
+                {webRiskLevel === 'verified' ? (
                   <Ionicons name="shield-checkmark" color={'#76B947'} size={12} style={{ marginTop: 2 }} />
-                ) : (
+                ) : webRiskLevel === 'risky' ? (
+                  <Ionicons name="md-shield" color="red" size={12} style={{ marginTop: 2 }} />
+                ) : webRiskLevel === 'tls' ? (
                   <Ionicons name="lock-closed" color={'#111'} size={12} />
-                )}
+                ) : undefined}
               </TouchableOpacity>
             ) : undefined}
             {isFocus ? undefined : (
@@ -298,7 +316,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
           onGoHome={goHome}
         />
       ) : (
-        <View>
+        <View style={{ width: '100%', height: '100%' }}>
           <Text style={{ marginHorizontal: 16, marginTop: 12 }}>{t('browser-popular-dapps')}</Text>
           <FlatList
             data={PopularDApps}
@@ -316,11 +334,9 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
 
           <FlatList
             data={Bookmarks.favs}
-            bounces={false}
             renderItem={renderItem}
             numColumns={NumOfColumns}
             contentContainerStyle={{ paddingHorizontal: 4, paddingVertical: 8 }}
-            style={{ marginTop: 4 }}
             keyExtractor={(v, index) => `v.url-${index}`}
           />
         </View>
