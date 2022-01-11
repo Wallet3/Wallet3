@@ -133,7 +133,7 @@ export default forwardRef(
           setPageMetadata(data.payload);
           break;
         case 'wcuri':
-          LinkHub.handleURL(data.payload.uri);
+          LinkHub.handleURL(data.payload.uri, true);
           break;
         case 'INPAGE_REQUEST':
           ((ref as any).current as WebView).postMessage(

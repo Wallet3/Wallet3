@@ -316,7 +316,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
           onGoHome={goHome}
         />
       ) : (
-        <View style={{ width: '100%', height: '100%' }}>
+        <View>
           <Text style={{ marginHorizontal: 16, marginTop: 12 }}>{t('browser-popular-dapps')}</Text>
           <FlatList
             data={PopularDApps}
@@ -335,6 +335,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
           <FlatList
             data={Bookmarks.favs}
             renderItem={renderItem}
+            style={{ height: '100%' }}
             numColumns={NumOfColumns}
             contentContainerStyle={{ paddingHorizontal: 4, paddingVertical: 8 }}
             keyExtractor={(v, index) => `v.url-${index}`}

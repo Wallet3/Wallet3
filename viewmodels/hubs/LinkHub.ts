@@ -13,7 +13,7 @@ class LinkHub {
     Linking.addEventListener('url', ({ url }) => this.handleURL(url));
   }
 
-  handleURL = (url: string) => {
+  handleURL = (url: string, fromMobile = false) => {
     if (!url) return false;
     if (this.handledUrls.has(url)) return false;
 
@@ -56,11 +56,11 @@ class LinkHub {
 
         this.handledUrls.add(url);
 
-        PubSub.publish(`CodeScan-wc:`, { data: queryParams.uri });
+        PubSub.publish(`CodeScan-wc:`, { data: queryParams.uri, isMobile: fromMobile });
       } catch (error) {}
     } else {
       if (scheme === 'wc:') this.handledUrls.add(url);
-      PubSub.publish(`CodeScan-${scheme}`, { data: url.replace('Ethereum', 'ethereum') });
+      PubSub.publish(`CodeScan-${scheme}`, { data: url.replace('Ethereum', 'ethereum'), isMobile: fromMobile });
     }
 
     return true;

@@ -52,7 +52,7 @@ export interface WCCallRequest_eth_sendTransaction {
   data: string;
 }
 
-@Entity({ name: 'wcsession_v1' })
+@Entity({ name: 'wcsessionv1_1' })
 export default class WCSession_v1 extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
@@ -68,4 +68,16 @@ export default class WCSession_v1 extends BaseEntity {
 
   @Column()
   lastUsedTimestamp!: number;
+
+  @Column({ default: false })
+  isMobile!: boolean;
+
+  @Column({ nullable: true })
+  hostname!: string;
+
+  @Column({ default: '0x1' })
+  lastUsedChainId!: number;
+
+  @Column()
+  lastUsedAccount!: string;
 }

@@ -38,6 +38,14 @@ export class WalletConnect_v1 extends EventEmitter {
     return this.store?.lastUsedTimestamp ? new Date(this.store?.lastUsedTimestamp) : new Date();
   }
 
+  get isMobileApp() {
+    return this.store?.isMobile ?? false;
+  }
+
+  get hostname() {
+    return this.store?.hostname;
+  }
+
   constructor(uri?: string) {
     super();
 

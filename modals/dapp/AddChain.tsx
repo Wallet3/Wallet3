@@ -49,7 +49,7 @@ export default ({ themeColor, chain, approve, reject }: Props) => {
         </View>
 
         <View style={styles.reviewItem}>
-          <Text style={styles.reviewItemTitle}>RPC Url</Text>
+          <Text style={styles.reviewItemTitle}>RPC URL</Text>
           <Text style={{ ...styles.reviewItemValue, maxWidth: 180 }} numberOfLines={1}>
             {chain.rpcUrls?.[0] || chain.rpcUrls?.toString()}
           </Text>
