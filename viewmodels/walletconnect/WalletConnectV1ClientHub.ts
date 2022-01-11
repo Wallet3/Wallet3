@@ -4,7 +4,7 @@ import { action, autorun, computed, makeObservable, observable, reaction, runInA
 
 import App from '../App';
 import Database from '../../models/Database';
-import { EventEmitter } from '../../utils/events';
+import EventEmitter from 'events';
 import LINQ from 'linq';
 import Networks from '../Networks';
 import WCSession_v1 from '../../models/WCSession_v1';
@@ -67,7 +67,8 @@ class WalletConnectV1ClientHub extends EventEmitter {
       client.setAccounts([App.currentWallet!.currentAccount!.address!]);
 
       client.once('sessionApproved', () => {
-        runInAction(() => (this.clients = this.clients.concat(client)));
+        // runInAction(() => (this.clients = this.clients.concat(client)));
+        runInAction(() => this.clients.push(client));
 
         const store = new WCSession_v1();
         store.id = Date.now();
@@ -82,6 +83,8 @@ class WalletConnectV1ClientHub extends EventEmitter {
 
         store.save();
         client.setStore(store);
+
+        if (extra?.fromMobile) setTimeout(() => this.emit('mobileAppConnected', client), 100);
       });
 
       this.handleLifecycle(client);

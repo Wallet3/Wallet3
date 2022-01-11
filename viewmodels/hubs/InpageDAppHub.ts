@@ -319,13 +319,18 @@ class InpageDAppHub extends EventEmitter {
     if (!Array.isArray(chain.rpcUrls) || !Array.isArray(chain.blockExplorerUrls) || !chain.nativeCurrency)
       return { error: { message: 'Invalid request' } };
 
+    if (Networks.has(chain.chainId)) {
+      this.wallet_switchEthereumChain(origin, [{ chainId: chain.chainId }]);
+      return null;
+    }
+
     return new Promise((resolve) => {
       const approve = async () => {
         if (await Networks.add(chain))
           showMessage({ message: i18n.t('msg-chain-added', { name: chain.chainName }), type: 'success' });
 
         resolve(null);
-        this.wallet_switchEthereumChain(origin, [{ chainId: params[0].chainId }]);
+        this.wallet_switchEthereumChain(origin, [{ chainId: chain.chainId }]);
       };
 
       const reject = () => {

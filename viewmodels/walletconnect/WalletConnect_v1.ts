@@ -114,6 +114,14 @@ export class WalletConnect_v1 extends EventEmitter {
     this.store.save();
   }
 
+  setLastUsedChain(chainId: number) {
+    this.updateSession({ chainId });
+    if (!this.store) return;
+
+    this.store.lastUsedChainId = `${chainId}`;
+    this.store.save();
+  }
+
   setAccounts(accounts: string[]) {
     this.accounts = accounts;
 

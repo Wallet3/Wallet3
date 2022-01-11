@@ -15,10 +15,12 @@ import { INetwork } from '../../common/Networks';
 import InjectInpageProvider from './scripts/InjectInpageProvider';
 import InpageDAppHub from '../../viewmodels/hubs/InpageDAppHub';
 import LinkHub from '../../viewmodels/hubs/LinkHub';
+import MetamaskLogo from '../../assets/3rd/metamask.svg';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
 import { NetworksMenu } from '../../modals';
 import { Portal } from 'react-native-portalize';
+import WalletConnectLogo from '../../assets/3rd/walletconnect.svg';
 import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectV1ClientHub';
 import { WebViewScrollEvent } from 'react-native-webview/lib/WebViewTypes';
 import { borderColor } from '../../constants/styles';
@@ -104,6 +106,34 @@ export default forwardRef(
       setAppNetwork(Networks.find(appNetworkId));
     };
 
+    const updateGlobalState = () => {
+      const hostname = (Linking.parse(pageMetadata?.origin ?? 'http://').hostname ?? dapp?.origin) || '';
+      if (dapp?.origin === hostname) return;
+
+      const wcApp = WalletConnectV1ClientHub.find(hostname);
+
+      if (wcApp && wcApp.isMobileApp) {
+        updateDAppState({
+          lastUsedChainId: wcApp.lastUsedChainId,
+          lastUsedAccount: wcApp.lastUsedAccount,
+          origin: wcApp.origin,
+          isWalletConnect: true,
+        });
+
+        wcApp.once('disconnect', () => {
+          // console.log(dapp?.origin, wcApp.origin);
+          // if (!dapp?.isWalletConnect) return;
+          // if (dapp.origin !== origin) return;
+
+          updateDAppState(undefined);
+        });
+
+        return;
+      }
+
+      InpageDAppHub.getDApp(hostname).then((app) => updateDAppState(app));
+    };
+
     useEffect(() => {
       if (!source?.['uri']) showTabBar();
     }, [source]);
@@ -114,33 +144,20 @@ export default forwardRef(
         updateDAppState(await InpageDAppHub.getDApp(appState.payload.origin));
       });
 
-      InpageDAppHub.on('dappConnected', (app) => setDApp(app));
+      InpageDAppHub.on('dappConnected', (app) => updateDAppState(app));
+
+      WalletConnectV1ClientHub.on('mobileAppConnected', () => {
+        updateGlobalState();
+      });
 
       return () => {
         InpageDAppHub.removeAllListeners();
+        WalletConnectV1ClientHub.removeAllListeners();
         showTabBar();
       };
-    }, []);
+    }, [pageMetadata]);
 
-    useEffect(() => {
-      const hostname = (Linking.parse(pageMetadata?.origin ?? 'http://').hostname ?? dapp?.origin) || '';
-      if (dapp?.origin === hostname) return;
-
-      const wcApp = WalletConnectV1ClientHub.find(hostname);
-
-      if (wcApp) {
-        updateDAppState({
-          lastUsedChainId: wcApp.lastUsedChainId,
-          lastUsedAccount: wcApp.lastUsedAccount,
-          origin: wcApp.origin,
-          isWalletConnect: true,
-        });
-
-        return;
-      }
-
-      InpageDAppHub.getDApp(hostname).then((app) => updateDAppState(app));
-    }, [pageMetadata, dapp]);
+    useEffect(() => updateGlobalState(), [pageMetadata]);
 
     const onMessage = async (e: WebViewMessageEvent) => {
       let data: { type: string; payload: any; origin?: string; pageMetadata?: PageMetadata };
@@ -179,6 +196,8 @@ export default forwardRef(
 
     const updateDAppNetworkConfig = (network: INetwork) => {
       if (dapp?.isWalletConnect) {
+        WalletConnectV1ClientHub.find(dapp.origin)?.setLastUsedChain(network.chainId);
+        updateDAppState({ ...dapp!, lastUsedChainId: `${network.chainId}` });
       } else {
         InpageDAppHub.setDAppConfigs(dapp?.origin!, { chainId: `${network.chainId}` });
       }
@@ -241,7 +260,7 @@ export default forwardRef(
               animation={'fadeInUp'}
               style={{ paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center' }}
             >
-              <TouchableOpacity onPress={() => openNetworksModal()}>
+              <TouchableOpacity onPress={() => openNetworksModal()} style={{ position: 'relative' }}>
                 {generateNetworkIcon({
                   chainId: appNetwork.chainId,
                   color: `${appNetwork.color}`,
@@ -249,6 +268,14 @@ export default forwardRef(
                   style: {},
                   hideEVMTitle: true,
                 })}
+
+                {dapp?.isWalletConnect ? (
+                  <WalletConnectLogo width={9} height={9} style={{ position: 'absolute', right: 0, bottom: 0 }} />
+                ) : undefined}
+
+                {dapp && !dapp.isWalletConnect ? (
+                  <MetamaskLogo width={7} height={7} style={{ position: 'absolute', right: 0, bottom: 0 }} />
+                ) : undefined}
               </TouchableOpacity>
             </Animatable.View>
           ) : undefined}
