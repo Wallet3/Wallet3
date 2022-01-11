@@ -272,10 +272,6 @@ export default forwardRef(
                 {dapp?.isWalletConnect ? (
                   <WalletConnectLogo width={9} height={9} style={{ position: 'absolute', right: 0, bottom: 0 }} />
                 ) : undefined}
-
-                {dapp && !dapp.isWalletConnect ? (
-                  <MetamaskLogo width={7} height={7} style={{ position: 'absolute', right: 0, bottom: 0 }} />
-                ) : undefined}
               </TouchableOpacity>
             </Animatable.View>
           ) : undefined}
