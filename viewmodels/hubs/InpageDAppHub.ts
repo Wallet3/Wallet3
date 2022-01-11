@@ -102,6 +102,7 @@ class InpageDAppHub extends EventEmitter {
         response = await this.wallet_switchEthereumChain(origin, params);
         break;
       case 'personal_sign':
+      case 'eth_signTypedData':
       case 'eth_signTypedData_v3':
       case 'eth_signTypedData_v4':
         response = await this.sign(origin, params, method);
@@ -235,6 +236,11 @@ class InpageDAppHub extends EventEmitter {
         case 'personal_sign':
           msg = Buffer.from(utils.arrayify(params[0])).toString('utf8');
           type = 'plaintext';
+          break;
+        case 'eth_signTypedData':
+          typedData = params[0];
+          type = 'typedData';
+          typedVersion = SignTypedDataVersion.V1;
           break;
         case 'eth_signTypedData_v3':
           typedData = JSON.parse(params[1]);
