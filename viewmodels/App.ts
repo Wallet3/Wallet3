@@ -6,6 +6,7 @@ import Bookmarks from './customs/Bookmarks';
 import Coingecko from '../common/apis/Coingecko';
 import Contacts from './customs/Contacts';
 import Database from '../models/Database';
+import InpageDAppHub from './hubs/InpageDAppHub';
 import LinkHub from './hubs/LinkHub';
 import Networks from './Networks';
 import TxHub from './hubs/TxHub';
@@ -54,7 +55,6 @@ export class AppVM {
 
     const wallets = await Promise.all((await Database.keys.find()).map((key) => new Wallet(key).init()));
 
-
     Authentication.once('appAuthorized', () => {
       WalletConnectV1ClientHub.init();
       LinkHub.start();
@@ -71,11 +71,19 @@ export class AppVM {
     this.wallets.forEach((w) => w.dispose());
     this.wallets = [];
     this.currentWallet = null;
+    
     TxHub.reset();
     Contacts.reset();
     Networks.reset();
     Bookmarks.reset();
-    await Promise.all([Database.reset(), AsyncStorage.clear(), Authentication.reset(), WalletConnectV1ClientHub.reset()]);
+
+    await Promise.all([
+      Database.reset(),
+      AsyncStorage.clear(),
+      Authentication.reset(),
+      WalletConnectV1ClientHub.reset(),
+      InpageDAppHub.reset(),
+    ]);
   }
 }
 

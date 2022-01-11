@@ -58,7 +58,7 @@
   "settings-languages": "Languages",
   "settings-currencies": "Currencies",
   "settings-security": "Security",
-  "settings-security-biometric": "Biometric",
+  "settings-security-biometric": "Biometric Login",
   "settings-security-passcode": "Change Passcode",
   "settings-security-backup": "Backup",
   "settings-security-backup-verify": "Verify",

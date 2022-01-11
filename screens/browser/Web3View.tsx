@@ -3,7 +3,7 @@ import * as Linking from 'expo-linking';
 
 import { Animated, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { BottomTabNavigationProp, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import React, { forwardRef, useEffect, useState } from 'react';
 import { WebView, WebViewMessageEvent, WebViewNavigation, WebViewProps } from 'react-native-webview';
 
@@ -150,7 +150,7 @@ export default forwardRef(
       props?.onNavigationStateChange?.(event);
     };
 
-    const tintColor = `${appNetwork?.color ?? '#000000'}aa`;
+    const tintColor = `${appNetwork?.color ?? '#000000'}`;
     const { ref: networksRef, open: openNetworksModal, close: closeNetworksModal } = useModalize();
 
     return (
@@ -197,7 +197,7 @@ export default forwardRef(
           </TouchableOpacity>
 
           <TouchableOpacity style={{ paddingHorizontal: 12 }} onPress={onGoHome}>
-            <Ionicons name="radio-button-off" size={22} color={tintColor} />
+            <MaterialIcons name="radio-button-off" size={22} color={tintColor} />
           </TouchableOpacity>
 
           <View style={{ flex: 1 }} />

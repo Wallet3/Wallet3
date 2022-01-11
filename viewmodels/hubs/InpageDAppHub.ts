@@ -403,6 +403,11 @@ class InpageDAppHub extends EventEmitter {
 
     dapp.save();
   }
+
+  reset() {
+    this.apps.clear();
+    return this.dbTable.clear();
+  }
 }
 
 export default new InpageDAppHub();
