@@ -1,13 +1,23 @@
 import * as Linking from 'expo-linking';
 
+import {
+  Animated,
+  Dimensions,
+  FlatList,
+  Image,
+  ListRenderItemInfo,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Bookmarks, { Bookmark, PopularDApps } from '../../viewmodels/customs/Bookmarks';
-import { Dimensions, FlatList, Image, ListRenderItemInfo, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { BottomTabScreenProps, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import React, { useEffect, useRef, useState } from 'react';
 import { WebView, WebViewMessageEvent, WebViewNavigation } from 'react-native-webview';
 import { borderColor, thirdFontColor } from '../../constants/styles';
 
 import { Bar } from 'react-native-progress';
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import CachedImage from 'react-native-expo-cached-image';
 import Collapsible from 'react-native-collapsible';
 import InpageDAppHub from '../../viewmodels/hubs/InpageDAppHub';
@@ -38,6 +48,8 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   const [isFocus, setFocus] = useState(false);
   const [hostname, setHostname] = useState('');
   const [webUrl, setWebUrl] = useState('');
+  const [tabBarHidden, setTabBarHidden] = useState(false);
+  const [tabBarHeight] = useState(useBottomTabBarHeight());
   const [addr, setAddr] = useState('');
   const [uri, setUri] = useState<string>('');
   const [pageMetadata, setPageMetadata] = useState<{ icon: string; title: string; desc?: string; origin: string }>();
@@ -107,6 +119,32 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
 
     Bookmarks.submitHistory(goTo(addr));
   };
+
+  const hideTabBar = () => {
+    if (tabBarHidden) return;
+
+    setTabBarHidden(true);
+
+    const translateY = new Animated.Value(0);
+    Animated.spring(translateY, { toValue: tabBarHeight, useNativeDriver: true }).start();
+    setTimeout(() => navigation.setOptions({ tabBarStyle: { height: 0 } }), 100);
+    navigation.setOptions({ tabBarStyle: { transform: [{ translateY }] } });
+  };
+
+  const showTabBar = () => {
+    if (!tabBarHidden) return;
+
+    setTabBarHidden(false);
+
+    const translateY = new Animated.Value(tabBarHeight);
+    Animated.spring(translateY, { toValue: 0, useNativeDriver: true }).start();
+    navigation.setOptions({ tabBarStyle: { transform: [{ translateY }], height: tabBarHeight } });
+  };
+
+  useEffect(() => {
+    if (webUrl) hideTabBar();
+    else showTabBar();
+  }, [webUrl]);
 
   const onNavigationStateChange = (event: WebViewNavigation) => {
     if (!event.url) return;
@@ -307,7 +345,6 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
       {uri ? (
         <Web3View
           ref={webview}
-          navigation={navigation}
           source={{ uri }}
           onLoadProgress={({ nativeEvent }) => setLoadingProgress(nativeEvent.progress)}
           onLoadEnd={() => setLoadingProgress(1)}

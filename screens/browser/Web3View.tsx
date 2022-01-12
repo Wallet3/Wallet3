@@ -2,7 +2,6 @@ import * as Animatable from 'react-native-animatable';
 import * as Linking from 'expo-linking';
 
 import { Animated, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { BottomTabNavigationProp, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import React, { forwardRef, useEffect, useState } from 'react';
 import { WebView, WebViewMessageEvent, WebViewNavigation, WebViewProps } from 'react-native-webview';
@@ -46,63 +45,20 @@ export default forwardRef(
   (
     props: WebViewProps & {
       onMetadataChange?: (metadata: { icon: string; title: string; desc?: string; origin: string }) => void;
-      navigation: BottomTabNavigationProp<any, any>;
       onGoHome?: () => void;
     },
     ref: React.Ref<WebView>
   ) => {
     const { t } = i18n;
-    const { navigation, onMetadataChange, source, onGoHome } = props;
+    const { onMetadataChange, onGoHome } = props;
     const [canGoBack, setCanGoBack] = useState(false);
     const [canGoForward, setCanGoForward] = useState(false);
     const [appName] = useState(`Wallet3/${DeviceInfo.getVersion() ?? '0.0.0'}`);
-    const [lastBaseY, setLastBaseY] = useState(0);
-    const [tabBarHidden, setTabBarHidden] = useState(false);
-    const [tabBarHeight] = useState(useBottomTabBarHeight());
+
     const [pageMetadata, setPageMetadata] = useState<PageMetadata>();
     const [appNetwork, setAppNetwork] = useState<INetwork>();
     const [dapp, setDApp] = useState<ConnectedBrowserDApp | undefined>();
     const [webUrl, setWebUrl] = useState('');
-
-    const hideTabBar = () => {
-      if (tabBarHidden) return;
-
-      setTabBarHidden(true);
-
-      const translateY = new Animated.Value(0);
-      Animated.spring(translateY, { toValue: tabBarHeight, useNativeDriver: true }).start();
-      setTimeout(() => navigation.setOptions({ tabBarStyle: { height: 0 } }), 100);
-      navigation.setOptions({ tabBarStyle: { transform: [{ translateY }] } });
-    };
-
-    const showTabBar = () => {
-      if (!tabBarHidden) return;
-      
-      setTabBarHidden(false);
-
-      const translateY = new Animated.Value(tabBarHeight);
-      Animated.spring(translateY, { toValue: 0, useNativeDriver: true }).start();
-      navigation.setOptions({ tabBarStyle: { transform: [{ translateY }], height: tabBarHeight } });
-    };
-
-    // const onScroll = ({ nativeEvent }: WebViewScrollEvent) => {
-    //   const { contentOffset, contentSize, layoutMeasurement } = nativeEvent;
-    //   const { y } = contentOffset;
-
-    //   if (layoutMeasurement.height + y >= contentSize.height) return;
-
-    //   try {
-    //     if (y > lastBaseY) {
-    //       if (tabBarHidden) return;
-    //       hideTabBar();
-    //     } else {
-    //       if (!tabBarHidden) return;
-    //       showTabBar();
-    //     }
-    //   } finally {
-    //     setLastBaseY(Math.max(0, y));
-    //   }
-    // };
 
     const updateDAppState = (dapp?: ConnectedBrowserDApp) => {
       setDApp(dapp);
@@ -112,7 +68,8 @@ export default forwardRef(
     };
 
     const updateGlobalState = () => {
-      const hostname = (Linking.parse(pageMetadata?.origin ?? 'http://').hostname ?? dapp?.origin) || '';
+      console.log('updateGlobalState', webUrl);
+      const hostname = (Linking.parse(webUrl || 'http://').hostname ?? dapp?.origin) || '';
       if (dapp?.origin === hostname) return;
 
       const wcApp = WalletConnectV1ClientHub.find(hostname);
@@ -140,17 +97,6 @@ export default forwardRef(
     };
 
     useEffect(() => {
-      if (!source?.['uri']) {
-        showTabBar();
-        return;
-      }
-
-      if (source?.['uri'] || webUrl) {
-        hideTabBar();
-      }
-    }, [source, webUrl]);
-
-    useEffect(() => {
       InpageDAppHub.on('appStateUpdated', async (appState) => {
         ((ref as any).current as WebView)?.postMessage(JSON.stringify(appState));
         updateDAppState(await InpageDAppHub.getDApp(appState.payload.origin));
@@ -165,11 +111,10 @@ export default forwardRef(
       return () => {
         InpageDAppHub.removeAllListeners();
         WalletConnectV1ClientHub.removeAllListeners();
-        showTabBar();
       };
-    }, [pageMetadata]);
+    }, [webUrl]);
 
-    useEffect(() => updateGlobalState(), [pageMetadata]);
+    useEffect(() => updateGlobalState(), [webUrl]);
 
     const onMessage = async (e: WebViewMessageEvent) => {
       let data: { type: string; payload: any; origin?: string; pageMetadata?: PageMetadata };
@@ -224,7 +169,7 @@ export default forwardRef(
         <WebView
           {...props}
           ref={ref}
-          // contentInset={{ bottom: dapp ? 0 : 39 }}
+          contentInset={{ bottom: 37 }}
           automaticallyAdjustContentInsets
           contentInsetAdjustmentBehavior="always"
           onNavigationStateChange={onNavigationStateChange}
@@ -233,7 +178,6 @@ export default forwardRef(
           injectedJavaScript={`${GetPageMetadata} ${HookWalletConnect}`}
           onMessage={onMessage}
           mediaPlaybackRequiresUserAction
-          // onScroll={onScroll}
           pullToRefreshEnabled
           allowsInlineMediaPlayback
           injectedJavaScriptBeforeContentLoaded={InjectInpageProvider}
@@ -244,24 +188,22 @@ export default forwardRef(
           tint="light"
           style={{
             ...styles.blurView,
-            borderTopWidth: 0.33,
+            // borderTopWidth: 0.33,
             // borderTopWidth: dapp ? 0.33 : 0,
+            borderTopWidth: 0,
             // position: dapp ? 'relative' : 'absolute',
-            // position: 'absolute',
+            position: 'absolute',
             // shadowOpacity: dapp ? 0 : 0.25,
-            // shadowOpacity: 0.25,
+            shadowOpacity: 0.25,
           }}
         >
-          <View style={{ flex: 1 }} />
+          <View style={{ flex: 1, flexDirection: 'row' }}>
+            <TouchableOpacity style={{ paddingHorizontal: 12 }}>
+              <MaterialCommunityIcons name="arrow-collapse-vertical" size={18} />
+            </TouchableOpacity>
+          </View>
 
-          <View
-            style={{
-              flex: 2,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-around',
-            }}
-          >
+          <View style={{ flex: 2, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' }}>
             <TouchableOpacity
               style={{ paddingHorizontal: 12 }}
               onPress={() => ((ref as any)?.current as WebView)?.goBack()}
@@ -270,7 +212,12 @@ export default forwardRef(
               <Ionicons name="chevron-back-outline" size={22} color={canGoBack ? tintColor : '#dddddd50'} />
             </TouchableOpacity>
 
-            <TouchableOpacity style={{ paddingHorizontal: 12 }} onPress={onGoHome}>
+            <TouchableOpacity
+              style={{ paddingHorizontal: 12 }}
+              onPress={() => {
+                onGoHome?.();
+              }}
+            >
               <MaterialIcons name="radio-button-off" size={22} color={tintColor} />
             </TouchableOpacity>
 
