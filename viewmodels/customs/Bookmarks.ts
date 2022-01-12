@@ -3,6 +3,7 @@ import * as Linking from 'expo-linking';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import NoInsetsSites from '../../configs/urls/no-insets.json';
 import RiskyUrls from '../../configs/urls/risky.json';
 import SecureUrls from '../../configs/urls/verified.json';
 
@@ -43,7 +44,7 @@ class Bookmarks {
       .catch(() => {});
 
     AsyncStorage.getItem(`separated-sites`)
-      .then((v) => runInAction(() => (this.separatedSites = JSON.parse(v || '[]'))))
+      .then((v) => runInAction(() => (this.separatedSites = v ? JSON.parse(v) : NoInsetsSites)))
       .catch(() => {});
   }
 
@@ -93,6 +94,7 @@ class Bookmarks {
   reset() {
     this.favs = [];
     this.history = [];
+    this.separatedSites = NoInsetsSites;
   }
 }
 
