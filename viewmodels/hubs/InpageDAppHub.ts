@@ -320,7 +320,7 @@ class InpageDAppHub extends EventEmitter {
       return { error: { message: 'Invalid request' } };
 
     if (Networks.has(chain.chainId)) {
-      this.wallet_switchEthereumChain(origin, [{ chainId: chain.chainId }]);
+      setTimeout(() => this.wallet_switchEthereumChain(origin, [{ chainId: chain.chainId }]), 200);
       return null;
     }
 

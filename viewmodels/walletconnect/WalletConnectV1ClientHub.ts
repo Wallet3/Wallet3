@@ -107,7 +107,9 @@ class WalletConnectV1ClientHub extends EventEmitter {
   }
 
   find(hostname: string) {
-    return this.clients.find((c) => c.origin === hostname);
+    return LINQ.from(this.clients.filter((c) => c.origin === hostname))
+      .orderByDescending((i) => i.lastUsedTimestamp)
+      .firstOrDefault();
   }
 
   reset() {

@@ -34,6 +34,7 @@
   "https://app.bancor.network",
   "https://app.maple.finance",
   "https://zapper.fi",
+  "https://cowswap.exchange",
   "https://defi.instadapp.io",
   "https://mirror.xyz",
   "https://app.alpacafinance.org",
@@ -51,6 +52,7 @@
   "https://etherscan.io",
   "https://gnosis-safe.io/app",
   "https://www.tokensets.com",
+  "https://bridge.xdaichain.com",
   "https://pay.sablier.finance",
   "https://debank.com",
   "https://wallet.zksync.io",
@@ -58,5 +60,7 @@
   "https://kyberswap.com",
   "https://anyswap.exchange/#/router",
   "https://rss3.bio",
-  "https://revery.so"
+  "https://revery.so",
+  "https://app.epns.io",
+  "https://www.sound.xyz"
 ]
