@@ -3,32 +3,14 @@ import * as Linking from 'expo-linking';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import RiskyUrls from '../../configs/riskyurls.json';
-import SecureUrls from '../../configs/urls.json';
+import RiskyUrls from '../../configs/urls/risky.json';
+import SecureUrls from '../../configs/urls/verified.json';
 
 export interface Bookmark {
   url: string;
   icon: string;
   title: string;
 }
-
-export const PopularDApps = [
-  { url: 'https://app.uniswap.org', icon: 'https://app.uniswap.org/favicon.png', title: 'Uniswap' },
-  { url: 'https://curve.fi', icon: 'https://curve.fi/apple-touch-icon.png', title: 'Curve' },
-  { url: 'https://app.compound.finance', icon: 'https://compound.finance/images/compound-512.png', title: 'Compound' },
-  { url: 'https://trade.dydx.exchange', icon: 'https://dydx.exchange/meta/apple-icon-180x180.png', title: 'dYdX' },
-  {
-    url: 'https://oasis.app',
-    icon: 'https://www.gitbook.com/cdn-cgi/image/width=40,height=40,fit=contain,dpr=2,format=auto/https%3A%2F%2Fdocs.makerdao.com%2F~%2Ffiles%2Fv0%2Fb%2Fgitbook-28427.appspot.com%2Fo%2Fspaces%252F-LtJ1VeNJVW-jiKH0xoL%252Favatar.png%3Fgeneration%3D1574804307039477%26alt%3Dmedia',
-    title: 'MakerDAO',
-  },
-  {
-    url: 'https://opensea.io',
-    icon: 'https://storage.googleapis.com/opensea-static/Logomark/Logomark-Blue.png',
-    title: 'Opensea',
-  },
-  { url: 'https://foundation.app', icon: 'https://foundation.app/apple-touch-icon.png', title: 'Foundation' },
-];
 
 class Bookmarks {
   favs: Bookmark[] = [];

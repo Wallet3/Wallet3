@@ -46,11 +46,13 @@ export default forwardRef(
     props: WebViewProps & {
       onMetadataChange?: (metadata: { icon: string; title: string; desc?: string; origin: string }) => void;
       onGoHome?: () => void;
+      separateNavBar?: boolean;
+      onSeparateRequest?: () => void;
     },
     ref: React.Ref<WebView>
   ) => {
     const { t } = i18n;
-    const { onMetadataChange, onGoHome } = props;
+    const { onMetadataChange, onGoHome, separateNavBar, onSeparateRequest } = props;
     const [canGoBack, setCanGoBack] = useState(false);
     const [canGoForward, setCanGoForward] = useState(false);
     const [appName] = useState(`Wallet3/${DeviceInfo.getVersion() ?? '0.0.0'}`);
@@ -68,7 +70,6 @@ export default forwardRef(
     };
 
     const updateGlobalState = () => {
-      console.log('updateGlobalState', webUrl);
       const hostname = (Linking.parse(webUrl || 'http://').hostname ?? dapp?.origin) || '';
       if (dapp?.origin === hostname) return;
 
@@ -169,7 +170,7 @@ export default forwardRef(
         <WebView
           {...props}
           ref={ref}
-          contentInset={{ bottom: 37 }}
+          contentInset={{ bottom: separateNavBar ? 0 : 37 }}
           automaticallyAdjustContentInsets
           contentInsetAdjustmentBehavior="always"
           onNavigationStateChange={onNavigationStateChange}
@@ -188,24 +189,20 @@ export default forwardRef(
           tint="light"
           style={{
             ...styles.blurView,
-            // borderTopWidth: 0.33,
-            // borderTopWidth: dapp ? 0.33 : 0,
-            borderTopWidth: 0,
-            // position: dapp ? 'relative' : 'absolute',
-            position: 'absolute',
-            // shadowOpacity: dapp ? 0 : 0.25,
-            shadowOpacity: 0.25,
+            borderTopWidth: separateNavBar ? 0.33 : 0,
+            position: separateNavBar ? 'relative' : 'absolute',
+            shadowOpacity: separateNavBar ? 0 : 0.25,
           }}
         >
           <View style={{ flex: 1, flexDirection: 'row' }}>
-            <TouchableOpacity style={{ paddingHorizontal: 12 }}>
+            <TouchableOpacity style={styles.navTouchableItem} onPress={onSeparateRequest}>
               <MaterialCommunityIcons name="arrow-collapse-vertical" size={18} />
             </TouchableOpacity>
           </View>
 
           <View style={{ flex: 2, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' }}>
             <TouchableOpacity
-              style={{ paddingHorizontal: 12 }}
+              style={styles.navTouchableItem}
               onPress={() => ((ref as any)?.current as WebView)?.goBack()}
               disabled={!canGoBack}
             >
@@ -213,7 +210,7 @@ export default forwardRef(
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={{ paddingHorizontal: 12 }}
+              style={styles.navTouchableItem}
               onPress={() => {
                 onGoHome?.();
               }}
@@ -222,7 +219,7 @@ export default forwardRef(
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={{ paddingHorizontal: 12 }}
+              style={styles.navTouchableItem}
               onPress={() => ((ref as any)?.current as WebView)?.goForward()}
               disabled={!canGoForward}
             >
@@ -232,11 +229,11 @@ export default forwardRef(
 
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
             {dapp && appNetwork ? (
-              <Animatable.View
-                animation={'fadeInUp'}
-                style={{ paddingHorizontal: 12, paddingStart: 24, flexDirection: 'row', alignItems: 'center' }}
-              >
-                <TouchableOpacity onPress={() => openNetworksModal()} style={{ position: 'relative' }}>
+              <Animatable.View animation={'fadeInUp'} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <TouchableOpacity
+                  onPress={() => openNetworksModal()}
+                  style={{ ...styles.navTouchableItem, position: 'relative' }}
+                >
                   {generateNetworkIcon({
                     chainId: appNetwork.chainId,
                     color: `${appNetwork.color}`,
@@ -283,7 +280,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 4,
-    paddingVertical: 8,
     bottom: 0,
     left: 0,
     right: 0,
@@ -299,5 +295,10 @@ const styles = StyleSheet.create({
     elevation: 5,
     backgroundColor: '#ffffff20',
     borderTopColor: 'rgb(216, 216, 216)',
+  },
+
+  navTouchableItem: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
   },
 });

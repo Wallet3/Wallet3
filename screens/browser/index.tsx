@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Bookmarks, { Bookmark, PopularDApps } from '../../viewmodels/customs/Bookmarks';
+import Bookmarks, { Bookmark } from '../../viewmodels/customs/Bookmarks';
 import { BottomTabScreenProps, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import React, { useEffect, useRef, useState } from 'react';
 import { WebView, WebViewMessageEvent, WebViewNavigation } from 'react-native-webview';
@@ -24,7 +24,8 @@ import InpageDAppHub from '../../viewmodels/hubs/InpageDAppHub';
 import { Ionicons } from '@expo/vector-icons';
 import LinkHub from '../../viewmodels/hubs/LinkHub';
 import Networks from '../../viewmodels/Networks';
-import SuggestUrls from '../../configs/urls.json';
+import PopularDApps from '../../configs/urls/popular.json';
+import SuggestUrls from '../../configs/urls/verified.json';
 import Web3View from './Web3View';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
