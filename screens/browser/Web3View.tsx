@@ -201,8 +201,11 @@ export default forwardRef(
                 <MaterialCommunityIcons name="arrow-collapse-vertical" size={20} color={tintColor} />
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity style={styles.navTouchableItem} onPress={() => onSeparateRequest?.(webUrl)}>
-                <MaterialCommunityIcons name="arrow-expand" size={20} color={tintColor} />
+              <TouchableOpacity
+                style={{ ...styles.navTouchableItem, paddingTop: 10, paddingBottom: 9 }}
+                onPress={() => onSeparateRequest?.(webUrl)}
+              >
+                <MaterialCommunityIcons name="arrow-expand" size={19} color={tintColor} />
               </TouchableOpacity>
             )}
 
