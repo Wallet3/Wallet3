@@ -2,7 +2,7 @@ import * as Animatable from 'react-native-animatable';
 import * as Linking from 'expo-linking';
 
 import { Animated, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import React, { forwardRef, useEffect, useState } from 'react';
 import { WebView, WebViewMessageEvent, WebViewNavigation, WebViewProps } from 'react-native-webview';
 
@@ -47,12 +47,13 @@ export default forwardRef(
       onMetadataChange?: (metadata: { icon: string; title: string; desc?: string; origin: string }) => void;
       onGoHome?: () => void;
       separateNavBar?: boolean;
-      onSeparateRequest?: () => void;
+      onSeparateRequest?: (webUrl: string) => void;
+      onExpandRequest?: (webUrl: string) => void;
     },
     ref: React.Ref<WebView>
   ) => {
     const { t } = i18n;
-    const { onMetadataChange, onGoHome, separateNavBar, onSeparateRequest } = props;
+    const { onMetadataChange, onGoHome, separateNavBar, onSeparateRequest, onExpandRequest } = props;
     const [canGoBack, setCanGoBack] = useState(false);
     const [canGoForward, setCanGoForward] = useState(false);
     const [appName] = useState(`Wallet3/${DeviceInfo.getVersion() ?? '0.0.0'}`);
@@ -162,7 +163,7 @@ export default forwardRef(
       }
     };
 
-    const tintColor = `${appNetwork?.color ?? '#000000'}`;
+    const tintColor = '#000000c0'; // `${appNetwork?.color ?? '#000000'}`;
     const { ref: networksRef, open: openNetworksModal, close: closeNetworksModal } = useModalize();
 
     return (
@@ -194,9 +195,19 @@ export default forwardRef(
             shadowOpacity: separateNavBar ? 0 : 0.25,
           }}
         >
-          <View style={{ flex: 1, flexDirection: 'row' }}>
-            <TouchableOpacity style={styles.navTouchableItem} onPress={onSeparateRequest}>
-              <MaterialCommunityIcons name="arrow-collapse-vertical" size={18} />
+          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+            {separateNavBar ? (
+              <TouchableOpacity style={styles.navTouchableItem} onPress={() => onExpandRequest?.(webUrl)}>
+                <MaterialCommunityIcons name="arrow-collapse-vertical" size={20} color={tintColor} />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity style={styles.navTouchableItem} onPress={() => onSeparateRequest?.(webUrl)}>
+                <MaterialCommunityIcons name="arrow-expand" size={20} color={tintColor} />
+              </TouchableOpacity>
+            )}
+
+            <TouchableOpacity style={styles.navTouchableItem} onPress={onGoHome}>
+              <Feather name="book-open" size={20} color={tintColor} />
             </TouchableOpacity>
           </View>
 
@@ -209,12 +220,7 @@ export default forwardRef(
               <Ionicons name="chevron-back-outline" size={22} color={canGoBack ? tintColor : '#dddddd50'} />
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.navTouchableItem}
-              onPress={() => {
-                onGoHome?.();
-              }}
-            >
+            <TouchableOpacity style={styles.navTouchableItem} onPress={onGoHome}>
               <MaterialIcons name="radio-button-off" size={22} color={tintColor} />
             </TouchableOpacity>
 
@@ -232,7 +238,7 @@ export default forwardRef(
               <Animatable.View animation={'fadeInUp'} style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <TouchableOpacity
                   onPress={() => openNetworksModal()}
-                  style={{ ...styles.navTouchableItem, position: 'relative' }}
+                  style={{ paddingStart: 16, paddingEnd: 8, position: 'relative' }}
                 >
                   {generateNetworkIcon({
                     chainId: appNetwork.chainId,
@@ -243,7 +249,7 @@ export default forwardRef(
                   })}
 
                   {dapp?.isWalletConnect ? (
-                    <WalletConnectLogo width={9} height={9} style={{ position: 'absolute', right: 0, bottom: 0 }} />
+                    <WalletConnectLogo width={9} height={9} style={{ position: 'absolute', right: 5, bottom: -4 }} />
                   ) : undefined}
                 </TouchableOpacity>
               </Animatable.View>
@@ -300,5 +306,6 @@ const styles = StyleSheet.create({
   navTouchableItem: {
     paddingVertical: 8,
     paddingHorizontal: 12,
+    paddingTop: 9,
   },
 });

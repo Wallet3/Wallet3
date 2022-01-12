@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Bookmarks, { Bookmark } from '../../viewmodels/customs/Bookmarks';
+import Bookmarks, { Bookmark, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
 import { BottomTabScreenProps, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import React, { useEffect, useRef, useState } from 'react';
 import { WebView, WebViewMessageEvent, WebViewNavigation } from 'react-native-webview';
@@ -58,9 +58,9 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   const [webRiskLevel, setWebRiskLevel] = useState('');
 
   useEffect(() => {
-    Bookmarks.isSecureSite(webUrl)
+    isSecureSite(webUrl)
       ? setWebRiskLevel('verified')
-      : Bookmarks.isRiskySite(webUrl)
+      : isRiskySite(webUrl)
       ? setWebRiskLevel('risky')
       : webUrl.startsWith('https://')
       ? setWebRiskLevel('tls')
@@ -352,6 +352,9 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
           onNavigationStateChange={onNavigationStateChange}
           onMetadataChange={setPageMetadata}
           onGoHome={goHome}
+          onSeparateRequest={(webUrl) => Bookmarks.addSeparatedSite(webUrl)}
+          onExpandRequest={(webUrl) => Bookmarks.removeSeparatedSite(webUrl)}
+          separateNavBar={Bookmarks.isSeparatedSite(webUrl)}
         />
       ) : (
         <View>

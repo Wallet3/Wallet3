@@ -15,6 +15,7 @@ export interface Bookmark {
 class Bookmarks {
   favs: Bookmark[] = [];
   history: string[] = [];
+  separatedSites: string[] = [];
 
   constructor() {
     makeObservable(this, {
@@ -24,18 +25,25 @@ class Bookmarks {
       add: action,
       submitHistory: action,
       reset: action,
+      separatedSites: observable,
+      addSeparatedSite: action,
+      removeSeparatedSite: action,
     });
 
     AsyncStorage.getItem(`bookmarks`)
       .then((v) => {
-        runInAction(() => this.favs.push(...JSON.parse(v || '[]')));
+        runInAction(() => (this.favs = JSON.parse(v || '[]')));
       })
       .catch(() => {});
 
     AsyncStorage.getItem(`history-urls`)
       .then((v) => {
-        runInAction(() => this.history.push(...JSON.parse(v || '[]')));
+        runInAction(() => (this.history = JSON.parse(v || '[]')));
       })
+      .catch(() => {});
+
+    AsyncStorage.getItem(`separated-sites`)
+      .then((v) => runInAction(() => (this.separatedSites = JSON.parse(v || '[]'))))
       .catch(() => {});
   }
 
@@ -54,17 +62,32 @@ class Bookmarks {
     return this.favs.find((i) => i.url === url) ? true : false;
   }
 
-  isSecureSite(url: string) {
-    return SecureUrls.some((i) => url.startsWith(i));
-  }
-
-  isRiskySite(url: string) {
-    return RiskyUrls.some((i) => url.startsWith(i));
-  }
-
   submitHistory(url: string) {
     this.history = [url, ...this.history.filter((i) => !i.includes(url) || !url.includes(i))];
     AsyncStorage.setItem(`history-urls`, JSON.stringify(this.history.slice(0, 32)));
+  }
+
+  addSeparatedSite(url: string) {
+    const { hostname } = Linking.parse(url || 'https://');
+    if (!hostname) return;
+
+    this.separatedSites.push(hostname);
+    AsyncStorage.setItem('separated-sites', JSON.stringify(this.separatedSites));
+  }
+
+  removeSeparatedSite(url: string) {
+    const { hostname } = Linking.parse(url || 'https://');
+    if (!hostname) return;
+
+    this.separatedSites = this.separatedSites.filter((i) => i !== hostname);
+    AsyncStorage.setItem('separated-sites', JSON.stringify(this.separatedSites));
+  }
+
+  isSeparatedSite(url: string) {
+    const { hostname } = Linking.parse(url || 'https://');
+    if (!hostname) return false;
+
+    return this.separatedSites.includes(hostname);
   }
 
   reset() {
@@ -74,3 +97,11 @@ class Bookmarks {
 }
 
 export default new Bookmarks();
+
+export function isSecureSite(url: string) {
+  return SecureUrls.some((i) => url.startsWith(i));
+}
+
+export function isRiskySite(url: string) {
+  return RiskyUrls.some((i) => url.startsWith(i));
+}
