@@ -14,6 +14,7 @@ import {
 import Bookmarks, { Bookmark, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
 import { BottomTabScreenProps, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import React, { useEffect, useRef, useState } from 'react';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { WebView, WebViewMessageEvent, WebViewNavigation } from 'react-native-webview';
 import { borderColor, thirdFontColor } from '../../constants/styles';
 
@@ -23,13 +24,16 @@ import Collapsible from 'react-native-collapsible';
 import InpageDAppHub from '../../viewmodels/hubs/InpageDAppHub';
 import { Ionicons } from '@expo/vector-icons';
 import LinkHub from '../../viewmodels/hubs/LinkHub';
+import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
 import PopularDApps from '../../configs/urls/popular.json';
+import { Portal } from 'react-native-portalize';
+import { SafeViewContainer } from '../../components';
 import SuggestUrls from '../../configs/urls/verified.json';
 import Web3View from './Web3View';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 const DefaultIcon = require('../../assets/default-icon.png');
 
@@ -56,6 +60,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   const [pageMetadata, setPageMetadata] = useState<{ icon: string; title: string; desc?: string; origin: string }>();
   const [suggests, setSuggests] = useState<string[]>([]);
   const [webRiskLevel, setWebRiskLevel] = useState('');
+  const { ref: favsRef, open: openFavs } = useModalize();
 
   useEffect(() => {
     isSecureSite(webUrl)
@@ -355,6 +360,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
           onSeparateRequest={(webUrl) => Bookmarks.addSeparatedSite(webUrl)}
           onExpandRequest={(webUrl) => Bookmarks.removeSeparatedSite(webUrl)}
           separateNavBar={Bookmarks.isSeparatedSite(webUrl)}
+          onBookmarksPress={openFavs}
         />
       ) : (
         <View>
@@ -383,6 +389,30 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
           />
         </View>
       )}
+
+      <Portal>
+        <Modalize
+          ref={favsRef}
+          adjustToContentHeight
+          disableScrollIfPossible
+          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+          modalStyle={{ padding: 0, margin: 0 }}
+        >
+          <SafeAreaProvider style={{ padding: 0 }}>
+            <SafeViewContainer style={{ height: 439, flex: 1, padding: 0 }}>
+              <Text style={{ marginHorizontal: 12 }}>{t('browser-favorites')}</Text>
+              <FlatList
+                data={Bookmarks.favs}
+                renderItem={renderItem}
+                style={{ height: '100%' }}
+                numColumns={NumOfColumns}
+                contentContainerStyle={{ paddingHorizontal: 4 }}
+                keyExtractor={(v, index) => `v.url-${index}`}
+              />
+            </SafeViewContainer>
+          </SafeAreaProvider>
+        </Modalize>
+      </Portal>
     </View>
   );
 });

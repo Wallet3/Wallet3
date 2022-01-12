@@ -49,11 +49,12 @@ export default forwardRef(
       separateNavBar?: boolean;
       onSeparateRequest?: (webUrl: string) => void;
       onExpandRequest?: (webUrl: string) => void;
+      onBookmarksPress?: () => void;
     },
     ref: React.Ref<WebView>
   ) => {
     const { t } = i18n;
-    const { onMetadataChange, onGoHome, separateNavBar, onSeparateRequest, onExpandRequest } = props;
+    const { onMetadataChange, onGoHome, separateNavBar, onSeparateRequest, onExpandRequest, onBookmarksPress } = props;
     const [canGoBack, setCanGoBack] = useState(false);
     const [canGoForward, setCanGoForward] = useState(false);
     const [appName] = useState(`Wallet3/${DeviceInfo.getVersion() ?? '0.0.0'}`);
@@ -209,7 +210,7 @@ export default forwardRef(
               </TouchableOpacity>
             )}
 
-            <TouchableOpacity style={styles.navTouchableItem} onPress={onGoHome}>
+            <TouchableOpacity style={styles.navTouchableItem} onPress={onBookmarksPress}>
               <Feather name="book-open" size={20} color={tintColor} />
             </TouchableOpacity>
           </View>
