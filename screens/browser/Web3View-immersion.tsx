@@ -168,11 +168,11 @@ export default forwardRef(
     const { ref: networksRef, open: openNetworksModal, close: closeNetworksModal } = useModalize();
 
     return (
-      <View style={{ flex: 1, position: 'relative' }}>
+      <View style={{ flex: 1, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
         <WebView
           {...props}
           ref={ref}
-          contentInset={{ bottom: separateNavBar ? 0 : 37 }}
+          contentInset={{ bottom: separateNavBar ? 0 : 37, top: 42.3 }}
           automaticallyAdjustContentInsets
           contentInsetAdjustmentBehavior="always"
           onNavigationStateChange={onNavigationStateChange}
@@ -183,8 +183,8 @@ export default forwardRef(
           mediaPlaybackRequiresUserAction
           pullToRefreshEnabled
           allowsInlineMediaPlayback
-          allowsBackForwardNavigationGestures
           injectedJavaScriptBeforeContentLoaded={InjectInpageProvider}
+          // style={{ marginTop: -47 }}
         />
 
         <BlurView
@@ -301,9 +301,9 @@ const styles = StyleSheet.create({
       height: -2,
     },
 
+    elevation: 5,
     shadowRadius: 3.14,
 
-    elevation: 5,
     backgroundColor: '#ffffff20',
     borderTopColor: 'rgb(216, 216, 216)',
   },

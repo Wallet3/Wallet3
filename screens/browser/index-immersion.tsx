@@ -19,6 +19,7 @@ import { WebView, WebViewMessageEvent, WebViewNavigation } from 'react-native-we
 import { borderColor, thirdFontColor } from '../../constants/styles';
 
 import { Bar } from 'react-native-progress';
+import { BlurView } from 'expo-blur';
 import CachedImage from 'react-native-expo-cached-image';
 import Collapsible from 'react-native-collapsible';
 import InpageDAppHub from '../../viewmodels/hubs/InpageDAppHub';
@@ -49,6 +50,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   const webview = useRef<WebView>(null);
   const addrRef = useRef<TextInput>(null);
 
+  const [safeArea] = useState(useSafeAreaInsets());
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [isFocus, setFocus] = useState(false);
   const [hostname, setHostname] = useState('');
@@ -60,7 +62,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   const [pageMetadata, setPageMetadata] = useState<{ icon: string; title: string; desc?: string; origin: string }>();
   const [suggests, setSuggests] = useState<string[]>([]);
   const [webRiskLevel, setWebRiskLevel] = useState('');
-  const { ref: favsRef, open: openFavs, close: closeFavs } = useModalize();
+  const { ref: favsRef, open: openFavs } = useModalize();
 
   useEffect(() => {
     isSecureSite(webUrl)
@@ -162,13 +164,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
 
   const renderItem = ({ item }: ListRenderItemInfo<Bookmark>) => {
     return (
-      <TouchableOpacity
-        style={{ padding: 8 }}
-        onPress={() => {
-          goTo(item.url);
-          closeFavs();
-        }}
-      >
+      <TouchableOpacity style={{ padding: 8 }} onPress={() => setUri(item.url)}>
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
           {item.icon ? (
             <CachedImage
@@ -200,7 +196,70 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
 
   return (
     <View style={{ backgroundColor: `#fff`, flex: 1, paddingTop: top, position: 'relative' }}>
-      <View style={{ position: 'relative', paddingTop: 4, paddingBottom: 8 }}>
+      {uri ? (
+        <Web3View
+          ref={webview}
+          source={{ uri }}
+          onLoadProgress={({ nativeEvent }) => setLoadingProgress(nativeEvent.progress)}
+          onLoadEnd={() => setLoadingProgress(1)}
+          onNavigationStateChange={onNavigationStateChange}
+          onMetadataChange={setPageMetadata}
+          onGoHome={goHome}
+          onSeparateRequest={(webUrl) => Bookmarks.addSeparatedSite(webUrl)}
+          onExpandRequest={(webUrl) => Bookmarks.removeSeparatedSite(webUrl)}
+          separateNavBar={Bookmarks.isSeparatedSite(webUrl)}
+          onBookmarksPress={openFavs}
+        />
+      ) : (
+        <View style={{ marginTop: safeArea.top }}>
+          <Text style={{ marginHorizontal: 16, marginTop: 12 }}>{t('browser-popular-dapps')}</Text>
+          <FlatList
+            data={PopularDApps}
+            bounces={false}
+            renderItem={renderItem}
+            numColumns={NumOfColumns}
+            showsVerticalScrollIndicator={false}
+            style={{ marginTop: 4 }}
+            keyExtractor={(v, index) => `v.url-${index}`}
+            contentContainerStyle={{ paddingHorizontal: 4, paddingVertical: 8 }}
+          />
+
+          {Bookmarks.favs.length > 0 ? (
+            <Text style={{ marginHorizontal: 16, marginTop: 12 }}>{t('browser-favorites')}</Text>
+          ) : undefined}
+
+          <FlatList
+            data={Bookmarks.favs}
+            renderItem={renderItem}
+            style={{ height: '100%' }}
+            numColumns={NumOfColumns}
+            contentContainerStyle={{ paddingHorizontal: 4, paddingVertical: 8 }}
+            keyExtractor={(v, index) => `v.url-${index}`}
+          />
+        </View>
+      )}
+
+      <BlurView
+        intensity={27}
+        style={{
+          position: 'absolute',
+          paddingTop: safeArea.top,
+          paddingBottom: 8,
+          top: 0,
+          left: 0,
+          right: 0,
+
+          shadowColor: `#00000060`,
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+
+          elevation: 5,
+          shadowRadius: 3.14,
+          shadowOpacity: isFocus ? 0.25 : 0,
+        }}
+      >
         <View
           style={{
             flexDirection: 'row',
@@ -226,7 +285,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
               onChangeText={(t) => setAddr(t)}
               onSubmitEditing={() => onAddrSubmit()}
               style={{
-                backgroundColor: isFocus ? '#fff' : '#f5f5f5',
+                backgroundColor: isFocus ? '#ffffff' : '#f5f5f590',
                 fontSize: 16,
                 paddingHorizontal: isFocus ? 8 : 20,
                 flex: 1,
@@ -281,7 +340,15 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
           </TouchableOpacity>
         </View>
 
-        <Collapsible collapsed={!isFocus} style={{ borderWidth: 0, padding: 0, margin: 0 }} enablePointerEvents>
+        <Collapsible
+          collapsed={!isFocus}
+          style={{
+            borderWidth: 0,
+            padding: 0,
+            margin: 0,
+          }}
+          enablePointerEvents
+        >
           {addr && isFocus ? (
             <View style={{ marginTop: 8, paddingBottom: 4, borderBottomWidth: 1, borderBottomColor: borderColor }}>
               {suggests.map((url, index) => (
@@ -316,7 +383,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
                 flexWrap: 'wrap',
                 padding: 8,
                 borderBottomWidth: 1,
-                borderBottomColor: borderColor,
+                borderBottomColor: `${borderColor}50`,
               }}
             >
               {PopularDApps.concat(Bookmarks.favs.slice(0, 24)).map((item, i) => (
@@ -352,49 +419,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
             style={{ position: 'absolute', bottom: 0 }}
           />
         ) : undefined}
-      </View>
-
-      {uri ? (
-        <Web3View
-          ref={webview}
-          source={{ uri }}
-          onLoadProgress={({ nativeEvent }) => setLoadingProgress(nativeEvent.progress)}
-          onLoadEnd={() => setLoadingProgress(1)}
-          onNavigationStateChange={onNavigationStateChange}
-          onMetadataChange={setPageMetadata}
-          onGoHome={goHome}
-          onSeparateRequest={(webUrl) => Bookmarks.addSeparatedSite(webUrl)}
-          onExpandRequest={(webUrl) => Bookmarks.removeSeparatedSite(webUrl)}
-          separateNavBar={Bookmarks.isSeparatedSite(webUrl)}
-          onBookmarksPress={openFavs}
-        />
-      ) : (
-        <View>
-          <Text style={{ marginHorizontal: 16, marginTop: 12 }}>{t('browser-popular-dapps')}</Text>
-          <FlatList
-            data={PopularDApps}
-            bounces={false}
-            renderItem={renderItem}
-            numColumns={NumOfColumns}
-            style={{ marginTop: 4 }}
-            keyExtractor={(v, index) => `v.url-${index}`}
-            contentContainerStyle={{ paddingHorizontal: 4, paddingVertical: 8 }}
-          />
-
-          {Bookmarks.favs.length > 0 ? (
-            <Text style={{ marginHorizontal: 16, marginTop: 12 }}>{t('browser-favorites')}</Text>
-          ) : undefined}
-
-          <FlatList
-            data={Bookmarks.favs}
-            renderItem={renderItem}
-            style={{ height: '100%' }}
-            numColumns={NumOfColumns}
-            contentContainerStyle={{ paddingHorizontal: 4, paddingVertical: 8 }}
-            keyExtractor={(v, index) => `v.url-${index}`}
-          />
-        </View>
-      )}
+      </BlurView>
 
       <Portal>
         <Modalize
