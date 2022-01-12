@@ -18,6 +18,7 @@ import WalletScreen from './wallet';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import i18n from '../i18n';
 import { observer } from 'mobx-react-lite';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const DrawerRoot = createDrawerNavigator();
 const TabNavigation = createBottomTabNavigator();
@@ -34,6 +35,7 @@ const RootTab = observer(() => {
   const { current } = Networks;
   const navigation = useNavigation() as DrawerNavigationHelpers;
   const { Navigator, Screen } = TabNavigation;
+  const { bottom } = useSafeAreaInsets();
 
   return (
     <Navigator
@@ -49,8 +51,8 @@ const RootTab = observer(() => {
         },
         tabBarActiveTintColor: current.color,
         tabBarInactiveTintColor: 'gray',
-        tabBarLabelStyle: { marginBottom: 3, marginTop: -3 },
-        // tabBarStyle: { height: 56 },
+        tabBarLabelStyle: { marginBottom: bottom === 0 ? 7 : 3, marginTop: -3 },
+        tabBarStyle: bottom === 0 ? { height: 57 } : undefined,
         // tabBarBackground: () => <BlurView />,
       })}
     >

@@ -26,6 +26,7 @@ import { borderColor } from '../../constants/styles';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface PageMetadata {
   icon: string;
@@ -63,6 +64,7 @@ export default forwardRef(
     const [appNetwork, setAppNetwork] = useState<INetwork>();
     const [dapp, setDApp] = useState<ConnectedBrowserDApp | undefined>();
     const [webUrl, setWebUrl] = useState('');
+    const { bottom: safeAreaBottom } = useSafeAreaInsets();
 
     const updateDAppState = (dapp?: ConnectedBrowserDApp) => {
       setDApp(dapp);
@@ -172,7 +174,7 @@ export default forwardRef(
         <WebView
           {...props}
           ref={ref}
-          contentInset={{ bottom: separateNavBar ? 0 : 37 }}
+          contentInset={{ bottom: separateNavBar ? 0 : 37 + (safeAreaBottom === 0 ? 8 : 0) }}
           automaticallyAdjustContentInsets
           contentInsetAdjustmentBehavior="always"
           onNavigationStateChange={onNavigationStateChange}
@@ -192,6 +194,7 @@ export default forwardRef(
           tint="light"
           style={{
             ...styles.blurView,
+            paddingVertical: safeAreaBottom === 0 ? 4 : undefined,
             borderTopWidth: separateNavBar ? 0.33 : 0,
             position: separateNavBar ? 'relative' : 'absolute',
             shadowOpacity: separateNavBar ? 0 : 0.25,
