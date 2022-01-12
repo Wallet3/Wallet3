@@ -35,7 +35,7 @@ export class WalletConnect_v1 extends EventEmitter {
   }
 
   get lastUsedTimestamp() {
-    return this.store?.lastUsedTimestamp ? new Date(this.store?.lastUsedTimestamp) : new Date();
+    return this.store?.lastUsedTimestamp ?? 0;
   }
 
   get isMobileApp() {
@@ -111,6 +111,7 @@ export class WalletConnect_v1 extends EventEmitter {
 
     if (!this.store) return;
     this.store.chains = chains;
+    this.store.lastUsedTimestamp = Date.now();
     this.store.save();
   }
 
@@ -119,6 +120,7 @@ export class WalletConnect_v1 extends EventEmitter {
     if (!this.store) return;
 
     this.store.lastUsedChainId = `${chainId}`;
+    this.store.lastUsedTimestamp = Date.now();
     this.store.save();
   }
 
@@ -127,6 +129,7 @@ export class WalletConnect_v1 extends EventEmitter {
 
     if (!this.store) return;
     this.store.accounts = accounts;
+    this.store.lastUsedTimestamp = Date.now();
     this.store.save();
   }
 
@@ -149,6 +152,11 @@ export class WalletConnect_v1 extends EventEmitter {
     this.peerId = peerId;
     this.appMeta = peerMeta;
     this.enabledChains = [chainId ?? 1];
+
+    if (this.store) {
+      this.store.lastUsedTimestamp = Date.now();
+      this.store.save();
+    }
 
     this.emit('sessionRequest');
   };

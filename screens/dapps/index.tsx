@@ -111,7 +111,7 @@ const DAppItem = observer(({ item, openApp }: { item: WalletConnect_v1; openApp:
             ) : undefined}
 
             <Text style={{ color: secondaryFontColor, fontSize: 12, marginTop: 4 }}>
-              {`${t('connectedapps-list-last-used')}: ${item.lastUsedTimestamp.toLocaleDateString()}`}
+              {`${t('connectedapps-list-last-used')}: ${new Date(item.lastUsedTimestamp).toLocaleDateString()}`}
             </Text>
 
             <ScrollView

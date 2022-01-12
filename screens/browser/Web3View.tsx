@@ -211,7 +211,7 @@ export default forwardRef(
         <WebView
           {...props}
           ref={ref}
-          contentInset={{ bottom: dapp ? 0 : 36 }}
+          contentInset={{ bottom: dapp ? 0 : 39 }}
           onNavigationStateChange={onNavigationStateChange}
           applicationNameForUserAgent={appName}
           allowsFullscreenVideo={false}
@@ -233,48 +233,59 @@ export default forwardRef(
             shadowOpacity: dapp ? 0 : 0.25,
           }}
         >
-          <TouchableOpacity
-            style={{ paddingHorizontal: 12 }}
-            onPress={() => ((ref as any)?.current as WebView)?.goBack()}
-            disabled={!canGoBack}
-          >
-            <Ionicons name="chevron-back-outline" size={22} color={canGoBack ? tintColor : '#dddddd50'} />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={{ paddingHorizontal: 12 }}
-            onPress={() => ((ref as any)?.current as WebView)?.goForward()}
-            disabled={!canGoForward}
-          >
-            <Ionicons name="chevron-forward-outline" size={22} color={canGoForward ? tintColor : '#dddddd50'} />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={{ paddingHorizontal: 12 }} onPress={onGoHome}>
-            <MaterialIcons name="radio-button-off" size={22} color={tintColor} />
-          </TouchableOpacity>
-
           <View style={{ flex: 1 }} />
 
-          {dapp && appNetwork ? (
-            <Animatable.View
-              animation={'fadeInUp'}
-              style={{ paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center' }}
+          <View
+            style={{
+              flex: 2,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-around',
+            }}
+          >
+            <TouchableOpacity
+              style={{ paddingHorizontal: 12 }}
+              onPress={() => ((ref as any)?.current as WebView)?.goBack()}
+              disabled={!canGoBack}
             >
-              <TouchableOpacity onPress={() => openNetworksModal()} style={{ position: 'relative' }}>
-                {generateNetworkIcon({
-                  chainId: appNetwork.chainId,
-                  color: `${appNetwork.color}`,
-                  width: 22,
-                  style: {},
-                  hideEVMTitle: true,
-                })}
+              <Ionicons name="chevron-back-outline" size={22} color={canGoBack ? tintColor : '#dddddd50'} />
+            </TouchableOpacity>
 
-                {dapp?.isWalletConnect ? (
-                  <WalletConnectLogo width={9} height={9} style={{ position: 'absolute', right: 0, bottom: 0 }} />
-                ) : undefined}
-              </TouchableOpacity>
-            </Animatable.View>
-          ) : undefined}
+            <TouchableOpacity style={{ paddingHorizontal: 12 }} onPress={onGoHome}>
+              <MaterialIcons name="radio-button-off" size={22} color={tintColor} />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{ paddingHorizontal: 12 }}
+              onPress={() => ((ref as any)?.current as WebView)?.goForward()}
+              disabled={!canGoForward}
+            >
+              <Ionicons name="chevron-forward-outline" size={22} color={canGoForward ? tintColor : '#dddddd50'} />
+            </TouchableOpacity>
+          </View>
+
+          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
+            {dapp && appNetwork ? (
+              <Animatable.View
+                animation={'fadeInUp'}
+                style={{ paddingHorizontal: 12, paddingStart: 24, flexDirection: 'row', alignItems: 'center' }}
+              >
+                <TouchableOpacity onPress={() => openNetworksModal()} style={{ position: 'relative' }}>
+                  {generateNetworkIcon({
+                    chainId: appNetwork.chainId,
+                    color: `${appNetwork.color}`,
+                    width: 22,
+                    style: {},
+                    hideEVMTitle: true,
+                  })}
+
+                  {dapp?.isWalletConnect ? (
+                    <WalletConnectLogo width={9} height={9} style={{ position: 'absolute', right: 0, bottom: 0 }} />
+                  ) : undefined}
+                </TouchableOpacity>
+              </Animatable.View>
+            ) : undefined}
+          </View>
         </BlurView>
 
         <Portal>

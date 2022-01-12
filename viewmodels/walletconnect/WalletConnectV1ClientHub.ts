@@ -55,6 +55,7 @@ class WalletConnectV1ClientHub extends EventEmitter {
       );
 
       this.clients.forEach((client) => this.handleLifecycle(client));
+      this.clients.filter((c) => c.lastUsedTimestamp < Date.now() - 1000 * 60 * 60 * 24 * 60).forEach((c) => c.killSession());
     });
   }
 
