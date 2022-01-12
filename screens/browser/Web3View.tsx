@@ -62,8 +62,11 @@ export default forwardRef(
     const [pageMetadata, setPageMetadata] = useState<PageMetadata>();
     const [appNetwork, setAppNetwork] = useState<INetwork>();
     const [dapp, setDApp] = useState<ConnectedBrowserDApp | undefined>();
+    const [webUrl, setWebUrl] = useState('');
 
     const hideTabBar = () => {
+      if (tabBarHidden) return;
+
       setTabBarHidden(true);
 
       const translateY = new Animated.Value(0);
@@ -73,6 +76,8 @@ export default forwardRef(
     };
 
     const showTabBar = () => {
+      if (!tabBarHidden) return;
+      
       setTabBarHidden(false);
 
       const translateY = new Animated.Value(tabBarHeight);
@@ -80,24 +85,24 @@ export default forwardRef(
       navigation.setOptions({ tabBarStyle: { transform: [{ translateY }], height: tabBarHeight } });
     };
 
-    const onScroll = ({ nativeEvent }: WebViewScrollEvent) => {
-      const { contentOffset, contentSize, layoutMeasurement } = nativeEvent;
-      const { y } = contentOffset;
+    // const onScroll = ({ nativeEvent }: WebViewScrollEvent) => {
+    //   const { contentOffset, contentSize, layoutMeasurement } = nativeEvent;
+    //   const { y } = contentOffset;
 
-      if (layoutMeasurement.height + y >= contentSize.height) return;
+    //   if (layoutMeasurement.height + y >= contentSize.height) return;
 
-      try {
-        if (y > lastBaseY) {
-          if (tabBarHidden) return;
-          hideTabBar();
-        } else {
-          if (!tabBarHidden) return;
-          showTabBar();
-        }
-      } finally {
-        setLastBaseY(Math.max(0, y));
-      }
-    };
+    //   try {
+    //     if (y > lastBaseY) {
+    //       if (tabBarHidden) return;
+    //       hideTabBar();
+    //     } else {
+    //       if (!tabBarHidden) return;
+    //       showTabBar();
+    //     }
+    //   } finally {
+    //     setLastBaseY(Math.max(0, y));
+    //   }
+    // };
 
     const updateDAppState = (dapp?: ConnectedBrowserDApp) => {
       setDApp(dapp);
@@ -135,8 +140,15 @@ export default forwardRef(
     };
 
     useEffect(() => {
-      if (!source?.['uri']) showTabBar();
-    }, [source]);
+      if (!source?.['uri']) {
+        showTabBar();
+        return;
+      }
+
+      if (source?.['uri'] || webUrl) {
+        hideTabBar();
+      }
+    }, [source, webUrl]);
 
     useEffect(() => {
       InpageDAppHub.on('appStateUpdated', async (appState) => {
@@ -190,6 +202,7 @@ export default forwardRef(
     const onNavigationStateChange = (event: WebViewNavigation) => {
       setCanGoBack(event.canGoBack);
       setCanGoForward(event.canGoForward);
+      setWebUrl(event.url);
 
       props?.onNavigationStateChange?.(event);
     };
@@ -211,15 +224,18 @@ export default forwardRef(
         <WebView
           {...props}
           ref={ref}
-          contentInset={{ bottom: dapp ? 0 : 39 }}
+          // contentInset={{ bottom: dapp ? 0 : 39 }}
+          automaticallyAdjustContentInsets
+          contentInsetAdjustmentBehavior="always"
           onNavigationStateChange={onNavigationStateChange}
           applicationNameForUserAgent={appName}
           allowsFullscreenVideo={false}
           injectedJavaScript={`${GetPageMetadata} ${HookWalletConnect}`}
           onMessage={onMessage}
           mediaPlaybackRequiresUserAction
-          onScroll={onScroll}
+          // onScroll={onScroll}
           pullToRefreshEnabled
+          allowsInlineMediaPlayback
           injectedJavaScriptBeforeContentLoaded={InjectInpageProvider}
         />
 
@@ -228,9 +244,12 @@ export default forwardRef(
           tint="light"
           style={{
             ...styles.blurView,
-            borderTopWidth: dapp ? 0.33 : 0,
-            position: dapp ? 'relative' : 'absolute',
-            shadowOpacity: dapp ? 0 : 0.25,
+            borderTopWidth: 0.33,
+            // borderTopWidth: dapp ? 0.33 : 0,
+            // position: dapp ? 'relative' : 'absolute',
+            // position: 'absolute',
+            // shadowOpacity: dapp ? 0 : 0.25,
+            // shadowOpacity: 0.25,
           }}
         >
           <View style={{ flex: 1 }} />
@@ -332,6 +351,6 @@ const styles = StyleSheet.create({
 
     elevation: 5,
     backgroundColor: '#ffffff20',
-    borderTopColor: borderColor,
+    borderTopColor: 'rgb(216, 216, 216)',
   },
 });
