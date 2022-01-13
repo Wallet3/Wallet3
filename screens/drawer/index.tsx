@@ -112,7 +112,7 @@ const Drawer = observer((props: DrawerProps) => {
 
       <View style={{ flex: 1 }} />
 
-      <View style={{ padding: 16, paddingBottom: 8 }}>
+      <View style={{ padding: 16, paddingBottom: bottom === 0 ? 4 : 8 }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
           <Text style={{ color: secondaryFontColor, fontSize: 14 }}>{t('home-drawer-networks')}</Text>
 
