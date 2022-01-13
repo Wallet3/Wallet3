@@ -14,7 +14,7 @@ import styles from './styles';
 
 interface Props {
   close: () => void;
-  approve?: () => void;
+  approve?: (userSelected: { network: INetwork; account: Account }) => void;
   reject?: () => void;
   appName?: string;
   appDesc?: string;
@@ -101,8 +101,8 @@ const ConnectPivot = observer(
 
 export default observer((props: Props) => {
   const { approve, reject, close, appName, appDesc, appIcon, appUrl } = props;
-  const onConnect = () => {
-    approve?.();
+  const onConnect = (userSelected: { network: INetwork; account: Account }) => {
+    approve?.(userSelected);
     close();
   };
 
@@ -114,17 +114,6 @@ export default observer((props: Props) => {
   return (
     <SafeAreaProvider style={styles.safeArea}>
       <ConnectPivot {...props} onApprove={onConnect} onReject={onReject} />
-      {/* <DAppConnectView
-        network={Networks.current}
-        account={App.currentWallet?.currentAccount!}
-        onConnect={onConnect}
-        onReject={onReject}
-        appName={appName}
-        appDesc={appDesc}
-        appIcon={appIcon}
-        appUrl={appUrl}
-        disableNetworksButton
-      /> */}
     </SafeAreaProvider>
   );
 });

@@ -3,9 +3,11 @@ import * as Linking from 'expo-linking';
 import { Bytes, providers, utils } from 'ethers';
 import Networks, { AddEthereumChainParameter } from '../Networks';
 
+import { Account } from '../account/Account';
 import App from '../App';
 import Database from '../../models/Database';
 import EventEmitter from 'events';
+import { INetwork } from '../../common/Networks';
 import InpageDApp from '../../models/InpageDApp';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import { WCCallRequest_eth_sendTransaction } from '../../models/WCSession_v1';
@@ -36,7 +38,7 @@ interface WatchAssetParams {
 
 export interface ConnectInpageDApp extends Payload {
   origin: string;
-  approve: () => void;
+  approve: (userSelected: { network: INetwork; account: Account }) => void;
   reject: () => void;
 }
 
@@ -169,14 +171,13 @@ class InpageDAppHub extends EventEmitter {
     }
 
     return new Promise<string[] | any>((resolve) => {
-      const approve = () => {
-        const account = App.currentWallet?.currentAccount?.address!;
+      const approve = ({ account, network }: { account: Account; network: INetwork }) => {
         const app = new InpageDApp();
         app.origin = origin;
-        app.lastUsedAccount = account;
-        app.lastUsedChainId = `0x${Number(Networks.current.chainId).toString(16)}`;
+        app.lastUsedAccount = account.address;
+        app.lastUsedChainId = `0x${Number(network.chainId).toString(16)}`;
         this.apps.set(origin, app);
-        resolve([account]);
+        resolve([account.address]);
 
         this.emit('dappConnected', app);
         app.save();
