@@ -163,7 +163,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   const renderItem = ({ item }: ListRenderItemInfo<Bookmark>) => {
     return (
       <TouchableOpacity
-        style={{ padding: 8, paddingVertical: 4 }}
+        style={{ padding: 8, paddingVertical: 4, paddingBottom: 8 }}
         onPress={() => {
           goTo(item.url);
           closeFavs();

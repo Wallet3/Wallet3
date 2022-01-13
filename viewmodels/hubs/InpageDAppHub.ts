@@ -321,6 +321,7 @@ class InpageDAppHub extends EventEmitter {
 
     if (Networks.has(chain.chainId)) {
       setTimeout(() => this.wallet_switchEthereumChain(origin, [{ chainId: chain.chainId }]), 200);
+      showMessage({ message: i18n.t('msg-chain-already-exists', { name: chain.chainName }), type: 'info' });
       return null;
     }
 

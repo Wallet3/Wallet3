@@ -7,6 +7,7 @@ import Avalanche from './avalanche.svg';
 import Boba from './boba.svg';
 import Bsc from './bsc.svg';
 import Celo from './celo.svg';
+import Cronos from './cronos.svg';
 import Ethereum from './ethereum2.svg';
 import Fantom from './fantom.svg';
 import HarmonyOne from './harmony-one.svg';
@@ -57,6 +58,7 @@ const xDAI = generateNetworkIcon({ chainId: 100, width: 32 });
 const BOBA = generateNetworkIcon({ chainId: 288, width: 32 });
 const AURORA = generateNetworkIcon({ chainId: 1313161554, width: 32 });
 const HARMONYONE = generateNetworkIcon({ chainId: 1666600000, width: 34, style: { marginHorizontal: -5 } });
+const CRONOS = generateNetworkIcon({ chainId: 25, width: 32, style: { marginStart: 0 } });
 // const ZSYNC = <ZKSync width={32} height={32} />;
 
 export const NetworkIcons = {
@@ -74,7 +76,7 @@ export const NetworkIcons = {
   288: BOBA,
   1313161554: AURORA,
   1666600000: HARMONYONE,
-
+  25: CRONOS,
   // zksync: ZSYNC,
 };
 
@@ -120,6 +122,8 @@ export function generateNetworkIcon(props: {
     case 1666600002:
     case 1666600003:
       return <HarmonyOne key={chainId} width={width} height={height ?? width} style={style} />;
+    case 25:
+      return <Cronos key={chainId} width={width} height={height ?? width} style={style} />;
     default:
       return <EVMIcon key={chainId} size={width} color={color!} style={style} hideEVMTitle={hideEVMTitle} />;
   }

@@ -148,6 +148,7 @@
   "msg-invalid-address": "Invalid address",
   "msg-invalid-qr-code": "Invalid QR code",
   "msg-chain-added": "{{name}} network added",
+  "msg-chain-already-exists": "{{name}} already exists",
   "msg-token-added": "{{name}} added to your wallet",
   "button-next": "Next",
   "button-save": "Save",

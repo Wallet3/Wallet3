@@ -147,6 +147,7 @@
   "msg-invalid-address": "无效地址",
   "msg-invalid-qr-code": "无效的二维码",
   "msg-chain-added": "{{name}} 添加成功",
+  "msg-chain-already-exists": "{{name}} 已经添加",
   "msg-token-added": "{{name}} 添加成功",
   "button-next": "继续",
   "button-save": "保存",

@@ -166,11 +166,20 @@ export const PublicNetworks: INetwork[] = [
   },
   {
     symbol: 'ONE',
-    comm_id: 'one',
+    comm_id: 'harmony',
     network: 'Harmony',
     chainId: 1666600000,
     explorer: 'https://explorer.harmony.one',
     color: '#00aee9',
+    defaultTokens: [],
+  },
+  {
+    symbol: 'CRO',
+    comm_id: 'cro',
+    network: 'Cronos',
+    chainId: 25,
+    explorer: 'https://cronos.crypto.org/explorer',
+    color: '#051221',
     defaultTokens: [],
   },
   {
