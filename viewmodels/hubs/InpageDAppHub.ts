@@ -93,6 +93,10 @@ class InpageDAppHub extends EventEmitter {
         const account = (await this.getDApp(origin))?.lastUsedAccount;
         response = account ? [account] : [];
         break;
+      case 'eth_coinbase':
+        const coinbase = (await this.getDApp(origin))?.lastUsedAccount;
+        response = account ? [coinbase] : null;
+        break;
       case 'eth_requestAccounts':
         response = await this.eth_requestAccounts(origin, payload);
         break;
