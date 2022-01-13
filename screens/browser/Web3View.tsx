@@ -12,9 +12,11 @@ import GetPageMetadata from './scripts/Metadata';
 import HookWalletConnect from './scripts/InjectWalletConnectObserver';
 import { INetwork } from '../../common/Networks';
 import InjectInpageProvider from './scripts/InjectInpageProvider';
-import InpageDAppHub from '../../viewmodels/hubs/InpageDAppHub';
+// import InpageDAppHub from '../../viewmodels/hubs/InpageDAppHub';
+import InpageDAppHub from '../../viewmodels/hubs/InpageMetamaskDAppHub';
 import LinkHub from '../../viewmodels/hubs/LinkHub';
 import MetamaskLogo from '../../assets/3rd/metamask.svg';
+import MetamaskMobileProvider from './scripts/Metamask-mobile-provider';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
 import { NetworksMenu } from '../../modals';
@@ -41,6 +43,14 @@ interface ConnectedBrowserDApp {
   lastUsedAccount: string;
   isWalletConnect?: boolean;
 }
+
+export const JS_POST_MESSAGE_TO_PROVIDER = (message, origin = '*') => `(function () {
+	try {
+		window.postMessage(${JSON.stringify(message)}, '${origin}');
+	} catch (e) {
+		//Nothing to do
+	}
+})()`;
 
 export default forwardRef(
   (
@@ -122,15 +132,16 @@ export default forwardRef(
     useEffect(() => updateGlobalState(), [webUrl]);
 
     const onMessage = async (e: WebViewMessageEvent) => {
-      let data: { type: string; payload: any; origin?: string; pageMetadata?: PageMetadata };
+      let data: { type: string; payload: any; origin?: string; pageMetadata?: PageMetadata; name?: string; data: any };
 
       try {
         data = JSON.parse(e.nativeEvent.data);
+        console.log(data);
       } catch (error) {
         return;
       }
 
-      switch (data.type) {
+      switch (data.type ?? data.name) {
         case 'metadata':
           onMetadataChange?.(data.payload);
           setPageMetadata(data.payload);
@@ -141,10 +152,18 @@ export default forwardRef(
             hostname: Linking.parse(pageMetadata?.origin ?? 'https://').hostname ?? '',
           });
           break;
-        case 'INPAGE_REQUEST':
-          ((ref as any).current as WebView).postMessage(
-            await InpageDAppHub.handle(data.origin!, { ...data.payload, pageMetadata: data.pageMetadata ?? pageMetadata })
-          );
+        // case 'INPAGE_REQUEST':
+          // ((ref as any).current as WebView).postMessage(
+          //   await InpageDAppHub.handle(data.origin!, { ...data.payload, pageMetadata: data.pageMetadata ?? pageMetadata })
+          // );
+          // break;
+        case 'metamask-provider':
+          const metamaskResp = await InpageDAppHub.handle(data.origin!, data.data);
+          console.log(metamaskResp);
+          // ((ref as any).current as WebView).postMessage(JSON.stringify(metamaskResp));
+          const { scheme, hostname } = Linking.parse(data.origin!);
+          const webview = (ref as any).current as WebView;
+          webview.injectJavaScript(JS_POST_MESSAGE_TO_PROVIDER(metamaskResp));
           break;
       }
     };
@@ -186,7 +205,7 @@ export default forwardRef(
           pullToRefreshEnabled
           allowsInlineMediaPlayback
           allowsBackForwardNavigationGestures
-          injectedJavaScriptBeforeContentLoaded={InjectInpageProvider}
+          injectedJavaScriptBeforeContentLoaded={MetamaskMobileProvider}
         />
 
         <Animatable.View
@@ -317,3 +336,9 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
 });
+
+const debugWebView = `window.onerror = function(message, sourcefile, lineno, colno, error) {
+  alert("Message: " + message + " - Source: " + sourcefile + " Line: " + lineno + ":" + colno);
+  return true;
+};
+true;`;

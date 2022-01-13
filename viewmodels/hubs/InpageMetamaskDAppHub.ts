@@ -15,14 +15,22 @@ import i18n from '../../i18n';
 import { rawCall } from '../../common/RPC';
 import { showMessage } from 'react-native-flash-message';
 
-interface Payload {
-  id?: string;
-  jsonrpc?: string;
+interface JsonRpcRequest {
+  id?: number | string;
+  jsonrpc: '2.0';
   method: string;
-  params: any[] | any;
-  __mmID: string;
-  hostname?: string;
+  params?: Array<any> | any;
+}
 
+interface JsonRpcResponse {
+  id: string | undefined;
+  jsonrpc: '2.0';
+  method: string;
+  result?: unknown;
+  error?: Error;
+}
+
+interface Payload extends JsonRpcRequest {
   pageMetadata?: { icon: string; title: string; desc?: string };
 }
 
@@ -85,73 +93,73 @@ class InpageDAppHub extends EventEmitter {
   }
 
   async handle(origin: string, payload: Payload) {
-    const { method, params, __mmID, id, jsonrpc } = payload;
-    let response: any = null;
+    const { hostname } = Linking.parse(origin);
+    const { method, params, id, jsonrpc } = payload;
+    let result: any = null;
 
     switch (method) {
+      case 'metamask_getProviderState':
+        result = {
+          isInitialized: true,
+          isUnlocked: true,
+          network: Networks.current.chainId,
+          selectedAddress: App.currentWallet?.currentAccount?.address!,
+          accounts: [App.currentWallet?.currentAccount?.address!],
+        };
+        break;
       case 'eth_accounts':
-        const account = (await this.getDApp(origin))?.lastUsedAccount;
-        response = account ? [account] : [];
+        const account = (await this.getDApp(hostname!))?.lastUsedAccount;
+        result = account ? [account] : [];
         break;
       case 'eth_coinbase':
-        const coinbase = (await this.getDApp(origin))?.lastUsedAccount;
-        response = account ? [coinbase] : null;
+        const coinbase = (await this.getDApp(hostname!))?.lastUsedAccount;
+        result = account ? [coinbase] : null;
         break;
       case 'eth_requestAccounts':
-        response = await this.eth_requestAccounts(origin, payload);
+        result = await this.eth_requestAccounts(hostname!, payload);
         break;
       case 'net_version':
       case 'eth_chainId':
-        response = `0x${Number(this.apps.get(origin)?.lastUsedChainId ?? Networks.current.chainId).toString(16)}`;
+        result = `0x${Number(this.apps.get(hostname!)?.lastUsedChainId ?? Networks.current.chainId).toString(16)}`;
         break;
       case 'wallet_switchEthereumChain':
-        response = await this.wallet_switchEthereumChain(origin, params);
+        result = await this.wallet_switchEthereumChain(hostname!, params);
         break;
       case 'personal_sign':
       case 'eth_signTypedData':
       case 'eth_signTypedData_v3':
       case 'eth_signTypedData_v4':
-        response = await this.sign(origin, params, method);
+        result = await this.sign(hostname!, params, method);
         break;
       case 'eth_sign':
-        response = { error: { message: 'eth_sign is not supported' } };
+        result = { error: { message: 'eth_sign is not supported' } };
         break;
       case 'eth_sendTransaction':
-        response = await this.eth_sendTransaction(origin, payload);
+        result = await this.eth_sendTransaction(hostname!, payload);
         break;
       case 'wallet_addEthereumChain':
-        response = await this.wallet_addEthereumChain(origin, params);
+        result = await this.wallet_addEthereumChain(hostname!, params);
         break;
       case 'wallet_watchAsset':
-        response = await this.wallet_watchAsset(origin, params);
+        result = await this.wallet_watchAsset(hostname!, params);
         break;
       case 'eth_getEncryptionPublicKey':
       case 'eth_decrypt':
         break;
       case 'personal_ecRecover':
-        response = await this.personal_ecRecover(origin, params);
+        result = await this.personal_ecRecover(hostname!, params);
         break;
       default:
-        const dapp = await this.getDApp(origin);
-        if (dapp) response = await rawCall(dapp.lastUsedChainId, { method, params });
+        const dapp = await this.getDApp(hostname!);
+        if (dapp) result = await rawCall(dapp.lastUsedChainId, { method, params });
         break;
     }
 
-    // delete (params || {})[0]?.data;
-    // console.log(
-    //   origin,
-    //   __mmID,
-    //   method,
-
-    //   // response,
-    //   JSON.stringify(params || {}).substring(0, 200),
-    //   JSON.stringify(response || null).substring(0, 64)
-    // );
-    // console.log(payload);
-
-    // if (response === null) console.log('null resp', hostname, this.apps.has(hostname ?? ''), origin);
-
-    return JSON.stringify({ type: 'INPAGE_RESPONSE', payload: { id, jsonrpc, __mmID, error: undefined, response } });
+    return {
+      name: 'metamask-provider',
+      data: { id, jsonrpc, error: undefined, result },
+    };
+    // return JSON.stringify({ id, jsonrpc, result, error: undefined });
   }
 
   async getDApp(hostname: string) {
