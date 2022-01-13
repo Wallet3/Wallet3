@@ -163,7 +163,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   const renderItem = ({ item }: ListRenderItemInfo<Bookmark>) => {
     return (
       <TouchableOpacity
-        style={{ padding: 8 }}
+        style={{ padding: 8, paddingVertical: 4 }}
         onPress={() => {
           goTo(item.url);
           closeFavs();
@@ -376,9 +376,9 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
             bounces={false}
             renderItem={renderItem}
             numColumns={NumOfColumns}
-            style={{ marginTop: 4 }}
+            style={{ marginTop: 2 }}
             keyExtractor={(v, index) => `v.url-${index}`}
-            contentContainerStyle={{ paddingHorizontal: 4, paddingVertical: 8 }}
+            contentContainerStyle={{ paddingHorizontal: 4, paddingVertical: 4 }}
           />
 
           {Bookmarks.favs.length > 0 ? (
@@ -390,7 +390,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
             renderItem={renderItem}
             style={{ height: '100%' }}
             numColumns={NumOfColumns}
-            contentContainerStyle={{ paddingHorizontal: 4, paddingVertical: 8 }}
+            contentContainerStyle={{ paddingHorizontal: 4, paddingVertical: 2 }}
             keyExtractor={(v, index) => `v.url-${index}`}
           />
         </View>
@@ -408,7 +408,9 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
             <SafeViewContainer style={{ height: 439, flex: 1, padding: 0 }}>
               <Text style={{ marginHorizontal: 12 }}>{t('browser-favorites')}</Text>
               <FlatList
-                data={Bookmarks.favs}
+                data={Bookmarks.favs.concat(
+                  PopularDApps.filter((d) => !Bookmarks.favs.find((f) => f.url.includes(d.url) || d.url.includes(f.url)))
+                )}
                 renderItem={renderItem}
                 style={{ height: '100%' }}
                 numColumns={NumOfColumns}
