@@ -28,7 +28,28 @@ class WalletConnectV1ClientHub extends EventEmitter {
     makeObservable(this, { clients: observable, sortedClients: computed, connectedCount: computed, reset: action });
   }
 
+  private async upgrade() {
+    const legacyEntities = await Database.wcV1Sessions_legacy.find();
+    await Promise.all(
+      legacyEntities.map(async (e) => {
+        const session = new WCSession_v1();
+        session.id = e.id;
+        session.session = e.session;
+        session.chains = e.chains;
+        session.accounts = e.accounts;
+        session.lastUsedTimestamp = e.lastUsedTimestamp;
+        session.lastUsedAccount = '';
+        await session.save();
+        return session;
+      })
+    );
+
+    await Database.wcV1Sessions_legacy.clear();
+  }
+
   async init() {
+    await this.upgrade();
+
     // Notify dapps to switch current network
     autorun(() => {
       const { current } = Networks;

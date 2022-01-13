@@ -52,6 +52,24 @@ export interface WCCallRequest_eth_sendTransaction {
   data: string;
 }
 
+@Entity({ name: 'wcsession_v1' })
+export class WCSession_v1_legacy extends BaseEntity {
+  @PrimaryGeneratedColumn()
+  id!: number;
+
+  @Column({ type: 'simple-json' })
+  session!: IRawWcSession;
+
+  @Column({ type: 'simple-json' })
+  chains!: number[];
+
+  @Column({ type: 'simple-json' })
+  accounts!: string[];
+
+  @Column()
+  lastUsedTimestamp!: number;
+}
+
 @Entity({ name: 'wcsessionv1_1' })
 export default class WCSession_v1 extends BaseEntity {
   @PrimaryGeneratedColumn()
