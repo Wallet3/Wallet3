@@ -13,13 +13,20 @@ interface Props {
   networks: INetwork[];
   selectedChains: number[];
   onDone: (selectedChains: number[]) => void;
+  single?: boolean;
 }
 
-export default observer(({ networks, selectedChains, onDone }: Props) => {
+export default observer(({ networks, selectedChains, onDone, single }: Props) => {
   const [selected, setSelected] = useState<number[]>(selectedChains);
   const { t } = i18n;
 
   const toggleNetwork = (network: INetwork) => {
+    if (single) {
+      setSelected([network.chainId]);
+      onDone([network.chainId]);
+      return;
+    }
+
     if (selected.includes(network.chainId)) {
       if (selected.length === 1) return;
       setSelected(selected.filter((id) => id !== network.chainId));

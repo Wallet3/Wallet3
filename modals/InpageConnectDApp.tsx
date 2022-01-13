@@ -1,8 +1,14 @@
+import React, { useRef, useState } from 'react';
+
+import { Account } from '../viewmodels/account/Account';
+import AccountSelector from './dapp/AccountSelector';
 import App from '../viewmodels/App';
 import DAppConnectView from './dapp/DAppConnectView';
+import { INetwork } from '../common/Networks';
+import NetworkSelector from './dapp/NetworkSelector';
 import Networks from '../viewmodels/Networks';
-import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import Swiper from 'react-native-swiper';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
 
@@ -16,7 +22,85 @@ interface Props {
   appUrl?: string;
 }
 
-export default observer(({ approve, reject, close, appName, appDesc, appIcon, appUrl }: Props) => {
+const ConnectPivot = observer(
+  ({
+    appName,
+    appDesc,
+    appIcon,
+    appUrl,
+    onApprove,
+    onReject,
+  }: {
+    appName?: string;
+    appDesc?: string;
+    appIcon?: string;
+    appUrl?: string;
+    onApprove: (userSelected: { account: Account; network: INetwork }) => void;
+    onReject: () => void;
+  }) => {
+    const swiper = useRef<Swiper>(null);
+    const [panel, setPanel] = useState(1);
+    const [account, setAccount] = useState(App.currentWallet!.currentAccount!);
+    const [selectedNetwork, setSelectedNetwork] = useState(Networks.current);
+
+    const approve = () => onApprove({ account, network: selectedNetwork });
+
+    const onSelectNetworksDone = (chains: number[]) => {
+      swiper.current?.scrollTo(0);
+      setSelectedNetwork(Networks.find(chains[0])!);
+    };
+
+    const onSelectAccountsDone = (accounts: string[]) => {
+      swiper.current?.scrollTo(0);
+      setAccount(App.findAccount(accounts[0])!);
+    };
+
+    const swipeTo = (index: number) => {
+      setPanel(index);
+      setTimeout(() => swiper.current?.scrollTo(1), 0);
+    };
+
+    return (
+      <Swiper
+        ref={swiper}
+        showsPagination={false}
+        showsButtons={false}
+        scrollEnabled={false}
+        loop={false}
+        automaticallyAdjustContentInsets
+      >
+        <DAppConnectView
+          onNetworksPress={() => swipeTo(1)}
+          onAccountsPress={() => swipeTo(2)}
+          onConnect={approve}
+          onReject={onReject}
+          account={account}
+          network={selectedNetwork}
+          appName={appName}
+          appDesc={appDesc}
+          appIcon={appIcon}
+          appUrl={appUrl}
+        />
+
+        {panel === 1 ? (
+          <NetworkSelector
+            networks={Networks.all}
+            selectedChains={[selectedNetwork.chainId]}
+            onDone={onSelectNetworksDone}
+            single
+          />
+        ) : undefined}
+
+        {panel === 2 ? (
+          <AccountSelector accounts={App.allAccounts} selectedAccounts={[account.address]} onDone={onSelectAccountsDone} />
+        ) : undefined}
+      </Swiper>
+    );
+  }
+);
+
+export default observer((props: Props) => {
+  const { approve, reject, close, appName, appDesc, appIcon, appUrl } = props;
   const onConnect = () => {
     approve?.();
     close();
@@ -29,7 +113,8 @@ export default observer(({ approve, reject, close, appName, appDesc, appIcon, ap
 
   return (
     <SafeAreaProvider style={styles.safeArea}>
-      <DAppConnectView
+      <ConnectPivot {...props} onApprove={onConnect} onReject={onReject} />
+      {/* <DAppConnectView
         network={Networks.current}
         account={App.currentWallet?.currentAccount!}
         onConnect={onConnect}
@@ -39,7 +124,7 @@ export default observer(({ approve, reject, close, appName, appDesc, appIcon, ap
         appIcon={appIcon}
         appUrl={appUrl}
         disableNetworksButton
-      />
+      /> */}
     </SafeAreaProvider>
   );
 });

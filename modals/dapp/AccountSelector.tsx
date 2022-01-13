@@ -16,15 +16,23 @@ export default observer(
     accounts,
     selectedAccounts,
     onDone,
+    single,
   }: {
     accounts: Account[];
     selectedAccounts: string[];
     onDone: (selectedAccounts: string[]) => void;
+    single?: boolean;
   }) => {
     const [selected, setSelected] = useState(selectedAccounts);
     const { t } = i18n;
 
     const toggleNetwork = (account: string) => {
+      if (single) {
+        setSelected([account]);
+        onDone([account]);
+        return;
+      }
+
       if (selected.includes(account)) {
         if (selected.length === 1) return;
         setSelected(selected.filter((id) => id !== account));
