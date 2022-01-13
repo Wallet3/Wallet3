@@ -226,7 +226,6 @@ const InpageDAppRequests = () => {
 
 const GlobalNetworksMenuModal = () => {
   const { ref: networksRef, open: openNetworksModal, close: closeNetworksModal } = useModalize();
-  const [selectedNetwork, setSelectedNetwork] = useState(Networks.current);
 
   useEffect(() => {
     PubSub.subscribe('openNetworksModal', () => openNetworksModal());
@@ -242,11 +241,9 @@ const GlobalNetworksMenuModal = () => {
     >
       <NetworksMenu
         networks={Networks.all}
-        selectedNetwork={selectedNetwork}
         onNetworkPress={(network) => {
           closeNetworksModal();
           Networks.switch(network);
-          setSelectedNetwork(network);
         }}
       />
     </Modalize>

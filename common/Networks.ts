@@ -165,6 +165,15 @@ export const PublicNetworks: INetwork[] = [
     explorer: 'https://explorer.aurora.dev',
   },
   {
+    symbol: 'ONE',
+    comm_id: 'one',
+    network: 'Harmony',
+    chainId: 1666600000,
+    explorer: 'https://explorer.harmony.one',
+    color: '#00aee9',
+    defaultTokens: [],
+  },
+  {
     symbol: 'HT',
     comm_id: 'heco',
     chainId: 128,
@@ -186,16 +195,6 @@ export const PublicNetworks: INetwork[] = [
     blockTimeMs: 5 * 1000,
     explorer: 'https://www.oklink.com/okexchain',
   },
-
-  // {
-  //   symbol: 'ONE',
-  //   comm_id: 'one',
-  //   network: 'Harmony',
-  //   chainId: 1666600000,
-  //   explorer: 'https://explorer.harmony.one',
-  //   color: '#00B0FF',
-  //   defaultTokens: [],
-  // },
 ];
 
 export const Testnets: INetwork[] = [

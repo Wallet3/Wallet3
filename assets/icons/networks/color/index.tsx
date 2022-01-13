@@ -56,6 +56,7 @@ const POLY = generateNetworkIcon({ chainId: 137, width: 27, height: 32 });
 const xDAI = generateNetworkIcon({ chainId: 100, width: 32 });
 const BOBA = generateNetworkIcon({ chainId: 288, width: 32 });
 const AURORA = generateNetworkIcon({ chainId: 1313161554, width: 32 });
+const HARMONYONE = generateNetworkIcon({ chainId: 1666600000, width: 34, style: { marginHorizontal: -5 } });
 // const ZSYNC = <ZKSync width={32} height={32} />;
 
 export const NetworkIcons = {
@@ -72,6 +73,7 @@ export const NetworkIcons = {
   100: xDAI,
   288: BOBA,
   1313161554: AURORA,
+  1666600000: HARMONYONE,
 
   // zksync: ZSYNC,
 };
@@ -113,6 +115,11 @@ export function generateNetworkIcon(props: {
       return <OKEx key={chainId} width={width} height={height ?? width} style={style} />;
     case 1313161554:
       return <Aurora key={chainId} width={width} height={height ?? width} style={style} />;
+    case 1666600000:
+    case 1666600001:
+    case 1666600002:
+    case 1666600003:
+      return <HarmonyOne key={chainId} width={width} height={height ?? width} style={style} />;
     default:
       return <EVMIcon key={chainId} size={width} color={color!} style={style} hideEVMTitle={hideEVMTitle} />;
   }

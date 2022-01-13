@@ -21,7 +21,8 @@ interface Props {
 
 export default observer(({ title, onNetworkPress, networks, selectedNetwork }: Props) => {
   const { t } = i18n;
-
+  selectedNetwork = selectedNetwork ?? Networks.current;
+  
   const renderItem = ({ item }: ListRenderItemInfo<INetwork>) => {
     return (
       <TouchableOpacity
