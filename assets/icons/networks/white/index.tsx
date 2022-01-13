@@ -4,8 +4,10 @@ import Avalanche from './avalanche.svg';
 import BSC from './bsc.svg';
 import Boba from './boba.svg';
 import Celo from './celo.svg';
+import Cronos from './cronos.svg';
 import Ethereum from './ethereum.svg';
 import Fantom from './fantom.svg';
+import Harmony from './harmony-one.svg';
 import Heco from './heco.svg';
 import OKEx from './okex.svg';
 import Optimism from './optimism.svg';
@@ -105,6 +107,20 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     opacity: 0.72,
   },
+
+  cronos: {
+    marginTop: -45,
+    marginEnd: -3,
+    alignSelf: 'flex-end',
+    opacity: 0.72,
+  },
+
+  harmony: {
+    marginTop: -42,
+    marginEnd: -7,
+    alignSelf: 'flex-end',
+    opacity: 0.72,
+  },
 });
 
 export default {
@@ -121,4 +137,6 @@ export default {
   56: <BSC width={49} height={49} style={styles.bsc} />,
   288: <Boba width={49} height={49} style={styles.boba} />,
   1313161554: <Aurora width={49} height={49} style={styles.aurora} />,
+  25: <Cronos width={49} height={49} style={styles.cronos} />,
+  1666600000: <Harmony width={52} height={52} style={styles.harmony} />,
 };
