@@ -2,9 +2,10 @@ import { Button, SafeViewContainer } from '../components';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaView, Text, View } from 'react-native';
 
+import { Account } from '../viewmodels/account/Account';
 import AccountSelector from './dapp/AccountSelector';
 import App from '../viewmodels/App';
-import DApp from './dapp/DApp';
+import DAppConnectView from './dapp/DAppConnectView';
 import { Ionicons } from '@expo/vector-icons';
 import Loading from './views/Loading';
 import NetworkSelector from './dapp/NetworkSelector';
@@ -13,8 +14,66 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
 import WalletConnectV1ClientHub from '../viewmodels/walletconnect/WalletConnectV1ClientHub';
 import { WalletConnect_v1 } from '../viewmodels/walletconnect/WalletConnect_v1';
+import i18n from '../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
+
+interface DAppProps {
+  client: WalletConnect_v1;
+  onNetworksPress?: () => void;
+  onAccountsPress?: () => void;
+  close: Function;
+  onConnect: () => void;
+  accounts: Account[];
+  currentAccount?: Account;
+}
+
+const DApp = observer(
+  ({ client, onNetworksPress, onAccountsPress, close, onConnect, accounts, currentAccount }: DAppProps) => {
+    const { t } = i18n;
+    const networks = Networks.all.filter((n) => client.enabledChains.includes(n.chainId));
+    const [network] = networks;
+
+    const app = client.appMeta!;
+
+    const account = client.accounts.includes(currentAccount?.address ?? '')
+      ? currentAccount
+      : accounts.find((a) => a.address === client.accounts[0]) ?? currentAccount;
+
+    const reject = async () => {
+      close();
+      await client.killSession();
+      client.dispose();
+    };
+
+    if (!network) {
+      return (
+        <View style={{ flex: 1 }}>
+          <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+            <Text style={{ color: 'crimson', fontSize: 24 }}>{t('modal-dapp-not-supported-network')}</Text>
+          </View>
+          <Button title="Close" onPress={() => close()} />
+        </View>
+      );
+    }
+
+    return (
+      <DAppConnectView
+        network={network}
+        account={account}
+        appDesc={app.description}
+        appIcon={app.icons[0]}
+        appName={app.name}
+        appUrl={app.url}
+        disableNetworksButton={client.version > 1}
+        onAccountsPress={onAccountsPress}
+        onNetworksPress={onNetworksPress}
+        onConnect={onConnect}
+        onReject={reject}
+      />
+    );
+  }
+);
 
 interface Props {
   uri?: string;

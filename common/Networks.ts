@@ -147,15 +147,6 @@ export const PublicNetworks: INetwork[] = [
     explorer: 'https://snowtrace.io',
   },
   {
-    symbol: 'MOVR',
-    comm_id: 'movr',
-    chainId: 1285,
-    network: 'Moonriver',
-    color: '#53cbc9',
-    defaultTokens: [],
-    explorer: 'https://moonriver.moonscan.io',
-  },
-  {
     symbol: 'ETH',
     comm_id: 'aurora',
     chainId: 1313161554,
@@ -172,6 +163,15 @@ export const PublicNetworks: INetwork[] = [
     explorer: 'https://explorer.harmony.one',
     color: '#00aee9',
     defaultTokens: [],
+  },
+  {
+    symbol: 'MOVR',
+    comm_id: 'movr',
+    chainId: 1285,
+    network: 'Moonriver',
+    color: '#53cbc9',
+    defaultTokens: [],
+    explorer: 'https://moonriver.moonscan.io',
   },
   {
     symbol: 'CRO',
