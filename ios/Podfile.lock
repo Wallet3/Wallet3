@@ -34,7 +34,7 @@ PODS:
     - ExpoModulesCore
   - EXManifests (0.2.2):
     - EXJSONUtils
-  - Expo (43.0.4):
+  - Expo (43.0.5):
     - ExpoModulesCore
   - ExpoModulesCore (0.4.4):
     - React-Core
@@ -263,7 +263,7 @@ PODS:
     - React-jsi (= 0.64.3)
     - React-perflogger (= 0.64.3)
   - React-jsinspector (0.64.3)
-  - react-native-nfc-manager (3.11.4):
+  - react-native-nfc-manager (3.11.5):
     - React
   - react-native-randombytes (3.6.1):
     - React-Core
@@ -619,7 +619,7 @@ SPEC CHECKSUMS:
   EXLocalAuthentication: 4c7166ed3133d2c75586093833936652e7d2c7fc
   EXLocalization: bb38414618b30a177482c9a6f5594ec6eb0898c1
   EXManifests: 50e42e01335df4e54109dee7be5a91bfd37347db
-  Expo: 363a3f3c60d5a1d4f8badb29a869005487f2d9e4
+  Expo: d9588796cd19999da4d440d87bf7eb7ae4dbd608
   ExpoModulesCore: 47b403a33ad73770c49d7559615b3ea121a36116
   EXRandom: 06978dcf45075f3c9e17ae5e726b887316ee9877
   EXSecureStore: fa0fdde1c81ceee2a3cb0519e649feae42767969
@@ -645,7 +645,7 @@ SPEC CHECKSUMS:
   React-jsi: a8b09c29521c798f1783348b37b511ba7b3dbeb3
   React-jsiexecutor: df6abc9fafbecb8e5b7a5fbc5e6d4bd017d594d5
   React-jsinspector: 34e23860273a23695342f58eed3ffd3ba10c31e0
-  react-native-nfc-manager: 8dac41f240201754932ad58388adeae02865effb
+  react-native-nfc-manager: bbb5419748bcc94968746f9dd5f210eabd5dd7fb
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
   react-native-webview: 28a8636d97ee641f2ee8f20492d7a6c269c1d703
