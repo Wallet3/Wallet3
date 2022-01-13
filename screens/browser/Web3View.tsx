@@ -189,81 +189,85 @@ export default forwardRef(
           injectedJavaScriptBeforeContentLoaded={InjectInpageProvider}
         />
 
-        <BlurView
-          intensity={25}
-          tint="light"
-          style={{
-            ...styles.blurView,
-            paddingVertical: safeAreaBottom === 0 ? 4 : undefined,
-            borderTopWidth: separateNavBar ? 0.33 : 0,
-            position: separateNavBar ? 'relative' : 'absolute',
-            shadowOpacity: separateNavBar ? 0 : 0.25,
-          }}
+        <Animatable.View
+          animation="fadeInUp"
+          style={{ bottom: 0, left: 0, right: 0, position: separateNavBar ? 'relative' : 'absolute' }}
         >
-          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-            {separateNavBar ? (
-              <TouchableOpacity style={styles.navTouchableItem} onPress={() => onExpandRequest?.(webUrl)}>
-                <MaterialCommunityIcons name="arrow-collapse-vertical" size={20} color={tintColor} />
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                style={{ ...styles.navTouchableItem, paddingTop: 10, paddingBottom: 9 }}
-                onPress={() => onSeparateRequest?.(webUrl)}
-              >
-                <MaterialCommunityIcons name="arrow-expand" size={19} color={tintColor} />
-              </TouchableOpacity>
-            )}
-
-            <TouchableOpacity style={styles.navTouchableItem} onPress={onBookmarksPress}>
-              <Feather name="book-open" size={20} color={tintColor} />
-            </TouchableOpacity>
-          </View>
-
-          <View style={{ flex: 2, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' }}>
-            <TouchableOpacity
-              style={styles.navTouchableItem}
-              onPress={() => ((ref as any)?.current as WebView)?.goBack()}
-              disabled={!canGoBack}
-            >
-              <Ionicons name="chevron-back-outline" size={22} color={canGoBack ? tintColor : '#dddddd50'} />
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.navTouchableItem} onPress={onGoHome}>
-              <MaterialIcons name="radio-button-off" size={22} color={tintColor} />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.navTouchableItem}
-              onPress={() => ((ref as any)?.current as WebView)?.goForward()}
-              disabled={!canGoForward}
-            >
-              <Ionicons name="chevron-forward-outline" size={22} color={canGoForward ? tintColor : '#dddddd50'} />
-            </TouchableOpacity>
-          </View>
-
-          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-            {dapp && appNetwork ? (
-              <Animatable.View animation={'fadeInUp'} style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <TouchableOpacity
-                  onPress={() => openNetworksModal()}
-                  style={{ paddingStart: 16, paddingEnd: 8, position: 'relative' }}
-                >
-                  {generateNetworkIcon({
-                    chainId: appNetwork.chainId,
-                    color: `${appNetwork.color}`,
-                    width: 22,
-                    style: {},
-                    hideEVMTitle: true,
-                  })}
-
-                  {dapp?.isWalletConnect ? (
-                    <WalletConnectLogo width={9} height={9} style={{ position: 'absolute', right: 5, bottom: -4 }} />
-                  ) : undefined}
+          <BlurView
+            intensity={25}
+            tint="light"
+            style={{
+              ...styles.blurView,
+              paddingVertical: safeAreaBottom === 0 ? 4 : undefined,
+              borderTopWidth: separateNavBar ? 0.33 : 0,
+              shadowOpacity: separateNavBar ? 0 : 0.25,
+            }}
+          >
+            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+              {separateNavBar ? (
+                <TouchableOpacity style={styles.navTouchableItem} onPress={() => onExpandRequest?.(webUrl)}>
+                  <MaterialCommunityIcons name="arrow-collapse-vertical" size={20} color={tintColor} />
                 </TouchableOpacity>
-              </Animatable.View>
-            ) : undefined}
-          </View>
-        </BlurView>
+              ) : (
+                <TouchableOpacity
+                  style={{ ...styles.navTouchableItem, paddingTop: 10, paddingBottom: 9 }}
+                  onPress={() => onSeparateRequest?.(webUrl)}
+                >
+                  <MaterialCommunityIcons name="arrow-expand" size={19} color={tintColor} />
+                </TouchableOpacity>
+              )}
+
+              <TouchableOpacity style={styles.navTouchableItem} onPress={onBookmarksPress}>
+                <Feather name="book-open" size={20} color={tintColor} />
+              </TouchableOpacity>
+            </View>
+
+            <View style={{ flex: 2, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' }}>
+              <TouchableOpacity
+                style={styles.navTouchableItem}
+                onPress={() => ((ref as any)?.current as WebView)?.goBack()}
+                disabled={!canGoBack}
+              >
+                <Ionicons name="chevron-back-outline" size={22} color={canGoBack ? tintColor : '#dddddd50'} />
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.navTouchableItem} onPress={onGoHome}>
+                <MaterialIcons name="radio-button-off" size={22} color={tintColor} />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.navTouchableItem}
+                onPress={() => ((ref as any)?.current as WebView)?.goForward()}
+                disabled={!canGoForward}
+              >
+                <Ionicons name="chevron-forward-outline" size={22} color={canGoForward ? tintColor : '#dddddd50'} />
+              </TouchableOpacity>
+            </View>
+
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
+              {dapp && appNetwork ? (
+                <Animatable.View animation={'fadeInUp'} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <TouchableOpacity
+                    onPress={() => openNetworksModal()}
+                    style={{ paddingStart: 16, paddingEnd: 8, position: 'relative' }}
+                  >
+                    {generateNetworkIcon({
+                      chainId: appNetwork.chainId,
+                      color: `${appNetwork.color}`,
+                      width: 22,
+                      style: {},
+                      hideEVMTitle: true,
+                    })}
+
+                    {dapp?.isWalletConnect ? (
+                      <WalletConnectLogo width={9} height={9} style={{ position: 'absolute', right: 5, bottom: -4 }} />
+                    ) : undefined}
+                  </TouchableOpacity>
+                </Animatable.View>
+              ) : undefined}
+            </View>
+          </BlurView>
+        </Animatable.View>
 
         <Portal>
           <Modalize
@@ -294,9 +298,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 4,
-    bottom: 0,
-    left: 0,
-    right: 0,
 
     shadowColor: `#00000060`,
     shadowOffset: {
@@ -312,8 +313,8 @@ const styles = StyleSheet.create({
   },
 
   navTouchableItem: {
-    paddingVertical: 8,
+    paddingVertical: 9,
     paddingHorizontal: 12,
-    paddingTop: 9,
+    paddingTop: 10,
   },
 });

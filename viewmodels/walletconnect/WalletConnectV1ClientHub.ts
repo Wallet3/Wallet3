@@ -30,6 +30,8 @@ class WalletConnectV1ClientHub extends EventEmitter {
 
   private async upgrade() {
     const legacyEntities = await Database.wcV1Sessions_legacy.find();
+    if (legacyEntities.length === 0) return;
+
     await Promise.all(
       legacyEntities.map(async (e) => {
         const session = new WCSession_v1();

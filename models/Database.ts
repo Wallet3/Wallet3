@@ -24,7 +24,7 @@ class Database {
       database: __DEV__ ? 'dev5' : 'appdata',
       driver: require('expo-sqlite'),
       synchronize: true,
-      entities: [Key, Transaction, WCSession_v1, InpageDApp, Chain],
+      entities: [Key, Transaction, WCSession_v1_legacy, WCSession_v1, InpageDApp, Chain],
     });
 
     this.keys = this._connection.getRepository(Key);
