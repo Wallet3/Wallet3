@@ -378,17 +378,17 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
             numColumns={NumOfColumns}
             style={{ marginTop: 2 }}
             keyExtractor={(v, index) => `v.url-${index}`}
-            contentContainerStyle={{ paddingHorizontal: 4, paddingVertical: 4 }}
+            contentContainerStyle={{ paddingHorizontal: 4, paddingBottom: 8, paddingTop: 2 }}
           />
 
           {Bookmarks.favs.length > 0 ? (
-            <Text style={{ marginHorizontal: 16, marginTop: 12 }}>{t('browser-favorites')}</Text>
+            <Text style={{ marginHorizontal: 16, marginTop: 16 }}>{t('browser-favorites')}</Text>
           ) : undefined}
 
           <FlatList
             data={Bookmarks.favs}
             renderItem={renderItem}
-            style={{ height: '100%' }}
+            style={{ height: '100%', marginTop: 4 }}
             numColumns={NumOfColumns}
             contentContainerStyle={{ paddingHorizontal: 4, paddingVertical: 2 }}
             keyExtractor={(v, index) => `v.url-${index}`}
