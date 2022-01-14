@@ -6,7 +6,7 @@ import Bookmarks from './customs/Bookmarks';
 import Coingecko from '../common/apis/Coingecko';
 import Contacts from './customs/Contacts';
 import Database from '../models/Database';
-import InpageDAppHub from './hubs/InpageDAppHub';
+import InpageMetamaskDAppHub from './hubs/InpageMetamaskDAppHub';
 import LinkHub from './hubs/LinkHub';
 import Networks from './Networks';
 import TxHub from './hubs/TxHub';
@@ -82,7 +82,7 @@ export class AppVM {
       AsyncStorage.clear(),
       Authentication.reset(),
       WalletConnectV1ClientHub.reset(),
-      InpageDAppHub.reset(),
+      InpageMetamaskDAppHub.reset(),
     ]);
   }
 }

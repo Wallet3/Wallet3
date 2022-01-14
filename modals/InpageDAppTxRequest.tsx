@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import App from '../viewmodels/App';
 import Authentication from '../viewmodels/Authentication';
 import { Button } from '../components';
-import { InpageDAppTxRequest } from '../viewmodels/hubs/InpageDAppHub';
+import { InpageDAppTxRequest } from '../viewmodels/hubs/InpageMetamaskDAppHub';
 import Networks from '../viewmodels/Networks';
 import { RawTransactionRequest } from '../viewmodels/transferring/RawTransactionRequest';
 import { SafeAreaProvider } from 'react-native-safe-area-context';

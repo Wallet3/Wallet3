@@ -6,7 +6,7 @@ import {
   InpageDAppAddEthereumChain,
   InpageDAppSignRequest,
   InpageDAppTxRequest,
-} from '../viewmodels/hubs/InpageDAppHub';
+} from '../viewmodels/hubs/InpageMetamaskDAppHub';
 import { ERC681, ERC681Transferring } from '../viewmodels/transferring/ERC681Transferring';
 import { NetworksMenu, Request, Send, WalletConnectDApp, WalletConnectSign, WalletConnectTxRequest } from '../modals';
 import React, { useEffect, useState } from 'react';

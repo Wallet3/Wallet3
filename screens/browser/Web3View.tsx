@@ -12,8 +12,8 @@ import GetPageMetadata from './scripts/Metadata';
 import HookWalletConnect from './scripts/InjectWalletConnectObserver';
 import { INetwork } from '../../common/Networks';
 import InjectInpageProvider from './scripts/InjectInpageProvider';
-// import InpageDAppHub from '../../viewmodels/hubs/InpageDAppHub';
-import InpageDAppHub from '../../viewmodels/hubs/InpageMetamaskDAppHub';
+// import InpageMetamaskDAppHub from '../../viewmodels/hubs/InpageMetamaskDAppHub';
+import InpageMetamaskDAppHub from '../../viewmodels/hubs/InpageMetamaskDAppHub';
 import LinkHub from '../../viewmodels/hubs/LinkHub';
 import MetamaskLogo from '../../assets/3rd/metamask.svg';
 import MetamaskMobileProvider from './scripts/Metamask-mobile-provider';
@@ -108,23 +108,24 @@ export default forwardRef(
         return;
       }
 
-      InpageDAppHub.getDApp(hostname).then((app) => updateDAppState(app));
+      InpageMetamaskDAppHub.getDApp(hostname).then((app) => updateDAppState(app));
     };
 
     useEffect(() => {
-      InpageDAppHub.on('appStateUpdated', async (appState) => {
-        ((ref as any).current as WebView)?.postMessage(JSON.stringify(appState));
-        updateDAppState(await InpageDAppHub.getDApp(appState.payload.origin));
+      InpageMetamaskDAppHub.on('appChainUpdated_metamask', async (appState) => {
+        const webview = (ref as any).current as WebView;
+        webview.injectJavaScript(JS_POST_MESSAGE_TO_PROVIDER(appState));
+        updateDAppState(await InpageMetamaskDAppHub.getDApp(appState.origin));
       });
 
-      InpageDAppHub.on('dappConnected', (app) => updateDAppState(app));
+      InpageMetamaskDAppHub.on('dappConnected', (app) => updateDAppState(app));
 
       WalletConnectV1ClientHub.on('mobileAppConnected', () => {
         updateGlobalState();
       });
 
       return () => {
-        InpageDAppHub.removeAllListeners();
+        InpageMetamaskDAppHub.removeAllListeners();
         WalletConnectV1ClientHub.removeAllListeners();
       };
     }, [webUrl]);
@@ -153,15 +154,13 @@ export default forwardRef(
           });
           break;
         // case 'INPAGE_REQUEST':
-          // ((ref as any).current as WebView).postMessage(
-          //   await InpageDAppHub.handle(data.origin!, { ...data.payload, pageMetadata: data.pageMetadata ?? pageMetadata })
-          // );
-          // break;
+        // ((ref as any).current as WebView).postMessage(
+        //   await InpageMetamaskDAppHub.handle(data.origin!, { ...data.payload, pageMetadata: data.pageMetadata ?? pageMetadata })
+        // );
+        // break;
         case 'metamask-provider':
-          const metamaskResp = await InpageDAppHub.handle(data.origin!, data.data);
-          console.log(metamaskResp);
-          // ((ref as any).current as WebView).postMessage(JSON.stringify(metamaskResp));
-          const { scheme, hostname } = Linking.parse(data.origin!);
+          const metamaskResp = await InpageMetamaskDAppHub.handle(data.origin!, data.data);
+
           const webview = (ref as any).current as WebView;
           webview.injectJavaScript(JS_POST_MESSAGE_TO_PROVIDER(metamaskResp));
           break;
@@ -181,7 +180,7 @@ export default forwardRef(
         WalletConnectV1ClientHub.find(dapp.origin)?.setLastUsedChain(network.chainId);
         updateDAppState({ ...dapp!, lastUsedChainId: `${network.chainId}` });
       } else {
-        InpageDAppHub.setDAppConfigs(dapp?.origin!, { chainId: `${network.chainId}` });
+        InpageMetamaskDAppHub.setDAppChainId(dapp?.origin!, network.chainId);
       }
     };
 

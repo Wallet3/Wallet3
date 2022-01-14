@@ -21,7 +21,7 @@ import { borderColor, thirdFontColor } from '../../constants/styles';
 import { Bar } from 'react-native-progress';
 import CachedImage from 'react-native-expo-cached-image';
 import Collapsible from 'react-native-collapsible';
-import InpageDAppHub from '../../viewmodels/hubs/InpageDAppHub';
+import InpageMetamaskDAppHub from '../../viewmodels/hubs/InpageMetamaskDAppHub';
 import { Ionicons } from '@expo/vector-icons';
 import LinkHub from '../../viewmodels/hubs/LinkHub';
 import { Modalize } from 'react-native-modalize';

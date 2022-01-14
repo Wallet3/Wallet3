@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import Authentication from '../viewmodels/Authentication';
-import { InpageDAppSignRequest } from '../viewmodels/hubs/InpageDAppHub';
+import { InpageDAppSignRequest } from '../viewmodels/hubs/InpageMetamaskDAppHub';
 import Networks from '../viewmodels/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Sign from './compositions/Sign';

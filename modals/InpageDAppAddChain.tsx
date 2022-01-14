@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import AddChain from './dapp/AddChain';
-import { InpageDAppAddEthereumChain } from '../viewmodels/hubs/InpageDAppHub';
+import { InpageDAppAddEthereumChain } from '../viewmodels/hubs/InpageMetamaskDAppHub';
 import Networks from '../viewmodels/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { observer } from 'mobx-react-lite';

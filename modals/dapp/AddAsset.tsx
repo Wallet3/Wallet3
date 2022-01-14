@@ -1,5 +1,5 @@
 import { Image, Text, View } from 'react-native';
-import { InpageDAppAddAsset, InpageDAppAddEthereumChain } from '../../viewmodels/hubs/InpageDAppHub';
+import { InpageDAppAddAsset, InpageDAppAddEthereumChain } from '../../viewmodels/hubs/InpageMetamaskDAppHub';
 
 import React from 'react';
 import RejectApproveButtons from '../components/RejectApproveButtons';

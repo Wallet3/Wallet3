@@ -15,6 +15,12 @@ import i18n from '../../i18n';
 import { rawCall } from '../../common/RPC';
 import { showMessage } from 'react-native-flash-message';
 
+const NOTIFICATION_NAMES = {
+  accountsChanged: 'metamask_accountsChanged',
+  unlockStateChanged: 'metamask_unlockStateChanged',
+  chainChanged: 'metamask_chainChanged',
+};
+
 interface JsonRpcRequest {
   id?: number | string;
   jsonrpc: '2.0';
@@ -80,7 +86,7 @@ export interface InpageDAppAddAsset {
   asset: WatchAssetParams;
 }
 
-class InpageDAppHub extends EventEmitter {
+class InpageMetamaskDAppHub extends EventEmitter {
   apps = new Map<string, InpageDApp>();
 
   private get dbTable() {
@@ -208,13 +214,7 @@ class InpageDAppHub extends EventEmitter {
     if (Number(dapp.lastUsedChainId) === Number(targetChainId)) return null;
     if (!Networks.has(targetChainId)) return { error: { code: 4902, message: 'the chain has not been added to Wallet 3' } };
 
-    dapp.lastUsedChainId = targetChainId;
-    dapp.save();
-
-    this.emit('appStateUpdated', {
-      type: 'STATE_UPDATE',
-      payload: { origin, selectedAddress: dapp.lastUsedAccount, network: targetChainId },
-    });
+    this.setDAppChainId(origin, targetChainId);
 
     return null;
   }
@@ -408,19 +408,22 @@ class InpageDAppHub extends EventEmitter {
     return dapp.lastUsedAccount === address ? address : null;
   }
 
-  async setDAppConfigs(origin: string, configs: { account?: string; chainId?: string }) {
+  async setDAppChainId(origin: string, chainId: string | number) {
     const dapp = await this.getDApp(origin);
     if (!dapp) return;
 
-    dapp.lastUsedAccount = configs.account || dapp.lastUsedAccount;
-    dapp.lastUsedChainId = configs.chainId || dapp.lastUsedChainId;
-
-    this.emit('appStateUpdated', {
-      type: 'STATE_UPDATE',
-      payload: { origin, selectedAddress: dapp.lastUsedAccount, network: dapp.lastUsedChainId },
-    });
-
+    dapp.lastUsedChainId = `${chainId}`;
     dapp.save();
+
+    this.emit('appChainUpdated_metamask', {
+      origin,
+      name: 'metamask-provider',
+      data: {
+        method: NOTIFICATION_NAMES.chainChanged,
+        jsonrpc: '2.0',
+        params: { chainId: `0x${Number(chainId).toString(16)}`, networkVersion: `${chainId}` },
+      },
+    });
   }
 
   reset() {
@@ -429,4 +432,4 @@ class InpageDAppHub extends EventEmitter {
   }
 }
 
-export default new InpageDAppHub();
+export default new InpageMetamaskDAppHub();
