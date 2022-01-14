@@ -144,8 +144,7 @@ const styles = StyleSheet.create({
     textAlignVertical: 'bottom',
     lineHeight: 33,
     position: 'absolute',
-    bottom: -10,
-    fontFamily: Langs.systemLang.includes('ja') && Langs.currentLang.value.includes('zh') ? undefined : numericFontFamily,
+    bottom: -8,
   },
 
   buttonsContainer: {
