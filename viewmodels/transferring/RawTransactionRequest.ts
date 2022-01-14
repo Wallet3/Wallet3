@@ -68,6 +68,10 @@ export class RawTransactionRequest extends BaseTransaction {
     }
   }
 
+  get token() {
+    return this.erc20;
+  }
+
   constructor({ param, network, account }: IConstructor) {
     super({ network, account });
 

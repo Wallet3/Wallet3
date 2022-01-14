@@ -10,6 +10,7 @@ import DeviceInfo from 'react-native-device-info';
 import EventEmitter from 'events';
 import { INetwork } from '../../common/Networks';
 import InpageDApp from '../../models/InpageDApp';
+import { ReadableInfo } from '../../models/Transaction';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import { WCCallRequest_eth_sendTransaction } from '../../models/WCSession_v1';
 import WebView from 'react-native-webview';
@@ -72,7 +73,7 @@ export interface InpageDAppTxRequest {
   param: WCCallRequest_eth_sendTransaction;
   account: string;
   app: { name: string; icon: string };
-  approve: (obj: { pin?: string; tx: providers.TransactionRequest }) => Promise<boolean>;
+  approve: (obj: { pin?: string; tx: providers.TransactionRequest; readableInfo: ReadableInfo }) => Promise<boolean>;
   reject: () => void;
 }
 
@@ -291,7 +292,15 @@ class InpageMetamaskDAppHub extends EventEmitter {
     const { params, pageMetadata } = payload;
 
     return new Promise<string | any>((resolve) => {
-      const approve = async ({ pin, tx }: { pin?: string; tx: providers.TransactionRequest }) => {
+      const approve = async ({
+        pin,
+        tx,
+        readableInfo,
+      }: {
+        pin?: string;
+        tx: providers.TransactionRequest;
+        readableInfo: ReadableInfo;
+      }) => {
         const { wallet, accountIndex } = App.findWallet(dapp.lastUsedAccount) || {};
         if (!wallet) return resolve({ error: { code: 4001, message: 'Invalid account' } });
 
@@ -309,7 +318,7 @@ class InpageMetamaskDAppHub extends EventEmitter {
         const broadcastTx = {
           txHex,
           tx,
-          readableInfo: { dapp: pageMetadata?.title ?? '', type: 'dapp-interaction', icon: pageMetadata?.icon } as any,
+          readableInfo: { ...(readableInfo || {}), dapp: pageMetadata?.title ?? '', icon: pageMetadata?.icon },
         };
 
         wallet.sendTx(broadcastTx).then((hash) => resolve(hash));

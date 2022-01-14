@@ -43,7 +43,19 @@ export default observer(({ param, chainId, approve, reject, close, account, app 
   const [vm] = useState(new RawTransactionRequest({ param, network, account: userAccount }));
 
   const onApprove = async (pin?: string) => {
-    const result = await approve({ pin, tx: vm.txRequest });
+    const result = await approve({
+      pin,
+      tx: vm.txRequest,
+      readableInfo: {
+        type: 'dapp-interaction',
+        symbol: vm.token?.symbol,
+        decimals: vm.token?.decimals,
+        amountWei: vm.tokenAmountWei.toString(),
+        amount: Number(vm.tokenAmount).toLocaleString(undefined, { maximumFractionDigits: 7 }),
+        recipient: vm.to,
+      },
+    });
+
     setVerified(result);
     if (result) setTimeout(() => close(), 1750);
     return result;
