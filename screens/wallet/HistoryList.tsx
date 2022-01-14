@@ -37,7 +37,8 @@ const Tx = observer(({ item, onPress }: { onPress?: (tx: Transaction) => void; i
   const { t } = i18n;
 
   const { chainId } = item;
-  const tokenSymbol = item.readableInfo?.symbol ?? ChainIdsSymbol.get(chainId);
+  const tokenSymbol = item.readableInfo?.symbol?.trim() || ChainIdsSymbol.get(chainId);
+
   const dappIcon = item.readableInfo?.icon;
   const amount: string = item.readableInfo?.amount ?? utils.formatEther(item.value ?? '0');
 
