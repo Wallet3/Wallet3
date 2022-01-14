@@ -1,4 +1,5 @@
 import { BarCodeScannedCallback, BarCodeScanner } from 'expo-barcode-scanner';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -60,9 +61,9 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
         style={{ flex: 1, width: '100%', height: '100%', position: 'absolute' }}
-      >
-        
-      </BarCodeScanner>
+      ></BarCodeScanner>
+
+      <Ionicons name="scan-outline" size={250} color="#ffffff50" style={{ position: 'absolute', zIndex: 1 }} />
 
       <StatusBar style="light" />
     </View>
