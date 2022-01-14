@@ -60,6 +60,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   const [pageMetadata, setPageMetadata] = useState<{ icon: string; title: string; desc?: string; origin: string }>();
   const [suggests, setSuggests] = useState<string[]>([]);
   const [webRiskLevel, setWebRiskLevel] = useState('');
+  const [isExpandedSite, setIsExpandedSite] = useState(false);
   const { ref: favsRef, open: openFavs, close: closeFavs } = useModalize();
 
   useEffect(() => {
@@ -150,6 +151,8 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   useEffect(() => {
     if (webUrl) hideTabBar();
     else showTabBar();
+
+    setIsExpandedSite(Bookmarks.isExpandedSite(webUrl));
   }, [webUrl]);
 
   const onNavigationStateChange = (event: WebViewNavigation) => {
@@ -363,9 +366,9 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
           onNavigationStateChange={onNavigationStateChange}
           onMetadataChange={setPageMetadata}
           onGoHome={goHome}
-          onSeparateRequest={(webUrl) => Bookmarks.addExpandedSite(webUrl)}
+          onShrinkRequest={(webUrl) => Bookmarks.addExpandedSite(webUrl)}
           onExpandRequest={(webUrl) => Bookmarks.removeExpandedSite(webUrl)}
-          separateNavBar={!Bookmarks.isExpandedSite(webUrl)}
+          expanded={isExpandedSite}
           onBookmarksPress={openFavs}
         />
       ) : (

@@ -45,15 +45,15 @@ export default forwardRef(
     props: WebViewProps & {
       onMetadataChange?: (metadata: { icon: string; title: string; desc?: string; origin: string }) => void;
       onGoHome?: () => void;
-      separateNavBar?: boolean;
-      onSeparateRequest?: (webUrl: string) => void;
+      expanded?: boolean;
+      onShrinkRequest?: (webUrl: string) => void;
       onExpandRequest?: (webUrl: string) => void;
       onBookmarksPress?: () => void;
     },
     ref: React.Ref<WebView>
   ) => {
     const { t } = i18n;
-    const { onMetadataChange, onGoHome, separateNavBar, onSeparateRequest, onExpandRequest, onBookmarksPress } = props;
+    const { onMetadataChange, onGoHome, expanded, onShrinkRequest, onExpandRequest, onBookmarksPress } = props;
     const [canGoBack, setCanGoBack] = useState(false);
     const [canGoForward, setCanGoForward] = useState(false);
     const [appName] = useState(`Wallet3/${DeviceInfo.getVersion() ?? '0.0.0'}`);
@@ -144,7 +144,7 @@ export default forwardRef(
           const resp = await hub.handle(data.origin!, { ...data.data, pageMetadata });
 
           const webview = (ref as any).current as WebView;
-          webview.injectJavaScript(JS_POST_MESSAGE_TO_PROVIDER(resp));
+          webview?.injectJavaScript(JS_POST_MESSAGE_TO_PROVIDER(resp));
           break;
       }
     };
@@ -174,7 +174,7 @@ export default forwardRef(
         <WebView
           {...props}
           ref={ref}
-          contentInset={{ bottom: separateNavBar ? 0 : 37 + (safeAreaBottom === 0 ? 8 : 0) }}
+          contentInset={{ bottom: expanded ? 37 + (safeAreaBottom === 0 ? 8 : 0) : 0 }}
           automaticallyAdjustContentInsets
           contentInsetAdjustmentBehavior="always"
           onNavigationStateChange={onNavigationStateChange}
@@ -191,7 +191,7 @@ export default forwardRef(
 
         <Animatable.View
           animation="fadeInUp"
-          style={{ bottom: 0, left: 0, right: 0, position: separateNavBar ? 'relative' : 'absolute' }}
+          style={{ bottom: 0, left: 0, right: 0, position: expanded ? 'absolute' : 'relative' }}
         >
           <BlurView
             intensity={25}
@@ -199,21 +199,21 @@ export default forwardRef(
             style={{
               ...styles.blurView,
               paddingVertical: safeAreaBottom === 0 ? 4 : undefined,
-              borderTopWidth: separateNavBar ? 0.33 : 0,
-              shadowOpacity: separateNavBar ? 0 : 0.25,
+              borderTopWidth: expanded ? 0 : 0.33,
+              shadowOpacity: expanded ? 0.25 : 0,
             }}
           >
             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-              {separateNavBar ? (
-                <TouchableOpacity
-                  style={{ ...styles.navTouchableItem, paddingTop: 10, paddingBottom: 9 }}
-                  onPress={() => onSeparateRequest?.(webUrl)}
-                >
-                  <MaterialCommunityIcons name="arrow-expand" size={19} color={tintColor} />
-                </TouchableOpacity>
-              ) : (
+              {expanded ? (
                 <TouchableOpacity style={styles.navTouchableItem} onPress={() => onExpandRequest?.(webUrl)}>
                   <MaterialCommunityIcons name="arrow-collapse-vertical" size={20} color={tintColor} />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={{ ...styles.navTouchableItem, paddingTop: 10, paddingBottom: 9 }}
+                  onPress={() => onShrinkRequest?.(webUrl)}
+                >
+                  <MaterialCommunityIcons name="arrow-expand" size={19} color={tintColor} />
                 </TouchableOpacity>
               )}
 
