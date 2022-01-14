@@ -11,6 +11,7 @@ import { INetwork } from '../../common/Networks';
 import InpageDApp from '../../models/InpageDApp';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import { WCCallRequest_eth_sendTransaction } from '../../models/WCSession_v1';
+import WebView from 'react-native-webview';
 import i18n from '../../i18n';
 import { rawCall } from '../../common/RPC';
 import { showMessage } from 'react-native-flash-message';
@@ -95,7 +96,6 @@ class InpageMetamaskDAppHub extends EventEmitter {
 
   constructor() {
     super();
-    // this.dbTable.clear()
   }
 
   async handle(origin: string, payload: Payload) {
@@ -334,7 +334,14 @@ class InpageMetamaskDAppHub extends EventEmitter {
 
     if (Networks.has(chain.chainId)) {
       setTimeout(() => this.wallet_switchEthereumChain(origin, [{ chainId: chain.chainId }]), 200);
-      showMessage({ message: i18n.t('msg-chain-already-exists', { name: chain.chainName }), type: 'info' });
+
+      const dapp = await this.getDApp(origin);
+      if (!dapp) return null;
+
+      if (Number(dapp.lastUsedChainId) !== 1) {
+        showMessage({ message: i18n.t('msg-chain-already-exists', { name: chain.chainName }), type: 'info' });
+      }
+
       return null;
     }
 
