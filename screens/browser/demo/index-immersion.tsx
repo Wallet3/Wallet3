@@ -205,9 +205,9 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
           onNavigationStateChange={onNavigationStateChange}
           onMetadataChange={setPageMetadata}
           onGoHome={goHome}
-          onSeparateRequest={(webUrl) => Bookmarks.addSeparatedSite(webUrl)}
-          onExpandRequest={(webUrl) => Bookmarks.removeSeparatedSite(webUrl)}
-          separateNavBar={Bookmarks.isSeparatedSite(webUrl)}
+          onSeparateRequest={(webUrl) => Bookmarks.addExpandedSite(webUrl)}
+          onExpandRequest={(webUrl) => Bookmarks.removeExpandedSite(webUrl)}
+          separateNavBar={Bookmarks.isExpandedSite(webUrl)}
           onBookmarksPress={openFavs}
         />
       ) : (

@@ -16,7 +16,7 @@ export interface Bookmark {
 class Bookmarks {
   favs: Bookmark[] = [];
   history: string[] = [];
-  separatedSites: string[] = [];
+  expandedSites: string[] = [];
 
   constructor() {
     makeObservable(this, {
@@ -26,9 +26,9 @@ class Bookmarks {
       add: action,
       submitHistory: action,
       reset: action,
-      separatedSites: observable,
-      addSeparatedSite: action,
-      removeSeparatedSite: action,
+      expandedSites: observable,
+      addExpandedSite: action,
+      removeExpandedSite: action,
     });
 
     AsyncStorage.getItem(`bookmarks`)
@@ -43,8 +43,8 @@ class Bookmarks {
       })
       .catch(() => {});
 
-    AsyncStorage.getItem(`separated-sites`)
-      .then((v) => runInAction(() => (this.separatedSites = v ? JSON.parse(v) : NoInsetsSites)))
+    AsyncStorage.getItem(`expanded-sites`)
+      .then((v) => runInAction(() => (this.expandedSites = v ? JSON.parse(v) : NoInsetsSites)))
       .catch(() => {});
   }
 
@@ -68,33 +68,33 @@ class Bookmarks {
     AsyncStorage.setItem(`history-urls`, JSON.stringify(this.history.slice(0, 32)));
   }
 
-  addSeparatedSite(url: string) {
+  addExpandedSite(url: string) {
     const { hostname } = Linking.parse(url || 'https://');
     if (!hostname) return;
 
-    this.separatedSites.push(hostname);
-    AsyncStorage.setItem('separated-sites', JSON.stringify(this.separatedSites));
+    this.expandedSites.push(hostname);
+    AsyncStorage.setItem('expanded-sites', JSON.stringify(this.expandedSites));
   }
 
-  removeSeparatedSite(url: string) {
+  removeExpandedSite(url: string) {
     const { hostname } = Linking.parse(url || 'https://');
     if (!hostname) return;
 
-    this.separatedSites = this.separatedSites.filter((i) => i !== hostname);
-    AsyncStorage.setItem('separated-sites', JSON.stringify(this.separatedSites));
+    this.expandedSites = this.expandedSites.filter((i) => i !== hostname);
+    AsyncStorage.setItem('expanded-sites', JSON.stringify(this.expandedSites));
   }
 
-  isSeparatedSite(url: string) {
+  isExpandedSite(url: string) {
     const { hostname } = Linking.parse(url || 'https://');
     if (!hostname) return false;
 
-    return this.separatedSites.includes(hostname);
+    return this.expandedSites.includes(hostname) || this.expandedSites.some((i) => hostname.includes(i));
   }
 
   reset() {
     this.favs = [];
     this.history = [];
-    this.separatedSites = NoInsetsSites;
+    this.expandedSites = NoInsetsSites;
   }
 }
 

@@ -29,7 +29,7 @@
     "ethers": "^5.5.3",
     "events": "^3.3.0",
     "expo": "~43.0.5",
-    "expo-asset": "^8.4.5",
+    "expo-asset": "^8.4.6",
     "expo-barcode-scanner": "^11.2.0",
     "expo-blur": "^11.0.0",
     "expo-clipboard": "^2.0.3",
