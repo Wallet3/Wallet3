@@ -116,18 +116,31 @@ export class AccountTokens {
   async addToken(token: UserToken, targetChainId = Networks.current.chainId) {
     if (!token.address) return;
 
-    const found = this.allTokens.find((t) => t.address === token.address);
+    const currentChainId = Networks.current.chainId;
+
+    const tokens =
+      targetChainId === currentChainId ? this.allTokens : await TokensMan.loadUserTokens(targetChainId, this.owner);
+
+    const found = tokens.find((t) => t.address === token.address);
 
     if (found) {
-      if (!found.shown) this.toggleToken(found);
+      if (targetChainId === currentChainId) {
+        if (!found.shown) runInAction(() => this.toggleToken(found));
+      } else {
+        found.shown = true;
+        TokensMan.saveUserTokens(targetChainId, this.owner, tokens);
+      }
+
       return;
     }
 
     token.shown = true;
 
     if (targetChainId === Networks.current.chainId) {
-      this.allTokens = [token, ...this.allTokens];
-      this.tokens = [this.tokens[0], token, ...this.tokens.slice(1)];
+      runInAction(() => {
+        this.allTokens.unshift(token);
+        this.tokens.splice(1, 0, token);
+      });
     }
 
     TokensMan.saveUserTokens(targetChainId, this.owner, [
