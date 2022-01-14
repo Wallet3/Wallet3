@@ -77,7 +77,7 @@ const Tx = observer(({ item, onPress }: { onPress?: (tx: Transaction) => void; i
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 6 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           {dappIcon ? (
-            <Image source={{ uri: dappIcon }} style={{ width: 16, height: 16, marginEnd: 4 }} />
+            <Image source={{ uri: dappIcon }} style={{ width: 16, height: 16, marginEnd: 4, borderRadius: 3 }} />
           ) : (
             <Text style={{ fontWeight: '300', marginEnd: 2 }}>{t('home-history-item-to')}:</Text>
           )}
