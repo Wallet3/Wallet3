@@ -11,7 +11,7 @@ import { observer } from 'mobx-react-lite';
 const LangItem = observer(({ item, onPress }: { onPress: () => void; item: Lang }) => {
   return (
     <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 16 }} onPress={onPress}>
-      <Text style={{ fontSize: 17, fontFamily: 'Menlo-Regular' }}>{item.name}</Text>
+      <Text style={{ fontSize: 17, fontFamily: 'PingFangTC-Medium' }}>{item.name}</Text>
       <View style={{ flex: 1 }} />
       <Feather name="check" size={17} style={{ opacity: Langs.currentLang.value === item.value ? 1 : 0 }} />
     </TouchableOpacity>
