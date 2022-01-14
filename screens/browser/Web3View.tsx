@@ -205,13 +205,13 @@ export default forwardRef(
           >
             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
               {expanded ? (
-                <TouchableOpacity style={styles.navTouchableItem} onPress={() => onExpandRequest?.(webUrl)}>
+                <TouchableOpacity style={styles.navTouchableItem} onPress={() => onShrinkRequest?.(webUrl)}>
                   <MaterialCommunityIcons name="arrow-collapse-vertical" size={20} color={tintColor} />
                 </TouchableOpacity>
               ) : (
                 <TouchableOpacity
                   style={{ ...styles.navTouchableItem, paddingTop: 10, paddingBottom: 9 }}
-                  onPress={() => onShrinkRequest?.(webUrl)}
+                  onPress={() => onExpandRequest?.(webUrl)}
                 >
                   <MaterialCommunityIcons name="arrow-expand" size={19} color={tintColor} />
                 </TouchableOpacity>

@@ -366,10 +366,16 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
           onNavigationStateChange={onNavigationStateChange}
           onMetadataChange={setPageMetadata}
           onGoHome={goHome}
-          onShrinkRequest={(webUrl) => Bookmarks.addExpandedSite(webUrl)}
-          onExpandRequest={(webUrl) => Bookmarks.removeExpandedSite(webUrl)}
           expanded={isExpandedSite}
           onBookmarksPress={openFavs}
+          onShrinkRequest={(webUrl) => {
+            Bookmarks.removeExpandedSite(webUrl);
+            setIsExpandedSite(false);
+          }}
+          onExpandRequest={(webUrl) => {
+            Bookmarks.addExpandedSite(webUrl);
+            setIsExpandedSite(true);
+          }}
         />
       ) : (
         <View>
