@@ -159,7 +159,6 @@ export default observer(({ uri, close, extra }: Props) => {
 
     let wc_client = WalletConnectV1ClientHub.connect(uri, extra);
     const timeout = setTimeout(async () => {
-      console.log('timeout');
       setConnectTimeout(true);
       setConnecting(false);
       setClient(undefined);

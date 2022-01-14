@@ -125,7 +125,6 @@ export default forwardRef(
 
       try {
         data = JSON.parse(e.nativeEvent.data);
-        console.log(data);
       } catch (error) {
         return;
       }
