@@ -90,7 +90,11 @@ export default observer(
 
         <View style={{ height: 36, backgroundColor: 'transparent' }} />
 
-        <View style={{ justifyContent: 'space-between', marginBottom: 8, backgroundColor: 'transparent', height: 31 }}>
+        <View style={{ justifyContent: 'space-between', marginBottom: 8, height: 32, position: 'relative' }}>
+          <Text style={{ ...styles.headline, position: 'relative', opacity: 0 }} numberOfLines={1}>
+            [Placeholder] DO NOT DELETE ME!!!
+          </Text>
+
           <AnimateNumber
             value={balance || 0}
             style={styles.headline}
@@ -137,7 +141,10 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     maxWidth: '85%',
     fontSize: 29,
-    lineHeight: 39,
+    textAlignVertical: 'bottom',
+    lineHeight: 33,
+    position: 'absolute',
+    bottom: -10,
     fontFamily: Langs.systemLang.includes('ja') && Langs.currentLang.value.includes('zh') ? undefined : numericFontFamily,
   },
 

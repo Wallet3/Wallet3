@@ -221,7 +221,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
               placeholderTextColor="#dfdfdf"
               autoCorrect={false}
               placeholder={t('browser-enter-address')}
-              selectTextOnFocus={true}
+              selectTextOnFocus
               onFocus={() => setFocus(true)}
               onBlur={() => setFocus(false)}
               defaultValue={isFocus ? webUrl : undefined}

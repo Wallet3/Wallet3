@@ -6,6 +6,7 @@ import Networks, { AddEthereumChainParameter } from '../Networks';
 import { Account } from '../account/Account';
 import App from '../App';
 import Database from '../../models/Database';
+import DeviceInfo from 'react-native-device-info';
 import EventEmitter from 'events';
 import { INetwork } from '../../common/Networks';
 import InpageDApp from '../../models/InpageDApp';
@@ -113,6 +114,9 @@ class InpageMetamaskDAppHub extends EventEmitter {
           accounts: [App.currentWallet?.currentAccount?.address!],
         };
         break;
+      case 'web3_clientVersion':
+        result = `Wallet3/${DeviceInfo.getVersion()}/Mobile`;
+        break;
       case 'eth_accounts':
         const account = (await this.getDApp(hostname!))?.lastUsedAccount;
         result = account ? [account] : [];
@@ -125,8 +129,10 @@ class InpageMetamaskDAppHub extends EventEmitter {
         result = await this.eth_requestAccounts(hostname!, payload);
         break;
       case 'net_version':
+        result = `${Number((await this.getDApp(hostname!))?.lastUsedChainId ?? 1)}`;
+        break;
       case 'eth_chainId':
-        result = `0x${Number(this.apps.get(hostname!)?.lastUsedChainId ?? Networks.current.chainId).toString(16)}`;
+        result = `0x${Number((await this.getDApp(hostname!))?.lastUsedChainId ?? Networks.current.chainId).toString(16)}`;
         break;
       case 'wallet_switchEthereumChain':
         result = await this.wallet_switchEthereumChain(hostname!, params);

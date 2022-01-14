@@ -82,6 +82,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app }: Props) 
                 defaultValue={vm.maxUint256Amount ? 'Unlimited' : vm.tokenAmount}
                 keyboardType="decimal-pad"
                 onChangeText={(t) => vm.setApproveAmount(t)}
+                selectTextOnFocus
                 textAlign="right"
                 style={{
                   ...styles.reviewItemValue,
