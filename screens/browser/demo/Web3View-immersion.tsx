@@ -8,23 +8,23 @@ import { WebView, WebViewMessageEvent, WebViewNavigation, WebViewProps } from 'r
 
 import { BlurView } from 'expo-blur';
 import DeviceInfo from 'react-native-device-info';
-import GetPageMetadata from './scripts/Metadata';
-import HookWalletConnect from './scripts/InjectWalletConnectObserver';
-import { INetwork } from '../../common/Networks';
-import InjectInpageProvider from './scripts/InjectInpageProvider';
-import InpageMetamaskDAppHub from '../../viewmodels/hubs/InpageMetamaskDAppHub';
-import LinkHub from '../../viewmodels/hubs/LinkHub';
+import GetPageMetadata from '../scripts/Metadata';
+import HookWalletConnect from '../scripts/InjectWalletConnectObserver';
+import { INetwork } from '../../../common/Networks';
+import InpageMetamaskDAppHub from '../../../viewmodels/hubs/InpageMetamaskDAppHub';
+import LinkHub from '../../../viewmodels/hubs/LinkHub';
 import MetamaskLogo from '../../assets/3rd/metamask.svg';
+import MetamaskMobileProvider from '../scripts/Metamask-mobile-provider';
 import { Modalize } from 'react-native-modalize';
-import Networks from '../../viewmodels/Networks';
-import { NetworksMenu } from '../../modals';
+import Networks from '../../../viewmodels/Networks';
+import { NetworksMenu } from '../../../modals';
 import { Portal } from 'react-native-portalize';
 import WalletConnectLogo from '../../assets/3rd/walletconnect.svg';
-import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectV1ClientHub';
+import WalletConnectV1ClientHub from '../../../viewmodels/walletconnect/WalletConnectV1ClientHub';
 import { WebViewScrollEvent } from 'react-native-webview/lib/WebViewTypes';
-import { borderColor } from '../../constants/styles';
-import { generateNetworkIcon } from '../../assets/icons/networks/color';
-import i18n from '../../i18n';
+import { borderColor } from '../../../constants/styles';
+import { generateNetworkIcon } from '../../../assets/icons/networks/color';
+import i18n from '../../../i18n';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 interface PageMetadata {
@@ -139,11 +139,6 @@ export default forwardRef(
             hostname: Linking.parse(pageMetadata?.origin ?? 'https://').hostname ?? '',
           });
           break;
-        case 'INPAGE_REQUEST':
-          ((ref as any).current as WebView).postMessage(
-            await InpageMetamaskDAppHub.handle(data.origin!, { ...data.payload, pageMetadata: data.pageMetadata ?? pageMetadata })
-          );
-          break;
       }
     };
 
@@ -160,7 +155,7 @@ export default forwardRef(
         WalletConnectV1ClientHub.find(dapp.origin)?.setLastUsedChain(network.chainId);
         updateDAppState({ ...dapp!, lastUsedChainId: `${network.chainId}` });
       } else {
-        InpageMetamaskDAppHub.setDAppConfigs(dapp?.origin!, { chainId: `${network.chainId}` });
+        InpageMetamaskDAppHub.setDAppChainId(dapp?.origin!, network.chainId);
       }
     };
 
@@ -183,7 +178,7 @@ export default forwardRef(
           mediaPlaybackRequiresUserAction
           pullToRefreshEnabled
           allowsInlineMediaPlayback
-          injectedJavaScriptBeforeContentLoaded={InjectInpageProvider}
+          injectedJavaScriptBeforeContentLoaded={MetamaskMobileProvider}
           // style={{ marginTop: -47 }}
         />
 

@@ -11,28 +11,28 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Bookmarks, { Bookmark, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
+import Bookmarks, { Bookmark, isRiskySite, isSecureSite } from '../../../viewmodels/customs/Bookmarks';
 import { BottomTabScreenProps, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { WebView, WebViewMessageEvent, WebViewNavigation } from 'react-native-webview';
-import { borderColor, thirdFontColor } from '../../constants/styles';
+import { borderColor, thirdFontColor } from '../../../constants/styles';
 
 import { Bar } from 'react-native-progress';
 import { BlurView } from 'expo-blur';
 import CachedImage from 'react-native-expo-cached-image';
 import Collapsible from 'react-native-collapsible';
-import InpageMetamaskDAppHub from '../../viewmodels/hubs/InpageMetamaskDAppHub';
+import InpageMetamaskDAppHub from '../../../viewmodels/hubs/InpageMetamaskDAppHub';
 import { Ionicons } from '@expo/vector-icons';
-import LinkHub from '../../viewmodels/hubs/LinkHub';
+import LinkHub from '../../../viewmodels/hubs/LinkHub';
 import { Modalize } from 'react-native-modalize';
-import Networks from '../../viewmodels/Networks';
-import PopularDApps from '../../configs/urls/popular.json';
+import Networks from '../../../viewmodels/Networks';
+import PopularDApps from '../../../configs/urls/popular.json';
 import { Portal } from 'react-native-portalize';
-import { SafeViewContainer } from '../../components';
-import SuggestUrls from '../../configs/urls/verified.json';
-import Web3View from './Web3View';
-import i18n from '../../i18n';
+import { SafeViewContainer } from '../../../components';
+import SuggestUrls from '../../../configs/urls/verified.json';
+import Web3View from '../Web3View';
+import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
