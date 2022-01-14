@@ -12,7 +12,7 @@ import { utils } from 'ethers';
 export class AccountTokens {
   owner: string;
 
-  tokens: IToken[] = [];
+  tokens: UserToken[] = [];
   allTokens: UserToken[] = [];
   nativeToken!: NativeToken;
   loadingTokens = false;
@@ -114,8 +114,13 @@ export class AccountTokens {
   }
 
   async addToken(token: UserToken, targetChainId = Networks.current.chainId) {
-    if (this.allTokens.find((t) => t.address === token.address)) return;
-    if (this.tokens.find((t) => t.address === token.address)) return;
+    let found =
+      this.allTokens.find((t) => t.address === token.address) ?? this.tokens.find((t) => t.address === token.address);
+
+    if (found) {
+      if (!found.shown) this.toggleToken(found);
+      return;
+    }
 
     token.shown = true;
 
