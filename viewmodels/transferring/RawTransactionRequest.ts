@@ -149,6 +149,7 @@ export class RawTransactionRequest extends BaseTransaction {
 
       this.param.data = data;
       this.txException = '';
+      this.tokenAmountWei = utils.parseUnits(amount, this.erc20.decimals);
     } catch (error: any) {
       this.txException = 'Invalid amount';
     }

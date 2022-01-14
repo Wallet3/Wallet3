@@ -49,10 +49,7 @@ export default observer(({ param, chainId, approve, reject, close, account, app 
       readableInfo: {
         type: 'dapp-interaction',
         symbol: vm.token?.symbol,
-        decimals: vm.token?.decimals,
-        amountWei: vm.tokenAmountWei.toString(),
         amount: Number(vm.tokenAmount).toLocaleString(undefined, { maximumFractionDigits: 7 }),
-        recipient: vm.to,
       },
     });
 
