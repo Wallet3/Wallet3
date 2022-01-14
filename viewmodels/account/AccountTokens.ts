@@ -114,8 +114,9 @@ export class AccountTokens {
   }
 
   async addToken(token: UserToken, targetChainId = Networks.current.chainId) {
-    let found =
-      this.allTokens.find((t) => t.address === token.address) ?? this.tokens.find((t) => t.address === token.address);
+    if (!token.address) return;
+
+    const found = this.allTokens.find((t) => t.address === token.address);
 
     if (found) {
       if (!found.shown) this.toggleToken(found);

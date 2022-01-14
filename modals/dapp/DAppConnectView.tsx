@@ -5,6 +5,7 @@ import { themeColor, thirdFontColor } from '../../constants/styles';
 import { Account } from '../../viewmodels/account/Account';
 import { INetwork } from '../../common/Networks';
 import Image from 'react-native-expo-cached-image';
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
@@ -23,6 +24,8 @@ interface Props {
   onReject?: () => void;
   disableNetworksButton?: boolean;
   disableAccountsButton?: boolean;
+  isVerified?: boolean;
+  isRisky?: boolean;
 }
 
 export default ({
@@ -38,6 +41,8 @@ export default ({
   onReject,
   disableNetworksButton,
   disableAccountsButton,
+  isVerified,
+  isRisky,
 }: Props) => {
   const { t } = i18n;
 
@@ -86,9 +91,12 @@ export default ({
         {appName}
       </Text>
 
-      <Text style={viewStyles.txt} numberOfLines={1}>
-        {appUrl}
-      </Text>
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
+        {isVerified ? <Ionicons name="shield-checkmark" color="#76B947" size={15} /> : undefined}
+        <Text style={{ ...viewStyles.txt, marginBottom: 0, marginStart: 4 }} numberOfLines={1}>
+          {appUrl}
+        </Text>
+      </View>
 
       {appDesc ? (
         <Text style={viewStyles.txt} numberOfLines={2}>

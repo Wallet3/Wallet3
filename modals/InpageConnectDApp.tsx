@@ -9,6 +9,7 @@ import NetworkSelector from './dapp/NetworkSelector';
 import Networks from '../viewmodels/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
+import { isSecureSite } from '../viewmodels/customs/Bookmarks';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
 
@@ -80,6 +81,7 @@ const ConnectPivot = observer(
           appDesc={appDesc}
           appIcon={appIcon}
           appUrl={appUrl}
+          isVerified={isSecureSite(appUrl ?? '')}
         />
 
         {panel === 1 ? (

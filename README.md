@@ -10,5 +10,4 @@ Available on the App Store
 2. Install dependencies with `yarn install`.
 3. Copy `configs/providers.example.json` to `configs/providers.json`, `secret.example.ts` to `secret.ts`.
 4. Fill valid provider urls in `configs/providers.json`.
-5. Create empty files (`InjectWalletConnectObserver.ts` and `InjectInpageProvider.ts`) in `screens/browser/scripts`, and set content to `export default '';`.
-6. Launch with `yarn ios`
+5. Launch with `yarn ios`
