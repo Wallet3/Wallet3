@@ -112,7 +112,7 @@ export default forwardRef(
         updateGlobalState();
       });
 
-      ((ref as any)?.current as WebView)?.injectJavaScript(`${GetPageMetadata}\ntrue;`);
+      if (pageMetadata) ((ref as any)?.current as WebView)?.injectJavaScript(`${GetPageMetadata}\ntrue;`);
 
       return () => {
         hub.removeAllListeners();
