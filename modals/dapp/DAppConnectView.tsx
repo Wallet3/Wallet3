@@ -92,8 +92,8 @@ export default ({
       </Text>
 
       <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
-        {isVerified ? <Ionicons name="shield-checkmark" color="#76B947" size={15} /> : undefined}
-        <Text style={{ ...viewStyles.txt, marginBottom: 0, marginStart: 4 }} numberOfLines={1}>
+        {isVerified ? <Ionicons name="shield-checkmark" color="#76B947" size={14} /> : undefined}
+        <Text style={{ ...viewStyles.txt, marginBottom: 0, marginStart: 6 }} numberOfLines={1}>
           {appUrl}
         </Text>
       </View>
