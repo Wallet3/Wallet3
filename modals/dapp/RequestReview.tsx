@@ -38,7 +38,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app }: Props) 
         <View style={styles.reviewItem}>
           <Text style={styles.reviewItemTitle}>DApp</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Image source={{ uri: app.icon }} style={{ width: 19, height: 19, marginEnd: 4 }} />
+            <Image source={{ uri: app.icon }} style={{ width: 19, height: 19, marginEnd: 4, borderRadius: 3 }} />
             <Text style={{ ...styles.reviewItemValue, maxWidth: 180 }} numberOfLines={1}>
               {app.name}
             </Text>

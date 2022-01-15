@@ -102,7 +102,7 @@ export default forwardRef(
     useEffect(() => {
       hub.on('appChainUpdated_metamask', async (appState) => {
         const webview = (ref as any).current as WebView;
-        webview.injectJavaScript(JS_POST_MESSAGE_TO_PROVIDER(appState));
+        webview?.injectJavaScript(JS_POST_MESSAGE_TO_PROVIDER(appState));
         updateDAppState(await hub.getDApp(appState.origin));
       });
 
@@ -111,6 +111,8 @@ export default forwardRef(
       WalletConnectV1ClientHub.on('mobileAppConnected', () => {
         updateGlobalState();
       });
+
+      ((ref as any)?.current as WebView)?.injectJavaScript(`${GetPageMetadata}\ntrue;`);
 
       return () => {
         hub.removeAllListeners();
