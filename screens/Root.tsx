@@ -53,6 +53,7 @@ const RootTab = observer(() => {
         tabBarInactiveTintColor: 'gray',
         tabBarLabelStyle: { marginBottom: bottom === 0 ? 7 : 3, marginTop: -3 },
         tabBarStyle: bottom === 0 ? { height: 57 } : undefined,
+        tabBarLabelPosition: "below-icon",
         // tabBarBackground: () => <BlurView />,
       })}
     >
