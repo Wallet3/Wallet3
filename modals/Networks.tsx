@@ -14,7 +14,7 @@ import styles from './styles';
 
 interface Props {
   onNetworkPress?: (network: INetwork) => void;
-  networks: INetwork[];
+  networks?: INetwork[];
   selectedNetwork?: INetwork;
   title?: string;
 }
@@ -22,7 +22,8 @@ interface Props {
 export default observer(({ title, onNetworkPress, networks, selectedNetwork }: Props) => {
   const { t } = i18n;
   selectedNetwork = selectedNetwork ?? Networks.current;
-  
+  networks = networks ?? Networks.all;
+
   const renderItem = ({ item }: ListRenderItemInfo<INetwork>) => {
     return (
       <TouchableOpacity
