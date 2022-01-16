@@ -174,6 +174,15 @@ export const PublicNetworks: INetwork[] = [
     explorer: 'https://moonriver.moonscan.io',
   },
   {
+    symbol: 'GLMR',
+    comm_id: 'glmr',
+    chainId: 1284,
+    network: 'Moonbeam',
+    color: '#53cbc9',
+    defaultTokens: [],
+    explorer: 'https://moonbeam.moonscan.io',
+  },
+  {
     symbol: 'CRO',
     comm_id: 'cro',
     network: 'Cronos',
