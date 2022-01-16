@@ -6,6 +6,7 @@ import {
   FlatList,
   Image,
   ListRenderItemInfo,
+  Platform,
   Text,
   TextInput,
   TouchableOpacity,
@@ -32,15 +33,24 @@ import { SafeViewContainer } from '../../components';
 import SuggestUrls from '../../configs/urls/verified.json';
 import Web3View from './Web3View';
 import i18n from '../../i18n';
+import { isPortrait } from '../../utils/device';
+import { isTablet } from 'react-native-device-info';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 const DefaultIcon = require('../../assets/default-icon.png');
 
-const ScreenWidth = Dimensions.get('window').width;
-const NumOfColumns = 7;
-const LargeIconSize = (ScreenWidth - 8 - 16 * NumOfColumns) / NumOfColumns;
-const SmallIconSize = (ScreenWidth - 16 - 16 * 8) / 8;
+const calcIconSize = () => {
+  const { width } = Dimensions.get('window');
+
+  const columns = Math.ceil(width / 64);
+  const largeIconSize = (width - 8 - 16 * columns) / columns;
+  const smallIconSize = (width - 16 - 16 * (columns + 1)) / (columns + 1);
+
+  return { WindowWidth: width, NumOfColumns: columns, LargeIconSize: largeIconSize, SmallIconSize: smallIconSize };
+};
+
+const { WindowWidth, NumOfColumns, LargeIconSize, SmallIconSize } = calcIconSize();
 
 export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   const { t } = i18n;
@@ -62,6 +72,22 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   const [webRiskLevel, setWebRiskLevel] = useState('');
   const [isExpandedSite, setIsExpandedSite] = useState(false);
   const { ref: favsRef, open: openFavs, close: closeFavs } = useModalize();
+
+  const [numOfColumns, setNumOfColumns] = useState(NumOfColumns);
+  const [largeIconSize, setLargeIconSize] = useState(LargeIconSize);
+  const [smallIconSize, setSmallIconSize] = useState(SmallIconSize);
+  const [windowWidth, setWindowWidth] = useState(WindowWidth);
+
+  useEffect(() => {
+    Dimensions.addEventListener('change', ({ window, screen }) => {
+      // const { WindowWidth, LargeIconSize, SmallIconSize, NumOfColumns } = calcIconSize();
+      // console.log(WindowWidth, LargeIconSize, SmallIconSize, NumOfColumns);
+      // setNumOfColumns(NumOfColumns);
+      // setLargeIconSize(LargeIconSize);
+      // setSmallIconSize(SmallIconSize);
+      // setWindowWidth(WindowWidth);
+    });
+  }, []);
 
   useEffect(() => {
     isSecureSite(webUrl)
@@ -176,13 +202,13 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
           {item.icon ? (
             <CachedImage
               source={{ uri: item.icon }}
-              style={{ width: LargeIconSize, height: LargeIconSize, borderRadius: 7 }}
+              style={{ width: largeIconSize, height: largeIconSize, borderRadius: 7 }}
             />
           ) : (
-            <Image source={DefaultIcon} style={{ width: LargeIconSize, height: LargeIconSize, borderRadius: 7 }} />
+            <Image source={DefaultIcon} style={{ width: largeIconSize, height: largeIconSize, borderRadius: 7 }} />
           )}
 
-          <Text numberOfLines={1} style={{ maxWidth: LargeIconSize, marginTop: 4, fontSize: 9, color: thirdFontColor }}>
+          <Text numberOfLines={1} style={{ maxWidth: largeIconSize, marginTop: 4, fontSize: 9, color: thirdFontColor }}>
             {item.title}
           </Text>
         </View>
@@ -327,10 +353,10 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
                   {item.icon ? (
                     <CachedImage
                       source={{ uri: item.icon }}
-                      style={{ width: SmallIconSize, height: SmallIconSize, borderRadius: 3 }}
+                      style={{ width: smallIconSize, height: smallIconSize, borderRadius: 3 }}
                     />
                   ) : (
-                    <Image source={DefaultIcon} style={{ width: SmallIconSize, height: SmallIconSize, borderRadius: 3 }} />
+                    <Image source={DefaultIcon} style={{ width: smallIconSize, height: smallIconSize, borderRadius: 3 }} />
                   )}
                 </TouchableOpacity>
               ))}
@@ -346,7 +372,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
 
         {loadingProgress > 0 && loadingProgress < 1 ? (
           <Bar
-            width={ScreenWidth}
+            width={windowWidth}
             color={current.color}
             height={2}
             borderWidth={0}
@@ -381,10 +407,11 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
         <View>
           <Text style={{ marginHorizontal: 16, marginTop: 12 }}>{t('browser-popular-dapps')}</Text>
           <FlatList
+            key={`Pops-${WindowWidth}`}
             data={PopularDApps}
             bounces={false}
             renderItem={renderItem}
-            numColumns={NumOfColumns}
+            numColumns={numOfColumns}
             style={{ marginTop: 2 }}
             keyExtractor={(v, index) => `v.url-${index}`}
             contentContainerStyle={{ paddingHorizontal: 4, paddingBottom: 8, paddingTop: 2 }}
@@ -395,10 +422,11 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
           ) : undefined}
 
           <FlatList
+            key={`Favs-${WindowWidth}`}
             data={Bookmarks.favs}
             renderItem={renderItem}
             style={{ height: '100%', marginTop: 4 }}
-            numColumns={NumOfColumns}
+            numColumns={numOfColumns}
             contentContainerStyle={{ paddingHorizontal: 4, paddingVertical: 2 }}
             keyExtractor={(v, index) => `v.url-${index}`}
           />
@@ -417,12 +445,13 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
             <SafeViewContainer style={{ height: 439, flex: 1, padding: 0 }}>
               <Text style={{ marginHorizontal: 12 }}>{t('browser-favorites')}</Text>
               <FlatList
+                key={`Bookmarks-${WindowWidth}`}
                 data={Bookmarks.favs.concat(
                   PopularDApps.filter((d) => !Bookmarks.favs.find((f) => f.url.includes(d.url) || d.url.includes(f.url)))
                 )}
                 renderItem={renderItem}
                 style={{ height: '100%' }}
-                numColumns={NumOfColumns}
+                numColumns={numOfColumns}
                 contentContainerStyle={{ paddingHorizontal: 4 }}
                 keyExtractor={(v, index) => `v.url-${index}`}
               />
