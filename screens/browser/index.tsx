@@ -22,6 +22,7 @@ import { borderColor, thirdFontColor } from '../../constants/styles';
 import { Bar } from 'react-native-progress';
 import CachedImage from 'react-native-expo-cached-image';
 import Collapsible from 'react-native-collapsible';
+import { FlatGrid } from 'react-native-super-grid';
 import InpageMetamaskDAppHub from '../../viewmodels/hubs/InpageMetamaskDAppHub';
 import { Ionicons } from '@expo/vector-icons';
 import LinkHub from '../../viewmodels/hubs/LinkHub';
@@ -43,14 +44,15 @@ const DefaultIcon = require('../../assets/default-icon.png');
 const calcIconSize = () => {
   const { width } = Dimensions.get('window');
 
-  const columns = Math.ceil(width / 64);
-  const largeIconSize = (width - 8 - 16 * columns) / columns;
-  const smallIconSize = (width - 16 - 16 * (columns + 1)) / (columns + 1);
+  const NumOfColumns = Math.ceil(width / 64);
+  const LargeIconSize = (width - 8 - 16 * NumOfColumns) / NumOfColumns;
+  const SmallIconSize = (width - 16 - 16 * (NumOfColumns + 1)) / (NumOfColumns + 1);
 
-  return { WindowWidth: width, NumOfColumns: columns, LargeIconSize: largeIconSize, SmallIconSize: smallIconSize };
+  return { WindowWidth: width, NumOfColumns, LargeIconSize, SmallIconSize };
 };
 
 const { WindowWidth, NumOfColumns, LargeIconSize, SmallIconSize } = calcIconSize();
+console.log(NumOfColumns, WindowWidth, LargeIconSize, SmallIconSize);
 
 export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   const { t } = i18n;
@@ -80,12 +82,12 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
 
   useEffect(() => {
     Dimensions.addEventListener('change', ({ window, screen }) => {
-      // const { WindowWidth, LargeIconSize, SmallIconSize, NumOfColumns } = calcIconSize();
-      // console.log(WindowWidth, LargeIconSize, SmallIconSize, NumOfColumns);
-      // setNumOfColumns(NumOfColumns);
-      // setLargeIconSize(LargeIconSize);
-      // setSmallIconSize(SmallIconSize);
-      // setWindowWidth(WindowWidth);
+      const { WindowWidth, LargeIconSize, SmallIconSize, NumOfColumns } = calcIconSize();
+      console.log(NumOfColumns, WindowWidth, LargeIconSize, SmallIconSize);
+      setWindowWidth(WindowWidth);
+      setNumOfColumns(NumOfColumns);
+      setLargeIconSize(LargeIconSize);
+      setSmallIconSize(SmallIconSize);
     });
   }, []);
 
@@ -192,26 +194,21 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   const renderItem = ({ item }: ListRenderItemInfo<Bookmark>) => {
     return (
       <TouchableOpacity
-        style={{ padding: 8, paddingVertical: 4, paddingBottom: 8 }}
+        style={{ alignItems: 'center', justifyContent: 'center' }}
         onPress={() => {
           goTo(item.url);
           closeFavs();
         }}
       >
-        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-          {item.icon ? (
-            <CachedImage
-              source={{ uri: item.icon }}
-              style={{ width: largeIconSize, height: largeIconSize, borderRadius: 7 }}
-            />
-          ) : (
-            <Image source={DefaultIcon} style={{ width: largeIconSize, height: largeIconSize, borderRadius: 7 }} />
-          )}
+        {item.icon ? (
+          <CachedImage source={{ uri: item.icon }} style={{ width: largeIconSize, height: largeIconSize, borderRadius: 7 }} />
+        ) : (
+          <Image source={DefaultIcon} style={{ width: largeIconSize, height: largeIconSize, borderRadius: 7 }} />
+        )}
 
-          <Text numberOfLines={1} style={{ maxWidth: largeIconSize, marginTop: 4, fontSize: 9, color: thirdFontColor }}>
-            {item.title}
-          </Text>
-        </View>
+        <Text numberOfLines={1} style={{ maxWidth: largeIconSize + 8, marginTop: 4, fontSize: 9, color: thirdFontColor }}>
+          {item.title}
+        </Text>
       </TouchableOpacity>
     );
   };
@@ -406,29 +403,33 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
       ) : (
         <View>
           <Text style={{ marginHorizontal: 16, marginTop: 12 }}>{t('browser-popular-dapps')}</Text>
-          <FlatList
-            key={`Pops-${WindowWidth}`}
-            data={PopularDApps}
+
+          <FlatGrid
+            style={{ marginTop: 2, padding: 0 }}
+            contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: 8, paddingTop: 2 }}
+            itemDimension={LargeIconSize + 8}
             bounces={false}
             renderItem={renderItem}
-            numColumns={numOfColumns}
-            style={{ marginTop: 2 }}
-            keyExtractor={(v, index) => `v.url-${index}`}
-            contentContainerStyle={{ paddingHorizontal: 4, paddingBottom: 8, paddingTop: 2 }}
+            data={PopularDApps}
+            itemContainerStyle={{ padding: 0, margin: 0, marginBottom: 4 }}
+            spacing={8}
+            keyExtractor={(v, index) => `${v.url}-${index}`}
           />
 
           {Bookmarks.favs.length > 0 ? (
-            <Text style={{ marginHorizontal: 16, marginTop: 16 }}>{t('browser-favorites')}</Text>
+            <Text style={{ marginHorizontal: 16, marginTop: 0 }}>{t('browser-favorites')}</Text>
           ) : undefined}
 
-          <FlatList
-            key={`Favs-${WindowWidth}`}
-            data={Bookmarks.favs}
+          <FlatGrid
+            style={{ marginTop: 2, padding: 0 }}
+            contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: 8, paddingTop: 2 }}
+            itemDimension={LargeIconSize + 8}
+            bounces={false}
             renderItem={renderItem}
-            style={{ height: '100%', marginTop: 4 }}
-            numColumns={numOfColumns}
-            contentContainerStyle={{ paddingHorizontal: 4, paddingVertical: 2 }}
-            keyExtractor={(v, index) => `v.url-${index}`}
+            data={Bookmarks.favs}
+            itemContainerStyle={{ padding: 0, margin: 0, marginBottom: 8 }}
+            spacing={8}
+            keyExtractor={(v, index) => `${v.url}-${index}`}
           />
         </View>
       )}
@@ -444,16 +445,18 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
           <SafeAreaProvider style={{ padding: 0 }}>
             <SafeViewContainer style={{ height: 439, flex: 1, padding: 0 }}>
               <Text style={{ marginHorizontal: 12 }}>{t('browser-favorites')}</Text>
-              <FlatList
-                key={`Bookmarks-${WindowWidth}`}
+              <FlatGrid
+                style={{ marginTop: 2, padding: 0 }}
+                contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: 8, paddingTop: 2 }}
+                itemDimension={LargeIconSize + 8}
+                bounces={false}
+                renderItem={renderItem}
+                itemContainerStyle={{ padding: 0, margin: 0, marginBottom: 12 }}
+                spacing={8}
+                keyExtractor={(v, index) => `${v.url}-${index}`}
                 data={Bookmarks.favs.concat(
                   PopularDApps.filter((d) => !Bookmarks.favs.find((f) => f.url.includes(d.url) || d.url.includes(f.url)))
                 )}
-                renderItem={renderItem}
-                style={{ height: '100%' }}
-                numColumns={numOfColumns}
-                contentContainerStyle={{ paddingHorizontal: 4 }}
-                keyExtractor={(v, index) => `v.url-${index}`}
               />
             </SafeViewContainer>
           </SafeAreaProvider>

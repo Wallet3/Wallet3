@@ -8262,6 +8262,13 @@ react-native-shared-element@^0.8.3:
   resolved "https://registry.npmjs.org/react-native-shared-element/-/react-native-shared-element-0.8.3.tgz"
   integrity sha512-mbL0gWBaZgWc5YQUwwlzyUOToMbfE+QdNxlSK8MdRGX6ItssVH+JLbq8ilLRTNEO+cTFFosXdQwqBUAC4IPSww==
 
+react-native-super-grid@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-super-grid/-/react-native-super-grid-4.2.0.tgz#df07d88d58f232cb2e01e0752f5279cc3b366ca4"
+  integrity sha512-5GpdcXwnwizjWECY7APpyoMyGEAieRy0hxCJl8JQAodg2IigWYx10eDHrW/b1Rw1hsZVNyo4qSrAM3iOLW2XPw==
+  dependencies:
+    prop-types "^15.6.0"
+
 react-native-svg-charts@^5.4.0:
   version "5.4.0"
   resolved "https://registry.npmjs.org/react-native-svg-charts/-/react-native-svg-charts-5.4.0.tgz"

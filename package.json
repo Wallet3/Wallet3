@@ -82,6 +82,7 @@
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.10.1",
     "react-native-shared-element": "^0.8.3",
+    "react-native-super-grid": "^4.2.0",
     "react-native-svg": "12.1.1",
     "react-native-svg-charts": "^5.4.0",
     "react-native-swiper": "^1.6.0",
