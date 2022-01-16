@@ -8,6 +8,10 @@ import Chain from '../models/Chain';
 import Database from '../models/Database';
 import providers from '../configs/providers.json';
 
+const ChainColors = {
+  61: '#3ab83a',
+};
+
 export interface AddEthereumChainParameter {
   chainId: string; // A 0x-prefixed hexadecimal string
   chainName: string;
@@ -102,6 +106,7 @@ class Networks {
   }
 
   async add(chain: AddEthereumChainParameter) {
+    if (!Number.isSafeInteger(Number(chain.chainId))) return;
     if (PublicNetworks.find((n) => n.chainId === Number(chain.chainId))) return false;
 
     const nc = (await Database.chains.findOne({ where: { id: chain.chainId } })) || new Chain();
@@ -110,7 +115,7 @@ class Networks {
     nc.name = chain.chainName || 'EVM-Compatible';
     nc.explorer = chain.blockExplorerUrls?.[0] || '';
     nc.rpcUrls = chain.rpcUrls;
-    nc.customize = nc.customize ?? { color: '#7B68EE' };
+    nc.customize = nc.customize ?? { color: ChainColors[Number(chain.chainId)] || '#7B68EE' };
     nc.symbol = chain.nativeCurrency.symbol || 'ETH';
 
     runInAction(() => {
