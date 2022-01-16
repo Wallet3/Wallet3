@@ -4,9 +4,9 @@
   { "url": "https://app.compound.finance", "icon": "https://compound.finance/images/compound-512.png", "title": "Compound" },
   { "url": "https://trade.dydx.exchange", "icon": "https://dydx.exchange/meta/apple-icon-180x180.png", "title": "dYdX" },
   {
-    "url": "https://looksrare.org",
-    "icon": "https://looksrare.org/apple-touch-icon.png",
-    "title": "LooksRare"
+    "url": "https://zapper.fi",
+    "icon": "https://zapper.fi/logo192.png",
+    "title": "Zapper"
   },
   {
     "url": "https://opensea.io",

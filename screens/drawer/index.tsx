@@ -48,8 +48,7 @@ const Drawer = observer((props: DrawerProps) => {
     <SafeViewContainer
       style={{ flex: 1, height: screenHeight, paddingHorizontal: 0, paddingTop: 0, paddingBottom: bottom ? 0 : 16 }}
     >
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Profile')}
+      <View
         style={{
           marginHorizontal: 16,
           alignItems: 'center',
@@ -60,19 +59,21 @@ const Drawer = observer((props: DrawerProps) => {
           borderBottomColor: borderColor,
         }}
       >
-        <Image
-          source={
-            currentWallet?.currentAccount?.avatar
-              ? { uri: currentWallet?.currentAccount?.avatar }
-              : icons[current.symbol.toLowerCase()]
-          }
-          style={{
-            width: 50,
-            height: 50,
-            borderRadius: 25,
-            backgroundColor: current.color,
-          }}
-        />
+        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+          <Image
+            source={
+              currentWallet?.currentAccount?.avatar
+                ? { uri: currentWallet?.currentAccount?.avatar }
+                : icons[current.symbol.toLowerCase()]
+            }
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: 25,
+              backgroundColor: current.color,
+            }}
+          />
+        </TouchableOpacity>
 
         <Text
           numberOfLines={1}
@@ -85,7 +86,7 @@ const Drawer = observer((props: DrawerProps) => {
         >
           {currentWallet?.currentAccount?.displayName}
         </Text>
-      </TouchableOpacity>
+      </View>
 
       <View style={{ paddingBottom: 12 }}>
         <DrawerItem

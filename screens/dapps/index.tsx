@@ -97,10 +97,10 @@ const DAppItem = observer(({ item, openApp }: { item: WalletConnect_v1; openApp:
   return (
     <View style={{ paddingHorizontal: 16, paddingVertical: 12, flexDirection: 'row', alignItems: 'center' }}>
       <TouchableOpacity style={{ flex: 1, alignItems: 'center', flexDirection: 'row' }} onPress={() => openApp(item)}>
-        <Image
-          source={{ uri: appMeta?.icons[0] }}
-          style={{ width: 27, height: 27, marginEnd: 12, borderWidth: 1, borderRadius: 5, borderColor }}
-        />
+        <View style={{ marginEnd: 12, borderWidth: 1, borderRadius: 5, borderColor, padding: 2 }}>
+          <Image source={{ uri: appMeta?.icons[0] }} style={{ width: 27, height: 27 }} />
+        </View>
+
         <View style={{ flex: 1 }}>
           <Text style={{ fontWeight: '500', fontSize: 17 }} numberOfLines={1}>
             {appMeta?.name || appMeta?.url}
