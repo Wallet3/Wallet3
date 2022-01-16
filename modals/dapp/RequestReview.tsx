@@ -189,12 +189,12 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app }: Props) 
         themeColor={network?.color}
         rejectTitle={t('button-reject')}
         approveTitle={t(
-          Authentication.biometricsEnabled && Authentication.biometricsSupported
+          Authentication.biometricEnabled && Authentication.biometricsSupported
             ? 'modal-review-button-hold-to-send'
             : 'button-send'
         )}
         disabledApprove={!vm.isValidParams}
-        longConfirm={Authentication.biometricsEnabled && Authentication.biometricsSupported ? true : false}
+        longConfirm={Authentication.biometricEnabled && Authentication.biometricsSupported ? true : false}
       />
     </SafeViewContainer>
   );

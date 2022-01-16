@@ -26,10 +26,23 @@ const keys = {
 export class Authentication extends EventEmitter {
   biometricsSupported = false;
   supportedTypes: AuthenticationType[] = [];
-  biometricsEnabled = true;
+  biometricEnabled = true;
 
   appAuthorized = false;
   userSecretsVerified = false;
+
+  get biometricType() {
+    if (!this.biometricsSupported || !this.biometricEnabled) return undefined;
+
+    switch (this.supportedTypes[0]) {
+      case AuthenticationType.FINGERPRINT:
+        return 'fingerprint';
+      case AuthenticationType.FACIAL_RECOGNITION:
+        return 'faceid';
+    }
+
+    return undefined;
+  }
 
   constructor() {
     super();
@@ -37,7 +50,7 @@ export class Authentication extends EventEmitter {
     makeObservable(this, {
       biometricsSupported: observable,
       supportedTypes: observable,
-      biometricsEnabled: observable,
+      biometricEnabled: observable,
       appAuthorized: observable,
       userSecretsVerified: observable,
       setBiometrics: action,
@@ -64,7 +77,7 @@ export class Authentication extends EventEmitter {
     runInAction(() => {
       this.biometricsSupported = supported && enrolled;
       this.supportedTypes = supportedTypes;
-      this.biometricsEnabled = enableBiometrics === 'true';
+      this.biometricEnabled = enableBiometrics === 'true';
       this.userSecretsVerified = userSecretsVerified === 'true';
     });
   }
@@ -86,7 +99,7 @@ export class Authentication extends EventEmitter {
       if (!(await this.authenticate())) return;
     }
 
-    runInAction(() => (this.biometricsEnabled = enabled));
+    runInAction(() => (this.biometricEnabled = enabled));
     AsyncStorage.setItem(keys.enableBiometrics, enabled.toString());
   }
 

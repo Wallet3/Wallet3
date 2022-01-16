@@ -42,7 +42,7 @@ export default observer(({ msg, type, chainId, typedData, approve, reject, close
           onSign={() => onApprove()}
           sign={(p) => onApprove(p)}
           typedData={typedData}
-          biometricEnabled={Authentication.biometricsEnabled}
+          biometricEnabled={Authentication.biometricEnabled}
         />
       )}
     </SafeAreaProvider>

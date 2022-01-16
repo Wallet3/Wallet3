@@ -335,16 +335,19 @@ const SendFundsModal = () => {
 const LockScreen = ({ app, appAuth }: { app: AppVM; appAuth: Authentication }) => {
   const { ref: lockScreenRef, open: openLockScreen, close: closeLockScreen } = useModalize();
 
+  const bioAuth = async () => {
+    if (!appAuth.biometricEnabled || !appAuth.biometricsSupported) return;
+
+    const success = await appAuth.authorize();
+    if (success) closeLockScreen();
+  };
+
   useEffect(() => {
-    const dispose = autorun(async () => {
+    const dispose = autorun(() => {
       if (!app.hasWallet || appAuth.appAuthorized) return;
 
       openLockScreen();
-
-      if (!appAuth.biometricsEnabled || !appAuth.biometricsSupported) return;
-
-      const success = await appAuth.authorize();
-      if (success) closeLockScreen();
+      bioAuth();
     });
 
     return () => {
@@ -365,6 +368,8 @@ const LockScreen = ({ app, appAuth }: { app: AppVM; appAuth: Authentication }) =
     >
       <FullPasspad
         themeColor={Networks.current.color}
+        bioType={appAuth.biometricType}
+        onBioAuth={bioAuth}
         height={ScreenHeight}
         onCodeEntered={async (code) => {
           const success = await appAuth.authorize(code);

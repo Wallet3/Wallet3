@@ -61,7 +61,7 @@ export default observer(({ vm, onClose, erc681 }: Props) => {
   const onSendClick = async () => {
     Contacts.saveContact({ address: vm.toAddress, ens: vm.isEns ? vm.to : undefined });
 
-    if (!Authentication.biometricsEnabled) {
+    if (!Authentication.biometricEnabled) {
       swiper.current?.scrollTo(3);
       return;
     }
@@ -100,7 +100,7 @@ export default observer(({ vm, onClose, erc681 }: Props) => {
             vm={vm}
             onSend={onSendClick}
             disableBack={erc681}
-            biometricEnabled={Authentication.biometricsEnabled}
+            biometricEnabled={Authentication.biometricEnabled}
           />
 
           <Passpad

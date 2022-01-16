@@ -73,7 +73,7 @@ export default observer(({ client, request, close }: Props) => {
           vm={vm}
           onApprove={sendTx}
           onReject={reject}
-          biometricEnabled={Authentication.biometricsEnabled}
+          biometricEnabled={Authentication.biometricEnabled}
         />
       )}
     </SafeAreaProvider>

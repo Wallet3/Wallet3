@@ -80,7 +80,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
 
           <View>
             <Switch
-              value={Authentication.biometricsEnabled}
+              value={Authentication.biometricEnabled}
               onValueChange={(v) => Authentication.setBiometrics(v)}
               trackColor={{ true: Networks.current.color }}
             />

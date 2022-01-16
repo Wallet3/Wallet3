@@ -48,7 +48,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
 
   useEffect(() => {
     setTimeout(() => open(), 0);
-    if (Authentication.biometricsEnabled) verify();
+    if (Authentication.biometricEnabled) verify();
 
     return () => MnemonicOnce.clean();
   }, []);

@@ -66,7 +66,7 @@ export default observer(({ param, chainId, approve, reject, close, account, app 
         <TxRequest
           vm={vm}
           themeColor={network.color}
-          biometricEnabled={Authentication.biometricsEnabled}
+          biometricEnabled={Authentication.biometricEnabled}
           onApprove={onApprove}
           onReject={onReject}
           app={app}

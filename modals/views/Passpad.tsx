@@ -16,9 +16,11 @@ interface Props {
   onCancel?: () => void;
   disableCancel?: boolean;
   style?: StyleProp<ViewStyle>;
+  bioType?: 'fingerprint' | 'faceid';
+  onBioAuth?: () => void;
 }
 
-const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style }: Props) => {
+const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style, bioType, onBioAuth }: Props) => {
   const { t } = i18n;
   const passcodeLength = 6;
   const [passcode, setPasscode] = useState('');
@@ -49,7 +51,7 @@ const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style }: 
 
       <View style={{ flex: 1 }} />
 
-      <Numpad onPress={(value) => DefaultNumpadHandler(value, passcode, setPasscode)} disableDot />
+      <Numpad onPress={(value) => DefaultNumpadHandler(value, passcode, setPasscode)} disableDot bioType={bioType} onBioAuth={onBioAuth} />
 
       {disableCancel ? undefined : (
         <Button title={t('button-cancel')} onPress={() => onCancel?.()} themeColor={themeColor} style={{ marginTop: 12 }} />
@@ -64,12 +66,21 @@ interface FullPasspadProps {
   height?: number;
   themeColor?: string;
   onCodeEntered: (code: string) => Promise<boolean>;
+  onBioAuth?: () => void;
+  bioType?: 'fingerprint' | 'faceid';
 }
 
-export const FullPasspad = ({ height, themeColor, onCodeEntered }: FullPasspadProps) => {
+export const FullPasspad = ({ height, themeColor, onCodeEntered, bioType, onBioAuth }: FullPasspadProps) => {
   return (
     <SafeAreaProvider style={{ flex: 1, height }}>
-      <Passpad themeColor={themeColor} disableCancel onCodeEntered={onCodeEntered} style={{ marginBottom: 4 }} />
+      <Passpad
+        themeColor={themeColor}
+        disableCancel
+        onCodeEntered={onCodeEntered}
+        style={{ marginBottom: 4 }}
+        onBioAuth={onBioAuth}
+        bioType={bioType}
+      />
     </SafeAreaProvider>
   );
 };
