@@ -76,7 +76,7 @@ const Drawer = observer((props: DrawerProps) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={{ flexDirection: 'row', alignItems: 'center' }}
+          style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 8 }}
           onPress={() => PubSub.publish('openAccountsMenu')}
         >
           <Text

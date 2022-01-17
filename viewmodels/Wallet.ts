@@ -80,6 +80,10 @@ export class Wallet {
     return this;
   }
 
+  async newAccount() {
+    const bip32 = utils.HDNode.fromExtendedKey(this.key.bip32Xpubkey);
+  }
+
   async refreshAccount() {
     if (Date.now() - this.lastRefreshedTime < 1000 * 5) return;
     this.lastRefreshedTime = Date.now();

@@ -1,3 +1,4 @@
+import { Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { FlatList, Image, ListRenderItemInfo, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeViewContainer, Separator } from '../components';
 
@@ -5,7 +6,6 @@ import { Account } from '../viewmodels/account/Account';
 import App from '../viewmodels/App';
 import CachedImage from 'react-native-expo-cached-image';
 import Currency from '../viewmodels/settings/Currency';
-import { Feather } from '@expo/vector-icons';
 import Networks from '../viewmodels/Networks';
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -31,8 +31,8 @@ const AccountItem = observer(({ account, themeColor }: { account: Account; theme
       )}
 
       <View style={{ flex: 1, marginStart: 12, justifyContent: 'space-between' }}>
-        <Text style={{ fontSize: 17, fontWeight: '500' }}>{account.displayName}</Text>
-        <Text>{balance}</Text>
+        <Text style={{ fontSize: 17, fontWeight: '500', marginBottom: 2 }}>{account.displayName}</Text>
+        <Text style={{ color: secondaryFontColor }}>{balance}</Text>
       </View>
 
       <Feather name="check" color={themeColor} size={20} style={{ opacity: 1 }} />
@@ -62,6 +62,16 @@ export default observer((props) => {
           style={{ flex: 1, marginHorizontal: -16 }}
           contentContainerStyle={{ paddingTop: 4, paddingHorizontal: 16 }}
         />
+
+        <TouchableOpacity style={styles.option}>
+          <MaterialIcons name="add-circle" size={22} color={themeColor} />
+          <Text style={{ marginStart: 10, color: themeColor, fontWeight: '600', fontSize: 15 }}>Create a new account</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.option}>
+          <Ionicons name="key-outline" size={19} color={themeColor} style={{ paddingHorizontal: 1.5 }} />
+          <Text style={{ marginStart: 10, color: themeColor, fontWeight: '600', fontSize: 15 }}>Import an existing wallet</Text>
+        </TouchableOpacity>
       </SafeViewContainer>
     </SafeAreaProvider>
   );
@@ -75,5 +85,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#9375a7',
+  },
+
+  option: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
   },
 });
