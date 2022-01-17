@@ -1,6 +1,15 @@
 import * as Linking from 'expo-linking';
 
 import {
+  AccountsMenu,
+  NetworksMenu,
+  Request,
+  Send,
+  WalletConnectDApp,
+  WalletConnectSign,
+  WalletConnectTxRequest,
+} from '../modals';
+import {
   ConnectInpageDApp,
   InpageDAppAddAsset,
   InpageDAppAddEthereumChain,
@@ -8,7 +17,6 @@ import {
   InpageDAppTxRequest,
 } from '../viewmodels/hubs/InpageMetamaskDAppHub';
 import { ERC681, ERC681Transferring } from '../viewmodels/transferring/ERC681Transferring';
-import { NetworksMenu, Request, Send, WalletConnectDApp, WalletConnectSign, WalletConnectTxRequest } from '../modals';
 import React, { useEffect, useState } from 'react';
 
 import { AppVM } from '../viewmodels/App';
@@ -228,7 +236,7 @@ const GlobalNetworksMenuModal = () => {
   const { ref: networksRef, open: openNetworksModal, close: closeNetworksModal } = useModalize();
 
   useEffect(() => {
-    PubSub.subscribe('openNetworksModal', () => openNetworksModal());
+    PubSub.subscribe('openNetworksMenu', () => openNetworksModal());
   }, []);
 
   return (
@@ -245,6 +253,26 @@ const GlobalNetworksMenuModal = () => {
           Networks.switch(network);
         }}
       />
+    </Modalize>
+  );
+};
+
+const GlobalAccountsMenuModal = () => {
+  const { ref, open, close } = useModalize();
+
+  useEffect(() => {
+    PubSub.subscribe('openAccountsMenu', () => open());
+  }, []);
+
+  return (
+    <Modalize
+      ref={ref}
+      adjustToContentHeight
+      disableScrollIfPossible
+      modalStyle={styles.modalStyle}
+      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+    >
+      <AccountsMenu />
     </Modalize>
   );
 };
@@ -387,6 +415,7 @@ export default (props: { app: AppVM; appAuth: Authentication }) => {
     <SendFundsModal key="send-funds" />,
     <RequestFundsModal key="request-funds" />,
     <GlobalNetworksMenuModal key="networks-menu" />,
+    <GlobalAccountsMenuModal key="accounts-menu" />,
     <WalletConnectV1 key="walletconnect" />,
     <WalletConnectRequests key="walletconnect-requests" {...props} />,
     <InpageDAppConnect key="inpage-dapp-connect" />,

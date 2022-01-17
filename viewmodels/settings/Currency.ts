@@ -56,10 +56,6 @@ export class CurrencyViewmodel {
 
   tokenToUSD(amount: number | string, tokenSymbol: string) {
     return Number(amount) * this.getPrice(tokenSymbol);
-    // try {
-    // } catch (error) {
-    //   return 0;
-    // }
   }
 
   get ethPrice() {

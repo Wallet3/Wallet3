@@ -75,13 +75,17 @@ const Drawer = observer((props: DrawerProps) => {
           />
         </TouchableOpacity>
 
-        <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <TouchableOpacity
+          style={{ flexDirection: 'row', alignItems: 'center' }}
+          onPress={() => PubSub.publish('openAccountsMenu')}
+        >
           <Text
             numberOfLines={1}
             style={{
               fontWeight: '500',
               marginStart: 12,
               fontSize: 17,
+              width: '72%',
             }}
           >
             {currentWallet?.currentAccount?.displayName}
@@ -141,7 +145,7 @@ const Drawer = observer((props: DrawerProps) => {
           style={{ flexDirection: 'row', alignItems: 'center' }}
           onPress={() => {
             navigation.dispatch(DrawerActions.closeDrawer());
-            PubSub.publish('openNetworksModal');
+            PubSub.publish('openNetworksMenu');
           }}
         >
           {NetworkIcons[current.chainId] || <EVMIcon color={current.color} />}
