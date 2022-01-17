@@ -2,10 +2,10 @@ import App, { AppVM } from '../../viewmodels/App';
 import { Arbitrum, EVMIcon, Ethereum, NetworkIcons, Optimism, Polygon } from '../../assets/icons/networks/color';
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
+import { Feather, MaterialIcons } from '@expo/vector-icons';
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
 import { DrawerActions } from '@react-navigation/core';
-import { Feather } from '@expo/vector-icons';
 import { INetwork } from '../../common/Networks';
 import Networks from '../../viewmodels/Networks';
 import PubSub from 'pubsub-js';
@@ -75,17 +75,20 @@ const Drawer = observer((props: DrawerProps) => {
           />
         </TouchableOpacity>
 
-        <Text
-          numberOfLines={1}
-          style={{
-            fontWeight: '500',
-            marginStart: 12,
-            fontSize: 17,
-            maxWidth: '70%',
-          }}
-        >
-          {currentWallet?.currentAccount?.displayName}
-        </Text>
+        <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text
+            numberOfLines={1}
+            style={{
+              fontWeight: '500',
+              marginStart: 12,
+              fontSize: 17,
+            }}
+          >
+            {currentWallet?.currentAccount?.displayName}
+          </Text>
+
+          <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 8 }} size={19} />
+        </TouchableOpacity>
       </View>
 
       <View style={{ paddingBottom: 12 }}>
