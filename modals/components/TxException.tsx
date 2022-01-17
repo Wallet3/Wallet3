@@ -14,9 +14,9 @@ export default ({ exception }: { exception: string }) => {
       contentContainerStyle={{ alignItems: 'center', marginVertical: -12, paddingHorizontal: 16 }}
       style={{
         borderRadius: 10,
-        marginTop: 12,
+        marginTop: 8,
         backgroundColor: 'crimson',
-        minHeight: 17,
+        minHeight: 22,
       }}
     >
       <Ionicons name="alert-circle" color="white" size={16} style={{ marginBottom: -1 }} />
