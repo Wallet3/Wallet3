@@ -51,6 +51,7 @@ export class Wallet {
       currentAccount: observable,
       accounts: observable,
       switchAccount: action,
+      newAccount: action,
     });
 
     reaction(
@@ -62,7 +63,7 @@ export class Wallet {
   }
 
   async init() {
-    const count = Number((await AsyncStorage.getItem('genAddressCount')) || 1);
+    const count = Number((await AsyncStorage.getItem(`${this.key.id}-address-count`)) || 1);
     const bip32 = utils.HDNode.fromExtendedKey(this.key.bip32Xpubkey);
 
     const accounts: Account[] = [];
@@ -82,6 +83,11 @@ export class Wallet {
 
   async newAccount() {
     const bip32 = utils.HDNode.fromExtendedKey(this.key.bip32Xpubkey);
+    const index = this.accounts.length;
+    const node = bip32.derivePath(`${index}`);
+    this.accounts.push(new Account(node.address, index));
+
+    AsyncStorage.setItem(`${this.key.id}-address-count`, `${this.accounts.length}`)
   }
 
   async refreshAccount() {

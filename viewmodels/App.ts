@@ -1,5 +1,6 @@
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
+import { Account } from './account/Account';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Authentication from './Authentication';
 import Bookmarks from './customs/Bookmarks';
@@ -14,9 +15,13 @@ import { Wallet } from './Wallet';
 import WalletConnectV1ClientHub from './walletconnect/WalletConnectV1ClientHub';
 
 export class AppVM {
+  private lastRefreshedTime = 0;
+  private refreshTimer!: NodeJS.Timer;
+
   initialized = false;
   wallets: Wallet[] = [];
   currentWallet: Wallet | null = null;
+  currentAccount: Account | null = null;
 
   get hasWallet() {
     return this.wallets.length > 0;
@@ -33,6 +38,8 @@ export class AppVM {
       currentWallet: observable,
       hasWallet: computed,
       reset: action,
+      switchAccount: action,
+      currentAccount: observable,
     });
   }
 
@@ -47,6 +54,29 @@ export class AppVM {
     return this.allAccounts.find((a) => a.address === account);
   }
 
+  switchAccount(address: string) {
+    const target = this.findAccount(address);
+    if (!target) return;
+
+    target.fetchBasicInfo();
+    target.tokens.refreshOverview();
+    this.currentAccount = target;
+
+    clearTimeout(this.refreshTimer);
+    this.refreshTimer = setTimeout(() => this.refreshAccount(), 1000 * 20);
+    AsyncStorage.setItem('lastUsedAccount', address);
+  }
+
+  async refreshAccount() {
+    if (Date.now() - this.lastRefreshedTime < 1000 * 5) return;
+    this.lastRefreshedTime = Date.now();
+
+    clearTimeout(this.refreshTimer);
+    await this.currentAccount?.tokens.refreshTokensBalance();
+
+    this.refreshTimer = setTimeout(() => this.refreshAccount(), 10 * 1000);
+  }
+
   async init() {
     Coingecko.init();
 
@@ -54,6 +84,7 @@ export class AppVM {
     await Promise.all([TxHub.init(), Networks.init()]);
 
     const wallets = await Promise.all((await Database.keys.find()).map((key) => new Wallet(key).init()));
+    const lastUsedAccount = await AsyncStorage.getItem('lastUsedAccount');
 
     Authentication.once('appAuthorized', () => {
       WalletConnectV1ClientHub.init();
@@ -64,6 +95,7 @@ export class AppVM {
       this.initialized = true;
       this.wallets = wallets;
       this.currentWallet = wallets[0];
+      if (lastUsedAccount) this.switchAccount(lastUsedAccount);
     });
   }
 
@@ -71,7 +103,7 @@ export class AppVM {
     this.wallets.forEach((w) => w.dispose());
     this.wallets = [];
     this.currentWallet = null;
-    
+
     TxHub.reset();
     Contacts.reset();
     Networks.reset();
