@@ -1,13 +1,13 @@
 import { Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { FlatList, Image, ListRenderItemInfo, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { SafeViewContainer, Separator } from '../components';
+import { Loader, SafeViewContainer, Separator } from '../components';
+import React, { useEffect, useRef } from 'react';
 
 import { Account } from '../viewmodels/account/Account';
 import App from '../viewmodels/App';
 import CachedImage from 'react-native-expo-cached-image';
 import Currency from '../viewmodels/settings/Currency';
 import Networks from '../viewmodels/Networks';
-import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import i18n from '../i18n';
 import { observer } from 'mobx-react-lite';
@@ -50,10 +50,20 @@ const AccountItem = observer(
 export default observer(() => {
   const { t } = i18n;
   const themeColor = Networks.current.color;
+  const list = useRef<FlatList>(null);
 
   const renderAccount = ({ item }: ListRenderItemInfo<Account>) => (
     <AccountItem currentAccount={App.currentAccount} account={item} themeColor={themeColor} />
   );
+
+  const newAccount = async () => {
+    await App.newAccount();
+    list.current?.scrollToEnd({ animated: true });
+  };
+
+  useEffect(() => {
+    list.current?.scrollToIndex({ index: App.allAccounts.indexOf(App.currentAccount!), animated: true });
+  }, []);
 
   return (
     <SafeAreaProvider style={rootStyles.safeArea}>
@@ -62,17 +72,20 @@ export default observer(() => {
           {t('modal-accounts-menu-title')}
         </Text>
 
-        <Separator style={{ marginTop: 4 }} />
+        <Separator style={{ marginTop: 4, opacity: 0.5 }} />
 
         <FlatList
+          ref={list}
           data={App.allAccounts}
           renderItem={renderAccount}
           keyExtractor={(i) => i.address}
           style={{ flex: 1, marginHorizontal: -16 }}
-          contentContainerStyle={{ paddingTop: 4, paddingHorizontal: 16 }}
+          contentContainerStyle={{ paddingVertical: 4, paddingHorizontal: 16 }}
         />
 
-        <TouchableOpacity style={styles.option} onPress={() => App.newAccount()}>
+        <Separator style={{ marginBottom: 4, opacity: 0.5 }} />
+
+        <TouchableOpacity style={styles.option} onPress={newAccount}>
           <MaterialIcons name="add-circle" size={22} color={themeColor} />
           <Text style={{ marginStart: 10, color: themeColor, fontWeight: '600', fontSize: 15 }}>Create a new account</Text>
         </TouchableOpacity>

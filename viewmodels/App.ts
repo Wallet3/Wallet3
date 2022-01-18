@@ -60,7 +60,7 @@ export class AppVM {
   }
 
   newAccount() {
-    this.wallets[0].newAccount();
+    return this.wallets[0]?.newAccount();
   }
 
   switchAccount(address: string, force = false) {
