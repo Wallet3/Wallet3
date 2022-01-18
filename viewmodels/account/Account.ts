@@ -56,7 +56,7 @@ export class Account {
         emojiAvatar = genEmoji();
         emojiColor = genColor();
 
-        AsyncStorage.setItem(`${address}-info`, JSON.stringify({ emojiAvatar, emojiColor }));
+        AsyncStorage.setItem(`${address}-local-avatar`, JSON.stringify({ emojiAvatar, emojiColor }));
       }
 
       runInAction(() => {

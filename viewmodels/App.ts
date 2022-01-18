@@ -101,7 +101,6 @@ export class AppVM {
     runInAction(() => {
       this.initialized = true;
       this.wallets = wallets;
-      // this.currentWallet = wallets[0];
       this.switchAccount(lastUsedAccount, true);
     });
   }

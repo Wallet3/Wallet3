@@ -57,23 +57,38 @@ export default observer(() => {
             borderColor: '#fff',
           }}
         >
-          <CachedImage
-            source={currentAccount?.avatar ? { uri: currentAccount?.avatar } : icons[current.symbol.toLowerCase()]}
-            style={{
-              width: 64,
-              height: 64,
-              borderRadius: 200,
-              backgroundColor: current.color,
-            }}
-          />
+          {currentAccount?.avatar ? (
+            <CachedImage
+              source={currentAccount?.avatar ? { uri: currentAccount?.avatar } : icons[current.symbol.toLowerCase()]}
+              style={{
+                width: 64,
+                height: 64,
+                borderRadius: 200,
+                backgroundColor: current.color,
+              }}
+            />
+          ) : (
+            <View
+              style={{
+                width: 64,
+                height: 64,
+                borderRadius: 200,
+                backgroundColor: currentAccount?.emojiColor,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Text style={{ fontSize: 20 }}>{currentAccount?.emojiAvatar}</Text>
+            </View>
+          )}
         </View>
       </View>
 
       <View>
         <View style={{ flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between' }}>
           <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
-            <Text style={{ fontSize: 17, fontWeight: '500' }}>{ens?.name}</Text>
-            <Text style={{ marginStart: 8, fontSize: 15, color: secondaryFontColor }}>
+            {ens?.name ? <Text style={{ fontSize: 17, fontWeight: '500', marginEnd: 8 }}>{ens?.name}</Text> : undefined}
+            <Text style={{ fontSize: 15, color: secondaryFontColor }}>
               {formatAddress(currentAccount?.address || '', 7, 5)}
             </Text>
           </View>

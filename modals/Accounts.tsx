@@ -40,7 +40,7 @@ const AccountItem = observer(({ account, themeColor }: { account: Account; theme
   );
 });
 
-export default observer((props) => {
+export default observer(() => {
   const { t } = i18n;
   const themeColor = Networks.current.color;
 
@@ -63,7 +63,7 @@ export default observer((props) => {
           contentContainerStyle={{ paddingTop: 4, paddingHorizontal: 16 }}
         />
 
-        <TouchableOpacity style={styles.option}>
+        <TouchableOpacity style={styles.option} onPress={() => App}>
           <MaterialIcons name="add-circle" size={22} color={themeColor} />
           <Text style={{ marginStart: 10, color: themeColor, fontWeight: '600', fontSize: 15 }}>Create a new account</Text>
         </TouchableOpacity>
