@@ -190,13 +190,13 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
           modalStyle={appStyles.modalStyle}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <SafeAreaProvider>
+          <SafeAreaProvider style={{ height: 270 }}>
             <Confirm
               onConfirm={() => App.reset()}
               buttonText={t('settings-modal-button-confirm')}
               desc={t('settings-modal-erase')}
               themeColor="crimson"
-              style={{ height: 270 }}
+              style={{ flex: 1 }}
             />
           </SafeAreaProvider>
         </Modalize>

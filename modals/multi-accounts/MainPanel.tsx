@@ -21,7 +21,7 @@ interface Props {
   onEditAccount?: (account: Account) => void;
 }
 
-export default ({ onRemoveAccount, onEditAccount }: Props) => {
+export default observer(({ onRemoveAccount, onEditAccount }: Props) => {
   const { t } = i18n;
   const themeColor = Networks.current.color;
   const list = useRef<FlatList>(null);
@@ -31,8 +31,8 @@ export default ({ onRemoveAccount, onEditAccount }: Props) => {
       account={item}
       themeColor={themeColor}
       onPress={() => App.switchAccount(item.address)}
-      onEdit={onRemoveAccount}
-      onRemove={onEditAccount}
+      onEdit={onEditAccount}
+      onRemove={onRemoveAccount}
     />
   );
 
@@ -56,7 +56,7 @@ export default ({ onRemoveAccount, onEditAccount }: Props) => {
   return (
     <SafeViewContainer style={{ padding: 16 }}>
       <Text style={{ color: secondaryFontColor }} numberOfLines={1}>
-        {t('modal-accounts-menu-title')}
+        {t('modal-multi-accounts-title')}
       </Text>
 
       <Separator style={{ marginTop: 4, opacity: 0.5 }} />
@@ -83,7 +83,7 @@ export default ({ onRemoveAccount, onEditAccount }: Props) => {
       </TouchableOpacity>
     </SafeViewContainer>
   );
-};
+});
 
 const styles = StyleSheet.create({
   option: {

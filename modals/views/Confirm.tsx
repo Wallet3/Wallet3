@@ -6,25 +6,29 @@ import React from 'react';
 
 interface Props {
   onConfirm: () => void;
+  onCancel?: () => void;
   desc: string;
   buttonText: string;
   themeColor: string;
   style?: StyleProp<ViewStyle>;
+  cancelable?: boolean;
 }
 
-export function Confirm({ onConfirm, desc, buttonText, themeColor, style }: Props) {
+export function Confirm({ onConfirm, onCancel, desc, buttonText, themeColor, style, cancelable }: Props) {
   return (
     <SafeViewContainer style={style}>
       <View style={{ flex: 1 }} />
 
       <View style={{ justifyContent: 'center', alignItems: 'center' }}>
         <Ionicons name="warning" size={72} color={themeColor} />
-        <Text style={{ color: themeColor }}>{desc}</Text>
+        <Text style={{ color: themeColor, textAlign: 'center' }}>{desc}</Text>
       </View>
 
       <View style={{ flex: 1 }} />
 
-      <Button title={buttonText} themeColor="crimson" onLongPress={onConfirm} />
+      <Button title={buttonText} themeColor={themeColor} onLongPress={onConfirm} />
+
+      {cancelable && <Button title="Cancel" reverse themeColor={themeColor} onPress={onCancel} style={{ marginTop: 12 }} />}
     </SafeViewContainer>
   );
 }

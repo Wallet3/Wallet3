@@ -80,7 +80,8 @@
   "profile-accounts": "Accounts",
   "profile-addresses": "Addresses",
   "profile-more-records": "More Records",
-  "modal-accounts-menu-title": "Accounts",
+  "modal-multi-accounts-title": "Accounts",
+  "modal-multi-accounts-remove-account-desc": "Are you sure to remove this account?\n{{addr}}",
   "modal-accounts-selector-title": "Select accounts",
   "modal-networks-selector-title": "Select networks",
   "modal-networks-switch": "Switch current network",
@@ -159,5 +160,6 @@
   "button-reject": "Reject",
   "button-sign": "Sign",
   "button-send": "Send",
-  "button-request": "Receive"
+  "button-request": "Receive",
+  "button-confirm": "Confirm"
 }
