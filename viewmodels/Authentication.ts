@@ -1,4 +1,5 @@
 import * as Random from 'expo-random';
+import * as ScreenCapture from 'expo-screen-capture';
 import * as SecureStore from 'expo-secure-store';
 
 import {
@@ -80,6 +81,8 @@ export class Authentication extends EventEmitter {
       this.biometricEnabled = enableBiometrics === 'true';
       this.userSecretsVerified = userSecretsVerified === 'true';
     });
+
+    ScreenCapture.preventScreenCaptureAsync();
   }
 
   private async authenticate({ pin, options }: { pin?: string; options?: LocalAuthenticationOptions } = {}): Promise<boolean> {

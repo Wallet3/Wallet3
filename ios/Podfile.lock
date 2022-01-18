@@ -40,6 +40,8 @@ PODS:
     - React-Core
   - EXRandom (12.1.1):
     - React-Core
+  - EXScreenCapture (4.1.0):
+    - ExpoModulesCore
   - EXSecureStore (11.1.0):
     - ExpoModulesCore
   - EXSplashScreen (0.13.5):
@@ -408,6 +410,7 @@ DEPENDENCIES:
   - Expo (from `../node_modules/expo/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core/ios`)
   - EXRandom (from `../node_modules/expo-random/ios`)
+  - EXScreenCapture (from `../node_modules/expo-screen-capture/ios`)
   - EXSecureStore (from `../node_modules/expo-secure-store/ios`)
   - EXSplashScreen (from `../node_modules/expo-splash-screen/ios`)
   - EXSQLite (from `../node_modules/expo-sqlite/ios`)
@@ -504,6 +507,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-modules-core/ios"
   EXRandom:
     :path: "../node_modules/expo-random/ios"
+  EXScreenCapture:
+    :path: "../node_modules/expo-screen-capture/ios"
   EXSecureStore:
     :path: "../node_modules/expo-secure-store/ios"
   EXSplashScreen:
@@ -622,6 +627,7 @@ SPEC CHECKSUMS:
   Expo: d9588796cd19999da4d440d87bf7eb7ae4dbd608
   ExpoModulesCore: 47b403a33ad73770c49d7559615b3ea121a36116
   EXRandom: 06978dcf45075f3c9e17ae5e726b887316ee9877
+  EXScreenCapture: 0146fdf6ca4c3402a1cf62b2ddb739a840e08c94
   EXSecureStore: fa0fdde1c81ceee2a3cb0519e649feae42767969
   EXSplashScreen: 57f329dbf25c5c12800feed79068a056453dc772
   EXSQLite: 5b16cc6b280d3c024b0b1d76829dd2161a26acbe

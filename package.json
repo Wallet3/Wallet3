@@ -39,6 +39,7 @@
     "expo-local-authentication": "^12.1.0",
     "expo-localization": "^11.0.0",
     "expo-random": "^12.1.1",
+    "expo-screen-capture": "^4.1.0",
     "expo-secure-store": "~11.1.0",
     "expo-splash-screen": "^0.13.5",
     "expo-sqlite": "~10.1.0",
