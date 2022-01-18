@@ -85,6 +85,7 @@ export const PublicNetworks: INetwork[] = [
     chainId: 137,
     color: '#8247E5',
     order: 2,
+    eip1559: true,
     defaultTokens: PolygonPopularTokens,
     blockTimeMs: 3 * 1000,
     explorer: 'https://polygonscan.com',
