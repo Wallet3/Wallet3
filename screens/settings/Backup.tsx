@@ -26,7 +26,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
   const themeColor = Networks.current.color;
 
   const verify = async (passcode?: string) => {
-    const secret = await App.currentWallet?.getSecret(passcode);
+    const secret = await App.wallets[0]?.getSecret(passcode);
     const success = secret ? true : false;
 
     setAuthorized(success);

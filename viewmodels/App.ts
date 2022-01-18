@@ -20,7 +20,6 @@ export class AppVM {
 
   initialized = false;
   wallets: Wallet[] = [];
-  currentWallet: Wallet | null = null;
   currentAccount: Account | null = null;
 
   get hasWallet() {
@@ -35,7 +34,6 @@ export class AppVM {
     makeObservable(this, {
       initialized: observable,
       wallets: observable,
-      currentWallet: observable,
       hasWallet: computed,
       reset: action,
       switchAccount: action,
@@ -54,9 +52,11 @@ export class AppVM {
     return this.allAccounts.find((a) => a.address === account);
   }
 
-  switchAccount(address: string) {
-    const target = this.findAccount(address);
-    if (!target) return;
+  switchAccount(address: string, force = false) {
+    let target = this.findAccount(address);
+    if (!target && !force) return;
+
+    target = target ?? this.allAccounts[0];
 
     target.fetchBasicInfo();
     target.tokens.refreshOverview();
@@ -64,7 +64,7 @@ export class AppVM {
 
     clearTimeout(this.refreshTimer);
     this.refreshTimer = setTimeout(() => this.refreshAccount(), 1000 * 20);
-    AsyncStorage.setItem('lastUsedAccount', address);
+    AsyncStorage.setItem('lastUsedAccount', target.address);
   }
 
   async refreshAccount() {
@@ -84,7 +84,7 @@ export class AppVM {
     await Promise.all([TxHub.init(), Networks.init()]);
 
     const wallets = await Promise.all((await Database.keys.find()).map((key) => new Wallet(key).init()));
-    const lastUsedAccount = await AsyncStorage.getItem('lastUsedAccount');
+    const lastUsedAccount = (await AsyncStorage.getItem('lastUsedAccount')) ?? '';
 
     Authentication.once('appAuthorized', () => {
       WalletConnectV1ClientHub.init();
@@ -94,15 +94,15 @@ export class AppVM {
     runInAction(() => {
       this.initialized = true;
       this.wallets = wallets;
-      this.currentWallet = wallets[0];
-      if (lastUsedAccount) this.switchAccount(lastUsedAccount);
+      // this.currentWallet = wallets[0];
+      this.switchAccount(lastUsedAccount, true);
     });
   }
 
   async reset() {
     this.wallets.forEach((w) => w.dispose());
     this.wallets = [];
-    this.currentWallet = null;
+    this.currentAccount = null;
 
     TxHub.reset();
     Contacts.reset();

@@ -16,7 +16,7 @@ export default observer(() => {
   const [vm] = useState(new TransferRequesting(Networks.current));
   const themeColor = Networks.current.color;
 
-  const { avatar, address } = App.currentWallet?.currentAccount || {};
+  const { avatar, address } = App.currentAccount || {};
 
   return (
     <SafeAreaProvider style={styles.safeArea}>

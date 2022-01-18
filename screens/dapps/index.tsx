@@ -181,7 +181,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
               client={selectedClient}
               allAccounts={App.allAccounts}
               close={close}
-              currentAccount={App.currentWallet?.currentAccount!}
+              currentAccount={App.currentAccount!}
             />
           ) : undefined}
         </Modalize>

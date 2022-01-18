@@ -22,7 +22,7 @@ export class ERC681Transferring extends TokenTransferring {
   }
 
   constructor({ defaultNetwork, erc681 }: { defaultNetwork: INetwork; erc681: ERC681 }) {
-    const account = App.currentWallet!.currentAccount!;
+    const account = App.currentAccount!;
 
     const network = Networks.all.find((n) => n.chainId === Number(erc681.chain_id)) ?? defaultNetwork;
     const token = (

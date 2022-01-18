@@ -32,7 +32,7 @@ export class TransactionRequest extends RawTransactionRequest {
   constructor({ request, client }: IConstructor) {
     const [param, requestChainId] = request.params as [WCCallRequest_eth_sendTransaction, number?];
 
-    const { currentAccount } = App.currentWallet || {};
+    const { currentAccount } = App;
     const account = client.accounts.includes(currentAccount?.address ?? '')
       ? currentAccount!
       : App.allAccounts.find((a) => a.address === client.accounts[0]) ?? App.allAccounts[0];

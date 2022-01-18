@@ -15,13 +15,13 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
   const [addr, setAddr] = useState('');
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState<UserToken | undefined>();
-  const { currentWallet } = App;
+  const { currentAccount } = App;
 
   useEffect(() => {
     if (!addr) return;
     setLoading(true);
 
-    currentWallet?.currentAccount?.tokens.fetchToken(addr).then((t) => {
+    currentAccount?.tokens.fetchToken(addr).then((t) => {
       setLoading(false);
       setToken(t);
     });
@@ -87,7 +87,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
           title={t('button-save')}
           disabled={!token}
           onPress={() => {
-            currentWallet?.currentAccount?.tokens.addToken(token!);
+            currentAccount?.tokens.addToken(token!);
             navigation.popToTop();
           }}
         />

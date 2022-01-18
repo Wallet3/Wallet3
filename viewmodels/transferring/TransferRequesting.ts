@@ -14,7 +14,7 @@ export class TransferRequesting {
   readonly network: INetwork;
 
   get currentAccount() {
-    return App.currentWallet?.currentAccount!;
+    return App.currentAccount!;
   }
 
   get allTokens() {

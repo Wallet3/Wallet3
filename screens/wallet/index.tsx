@@ -31,7 +31,7 @@ type RootStackParamList = {
 export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, 'Home'>) => {
   const { t } = i18n;
 
-  const { currentWallet } = App;
+  const { currentAccount } = App;
   const { current } = Networks;
   const { ref: tokenDetailModalize, open: openTokenDetail, close: closeTokenDetail } = useModalize();
   const { ref: txDetailModalize, open: openTxDetail, close: closeTxDetail } = useModalize();
@@ -61,25 +61,25 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
     >
       <Overview
         style={{ backgroundColor: current.color, marginBottom: 2 }}
-        address={currentWallet?.currentAccount?.address}
-        balance={currentWallet?.currentAccount?.balance}
+        address={currentAccount?.address}
+        balance={currentAccount?.balance}
         currency={CurrencyViewmodel.currentCurrency.symbol}
         network={current.network}
         chainId={current.chainId}
-        avatar={currentWallet?.currentAccount?.avatar}
-        ens={currentWallet?.currentAccount?.ens.name}
+        avatar={currentAccount?.avatar}
+        ens={currentAccount?.ens.name}
         connectedApps={WalletConnectV1ClientHub.connectedCount}
-        disabled={currentWallet?.currentAccount?.tokens.loadingTokens}
+        disabled={currentAccount?.tokens.loadingTokens}
         onSendPress={() => PubSub.publish('openSendFundsModal')}
         onRequestPress={() => PubSub.publish('openRequestFundsModal')}
         onDAppsPress={() => navigation.navigate('DApps')}
       />
 
       <Assets
-        tokens={currentWallet?.currentAccount?.tokens.tokens}
+        tokens={currentAccount?.tokens.tokens}
         themeColor={current.color}
-        loadingTokens={currentWallet?.currentAccount?.tokens.loadingTokens}
-        onRefreshRequest={async () => await currentWallet?.refreshAccount()}
+        loadingTokens={currentAccount?.tokens.loadingTokens}
+        onRefreshRequest={async () => await App.refreshAccount()}
         onTokenPress={onTokenPress}
         onTxPress={onTxPress}
       />

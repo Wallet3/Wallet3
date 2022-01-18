@@ -19,8 +19,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 export default observer(() => {
   const { top } = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
-  const { currentWallet } = App;
-  const { currentAccount } = currentWallet || {};
+
+  const { currentAccount } = App;
   const { ens } = currentAccount || {};
 
   const { t } = i18n;
@@ -58,11 +58,7 @@ export default observer(() => {
           }}
         >
           <CachedImage
-            source={
-              currentWallet?.currentAccount?.avatar
-                ? { uri: currentWallet?.currentAccount?.avatar }
-                : icons[current.symbol.toLowerCase()]
-            }
+            source={currentAccount?.avatar ? { uri: currentAccount?.avatar } : icons[current.symbol.toLowerCase()]}
             style={{
               width: 64,
               height: 64,

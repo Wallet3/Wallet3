@@ -34,7 +34,7 @@ export default observer(({ client, request, close }: Props) => {
   const sendTx = async (pin?: string) => {
     const tx = vm.txRequest;
 
-    const { txHex, error } = await App.currentWallet!.signTx({
+    const { txHex, error } = await vm.wallet.signTx({
       accountIndex: vm.account.index,
       tx,
       pin,
@@ -45,7 +45,7 @@ export default observer(({ client, request, close }: Props) => {
       return false;
     }
 
-    const hash = await App.currentWallet!.sendTx({
+    const hash = await vm.wallet.sendTx({
       txHex,
       tx,
       readableInfo: {

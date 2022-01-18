@@ -117,7 +117,7 @@ export class TokenTransferring extends BaseTransaction {
     autoSetToken?: boolean;
     to?: string;
   }) {
-    const account = App.currentWallet!.currentAccount!;
+    const account = App.currentAccount!;
 
     super({ account, network: targetNetwork });
 

@@ -62,8 +62,7 @@ class WalletConnectV1ClientHub extends EventEmitter {
 
     // Notify dapps to update current account
     autorun(() => {
-      const { currentWallet } = App;
-      const { currentAccount } = currentWallet ?? {};
+      const { currentAccount } = App;
       if (!currentAccount) return;
 
       const clients = this.clients.filter((c) => c!.isMobileApp).filter((c) => c.accounts.includes(currentAccount.address));
@@ -88,7 +87,7 @@ class WalletConnectV1ClientHub extends EventEmitter {
 
     if (version === '1') {
       const client = new WalletConnect_v1(uri);
-      client.setAccounts([App.currentWallet!.currentAccount!.address!]);
+      client.setAccounts([App.currentAccount!.address!]);
 
       client.once('sessionApproved', () => {
         // runInAction(() => (this.clients = this.clients.concat(client)));

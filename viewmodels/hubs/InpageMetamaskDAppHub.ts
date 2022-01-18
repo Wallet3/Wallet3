@@ -111,8 +111,8 @@ class InpageMetamaskDAppHub extends EventEmitter {
           isInitialized: true,
           isUnlocked: true,
           network: Networks.current.chainId,
-          selectedAddress: App.currentWallet?.currentAccount?.address!,
-          accounts: [App.currentWallet?.currentAccount?.address!],
+          selectedAddress: App.currentAccount?.address!,
+          accounts: [App.currentAccount?.address!],
         };
         break;
       case 'web3_clientVersion':
@@ -186,7 +186,7 @@ class InpageMetamaskDAppHub extends EventEmitter {
   }
 
   private async eth_requestAccounts(origin: string, payload: Payload) {
-    if (!App.currentWallet) return [];
+    if (!App.currentAccount) return [];
 
     const dapp = await this.getDApp(origin);
 
@@ -389,7 +389,7 @@ class InpageMetamaskDAppHub extends EventEmitter {
 
     return new Promise((resolve) => {
       const approve = () => {
-        const account = App.allAccounts.find((a) => a.address === dapp?.lastUsedAccount) ?? App.currentWallet?.currentAccount;
+        const account = App.allAccounts.find((a) => a.address === dapp?.lastUsedAccount) ?? App.currentAccount;
 
         account?.tokens.addToken(
           {

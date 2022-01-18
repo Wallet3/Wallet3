@@ -4,14 +4,17 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 import { estimateGas, getGasPrice, getMaxPriorityFee, getNextBlockBaseFee, getTransactionCount } from '../../common/RPC';
 
 import { Account } from '../account/Account';
+import App from '../App';
 import { INetwork } from '../../common/Networks';
 import { NativeToken } from '../../models/NativeToken';
+import { Wallet } from '../Wallet';
 
 export class BaseTransaction {
   private timer?: NodeJS.Timer;
 
   readonly network: INetwork;
   readonly account: Account;
+  readonly wallet: Wallet;
   readonly nativeToken: NativeToken;
 
   isEstimatingGas = false;
@@ -25,6 +28,7 @@ export class BaseTransaction {
   constructor(args: { network: INetwork; account: Account }) {
     this.network = args.network;
     this.account = args.account;
+    this.wallet = App.findWallet(this.account.address)!.wallet;
     this.nativeToken = new NativeToken({ ...this.network, owner: this.account.address });
 
     makeObservable(this, {

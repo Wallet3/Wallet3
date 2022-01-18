@@ -28,7 +28,7 @@ interface DrawerProps extends DrawerContentComponentProps {
 const Drawer = observer((props: DrawerProps) => {
   const { t } = i18n;
   const { navigation, appVM } = props;
-  const { currentWallet } = appVM;
+  const { currentAccount } = appVM;
   const { current } = Networks;
 
   const { index } = navigation.getState();
@@ -61,11 +61,7 @@ const Drawer = observer((props: DrawerProps) => {
       >
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
           <Image
-            source={
-              currentWallet?.currentAccount?.avatar
-                ? { uri: currentWallet?.currentAccount?.avatar }
-                : icons[current.symbol.toLowerCase()]
-            }
+            source={currentAccount?.avatar ? { uri: currentAccount?.avatar } : icons[current.symbol.toLowerCase()]}
             style={{
               width: 50,
               height: 50,
@@ -88,7 +84,7 @@ const Drawer = observer((props: DrawerProps) => {
               width: '72%',
             }}
           >
-            {currentWallet?.currentAccount?.displayName}
+            {currentAccount?.displayName}
           </Text>
 
           <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 8 }} size={19} />

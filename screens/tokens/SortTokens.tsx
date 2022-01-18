@@ -45,12 +45,12 @@ const DraggableToken = observer(
 
 export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Tokens'>) => {
   const { t } = i18n;
-  const { currentWallet } = App;
-  const { allTokens } = currentWallet?.currentAccount?.tokens ?? { allTokens: [] };
+  const { currentAccount } = App;
+  const { allTokens } = currentAccount?.tokens ?? { allTokens: [] };
   const [data, setData] = useState(allTokens);
 
   const renderItem = (props: RenderItemParams<UserToken>) => {
-    return <DraggableToken {...props} onValueChange={() => currentWallet?.currentAccount?.tokens.toggleToken(props.item)} />;
+    return <DraggableToken {...props} onValueChange={() => currentAccount?.tokens.toggleToken(props.item)} />;
   };
 
   return (
@@ -63,7 +63,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
         renderItem={renderItem}
         keyExtractor={(item) => item.address}
         onDragEnd={({ data }) => {
-          currentWallet?.currentAccount?.tokens.sortTokens(data);
+          currentAccount?.tokens.sortTokens(data);
           setData(data);
         }}
       />

@@ -41,7 +41,7 @@ const ConnectPivot = observer(
   }) => {
     const swiper = useRef<Swiper>(null);
     const [panel, setPanel] = useState(1);
-    const [account, setAccount] = useState(App.currentWallet!.currentAccount!);
+    const [account, setAccount] = useState(App.currentAccount!);
     const [selectedNetwork, setSelectedNetwork] = useState(Networks.current);
 
     const approve = () => onApprove({ account, network: selectedNetwork });

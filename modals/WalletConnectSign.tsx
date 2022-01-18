@@ -58,11 +58,13 @@ export default observer(({ request, client, close, biometricEnabled }: Props) =>
   };
 
   const sign = async (pin?: string) => {
-    if (!client.accounts.includes(App.currentWallet?.currentAccount?.address ?? '')) {
+    if (!client.accounts.includes(App.currentAccount?.address ?? '')) {
       return false;
     }
 
-    const wallet = App.currentWallet!;
+    const wallet = App.findWallet(App.currentAccount!.address)?.wallet;
+    if (!wallet) return false;
+
     const signed = typedData ? await wallet.signTypedData({ typedData, pin }) : await wallet.signMessage({ msg: msg!, pin });
 
     if (signed) {

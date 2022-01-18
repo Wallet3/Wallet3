@@ -28,7 +28,7 @@ export default observer(({ vm, onClose, erc681 }: Props) => {
 
   const sendTx = async (pin?: string) => {
     const tx = vm.txRequest;
-    const { txHex, error } = await App.currentWallet!.signTx({
+    const { txHex, error } = await vm.wallet!.signTx({
       accountIndex: vm.account.index,
       tx,
       pin,
@@ -42,7 +42,7 @@ export default observer(({ vm, onClose, erc681 }: Props) => {
     setVerified(true);
     setTimeout(() => PubSub.publish('closeSendFundsModal'), 1700);
 
-    App.currentWallet?.sendTx({
+    vm.wallet?.sendTx({
       tx,
       txHex,
       readableInfo: {
