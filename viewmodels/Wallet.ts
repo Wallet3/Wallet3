@@ -64,9 +64,7 @@ export class Wallet {
       accounts.push(new Account(accountNode.address, i));
     }
 
-    runInAction(() => {
-      this.accounts = accounts;
-    });
+    runInAction(() => (this.accounts = accounts));
 
     return this;
   }

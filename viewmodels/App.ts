@@ -66,10 +66,13 @@ export class AppVM {
   }
 
   switchAccount(address: string, force = false) {
+    if (this.currentAccount?.address === address) return;
+    
     let target = this.findAccount(address);
     if (!target && !force) return;
 
     target = target ?? this.allAccounts[0];
+    if (!target) return;
 
     target.tokens.refreshOverview();
     this.currentAccount = target;

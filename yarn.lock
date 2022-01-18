@@ -8056,6 +8056,11 @@ react-native-collapsible@^1.6.0:
   resolved "https://registry.yarnpkg.com/react-native-collapsible/-/react-native-collapsible-1.6.0.tgz#ca261ffff16914f872059bb0972e3a78c4b37f9c"
   integrity sha512-beZjdgbT9Y/Pg591Xy5XkKG20HffJiVad4n9bfcUF/f783A+tvOVXnqvbS58Lkaym93mi4jcDPMuW9Vc1t6rqg==
 
+react-native-context-menu-view@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-context-menu-view/-/react-native-context-menu-view-1.2.1.tgz#0faf79127c5242fb852d4ce5cb3c6660c19291db"
+  integrity sha512-p6aslD1mTftJG57RRP2qVHHD/37A6oRN5H90n5UY151cWNfhYx5uCfD6B6Uou0MGuOStMKEWZ6h739AO/pPOOg==
+
 react-native-crypto@^2.2.0:
   version "2.2.0"
   resolved "https://registry.npmjs.org/react-native-crypto/-/react-native-crypto-2.2.0.tgz"

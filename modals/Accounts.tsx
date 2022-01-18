@@ -1,5 +1,6 @@
+import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
 import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { FlatList, ListRenderItemInfo, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, ListRenderItemInfo, NativeSyntheticEvent, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef } from 'react';
 import { SafeViewContainer, Separator } from '../components';
 
@@ -20,31 +21,47 @@ const AccountItem = observer(
       account.nativeToken.balance.gt(0) ? utils.formatEther(account.nativeToken.balance).substring(0, 6) : '0'
     } ${account.nativeToken.symbol}`;
 
+    const onActionPress = (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => {
+      const { name } = e.nativeEvent;
+    };
+
+    const actions =
+      App.allAccounts.length > 1
+        ? [
+            { title: 'Edit', systemIcon: 'square.and.pencil' },
+            { title: 'Remove', destructive: true, systemIcon: 'trash.slash' },
+          ]
+        : [{ title: 'Edit', systemIcon: 'square.and.pencil' }];
+
     return (
-      <TouchableOpacity
-        onPress={() => onPress?.(account)}
-        style={{ flexDirection: 'row', paddingVertical: 8, alignItems: 'center' }}
-      >
-        {account.avatar ? (
-          <CachedImage source={{ uri: account.avatar }} style={styles.avatar} />
-        ) : (
-          <View style={{ ...styles.avatar, backgroundColor: account.emojiColor }}>
-            <Text style={{ fontSize: 17, textAlign: 'center', marginTop: 2, marginStart: 2 }}>{account.emojiAvatar}</Text>
+      <ContextMenu onPress={onActionPress} actions={actions}>
+        <TouchableOpacity
+          onPress={() => onPress?.(account)}
+          style={{ flexDirection: 'row', paddingVertical: 8, alignItems: 'center', paddingHorizontal: 16 }}
+        >
+          {account.avatar ? (
+            <CachedImage source={{ uri: account.avatar }} style={styles.avatar} />
+          ) : (
+            <View style={{ ...styles.avatar, backgroundColor: account.emojiColor }}>
+              <Text style={{ fontSize: 17, textAlign: 'center', marginTop: 2, marginStart: 1.5 }}>{account.emojiAvatar}</Text>
+            </View>
+          )}
+
+          <View style={{ flex: 1, marginStart: 12, justifyContent: 'space-between' }}>
+            <Text style={{ fontSize: 17, fontWeight: '500', marginBottom: 2 }} numberOfLines={1}>
+              {account.displayName}
+            </Text>
+            <Text style={{ color: secondaryFontColor }}>{balance}</Text>
           </View>
-        )}
 
-        <View style={{ flex: 1, marginStart: 12, justifyContent: 'space-between' }}>
-          <Text style={{ fontSize: 17, fontWeight: '500', marginBottom: 2 }}>{account.displayName}</Text>
-          <Text style={{ color: secondaryFontColor }}>{balance}</Text>
-        </View>
-
-        <Feather
-          name="check"
-          color={themeColor}
-          size={20}
-          style={{ opacity: account.address === App.currentAccount?.address ? 1 : 0 }}
-        />
-      </TouchableOpacity>
+          <Feather
+            name="check"
+            color={themeColor}
+            size={20}
+            style={{ opacity: account.address === App.currentAccount?.address ? 1 : 0 }}
+          />
+        </TouchableOpacity>
+      </ContextMenu>
     );
   }
 );
@@ -97,7 +114,7 @@ export default observer(({ onDone }: { onDone?: () => void }) => {
           renderItem={renderAccount}
           keyExtractor={(i) => i.address}
           style={{ flex: 1, marginHorizontal: -16 }}
-          contentContainerStyle={{ paddingVertical: 4, paddingHorizontal: 16 }}
+          contentContainerStyle={{ paddingVertical: 4 }}
         />
 
         <Separator style={{ marginBottom: 4, opacity: 0.5 }} />

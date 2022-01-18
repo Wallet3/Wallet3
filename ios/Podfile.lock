@@ -265,6 +265,8 @@ PODS:
     - React-jsi (= 0.64.3)
     - React-perflogger (= 0.64.3)
   - React-jsinspector (0.64.3)
+  - react-native-context-menu-view (1.2.1):
+    - React
   - react-native-nfc-manager (3.11.5):
     - React
   - react-native-randombytes (3.6.1):
@@ -435,6 +437,7 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
+  - react-native-context-menu-view (from `../node_modules/react-native-context-menu-view`)
   - react-native-nfc-manager (from `../node_modules/react-native-nfc-manager`)
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -553,6 +556,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
+  react-native-context-menu-view:
+    :path: "../node_modules/react-native-context-menu-view"
   react-native-nfc-manager:
     :path: "../node_modules/react-native-nfc-manager"
   react-native-randombytes:
@@ -651,6 +656,7 @@ SPEC CHECKSUMS:
   React-jsi: a8b09c29521c798f1783348b37b511ba7b3dbeb3
   React-jsiexecutor: df6abc9fafbecb8e5b7a5fbc5e6d4bd017d594d5
   React-jsinspector: 34e23860273a23695342f58eed3ffd3ba10c31e0
+  react-native-context-menu-view: 314d901eb8d8b3d32c2bcc5c5288045c539fe345
   react-native-nfc-manager: bbb5419748bcc94968746f9dd5f210eabd5dd7fb
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
