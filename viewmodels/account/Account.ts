@@ -44,9 +44,10 @@ export class Account {
 
     makeObservable(this, {
       tokens: observable,
-
       displayName: computed,
       balance: computed,
+      emojiAvatar: observable,
+      emojiColor: observable,
     });
 
     AsyncStorage.getItem(`${address}-local-avatar`).then((v) => {

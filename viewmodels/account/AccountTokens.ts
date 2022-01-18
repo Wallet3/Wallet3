@@ -30,6 +30,8 @@ export class AccountTokens {
       addToken: action,
       refreshOverview: action,
     });
+
+    this.createNativeToken();
   }
 
   async refreshOverview() {
@@ -37,7 +39,7 @@ export class AccountTokens {
     this.loadingTokens = true;
 
     const [native, userTokens, userBalance] = await Promise.all([
-      this.createNativeToken(),
+      this.nativeToken,
       TokensMan.loadUserTokens(current.chainId, this.owner),
       Debank.getBalance(this.owner, current.comm_id),
     ]);

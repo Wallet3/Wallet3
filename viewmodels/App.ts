@@ -59,6 +59,10 @@ export class AppVM {
     return this.allAccounts.find((a) => a.address === account);
   }
 
+  newAccount() {
+    this.wallets[0].newAccount();
+  }
+
   switchAccount(address: string, force = false) {
     let target = this.findAccount(address);
     if (!target && !force) return;

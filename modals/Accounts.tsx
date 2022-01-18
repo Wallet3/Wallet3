@@ -15,36 +15,45 @@ import rootStyles from './styles';
 import { secondaryFontColor } from '../constants/styles';
 import { utils } from 'ethers';
 
-const AccountItem = observer(({ account, themeColor }: { account: Account; themeColor: string }) => {
-  const balance = `${
-    account.nativeToken.balance.gt(0) ? utils.formatEther(account.nativeToken.balance).substring(0, 6) : '0'
-  } ${account.nativeToken.symbol}`;
+const AccountItem = observer(
+  ({ account, themeColor, currentAccount }: { currentAccount: Account | null; account: Account; themeColor: string }) => {
+    const balance = `${
+      account.nativeToken.balance.gt(0) ? utils.formatEther(account.nativeToken.balance).substring(0, 6) : '0'
+    } ${account.nativeToken.symbol}`;
 
-  return (
-    <TouchableOpacity style={{ flexDirection: 'row', paddingVertical: 6, alignItems: 'center' }}>
-      {account.avatar ? (
-        <CachedImage source={{ uri: account.avatar }} style={styles.avatar} />
-      ) : (
-        <View style={{ ...styles.avatar, backgroundColor: account.emojiColor }}>
-          <Text style={{ fontSize: 14, textAlign: 'center', marginTop: 2, marginStart: 2 }}>{account.emojiAvatar}</Text>
+    return (
+      <TouchableOpacity style={{ flexDirection: 'row', paddingVertical: 8, alignItems: 'center' }}>
+        {account.avatar ? (
+          <CachedImage source={{ uri: account.avatar }} style={styles.avatar} />
+        ) : (
+          <View style={{ ...styles.avatar, backgroundColor: account.emojiColor }}>
+            <Text style={{ fontSize: 14, textAlign: 'center', marginTop: 1, marginStart: 2 }}>{account.emojiAvatar}</Text>
+          </View>
+        )}
+
+        <View style={{ flex: 1, marginStart: 12, justifyContent: 'space-between' }}>
+          <Text style={{ fontSize: 17, fontWeight: '500', marginBottom: 2 }}>{account.displayName}</Text>
+          <Text style={{ color: secondaryFontColor }}>{balance}</Text>
         </View>
-      )}
 
-      <View style={{ flex: 1, marginStart: 12, justifyContent: 'space-between' }}>
-        <Text style={{ fontSize: 17, fontWeight: '500', marginBottom: 2 }}>{account.displayName}</Text>
-        <Text style={{ color: secondaryFontColor }}>{balance}</Text>
-      </View>
-
-      <Feather name="check" color={themeColor} size={20} style={{ opacity: 1 }} />
-    </TouchableOpacity>
-  );
-});
+        <Feather
+          name="check"
+          color={themeColor}
+          size={20}
+          style={{ opacity: account.address === currentAccount?.address ? 1 : 0 }}
+        />
+      </TouchableOpacity>
+    );
+  }
+);
 
 export default observer(() => {
   const { t } = i18n;
   const themeColor = Networks.current.color;
 
-  const renderAccount = ({ item }: ListRenderItemInfo<Account>) => <AccountItem account={item} themeColor={themeColor} />;
+  const renderAccount = ({ item }: ListRenderItemInfo<Account>) => (
+    <AccountItem currentAccount={App.currentAccount} account={item} themeColor={themeColor} />
+  );
 
   return (
     <SafeAreaProvider style={rootStyles.safeArea}>
@@ -63,7 +72,7 @@ export default observer(() => {
           contentContainerStyle={{ paddingTop: 4, paddingHorizontal: 16 }}
         />
 
-        <TouchableOpacity style={styles.option} onPress={() => App}>
+        <TouchableOpacity style={styles.option} onPress={() => App.newAccount()}>
           <MaterialIcons name="add-circle" size={22} color={themeColor} />
           <Text style={{ marginStart: 10, color: themeColor, fontWeight: '600', fontSize: 15 }}>Create a new account</Text>
         </TouchableOpacity>
