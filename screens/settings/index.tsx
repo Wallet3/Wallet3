@@ -5,6 +5,7 @@ import { fontColor, secondaryFontColor } from '../../constants/styles';
 
 import App from '../../viewmodels/App';
 import Authentication from '../../viewmodels/Authentication';
+import { Confirm } from '../../modals/views/Confirm';
 import CurrencyViewmodel from '../../viewmodels/settings/Currency';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import { FullPasspad } from '../../modals/views/Passpad';
@@ -190,18 +191,13 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
           <SafeAreaProvider>
-            <SafeViewContainer style={{ flex: 1, height: 270 }}>
-              <View style={{ flex: 1 }} />
-
-              <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                <Ionicons name="warning" size={72} color="crimson" />
-                <Text style={{ color: 'crimson' }}>{t('settings-modal-erase')}</Text>
-              </View>
-
-              <View style={{ flex: 1 }} />
-
-              <Button title={t('settings-modal-button-confirm')} themeColor="crimson" onLongPress={() => App.reset()} />
-            </SafeViewContainer>
+            <Confirm
+              onConfirm={() => App.reset()}
+              buttonText={t('settings-modal-button-confirm')}
+              desc={t('settings-modal-erase')}
+              themeColor="crimson"
+              style={{ height: 270 }}
+            />
           </SafeAreaProvider>
         </Modalize>
       </Portal>

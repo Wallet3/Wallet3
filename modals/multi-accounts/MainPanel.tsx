@@ -16,7 +16,12 @@ import rootStyles from '../styles';
 import { secondaryFontColor } from '../../constants/styles';
 import { utils } from 'ethers';
 
-export default () => {
+interface Props {
+  onRemoveAccount?: (account: Account) => void;
+  onEditAccount?: (account: Account) => void;
+}
+
+export default ({ onRemoveAccount, onEditAccount }: Props) => {
   const { t } = i18n;
   const themeColor = Networks.current.color;
   const list = useRef<FlatList>(null);
@@ -25,9 +30,9 @@ export default () => {
     <AccountItem
       account={item}
       themeColor={themeColor}
-      onPress={() => {
-        App.switchAccount(item.address);
-      }}
+      onPress={() => App.switchAccount(item.address)}
+      onEdit={onRemoveAccount}
+      onRemove={onEditAccount}
     />
   );
 
