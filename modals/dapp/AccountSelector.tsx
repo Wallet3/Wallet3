@@ -62,7 +62,21 @@ export default observer(
 
           {item.avatar ? (
             <Image source={{ uri: item.avatar }} style={{ width: 16, height: 16, marginStart: 12, borderRadius: 100 }} />
-          ) : undefined}
+          ) : (
+            <View
+              style={{
+                width: 32,
+                height: 32,
+                backgroundColor: item.emojiColor,
+                borderRadius: 50,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginStart: 12,
+              }}
+            >
+              <Text style={{ marginStart: 1, marginTop: 1, fontSize: 12 }}>{item.emojiAvatar}</Text>
+            </View>
+          )}
 
           <Text
             style={{
@@ -88,7 +102,7 @@ export default observer(
         <FlatList
           data={accounts}
           renderItem={renderItem}
-          keyExtractor={(i) => i}
+          keyExtractor={(i) => i.address}
           contentContainerStyle={{ paddingBottom: 8 }}
           style={{ flex: 1, marginHorizontal: -16, paddingHorizontal: 16, marginBottom: 12 }}
         />

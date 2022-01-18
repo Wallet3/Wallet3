@@ -119,7 +119,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
 
       {Modals({ app, appAuth })}
 
-      <FlashMessage position="top" hideStatusBar />
+      <FlashMessage position="top" />
     </NavigationContainer>
   );
 });

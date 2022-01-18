@@ -140,6 +140,7 @@ export class Authentication extends EventEmitter {
   reset() {
     this.appAuthorized = false;
     this.userSecretsVerified = false;
+    this.biometricEnabled = false;
     SecureStore.setItemAsync(keys.masterKey, Buffer.from(Random.getRandomBytes(16)).toString('hex'));
   }
 }
