@@ -38,6 +38,7 @@ export class AppVM {
       reset: action,
       switchAccount: action,
       currentAccount: observable,
+      newAccount: action,
     });
 
     reaction(
@@ -60,7 +61,8 @@ export class AppVM {
   }
 
   newAccount() {
-    return this.wallets[0]?.newAccount();
+    this.wallets[0]?.newAccount();
+    this.switchAccount(this.allAccounts[this.allAccounts.length - 1].address);
   }
 
   switchAccount(address: string, force = false) {
@@ -69,7 +71,6 @@ export class AppVM {
 
     target = target ?? this.allAccounts[0];
 
-    target.fetchBasicInfo();
     target.tokens.refreshOverview();
     this.currentAccount = target;
 

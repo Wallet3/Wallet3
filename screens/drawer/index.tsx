@@ -81,7 +81,7 @@ const Drawer = observer((props: DrawerProps) => {
                 justifyContent: 'center',
               }}
             >
-              <Text style={{ textAlign: 'center', marginStart: 2, marginTop: 2, fontSize: 16 }}>
+              <Text style={{ textAlign: 'center', marginStart: 2, marginTop: 2, fontSize: 23 }}>
                 {currentAccount?.emojiAvatar}
               </Text>
             </View>

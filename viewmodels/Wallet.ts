@@ -77,7 +77,7 @@ export class Wallet {
     const node = bip32.derivePath(`${index}`);
     this.accounts.push(new Account(node.address, index));
 
-    await AsyncStorage.setItem(`${this.key.id}-address-count`, `${this.accounts.length}`);
+    AsyncStorage.setItem(`${this.key.id}-address-count`, `${this.accounts.length}`);
   }
 
   private async unlockPrivateKey({ pin, accountIndex }: { pin?: string; accountIndex?: number }) {

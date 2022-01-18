@@ -1,12 +1,11 @@
-import { Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
-import { FlatList, Image, ListRenderItemInfo, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Loader, SafeViewContainer, Separator } from '../components';
+import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { FlatList, ListRenderItemInfo, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef } from 'react';
+import { SafeViewContainer, Separator } from '../components';
 
 import { Account } from '../viewmodels/account/Account';
 import App from '../viewmodels/App';
 import CachedImage from 'react-native-expo-cached-image';
-import Currency from '../viewmodels/settings/Currency';
 import Networks from '../viewmodels/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import i18n from '../i18n';
@@ -16,18 +15,21 @@ import { secondaryFontColor } from '../constants/styles';
 import { utils } from 'ethers';
 
 const AccountItem = observer(
-  ({ account, themeColor, currentAccount }: { currentAccount: Account | null; account: Account; themeColor: string }) => {
+  ({ account, themeColor, onPress }: { account: Account; themeColor: string; onPress?: (item: Account) => void }) => {
     const balance = `${
       account.nativeToken.balance.gt(0) ? utils.formatEther(account.nativeToken.balance).substring(0, 6) : '0'
     } ${account.nativeToken.symbol}`;
 
     return (
-      <TouchableOpacity style={{ flexDirection: 'row', paddingVertical: 8, alignItems: 'center' }}>
+      <TouchableOpacity
+        onPress={() => onPress?.(account)}
+        style={{ flexDirection: 'row', paddingVertical: 8, alignItems: 'center' }}
+      >
         {account.avatar ? (
           <CachedImage source={{ uri: account.avatar }} style={styles.avatar} />
         ) : (
           <View style={{ ...styles.avatar, backgroundColor: account.emojiColor }}>
-            <Text style={{ fontSize: 14, textAlign: 'center', marginTop: 1, marginStart: 2 }}>{account.emojiAvatar}</Text>
+            <Text style={{ fontSize: 17, textAlign: 'center', marginTop: 2, marginStart: 2 }}>{account.emojiAvatar}</Text>
           </View>
         )}
 
@@ -40,29 +42,44 @@ const AccountItem = observer(
           name="check"
           color={themeColor}
           size={20}
-          style={{ opacity: account.address === currentAccount?.address ? 1 : 0 }}
+          style={{ opacity: account.address === App.currentAccount?.address ? 1 : 0 }}
         />
       </TouchableOpacity>
     );
   }
 );
 
-export default observer(() => {
+export default observer(({ onDone }: { onDone?: () => void }) => {
   const { t } = i18n;
   const themeColor = Networks.current.color;
   const list = useRef<FlatList>(null);
 
   const renderAccount = ({ item }: ListRenderItemInfo<Account>) => (
-    <AccountItem currentAccount={App.currentAccount} account={item} themeColor={themeColor} />
+    <AccountItem
+      account={item}
+      themeColor={themeColor}
+      onPress={() => {
+        App.switchAccount(item.address);
+        onDone?.();
+      }}
+    />
   );
 
   const newAccount = async () => {
-    await App.newAccount();
-    list.current?.scrollToEnd({ animated: true });
+    App.newAccount();
+    setTimeout(() => list.current?.scrollToEnd({ animated: true }), 150);
   };
 
   useEffect(() => {
-    list.current?.scrollToIndex({ index: App.allAccounts.indexOf(App.currentAccount!), animated: true });
+    const timer = setTimeout(() => {
+      try {
+        list.current?.scrollToIndex({ index: App.allAccounts.indexOf(App.currentAccount!), animated: true });
+      } catch (error) {}
+    }, 500);
+
+    return () => {
+      clearTimeout(timer);
+    };
   }, []);
 
   return (

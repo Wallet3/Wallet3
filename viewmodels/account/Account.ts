@@ -35,7 +35,7 @@ export class Account {
   }
 
   constructor(address: string, index: number) {
-    // address = '0xb8c2C29ee19D8307cb7255e1Cd9CbDE883A267d5';
+    // if (index === 5) address = '0xb8c2C29ee19D8307cb7255e1Cd9CbDE883A267d5';
     this.address = address;
     this.index = index;
 
@@ -67,7 +67,7 @@ export class Account {
     });
   }
 
-  async fetchBasicInfo() {
-    return this.ens.fetchBasicInfo();
-  }
+  // async fetchBasicInfo() {
+  //   return this.ens.fetchBasicInfo();
+  // }
 }

@@ -18,6 +18,7 @@ export class ENSViewer {
   constructor(owner: string) {
     this.owner = owner;
     makeObservable(this, { name: observable, avatar: observable });
+    this.fetchBasicInfo()
   }
 
   async fetchBasicInfo() {
