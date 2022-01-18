@@ -1,4 +1,4 @@
-import AccountsMenu from './Accounts';
+import AccountsMenu from './multi-accounts/Accounts';
 import NetworksMenu from './Networks';
 import Request from './Request';
 import Send from './Send';
