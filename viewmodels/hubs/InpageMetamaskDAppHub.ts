@@ -238,7 +238,7 @@ class InpageMetamaskDAppHub extends EventEmitter {
 
       const approve = async (pin?: string) => {
         const { wallet, accountIndex } = App.findWallet(dapp.lastUsedAccount) || {};
-        if (!wallet) return resolve({ error: { code: 4001, message: 'Invalid account' } });
+        if (!wallet || accountIndex === undefined) return resolve({ error: { code: 4001, message: 'Invalid account' } });
 
         const signed =
           type === 'typedData'

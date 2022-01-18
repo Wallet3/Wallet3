@@ -25,7 +25,7 @@ type SendTxRequest = {
 };
 
 type SignMessageRequest = {
-  accountIndex?: number;
+  accountIndex: number;
   msg: string;
   pin?: string;
 };
@@ -41,25 +41,16 @@ export class Wallet {
   private key: Key;
   private refreshTimer!: NodeJS.Timer;
   accounts: Account[] = [];
-  currentAccount: Account | null = null;
+
   lastRefreshedTime = 0;
 
   constructor(key: Key) {
     this.key = key;
 
     makeObservable(this, {
-      currentAccount: observable,
       accounts: observable,
-      switchAccount: action,
       newAccount: action,
     });
-
-    reaction(
-      () => Networks.current,
-      () => {
-        this.currentAccount?.tokens.refreshOverview();
-      }
-    );
   }
 
   async init() {
@@ -75,7 +66,6 @@ export class Wallet {
 
     runInAction(() => {
       this.accounts = accounts;
-      this.switchAccount(accounts[0]);
     });
 
     return this;
@@ -87,27 +77,7 @@ export class Wallet {
     const node = bip32.derivePath(`${index}`);
     this.accounts.push(new Account(node.address, index));
 
-    AsyncStorage.setItem(`${this.key.id}-address-count`, `${this.accounts.length}`)
-  }
-
-  async refreshAccount() {
-    if (Date.now() - this.lastRefreshedTime < 1000 * 5) return;
-    this.lastRefreshedTime = Date.now();
-
-    clearTimeout(this.refreshTimer);
-    await this.currentAccount?.tokens.refreshTokensBalance();
-
-    this.refreshTimer = setTimeout(() => this.refreshAccount(), 15 * 1000);
-  }
-
-  switchAccount(account: Account) {
-    if (!account) return;
-    this.currentAccount = account;
-    this.currentAccount.tokens.refreshOverview();
-    this.currentAccount.fetchBasicInfo();
-
-    clearTimeout(this.refreshTimer);
-    this.refreshTimer = setTimeout(() => this.refreshAccount(), 1000 * 60);
+    AsyncStorage.setItem(`${this.key.id}-address-count`, `${this.accounts.length}`);
   }
 
   private async unlockPrivateKey({ pin, accountIndex }: { pin?: string; accountIndex?: number }) {
@@ -137,7 +107,7 @@ export class Wallet {
 
   async signMessage(request: SignMessageRequest) {
     try {
-      return (await this.openWallet({ accountIndex: this.currentAccount!.index, ...request }))?.signMessage(request.msg);
+      return (await this.openWallet(request))?.signMessage(request.msg);
     } catch (error) {}
   }
 

@@ -62,10 +62,12 @@ export default observer(({ request, client, close, biometricEnabled }: Props) =>
       return false;
     }
 
-    const wallet = App.findWallet(App.currentAccount!.address)?.wallet;
-    if (!wallet) return false;
+    const { wallet, accountIndex } = App.findWallet(App.currentAccount!.address) || {};
+    if (!wallet || accountIndex === undefined) return false;
 
-    const signed = typedData ? await wallet.signTypedData({ typedData, pin }) : await wallet.signMessage({ msg: msg!, pin });
+    const signed = typedData
+      ? await wallet.signTypedData({ typedData, pin })
+      : await wallet.signMessage({ msg: msg!, pin, accountIndex });
 
     if (signed) {
       client.approveRequest(request.id, signed);

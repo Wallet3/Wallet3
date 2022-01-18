@@ -1,4 +1,4 @@
-import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
 
 import { Account } from './account/Account';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -39,6 +39,13 @@ export class AppVM {
       switchAccount: action,
       currentAccount: observable,
     });
+
+    reaction(
+      () => Networks.current,
+      () => {
+        this.currentAccount?.tokens.refreshOverview();
+      }
+    );
   }
 
   findWallet(account: string) {
