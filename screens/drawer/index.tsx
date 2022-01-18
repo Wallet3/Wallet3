@@ -60,15 +60,32 @@ const Drawer = observer((props: DrawerProps) => {
         }}
       >
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-          <Image
-            source={currentAccount?.avatar ? { uri: currentAccount?.avatar } : icons[current.symbol.toLowerCase()]}
-            style={{
-              width: 50,
-              height: 50,
-              borderRadius: 25,
-              backgroundColor: current.color,
-            }}
-          />
+          {currentAccount?.avatar ? (
+            <Image
+              source={currentAccount?.avatar ? { uri: currentAccount?.avatar } : icons[current.symbol.toLowerCase()]}
+              style={{
+                width: 50,
+                height: 50,
+                borderRadius: 25,
+                backgroundColor: current.color,
+              }}
+            />
+          ) : (
+            <View
+              style={{
+                width: 50,
+                height: 50,
+                borderRadius: 25,
+                backgroundColor: currentAccount?.emojiColor,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Text style={{ textAlign: 'center', marginStart: 2, marginTop: 2, fontSize: 16 }}>
+                {currentAccount?.emojiAvatar}
+              </Text>
+            </View>
+          )}
         </TouchableOpacity>
 
         <TouchableOpacity

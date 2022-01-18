@@ -25,8 +25,8 @@ const AccountItem = observer(({ account, themeColor }: { account: Account; theme
       {account.avatar ? (
         <CachedImage source={{ uri: account.avatar }} style={styles.avatar} />
       ) : (
-        <View style={styles.avatar}>
-          <Text style={{ fontSize: 16 }}>🐤</Text>
+        <View style={{ ...styles.avatar, backgroundColor: account.emojiColor }}>
+          <Text style={{ fontSize: 14, textAlign: 'center', marginTop: 2, marginStart: 2 }}>{account.emojiAvatar}</Text>
         </View>
       )}
 
@@ -70,7 +70,9 @@ export default observer((props) => {
 
         <TouchableOpacity style={styles.option}>
           <Ionicons name="key-outline" size={19} color={themeColor} style={{ paddingHorizontal: 1.5 }} />
-          <Text style={{ marginStart: 10, color: themeColor, fontWeight: '600', fontSize: 15 }}>Import an existing wallet</Text>
+          <Text style={{ marginStart: 10, color: themeColor, fontWeight: '600', fontSize: 15 }}>
+            Import an existing wallet
+          </Text>
         </TouchableOpacity>
       </SafeViewContainer>
     </SafeAreaProvider>

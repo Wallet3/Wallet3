@@ -1,6 +1,8 @@
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { genColor, genEmoji } from '../../utils/emoji';
 
 import { AccountTokens } from './AccountTokens';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import CurrencyViewmodel from '../settings/Currency';
 import { ENSViewer } from './ENSViewer';
 import Networks from '../Networks';
@@ -13,6 +15,8 @@ export class Account {
 
   tokens: AccountTokens;
   ens: ENSViewer;
+  emojiAvatar = '';
+  emojiColor = '';
 
   get nativeToken() {
     return this.tokens.nativeToken;
@@ -43,6 +47,22 @@ export class Account {
 
       displayName: computed,
       balance: computed,
+    });
+
+    AsyncStorage.getItem(`${address}-local-avatar`).then((v) => {
+      let { emojiAvatar, emojiColor } = JSON.parse(v || '{}');
+
+      if (!emojiAvatar || !emojiColor) {
+        emojiAvatar = genEmoji();
+        emojiColor = genColor();
+
+        AsyncStorage.setItem(`${address}-info`, JSON.stringify({ emojiAvatar, emojiColor }));
+      }
+
+      runInAction(() => {
+        this.emojiAvatar = emojiAvatar;
+        this.emojiColor = emojiColor;
+      });
     });
   }
 
