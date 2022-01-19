@@ -1,6 +1,8 @@
 import { Button, SafeViewContainer } from '../../components';
 import { Text, View } from 'react-native';
 
+import { Account } from '../../viewmodels/account/Account';
+import AccountIndicator from '../components/AccountIndicator';
 import JSONTree from 'react-native-json-tree';
 import React from 'react';
 import RejectApproveButtons from '../components/RejectApproveButtons';
@@ -30,32 +32,45 @@ const theme = {
   base0F: '#3971ED',
 };
 
-export default observer(
-  ({ themeColor, data, onReject, onSign }: { themeColor: string; data: any; onReject: () => void; onSign: () => void }) => {
-    const { t } = i18n;
+interface Props {
+  themeColor: string;
+  data: any;
+  onReject: () => void;
+  onSign: () => void;
+  account: Account;
+}
 
-    return (
-      <SafeViewContainer style={{ flex: 1 }}>
-        <View style={{ paddingBottom: 5, borderBottomWidth: 1, borderBottomColor: borderColor }}>
-          <Text style={{ fontSize: 21, color: themeColor, fontWeight: '500' }}>{t('modal-message-signing')}</Text>
-        </View>
+export default observer(({ themeColor, data, onReject, onSign, account }: Props) => {
+  const { t } = i18n;
 
-        <ScrollView
-          style={{ flex: 1, marginHorizontal: -16, paddingHorizontal: 12 }}
-          contentContainerStyle={{}}
-          bounces={false}
-        >
-          <JSONTree data={data} hideRoot theme={theme} />
-        </ScrollView>
+  return (
+    <SafeViewContainer style={{ flex: 1 }}>
+      <View
+        style={{
+          paddingBottom: 5,
+          borderBottomWidth: 1,
+          borderBottomColor: borderColor,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        <Text style={{ fontSize: 21, color: themeColor, fontWeight: '500' }}>{t('modal-message-signing')}</Text>
 
-        <RejectApproveButtons
-          onReject={onReject}
-          onApprove={onSign}
-          themeColor={themeColor}
-          rejectTitle={t('button-reject')}
-          approveTitle={t('button-sign')}
-        />
-      </SafeViewContainer>
-    );
-  }
-);
+        <AccountIndicator account={account} />
+      </View>
+
+      <ScrollView style={{ flex: 1, marginHorizontal: -16, paddingHorizontal: 12 }} contentContainerStyle={{}} bounces={false}>
+        <JSONTree data={data} hideRoot theme={theme} />
+      </ScrollView>
+
+      <RejectApproveButtons
+        onReject={onReject}
+        onApprove={onSign}
+        themeColor={themeColor}
+        rejectTitle={t('button-reject')}
+        approveTitle={t('button-sign')}
+      />
+    </SafeViewContainer>
+  );
+});
