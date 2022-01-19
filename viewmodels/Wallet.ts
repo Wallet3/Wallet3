@@ -78,7 +78,11 @@ export class Wallet {
 
   async newAccount() {
     const bip32 = utils.HDNode.fromExtendedKey(this.key.bip32Xpubkey);
-    const index = Math.max(this.accounts[this.accounts.length - 1].index, LINQ.from(this.removedIndexes).max()) + 1;
+    const index =
+      Math.max(
+        this.accounts[this.accounts.length - 1].index,
+        this.removedIndexes.length > 0 ? LINQ.from(this.removedIndexes).max() : 0
+      ) + 1;
 
     const node = bip32.derivePath(`${index}`);
     this.accounts.push(new Account(node.address, index));

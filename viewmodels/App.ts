@@ -40,6 +40,7 @@ export class AppVM {
       currentAccount: observable,
       newAccount: action,
       removeAccount: action,
+      allAccounts: computed,
     });
 
     reaction(
@@ -84,6 +85,8 @@ export class AppVM {
   }
 
   removeAccount(account: Account) {
+    if (this.allAccounts.length === 1) return;
+
     const isCurrentAccount = account.address === this.currentAccount?.address;
     const index = this.allAccounts.indexOf(account);
 
