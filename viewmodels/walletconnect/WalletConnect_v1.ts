@@ -63,6 +63,8 @@ export class WalletConnect_v1 extends EventEmitter {
       accounts: observable,
       setChains: action,
       setAccounts: action,
+      setLastUsedAccount: action,
+      setLastUsedChain: action,
     });
 
     if (uri) this.connect(uri);
@@ -119,6 +121,8 @@ export class WalletConnect_v1 extends EventEmitter {
     this.updateSession({ chainId });
     if (!this.store) return;
 
+    this.enabledChains = [chainId];
+    this.store.chains = [chainId];
     this.store.lastUsedChainId = `${chainId}`;
     this.store.lastUsedTimestamp = Date.now();
     this.store.save();

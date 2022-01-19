@@ -4,6 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Account } from '../../viewmodels/account/Account';
 import Avatar from '../../components/Avatar';
 import { Entypo } from '@expo/vector-icons';
+import { INetwork } from '../../common/Networks';
 import Image from 'react-native-expo-cached-image';
 import Networks from '../../viewmodels/Networks';
 import React from 'react';
@@ -19,17 +20,16 @@ import { thirdFontColor } from '../../constants/styles';
 interface Props {
   client: WalletConnect_v1;
   defaultAccount?: Account;
+  defaultNetwork?: INetwork;
 
   onDisconnect: () => void;
   onNetworkPress?: () => void;
   onAccountsPress?: () => void;
 }
 
-export default observer(({ client, onDisconnect, onNetworkPress, onAccountsPress, defaultAccount }: Props) => {
+export default observer(({ client, onDisconnect, onNetworkPress, onAccountsPress, defaultAccount, defaultNetwork }: Props) => {
   const { appMeta, enabledChains } = client || {};
   const { t } = i18n;
-
-  const defaultNetwork = client.findTargetNetwork({ networks: Networks.all, defaultNetwork: Networks.current });
 
   return (
     <SafeViewContainer>
@@ -112,8 +112,8 @@ export default observer(({ client, onDisconnect, onNetworkPress, onAccountsPress
           </ScrollView>
 
           {enabledChains.length === 1 ? (
-            <Text style={{ ...viewStyles.itemTxt, marginStart: 2 }} numberOfLines={1}>
-              {defaultNetwork.network}
+            <Text style={{ ...viewStyles.itemTxt, marginStart: 2, maxWidth: 100 }} numberOfLines={1}>
+              {defaultNetwork?.network?.split(' ')[0]}
             </Text>
           ) : undefined}
 

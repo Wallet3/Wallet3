@@ -34,8 +34,13 @@ interface Props {
 const DApp = observer(({ client, allAccounts, currentAccount, close }: Props) => {
   const swiper = useRef<Swiper>(null);
   const [panel, setPanel] = useState(1);
+
   const [defaultAccount, setDefaultAccount] = useState(
     allAccounts.find((a) => a.address === (client.lastUsedAccount || client.accounts[0]))
+  );
+
+  const [defaultNetwork, setDefaultNetwork] = useState(
+    client.findTargetNetwork({ networks: Networks.all, defaultNetwork: Networks.current })
   );
 
   const disconnect = () => {
@@ -51,6 +56,8 @@ const DApp = observer(({ client, allAccounts, currentAccount, close }: Props) =>
     } else {
       client.updateChains(chains, Networks.current);
     }
+
+    setDefaultNetwork(client.findTargetNetwork({ networks: Networks.all, defaultNetwork: Networks.current }));
   };
 
   const selectAccounts = (accounts: string[]) => {
@@ -83,13 +90,19 @@ const DApp = observer(({ client, allAccounts, currentAccount, close }: Props) =>
         <DAppInfo
           client={client}
           defaultAccount={defaultAccount}
+          defaultNetwork={defaultNetwork}
           onDisconnect={disconnect}
           onNetworkPress={() => swipeTo(1)}
           onAccountsPress={() => swipeTo(2)}
         />
 
         {panel === 1 ? (
-          <NetworkSelector networks={Networks.all} selectedChains={client.enabledChains} onDone={selectNetworks} />
+          <NetworkSelector
+            networks={Networks.all}
+            selectedChains={client.isMobileApp ? [Number(client.lastUsedChainId)] : client.enabledChains}
+            onDone={selectNetworks}
+            single={client.isMobileApp}
+          />
         ) : undefined}
 
         {panel === 2 ? (
