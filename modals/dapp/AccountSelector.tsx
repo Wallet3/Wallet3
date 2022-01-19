@@ -1,7 +1,6 @@
 import { Button, SafeViewContainer } from '../../components';
-import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
+import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
 import { borderColor, fontColor, secondaryFontColor, themeColor } from '../../constants/styles';
 
 import { Account } from '../../viewmodels/account/Account';
@@ -26,7 +25,7 @@ export default observer(
     const [selected, setSelected] = useState(selectedAccounts);
     const { t } = i18n;
 
-    const toggleNetwork = (account: string) => {
+    const toggleAddress = (account: string) => {
       if (single) {
         setSelected([account]);
         onDone([account]);
@@ -44,7 +43,7 @@ export default observer(
     const renderItem = ({ item }: { item: Account }) => {
       return (
         <TouchableOpacity
-          onPress={() => toggleNetwork(item.address)}
+          onPress={() => toggleAddress(item.address)}
           style={{
             flexDirection: 'row',
             padding: 4,

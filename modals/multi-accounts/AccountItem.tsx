@@ -24,6 +24,7 @@ export default observer(({ account, themeColor, onPress, onEdit, onRemove }: Pro
     account.nativeToken.balance.gt(0) ? utils.formatEther(account.nativeToken.balance).substring(0, 6) : '0'
   } ${account.nativeToken.symbol}`;
 
+  const { currentAccount } = App;
   const onActionPress = (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => {
     const { index } = e.nativeEvent;
 
@@ -60,7 +61,15 @@ export default observer(({ account, themeColor, onPress, onEdit, onRemove }: Pro
         )}
 
         <View style={{ flex: 1, marginStart: 12, justifyContent: 'space-between' }}>
-          <Text style={{ fontSize: 17, fontWeight: '500', marginBottom: 2 }} numberOfLines={1}>
+          <Text
+            style={{
+              fontSize: 17,
+              fontWeight: '500',
+              marginBottom: 2,
+              color: account.address === currentAccount?.address ? themeColor : undefined,
+            }}
+            numberOfLines={1}
+          >
             {account.displayName}
           </Text>
           <Text style={{ color: secondaryFontColor }}>{balance}</Text>
@@ -70,7 +79,7 @@ export default observer(({ account, themeColor, onPress, onEdit, onRemove }: Pro
           name="check"
           color={themeColor}
           size={20}
-          style={{ opacity: account.address === App.currentAccount?.address ? 1 : 0 }}
+          style={{ opacity: account.address === currentAccount?.address ? 1 : 0 }}
         />
       </TouchableOpacity>
     </ContextMenu>
