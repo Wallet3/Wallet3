@@ -5,9 +5,9 @@ import Networks from '../viewmodels/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Sign from './compositions/Sign';
 import Success from './views/Success';
-import Swiper from 'react-native-swiper';
 import { WCCallRequestRequest } from '../models/WCSession_v1';
 import { WalletConnect_v1 } from '../viewmodels/walletconnect/WalletConnect_v1';
+import i18n from '../i18n';
 import { observer } from 'mobx-react-lite';
 import { showMessage } from 'react-native-flash-message';
 import styles from './styles';
@@ -60,13 +60,13 @@ export default observer(({ request, client, close, biometricEnabled }: Props) =>
 
   const sign = async (pin?: string) => {
     if (!client.lastUsedAccount && !client.accounts.includes(App.currentAccount?.address ?? '')) {
-      showMessage({ message: `Current account rejects this dapp's request, please switch current account`, type: 'warning' });
+      showMessage({ message: i18n.t('msg-no-account-authorized-to-dapp'), type: 'warning' });
       return false;
     }
 
     const { wallet, accountIndex } = App.findWallet(client.lastUsedAccount || App.currentAccount!.address) || {};
     if (!wallet || accountIndex === undefined) {
-      showMessage({ message: 'Account not found, maybe it is removed', type: 'warning' });
+      showMessage({ message: i18n.t('msg-account-not-found'), type: 'warning' });
       return false;
     }
 

@@ -152,6 +152,8 @@
   "msg-chain-added": "{{name}} network added",
   "msg-chain-already-exists": "{{name}} already exists",
   "msg-token-added": "{{name}} added to your wallet",
+  "msg-account-not-found": "No account found, maybe it is removed",
+  "msg-no-account-authorized-to-dapp": "No account is authorized to current dapp",
   "button-next": "Next",
   "button-save": "Save",
   "button-done": "Done",

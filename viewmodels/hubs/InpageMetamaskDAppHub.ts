@@ -302,7 +302,10 @@ class InpageMetamaskDAppHub extends EventEmitter {
         readableInfo: ReadableInfo;
       }) => {
         const { wallet, accountIndex } = App.findWallet(dapp.lastUsedAccount) || {};
-        if (!wallet) return resolve({ error: { code: 4001, message: 'Invalid account' } });
+        if (!wallet) {
+          showMessage({ message: i18n.t('msg-account-not-found'), type: 'warning' });
+          return resolve({ error: { code: 4001, message: 'Invalid account' } });
+        }
 
         const { txHex, error } = await wallet.signTx({
           tx,
