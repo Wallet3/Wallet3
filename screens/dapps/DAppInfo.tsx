@@ -2,6 +2,7 @@ import { Button, SafeViewContainer } from '../../components';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { Account } from '../../viewmodels/account/Account';
+import Avatar from '../../components/Avatar';
 import { Entypo } from '@expo/vector-icons';
 import Image from 'react-native-expo-cached-image';
 import Networks from '../../viewmodels/Networks';
@@ -12,21 +13,22 @@ import dayjs from 'dayjs';
 import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
+import { observer } from 'mobx-react-lite';
 import { thirdFontColor } from '../../constants/styles';
 
 interface Props {
   client: WalletConnect_v1;
-  accounts: Account[];
+  defaultAccount?: Account;
+
   onDisconnect: () => void;
   onNetworkPress?: () => void;
   onAccountsPress?: () => void;
 }
 
-export default ({ client, accounts, onDisconnect, onNetworkPress, onAccountsPress }: Props) => {
+export default observer(({ client, onDisconnect, onNetworkPress, onAccountsPress, defaultAccount }: Props) => {
   const { appMeta, enabledChains } = client || {};
   const { t } = i18n;
 
-  const defaultAccount = accounts.find((a) => a.address === client.accounts[0]);
   const defaultNetwork = client.findTargetNetwork({ networks: Networks.all, defaultNetwork: Networks.current });
 
   return (
@@ -34,6 +36,7 @@ export default ({ client, accounts, onDisconnect, onNetworkPress, onAccountsPres
       <Text style={{ fontSize: 20, fontWeight: '600', marginBottom: 10, color: thirdFontColor }}>
         {t('connectedapps-modal-title')}
       </Text>
+
       <View style={viewStyles.infoItem}>
         <Text style={viewStyles.itemTxt}>DApp:</Text>
 
@@ -44,6 +47,7 @@ export default ({ client, accounts, onDisconnect, onNetworkPress, onAccountsPres
           </Text>
         </View>
       </View>
+
       <View style={viewStyles.infoItem}>
         <Text style={viewStyles.itemTxt}>{t('connectedapps-modal-description')}:</Text>
         <Text style={viewStyles.itemTxt} numberOfLines={1}>
@@ -70,14 +74,16 @@ export default ({ client, accounts, onDisconnect, onNetworkPress, onAccountsPres
         <Text style={viewStyles.itemTxt}>{t('connectedapps-modal-accounts')}:</Text>
 
         <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={onAccountsPress}>
-          {defaultAccount?.avatar ? (
-            <Image
-              source={{ uri: defaultAccount.avatar }}
-              style={{ width: 15, height: 15, borderRadius: 100, marginEnd: 4 }}
-            />
-          ) : undefined}
-          <Text style={viewStyles.itemTxt} numberOfLines={1}>
-            {defaultAccount?.ens.name || formatAddress(defaultAccount?.address ?? '', 7, 5)}
+          <Avatar
+            uri={defaultAccount?.avatar}
+            size={15}
+            emojiSize={8}
+            emoji={defaultAccount?.emojiAvatar}
+            backgroundColor={defaultAccount?.emojiColor}
+          />
+
+          <Text style={{ ...viewStyles.itemTxt, marginStart: 6 }} numberOfLines={1}>
+            {defaultAccount?.displayName}
           </Text>
           <Entypo name="chevron-right" style={viewStyles.arrow} />
         </TouchableOpacity>
@@ -120,7 +126,7 @@ export default ({ client, accounts, onDisconnect, onNetworkPress, onAccountsPres
       <Button title={t('connectedapps-modal-button-disconnect')} themeColor={'crimson'} onPress={onDisconnect} />
     </SafeViewContainer>
   );
-};
+});
 
 const viewStyles = StyleSheet.create({
   infoItem: {

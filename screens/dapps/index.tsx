@@ -24,71 +24,86 @@ import { observer } from 'mobx-react-lite';
 import { styles } from '../../constants/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
-const DApp = observer(
-  ({
-    client,
-    allAccounts,
-    currentAccount,
-    close,
-  }: {
-    client: WalletConnect_v1;
-    allAccounts: Account[];
-    close: Function;
-    currentAccount: Account;
-  }) => {
-    const swiper = useRef<Swiper>(null);
-    const [panel, setPanel] = useState(1);
+interface Props {
+  client: WalletConnect_v1;
+  allAccounts: Account[];
+  close: Function;
+  currentAccount: Account;
+}
 
-    const disconnect = () => {
-      client.killSession();
-      close();
-    };
+const DApp = observer(({ client, allAccounts, currentAccount, close }: Props) => {
+  const swiper = useRef<Swiper>(null);
+  const [panel, setPanel] = useState(1);
+  const [defaultAccount, setDefaultAccount] = useState(
+    allAccounts.find((a) => a.address === (client.lastUsedAccount || client.accounts[0]))
+  );
 
-    const selectNetworks = (chains: number[]) => {
-      swiper.current?.scrollTo(0);
+  const disconnect = () => {
+    client.killSession();
+    close();
+  };
+
+  const selectNetworks = (chains: number[]) => {
+    swiper.current?.scrollTo(0);
+
+    if (client.isMobileApp) {
+      client.setLastUsedChain(chains[0]);
+    } else {
       client.updateChains(chains, Networks.current);
-    };
+    }
+  };
 
-    const selectAccounts = (accounts: string[]) => {
-      swiper.current?.scrollTo(0);
+  const selectAccounts = (accounts: string[]) => {
+    swiper.current?.scrollTo(0);
+
+    if (client.isMobileApp) {
+      client.setLastUsedAccount(accounts[0]);
+    } else {
       client.updateAccounts(accounts, currentAccount.address);
-    };
+    }
 
-    const swipeTo = (index: number) => {
-      setPanel(index);
-      setTimeout(() => swiper.current?.scrollTo(1), 0);
-    };
+    setDefaultAccount(allAccounts.find((a) => a.address === (client.lastUsedAccount || client.accounts[0])));
+  };
 
-    return (
-      <SafeAreaProvider style={{ flex: 1, height: 429 }}>
-        <Swiper
-          ref={swiper}
-          showsPagination={false}
-          showsButtons={false}
-          scrollEnabled={false}
-          loop={false}
-          automaticallyAdjustContentInsets
-        >
-          <DAppInfo
-            client={client}
-            accounts={allAccounts}
-            onDisconnect={disconnect}
-            onNetworkPress={() => swipeTo(1)}
-            onAccountsPress={() => swipeTo(2)}
+  const swipeTo = (index: number) => {
+    setPanel(index);
+    setTimeout(() => swiper.current?.scrollTo(1), 0);
+  };
+
+  return (
+    <SafeAreaProvider style={{ flex: 1, height: 429 }}>
+      <Swiper
+        ref={swiper}
+        showsPagination={false}
+        showsButtons={false}
+        scrollEnabled={false}
+        loop={false}
+        automaticallyAdjustContentInsets
+      >
+        <DAppInfo
+          client={client}
+          defaultAccount={defaultAccount}
+          onDisconnect={disconnect}
+          onNetworkPress={() => swipeTo(1)}
+          onAccountsPress={() => swipeTo(2)}
+        />
+
+        {panel === 1 ? (
+          <NetworkSelector networks={Networks.all} selectedChains={client.enabledChains} onDone={selectNetworks} />
+        ) : undefined}
+
+        {panel === 2 ? (
+          <AccountSelector
+            single={client.isMobileApp}
+            accounts={App.allAccounts}
+            selectedAccounts={client.isMobileApp ? [client.lastUsedAccount] : client.accounts}
+            onDone={selectAccounts}
           />
-
-          {panel === 1 ? (
-            <NetworkSelector networks={Networks.all} selectedChains={client.enabledChains} onDone={selectNetworks} />
-          ) : undefined}
-
-          {panel === 2 ? (
-            <AccountSelector accounts={App.allAccounts} selectedAccounts={client.accounts} onDone={selectAccounts} />
-          ) : undefined}
-        </Swiper>
-      </SafeAreaProvider>
-    );
-  }
-);
+        ) : undefined}
+      </Swiper>
+    </SafeAreaProvider>
+  );
+});
 
 const DAppItem = observer(({ item, openApp }: { item: WalletConnect_v1; openApp: (item: WalletConnect_v1) => void }) => {
   const { appMeta } = item;
@@ -177,12 +192,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
       <Portal>
         <Modalize adjustToContentHeight ref={ref} disableScrollIfPossible modalStyle={styles.modalStyle}>
           {selectedClient ? (
-            <DApp
-              client={selectedClient}
-              allAccounts={App.allAccounts}
-              close={close}
-              currentAccount={App.currentAccount!}
-            />
+            <DApp client={selectedClient} allAccounts={App.allAccounts} close={close} currentAccount={App.currentAccount!} />
           ) : undefined}
         </Modalize>
       </Portal>
