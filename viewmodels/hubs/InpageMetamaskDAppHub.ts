@@ -66,6 +66,7 @@ export interface InpageDAppSignRequest {
   typedData?: any;
   approve: (pin?: string) => Promise<boolean>;
   reject: () => void;
+  account: Account;
 }
 
 export interface InpageDAppTxRequest {
@@ -236,6 +237,12 @@ class InpageMetamaskDAppHub extends EventEmitter {
     const dapp = await this.getDApp(origin);
     if (!dapp) return;
 
+    const { wallet, account, accountIndex } = App.findWallet(dapp.lastUsedAccount) || {};
+    if (!wallet || !account || accountIndex === undefined) {
+      showMessage({ message: i18n.t('msg-account-not-found'), type: 'warning' });
+      return { error: { code: 4001, message: 'Invalid account' } };
+    }
+
     return new Promise((resolve) => {
       let msg: string | undefined = undefined;
       let typedData: any;
@@ -243,9 +250,6 @@ class InpageMetamaskDAppHub extends EventEmitter {
       let typedVersion = SignTypedDataVersion.V4;
 
       const approve = async (pin?: string) => {
-        const { wallet, accountIndex } = App.findWallet(dapp.lastUsedAccount) || {};
-        if (!wallet || accountIndex === undefined) return resolve({ error: { code: 4001, message: 'Invalid account' } });
-
         const signed =
           type === 'typedData'
             ? await wallet.signTypedData({ typedData, pin, accountIndex, version: typedVersion })
@@ -287,6 +291,7 @@ class InpageMetamaskDAppHub extends EventEmitter {
         approve,
         reject,
         chainId: Number(dapp.lastUsedChainId),
+        account,
       } as InpageDAppSignRequest);
     });
   }

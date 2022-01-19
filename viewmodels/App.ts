@@ -51,11 +51,14 @@ export class AppVM {
     );
   }
 
-  findWallet(account: string) {
-    const wallet = this.wallets.find((w) => w.accounts.find((a) => a.address === account));
+  findWallet(accountAddress: string) {
+    const wallet = this.wallets.find((w) => w.accounts.find((a) => a.address === accountAddress));
     if (!wallet) return;
 
-    return { wallet, accountIndex: wallet.accounts.find((a) => a.address === account)!.index };
+    const account = wallet.accounts.find((a) => a.address === accountAddress);
+    if (!account) return;
+
+    return { wallet, accountIndex: account.index, account };
   }
 
   findAccount(account: string) {

@@ -1,7 +1,7 @@
 {
   "land-welcome-import-wallet": "Import a wallet",
   "land-welcome-create-wallet": "Create a wallet",
-  "land-import-placeholder": "Enter your recovery phrase here",
+  "land-import-placeholder": "Enter recovery phrase here",
   "land-import-derivation-path": "Derivation Path",
   "land-import-button-sync": "Sync with Wallet 3 Desktop",
   "land-create-security-tips": "Security Tips",

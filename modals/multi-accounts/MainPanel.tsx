@@ -19,9 +19,10 @@ import { utils } from 'ethers';
 interface Props {
   onRemoveAccount?: (account: Account) => void;
   onEditAccount?: (account: Account) => void;
+  onImportWallet?: () => void;
 }
 
-export default observer(({ onRemoveAccount, onEditAccount }: Props) => {
+export default observer(({ onRemoveAccount, onEditAccount, onImportWallet }: Props) => {
   const { t } = i18n;
   const themeColor = Networks.current.color;
   const list = useRef<FlatList>(null);
@@ -80,7 +81,7 @@ export default observer(({ onRemoveAccount, onEditAccount }: Props) => {
         <Text style={{ marginStart: 10, color: themeColor, fontWeight: '600', fontSize: 15 }}>Create a new account</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.option}>
+      <TouchableOpacity style={styles.option} onPress={onImportWallet}>
         <Ionicons name="key-outline" size={19} color={themeColor} style={{ paddingHorizontal: 1.5 }} />
         <Text style={{ marginStart: 10, color: themeColor, fontWeight: '600', fontSize: 15 }}>Import an existing wallet</Text>
       </TouchableOpacity>

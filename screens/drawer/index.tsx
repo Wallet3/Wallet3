@@ -61,12 +61,21 @@ const Drawer = observer((props: DrawerProps) => {
         }}
       >
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-          <Avatar size={50} uri={currentAccount?.avatar} backgroundColor={currentAccount?.emojiColor} emoji={currentAccount?.emojiAvatar} emojiSize={23} />
+          <Avatar
+            size={50}
+            uri={currentAccount?.avatar}
+            backgroundColor={currentAccount?.emojiColor}
+            emoji={currentAccount?.emojiAvatar}
+            emojiSize={23}
+          />
         </TouchableOpacity>
 
         <TouchableOpacity
           style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 8 }}
-          onPress={() => PubSub.publish('openAccountsMenu')}
+          onPress={() => {
+            navigation.dispatch(DrawerActions.closeDrawer());
+            PubSub.publish('openAccountsMenu');
+          }}
         >
           <Text
             numberOfLines={1}

@@ -319,9 +319,3 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
 });
-
-const debugWebView = `window.onerror = function(message, sourcefile, lineno, colno, error) {
-  alert("Message: " + message + " - Source: " + sourcefile + " Line: " + lineno + ":" + colno);
-  return true;
-};
-true;`;

@@ -4,6 +4,7 @@ import { Account } from '../../viewmodels/account/Account';
 import App from '../../viewmodels/App';
 import { Confirm } from '../views/Confirm';
 import EditAccount from './EditAccount';
+import ImportWallet from './ImportWallet';
 import MainPanel from './MainPanel';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
@@ -47,6 +48,16 @@ export default observer(() => {
     setTimeout(() => setType(''), 500);
   };
 
+  const onImportWallet = () => {
+    setType('importWallet');
+    setTimeout(() => swiper.current?.scrollTo(1), 0);
+  };
+
+  const onImportWalletDone = () => {
+    swiper.current?.scrollBy(-1);
+    setTimeout(() => setType(''), 500);
+  };
+
   return (
     <SafeAreaProvider style={rootStyles.safeArea}>
       <Swiper
@@ -57,7 +68,8 @@ export default observer(() => {
         loop={false}
         automaticallyAdjustContentInsets
       >
-        <MainPanel onRemoveAccount={onRemoveAccount} onEditAccount={editAccount} />
+        <MainPanel onRemoveAccount={onRemoveAccount} onEditAccount={editAccount} onImportWallet={onImportWallet} />
+
         {type === 'removeAccount' && (
           <Confirm
             confirmButtonTitle={t('button-confirm')}
@@ -72,6 +84,8 @@ export default observer(() => {
         )}
 
         {type === 'editAccount' && <EditAccount account={account} onDone={editAccountDone} />}
+
+        {type === 'importWallet' && <ImportWallet onCancel={onImportWalletDone} onDone={onImportWalletDone} />}
       </Swiper>
     </SafeAreaProvider>
   );
