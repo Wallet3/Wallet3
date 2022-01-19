@@ -1,4 +1,4 @@
-const emojis = [
+export const emojis = [
   '🐭',
   '🐹',
   '🐰',

@@ -17,6 +17,7 @@ export class Account {
   ens: ENSViewer;
   emojiAvatar = '';
   emojiColor = '';
+  nickname = '';
 
   get nativeToken() {
     return this.tokens.nativeToken;
@@ -34,6 +35,17 @@ export class Account {
     return CurrencyViewmodel.usdToToken(this.tokens.balanceUSD);
   }
 
+  setAvatar(objs: { emoji?: string; color?: string; name?: string }) {
+    this.emojiAvatar = objs.emoji || this.emojiAvatar;
+    this.emojiColor = objs.color || this.emojiColor;
+    this.nickname = objs.name || this.nickname;
+
+    AsyncStorage.setItem(
+      `${this.address}-local-avatar`,
+      JSON.stringify({ emoji: this.emojiAvatar, color: this.emojiColor, nickname: this.nickname })
+    );
+  }
+
   constructor(address: string, index: number) {
     // if (index === 5) address = '0xb8c2C29ee19D8307cb7255e1Cd9CbDE883A267d5';
     this.address = address;
@@ -48,21 +60,24 @@ export class Account {
       balance: computed,
       emojiAvatar: observable,
       emojiColor: observable,
+      nickname: observable,
+      setAvatar: action,
     });
 
     AsyncStorage.getItem(`${address}-local-avatar`).then((v) => {
-      let { emojiAvatar, emojiColor } = JSON.parse(v || '{}');
+      let { emoji, color, nickname } = JSON.parse(v || '{}');
 
-      if (!emojiAvatar || !emojiColor) {
-        emojiAvatar = genEmoji();
-        emojiColor = genColor();
+      if (!emoji || !color) {
+        emoji = genEmoji();
+        color = genColor();
 
-        AsyncStorage.setItem(`${address}-local-avatar`, JSON.stringify({ emojiAvatar, emojiColor }));
+        AsyncStorage.setItem(`${address}-local-avatar`, JSON.stringify({ emoji, color }));
       }
 
       runInAction(() => {
-        this.emojiAvatar = emojiAvatar;
-        this.emojiColor = emojiColor;
+        this.emojiAvatar = emoji;
+        this.emojiColor = color;
+        this.nickname = nickname || '';
       });
     });
   }

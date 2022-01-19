@@ -36,7 +36,7 @@ export default ({ uri, backgroundColor, emoji, size, emojiSize, style }: Props) 
         justifyContent: 'center',
       }}
     >
-      <Text style={{ textAlign: 'center', marginStart: 2, marginTop: 2, fontSize: emojiSize }}>{emoji}</Text>
+      <Text style={{ textAlign: 'center', marginStart: 2, marginTop: 1.5, fontSize: emojiSize }}>{emoji}</Text>
     </View>
   );
 };
