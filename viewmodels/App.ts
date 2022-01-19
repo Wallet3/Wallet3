@@ -39,6 +39,7 @@ export class AppVM {
       switchAccount: action,
       currentAccount: observable,
       newAccount: action,
+      removeAccount: action,
     });
 
     reaction(
@@ -67,7 +68,7 @@ export class AppVM {
 
   switchAccount(address: string, force = false) {
     if (this.currentAccount?.address === address) return;
-    
+
     let target = this.findAccount(address);
     if (!target && !force) return;
 
@@ -80,6 +81,11 @@ export class AppVM {
     clearTimeout(this.refreshTimer);
     this.refreshTimer = setTimeout(() => this.refreshAccount(), 1000 * 20);
     AsyncStorage.setItem('lastUsedAccount', target.address);
+  }
+
+  removeAccount(account: Account) {
+    this.findWallet(account.address)?.wallet.removeAccount(account);
+    this.switchAccount(this.allAccounts[0].address);
   }
 
   async refreshAccount() {

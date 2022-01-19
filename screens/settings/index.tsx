@@ -193,7 +193,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
           <SafeAreaProvider style={{ height: 270 }}>
             <Confirm
               onConfirm={() => App.reset()}
-              buttonText={t('settings-modal-button-confirm')}
+              confirmButtonTitle={t('settings-modal-button-confirm')}
               desc={t('settings-modal-erase')}
               themeColor="crimson"
               style={{ flex: 1 }}

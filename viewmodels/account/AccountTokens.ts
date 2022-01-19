@@ -39,7 +39,7 @@ export class AccountTokens {
     this.loadingTokens = true;
 
     const [native, userTokens, userBalance] = await Promise.all([
-      this.nativeToken,
+      this.createNativeToken(),
       TokensMan.loadUserTokens(current.chainId, this.owner),
       Debank.getBalance(this.owner, current.comm_id),
     ]);

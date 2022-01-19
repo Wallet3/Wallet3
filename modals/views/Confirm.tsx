@@ -8,13 +8,23 @@ interface Props {
   onConfirm: () => void;
   onCancel?: () => void;
   desc: string;
-  buttonText: string;
+  confirmButtonTitle: string;
+  cancelButtonTitle?: string;
   themeColor: string;
   style?: StyleProp<ViewStyle>;
   cancelable?: boolean;
 }
 
-export function Confirm({ onConfirm, onCancel, desc, buttonText, themeColor, style, cancelable }: Props) {
+export function Confirm({
+  onConfirm,
+  onCancel,
+  desc,
+  confirmButtonTitle,
+  cancelButtonTitle,
+  themeColor,
+  style,
+  cancelable,
+}: Props) {
   return (
     <SafeViewContainer style={style}>
       <View style={{ flex: 1 }} />
@@ -26,9 +36,11 @@ export function Confirm({ onConfirm, onCancel, desc, buttonText, themeColor, sty
 
       <View style={{ flex: 1 }} />
 
-      <Button title={buttonText} themeColor={themeColor} onLongPress={onConfirm} />
+      <Button title={confirmButtonTitle} themeColor={themeColor} onLongPress={onConfirm} />
 
-      {cancelable && <Button title="Cancel" reverse themeColor={themeColor} onPress={onCancel} style={{ marginTop: 12 }} />}
+      {cancelable && (
+        <Button title={cancelButtonTitle} reverse themeColor={themeColor} onPress={onCancel} style={{ marginTop: 12 }} />
+      )}
     </SafeViewContainer>
   );
 }

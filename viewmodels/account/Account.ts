@@ -66,8 +66,4 @@ export class Account {
       });
     });
   }
-
-  // async fetchBasicInfo() {
-  //   return this.ens.fetchBasicInfo();
-  // }
 }

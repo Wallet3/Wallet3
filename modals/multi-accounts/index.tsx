@@ -42,12 +42,13 @@ export default observer(() => {
         <MainPanel onRemoveAccount={onRemoveAccount} />
         {type === 'remove' && (
           <Confirm
-            buttonText={t('button-confirm')}
+            confirmButtonTitle={t('button-confirm')}
+            cancelButtonTitle={t('button-cancel')}
             onConfirm={removeAccount}
             onCancel={cancelRemoveAccount}
             style={{ flex: 1 }}
             themeColor="crimson"
-            desc={t('modal-multi-accounts-remove-account-desc', { addr: formatAddress(account?.address ?? '') })}
+            desc={t('modal-multi-accounts-remove-account-desc', { addr: account?.displayName })}
             cancelable
           />
         )}
