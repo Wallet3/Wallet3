@@ -191,8 +191,14 @@ class InpageMetamaskDAppHub extends EventEmitter {
     const dapp = await this.getDApp(origin);
 
     if (dapp) {
-      const account = App.allAccounts.find((a) => a.address === dapp.lastUsedAccount); // Ensure last used account is still available
-      return [account?.address ?? App.allAccounts[0].address];
+      const account = App.allAccounts.find((a) => a.address === dapp.lastUsedAccount); // Ensure last used account is still available)
+
+      if (account) {
+        return [account.address];
+      } else {
+        this.apps.delete(origin);
+        await dapp.remove();
+      }
     }
 
     return new Promise<string[] | any>((resolve) => {

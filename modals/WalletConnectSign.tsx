@@ -100,7 +100,7 @@ export default observer(({ request, client, close, biometricEnabled }: Props) =>
           sign={sign}
           typedData={typedData}
           biometricEnabled
-          account={App.findAccount(client.lastUsedAccount) || App.currentAccount!}
+          account={App.findAccount(client.lastUsedAccount)!}
         />
       )}
     </SafeAreaProvider>

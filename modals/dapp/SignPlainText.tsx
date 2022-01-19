@@ -41,7 +41,7 @@ export default observer(({ msg, themeColor, onReject, onSign, account }: Props) 
       >
         <Text style={{ fontSize: 21, color: themeColor, fontWeight: '500' }}>{t('modal-message-signing')}</Text>
 
-        <AccountIndicator account={account} />
+        {account ? <AccountIndicator account={account} /> : undefined}
       </View>
 
       <ScrollView
