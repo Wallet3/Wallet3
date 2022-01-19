@@ -38,7 +38,7 @@ export class Account {
   setAvatar(objs: { emoji?: string; color?: string; nickname?: string }) {
     this.emojiAvatar = objs.emoji || this.emojiAvatar;
     this.emojiColor = objs.color || this.emojiColor;
-    this.nickname = objs.nickname || this.nickname;
+    this.nickname = objs.nickname ?? this.nickname;
 
     AsyncStorage.setItem(
       `${this.address}-local-avatar`,

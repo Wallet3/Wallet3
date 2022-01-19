@@ -7,6 +7,7 @@ import { Account } from '../../viewmodels/account/Account';
 import Avatar from '../../components/Avatar';
 import { FlatGrid } from 'react-native-super-grid';
 import { Ionicons } from '@expo/vector-icons';
+import Networks from '../../viewmodels/Networks';
 import { observer } from 'mobx-react-lite';
 
 interface Props {
@@ -24,6 +25,7 @@ export default observer(({ account, onDone }: Props) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedColor, setSelectedColor] = useState(account?.emojiColor);
   const [selectedEmoji, setSelectedEmoji] = useState(account?.emojiAvatar);
+  const themeColor = Networks.current.color;
 
   const done = () => {
     account?.setAvatar({ emoji: selectedEmoji, color: selectedColor, nickname: name });
@@ -45,7 +47,7 @@ export default observer(({ account, onDone }: Props) => {
         <TextBox
           title=""
           placeholder={`Account ${account?.index} | ${account?.displayName}`}
-          defaultValue={account?.ens.name}
+          defaultValue={account?.nickname || account?.ens.name}
           onChangeText={(txt) => setName(txt)}
           style={{ flex: 1 }}
         />
@@ -97,7 +99,7 @@ export default observer(({ account, onDone }: Props) => {
         />
       </View>
 
-      <Button title="OK" txtStyle={{ textTransform: 'uppercase' }} onPress={done} />
+      <Button title="OK" txtStyle={{ textTransform: 'uppercase' }} themeColor={themeColor} onPress={done} />
     </SafeViewContainer>
   );
 });
