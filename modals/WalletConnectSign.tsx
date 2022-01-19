@@ -66,7 +66,7 @@ export default observer(({ request, client, close, biometricEnabled }: Props) =>
     if (!wallet || accountIndex === undefined) return false;
 
     const signed = typedData
-      ? await wallet.signTypedData({ typedData, pin })
+      ? await wallet.signTypedData({ typedData, pin, accountIndex })
       : await wallet.signMessage({ msg: msg!, pin, accountIndex });
 
     if (signed) {

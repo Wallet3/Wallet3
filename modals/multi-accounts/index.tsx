@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 
 import { Account } from '../../viewmodels/account/Account';
+import App from '../../viewmodels/App';
 import { Confirm } from '../views/Confirm';
 import MainPanel from './MainPanel';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -22,7 +23,12 @@ export default observer(() => {
     setTimeout(() => swiper.current?.scrollTo(1), 0);
   };
 
-  const removeAccount = () => {};
+  const removeAccount = () => {
+    if (!account) return;
+    App.removeAccount(account);
+    swiper.current?.scrollBy(-1);
+    setAccount(undefined);
+  };
 
   const cancelRemoveAccount = () => {
     swiper.current?.scrollBy(-1);

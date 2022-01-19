@@ -5,7 +5,8 @@ import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 
 interface Props {
-  onConfirm: () => void;
+  onLongConfirm?: () => void;
+  onConfirm?: () => void;
   onCancel?: () => void;
   desc: string;
   confirmButtonTitle: string;
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export function Confirm({
+  onLongConfirm,
   onConfirm,
   onCancel,
   desc,
@@ -36,7 +38,7 @@ export function Confirm({
 
       <View style={{ flex: 1 }} />
 
-      <Button title={confirmButtonTitle} themeColor={themeColor} onLongPress={onConfirm} />
+      <Button title={confirmButtonTitle} themeColor={themeColor} onPress={onConfirm} onLongPress={onLongConfirm} />
 
       {cancelable && (
         <Button title={cancelButtonTitle} reverse themeColor={themeColor} onPress={onCancel} style={{ marginTop: 12 }} />

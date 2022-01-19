@@ -7,6 +7,7 @@ import { Account } from './account/Account';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Authentication from './Authentication';
 import Key from '../models/Key';
+import LINQ from 'linq';
 import Networks from './Networks';
 import { ReadableInfo } from '../models/Transaction';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
@@ -31,7 +32,7 @@ type SignMessageRequest = {
 };
 
 type SignTypedDataRequest = {
-  accountIndex?: number;
+  accountIndex: number;
   typedData: any;
   pin?: string;
   version?: SignTypedDataVersion;
@@ -40,6 +41,7 @@ type SignTypedDataRequest = {
 export class Wallet {
   private key: Key;
   private refreshTimer!: NodeJS.Timer;
+  private removedIndexes: number[] = [];
 
   accounts: Account[] = [];
 
@@ -56,14 +58,14 @@ export class Wallet {
   }
 
   async init() {
-    const removedIndexes: number[] = JSON.parse((await AsyncStorage.getItem(`${this.key.id}-removed-indexes`)) || '[]');
+    this.removedIndexes = JSON.parse((await AsyncStorage.getItem(`${this.key.id}-removed-indexes`)) || '[]');
     const count = Number((await AsyncStorage.getItem(`${this.key.id}-address-count`)) || 1);
     const bip32 = utils.HDNode.fromExtendedKey(this.key.bip32Xpubkey);
 
     const accounts: Account[] = [];
 
     for (let i = this.key.basePathIndex; i < this.key.basePathIndex + count; i++) {
-      if (removedIndexes.includes[i]) continue;
+      if (this.removedIndexes.includes(i)) continue;
 
       const accountNode = bip32.derivePath(`${i}`);
       accounts.push(new Account(accountNode.address, i));
@@ -76,7 +78,7 @@ export class Wallet {
 
   async newAccount() {
     const bip32 = utils.HDNode.fromExtendedKey(this.key.bip32Xpubkey);
-    const index = this.accounts[this.accounts.length - 1].index + 1;
+    const index = Math.max(this.accounts[this.accounts.length - 1].index, LINQ.from(this.removedIndexes).max()) + 1;
 
     const node = bip32.derivePath(`${index}`);
     this.accounts.push(new Account(node.address, index));
@@ -89,9 +91,8 @@ export class Wallet {
     if (index === -1) return;
     this.accounts.splice(index, 1);
 
-    const removedIndexes: number[] = JSON.parse((await AsyncStorage.getItem(`${this.key.id}-removed-indexes`)) || '[]');
-    removedIndexes.push(account.index);
-    await AsyncStorage.setItem(`${this.key.id}-removed-indexes`, JSON.stringify(removedIndexes));
+    this.removedIndexes.push(account.index);
+    await AsyncStorage.setItem(`${this.key.id}-removed-indexes`, JSON.stringify(this.removedIndexes));
   }
 
   private async unlockPrivateKey({ pin, accountIndex }: { pin?: string; accountIndex?: number }) {

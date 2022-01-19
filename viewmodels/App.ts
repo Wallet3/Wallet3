@@ -54,7 +54,7 @@ export class AppVM {
     const wallet = this.wallets.find((w) => w.accounts.find((a) => a.address === account));
     if (!wallet) return;
 
-    return { wallet, accountIndex: wallet.accounts.findIndex((a) => a.address === account) };
+    return { wallet, accountIndex: wallet.accounts.find((a) => a.address === account)!.index };
   }
 
   findAccount(account: string) {
@@ -84,8 +84,12 @@ export class AppVM {
   }
 
   removeAccount(account: Account) {
+    const isCurrentAccount = account.address === this.currentAccount?.address;
+    const index = this.allAccounts.indexOf(account);
+
     this.findWallet(account.address)?.wallet.removeAccount(account);
-    this.switchAccount(this.allAccounts[0].address);
+
+    if (isCurrentAccount) this.switchAccount(this.allAccounts[Math.max(0, index - 1)].address);
   }
 
   async refreshAccount() {
