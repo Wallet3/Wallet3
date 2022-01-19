@@ -40,7 +40,7 @@ export default ({ value, onChangeText, title, style, placeholder, defaultValue }
         ...((style as any) || {}),
       }}
     >
-      <Text style={{ fontSize: 18, color: secondaryFontColor, marginEnd: 12 }}>{title}</Text>
+      <Text style={{ fontSize: 18, color: secondaryFontColor, marginEnd: title ? 12 : 0 }}>{title}</Text>
       <TextInput
         ref={addrRef}
         style={{ fontSize: 20, flex: 1, color: fontColor }}

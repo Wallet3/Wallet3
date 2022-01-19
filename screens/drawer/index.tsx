@@ -5,6 +5,7 @@ import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem } from
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
+import Avatar from '../../components/Avatar';
 import { DrawerActions } from '@react-navigation/core';
 import { INetwork } from '../../common/Networks';
 import Networks from '../../viewmodels/Networks';
@@ -60,32 +61,7 @@ const Drawer = observer((props: DrawerProps) => {
         }}
       >
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-          {currentAccount?.avatar ? (
-            <Image
-              source={currentAccount?.avatar ? { uri: currentAccount?.avatar } : icons[current.symbol.toLowerCase()]}
-              style={{
-                width: 50,
-                height: 50,
-                borderRadius: 25,
-                backgroundColor: current.color,
-              }}
-            />
-          ) : (
-            <View
-              style={{
-                width: 50,
-                height: 50,
-                borderRadius: 25,
-                backgroundColor: currentAccount?.emojiColor,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Text style={{ textAlign: 'center', marginStart: 2, marginTop: 2, fontSize: 23 }}>
-                {currentAccount?.emojiAvatar}
-              </Text>
-            </View>
-          )}
+          <Avatar size={50} uri={currentAccount?.avatar} backgroundColor={currentAccount?.emojiColor} emoji={currentAccount?.emojiAvatar} emojiSize={23} />
         </TouchableOpacity>
 
         <TouchableOpacity

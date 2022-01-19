@@ -6,6 +6,7 @@ import { SafeViewContainer, Separator } from '../../components';
 
 import { Account } from '../../viewmodels/account/Account';
 import App from '../../viewmodels/App';
+import Avatar from '../../components/Avatar';
 import CachedImage from 'react-native-expo-cached-image';
 import { observer } from 'mobx-react-lite';
 import { secondaryFontColor } from '../../constants/styles';
@@ -52,13 +53,13 @@ export default observer(({ account, themeColor, onPress, onEdit, onRemove }: Pro
         onPress={() => onPress?.(account)}
         style={{ flexDirection: 'row', paddingVertical: 8, alignItems: 'center', paddingHorizontal: 16 }}
       >
-        {account.avatar ? (
-          <CachedImage source={{ uri: account.avatar }} style={styles.avatar} />
-        ) : (
-          <View style={{ ...styles.avatar, backgroundColor: account.emojiColor }}>
-            <Text style={{ fontSize: 17, textAlign: 'center', marginTop: 2, marginStart: 1.5 }}>{account.emojiAvatar}</Text>
-          </View>
-        )}
+        <Avatar
+          size={42}
+          uri={account.avatar}
+          emojiSize={17}
+          emoji={account.emojiAvatar}
+          backgroundColor={account.emojiColor}
+        />
 
         <View style={{ flex: 1, marginStart: 12, justifyContent: 'space-between' }}>
           <Text

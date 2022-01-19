@@ -3,6 +3,7 @@ import React, { useRef, useState } from 'react';
 import { Account } from '../../viewmodels/account/Account';
 import App from '../../viewmodels/App';
 import { Confirm } from '../views/Confirm';
+import EditAccount from './EditAccount';
 import MainPanel from './MainPanel';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
@@ -18,7 +19,7 @@ export default observer(() => {
   const [account, setAccount] = useState<Account>();
 
   const onRemoveAccount = (account: Account) => {
-    setType('remove');
+    setType('removeAccount');
     setAccount(account);
     setTimeout(() => swiper.current?.scrollTo(1), 0);
   };
@@ -35,6 +36,12 @@ export default observer(() => {
     setTimeout(() => setType(''), 500);
   };
 
+  const editAccount = (account: Account) => {
+    setType('editAccount');
+    setAccount(account);
+    setTimeout(() => swiper.current?.scrollTo(1), 0);
+  };
+
   return (
     <SafeAreaProvider style={rootStyles.safeArea}>
       <Swiper
@@ -45,8 +52,8 @@ export default observer(() => {
         loop={false}
         automaticallyAdjustContentInsets
       >
-        <MainPanel onRemoveAccount={onRemoveAccount} />
-        {type === 'remove' && (
+        <MainPanel onRemoveAccount={onRemoveAccount} onEditAccount={editAccount} />
+        {type === 'removeAccount' && (
           <Confirm
             confirmButtonTitle={t('button-confirm')}
             cancelButtonTitle={t('button-cancel')}
@@ -58,6 +65,8 @@ export default observer(() => {
             cancelable
           />
         )}
+
+        {type === 'editAccount' && <EditAccount account={account} />}
       </Swiper>
     </SafeAreaProvider>
   );

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { borderColor, fontColor, secondaryFontColor, themeColor } from '../../constants/styles';
 
 import { Account } from '../../viewmodels/account/Account';
+import Avatar from '../../components/Avatar';
 import { Feather } from '@expo/vector-icons';
 import Image from 'react-native-expo-cached-image';
 import { formatAddress } from '../../utils/formatter';
@@ -59,23 +60,14 @@ export default observer(
             style={{ opacity: selected.includes(item.address) ? 1 : 0, marginBottom: -1 }}
           />
 
-          {item.avatar ? (
-            <Image source={{ uri: item.avatar }} style={{ width: 16, height: 16, marginStart: 12, borderRadius: 100 }} />
-          ) : (
-            <View
-              style={{
-                width: 32,
-                height: 32,
-                backgroundColor: item.emojiColor,
-                borderRadius: 50,
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginStart: 12,
-              }}
-            >
-              <Text style={{ marginStart: 1, marginTop: 1, fontSize: 12 }}>{item.emojiAvatar}</Text>
-            </View>
-          )}
+          <Avatar
+            size={32}
+            uri={item.avatar}
+            emoji={item.emojiAvatar}
+            backgroundColor={item.emojiColor}
+            emojiSize={12}
+            style={{ marginStart: 12 }}
+          />
 
           <Text
             style={{

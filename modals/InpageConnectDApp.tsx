@@ -94,7 +94,12 @@ const ConnectPivot = observer(
         ) : undefined}
 
         {panel === 2 ? (
-          <AccountSelector accounts={App.allAccounts} selectedAccounts={[account.address]} onDone={onSelectAccountsDone} />
+          <AccountSelector
+            single
+            accounts={App.allAccounts}
+            selectedAccounts={[account.address]}
+            onDone={onSelectAccountsDone}
+          />
         ) : undefined}
       </Swiper>
     );
