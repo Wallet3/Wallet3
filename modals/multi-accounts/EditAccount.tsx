@@ -11,7 +11,6 @@ import { observer } from 'mobx-react-lite';
 
 interface Props {
   account?: Account;
-  themeColor?: string;
   onDone?: () => void;
 }
 
@@ -27,6 +26,7 @@ export default observer(({ account, onDone }: Props) => {
   const [selectedEmoji, setSelectedEmoji] = useState(account?.emojiAvatar);
 
   const done = () => {
+    account?.setAvatar({ emoji: selectedEmoji, color: selectedColor, nickname: name });
     onDone?.();
   };
 

@@ -42,6 +42,11 @@ export default observer(() => {
     setTimeout(() => swiper.current?.scrollTo(1), 0);
   };
 
+  const editAccountDone = () => {
+    swiper.current?.scrollBy(-1);
+    setTimeout(() => setType(''), 500);
+  };
+
   return (
     <SafeAreaProvider style={rootStyles.safeArea}>
       <Swiper
@@ -66,7 +71,7 @@ export default observer(() => {
           />
         )}
 
-        {type === 'editAccount' && <EditAccount account={account} />}
+        {type === 'editAccount' && <EditAccount account={account} onDone={editAccountDone} />}
       </Swiper>
     </SafeAreaProvider>
   );

@@ -24,7 +24,7 @@ export class Account {
   }
 
   get displayName() {
-    return this.ens.name || formatAddress(this.address, 7, 5);
+    return this.nickname || this.ens.name || formatAddress(this.address, 7, 5);
   }
 
   get avatar() {
@@ -35,10 +35,10 @@ export class Account {
     return CurrencyViewmodel.usdToToken(this.tokens.balanceUSD);
   }
 
-  setAvatar(objs: { emoji?: string; color?: string; name?: string }) {
+  setAvatar(objs: { emoji?: string; color?: string; nickname?: string }) {
     this.emojiAvatar = objs.emoji || this.emojiAvatar;
     this.emojiColor = objs.color || this.emojiColor;
-    this.nickname = objs.name || this.nickname;
+    this.nickname = objs.nickname || this.nickname;
 
     AsyncStorage.setItem(
       `${this.address}-local-avatar`,
