@@ -57,7 +57,7 @@ class WalletConnectV1ClientHub extends EventEmitter {
       const { current } = Networks;
 
       const clients = this.clients.filter((c) => !c.isMobileApp).filter((c) => c.enabledChains.includes(current.chainId));
-      clients.forEach((c) => c.updateSession({ chainId: current.chainId }));
+      clients.forEach((c) => c.setLastUsedChain(current.chainId));
     });
 
     // Notify dapps to update current account
@@ -66,7 +66,7 @@ class WalletConnectV1ClientHub extends EventEmitter {
       if (!currentAccount) return;
 
       const clients = this.clients.filter((c) => c!.isMobileApp).filter((c) => c.accounts.includes(currentAccount.address));
-      clients.forEach((c) => c.updateSession({ accounts: [currentAccount.address] }));
+      clients.forEach((c) => c.setLastUsedAccount(currentAccount.address));
     });
 
     // Restore sessions
@@ -90,7 +90,6 @@ class WalletConnectV1ClientHub extends EventEmitter {
       client.setAccounts([App.currentAccount!.address!]);
 
       client.once('sessionApproved', () => {
-        // runInAction(() => (this.clients = this.clients.concat(client)));
         runInAction(() => this.clients.push(client));
 
         const store = new WCSession_v1();

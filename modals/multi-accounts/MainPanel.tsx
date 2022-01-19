@@ -42,6 +42,9 @@ export default observer(({ onRemoveAccount, onEditAccount }: Props) => {
   };
 
   useEffect(() => {
+    if (App.allAccounts.length < 6 || !App.currentAccount) return;
+    if (App.allAccounts.indexOf(App.currentAccount) < 6) return;
+
     const timer = setTimeout(() => {
       try {
         list.current?.scrollToIndex({ index: App.allAccounts.indexOf(App.currentAccount!), animated: true });

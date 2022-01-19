@@ -9,6 +9,7 @@ import Swiper from 'react-native-swiper';
 import { WCCallRequestRequest } from '../models/WCSession_v1';
 import { WalletConnect_v1 } from '../viewmodels/walletconnect/WalletConnect_v1';
 import { observer } from 'mobx-react-lite';
+import { showMessage } from 'react-native-flash-message';
 import styles from './styles';
 import { utils } from 'ethers';
 
@@ -58,12 +59,18 @@ export default observer(({ request, client, close, biometricEnabled }: Props) =>
   };
 
   const sign = async (pin?: string) => {
-    if (!client.accounts.includes(App.currentAccount?.address ?? '')) {
+    if (!client.lastUsedAccount && !client.accounts.includes(App.currentAccount?.address ?? '')) {
+      showMessage({ message: `Current account rejects this dapp's request, please switch current account`, type: 'warning' });
       return false;
     }
 
-    const { wallet, accountIndex } = App.findWallet(App.currentAccount!.address) || {};
-    if (!wallet || accountIndex === undefined) return false;
+    const { wallet, accountIndex } = App.findWallet(client.lastUsedAccount || App.currentAccount!.address) || {};
+    if (!wallet || accountIndex === undefined) {
+      showMessage({ message: 'Account not found, maybe it is removed', type: 'warning' });
+      return false;
+    }
+
+    console.log({ pin, accountIndex });
 
     const signed = typedData
       ? await wallet.signTypedData({ typedData, pin, accountIndex })

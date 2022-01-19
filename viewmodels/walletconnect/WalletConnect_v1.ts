@@ -88,7 +88,7 @@ export class WalletConnect_v1 extends EventEmitter {
     return this;
   }
 
-  updateSession(session: { chainId?: number; accounts?: string[] }) {
+  private updateSession(session: { chainId?: number; accounts?: string[] }) {
     this.client?.updateSession(session as any);
   }
 
@@ -120,6 +120,15 @@ export class WalletConnect_v1 extends EventEmitter {
     if (!this.store) return;
 
     this.store.lastUsedChainId = `${chainId}`;
+    this.store.lastUsedTimestamp = Date.now();
+    this.store.save();
+  }
+
+  setLastUsedAccount(account: string) {
+    this.updateSession({ accounts: [account] });
+    if (!this.store) return;
+
+    this.store.lastUsedAccount = account;
     this.store.lastUsedTimestamp = Date.now();
     this.store.save();
   }
