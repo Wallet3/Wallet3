@@ -16,12 +16,13 @@ interface Props {
 }
 
 export default observer(({ account, onDone }: Props) => {
-  const [name, setName] = useState('');
   const [colors] = useState(
     [account?.emojiColor].concat(
       new Array(2 * Math.floor((Dimensions.get('window').width - 32) / (52 + 5)) - 1).fill(0).map(() => genColor())
     )
   );
+
+  const [name, setName] = useState<string>();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedColor, setSelectedColor] = useState(account?.emojiColor);
   const [selectedEmoji, setSelectedEmoji] = useState(account?.emojiAvatar);
