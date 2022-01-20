@@ -1,8 +1,8 @@
 import numeral from 'numeral';
 
-export function formatAddress(value: string, headLength = 10, tailLength = 8) {
+export function formatAddress(value: string, headLength = 10, tailLength = 8, dots = '......') {
   return value?.length > headLength + tailLength
-    ? `${value.substring(0, headLength)}......${value.substring(value.length - tailLength)}`
+    ? `${value.substring(0, headLength)}${dots}${value.substring(value.length - tailLength)}`
     : value;
 }
 

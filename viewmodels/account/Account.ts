@@ -28,7 +28,7 @@ export class Account {
   }
 
   get miniDisplayName() {
-    return this.nickname || this.ens.name || formatAddress(this.address, 5, 3);
+    return this.nickname || this.ens.name || formatAddress(this.address, 5, 3, '...');
   }
 
   get avatar() {
