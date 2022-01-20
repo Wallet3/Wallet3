@@ -1,9 +1,12 @@
 import { Coin, SafeViewContainer, Skeleton } from '../../components';
 import React, { useRef } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { fontColor, thirdFontColor } from '../../constants/styles';
 
+import { Account } from '../../viewmodels/account/Account';
 import AnimateNumber from 'react-native-animate-number';
 import Authentication from '../../viewmodels/Authentication';
+import Avatar from '../../components/Avatar';
 import Currency from '../../viewmodels/settings/Currency';
 import GasReview from '../views/GasReview';
 import Image from 'react-native-expo-cached-image';
@@ -13,7 +16,6 @@ import { RawTransactionRequest } from '../../viewmodels/transferring/RawTransact
 import RejectApproveButtons from '../components/RejectApproveButtons';
 import Swiper from 'react-native-swiper';
 import TxException from '../components/TxException';
-import { fontColor } from '../../constants/styles';
 import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
@@ -26,14 +28,26 @@ interface Props {
   onReject?: () => void;
   onApprove?: () => void;
   onGasPress?: () => void;
+  account: Account;
 }
 
-const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app }: Props) => {
+const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account }: Props) => {
   const { network } = vm;
   const { t } = i18n;
 
   return (
     <SafeViewContainer>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', paddingEnd: 4 }}>
+        <Avatar
+          size={18}
+          emoji={account?.emojiAvatar}
+          emojiSize={8}
+          backgroundColor={account?.emojiColor}
+          uri={account?.avatar}
+        />
+        <Text style={{ marginStart: 8, color: `${thirdFontColor}`, fontSize: 13 }}>{account?.miniDisplayName}</Text>
+      </View>
+
       <View style={styles.reviewItemsContainer}>
         <View style={styles.reviewItem}>
           <Text style={styles.reviewItemTitle}>DApp</Text>
@@ -188,13 +202,9 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app }: Props) 
         onApprove={onApprove}
         themeColor={network?.color}
         rejectTitle={t('button-reject')}
-        approveTitle={t(
-          Authentication.biometricEnabled && Authentication.biometricsSupported
-            ? 'modal-review-button-hold-to-send'
-            : 'button-send'
-        )}
+        approveTitle={t(Authentication.biometricType === 'faceid' ? 'modal-review-button-hold-to-send' : 'button-send')}
         disabledApprove={!vm.isValidParams}
-        longConfirm={Authentication.biometricEnabled && Authentication.biometricsSupported ? true : false}
+        longConfirm={Authentication.biometricType === 'faceid'}
       />
     </SafeViewContainer>
   );

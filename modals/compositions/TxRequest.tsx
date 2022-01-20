@@ -37,7 +37,7 @@ export default ({ themeColor, vm, app, onApprove, onReject, biometricEnabled }: 
       loop={false}
       automaticallyAdjustContentInsets
     >
-      <RequestReview vm={vm} app={app} onReject={onReject} onApprove={approve} />
+      <RequestReview vm={vm} app={app} onReject={onReject} onApprove={approve} account={vm.account} />
       <Passpad themeColor={themeColor} onCodeEntered={(c) => onApprove(c)} onCancel={() => swiper.current?.scrollTo(0)} />
     </Swiper>
   );

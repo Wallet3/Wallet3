@@ -50,7 +50,7 @@ export default observer(
     const { t } = i18n;
 
     return (
-      <SafeViewContainer style={{ flex: 1, alignItems: 'center' }}>
+      <SafeViewContainer style={{ flex: 1, alignItems: 'center', paddingTop: 12 }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
           <TouchableOpacity
             style={{ paddingVertical: 6, flexDirection: 'row', alignItems: 'center' }}

@@ -27,6 +27,10 @@ export class Account {
     return this.nickname || this.ens.name || formatAddress(this.address, 7, 5);
   }
 
+  get miniDisplayName() {
+    return this.nickname || this.ens.name || formatAddress(this.address, 5, 3);
+  }
+
   get avatar() {
     return this.ens.avatar;
   }

@@ -59,7 +59,7 @@ export default observer(({ param, chainId, approve, reject, close, account, app 
   };
 
   return (
-    <SafeAreaProvider style={{ ...styles.safeArea, height: 480 }}>
+    <SafeAreaProvider style={{ ...styles.safeArea, height: 500 }}>
       {verified ? (
         <Success />
       ) : (

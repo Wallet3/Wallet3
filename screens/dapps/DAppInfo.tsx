@@ -83,7 +83,7 @@ export default observer(({ client, onDisconnect, onNetworkPress, onAccountsPress
           />
 
           <Text style={{ ...viewStyles.itemTxt, marginStart: 6 }} numberOfLines={1}>
-            {defaultAccount?.displayName}
+            {defaultAccount?.miniDisplayName}
           </Text>
           <Entypo name="chevron-right" style={viewStyles.arrow} />
         </TouchableOpacity>
