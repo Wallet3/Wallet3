@@ -38,7 +38,8 @@ class WalletConnectV1ClientHub extends EventEmitter {
         session.id = e.id;
         session.session = e.session;
         session.lastUsedTimestamp = e.lastUsedTimestamp;
-        session.lastUsedAccount = '';
+        session.lastUsedAccount = App.currentAccount?.address || '';
+        session.lastUsedChainId = `${Networks.current?.chainId || 1}`;
         await session.save();
         return session;
       })
@@ -49,30 +50,6 @@ class WalletConnectV1ClientHub extends EventEmitter {
 
   async init() {
     await this.upgrade();
-
-    // Notify dapps to switch current network
-    // reaction(
-    //   () => Networks.current,
-    //   () => {
-    //     this.clients
-    //       .filter((c) => !c.isMobileApp)
-    //       .filter((c) => c.enabledChains.includes(Networks.current.chainId))
-    //       .forEach((c) => c.setLastUsedChain(Networks.current.chainId));
-    //   }
-    // );
-
-    // Notify dapps to update current account
-    // reaction(
-    //   () => App.currentAccount,
-    //   () => {
-    //     if (!App.currentAccount) return;
-
-    //     this.clients
-    //       .filter((c) => c!.isMobileApp)
-    //       .filter((c) => c.accounts.includes(App.currentAccount!.address))
-    //       .forEach((c) => c.setLastUsedAccount(App.currentAccount!.address));
-    //   }
-    // );
 
     // Restore sessions
     const sessions = await Database.wcV1Sessions.find();
