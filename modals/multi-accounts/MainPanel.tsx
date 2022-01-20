@@ -49,11 +49,12 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDon
   useEffect(() => {
     const { allAccounts } = App;
     if (allAccounts.length < 5 || !App.currentAccount) return;
-    if (allAccounts.indexOf(App.currentAccount) < 5) return;
+
+    const index = allAccounts.indexOf(App.currentAccount);
+    if (index < 5) return;
 
     const timer = setTimeout(() => {
       try {
-        const index = App.allAccounts.indexOf(App.currentAccount!);
         list.current?.scrollToIndex({ index, animated: true });
       } catch (error) {}
     }, Math.min(allAccounts.length * 100, 1000));
