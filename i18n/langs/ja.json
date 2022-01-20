@@ -163,5 +163,7 @@
   "button-reject": "拒否",
   "button-sign": "サイン",
   "button-send": "送金",
-  "button-request": "リクエスト"
+  "button-request": "リクエスト",
+  "button-edit": "エディット",
+  "button-remove": "削除"
 }

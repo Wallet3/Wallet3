@@ -8,6 +8,7 @@ import { Account } from '../../viewmodels/account/Account';
 import App from '../../viewmodels/App';
 import Avatar from '../../components/Avatar';
 import CachedImage from 'react-native-expo-cached-image';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { secondaryFontColor } from '../../constants/styles';
 import { utils } from 'ethers';
@@ -26,6 +27,8 @@ export default observer(({ account, themeColor, onPress, onEdit, onRemove }: Pro
   } ${account.nativeToken.symbol}`;
 
   const { currentAccount } = App;
+  const { t } = i18n;
+
   const onActionPress = (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => {
     const { index } = e.nativeEvent;
 
@@ -42,10 +45,10 @@ export default observer(({ account, themeColor, onPress, onEdit, onRemove }: Pro
   const actions =
     App.allAccounts.length > 1
       ? [
-          { title: 'Edit', systemIcon: 'square.and.pencil' },
-          { title: 'Remove', destructive: true, systemIcon: 'trash.slash' },
+          { title: t('button-edit'), systemIcon: 'square.and.pencil' },
+          { title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' },
         ]
-      : [{ title: 'Edit', systemIcon: 'square.and.pencil' }];
+      : [{ title: t('button-edit'), systemIcon: 'square.and.pencil' }];
 
   return (
     <ContextMenu onPress={onActionPress} actions={actions}>

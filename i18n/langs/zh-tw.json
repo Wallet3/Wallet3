@@ -163,5 +163,7 @@
   "button-reject": "拒絕",
   "button-sign": "簽名",
   "button-send": "發送",
-  "button-request": "收款"
+  "button-request": "收款",
+  "button-edit": "編輯",
+  "button-remove": "移除"
 }
