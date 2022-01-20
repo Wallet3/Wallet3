@@ -271,7 +271,7 @@ export default forwardRef(
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
               {appAccount && (
                 <Animatable.View animation={'fadeInUp'}>
-                  <TouchableOpacity style={{ paddingHorizontal: 8, marginBottom: -1 }} onPress={() => openAccountsModal()}>
+                  <TouchableOpacity style={{ paddingHorizontal: 8, marginBottom: -0.5 }} onPress={() => openAccountsModal()}>
                     <Avatar
                       size={25}
                       uri={appAccount?.avatar}
