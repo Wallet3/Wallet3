@@ -76,11 +76,16 @@ class WalletConnectV1ClientHub extends EventEmitter {
 
     // Restore sessions
     const sessions = await Database.wcV1Sessions.find();
-    runInAction(() => {
-      this.clients = sessions.map((sessionStore) =>
-        new WalletConnect_v1().connectSession(sessionStore.session).setStore(sessionStore)
-      );
+    const cs = await Promise.all(
+      sessions.map(async (sessionStore) => {
+        const c = new WalletConnect_v1().connectSession(sessionStore.session).setStore(sessionStore);
+        await sessionStore.save();
+        return c;
+      })
+    );
 
+    runInAction(() => {
+      this.clients = cs;
       this.clients.forEach((client) => this.handleLifecycle(client));
       this.clients.filter((c) => c.lastUsedTimestamp < Date.now() - 1000 * 60 * 60 * 24 * 60).forEach((c) => c.killSession());
     });
@@ -92,23 +97,20 @@ class WalletConnectV1ClientHub extends EventEmitter {
 
     if (version === '1') {
       const client = new WalletConnect_v1(uri);
-      client.setLastUsedAccount(App.currentAccount!.address);
+      const store = new WCSession_v1();
+      store.id = Date.now();
+      client.setStore(store);
 
       client.once('sessionApproved', () => {
         runInAction(() => this.clients.push(client));
 
-        const store = new WCSession_v1();
-        store.id = Date.now();
         store.session = client.session;
         store.lastUsedTimestamp = Date.now();
 
         store.isMobile = extra?.fromMobile ?? false;
         store.hostname = extra?.hostname ?? '';
-        store.lastUsedAccount = client.lastUsedAccount;
-        store.lastUsedChainId = client.lastUsedChainId;
 
         store.save();
-        client.setStore(store);
 
         if (extra?.fromMobile) setTimeout(() => this.emit('mobileAppConnected', client), 100);
       });

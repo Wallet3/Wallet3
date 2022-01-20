@@ -28,10 +28,9 @@ interface Props {
   client: WalletConnect_v1;
   allAccounts: Account[];
   close: Function;
-  currentAccount: Account;
 }
 
-const DApp = observer(({ client, allAccounts, currentAccount, close }: Props) => {
+const DApp = observer(({ client, allAccounts, close }: Props) => {
   const swiper = useRef<Swiper>(null);
   const [panel, setPanel] = useState(1);
 
@@ -45,13 +44,13 @@ const DApp = observer(({ client, allAccounts, currentAccount, close }: Props) =>
 
   const selectNetworks = (chains: number[]) => {
     swiper.current?.scrollTo(0);
-    client.setLastUsedChain(chains[0]);
+    client.setLastUsedChain(chains[0], true);
     setDefaultNetwork(client.activeNetwork);
   };
 
   const selectAccounts = (accounts: string[]) => {
     swiper.current?.scrollTo(0);
-    client.setLastUsedAccount(accounts[0]);
+    client.setLastUsedAccount(accounts[0], true);
     setDefaultAccount(client.activeAccount!);
   };
 
@@ -175,9 +174,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
 
       <Portal>
         <Modalize adjustToContentHeight ref={ref} disableScrollIfPossible modalStyle={styles.modalStyle}>
-          {selectedClient ? (
-            <DApp client={selectedClient} allAccounts={App.allAccounts} close={close} currentAccount={App.currentAccount!} />
-          ) : undefined}
+          {selectedClient ? <DApp client={selectedClient} allAccounts={App.allAccounts} close={close} /> : undefined}
         </Modalize>
       </Portal>
     </View>

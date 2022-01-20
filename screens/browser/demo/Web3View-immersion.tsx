@@ -152,7 +152,7 @@ export default forwardRef(
 
     const updateDAppNetworkConfig = (network: INetwork) => {
       if (dapp?.isWalletConnect) {
-        WalletConnectV1ClientHub.find(dapp.origin)?.setLastUsedChain(network.chainId);
+        WalletConnectV1ClientHub.find(dapp.origin)?.setLastUsedChain(network.chainId, true);
         updateDAppState({ ...dapp!, lastUsedChainId: `${network.chainId}` });
       } else {
         InpageMetamaskDAppHub.setDAppChainId(dapp?.origin!, network.chainId);

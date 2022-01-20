@@ -33,7 +33,7 @@ export class TransactionRequest extends RawTransactionRequest {
     const [param, requestChainId] = request.params as [WCCallRequest_eth_sendTransaction, number?];
 
     if (requestChainId) {
-      client.setLastUsedChain(requestChainId);
+      client.setLastUsedChain(requestChainId, true);
     }
 
     const account = client.activeAccount!;

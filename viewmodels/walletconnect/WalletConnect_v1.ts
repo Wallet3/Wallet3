@@ -105,26 +105,26 @@ export class WalletConnect_v1 extends EventEmitter {
   }
 
   private updateSession(session: { chainId?: number; accounts?: string[] }) {
+    if (!this.client.connected) return;
     this.client?.updateSession(session as any);
   }
 
-  setLastUsedChain(chainId: number) {
+  setLastUsedChain(chainId: number, persistent = false) {
     this.updateSession({ chainId });
     if (!this.store) return;
 
-    
     this.store.lastUsedChainId = `${chainId}`;
-    this.store.lastUsedTimestamp = Date.now();
-    this.store.save();
+
+    if (persistent) this.store.save();
   }
 
-  setLastUsedAccount(account: string) {
+  setLastUsedAccount(account: string, persistent = false) {
     this.updateSession({ accounts: [account] });
     if (!this.store) return;
 
     this.store.lastUsedAccount = account;
-    this.store.lastUsedTimestamp = Date.now();
-    this.store.save();
+
+    if (persistent) this.store.save();
   }
 
   setStore(store: WCSession_v1) {
@@ -152,9 +152,8 @@ export class WalletConnect_v1 extends EventEmitter {
     this.appMeta = peerMeta;
 
     if (this.store) {
-      this.store.lastUsedChainId = `${chainId}`;
+      if (Number.isInteger(chainId)) this.store.lastUsedChainId = `${chainId}`;
       this.store.lastUsedTimestamp = Date.now();
-      this.store.save();
     }
 
     this.emit('sessionRequest');

@@ -81,7 +81,7 @@ interface ConnectDAppProps {
   extra?: { fromMobile?: boolean; hostname?: string };
 }
 
-const ConnectDApp = observer(({ client, close, extra }: ConnectDAppProps) => {
+const ConnectDApp = observer(({ client, close }: ConnectDAppProps) => {
   const swiper = useRef<Swiper>(null);
   const [panel, setPanel] = useState(1);
 
