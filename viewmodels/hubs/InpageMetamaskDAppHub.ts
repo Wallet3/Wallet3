@@ -462,6 +462,24 @@ class InpageMetamaskDAppHub extends EventEmitter {
     });
   }
 
+  async setDAppAccount(origin: string, account: string) {
+    const dapp = await this.getDApp(origin);
+    if (!dapp) return;
+
+    dapp.lastUsedAccount = account;
+    dapp.save();
+
+    this.emit('appAccountUpdated_metamask', {
+      origin,
+      name: 'metamask-provider',
+      data: {
+        method: NOTIFICATION_NAMES.accountsChanged,
+        jsonrpc: '2.0',
+        params: [account],
+      },
+    });
+  }
+
   reset() {
     this.apps.clear();
     return this.dbTable.clear();

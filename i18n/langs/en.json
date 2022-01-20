@@ -82,7 +82,7 @@
   "profile-more-records": "More Records",
   "modal-multi-accounts-title": "Accounts",
   "modal-multi-accounts-remove-account-desc": "Are you sure to remove this account?\n{{addr}}",
-  "modal-accounts-selector-title": "Select accounts",
+  "modal-accounts-selector-title": "Select a account",
   "modal-networks-selector-title": "Select networks",
   "modal-networks-switch": "Switch current network",
   "modal-contacts-recent": "Recent contacts",

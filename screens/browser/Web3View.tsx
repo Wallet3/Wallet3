@@ -3,9 +3,14 @@ import * as Linking from 'expo-linking';
 
 import { Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import React, { forwardRef, useEffect, useState } from 'react';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { WebView, WebViewMessageEvent, WebViewNavigation, WebViewProps } from 'react-native-webview';
 
+import { Account } from '../../viewmodels/account/Account';
+import AccountSelector from '../../modals/dapp/AccountSelector';
+import App from '../../viewmodels/App';
+import Avatar from '../../components/Avatar';
 import { BlurView } from 'expo-blur';
 import DeviceInfo from 'react-native-device-info';
 import GetPageMetadata from './scripts/Metadata';
@@ -24,7 +29,6 @@ import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import hub from '../../viewmodels/hubs/InpageMetamaskDAppHub';
 import i18n from '../../i18n';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface PageMetadata {
   icon: string;
@@ -56,10 +60,11 @@ export default forwardRef(
     const { onMetadataChange, onGoHome, expanded, onShrinkRequest, onExpandRequest, onBookmarksPress } = props;
     const [canGoBack, setCanGoBack] = useState(false);
     const [canGoForward, setCanGoForward] = useState(false);
-    const [appName] = useState(`Wallet3/${DeviceInfo.getVersion() ?? '0.0.0'}`);
+    const [appName] = useState(`Wallet3/${DeviceInfo.getVersion() || '0.0.0'}`);
 
     const [pageMetadata, setPageMetadata] = useState<PageMetadata>();
     const [appNetwork, setAppNetwork] = useState<INetwork>();
+    const [appAccount, setAppAccount] = useState<Account>();
     const [dapp, setDApp] = useState<ConnectedBrowserDApp | undefined>();
     const [webUrl, setWebUrl] = useState('');
     const { bottom: safeAreaBottom } = useSafeAreaInsets();
@@ -67,8 +72,8 @@ export default forwardRef(
     const updateDAppState = (dapp?: ConnectedBrowserDApp) => {
       setDApp(dapp);
 
-      const appNetworkId = dapp?.lastUsedChainId ?? -1;
-      setAppNetwork(Networks.find(appNetworkId));
+      setAppNetwork(Networks.find(dapp?.lastUsedChainId ?? -1));
+      setAppAccount(App.findAccount(dapp?.lastUsedAccount ?? ''));
     };
 
     const updateGlobalState = () => {
@@ -100,11 +105,14 @@ export default forwardRef(
     };
 
     useEffect(() => {
-      hub.on('appChainUpdated_metamask', async (appState) => {
+      const notifyWebView = async (appState) => {
         const webview = (ref as any).current as WebView;
         webview?.injectJavaScript(JS_POST_MESSAGE_TO_PROVIDER(appState));
         updateDAppState(await hub.getDApp(appState.origin));
-      });
+      };
+
+      hub.on('appChainUpdated_metamask', notifyWebView);
+      hub.on('appAccountUpdated_metamask', notifyWebView);
 
       hub.on('dappConnected', (app) => updateDAppState(app));
 
@@ -166,10 +174,24 @@ export default forwardRef(
       } else {
         hub.setDAppChainId(dapp?.origin!, network.chainId);
       }
+
+      closeNetworksModal();
     };
 
-    const tintColor = '#000000c0'; // `${appNetwork?.color ?? '#000000'}`;
+    const updateDAppAccountConfig = (account: string) => {
+      if (dapp?.isWalletConnect) {
+        WalletConnectV1ClientHub.find(dapp.origin)?.setLastUsedAccount(account, true);
+        updateDAppState({ ...dapp!, lastUsedAccount: account });
+      } else {
+        hub.setDAppAccount(dapp?.origin!, account);
+      }
+
+      closeAccountsModal();
+    };
+
+    const tintColor = '#000000c0';
     const { ref: networksRef, open: openNetworksModal, close: closeNetworksModal } = useModalize();
+    const { ref: accountsRef, open: openAccountsModal, close: closeAccountsModal } = useModalize();
 
     return (
       <View style={{ flex: 1, position: 'relative' }}>
@@ -246,12 +268,26 @@ export default forwardRef(
               </TouchableOpacity>
             </View>
 
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
+              {appAccount && (
+                <Animatable.View animation={'fadeInUp'}>
+                  <TouchableOpacity style={{ paddingHorizontal: 8, marginBottom: -1 }} onPress={() => openAccountsModal()}>
+                    <Avatar
+                      size={25}
+                      uri={appAccount?.avatar}
+                      emoji={appAccount?.emojiAvatar}
+                      emojiSize={11}
+                      backgroundColor={appAccount?.emojiColor}
+                    />
+                  </TouchableOpacity>
+                </Animatable.View>
+              )}
+
               {dapp && appNetwork ? (
                 <Animatable.View animation={'fadeInUp'} style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <TouchableOpacity
                     onPress={() => openNetworksModal()}
-                    style={{ paddingStart: 16, paddingEnd: 8, position: 'relative' }}
+                    style={{ paddingStart: 16, paddingEnd: 10, position: 'relative' }}
                   >
                     {generateNetworkIcon({
                       chainId: appNetwork.chainId,
@@ -283,11 +319,27 @@ export default forwardRef(
               title={t('modal-dapp-switch-network', { app: pageMetadata?.title?.split(' ')?.[0] ?? '' })}
               networks={Networks.all}
               selectedNetwork={appNetwork}
-              onNetworkPress={(network) => {
-                closeNetworksModal();
-                updateDAppNetworkConfig(network);
-              }}
+              onNetworkPress={(network) => updateDAppNetworkConfig(network)}
             />
+          </Modalize>
+
+          <Modalize
+            ref={accountsRef}
+            adjustToContentHeight
+            disableScrollIfPossible
+            modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
+            scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+          >
+            <SafeAreaProvider>
+              <AccountSelector
+                single
+                accounts={App.allAccounts}
+                selectedAccounts={appAccount ? [appAccount.address] : []}
+                onDone={([account]) => updateDAppAccountConfig(account)}
+                style={{ padding: 16, height: 430 }}
+                expanded
+              />
+            </SafeAreaProvider>
           </Modalize>
         </Portal>
       </View>
