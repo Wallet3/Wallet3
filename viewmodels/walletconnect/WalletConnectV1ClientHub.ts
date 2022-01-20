@@ -79,7 +79,7 @@ class WalletConnectV1ClientHub extends EventEmitter {
     const cs = await Promise.all(
       sessions.map(async (sessionStore) => {
         const c = new WalletConnect_v1().connectSession(sessionStore.session).setStore(sessionStore);
-        await sessionStore.save();
+        await sessionStore.save(); // Don't remove this code until v1.5
         return c;
       })
     );
