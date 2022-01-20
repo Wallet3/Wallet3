@@ -20,9 +20,10 @@ interface Props {
   onRemoveAccount?: (account: Account) => void;
   onEditAccount?: (account: Account) => void;
   onImportWallet?: () => void;
+  onDone?: () => void;
 }
 
-export default observer(({ onRemoveAccount, onEditAccount, onImportWallet }: Props) => {
+export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDone }: Props) => {
   const { t } = i18n;
   const themeColor = Networks.current.color;
   const list = useRef<FlatList>(null);
@@ -31,9 +32,12 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet }: Pro
     <AccountItem
       account={item}
       themeColor={themeColor}
-      onPress={() => App.switchAccount(item.address)}
       onEdit={onEditAccount}
       onRemove={onRemoveAccount}
+      onPress={() => {
+        App.switchAccount(item.address);
+        onDone?.();
+      }}
     />
   );
 
@@ -43,8 +47,8 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet }: Pro
   };
 
   useEffect(() => {
-    if (App.allAccounts.length < 6 || !App.currentAccount) return;
-    if (App.allAccounts.indexOf(App.currentAccount) < 6) return;
+    if (App.allAccounts.length < 5 || !App.currentAccount) return;
+    if (App.allAccounts.indexOf(App.currentAccount) < 5) return;
 
     const timer = setTimeout(() => {
       try {

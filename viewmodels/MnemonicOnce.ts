@@ -10,7 +10,7 @@ import { langToWordlist } from '../utils/mnemonic';
 import { makeAutoObservable } from 'mobx';
 import { xpubkeyFromHDNode } from '../utils/bip32';
 
-class MnemonicOnce {
+export class MnemonicOnce {
   secret = '';
   derivationPath = DEFAULT_DERIVATION_PATH;
   derivationIndex = 0;
@@ -58,6 +58,8 @@ class MnemonicOnce {
     await key.save();
 
     this.clean();
+
+    return key;
   }
 
   clean() {

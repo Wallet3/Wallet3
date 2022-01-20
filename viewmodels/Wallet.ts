@@ -57,6 +57,14 @@ export class Wallet {
     });
   }
 
+  isSameKey(key: Key) {
+    return (
+      this.key.bip32Xpubkey === key.bip32Xpubkey &&
+      this.key.basePath === key.basePath &&
+      this.key.basePathIndex === key.basePathIndex
+    );
+  }
+
   async init() {
     this.removedIndexes = JSON.parse((await AsyncStorage.getItem(`${this.key.id}-removed-indexes`)) || '[]');
     const count = Number((await AsyncStorage.getItem(`${this.key.id}-address-count`)) || 1);

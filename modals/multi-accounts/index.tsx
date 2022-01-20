@@ -13,7 +13,7 @@ import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import rootStyles from '../styles';
 
-export default observer(() => {
+export default observer(({ close }: { close?: Function }) => {
   const { t } = i18n;
   const swiper = useRef<Swiper>(null);
   const [type, setType] = useState('');
@@ -68,7 +68,12 @@ export default observer(() => {
         loop={false}
         automaticallyAdjustContentInsets
       >
-        <MainPanel onRemoveAccount={onRemoveAccount} onEditAccount={editAccount} onImportWallet={onImportWallet} />
+        <MainPanel
+          onRemoveAccount={onRemoveAccount}
+          onEditAccount={editAccount}
+          onImportWallet={onImportWallet}
+          onDone={() => close?.()}
+        />
 
         {type === 'removeAccount' && (
           <Confirm

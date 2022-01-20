@@ -272,7 +272,7 @@ const GlobalAccountsMenuModal = () => {
       modalStyle={styles.modalStyle}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
-      <AccountsMenu />
+      <AccountsMenu close={close} />
     </Modalize>
   );
 };

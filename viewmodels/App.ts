@@ -8,6 +8,8 @@ import Coingecko from '../common/apis/Coingecko';
 import Contacts from './customs/Contacts';
 import Database from '../models/Database';
 import InpageMetamaskDAppHub from './hubs/InpageMetamaskDAppHub';
+import Key from '../models/Key';
+import LINQ from 'linq';
 import LinkHub from './hubs/LinkHub';
 import Networks from './Networks';
 import TxHub from './hubs/TxHub';
@@ -27,7 +29,9 @@ export class AppVM {
   }
 
   get allAccounts() {
-    return this.wallets.map((wallet) => wallet.accounts).flat();
+    return LINQ.from(this.wallets.map((wallet) => wallet.accounts).flat())
+      .distinct((a) => a.address)
+      .toArray();
   }
 
   constructor() {
@@ -49,6 +53,13 @@ export class AppVM {
         this.currentAccount?.tokens.refreshOverview();
       }
     );
+  }
+
+  async addWallet(key: Key) {
+    if (this.wallets.find((w) => w.isSameKey(key))) return;
+
+    const wallet = await new Wallet(key).init();
+    runInAction(() => this.wallets.push(wallet));
   }
 
   findWallet(accountAddress: string) {

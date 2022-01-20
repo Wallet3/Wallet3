@@ -1,15 +1,35 @@
-import { Button, SafeViewContainer } from '../../components';
+import { Button, Loader, SafeViewContainer } from '../../components';
+import React, { useEffect, useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import { borderColor, secondaryFontColor } from '../../constants/styles';
 
+import App from '../../viewmodels/App';
+import { MnemonicOnce } from '../../viewmodels/MnemonicOnce';
 import Networks from '../../viewmodels/Networks';
-import React from 'react';
 import RejectApproveButtons from '../components/RejectApproveButtons';
 import i18n from '../../i18n';
 
 export default ({ onDone, onCancel }: { onDone?: () => void; onCancel?: () => void }) => {
   const { t } = i18n;
   const themeColor = Networks.current.color;
+  const [mnemonic] = useState(new MnemonicOnce());
+  const [secret, setSecret] = useState('');
+  const [verified, setVerified] = useState(false);
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => setVerified(mnemonic.setMnemonic(secret)), [secret]);
+
+  const importWallet = async () => {
+    if (!verified) return;
+
+    setBusy(true);
+
+    setTimeout(async () => {
+      await App.addWallet(await mnemonic.save());
+      setBusy(false);
+      onDone?.();
+    }, 0);
+  };
 
   return (
     <SafeViewContainer style={{ padding: 16 }}>
@@ -17,7 +37,7 @@ export default ({ onDone, onCancel }: { onDone?: () => void; onCancel?: () => vo
         multiline={true}
         numberOfLines={5}
         placeholder={t('land-import-placeholder')}
-        // onChangeText={(txt) => setMnemonic(txt)}
+        onChangeText={(txt) => setSecret(txt)}
         autoCapitalize="none"
         keyboardType="default"
         secureTextEntry={true}
@@ -48,14 +68,22 @@ export default ({ onDone, onCancel }: { onDone?: () => void; onCancel?: () => vo
         <TextInput
           style={{ fontSize: 17, color: themeColor }}
           defaultValue={`m/44'/60'/0'/0/0`}
-          //   onChangeText={(txt) => MnemonicOnce.setDerivationPath(txt)}
+          onChangeText={(txt) => mnemonic.setDerivationPath(txt)}
         />
       </View>
 
       <View style={{ flex: 1 }} />
 
-      {/* <Button reverse title={t('land-import-button-sync')} themeColor={themeColor} /> */}
-      <RejectApproveButtons themeColor={themeColor} onReject={onCancel} rejectTitle={t('button-cancel')} />
+      <RejectApproveButtons
+        themeColor={themeColor}
+        onReject={onCancel}
+        onApprove={importWallet}
+        rejectTitle={t('button-cancel')}
+        approveTitle={t('button-done')}
+        disabledApprove={!verified}
+      />
+
+      <Loader loading={busy} message={t('land-passcode-encrypting')} />
     </SafeViewContainer>
   );
 };
