@@ -48,7 +48,7 @@ export default observer(({ account, onDone }: Props) => {
         <TextBox
           title=""
           placeholder={`Account ${account?.index} | ${account?.displayName}`}
-          defaultValue={account?.nickname || account?.ens.name}
+          defaultValue={account?.nickname || account?.ens.name || name}
           onChangeText={(txt) => setName(txt)}
           style={{ flex: 1 }}
         />
