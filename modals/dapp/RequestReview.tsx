@@ -1,5 +1,5 @@
 import { Coin, SafeViewContainer, Skeleton } from '../../components';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { fontColor, thirdFontColor } from '../../constants/styles';
 
@@ -26,7 +26,7 @@ interface Props {
   vm: RawTransactionRequest;
   app: { name: string; icon: string };
   onReject?: () => void;
-  onApprove?: () => void;
+  onApprove?: () => Promise<void>;
   onGasPress?: () => void;
   account: Account;
 }
@@ -34,6 +34,8 @@ interface Props {
 const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account }: Props) => {
   const { network } = vm;
   const { t } = i18n;
+
+  const [busy, setBusy] = useState(false);
 
   return (
     <SafeViewContainer>
@@ -199,12 +201,16 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account }
 
       <RejectApproveButtons
         onReject={onReject}
-        onApprove={onApprove}
         themeColor={network?.color}
         rejectTitle={t('button-reject')}
         approveTitle={t(Authentication.biometricType === 'faceid' ? 'modal-review-button-hold-to-send' : 'button-send')}
-        disabledApprove={!vm.isValidParams}
+        disabledApprove={!vm.isValidParams || busy}
         longConfirm={Authentication.biometricType === 'faceid'}
+        onApprove={async () => {
+          setBusy(true);
+          await onApprove?.();
+          setBusy(false);
+        }}
       />
     </SafeViewContainer>
   );
