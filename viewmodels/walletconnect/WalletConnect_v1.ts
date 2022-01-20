@@ -4,12 +4,14 @@ import WCSession_v1, {
   WCClientMeta,
   WCSessionRequestRequest,
 } from '../../models/WCSession_v1';
-import { action, makeObservable, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
 import { Account } from '../account/Account';
+import App from '../App';
 import { EventEmitter } from 'events';
 import { INetwork } from '../../common/Networks';
 import { ISessionStatus } from '@walletconnect/types';
+import Networks from '../Networks';
 import PubSub from 'pubsub-js';
 import WalletConnectClient from '@walletconnect/client';
 
@@ -27,8 +29,6 @@ export class WalletConnect_v1 extends EventEmitter {
   readonly version = 1;
   peerId = '';
   appMeta: WCClientMeta | null = null;
-  enabledChains: number[] = [1];
-  accounts: string[] = [];
 
   get session() {
     return this.client.session;
@@ -50,8 +50,24 @@ export class WalletConnect_v1 extends EventEmitter {
     return this.store?.lastUsedChainId ?? '0x1';
   }
 
+  get chains() {
+    return [Number(this.lastUsedChainId)];
+  }
+
   get lastUsedAccount() {
     return this.store?.lastUsedAccount ?? '';
+  }
+
+  get accounts() {
+    return this.lastUsedAccount ? [this.lastUsedAccount] : [];
+  }
+
+  get activeAccount() {
+    return App.findAccount(this.lastUsedAccount) || App.currentAccount;
+  }
+
+  get activeNetwork() {
+    return Networks.find(this.lastUsedChainId) || Networks.current;
   }
 
   constructor(uri?: string) {
@@ -59,12 +75,10 @@ export class WalletConnect_v1 extends EventEmitter {
 
     makeObservable(this, {
       appMeta: observable,
-      enabledChains: observable,
-      accounts: observable,
-      setChains: action,
-      setAccounts: action,
       setLastUsedAccount: action,
       setLastUsedChain: action,
+      activeAccount: computed,
+      activeNetwork: computed,
     });
 
     if (uri) this.connect(uri);
@@ -94,35 +108,11 @@ export class WalletConnect_v1 extends EventEmitter {
     this.client?.updateSession(session as any);
   }
 
-  updateChains(chains: number[], currentNetwork: INetwork) {
-    const target = chains.find((c) => c === currentNetwork.chainId) ?? chains[0];
-
-    this.updateSession({ chainId: target });
-    this.setChains(chains);
-  }
-
-  updateAccounts(accounts: string[], currentAccount: string) {
-    const target = accounts.find((a) => a === currentAccount) ?? accounts[0];
-
-    this.updateSession({ accounts: [target] });
-    this.setAccounts(accounts);
-  }
-
-  setChains(chains: number[]) {
-    this.enabledChains = chains;
-
-    if (!this.store) return;
-    this.store.chains = chains;
-    this.store.lastUsedTimestamp = Date.now();
-    this.store.save();
-  }
-
   setLastUsedChain(chainId: number) {
     this.updateSession({ chainId });
     if (!this.store) return;
 
-    this.enabledChains = [chainId];
-    this.store.chains = [chainId];
+    
     this.store.lastUsedChainId = `${chainId}`;
     this.store.lastUsedTimestamp = Date.now();
     this.store.save();
@@ -137,21 +127,17 @@ export class WalletConnect_v1 extends EventEmitter {
     this.store.save();
   }
 
-  setAccounts(accounts: string[]) {
-    this.accounts = accounts;
-
-    if (!this.store) return;
-    this.store.accounts = accounts;
-    this.store.lastUsedTimestamp = Date.now();
-    this.store.save();
-  }
-
   setStore(store: WCSession_v1) {
     this.store = store;
-    runInAction(() => {
-      this.enabledChains = store.chains.map((id) => Number(id));
-      this.accounts = store.accounts;
-    });
+
+    if (!store.lastUsedChainId) {
+      this.setLastUsedChain(Networks.current.chainId);
+    }
+
+    if (!store.lastUsedAccount) {
+      this.setLastUsedAccount(App.currentAccount!.address);
+    }
+
     return this;
   }
 
@@ -164,9 +150,9 @@ export class WalletConnect_v1 extends EventEmitter {
     const [{ peerMeta, peerId, chainId }] = request.params;
     this.peerId = peerId;
     this.appMeta = peerMeta;
-    this.enabledChains = [chainId ?? 1];
 
     if (this.store) {
+      this.store.lastUsedChainId = `${chainId}`;
       this.store.lastUsedTimestamp = Date.now();
       this.store.save();
     }
@@ -175,7 +161,7 @@ export class WalletConnect_v1 extends EventEmitter {
   };
 
   approveSession = async () => {
-    this.client.approveSession({ accounts: this.accounts, chainId: this.enabledChains[0] });
+    this.client.approveSession({ accounts: [this.lastUsedAccount], chainId: Number(this.lastUsedChainId) });
     this.emit('sessionApproved', this.client.session);
   };
 
@@ -190,24 +176,6 @@ export class WalletConnect_v1 extends EventEmitter {
   approveRequest = (id: number, result: any) => {
     this.client.approveRequest({ id, result });
   };
-
-  findTargetNetwork({
-    networks,
-    requestChainId,
-    defaultNetwork,
-  }: {
-    networks: INetwork[];
-    requestChainId?: number;
-    defaultNetwork: INetwork;
-  }) {
-    return (
-      networks.find((n) => n.chainId === requestChainId) ??
-      (this.enabledChains.includes(defaultNetwork.chainId)
-        ? defaultNetwork
-        : networks.find((n) => this.enabledChains[0] === n.chainId)) ??
-      networks[0]
-    );
-  }
 
   private handleCallRequest = async (error: Error | null, request: WCCallRequestRequest) => {
     if (error || !request) {

@@ -28,7 +28,7 @@ interface Props {
 }
 
 export default observer(({ client, onDisconnect, onNetworkPress, onAccountsPress, defaultAccount, defaultNetwork }: Props) => {
-  const { appMeta, enabledChains } = client || {};
+  const { appMeta } = client || {};
   const { t } = i18n;
 
   return (
@@ -100,7 +100,7 @@ export default observer(({ client, onDisconnect, onNetworkPress, onAccountsPress
             style={{ flexDirection: 'row-reverse', maxWidth: 185 }}
             contentContainerStyle={{ alignItems: 'center' }}
           >
-            {enabledChains.map((c) =>
+            {client.chains.map((c) =>
               generateNetworkIcon({
                 color: Networks.all.find((n) => n.chainId === c)?.color,
                 chainId: c,
@@ -111,11 +111,9 @@ export default observer(({ client, onDisconnect, onNetworkPress, onAccountsPress
             )}
           </ScrollView>
 
-          {enabledChains.length === 1 ? (
-            <Text style={{ ...viewStyles.itemTxt, marginStart: 2, maxWidth: 100 }} numberOfLines={1}>
-              {defaultNetwork?.network?.split(' ')[0]}
-            </Text>
-          ) : undefined}
+          <Text style={{ ...viewStyles.itemTxt, marginStart: 2, maxWidth: 100 }} numberOfLines={1}>
+            {defaultNetwork?.network?.split(' ')[0]}
+          </Text>
 
           <Entypo name="chevron-right" style={viewStyles.arrow} />
         </TouchableOpacity>

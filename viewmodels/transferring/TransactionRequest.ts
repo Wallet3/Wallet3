@@ -32,12 +32,12 @@ export class TransactionRequest extends RawTransactionRequest {
   constructor({ request, client }: IConstructor) {
     const [param, requestChainId] = request.params as [WCCallRequest_eth_sendTransaction, number?];
 
-    const { currentAccount } = App;
-    const account = client.accounts.includes(currentAccount?.address ?? '')
-      ? currentAccount!
-      : App.allAccounts.find((a) => a.address === client.accounts[0]) ?? App.allAccounts[0];
+    if (requestChainId) {
+      client.setLastUsedChain(requestChainId);
+    }
 
-    const network = client.findTargetNetwork({ networks: Networks.all, requestChainId, defaultNetwork: Networks.current });
+    const account = client.activeAccount!;
+    const network = client.activeNetwork;
 
     super({ network, account, param });
 

@@ -31,8 +31,8 @@ interface DAppProps {
 const DApp = observer(
   ({ client, onNetworksPress, onAccountsPress, close, onConnect, accounts, currentAccount }: DAppProps) => {
     const { t } = i18n;
-    const networks = Networks.all.filter((n) => client.enabledChains.includes(n.chainId));
-    const [network] = networks;
+
+    const network = client.activeNetwork;
 
     const app = client.appMeta!;
 
@@ -75,24 +75,24 @@ const DApp = observer(
   }
 );
 
-interface Props {
-  uri?: string;
-  extra: { fromMobile?: boolean; hostname?: string };
+interface ConnectDAppProps {
+  client: WalletConnect_v1;
   close: Function;
+  extra?: { fromMobile?: boolean; hostname?: string };
 }
 
-const ConnectDApp = observer(({ client, close }: { client: WalletConnect_v1; close: Function }) => {
+const ConnectDApp = observer(({ client, close, extra }: ConnectDAppProps) => {
   const swiper = useRef<Swiper>(null);
   const [panel, setPanel] = useState(1);
 
   const selectNetworks = (chains: number[]) => {
     swiper.current?.scrollTo(0);
-    client.setChains(chains);
+    client.setLastUsedChain(chains[0]);
   };
 
   const selectAccounts = (accounts: string[]) => {
     swiper.current?.scrollTo(0);
-    client.setAccounts(accounts);
+    client.setLastUsedAccount(accounts[0]);
   };
 
   const connect = () => {
@@ -125,11 +125,11 @@ const ConnectDApp = observer(({ client, close }: { client: WalletConnect_v1; clo
       />
 
       {panel === 1 ? (
-        <NetworkSelector networks={Networks.all} selectedChains={client.enabledChains} onDone={selectNetworks} />
+        <NetworkSelector single networks={Networks.all} selectedChains={client.chains} onDone={selectNetworks} />
       ) : undefined}
 
       {panel === 2 ? (
-        <AccountSelector accounts={App.allAccounts} selectedAccounts={client.accounts} onDone={selectAccounts} />
+        <AccountSelector single accounts={App.allAccounts} selectedAccounts={client.accounts} onDone={selectAccounts} />
       ) : undefined}
     </Swiper>
   );
@@ -147,6 +147,12 @@ const TimeoutView = ({ close }: { close: Function }) => {
     </SafeViewContainer>
   );
 };
+
+interface Props {
+  uri?: string;
+  extra: { fromMobile?: boolean; hostname?: string };
+  close: Function;
+}
 
 export default observer(({ uri, close, extra }: Props) => {
   const [connecting, setConnecting] = useState(true);
@@ -177,7 +183,7 @@ export default observer(({ uri, close, extra }: Props) => {
   return (
     <SafeAreaProvider style={styles.safeArea}>
       {connecting ? <Loading /> : undefined}
-      {client ? <ConnectDApp client={client} close={close} /> : undefined}
+      {client ? <ConnectDApp client={client} close={close} extra={extra} /> : undefined}
       {connectTimeout ? <TimeoutView close={close} /> : undefined}
     </SafeAreaProvider>
   );

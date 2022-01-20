@@ -37,8 +37,6 @@ class WalletConnectV1ClientHub extends EventEmitter {
         const session = new WCSession_v1();
         session.id = e.id;
         session.session = e.session;
-        session.chains = e.chains;
-        session.accounts = e.accounts;
         session.lastUsedTimestamp = e.lastUsedTimestamp;
         session.lastUsedAccount = '';
         await session.save();
@@ -53,28 +51,28 @@ class WalletConnectV1ClientHub extends EventEmitter {
     await this.upgrade();
 
     // Notify dapps to switch current network
-    reaction(
-      () => Networks.current,
-      () => {
-        this.clients
-          .filter((c) => !c.isMobileApp)
-          .filter((c) => c.enabledChains.includes(Networks.current.chainId))
-          .forEach((c) => c.setLastUsedChain(Networks.current.chainId));
-      }
-    );
+    // reaction(
+    //   () => Networks.current,
+    //   () => {
+    //     this.clients
+    //       .filter((c) => !c.isMobileApp)
+    //       .filter((c) => c.enabledChains.includes(Networks.current.chainId))
+    //       .forEach((c) => c.setLastUsedChain(Networks.current.chainId));
+    //   }
+    // );
 
     // Notify dapps to update current account
-    reaction(
-      () => App.currentAccount,
-      () => {
-        if (!App.currentAccount) return;
+    // reaction(
+    //   () => App.currentAccount,
+    //   () => {
+    //     if (!App.currentAccount) return;
 
-        this.clients
-          .filter((c) => c!.isMobileApp)
-          .filter((c) => c.accounts.includes(App.currentAccount!.address))
-          .forEach((c) => c.setLastUsedAccount(App.currentAccount!.address));
-      }
-    );
+    //     this.clients
+    //       .filter((c) => c!.isMobileApp)
+    //       .filter((c) => c.accounts.includes(App.currentAccount!.address))
+    //       .forEach((c) => c.setLastUsedAccount(App.currentAccount!.address));
+    //   }
+    // );
 
     // Restore sessions
     const sessions = await Database.wcV1Sessions.find();
@@ -94,7 +92,7 @@ class WalletConnectV1ClientHub extends EventEmitter {
 
     if (version === '1') {
       const client = new WalletConnect_v1(uri);
-      client.setAccounts([App.currentAccount!.address!]);
+      client.setLastUsedAccount(App.currentAccount!.address);
 
       client.once('sessionApproved', () => {
         runInAction(() => this.clients.push(client));
@@ -103,12 +101,11 @@ class WalletConnectV1ClientHub extends EventEmitter {
         store.id = Date.now();
         store.session = client.session;
         store.lastUsedTimestamp = Date.now();
-        store.chains = client.enabledChains;
-        store.accounts = client.accounts;
+
         store.isMobile = extra?.fromMobile ?? false;
         store.hostname = extra?.hostname ?? '';
-        store.lastUsedAccount = client.accounts[0];
-        store.lastUsedChainId = `${client.enabledChains[0]}`;
+        store.lastUsedAccount = client.lastUsedAccount;
+        store.lastUsedChainId = client.lastUsedChainId;
 
         store.save();
         client.setStore(store);

@@ -26,7 +26,7 @@ export default observer(({ request, client, close, biometricEnabled }: Props) =>
   const [type, setType] = useState('');
   const [verified, setVerified] = useState(false);
 
-  const themeColor = client.findTargetNetwork({ networks: Networks.all, defaultNetwork: Networks.current }).color;
+  const themeColor = client.activeNetwork.color;
 
   useEffect(() => {
     const { params, method } = request;
@@ -59,7 +59,7 @@ export default observer(({ request, client, close, biometricEnabled }: Props) =>
   };
 
   const sign = async (pin?: string) => {
-    if (!client.lastUsedAccount && !client.accounts.includes(App.currentAccount?.address ?? '')) {
+    if (!client.lastUsedAccount) {
       showMessage({ message: i18n.t('msg-no-account-authorized-to-dapp'), type: 'warning' });
       return false;
     }
@@ -86,6 +86,8 @@ export default observer(({ request, client, close, biometricEnabled }: Props) =>
     return signed ? true : false;
   };
 
+  console.log(client.lastUsedAccount, client.activeAccount?.address);
+
   return (
     <SafeAreaProvider style={styles.safeArea}>
       {verified ? (
@@ -100,7 +102,7 @@ export default observer(({ request, client, close, biometricEnabled }: Props) =>
           sign={sign}
           typedData={typedData}
           biometricEnabled
-          account={App.findAccount(client.lastUsedAccount)!}
+          account={client.activeAccount!}
         />
       )}
     </SafeAreaProvider>

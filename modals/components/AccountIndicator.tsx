@@ -11,7 +11,7 @@ export default ({ account }: { account: Account }) => {
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
       <Avatar uri={account.avatar} size={20} emojiSize={8} emoji={account.emojiAvatar} backgroundColor={account.emojiColor} />
 
-      <Text numberOfLines={1} style={{ maxWidth: 150, marginStart: 8, color: thirdFontColor, fontSize: 14 }}>
+      <Text numberOfLines={1} style={{ maxWidth: 100, marginStart: 8, color: thirdFontColor, fontSize: 14 }}>
         {account.nickname || account.ens.name || formatAddress(account.address, 5, 3)}
       </Text>
     </View>

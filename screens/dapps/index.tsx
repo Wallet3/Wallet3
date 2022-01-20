@@ -35,13 +35,8 @@ const DApp = observer(({ client, allAccounts, currentAccount, close }: Props) =>
   const swiper = useRef<Swiper>(null);
   const [panel, setPanel] = useState(1);
 
-  const [defaultAccount, setDefaultAccount] = useState(
-    allAccounts.find((a) => a.address === (client.lastUsedAccount || client.accounts[0]))
-  );
-
-  const [defaultNetwork, setDefaultNetwork] = useState(
-    client.findTargetNetwork({ networks: Networks.all, defaultNetwork: Networks.current })
-  );
+  const [defaultAccount, setDefaultAccount] = useState(client.activeAccount!);
+  const [defaultNetwork, setDefaultNetwork] = useState(client.activeNetwork);
 
   const disconnect = () => {
     client.killSession();
@@ -50,26 +45,14 @@ const DApp = observer(({ client, allAccounts, currentAccount, close }: Props) =>
 
   const selectNetworks = (chains: number[]) => {
     swiper.current?.scrollTo(0);
-
-    if (client.isMobileApp) {
-      client.setLastUsedChain(chains[0]);
-    } else {
-      client.updateChains(chains, Networks.current);
-    }
-
-    setDefaultNetwork(client.findTargetNetwork({ networks: Networks.all, defaultNetwork: Networks.current }));
+    client.setLastUsedChain(chains[0]);
+    setDefaultNetwork(client.activeNetwork);
   };
 
   const selectAccounts = (accounts: string[]) => {
     swiper.current?.scrollTo(0);
-
-    if (client.isMobileApp) {
-      client.setLastUsedAccount(accounts[0]);
-    } else {
-      client.updateAccounts(accounts, currentAccount.address);
-    }
-
-    setDefaultAccount(allAccounts.find((a) => a.address === (client.lastUsedAccount || client.accounts[0])));
+    client.setLastUsedAccount(accounts[0]);
+    setDefaultAccount(client.activeAccount!);
   };
 
   const swipeTo = (index: number) => {
@@ -97,21 +80,11 @@ const DApp = observer(({ client, allAccounts, currentAccount, close }: Props) =>
         />
 
         {panel === 1 ? (
-          <NetworkSelector
-            networks={Networks.all}
-            selectedChains={client.isMobileApp ? [Number(client.lastUsedChainId)] : client.enabledChains}
-            onDone={selectNetworks}
-            single={client.isMobileApp}
-          />
+          <NetworkSelector networks={Networks.all} selectedChains={client.chains} onDone={selectNetworks} single />
         ) : undefined}
 
         {panel === 2 ? (
-          <AccountSelector
-            single={client.isMobileApp}
-            accounts={App.allAccounts}
-            selectedAccounts={client.isMobileApp ? [client.lastUsedAccount] : client.accounts}
-            onDone={selectAccounts}
-          />
+          <AccountSelector single accounts={allAccounts} selectedAccounts={client.accounts} onDone={selectAccounts} />
         ) : undefined}
       </Swiper>
     </SafeAreaProvider>
@@ -148,15 +121,13 @@ const DAppItem = observer(({ item, openApp }: { item: WalletConnect_v1; openApp:
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={{ alignItems: 'center' }}
             >
-              {item.enabledChains.map((c) =>
-                generateNetworkIcon({
-                  color: Networks.find(c)?.color,
-                  chainId: c,
-                  width: 12,
-                  height: 12,
-                  style: { marginHorizontal: 4 },
-                })
-              )}
+              {generateNetworkIcon({
+                color: item.activeNetwork.color,
+                chainId: Number(item.lastUsedChainId),
+                width: 12,
+                height: 12,
+                style: { marginHorizontal: 4 },
+              })}
             </ScrollView>
           </View>
         </View>
@@ -178,7 +149,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
 
   const openApp = (client: WalletConnect_v1) => {
     setSelectedClient(client);
-    open();
+    setTimeout(() => open(), 0);
   };
 
   const renderItem = ({ item }: { item: WalletConnect_v1 }) => <DAppItem item={item} openApp={openApp} />;
