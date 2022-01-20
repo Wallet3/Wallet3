@@ -1,15 +1,16 @@
 import * as Debank from '../../common/apis/Debank';
 
 import TokensMan, { UserToken } from '../services/TokensMan';
-import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import { ERC20Token } from '../../models/ERC20';
-import { IToken } from '../../common/Tokens';
 import { NativeToken } from '../../models/NativeToken';
 import Networks from '../Networks';
 import { utils } from 'ethers';
 
 export class AccountTokens {
+  private lastRefreshTime = 0;
+
   owner: string;
 
   tokens: UserToken[] = [];
@@ -31,7 +32,7 @@ export class AccountTokens {
       refreshOverview: action,
     });
 
-    this.createNativeToken();
+    this.refreshNativeToken();
   }
 
   async refreshOverview() {
@@ -39,7 +40,7 @@ export class AccountTokens {
     this.loadingTokens = true;
 
     const [native, userTokens, userBalance] = await Promise.all([
-      this.createNativeToken(),
+      this.refreshNativeToken(),
       TokensMan.loadUserTokens(current.chainId, this.owner),
       Debank.getBalance(this.owner, current.comm_id),
     ]);
@@ -73,19 +74,22 @@ export class AccountTokens {
     });
   }
 
-  private async createNativeToken() {
+  async refreshNativeToken() {
+    if (this.nativeToken?.chainId === Networks.current.chainId && this.lastRefreshTime > Date.now() - 3 * 1000)
+      return this.nativeToken;
+
     const native =
       this.nativeToken ||
       new NativeToken({
         owner: this.owner,
-        chainId: Networks.current.chainId,
-        symbol: Networks.current.symbol,
+        ...Networks.current,
       });
 
     native.setChain({ ...Networks.current });
     native.getBalance();
 
     this.nativeToken = native;
+    this.lastRefreshTime = Date.now();
 
     return native as unknown as ERC20Token;
   }

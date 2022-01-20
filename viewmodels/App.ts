@@ -51,6 +51,7 @@ export class AppVM {
       () => Networks.current,
       () => {
         this.currentAccount?.tokens.refreshOverview();
+        this.allAccounts.forEach((a) => a.tokens.refreshNativeToken());
       }
     );
   }
