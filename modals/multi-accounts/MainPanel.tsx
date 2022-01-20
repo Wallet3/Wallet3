@@ -47,14 +47,16 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDon
   };
 
   useEffect(() => {
-    if (App.allAccounts.length < 5 || !App.currentAccount) return;
-    if (App.allAccounts.indexOf(App.currentAccount) < 5) return;
+    const { allAccounts } = App;
+    if (allAccounts.length < 5 || !App.currentAccount) return;
+    if (allAccounts.indexOf(App.currentAccount) < 5) return;
 
     const timer = setTimeout(() => {
       try {
-        list.current?.scrollToIndex({ index: App.allAccounts.indexOf(App.currentAccount!), animated: true });
+        const index = App.allAccounts.indexOf(App.currentAccount!);
+        list.current?.scrollToIndex({ index, animated: true });
       } catch (error) {}
-    }, 500);
+    }, Math.min(allAccounts.length * 100, 1000));
 
     return () => {
       clearTimeout(timer);

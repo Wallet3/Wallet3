@@ -14,7 +14,7 @@ interface Props {
 
 export default ({ uri, backgroundColor, emoji, size, emojiSize, style }: Props) => {
   return uri ? (
-    <Image
+    <CachedImage
       source={{ uri }}
       style={{
         ...(style || ({} as any)),

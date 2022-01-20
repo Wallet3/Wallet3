@@ -47,6 +47,10 @@ export class Wallet {
 
   lastRefreshedTime = 0;
 
+  get hdWallet() {
+    return this.key.bip32Xpubkey.startsWith('xpub');
+  }
+
   constructor(key: Key) {
     this.key = key;
 
@@ -84,7 +88,7 @@ export class Wallet {
     return this;
   }
 
-  async newAccount() {
+  newAccount() {
     const bip32 = utils.HDNode.fromExtendedKey(this.key.bip32Xpubkey);
     const index =
       Math.max(
@@ -93,9 +97,12 @@ export class Wallet {
       ) + 1;
 
     const node = bip32.derivePath(`${index}`);
-    this.accounts.push(new Account(node.address, index));
+    const account = new Account(node.address, index);
+    this.accounts.push(account);
 
     AsyncStorage.setItem(`${this.key.id}-address-count`, `${index + 1}`);
+
+    return account;
   }
 
   async removeAccount(account: Account) {

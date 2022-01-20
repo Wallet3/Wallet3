@@ -77,8 +77,17 @@ export class AppVM {
   }
 
   newAccount() {
-    this.wallets[0]?.newAccount();
-    this.switchAccount(this.allAccounts[this.allAccounts.length - 1].address);
+    let { wallet } = this.findWallet(this.currentAccount!.address) || {};
+    let account: Account;
+
+    if (wallet?.hdWallet) {
+      account = wallet.newAccount();
+    } else {
+      wallet = this.wallets.find((w) => w.hdWallet);
+      account = wallet!.newAccount();
+    }
+
+    this.switchAccount(account.address);
   }
 
   switchAccount(address: string, force = false) {
