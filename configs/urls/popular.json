@@ -14,5 +14,6 @@
     "title": "Opensea"
   },
   { "url": "https://foundation.app", "icon": "https://foundation.app/apple-touch-icon.png", "title": "Foundation" },
-  { "url": "https://mirror.xyz", "icon": "https://mirror.xyz/icon/apple-touch-icon.png", "title": "Mirror" }
+  { "url": "https://mirror.xyz", "icon": "https://mirror.xyz/icon/apple-touch-icon.png", "title": "Mirror" },
+  { "url": "https://studio.manifold.xyz", "icon": "https://www.manifold.xyz/favicon.ico", "title": "Manifold Studio" }
 ]

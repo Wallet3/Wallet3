@@ -14,16 +14,29 @@ interface Props {
 
 export default ({ uri, backgroundColor, emoji, size, emojiSize, style }: Props) => {
   return uri ? (
-    <CachedImage
-      source={{ uri }}
-      style={{
-        ...(style || ({} as any)),
-        width: size,
-        height: size,
-        borderRadius: size / 2,
-        backgroundColor: backgroundColor,
-      }}
-    />
+    uri.endsWith('.gif') ? (
+      <Image
+        source={{ uri }}
+        style={{
+          ...(style || ({} as any)),
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          backgroundColor: backgroundColor,
+        }}
+      />
+    ) : (
+      <CachedImage
+        source={{ uri }}
+        style={{
+          ...(style || ({} as any)),
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          backgroundColor: backgroundColor,
+        }}
+      />
+    )
   ) : (
     <View
       style={{

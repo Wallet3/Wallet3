@@ -8,6 +8,7 @@ import { DEFAULT_DERIVATION_PATH } from '../common/Constants';
 import Key from '../models/Key';
 import { langToWordlist } from '../utils/mnemonic';
 import { makeAutoObservable } from 'mobx';
+import { setString } from 'expo-clipboard';
 import { xpubkeyFromHDNode } from '../utils/bip32';
 
 export class MnemonicOnce {
@@ -30,8 +31,9 @@ export class MnemonicOnce {
 
   setMnemonic(mnemonic: string) {
     if (!ethers.utils.isValidMnemonic(mnemonic, langToWordlist(mnemonic))) return false;
+    
     this.secret = mnemonic;
-
+    setString(''); // write empty string to clipboard, if the user pasted a mnemonic
     return true;
   }
 
