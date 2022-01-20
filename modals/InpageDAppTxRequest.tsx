@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Text, View } from 'react-native';
 
 import App from '../viewmodels/App';
 import Authentication from '../viewmodels/Authentication';
@@ -9,7 +10,6 @@ import { RawTransactionRequest } from '../viewmodels/transferring/RawTransaction
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Success from './views/Success';
 import TxRequest from './compositions/TxRequest';
-import { View } from 'react-native';
 import i18n from '../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
@@ -31,9 +31,11 @@ export default observer(({ param, chainId, approve, reject, close, account, app 
 
   if (!userAccount) {
     return (
-      <SafeAreaProvider>
+      <SafeAreaProvider style={{ ...styles.safeArea, height: 370 }}>
         <View>
-          <View></View>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Text>Not authorized</Text>
+          </View>
           <Button title={t('button-cancel')} onPress={onReject} />
         </View>
       </SafeAreaProvider>

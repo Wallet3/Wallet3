@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TransactionRequest, parseRequestType } from '../viewmodels/transferring/TransactionRequest';
+import { WalletConnectTransactionRequest, parseRequestType } from '../viewmodels/transferring/TransactionRequest';
 
 import App from '../viewmodels/App';
 import Authentication from '../viewmodels/Authentication';
@@ -19,7 +19,7 @@ interface Props {
 }
 
 export default observer(({ client, request, close }: Props) => {
-  const [vm] = useState(new TransactionRequest({ client, request }));
+  const [vm] = useState(new WalletConnectTransactionRequest({ client, request }));
   const [verified, setVerified] = useState(false);
 
   useEffect(() => {

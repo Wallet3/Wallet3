@@ -26,7 +26,7 @@ export function parseRequestType(data: string): { type: RequestType; methodFunc:
   return { type: data ? Methods.get(methodFunc) ?? 'Contract Interaction' : 'Transfer', methodFunc };
 }
 
-export class TransactionRequest extends RawTransactionRequest {
+export class WalletConnectTransactionRequest extends RawTransactionRequest {
   private client: WalletConnect_v1;
 
   constructor({ request, client }: IConstructor) {

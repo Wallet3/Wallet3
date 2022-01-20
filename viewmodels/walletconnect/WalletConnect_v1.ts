@@ -180,6 +180,11 @@ export class WalletConnect_v1 extends EventEmitter {
       return;
     }
 
+    if (this.activeAccount?.address !== this.lastUsedAccount || !this.lastUsedAccount) {
+      this.rejectRequest(request.id, 'Not authorized');
+      return;
+    }
+
     PubSub.publish('wc_request', { client: this, request });
 
     this.emit('sessionUpdated');
