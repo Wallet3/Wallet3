@@ -53,21 +53,28 @@ class WalletConnectV1ClientHub extends EventEmitter {
     await this.upgrade();
 
     // Notify dapps to switch current network
-    autorun(() => {
-      const { current } = Networks;
-
-      const clients = this.clients.filter((c) => !c.isMobileApp).filter((c) => c.enabledChains.includes(current.chainId));
-      clients.forEach((c) => c.setLastUsedChain(current.chainId));
-    });
+    reaction(
+      () => Networks.current,
+      () => {
+        this.clients
+          .filter((c) => !c.isMobileApp)
+          .filter((c) => c.enabledChains.includes(Networks.current.chainId))
+          .forEach((c) => c.setLastUsedChain(Networks.current.chainId));
+      }
+    );
 
     // Notify dapps to update current account
-    autorun(() => {
-      const { currentAccount } = App;
-      if (!currentAccount) return;
+    reaction(
+      () => App.currentAccount,
+      () => {
+        if (!App.currentAccount) return;
 
-      const clients = this.clients.filter((c) => c!.isMobileApp).filter((c) => c.accounts.includes(currentAccount.address));
-      clients.forEach((c) => c.setLastUsedAccount(currentAccount.address));
-    });
+        this.clients
+          .filter((c) => c!.isMobileApp)
+          .filter((c) => c.accounts.includes(App.currentAccount!.address))
+          .forEach((c) => c.setLastUsedAccount(App.currentAccount!.address));
+      }
+    );
 
     // Restore sessions
     const sessions = await Database.wcV1Sessions.find();
