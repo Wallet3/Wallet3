@@ -1,15 +1,6 @@
 import * as Linking from 'expo-linking';
 
-import {
-  Animated,
-  Dimensions,
-  Image,
-  ListRenderItemInfo,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Animated, Dimensions, Image, ListRenderItemInfo, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Bookmarks, { Bookmark, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
 import { BottomTabScreenProps, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import React, { useEffect, useRef, useState } from 'react';
@@ -46,7 +37,6 @@ const calcIconSize = () => {
 };
 
 const { WindowWidth, NumOfColumns, LargeIconSize, SmallIconSize } = calcIconSize();
-console.log(NumOfColumns, WindowWidth, LargeIconSize, SmallIconSize);
 
 export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   const { t } = i18n;
@@ -77,7 +67,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   useEffect(() => {
     Dimensions.addEventListener('change', ({ window, screen }) => {
       const { WindowWidth, LargeIconSize, SmallIconSize, NumOfColumns } = calcIconSize();
-      console.log(NumOfColumns, WindowWidth, LargeIconSize, SmallIconSize);
+
       setWindowWidth(WindowWidth);
       setNumOfColumns(NumOfColumns);
       setLargeIconSize(LargeIconSize);

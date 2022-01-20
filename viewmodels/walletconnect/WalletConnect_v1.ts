@@ -77,8 +77,6 @@ export class WalletConnect_v1 extends EventEmitter {
       appMeta: observable,
       setLastUsedAccount: action,
       setLastUsedChain: action,
-      activeAccount: computed,
-      activeNetwork: computed,
     });
 
     if (uri) this.connect(uri);

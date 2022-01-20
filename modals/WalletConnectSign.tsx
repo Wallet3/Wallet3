@@ -70,8 +70,6 @@ export default observer(({ request, client, close, biometricEnabled }: Props) =>
       return false;
     }
 
-    console.log({ pin, accountIndex });
-
     const signed = typedData
       ? await wallet.signTypedData({ typedData, pin, accountIndex })
       : await wallet.signMessage({ msg: msg!, pin, accountIndex });
@@ -85,8 +83,6 @@ export default observer(({ request, client, close, biometricEnabled }: Props) =>
 
     return signed ? true : false;
   };
-
-  console.log(client.lastUsedAccount, client.activeAccount?.address);
 
   return (
     <SafeAreaProvider style={styles.safeArea}>

@@ -46,12 +46,14 @@ const DApp = observer(({ client, allAccounts, close }: Props) => {
     swiper.current?.scrollTo(0);
     client.setLastUsedChain(chains[0], true);
     setDefaultNetwork(client.activeNetwork);
+    console.log(client.activeNetwork.network)
   };
 
   const selectAccounts = (accounts: string[]) => {
     swiper.current?.scrollTo(0);
     client.setLastUsedAccount(accounts[0], true);
     setDefaultAccount(client.activeAccount!);
+    console.log(client.activeAccount?.address);
   };
 
   const swipeTo = (index: number) => {
@@ -113,21 +115,6 @@ const DAppItem = observer(({ item, openApp }: { item: WalletConnect_v1; openApp:
             <Text style={{ color: secondaryFontColor, fontSize: 12, marginTop: 4 }}>
               {`${t('connectedapps-list-last-used')}: ${new Date(item.lastUsedTimestamp).toLocaleDateString()}`}
             </Text>
-
-            <ScrollView
-              horizontal
-              style={{ marginBottom: -4, marginStart: 4 }}
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{ alignItems: 'center' }}
-            >
-              {generateNetworkIcon({
-                color: item.activeNetwork.color,
-                chainId: Number(item.lastUsedChainId),
-                width: 12,
-                height: 12,
-                style: { marginHorizontal: 4 },
-              })}
-            </ScrollView>
           </View>
         </View>
       </TouchableOpacity>
