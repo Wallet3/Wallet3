@@ -82,6 +82,8 @@
   "profile-more-records": "More Records",
   "modal-multi-accounts-title": "Accounts",
   "modal-multi-accounts-remove-account-desc": "Are you sure to remove this account?\n{{addr}}",
+  "modal-multi-accounts-button-create-account": "Create a new account",
+  "modal-multi-accounts-button-import-account": "Import an existing wallet",
   "modal-accounts-selector-title": "Select a account",
   "modal-networks-selector-title": "Select networks",
   "modal-networks-switch": "Switch current network",

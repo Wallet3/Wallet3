@@ -85,12 +85,16 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDon
 
       <TouchableOpacity style={styles.option} onPress={newAccount}>
         <MaterialIcons name="add-circle" size={22} color={themeColor} />
-        <Text style={{ marginStart: 10, color: themeColor, fontWeight: '600', fontSize: 15 }}>Create a new account</Text>
+        <Text style={{ marginStart: 10, color: themeColor, fontWeight: '600', fontSize: 15 }}>
+          {t('modal-multi-accounts-button-create-account')}
+        </Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.option} onPress={onImportWallet}>
         <Ionicons name="key-outline" size={19} color={themeColor} style={{ paddingHorizontal: 1.5 }} />
-        <Text style={{ marginStart: 10, color: themeColor, fontWeight: '600', fontSize: 15 }}>Import an existing wallet</Text>
+        <Text style={{ marginStart: 10, color: themeColor, fontWeight: '600', fontSize: 15 }}>
+          {t('modal-multi-accounts-button-import-account')}
+        </Text>
       </TouchableOpacity>
     </SafeViewContainer>
   );
