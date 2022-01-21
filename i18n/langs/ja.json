@@ -104,6 +104,8 @@
   "modal-gas-review-fast": "高速",
   "modal-gas-review-standard": "スロー",
   "modal-message-signing": "メッセージサイン",
+  "modal-dapp-connection-timeout": "接続タイムアウト",
+  "modal-dapp-connection-wc-failed": "DAppの接続に失敗しました",
   "modal-dapp-request-type": "タイプ",
   "modal-dapp-request-type-approve": "確認",
   "modal-dapp-request-max-approve": "マックス",

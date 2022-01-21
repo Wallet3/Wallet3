@@ -73,7 +73,14 @@ class WalletConnectV1ClientHub extends EventEmitter {
     const [_, version] = linking.path?.split('@') ?? [];
 
     if (version === '1') {
-      const client = new WalletConnect_v1(uri);
+      let client: WalletConnect_v1;
+
+      try {
+        client = new WalletConnect_v1(uri);
+      } catch (error) {
+        return;
+      }
+
       const store = new WCSession_v1();
       store.id = Date.now();
       client.setStore(store);

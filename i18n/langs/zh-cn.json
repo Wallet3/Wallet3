@@ -104,6 +104,8 @@
   "modal-gas-review-fast": "标准",
   "modal-gas-review-standard": "慢速",
   "modal-message-signing": "消息签名",
+  "modal-dapp-connection-timeout": "连接超时",
+  "modal-dapp-connection-wc-failed": "连接 DApp 失败",
   "modal-dapp-request-type": "类型",
   "modal-dapp-request-type-approve": "授权",
   "modal-dapp-request-max-approve": "使用上限",

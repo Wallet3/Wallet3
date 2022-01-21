@@ -133,13 +133,15 @@ const ConnectDApp = observer(({ client, close }: ConnectDAppProps) => {
   );
 });
 
-const TimeoutView = ({ close }: { close: Function }) => {
+const TimeoutView = ({ close, msg }: { close: Function; msg?: string }) => {
+  const { t } = i18n;
+
   return (
     <SafeViewContainer style={{ flex: 1 }}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Ionicons name="timer-outline" color="crimson" size={72} />
-        <Text style={{ fontSize: 24, color: 'crimson', marginTop: 12 }}>Connection Timeout</Text>
-        <Text style={{ fontSize: 17, color: 'crimson', marginTop: 12 }}>Please refresh webpage and try again.</Text>
+        <Text style={{ fontSize: 24, color: 'crimson', marginTop: 12 }}>{msg ?? t('modal-dapp-connection-timeout')}</Text>
+        <Text style={{ fontSize: 17, color: 'crimson', marginTop: 12 }}>{t('modal-dapp-connection-refresh-again')}</Text>
       </View>
       <Button title="Close" onPress={() => close()} />
     </SafeViewContainer>
@@ -156,12 +158,20 @@ export default observer(({ uri, close, extra }: Props) => {
   const [connecting, setConnecting] = useState(true);
   const [connectTimeout, setConnectTimeout] = useState(false);
   const [client, setClient] = useState<WalletConnect_v1>();
+  const [errorMsg, setErrorMsg] = useState<string>();
+  const { t } = i18n;
 
   useEffect(() => {
     if (!uri) return;
     if (client) return;
 
     let wc_client = WalletConnectV1ClientHub.connect(uri, extra);
+    if (!wc_client) {
+      setErrorMsg(t('modal-dapp-connection-wc-failed'));
+      setConnectTimeout(true);
+      return;
+    }
+
     const timeout = setTimeout(async () => {
       setConnectTimeout(true);
       setConnecting(false);
@@ -182,7 +192,7 @@ export default observer(({ uri, close, extra }: Props) => {
     <SafeAreaProvider style={styles.safeArea}>
       {connecting ? <Loading /> : undefined}
       {client ? <ConnectDApp client={client} close={close} extra={extra} /> : undefined}
-      {connectTimeout ? <TimeoutView close={close} /> : undefined}
+      {connectTimeout ? <TimeoutView close={close} msg={errorMsg} /> : undefined}
     </SafeAreaProvider>
   );
 });
