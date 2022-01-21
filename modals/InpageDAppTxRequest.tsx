@@ -1,10 +1,11 @@
+import { Button, SafeViewContainer } from '../components';
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 
 import App from '../viewmodels/App';
 import Authentication from '../viewmodels/Authentication';
-import { Button } from '../components';
 import { InpageDAppTxRequest } from '../viewmodels/hubs/InpageMetamaskDAppHub';
+import { Ionicons } from '@expo/vector-icons';
 import Networks from '../viewmodels/Networks';
 import { RawTransactionRequest } from '../viewmodels/transferring/RawTransactionRequest';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -32,12 +33,13 @@ export default observer(({ param, chainId, approve, reject, close, account, app 
   if (!userAccount) {
     return (
       <SafeAreaProvider style={{ ...styles.safeArea, height: 370 }}>
-        <View>
+        <SafeViewContainer style={{ flex: 1 }}>
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>Not authorized</Text>
+            <Ionicons name="warning" size={72} color={'crimson'} />
+            <Text style={{ color: 'crimson' }}>{t('msg-no-account-authorized-to-dapp')}</Text>
           </View>
-          <Button title={t('button-cancel')} onPress={onReject} />
-        </View>
+          <Button title={t('button-cancel')} onPress={onReject} themeColor="crimson" />
+        </SafeViewContainer>
       </SafeAreaProvider>
     );
   }
