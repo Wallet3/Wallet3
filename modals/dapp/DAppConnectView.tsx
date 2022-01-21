@@ -92,7 +92,7 @@ export default observer(
 
         <View style={{ flex: 1 }} />
 
-        <Image source={{ uri: appIcon }} style={{ width: 72, height: 72, marginBottom: 12, borderRadius: 7 }} />
+        <Image source={{ uri: appIcon }} style={{ width: 72, height: 72, marginBottom: 20, borderRadius: 7 }} />
 
         <Text style={{ ...viewStyles.txt, fontSize: 24, fontWeight: '500', opacity: 1 }} numberOfLines={1}>
           {appName}
@@ -106,7 +106,7 @@ export default observer(
         </View>
 
         {appDesc ? (
-          <Text style={viewStyles.txt} numberOfLines={2}>
+          <Text style={{ ...viewStyles.txt, fontSize: 15 }} numberOfLines={2}>
             {appDesc}
           </Text>
         ) : undefined}
