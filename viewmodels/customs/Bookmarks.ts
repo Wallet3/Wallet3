@@ -65,7 +65,7 @@ class Bookmarks {
 
   submitHistory(url: string) {
     this.history = [url, ...this.history.filter((i) => !i.includes(url) || !url.includes(i))];
-    AsyncStorage.setItem(`history-urls`, JSON.stringify(this.history.slice(0, 32)));
+    AsyncStorage.setItem(`history-urls`, JSON.stringify(this.history.slice(0, 100)));
   }
 
   addExpandedSite(url: string) {
