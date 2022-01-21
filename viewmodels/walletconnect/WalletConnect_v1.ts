@@ -14,6 +14,8 @@ import { ISessionStatus } from '@walletconnect/types';
 import Networks from '../Networks';
 import PubSub from 'pubsub-js';
 import WalletConnectClient from '@walletconnect/client';
+import i18n from '../../i18n';
+import { showMessage } from 'react-native-flash-message';
 
 const clientMeta = {
   name: 'Wallet 3',
@@ -63,7 +65,7 @@ export class WalletConnect_v1 extends EventEmitter {
   }
 
   get activeAccount() {
-    return App.findAccount(this.lastUsedAccount) || App.currentAccount;
+    return App.findAccount(this.lastUsedAccount);
   }
 
   get activeNetwork() {
@@ -182,6 +184,7 @@ export class WalletConnect_v1 extends EventEmitter {
 
     if (this.activeAccount?.address !== this.lastUsedAccount || !this.lastUsedAccount) {
       this.rejectRequest(request.id, 'Not authorized');
+      showMessage({ message: i18n.t('msg-account-not-found'), type: 'warning' });
       return;
     }
 

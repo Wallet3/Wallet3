@@ -15,7 +15,7 @@ interface Props {
   sign: (pin: string) => Promise<boolean>;
   typedData?: any;
   biometricEnabled?: boolean;
-  account: Account;
+  account?: Account;
 }
 
 export default ({ type, msg, themeColor, onReject, typedData, sign, biometricEnabled, onSign, account }: Props) => {

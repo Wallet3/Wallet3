@@ -34,7 +34,7 @@ const DApp = observer(({ client, allAccounts, close }: Props) => {
   const swiper = useRef<Swiper>(null);
   const [panel, setPanel] = useState(1);
 
-  const [defaultAccount, setDefaultAccount] = useState(client.activeAccount!);
+  const [defaultAccount, setDefaultAccount] = useState(client.activeAccount);
   const [defaultNetwork, setDefaultNetwork] = useState(client.activeNetwork);
 
   const disconnect = () => {
@@ -51,7 +51,7 @@ const DApp = observer(({ client, allAccounts, close }: Props) => {
   const selectAccounts = (accounts: string[]) => {
     swiper.current?.scrollTo(0);
     client.setLastUsedAccount(accounts[0], true);
-    setDefaultAccount(client.activeAccount!);
+    setDefaultAccount(client.activeAccount);
   };
 
   const swipeTo = (index: number) => {

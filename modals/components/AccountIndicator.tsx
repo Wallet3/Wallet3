@@ -12,7 +12,7 @@ export default ({ account }: { account: Account }) => {
       <Avatar uri={account.avatar} size={20} emojiSize={8} emoji={account.emojiAvatar} backgroundColor={account.emojiColor} />
 
       <Text numberOfLines={1} style={{ maxWidth: 100, marginStart: 6, color: thirdFontColor, fontSize: 14 }}>
-        {account.nickname || account.ens.name || formatAddress(account.address, 5, 3)}
+        {account.miniDisplayName}
       </Text>
     </View>
   );

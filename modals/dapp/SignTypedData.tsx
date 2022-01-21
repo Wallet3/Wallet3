@@ -37,7 +37,7 @@ interface Props {
   data: any;
   onReject: () => void;
   onSign: () => void;
-  account: Account;
+  account?: Account;
 }
 
 export default observer(({ themeColor, data, onReject, onSign, account }: Props) => {

@@ -27,9 +27,12 @@ export default observer(({ close }: { close?: Function }) => {
 
   const removeAccount = () => {
     if (!account) return;
-    App.removeAccount(account);
     swiper.current?.scrollBy(-1);
-    setAccount(undefined);
+
+    setTimeout(() => {
+      App.removeAccount(account);
+      setAccount(undefined);
+    }, 300);
   };
 
   const cancelRemoveAccount = () => {

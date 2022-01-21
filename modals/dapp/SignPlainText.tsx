@@ -21,7 +21,7 @@ interface Props {
   themeColor: string;
   onReject?: () => void;
   onSign?: () => void;
-  account: Account;
+  account?: Account;
 }
 
 export default observer(({ msg, themeColor, onReject, onSign, account }: Props) => {

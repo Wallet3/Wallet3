@@ -27,7 +27,7 @@ interface DAppProps {
   onConnect: () => void;
 
   network: INetwork;
-  account: Account;
+  account?: Account;
 }
 
 const DApp = observer(({ client, onNetworksPress, onAccountsPress, close, onConnect, account, network }: DAppProps) => {
@@ -78,19 +78,19 @@ interface ConnectDAppProps {
 const ConnectDApp = observer(({ client, close }: ConnectDAppProps) => {
   const swiper = useRef<Swiper>(null);
   const [panel, setPanel] = useState(1);
-  const [account, setAccount] = useState<Account>(client.activeAccount!);
-  const [network, setNetwork] = useState<INetwork>(client.activeNetwork);
+  const [account, setAccount] = useState(client.activeAccount);
+  const [network, setNetwork] = useState(client.activeNetwork);
 
   const selectNetworks = (chains: number[]) => {
     swiper.current?.scrollTo(0);
     client.setLastUsedChain(chains[0]);
-    setNetwork(client.activeNetwork!);
+    setNetwork(client.activeNetwork);
   };
 
   const selectAccounts = (accounts: string[]) => {
     swiper.current?.scrollTo(0);
     client.setLastUsedAccount(accounts[0]);
-    setAccount(client.activeAccount!);
+    setAccount(client.activeAccount);
   };
 
   const connect = () => {
