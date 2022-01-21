@@ -157,6 +157,7 @@
   "msg-token-added": "{{name}} を追加しました",
   "msg-account-not-found": "アカウントが見つかりません、削除された可能性があります",
   "msg-no-account-authorized-to-dapp": "現在のDAppに認証されたアカウントはありません",
+  "msg-failed-to-import-wallet": "このウォレットのインポートに失敗しました",
   "button-next": "次へ",
   "button-save": "保存",
   "button-done": "完了",

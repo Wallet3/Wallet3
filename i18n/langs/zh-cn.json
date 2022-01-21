@@ -157,6 +157,7 @@
   "msg-token-added": "{{name}} 添加成功",
   "msg-account-not-found": "账户可能已被删除",
   "msg-no-account-authorized-to-dapp": "该 DApp 未授权",
+  "msg-failed-to-import-wallet": "导入钱包失败，请检查派生路径是否正确",
   "button-next": "继续",
   "button-save": "保存",
   "button-done": "完成",

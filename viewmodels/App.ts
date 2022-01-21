@@ -60,7 +60,10 @@ export class AppVM {
     if (this.wallets.find((w) => w.isSameKey(key))) return;
 
     const wallet = await new Wallet(key).init();
-    runInAction(() => this.wallets.push(wallet));
+    runInAction(() => {
+      this.wallets.push(wallet);
+      this.switchAccount(wallet.accounts[0].address);
+    });
   }
 
   findWallet(accountAddress: string) {

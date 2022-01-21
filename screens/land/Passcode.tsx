@@ -10,6 +10,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { showMessage } from 'react-native-flash-message';
 import styles from './styles';
 import { themeColor } from '../../constants/styles';
 
@@ -24,11 +25,13 @@ export default observer(({}: NativeStackScreenProps<LandScreenStack, 'Backup'>) 
 
     await Authentication.authorize(passcode);
 
-    await MnemonicOnce.save();
+    if (await MnemonicOnce.save()) {
+      AppVM.init();
+    } else {
+      showMessage({ message: 'msg-failed-to-import-wallet', type: 'warning' });
+    }
 
     setBusy(false);
-
-    await AppVM.init();
   };
 
   return (

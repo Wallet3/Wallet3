@@ -31,7 +31,7 @@ export class MnemonicOnce {
 
   setMnemonic(mnemonic: string) {
     if (!ethers.utils.isValidMnemonic(mnemonic, langToWordlist(mnemonic))) return false;
-    
+
     this.secret = mnemonic;
     setString(''); // write empty string to clipboard, if the user pasted a mnemonic
     return true;
@@ -45,23 +45,27 @@ export class MnemonicOnce {
   }
 
   async save() {
-    const root = ethers.utils.HDNode.fromMnemonic(this.secret);
-    const bip32 = root.derivePath(this.derivationPath);
-    const bip32XPubkey = xpubkeyFromHDNode(bip32);
+    try {
+      const root = ethers.utils.HDNode.fromMnemonic(this.secret);
 
-    const key = new Key();
-    key.id = Date.now();
-    key.secret = await Authentication.encrypt(this.secret);
-    key.bip32Xprivkey = await Authentication.encrypt(bip32.extendedKey);
-    key.bip32Xpubkey = bip32XPubkey;
-    key.basePath = this.derivationPath;
-    key.basePathIndex = this.derivationIndex;
+      const bip32 = root.derivePath(this.derivationPath);
+      const bip32XPubkey = xpubkeyFromHDNode(bip32);
 
-    await key.save();
+      const key = new Key();
+      key.id = Date.now();
+      key.secret = await Authentication.encrypt(this.secret);
+      key.bip32Xprivkey = await Authentication.encrypt(bip32.extendedKey);
+      key.bip32Xpubkey = bip32XPubkey;
+      key.basePath = this.derivationPath;
+      key.basePathIndex = this.derivationIndex;
 
-    this.clean();
-
-    return key;
+      await key.save();
+      return key;
+    } catch (error) {
+      return undefined;
+    } finally {
+      this.clean();
+    }
   }
 
   clean() {

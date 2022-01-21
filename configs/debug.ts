@@ -8,4 +8,5 @@ LogBox.ignoreLogs([
   '[mobx] Out of bounds read',
   'Webview Process Terminated',
   'source.uri should not be an empty string',
+  'check out new Gestures system',
 ]);

@@ -8,6 +8,7 @@ import { MnemonicOnce } from '../../viewmodels/MnemonicOnce';
 import Networks from '../../viewmodels/Networks';
 import RejectApproveButtons from '../components/RejectApproveButtons';
 import i18n from '../../i18n';
+import { showMessage } from 'react-native-flash-message';
 
 export default ({ onDone, onCancel }: { onDone?: () => void; onCancel?: () => void }) => {
   const { t } = i18n;
@@ -25,9 +26,16 @@ export default ({ onDone, onCancel }: { onDone?: () => void; onCancel?: () => vo
     setBusy(true);
 
     setTimeout(async () => {
-      await App.addWallet(await mnemonic.save());
+      const key = await mnemonic.save();
+
+      if (key) {
+        await App.addWallet(key);
+        onDone?.();
+      } else {
+        showMessage({ message: 'msg-failed-to-import-wallet', type: 'warning' });
+      }
+
       setBusy(false);
-      onDone?.();
     }, 0);
   };
 
