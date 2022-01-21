@@ -56,7 +56,9 @@ class LinkHub {
 
         this.handledUrls.add(url);
 
-        PubSub.publish(`CodeScan-wc:`, { data: queryParams.uri, extra });
+        const data = queryParams.key ? `${queryParams.uri}&key=${queryParams.key}` : `${queryParams.uri}`;
+
+        PubSub.publish(`CodeScan-wc:`, { data, extra });
       } catch (error) {}
     } else {
       if (scheme === 'wc:') this.handledUrls.add(url);

@@ -58,8 +58,8 @@ export default observer(
             disabled={disableAccountsButton}
           >
             <Avatar
-              size={28}
-              emojiSize={11}
+              size={24}
+              emojiSize={9}
               emoji={account?.emojiAvatar}
               backgroundColor={account?.emojiColor}
               uri={account?.avatar}
