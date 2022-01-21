@@ -83,7 +83,7 @@
   "modal-multi-accounts-title": "賬戶",
   "modal-multi-accounts-remove-account-desc": "確定刪除該賬戶？\n{{addr}}",
   "modal-multi-accounts-button-create-account": "創建新賬戶",
-  "modal-multi-accounts-button-import-account": "導入已有賬戶",
+  "modal-multi-accounts-button-import-account": "導入已有錢包",
   "modal-accounts-selector-title": "選擇賬號",
   "modal-networks-selector-title": "選擇網絡",
   "modal-networks-switch": "切換網絡",

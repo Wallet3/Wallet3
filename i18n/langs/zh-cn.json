@@ -83,7 +83,7 @@
   "modal-multi-accounts-title": "账户",
   "modal-multi-accounts-remove-account-desc": "确定删除该账户？\n{{addr}}",
   "modal-multi-accounts-button-create-account": "创建新账户",
-  "modal-multi-accounts-button-import-account": "导入已有账户",
+  "modal-multi-accounts-button-import-account": "导入已有钱包",
   "modal-accounts-selector-title": "选择账号",
   "modal-networks-selector-title": "选择网络",
   "modal-networks-switch": "切换网络",

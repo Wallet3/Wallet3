@@ -67,6 +67,7 @@ const Drawer = observer((props: DrawerProps) => {
             backgroundColor={currentAccount?.emojiColor}
             emoji={currentAccount?.emojiAvatar}
             emojiSize={23}
+            emojiMarginStart={2}
           />
         </TouchableOpacity>
 
