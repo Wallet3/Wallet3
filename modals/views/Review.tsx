@@ -14,6 +14,7 @@ import Swiper from 'react-native-swiper';
 import { TokenTransferring } from '../../viewmodels/transferring/TokenTransferring';
 import TxException from '../components/TxException';
 import { formatAddress } from '../../utils/formatter';
+import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
@@ -71,7 +72,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
               <Image source={{ uri: vm.avatar }} style={{ width: 15, height: 15, marginEnd: 5, borderRadius: 100 }} />
             ) : undefined}
             <Text style={{ ...styles.reviewItemValue }} numberOfLines={1}>
-              {utils.isAddress(vm.to) ? formatAddress(vm.to, 9, 6) : vm.to}
+              {utils.isAddress(vm.to) ? formatAddress(vm.to, 7, 5) : vm.to}
             </Text>
           </View>
         </View>
@@ -79,7 +80,8 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
         <View style={{ ...styles.reviewItem, borderBottomWidth: 0 }}>
           <Text style={styles.reviewItemTitle}>{t('modal-review-network')}</Text>
 
-          <View>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            {generateNetworkIcon({ ...vm.network, width: 15, style: { marginEnd: 5 } })}
             <Text style={{ ...styles.reviewItemValue, color: vm.network.color }}>{vm.network.network}</Text>
           </View>
         </View>
