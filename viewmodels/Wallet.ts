@@ -175,4 +175,8 @@ export class Wallet {
   dispose() {
     clearTimeout(this.refreshTimer);
   }
+
+  delete() {
+    return this.key.remove();
+  }
 }

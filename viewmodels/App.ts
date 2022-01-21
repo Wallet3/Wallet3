@@ -111,15 +111,23 @@ export class AppVM {
     AsyncStorage.setItem('lastUsedAccount', target.address);
   }
 
-  removeAccount(account: Account) {
+  async removeAccount(account: Account) {
     if (this.allAccounts.length === 1) return;
 
     const isCurrentAccount = account.address === this.currentAccount?.address;
     const index = this.allAccounts.indexOf(account);
 
-    this.findWallet(account.address)?.wallet.removeAccount(account);
+    const { wallet } = this.findWallet(account.address) || {};
+    if (!wallet) return;
 
-    if (isCurrentAccount) this.switchAccount(this.allAccounts[Math.max(0, index - 1)].address);
+    await wallet.removeAccount(account);
+
+    if (isCurrentAccount) runInAction(() => this.switchAccount(this.allAccounts[Math.max(0, index - 1)].address));
+
+    if (wallet.accounts.length === 0) {
+      runInAction(() => this.wallets.splice(this.wallets.indexOf(wallet), 1));
+      console.log(await wallet.delete());
+    }
   }
 
   async refreshAccount() {
