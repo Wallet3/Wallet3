@@ -157,6 +157,10 @@ const InpageDAppConnect = () => {
       setData(data);
       openConnectDapp();
     });
+
+    return () => {
+      PubSub.unsubscribe('openConnectInpageDApp');
+    };
   }, []);
 
   return (
@@ -237,6 +241,10 @@ const GlobalNetworksMenuModal = () => {
 
   useEffect(() => {
     PubSub.subscribe('openNetworksMenu', () => openNetworksModal());
+
+    return () => {
+      PubSub.unsubscribe('openNetworksMenu');
+    };
   }, []);
 
   return (
@@ -262,6 +270,10 @@ const GlobalAccountsMenuModal = () => {
 
   useEffect(() => {
     PubSub.subscribe('openAccountsMenu', () => open());
+
+    return () => {
+      PubSub.unsubscribe('openAccountsMenu');
+    };
   }, []);
 
   return (
@@ -282,6 +294,10 @@ const RequestFundsModal = () => {
 
   useEffect(() => {
     PubSub.subscribe('openRequestFundsModal', () => openRequestModal());
+
+    return () => {
+      PubSub.unsubscribe('openRequestFundsModal');
+    };
   }, []);
 
   return (

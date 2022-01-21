@@ -366,7 +366,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
 
       {uri ? (
         <Web3View
-          ref={webview}
+          webViewRef={webview}
           source={{ uri }}
           onLoadProgress={({ nativeEvent }) => setLoadingProgress(nativeEvent.progress)}
           onLoadEnd={() => setLoadingProgress(1)}
