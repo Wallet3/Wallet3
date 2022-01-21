@@ -90,9 +90,11 @@ export default observer((props: SubViewProps) => {
         {amount}
       </Text>
 
+      <View style={{ flex: 1 }} />
+
       {props.max ? (
         <TouchableOpacity
-          style={{ justifyContent: 'flex-end', flexDirection: 'row', paddingEnd: 4 }}
+          style={{ justifyContent: 'flex-end', flexDirection: 'row', paddingEnd: 4, paddingBottom: 6 }}
           onPress={() => {
             props.onMaxPress?.();
             setAmount(props.max ?? '0');
@@ -103,8 +105,6 @@ export default observer((props: SubViewProps) => {
           </Text>
         </TouchableOpacity>
       ) : undefined}
-
-      <View style={{ flex: 1 }} />
 
       <Numpad onPress={onNumPress} />
 
