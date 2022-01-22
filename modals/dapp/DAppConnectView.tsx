@@ -1,7 +1,6 @@
 import { Button, SafeViewContainer } from '../../components';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { themeColor, thirdFontColor } from '../../constants/styles';
 
 import { Account } from '../../viewmodels/account/Account';
 import Avatar from '../../components/Avatar';
@@ -12,6 +11,7 @@ import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { thirdFontColor } from '../../constants/styles';
 
 interface Props {
   account?: Account;
@@ -27,6 +27,7 @@ interface Props {
   disableNetworksButton?: boolean;
   disableAccountsButton?: boolean;
   isVerified?: boolean;
+  themeColor: string;
   isRisky?: boolean;
 }
 
@@ -45,6 +46,7 @@ export default observer(
     disableNetworksButton,
     disableAccountsButton,
     isVerified,
+    themeColor,
     isRisky,
   }: Props) => {
     const { t } = i18n;
@@ -115,7 +117,7 @@ export default observer(
         <View style={{ flex: 1 }} />
 
         <View style={{ width: '100%' }}>
-          <Button title={t('button-connect')} onPress={onConnect} />
+          <Button title={t('button-connect')} onPress={onConnect} themeColor={themeColor} />
           <Button title={t('button-reject')} themeColor={themeColor} onPress={onReject} style={{ marginTop: 12 }} reverse />
         </View>
       </SafeViewContainer>

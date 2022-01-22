@@ -18,6 +18,7 @@ interface Props {
 
 export default observer(({ networks, selectedChains, onDone, single }: Props) => {
   const [selected, setSelected] = useState<number[]>(selectedChains);
+  const defaultNetwork = networks.find((n) => n.chainId === (selectedChains[0] || 1));
   const { t } = i18n;
 
   const toggleNetwork = (network: INetwork) => {
@@ -73,7 +74,12 @@ export default observer(({ networks, selectedChains, onDone, single }: Props) =>
         style={{ flex: 1, marginHorizontal: -16, paddingHorizontal: 16, marginBottom: 12 }}
       />
 
-      <Button title={t('button-done')} disabled={selected.length === 0} onPress={() => onDone(selected)} />
+      <Button
+        title={t('button-done')}
+        disabled={selected.length === 0}
+        onPress={() => onDone(selected)}
+        themeColor={defaultNetwork?.color}
+      />
     </SafeViewContainer>
   );
 });

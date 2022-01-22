@@ -114,6 +114,15 @@ export const PublicNetworks: INetwork[] = [
     eip1559: true,
   },
   {
+    symbol: 'ETH',
+    comm_id: 'aurora',
+    chainId: 1313161554,
+    network: 'Aurora',
+    color: '#70d44b',
+    defaultTokens: [],
+    explorer: 'https://explorer.aurora.dev',
+  },
+  {
     symbol: 'FTM',
     comm_id: 'ftm',
     chainId: 250,
@@ -146,15 +155,6 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: AVAXPopularTokens,
     blockTimeMs: 5 * 1000,
     explorer: 'https://snowtrace.io',
-  },
-  {
-    symbol: 'ETH',
-    comm_id: 'aurora',
-    chainId: 1313161554,
-    network: 'Aurora',
-    color: '#70d44b',
-    defaultTokens: [],
-    explorer: 'https://explorer.aurora.dev',
   },
   {
     symbol: 'ONE',

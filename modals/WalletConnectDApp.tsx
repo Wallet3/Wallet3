@@ -65,6 +65,7 @@ const DApp = observer(({ client, onNetworksPress, onAccountsPress, close, onConn
       onNetworksPress={onNetworksPress}
       onConnect={onConnect}
       onReject={reject}
+      themeColor={network.color}
     />
   );
 });

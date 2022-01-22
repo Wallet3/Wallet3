@@ -73,6 +73,7 @@ export default observer(({ accounts, selectedAccounts, onDone, single, style, ex
             fontSize: 17,
             fontWeight: '500',
             marginStart: 10,
+            maxWidth: '80%',
           }}
           numberOfLines={1}
         >

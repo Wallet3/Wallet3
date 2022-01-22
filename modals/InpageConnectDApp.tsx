@@ -81,6 +81,7 @@ const ConnectPivot = observer(
           appDesc={appDesc}
           appIcon={appIcon}
           appUrl={appUrl}
+          themeColor={selectedNetwork.color}
           isVerified={isSecureSite(appUrl ?? '')}
         />
 
