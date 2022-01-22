@@ -9,6 +9,7 @@ import { Gwei_1 } from '../../common/Constants';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/Tokens';
 import Networks from '../Networks';
+import { getAvatar } from '../../common/ENS';
 import { getGasPrice } from '../../common/RPC';
 
 export class TokenTransferring extends BaseTransaction {
@@ -192,13 +193,20 @@ export class TokenTransferring extends BaseTransaction {
     let provider = Networks.MainnetWsProvider;
 
     this.isResolvingAddress = true;
-    const address = await provider.resolveName(to);
+    const address = (await provider.resolveName(to)) || '';
 
     runInAction(() => {
-      this.toAddress = address || '';
+      this.toAddress = address;
       this.isResolvingAddress = false;
       provider.destroy();
     });
+
+    if (avatar) return;
+
+    const img = await getAvatar(to, address);
+    if (!img?.url) return;
+
+    runInAction(() => (this.avatar = img.url));
   }
 
   setToken(token: IToken) {

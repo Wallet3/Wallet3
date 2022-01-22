@@ -59,7 +59,14 @@ export default observer(({ vm, onClose, erc681 }: Props) => {
   };
 
   const onSendClick = async () => {
-    Contacts.saveContact({ address: vm.toAddress, ens: vm.isEns ? vm.to : undefined });
+    const selfAccount = App.allAccounts.find((c) => c.address === vm.toAddress);
+
+    Contacts.saveContact({
+      address: vm.toAddress,
+      ens: vm.isEns ? vm.to : undefined,
+      name: selfAccount?.nickname,
+      emoji: selfAccount ? { icon: selfAccount.emojiAvatar, color: selfAccount.emojiColor } : undefined,
+    });
 
     if (!Authentication.biometricEnabled) {
       swiper.current?.scrollTo(3);

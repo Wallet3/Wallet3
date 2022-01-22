@@ -8,6 +8,8 @@ export interface IContact {
   address: string;
   ens?: string;
   avatar?: string;
+  name?: string;
+  emoji?: { color: string; icon: string };
 }
 
 class Contacts {

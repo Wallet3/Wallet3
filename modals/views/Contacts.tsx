@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { SafeViewContainer, Skeleton, TextBox } from '../../components';
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
+import Avatar from '../../components/Avatar';
 import Button from '../../components/Button';
 import { FlatList } from 'react-native-gesture-handler';
 import Image from 'react-native-expo-cached-image';
@@ -40,18 +41,30 @@ export default observer(({ onNext, vm }: Props) => {
         }}
       >
         <View style={{ position: 'relative', marginEnd: 12 }}>
-          <FontAwesome
-            name="user-circle-o"
-            size={20}
-            color={secondaryFontColor}
-            style={{ width: 20, height: 20, opacity: 0.5 }}
-          />
+          {item.emoji ? (
+            <Avatar
+              size={20}
+              emoji={item.emoji.icon}
+              backgroundColor={item.emoji.color}
+              emojiSize={8}
+              emojiMarginTop={0}
+              emojiMarginStart={0}
+            />
+          ) : (
+            <FontAwesome
+              name="user-circle-o"
+              size={20}
+              color={secondaryFontColor}
+              style={{ width: 20, height: 20, opacity: 0.5 }}
+            />
+          )}
+
           {item.avatar ? (
             <Image source={{ uri: item.avatar }} style={{ position: 'absolute', width: 20, height: 20, borderRadius: 100 }} />
           ) : undefined}
         </View>
-        <Text style={{ fontSize: 17, color: fontColor }} numberOfLines={1}>
-          {item.ens || formatAddress(item.address)}
+        <Text style={{ fontSize: 17, color: fontColor, maxWidth: '90%' }} numberOfLines={1}>
+          {item.ens || item.name || formatAddress(item.address)}
         </Text>
       </TouchableOpacity>
     );
