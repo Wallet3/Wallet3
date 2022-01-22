@@ -8,5 +8,5 @@ interface Props {
 }
 
 export default (props: Props) => {
-  return <View style={{ height: 1, backgroundColor: borderColor, width: '100%', ...((props.style as any) || {}) }}></View>;
+  return <View style={{ height: 0.5, backgroundColor: borderColor, width: '100%', ...((props.style as any) || {}) }}></View>;
 };

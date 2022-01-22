@@ -1,4 +1,5 @@
 import { Button, SafeViewContainer } from '../../components';
+import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { themeColor, thirdFontColor } from '../../constants/styles';
 
@@ -7,7 +8,6 @@ import Avatar from '../../components/Avatar';
 import { INetwork } from '../../common/Networks';
 import Image from 'react-native-expo-cached-image';
 import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
 import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
@@ -48,6 +48,7 @@ export default observer(
     isRisky,
   }: Props) => {
     const { t } = i18n;
+    const [shortAppName] = useState((appName?.split?.(' ')?.[0] || '').replace(/\,|\:/, ''));
 
     return (
       <SafeViewContainer style={{ flex: 1, alignItems: 'center', paddingTop: 12 }}>
@@ -95,7 +96,7 @@ export default observer(
         <Image source={{ uri: appIcon }} style={{ width: 72, height: 72, marginBottom: 20, borderRadius: 7 }} />
 
         <Text style={{ ...viewStyles.txt, fontSize: 24, fontWeight: '500', opacity: 1 }} numberOfLines={1}>
-          {appName}
+          {shortAppName.length > 2 ? shortAppName : appName}
         </Text>
 
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>

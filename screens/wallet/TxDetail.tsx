@@ -31,7 +31,7 @@ export default observer(({ tx }: { tx?: Transaction }) => {
             height: 16,
             style: { marginEnd: 4 },
           })}
-          <Text style={styles.txt}>{network.network.split(' ')[0]}</Text>
+          <Text style={styles.txt} numberOfLines={1}>{network.network.split(' ')[0]}</Text>
         </View>
       </View>
 
