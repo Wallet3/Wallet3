@@ -158,6 +158,7 @@
   "msg-account-not-found": "賬戶可能已被刪除",
   "msg-no-account-authorized-to-dapp": "該 DApp 未授權",
   "msg-failed-to-import-wallet": "導入錢包失敗，請檢查派生路徑是否正確",
+  "msg-asset-can-not-added": "无法添加该资产到当前网络。请检查资产地址和当前网络是否匹配",
   "button-next": "繼續",
   "button-save": "保存",
   "button-done": "完成",

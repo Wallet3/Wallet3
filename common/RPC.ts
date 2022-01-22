@@ -246,3 +246,19 @@ export async function getMaxPriorityFee(chainId: number) {
 
   return 0;
 }
+
+export async function getCode(chainId: number, contract: string) {
+  const urls = getUrls(chainId);
+
+  for (let url of urls) {
+    try {
+      const resp = await post(url, { jsonrpc: '2.0', method: 'eth_getCode', params: [contract, 'latest'], id: Date.now() });
+
+      if (resp.error) continue;
+
+      return resp.result as string;
+    } catch (error) {}
+  }
+
+  return undefined;
+}

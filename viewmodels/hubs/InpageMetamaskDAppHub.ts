@@ -2,6 +2,7 @@ import * as Linking from 'expo-linking';
 
 import { Bytes, providers, utils } from 'ethers';
 import Networks, { AddEthereumChainParameter } from '../Networks';
+import { getCode, rawCall } from '../../common/RPC';
 
 import { Account } from '../account/Account';
 import App from '../App';
@@ -15,7 +16,6 @@ import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import { WCCallRequest_eth_sendTransaction } from '../../models/WCSession_v1';
 import WebView from 'react-native-webview';
 import i18n from '../../i18n';
-import { rawCall } from '../../common/RPC';
 import { showMessage } from 'react-native-flash-message';
 
 const NOTIFICATION_NAMES = {
@@ -402,7 +402,17 @@ class InpageMetamaskDAppHub extends EventEmitter {
     const dapp = await this.getDApp(origin);
 
     return new Promise((resolve) => {
-      const approve = () => {
+      const approve = async () => {
+        const chainId = Number(dapp?.lastUsedChainId || Networks.current.chainId);
+
+        const code = await getCode(chainId, asset.options.address);
+
+        if (code === '0x' || !code) {
+          showMessage({ message: i18n.t('msg-asset-can-not-added'), type: 'warning' });
+          resolve({ error: { code: 1, message: 'Invalid address' } });
+          return;
+        }
+
         const account = App.allAccounts.find((a) => a.address === dapp?.lastUsedAccount) ?? App.currentAccount;
 
         account?.tokens.addToken(
@@ -413,11 +423,10 @@ class InpageMetamaskDAppHub extends EventEmitter {
             iconUrl: asset.options.image,
             shown: true,
           },
-          dapp ? Number(dapp?.lastUsedChainId) : undefined
+          chainId
         );
 
         showMessage({ message: i18n.t('msg-token-added', { name: asset.options.symbol }), type: 'success' });
-
         resolve(null);
       };
 
