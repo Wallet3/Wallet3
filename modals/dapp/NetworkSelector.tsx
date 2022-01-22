@@ -55,7 +55,10 @@ export default observer(({ networks, selectedChains, onDone, single }: Props) =>
           color: item.color,
           style: { marginHorizontal: 10, marginStart: item.chainId === 1 ? 9 : undefined },
         })}
-        <Text style={{ color: item.color, fontSize: 16, fontWeight: '500' }}>{item.network}</Text>
+        
+        <Text style={{ color: item.color, fontSize: 16, fontWeight: '500', maxWidth: '80%' }} numberOfLines={1}>
+          {item.network}
+        </Text>
       </TouchableOpacity>
     );
   };

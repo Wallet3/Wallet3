@@ -14,6 +14,7 @@ import { action, makeObservable, observable, runInAction } from 'mobx';
 import { appEncryptKey, pinEncryptKey } from '../configs/secret';
 import { decrypt, encrypt, sha256 } from '../utils/cipher';
 
+import { AppState } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import EventEmitter from 'events';
 
@@ -25,6 +26,8 @@ const keys = {
 };
 
 export class Authentication extends EventEmitter {
+  private lastBackgroundTimestamp = Date.now();
+
   biometricsSupported = false;
   supportedTypes: AuthenticationType[] = [];
   biometricEnabled = true;
@@ -59,6 +62,18 @@ export class Authentication extends EventEmitter {
     });
 
     this.init();
+
+    AppState.addEventListener('change', (nextState) => {
+      if (nextState === 'background' || nextState === 'inactive') {
+        this.lastBackgroundTimestamp = Date.now();
+        return;
+      }
+
+      if (nextState === 'active') {
+        if (Date.now() - this.lastBackgroundTimestamp < 1000 * 60) return;
+        runInAction(() => (this.appAuthorized = false));
+      }
+    });
   }
 
   async init() {
