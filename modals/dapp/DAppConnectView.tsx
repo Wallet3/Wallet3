@@ -66,7 +66,7 @@ export default observer(
             />
 
             <Text style={{ color: thirdFontColor, maxWidth: 150, marginStart: 8 }} numberOfLines={1}>
-              {account?.nickname || account?.ens.name || formatAddress(account?.address || '', 6, 4)}
+              {account?.miniDisplayName}
             </Text>
           </TouchableOpacity>
 

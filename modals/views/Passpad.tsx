@@ -1,4 +1,5 @@
 import * as Animatable from 'react-native-animatable';
+import * as Haptics from 'expo-haptics';
 
 import { Button, SafeViewContainer } from '../../components';
 import Numpad, { DefaultNumpadHandler } from '../../components/Numpad';
@@ -36,6 +37,7 @@ const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style, bi
       if (success) return;
 
       passcodeView.current?.shake?.();
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       setTimeout(() => setPasscode(''), 500);
     });
   }, [passcode]);
@@ -51,7 +53,12 @@ const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style, bi
 
       <View style={{ flex: 1 }} />
 
-      <Numpad onPress={(value) => DefaultNumpadHandler(value, passcode, setPasscode)} disableDot bioType={bioType} onBioAuth={onBioAuth} />
+      <Numpad
+        onPress={(value) => DefaultNumpadHandler(value, passcode, setPasscode)}
+        disableDot
+        bioType={bioType}
+        onBioAuth={onBioAuth}
+      />
 
       {disableCancel ? undefined : (
         <Button title={t('button-cancel')} onPress={() => onCancel?.()} themeColor={themeColor} style={{ marginTop: 12 }} />

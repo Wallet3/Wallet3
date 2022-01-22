@@ -34,6 +34,8 @@ PODS:
     - EXJSONUtils
   - Expo (44.0.5):
     - ExpoModulesCore
+  - ExpoHaptics (11.1.0):
+    - ExpoModulesCore
   - ExpoLocalization (12.0.0):
     - ExpoModulesCore
   - ExpoModulesCore (0.6.4):
@@ -340,7 +342,7 @@ PODS:
     - React-cxxreact (= 0.64.3)
     - React-jsi (= 0.64.3)
     - React-perflogger (= 0.64.3)
-  - RNCAsyncStorage (1.15.15):
+  - RNCAsyncStorage (1.15.16):
     - React-Core
   - RNDeviceInfo (8.4.8):
     - React-Core
@@ -409,6 +411,7 @@ DEPENDENCIES:
   - EXLocalAuthentication (from `../node_modules/expo-local-authentication/ios`)
   - EXManifests (from `../node_modules/expo-manifests/ios`)
   - Expo (from `../node_modules/expo/ios`)
+  - ExpoHaptics (from `../node_modules/expo-haptics/ios`)
   - ExpoLocalization (from `../node_modules/expo-localization/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core/ios`)
   - EXRandom (from `../node_modules/expo-random/ios`)
@@ -504,6 +507,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-manifests/ios"
   Expo:
     :path: "../node_modules/expo/ios"
+  ExpoHaptics:
+    :path: "../node_modules/expo-haptics/ios"
   ExpoLocalization:
     :path: "../node_modules/expo-localization/ios"
   ExpoModulesCore:
@@ -629,6 +634,7 @@ SPEC CHECKSUMS:
   EXLocalAuthentication: 4c7166ed3133d2c75586093833936652e7d2c7fc
   EXManifests: 50e42e01335df4e54109dee7be5a91bfd37347db
   Expo: 337c72b7e9314e93023af79c875930db8e008275
+  ExpoHaptics: c62a5fc7bba0184d0165d559fc2b0fc46168ef40
   ExpoLocalization: 83582a967db52987a8479490b056d5eb9fd70552
   ExpoModulesCore: 64abda7af7cf659d2fa092934e29c6f4ea7e849f
   EXRandom: 06978dcf45075f3c9e17ae5e726b887316ee9877
@@ -673,7 +679,7 @@ SPEC CHECKSUMS:
   React-RCTVibration: c7f845861e79eae13dc1e8217a3cf47a3945b504
   React-runtimeexecutor: 493d9abb8b23c3f84e19ae221eeba92cadcb70dc
   ReactCommon: 8fea6422328e2fc093e25c9fac67adbcf0f04fb4
-  RNCAsyncStorage: 0bef6a21517c0254bd6bd59a3672963abfa0d18e
+  RNCAsyncStorage: 6ed7eefcf176fee8cd7039a44ca56f0247a650bb
   RNDeviceInfo: 0400a6d0c94186d1120c3cbd97b23abc022187a9
   RNGestureHandler: bf572f552ea324acd5b5464b8d30755b2d8c1de6
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
