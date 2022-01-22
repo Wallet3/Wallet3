@@ -81,7 +81,7 @@ export default observer(
 
         <CopyableText
           copyText={address || ''}
-          title={formatAddress(address || '', 9, 5)}
+          title={formatAddress(address || '', 8, 5)}
           iconSize={10}
           iconColor="#fff"
           iconStyle={{ marginHorizontal: 5 }}

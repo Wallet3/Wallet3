@@ -1,10 +1,10 @@
+import { Coin, Separator } from '../../components';
 import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist';
 import React, { useState } from 'react';
 import { SafeAreaView, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { fontColor, secondaryFontColor } from '../../constants/styles';
 
 import App from '../../viewmodels/App';
-import { Coin } from '../../components';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/Networks';
 import { RootStack } from '../navigations';
@@ -56,9 +56,10 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
   return (
     <SafeAreaView style={{ backgroundColor: '#fff', flex: 1 }}>
       <Text style={{ paddingHorizontal: 16, color: secondaryFontColor, paddingBottom: 4 }}>{t('home-tokens-drag-tip')}</Text>
+      <Separator />
       <DraggableFlatList
-        style={{ flex: 1, marginBottom: -36 }}
-        contentContainerStyle={{ paddingBottom: 36 }}
+        style={{ marginBottom: -36 }}
+        contentContainerStyle={{ paddingBottom: 42 }}
         data={data}
         renderItem={renderItem}
         keyExtractor={(item) => item.address}
