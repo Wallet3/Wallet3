@@ -221,7 +221,7 @@ const QRView = observer(({ vm, onBack, themeColor }: Props) => {
 
         <CopyableText
           title={t('tip-copy-link')}
-          txt={requestingUri}
+          copyText={requestingUri}
           txtStyle={{ fontSize: 12, maxWidth: 185, color: thirdFontColor }}
           iconColor={thirdFontColor}
           iconStyle={{ marginHorizontal: 4 }}

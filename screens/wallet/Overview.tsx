@@ -1,5 +1,6 @@
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { formatAddress, formatCurrency } from '../../utils/formatter';
 import { numericFontFamily, themeColor } from '../../constants/styles';
 
 import AnimateNumber from 'react-native-animate-number';
@@ -9,7 +10,6 @@ import Langs from '../../viewmodels/settings/Langs';
 import Logos from '../../assets/icons/networks/white';
 import React from 'react';
 import Ripple from 'react-native-material-ripple';
-import { formatCurrency } from '../../utils/formatter';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 
@@ -80,8 +80,8 @@ export default observer(
         </View>
 
         <CopyableText
-          txt={address || ''}
-          format
+          copyText={address || ''}
+          title={formatAddress(address || '', 9, 5)}
           iconSize={10}
           iconColor="#fff"
           iconStyle={{ marginHorizontal: 5 }}

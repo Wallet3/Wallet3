@@ -136,7 +136,7 @@ export default observer(() => {
             return (
               <View style={styles.socialContainer} key={`${symbol}-${address}`}>
                 <Image source={icons[symbol]} style={styles.coin} />
-                <CopyableText txt={formatAddress(address || '', 6, 4)} iconStyle={{ marginStart: 5 }} iconColor="black" />
+                <CopyableText copyText={address} title={formatAddress(address || '', 6, 4)} iconStyle={{ marginStart: 5 }} iconColor="black" />
               </View>
             );
           })}
