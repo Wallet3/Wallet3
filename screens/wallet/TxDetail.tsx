@@ -1,15 +1,14 @@
 import { Linking, StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
 import Transaction, { ITransaction } from '../../models/Transaction';
 
-import { ChainIdToNetwork } from '../../common/Networks';
 import { Gwei_1 } from '../../common/Constants';
-import React from 'react';
+import Networks from '../../viewmodels/Networks';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import { openBrowserAsync } from 'expo-web-browser';
 import { thirdFontColor } from '../../constants/styles';
 import { utils } from 'ethers';
 
@@ -17,7 +16,7 @@ export default observer(({ tx }: { tx?: Transaction }) => {
   if (!tx) return null;
 
   const { t } = i18n;
-  const network = ChainIdToNetwork.get(tx.chainId ?? 1)!;
+  const [network] = useState(Networks.find(tx.chainId) || Networks.current);
 
   return (
     <View style={{ padding: 16, paddingTop: 24, paddingBottom: 32 }}>
@@ -31,7 +30,9 @@ export default observer(({ tx }: { tx?: Transaction }) => {
             height: 16,
             style: { marginEnd: 4 },
           })}
-          <Text style={styles.txt} numberOfLines={1}>{network.network.split(' ')[0]}</Text>
+          <Text style={styles.txt} numberOfLines={1}>
+            {network.network.split(' ')[0]}
+          </Text>
         </View>
       </View>
 

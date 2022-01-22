@@ -1,18 +1,18 @@
-import { ChainIdsSymbol, Networks } from '../../common/Networks';
 import { FlatList, ListRenderItemInfo, Text, View } from 'react-native';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import Transaction, { ITransaction } from '../../models/Transaction';
 
 import { Coin } from '../../components';
 import Image from 'react-native-expo-cached-image';
 import { Ionicons } from '@expo/vector-icons';
+import Networks from '../../viewmodels/Networks';
 import React from 'react';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import Transaction from '../../models/Transaction';
 import dayjs from 'dayjs';
 import { formatAddress } from '../../utils/formatter';
-import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { secondaryFontColor } from '../../constants/styles';
+import { useState } from 'react';
 import { utils } from 'ethers';
 
 interface Props {
@@ -37,7 +37,7 @@ const Tx = observer(({ item, onPress }: { onPress?: (tx: Transaction) => void; i
   const { t } = i18n;
 
   const { chainId } = item;
-  const tokenSymbol = item.readableInfo?.symbol?.trim() || ChainIdsSymbol.get(chainId);
+  const [tokenSymbol] = useState(item.readableInfo?.symbol?.trim() || Networks.find(chainId)?.symbol);
 
   const dappIcon = item.readableInfo?.icon;
   const amount: string = item.readableInfo?.amount ?? utils.formatEther(item.value ?? '0');

@@ -5,6 +5,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import AnimateNumber from 'react-native-animate-number';
 import BackButton from '../components/BackButton';
 import Currency from '../../viewmodels/settings/Currency';
+import FaceID from '../../assets/icons/app/FaceID-white.svg';
 import GasReview from './GasReview';
 import Image from 'react-native-expo-cached-image';
 import InsufficientFee from '../components/InsufficientFee';
@@ -26,10 +27,10 @@ interface Props {
   onGasPress?: () => void;
   disableBack?: boolean;
   vm: TokenTransferring;
-  biometricEnabled?: boolean;
+  biometricType?: 'faceid' | 'fingerprint';
 }
 
-const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biometricEnabled }: Props) => {
+const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biometricType }: Props) => {
   const { t } = i18n;
   const [busy, setBusy] = React.useState(false);
 
@@ -39,9 +40,11 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
     setBusy(false);
   };
 
-  const sendTitle = biometricEnabled ? t('modal-review-button-hold-to-send') : t('modal-review-button-send');
-  const onLongSendPress = biometricEnabled ? send : undefined;
-  const onSendPress = biometricEnabled ? undefined : send;
+  const sendTitle = biometricType === 'faceid' ? t('modal-review-button-hold-to-send') : t('modal-review-button-send');
+  const onLongSendPress = biometricType === 'faceid' ? send : undefined;
+  const onSendPress = biometricType === 'faceid' ? undefined : send;
+  const authIcon =
+    biometricType === 'faceid' ? () => <FaceID width={12.5} height={12.5} style={{ marginEnd: 2 }} /> : undefined;
 
   return (
     <SafeViewContainer style={styles.container}>
@@ -82,7 +85,9 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
 
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             {generateNetworkIcon({ ...vm.network, width: 15, style: { marginEnd: 5 } })}
-            <Text style={{ ...styles.reviewItemValue, color: vm.network.color }}>{vm.network.network}</Text>
+            <Text style={{ ...styles.reviewItemValue, color: vm.network.color, maxWidth: 150 }} numberOfLines={1}>
+              {vm.network.network.split(' ')[0]}
+            </Text>
           </View>
         </View>
       </View>
@@ -138,6 +143,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
         disabled={!vm.isValidParams || busy}
         onPress={onSendPress}
         onLongPress={onLongSendPress}
+        icon={authIcon}
       />
     </SafeViewContainer>
   );

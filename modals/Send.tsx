@@ -107,7 +107,7 @@ export default observer(({ vm, onClose, erc681 }: Props) => {
             vm={vm}
             onSend={onSendClick}
             disableBack={erc681}
-            biometricEnabled={Authentication.biometricEnabled}
+            biometricType={Authentication.biometricType}
           />
 
           <Passpad

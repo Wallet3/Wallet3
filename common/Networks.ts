@@ -263,5 +263,3 @@ export const Testnets: INetwork[] = [
 ];
 
 export const Networks: INetwork[] = [...PublicNetworks, ...Testnets];
-export const ChainIdsSymbol = new Map<number, string>(Networks.map((n) => [n.chainId, n.symbol]));
-export const ChainIdToNetwork = new Map<number, INetwork>(Networks.map((n) => [n.chainId, n]));
