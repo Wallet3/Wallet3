@@ -21,5 +21,5 @@ export default class Chain extends BaseEntity {
   iconUrl?: string;
 
   @Column({ nullable: true, type: 'simple-json' })
-  customize?: { color?: string };
+  customize?: { color?: string; eip1559?: boolean };
 }

@@ -2,6 +2,7 @@ import * as ethers from 'ethers';
 
 import { INetwork, PublicNetworks } from '../common/Networks';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { getMaxPriorityFeeByRPC, getNextBlockBaseFeeByRPC } from '../common/RPC';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Chain from '../models/Chain';
@@ -70,12 +71,13 @@ class Networks {
           return {
             chainId: Number(c.id),
             color: c.customize?.color || '#7B68EE',
-            comm_id: c.symbol.toLowerCase(),
+            comm_id: c.name.toLowerCase(),
             explorer: c.explorer,
             symbol: c.symbol,
             defaultTokens: [],
             network: c.name,
             rpcUrls: c.rpcUrls,
+            eip1559: c.customize?.eip1559,
           };
         });
     });
@@ -103,11 +105,13 @@ class Networks {
 
   reset() {
     this.switch(this.Ethereum);
+    this.userChains = [];
   }
 
   async add(chain: AddEthereumChainParameter) {
-    if (!Number.isSafeInteger(Number(chain.chainId))) return;
+    if (!Number.isSafeInteger(Number(chain?.chainId))) return false;
     if (PublicNetworks.find((n) => n.chainId === Number(chain.chainId))) return false;
+    if (chain.rpcUrls?.length === 0) return false;
 
     const nc = (await Database.chains.findOne({ where: { id: chain.chainId } })) || new Chain();
 
@@ -115,8 +119,13 @@ class Networks {
     nc.name = chain.chainName || 'EVM-Compatible';
     nc.explorer = chain.blockExplorerUrls?.[0] || '';
     nc.rpcUrls = chain.rpcUrls;
-    nc.customize = nc.customize ?? { color: ChainColors[Number(chain.chainId)] || '#7B68EE' };
+    nc.customize = nc.customize ?? { color: ChainColors[Number(chain.chainId)] || '#7B68EE', eip1559: false };
     nc.symbol = chain.nativeCurrency.symbol || 'ETH';
+
+    try {
+      const priFee = await getNextBlockBaseFeeByRPC(chain.rpcUrls[0]);
+      nc.customize.eip1559 = priFee >= 1;
+    } catch (error) {}
 
     runInAction(() => {
       this.userChains.push({
@@ -127,6 +136,8 @@ class Networks {
         defaultTokens: [],
         explorer: nc.explorer,
         symbol: nc.symbol,
+        rpcUrls: chain.rpcUrls,
+        eip1559: nc.customize?.eip1559,
       });
     });
 

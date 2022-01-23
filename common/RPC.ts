@@ -210,22 +210,26 @@ export async function getNextBlockBaseFee(chainId: number) {
 
   for (let url of urls) {
     try {
-      const resp = await post(url, {
-        jsonrpc: '2.0',
-        method: 'eth_feeHistory',
-        params: [1, 'latest', []],
-        id: Date.now(),
-      });
-
-      const { baseFeePerGas } = resp.result as { baseFeePerGas: string[]; oldestBlock: number };
-
-      if (baseFeePerGas.length === 0) return 0;
-
-      return Number.parseInt(baseFeePerGas[baseFeePerGas.length - 1]);
+      return await getNextBlockBaseFeeByRPC(url);
     } catch (error) {}
   }
 
   return 0;
+}
+
+export async function getNextBlockBaseFeeByRPC(url: string) {
+  const resp = await post(url, {
+    jsonrpc: '2.0',
+    method: 'eth_feeHistory',
+    params: [1, 'latest', []],
+    id: Date.now(),
+  });
+
+  const { baseFeePerGas } = resp.result as { baseFeePerGas: string[]; oldestBlock: number };
+
+  if (baseFeePerGas.length === 0) return 0;
+
+  return Number.parseInt(baseFeePerGas[baseFeePerGas.length - 1]);
 }
 
 export async function getMaxPriorityFee(chainId: number) {
@@ -233,18 +237,22 @@ export async function getMaxPriorityFee(chainId: number) {
 
   for (let url of urls) {
     try {
-      const resp = await post(url, {
-        jsonrpc: '2.0',
-        method: 'eth_maxPriorityFeePerGas',
-        params: [],
-        id: Date.now(),
-      });
-
-      return Number.parseInt(resp.result);
+      return await getMaxPriorityFeeByRPC(url);
     } catch (error) {}
   }
 
   return 0;
+}
+
+export async function getMaxPriorityFeeByRPC(url: string) {
+  const resp = await post(url, {
+    jsonrpc: '2.0',
+    method: 'eth_maxPriorityFeePerGas',
+    params: [],
+    id: Date.now(),
+  });
+
+  return Number.parseInt(resp.result);
 }
 
 export async function getCode(chainId: number, contract: string) {
