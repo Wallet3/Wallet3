@@ -393,7 +393,7 @@ const SendFundsModal = () => {
   );
 };
 
-const LockScreen = ({ app, appAuth }: { app: AppVM; appAuth: Authentication }) => {
+export const LockScreen = ({ app, appAuth }: { app: AppVM; appAuth: Authentication }) => {
   const { ref: lockScreenRef, open: openLockScreen, close: closeLockScreen } = useModalize();
 
   const bioAuth = async () => {
@@ -445,7 +445,6 @@ const LockScreen = ({ app, appAuth }: { app: AppVM; appAuth: Authentication }) =
 
 export default (props: { app: AppVM; appAuth: Authentication }) => {
   return [
-    <LockScreen key="lock-screen" {...props} />,
     <SendFundsModal key="send-funds" />,
     <RequestFundsModal key="request-funds" />,
     <GlobalNetworksMenuModal key="networks-menu" />,

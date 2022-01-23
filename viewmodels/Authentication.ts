@@ -70,7 +70,7 @@ export class Authentication extends EventEmitter {
       }
 
       if (nextState === 'active') {
-        if (Date.now() - this.lastBackgroundTimestamp < 1000 * 60 * 3) return;
+        if (Date.now() - this.lastBackgroundTimestamp < 1000 * 60 * 2) return;
         runInAction(() => (this.appAuthorized = false));
       }
     });

@@ -2,6 +2,7 @@ import * as SplashScreen from 'expo-splash-screen';
 
 import AppViewModel, { AppVM } from './viewmodels/App';
 import AuthViewModel, { Authentication } from './viewmodels/Authentication';
+import Modals, { LockScreen } from './screens/Modalize';
 
 import { About } from './screens/settings/About';
 import AddToken from './screens/tokens/AddToken';
@@ -13,7 +14,6 @@ import { Host } from 'react-native-portalize';
 import { Ionicons } from '@expo/vector-icons';
 import LandScreen from './screens/land';
 import Languages from './screens/settings/Languages';
-import Modals from './screens/Modalize';
 import { NavigationContainer } from '@react-navigation/native';
 import ProfileScreen from './screens/profile';
 import QRScan from './screens/misc/QRScan';
@@ -117,8 +117,9 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
         ) : undefined}
       </Host>
 
-      {Modals({ app, appAuth })}
+      {appAuth.appAuthorized ? Modals({ app, appAuth }) : undefined}
 
+      <LockScreen app={app} appAuth={appAuth} />
       <FlashMessage position="top" />
     </NavigationContainer>
   );
