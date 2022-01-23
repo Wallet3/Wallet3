@@ -404,6 +404,7 @@ const LockScreen = ({ app, appAuth }: { app: AppVM; appAuth: Authentication }) =
       ref={lockScreenRef}
       modalHeight={ScreenHeight}
       closeOnOverlayTap={false}
+      withHandle={false}
       disableScrollIfPossible
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
