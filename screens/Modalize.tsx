@@ -76,6 +76,10 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
 
       setTimeout(() => open(), 0);
     });
+
+    return () => {
+      PubSub.unsubscribe('wc_request');
+    };
   }, []);
 
   return (
@@ -109,6 +113,10 @@ const WalletConnectV1 = () => {
       setExtra(extra);
       openConnectDapp();
     });
+
+    return () => {
+      PubSub.unsubscribe('CodeScan-wc:');
+    };
   }, []);
 
   return (
@@ -213,6 +221,13 @@ const InpageDAppRequests = () => {
       setType('addAsset');
       open();
     });
+
+    return () => {
+      PubSub.unsubscribe('openInpageDAppSign');
+      PubSub.unsubscribe('openInpageDAppSendTransaction');
+      PubSub.unsubscribe('openAddEthereumChain');
+      PubSub.unsubscribe('openAddAsset');
+    };
   }, []);
 
   return (
@@ -353,6 +368,8 @@ const SendFundsModal = () => {
     return () => {
       PubSub.unsubscribe('openSendFundsModal');
       PubSub.unsubscribe('closeSendFundsModal');
+      PubSub.unsubscribe(`CodeScan-ethereum`);
+      PubSub.unsubscribe(`CodeScan-0x`);
     };
   }, []);
 
