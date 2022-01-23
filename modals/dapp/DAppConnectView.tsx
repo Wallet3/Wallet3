@@ -86,7 +86,14 @@ export default observer(
               alignItems: 'center',
             }}
           >
-            {generateNetworkIcon({ chainId: network.chainId, width: 16, height: 16, color: network.color })}
+            {generateNetworkIcon({
+              chainId: network.chainId,
+              width: 16,
+              height: 16,
+              color: network.color,
+              hideEVMTitle: true,
+            })}
+            
             <Text style={{ color: network.color, marginStart: 6, maxWidth: 120 }} numberOfLines={1}>
               {`${network.network.split(' ')[0]}`}
             </Text>
