@@ -5,9 +5,9 @@ import { fontColor, thirdFontColor } from '../../constants/styles';
 
 import { Account } from '../../viewmodels/account/Account';
 import AnimateNumber from 'react-native-animate-number';
-import Authentication from '../../viewmodels/Authentication';
 import Avatar from '../../components/Avatar';
 import Currency from '../../viewmodels/settings/Currency';
+import FaceID from '../../assets/icons/app/FaceID-white.svg';
 import GasReview from '../views/GasReview';
 import Image from 'react-native-expo-cached-image';
 import InsufficientFee from '../components/InsufficientFee';
@@ -29,9 +29,10 @@ interface Props {
   onApprove?: () => Promise<void>;
   onGasPress?: () => void;
   account: Account;
+  bioType?: 'faceid' | 'fingerprint';
 }
 
-const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account }: Props) => {
+const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, bioType }: Props) => {
   const { network } = vm;
   const { t } = i18n;
 
@@ -203,9 +204,10 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account }
         onReject={onReject}
         themeColor={network?.color}
         rejectTitle={t('button-reject')}
-        approveTitle={t(Authentication.biometricType === 'faceid' ? 'modal-review-button-hold-to-send' : 'button-send')}
+        approveTitle={t(bioType === 'faceid' ? 'modal-review-button-hold-to-send' : 'button-send')}
         disabledApprove={!vm.isValidParams || busy}
-        longConfirm={Authentication.biometricType === 'faceid'}
+        longConfirm={bioType === 'faceid'}
+        approveIcon={bioType === 'faceid' ? () => <FaceID width={12.5} height={12.5} style={{ marginEnd: 2 }} /> : undefined}
         onApprove={async () => {
           setBusy(true);
           await onApprove?.();

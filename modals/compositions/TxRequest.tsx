@@ -11,14 +11,14 @@ interface Props {
   app: { icon: string; name: string };
   onApprove: (pin?: string) => Promise<boolean>;
   onReject: () => void;
-  biometricEnabled?: boolean;
+  bioType?: 'faceid' | 'fingerprint';
 }
 
-export default ({ themeColor, vm, app, onApprove, onReject, biometricEnabled }: Props) => {
+export default ({ themeColor, vm, app, onApprove, onReject, bioType }: Props) => {
   const swiper = useRef<Swiper>(null);
 
   const approve = async () => {
-    if (!biometricEnabled) {
+    if (!bioType) {
       swiper.current?.scrollTo(1);
       return;
     }
@@ -37,7 +37,7 @@ export default ({ themeColor, vm, app, onApprove, onReject, biometricEnabled }: 
       loop={false}
       automaticallyAdjustContentInsets
     >
-      <RequestReview vm={vm} app={app} onReject={onReject} onApprove={approve} account={vm.account} />
+      <RequestReview vm={vm} app={app} onReject={onReject} onApprove={approve} account={vm.account} bioType={bioType} />
       <Passpad themeColor={themeColor} onCodeEntered={(c) => onApprove(c)} onCancel={() => swiper.current?.scrollTo(0)} />
     </Swiper>
   );
