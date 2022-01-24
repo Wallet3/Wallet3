@@ -70,8 +70,8 @@ const RootTab = observer(() => {
                 onPress={() => PubSub.publish('openNetworksMenu')}
                 style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 0 }}
               >
-                <Text style={{ fontFamily: 'Questrial', fontSize: 20, color: current.color }}>Wallet 3</Text>
-                <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 4 }} color={current.color} size={12} />
+                <Text style={{ fontFamily: 'Questrial', fontSize: 20 }}>Wallet 3</Text>
+                <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 4 }} size={12} />
               </TouchableOpacity>
             );
           },
@@ -80,7 +80,7 @@ const RootTab = observer(() => {
               style={{ padding: 16, paddingVertical: 0 }}
               onPress={() => navigation.dispatch(DrawerActions.openDrawer)}
             >
-              <Feather name="menu" size={20} color={current.color} />
+              <Feather name="menu" size={20} />
             </TouchableOpacity>
           ),
           headerRight: () => (
@@ -97,14 +97,14 @@ const RootTab = observer(() => {
                 marginEnd: 17,
               }}
             >
-              <MaterialCommunityIcons name="scan-helper" size={16.5} style={{}} color={current.color} />
+              <MaterialCommunityIcons name="scan-helper" size={16.5} style={{}} />
               <View
                 style={{
                   position: 'absolute',
                   left: 2,
                   right: 4.5,
                   height: 1.5,
-                  backgroundColor: current.color,
+                  backgroundColor: '#000',
                   marginStart: 8,
                 }}
               />

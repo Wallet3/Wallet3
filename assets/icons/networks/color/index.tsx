@@ -34,7 +34,7 @@ export const EVMIcon = ({
   hideEVMTitle?: boolean;
 }) => {
   return (
-    <View style={{ ...style, position: 'relative', justifyContent: 'center', alignItems: 'center' }}>
+    <View style={{ ...style, position: 'relative', justifyContent: 'center', alignItems: 'center', paddingBottom: 1 }}>
       <Entypo name="network" size={size ?? 30} color={color} />
       {hideEVMTitle ? undefined : <Text style={{ fontSize: 5, fontWeight: '500', color }}>{'EVM'}</Text>}
     </View>
