@@ -121,12 +121,19 @@ export class Wallet {
   }
 
   private async unlockPrivateKey({ pin, accountIndex }: { pin?: string; accountIndex?: number }) {
-    const xprivkey = await Authentication.decrypt(this.key.bip32Xprivkey, pin);
-    if (!xprivkey) return undefined;
+    try {
+      if (this.isHDWallet) {
+        const xprivkey = await Authentication.decrypt(this.key.bip32Xprivkey, pin);
+        if (!xprivkey) return undefined;
 
-    const bip32 = utils.HDNode.fromExtendedKey(xprivkey);
-    const account = bip32.derivePath(`${accountIndex ?? 0}`);
-    return account.privateKey;
+        const bip32 = utils.HDNode.fromExtendedKey(xprivkey);
+        const account = bip32.derivePath(`${accountIndex ?? 0}`);
+        return account.privateKey;
+      } else {
+        const privkey = await Authentication.decrypt(this.key.secret, pin);
+        return privkey;
+      }
+    } catch (error) {}
   }
 
   private async openWallet(args: { pin?: string; accountIndex: number }) {
