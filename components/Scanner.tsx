@@ -12,7 +12,7 @@ interface Props {
   style?: StyleProp<ViewStyle>;
 }
 
-export default ({ onBarCodeScanned }: Props) => {
+export default ({ onBarCodeScanned, style }: Props) => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const { t } = i18n;
 
@@ -45,12 +45,7 @@ export default ({ onBarCodeScanned }: Props) => {
     );
   }
 
-  return (
-    <BarCodeScanner
-      onBarCodeScanned={onBarCodeScanned}
-      style={{ flex: 1, width: '100%', height: '100%', position: 'absolute' }}
-    ></BarCodeScanner>
-  );
+  return <BarCodeScanner onBarCodeScanned={onBarCodeScanned} style={style} />;
 };
 
 const styles = StyleSheet.create({
