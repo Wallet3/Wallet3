@@ -37,6 +37,11 @@ export function About() {
         <Text style={styles.txt}>{t('about-features-4')}</Text>
       </View>
 
+      <View style={styles.item}>
+        <Ionicons name="logo-github" size={16} color={thirdFontColor} />
+        <Text style={styles.txt}>{t('about-features-5')}</Text>
+      </View>
+
       <Text style={{ marginTop: 24, marginBottom: 4, fontWeight: '500', fontSize: 19, color: thirdFontColor }}>
         {t('about-data-providers')}
       </Text>
