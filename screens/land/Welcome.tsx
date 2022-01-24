@@ -12,14 +12,6 @@ import { useFonts } from 'expo-font';
 export default ({ navigation }: NativeStackScreenProps<LandScreenStack, 'Welcome'>) => {
   const { t } = i18n;
 
-  const [loaded] = useFonts({
-    Questrial: require('../../assets/fonts/Questrial.ttf'),
-  });
-
-  if (!loaded) {
-    return null;
-  }
-
   return (
     <SafeViewContainer style={{ flex: 1, backgroundColor: '#fff', alignItems: 'center' }}>
       <View style={{ flex: 1 }} />

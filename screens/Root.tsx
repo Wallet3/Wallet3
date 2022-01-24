@@ -1,7 +1,7 @@
-import { Animated, Dimensions, TouchableOpacity, View } from 'react-native';
+import { Animated, Dimensions, Text, TouchableOpacity, View } from 'react-native';
 import { BottomTabBar, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { DrawerActions, useNavigation } from '@react-navigation/native';
-import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Entypo, Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { borderColor, fontColor } from '../constants/styles';
 
 import { BlurView } from 'expo-blur';
@@ -19,6 +19,7 @@ import WalletScreen from './wallet';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import i18n from '../i18n';
 import { observer } from 'mobx-react-lite';
+import { useFonts } from 'expo-font';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const DrawerRoot = createDrawerNavigator();
@@ -46,7 +47,7 @@ const RootTab = observer(() => {
           const icons = {
             Wallet: 'credit-card',
             Explore: 'compass',
-            FashionWallet: 'credit-card'
+            FashionWallet: 'credit-card',
           };
 
           return <Feather name={icons[route.name]} size={size} color={focused ? current.color : 'gray'} />;
@@ -56,7 +57,6 @@ const RootTab = observer(() => {
         tabBarLabelStyle: { marginBottom: bottom === 0 ? 7 : 3, marginTop: -3 },
         tabBarStyle: bottom === 0 ? { height: 57 } : undefined,
         tabBarLabelPosition: 'below-icon',
-        // tabBarBackground: () => <BlurView />,
       })}
     >
       <Screen
@@ -64,13 +64,23 @@ const RootTab = observer(() => {
         component={WalletScreen}
         options={{
           tabBarLabel: t('home-tab-wallet'),
-          title: 'Wallet 3',
+          headerTitle: () => {
+            return (
+              <TouchableOpacity
+                onPress={() => PubSub.publish('openNetworksMenu')}
+                style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 0 }}
+              >
+                <Text style={{ fontFamily: 'Questrial', fontSize: 20, color: current.color }}>Wallet 3</Text>
+                <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 4 }} color={current.color} size={12} />
+              </TouchableOpacity>
+            );
+          },
           headerLeft: () => (
             <TouchableOpacity
               style={{ padding: 16, paddingVertical: 0 }}
               onPress={() => navigation.dispatch(DrawerActions.openDrawer)}
             >
-              <Feather name="menu" size={21} />
+              <Feather name="menu" size={20} color={current.color} />
             </TouchableOpacity>
           ),
           headerRight: () => (
@@ -87,9 +97,16 @@ const RootTab = observer(() => {
                 marginEnd: 17,
               }}
             >
-              <MaterialCommunityIcons name="scan-helper" size={18} style={{}} />
+              <MaterialCommunityIcons name="scan-helper" size={16.5} style={{}} color={current.color} />
               <View
-                style={{ position: 'absolute', left: 2, right: 4.5, height: 1.5, backgroundColor: '#000', marginStart: 8 }}
+                style={{
+                  position: 'absolute',
+                  left: 2,
+                  right: 4.5,
+                  height: 1.5,
+                  backgroundColor: current.color,
+                  marginStart: 8,
+                }}
               />
             </TouchableOpacity>
           ),
@@ -136,7 +153,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
             style={{ padding: 16, paddingVertical: 0 }}
             onPress={() => navigation.dispatch(DrawerActions.openDrawer)}
           >
-            <Feather name="menu" size={21} />
+            <Feather name="menu" size={20} />
           </TouchableOpacity>
         ),
       }}

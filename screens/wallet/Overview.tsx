@@ -61,7 +61,7 @@ export default observer(
               onPress={() => PubSub.publish('openNetworksMenu')}
             >
               <Text style={{ ...styles.text, fontSize: 16 }}>{network}</Text>
-              <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 2 }} color={'#fff'} size={12} />
+              {/* <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 2 }} color={'#fff'} size={12} /> */}
             </TouchableOpacity>
 
             {avatar ? (

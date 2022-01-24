@@ -26,6 +26,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import i18n from './i18n';
 import { observer } from 'mobx-react-lite';
+import { useFonts } from 'expo-font';
 
 SplashScreen.hideAsync();
 AppViewModel.init();
@@ -35,6 +36,14 @@ const StackRoot = createNativeStackNavigator();
 const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication }) => {
   const { Navigator, Screen } = StackRoot;
   const { t } = i18n;
+
+  const [loaded] = useFonts({
+    Questrial: require('./assets/fonts/Questrial.ttf'),
+  });
+
+  if (!loaded) {
+    return null;
+  }
 
   return (
     <NavigationContainer>
