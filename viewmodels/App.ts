@@ -15,6 +15,7 @@ import Networks from './Networks';
 import TxHub from './hubs/TxHub';
 import { Wallet } from './Wallet';
 import WalletConnectV1ClientHub from './walletconnect/WalletConnectV1ClientHub';
+import i18n from '../i18n';
 import { showMessage } from 'react-native-flash-message';
 
 export class AppVM {
@@ -85,15 +86,15 @@ export class AppVM {
     let { wallet } = this.findWallet(this.currentAccount!.address) || {};
     let account: Account | undefined;
 
-    if (wallet?.hdWallet) {
+    if (wallet?.isHDWallet) {
       account = wallet.newAccount();
     } else {
-      wallet = this.wallets.find((w) => w.hdWallet);
+      wallet = this.wallets.find((w) => w.isHDWallet);
       account = wallet?.newAccount();
     }
 
     if (!account) {
-      showMessage({ message: 'No wallet can generate a new account', type: 'danger' });
+      showMessage({ message: i18n.t('msg-no-hd-wallet'), type: 'warning' });
       return;
     }
 

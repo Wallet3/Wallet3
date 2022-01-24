@@ -1,7 +1,7 @@
 {
   "land-welcome-import-wallet": "ウォレットのインポート",
   "land-welcome-create-wallet": "ウォレットの新規作成",
-  "land-import-placeholder": "ニーモニックを入力してください。",
+  "land-import-placeholder": "ニーモニック/秘密鍵を入力してください。",
   "land-import-derivation-path": "派生パス",
   "land-import-button-sync": "Wallet 3 デスクトップ版との同期",
   "land-create-security-tips": "セキュリティについて",
@@ -160,6 +160,7 @@
   "msg-no-account-authorized-to-dapp": "現在のDAppに認証されたアカウントはありません",
   "msg-failed-to-import-wallet": "このウォレットのインポートに失敗しました",
   "msg-asset-can-not-added": "この資産は現在のネットワークに追加できません。資産のコントラクトアドレスと現在のネットワークが正しいかどうか確認してください。",
+  "msg-no-hd-wallet": "新しいアカウントを生成できるウォレットはありません",
   "button-next": "次へ",
   "button-save": "保存",
   "button-done": "完了",

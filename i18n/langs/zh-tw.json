@@ -1,7 +1,7 @@
 {
   "land-welcome-import-wallet": "導入錢包",
   "land-welcome-create-wallet": "創建錢包",
-  "land-import-placeholder": "輸入助記詞組",
+  "land-import-placeholder": "請輸入助記詞組或私鑰",
   "land-import-derivation-path": "地址派生路徑",
   "land-import-button-sync": "使用 Wallet 3 桌面版同步",
   "land-create-security-tips": "安全提示",
@@ -160,6 +160,7 @@
   "msg-no-account-authorized-to-dapp": "該 DApp 未授權",
   "msg-failed-to-import-wallet": "導入錢包失敗，請檢查派生路徑是否正確",
   "msg-asset-can-not-added": "無法添加該資產到當前網絡。請檢查資產地址和當前網絡是否匹配",
+  "msg-no-hd-wallet": "沒有錢包可以生成新賬戶，請導入助記詞錢包後嘗試生成新賬戶",
   "button-next": "繼續",
   "button-save": "保存",
   "button-done": "完成",

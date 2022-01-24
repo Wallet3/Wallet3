@@ -47,7 +47,7 @@ export class Wallet {
 
   lastRefreshedTime = 0;
 
-  get hdWallet() {
+  get isHDWallet() {
     return this.key.bip32Xpubkey.startsWith('xpub');
   }
 
@@ -72,15 +72,19 @@ export class Wallet {
   async init() {
     this.removedIndexes = JSON.parse((await AsyncStorage.getItem(`${this.key.id}-removed-indexes`)) || '[]');
     const count = Number((await AsyncStorage.getItem(`${this.key.id}-address-count`)) || 1);
-    const bip32 = utils.HDNode.fromExtendedKey(this.key.bip32Xpubkey);
-
     const accounts: Account[] = [];
 
-    for (let i = this.key.basePathIndex; i < this.key.basePathIndex + count; i++) {
-      if (this.removedIndexes.includes(i)) continue;
+    if (this.isHDWallet) {
+      const bip32 = utils.HDNode.fromExtendedKey(this.key.bip32Xpubkey);
 
-      const accountNode = bip32.derivePath(`${i}`);
-      accounts.push(new Account(accountNode.address, i));
+      for (let i = this.key.basePathIndex; i < this.key.basePathIndex + count; i++) {
+        if (this.removedIndexes.includes(i)) continue;
+
+        const accountNode = bip32.derivePath(`${i}`);
+        accounts.push(new Account(accountNode.address, i));
+      }
+    } else {
+      accounts.push(new Account(this.key.bip32Xpubkey, 0));
     }
 
     runInAction(() => (this.accounts = accounts));
@@ -89,6 +93,8 @@ export class Wallet {
   }
 
   newAccount() {
+    if (!this.isHDWallet) return;
+
     const bip32 = utils.HDNode.fromExtendedKey(this.key.bip32Xpubkey);
     const index =
       Math.max(

@@ -1,7 +1,7 @@
 import * as Random from 'expo-random';
 import * as ethers from 'ethers';
 
-import { decrypt, encrypt } from '../utils/cipher';
+import { decrypt, encrypt, sha256 } from '../utils/cipher';
 
 import Authentication from './Authentication';
 import { DEFAULT_DERIVATION_PATH } from '../common/Constants';
@@ -56,6 +56,8 @@ export class MnemonicOnce {
       if (ethers.utils.isValidMnemonic(this.secret)) {
         return await this.saveMnemonic();
       }
+
+      return await this.savePrivKey();
     } catch (error) {
       return undefined;
     } finally {
@@ -83,7 +85,12 @@ export class MnemonicOnce {
 
   private async savePrivKey() {
     const key = new Key();
-    
+    key.id = Date.now();
+    key.secret = await Authentication.encrypt(this.secret);
+    key.bip32Xpubkey = new ethers.Wallet(this.secret).address;
+
+    await key.save();
+    return key;
   }
 
   clean() {
