@@ -365,9 +365,8 @@ class InpageMetamaskDAppHub extends EventEmitter {
       setTimeout(() => this.wallet_switchEthereumChain(origin, [{ chainId: chain.chainId }]), 200);
 
       const dapp = await this.getDApp(origin);
-      if (!dapp) return null;
 
-      if (Number(dapp.lastUsedChainId) !== 1) {
+      if (Number(dapp?.lastUsedChainId) !== Networks.current.chainId) {
         showMessage({ message: i18n.t('msg-chain-already-exists', { name: chain.chainName }), type: 'info' });
       }
 

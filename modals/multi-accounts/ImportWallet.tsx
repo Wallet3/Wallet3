@@ -19,14 +19,14 @@ export default ({ onDone, onCancel }: { onDone?: () => void; onCancel?: () => vo
   const { t } = i18n;
   const themeColor = Networks.current.color;
   const [mnemonic] = useState(new MnemonicOnce());
-  const [secret, setSecret] = useState('');
+  const [secret, setSecret] = useState<string>();
   const [verified, setVerified] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [defaultSecret, setDefaultSecret] = useState<string>();
+
   const [swiperIndex, setSwiperIndex] = useState(0);
   const swiper = useRef<Swiper>(null);
 
-  useEffect(() => setVerified(mnemonic.setSecret(secret)), [secret]);
+  useEffect(() => setVerified(mnemonic.setSecret(secret || '')), [secret]);
 
   const importWallet = async () => {
     if (!verified) return;
@@ -47,19 +47,14 @@ export default ({ onDone, onCancel }: { onDone?: () => void; onCancel?: () => vo
     }, 0);
   };
 
-  useEffect(() => {
-    PubSub.subscribe('CodeScan-wallet3sync:', (_, { data }: { data: string }) => {
-      const encoded = data.substring(12);
-      const decoded = decode(encoded).replaceAll(',', ' ').trim();
+  const onData = (secret: string) => {
+    setSecret(secret);
 
-      if (!mnemonic.setSecret(decoded)) return;
-      setDefaultSecret(decoded);
-    });
-
-    return () => {
-      PubSub.unsubscribe('CodeScan-wallet3sync:');
-    };
-  }, []);
+    setTimeout(() => {
+      if (!verified) return;
+      swiper.current?.scrollTo(0);
+    }, 0);
+  };
 
   return (
     <Swiper
@@ -78,7 +73,7 @@ export default ({ onDone, onCancel }: { onDone?: () => void; onCancel?: () => vo
             numberOfLines={5}
             placeholder={t('land-import-placeholder')}
             onChangeText={(txt) => setSecret(txt)}
-            defaultValue={defaultSecret}
+            defaultValue={secret}
             autoCapitalize="none"
             keyboardType="default"
             secureTextEntry={true}
@@ -136,7 +131,7 @@ export default ({ onDone, onCancel }: { onDone?: () => void; onCancel?: () => vo
         <Loader loading={busy} message={t('land-passcode-encrypting')} />
       </SafeViewContainer>
 
-      <SecretScan onBack={() => swiper.current?.scrollTo(0)} enabled={swiperIndex === 1} />
+      <SecretScan onData={onData} onBack={() => swiper.current?.scrollTo(0)} enabled={swiperIndex === 1} />
     </Swiper>
   );
 };

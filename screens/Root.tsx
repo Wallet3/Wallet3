@@ -67,11 +67,11 @@ const RootTab = observer(() => {
           headerTitle: () => {
             return (
               <TouchableOpacity
-                onPress={() => PubSub.publish('openNetworksMenu')}
+                onPress={() => PubSub.publish('openAccountsMenu')}
                 style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 0 }}
               >
                 <Text style={{ fontFamily: 'Questrial', fontSize: 20 }}>Wallet 3</Text>
-                <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 4 }} size={12} />
+                {/* <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 4 }} size={12} /> */}
               </TouchableOpacity>
             );
           },
