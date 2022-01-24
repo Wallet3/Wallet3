@@ -9,6 +9,7 @@ import BrowserScreen from './browser';
 import DAppsScreen from './dapps';
 import Drawer from './drawer';
 import { DrawerNavigationHelpers } from '@react-navigation/drawer/lib/typescript/src/types';
+import FashionWallet from './wallet/SocialWallet';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../viewmodels/Networks';
 import PortfolioScreen from './portfolio';
@@ -45,6 +46,7 @@ const RootTab = observer(() => {
           const icons = {
             Wallet: 'credit-card',
             Explore: 'compass',
+            FashionWallet: 'credit-card'
           };
 
           return <Feather name={icons[route.name]} size={size} color={focused ? current.color : 'gray'} />;
@@ -53,7 +55,7 @@ const RootTab = observer(() => {
         tabBarInactiveTintColor: 'gray',
         tabBarLabelStyle: { marginBottom: bottom === 0 ? 7 : 3, marginTop: -3 },
         tabBarStyle: bottom === 0 ? { height: 57 } : undefined,
-        tabBarLabelPosition: "below-icon",
+        tabBarLabelPosition: 'below-icon',
         // tabBarBackground: () => <BlurView />,
       })}
     >
@@ -93,6 +95,22 @@ const RootTab = observer(() => {
           ),
         }}
       />
+
+      {/* <Screen
+        name="FashionWallet"
+        component={FashionWallet}
+        options={{
+          headerShown: false,
+          headerLeft: () => (
+            <TouchableOpacity
+              style={{ padding: 16, paddingVertical: 0 }}
+              onPress={() => navigation.dispatch(DrawerActions.openDrawer)}
+            >
+              <Feather name="menu" size={21} />
+            </TouchableOpacity>
+          ),
+        }}
+      /> */}
 
       <Screen name="Explore" component={BrowserScreen} options={{ tabBarLabel: 'Web3', headerShown: false }} />
     </Navigator>

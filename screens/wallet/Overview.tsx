@@ -1,4 +1,4 @@
-import { Feather, Ionicons } from '@expo/vector-icons';
+import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { formatAddress, formatCurrency } from '../../utils/formatter';
 import { numericFontFamily, themeColor } from '../../constants/styles';
@@ -56,7 +56,13 @@ export default observer(
           }}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ ...styles.text, fontSize: 16 }}>{network}</Text>
+            <TouchableOpacity
+              style={{ flexDirection: 'row', alignItems: 'center' }}
+              onPress={() => PubSub.publish('openNetworksMenu')}
+            >
+              <Text style={{ ...styles.text, fontSize: 16 }}>{network}</Text>
+              <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 2 }} color={'#fff'} size={12} />
+            </TouchableOpacity>
 
             {avatar ? (
               <Image
