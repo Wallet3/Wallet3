@@ -8,6 +8,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MnemonicOnce } from '../../viewmodels/MnemonicOnce';
 import Networks from '../../viewmodels/Networks';
 import RejectApproveButtons from '../components/RejectApproveButtons';
+import SecretScan from './SecretScan';
 import Swiper from 'react-native-swiper';
 import { decode } from 'js-base64';
 import i18n from '../../i18n';
@@ -22,6 +23,7 @@ export default ({ onDone, onCancel }: { onDone?: () => void; onCancel?: () => vo
   const [verified, setVerified] = useState(false);
   const [busy, setBusy] = useState(false);
   const [defaultSecret, setDefaultSecret] = useState<string>();
+  const [swiperIndex, setSwiperIndex] = useState(0);
   const swiper = useRef<Swiper>(null);
 
   useEffect(() => setVerified(mnemonic.setSecret(secret)), [secret]);
@@ -65,6 +67,7 @@ export default ({ onDone, onCancel }: { onDone?: () => void; onCancel?: () => vo
       showsPagination={false}
       showsButtons={false}
       scrollEnabled={false}
+      onIndexChanged={(index) => setSwiperIndex(index)}
       loop={false}
       automaticallyAdjustContentInsets
     >
@@ -93,7 +96,7 @@ export default ({ onDone, onCancel }: { onDone?: () => void; onCancel?: () => vo
 
           <TouchableOpacity
             style={{ position: 'absolute', bottom: 0, right: 0, padding: 10, alignItems: 'center', justifyContent: 'center' }}
-            // onPress={() => }
+            onPress={() => swiper.current?.scrollTo(1)}
           >
             <MaterialCommunityIcons name="scan-helper" size={16} color={themeColor} />
             <View style={{ height: 1, position: 'absolute', width: 12, backgroundColor: themeColor }} />
@@ -132,6 +135,8 @@ export default ({ onDone, onCancel }: { onDone?: () => void; onCancel?: () => vo
 
         <Loader loading={busy} message={t('land-passcode-encrypting')} />
       </SafeViewContainer>
+
+      <SecretScan onBack={() => swiper.current?.scrollTo(0)} enabled={swiperIndex === 1} />
     </Swiper>
   );
 };
