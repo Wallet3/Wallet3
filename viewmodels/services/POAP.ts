@@ -5,6 +5,22 @@ import axios from 'axios';
 
 const ContractAddr = '0x22C1f6050E56d2876009903609a2cC3fEf83B415';
 
+export interface POAPBadge {
+  tokenId: BigNumber;
+  eventId: BigNumber;
+
+  tokenURI: string;
+  metadata: {
+    description: string;
+    external_url: string;
+    home_url: string;
+    image_url: string;
+    name: string;
+    year: number;
+    tags: string[];
+  };
+}
+
 export class POAP {
   readonly contract: ethers.Contract;
 
@@ -48,7 +64,7 @@ export class POAP {
     );
   }
 
-  async getNFTs(address: string) {
+  async getNFTs(address: string): Promise<POAPBadge[]> {
     const count = await this.balanceOf(address);
     if (count === 0) return [];
 

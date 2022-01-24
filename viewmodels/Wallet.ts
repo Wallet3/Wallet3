@@ -114,10 +114,17 @@ export class Wallet {
   async removeAccount(account: Account) {
     const index = this.accounts.indexOf(account);
     if (index === -1) return;
-    this.accounts.splice(index, 1);
 
+    this.accounts.splice(index, 1);
     this.removedIndexes.push(account.index);
-    await AsyncStorage.setItem(`${this.key.id}-removed-indexes`, JSON.stringify(this.removedIndexes));
+
+    const storeKey = `${this.key.id}-removed-indexes`;
+
+    if (this.accounts.length > 0) {
+      await AsyncStorage.setItem(storeKey, JSON.stringify(this.removedIndexes));
+    } else {
+      AsyncStorage.removeItem(storeKey);
+    }
   }
 
   private async unlockPrivateKey({ pin, accountIndex }: { pin?: string; accountIndex?: number }) {

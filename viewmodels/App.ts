@@ -133,7 +133,7 @@ export class AppVM {
 
     if (wallet.accounts.length === 0) {
       runInAction(() => this.wallets.splice(this.wallets.indexOf(wallet), 1));
-      console.log(await wallet.delete());
+      await wallet.delete();
     }
   }
 
