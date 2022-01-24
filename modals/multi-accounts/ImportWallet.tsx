@@ -18,7 +18,7 @@ export default ({ onDone, onCancel }: { onDone?: () => void; onCancel?: () => vo
   const [verified, setVerified] = useState(false);
   const [busy, setBusy] = useState(false);
 
-  useEffect(() => setVerified(mnemonic.setMnemonic(secret)), [secret]);
+  useEffect(() => setVerified(mnemonic.setSecret(secret)), [secret]);
 
   const importWallet = async () => {
     if (!verified) return;

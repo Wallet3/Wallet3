@@ -97,7 +97,7 @@ export class Authentication extends EventEmitter {
       this.userSecretsVerified = userSecretsVerified === 'true';
     });
 
-    ScreenCapture.preventScreenCaptureAsync();
+    setTimeout(() => ScreenCapture.preventScreenCaptureAsync(), 2000);
   }
 
   private async authenticate({ pin, options }: { pin?: string; options?: LocalAuthenticationOptions } = {}): Promise<boolean> {

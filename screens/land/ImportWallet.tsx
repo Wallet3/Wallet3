@@ -23,7 +23,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
   const [verified, setVerified] = React.useState(false);
 
   useEffect(() => {
-    setVerified(MnemonicOnce.setMnemonic(mnemonic));
+    setVerified(MnemonicOnce.setSecret(mnemonic));
   }, [mnemonic]);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
       const decoded = decode(encoded).replaceAll(',', ' ').trim();
 
       if (!ethers.utils.isValidMnemonic(decoded)) return;
-      MnemonicOnce.setMnemonic(decoded);
+      MnemonicOnce.setSecret(decoded);
       navigation.navigate('SetupPasscode');
     });
 

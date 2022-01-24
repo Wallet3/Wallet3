@@ -29,12 +29,19 @@ export class MnemonicOnce {
     this.secret = ethers.utils.entropyToMnemonic(entropy);
   }
 
-  setMnemonic(mnemonic: string) {
-    if (!ethers.utils.isValidMnemonic(mnemonic, langToWordlist(mnemonic))) return false;
+  setSecret(secret: string) {
+    if (ethers.utils.isValidMnemonic(secret)) {
+      this.secret = secret;
+    } else if ((secret.length === 64 && !secret.startsWith('0x')) || (secret.startsWith('0x') && secret.length === 66)) {
+      this.secret = secret;
+    } else {
+      this.secret = '';
+    }
 
-    this.secret = mnemonic;
-    setString(''); // write empty string to clipboard, if the user pasted a mnemonic
-    return true;
+    const success = this.secret ? true : false;
+    if (success) setString(''); // write empty string to clipboard, if the user pasted a mnemonic
+
+    return success;
   }
 
   async setDerivationPath(fullPath: string) {
@@ -46,26 +53,37 @@ export class MnemonicOnce {
 
   async save() {
     try {
-      const root = ethers.utils.HDNode.fromMnemonic(this.secret);
-
-      const bip32 = root.derivePath(this.derivationPath);
-      const bip32XPubkey = xpubkeyFromHDNode(bip32);
-
-      const key = new Key();
-      key.id = Date.now();
-      key.secret = await Authentication.encrypt(this.secret);
-      key.bip32Xprivkey = await Authentication.encrypt(bip32.extendedKey);
-      key.bip32Xpubkey = bip32XPubkey;
-      key.basePath = this.derivationPath;
-      key.basePathIndex = this.derivationIndex;
-
-      await key.save();
-      return key;
+      if (ethers.utils.isValidMnemonic(this.secret)) {
+        return await this.saveMnemonic();
+      }
     } catch (error) {
       return undefined;
     } finally {
       this.clean();
     }
+  }
+
+  private async saveMnemonic() {
+    const root = ethers.utils.HDNode.fromMnemonic(this.secret);
+
+    const bip32 = root.derivePath(this.derivationPath);
+    const bip32XPubkey = xpubkeyFromHDNode(bip32);
+
+    const key = new Key();
+    key.id = Date.now();
+    key.secret = await Authentication.encrypt(this.secret);
+    key.bip32Xprivkey = await Authentication.encrypt(bip32.extendedKey);
+    key.bip32Xpubkey = bip32XPubkey;
+    key.basePath = this.derivationPath;
+    key.basePathIndex = this.derivationIndex;
+
+    await key.save();
+    return key;
+  }
+
+  private async savePrivKey() {
+    const key = new Key();
+    
   }
 
   clean() {

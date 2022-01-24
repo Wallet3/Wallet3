@@ -34,7 +34,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
     try {
       if (success) {
         close();
-        MnemonicOnce.setMnemonic(secret!);
+        MnemonicOnce.setSecret(secret!);
         setWords(MnemonicOnce.secretWords);
       } else {
         setRetried((p) => p + 1);

@@ -15,6 +15,7 @@ import Networks from './Networks';
 import TxHub from './hubs/TxHub';
 import { Wallet } from './Wallet';
 import WalletConnectV1ClientHub from './walletconnect/WalletConnectV1ClientHub';
+import { showMessage } from 'react-native-flash-message';
 
 export class AppVM {
   private lastRefreshedTime = 0;
@@ -82,13 +83,18 @@ export class AppVM {
 
   newAccount() {
     let { wallet } = this.findWallet(this.currentAccount!.address) || {};
-    let account: Account;
+    let account: Account | undefined;
 
     if (wallet?.hdWallet) {
       account = wallet.newAccount();
     } else {
       wallet = this.wallets.find((w) => w.hdWallet);
-      account = wallet!.newAccount();
+      account = wallet?.newAccount();
+    }
+
+    if (!account) {
+      showMessage({ message: 'No wallet can generate a new account', type: 'danger' });
+      return;
     }
 
     this.switchAccount(account.address);
@@ -141,6 +147,7 @@ export class AppVM {
   }
 
   async init() {
+    console.log('init app viewmodel');
     Coingecko.init();
 
     await Promise.all([Database.init(), Authentication.init()]);
