@@ -20,6 +20,7 @@
     "@tradle/react-native-http": "^2.0.0",
     "@walletconnect/client": "^1.7.1",
     "assert": "^2.0.0",
+    "axios": "^0.25.0",
     "buffer": "^6.0.3",
     "crypto-es": "^1.2.7",
     "d3-shape": "^3.1.0",
