@@ -55,5 +55,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     position: 'relative',
+    width: '100%',
+    height: '100%',
   },
 });
