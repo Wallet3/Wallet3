@@ -1,13 +1,14 @@
 import { Button, Mnemonic, SafeViewContainer } from '../../components';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Text, View } from 'react-native';
-import { secondaryFontColor, styles } from '../../constants/styles';
+import { borderColor, secondaryFontColor, styles, thirdFontColor } from '../../constants/styles';
 
 import App from '../../viewmodels/App';
 import Authentication from '../../viewmodels/Authentication';
+import CopyableText from '../../components/CopyableText';
 import { FullPasspad } from '../../modals/views/Passpad';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import MnemonicOnce from '../../viewmodels/MnemonicOnce';
+import { MnemonicOnce } from '../../viewmodels/MnemonicOnce';
 import { Modalize } from 'react-native-modalize';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/Networks';
@@ -15,6 +16,7 @@ import { Portal } from 'react-native-portalize';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
+import { usePreventScreenCapture } from 'expo-screen-capture';
 
 export default observer(({ navigation }: NativeStackScreenProps<any, never>) => {
   const { t } = i18n;
@@ -22,11 +24,16 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
   const [retried, setRetried] = useState(0);
   const [authorized, setAuthorized] = useState(false);
   const [words, setWords] = useState<string[]>([]);
+  const [privKey, setPrivKey] = useState<string>();
+  const [mnemonicOnce] = useState(new MnemonicOnce());
+
+  usePreventScreenCapture();
 
   const themeColor = Networks.current.color;
 
   const verify = async (passcode?: string) => {
-    const secret = await App.wallets[0]?.getSecret(passcode);
+    const { wallet } = App.findWallet(App.currentAccount?.address || '') || {};
+    const secret = await wallet?.getSecret(passcode);
     const success = secret ? true : false;
 
     setAuthorized(success);
@@ -34,8 +41,13 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
     try {
       if (success) {
         close();
-        MnemonicOnce.setSecret(secret!);
-        setWords(MnemonicOnce.secretWords);
+        mnemonicOnce.setSecret(secret!);
+
+        if (wallet?.isHDWallet) {
+          setWords(mnemonicOnce.secretWords);
+        } else {
+          setPrivKey(secret!);
+        }
       } else {
         setRetried((p) => p + 1);
       }
@@ -48,9 +60,9 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
 
   useEffect(() => {
     setTimeout(() => open(), 0);
-    if (Authentication.biometricEnabled) verify();
+    if (Authentication.biometricType) verify();
 
-    return () => MnemonicOnce.clean();
+    return () => mnemonicOnce.clean();
   }, []);
 
   return (
@@ -71,15 +83,23 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
             <Text style={{ marginStart: 16, color: secondaryFontColor }}>{t('land-create-security-tips-2')}</Text>
           </View>
 
-          <Mnemonic phrase={words} />
+          {words.length > 0 && <Mnemonic phrase={words} />}
+
+          {privKey && (
+            <View style={{ padding: 8, borderWidth: 1, borderRadius: 7, borderColor }}>
+              <CopyableText copyText={privKey} iconSize={0.001} iconColor={thirdFontColor} txtStyle={{ color: thirdFontColor }} />
+            </View>
+          )}
 
           <View style={{ flex: 1 }} />
 
-          <Button
-            title={t('settings-security-backup-button-verify')}
-            themeColor={themeColor}
-            onPress={() => navigation.navigate('VerifySecret')}
-          />
+          {words.length > 0 && (
+            <Button
+              title={t('settings-security-backup-button-verify')}
+              themeColor={themeColor}
+              onPress={() => navigation.navigate('VerifySecret')}
+            />
+          )}
         </View>
       ) : (
         <View></View>

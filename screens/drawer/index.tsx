@@ -3,6 +3,7 @@ import { Arbitrum, EVMIcon, Ethereum, NetworkIcons, Optimism, Polygon } from '..
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
+import React, { useEffect, useState } from 'react';
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
 import Avatar from '../../components/Avatar';
@@ -10,7 +11,6 @@ import { DrawerActions } from '@react-navigation/core';
 import { INetwork } from '../../common/Networks';
 import Networks from '../../viewmodels/Networks';
 import PubSub from 'pubsub-js';
-import React from 'react';
 import { SafeViewContainer } from '../../components';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import i18n from '../../i18n';
@@ -20,7 +20,7 @@ import { observer } from 'mobx-react-lite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { bottom, top } = initialWindowMetrics?.insets ?? { bottom: 0, top: 0 };
-const screenHeight = Dimensions.get('window').height - (bottom + top);
+const contentHeight = Dimensions.get('window').height - (bottom + top);
 
 interface DrawerProps extends DrawerContentComponentProps {
   appVM: AppVM;
@@ -31,6 +31,7 @@ const Drawer = observer((props: DrawerProps) => {
   const { navigation, appVM } = props;
   const { currentAccount } = appVM;
   const { current } = Networks;
+  const [screenHeight, setScreenHeight] = useState(contentHeight);
 
   const { index } = navigation.getState();
 
@@ -43,7 +44,22 @@ const Drawer = observer((props: DrawerProps) => {
     navigation.dispatch(DrawerActions.closeDrawer());
   };
 
-  const { bottom } = useSafeAreaInsets();
+  const { bottom, top, right, left } = useSafeAreaInsets();
+
+  useEffect(() => {
+    const updateScreenHeight = () => {
+      const { height, width } = Dimensions.get('window');
+
+      if (height > width) setScreenHeight(height - (bottom + top));
+      else setScreenHeight(height - (left + right) - 16);
+    };
+
+    Dimensions.addEventListener('change', updateScreenHeight);
+
+    return () => {
+      Dimensions.removeEventListener('change', updateScreenHeight);
+    };
+  }, []);
 
   return (
     <SafeViewContainer

@@ -96,8 +96,6 @@ export class Authentication extends EventEmitter {
       this.biometricEnabled = enableBiometrics === 'true';
       this.userSecretsVerified = userSecretsVerified === 'true';
     });
-
-    setTimeout(() => ScreenCapture.preventScreenCaptureAsync(), 2000);
   }
 
   private async authenticate({ pin, options }: { pin?: string; options?: LocalAuthenticationOptions } = {}): Promise<boolean> {
