@@ -87,7 +87,12 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
 
           {privKey && (
             <View style={{ padding: 8, borderWidth: 1, borderRadius: 7, borderColor }}>
-              <CopyableText copyText={privKey} iconSize={0.001} iconColor={thirdFontColor} txtStyle={{ color: thirdFontColor }} />
+              <CopyableText
+                copyText={privKey}
+                iconSize={0.001}
+                iconColor={thirdFontColor}
+                txtStyle={{ color: thirdFontColor }}
+              />
             </View>
           )}
 

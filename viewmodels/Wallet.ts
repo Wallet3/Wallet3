@@ -112,11 +112,11 @@ export class Wallet {
   }
 
   async removeAccount(account: Account) {
-    const index = this.accounts.indexOf(account);
+    const index = this.accounts.findIndex((a) => a.address === account.address);
     if (index === -1) return;
 
-    this.accounts.splice(index, 1);
     this.removedIndexes.push(account.index);
+    this.accounts.splice(index, 1);
 
     const storeKey = `${this.key.id}-removed-indexes`;
 
@@ -189,7 +189,9 @@ export class Wallet {
   }
 
   async getSecret(pin?: string) {
-    return await Authentication.decrypt(this.key.secret, pin);
+    try {
+      return await Authentication.decrypt(this.key.secret, pin);
+    } catch (error) {}
   }
 
   dispose() {
