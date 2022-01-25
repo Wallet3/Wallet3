@@ -80,7 +80,7 @@ const RootTab = observer(() => {
               style={{ padding: 16, paddingVertical: 0 }}
               onPress={() => navigation.dispatch(DrawerActions.openDrawer)}
             >
-              <Feather name="menu" size={20} />
+              <Ionicons name="menu-outline" size={23} />
             </TouchableOpacity>
           ),
           headerRight: () => (
@@ -123,7 +123,7 @@ const RootTab = observer(() => {
               style={{ padding: 16, paddingVertical: 0 }}
               onPress={() => navigation.dispatch(DrawerActions.openDrawer)}
             >
-              <Feather name="menu" size={21} />
+              <Ionicons name="menu-outline" size={23} />
             </TouchableOpacity>
           ),
         }}
@@ -153,7 +153,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
             style={{ padding: 16, paddingVertical: 0 }}
             onPress={() => navigation.dispatch(DrawerActions.openDrawer)}
           >
-            <Feather name="menu" size={20} />
+            <Ionicons name="menu-outline" size={23} />
           </TouchableOpacity>
         ),
       }}
