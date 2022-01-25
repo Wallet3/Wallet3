@@ -60,6 +60,9 @@ export async function getMarketChart(id: string, days = 1) {
 
 const FixedSymbols = {
   uni: 'uniswap',
+  eth: 'ethereum',
+  comp: 'compound-governance-token',
+  cake: 'pancakeswap-token',
 };
 
 class Coingecko {
@@ -101,6 +104,8 @@ class Coingecko {
     if (!coins) return;
 
     for (let { symbol, id } of coins) {
+      if (symbol.includes('wormhole')) continue;
+      if (this.coinSymbolToId[symbol]) continue;
       this.coinSymbolToId[symbol] = id;
     }
 

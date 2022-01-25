@@ -149,7 +149,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             {generateNetworkIcon({ ...network, width: 15, style: { marginEnd: 6 } })}
             <Text style={{ ...styles.reviewItemValue, color: network?.color }} numberOfLines={1}>
-              {network?.network}
+              {network?.network?.split(' ')?.[0]}
             </Text>
           </View>
         </View>
