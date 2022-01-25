@@ -58,11 +58,8 @@ export async function getMarketChart(id: string, days = 1) {
   } catch (error) {}
 }
 
-const FixedSymbols = {
-  uni: 'uniswap',
+const NativeTokens = {
   eth: 'ethereum',
-  comp: 'compound-governance-token',
-  cake: 'pancakeswap-token',
 };
 
 class Coingecko {
@@ -78,7 +75,7 @@ class Coingecko {
 
   timer?: NodeJS.Timer;
 
-  coinSymbolToId!: { [index: string]: string };
+  coinSymbolToIds = new Map<string, string[]>();
 
   constructor() {
     makeObservable(this, {
@@ -95,23 +92,24 @@ class Coingecko {
   }
 
   async init() {
-    if (this.coinSymbolToId) return;
-
-    this.coinSymbolToId = {};
+    if (this.coinSymbolToIds.size > 10) return;
 
     const coins = (await getCoins())!;
 
     if (!coins) return;
 
     for (let { symbol, id } of coins) {
-      if (symbol.includes('wormhole')) continue;
-      if (this.coinSymbolToId[symbol]) continue;
-      this.coinSymbolToId[symbol] = id;
-    }
+      if (symbol.includes('-wormhole')) continue;
+      let ids = this.coinSymbolToIds.get(symbol);
 
-    Object.getOwnPropertyNames(FixedSymbols).forEach((symbol) => {
-      this.coinSymbolToId[symbol] = FixedSymbols[symbol];
-    });
+      if (!ids) {
+        ids = [id];
+        this.coinSymbolToIds.set(symbol, ids);
+        continue;
+      }
+
+      ids.push(id);
+    }
   }
 
   async start(delay: number = 25) {
@@ -146,14 +144,36 @@ class Coingecko {
     run();
   }
 
-  async getCoinDetails(symbol: string) {
+  async getCoinDetails(symbol: string, address: string, network?: string) {
     await this.init();
-    const id = this.coinSymbolToId[symbol.toLowerCase()];
-    return await getCoin(id);
+
+    const ids = this.coinSymbolToIds.get(symbol.toLowerCase());
+    const lowerAddress = address.toLowerCase();
+    // const isNativeToken = NativeTokens[symbol.toLowerCase()] ? true : false;
+
+    for (let id of ids!) {
+      const coin = await getCoin(id);
+
+      if (!coin) continue;
+      // if (isNativeToken) return coin;
+
+      const platforms = Object.getOwnPropertyNames(coin.platforms).filter((k) => k);
+
+      if (platforms.length === 0 && !address) return coin;
+      if (platforms.length === 0) continue;
+
+      const found = platforms.find((platform) => coin.platforms[platform] === lowerAddress);
+      if (found) return coin;
+
+      const nativeToken = platforms.find((p) => coin.platforms[id]?.toLowerCase() === symbol.toLowerCase());
+      if (nativeToken) return coin;
+
+      // if (!address)
+    }
   }
 
-  getCoinId(symbol: string) {
-    return this.coinSymbolToId[symbol.toLowerCase()];
+  getCoinIds(symbol: string) {
+    return this.coinSymbolToIds.get(symbol.toLowerCase());
   }
 }
 

@@ -16,6 +16,7 @@ export class TokenData implements ITokenData {
   readonly address: string;
   readonly symbol: string;
 
+  coinId?: string;
   description: string = '';
   firstDescription = '';
   loading = false;
@@ -48,16 +49,18 @@ export class TokenData implements ITokenData {
       this.loading = true;
     });
 
-    this.refreshHistoryPrices();
-    const result = await Coingecko.getCoinDetails(this.symbol);
+    const result = await Coingecko.getCoinDetails(this.symbol, this.address);
+
     if (!result) {
       runInAction(() => (this.loading = false));
       return;
     }
 
-    const { description, links, market_data, error } = result;
+    const { description, links, market_data, error, id } = result;
 
-    if (error || !description || !market_data) return;
+    if (error || !id || !description || !market_data) return;
+
+    this.coinId = id;
 
     const en = description.en?.replace(/<[^>]*>?/gm, '');
     const [first] = en?.split(/(?:\r?\n)+/);
@@ -70,11 +73,14 @@ export class TokenData implements ITokenData {
       this.priceChangePercentIn24 = market_data.price_change_percentage_24h || 0;
       this.loading = false;
     });
+
+    this.refreshHistoryPrices();
   }
 
   async refreshHistoryPrices() {
-    const id = Coingecko.getCoinId(this.symbol);
-    const data = await getMarketChart(id, this.historyDays);
+    if (!this.coinId) return;
+
+    const data = await getMarketChart(this.coinId, this.historyDays);
     if (!data) return;
 
     const { prices } = data;

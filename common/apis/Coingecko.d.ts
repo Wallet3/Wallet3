@@ -1,6 +1,8 @@
 export interface Platforms {
   ethereum: string;
   'polygon-pos': string;
+
+  [key: string]: string;
 }
 
 export interface Localization {
