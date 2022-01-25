@@ -18,9 +18,10 @@ interface Props {
   single?: boolean;
   style?: StyleProp<ViewStyle>;
   expanded?: boolean;
+  themeColor?: string;
 }
 
-export default observer(({ accounts, selectedAccounts, onDone, single, style, expanded }: Props) => {
+export default observer(({ accounts, selectedAccounts, onDone, single, style, expanded, themeColor }: Props) => {
   const [selected, setSelected] = useState(selectedAccounts);
   const { t } = i18n;
 
@@ -98,7 +99,12 @@ export default observer(({ accounts, selectedAccounts, onDone, single, style, ex
       />
 
       {expanded ? undefined : (
-        <Button title={t('button-done')} disabled={selected.length === 0} onPress={() => onDone(selected)} />
+        <Button
+          title={t('button-done')}
+          disabled={selected.length === 0}
+          onPress={() => onDone(selected)}
+          themeColor={themeColor}
+        />
       )}
     </SafeViewContainer>
   );

@@ -8,6 +8,7 @@ import { INetwork } from '../../common/Networks';
 import Image from 'react-native-expo-cached-image';
 import { Ionicons } from '@expo/vector-icons';
 import { formatAddress } from '../../utils/formatter';
+import { genColor } from '../../utils/emoji';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -51,6 +52,7 @@ export default observer(
   }: Props) => {
     const { t } = i18n;
     const [shortAppName] = useState((appName?.split?.(' ')?.[0] || '').replace(/\,|\:/, ''));
+    const [iconFailed, setIconFailed] = useState(false);
 
     return (
       <SafeViewContainer style={{ flex: 1, alignItems: 'center', paddingTop: 12 }}>
@@ -93,7 +95,7 @@ export default observer(
               color: network.color,
               hideEVMTitle: true,
             })}
-            
+
             <Text style={{ color: network.color, marginStart: 6, maxWidth: 120 }} numberOfLines={1}>
               {`${network.network.split(' ')[0]}`}
             </Text>
@@ -102,7 +104,29 @@ export default observer(
 
         <View style={{ flex: 1 }} />
 
-        <Image source={{ uri: appIcon }} style={{ width: 72, height: 72, marginBottom: 20, borderRadius: 7 }} />
+        <View style={{ width: 72, height: 72, marginBottom: 20, position: 'relative' }}>
+          <View
+            style={{
+              width: '100%',
+              height: '100%',
+              position: 'absolute',
+              borderRadius: 100,
+              backgroundColor: genColor(),
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Text style={{ color: '#fff', fontSize: 36, fontWeight: '600', marginTop: 3, marginStart: 2 }}>
+              {appName?.[0]}
+            </Text>
+          </View>
+
+          <Image
+            source={{ uri: appIcon }}
+            style={{ width: 72, height: 72, borderRadius: 7, backgroundColor: iconFailed ? undefined : '#fff' }}
+            onError={() => setIconFailed(true)}
+          />
+        </View>
 
         <Text style={{ ...viewStyles.txt, fontSize: 24, fontWeight: '500', opacity: 1 }} numberOfLines={1}>
           {shortAppName.length > 2 ? shortAppName : appName}
