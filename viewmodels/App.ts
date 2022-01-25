@@ -152,7 +152,6 @@ export class AppVM {
   }
 
   async init() {
-    console.log('init app viewmodel');
     Coingecko.init();
 
     await Promise.all([Database.init(), Authentication.init()]);
