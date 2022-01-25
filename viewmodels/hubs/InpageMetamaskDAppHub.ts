@@ -425,7 +425,11 @@ class InpageMetamaskDAppHub extends EventEmitter {
           chainId
         );
 
-        showMessage({ message: i18n.t('msg-token-added', { name: asset.options.symbol }), type: 'success' });
+        showMessage({
+          message: account ? i18n.t('msg-token-added', { name: asset.options.symbol }) : i18n.t('msg-account-not-found'),
+          type: account ? 'success' : 'warning',
+        });
+
         resolve(null);
       };
 
