@@ -7,9 +7,11 @@ import { StyleSheet, Text, View } from 'react-native';
 import { fontColor, thirdFontColor } from '../../constants/styles';
 
 import { FontAwesome } from '@expo/vector-icons';
+import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/Tokens';
 import { LineChart } from 'react-native-svg-charts';
 import { TokenData } from '../../viewmodels/services/TokenData';
+import { UserToken } from '../../viewmodels/services/TokensMan';
 import { formatCurrency } from '../../utils/formatter';
 import i18n from '../../i18n';
 import numeral from 'numeral';
@@ -17,12 +19,13 @@ import { observer } from 'mobx-react-lite';
 
 interface Props {
   token?: IToken;
+  network: INetwork;
   themeColor?: string;
   onSendPress?: (token?: IToken) => void;
 }
 
-export default observer(({ token, themeColor, onSendPress }: Props) => {
-  const [vm] = useState<TokenData>(new TokenData({ token: token! }));
+export default observer(({ token, themeColor, onSendPress, network }: Props) => {
+  const [vm] = useState<TokenData>(new TokenData({ token: token!, network }));
   const { t } = i18n;
 
   const Gradient = () => (

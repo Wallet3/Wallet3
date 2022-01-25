@@ -19,7 +19,7 @@ interface ChainsPrice {
 const host = 'https://api.coingecko.com';
 
 export async function getPrice(
-  ids = 'ethereum,matic-network,fantom,okexchain,huobi-token,binancecoin,avalanche-2,celo',
+  ids = 'ethereum,matic-network,fantom,okexchain,huobi-token,binancecoin,avalanche-2,celo,crypto-com-chain,harmony,moonriver,moonbeam',
   currencies = 'usd'
 ) {
   try {
@@ -58,10 +58,6 @@ export async function getMarketChart(id: string, days = 1) {
   } catch (error) {}
 }
 
-const NativeTokens = {
-  eth: 'ethereum',
-};
-
 class Coingecko {
   eth: number = 0;
   matic = 0;
@@ -72,6 +68,10 @@ class Coingecko {
   ht = 0;
   avax = 0;
   celo = 0;
+  cro = 0;
+  one = 0;
+  movr = 0;
+  glmr = 0;
 
   timer?: NodeJS.Timer;
 
@@ -99,12 +99,12 @@ class Coingecko {
     if (!coins) return;
 
     for (let { symbol, id } of coins) {
-      if (symbol.includes('-wormhole')) continue;
-      let ids = this.coinSymbolToIds.get(symbol);
+      if (id.includes('-wormhole')) continue;
+      let ids = this.coinSymbolToIds.get(symbol.toLowerCase());
 
       if (!ids) {
         ids = [id];
-        this.coinSymbolToIds.set(symbol, ids);
+        this.coinSymbolToIds.set(symbol.toLowerCase(), ids);
         continue;
       }
 
@@ -112,7 +112,7 @@ class Coingecko {
     }
   }
 
-  async start(delay: number = 25) {
+  async start(delay: number = 30) {
     const run = () => {
       this.timer = setTimeout(() => this.start(delay), delay * 1000);
     };
@@ -130,45 +130,48 @@ class Coingecko {
       const { ethereum } = data;
 
       runInAction(() => {
-        this.eth = ethereum.usd;
-        this.matic = data['matic-network'].usd;
-        this.ftm = data.fantom.usd;
-        this.ht = data['huobi-token'].usd;
-        this.okt = data['okexchain'].usd;
-        this.bnb = data.binancecoin.usd;
-        this.avax = data['avalanche-2'].usd;
-        this.celo = data['celo'].usd;
+        this.eth = ethereum?.usd || 0;
+        this.matic = data['matic-network']?.usd || 0;
+        this.ftm = data['fantom']?.usd || 0;
+        this.ht = data['huobi-token']?.usd || 0;
+        this.okt = data['okexchain']?.usd || 0;
+        this.bnb = data['binancecoin']?.usd || 0;
+        this.avax = data['avalanche-2']?.usd || 0;
+        this.celo = data['celo']?.usd || 0;
+        this.cro = data['crypto-com-chain']?.usd || 0;
+        this.one = data['harmony']?.usd || 0;
+        this.movr = data['moonriver']?.usd || 0;
+        this.glmr = data['moonbeam']?.usd || 0;
       });
     } catch {}
 
     run();
   }
 
-  async getCoinDetails(symbol: string, address: string, network?: string) {
+  async getCoinDetails(symbol: string, address: string, network: string) {
     await this.init();
 
-    const ids = this.coinSymbolToIds.get(symbol.toLowerCase());
-    const lowerAddress = address.toLowerCase();
-    // const isNativeToken = NativeTokens[symbol.toLowerCase()] ? true : false;
+    const ids = this.coinSymbolToIds.get(symbol.toLowerCase()) || [];
+    address = address.toLowerCase();
+    network = network.toLowerCase();
 
     for (let id of ids!) {
       const coin = await getCoin(id);
-
       if (!coin) continue;
-      // if (isNativeToken) return coin;
+      if (ids.length === 1) return coin;
 
       const platforms = Object.getOwnPropertyNames(coin.platforms).filter((k) => k);
 
-      if (platforms.length === 0 && !address) return coin;
+      if (platforms.length === 0 && !address && coin.name.toLowerCase() === network) return coin;
       if (platforms.length === 0) continue;
 
-      const found = platforms.find((platform) => coin.platforms[platform] === lowerAddress);
+      const found = platforms.find((platform) => coin.platforms[platform]?.toLowerCase() === address);
       if (found) return coin;
 
       const nativeToken = platforms.find((p) => coin.platforms[id]?.toLowerCase() === symbol.toLowerCase());
       if (nativeToken) return coin;
 
-      // if (!address)
+      if (!address && coin.name.toLowerCase() === network) return coin;
     }
   }
 

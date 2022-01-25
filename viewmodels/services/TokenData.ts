@@ -1,7 +1,9 @@
 import Coingecko, { getMarketChart } from '../../common/apis/Coingecko';
 import { makeObservable, observable, runInAction } from 'mobx';
 
+import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/Tokens';
+import { UserToken } from './TokensMan';
 
 interface ITokenData {
   description: string;
@@ -15,6 +17,7 @@ interface ITokenData {
 export class TokenData implements ITokenData {
   readonly address: string;
   readonly symbol: string;
+  readonly network: INetwork;
 
   coinId?: string;
   description: string = '';
@@ -27,9 +30,10 @@ export class TokenData implements ITokenData {
   historyPrices: number[] = [];
   historyDays = 1;
 
-  constructor({ token }: { token: IToken }) {
+  constructor({ token, network }: { token: UserToken; network: INetwork }) {
     this.symbol = token.symbol;
     this.address = token.address;
+    this.network = network;
 
     makeObservable(this, {
       symbol: observable,
@@ -49,7 +53,7 @@ export class TokenData implements ITokenData {
       this.loading = true;
     });
 
-    const result = await Coingecko.getCoinDetails(this.symbol, this.address);
+    const result = await Coingecko.getCoinDetails(this.symbol, this.address, this.network.network);
 
     if (!result) {
       runInAction(() => (this.loading = false));

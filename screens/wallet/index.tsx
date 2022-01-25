@@ -90,11 +90,12 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         <Modalize
           adjustToContentHeight
           ref={tokenDetailModalize}
-          snapPoint={450}
+          snapPoint={500}
           modalStyle={{ borderTopStartRadius: 15, borderTopEndRadius: 15 }}
         >
           <TokenDetail
             token={selectedToken}
+            network={current}
             themeColor={current.color}
             onSendPress={(token) => {
               PubSub.publish('openSendFundsModal', { token });
