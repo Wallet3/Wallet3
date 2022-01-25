@@ -43,7 +43,7 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
       >
         <AntDesign name="qrcode" size={27} color={'#fff'} />
 
-        <Text style={styles.tip}>
+        <Text style={styles.tip} numberOfLines={1}>
           {Authentication.appAuthorized ? t('qrscan-tip-1') : t('qrscan-tip-desktop-backup-qrcode')}
         </Text>
       </View>

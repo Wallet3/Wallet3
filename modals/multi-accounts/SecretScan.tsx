@@ -46,7 +46,7 @@ export default ({ onBack, enabled, onData }: Props) => {
       <View
         style={{
           position: 'absolute',
-          bottom: bottom + 4,
+          bottom: bottom || 8,
           left: 17,
           right: 16,
           height: 32,

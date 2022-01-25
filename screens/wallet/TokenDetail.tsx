@@ -84,7 +84,7 @@ export default observer(({ token, themeColor, onSendPress }: Props) => {
           <Text style={{ ...styles.subValue, marginEnd: 8 }}>
             {`${numeral(token?.amount ?? 0).format('0,0.000000')} ${token?.symbol}`}
           </Text>
-          <Coin symbol={token?.symbol} iconUrl={token?.iconUrl} />
+          <Coin symbol={token?.symbol} iconUrl={token?.iconUrl} size={19} />
         </View>
       </View>
 
