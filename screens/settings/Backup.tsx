@@ -1,6 +1,6 @@
 import { Button, Mnemonic, SafeViewContainer } from '../../components';
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { borderColor, secondaryFontColor, styles, thirdFontColor } from '../../constants/styles';
 
 import App from '../../viewmodels/App';
@@ -8,7 +8,7 @@ import Authentication from '../../viewmodels/Authentication';
 import CopyableText from '../../components/CopyableText';
 import { FullPasspad } from '../../modals/views/Passpad';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { MnemonicOnce } from '../../viewmodels/MnemonicOnce';
+import MnemonicOnce from '../../viewmodels/MnemonicOnce';
 import { Modalize } from 'react-native-modalize';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/Networks';
@@ -25,7 +25,6 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
   const [authorized, setAuthorized] = useState(false);
   const [words, setWords] = useState<string[]>([]);
   const [privKey, setPrivKey] = useState<string>();
-  const [mnemonicOnce] = useState(new MnemonicOnce());
 
   usePreventScreenCapture();
 
@@ -41,10 +40,10 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
     try {
       if (success) {
         close();
-        mnemonicOnce.setSecret(secret!);
+        MnemonicOnce.setSecret(secret!);
 
         if (wallet?.isHDWallet) {
-          setWords(mnemonicOnce.secretWords);
+          setWords(MnemonicOnce.secretWords);
         } else {
           setPrivKey(secret!);
         }
@@ -62,7 +61,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
     setTimeout(() => open(), 0);
     if (Authentication.biometricType) verify();
 
-    return () => mnemonicOnce.clean();
+    return () => MnemonicOnce.clean();
   }, []);
 
   return (

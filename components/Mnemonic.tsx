@@ -1,7 +1,8 @@
-import { StyleProp, Text, View, ViewStyle } from 'react-native';
+import { AppState, AppStateStatus, StyleProp, Text, View, ViewStyle } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { borderColor, secondaryFontColor } from '../constants/styles';
 
-import React from 'react';
+import { BlurView } from 'expo-blur';
 import { observer } from 'mobx-react-lite';
 
 interface Props {
@@ -11,6 +12,7 @@ interface Props {
 
 export default observer((props: Props) => {
   const { phrase } = props;
+  const [isActive, setIsActive] = useState(true);
 
   const rows = Math.ceil(phrase.length / 4);
   const rowWords: string[][] = phrase.length === 0 ? new Array(3).fill(new Array(4).fill('')) : [];
@@ -25,9 +27,19 @@ export default observer((props: Props) => {
     rowWords.push(row);
   }
 
+  useEffect(() => {
+    const updateState = (state: AppStateStatus) => setIsActive(state === 'active');
+
+    AppState.addEventListener('change', updateState);
+
+    return () => {
+      AppState.removeEventListener('change', updateState);
+    };
+  }, []);
+
   const renderRow = ({ words, row }: { words: string[]; row: number }) => {
     return (
-      <View key={row} style={{ flexDirection: 'row' }}>
+      <View key={row} style={{ flexDirection: 'row', position: 'relative' }}>
         {words.map((word, i) => (
           <View
             key={`${word}-${i}`}
@@ -58,10 +70,26 @@ export default observer((props: Props) => {
   };
 
   return (
-    <View style={{ borderColor, borderWidth: 1, borderRadius: 7, ...((props.style as any) || {}) }}>
+    <View style={{ borderColor, borderWidth: 1, borderRadius: isActive ? 7 : 0, ...((props.style as any) || {}) }}>
       {rowWords.map((words, row) => {
         return renderRow({ words, row });
       })}
+
+      {!isActive && (
+        <BlurView
+          intensity={25}
+          style={{
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            bottom: 0,
+            top: 0,
+            width: '100%',
+            height: '100%',
+            borderRadius: 7,
+          }}
+        />
+      )}
     </View>
   );
 });
