@@ -60,6 +60,10 @@ export class AppVM {
 
   async addWallet(key: Key) {
     if (this.wallets.find((w) => w.isSameKey(key))) return;
+    if (this.allAccounts.find((a) => a.address === key.bip32Xpubkey)) {
+      this.switchAccount(key.bip32Xpubkey);
+      return;
+    }
 
     const wallet = await new Wallet(key).init();
     runInAction(() => {
