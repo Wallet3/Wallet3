@@ -100,10 +100,10 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
       />
 
       <Text style={{ fontSize: 21, marginTop: 12, color: '#75869c', fontWeight: '600', opacity: 0.72 }}>
-        {`${t('modal-token-details-about')} ${token?.symbol}`}
+        {t('modal-token-details-about', { token: token?.symbol })}
       </Text>
 
-      <View style={{ marginTop: 8 }}>
+      <View style={{ marginVertical: 8 }}>
         {vm.loading ? (
           <Skeleton style={{ flex: 1, width: '100%', height: 32 }} />
         ) : (

@@ -129,7 +129,7 @@
   "modal-dapp-add-asset-type": "类型",
   "modal-dapp-add-asset-decimals": "位数",
   "modal-dapp-add-asset-address": "地址",
-  "modal-token-details-about": "关于",
+  "modal-token-details-about": "关于 {{token}}",
   "modal-token-details-value": "总价值",
   "modal-token-details-balance": "余额",
   "modal-tx-details-network": "交易网络",

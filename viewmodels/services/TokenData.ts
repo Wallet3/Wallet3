@@ -3,6 +3,7 @@ import { makeObservable, observable, runInAction } from 'mobx';
 
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/Tokens';
+import Langs from '../settings/Langs';
 import { UserToken } from './TokensMan';
 
 interface ITokenData {
@@ -62,16 +63,16 @@ export class TokenData implements ITokenData {
 
     const { description, links, market_data, error, id } = result;
 
-    if (error || !id || !description || !market_data) return;
+    if (error || !id || !market_data) return;
 
     this.coinId = id;
 
-    const en = description.en?.replace(/<[^>]*>?/gm, '');
-    const [first] = en?.split(/(?:\r?\n)+/);
+    const desc = (description?.[Langs.currentLang.value] || description?.en)?.replace(/<[^>]*>?/gm, '');
+    const [first] = desc?.split(/(?:\r?\n)+/);
 
     runInAction(() => {
       this.firstDescription = first || '';
-      this.description = en || '';
+      this.description = desc || '';
       this.price = market_data.current_price?.usd ?? 0;
       this.priceChangeIn24 = market_data.price_change_24h || 0;
       this.priceChangePercentIn24 = market_data.price_change_percentage_24h || 0;
