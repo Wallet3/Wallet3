@@ -24,6 +24,7 @@ import CachedImage from 'react-native-expo-cached-image';
 import Collapsible from 'react-native-collapsible';
 import { FlatGrid } from 'react-native-super-grid';
 import { Ionicons } from '@expo/vector-icons';
+import { LayoutAnimConfig } from '../../utils/animations';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
 import PopularDApps from '../../configs/urls/popular.json';
@@ -37,18 +38,6 @@ import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 const DefaultIcon = require('../../assets/default-icon.png');
 
-const layoutAnimConfig = {
-  duration: 300,
-  update: {
-    type: LayoutAnimation.Types.easeInEaseOut,
-  },
-  delete: {
-    duration: 300,
-    type: LayoutAnimation.Types.linear,
-    property: LayoutAnimation.Properties.opacity,
-  },
-};
-
 const calcIconSize = () => {
   const { width } = Dimensions.get('window');
 
@@ -59,7 +48,7 @@ const calcIconSize = () => {
   return { WindowWidth: width, NumOfColumns, LargeIconSize, SmallIconSize };
 };
 
-const { WindowWidth, NumOfColumns, LargeIconSize, SmallIconSize } = calcIconSize();
+const { WindowWidth, LargeIconSize, SmallIconSize } = calcIconSize();
 
 export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   const { t } = i18n;
@@ -82,17 +71,15 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   const [isExpandedSite, setIsExpandedSite] = useState(false);
   const { ref: favsRef, open: openFavs, close: closeFavs } = useModalize();
 
-  const [numOfColumns, setNumOfColumns] = useState(NumOfColumns);
   const [largeIconSize, setLargeIconSize] = useState(LargeIconSize);
   const [smallIconSize, setSmallIconSize] = useState(SmallIconSize);
   const [windowWidth, setWindowWidth] = useState(WindowWidth);
 
   useEffect(() => {
     Dimensions.addEventListener('change', ({ window, screen }) => {
-      const { WindowWidth, LargeIconSize, SmallIconSize, NumOfColumns } = calcIconSize();
+      const { WindowWidth, LargeIconSize, SmallIconSize } = calcIconSize();
 
       setWindowWidth(WindowWidth);
-      setNumOfColumns(NumOfColumns);
       setLargeIconSize(LargeIconSize);
       setSmallIconSize(SmallIconSize);
     });
@@ -201,7 +188,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
   const renderItem = (p: ListRenderItemInfo<Bookmark>) =>
     renderBookmarkItem({
       ...p,
-      iconSize: LargeIconSize,
+      iconSize: largeIconSize,
       onPress: (item) => {
         goTo(item.url);
         closeFavs();
@@ -433,7 +420,7 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
                   closeFavs();
                 },
                 onRemove: (item) => {
-                  LayoutAnimation.configureNext(layoutAnimConfig);
+                  LayoutAnimation.configureNext(LayoutAnimConfig);
                   Bookmarks.remove(item.url);
                 },
               })
