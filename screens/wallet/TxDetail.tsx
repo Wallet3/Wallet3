@@ -10,6 +10,7 @@ import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { thirdFontColor } from '../../constants/styles';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { utils } from 'ethers';
 
 export default observer(({ tx }: { tx?: Transaction }) => {
@@ -17,9 +18,10 @@ export default observer(({ tx }: { tx?: Transaction }) => {
 
   const { t } = i18n;
   const [network] = useState(Networks.find(tx.chainId) || Networks.current);
+  const { bottom } = useSafeAreaInsets();
 
   return (
-    <View style={{ padding: 16, paddingTop: 24, paddingBottom: 32 }}>
+    <View style={{ padding: 16, paddingTop: 20, paddingBottom: bottom }}>
       <View style={styles.itemContainer}>
         <Text style={styles.txt}>{t('modal-tx-details-network')}:</Text>
         <View style={{ flexDirection: 'row', alignItems: 'center', width: '50%', justifyContent: 'flex-end' }}>
@@ -28,7 +30,7 @@ export default observer(({ tx }: { tx?: Transaction }) => {
             chainId: network.chainId,
             width: 16,
             height: 16,
-            style: { marginEnd: 4 },
+            style: { marginEnd: 7 },
           })}
           <Text style={{ ...styles.txt, maxWidth: 160 }} numberOfLines={1}>
             {network.network}

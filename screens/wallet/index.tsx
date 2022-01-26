@@ -13,6 +13,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import Networks from '../../viewmodels/Networks';
 import Overview from './Overview';
 import { Portal } from 'react-native-portalize';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import TokenDetail from './TokenDetail';
 import TxDetail from './TxDetail';
@@ -105,7 +106,9 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         </Modalize>
 
         <Modalize ref={txDetailModalize} adjustToContentHeight modalStyle={{ borderTopStartRadius: 5, borderTopEndRadius: 5 }}>
-          <TxDetail tx={selectedTx} />
+          <SafeAreaProvider>
+            <TxDetail tx={selectedTx} />
+          </SafeAreaProvider>
         </Modalize>
       </Portal>
     </View>
