@@ -15,7 +15,7 @@ import styles from './styles';
 interface Props {
   onNetworkPress?: (network: INetwork) => void;
   networks?: INetwork[];
-  selectedNetwork?: INetwork;
+  selectedNetwork?: INetwork | null;
   title?: string;
 }
 

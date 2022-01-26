@@ -1,7 +1,7 @@
 import * as Linking from 'expo-linking';
 
 import WebView, { WebViewMessageEvent, WebViewNavigation } from 'react-native-webview';
-import { makeAutoObservable, reaction, runInAction } from 'mobx';
+import { action, makeAutoObservable, makeObservable, observable, reaction, runInAction } from 'mobx';
 
 import { Account } from '../../../viewmodels/account/Account';
 import App from '../../../viewmodels/App';
@@ -27,7 +27,7 @@ interface ConnectedBrowserDApp {
   isWalletConnect?: boolean;
 }
 
-class WebViewController {
+export class WebViewController {
   readonly hub = new InpageMetamaskDAppHub();
   webView: WebView | null;
 
@@ -43,11 +43,21 @@ class WebViewController {
   constructor(webView: WebView) {
     this.webView = webView;
 
-    makeAutoObservable(this);
+    makeObservable(this, {
+      canGoBack: observable,
+      canGoForward: observable,
+      webUrl: observable,
+      pageMetadata: observable,
+      dapp: observable,
+      appNetwork: observable,
+      appAccount: observable,
+      forceUpdateAppStates: action,
+      updateGlobalState: action,
+    });
 
     reaction(
       () => this.dapp,
-      () => this.forceUpdateStates()
+      () => this.forceUpdateAppStates()
     );
 
     reaction(
@@ -69,12 +79,14 @@ class WebViewController {
     this.webView = null;
   }
 
-  private forceUpdateStates() {
+  forceUpdateAppStates() {
     this.appNetwork = Networks.find(this.dapp?.lastUsedChainId ?? -1) || null;
     this.appAccount = App.findAccount(this.dapp?.lastUsedAccount ?? '') || null;
+    console.log('updateAppStates', this.appNetwork?.network, this.appAccount?.address);
   }
 
-  private updateGlobalState() {
+  updateGlobalState() {
+    console.log('updateGlobalState', this.webUrl);
     if (!this.pageMetadata) this.webView?.injectJavaScript(`${GetPageMetadata}\ntrue;`);
 
     const hostname = (Linking.parse(this.webUrl || 'http://').hostname ?? this.dapp?.origin) || '';
@@ -101,14 +113,18 @@ class WebViewController {
       return;
     }
 
-    this.hub.getDApp(hostname).then((app) => (this.dapp = app || null));
+    this.hub.getDApp(hostname).then((app) => runInAction(() => (this.dapp = app || null)));
   }
 
-  onNavigationStateChange(event: WebViewNavigation) {
-    this.canGoBack = event.canGoBack;
-    this.canGoForward = event.canGoForward;
-    this.webUrl = event.url;
-  }
+  onNavigationStateChange = (event: WebViewNavigation) => {
+    runInAction(() => {
+      this.canGoBack = event.canGoBack;
+      this.canGoForward = event.canGoForward;
+      this.webUrl = event.url;
+    });
+
+    console.log(this.webUrl);
+  };
 
   notifyWebView = async (appState) => {
     this.webView?.injectJavaScript(JS_POST_MESSAGE_TO_PROVIDER(appState));
@@ -116,7 +132,7 @@ class WebViewController {
 
     runInAction(() => {
       this.dapp = dapp;
-      this.forceUpdateStates();
+      this.forceUpdateAppStates();
     });
   };
 
@@ -131,7 +147,7 @@ class WebViewController {
 
     switch (data.type ?? data.name) {
       case 'metadata':
-        this.pageMetadata = data.payload;
+        runInAction(() => (this.pageMetadata = data.payload));
         break;
       case 'wcuri':
         LinkHub.handleURL(data.payload.uri, {
@@ -149,7 +165,7 @@ class WebViewController {
   updateDAppNetworkConfig = (network: INetwork) => {
     if (this.dapp?.isWalletConnect) {
       WalletConnectV1ClientHub.find(this.dapp.origin)?.setLastUsedChain(network.chainId, true);
-      this.dapp = { ...this.dapp!, lastUsedChainId: `${network.chainId}` };
+      runInAction(() => (this.dapp = { ...this.dapp!, lastUsedChainId: `${network.chainId}` }));
     } else {
       this.hub.setDAppChainId(this.dapp?.origin!, network.chainId);
     }
@@ -158,7 +174,7 @@ class WebViewController {
   updateDAppAccountConfig = (account: string) => {
     if (this.dapp?.isWalletConnect) {
       WalletConnectV1ClientHub.find(this.dapp.origin)?.setLastUsedAccount(account, true);
-      this.dapp = { ...this.dapp!, lastUsedAccount: account };
+      runInAction(() => (this.dapp = { ...this.dapp!, lastUsedAccount: account }));
     } else {
       this.hub.setDAppAccount(this.dapp?.origin!, account);
     }

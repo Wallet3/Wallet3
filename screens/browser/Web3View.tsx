@@ -25,6 +25,7 @@ import { NetworksMenu } from '../../modals';
 import { Portal } from 'react-native-portalize';
 import WalletConnectLogo from '../../assets/3rd/walletconnect.svg';
 import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectV1ClientHub';
+import { WebViewController } from './controller/WebViewController';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import hub from '../../viewmodels/hubs/InpageMetamaskDAppHub';
 import i18n from '../../i18n';
@@ -59,137 +60,149 @@ interface Web3ViewProps extends WebViewProps {
 export default observer((props: Web3ViewProps) => {
   const { t } = i18n;
   const { webViewRef } = props;
-  const { onMetadataChange, onGoHome, expanded, onShrinkRequest, onExpandRequest, onBookmarksPress } = props;
-  const [canGoBack, setCanGoBack] = useState(false);
-  const [canGoForward, setCanGoForward] = useState(false);
   const [appName] = useState(`Wallet3/${DeviceInfo.getVersion() || '0.0.0'}`);
-
-  const [pageMetadata, setPageMetadata] = useState<PageMetadata>();
-  const [appNetwork, setAppNetwork] = useState<INetwork>();
-  const [appAccount, setAppAccount] = useState<Account>();
-  const [dapp, setDApp] = useState<ConnectedBrowserDApp | undefined>();
-  const [webUrl, setWebUrl] = useState('');
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
+  const { onMetadataChange, onGoHome, expanded, onShrinkRequest, onExpandRequest, onBookmarksPress } = props;
 
-  const updateDAppState = (dapp?: ConnectedBrowserDApp) => {
-    setDApp(dapp);
-
-    setAppNetwork(Networks.find(dapp?.lastUsedChainId ?? -1));
-    setAppAccount(App.findAccount(dapp?.lastUsedAccount ?? ''));
-  };
-
-  const updateGlobalState = () => {
-    const hostname = (Linking.parse(webUrl || 'http://').hostname ?? dapp?.origin) || '';
-    if (dapp?.origin === hostname) return;
-
-    const wcApp = WalletConnectV1ClientHub.find(hostname);
-
-    if (wcApp && wcApp.isMobileApp) {
-      updateDAppState({
-        lastUsedChainId: wcApp.lastUsedChainId,
-        lastUsedAccount: wcApp.lastUsedAccount,
-        origin: wcApp.origin,
-        isWalletConnect: true,
-      });
-
-      wcApp.once('disconnect', () => {
-        // console.log(dapp?.origin, wcApp.origin);
-        // if (!dapp?.isWalletConnect) return;
-        // if (dapp.origin !== origin) return;
-
-        updateDAppState(undefined);
-      });
-
-      return;
-    }
-
-    hub.getDApp(hostname).then((app) => updateDAppState(app));
-  };
+  const [vm, setVM] = useState<WebViewController>();
 
   useEffect(() => {
-    const notifyWebView = async (appState) => {
-      const webview = (webViewRef as any).current as WebView;
-      webview?.injectJavaScript(JS_POST_MESSAGE_TO_PROVIDER(appState));
-      updateDAppState(await hub.getDApp(appState.origin));
-    };
-
-    hub.on('appChainUpdated_metamask', notifyWebView);
-    hub.on('appAccountUpdated_metamask', notifyWebView);
-
-    hub.on('dappConnected', (app) => updateDAppState(app));
-
-    WalletConnectV1ClientHub.on('mobileAppConnected', () => {
-      updateGlobalState();
-    });
-
-    if (pageMetadata) ((webViewRef as any)?.current as WebView)?.injectJavaScript(`${GetPageMetadata}\ntrue;`);
+    if (!(webViewRef as any)?.current) return;
+    setVM(new WebViewController((webViewRef as any).current));
 
     return () => {
-      hub.removeAllListeners();
-      WalletConnectV1ClientHub.removeAllListeners();
+      vm?.dispose();
     };
-  }, [webUrl]);
+  }, [webViewRef]);
 
-  useEffect(() => updateGlobalState(), [webUrl]);
+  // const [canGoBack, setCanGoBack] = useState(false);
+  // const [canGoForward, setCanGoForward] = useState(false);
 
-  const onMessage = async (e: WebViewMessageEvent) => {
-    let data: { type: string; payload: any; origin?: string; pageMetadata?: PageMetadata; name?: string; data: any };
+  // const [pageMetadata, setPageMetadata] = useState<PageMetadata>();
+  // const [appNetwork, setAppNetwork] = useState<INetwork>();
+  // const [appAccount, setAppAccount] = useState<Account>();
+  // const [dapp, setDApp] = useState<ConnectedBrowserDApp | undefined>();
+  // const [webUrl, setWebUrl] = useState('');
 
-    try {
-      data = JSON.parse(e.nativeEvent.data);
-    } catch (error) {
-      return;
-    }
+  // const updateDAppState = (dapp?: ConnectedBrowserDApp) => {
+  //   setDApp(dapp);
 
-    switch (data.type ?? data.name) {
-      case 'metadata':
-        onMetadataChange?.(data.payload);
-        setPageMetadata(data.payload);
-        break;
-      case 'wcuri':
-        LinkHub.handleURL(data.payload.uri, {
-          fromMobile: true,
-          hostname: Linking.parse(pageMetadata?.origin ?? 'https://').hostname ?? '',
-        });
-        break;
-      case 'metamask-provider':
-        const resp = await hub.handle(data.origin!, { ...data.data, pageMetadata });
+  //   setAppNetwork(Networks.find(dapp?.lastUsedChainId ?? -1));
+  //   setAppAccount(App.findAccount(dapp?.lastUsedAccount ?? ''));
+  // };
 
-        const webview = (webViewRef as any).current as WebView;
-        webview?.injectJavaScript(JS_POST_MESSAGE_TO_PROVIDER(resp));
-        break;
-    }
-  };
+  // const updateGlobalState = () => {
+  //   const hostname = (Linking.parse(webUrl || 'http://').hostname ?? dapp?.origin) || '';
+  //   if (dapp?.origin === hostname) return;
 
-  const onNavigationStateChange = (event: WebViewNavigation) => {
-    setCanGoBack(event.canGoBack);
-    setCanGoForward(event.canGoForward);
-    setWebUrl(event.url);
+  //   const wcApp = WalletConnectV1ClientHub.find(hostname);
 
-    props?.onNavigationStateChange?.(event);
-  };
+  //   if (wcApp && wcApp.isMobileApp) {
+  //     updateDAppState({
+  //       lastUsedChainId: wcApp.lastUsedChainId,
+  //       lastUsedAccount: wcApp.lastUsedAccount,
+  //       origin: wcApp.origin,
+  //       isWalletConnect: true,
+  //     });
 
-  const updateDAppNetworkConfig = (network: INetwork) => {
-    if (dapp?.isWalletConnect) {
-      WalletConnectV1ClientHub.find(dapp.origin)?.setLastUsedChain(network.chainId, true);
-      updateDAppState({ ...dapp!, lastUsedChainId: `${network.chainId}` });
-    } else {
-      hub.setDAppChainId(dapp?.origin!, network.chainId);
-    }
+  //     wcApp.once('disconnect', () => {
+  //       // console.log(dapp?.origin, wcApp.origin);
+  //       // if (!dapp?.isWalletConnect) return;
+  //       // if (dapp.origin !== origin) return;
 
-    closeNetworksModal();
-  };
+  //       updateDAppState(undefined);
+  //     });
 
-  const updateDAppAccountConfig = (account: string) => {
-    if (dapp?.isWalletConnect) {
-      WalletConnectV1ClientHub.find(dapp.origin)?.setLastUsedAccount(account, true);
-      updateDAppState({ ...dapp!, lastUsedAccount: account });
-    } else {
-      hub.setDAppAccount(dapp?.origin!, account);
-    }
+  //     return;
+  //   }
 
-    closeAccountsModal();
-  };
+  //   hub.getDApp(hostname).then((app) => updateDAppState(app));
+  // };
+
+  // useEffect(() => {
+  //   const notifyWebView = async (appState) => {
+  //     const webview = (webViewRef as any).current as WebView;
+  //     webview?.injectJavaScript(JS_POST_MESSAGE_TO_PROVIDER(appState));
+  //     updateDAppState(await hub.getDApp(appState.origin));
+  //   };
+
+  //   hub.on('appChainUpdated_metamask', notifyWebView);
+  //   hub.on('appAccountUpdated_metamask', notifyWebView);
+
+  //   hub.on('dappConnected', (app) => updateDAppState(app));
+
+  //   WalletConnectV1ClientHub.on('mobileAppConnected', () => {
+  //     updateGlobalState();
+  //   });
+
+  //   if (pageMetadata) ((webViewRef as any)?.current as WebView)?.injectJavaScript(`${GetPageMetadata}\ntrue;`);
+
+  //   return () => {
+  //     hub.removeAllListeners();
+  //     WalletConnectV1ClientHub.removeAllListeners();
+  //   };
+  // }, [webUrl]);
+
+  // useEffect(() => updateGlobalState(), [webUrl]);
+
+  // const onMessage = async (e: WebViewMessageEvent) => {
+  //   let data: { type: string; payload: any; origin?: string; pageMetadata?: PageMetadata; name?: string; data: any };
+
+  //   try {
+  //     data = JSON.parse(e.nativeEvent.data);
+  //   } catch (error) {
+  //     return;
+  //   }
+
+  //   switch (data.type ?? data.name) {
+  //     case 'metadata':
+  //       onMetadataChange?.(data.payload);
+  //       setPageMetadata(data.payload);
+  //       break;
+  //     case 'wcuri':
+  //       LinkHub.handleURL(data.payload.uri, {
+  //         fromMobile: true,
+  //         hostname: Linking.parse(pageMetadata?.origin ?? 'https://').hostname ?? '',
+  //       });
+  //       break;
+  //     case 'metamask-provider':
+  //       const resp = await hub.handle(data.origin!, { ...data.data, pageMetadata });
+
+  //       const webview = (webViewRef as any).current as WebView;
+  //       webview?.injectJavaScript(JS_POST_MESSAGE_TO_PROVIDER(resp));
+  //       break;
+  //   }
+  // };
+
+  // const onNavigationStateChange = (event: WebViewNavigation) => {
+  //   setCanGoBack(event.canGoBack);
+  //   setCanGoForward(event.canGoForward);
+  //   setWebUrl(event.url);
+
+  //   props?.onNavigationStateChange?.(event);
+  // };
+
+  // const updateDAppNetworkConfig = (network: INetwork) => {
+  //   if (dapp?.isWalletConnect) {
+  //     WalletConnectV1ClientHub.find(dapp.origin)?.setLastUsedChain(network.chainId, true);
+  //     updateDAppState({ ...dapp!, lastUsedChainId: `${network.chainId}` });
+  //   } else {
+  //     hub.setDAppChainId(dapp?.origin!, network.chainId);
+  //   }
+
+  //   closeNetworksModal();
+  // };
+
+  // const updateDAppAccountConfig = (account: string) => {
+  //   if (dapp?.isWalletConnect) {
+  //     WalletConnectV1ClientHub.find(dapp.origin)?.setLastUsedAccount(account, true);
+  //     updateDAppState({ ...dapp!, lastUsedAccount: account });
+  //   } else {
+  //     hub.setDAppAccount(dapp?.origin!, account);
+  //   }
+
+  //   closeAccountsModal();
+  // };
 
   const tintColor = '#000000c0';
   const { ref: networksRef, open: openNetworksModal, close: closeNetworksModal } = useModalize();
@@ -203,11 +216,11 @@ export default observer((props: Web3ViewProps) => {
         automaticallyAdjustContentInsets={false}
         contentInsetAdjustmentBehavior={'never'}
         contentInset={{ bottom: expanded ? 37 + (safeAreaBottom === 0 ? 8 : 0) : 0 }}
-        onNavigationStateChange={onNavigationStateChange}
+        onNavigationStateChange={vm?.onNavigationStateChange}
         applicationNameForUserAgent={appName}
         allowsFullscreenVideo={false}
-        injectedJavaScript={`${GetPageMetadata} ${HookWalletConnect}`}
-        onMessage={onMessage}
+        injectedJavaScript={vm && `${GetPageMetadata}\ntrue;\n${HookWalletConnect}\ntrue;`}
+        onMessage={vm?.onMessage}
         mediaPlaybackRequiresUserAction
         pullToRefreshEnabled
         allowsInlineMediaPlayback
@@ -231,13 +244,13 @@ export default observer((props: Web3ViewProps) => {
         >
           <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
             {expanded ? (
-              <TouchableOpacity style={styles.navTouchableItem} onPress={() => onShrinkRequest?.(webUrl)}>
+              <TouchableOpacity style={styles.navTouchableItem} onPress={() => vm && onShrinkRequest?.(vm.webUrl)}>
                 <MaterialCommunityIcons name="arrow-collapse-vertical" size={20} color={tintColor} />
               </TouchableOpacity>
             ) : (
               <TouchableOpacity
                 style={{ ...styles.navTouchableItem, paddingTop: 10, paddingBottom: 9 }}
-                onPress={() => onExpandRequest?.(webUrl)}
+                onPress={() => vm && onExpandRequest?.(vm.webUrl)}
               >
                 <MaterialCommunityIcons name="arrow-expand" size={19} color={tintColor} />
               </TouchableOpacity>
@@ -252,9 +265,9 @@ export default observer((props: Web3ViewProps) => {
             <TouchableOpacity
               style={styles.navTouchableItem}
               onPress={() => ((webViewRef as any)?.current as WebView)?.goBack()}
-              disabled={!canGoBack}
+              disabled={!vm?.canGoBack}
             >
-              <Ionicons name="chevron-back-outline" size={22} color={canGoBack ? tintColor : '#dddddd50'} />
+              <Ionicons name="chevron-back-outline" size={22} color={vm?.canGoBack ? tintColor : '#dddddd50'} />
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.navTouchableItem} onPress={onGoHome}>
@@ -264,42 +277,42 @@ export default observer((props: Web3ViewProps) => {
             <TouchableOpacity
               style={styles.navTouchableItem}
               onPress={() => ((webViewRef as any)?.current as WebView)?.goForward()}
-              disabled={!canGoForward}
+              disabled={!vm?.canGoForward}
             >
-              <Ionicons name="chevron-forward-outline" size={22} color={canGoForward ? tintColor : '#dddddd50'} />
+              <Ionicons name="chevron-forward-outline" size={22} color={vm?.canGoForward ? tintColor : '#dddddd50'} />
             </TouchableOpacity>
           </View>
 
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
-            {appAccount && (
+            {vm?.appAccount && (
               <Animatable.View animation={'fadeInUp'}>
                 <TouchableOpacity style={{ paddingHorizontal: 8, marginBottom: -0.5 }} onPress={() => openAccountsModal()}>
                   <Avatar
                     size={25}
-                    uri={appAccount?.avatar}
-                    emoji={appAccount?.emojiAvatar}
+                    uri={vm?.appAccount?.avatar}
+                    emoji={vm?.appAccount?.emojiAvatar}
                     emojiSize={11}
-                    backgroundColor={appAccount?.emojiColor}
+                    backgroundColor={vm?.appAccount?.emojiColor}
                   />
                 </TouchableOpacity>
               </Animatable.View>
             )}
 
-            {dapp && appNetwork ? (
+            {vm?.dapp && vm?.appNetwork ? (
               <Animatable.View animation={'fadeInUp'} style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <TouchableOpacity
                   onPress={() => openNetworksModal()}
                   style={{ paddingStart: 16, paddingEnd: 10, position: 'relative' }}
                 >
                   {generateNetworkIcon({
-                    chainId: appNetwork.chainId,
-                    color: `${appNetwork.color}`,
+                    chainId: vm?.appNetwork.chainId,
+                    color: `${vm?.appNetwork.color}`,
                     width: 22,
                     style: {},
                     hideEVMTitle: true,
                   })}
 
-                  {dapp?.isWalletConnect ? (
+                  {vm?.dapp?.isWalletConnect ? (
                     <WalletConnectLogo width={9} height={9} style={{ position: 'absolute', right: 5, bottom: -4 }} />
                   ) : undefined}
                 </TouchableOpacity>
@@ -318,10 +331,13 @@ export default observer((props: Web3ViewProps) => {
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
           <NetworksMenu
-            title={t('modal-dapp-switch-network', { app: pageMetadata?.title?.split(' ')?.[0] ?? '' })}
+            title={t('modal-dapp-switch-network', { app: vm?.pageMetadata?.title?.split(' ')?.[0] ?? '' })}
             networks={Networks.all}
-            selectedNetwork={appNetwork}
-            onNetworkPress={(network) => updateDAppNetworkConfig(network)}
+            selectedNetwork={vm?.appNetwork}
+            onNetworkPress={(network) => {
+              vm?.updateDAppNetworkConfig(network);
+              closeNetworksModal();
+            }}
           />
         </Modalize>
 
@@ -336,10 +352,14 @@ export default observer((props: Web3ViewProps) => {
             <AccountSelector
               single
               accounts={App.allAccounts}
-              selectedAccounts={appAccount ? [appAccount.address] : []}
-              onDone={([account]) => updateDAppAccountConfig(account)}
+              selectedAccounts={vm?.appAccount ? [vm?.appAccount.address] : []}
               style={{ padding: 16, height: 430 }}
               expanded
+              themeColor={vm?.appNetwork?.color}
+              onDone={([account]) => {
+                vm?.updateDAppAccountConfig(account);
+                closeAccountsModal();
+              }}
             />
           </SafeAreaProvider>
         </Modalize>
