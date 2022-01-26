@@ -177,5 +177,6 @@
   "button-request": "Receive",
   "button-confirm": "Confirm",
   "button-edit": "Edit",
-  "button-remove": "Remove"
+  "button-remove": "Remove",
+  "button-share": "Share"
 }

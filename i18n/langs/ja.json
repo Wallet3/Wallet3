@@ -174,5 +174,6 @@
   "button-send": "送金",
   "button-request": "リクエスト",
   "button-edit": "エディット",
-  "button-remove": "削除"
+  "button-remove": "削除",
+  "button-share": "共有"
 }

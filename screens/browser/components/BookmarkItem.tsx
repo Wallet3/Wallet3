@@ -39,7 +39,7 @@ interface UserBookmarkProps extends Props {
 export const renderUserBookmarkItem = (props: UserBookmarkProps) => {
   const { onRemove, item, iconSize, onPress } = props;
   const actions = [
-    { title: 'Share', systemIcon: 'square.and.arrow.up' },
+    { title: t('button-share'), systemIcon: 'square.and.arrow.up' },
     { title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' },
   ];
 
