@@ -69,4 +69,10 @@ export default `function getIcons() {
     return icons.sort((a1, a2) => a2.length - a1.length).filter(i => i.startsWith('http') && !i.endsWith('.svg'))[0] || '';
 }
 
-window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'metadata', payload: { origin: window.location.href, icon: getIcons(), title: document.title || location.hostname, desc: document.querySelector('meta[name="description"]') && document.querySelector('meta[name="description"]').content } }));`;
+window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'metadata', payload: {
+     origin: window.location.href, 
+     icon: getIcons(), 
+     title: document.title || location.hostname, 
+     desc: document.querySelector('meta[name="description"]') && document.querySelector('meta[name="description"]').content, 
+     themeColor: document.querySelector('meta[name="theme-color"]') && document.querySelector('meta[name="theme-color"]').content,
+    } }));`;

@@ -31,11 +31,12 @@ import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
-interface PageMetadata {
+export interface PageMetadata {
   icon: string;
   title: string;
-  desc?: string;
   origin: string;
+  desc?: string;
+  themeColor?: string;
 }
 
 interface ConnectedBrowserDApp {
