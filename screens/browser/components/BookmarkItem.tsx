@@ -1,5 +1,5 @@
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
-import { Image, ListRenderItemInfo, NativeSyntheticEvent, Text, TouchableOpacity } from 'react-native';
+import { Image, ListRenderItemInfo, NativeSyntheticEvent, Share, Text, TouchableOpacity } from 'react-native';
 
 import { Bookmark } from '../../../viewmodels/customs/Bookmarks';
 import CachedImage from 'react-native-expo-cached-image';
@@ -38,13 +38,19 @@ interface UserBookmarkProps extends Props {
 
 export const renderUserBookmarkItem = (props: UserBookmarkProps) => {
   const { onRemove, item, iconSize, onPress } = props;
-  const actions = [{ title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' }];
+  const actions = [
+    { title: 'Share', systemIcon: 'square.and.arrow.up' },
+    { title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' },
+  ];
 
   const onActionPress = (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => {
     const { index } = e.nativeEvent;
 
     switch (index) {
       case 0:
+        Share.share({ title: item.title, url: item.url });
+        break;
+      case 1:
         onRemove?.(item);
         break;
     }
