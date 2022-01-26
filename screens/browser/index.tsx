@@ -1,12 +1,23 @@
 import * as Linking from 'expo-linking';
 
-import { Animated, Dimensions, Image, ListRenderItemInfo, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  Animated,
+  Dimensions,
+  Image,
+  LayoutAnimation,
+  ListRenderItemInfo,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Bookmarks, { Bookmark, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
 import { BottomTabScreenProps, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { WebView, WebViewNavigation } from 'react-native-webview';
 import { borderColor, thirdFontColor } from '../../constants/styles';
+import { renderBookmarkItem, renderUserBookmarkItem } from './components/BookmarkItem';
 
 import { Bar } from 'react-native-progress';
 import CachedImage from 'react-native-expo-cached-image';
@@ -25,6 +36,18 @@ import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 const DefaultIcon = require('../../assets/default-icon.png');
+
+const layoutAnimConfig = {
+  duration: 300,
+  update: {
+    type: LayoutAnimation.Types.easeInEaseOut,
+  },
+  delete: {
+    duration: 300,
+    type: LayoutAnimation.Types.linear,
+    property: LayoutAnimation.Properties.opacity,
+  },
+};
 
 const calcIconSize = () => {
   const { width } = Dimensions.get('window');
@@ -175,27 +198,15 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
     setHostname(hn.startsWith('www.') ? hn.substring(4) : hn);
   };
 
-  const renderItem = ({ item }: ListRenderItemInfo<Bookmark>) => {
-    return (
-      <TouchableOpacity
-        style={{ alignItems: 'center', justifyContent: 'center' }}
-        onPress={() => {
-          goTo(item.url);
-          closeFavs();
-        }}
-      >
-        {item.icon ? (
-          <CachedImage source={{ uri: item.icon }} style={{ width: largeIconSize, height: largeIconSize, borderRadius: 7 }} />
-        ) : (
-          <Image source={DefaultIcon} style={{ width: largeIconSize, height: largeIconSize, borderRadius: 7 }} />
-        )}
-
-        <Text numberOfLines={1} style={{ maxWidth: largeIconSize + 8, marginTop: 4, fontSize: 9, color: thirdFontColor }}>
-          {item.title}
-        </Text>
-      </TouchableOpacity>
-    );
-  };
+  const renderItem = (p: ListRenderItemInfo<Bookmark>) =>
+    renderBookmarkItem({
+      ...p,
+      iconSize: LargeIconSize,
+      onPress: (item) => {
+        goTo(item.url);
+        closeFavs();
+      },
+    });
 
   useEffect(() => {
     setSuggests(
@@ -393,11 +404,11 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
             contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: 8, paddingTop: 2 }}
             itemDimension={LargeIconSize + 8}
             bounces={false}
-            renderItem={renderItem}
             data={PopularDApps}
             itemContainerStyle={{ padding: 0, margin: 0, marginBottom: 4 }}
             spacing={8}
             keyExtractor={(v, index) => `${v.url}-${index}`}
+            renderItem={renderItem}
           />
 
           {Bookmarks.favs.length > 0 ? (
@@ -409,11 +420,24 @@ export default observer(({ navigation }: BottomTabScreenProps<{}, never>) => {
             contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: 8, paddingTop: 2 }}
             itemDimension={LargeIconSize + 8}
             bounces={false}
-            renderItem={renderItem}
             data={Bookmarks.favs}
             itemContainerStyle={{ padding: 0, margin: 0, marginBottom: 8 }}
             spacing={8}
             keyExtractor={(v, index) => `${v.url}-${index}`}
+            renderItem={(p) =>
+              renderUserBookmarkItem({
+                ...p,
+                iconSize: LargeIconSize,
+                onPress: (item) => {
+                  goTo(item.url);
+                  closeFavs();
+                },
+                onRemove: (item) => {
+                  LayoutAnimation.configureNext(layoutAnimConfig);
+                  Bookmarks.remove(item.url);
+                },
+              })
+            }
           />
         </View>
       )}

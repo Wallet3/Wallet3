@@ -55,7 +55,10 @@ class Bookmarks {
   }
 
   remove(url: string) {
-    this.favs = this.favs.filter((i) => !i.url.startsWith(url) && !url.startsWith(i.url));
+    const index = this.favs.findIndex((i) => i.url === url);
+    if (index === -1) return;
+
+    this.favs.splice(index, 1);
     AsyncStorage.setItem(`bookmarks`, JSON.stringify(this.favs));
   }
 

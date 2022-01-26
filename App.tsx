@@ -2,6 +2,17 @@ import * as SplashScreen from 'expo-splash-screen';
 
 import AppViewModel, { AppVM } from './viewmodels/App';
 import AuthViewModel, { Authentication } from './viewmodels/Authentication';
+import {
+  FlatList,
+  LayoutAnimation,
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  UIManager,
+  View,
+} from 'react-native';
 import Modals, { LockScreen } from './screens/Modalize';
 
 import { About } from './screens/settings/About';
@@ -20,7 +31,6 @@ import QRScan from './screens/misc/QRScan';
 import React from 'react';
 import Root from './screens/Root';
 import Tokens from './screens/tokens/SortTokens';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import VerifySecret from './screens/settings/VerifySecret';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -30,6 +40,8 @@ import { useFonts } from 'expo-font';
 
 SplashScreen.hideAsync();
 AppViewModel.init();
+
+UIManager.setLayoutAnimationEnabledExperimental?.(true);
 
 const StackRoot = createNativeStackNavigator();
 
