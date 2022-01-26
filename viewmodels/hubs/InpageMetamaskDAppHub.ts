@@ -492,6 +492,12 @@ export class InpageMetamaskDAppHub extends EventEmitter {
     });
   }
 
+  async removeAccount(address: string) {
+    const items = await this.dbTable.find({ where: { lastUsedAccount: address } });
+    items.forEach((i) => this.apps.delete(i.origin));
+    await this.dbTable.remove(items);
+  }
+
   reset() {
     this.apps.clear();
     return this.dbTable.clear();

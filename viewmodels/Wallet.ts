@@ -6,6 +6,7 @@ import { action, makeObservable, observable, reaction, runInAction } from 'mobx'
 import { Account } from './account/Account';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Authentication from './Authentication';
+import InpageMetamaskDAppHub from './hubs/InpageMetamaskDAppHub';
 import Key from '../models/Key';
 import LINQ from 'linq';
 import Networks from './Networks';
@@ -125,6 +126,8 @@ export class Wallet {
     } else {
       AsyncStorage.removeItem(storeKey);
     }
+
+    InpageMetamaskDAppHub.removeAccount(account.address);
   }
 
   private async unlockPrivateKey({ pin, accountIndex }: { pin?: string; accountIndex?: number }) {
