@@ -121,7 +121,7 @@ export class InpageMetamaskDAppHub extends EventEmitter {
         break;
       case 'eth_accounts':
         const account = (await this.getDApp(hostname!))?.lastUsedAccount;
-        result = account ? [account] : [];
+        result = account && App.allAccounts.find((a) => a.address === account) ? [account] : [];
         break;
       case 'eth_coinbase':
         const coinbase = (await this.getDApp(hostname!))?.lastUsedAccount;
