@@ -83,7 +83,13 @@ const DApp = observer(({ client, allAccounts, close }: Props) => {
         ) : undefined}
 
         {panel === 2 ? (
-          <AccountSelector single accounts={allAccounts} selectedAccounts={client.accounts} onDone={selectAccounts} />
+          <AccountSelector
+            single
+            accounts={allAccounts}
+            selectedAccounts={client.accounts}
+            onDone={selectAccounts}
+            themeColor={defaultNetwork.color}
+          />
         ) : undefined}
       </Swiper>
     </SafeAreaProvider>
