@@ -5,6 +5,7 @@ import Coin from './Coin';
 import DismissKeyboard from './DismissKeyboard';
 import Loader from './Loader';
 import Mnemonic from './Mnemonic';
+import NullableImage from './NullableImage';
 import SafeViewContainer from './SafeViewContainer';
 import Separator from './Separator';
 import Skeleton from './Skeleton';
@@ -21,5 +22,6 @@ export {
   NumpadChar,
   Loader,
   SafeViewContainer,
+  NullableImage,
   Skeleton,
 };

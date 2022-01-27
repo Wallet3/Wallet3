@@ -8,6 +8,7 @@ import {
   Image,
   LayoutAnimation,
   ListRenderItemInfo,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -30,6 +31,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { LayoutAnimConfig } from '../../utils/animations';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
+import { NullableImage } from '../../components';
 import PopularDApps from '../../configs/urls/popular.json';
 import { Portal } from 'react-native-portalize';
 import { SafeViewContainer } from '../../components';
@@ -446,7 +448,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
 
       {!webUrl && Bookmarks.recentSites.length > 0 ? (
         <Animatable.View animation={'fadeInUp'} style={{ flex: 1 }}>
-          <View style={{ flex: 1 }} />
+          <ScrollView style={{ flex: 1 }} />
 
           <FlatList
             style={{ maxHeight: 52, backgroundColor: '#fff', borderTopWidth: 1, borderColor }}
@@ -472,7 +474,14 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
                     marginHorizontal: 4,
                   }}
                 >
-                  <CachedImage source={{ uri: item.icon }} style={{ width: 15, height: 15, marginEnd: 6, borderRadius: 2 }} />
+                  <NullableImage
+                    uri={item.icon}
+                    size={15}
+                    text={item.title}
+                    fontSize={10}
+                    imageRadius={2}
+                    containerStyle={{ marginEnd: 6 }}
+                  />
                   <Text style={{ color: item.themeColor, maxWidth: 150 }} numberOfLines={1}>
                     {item.title}
                   </Text>
