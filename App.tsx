@@ -30,6 +30,7 @@ import ProfileScreen from './screens/profile';
 import QRScan from './screens/misc/QRScan';
 import React from 'react';
 import Root from './screens/Root';
+import Theme from './viewmodels/settings/Theme';
 import Tokens from './screens/tokens/SortTokens';
 import VerifySecret from './screens/settings/VerifySecret';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -59,7 +60,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
 
   return (
     <NavigationContainer>
-      <Host style={{ backgroundColor: '#fff' }}>
+      <Host style={{ backgroundColor: Theme.backgroundColor }}>
         {app.initialized ? (
           app.hasWallet ? (
             <Navigator
@@ -67,10 +68,12 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
               screenOptions={({ navigation }) => {
                 return {
                   headerTransparent: true,
-                  contentStyle: { backgroundColor: '#fff' },
+                  headerTintColor: Theme.foregroundColor,
+                  headerStyle: { backgroundColor: Theme.backgroundColor },
+                  contentStyle: { backgroundColor: Theme.backgroundColor },
                   headerLeft: () => (
                     <TouchableOpacity onPress={() => navigation.pop()} style={{ margin: -12, padding: 12, zIndex: 99 }}>
-                      <Ionicons name="arrow-back-outline" size={20} />
+                      <Ionicons name="arrow-back-outline" size={20} color={Theme.foregroundColor} />
                     </TouchableOpacity>
                   ),
                 };
@@ -93,7 +96,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
                     title: '',
                     headerLeft: () => (
                       <TouchableOpacity onPress={() => navigation.pop()} style={{ margin: -12, padding: 12, zIndex: 99 }}>
-                        <Ionicons name="arrow-back-outline" size={20} color="white" />
+                        <Ionicons name="arrow-back-outline" size={20} color={Theme.foregroundColor} />
                       </TouchableOpacity>
                     ),
                   };
@@ -123,7 +126,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
                     title: t('home-tokens-title'),
                     headerRight: () => (
                       <TouchableOpacity onPress={() => navigation.navigate('AddToken')}>
-                        <Ionicons name="add-circle-outline" size={24} />
+                        <Ionicons name="add-circle-outline" size={24} color={Theme.foregroundColor} />
                       </TouchableOpacity>
                     ),
                   };

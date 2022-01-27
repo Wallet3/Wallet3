@@ -11,6 +11,7 @@ import HistoryList from './HistoryList';
 import { IToken } from '../../common/Tokens';
 import { RootNavigationProps } from '../navigations';
 import Swiper from 'react-native-swiper';
+import Theme from '../../viewmodels/settings/Theme';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import TxHub from '../../viewmodels/hubs/TxHub';
 import i18n from '../../i18n';
@@ -40,6 +41,7 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
 
   const [activeTab, setActiveTab] = useState(0);
   const swiper = React.useRef<Swiper>(null);
+  const { borderColor } = Theme;
 
   const swipeTo = (index: number) => {
     swiper.current?.scrollTo(index);
@@ -50,7 +52,7 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ ...styles.header }}>
+      <View style={{ ...styles.header, borderBottomColor: borderColor }}>
         <View style={styles.tabsContainer}>
           <Text
             style={{

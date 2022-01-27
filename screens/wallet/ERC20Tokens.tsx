@@ -3,13 +3,17 @@ import { FlatList, ListRenderItemInfo, RefreshControl, Text, TouchableOpacity, V
 import React, { useState } from 'react';
 
 import { IToken } from '../../common/Tokens';
+import Theme from '../../viewmodels/settings/Theme';
 import { fontColor } from '../../constants/styles';
 import { formatCurrency } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
 
 const Token = observer(({ item, onPress }: { item: IToken; onPress?: (token: IToken) => void }) => {
+  const { textColor } = Theme;
+
   return (
     <TouchableOpacity
+      onPress={() => onPress?.(item)}
       style={{
         flexDirection: 'row',
         alignItems: 'center',
@@ -18,10 +22,9 @@ const Token = observer(({ item, onPress }: { item: IToken; onPress?: (token: ITo
         paddingBottom: 13,
         paddingHorizontal: 22,
       }}
-      onPress={() => onPress?.(item)}
     >
       <Coin symbol={item.symbol} style={{ width: 36, height: 36, marginEnd: 16 }} iconUrl={item.iconUrl} />
-      <Text style={{ fontSize: 18, color: fontColor }} numberOfLines={1}>
+      <Text style={{ fontSize: 18, color: textColor }} numberOfLines={1}>
         {item.symbol}
       </Text>
       <View style={{ flex: 1 }} />
@@ -29,7 +32,7 @@ const Token = observer(({ item, onPress }: { item: IToken; onPress?: (token: ITo
       {item.loading ? (
         <Skeleton />
       ) : (
-        <Text style={{ fontSize: 19, color: fontColor }} numberOfLines={1}>
+        <Text style={{ fontSize: 19, color: textColor }} numberOfLines={1}>
           {formatCurrency(item.amount || '0', '')}
         </Text>
       )}

@@ -24,6 +24,8 @@ interface Props {
   avatar?: string;
   chainId: number;
   disabled?: boolean;
+  separatorColor?: string;
+  textColor: string;
   onSendPress?: () => void;
   onRequestPress?: () => void;
   onDAppsPress?: () => void;
@@ -43,6 +45,8 @@ export default observer(
     onRequestPress,
     onDAppsPress,
     disabled,
+    separatorColor,
+    textColor,
   }: Props) => {
     const { t } = i18n;
 
@@ -60,8 +64,8 @@ export default observer(
               style={{ flexDirection: 'row', alignItems: 'center' }}
               onPress={() => PubSub.publish('openNetworksMenu')}
             >
-              <Text style={{ ...styles.text, fontSize: 16 }}>{network}</Text>
-              <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 2 }} color={'#fff'} size={12} />
+              <Text style={{ ...styles.text, fontSize: 16, color: textColor }}>{network}</Text>
+              <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 2 }} color={textColor} size={12} />
             </TouchableOpacity>
 
             {avatar ? (
@@ -80,8 +84,10 @@ export default observer(
           </View>
 
           <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={onDAppsPress}>
-            <Text style={{ ...styles.text, fontSize: 14, marginEnd: 5, opacity: connectedApps || 0 }}>{connectedApps}</Text>
-            <Feather name="layers" size={14} color="#fff" style={{ opacity: connectedApps || 0 }} />
+            <Text style={{ ...styles.text, color: textColor, fontSize: 14, marginEnd: 5, opacity: connectedApps || 0 }}>
+              {connectedApps}
+            </Text>
+            <Feather name="layers" size={14} color={textColor} style={{ opacity: connectedApps || 0 }} />
           </TouchableOpacity>
         </View>
 
@@ -89,9 +95,9 @@ export default observer(
           copyText={address || ''}
           title={formatAddress(address || '', 8, 5)}
           iconSize={10}
-          iconColor="#fff"
+          iconColor={textColor}
           iconStyle={{ marginHorizontal: 5 }}
-          txtStyle={{ ...styles.text, fontSize: 12 }}
+          txtStyle={{ ...styles.text, fontSize: 12, color: textColor }}
         />
 
         <View style={{ height: 36, backgroundColor: 'transparent' }} />
@@ -103,7 +109,7 @@ export default observer(
 
           <AnimateNumber
             value={balance || 0}
-            style={styles.headline}
+            style={{ ...styles.headline, color: textColor }}
             numberOfLines={1}
             formatter={(v) => formatCurrency(v, currency)}
           />
@@ -111,18 +117,18 @@ export default observer(
           {Logos[chainId]}
         </View>
 
-        <View style={{ height: 1, backgroundColor: '#ffffff25', marginTop: 2, marginHorizontal: -12 }} />
+        <View style={{ height: 1, backgroundColor: separatorColor ?? '#ffffff25', marginTop: 2, marginHorizontal: -12 }} />
 
         <View style={styles.buttonsContainer}>
           <Ripple style={styles.button} onPress={(_) => (disabled ? undefined : onSendPress?.())}>
-            <Ionicons name="md-arrow-up-circle-outline" size={18} color="white" />
-            <Text style={styles.buttonText}>{t('button-send')}</Text>
+            <Ionicons name="md-arrow-up-circle-outline" size={18} color={textColor} />
+            <Text style={{ ...styles.buttonText, color: textColor }}>{t('button-send')}</Text>
           </Ripple>
 
-          <View style={{ width: 1, backgroundColor: '#ffffff25' }}></View>
+          <View style={{ width: 1, backgroundColor: separatorColor ?? '#ffffff25' }}></View>
           <Ripple style={styles.button} onPress={(_) => (disabled ? undefined : onRequestPress?.())}>
-            <Ionicons name="md-arrow-down-circle-outline" size={18} color="white" />
-            <Text style={styles.buttonText}>{t('button-request')}</Text>
+            <Ionicons name="md-arrow-down-circle-outline" size={18} color={textColor} />
+            <Text style={{ ...styles.buttonText, color: textColor }}>{t('button-request')}</Text>
           </Ripple>
         </View>
       </View>

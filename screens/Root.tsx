@@ -1,25 +1,23 @@
-import { Animated, Dimensions, Text, TouchableOpacity, View } from 'react-native';
-import { BottomTabBar, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
 import { DrawerActions, useNavigation } from '@react-navigation/native';
-import { Entypo, Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
-import { borderColor, fontColor } from '../constants/styles';
+import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
-import { BlurView } from 'expo-blur';
 import BrowserScreen from './browser';
 import DAppsScreen from './dapps';
 import Drawer from './drawer';
 import { DrawerNavigationHelpers } from '@react-navigation/drawer/lib/typescript/src/types';
-import FashionWallet from './wallet/SocialWallet';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../viewmodels/Networks';
 import PortfolioScreen from './portfolio';
 import React from 'react';
 import SettingScreen from './settings';
+import Theme from '../viewmodels/settings/Theme';
 import WalletScreen from './wallet';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import i18n from '../i18n';
 import { observer } from 'mobx-react-lite';
-import { useFonts } from 'expo-font';
+import { useHeaderHeight } from '@react-navigation/elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const DrawerRoot = createDrawerNavigator();
@@ -37,13 +35,27 @@ const RootTab = observer(() => {
   const { current } = Networks;
   const navigation = useNavigation() as DrawerNavigationHelpers;
   const { Navigator, Screen } = TabNavigation;
-  const { bottom } = useSafeAreaInsets();
+  const { bottom, top } = useSafeAreaInsets();
+  let { foregroundColor, backgroundColor, borderColor, isLightMode } = Theme;
+
+  foregroundColor = isLightMode ? foregroundColor : current.color;
+  borderColor = isLightMode ? borderColor : `${current.color}30`;
 
   return (
     <Navigator
       initialRouteName="Wallet"
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
+        tabBarActiveTintColor: current.color,
+        tabBarInactiveTintColor: 'gray',
+        tabBarLabelStyle: { marginBottom: bottom === 0 ? 7 : 3, marginTop: -3 },
+        tabBarStyle: {
+          backgroundColor,
+          height: bottom === 0 ? 57 : 79,
+          borderTopColor: borderColor,
+        },
+        headerStyle: { backgroundColor },
+        tabBarLabelPosition: 'below-icon',
+        tabBarIcon: ({ focused, size }) => {
           const icons = {
             Wallet: 'credit-card',
             Explore: 'compass',
@@ -52,11 +64,6 @@ const RootTab = observer(() => {
 
           return <Feather name={icons[route.name]} size={size} color={focused ? current.color : 'gray'} />;
         },
-        tabBarActiveTintColor: current.color,
-        tabBarInactiveTintColor: 'gray',
-        tabBarLabelStyle: { marginBottom: bottom === 0 ? 7 : 3, marginTop: -3 },
-        tabBarStyle: bottom === 0 ? { height: 57 } : undefined,
-        tabBarLabelPosition: 'below-icon',
       })}
     >
       <Screen
@@ -64,51 +71,62 @@ const RootTab = observer(() => {
         component={WalletScreen}
         options={{
           tabBarLabel: t('home-tab-wallet'),
-          headerTitle: () => {
-            return (
-              <TouchableOpacity
-                onPress={() => PubSub.publish('openAccountsMenu')}
-                style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 0 }}
-              >
-                <Text style={{ fontFamily: 'Questrial', fontSize: 20 }}>Wallet 3</Text>
-                {/* <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 4 }} size={12} /> */}
-              </TouchableOpacity>
-            );
-          },
-          headerLeft: () => (
-            <TouchableOpacity
-              style={{ padding: 16, paddingVertical: 0 }}
-              onPress={() => navigation.dispatch(DrawerActions.openDrawer)}
-            >
-              <Ionicons name="menu-outline" size={23} />
-            </TouchableOpacity>
-          ),
-          headerRight: () => (
-            <TouchableOpacity
-              onPress={() => navigation.getParent()?.navigate('QRScan')}
+          header: () => (
+            <View
               style={{
-                zIndex: 5,
+                paddingTop: top,
+                paddingBottom: 8,
+                backgroundColor,
                 flexDirection: 'row',
-                justifyContent: 'center',
                 alignItems: 'center',
-                position: 'relative',
-                paddingStart: 8,
-                paddingEnd: 2,
-                marginEnd: 17,
+                borderBottomColor: borderColor,
+                borderBottomWidth: 0.33,
               }}
             >
-              <MaterialCommunityIcons name="scan-helper" size={16.5} style={{}} />
-              <View
+              <TouchableOpacity
+                style={{ padding: 16, paddingVertical: 4 }}
+                onPress={() => navigation.dispatch(DrawerActions.openDrawer)}
+              >
+                <Ionicons name="menu-outline" size={23} color={foregroundColor} />
+              </TouchableOpacity>
+
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <TouchableOpacity
+                  onPress={() => PubSub.publish('openAccountsMenu')}
+                  style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 0 }}
+                >
+                  <Text style={{ fontFamily: 'Questrial', fontSize: 20, color: foregroundColor }}>Wallet 3</Text>
+                  {/* <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 4 }} size={12} /> */}
+                </TouchableOpacity>
+              </View>
+
+              <TouchableOpacity
+                onPress={() => navigation.getParent()?.navigate('QRScan')}
                 style={{
-                  position: 'absolute',
-                  left: 2,
-                  right: 4.5,
-                  height: 1.5,
-                  backgroundColor: '#000',
-                  marginStart: 8,
+                  zIndex: 5,
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  position: 'relative',
+                  paddingStart: 19,
+                  paddingVertical: 5,
+                  paddingEnd: 19,
                 }}
-              />
-            </TouchableOpacity>
+              >
+                <MaterialCommunityIcons name="scan-helper" size={16.5} color={foregroundColor} />
+                <View
+                  style={{
+                    position: 'absolute',
+                    left: 2,
+                    right: 4.5,
+                    height: 1.5,
+                    marginEnd: 17,
+                    marginStart: 19,
+                    backgroundColor: foregroundColor,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
           ),
         }}
       />
@@ -137,23 +155,25 @@ const RootTab = observer(() => {
 export default observer(({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>) => {
   const { Navigator, Screen } = DrawerRoot;
   const { t } = i18n;
+  const { backgroundColor, foregroundColor, borderColor } = Theme;
 
   return (
     <Navigator
       initialRouteName="Home"
       drawerContent={Drawer}
       screenOptions={{
-        sceneContainerStyle: { backgroundColor: '#fff' },
+        sceneContainerStyle: { backgroundColor: backgroundColor },
         headerTransparent: false,
-        headerTintColor: fontColor,
+        headerTintColor: foregroundColor,
         swipeEdgeWidth: ScreenWidth * 0.25,
         drawerType: 'slide',
+        headerStyle: { backgroundColor, borderBottomColor: borderColor },
         headerLeft: () => (
           <TouchableOpacity
             style={{ padding: 16, paddingVertical: 0 }}
             onPress={() => navigation.dispatch(DrawerActions.openDrawer)}
           >
-            <Ionicons name="menu-outline" size={23} />
+            <Ionicons name="menu-outline" size={23} color={foregroundColor} />
           </TouchableOpacity>
         ),
       }}
@@ -166,7 +186,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
       <Screen
         name="Portfolio"
         component={PortfolioScreen}
-        options={{ headerTransparent: true, headerTitleStyle: { display: 'none' } }}
+        options={{ headerTransparent: true, headerShown: false, headerTitleStyle: { display: 'none' } }}
       />
     </Navigator>
   );
