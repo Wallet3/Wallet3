@@ -57,7 +57,9 @@ export function About() {
         />
       </View>
 
-      <Text style={{ marginTop: 24, color: thirdFontColor, fontSize: 12 }}>Copyright ©️ 2021 ChainBow Co., Ltd.</Text>
+      <Text style={{ marginTop: 24, color: thirdFontColor, fontSize: 12 }}>
+        ©️ 2021-{new Date().getFullYear()} ChainBow Co., Ltd.
+      </Text>
     </SafeViewContainer>
   );
 }

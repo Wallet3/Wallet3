@@ -23,7 +23,7 @@ const DarkTheme = {
 };
 
 class Theme {
-  mode: 'light' | 'dark' = 'light';
+  mode: 'light' | 'dark' = 'dark';
 
   constructor() {
     makeObservable(this, {

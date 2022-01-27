@@ -174,7 +174,11 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
 
     const translateY = new Animated.Value(0);
     Animated.spring(translateY, { toValue: tabBarHeight, useNativeDriver: true }).start();
-    setTimeout(() => navigation.setOptions({ tabBarStyle: { height: 0, backgroundColor, borderTopColor: borderColor } }), 100);
+    setTimeout(
+      () =>
+        navigation.setOptions({ tabBarStyle: { height: 0, backgroundColor, borderTopColor: borderColor, borderTopWidth: 0 } }),
+      100
+    );
     navigation.setOptions({ tabBarStyle: { transform: [{ translateY }], backgroundColor, borderColor } });
   };
 
@@ -264,7 +268,9 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
                 textAlign: isFocus ? 'auto' : 'center',
                 color:
                   (webRiskLevel === 'verified' || webRiskLevel === 'tls') && !isFocus
-                    ? '#66db0d'
+                    ? isLightMode
+                      ? secureColor
+                      : '#66db0d'
                     : webRiskLevel === 'risky'
                     ? 'red'
                     : undefined,
@@ -274,7 +280,12 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
             {isFocus ? undefined : webUrl.startsWith('https') ? (
               <TouchableOpacity style={{ position: 'absolute', left: 0, paddingStart: 8 }}>
                 {webRiskLevel === 'verified' ? (
-                  <Ionicons name="shield-checkmark" color={'#66db0d'} size={12} style={{ marginTop: 2 }} />
+                  <Ionicons
+                    name="shield-checkmark"
+                    color={isLightMode ? secureColor : '#66db0d'}
+                    size={12}
+                    style={{ marginTop: 2 }}
+                  />
                 ) : webRiskLevel === 'risky' ? (
                   <Ionicons name="md-shield" color="red" size={12} style={{ marginTop: 2 }} />
                 ) : webRiskLevel === 'tls' ? (

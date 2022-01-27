@@ -123,13 +123,21 @@ export default observer(
         <View style={{ height: 1, backgroundColor: separatorColor ?? '#ffffff25', marginTop: 2, marginHorizontal: -12 }} />
 
         <View style={styles.buttonsContainer}>
-          <Ripple style={styles.button} onPress={(_) => (disabled ? undefined : onSendPress?.())}>
+          <Ripple
+            style={styles.button}
+            rippleColor={mode === 'light' ? undefined : themeColor}
+            onPress={(_) => (disabled ? undefined : onSendPress?.())}
+          >
             <Ionicons name="md-arrow-up-circle-outline" size={18} color={textColor} />
             <Text style={{ ...styles.buttonText, color: textColor }}>{t('button-send')}</Text>
           </Ripple>
-
           <View style={{ width: 1, backgroundColor: separatorColor ?? '#ffffff25' }}></View>
-          <Ripple style={styles.button} onPress={(_) => (disabled ? undefined : onRequestPress?.())}>
+
+          <Ripple
+            style={styles.button}
+            rippleColor={mode === 'light' ? undefined : themeColor}
+            onPress={(_) => (disabled ? undefined : onRequestPress?.())}
+          >
             <Ionicons name="md-arrow-down-circle-outline" size={18} color={textColor} />
             <Text style={{ ...styles.buttonText, color: textColor }}>{t('button-request')}</Text>
           </Ripple>
