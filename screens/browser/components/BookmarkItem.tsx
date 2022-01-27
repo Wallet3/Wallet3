@@ -3,6 +3,7 @@ import { Image, ListRenderItemInfo, NativeSyntheticEvent, Share, Text, Touchable
 
 import { Bookmark } from '../../../viewmodels/customs/Bookmarks';
 import CachedImage from 'react-native-expo-cached-image';
+import { NullableImage } from '../../../components';
 import React from 'react';
 import i18n from '../../../i18n';
 import { thirdFontColor } from '../../../constants/styles';
@@ -19,12 +20,7 @@ interface Props extends ListRenderItemInfo<Bookmark> {
 export const renderBookmarkItem = ({ item, onPress, iconSize }: Props) => {
   return (
     <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }} onPress={() => onPress?.(item)}>
-      {item.icon ? (
-        <CachedImage source={{ uri: item.icon }} style={{ width: iconSize, height: iconSize, borderRadius }} />
-      ) : (
-        <Image source={DefaultIcon} style={{ width: iconSize, height: iconSize, borderRadius }} />
-      )}
-
+      <NullableImage uri={item.icon} size={iconSize} text={item.title} imageRadius={7} fontSize={15} />
       <Text numberOfLines={1} style={{ maxWidth: iconSize + 8, marginTop: 4, fontSize: 9, color: thirdFontColor }}>
         {item.title}
       </Text>
@@ -59,11 +55,7 @@ export const renderUserBookmarkItem = (props: UserBookmarkProps) => {
   return (
     <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }} onPress={() => onPress?.(item)}>
       <ContextMenu actions={actions} onPress={onActionPress}>
-        {item.icon ? (
-          <CachedImage source={{ uri: item.icon }} style={{ width: iconSize, height: iconSize, borderRadius }} />
-        ) : (
-          <Image source={DefaultIcon} style={{ width: iconSize, height: iconSize, borderRadius }} />
-        )}
+        <NullableImage uri={item.icon} size={iconSize} text={item.title} imageRadius={7} fontSize={18} />
       </ContextMenu>
 
       <Text numberOfLines={1} style={{ maxWidth: iconSize + 8, marginTop: 4, fontSize: 9, color: thirdFontColor }}>

@@ -85,6 +85,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
   const [largeIconSize, setLargeIconSize] = useState(LargeIconSize);
   const [smallIconSize, setSmallIconSize] = useState(SmallIconSize);
   const [windowWidth, setWindowWidth] = useState(WindowWidth);
+  const { history, favs, expandedSites, recentSites } = Bookmarks;
 
   useEffect(() => {
     Dimensions.addEventListener('change', ({ window, screen }) => {
@@ -480,7 +481,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
                     imageRadius={2}
                     containerStyle={{ marginEnd: 6 }}
                   />
-                  <Text style={{ color: item.themeColor, maxWidth: 150 }} numberOfLines={1}>
+                  <Text style={{ color: item.themeColor, maxWidth: 150, marginBottom: -1 }} numberOfLines={1}>
                     {item.title}
                   </Text>
                 </TouchableOpacity>
