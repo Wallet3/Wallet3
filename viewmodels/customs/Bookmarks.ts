@@ -4,6 +4,7 @@ import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NoInsetsSites from '../../configs/urls/no-insets.json';
+import { PageMetadata } from '../../screens/browser/Web3View';
 import RiskyUrls from '../../configs/urls/risky.json';
 import SecureUrls from '../../configs/urls/verified.json';
 
@@ -16,6 +17,7 @@ export interface Bookmark {
 class Bookmarks {
   favs: Bookmark[] = [];
   history: string[] = [];
+  recentSites: PageMetadata[] = [];
   expandedSites: string[] = [];
 
   constructor() {
@@ -29,6 +31,8 @@ class Bookmarks {
       expandedSites: observable,
       addExpandedSite: action,
       removeExpandedSite: action,
+      addRecentSite: action,
+      recentSites: observable,
     });
 
     AsyncStorage.getItem(`bookmarks`)
@@ -48,9 +52,9 @@ class Bookmarks {
       .catch(() => {});
   }
 
-  add(obj: Bookmark) {
-    obj.title = obj.title || Linking.parse(obj.url).hostname || obj.url;
-    this.favs.push(obj);
+  add(bookmark: Bookmark) {
+    bookmark.title = bookmark.title || Linking.parse(bookmark.url).hostname || bookmark.url;
+    this.favs.push(bookmark);
     AsyncStorage.setItem(`bookmarks`, JSON.stringify(this.favs));
   }
 
@@ -92,6 +96,27 @@ class Bookmarks {
     if (!hostname) return false;
 
     return this.expandedSites.includes(hostname) || this.expandedSites.some((i) => hostname.includes(i));
+  }
+
+  addRecentSite(metadata: PageMetadata) {
+    console.log(metadata);
+    if (!metadata?.title) return;
+
+    const index = this.recentSites.findIndex((s) => s.hostname === metadata.hostname);
+
+    if (index !== -1) {
+      const [item] = this.recentSites.splice(index, 1);
+      this.recentSites.unshift(item);
+      return;
+    }
+
+    const themeColor = metadata.themeColor?.toLowerCase?.() || '#555';
+    metadata.themeColor =
+      themeColor === 'white' || themeColor === '#ffffff' || themeColor === '#fff' ? '#555' : metadata.themeColor;
+
+    this.recentSites.unshift(metadata);
+
+    if (this.recentSites.length > 10) this.recentSites.pop();
   }
 
   reset() {

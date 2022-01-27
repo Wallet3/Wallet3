@@ -1,8 +1,10 @@
+import * as Animatable from 'react-native-animatable';
 import * as Linking from 'expo-linking';
 
 import {
   Animated,
   Dimensions,
+  FlatList,
   Image,
   LayoutAnimation,
   ListRenderItemInfo,
@@ -218,7 +220,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
 
   return (
     <View style={{ backgroundColor: `#fff`, flex: 1, paddingTop: top, position: 'relative' }}>
-      <View style={{ position: 'relative', paddingTop: 4, paddingBottom: 8 }}>
+      <View style={{ position: 'relative', paddingTop: 4, paddingBottom: isFocus ? 0 : 8 }}>
         <View
           style={{
             flexDirection: 'row',
@@ -352,11 +354,11 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
             </View>
           ) : undefined}
 
-          <View style={{ flexDirection: 'row', paddingHorizontal: 16, paddingTop: 2, marginTop: 4 }}>
+          {/* <View style={{ flexDirection: 'row', paddingHorizontal: 16, paddingTop: 2, marginTop: 4 }}>
             <TouchableOpacity style={{ width: 48 }} onPress={() => goHome()}>
               <Ionicons name="home-outline" size={20} />
             </TouchableOpacity>
-          </View>
+          </View> */}
         </Collapsible>
 
         {loadingProgress > 0 && loadingProgress < 1 ? (
@@ -377,12 +379,12 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
           webViewRef={webview}
           source={{ uri }}
           onLoadProgress={({ nativeEvent }) => setLoadingProgress(nativeEvent.progress)}
-          onLoadEnd={() => {
-            setLoadingProgress(1);
-            onPageLoaded?.(tabIndex, pageMetadata!);
-          }}
+          onLoadEnd={() => setLoadingProgress(1)}
           onNavigationStateChange={onNavigationStateChange}
-          onMetadataChange={setPageMetadata}
+          onMetadataChange={(data) => {
+            setPageMetadata(data);
+            Bookmarks.addRecentSite(data);
+          }}
           onGoHome={goHome}
           expanded={isExpandedSite}
           onBookmarksPress={openFavs}
@@ -396,7 +398,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
           }}
         />
       ) : (
-        <View>
+        <View style={{}}>
           <Text style={{ marginHorizontal: 16, marginTop: 12 }}>{t('browser-popular-dapps')}</Text>
 
           <FlatGrid
@@ -441,6 +443,45 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
           />
         </View>
       )}
+
+      {!webUrl && Bookmarks.recentSites.length > 0 ? (
+        <Animatable.View animation={'fadeInUp'} style={{ flex: 1 }}>
+          <View style={{ flex: 1 }} />
+
+          <FlatList
+            style={{ maxHeight: 52, backgroundColor: '#fff', borderTopWidth: 1, borderColor }}
+            contentContainerStyle={{ paddingVertical: 8, paddingHorizontal: 8 }}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            horizontal
+            data={Bookmarks.recentSites}
+            keyExtractor={(item, index) => `${item?.origin}-${index}`}
+            renderItem={({ item, index }) => {
+              return (
+                <TouchableOpacity
+                  onPress={() => goTo(item.origin)}
+                  key={`tab-${index}`}
+                  style={{
+                    padding: 8,
+                    borderRadius: 10,
+                    borderWidth: 1,
+                    borderColor: item?.themeColor ?? borderColor,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                    marginHorizontal: 4,
+                  }}
+                >
+                  <CachedImage source={{ uri: item.icon }} style={{ width: 15, height: 15, marginEnd: 6, borderRadius: 2 }} />
+                  <Text style={{ color: item.themeColor, maxWidth: 150 }} numberOfLines={1}>
+                    {item.title}
+                  </Text>
+                </TouchableOpacity>
+              );
+            }}
+          />
+        </Animatable.View>
+      ) : undefined}
 
       <Portal>
         <Modalize

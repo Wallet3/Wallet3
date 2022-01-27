@@ -35,6 +35,7 @@ export interface PageMetadata {
   icon: string;
   title: string;
   origin: string;
+  hostname: string;
   desc?: string;
   themeColor?: string;
 }
@@ -47,7 +48,7 @@ interface ConnectedBrowserDApp {
 }
 
 interface Web3ViewProps extends WebViewProps {
-  onMetadataChange?: (metadata: { icon: string; title: string; desc?: string; origin: string }) => void;
+  onMetadataChange?: (metadata: PageMetadata) => void;
   onGoHome?: () => void;
   expanded?: boolean;
   onShrinkRequest?: (webUrl: string) => void;
