@@ -34,6 +34,7 @@ import Networks from '../../viewmodels/Networks';
 import { NullableImage } from '../../components';
 import PopularDApps from '../../configs/urls/popular.json';
 import { Portal } from 'react-native-portalize';
+import RecentHistory from './components/RecentHistory';
 import { SafeViewContainer } from '../../components';
 import SuggestUrls from '../../configs/urls/verified.json';
 import i18n from '../../i18n';
@@ -442,49 +443,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
       )}
 
       {!webUrl && recentSites.length > 0 ? (
-        <Animatable.View animation={'fadeInUp'} style={{ flex: 1 }}>
-          <ScrollView style={{ flex: 1 }} />
-
-          <FlatList
-            style={{ maxHeight: 52, backgroundColor: '#fff', borderTopWidth: 1, borderColor }}
-            contentContainerStyle={{ paddingVertical: 8, paddingHorizontal: 8 }}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            horizontal
-            data={recentSites}
-            keyExtractor={(item, index) => `${item?.origin}-${index}`}
-            renderItem={({ item, index }) => {
-              return (
-                <TouchableOpacity
-                  onPress={() => goTo(item.origin)}
-                  key={`tab-${index}`}
-                  style={{
-                    padding: 8,
-                    borderRadius: 10,
-                    borderWidth: 1,
-                    borderColor: item?.themeColor ?? borderColor,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                    marginHorizontal: 4,
-                  }}
-                >
-                  <NullableImage
-                    uri={item.icon}
-                    size={15}
-                    text={item.title}
-                    fontSize={10}
-                    imageRadius={2}
-                    containerStyle={{ marginEnd: 6 }}
-                  />
-                  <Text style={{ color: item.themeColor, maxWidth: 150, marginBottom: -1 }} numberOfLines={1}>
-                    {item.title}
-                  </Text>
-                </TouchableOpacity>
-              );
-            }}
-          />
-        </Animatable.View>
+        <RecentHistory recentSites={recentSites} onItemPress={(url) => goTo(url)} />
       ) : undefined}
 
       <Portal>
