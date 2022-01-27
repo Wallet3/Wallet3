@@ -39,7 +39,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
   const { ref: txDetailModalize, open: openTxDetail, close: closeTxDetail } = useModalize();
   const [selectedToken, setSelectedToken] = useState<IToken>();
   const [selectedTx, setSelectedTx] = useState<Transaction>();
-  const { backgroundColor, foregroundColor, statusBarStyle, mode } = Theme;
+  const { backgroundColor, foregroundColor, statusBarStyle, isLightMode, mode } = Theme;
 
   const onTokenPress = (token: IToken) => {
     setSelectedToken(token);
@@ -65,13 +65,13 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
       <Overview
         mode={mode}
         style={{
-          backgroundColor: mode === 'light' ? current.color : 'transparent',
+          backgroundColor: isLightMode ? current.color : 'transparent',
           marginBottom: 2,
-          borderWidth: mode === 'light' ? 0 : 1,
+          borderWidth: isLightMode ? 0 : 1,
           borderColor: current.color,
         }}
-        separatorColor={mode === 'light' ? undefined : current.color}
-        textColor={mode === 'light' ? '#fff' : current.color}
+        separatorColor={isLightMode ? undefined : current.color}
+        textColor={isLightMode ? '#fff' : current.color}
         address={currentAccount?.address}
         balance={currentAccount?.balance}
         currency={CurrencyViewmodel.currentCurrency.symbol}

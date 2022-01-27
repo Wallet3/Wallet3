@@ -43,35 +43,35 @@ class Theme {
   }
 
   get backgroundColor() {
-    return this.mode === 'light' ? LightTheme.backgroundColor : DarkTheme.backgroundColor;
+    return this.isLightMode ? LightTheme.backgroundColor : DarkTheme.backgroundColor;
   }
 
   get foregroundColor() {
-    return this.mode === 'light' ? LightTheme.foregroundColor : DarkTheme.foregroundColor;
+    return this.isLightMode ? LightTheme.foregroundColor : DarkTheme.foregroundColor;
   }
 
   get textColor() {
-    return this.mode === 'light' ? LightTheme.textColor : DarkTheme.textColor;
+    return this.isLightMode ? LightTheme.textColor : DarkTheme.textColor;
   }
 
   get secondaryTextColor() {
-    return this.mode === 'light' ? LightTheme.secondaryTextColor : DarkTheme.secondaryTextColor;
+    return this.isLightMode ? LightTheme.secondaryTextColor : DarkTheme.secondaryTextColor;
   }
 
   get thirdTextColor() {
-    return this.mode === 'light' ? LightTheme.thirdTextColor : DarkTheme.thirdTextColor;
+    return this.isLightMode ? LightTheme.thirdTextColor : DarkTheme.thirdTextColor;
   }
 
   get borderColor() {
-    return this.mode === 'light' ? LightTheme.borderColor : DarkTheme.borderColor;
+    return this.isLightMode ? LightTheme.borderColor : DarkTheme.borderColor;
   }
 
   get tintColor() {
-    return this.mode === 'light' ? LightTheme.defaultTintColor : DarkTheme.defaultTintColor;
+    return this.isLightMode ? LightTheme.defaultTintColor : DarkTheme.defaultTintColor;
   }
 
   get statusBarStyle() {
-    return this.mode === 'light' ? 'dark' : 'light';
+    return this.isLightMode ? 'dark' : 'light';
   }
 }
 

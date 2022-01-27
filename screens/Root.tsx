@@ -74,7 +74,7 @@ const RootTab = observer(() => {
           header: () => (
             <View
               style={{
-                paddingTop: top,
+                paddingTop: top + 4,
                 paddingBottom: 8,
                 backgroundColor,
                 flexDirection: 'row',

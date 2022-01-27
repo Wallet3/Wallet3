@@ -42,7 +42,7 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
   const [activeTab, setActiveTab] = useState(0);
   const swiper = React.useRef<Swiper>(null);
   let { borderColor, isLightMode } = Theme;
-  borderColor = isLightMode ? borderColor : '#efefef20';
+  borderColor = isLightMode ? borderColor : '#efefef0a';
 
   const swipeTo = (index: number) => {
     swiper.current?.scrollTo(index);
