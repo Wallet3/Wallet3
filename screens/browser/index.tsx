@@ -212,10 +212,8 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
 
   useEffect(() => {
     setSuggests(
-      Bookmarks.history
-        .concat(
-          (SuggestUrls as string[]).filter((u) => !Bookmarks.history.find((hurl) => hurl.includes(u) || u.includes(hurl)))
-        )
+      history
+        .concat((SuggestUrls as string[]).filter((u) => !history.find((hurl) => hurl.includes(u) || u.includes(hurl))))
         .filter((url) => url.includes(addr) || addr.includes(url))
         .slice(0, 5)
     );
@@ -342,7 +340,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
                 borderBottomColor: borderColor,
               }}
             >
-              {PopularDApps.concat(Bookmarks.favs.slice(0, 24)).map((item, i) => (
+              {PopularDApps.concat(favs.slice(0, 24)).map((item, i) => (
                 <TouchableOpacity style={{ margin: 8 }} key={`${item.url}-${i}`} onPress={() => goTo(item.url)}>
                   {item.icon ? (
                     <CachedImage
@@ -414,16 +412,14 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
             renderItem={renderItem}
           />
 
-          {Bookmarks.favs.length > 0 ? (
-            <Text style={{ marginHorizontal: 16, marginTop: 0 }}>{t('browser-favorites')}</Text>
-          ) : undefined}
+          {favs.length > 0 ? <Text style={{ marginHorizontal: 16, marginTop: 0 }}>{t('browser-favorites')}</Text> : undefined}
 
           <FlatGrid
             style={{ marginTop: 2, padding: 0 }}
             contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: 8, paddingTop: 2 }}
             itemDimension={LargeIconSize + 8}
             bounces={false}
-            data={Bookmarks.favs}
+            data={favs}
             itemContainerStyle={{ padding: 0, margin: 0, marginBottom: 8 }}
             spacing={8}
             keyExtractor={(v, index) => `${v.url}-${index}`}
@@ -445,7 +441,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
         </View>
       )}
 
-      {!webUrl && Bookmarks.recentSites.length > 0 ? (
+      {!webUrl && recentSites.length > 0 ? (
         <Animatable.View animation={'fadeInUp'} style={{ flex: 1 }}>
           <ScrollView style={{ flex: 1 }} />
 
@@ -455,7 +451,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
             horizontal
-            data={Bookmarks.recentSites}
+            data={recentSites}
             keyExtractor={(item, index) => `${item?.origin}-${index}`}
             renderItem={({ item, index }) => {
               return (
@@ -511,8 +507,8 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
                 itemContainerStyle={{ padding: 0, margin: 0, marginBottom: 12 }}
                 spacing={8}
                 keyExtractor={(v, index) => `${v.url}-${index}`}
-                data={Bookmarks.favs.concat(
-                  PopularDApps.filter((d) => !Bookmarks.favs.find((f) => f.url.includes(d.url) || d.url.includes(f.url)))
+                data={favs.concat(
+                  PopularDApps.filter((d) => !favs.find((f) => f.url.includes(d.url) || d.url.includes(f.url)))
                 )}
               />
             </SafeViewContainer>

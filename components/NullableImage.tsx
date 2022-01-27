@@ -19,6 +19,7 @@ interface Props {
 
 export default ({ uri, text, size, width, height, containerStyle, fontSize, fontStyle, imageRadius }: Props) => {
   const [iconFailed, setIconFailed] = useState(false);
+  const [defaultColor] = useState(genColor());
 
   width = width ?? size;
   height = height ?? size;
@@ -31,7 +32,7 @@ export default ({ uri, text, size, width, height, containerStyle, fontSize, font
           height,
           position: 'absolute',
           borderRadius: (width || size || 0) / 2,
-          backgroundColor: genColor(),
+          backgroundColor: defaultColor,
           justifyContent: 'center',
           alignItems: 'center',
         }}
