@@ -68,6 +68,10 @@ class Theme {
     return this.isLightMode ? LightTheme.borderColor : `${Networks.current.color}30`;
   }
 
+  get systemBorderColor() {
+    return this.isLightMode ? 'rgb(216,216,216)' : `${Networks.current.color}30`;
+  }
+
   get tintColor() {
     return this.isLightMode ? LightTheme.defaultTintColor : DarkTheme.defaultTintColor;
   }

@@ -36,7 +36,7 @@ const RootTab = observer(() => {
   const navigation = useNavigation() as DrawerNavigationHelpers;
   const { Navigator, Screen } = TabNavigation;
   const { bottom, top } = useSafeAreaInsets();
-  let { foregroundColor, backgroundColor, borderColor, isLightMode } = Theme;
+  let { foregroundColor, backgroundColor, systemBorderColor, borderColor, isLightMode } = Theme;
 
   foregroundColor = isLightMode ? foregroundColor : current.color;
 
@@ -50,7 +50,7 @@ const RootTab = observer(() => {
         tabBarStyle: {
           backgroundColor,
           height: bottom === 0 ? 57 : 79,
-          borderTopColor: borderColor,
+          borderTopColor: systemBorderColor,
         },
         headerStyle: { backgroundColor },
         tabBarLabelPosition: 'below-icon',
@@ -74,11 +74,11 @@ const RootTab = observer(() => {
             <View
               style={{
                 paddingTop: top + 4,
-                paddingBottom: 8,
+                paddingBottom: 6,
                 backgroundColor,
                 flexDirection: 'row',
                 alignItems: 'center',
-                borderBottomColor: borderColor,
+                borderBottomColor: systemBorderColor,
                 borderBottomWidth: 0.33,
               }}
             >
@@ -152,7 +152,7 @@ const RootTab = observer(() => {
         options={{
           tabBarLabel: 'Web3',
           headerShown: false,
-          tabBarStyle: { backgroundColor, borderColor, borderTopColor: borderColor },
+          tabBarStyle: { backgroundColor, borderTopColor: systemBorderColor },
         }}
       />
     </Navigator>

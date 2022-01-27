@@ -53,7 +53,7 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ ...styles.header, borderBottomColor: borderColor, borderBottomWidth: 1 }}>
+      <View style={{ ...styles.header, borderBottomColor: borderColor, borderBottomWidth: 0.33 }}>
         <View style={styles.tabsContainer}>
           <Text
             style={{

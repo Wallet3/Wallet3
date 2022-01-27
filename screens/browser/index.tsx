@@ -88,7 +88,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
   const [smallIconSize, setSmallIconSize] = useState(SmallIconSize);
   const [windowWidth, setWindowWidth] = useState(WindowWidth);
   const { history, favs, recentSites } = Bookmarks;
-  const { backgroundColor, textColor, borderColor, foregroundColor, isLightMode } = Theme;
+  const { backgroundColor, textColor, borderColor, systemBorderColor, foregroundColor, isLightMode } = Theme;
 
   useEffect(() => {
     Dimensions.addEventListener('change', ({ window, screen }) => {
@@ -176,10 +176,12 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
     Animated.spring(translateY, { toValue: tabBarHeight, useNativeDriver: true }).start();
     setTimeout(
       () =>
-        navigation.setOptions({ tabBarStyle: { height: 0, backgroundColor, borderTopColor: borderColor, borderTopWidth: 0 } }),
+        navigation.setOptions({
+          tabBarStyle: { height: 0, backgroundColor, borderTopColor: systemBorderColor, borderTopWidth: 0 },
+        }),
       100
     );
-    navigation.setOptions({ tabBarStyle: { transform: [{ translateY }], backgroundColor, borderColor } });
+    navigation.setOptions({ tabBarStyle: { transform: [{ translateY }], backgroundColor, borderColor: systemBorderColor } });
   };
 
   const showTabBar = () => {
@@ -190,7 +192,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
     const translateY = new Animated.Value(tabBarHeight);
     Animated.spring(translateY, { toValue: 0, useNativeDriver: true }).start();
     navigation.setOptions({
-      tabBarStyle: { transform: [{ translateY }], height: tabBarHeight, backgroundColor, borderTopColor: borderColor },
+      tabBarStyle: { transform: [{ translateY }], height: tabBarHeight, backgroundColor, borderTopColor: systemBorderColor },
     });
   };
 
