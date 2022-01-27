@@ -39,7 +39,6 @@ const RootTab = observer(() => {
   let { foregroundColor, backgroundColor, borderColor, isLightMode } = Theme;
 
   foregroundColor = isLightMode ? foregroundColor : current.color;
-  borderColor = isLightMode ? borderColor : `${current.color}30`;
 
   return (
     <Navigator
@@ -147,7 +146,15 @@ const RootTab = observer(() => {
         }}
       /> */}
 
-      <Screen name="Explore" component={BrowserScreen} options={{ tabBarLabel: 'Web3', headerShown: false }} />
+      <Screen
+        name="Explore"
+        component={BrowserScreen}
+        options={{
+          tabBarLabel: 'Web3',
+          headerShown: false,
+          tabBarStyle: { backgroundColor, borderColor, borderTopColor: borderColor },
+        }}
+      />
     </Navigator>
   );
 });

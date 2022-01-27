@@ -15,12 +15,20 @@ const { t } = i18n;
 interface Props extends ListRenderItemInfo<Bookmark> {
   onPress?: (item: Bookmark) => void;
   iconSize: number;
+  imageBackgroundColor: string;
 }
 
-export const renderBookmarkItem = ({ item, onPress, iconSize }: Props) => {
+export const renderBookmarkItem = ({ item, onPress, iconSize, imageBackgroundColor }: Props) => {
   return (
     <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }} onPress={() => onPress?.(item)}>
-      <NullableImage uri={item.icon} size={iconSize} text={item.title} imageRadius={7} fontSize={15} />
+      <NullableImage
+        uri={item.icon}
+        size={iconSize}
+        text={item.title}
+        imageRadius={7}
+        fontSize={15}
+        imageBackgroundColor={imageBackgroundColor}
+      />
       <Text numberOfLines={1} style={{ maxWidth: iconSize + 8, marginTop: 4, fontSize: 9, color: thirdFontColor }}>
         {item.title}
       </Text>
@@ -33,7 +41,7 @@ interface UserBookmarkProps extends Props {
 }
 
 export const renderUserBookmarkItem = (props: UserBookmarkProps) => {
-  const { onRemove, item, iconSize, onPress } = props;
+  const { onRemove, item, iconSize, onPress, imageBackgroundColor } = props;
   const actions = [
     { title: t('button-share'), systemIcon: 'square.and.arrow.up' },
     { title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' },
@@ -55,7 +63,14 @@ export const renderUserBookmarkItem = (props: UserBookmarkProps) => {
   return (
     <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }} onPress={() => onPress?.(item)}>
       <ContextMenu actions={actions} onPress={onActionPress}>
-        <NullableImage uri={item.icon} size={iconSize} text={item.title} imageRadius={7} fontSize={18} />
+        <NullableImage
+          uri={item.icon}
+          size={iconSize}
+          text={item.title}
+          imageRadius={7}
+          fontSize={18}
+          imageBackgroundColor={imageBackgroundColor}
+        />
       </ContextMenu>
 
       <Text numberOfLines={1} style={{ maxWidth: iconSize + 8, marginTop: 4, fontSize: 9, color: thirdFontColor }}>

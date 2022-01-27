@@ -23,6 +23,7 @@ import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
 import { NetworksMenu } from '../../modals';
 import { Portal } from 'react-native-portalize';
+import Theme from '../../viewmodels/settings/Theme';
 import WalletConnectLogo from '../../assets/3rd/walletconnect.svg';
 import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectV1ClientHub';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
@@ -73,6 +74,7 @@ export default observer((props: Web3ViewProps) => {
   const [appAccount, setAppAccount] = useState<Account>();
   const [dapp, setDApp] = useState<ConnectedBrowserDApp | undefined>();
   const [webUrl, setWebUrl] = useState('');
+  const { mode, foregroundColor, isLightMode, backgroundColor, borderColor } = Theme;
 
   const updateDAppState = (dapp?: ConnectedBrowserDApp) => {
     setDApp(dapp);
@@ -194,7 +196,7 @@ export default observer((props: Web3ViewProps) => {
     closeAccountsModal();
   };
 
-  const tintColor = '#000000c0';
+  const tintColor = isLightMode ? '#000000c0' : foregroundColor;
   const { ref: networksRef, open: openNetworksModal, close: closeNetworksModal } = useModalize();
   const { ref: accountsRef, open: openAccountsModal, close: closeAccountsModal } = useModalize();
 
@@ -209,6 +211,7 @@ export default observer((props: Web3ViewProps) => {
         onNavigationStateChange={onNavigationStateChange}
         applicationNameForUserAgent={appName}
         allowsFullscreenVideo={false}
+        forceDarkOn={mode === 'dark'}
         injectedJavaScript={`${GetPageMetadata}\ntrue;\n${HookWalletConnect}\ntrue;`}
         onMessage={onMessage}
         mediaPlaybackRequiresUserAction
@@ -216,6 +219,7 @@ export default observer((props: Web3ViewProps) => {
         allowsInlineMediaPlayback
         allowsBackForwardNavigationGestures
         injectedJavaScriptBeforeContentLoaded={`${MetamaskMobileProvider}\ntrue;`}
+        style={{ backgroundColor }}
       />
 
       <Animatable.View
@@ -223,13 +227,14 @@ export default observer((props: Web3ViewProps) => {
         style={{ bottom: 0, left: 0, right: 0, position: expanded ? 'absolute' : 'relative' }}
       >
         <BlurView
-          intensity={25}
-          tint="light"
+          intensity={isLightMode ? 25 : 75}
+          tint={mode}
           style={{
             ...styles.blurView,
             paddingVertical: safeAreaBottom === 0 ? 4 : undefined,
             borderTopWidth: expanded ? 0 : 0.33,
             shadowOpacity: expanded ? 0.25 : 0,
+            borderTopColor: borderColor,
           }}
         >
           <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>

@@ -13,11 +13,23 @@ interface Props {
   text?: string;
   fontSize?: number;
   imageRadius?: number;
+  imageBackgroundColor: string;
   containerStyle?: StyleProp<ViewStyle>;
   fontStyle?: StyleProp<ViewStyle>;
 }
 
-export default ({ uri, text, size, width, height, containerStyle, fontSize, fontStyle, imageRadius }: Props) => {
+export default ({
+  uri,
+  text,
+  size,
+  width,
+  height,
+  containerStyle,
+  fontSize,
+  fontStyle,
+  imageRadius,
+  imageBackgroundColor,
+}: Props) => {
   const [iconFailed, setIconFailed] = useState(false);
   const [defaultColor] = useState(genColor());
 
@@ -47,7 +59,7 @@ export default ({ uri, text, size, width, height, containerStyle, fontSize, font
           width,
           height,
           borderRadius: imageRadius,
-          backgroundColor: iconFailed ? undefined : '#fff',
+          backgroundColor: iconFailed ? undefined : imageBackgroundColor,
         }}
       />
     </View>

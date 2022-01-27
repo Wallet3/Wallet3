@@ -5,6 +5,7 @@ import { FlatList, ScrollView, Text, TouchableOpacity } from 'react-native';
 import { NullableImage } from '../../../components';
 import { PageMetadata } from '../Web3View';
 import React from 'react';
+import Theme from '../../../viewmodels/settings/Theme';
 import { borderColor } from '../../../constants/styles';
 import { observer } from 'mobx-react-lite';
 
@@ -14,12 +15,14 @@ interface Props {
 }
 
 export default observer(({ recentSites, onItemPress }: Props) => {
+  const { backgroundColor, borderColor } = Theme;
+
   return (
     <Animatable.View animation={'fadeInUp'} style={{ flex: 1 }}>
       <ScrollView style={{ flex: 1 }} />
 
       <FlatList
-        style={{ maxHeight: 52, backgroundColor: '#fff', borderTopWidth: 1, borderColor }}
+        style={{ maxHeight: 52, backgroundColor, borderTopWidth: 0.333, borderColor }}
         contentContainerStyle={{ paddingVertical: 8, paddingHorizontal: 8 }}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
@@ -49,6 +52,7 @@ export default observer(({ recentSites, onItemPress }: Props) => {
                 fontSize={10}
                 imageRadius={2}
                 containerStyle={{ marginEnd: 6 }}
+                imageBackgroundColor={backgroundColor}
               />
               <Text style={{ color: item.themeColor, maxWidth: 150, marginBottom: -1 }} numberOfLines={1}>
                 {item.title}

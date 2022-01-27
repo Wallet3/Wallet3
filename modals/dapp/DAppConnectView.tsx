@@ -7,6 +7,7 @@ import Avatar from '../../components/Avatar';
 import { INetwork } from '../../common/Networks';
 import { Ionicons } from '@expo/vector-icons';
 import { NullableImage } from '../../components';
+import Theme from '../../viewmodels/settings/Theme';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -50,6 +51,7 @@ export default observer(
   }: Props) => {
     const { t } = i18n;
     const [shortAppName] = useState((appName?.split?.(' ')?.[0] || '').replace(/\,|\:/, ''));
+    const { backgroundColor } = Theme;
 
     return (
       <SafeViewContainer style={{ flex: 1, alignItems: 'center', paddingTop: 12 }}>
@@ -109,6 +111,7 @@ export default observer(
           imageRadius={5}
           fontStyle={{ marginTop: 2, marginStart: 2 }}
           containerStyle={{ marginBottom: 20 }}
+          imageBackgroundColor={backgroundColor}
         />
 
         <Text style={{ ...viewStyles.txt, fontSize: 24, fontWeight: '500', opacity: 1 }} numberOfLines={1}>

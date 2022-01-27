@@ -109,9 +109,9 @@ class Bookmarks {
       return;
     }
 
-    const themeColor = metadata.themeColor?.toLowerCase?.() || '#555';
+    const themeColor = metadata.themeColor?.toLowerCase?.() || '#999';
     metadata.themeColor =
-      themeColor === 'white' || themeColor === '#ffffff' || themeColor === '#fff' ? '#555' : metadata.themeColor;
+      themeColor === 'white' || themeColor === '#ffffff' || themeColor === '#fff' ? '#999' : metadata.themeColor;
 
     this.recentSites.unshift(metadata);
 

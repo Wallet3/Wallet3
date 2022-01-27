@@ -1,5 +1,7 @@
 import { computed, makeObservable, observable } from 'mobx';
 
+import Networks from '../Networks';
+
 const LightTheme = {
   backgroundColor: '#fff',
   foregroundColor: '#000',
@@ -21,7 +23,7 @@ const DarkTheme = {
 };
 
 class Theme {
-  mode: 'light' | 'dark' = 'dark';
+  mode: 'light' | 'dark' = 'light';
 
   constructor() {
     makeObservable(this, {
@@ -63,7 +65,7 @@ class Theme {
   }
 
   get borderColor() {
-    return this.isLightMode ? LightTheme.borderColor : DarkTheme.borderColor;
+    return this.isLightMode ? LightTheme.borderColor : `${Networks.current.color}30`;
   }
 
   get tintColor() {

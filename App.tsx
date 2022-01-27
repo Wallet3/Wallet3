@@ -49,6 +49,7 @@ const StackRoot = createNativeStackNavigator();
 const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication }) => {
   const { Navigator, Screen } = StackRoot;
   const { t } = i18n;
+  const { backgroundColor, foregroundColor } = Theme;
 
   const [loaded] = useFonts({
     Questrial: require('./assets/fonts/Questrial.ttf'),
@@ -60,7 +61,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
 
   return (
     <NavigationContainer>
-      <Host style={{ backgroundColor: Theme.backgroundColor }}>
+      <Host style={{ backgroundColor: backgroundColor }}>
         {app.initialized ? (
           app.hasWallet ? (
             <Navigator
@@ -68,17 +69,17 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
               screenOptions={({ navigation }) => {
                 return {
                   headerTransparent: true,
-                  headerTintColor: Theme.foregroundColor,
-                  contentStyle: { backgroundColor: Theme.backgroundColor },
+                  headerTintColor: foregroundColor,
+                  contentStyle: { backgroundColor },
                   headerLeft: () => (
                     <TouchableOpacity onPress={() => navigation.pop()} style={{ margin: -12, padding: 12, zIndex: 99 }}>
-                      <Ionicons name="arrow-back-outline" size={20} color={Theme.foregroundColor} />
+                      <Ionicons name="arrow-back-outline" size={20} color={foregroundColor} />
                     </TouchableOpacity>
                   ),
                 };
               }}
             >
-              <Screen name="Root" component={Root} options={{ headerShown: false }} />
+              <Screen name="Root" component={Root} options={{ headerShown: false, contentStyle: { backgroundColor } }} />
               <Screen name="Languages" component={Languages} options={{ title: t('settings-languages') }} />
               <Screen name="Currencies" component={Currencies} options={{ title: t('settings-currencies') }} />
               <Screen name="ChangePasscode" component={ChangePasscode} options={{ title: t('settings-security-passcode') }} />
@@ -95,7 +96,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
                     title: '',
                     headerLeft: () => (
                       <TouchableOpacity onPress={() => navigation.pop()} style={{ margin: -12, padding: 12, zIndex: 99 }}>
-                        <Ionicons name="arrow-back-outline" size={20} color={Theme.foregroundColor} />
+                        <Ionicons name="arrow-back-outline" size={20} color={foregroundColor} />
                       </TouchableOpacity>
                     ),
                   };
@@ -125,7 +126,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
                     title: t('home-tokens-title'),
                     headerRight: () => (
                       <TouchableOpacity onPress={() => navigation.navigate('AddToken')}>
-                        <Ionicons name="add-circle-outline" size={24} color={Theme.foregroundColor} />
+                        <Ionicons name="add-circle-outline" size={24} color={foregroundColor} />
                       </TouchableOpacity>
                     ),
                   };

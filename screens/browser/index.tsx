@@ -20,7 +20,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Web3View, { PageMetadata } from './Web3View';
 import { WebView, WebViewNavigation } from 'react-native-webview';
-import { borderColor, thirdFontColor } from '../../constants/styles';
+import { borderColor, secureColor, thirdFontColor } from '../../constants/styles';
 import { renderBookmarkItem, renderUserBookmarkItem } from './components/BookmarkItem';
 
 import { Bar } from 'react-native-progress';
@@ -37,6 +37,7 @@ import { Portal } from 'react-native-portalize';
 import RecentHistory from './components/RecentHistory';
 import { SafeViewContainer } from '../../components';
 import SuggestUrls from '../../configs/urls/verified.json';
+import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
@@ -86,7 +87,8 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
   const [largeIconSize, setLargeIconSize] = useState(LargeIconSize);
   const [smallIconSize, setSmallIconSize] = useState(SmallIconSize);
   const [windowWidth, setWindowWidth] = useState(WindowWidth);
-  const { history, favs, expandedSites, recentSites } = Bookmarks;
+  const { history, favs, recentSites } = Bookmarks;
+  const { backgroundColor, textColor, borderColor, foregroundColor, isLightMode } = Theme;
 
   useEffect(() => {
     Dimensions.addEventListener('change', ({ window, screen }) => {
@@ -172,8 +174,8 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
 
     const translateY = new Animated.Value(0);
     Animated.spring(translateY, { toValue: tabBarHeight, useNativeDriver: true }).start();
-    setTimeout(() => navigation.setOptions({ tabBarStyle: { height: 0 } }), 100);
-    navigation.setOptions({ tabBarStyle: { transform: [{ translateY }] } });
+    setTimeout(() => navigation.setOptions({ tabBarStyle: { height: 0, backgroundColor, borderTopColor: borderColor } }), 100);
+    navigation.setOptions({ tabBarStyle: { transform: [{ translateY }], backgroundColor, borderColor } });
   };
 
   const showTabBar = () => {
@@ -183,7 +185,9 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
 
     const translateY = new Animated.Value(tabBarHeight);
     Animated.spring(translateY, { toValue: 0, useNativeDriver: true }).start();
-    navigation.setOptions({ tabBarStyle: { transform: [{ translateY }], height: tabBarHeight } });
+    navigation.setOptions({
+      tabBarStyle: { transform: [{ translateY }], height: tabBarHeight, backgroundColor, borderTopColor: borderColor },
+    });
   };
 
   useEffect(() => {
@@ -204,6 +208,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
   const renderItem = (p: ListRenderItemInfo<Bookmark>) =>
     renderBookmarkItem({
       ...p,
+      imageBackgroundColor: backgroundColor,
       iconSize: largeIconSize,
       onPress: (item) => {
         goTo(item.url);
@@ -221,7 +226,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
   }, [addr]);
 
   return (
-    <View style={{ backgroundColor: `#fff`, flex: 1, paddingTop: top, position: 'relative' }}>
+    <View style={{ backgroundColor: backgroundColor, flex: 1, paddingTop: top, position: 'relative' }}>
       <View style={{ position: 'relative', paddingTop: 4, paddingBottom: isFocus ? 0 : 8 }}>
         <View
           style={{
@@ -248,7 +253,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
               onChangeText={(t) => setAddr(t)}
               onSubmitEditing={() => onAddrSubmit()}
               style={{
-                backgroundColor: isFocus ? '#fff' : '#f5f5f5',
+                backgroundColor: isFocus ? '#fff' : isLightMode ? '#f5f5f5' : '#f5f5f520',
                 fontSize: 16,
                 paddingHorizontal: isFocus ? 8 : 20,
                 flex: 1,
@@ -259,7 +264,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
                 textAlign: isFocus ? 'auto' : 'center',
                 color:
                   (webRiskLevel === 'verified' || webRiskLevel === 'tls') && !isFocus
-                    ? '#76B947'
+                    ? '#66db0d'
                     : webRiskLevel === 'risky'
                     ? 'red'
                     : undefined,
@@ -269,11 +274,11 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
             {isFocus ? undefined : webUrl.startsWith('https') ? (
               <TouchableOpacity style={{ position: 'absolute', left: 0, paddingStart: 8 }}>
                 {webRiskLevel === 'verified' ? (
-                  <Ionicons name="shield-checkmark" color={'#76B947'} size={12} style={{ marginTop: 2 }} />
+                  <Ionicons name="shield-checkmark" color={'#66db0d'} size={12} style={{ marginTop: 2 }} />
                 ) : webRiskLevel === 'risky' ? (
                   <Ionicons name="md-shield" color="red" size={12} style={{ marginTop: 2 }} />
                 ) : webRiskLevel === 'tls' ? (
-                  <Ionicons name="lock-closed" color={'#111'} size={12} />
+                  <Ionicons name="lock-closed" color={foregroundColor} size={12} />
                 ) : undefined}
               </TouchableOpacity>
             ) : undefined}
@@ -282,8 +287,10 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
                 style={{ padding: 8, paddingHorizontal: 9, position: 'absolute', right: 0 }}
                 onPress={() => (loadingProgress === 1 ? refresh() : stopLoading())}
               >
-                {loadingProgress === 1 ? <Ionicons name="refresh" size={17} /> : undefined}
-                {loadingProgress > 0 && loadingProgress < 1 ? <Ionicons name="close-outline" size={17} /> : undefined}
+                {loadingProgress === 1 ? <Ionicons name="refresh" size={17} color={foregroundColor} /> : undefined}
+                {loadingProgress > 0 && loadingProgress < 1 ? (
+                  <Ionicons name="close-outline" size={17} color={foregroundColor} />
+                ) : undefined}
               </TouchableOpacity>
             )}
           </View>
@@ -298,7 +305,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
             <Ionicons
               name={Bookmarks.has(webUrl) ? 'bookmark' : 'bookmark-outline'}
               size={17}
-              color={loadingProgress < 1 ? 'lightgrey' : '#000'}
+              color={loadingProgress < 1 ? 'lightgrey' : foregroundColor}
             />
           </TouchableOpacity>
         </View>
@@ -399,7 +406,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
         />
       ) : (
         <View style={{}}>
-          <Text style={{ marginHorizontal: 16, marginTop: 12 }}>{t('browser-popular-dapps')}</Text>
+          <Text style={{ marginHorizontal: 16, marginTop: 12, color: textColor }}>{t('browser-popular-dapps')}</Text>
 
           <FlatGrid
             style={{ marginTop: 2, padding: 0 }}
@@ -413,7 +420,9 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
             renderItem={renderItem}
           />
 
-          {favs.length > 0 ? <Text style={{ marginHorizontal: 16, marginTop: 0 }}>{t('browser-favorites')}</Text> : undefined}
+          {favs.length > 0 ? (
+            <Text style={{ marginHorizontal: 16, marginTop: 0, color: textColor }}>{t('browser-favorites')}</Text>
+          ) : undefined}
 
           <FlatGrid
             style={{ marginTop: 2, padding: 0 }}
@@ -428,6 +437,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
               renderUserBookmarkItem({
                 ...p,
                 iconSize: LargeIconSize,
+                imageBackgroundColor: backgroundColor,
                 onPress: (item) => {
                   goTo(item.url);
                   closeFavs();
