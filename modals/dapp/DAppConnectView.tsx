@@ -106,6 +106,7 @@ export default observer(
           uri={appIcon}
           text={appName}
           fontSize={36}
+          imageRadius={5}
           fontStyle={{ marginTop: 2, marginStart: 2 }}
           containerStyle={{ marginBottom: 20 }}
         />

@@ -22,7 +22,6 @@ export default ({ uri, text, size, width, height, containerStyle, fontSize, font
 
   width = width ?? size;
   height = height ?? size;
-  const borderRadius = imageRadius ?? (width || size || 0) / 2;
 
   return (
     <View style={{ position: 'relative', ...(containerStyle || ({} as any)) }}>
@@ -31,7 +30,7 @@ export default ({ uri, text, size, width, height, containerStyle, fontSize, font
           width,
           height,
           position: 'absolute',
-          borderRadius,
+          borderRadius: (width || size || 0) / 2,
           backgroundColor: genColor(),
           justifyContent: 'center',
           alignItems: 'center',
@@ -46,7 +45,7 @@ export default ({ uri, text, size, width, height, containerStyle, fontSize, font
         style={{
           width,
           height,
-          borderRadius,
+          borderRadius: imageRadius,
           backgroundColor: iconFailed ? undefined : '#fff',
         }}
       />

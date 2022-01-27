@@ -9,4 +9,5 @@ LogBox.ignoreLogs([
   'Webview Process Terminated',
   'source.uri should not be an empty string',
   'check out new Gestures system',
+  'Could not find image file'
 ]);

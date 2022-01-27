@@ -356,11 +356,9 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
             </View>
           ) : undefined}
 
-          {/* <View style={{ flexDirection: 'row', paddingHorizontal: 16, paddingTop: 2, marginTop: 4 }}>
-            <TouchableOpacity style={{ width: 48 }} onPress={() => goHome()}>
-              <Ionicons name="home-outline" size={20} />
-            </TouchableOpacity>
-          </View> */}
+          <View style={{ flexDirection: 'row', paddingHorizontal: 16, paddingTop: 2, marginTop: 4 }}>
+            {/* Placeholder, never delete this */}
+          </View>
         </Collapsible>
 
         {loadingProgress > 0 && loadingProgress < 1 ? (

@@ -59,6 +59,7 @@ export class Authentication extends EventEmitter {
       userSecretsVerified: observable,
       setBiometrics: action,
       reset: action,
+      setUserSecretsVerified: action,
     });
 
     this.init();
