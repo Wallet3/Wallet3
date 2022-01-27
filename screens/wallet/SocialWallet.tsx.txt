@@ -125,6 +125,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
           modalStyle={{ borderTopStartRadius: 15, borderTopEndRadius: 15 }}
         >
           <TokenDetail
+            network={current}
             token={selectedToken}
             themeColor={current.color}
             onSendPress={(token) => {

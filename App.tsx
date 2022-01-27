@@ -30,6 +30,7 @@ import ProfileScreen from './screens/profile';
 import QRScan from './screens/misc/QRScan';
 import React from 'react';
 import Root from './screens/Root';
+import { StatusBar } from 'expo-status-bar';
 import Theme from './viewmodels/settings/Theme';
 import Tokens from './screens/tokens/SortTokens';
 import VerifySecret from './screens/settings/VerifySecret';
@@ -49,7 +50,7 @@ const StackRoot = createNativeStackNavigator();
 const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication }) => {
   const { Navigator, Screen } = StackRoot;
   const { t } = i18n;
-  const { backgroundColor, foregroundColor, systemBorderColor } = Theme;
+  const { backgroundColor, foregroundColor, statusBarStyle } = Theme;
 
   const [loaded] = useFonts({
     Questrial: require('./assets/fonts/Questrial.ttf'),
@@ -145,6 +146,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
 
       <LockScreen app={app} appAuth={appAuth} />
       <FlashMessage position="top" />
+      <StatusBar style={statusBarStyle} />
     </NavigationContainer>
   );
 });

@@ -95,8 +95,6 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         onTxPress={onTxPress}
       />
 
-      <StatusBar style={statusBarStyle} />
-
       <Portal>
         <Modalize
           adjustToContentHeight
