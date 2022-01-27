@@ -189,7 +189,7 @@ export const PublicNetworks: INetwork[] = [
     network: 'Cronos',
     chainId: 25,
     explorer: 'https://cronos.crypto.org/explorer',
-    color: '#051221',
+    color: '#474169',
     defaultTokens: [],
   },
   {

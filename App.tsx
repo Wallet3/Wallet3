@@ -69,7 +69,6 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
                 return {
                   headerTransparent: true,
                   headerTintColor: Theme.foregroundColor,
-                  headerStyle: { backgroundColor: Theme.backgroundColor },
                   contentStyle: { backgroundColor: Theme.backgroundColor },
                   headerLeft: () => (
                     <TouchableOpacity onPress={() => navigation.pop()} style={{ margin: -12, padding: 12, zIndex: 99 }}>

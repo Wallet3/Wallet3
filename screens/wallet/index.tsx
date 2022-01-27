@@ -63,6 +63,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
       }}
     >
       <Overview
+        mode={mode}
         style={{
           backgroundColor: mode === 'light' ? current.color : 'transparent',
           marginBottom: 2,

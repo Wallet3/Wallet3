@@ -44,11 +44,13 @@ export default observer(
   ({
     tokens,
     loading,
+    separatorColor,
     onRefreshRequest,
     onTokenPress,
   }: {
     tokens?: IToken[];
     loading?: boolean;
+    separatorColor?: string;
     onRefreshRequest?: () => Promise<any>;
     onTokenPress?: (token: IToken) => void;
   }) => {
@@ -71,7 +73,7 @@ export default observer(
         }
         renderItem={renderItem}
         style={{ paddingHorizontal: 16 }}
-        ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: '#efefef80', marginStart: 56 }} />}
+        ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: separatorColor, marginStart: 56 }} />}
       />
     ) : (
       <View style={{ flex: 1, padding: 16, paddingVertical: 12 }}>

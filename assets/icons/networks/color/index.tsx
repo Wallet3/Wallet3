@@ -1,4 +1,3 @@
-import { Entypo, Feather } from '@expo/vector-icons';
 import { StyleProp, Text, View, ViewStyle } from 'react-native';
 
 import Arbitrum from './arbitrum.svg';
@@ -8,10 +7,11 @@ import Boba from './boba.svg';
 import Bsc from './bsc.svg';
 import Celo from './celo.svg';
 import Cronos from './cronos.svg';
+import { Entypo } from '@expo/vector-icons';
 import Ethereum from './ethereum2.svg';
 import EthereumClassic from './ethereum-classic.svg';
 import Fantom from './fantom.svg';
-import HarmonyOne from './harmony-one.svg';
+import Harmony from './harmony-one.svg';
 import Heco from './heco.svg';
 import Mumbai from './mumbai.svg';
 import OKEx from './okex.svg';
@@ -20,6 +20,7 @@ import Polygon from './polygon.svg';
 import React from 'react';
 import XDai from './xdai.svg';
 import ZKSync from './zksync.svg';
+import styles from '../styles';
 
 export const EVMIcon = ({
   color,
@@ -124,7 +125,7 @@ export function generateNetworkIcon(props: {
     case 1666600001:
     case 1666600002:
     case 1666600003:
-      return <HarmonyOne key={chainId} width={width} height={height ?? width} style={style} />;
+      return <Harmony key={chainId} width={width} height={height ?? width} style={style} />;
     case 25:
       return <Cronos key={chainId} width={width} height={height ?? width} style={style} />;
     case 61:
@@ -133,3 +134,21 @@ export function generateNetworkIcon(props: {
       return <EVMIcon key={chainId} size={width} color={color!} style={style} hideEVMTitle={hideEVMTitle} />;
   }
 }
+
+export default {
+  1: <Ethereum width={52} height={52} style={{ ...styles.ethereum, marginTop: -47, marginEnd: -12, opacity: 1 }} />,
+  42161: <Arbitrum width={48} height={48} style={{ ...styles.arbitrum, marginTop: -45, marginEnd: -4, opacity: 1 }} />,
+  10: <Optimism width={46} height={46} style={{ ...styles.optimism, marginTop: -44, marginEnd: -2, opacity: 1 }} />,
+  100: <XDai width={45} height={45} style={{ ...styles.xdai, marginTop: -43, marginEnd: -1, opacity: 1 }} />,
+  137: <Polygon width={40} height={40} style={{ ...styles.polygon, marginTop: -36, marginEnd: -2, opacity: 1 }} />,
+  43114: <Avalanche width={43} height={43} style={{ ...styles.avalanche, marginTop: -42, marginEnd: -2, opacity: 1 }} />,
+  250: <Fantom width={45} height={45} style={{ ...styles.fantom, marginTop: -43, marginEnd: -2, opacity: 1 }} />,
+  42220: <Celo width={42} height={42} style={{ ...styles.celo, marginTop: -43, marginEnd: -2, opacity: 1 }} />,
+  128: <Heco width={52} height={52} style={{ ...styles.heco, opacity: 1 }} />,
+  66: <OKEx width={49} height={49} style={{ ...styles.okex, opacity: 1 }} />,
+  56: <Bsc width={42} height={42} style={{ ...styles.bsc, opacity: 1 }} />,
+  288: <Boba width={49} height={49} style={{ ...styles.boba, opacity: 1 }} />,
+  1313161554: <Aurora width={45} height={45} style={{ ...styles.aurora, marginTop: -43, marginEnd: -1, opacity: 1 }} />,
+  25: <Cronos width={49} height={49} style={{ ...styles.cronos, opacity: 1 }} />,
+  1666600000: <Harmony width={52} height={52} style={{ ...styles.harmony, opacity: 1 }} />,
+};

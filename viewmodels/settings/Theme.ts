@@ -11,9 +11,9 @@ const LightTheme = {
 };
 
 const DarkTheme = {
-  backgroundColor: '#000',
+  backgroundColor: '#18171b',
   foregroundColor: '#fff',
-  textColor: '#fff',
+  textColor: '#efefefcc',
   secondaryTextColor: '#999',
   thirdTextColor: '#75869c',
   borderColor: '#333',
@@ -21,7 +21,7 @@ const DarkTheme = {
 };
 
 class Theme {
-  mode: 'light' | 'dark' | 'system' = 'dark';
+  mode: 'light' | 'dark' = 'dark';
 
   constructor() {
     makeObservable(this, {

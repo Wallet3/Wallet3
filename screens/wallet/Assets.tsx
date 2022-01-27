@@ -41,7 +41,8 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
 
   const [activeTab, setActiveTab] = useState(0);
   const swiper = React.useRef<Swiper>(null);
-  const { borderColor } = Theme;
+  let { borderColor, isLightMode } = Theme;
+  borderColor = isLightMode ? borderColor : '#efefef20';
 
   const swipeTo = (index: number) => {
     swiper.current?.scrollTo(index);
@@ -52,7 +53,7 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ ...styles.header, borderBottomColor: borderColor }}>
+      <View style={{ ...styles.header, borderBottomColor: borderColor, borderBottomWidth: 1 }}>
         <View style={styles.tabsContainer}>
           <Text
             style={{
@@ -125,7 +126,13 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
         style={{}}
         onIndexChanged={(i) => setActiveTab(i)}
       >
-        <ERC20Tokens tokens={tokens} loading={loadingTokens} onRefreshRequest={onRefreshRequest} onTokenPress={onTokenPress} />
+        <ERC20Tokens
+          tokens={tokens}
+          loading={loadingTokens}
+          separatorColor={borderColor}
+          onRefreshRequest={onRefreshRequest}
+          onTokenPress={onTokenPress}
+        />
         {/* <View style={{ flex: 1 }}>
           <Text>Nfts</Text>
         </View> */}

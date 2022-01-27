@@ -4,12 +4,13 @@ import { formatAddress, formatCurrency } from '../../utils/formatter';
 import { numericFontFamily, themeColor } from '../../constants/styles';
 
 import AnimateNumber from 'react-native-animate-number';
+import ColorLogos from '../../assets/icons/networks/color';
 import CopyableText from '../../components/CopyableText';
 import Image from 'react-native-expo-cached-image';
 import Langs from '../../viewmodels/settings/Langs';
-import Logos from '../../assets/icons/networks/white';
 import React from 'react';
 import Ripple from 'react-native-material-ripple';
+import WhiteLogos from '../../assets/icons/networks/white';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 
@@ -29,6 +30,7 @@ interface Props {
   onSendPress?: () => void;
   onRequestPress?: () => void;
   onDAppsPress?: () => void;
+  mode?: 'light' | 'dark';
 }
 
 export default observer(
@@ -47,6 +49,7 @@ export default observer(
     disabled,
     separatorColor,
     textColor,
+    mode,
   }: Props) => {
     const { t } = i18n;
 
@@ -114,7 +117,7 @@ export default observer(
             formatter={(v) => formatCurrency(v, currency)}
           />
 
-          {Logos[chainId]}
+          {mode === 'light' ? WhiteLogos[chainId] : ColorLogos[chainId]}
         </View>
 
         <View style={{ height: 1, backgroundColor: separatorColor ?? '#ffffff25', marginTop: 2, marginHorizontal: -12 }} />
