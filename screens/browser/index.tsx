@@ -177,11 +177,13 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
     setTimeout(
       () =>
         navigation.setOptions({
-          tabBarStyle: { height: 0, backgroundColor, borderTopColor: systemBorderColor, borderTopWidth: 0 },
+          tabBarStyle: { height: 0, backgroundColor, borderTopColor: systemBorderColor },
         }),
       100
     );
-    navigation.setOptions({ tabBarStyle: { transform: [{ translateY }], backgroundColor, borderColor: systemBorderColor } });
+    navigation.setOptions({
+      tabBarStyle: { transform: [{ translateY }], backgroundColor, borderTopColor: systemBorderColor },
+    });
   };
 
   const showTabBar = () => {

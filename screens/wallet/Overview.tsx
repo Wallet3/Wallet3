@@ -26,6 +26,7 @@ interface Props {
   chainId: number;
   disabled?: boolean;
   separatorColor?: string;
+  separatorWidth?: number;
   textColor: string;
   onSendPress?: () => void;
   onRequestPress?: () => void;
@@ -48,6 +49,7 @@ export default observer(
     onDAppsPress,
     disabled,
     separatorColor,
+    separatorWidth,
     textColor,
     mode,
   }: Props) => {
@@ -120,7 +122,14 @@ export default observer(
           {mode === 'light' ? WhiteLogos[chainId] : ColorLogos[chainId]}
         </View>
 
-        <View style={{ height: 1, backgroundColor: separatorColor ?? '#ffffff25', marginTop: 2, marginHorizontal: -12 }} />
+        <View
+          style={{
+            height: separatorWidth ?? 1,
+            backgroundColor: separatorColor ?? '#ffffff25',
+            marginTop: 2,
+            marginHorizontal: -12,
+          }}
+        />
 
         <View style={styles.buttonsContainer}>
           <Ripple
@@ -131,7 +140,7 @@ export default observer(
             <Ionicons name="md-arrow-up-circle-outline" size={18} color={textColor} />
             <Text style={{ ...styles.buttonText, color: textColor }}>{t('button-send')}</Text>
           </Ripple>
-          <View style={{ width: 1, backgroundColor: separatorColor ?? '#ffffff25' }}></View>
+          <View style={{ width: separatorWidth ?? 1, backgroundColor: separatorColor ?? '#ffffff25' }}></View>
 
           <Ripple
             style={styles.button}

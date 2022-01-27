@@ -12,7 +12,7 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
   };
 
   return (
-    <SafeViewContainer style={{ paddingHorizontal: 16, flex: 1, backgroundColor: '#fff' }}>
+    <SafeViewContainer style={{ paddingHorizontal: 16, flex: 1 }}>
       <ConfirmPasscode onDone={(v) => updatePasscode(v)} />
     </SafeViewContainer>
   );

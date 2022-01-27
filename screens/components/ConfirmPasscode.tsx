@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Switch, Text, View } from 'react-native';
 import { renderEmptyCircle, renderFilledCircle } from '../../components/PasscodeCircle';
 
+import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { secondaryFontColor } from '../../constants/styles';
@@ -19,6 +20,7 @@ interface Props {
 
 export default observer(({ biometricsSupported, biometricsEnabled, themeColor, onBiometricValueChange, onDone }: Props) => {
   const { t } = i18n;
+  const { foregroundColor } = Theme;
 
   const passcodeLength = 6;
   const [passcode, setPasscode] = useState('');
@@ -74,8 +76,8 @@ export default observer(({ biometricsSupported, biometricsEnabled, themeColor, o
       </Animatable.Text>
 
       <Animatable.View ref={passcodeView as any} style={{ flexDirection: 'row', justifyContent: 'center' }}>
-        {new Array(passcode.length).fill(0).map((_, index) => renderFilledCircle(index))}
-        {new Array(passcodeLength - passcode.length).fill(0).map((_, index) => renderEmptyCircle(index))}
+        {new Array(passcode.length).fill(0).map((_, index) => renderFilledCircle(index, foregroundColor))}
+        {new Array(passcodeLength - passcode.length).fill(0).map((_, index) => renderEmptyCircle(index, foregroundColor))}
       </Animatable.View>
 
       <View style={{ flex: 1 }} />
@@ -95,7 +97,7 @@ export default observer(({ biometricsSupported, biometricsEnabled, themeColor, o
         </View>
       ) : undefined}
 
-      <Numpad onPress={onNumpadPress} disableDot />
+      <Numpad onPress={onNumpadPress} disableDot color={foregroundColor} />
 
       <Button
         title={t('button-done')}

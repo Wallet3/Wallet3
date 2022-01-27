@@ -8,10 +8,11 @@ import { observer } from 'mobx-react-lite';
 interface Props {
   phrase: string[];
   style?: StyleProp<ViewStyle>;
+  color?: string;
 }
 
 export default observer((props: Props) => {
-  const { phrase } = props;
+  const { phrase, color } = props;
   const [isActive, setIsActive] = useState(true);
 
   const rows = Math.ceil(phrase.length / 4);
@@ -60,7 +61,7 @@ export default observer((props: Props) => {
                 {row * 4 + i + 1}
               </Text>
             ) : undefined}
-            <Text numberOfLines={1} style={{ fontSize: 15 }}>
+            <Text numberOfLines={1} style={{ fontSize: 15, color }}>
               {word}
             </Text>
           </View>

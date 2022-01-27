@@ -74,7 +74,7 @@ export default observer((props: Web3ViewProps) => {
   const [appAccount, setAppAccount] = useState<Account>();
   const [dapp, setDApp] = useState<ConnectedBrowserDApp | undefined>();
   const [webUrl, setWebUrl] = useState('');
-  const { mode, foregroundColor, isLightMode, backgroundColor, borderColor } = Theme;
+  const { mode, foregroundColor, isLightMode, backgroundColor, borderColor, systemBorderColor } = Theme;
 
   const updateDAppState = (dapp?: ConnectedBrowserDApp) => {
     setDApp(dapp);
@@ -234,7 +234,7 @@ export default observer((props: Web3ViewProps) => {
             paddingVertical: safeAreaBottom === 0 ? 4 : undefined,
             borderTopWidth: expanded ? 0 : 0.33,
             shadowOpacity: expanded ? 0.25 : 0,
-            borderTopColor: borderColor,
+            borderTopColor: systemBorderColor,
           }}
         >
           <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>

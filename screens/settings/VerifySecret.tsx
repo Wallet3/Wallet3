@@ -7,15 +7,17 @@ import Authentication from '../../viewmodels/Authentication';
 import MnemonicOnce from '../../viewmodels/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SortWords } from '../components/SecretWords';
+import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 
 export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
   const { t } = i18n;
   const [verified, setVerified] = useState(false);
+  const { textColor } = Theme;
 
   return (
-    <SafeViewContainer style={{ flex: 1, backgroundColor: '#fff' }} paddingHeader>
+    <SafeViewContainer style={{ flex: 1 }} paddingHeader>
       {verified ? (
         <View style={{ flex: 1 }}>
           <View style={{ flex: 1 }} />
@@ -40,8 +42,9 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
         </View>
       ) : (
         <View>
-          <Text>{t('land-backup-sort-words')}</Text>
+          <Text style={{ color: textColor }}>{t('land-backup-sort-words')}</Text>
           <SortWords
+            color={textColor}
             words={MnemonicOnce.secretWords}
             onVerified={(v) => {
               setVerified(v);

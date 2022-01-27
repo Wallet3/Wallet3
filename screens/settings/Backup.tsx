@@ -13,6 +13,7 @@ import { Modalize } from 'react-native-modalize';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/Networks';
 import { Portal } from 'react-native-portalize';
+import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
@@ -25,6 +26,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
   const [authorized, setAuthorized] = useState(false);
   const [words, setWords] = useState<string[]>([]);
   const [privKey, setPrivKey] = useState<string>();
+  const { textColor } = Theme;
 
   usePreventScreenCapture();
 
@@ -65,7 +67,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
   }, []);
 
   return (
-    <SafeViewContainer style={{ backgroundColor: '#fff' }} paddingHeader includeTopPadding>
+    <SafeViewContainer paddingHeader includeTopPadding>
       {authorized ? (
         <View style={{ flex: 1 }}>
           <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: -12, marginBottom: -8 }}>
@@ -82,7 +84,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
             <Text style={{ marginStart: 16, color: secondaryFontColor }}>{t('land-create-security-tips-2')}</Text>
           </View>
 
-          {words.length > 0 && <Mnemonic phrase={words} />}
+          {words.length > 0 && <Mnemonic phrase={words} color={textColor} />}
 
           {privKey && (
             <View style={{ padding: 8, borderWidth: 1, borderRadius: 7, borderColor }}>

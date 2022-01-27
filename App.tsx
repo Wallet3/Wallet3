@@ -49,7 +49,7 @@ const StackRoot = createNativeStackNavigator();
 const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication }) => {
   const { Navigator, Screen } = StackRoot;
   const { t } = i18n;
-  const { backgroundColor, foregroundColor } = Theme;
+  const { backgroundColor, foregroundColor, systemBorderColor } = Theme;
 
   const [loaded] = useFonts({
     Questrial: require('./assets/fonts/Questrial.ttf'),
@@ -79,7 +79,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
                 };
               }}
             >
-              <Screen name="Root" component={Root} options={{ headerShown: false, contentStyle: { backgroundColor } }} />
+              <Screen name="Root" component={Root} options={{ headerShown: false }} />
               <Screen name="Languages" component={Languages} options={{ title: t('settings-languages') }} />
               <Screen name="Currencies" component={Currencies} options={{ title: t('settings-currencies') }} />
               <Screen name="ChangePasscode" component={ChangePasscode} options={{ title: t('settings-security-passcode') }} />

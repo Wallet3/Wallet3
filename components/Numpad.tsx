@@ -1,6 +1,6 @@
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import { StyleSheet, Text, TouchableHighlight, View } from 'react-native';
-import { borderColor, fontColor } from '../constants/styles';
+import { borderColor, fontColor, styles } from '../constants/styles';
 
 import FaceID from '../assets/icons/app/FaceID.svg';
 import React from 'react';
@@ -12,9 +12,12 @@ interface Props {
   disableDot?: boolean;
   onBioAuth?: () => void;
   bioType?: 'fingerprint' | 'faceid';
+  color?: string;
 }
 
-export default ({ onPress, onBioAuth, disableDot, bioType }: Props) => {
+export default ({ onPress, onBioAuth, disableDot, bioType, color }: Props) => {
+  const numStyle = { ...viewStyles.num, color };
+
   return (
     <View style={viewStyles.numpadContainer}>
       <TouchableHighlight
@@ -22,11 +25,11 @@ export default ({ onPress, onBioAuth, disableDot, bioType }: Props) => {
         underlayColor={borderColor}
         onPress={(_) => onPress('1')}
       >
-        <Text style={viewStyles.num}>1</Text>
+        <Text style={numStyle}>1</Text>
       </TouchableHighlight>
 
       <TouchableHighlight style={viewStyles.keyboard} underlayColor={borderColor} onPress={(_) => onPress('2')}>
-        <Text style={viewStyles.num}>2</Text>
+        <Text style={numStyle}>2</Text>
       </TouchableHighlight>
 
       <TouchableHighlight
@@ -34,15 +37,15 @@ export default ({ onPress, onBioAuth, disableDot, bioType }: Props) => {
         underlayColor={borderColor}
         onPress={(_) => onPress('3')}
       >
-        <Text style={viewStyles.num}>3</Text>
+        <Text style={numStyle}>3</Text>
       </TouchableHighlight>
 
       <TouchableHighlight style={viewStyles.keyboard} underlayColor={borderColor} onPress={(_) => onPress('4')}>
-        <Text style={viewStyles.num}>4</Text>
+        <Text style={numStyle}>4</Text>
       </TouchableHighlight>
 
       <TouchableHighlight style={viewStyles.keyboard} underlayColor={borderColor} onPress={(_) => onPress('5')}>
-        <Text style={viewStyles.num}>5</Text>
+        <Text style={numStyle}>5</Text>
       </TouchableHighlight>
 
       <TouchableHighlight
@@ -50,15 +53,15 @@ export default ({ onPress, onBioAuth, disableDot, bioType }: Props) => {
         underlayColor={borderColor}
         onPress={(_) => onPress('6')}
       >
-        <Text style={viewStyles.num}>6</Text>
+        <Text style={numStyle}>6</Text>
       </TouchableHighlight>
 
       <TouchableHighlight style={viewStyles.keyboard} underlayColor={borderColor} onPress={(_) => onPress('7')}>
-        <Text style={viewStyles.num}>7</Text>
+        <Text style={numStyle}>7</Text>
       </TouchableHighlight>
 
       <TouchableHighlight style={viewStyles.keyboard} underlayColor={borderColor} onPress={(_) => onPress('8')}>
-        <Text style={viewStyles.num}>8</Text>
+        <Text style={numStyle}>8</Text>
       </TouchableHighlight>
 
       <TouchableHighlight
@@ -66,7 +69,7 @@ export default ({ onPress, onBioAuth, disableDot, bioType }: Props) => {
         underlayColor={borderColor}
         onPress={(_) => onPress('9')}
       >
-        <Text style={viewStyles.num}>9</Text>
+        <Text style={numStyle}>9</Text>
       </TouchableHighlight>
 
       {bioType ? (
@@ -76,7 +79,7 @@ export default ({ onPress, onBioAuth, disableDot, bioType }: Props) => {
           onPress={(_) => onBioAuth?.()}
         >
           {bioType === 'fingerprint' ? (
-            <MaterialIcons name="fingerprint" size={19} />
+            <MaterialIcons name="fingerprint" size={19} color={color} />
           ) : bioType === 'faceid' ? (
             <FaceID width={17} height={17} />
           ) : (
@@ -90,7 +93,7 @@ export default ({ onPress, onBioAuth, disableDot, bioType }: Props) => {
           onPress={(_) => onPress('.')}
           disabled={disableDot}
         >
-          {disableDot ? <View /> : <Text style={viewStyles.num}>.</Text>}
+          {disableDot ? <View /> : <Text style={numStyle}>.</Text>}
         </TouchableHighlight>
       )}
 
@@ -99,7 +102,7 @@ export default ({ onPress, onBioAuth, disableDot, bioType }: Props) => {
         underlayColor={borderColor}
         onPress={(_) => onPress('0')}
       >
-        <Text style={viewStyles.num}>0</Text>
+        <Text style={numStyle}>0</Text>
       </TouchableHighlight>
 
       <TouchableHighlight
@@ -108,7 +111,7 @@ export default ({ onPress, onBioAuth, disableDot, bioType }: Props) => {
         onPress={(_) => onPress('del')}
         onLongPress={(_) => onPress('clear')}
       >
-        <Feather name="delete" size={20} color={fontColor} />
+        <Feather name="delete" size={20} color={color} />
       </TouchableHighlight>
     </View>
   );

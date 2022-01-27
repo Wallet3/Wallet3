@@ -16,6 +16,7 @@ import { Portal } from 'react-native-portalize';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
 import Swiper from 'react-native-swiper';
+import Theme from '../../viewmodels/settings/Theme';
 import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectV1ClientHub';
 import { WalletConnect_v1 } from '../../viewmodels/walletconnect/WalletConnect_v1';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
@@ -134,6 +135,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
   const { t } = i18n;
   const [selectedClient, setSelectedClient] = useState<WalletConnect_v1>();
   const { ref, open, close } = useModalize();
+  const {} = Theme;
 
   const { sortedClients, connectedCount } = WalletConnectV1ClientHub;
 
@@ -145,7 +147,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
   const renderItem = ({ item }: { item: WalletConnect_v1 }) => <DAppItem item={item} openApp={openApp} />;
 
   return (
-    <View style={{ backgroundColor: '#fff', flex: 1 }}>
+    <View style={{ flex: 1 }}>
       {connectedCount > 0 ? (
         <FlatList
           data={sortedClients}

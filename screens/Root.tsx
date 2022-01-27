@@ -174,6 +174,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
         headerTintColor: foregroundColor,
         swipeEdgeWidth: ScreenWidth * 0.25,
         drawerType: 'slide',
+        headerBackgroundContainerStyle: { borderBottomColor: borderColor },
         headerStyle: { backgroundColor, borderBottomColor: borderColor },
         headerLeft: () => (
           <TouchableOpacity

@@ -16,6 +16,7 @@ import { Portal } from 'react-native-portalize';
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
+import Theme from '../../viewmodels/settings/Theme';
 import { styles as appStyles } from '../../constants/styles';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -33,6 +34,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
   const [jumpToScreen, setJumpToScreen] = React.useState('');
   const { ref: passcodeRef, open: openPasscode, close: closePasscode } = useModalize();
   const { ref: resetRef, open: openReset, close: closeReset } = useModalize();
+  const { foregroundColor, textColor } = Theme;
 
   const openChangePasscode = () => {
     openPasscode();
@@ -44,14 +46,16 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
     setJumpToScreen('ResetApp');
   };
 
+  const itemText = { ...styles.itemText, color: textColor };
+
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#fff', padding: 16 }} alwaysBounceVertical={false}>
+    <ScrollView style={{ flex: 1, padding: 16 }} alwaysBounceVertical={false}>
       <Text style={{ ...styles.sectionTitle, marginTop: 0 }}>{t('settings-general')}</Text>
 
       <TouchableOpacity style={styles.itemContainer} onPress={() => parent?.navigate('Languages')}>
         <View style={styles.itemSubContainer}>
-          <Ionicons name="language-outline" style={styles.itemStartSymbol} size={16} />
-          <Text style={styles.itemText}>{t('settings-general-language')}</Text>
+          <Ionicons name="language-outline" style={styles.itemStartSymbol} size={16} color={textColor} />
+          <Text style={itemText}>{t('settings-general-language')}</Text>
         </View>
         <View style={styles.itemSubContainer}>
           <Text style={styles.itemText2}>{Langs.currentLang.name}</Text>
@@ -61,8 +65,8 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
 
       <TouchableOpacity style={styles.itemContainer} onPress={() => parent?.navigate('Currencies')}>
         <View style={styles.itemSubContainer}>
-          <MaterialCommunityIcons name="currency-eth" style={styles.itemStartSymbol} size={16} />
-          <Text style={styles.itemText}>{t('settings-general-currency')}</Text>
+          <MaterialCommunityIcons name="currency-eth" style={styles.itemStartSymbol} size={16} color={textColor} />
+          <Text style={itemText}>{t('settings-general-currency')}</Text>
         </View>
         <View style={styles.itemSubContainer}>
           <Text style={styles.itemText2}>{CurrencyViewmodel.currentCurrency?.currency}</Text>
@@ -75,8 +79,8 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
       {Authentication.biometricsSupported ? (
         <View style={styles.itemContainer}>
           <View style={styles.itemSubContainer}>
-            <Ionicons name="finger-print-outline" style={styles.itemStartSymbol} size={16} />
-            <Text style={styles.itemText}>{t('settings-security-biometric')}</Text>
+            <Ionicons name="finger-print-outline" style={styles.itemStartSymbol} size={16} color={textColor} />
+            <Text style={itemText}>{t('settings-security-biometric')}</Text>
           </View>
 
           <View>
@@ -91,8 +95,8 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
 
       <TouchableOpacity style={styles.itemContainer} onPress={() => openChangePasscode()}>
         <View style={styles.itemSubContainer}>
-          <Ionicons name="keypad-outline" style={styles.itemStartSymbol} size={16} />
-          <Text style={styles.itemText}>{t('settings-security-passcode')}</Text>
+          <Ionicons name="keypad-outline" style={styles.itemStartSymbol} size={16} color={textColor} />
+          <Text style={itemText}>{t('settings-security-passcode')}</Text>
         </View>
 
         <View style={styles.itemSubContainer}>
@@ -102,8 +106,8 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
 
       <TouchableOpacity style={styles.itemContainer} onPress={() => parent?.navigate('Backup')}>
         <View style={styles.itemSubContainer}>
-          <Ionicons name="file-tray-outline" style={styles.itemStartSymbol} size={16} />
-          <Text style={styles.itemText}>{t('settings-security-backup')}</Text>
+          <Ionicons name="file-tray-outline" style={styles.itemStartSymbol} size={16} color={textColor} />
+          <Text style={itemText}>{t('settings-security-backup')}</Text>
           {!Authentication.userSecretsVerified ? (
             <Ionicons name="alert-circle" size={15} color="darkorange" style={{ marginStart: 4, marginTop: -8 }} />
           ) : undefined}
@@ -115,8 +119,8 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
 
       <TouchableOpacity style={styles.itemContainer} onPress={() => openResetApp()}>
         <View style={styles.itemSubContainer}>
-          <Ionicons name="backspace-outline" style={styles.itemStartSymbol} size={16} />
-          <Text style={styles.itemText}>{t('settings-security-reset')}</Text>
+          <Ionicons name="backspace-outline" style={styles.itemStartSymbol} size={16} color={textColor} />
+          <Text style={itemText}>{t('settings-security-reset')}</Text>
         </View>
       </TouchableOpacity>
 
@@ -134,8 +138,8 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
 
       <TouchableOpacity style={styles.itemContainer} onPress={() => openURL('https://chainbow.co.jp/privacy.html')}>
         <View style={styles.itemSubContainer}>
-          <Ionicons name="magnet-outline" style={styles.itemStartSymbol} size={16} />
-          <Text style={styles.itemText}>{t('settings-legal-privacy')}</Text>
+          <Ionicons name="magnet-outline" style={styles.itemStartSymbol} size={16} color={textColor} />
+          <Text style={itemText}>{t('settings-legal-privacy')}</Text>
         </View>
         <View style={styles.itemSubContainer}>
           <Entypo name="chevron-right" style={styles.itemEndSymbol} />
@@ -144,8 +148,8 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
 
       <TouchableOpacity style={styles.itemContainer} onPress={() => parent?.navigate('About')}>
         <View style={styles.itemSubContainer}>
-          <Ionicons name="information-circle-outline" style={styles.itemStartSymbol} size={16} />
-          <Text style={styles.itemText}>{t('settings-legal-about')}</Text>
+          <Ionicons name="information-circle-outline" style={styles.itemStartSymbol} size={16} color={textColor} />
+          <Text style={itemText}>{t('settings-legal-about')}</Text>
         </View>
         <View style={styles.itemSubContainer}>
           <Entypo name="chevron-right" style={styles.itemEndSymbol} />

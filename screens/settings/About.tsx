@@ -4,45 +4,50 @@ import { secondaryFontColor, themeColor, thirdFontColor } from '../../constants/
 
 import React from 'react';
 import { SafeViewContainer } from '../../components';
+import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 
 export function About() {
   const { t } = i18n;
+  let { textColor, isLightMode } = Theme;
+
+  textColor = isLightMode ? thirdFontColor : textColor;
+  const txtStyle = { ...styles.txt, color: textColor };
 
   return (
-    <SafeViewContainer paddingHeader style={{ backgroundColor: '#fff' }}>
-      <Text style={{ fontWeight: '500', color: thirdFontColor, fontSize: 16 }}>{t('about-slogan')}</Text>
+    <SafeViewContainer paddingHeader style={{}}>
+      <Text style={{ fontWeight: '500', color: textColor, fontSize: 16 }}>{t('about-slogan')}</Text>
 
-      <Text style={{ marginTop: 24, marginBottom: 4, fontWeight: '500', fontSize: 19, color: thirdFontColor }}>
+      <Text style={{ marginTop: 24, marginBottom: 4, fontWeight: '500', fontSize: 19, color: textColor }}>
         {t('about-features')}
       </Text>
 
       <View style={styles.item}>
-        <Feather name="box" size={16} color={thirdFontColor} />
-        <Text style={styles.txt}>{t('about-features-1')}</Text>
+        <Feather name="box" size={16} color={textColor} />
+        <Text style={txtStyle}>{t('about-features-1')}</Text>
       </View>
 
       <View style={styles.item}>
-        <Feather name="link-2" size={16} color={thirdFontColor} />
-        <Text style={styles.txt}>{t('about-features-2')}</Text>
+        <Feather name="link-2" size={16} color={textColor} />
+        <Text style={txtStyle}>{t('about-features-2')}</Text>
       </View>
 
       <View style={styles.item}>
-        <Feather name="cpu" size={16} color={thirdFontColor} />
-        <Text style={styles.txt}>{t('about-features-3')}</Text>
+        <Feather name="cpu" size={16} color={textColor} />
+        <Text style={txtStyle}>{t('about-features-3')}</Text>
       </View>
 
       <View style={styles.item}>
-        <Ionicons name="shield-checkmark-outline" size={16} color={thirdFontColor} />
-        <Text style={styles.txt}>{t('about-features-4')}</Text>
+        <Ionicons name="shield-checkmark-outline" size={16} color={textColor} />
+        <Text style={txtStyle}>{t('about-features-4')}</Text>
       </View>
 
       <View style={styles.item}>
-        <Ionicons name="logo-github" size={16} color={thirdFontColor} />
-        <Text style={styles.txt}>{t('about-features-5')}</Text>
+        <Ionicons name="logo-github" size={16} color={textColor} />
+        <Text style={txtStyle}>{t('about-features-5')}</Text>
       </View>
 
-      <Text style={{ marginTop: 24, marginBottom: 4, fontWeight: '500', fontSize: 19, color: thirdFontColor }}>
+      <Text style={{ marginTop: 24, marginBottom: 4, fontWeight: '500', fontSize: 19, color: textColor }}>
         {t('about-data-providers')}
       </Text>
 
@@ -57,7 +62,7 @@ export function About() {
         />
       </View>
 
-      <Text style={{ marginTop: 24, color: thirdFontColor, fontSize: 12 }}>
+      <Text style={{ marginTop: 24, color: textColor, fontSize: 12 }}>
         ©️ 2021-{new Date().getFullYear()} ChainBow Co., Ltd.
       </Text>
     </SafeViewContainer>

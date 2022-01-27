@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { observer } from 'mobx-react-lite';
 
 export const StaticSecretWords = observer(
-  ({ words, onWordPress }: { words: string[]; onWordPress: (word: string, index: number) => void }) => (
+  ({ words, onWordPress, color }: { color: string; words: string[]; onWordPress: (word: string, index: number) => void }) => (
     <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
       {words.map((word, index) => (
         <TouchableHighlight
@@ -24,7 +24,7 @@ export const StaticSecretWords = observer(
             marginBottom: 8,
           }}
         >
-          <Text style={{}}>{word}</Text>
+          <Text style={{ color }}>{word}</Text>
         </TouchableHighlight>
       ))}
     </View>
@@ -82,7 +82,15 @@ export const SortedSecretWords = observer(
   )
 );
 
-export const SortWords = ({ words, onVerified }: { words: string[]; onVerified: (success: boolean) => void }) => {
+export const SortWords = ({
+  words,
+  onVerified,
+  color,
+}: {
+  words: string[];
+  onVerified: (success: boolean) => void;
+  color: string;
+}) => {
   const [sorted, setSorted] = useState<string[]>([]);
   const [shuffled, setShuffled] = useState<string[]>([]);
 
@@ -106,7 +114,7 @@ export const SortWords = ({ words, onVerified }: { words: string[]; onVerified: 
     <View>
       <SortedSecretWords words={sorted.filter((i) => i)} onDelWord={delSortedWord} />
 
-      <StaticSecretWords words={shuffled} onWordPress={onStaticWordPress} />
+      <StaticSecretWords color={color} words={shuffled} onWordPress={onStaticWordPress} />
     </View>
   );
 };
