@@ -12,6 +12,7 @@ import { INetwork } from '../../common/Networks';
 import Networks from '../../viewmodels/Networks';
 import PubSub from 'pubsub-js';
 import { SafeViewContainer } from '../../components';
+import Theme from '../../viewmodels/settings/Theme';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import i18n from '../../i18n';
 import icons from '../../assets/icons/crypto';
@@ -32,12 +33,13 @@ const Drawer = observer((props: DrawerProps) => {
   const { currentAccount } = appVM;
   const { current } = Networks;
   const [screenHeight, setScreenHeight] = useState(contentHeight);
+  const { borderColor, foregroundColor, textColor } = Theme;
 
   const { index } = navigation.getState();
 
-  const homeHighlight = index === 0 ? current.color : fontColor;
-  const settingsHighlight = index === 1 ? current.color : fontColor;
-  const dappsHighlight = index === 2 ? current.color : fontColor;
+  const homeHighlight = index === 0 ? current.color : foregroundColor;
+  const settingsHighlight = index === 1 ? current.color : foregroundColor;
+  const dappsHighlight = index === 2 ? current.color : foregroundColor;
 
   const fastSwitchNetwork = (network: INetwork) => {
     Networks.switch(network);
@@ -101,12 +103,13 @@ const Drawer = observer((props: DrawerProps) => {
               marginStart: 12,
               fontSize: 17,
               width: '72%',
+              color: foregroundColor,
             }}
           >
             {currentAccount?.displayName}
           </Text>
 
-          <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 8 }} size={19} />
+          <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 8 }} size={19} color={foregroundColor} />
         </TouchableOpacity>
       </View>
 
@@ -137,7 +140,7 @@ const Drawer = observer((props: DrawerProps) => {
 
       <View style={{ padding: 16, paddingBottom: bottom === 0 ? 4 : 8 }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Text style={{ color: secondaryFontColor, fontSize: 14 }}>{t('home-drawer-networks')}</Text>
+          <Text style={{ color: textColor, fontSize: 14 }}>{t('home-drawer-networks')}</Text>
 
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <TouchableOpacity onPress={() => fastSwitchNetwork(Networks.Ethereum)} style={styles.smallNetworkContainer}>
@@ -178,7 +181,7 @@ const Drawer = observer((props: DrawerProps) => {
 
 export default (props: DrawerContentComponentProps) => {
   return (
-    <DrawerContentScrollView {...props} scrollEnabled={false}>
+    <DrawerContentScrollView {...props} style={{ backgroundColor: Theme.backgroundColor }} scrollEnabled={false}>
       <Drawer {...props} appVM={App} />
     </DrawerContentScrollView>
   );
