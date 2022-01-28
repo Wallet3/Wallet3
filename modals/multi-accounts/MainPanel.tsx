@@ -10,6 +10,7 @@ import App from '../../viewmodels/App';
 import CachedImage from 'react-native-expo-cached-image';
 import Networks from '../../viewmodels/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import rootStyles from '../styles';
@@ -27,13 +28,16 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDon
   const { t } = i18n;
   const themeColor = Networks.current.color;
   const list = useRef<FlatList>(null);
+  const { borderColor, textColor, backgroundColor } = Theme;
 
   const renderAccount = ({ item }: ListRenderItemInfo<Account>) => (
     <AccountItem
       account={item}
+      textColor={textColor}
       themeColor={themeColor}
       onEdit={onEditAccount}
       onRemove={onRemoveAccount}
+      previewBackgroundColor={backgroundColor}
       onPress={() => {
         App.switchAccount(item.address);
         onDone?.();
@@ -70,7 +74,7 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDon
         {t('modal-multi-accounts-title')}
       </Text>
 
-      <Separator style={{ marginTop: 4, opacity: 0.5 }} />
+      <Separator style={{ marginTop: 4, opacity: 0.5, backgroundColor: borderColor }} />
 
       <FlatList
         ref={list}
@@ -81,7 +85,7 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDon
         contentContainerStyle={{ paddingVertical: 4 }}
       />
 
-      <Separator style={{ marginBottom: 4, opacity: 0.5 }} />
+      <Separator style={{ marginBottom: 4, opacity: 0.5, backgroundColor: borderColor }} />
 
       <TouchableOpacity style={styles.option} onPress={newAccount}>
         <MaterialIcons name="add-circle" size={22} color={themeColor} />

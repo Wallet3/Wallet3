@@ -5,6 +5,7 @@ import Image from 'react-native-expo-cached-image';
 import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/Networks';
 import React from 'react';
+import Theme from '../../viewmodels/settings/Theme';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Transaction from '../../models/Transaction';
 import dayjs from 'dayjs';
@@ -32,69 +33,77 @@ const StatusColor = {
   pending: 'deepskyblue',
 };
 
-const Tx = observer(({ item, onPress }: { onPress?: (tx: Transaction) => void; item: Transaction }) => {
-  const method = Methods.get((item.data as string)?.substring(0, 10)) ?? 'contract-interaction';
-  const { t } = i18n;
+const Tx = observer(
+  ({ item, onPress, textColor }: { onPress?: (tx: Transaction) => void; item: Transaction; textColor: string }) => {
+    const method = Methods.get((item.data as string)?.substring(0, 10)) ?? 'contract-interaction';
+    const { t } = i18n;
 
-  const { chainId } = item;
-  const [tokenSymbol] = useState(item.readableInfo?.symbol?.trim() || Networks.find(chainId)?.symbol);
+    const { chainId } = item;
+    const [tokenSymbol] = useState(item.readableInfo?.symbol?.trim() || Networks.find(chainId)?.symbol);
 
-  const dappIcon = item.readableInfo?.icon;
-  const amount: string = item.readableInfo?.amount ?? utils.formatEther(item.value ?? '0');
+    const dappIcon = item.readableInfo?.icon;
+    const amount: string = item.readableInfo?.amount ?? utils.formatEther(item.value ?? '0');
 
-  const to: string = item.readableInfo?.recipient ?? item.readableInfo.dapp ?? item.to;
-  const status = item.blockNumber ? (item.status ? 'confirmed' : 'failed') : 'pending';
-  const methodName = t(`home-history-item-type-${method ?? (item.data !== '0x' ? 'contract-interaction' : 'sent')}`);
+    const to: string = item.readableInfo?.recipient ?? item.readableInfo.dapp ?? item.to;
+    const status = item.blockNumber ? (item.status ? 'confirmed' : 'failed') : 'pending';
+    const methodName = t(`home-history-item-type-${method ?? (item.data !== '0x' ? 'contract-interaction' : 'sent')}`);
 
-  return (
-    <TouchableOpacity style={{ paddingVertical: 12, paddingHorizontal: 8 }} onPress={() => onPress?.(item as Transaction)}>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1, alignItems: 'center' }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Coin symbol={tokenSymbol} size={16} style={{ marginEnd: 4 }} />
+    return (
+      <TouchableOpacity style={{ paddingVertical: 12, paddingHorizontal: 8 }} onPress={() => onPress?.(item as Transaction)}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1, alignItems: 'center' }}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ fontSize: 16, marginEnd: 4, maxWidth: 180 }} numberOfLines={1}>{`${methodName}`}</Text>
-            {method === 'contract-interaction' ? undefined : (
-              <Text style={{ fontSize: 16, maxWidth: 150 }} numberOfLines={1}>
-                {`${amount?.substring?.(0, 7)} ${tokenSymbol}`}
+            <Coin symbol={tokenSymbol} size={16} style={{ marginEnd: 4 }} />
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={{ fontSize: 16, marginEnd: 4, maxWidth: 180, color: textColor }} numberOfLines={1}>
+                {`${methodName}`}
               </Text>
-            )}
+              {method === 'contract-interaction' ? undefined : (
+                <Text style={{ fontSize: 16, maxWidth: 150, color: textColor }} numberOfLines={1}>
+                  {`${amount?.substring?.(0, 7)} ${tokenSymbol}`}
+                </Text>
+              )}
+            </View>
+          </View>
+
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              backgroundColor: StatusColor[status],
+              paddingHorizontal: 6,
+              paddingVertical: 2,
+              borderRadius: 4,
+            }}
+          >
+            <Text style={{ color: 'white', fontWeight: '300', fontSize: 12 }}>{t(`modal-tx-details-status-${status}`)}</Text>
           </View>
         </View>
 
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            backgroundColor: StatusColor[status],
-            paddingHorizontal: 6,
-            paddingVertical: 2,
-            borderRadius: 4,
-          }}
-        >
-          <Text style={{ color: 'white', fontWeight: '300', fontSize: 12 }}>{t(`modal-tx-details-status-${status}`)}</Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 6 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            {dappIcon ? (
+              <Image source={{ uri: dappIcon }} style={{ width: 16, height: 16, marginEnd: 4, borderRadius: 3 }} />
+            ) : (
+              <Text style={{ fontWeight: '300', marginEnd: 2, color: textColor }}>{t('home-history-item-to')}:</Text>
+            )}
+            <Text style={{ fontWeight: '300', maxWidth: 210, color: textColor }} numberOfLines={1}>
+              {to.length === 42 ? formatAddress(to!, 10, 5) : to}
+            </Text>
+          </View>
+          <Text style={{ fontWeight: '300', color: textColor }}>{dayjs(item.timestamp ?? 0).format('YYYY-MM-DD')}</Text>
         </View>
-      </View>
-
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 6 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          {dappIcon ? (
-            <Image source={{ uri: dappIcon }} style={{ width: 16, height: 16, marginEnd: 4, borderRadius: 3 }} />
-          ) : (
-            <Text style={{ fontWeight: '300', marginEnd: 2 }}>{t('home-history-item-to')}:</Text>
-          )}
-          <Text style={{ fontWeight: '300', maxWidth: 210 }} numberOfLines={1}>
-            {to.length === 42 ? formatAddress(to!, 10, 5) : to}
-          </Text>
-        </View>
-        <Text style={{ fontWeight: '300' }}>{dayjs(item.timestamp ?? 0).format('YYYY-MM-DD')}</Text>
-      </View>
-    </TouchableOpacity>
-  );
-});
+      </TouchableOpacity>
+    );
+  }
+);
 
 export default observer(({ data, onTxPress }: Props) => {
   const { t } = i18n;
-  const renderItem = ({ item, index }: ListRenderItemInfo<Transaction>) => <Tx item={item} onPress={onTxPress} />;
+  const { textColor } = Theme;
+
+  const renderItem = ({ item, index }: ListRenderItemInfo<Transaction>) => (
+    <Tx textColor={textColor} item={item} onPress={onTxPress} />
+  );
 
   if (data.length === 0) {
     return (

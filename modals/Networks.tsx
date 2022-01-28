@@ -7,6 +7,7 @@ import { INetwork } from '../common/Networks';
 import Networks from '../viewmodels/Networks';
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import Theme from '../viewmodels/settings/Theme';
 import i18n from '../i18n';
 import { observer } from 'mobx-react-lite';
 import { secondaryFontColor } from '../constants/styles';
@@ -21,6 +22,7 @@ interface Props {
 
 export default observer(({ title, onNetworkPress, networks, selectedNetwork }: Props) => {
   const { t } = i18n;
+  const { backgroundColor, secondaryTextColor, borderColor } = Theme;
   selectedNetwork = selectedNetwork ?? Networks.current;
   networks = networks ?? Networks.all;
 
@@ -57,12 +59,12 @@ export default observer(({ title, onNetworkPress, networks, selectedNetwork }: P
   };
 
   return (
-    <SafeAreaProvider style={styles.safeArea}>
+    <SafeAreaProvider style={{ ...styles.safeArea, backgroundColor }}>
       <SafeViewContainer style={{ padding: 16 }}>
-        <Text style={{ color: secondaryFontColor }} numberOfLines={1}>
+        <Text style={{ color: secondaryTextColor }} numberOfLines={1}>
           {title ?? t('modal-networks-switch')}
         </Text>
-        <Separator style={{ marginVertical: 4 }} />
+        <Separator style={{ marginVertical: 4, backgroundColor: borderColor }} />
         <FlatList
           keyExtractor={(i) => i.network}
           data={networks}

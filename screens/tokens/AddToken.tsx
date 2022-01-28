@@ -6,6 +6,7 @@ import { borderColor, fontColor } from '../../constants/styles';
 import App from '../../viewmodels/App';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStack } from '../navigations';
+import Theme from '../../viewmodels/settings/Theme';
 import { UserToken } from '../../viewmodels/services/TokensMan';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -16,6 +17,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState<UserToken | undefined>();
   const { currentAccount } = App;
+  const { borderColor, tintColor, isLightMode, textColor, foregroundColor, secondaryTextColor } = Theme;
 
   useEffect(() => {
     if (!addr) return;
@@ -27,55 +29,60 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
     });
   }, [addr]);
 
+  const itemStyle = { ...styles.item, borderBottomColor: borderColor };
+  const itemTextStyle = { ...styles.itemText, color: textColor };
+
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#fff' }} scrollEnabled={false} contentContainerStyle={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1 }} scrollEnabled={false} contentContainerStyle={{ flex: 1 }}>
       <SafeViewContainer style={{ flex: 1 }} paddingHeader>
         <TextBox
           title={`${t('home-add-token-address')}:`}
           placeholder={t('home-add-token-placeholder')}
+          style={{ borderColor: isLightMode ? borderColor : tintColor }}
+          iconColor={isLightMode ? `${foregroundColor}80` : tintColor}
           value={addr}
           onChangeText={(t) => setAddr(t)}
         />
 
-        <View style={styles.item}>
-          <Text style={styles.itemText}>{t('home-add-token-name')}:</Text>
+        <View style={itemStyle}>
+          <Text style={itemTextStyle}>{t('home-add-token-name')}:</Text>
           {loading ? (
             <Skeleton style={{ height: 17 }} />
           ) : (
-            <Text style={styles.itemText} numberOfLines={1}>
+            <Text style={itemTextStyle} numberOfLines={1}>
               {token?.name || '---'}
             </Text>
           )}
         </View>
 
-        <View style={styles.item}>
-          <Text style={styles.itemText}>{t('home-add-token-symbol')}:</Text>
+        <View style={itemStyle}>
+          <Text style={itemTextStyle}>{t('home-add-token-symbol')}:</Text>
           {loading ? (
             <Skeleton style={{ height: 17 }} />
           ) : (
-            <Text style={styles.itemText} numberOfLines={1}>
+            <Text style={itemTextStyle} numberOfLines={1}>
               {token?.symbol || '---'}
             </Text>
           )}
         </View>
 
-        <View style={styles.item}>
-          <Text style={styles.itemText}>{t('home-add-token-decimals')}:</Text>
+        <View style={itemStyle}>
+          <Text style={itemTextStyle}>{t('home-add-token-decimals')}:</Text>
           {loading ? (
             <Skeleton style={{ height: 17 }} />
           ) : (
-            <Text style={styles.itemText} numberOfLines={1}>
+            <Text style={itemTextStyle} numberOfLines={1}>
               {token?.decimals || '---'}
             </Text>
           )}
         </View>
 
-        <View style={styles.item}>
-          <Text style={styles.itemText}>{t('home-add-token-balance')}:</Text>
+        <View style={itemStyle}>
+          <Text style={itemTextStyle}>{t('home-add-token-balance')}:</Text>
           {loading ? (
             <Skeleton style={{ height: 17 }} />
           ) : (
-            <Text style={styles.itemText} numberOfLines={1}>
+            <Text style={itemTextStyle} numberOfLines={1}>
               {token?.amount || '---'}
             </Text>
           )}

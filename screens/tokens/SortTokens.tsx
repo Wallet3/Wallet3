@@ -8,6 +8,7 @@ import App from '../../viewmodels/App';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/Networks';
 import { RootStack } from '../navigations';
+import Theme from '../../viewmodels/settings/Theme';
 import { UserToken } from '../../viewmodels/services/TokensMan';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -18,11 +19,13 @@ const DraggableToken = observer(
     isActive,
     item,
     onValueChange,
+    textColor,
   }: {
     item: UserToken;
     drag: any;
     isActive: boolean;
     onValueChange: (on: boolean) => void;
+    textColor: string;
   }) => (
     <TouchableOpacity
       onLongPress={drag}
@@ -36,7 +39,7 @@ const DraggableToken = observer(
       }}
     >
       <Coin symbol={item.symbol} style={{ width: 36, height: 36, marginEnd: 16 }} iconUrl={item.iconUrl} />
-      <Text style={{ fontSize: 18, color: fontColor }}>{item.symbol}</Text>
+      <Text style={{ fontSize: 18, color: textColor }}>{item.symbol}</Text>
       <View style={{ flex: 1 }} />
       <Switch value={item.shown} onValueChange={(on) => onValueChange(on)} trackColor={{ true: Networks.current.color }} />
     </TouchableOpacity>
@@ -48,15 +51,16 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
   const { currentAccount } = App;
   const { allTokens } = currentAccount?.tokens ?? { allTokens: [] };
   const [data, setData] = useState(allTokens);
+  const { borderColor, textColor } = Theme;
 
-  const renderItem = (props: RenderItemParams<UserToken>) => {
-    return <DraggableToken {...props} onValueChange={() => currentAccount?.tokens.toggleToken(props.item)} />;
-  };
+  const renderItem = (props: RenderItemParams<UserToken>) => (
+    <DraggableToken {...props} onValueChange={() => currentAccount?.tokens.toggleToken(props.item)} textColor={textColor} />
+  );
 
   return (
-    <SafeAreaView style={{ backgroundColor: '#fff', flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <Text style={{ paddingHorizontal: 16, color: secondaryFontColor, paddingBottom: 4 }}>{t('home-tokens-drag-tip')}</Text>
-      <Separator />
+      <Separator style={{ backgroundColor: borderColor }} />
       <DraggableFlatList
         style={{ marginBottom: -36 }}
         contentContainerStyle={{ paddingBottom: 42 }}

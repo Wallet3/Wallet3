@@ -9,12 +9,17 @@
     "title": "Zapper"
   },
   {
-    "url": "https://quixotic.io",
-    "icon": "https://quixotic.io/logo.png",
-    "title": "Quixotic"
+    "url": "https://opensea.io",
+    "icon": "https://storage.googleapis.com/opensea-static/Logomark/Logomark-Blue.png",
+    "title": "Opensea"
   },
   { "url": "https://foundation.app", "icon": "https://foundation.app/apple-touch-icon.png", "title": "Foundation" },
   { "url": "https://mirror.xyz", "icon": "https://mirror.xyz/icon/apple-touch-icon.png", "title": "Mirror" },
   { "url": "https://looksrare.org", "icon": "https://looksrare.org/apple-touch-icon.png", "title": "LooksRare" },
-  { "url": "https://app.showme.fan", "icon": "https://app.showme.fan/favicon.ico", "title": "ShowMe" }
+  { "url": "https://app.showme.fan", "icon": "https://app.showme.fan/favicon.ico", "title": "ShowMe" },
+  {
+    "url": "https://quixotic.io",
+    "icon": "https://quixotic.io/logo.png",
+    "title": "Quixotic"
+  }
 ]

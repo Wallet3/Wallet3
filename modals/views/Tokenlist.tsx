@@ -4,6 +4,7 @@ import { FlatList, ListRenderItemInfo, Text, TouchableOpacity, View } from 'reac
 import BackButton from '../components/BackButton';
 import { IToken } from '../../common/Tokens';
 import React from 'react';
+import Theme from '../../viewmodels/settings/Theme';
 import { fontColor } from '../../constants/styles';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
@@ -16,6 +17,8 @@ interface Props {
 }
 
 export default observer((props: Props) => {
+  const { textColor } = Theme;
+
   const renderItem = ({ item }: ListRenderItemInfo<IToken>) => {
     return (
       <TouchableOpacity
@@ -29,7 +32,7 @@ export default observer((props: Props) => {
         onPress={() => props.onTokenSelected?.(item)}
       >
         <Coin symbol={item.symbol} style={{ width: 25, height: 25, marginEnd: 12 }} iconUrl={item.iconUrl} />
-        <Text style={{ fontSize: 19, color: fontColor, textTransform: 'uppercase' }} numberOfLines={1}>
+        <Text style={{ fontSize: 19, color: textColor, textTransform: 'uppercase' }} numberOfLines={1}>
           {item.symbol}
         </Text>
       </TouchableOpacity>

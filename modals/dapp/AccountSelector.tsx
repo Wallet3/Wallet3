@@ -7,6 +7,7 @@ import { Account } from '../../viewmodels/account/Account';
 import Avatar from '../../components/Avatar';
 import { Feather } from '@expo/vector-icons';
 import Image from 'react-native-expo-cached-image';
+import Theme from '../../viewmodels/settings/Theme';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -24,6 +25,7 @@ interface Props {
 export default observer(({ accounts, selectedAccounts, onDone, single, style, expanded, themeColor }: Props) => {
   const [selected, setSelected] = useState(selectedAccounts);
   const { t } = i18n;
+  const { borderColor, textColor } = Theme;
 
   const toggleAddress = (account: string) => {
     if (single || expanded) {
@@ -70,7 +72,7 @@ export default observer(({ accounts, selectedAccounts, onDone, single, style, ex
 
         <Text
           style={{
-            color: selected.includes(item.address) ? themeColor : fontColor,
+            color: selected.includes(item.address) ? themeColor : textColor,
             fontSize: 17,
             fontWeight: '500',
             marginStart: 10,

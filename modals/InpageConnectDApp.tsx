@@ -9,6 +9,7 @@ import NetworkSelector from './dapp/NetworkSelector';
 import Networks from '../viewmodels/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
+import Theme from '../viewmodels/settings/Theme';
 import { isSecureSite } from '../viewmodels/customs/Bookmarks';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
@@ -110,6 +111,7 @@ const ConnectPivot = observer(
 
 export default observer((props: Props) => {
   const { approve, reject, close, appName, appDesc, appIcon, appUrl } = props;
+  const { backgroundColor } = Theme;
   const onConnect = (userSelected: { network: INetwork; account: Account }) => {
     approve?.(userSelected);
     close();
@@ -121,7 +123,7 @@ export default observer((props: Props) => {
   };
 
   return (
-    <SafeAreaProvider style={styles.safeArea}>
+    <SafeAreaProvider style={{ ...styles.safeArea, backgroundColor }}>
       <ConnectPivot {...props} onApprove={onConnect} onReject={onReject} />
     </SafeAreaProvider>
   );

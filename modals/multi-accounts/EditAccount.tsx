@@ -8,6 +8,7 @@ import Avatar from '../../components/Avatar';
 import { FlatGrid } from 'react-native-super-grid';
 import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/Networks';
+import Theme from '../../viewmodels/settings/Theme';
 import { observer } from 'mobx-react-lite';
 
 interface Props {
@@ -26,6 +27,7 @@ export default observer(({ account, onDone }: Props) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedColor, setSelectedColor] = useState(account?.emojiColor);
   const [selectedEmoji, setSelectedEmoji] = useState(account?.emojiAvatar);
+  const { tintColor, isLightMode, borderColor, foregroundColor } = Theme;
   const themeColor = Networks.current.color;
 
   const done = () => {
@@ -50,7 +52,9 @@ export default observer(({ account, onDone }: Props) => {
           placeholder={`Account ${(account?.index ?? 0) + 1} | ${account?.displayName}`}
           defaultValue={account?.nickname || account?.ens.name || name}
           onChangeText={(txt) => setName(txt)}
-          style={{ flex: 1 }}
+          style={{ flex: 1, borderColor: isLightMode ? borderColor : tintColor }}
+          iconColor={isLightMode ? `${foregroundColor}80` : tintColor}
+          textColor={foregroundColor}
         />
       </View>
 

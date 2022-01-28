@@ -5,6 +5,7 @@ import { borderColor, secondaryFontColor } from '../../constants/styles';
 
 import { Feather } from '@expo/vector-icons';
 import { INetwork } from '../../common/Networks';
+import Theme from '../../viewmodels/settings/Theme';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -20,6 +21,7 @@ export default observer(({ networks, selectedChains, onDone, single }: Props) =>
   const [selected, setSelected] = useState<number[]>(selectedChains);
   const defaultNetwork = networks.find((n) => n.chainId === (selectedChains[0] || 1));
   const { t } = i18n;
+  const { borderColor } = Theme;
 
   const toggleNetwork = (network: INetwork) => {
     if (single) {
@@ -55,7 +57,7 @@ export default observer(({ networks, selectedChains, onDone, single }: Props) =>
           color: item.color,
           style: { marginHorizontal: 10, marginStart: item.chainId === 1 ? 9 : undefined },
         })}
-        
+
         <Text style={{ color: item.color, fontSize: 16, fontWeight: '500', maxWidth: '80%' }} numberOfLines={1}>
           {item.network}
         </Text>

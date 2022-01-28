@@ -7,6 +7,7 @@ import { RequestAmount } from './views';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { SafeAreaView } from 'react-native';
 import Swiper from 'react-native-swiper';
+import Theme from '../viewmodels/settings/Theme';
 import { TransferRequesting } from '../viewmodels/transferring/TransferRequesting';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
@@ -14,12 +15,11 @@ import styles from './styles';
 export default observer(() => {
   const swiper = useRef<Swiper>(null);
   const [vm] = useState(new TransferRequesting(Networks.current));
-  const themeColor = Networks.current.color;
 
-  const { avatar, address } = App.currentAccount || {};
+  const { tintColor, backgroundColor } = Theme;
 
   return (
-    <SafeAreaProvider style={styles.safeArea}>
+    <SafeAreaProvider style={{ ...styles.safeArea, backgroundColor }}>
       <Swiper
         ref={swiper}
         showsPagination={false}
@@ -30,8 +30,8 @@ export default observer(() => {
         removeClippedSubviews
         style={{ overflow: 'hidden' }}
       >
-        <RequestAmount onNext={() => swiper.current?.scrollTo(1)} vm={vm} themeColor={themeColor} />
-        <NFCPad onBack={() => swiper.current?.scrollTo(0)} vm={vm} themeColor={themeColor} />
+        <RequestAmount onNext={() => swiper.current?.scrollTo(1)} vm={vm} themeColor={tintColor} />
+        <NFCPad onBack={() => swiper.current?.scrollTo(0)} vm={vm} themeColor={tintColor} />
       </Swiper>
     </SafeAreaProvider>
   );

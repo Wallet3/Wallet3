@@ -26,7 +26,7 @@ export default StyleSheet.create({
     fontSize: 22,
     fontWeight: '500',
     paddingEnd: 4,
-    color: borderColor,
+    color: `${borderColor}99`,
   },
 
   navMoreButton: {

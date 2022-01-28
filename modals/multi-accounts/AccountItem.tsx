@@ -19,9 +19,11 @@ interface Props {
   onPress?: (item: Account) => void;
   onEdit?: (item: Account) => void;
   onRemove?: (item: Account) => void;
+  textColor: string;
+  previewBackgroundColor: string;
 }
 
-export default observer(({ account, themeColor, onPress, onEdit, onRemove }: Props) => {
+export default observer(({ account, themeColor, onPress, onEdit, onRemove, textColor, previewBackgroundColor }: Props) => {
   const balance = `${
     account.nativeToken.balance.gt(0) ? utils.formatEther(account.nativeToken.balance).substring(0, 6) : '0'
   } ${account.nativeToken.symbol}`;
@@ -51,7 +53,7 @@ export default observer(({ account, themeColor, onPress, onEdit, onRemove }: Pro
       : [{ title: t('button-edit'), systemIcon: 'square.and.pencil' }];
 
   return (
-    <ContextMenu onPress={onActionPress} actions={actions}>
+    <ContextMenu onPress={onActionPress} actions={actions} previewBackgroundColor={previewBackgroundColor}>
       <TouchableOpacity
         onPress={() => onPress?.(account)}
         style={{ flexDirection: 'row', paddingVertical: 8, alignItems: 'center', paddingHorizontal: 16 }}
@@ -70,7 +72,7 @@ export default observer(({ account, themeColor, onPress, onEdit, onRemove }: Pro
               fontSize: 17,
               fontWeight: '500',
               marginBottom: 2,
-              color: account.address === currentAccount?.address ? themeColor : undefined,
+              color: account.address === currentAccount?.address ? themeColor : textColor,
             }}
             numberOfLines={1}
           >
@@ -88,21 +90,4 @@ export default observer(({ account, themeColor, onPress, onEdit, onRemove }: Pro
       </TouchableOpacity>
     </ContextMenu>
   );
-});
-
-const styles = StyleSheet.create({
-  avatar: {
-    borderRadius: 100,
-    width: 42,
-    height: 42,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#9375a7',
-  },
-
-  option: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 8,
-  },
 });

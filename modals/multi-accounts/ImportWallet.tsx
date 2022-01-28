@@ -10,6 +10,7 @@ import Networks from '../../viewmodels/Networks';
 import RejectApproveButtons from '../components/RejectApproveButtons';
 import SecretScan from './SecretScan';
 import Swiper from 'react-native-swiper';
+import Theme from '../../viewmodels/settings/Theme';
 import { decode } from 'js-base64';
 import i18n from '../../i18n';
 import { showMessage } from 'react-native-flash-message';
@@ -24,6 +25,7 @@ export default ({ onDone, onCancel }: { onDone?: () => void; onCancel?: () => vo
   const [busy, setBusy] = useState(false);
 
   const [swiperIndex, setSwiperIndex] = useState(0);
+  const { borderColor, secondaryTextColor, textColor, foregroundColor } = Theme;
   const swiper = useRef<Swiper>(null);
 
   useEffect(() => setVerified(mnemonic.setSecret(secret || '')), [secret]);
@@ -77,6 +79,7 @@ export default ({ onDone, onCancel }: { onDone?: () => void; onCancel?: () => vo
             autoCapitalize="none"
             keyboardType="default"
             secureTextEntry={true}
+            placeholderTextColor={secondaryTextColor}
             style={{
               height: 150,
               textAlignVertical: 'top',
@@ -86,6 +89,7 @@ export default ({ onDone, onCancel }: { onDone?: () => void; onCancel?: () => vo
               padding: 8,
               paddingVertical: 24,
               fontSize: 16,
+              color: foregroundColor,
             }}
           />
 

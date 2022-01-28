@@ -13,6 +13,7 @@ import NetworkSelector from './dapp/NetworkSelector';
 import Networks from '../viewmodels/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
+import Theme from '../viewmodels/settings/Theme';
 import WalletConnectV1ClientHub from '../viewmodels/walletconnect/WalletConnectV1ClientHub';
 import { WalletConnect_v1 } from '../viewmodels/walletconnect/WalletConnect_v1';
 import i18n from '../i18n';
@@ -166,6 +167,8 @@ export default observer(({ uri, close, extra }: Props) => {
   const [connectTimeout, setConnectTimeout] = useState(false);
   const [client, setClient] = useState<WalletConnect_v1>();
   const [errorMsg, setErrorMsg] = useState<string>();
+
+  const { backgroundColor } = Theme;
   const { t } = i18n;
 
   useEffect(() => {
@@ -196,7 +199,7 @@ export default observer(({ uri, close, extra }: Props) => {
   }, [uri]);
 
   return (
-    <SafeAreaProvider style={styles.safeArea}>
+    <SafeAreaProvider style={{ ...styles.safeArea, backgroundColor }}>
       {connecting ? <Loading /> : undefined}
       {client ? <ConnectDApp client={client} close={close} extra={extra} /> : undefined}
       {connectTimeout ? <TimeoutView close={close} msg={errorMsg} /> : undefined}

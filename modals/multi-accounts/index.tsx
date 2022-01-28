@@ -8,6 +8,7 @@ import ImportWallet from './ImportWallet';
 import MainPanel from './MainPanel';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
+import Theme from '../../viewmodels/settings/Theme';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -18,6 +19,7 @@ export default observer(({ close }: { close?: Function }) => {
   const swiper = useRef<Swiper>(null);
   const [type, setType] = useState('');
   const [account, setAccount] = useState<Account>();
+  const { backgroundColor } = Theme;
 
   const onRemoveAccount = (account: Account) => {
     setType('removeAccount');
@@ -62,7 +64,7 @@ export default observer(({ close }: { close?: Function }) => {
   };
 
   return (
-    <SafeAreaProvider style={rootStyles.safeArea}>
+    <SafeAreaProvider style={{ ...rootStyles.safeArea, backgroundColor }}>
       <Swiper
         ref={swiper}
         showsPagination={false}
