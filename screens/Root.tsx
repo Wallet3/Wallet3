@@ -8,7 +8,6 @@ import Drawer from './drawer';
 import { DrawerNavigationHelpers } from '@react-navigation/drawer/lib/typescript/src/types';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../viewmodels/Networks';
-import PortfolioScreen from './portfolio';
 import React from 'react';
 import SettingScreen from './settings';
 import Theme from '../viewmodels/settings/Theme';
@@ -190,12 +189,6 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
 
       <Screen name="Settings" component={SettingScreen} options={{ title: t('home-drawer-settings') }} />
       <Screen name="DApps" component={DAppsScreen} options={{ title: t('connectedapps-title') }} />
-
-      <Screen
-        name="Portfolio"
-        component={PortfolioScreen}
-        options={{ headerTransparent: true, headerShown: false, headerTitleStyle: { display: 'none' } }}
-      />
     </Navigator>
   );
 });

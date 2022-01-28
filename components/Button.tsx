@@ -27,7 +27,7 @@ export default (props: Props) => {
         ...styles.default,
         ...((props?.style as any) || {}),
         backgroundColor: disabled
-          ? 'lightgrey'
+          ? '#D3D3D350'
           : reverse
           ? 'transparent'
           : props.themeColor || (props?.style as ViewStyle)?.backgroundColor || styles.default.backgroundColor,

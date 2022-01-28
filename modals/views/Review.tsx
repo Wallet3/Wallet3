@@ -12,6 +12,7 @@ import InsufficientFee from '../components/InsufficientFee';
 import { MaterialIcons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/Networks';
 import Swiper from 'react-native-swiper';
+import Theme from '../../viewmodels/settings/Theme';
 import { TokenTransferring } from '../../viewmodels/transferring/TokenTransferring';
 import TxException from '../components/TxException';
 import { formatAddress } from '../../utils/formatter';
@@ -33,6 +34,7 @@ interface Props {
 const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biometricType }: Props) => {
   const { t } = i18n;
   const [busy, setBusy] = React.useState(false);
+  const { borderColor, textColor, isLightMode, tintColor, secondaryTextColor } = Theme;
 
   const send = async () => {
     setBusy(true);
@@ -46,6 +48,10 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
   const authIcon =
     biometricType === 'faceid' ? () => <FaceID width={12.5} height={12.5} style={{ marginEnd: 2 }} /> : undefined;
 
+  const reviewItemStyle = { ...styles.reviewItem, borderColor };
+  const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
+  const reviewItemValueStyle = { ...styles.reviewItemValue, color: textColor };
+
   return (
     <SafeViewContainer style={styles.container}>
       <View style={styles.navBar}>
@@ -54,38 +60,38 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
         <Text style={styles.navTitle}>{t('modal-review-title')}</Text>
       </View>
 
-      <View style={styles.reviewItemsContainer}>
-        <View style={styles.reviewItem}>
+      <View style={reviewItemsContainer}>
+        <View style={reviewItemStyle}>
           <Text style={styles.reviewItemTitle}>{t('modal-review-send')}</Text>
 
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-            <Text style={{ ...styles.reviewItemValue, marginEnd: 8, maxWidth: '50%' }} numberOfLines={1}>
+            <Text style={{ ...reviewItemValueStyle, marginEnd: 8, maxWidth: '50%' }} numberOfLines={1}>
               {vm.amount}
             </Text>
-            <Text style={{ ...styles.reviewItemValue, marginEnd: 8 }}>{vm.token.symbol}</Text>
+            <Text style={{ ...reviewItemValueStyle, marginEnd: 8 }}>{vm.token.symbol}</Text>
             <Coin symbol={vm.token!.symbol} forceRefresh iconUrl={vm.token?.iconUrl} />
           </View>
         </View>
 
-        <View style={styles.reviewItem}>
+        <View style={reviewItemStyle}>
           <Text style={styles.reviewItemTitle}>{t('modal-review-to')}</Text>
 
           <View style={{ flexDirection: 'row', maxWidth: '72%', alignItems: 'center' }}>
             {vm.avatar ? (
               <Image source={{ uri: vm.avatar }} style={{ width: 15, height: 15, marginEnd: 5, borderRadius: 100 }} />
             ) : undefined}
-            <Text style={{ ...styles.reviewItemValue }} numberOfLines={1}>
+            <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>
               {utils.isAddress(vm.to) ? formatAddress(vm.to, 7, 5) : vm.to}
             </Text>
           </View>
         </View>
 
-        <View style={{ ...styles.reviewItem, borderBottomWidth: 0 }}>
+        <View style={{ ...reviewItemStyle, borderBottomWidth: 0 }}>
           <Text style={styles.reviewItemTitle}>{t('modal-review-network')}</Text>
 
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             {generateNetworkIcon({ ...vm.network, width: 15, style: { marginEnd: 5 } })}
-            <Text style={{ ...styles.reviewItemValue, color: vm.network.color, maxWidth: 150 }} numberOfLines={1}>
+            <Text style={{ ...reviewItemValueStyle, color: vm.network.color, maxWidth: 150 }} numberOfLines={1}>
               {vm.network.network.split(' ')[0]}
             </Text>
           </View>
@@ -94,7 +100,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
 
       <View
         style={{
-          ...styles.reviewItemsContainer,
+          ...reviewItemsContainer,
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -120,14 +126,14 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
           </Text>
 
           <AnimateNumber
-            style={{ ...styles.reviewItemValue, marginHorizontal: 2 }}
+            style={{ ...reviewItemValueStyle, marginHorizontal: 2 }}
             numberOfLines={1}
             value={vm.txFee}
             duration={1500}
             formatter={(val) => `${val.toFixed(5)} ${vm.feeTokenSymbol}`}
           />
 
-          <MaterialIcons name="keyboard-arrow-right" size={15} />
+          <MaterialIcons name="keyboard-arrow-right" size={15} color={secondaryTextColor} />
         </TouchableOpacity>
       </View>
 

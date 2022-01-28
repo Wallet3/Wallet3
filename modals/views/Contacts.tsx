@@ -10,6 +10,7 @@ import Button from '../../components/Button';
 import { FlatList } from 'react-native-gesture-handler';
 import Image from 'react-native-expo-cached-image';
 import Networks from '../../viewmodels/Networks';
+import Theme from '../../viewmodels/settings/Theme';
 import { TokenTransferring } from '../../viewmodels/transferring/TokenTransferring';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
@@ -24,6 +25,7 @@ interface Props {
 export default observer(({ onNext, vm }: Props) => {
   const { t } = i18n;
   const [addr, setAddr] = useState<string>();
+  const { borderColor, tintColor, isLightMode, textColor, foregroundColor, secondaryTextColor } = Theme;
 
   const renderContact = ({ item }: ListRenderItemInfo<IContact>) => {
     return (
@@ -63,7 +65,7 @@ export default observer(({ onNext, vm }: Props) => {
             <Image source={{ uri: item.avatar }} style={{ position: 'absolute', width: 20, height: 20, borderRadius: 100 }} />
           ) : undefined}
         </View>
-        <Text style={{ fontSize: 17, color: fontColor, maxWidth: '90%' }} numberOfLines={1}>
+        <Text style={{ fontSize: 17, color: textColor, maxWidth: '90%' }} numberOfLines={1}>
           {item.ens || item.name || formatAddress(item.address)}
         </Text>
       </TouchableOpacity>
@@ -77,6 +79,9 @@ export default observer(({ onNext, vm }: Props) => {
         placeholder="0xabc..., .eth"
         defaultValue={vm.to}
         value={addr}
+        textColor={textColor}
+        style={{ borderColor: isLightMode ? borderColor : tintColor }}
+        iconColor={isLightMode ? `${foregroundColor}80` : tintColor}
         onChangeText={(t) => {
           setAddr(t);
           vm.setTo(t);
@@ -84,11 +89,11 @@ export default observer(({ onNext, vm }: Props) => {
       />
 
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Text style={{ color: secondaryFontColor }}>{t('modal-contacts-recent')}:</Text>
+        <Text style={{ color: secondaryTextColor }}>{t('modal-contacts-recent')}:</Text>
         {vm.isResolvingAddress ? (
           <Skeleton style={{ height: 14, width: 96 }} />
         ) : vm.isEns ? (
-          <Text style={{ color: secondaryFontColor }}>{formatAddress(vm.toAddress, 7, 5)}</Text>
+          <Text style={{ color: secondaryTextColor }}>{formatAddress(vm.toAddress, 7, 5)}</Text>
         ) : undefined}
       </View>
 

@@ -36,6 +36,7 @@ import PopularDApps from '../../configs/urls/popular.json';
 import { Portal } from 'react-native-portalize';
 import RecentHistory from './components/RecentHistory';
 import { SafeViewContainer } from '../../components';
+import { StatusBar } from 'expo-status-bar';
 import SuggestUrls from '../../configs/urls/verified.json';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
@@ -88,7 +89,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
   const [smallIconSize, setSmallIconSize] = useState(SmallIconSize);
   const [windowWidth, setWindowWidth] = useState(WindowWidth);
   const { history, favs, recentSites } = Bookmarks;
-  const { backgroundColor, textColor, borderColor, systemBorderColor, foregroundColor, isLightMode } = Theme;
+  const { backgroundColor, textColor, borderColor, systemBorderColor, foregroundColor, isLightMode, statusBarStyle } = Theme;
 
   useEffect(() => {
     Dimensions.addEventListener('change', ({ window, screen }) => {
@@ -403,13 +404,12 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
           onLoadProgress={({ nativeEvent }) => setLoadingProgress(nativeEvent.progress)}
           onLoadEnd={() => setLoadingProgress(1)}
           onNavigationStateChange={onNavigationStateChange}
-          onMetadataChange={(data) => {
-            setPageMetadata(data);
-            Bookmarks.addRecentSite(data);
-          }}
           onGoHome={goHome}
           expanded={isExpandedSite}
           onBookmarksPress={openFavs}
+          onMetadataChange={(data) => {
+            setPageMetadata(data);
+          }}
           onShrinkRequest={(webUrl) => {
             Bookmarks.removeExpandedSite(webUrl);
             setIsExpandedSite(false);
@@ -467,9 +467,9 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
         </View>
       )}
 
-      {!webUrl && recentSites.length > 0 ? (
+      {/* {!webUrl && recentSites.length > 0 ? (
         <RecentHistory recentSites={recentSites} onItemPress={(url) => goTo(url)} />
-      ) : undefined}
+      ) : undefined} */}
 
       <Portal>
         <Modalize
@@ -499,6 +499,8 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
           </SafeAreaProvider>
         </Modalize>
       </Portal>
+
+      <StatusBar style={statusBarStyle} />
     </View>
   );
 });

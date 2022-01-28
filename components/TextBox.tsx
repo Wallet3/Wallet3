@@ -12,9 +12,11 @@ interface Props {
   defaultValue?: string;
   placeholder?: string;
   style?: StyleProp<ViewStyle>;
+  iconColor?: string;
+  textColor?: string;
 }
 
-export default ({ value, onChangeText, title, style, placeholder, defaultValue }: Props) => {
+export default ({ value, onChangeText, title, style, placeholder, defaultValue, iconColor, textColor }: Props) => {
   const addrRef = useRef<TextInput>(null);
 
   const readClipboard = async () => {
@@ -43,19 +45,19 @@ export default ({ value, onChangeText, title, style, placeholder, defaultValue }
       <Text style={{ fontSize: 18, color: secondaryFontColor, marginEnd: title ? 12 : 0 }}>{title}</Text>
       <TextInput
         ref={addrRef}
-        style={{ fontSize: 20, flex: 1, color: fontColor }}
+        style={{ fontSize: 20, flex: 1, color: textColor ?? fontColor }}
         value={value}
         placeholder={placeholder}
         defaultValue={defaultValue}
         autoCapitalize="none"
         keyboardType="web-search"
-        placeholderTextColor="#dfdfdf"
+        placeholderTextColor="#dfdfdf50"
         autoCorrect={false}
         onChangeText={(t) => onChangeText(t)}
       />
 
       <TouchableOpacity onPress={(_) => readClipboard()}>
-        <Ionicons name="copy-outline" size={20} style={{ marginStart: 12, opacity: 0.5 }} />
+        <Ionicons name="copy-outline" size={20} style={{ marginStart: 12 }} color={iconColor} />
       </TouchableOpacity>
     </View>
   );

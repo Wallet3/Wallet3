@@ -6,6 +6,8 @@ export default StyleSheet.create({
   safeArea: {
     height: 439,
     flex: 1,
+    borderTopStartRadius: 6,
+    borderTopEndRadius: 6,
   },
 
   container: {

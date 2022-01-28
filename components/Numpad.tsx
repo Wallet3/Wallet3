@@ -17,55 +17,56 @@ interface Props {
 
 export default ({ onPress, onBioAuth, disableDot, bioType, color }: Props) => {
   const numStyle = { ...viewStyles.num, color };
+  const keyboardStyle = { ...viewStyles.keyboard, borderColor: color ?? borderColor };
 
   return (
-    <View style={viewStyles.numpadContainer}>
+    <View style={{ ...viewStyles.numpadContainer, borderColor: color ?? borderColor }}>
       <TouchableHighlight
-        style={{ ...viewStyles.keyboard, borderTopLeftRadius: 9.75 }}
+        style={{ ...keyboardStyle, borderTopLeftRadius: 9.75 }}
         underlayColor={borderColor}
         onPress={(_) => onPress('1')}
       >
         <Text style={numStyle}>1</Text>
       </TouchableHighlight>
 
-      <TouchableHighlight style={viewStyles.keyboard} underlayColor={borderColor} onPress={(_) => onPress('2')}>
+      <TouchableHighlight style={keyboardStyle} underlayColor={borderColor} onPress={(_) => onPress('2')}>
         <Text style={numStyle}>2</Text>
       </TouchableHighlight>
 
       <TouchableHighlight
-        style={{ ...viewStyles.keyboard, borderRightWidth: 0, borderTopRightRadius: 9.75 }}
+        style={{ ...keyboardStyle, borderRightWidth: 0, borderTopRightRadius: 9.75 }}
         underlayColor={borderColor}
         onPress={(_) => onPress('3')}
       >
         <Text style={numStyle}>3</Text>
       </TouchableHighlight>
 
-      <TouchableHighlight style={viewStyles.keyboard} underlayColor={borderColor} onPress={(_) => onPress('4')}>
+      <TouchableHighlight style={keyboardStyle} underlayColor={borderColor} onPress={(_) => onPress('4')}>
         <Text style={numStyle}>4</Text>
       </TouchableHighlight>
 
-      <TouchableHighlight style={viewStyles.keyboard} underlayColor={borderColor} onPress={(_) => onPress('5')}>
+      <TouchableHighlight style={keyboardStyle} underlayColor={borderColor} onPress={(_) => onPress('5')}>
         <Text style={numStyle}>5</Text>
       </TouchableHighlight>
 
       <TouchableHighlight
-        style={{ ...viewStyles.keyboard, borderRightWidth: 0 }}
+        style={{ ...keyboardStyle, borderRightWidth: 0 }}
         underlayColor={borderColor}
         onPress={(_) => onPress('6')}
       >
         <Text style={numStyle}>6</Text>
       </TouchableHighlight>
 
-      <TouchableHighlight style={viewStyles.keyboard} underlayColor={borderColor} onPress={(_) => onPress('7')}>
+      <TouchableHighlight style={keyboardStyle} underlayColor={borderColor} onPress={(_) => onPress('7')}>
         <Text style={numStyle}>7</Text>
       </TouchableHighlight>
 
-      <TouchableHighlight style={viewStyles.keyboard} underlayColor={borderColor} onPress={(_) => onPress('8')}>
+      <TouchableHighlight style={keyboardStyle} underlayColor={borderColor} onPress={(_) => onPress('8')}>
         <Text style={numStyle}>8</Text>
       </TouchableHighlight>
 
       <TouchableHighlight
-        style={{ ...viewStyles.keyboard, borderRightWidth: 0 }}
+        style={{ ...keyboardStyle, borderRightWidth: 0 }}
         underlayColor={borderColor}
         onPress={(_) => onPress('9')}
       >
@@ -74,7 +75,7 @@ export default ({ onPress, onBioAuth, disableDot, bioType, color }: Props) => {
 
       {bioType ? (
         <TouchableHighlight
-          style={{ ...viewStyles.keyboard, borderBottomWidth: 0, borderBottomLeftRadius: 9.75 }}
+          style={{ ...keyboardStyle, borderBottomWidth: 0, borderBottomLeftRadius: 9.75 }}
           underlayColor={borderColor}
           onPress={(_) => onBioAuth?.()}
         >
@@ -88,7 +89,7 @@ export default ({ onPress, onBioAuth, disableDot, bioType, color }: Props) => {
         </TouchableHighlight>
       ) : (
         <TouchableHighlight
-          style={{ ...viewStyles.keyboard, borderBottomWidth: 0, borderBottomLeftRadius: 9.75 }}
+          style={{ ...keyboardStyle, borderBottomWidth: 0, borderBottomLeftRadius: 9.75 }}
           underlayColor={borderColor}
           onPress={(_) => onPress('.')}
           disabled={disableDot}
@@ -98,7 +99,7 @@ export default ({ onPress, onBioAuth, disableDot, bioType, color }: Props) => {
       )}
 
       <TouchableHighlight
-        style={{ ...viewStyles.keyboard, borderBottomWidth: 0 }}
+        style={{ ...keyboardStyle, borderBottomWidth: 0 }}
         underlayColor={borderColor}
         onPress={(_) => onPress('0')}
       >
@@ -106,7 +107,7 @@ export default ({ onPress, onBioAuth, disableDot, bioType, color }: Props) => {
       </TouchableHighlight>
 
       <TouchableHighlight
-        style={{ ...viewStyles.keyboard, borderBottomWidth: 0, borderRightWidth: 0, borderBottomRightRadius: 10 }}
+        style={{ ...keyboardStyle, borderBottomWidth: 0, borderRightWidth: 0, borderBottomRightRadius: 10 }}
         underlayColor={borderColor}
         onPress={(_) => onPress('del')}
         onLongPress={(_) => onPress('clear')}

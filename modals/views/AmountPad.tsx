@@ -6,6 +6,7 @@ import { numericFontFamily, secondaryFontColor } from '../../constants/styles';
 import BackButton from '../components/BackButton';
 import { IToken } from '../../common/Tokens';
 import Networks from '../../viewmodels/Networks';
+import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import numeral from 'numeral';
 import { observer } from 'mobx-react-lite';
@@ -30,6 +31,7 @@ interface SubViewProps {
 export default observer((props: SubViewProps) => {
   const { t } = i18n;
   const [amount, setAmount] = useState(props.initValue ?? '0');
+  const { tintColor, borderColor, isLightMode } = Theme;
 
   const onNumPress = (num: string) => {
     if (num === '.') {
@@ -63,7 +65,10 @@ export default observer((props: SubViewProps) => {
       <View style={{ ...styles.navBar }}>
         {props.disableBack ? <View /> : <BackButton onPress={props.onBack} color={Networks.current.color} />}
 
-        <TouchableOpacity style={styles.navMoreButton} onPress={props.onTokenPress}>
+        <TouchableOpacity
+          style={{ ...styles.navMoreButton, borderColor: isLightMode ? borderColor : tintColor }}
+          onPress={props.onTokenPress}
+        >
           <Text
             style={{ fontSize: 19, marginEnd: 8, color: secondaryFontColor, fontWeight: '500', maxWidth: 200 }}
             numberOfLines={1}
@@ -106,7 +111,7 @@ export default observer((props: SubViewProps) => {
         </TouchableOpacity>
       ) : undefined}
 
-      <Numpad onPress={onNumPress} />
+      <Numpad onPress={onNumPress} color={isLightMode ? undefined : tintColor} />
 
       <Button
         title={t('button-next')}

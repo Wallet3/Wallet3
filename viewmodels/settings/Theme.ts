@@ -4,9 +4,9 @@ import Networks from '../Networks';
 
 const LightTheme = {
   backgroundColor: '#fff',
-  foregroundColor: '#000',
-  textColor: '#333',
-  secondaryTextColor: '#999',
+  foregroundColor: '#000000',
+  textColor: '#333333',
+  secondaryTextColor: '#999999',
   thirdTextColor: '#75869c',
   borderColor: '#efefef',
   defaultTintColor: '#6186ff',
@@ -14,16 +14,16 @@ const LightTheme = {
 
 const DarkTheme = {
   backgroundColor: '#18171b',
-  foregroundColor: '#fff',
+  foregroundColor: '#ffffff',
   textColor: '#efefefcc',
-  secondaryTextColor: '#999',
+  secondaryTextColor: '#999999',
   thirdTextColor: '#75869c',
-  borderColor: '#333',
+  borderColor: '#333333',
   defaultTintColor: '#6186ff',
 };
 
 class Theme {
-  mode: 'light' | 'dark' = 'light';
+  mode: 'light' | 'dark' = 'dark';
 
   constructor() {
     makeObservable(this, {
@@ -73,7 +73,7 @@ class Theme {
   }
 
   get tintColor() {
-    return this.isLightMode ? LightTheme.defaultTintColor : DarkTheme.defaultTintColor;
+    return Networks.current.color;
   }
 
   get statusBarStyle() {
