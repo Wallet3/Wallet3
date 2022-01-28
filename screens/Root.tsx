@@ -38,6 +38,7 @@ const RootTab = observer(() => {
   let { foregroundColor, backgroundColor, systemBorderColor, borderColor, isLightMode } = Theme;
 
   foregroundColor = isLightMode ? foregroundColor : current.color;
+  const tarBarStyle = { backgroundColor, borderTopColor: systemBorderColor };
 
   return (
     <Navigator
@@ -46,11 +47,7 @@ const RootTab = observer(() => {
         tabBarActiveTintColor: current.color,
         tabBarInactiveTintColor: 'gray',
         tabBarLabelStyle: { marginBottom: bottom === 0 ? 7 : 3, marginTop: -3 },
-        tabBarStyle: {
-          backgroundColor,
-          height: bottom === 0 ? 57 : 79,
-          borderTopColor: systemBorderColor,
-        },
+        tabBarStyle: bottom === 0 ? { ...tarBarStyle, height: 57 } : tarBarStyle,
         headerStyle: { backgroundColor },
         tabBarLabelPosition: 'below-icon',
         tabBarIcon: ({ focused, size }) => {
