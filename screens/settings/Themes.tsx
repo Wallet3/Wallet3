@@ -16,7 +16,7 @@ const ThemeItem = observer(({ item, onPress, textColor }: { onPress: () => void;
   return (
     <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 16 }} onPress={onPress}>
       <Text style={{ fontSize: 17, fontFamily: 'PingFangTC-Medium', color: textColor, textTransform: 'capitalize' }}>
-        {item}
+        {t(`settings-general-theme-${item}`)}
       </Text>
       <View style={{ flex: 1 }} />
       <Feather name="check" size={17} style={{ opacity: Theme.mode === item ? 1 : 0 }} color={textColor} />
