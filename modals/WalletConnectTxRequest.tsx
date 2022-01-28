@@ -5,6 +5,7 @@ import App from '../viewmodels/App';
 import Authentication from '../viewmodels/Authentication';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Success from './views/Success';
+import Theme from '../viewmodels/settings/Theme';
 import TxRequest from './compositions/TxRequest';
 import { WCCallRequestRequest } from '../models/WCSession_v1';
 import { WalletConnect_v1 } from '../viewmodels/walletconnect/WalletConnect_v1';
@@ -21,6 +22,7 @@ interface Props {
 export default observer(({ client, request, close }: Props) => {
   const [vm] = useState(new WalletConnectTransactionRequest({ client, request }));
   const [verified, setVerified] = useState(false);
+  const { backgroundColor } = Theme;
 
   useEffect(() => {
     return () => vm.dispose();
@@ -63,7 +65,7 @@ export default observer(({ client, request, close }: Props) => {
   };
 
   return (
-    <SafeAreaProvider style={{ ...styles.safeArea, height: 520 }}>
+    <SafeAreaProvider style={{ ...styles.safeArea, height: 520, backgroundColor }}>
       {verified ? (
         <Success />
       ) : (

@@ -8,6 +8,7 @@ import { SafeAreaView, StyleProp, View, ViewStyle } from 'react-native';
 import { renderEmptyCircle, renderFilledCircle } from '../../components/PasscodeCircle';
 
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import styles from '../styles';
 
@@ -26,6 +27,7 @@ const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style, bi
   const passcodeLength = 6;
   const [passcode, setPasscode] = useState('');
 
+  const { tintColor, isLightMode, foregroundColor } = Theme;
   const passcodeView = useRef<Animatable.View>(null);
 
   useEffect(() => {
@@ -47,8 +49,13 @@ const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style, bi
       <View style={{ flex: 1 }} />
 
       <Animatable.View ref={passcodeView as any} style={{ flexDirection: 'row', justifyContent: 'center' }}>
-        {new Array(passcode.length).fill(0).map((_, index) => renderFilledCircle(index))}
-        {new Array(passcodeLength - passcode.length).fill(0).map((_, index) => renderEmptyCircle(index))}
+        {new Array(passcode.length)
+          .fill(0)
+          .map((_, index) => renderFilledCircle(index, isLightMode ? foregroundColor : tintColor))}
+
+        {new Array(passcodeLength - passcode.length)
+          .fill(0)
+          .map((_, index) => renderEmptyCircle(index, isLightMode ? foregroundColor : tintColor))}
       </Animatable.View>
 
       <View style={{ flex: 1 }} />
@@ -58,6 +65,7 @@ const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style, bi
         disableDot
         bioType={bioType}
         onBioAuth={onBioAuth}
+        color={isLightMode ? undefined : tintColor}
       />
 
       {disableCancel ? undefined : (
@@ -78,8 +86,10 @@ interface FullPasspadProps {
 }
 
 export const FullPasspad = ({ height, themeColor, onCodeEntered, bioType, onBioAuth }: FullPasspadProps) => {
+  const { backgroundColor } = Theme;
+
   return (
-    <SafeAreaProvider style={{ flex: 1, height }}>
+    <SafeAreaProvider style={{ flex: 1, height, backgroundColor }}>
       <Passpad
         themeColor={themeColor}
         disableCancel

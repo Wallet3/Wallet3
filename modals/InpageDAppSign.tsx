@@ -6,6 +6,7 @@ import Networks from '../viewmodels/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Sign from './compositions/Sign';
 import Success from './views/Success';
+import Theme from '../viewmodels/settings/Theme';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
 
@@ -16,6 +17,7 @@ interface Props extends InpageDAppSignRequest {
 export default observer(({ msg, type, chainId, typedData, approve, reject, close, account }: Props) => {
   const [verified, setVerified] = useState(false);
   const [themeColor] = useState(Networks.find(chainId)?.color ?? Networks.Ethereum.color);
+  const { backgroundColor } = Theme;
 
   const onReject = () => {
     reject();
@@ -30,7 +32,7 @@ export default observer(({ msg, type, chainId, typedData, approve, reject, close
   };
 
   return (
-    <SafeAreaProvider style={styles.safeArea}>
+    <SafeAreaProvider style={{ ...styles.safeArea, backgroundColor }}>
       {verified ? (
         <Success />
       ) : (

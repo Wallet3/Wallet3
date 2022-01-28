@@ -38,6 +38,8 @@ const DApp = observer(({ client, allAccounts, close }: Props) => {
   const [defaultAccount, setDefaultAccount] = useState(client.activeAccount);
   const [defaultNetwork, setDefaultNetwork] = useState(client.activeNetwork);
 
+  const { backgroundColor } = Theme;
+
   const disconnect = () => {
     client.killSession();
     close();
@@ -61,7 +63,7 @@ const DApp = observer(({ client, allAccounts, close }: Props) => {
   };
 
   return (
-    <SafeAreaProvider style={{ flex: 1, height: 429 }}>
+    <SafeAreaProvider style={{ flex: 1, height: 429, backgroundColor, borderRadius: 6 }}>
       <Swiper
         ref={swiper}
         showsPagination={false}
@@ -97,45 +99,62 @@ const DApp = observer(({ client, allAccounts, close }: Props) => {
   );
 });
 
-const DAppItem = observer(({ item, openApp }: { item: WalletConnect_v1; openApp: (item: WalletConnect_v1) => void }) => {
-  const { appMeta } = item;
-  const { t } = i18n;
+const DAppItem = observer(
+  ({
+    textColor,
+    item,
+    openApp,
+    secondaryTextColor,
+  }: {
+    item: WalletConnect_v1;
+    openApp: (item: WalletConnect_v1) => void;
+    textColor: string;
+    secondaryTextColor: string;
+  }) => {
+    const { appMeta } = item;
+    const { t } = i18n;
 
-  return (
-    <View style={{ paddingHorizontal: 16, paddingVertical: 12, flexDirection: 'row', alignItems: 'center' }}>
-      <TouchableOpacity style={{ flex: 1, alignItems: 'center', flexDirection: 'row' }} onPress={() => openApp(item)}>
-        <View style={{ marginEnd: 12, borderWidth: 1, borderRadius: 5, borderColor, padding: 2 }}>
-          <Image source={{ uri: appMeta?.icons[0] }} style={{ width: 27, height: 27 }} />
-        </View>
-
-        <View style={{ flex: 1 }}>
-          <Text style={{ fontWeight: '500', fontSize: 17 }} numberOfLines={1}>
-            {appMeta?.name || appMeta?.url}
-          </Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            {item.isMobileApp ? (
-              <Ionicons name="ios-phone-portrait-outline" size={9} style={{ marginTop: 4, marginEnd: 3 }} />
-            ) : undefined}
-
-            <Text style={{ color: secondaryFontColor, fontSize: 12, marginTop: 4 }}>
-              {`${t('connectedapps-list-last-used')}: ${new Date(item.lastUsedTimestamp).toLocaleDateString()}`}
-            </Text>
+    return (
+      <View style={{ paddingHorizontal: 16, paddingVertical: 12, flexDirection: 'row', alignItems: 'center' }}>
+        <TouchableOpacity style={{ flex: 1, alignItems: 'center', flexDirection: 'row' }} onPress={() => openApp(item)}>
+          <View style={{ marginEnd: 12, borderWidth: 1, borderRadius: 5, borderColor, padding: 2 }}>
+            <Image source={{ uri: appMeta?.icons[0] }} style={{ width: 27, height: 27 }} />
           </View>
-        </View>
-      </TouchableOpacity>
 
-      <TouchableOpacity style={{ padding: 12, marginEnd: -12 }} onPress={() => item.killSession()}>
-        <FontAwesome name="trash-o" size={19} />
-      </TouchableOpacity>
-    </View>
-  );
-});
+          <View style={{ flex: 1 }}>
+            <Text style={{ fontWeight: '500', fontSize: 17, color: textColor }} numberOfLines={1}>
+              {appMeta?.name || appMeta?.url}
+            </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              {item.isMobileApp ? (
+                <Ionicons
+                  name="ios-phone-portrait-outline"
+                  size={9}
+                  style={{ marginTop: 4, marginEnd: 3 }}
+                  color={textColor}
+                />
+              ) : undefined}
+
+              <Text style={{ color: secondaryTextColor, fontSize: 12, marginTop: 4 }}>
+                {`${t('connectedapps-list-last-used')}: ${new Date(item.lastUsedTimestamp).toLocaleDateString()}`}
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={{ padding: 12, marginEnd: -12 }} onPress={() => item.killSession()}>
+          <FontAwesome name="trash-o" size={19} color={textColor} />
+        </TouchableOpacity>
+      </View>
+    );
+  }
+);
 
 export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
   const { t } = i18n;
   const [selectedClient, setSelectedClient] = useState<WalletConnect_v1>();
   const { ref, open, close } = useModalize();
-  const {} = Theme;
+  const { secondaryTextColor, textColor } = Theme;
 
   const { sortedClients, connectedCount } = WalletConnectV1ClientHub;
 
@@ -144,7 +163,9 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
     setTimeout(() => open(), 0);
   };
 
-  const renderItem = ({ item }: { item: WalletConnect_v1 }) => <DAppItem item={item} openApp={openApp} />;
+  const renderItem = ({ item }: { item: WalletConnect_v1 }) => (
+    <DAppItem textColor={textColor} item={item} openApp={openApp} secondaryTextColor={secondaryTextColor} />
+  );
 
   return (
     <View style={{ flex: 1 }}>
@@ -159,7 +180,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
       ) : (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <TouchableOpacity style={{ padding: 12 }} onPress={() => navigation.getParent()?.navigate('QRScan')}>
-            <MaterialCommunityIcons name="qrcode-scan" size={32} color={secondaryFontColor} />
+            <MaterialCommunityIcons name="qrcode-scan" size={32} color={secondaryTextColor} />
           </TouchableOpacity>
           <Text style={{ color: secondaryFontColor, marginTop: 24 }}>{t('connectedapps-noapps')}</Text>
         </View>

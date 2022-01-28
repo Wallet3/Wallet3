@@ -34,7 +34,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
   const [jumpToScreen, setJumpToScreen] = React.useState('');
   const { ref: passcodeRef, open: openPasscode, close: closePasscode } = useModalize();
   const { ref: resetRef, open: openReset, close: closeReset } = useModalize();
-  const { foregroundColor, textColor } = Theme;
+  const { foregroundColor, textColor, backgroundColor } = Theme;
 
   const openChangePasscode = () => {
     openPasscode();
@@ -194,7 +194,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
           modalStyle={appStyles.modalStyle}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <SafeAreaProvider style={{ height: 270 }}>
+          <SafeAreaProvider style={{ height: 270, backgroundColor }}>
             <Confirm
               onLongConfirm={() => App.reset()}
               confirmButtonTitle={t('settings-modal-button-confirm')}

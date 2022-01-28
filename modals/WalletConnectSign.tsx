@@ -5,6 +5,7 @@ import Networks from '../viewmodels/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Sign from './compositions/Sign';
 import Success from './views/Success';
+import Theme from '../viewmodels/settings/Theme';
 import { WCCallRequestRequest } from '../models/WCSession_v1';
 import { WalletConnect_v1 } from '../viewmodels/walletconnect/WalletConnect_v1';
 import i18n from '../i18n';
@@ -25,6 +26,7 @@ export default observer(({ request, client, close, biometricEnabled }: Props) =>
   const [typedData, setTypedData] = useState();
   const [type, setType] = useState('');
   const [verified, setVerified] = useState(false);
+  const { backgroundColor } = Theme;
 
   const themeColor = client.activeNetwork.color;
 
@@ -85,7 +87,7 @@ export default observer(({ request, client, close, biometricEnabled }: Props) =>
   };
 
   return (
-    <SafeAreaProvider style={styles.safeArea}>
+    <SafeAreaProvider style={{ ...styles.safeArea, backgroundColor }}>
       {verified ? (
         <Success />
       ) : (

@@ -20,7 +20,7 @@ interface Props {
 
 export default observer(({ biometricsSupported, biometricsEnabled, themeColor, onBiometricValueChange, onDone }: Props) => {
   const { t } = i18n;
-  const { foregroundColor } = Theme;
+  const { foregroundColor, tintColor, isLightMode } = Theme;
 
   const passcodeLength = 6;
   const [passcode, setPasscode] = useState('');
@@ -76,8 +76,13 @@ export default observer(({ biometricsSupported, biometricsEnabled, themeColor, o
       </Animatable.Text>
 
       <Animatable.View ref={passcodeView as any} style={{ flexDirection: 'row', justifyContent: 'center' }}>
-        {new Array(passcode.length).fill(0).map((_, index) => renderFilledCircle(index, foregroundColor))}
-        {new Array(passcodeLength - passcode.length).fill(0).map((_, index) => renderEmptyCircle(index, foregroundColor))}
+        {new Array(passcode.length)
+          .fill(0)
+          .map((_, index) => renderFilledCircle(index, isLightMode ? foregroundColor : tintColor))}
+          
+        {new Array(passcodeLength - passcode.length)
+          .fill(0)
+          .map((_, index) => renderEmptyCircle(index, isLightMode ? foregroundColor : tintColor))}
       </Animatable.View>
 
       <View style={{ flex: 1 }} />
@@ -97,7 +102,7 @@ export default observer(({ biometricsSupported, biometricsEnabled, themeColor, o
         </View>
       ) : undefined}
 
-      <Numpad onPress={onNumpadPress} disableDot color={foregroundColor} />
+      <Numpad onPress={onNumpadPress} disableDot color={isLightMode ? undefined : tintColor} />
 
       <Button
         title={t('button-done')}

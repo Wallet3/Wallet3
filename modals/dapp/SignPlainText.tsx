@@ -9,6 +9,7 @@ import AccountIndicator from '../components/AccountIndicator';
 import Avatar from '../../components/Avatar';
 import RejectApproveButtons from '../components/RejectApproveButtons';
 import { ScrollView } from 'react-native-gesture-handler';
+import Theme from '../../viewmodels/settings/Theme';
 import { WCCallRequestRequest } from '../../models/WCSession_v1';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
@@ -26,6 +27,7 @@ interface Props {
 
 export default observer(({ msg, themeColor, onReject, onSign, account }: Props) => {
   const { t } = i18n;
+  const { borderColor } = Theme;
 
   return (
     <SafeViewContainer style={{}}>

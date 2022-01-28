@@ -10,6 +10,7 @@ import Networks from '../viewmodels/Networks';
 import { RawTransactionRequest } from '../viewmodels/transferring/RawTransactionRequest';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Success from './views/Success';
+import Theme from '../viewmodels/settings/Theme';
 import TxRequest from './compositions/TxRequest';
 import i18n from '../i18n';
 import { observer } from 'mobx-react-lite';
@@ -24,6 +25,7 @@ export default observer(({ param, chainId, approve, reject, close, account, app 
   const [network] = useState(Networks.find(chainId) ?? Networks.Ethereum);
   const [userAccount] = useState(App.findAccount(account));
   const { t } = i18n;
+  const { backgroundColor } = Theme;
 
   const onReject = () => {
     reject();
@@ -63,7 +65,7 @@ export default observer(({ param, chainId, approve, reject, close, account, app 
   };
 
   return (
-    <SafeAreaProvider style={{ ...styles.safeArea, height: 500 }}>
+    <SafeAreaProvider style={{ ...styles.safeArea, height: 500, backgroundColor }}>
       {verified ? (
         <Success />
       ) : (

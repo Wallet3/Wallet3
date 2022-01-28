@@ -5,6 +5,7 @@ import { Passpad } from '../views';
 import SignPlainText from '../dapp/SignPlainText';
 import SignTypedData from '../dapp/SignTypedData';
 import Swiper from 'react-native-swiper';
+import Theme from '../../viewmodels/settings/Theme';
 
 interface Props {
   type: string;
@@ -20,7 +21,7 @@ interface Props {
 
 export default ({ type, msg, themeColor, onReject, typedData, sign, biometricEnabled, onSign, account }: Props) => {
   const swiper = useRef<Swiper>(null);
-
+  
   const onSignPress = async () => {
     if (!biometricEnabled) {
       swiper.current?.scrollTo(1);

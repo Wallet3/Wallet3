@@ -7,11 +7,12 @@ import JSONTree from 'react-native-json-tree';
 import React from 'react';
 import RejectApproveButtons from '../components/RejectApproveButtons';
 import { ScrollView } from 'react-native-gesture-handler';
+import Theme from '../../viewmodels/settings/Theme';
 import { borderColor } from '../../constants/styles';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 
-const theme = {
+const LightJsonTheme = {
   scheme: 'google',
   author: 'seth wright (http://sethawright.com)',
   base00: '#1d1f21',
@@ -42,6 +43,7 @@ interface Props {
 
 export default observer(({ themeColor, data, onReject, onSign, account }: Props) => {
   const { t } = i18n;
+  const { borderColor, isLightMode } = Theme;
 
   return (
     <SafeViewContainer style={{ flex: 1 }}>
@@ -60,8 +62,8 @@ export default observer(({ themeColor, data, onReject, onSign, account }: Props)
         {account ? <AccountIndicator account={account} /> : undefined}
       </View>
 
-      <ScrollView style={{ flex: 1, marginHorizontal: -16, paddingHorizontal: 12 }} contentContainerStyle={{}} bounces={false}>
-        <JSONTree data={data} hideRoot theme={theme} />
+      <ScrollView style={{ flex: 1, marginHorizontal: -16, paddingHorizontal: 12 }} bounces={false}>
+        <JSONTree data={data} hideRoot theme={isLightMode ? LightJsonTheme : undefined} />
       </ScrollView>
 
       <RejectApproveButtons
