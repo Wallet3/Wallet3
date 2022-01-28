@@ -176,7 +176,7 @@ export const PublicNetworks: INetwork[] = [
   },
   {
     symbol: 'GLMR',
-    comm_id: 'glmr',
+    comm_id: 'mobm',
     chainId: 1284,
     network: 'Moonbeam',
     color: '#53cbc9',

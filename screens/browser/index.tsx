@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import Bookmarks, { Bookmark, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
 import { BottomTabScreenProps, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Web3View, { PageMetadata } from './Web3View';
@@ -27,7 +28,6 @@ import { Bar } from 'react-native-progress';
 import CachedImage from 'react-native-expo-cached-image';
 import Collapsible from 'react-native-collapsible';
 import { FlatGrid } from 'react-native-super-grid';
-import { Ionicons } from '@expo/vector-icons';
 import { LayoutAnimConfig } from '../../utils/animations';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
@@ -380,7 +380,9 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
           ) : undefined}
 
           <View style={{ flexDirection: 'row', paddingHorizontal: 16, paddingTop: 2, marginTop: 4 }}>
-            {/* Placeholder, never delete this */}
+            <TouchableOpacity>
+              <MaterialCommunityIcons name="qrcode-scan" size={20} color={foregroundColor} />
+            </TouchableOpacity>
           </View>
         </Collapsible>
 
