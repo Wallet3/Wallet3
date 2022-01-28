@@ -33,7 +33,7 @@ const Drawer = observer((props: DrawerProps) => {
   const { currentAccount } = appVM;
   const { current } = Networks;
   const [screenHeight, setScreenHeight] = useState(contentHeight);
-  const { borderColor, foregroundColor, textColor } = Theme;
+  const { borderColor, foregroundColor, textColor, secondaryTextColor } = Theme;
 
   const { index } = navigation.getState();
 
@@ -140,7 +140,7 @@ const Drawer = observer((props: DrawerProps) => {
 
       <View style={{ padding: 16, paddingBottom: bottom === 0 ? 4 : 8 }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Text style={{ color: textColor, fontSize: 14 }}>{t('home-drawer-networks')}</Text>
+          <Text style={{ color: secondaryTextColor, fontSize: 14 }}>{t('home-drawer-networks')}</Text>
 
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <TouchableOpacity onPress={() => fastSwitchNetwork(Networks.Ethereum)} style={styles.smallNetworkContainer}>

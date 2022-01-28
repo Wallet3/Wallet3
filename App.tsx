@@ -2,18 +2,8 @@ import * as SplashScreen from 'expo-splash-screen';
 
 import AppViewModel, { AppVM } from './viewmodels/App';
 import AuthViewModel, { Authentication } from './viewmodels/Authentication';
-import {
-  FlatList,
-  LayoutAnimation,
-  Platform,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  UIManager,
-  View,
-} from 'react-native';
 import Modals, { LockScreen } from './screens/Modalize';
+import { TouchableOpacity, UIManager } from 'react-native';
 
 import { About } from './screens/settings/About';
 import AddToken from './screens/tokens/AddToken';
@@ -32,9 +22,9 @@ import React from 'react';
 import Root from './screens/Root';
 import { StatusBar } from 'expo-status-bar';
 import Theme from './viewmodels/settings/Theme';
+import Themes from './screens/settings/Themes';
 import Tokens from './screens/tokens/SortTokens';
 import VerifySecret from './screens/settings/VerifySecret';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import i18n from './i18n';
 import { observer } from 'mobx-react-lite';
@@ -83,6 +73,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
               <Screen name="Root" component={Root} options={{ headerShown: false }} />
               <Screen name="Languages" component={Languages} options={{ title: t('settings-languages') }} />
               <Screen name="Currencies" component={Currencies} options={{ title: t('settings-currencies') }} />
+              <Screen name="Themes" component={Themes} options={{ title: t('settings-themes') }} />
               <Screen name="ChangePasscode" component={ChangePasscode} options={{ title: t('settings-security-passcode') }} />
               <Screen name="Backup" component={Backup} options={{ title: t('settings-security-backup') }} />
               <Screen name="VerifySecret" component={VerifySecret} options={{ title: t('settings-security-backup-verify') }} />

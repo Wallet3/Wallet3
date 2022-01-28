@@ -34,7 +34,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
   const [jumpToScreen, setJumpToScreen] = React.useState('');
   const { ref: passcodeRef, open: openPasscode, close: closePasscode } = useModalize();
   const { ref: resetRef, open: openReset, close: closeReset } = useModalize();
-  const { foregroundColor, textColor, backgroundColor } = Theme;
+  const { foregroundColor, textColor, backgroundColor, mode } = Theme;
 
   const openChangePasscode = () => {
     openPasscode();
@@ -70,6 +70,17 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
         </View>
         <View style={styles.itemSubContainer}>
           <Text style={styles.itemText2}>{CurrencyViewmodel.currentCurrency?.currency}</Text>
+          <Entypo name="chevron-right" style={styles.itemEndSymbol} />
+        </View>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.itemContainer} onPress={() => parent?.navigate('Themes')}>
+        <View style={styles.itemSubContainer}>
+          <MaterialCommunityIcons name="format-color-fill" style={styles.itemStartSymbol} size={16} color={textColor} />
+          <Text style={itemText}>{t('settings-general-theme')}</Text>
+        </View>
+        <View style={styles.itemSubContainer}>
+          <Text style={styles.itemText2}>{t(`settings-general-theme-${mode}`)}</Text>
           <Entypo name="chevron-right" style={styles.itemEndSymbol} />
         </View>
       </TouchableOpacity>

@@ -10,6 +10,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/Tokens';
 import { LineChart } from 'react-native-svg-charts';
+import Theme from '../../viewmodels/settings/Theme';
 import { TokenData } from '../../viewmodels/services/TokenData';
 import { UserToken } from '../../viewmodels/services/TokensMan';
 import { formatCurrency } from '../../utils/formatter';
@@ -24,26 +25,27 @@ interface Props {
   onSendPress?: (token?: IToken) => void;
 }
 
+const Gradient = () => (
+  <Defs key={'gradient'}>
+    <LinearGradient id={'gradient'} x1={'0'} y1={'0%'} x2={'100%'} y2={'0%'}>
+      <Stop offset={'0%'} stopColor={'rgb(134, 65, 244)'} />
+      <Stop offset={'100%'} stopColor={'rgb(66, 194, 244)'} />
+    </LinearGradient>
+  </Defs>
+);
+
 export default observer(({ token, themeColor, onSendPress, network }: Props) => {
   const [vm] = useState<TokenData>(new TokenData({ token: token!, network }));
   const { t } = i18n;
-
-  const Gradient = () => (
-    <Defs key={'gradient'}>
-      <LinearGradient id={'gradient'} x1={'0'} y1={'0%'} x2={'100%'} y2={'0%'}>
-        <Stop offset={'0%'} stopColor={'rgb(134, 65, 244)'} />
-        <Stop offset={'100%'} stopColor={'rgb(66, 194, 244)'} />
-      </LinearGradient>
-    </Defs>
-  );
+  const { backgroundColor, textColor, foregroundColor } = Theme;
 
   return (
-    <View style={{ padding: 16 }}>
+    <View style={{ padding: 16, backgroundColor, borderRadius: 6 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Coin symbol={token?.symbol} size={39} iconUrl={token?.iconUrl} />
 
         <View style={{ marginStart: 16 }}>
-          <Text style={{ fontWeight: '500', fontSize: 19, color: fontColor }} numberOfLines={1}>
+          <Text style={{ fontWeight: '500', fontSize: 19, color: foregroundColor }} numberOfLines={1}>
             {token?.symbol}
           </Text>
           {vm.loading ? (
@@ -80,11 +82,11 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
       </View>
 
       <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
-        <Text style={styles.subValue} numberOfLines={1}>
+        <Text style={{ ...styles.subValue, color: foregroundColor }} numberOfLines={1}>
           {formatCurrency(Number(token?.amount || 0) * vm.price)}
         </Text>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={{ ...styles.subValue, marginEnd: 8 }}>
+          <Text style={{ ...styles.subValue, marginEnd: 8, color: foregroundColor }}>
             {`${numeral(token?.amount ?? 0).format('0,0.000000')} ${token?.symbol}`}
           </Text>
           <Coin symbol={token?.symbol} iconUrl={token?.iconUrl} size={19} />

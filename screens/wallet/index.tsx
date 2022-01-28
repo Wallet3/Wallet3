@@ -31,8 +31,6 @@ type RootStackParamList = {
 };
 
 export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, 'Home'>) => {
-  const { t } = i18n;
-
   const { currentAccount } = App;
   const { current } = Networks;
   const { ref: tokenDetailModalize, open: openTokenDetail, close: closeTokenDetail } = useModalize();
@@ -113,10 +111,13 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
           />
         </Modalize>
 
-        <Modalize ref={txDetailModalize} adjustToContentHeight modalStyle={{ borderTopStartRadius: 5, borderTopEndRadius: 5 }}>
-          <SafeAreaProvider>
-            <TxDetail tx={selectedTx} />
-          </SafeAreaProvider>
+        <Modalize
+          ref={txDetailModalize}
+          adjustToContentHeight
+          snapPoint={500}
+          modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
+        >
+          <TxDetail tx={selectedTx} />
         </Modalize>
       </Portal>
     </View>

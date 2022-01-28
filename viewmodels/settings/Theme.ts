@@ -1,4 +1,4 @@
-import { computed, makeObservable, observable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 
 import Networks from '../Networks';
 
@@ -37,7 +37,12 @@ class Theme {
       tintColor: computed,
       statusBarStyle: computed,
       isLightMode: computed,
+      setTheme: action,
     });
+  }
+
+  setTheme(mode: 'light' | 'dark') {
+    this.mode = mode;
   }
 
   get isLightMode() {
