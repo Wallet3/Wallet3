@@ -36,19 +36,19 @@ class Bookmarks {
     });
 
     AsyncStorage.getItem(`bookmarks`)
-      .then((v) => {
-        runInAction(() => (this.favs = JSON.parse(v || '[]')));
-      })
+      .then((v) => runInAction(() => (this.favs = JSON.parse(v || '[]'))))
       .catch(() => {});
 
     AsyncStorage.getItem(`history-urls`)
-      .then((v) => {
-        runInAction(() => (this.history = JSON.parse(v || '[]')));
-      })
+      .then((v) => runInAction(() => (this.history = JSON.parse(v || '[]'))))
       .catch(() => {});
 
     AsyncStorage.getItem(`expanded-sites`)
-      .then((v) => runInAction(() => (this.expandedSites = v ? JSON.parse(v) : NoInsetsSites)))
+      .then((v) => runInAction(() => (this.expandedSites = v ? JSON.parse(v || '[]') : NoInsetsSites)))
+      .catch(() => {});
+
+    AsyncStorage.getItem('recent-sites')
+      .then((v) => runInAction(() => (this.recentSites = JSON.parse(v || '[]'))))
       .catch(() => {});
   }
 
@@ -116,6 +116,8 @@ class Bookmarks {
     this.recentSites.unshift(metadata);
 
     if (this.recentSites.length > 10) this.recentSites.pop();
+
+    AsyncStorage.setItem('recent-sites', JSON.stringify(this.recentSites));
   }
 
   reset() {

@@ -41,9 +41,9 @@ class Theme {
       setTheme: action,
     });
 
-    AsyncStorage.getItem('theme').then((v) => {
-      runInAction(() => this.setTheme((v as any) || 'light'));
-    });
+    AsyncStorage.getItem('theme')
+      .then((v) => runInAction(() => this.setTheme((v as any) || 'light')))
+      .catch(() => {});
   }
 
   setTheme(mode: 'light' | 'dark') {

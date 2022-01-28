@@ -20,7 +20,7 @@ export default (props: Props) => {
       iterationCount={'infinite'}
       duration={1500}
       {...props}
-      style={{ width: 100, height: 20, borderRadius: 6, backgroundColor: '#f5f5f5', ...((props.style as any) || {}) }}
+      style={{ width: 100, height: 20, borderRadius: 6, backgroundColor: '#f5f5f590', ...((props.style as any) || {}) }}
     ></View>
   );
 };

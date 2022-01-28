@@ -19,7 +19,7 @@ export default observer(({ tx }: { tx?: Transaction }) => {
   const { backgroundColor } = Theme;
 
   return (
-    <View style={{ padding: 16, paddingVertical: 20, backgroundColor }}>
+    <View style={{ padding: 16, paddingVertical: 20, backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
       <View style={styles.itemContainer}>
         <Text style={styles.txt}>{t('modal-tx-details-network')}:</Text>
         <View style={{ flexDirection: 'row', alignItems: 'center', width: '50%', justifyContent: 'flex-end' }}>
