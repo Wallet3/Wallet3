@@ -27,7 +27,7 @@ const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style, bi
   const passcodeLength = 6;
   const [passcode, setPasscode] = useState('');
 
-  const { tintColor, isLightMode, foregroundColor } = Theme;
+  const { tintColor, isLightMode, foregroundColor, mode } = Theme;
   const passcodeView = useRef<Animatable.View>(null);
 
   useEffect(() => {
@@ -66,6 +66,7 @@ const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style, bi
         bioType={bioType}
         onBioAuth={onBioAuth}
         color={isLightMode ? undefined : tintColor}
+        mode={mode}
       />
 
       {disableCancel ? undefined : (

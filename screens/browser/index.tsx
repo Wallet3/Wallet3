@@ -409,6 +409,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
           onBookmarksPress={openFavs}
           onMetadataChange={(data) => {
             setPageMetadata(data);
+            Bookmarks.addRecentSite(data);
           }}
           onShrinkRequest={(webUrl) => {
             Bookmarks.removeExpandedSite(webUrl);
@@ -467,9 +468,9 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
         </View>
       )}
 
-      {/* {!webUrl && recentSites.length > 0 ? (
+      {!webUrl && recentSites.length > 0 ? (
         <RecentHistory recentSites={recentSites} onItemPress={(url) => goTo(url)} />
-      ) : undefined} */}
+      ) : undefined}
 
       <Portal>
         <Modalize

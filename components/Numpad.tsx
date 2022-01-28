@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 import { borderColor, fontColor, styles } from '../constants/styles';
 
 import FaceID from '../assets/icons/app/FaceID.svg';
+import FaceID_White from '../assets/icons/app/FaceID-white.svg';
 import React from 'react';
 
 export type NumpadChar = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '0' | '.' | 'del' | 'clear';
@@ -13,9 +14,10 @@ interface Props {
   onBioAuth?: () => void;
   bioType?: 'fingerprint' | 'faceid';
   color?: string;
+  mode: 'light' | 'dark';
 }
 
-export default ({ onPress, onBioAuth, disableDot, bioType, color }: Props) => {
+export default ({ onPress, onBioAuth, disableDot, bioType, color, mode }: Props) => {
   const numStyle = { ...viewStyles.num, color };
   const keyboardStyle = { ...viewStyles.keyboard, borderColor: color ?? borderColor };
 
@@ -82,7 +84,11 @@ export default ({ onPress, onBioAuth, disableDot, bioType, color }: Props) => {
           {bioType === 'fingerprint' ? (
             <MaterialIcons name="fingerprint" size={19} color={color} />
           ) : bioType === 'faceid' ? (
-            <FaceID width={17} height={17} />
+            mode === 'light' ? (
+              <FaceID width={17} height={17} />
+            ) : (
+              <FaceID_White width={17} height={17} />
+            )
           ) : (
             <View />
           )}

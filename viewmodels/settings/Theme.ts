@@ -1,5 +1,6 @@
-import { action, computed, makeObservable, observable } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Networks from '../Networks';
 
 const LightTheme = {
@@ -39,10 +40,17 @@ class Theme {
       isLightMode: computed,
       setTheme: action,
     });
+
+    AsyncStorage.getItem('theme').then((v) => {
+      runInAction(() => this.setTheme((v as any) || 'light'));
+    });
   }
 
   setTheme(mode: 'light' | 'dark') {
+    if (this.mode === mode) return;
+
     this.mode = mode;
+    AsyncStorage.setItem('theme', mode);
   }
 
   get isLightMode() {

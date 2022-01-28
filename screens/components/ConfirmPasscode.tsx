@@ -20,7 +20,7 @@ interface Props {
 
 export default observer(({ biometricsSupported, biometricsEnabled, themeColor, onBiometricValueChange, onDone }: Props) => {
   const { t } = i18n;
-  const { foregroundColor, tintColor, isLightMode } = Theme;
+  const { foregroundColor, tintColor, isLightMode, mode } = Theme;
 
   const passcodeLength = 6;
   const [passcode, setPasscode] = useState('');
@@ -79,7 +79,7 @@ export default observer(({ biometricsSupported, biometricsEnabled, themeColor, o
         {new Array(passcode.length)
           .fill(0)
           .map((_, index) => renderFilledCircle(index, isLightMode ? foregroundColor : tintColor))}
-          
+
         {new Array(passcodeLength - passcode.length)
           .fill(0)
           .map((_, index) => renderEmptyCircle(index, isLightMode ? foregroundColor : tintColor))}
@@ -102,7 +102,7 @@ export default observer(({ biometricsSupported, biometricsEnabled, themeColor, o
         </View>
       ) : undefined}
 
-      <Numpad onPress={onNumpadPress} disableDot color={isLightMode ? undefined : tintColor} />
+      <Numpad onPress={onNumpadPress} disableDot color={isLightMode ? undefined : tintColor} mode={mode} />
 
       <Button
         title={t('button-done')}

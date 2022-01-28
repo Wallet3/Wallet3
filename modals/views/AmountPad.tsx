@@ -31,7 +31,7 @@ interface SubViewProps {
 export default observer((props: SubViewProps) => {
   const { t } = i18n;
   const [amount, setAmount] = useState(props.initValue ?? '0');
-  const { tintColor, borderColor, isLightMode } = Theme;
+  const { tintColor, borderColor, isLightMode, mode } = Theme;
 
   const onNumPress = (num: string) => {
     if (num === '.') {
@@ -111,7 +111,7 @@ export default observer((props: SubViewProps) => {
         </TouchableOpacity>
       ) : undefined}
 
-      <Numpad onPress={onNumPress} color={isLightMode ? undefined : tintColor} />
+      <Numpad onPress={onNumPress} color={isLightMode ? undefined : tintColor} mode={mode} />
 
       <Button
         title={t('button-next')}
