@@ -132,6 +132,7 @@ class Bookmarks {
   reset() {
     this.favs = [];
     this.history = [];
+    this.recentSites = [];
     this.expandedSites = NoInsetsSites;
   }
 }

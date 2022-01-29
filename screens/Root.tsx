@@ -38,8 +38,9 @@ const RootTab = observer(() => {
   let { foregroundColor, backgroundColor, systemBorderColor, borderColor, isLightMode } = Theme;
 
   foregroundColor = isLightMode ? foregroundColor : current.color;
-  const tarBarStyle = { backgroundColor, borderTopColor: systemBorderColor };
-
+  const baseTarBarStyle = { backgroundColor, borderTopColor: systemBorderColor };
+  const tabBarStyle = bottom === 0 ? { ...baseTarBarStyle, height: 57 } : baseTarBarStyle;
+  
   return (
     <Navigator
       initialRouteName="Wallet"
@@ -47,7 +48,7 @@ const RootTab = observer(() => {
         tabBarActiveTintColor: current.color,
         tabBarInactiveTintColor: 'gray',
         tabBarLabelStyle: { marginBottom: bottom === 0 ? 7 : 3, marginTop: -3 },
-        tabBarStyle: bottom === 0 ? { ...tarBarStyle, height: 57 } : tarBarStyle,
+        tabBarStyle,
         headerStyle: { backgroundColor },
         tabBarLabelPosition: 'below-icon',
         tabBarIcon: ({ focused, size }) => {
@@ -150,7 +151,7 @@ const RootTab = observer(() => {
         options={{
           tabBarLabel: 'Web3',
           headerShown: false,
-          tabBarStyle: { backgroundColor, borderTopColor: systemBorderColor },
+          tabBarStyle,
         }}
       />
     </Navigator>
