@@ -109,10 +109,9 @@ class Bookmarks {
       return;
     }
 
-    const deniedColors = ['#ffffff', '#000000', 'white', '#fff', '#000', 'black'];
-    const themeColor = metadata.themeColor?.toLowerCase() || '#999';
+    const deniedColors = ['#ffffff', '#000000', 'white', '#fff', '#000', 'black', 'hsl(0, 0%, 100%)', null];
 
-    metadata.themeColor = deniedColors.includes(themeColor) ? '#999' : metadata.themeColor;
+    metadata.themeColor = deniedColors.includes(metadata.themeColor) ? '#999' : metadata.themeColor;
 
     this.recentSites.unshift(metadata);
 

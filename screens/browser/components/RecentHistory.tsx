@@ -54,7 +54,7 @@ export default observer(({ recentSites, onItemPress }: Props) => {
                 containerStyle={{ marginEnd: 6 }}
                 imageBackgroundColor={backgroundColor}
               />
-              <Text style={{ color: item.themeColor, maxWidth: 150, marginBottom: -1 }} numberOfLines={1}>
+              <Text style={{ color: item.themeColor || '#999', maxWidth: 150, marginBottom: -1 }} numberOfLines={1}>
                 {item.title}
               </Text>
             </TouchableOpacity>

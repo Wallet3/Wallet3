@@ -38,7 +38,7 @@ export interface PageMetadata {
   origin: string;
   hostname: string;
   desc?: string;
-  themeColor?: string;
+  themeColor: string | null;
 }
 
 interface ConnectedBrowserDApp {
