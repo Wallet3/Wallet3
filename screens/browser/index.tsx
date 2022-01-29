@@ -9,6 +9,7 @@ import {
   LayoutAnimation,
   ListRenderItemInfo,
   ScrollView,
+  Share,
   Text,
   TextInput,
   TouchableOpacity,
@@ -57,7 +58,7 @@ const calcIconSize = () => {
 
 const { WindowWidth, LargeIconSize, SmallIconSize } = calcIconSize();
 
-interface Props extends BottomTabScreenProps<{}, never> {
+interface Props extends BottomTabScreenProps<any, never> {
   onPageLoaded?: (tabIndex: number, metadata?: PageMetadata) => void;
   onHome?: () => void;
   onTakeOff?: () => void;
@@ -101,13 +102,25 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
   } = Theme;
 
   useEffect(() => {
-    Dimensions.addEventListener('change', ({ window, screen }) => {
+    const handler = () => {
       const { WindowWidth, LargeIconSize, SmallIconSize } = calcIconSize();
 
       setWindowWidth(WindowWidth);
       setLargeIconSize(LargeIconSize);
       setSmallIconSize(SmallIconSize);
+    };
+
+    Dimensions.addEventListener('change', handler);
+
+    PubSub.subscribe('CodeScan-https', (msg, { data }) => {
+      addrRef.current?.blur();
+      setTimeout(() => goTo(data), 1000);
     });
+
+    return () => {
+      Dimensions.removeEventListener('change', handler);
+      PubSub.unsubscribe('CodeScan-https');
+    };
   }, []);
 
   useEffect(() => {
@@ -156,6 +169,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
       setHostname(Linking.parse(url).hostname!);
     } finally {
       addrRef.current?.blur();
+      // setTimeout(() => addrRef.current?.blur(), 10);
     }
 
     onTakeOff?.();
@@ -390,6 +404,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
 
           <View style={{ flexDirection: 'row', paddingHorizontal: 0 }}>
             <TouchableOpacity
+              onPress={() => navigation.navigate('QRScan')}
               style={{
                 justifyContent: 'center',
                 paddingHorizontal: 16,
@@ -398,20 +413,20 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
               }}
             >
               <Ionicons name="md-scan-outline" size={21} color={textColor} />
-              {/* <View
-                style={{ height: 1.2, backgroundColor: textColor, position: 'absolute', width: 15, top: 18, left: 18 }}
-              /> */}
+              {/* <View style={{ height: 1, backgroundColor: textColor, position: 'absolute', width: 13.5, top: 18.5, left: 19 }} /> */}
             </TouchableOpacity>
 
             {webUrl ? (
               <TouchableOpacity
+                onPress={() => Share.share({ url: webUrl, title: pageMetadata?.title })}
                 style={{
                   justifyContent: 'center',
                   alignItems: 'center',
                   paddingVertical: 8,
+                  paddingHorizontal: 8,
                 }}
               >
-                <Ionicons name="ios-share-outline" size={21} color={textColor} />
+                <Ionicons name="ios-share-outline" size={20.5} color={textColor} />
               </TouchableOpacity>
             ) : undefined}
           </View>

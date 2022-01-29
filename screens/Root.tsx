@@ -179,7 +179,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
             style={{ padding: 16, paddingVertical: 0 }}
             onPress={() => navigation.dispatch(DrawerActions.openDrawer)}
           >
-            <Ionicons name="menu-outline" size={23} color={foregroundColor} />
+            <Feather name="menu" size={20} color={foregroundColor} style={{}} />
           </TouchableOpacity>
         ),
       }}

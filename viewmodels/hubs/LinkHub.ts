@@ -4,9 +4,26 @@ import Authentication from '../Authentication';
 import i18n from '../../i18n';
 import { showMessage } from 'react-native-flash-message';
 
+const appSchemes = [
+  'wallet3:',
+  'ledgerlive:',
+  'dharma:',
+  'huobiwallet:',
+  'imtokenv2:',
+  'tpoutside:',
+  'pillarwallet:',
+  'celowallet:',
+  'bitpie:',
+  'abt:',
+];
+
+const urls = ['https'];
+
+const supportedSchemes = ['ethereum', '0x', 'wc:', 'wallet3sync:'].concat(appSchemes).concat(urls);
+
 class LinkHub {
   private lastHandled = 0;
-  private handledUrls = new Set<string>();
+  private handledWCUrls = new Set<string>();
 
   start() {
     Linking.getInitialURL().then((url) => this.handleURL(url!));
@@ -15,22 +32,8 @@ class LinkHub {
 
   handleURL = (url: string, extra?: { fromMobile?: boolean; hostname?: string }) => {
     if (!url) return false;
-    if (this.handledUrls.has(url)) return false;
+    if (this.handledWCUrls.has(url)) return false;
 
-    const appSchemes = [
-      'wallet3:',
-      'ledgerlive:',
-      'dharma:',
-      'huobiwallet:',
-      'imtokenv2:',
-      'tpoutside:',
-      'pillarwallet:',
-      'celowallet:',
-      'bitpie:',
-      'abt:',
-    ];
-
-    const supportedSchemes = ['ethereum', '0x', 'wc:', 'wallet3sync:'].concat(appSchemes);
     const scheme =
       supportedSchemes.find((schema) => url.toLowerCase().startsWith(schema)) || (url.endsWith('.eth') ? '0x' : undefined);
 
@@ -54,14 +57,14 @@ class LinkHub {
         const { queryParams } = Linking.parse(url);
         if (Object.getOwnPropertyNames(queryParams).length === 0) return false; // ignore empty query params
 
-        this.handledUrls.add(url);
+        this.handledWCUrls.add(url);
 
         const data = queryParams.key ? `${queryParams.uri}&key=${queryParams.key}` : `${queryParams.uri}`;
 
         PubSub.publish(`CodeScan-wc:`, { data, extra });
       } catch (error) {}
     } else {
-      if (scheme === 'wc:') this.handledUrls.add(url);
+      if (scheme === 'wc:') this.handledWCUrls.add(url);
       PubSub.publish(`CodeScan-${scheme}`, { data: url.replace('Ethereum', 'ethereum'), extra });
     }
 

@@ -110,7 +110,7 @@ class Bookmarks {
     }
 
     const deniedColors = ['#ffffff', '#000000', 'white', '#fff', '#000', 'black'];
-    const themeColor = metadata.themeColor?.toLowerCase?.() || '#999';
+    const themeColor = metadata.themeColor?.toLowerCase() || '#999';
 
     metadata.themeColor = deniedColors.includes(themeColor) ? '#999' : metadata.themeColor;
 
