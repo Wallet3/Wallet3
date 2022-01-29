@@ -31,8 +31,9 @@ class Bookmarks {
       expandedSites: observable,
       addExpandedSite: action,
       removeExpandedSite: action,
-      addRecentSite: action,
       recentSites: observable,
+      addRecentSite: action,
+      removeRecentSite: action,
     });
 
     AsyncStorage.getItem(`bookmarks`)
@@ -117,6 +118,14 @@ class Bookmarks {
 
     if (this.recentSites.length > 10) this.recentSites.pop();
 
+    AsyncStorage.setItem('recent-sites', JSON.stringify(this.recentSites));
+  }
+
+  removeRecentSite(site: PageMetadata) {
+    const index = this.recentSites.indexOf(site);
+    if (index === -1) return;
+
+    this.recentSites.splice(index, 1);
     AsyncStorage.setItem('recent-sites', JSON.stringify(this.recentSites));
   }
 

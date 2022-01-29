@@ -516,9 +516,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
         </View>
       )}
 
-      {!webUrl && recentSites.length > 0 ? (
-        <RecentHistory recentSites={recentSites} onItemPress={(url) => goTo(url)} />
-      ) : undefined}
+      {!webUrl && recentSites.length > 0 ? <RecentHistory onItemPress={(url) => goTo(url)} /> : undefined}
 
       <Portal>
         <Modalize

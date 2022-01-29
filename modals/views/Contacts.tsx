@@ -1,6 +1,7 @@
 import Contacts, { IContact } from '../../viewmodels/customs/Contacts';
+import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
-import { ListRenderItemInfo, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
+import { ListRenderItemInfo, NativeSyntheticEvent, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeViewContainer, Skeleton, TextBox } from '../../components';
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
@@ -18,57 +19,77 @@ import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 
 interface Props {
-  onNext?: () => void;
   vm: TokenTransferring;
+  background?: string;
+  onNext?: () => void;
 }
 
 export default observer(({ onNext, vm }: Props) => {
   const { t } = i18n;
   const [addr, setAddr] = useState<string>();
-  const { borderColor, tintColor, isLightMode, textColor, foregroundColor, secondaryTextColor } = Theme;
+  const { borderColor, tintColor, isLightMode, textColor, foregroundColor, secondaryTextColor, backgroundColor } = Theme;
+  const { contacts } = Contacts;
 
   const renderContact = ({ item }: ListRenderItemInfo<IContact>) => {
-    return (
-      <TouchableOpacity
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          padding: 0,
-          margin: 0,
-          paddingVertical: 10,
-        }}
-        onPress={(_) => {
-          setAddr(item.ens || item.address);
-          vm.setTo(item.ens || item.address, item.avatar);
-        }}
-      >
-        <View style={{ position: 'relative', marginEnd: 12 }}>
-          {item.emoji ? (
-            <Avatar
-              size={20}
-              emoji={item.emoji.icon}
-              backgroundColor={item.emoji.color}
-              emojiSize={8}
-              emojiMarginTop={0}
-              emojiMarginStart={0}
-            />
-          ) : (
-            <FontAwesome
-              name="user-circle-o"
-              size={20}
-              color={secondaryFontColor}
-              style={{ width: 20, height: 20, opacity: 0.5 }}
-            />
-          )}
+    const actions = [{ title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' }];
 
-          {item.avatar ? (
-            <Image source={{ uri: item.avatar }} style={{ position: 'absolute', width: 20, height: 20, borderRadius: 100 }} />
-          ) : undefined}
-        </View>
-        <Text style={{ fontSize: 17, color: textColor, maxWidth: '90%' }} numberOfLines={1}>
-          {item.ens || item.name || formatAddress(item.address)}
-        </Text>
-      </TouchableOpacity>
+    const onActionPress = (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => {
+      const { index } = e.nativeEvent;
+
+      switch (index) {
+        case 0:
+          Contacts.remove(item);
+          break;
+      }
+    };
+
+    return (
+      <ContextMenu actions={actions} onPress={onActionPress} previewBackgroundColor={backgroundColor}>
+        <TouchableOpacity
+          style={{
+            paddingHorizontal: 16,
+            flexDirection: 'row',
+            alignItems: 'center',
+            padding: 0,
+            margin: 0,
+            paddingVertical: 10,
+          }}
+          onPress={(_) => {
+            setAddr(item.ens || item.address);
+            vm.setTo(item.ens || item.address, item.avatar);
+          }}
+        >
+          <View style={{ position: 'relative', marginEnd: 12 }}>
+            {item.emoji ? (
+              <Avatar
+                size={20}
+                emoji={item.emoji.icon}
+                backgroundColor={item.emoji.color}
+                emojiSize={8}
+                emojiMarginTop={0}
+                emojiMarginStart={0}
+              />
+            ) : (
+              <FontAwesome
+                name="user-circle-o"
+                size={20}
+                color={secondaryFontColor}
+                style={{ width: 20, height: 20, opacity: 0.5 }}
+              />
+            )}
+
+            {item.avatar ? (
+              <Image
+                source={{ uri: item.avatar }}
+                style={{ position: 'absolute', width: 20, height: 20, borderRadius: 100 }}
+              />
+            ) : undefined}
+          </View>
+          <Text style={{ fontSize: 17, color: textColor, maxWidth: '90%' }} numberOfLines={1}>
+            {item.ens || item.name || formatAddress(item.address)}
+          </Text>
+        </TouchableOpacity>
+      </ContextMenu>
     );
   };
 
@@ -98,11 +119,11 @@ export default observer(({ onNext, vm }: Props) => {
       </View>
 
       <FlatList
-        data={Contacts.contacts}
+        data={contacts}
         renderItem={renderContact}
-        style={{ flex: 1, marginHorizontal: -16, paddingHorizontal: 16 }}
+        style={{ flex: 1, marginHorizontal: -16 }}
         keyExtractor={(item) => `${item.ens}_${item.address}_${item.avatar}`}
-        ItemSeparatorComponent={() => <View style={{ backgroundColor: borderColor, height: 1 }} />}
+        ItemSeparatorComponent={() => <View style={{ backgroundColor: borderColor, height: 1, marginHorizontal: 16 }} />}
       />
 
       <Button

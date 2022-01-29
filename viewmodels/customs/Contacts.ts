@@ -16,7 +16,7 @@ class Contacts {
   contacts: IContact[] = [];
 
   constructor() {
-    makeObservable(this, { contacts: observable, saveContact: action, reset: action });
+    makeObservable(this, { contacts: observable, saveContact: action, reset: action, remove: action });
 
     AsyncStorage.getItem(`contacts`).then((v) => {
       runInAction(() => (this.contacts = JSON.parse(v || '[]')));
@@ -53,6 +53,14 @@ class Contacts {
         AsyncStorage.setItem(`contacts`, JSON.stringify(this.contacts));
       });
     }
+  }
+
+  remove(contact: IContact) {
+    const index = this.contacts.findIndex((c) => c === contact);
+    if (index === -1) return;
+
+    this.contacts = this.contacts.filter((c) => c !== contact);
+    AsyncStorage.setItem(`contacts`, JSON.stringify(this.contacts));
   }
 
   reset() {
