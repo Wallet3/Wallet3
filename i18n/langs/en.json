@@ -43,7 +43,7 @@
   "qrscan-title": "Scan",
   "qrscan-go-to-settings": "Go To Settings",
   "qrscan-no-permission": "No access to camera",
-  "qrscan-tip-1": "WalletConnect, Address, Funds Receive QRCode",
+  "qrscan-tip-1": "WalletConnect, Address, Funds QRCode",
   "qrscan-tip-2": "Mnemonic Words, Private Key, Wallet 3 Desktop",
   "qrscan-tip-desktop-backup-qrcode": "Wallet 3 Desktop Backup QRCode",
   "connectedapps-title": "Connected DApps",

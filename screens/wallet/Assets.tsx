@@ -41,7 +41,7 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
 
   const [activeTab, setActiveTab] = useState(0);
   const swiper = React.useRef<Swiper>(null);
-  let { borderColor } = Theme;
+  let { borderColor, systemBorderColor } = Theme;
 
   const swipeTo = (index: number) => {
     swiper.current?.scrollTo(index);
@@ -52,7 +52,7 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ ...styles.header, borderBottomColor: `${borderColor}`, borderBottomWidth: 1 }}>
+      <View style={{ ...styles.header, borderBottomColor: `${borderColor}`, borderBottomWidth: 0.5 }}>
         <View style={styles.tabsContainer}>
           <Text
             style={{

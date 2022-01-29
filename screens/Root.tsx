@@ -1,6 +1,6 @@
 import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
 import { DrawerActions, useNavigation } from '@react-navigation/native';
-import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Feather, Ionicons, MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
 
 import BrowserScreen from './browser';
 import DAppsScreen from './dapps';
@@ -69,7 +69,7 @@ const RootTab = observer(() => {
           header: () => (
             <View
               style={{
-                paddingTop: top + 5,
+                paddingTop: top + 4,
                 paddingBottom: 7,
                 backgroundColor,
                 flexDirection: 'row',
@@ -82,7 +82,8 @@ const RootTab = observer(() => {
                 style={{ padding: 16, paddingVertical: 4 }}
                 onPress={() => navigation.dispatch(DrawerActions.openDrawer)}
               >
-                <Ionicons name="menu-outline" size={23} color={foregroundColor} />
+                {/* <Ionicons name="menu-outline" size={23} color={foregroundColor} /> */}
+                <Feather name="menu" size={20} color={foregroundColor} style={{}} />
               </TouchableOpacity>
 
               <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -90,7 +91,7 @@ const RootTab = observer(() => {
                   onPress={() => PubSub.publish('openAccountsMenu')}
                   style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 0 }}
                 >
-                  <Text style={{ fontFamily: 'Questrial', fontSize: 20, color: foregroundColor }}>Wallet 3</Text>
+                  <Text style={{ fontFamily: 'Questrial', fontSize: 21, color: foregroundColor }}>Wallet 3</Text>
                   {/* <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 4 }} size={12} /> */}
                 </TouchableOpacity>
               </View>
@@ -108,15 +109,16 @@ const RootTab = observer(() => {
                   paddingEnd: 19,
                 }}
               >
-                <MaterialCommunityIcons name="scan-helper" size={16.5} color={foregroundColor} />
+                {/* <MaterialCommunityIcons name="scan-helper" size={16.5} color={foregroundColor} /> */}
+                <Ionicons name="scan-outline" size={21} color={foregroundColor} />
                 <View
                   style={{
                     position: 'absolute',
                     left: 2,
                     right: 4.5,
-                    height: 1.5,
-                    marginEnd: 17,
-                    marginStart: 19,
+                    height: 1.2,
+                    marginEnd: 19,
+                    marginStart: 20,
                     backgroundColor: foregroundColor,
                   }}
                 />

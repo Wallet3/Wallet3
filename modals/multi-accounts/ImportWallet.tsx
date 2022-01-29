@@ -1,10 +1,10 @@
 import { Button, Loader, SafeViewContainer } from '../../components';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useEffect, useRef, useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { borderColor, secondaryFontColor } from '../../constants/styles';
 
 import App from '../../viewmodels/App';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MnemonicOnce } from '../../viewmodels/MnemonicOnce';
 import Networks from '../../viewmodels/Networks';
 import RejectApproveButtons from '../components/RejectApproveButtons';
@@ -97,8 +97,8 @@ export default ({ onDone, onCancel }: { onDone?: () => void; onCancel?: () => vo
             style={{ position: 'absolute', bottom: 0, right: 0, padding: 10, alignItems: 'center', justifyContent: 'center' }}
             onPress={() => swiper.current?.scrollTo(1)}
           >
-            <MaterialCommunityIcons name="scan-helper" size={16} color={themeColor} />
-            <View style={{ height: 1, position: 'absolute', width: 12, backgroundColor: themeColor }} />
+            <Ionicons name="scan-outline" size={21} color={themeColor} />
+            <View style={{ height: 1.2, position: 'absolute', width: 13.5, left: 13,  backgroundColor: themeColor }} />
           </TouchableOpacity>
         </View>
 

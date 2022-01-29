@@ -392,26 +392,28 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
             <TouchableOpacity
               style={{
                 justifyContent: 'center',
-                paddingBottom: 2,
                 paddingHorizontal: 16,
                 alignItems: 'center',
                 paddingVertical: 8,
               }}
             >
-              <Ionicons name="md-scan-outline" size={22} color={textColor} />
+              <Ionicons name="md-scan-outline" size={21} color={textColor} />
+              {/* <View
+                style={{ height: 1.2, backgroundColor: textColor, position: 'absolute', width: 15, top: 18, left: 18 }}
+              /> */}
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                paddingHorizontal: 8,
-                paddingBottom: 2,
-                paddingVertical: 8,
-              }}
-            >
-              <Ionicons name="ios-share-outline" size={22} color={textColor} />
-            </TouchableOpacity>
+            {webUrl ? (
+              <TouchableOpacity
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  paddingVertical: 8,
+                }}
+              >
+                <Ionicons name="ios-share-outline" size={21} color={textColor} />
+              </TouchableOpacity>
+            ) : undefined}
           </View>
         </Collapsible>
 
