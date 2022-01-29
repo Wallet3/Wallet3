@@ -104,7 +104,7 @@ const RootTab = observer(() => {
                   justifyContent: 'center',
                   alignItems: 'center',
                   position: 'relative',
-                  paddingStart: 19,
+                  paddingStart: 11,
                   paddingVertical: 5,
                   paddingEnd: 19,
                 }}
@@ -118,7 +118,7 @@ const RootTab = observer(() => {
                     right: 4.5,
                     height: 1.2,
                     marginEnd: 19,
-                    marginStart: 20,
+                    marginStart: 12,
                     backgroundColor: foregroundColor,
                   }}
                 />
