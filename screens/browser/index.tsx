@@ -89,7 +89,16 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
   const [smallIconSize, setSmallIconSize] = useState(SmallIconSize);
   const [windowWidth, setWindowWidth] = useState(WindowWidth);
   const { history, favs, recentSites } = Bookmarks;
-  const { backgroundColor, textColor, borderColor, systemBorderColor, foregroundColor, isLightMode, statusBarStyle } = Theme;
+  const {
+    backgroundColor,
+    textColor,
+    borderColor,
+    systemBorderColor,
+    foregroundColor,
+    isLightMode,
+    statusBarStyle,
+    secondaryTextColor,
+  } = Theme;
 
   useEffect(() => {
     Dimensions.addEventListener('change', ({ window, screen }) => {
@@ -379,9 +388,29 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
             </View>
           ) : undefined}
 
-          <View style={{ flexDirection: 'row', paddingHorizontal: 16, paddingTop: 2, marginTop: 4 }}>
-            <TouchableOpacity>
-              <MaterialCommunityIcons name="qrcode-scan" size={20} color={foregroundColor} />
+          <View style={{ flexDirection: 'row', paddingHorizontal: 0 }}>
+            <TouchableOpacity
+              style={{
+                justifyContent: 'center',
+                paddingBottom: 2,
+                paddingHorizontal: 16,
+                alignItems: 'center',
+                paddingVertical: 8,
+              }}
+            >
+              <Ionicons name="md-scan-outline" size={22} color={textColor} />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                paddingHorizontal: 8,
+                paddingBottom: 2,
+                paddingVertical: 8,
+              }}
+            >
+              <Ionicons name="ios-share-outline" size={22} color={textColor} />
             </TouchableOpacity>
           </View>
         </Collapsible>

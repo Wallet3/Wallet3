@@ -73,7 +73,7 @@ export default observer(
         }
         renderItem={renderItem}
         style={{ paddingHorizontal: 16 }}
-        ItemSeparatorComponent={() => <View style={{ height: 0.333, backgroundColor: separatorColor, marginStart: 56 }} />}
+        ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: separatorColor, marginStart: 56 }} />}
       />
     ) : (
       <View style={{ flex: 1, padding: 16, paddingVertical: 12 }}>

@@ -19,7 +19,7 @@ const DarkTheme = {
   textColor: '#efefefcc',
   secondaryTextColor: '#999999',
   thirdTextColor: '#75869c',
-  borderColor: '#333333',
+  borderColor: '#efefef0a',
   defaultTintColor: '#6186ff',
 };
 
@@ -78,7 +78,7 @@ class Theme {
   }
 
   get borderColor() {
-    return this.isLightMode ? LightTheme.borderColor : `${Networks.current.color}30`;
+    return this.isLightMode ? LightTheme.borderColor : DarkTheme.borderColor;
   }
 
   get systemBorderColor() {
