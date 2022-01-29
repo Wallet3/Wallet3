@@ -105,9 +105,9 @@ const RootTab = observer(() => {
                   justifyContent: 'center',
                   alignItems: 'center',
                   position: 'relative',
-                  paddingStart: 11,
+                  paddingStart: 13,
                   paddingVertical: 5,
-                  paddingEnd: 19,
+                  paddingEnd: 15,
                 }}
               >
                 {/* <MaterialCommunityIcons name="scan-helper" size={16.5} color={foregroundColor} /> */}
@@ -118,8 +118,8 @@ const RootTab = observer(() => {
                     left: 2,
                     right: 4.5,
                     height: 1.2,
-                    marginEnd: 19,
-                    marginStart: 12,
+                    marginEnd: 15,
+                    marginStart: 14,
                     backgroundColor: foregroundColor,
                   }}
                 />
