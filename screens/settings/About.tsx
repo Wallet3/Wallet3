@@ -27,6 +27,11 @@ export function About() {
         <Text style={txtStyle}>{t('about-features-1')}</Text>
       </View>
 
+      <View style={{ ...styles.item, alignItems: 'flex-start' }}>
+        <Feather name="compass" size={16} color={textColor} style={{ marginTop: 1 }} />
+        <Text style={txtStyle}>{t('about-features-6')}</Text>
+      </View>
+
       <View style={styles.item}>
         <Feather name="link-2" size={16} color={textColor} />
         <Text style={txtStyle}>{t('about-features-2')}</Text>
@@ -79,6 +84,7 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 6,
+    marginVertical: 8,
+    marginEnd: 12,
   },
 });
