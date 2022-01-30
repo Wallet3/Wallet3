@@ -142,5 +142,5 @@ export function isSecureSite(url: string) {
 }
 
 export function isRiskySite(url: string) {
-  return RiskyUrls.some((i) => url.startsWith(i));
+  return RiskyUrls.some((i) => url.includes(i));
 }
