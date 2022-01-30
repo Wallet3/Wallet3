@@ -43,9 +43,11 @@ export class Authentication extends EventEmitter {
         return 'fingerprint';
       case AuthenticationType.FACIAL_RECOGNITION:
         return 'faceid';
+      case AuthenticationType.IRIS:
+        return 'iris';
+      default:
+        return undefined;
     }
-
-    return undefined;
   }
 
   constructor() {
@@ -101,7 +103,7 @@ export class Authentication extends EventEmitter {
 
   private async authenticate({ pin, options }: { pin?: string; options?: LocalAuthenticationOptions } = {}): Promise<boolean> {
     if (pin) return await this.verifyPin(pin);
-    if (!this.biometricsSupported) return false;
+    if (!this.biometricType) return false;
 
     const { success } = await authenticateAsync(options);
     return success;

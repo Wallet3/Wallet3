@@ -31,7 +31,7 @@ class LinkHub {
     Linking.addEventListener('url', ({ url }) => this.handleURL(url));
   }
 
-  handleURL = (uri: string, extra?: { fromMobile?: boolean; hostname?: string }) => {
+  handleURL = (uri: string, extra?: { fromMobile?: boolean; hostname?: string }): boolean => {
     if (!uri) return false;
     if (this.handledWCUrls.has(uri)) return false;
 
@@ -41,7 +41,7 @@ class LinkHub {
     if (!scheme) {
       if (isURL(uri)) {
         PubSub.publish(`CodeScan-https`, { data: uri.startsWith('http') ? uri : `https://${uri}`, extra });
-        return;
+        return true;
       }
 
       if (Date.now() - this.lastHandled < 3000) return false;
@@ -54,7 +54,7 @@ class LinkHub {
     if (!Authentication.appAuthorized) {
       if (scheme === 'wallet3sync:') {
       } else {
-        return;
+        return false;
       }
     }
 
