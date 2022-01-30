@@ -4,6 +4,7 @@ import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { fontColor, thirdFontColor } from '../../constants/styles';
 
 import { Account } from '../../viewmodels/account/Account';
+import AccountIndicator from '../components/AccountIndicator';
 import AnimateNumber from 'react-native-animate-number';
 import Avatar from '../../components/Avatar';
 import Currency from '../../viewmodels/settings/Currency';
@@ -47,14 +48,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
   return (
     <SafeViewContainer>
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', paddingEnd: 4 }}>
-        <Avatar
-          size={18}
-          emoji={account?.emojiAvatar}
-          emojiSize={8}
-          backgroundColor={account?.emojiColor}
-          uri={account?.avatar}
-        />
-        <Text style={{ marginStart: 8, color: `${thirdFontColor}`, fontSize: 13 }}>{account?.miniDisplayName}</Text>
+        <AccountIndicator account={account} />
       </View>
 
       <View style={reviewItemsContainer}>

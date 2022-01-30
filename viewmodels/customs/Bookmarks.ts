@@ -100,8 +100,6 @@ class Bookmarks {
   }
 
   addRecentSite(metadata: PageMetadata) {
-    console.log(metadata);
-
     const index = this.recentSites.findIndex((s) => s.hostname === metadata.hostname);
 
     if (index !== -1) {

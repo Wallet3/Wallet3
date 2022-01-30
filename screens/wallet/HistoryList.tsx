@@ -1,6 +1,6 @@
+import { Coin, NullableImage } from '../../components';
 import { FlatList, ListRenderItemInfo, Text, View } from 'react-native';
 
-import { Coin } from '../../components';
 import Image from 'react-native-expo-cached-image';
 import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/Networks';
@@ -34,7 +34,17 @@ const StatusColor = {
 };
 
 const Tx = observer(
-  ({ item, onPress, textColor }: { onPress?: (tx: Transaction) => void; item: Transaction; textColor: string }) => {
+  ({
+    item,
+    onPress,
+    textColor,
+    iconBackgroundColor,
+  }: {
+    onPress?: (tx: Transaction) => void;
+    item: Transaction;
+    textColor: string;
+    iconBackgroundColor: string;
+  }) => {
     const method = Methods.get((item.data as string)?.substring(0, 10)) ?? 'contract-interaction';
     const { t } = i18n;
 
@@ -82,7 +92,14 @@ const Tx = observer(
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 6 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             {dappIcon ? (
-              <Image source={{ uri: dappIcon }} style={{ width: 16, height: 16, marginEnd: 4, borderRadius: 3 }} />
+              <NullableImage
+                uri={dappIcon}
+                size={16}
+                imageRadius={3}
+                imageBackgroundColor={iconBackgroundColor}
+                text={to}
+                containerStyle={{ marginEnd: 4 }}
+              />
             ) : (
               <Text style={{ fontWeight: '300', marginEnd: 2, color: textColor }}>{t('home-history-item-to')}:</Text>
             )}
@@ -99,10 +116,10 @@ const Tx = observer(
 
 export default observer(({ data, onTxPress }: Props) => {
   const { t } = i18n;
-  const { textColor } = Theme;
+  const { textColor, backgroundColor } = Theme;
 
   const renderItem = ({ item, index }: ListRenderItemInfo<Transaction>) => (
-    <Tx textColor={textColor} item={item} onPress={onTxPress} />
+    <Tx textColor={textColor} item={item} onPress={onTxPress} iconBackgroundColor={backgroundColor} />
   );
 
   if (data.length === 0) {
