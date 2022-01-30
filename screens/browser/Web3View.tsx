@@ -341,7 +341,7 @@ export default observer((props: Web3ViewProps) => {
           modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <SafeAreaProvider>
+          <SafeAreaProvider style={{ backgroundColor }}>
             <AccountSelector
               single
               accounts={App.allAccounts}
