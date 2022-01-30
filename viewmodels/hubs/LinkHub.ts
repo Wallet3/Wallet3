@@ -2,6 +2,7 @@ import * as Linking from 'expo-linking';
 
 import Authentication from '../Authentication';
 import i18n from '../../i18n';
+import { isURL } from '../../utils/url';
 import { showMessage } from 'react-native-flash-message';
 
 const appSchemes = [
@@ -30,14 +31,19 @@ class LinkHub {
     Linking.addEventListener('url', ({ url }) => this.handleURL(url));
   }
 
-  handleURL = (url: string, extra?: { fromMobile?: boolean; hostname?: string }) => {
-    if (!url) return false;
-    if (this.handledWCUrls.has(url)) return false;
+  handleURL = (uri: string, extra?: { fromMobile?: boolean; hostname?: string }) => {
+    if (!uri) return false;
+    if (this.handledWCUrls.has(uri)) return false;
 
     const scheme =
-      supportedSchemes.find((schema) => url.toLowerCase().startsWith(schema)) || (url.endsWith('.eth') ? '0x' : undefined);
+      supportedSchemes.find((schema) => uri.toLowerCase().startsWith(schema)) || (uri.endsWith('.eth') ? '0x' : undefined);
 
     if (!scheme) {
+      if (isURL(uri)) {
+        PubSub.publish(`CodeScan-https`, { data: uri.startsWith('http') ? uri : `https://${uri}`, extra });
+        return;
+      }
+
       if (Date.now() - this.lastHandled < 3000) return false;
 
       showMessage({ message: i18n.t('msg-invalid-qr-code'), type: 'warning' });
@@ -54,18 +60,18 @@ class LinkHub {
 
     if (appSchemes.includes(scheme)) {
       try {
-        const { queryParams } = Linking.parse(url);
+        const { queryParams } = Linking.parse(uri);
         if (Object.getOwnPropertyNames(queryParams).length === 0) return false; // ignore empty query params
 
-        this.handledWCUrls.add(url);
+        this.handledWCUrls.add(uri);
 
         const data = queryParams.key ? `${queryParams.uri}&key=${queryParams.key}` : `${queryParams.uri}`;
 
         PubSub.publish(`CodeScan-wc:`, { data, extra });
       } catch (error) {}
     } else {
-      if (scheme === 'wc:') this.handledWCUrls.add(url);
-      PubSub.publish(`CodeScan-${scheme}`, { data: url.replace('Ethereum', 'ethereum'), extra });
+      if (scheme === 'wc:') this.handledWCUrls.add(uri);
+      PubSub.publish(`CodeScan-${scheme}`, { data: uri.replace('Ethereum', 'ethereum'), extra });
     }
 
     return true;

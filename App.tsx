@@ -88,7 +88,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
                     title: '',
                     headerLeft: () => (
                       <TouchableOpacity onPress={() => navigation.pop()} style={{ margin: -12, padding: 12, zIndex: 99 }}>
-                        <Ionicons name="arrow-back-outline" size={20} color={foregroundColor} />
+                        <Ionicons name="arrow-back-outline" size={20} color='#fff' />
                       </TouchableOpacity>
                     ),
                   };
