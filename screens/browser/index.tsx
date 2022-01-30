@@ -112,14 +112,14 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
 
     Dimensions.addEventListener('change', handler);
 
-    PubSub.subscribe('CodeScan-https', (msg, { data }) => {
+    PubSub.subscribe('CodeScan-https:', (msg, { data }) => {
       addrRef.current?.blur();
       setTimeout(() => goTo(data), 1000);
     });
 
     return () => {
       Dimensions.removeEventListener('change', handler);
-      PubSub.unsubscribe('CodeScan-https');
+      PubSub.unsubscribe('CodeScan-https:');
     };
   }, []);
 

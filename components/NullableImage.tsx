@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { StyleProp, Text, View, ViewStyle } from 'react-native';
 
-import { FontStyle } from 'react-native-svg';
 import Image from 'react-native-expo-cached-image';
 import { genColor } from '../utils/emoji';
 
@@ -38,19 +37,21 @@ export default ({
 
   return (
     <View style={{ position: 'relative', ...(containerStyle || ({} as any)) }}>
-      <View
-        style={{
-          width,
-          height,
-          position: 'absolute',
-          borderRadius: (width || size || 0) / 2,
-          backgroundColor: defaultColor,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Text style={{ color: '#fff', fontSize, fontWeight: '600', ...(fontStyle || ({} as any)) }}>{text?.[0]}</Text>
-      </View>
+      {iconFailed && (
+        <View
+          style={{
+            width,
+            height,
+            position: 'absolute',
+            borderRadius: (width || size || 0) / 2,
+            backgroundColor: defaultColor,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Text style={{ color: '#fff', fontSize, fontWeight: '600', ...(fontStyle || ({} as any)) }}>{text?.[0]}</Text>
+        </View>
+      )}
 
       <Image
         source={{ uri }}

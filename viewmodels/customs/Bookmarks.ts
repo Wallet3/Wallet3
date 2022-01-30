@@ -100,7 +100,7 @@ class Bookmarks {
   }
 
   addRecentSite(metadata: PageMetadata) {
-    if (!metadata?.title) return;
+    console.log(metadata);
 
     const index = this.recentSites.findIndex((s) => s.hostname === metadata.hostname);
 
@@ -110,9 +110,9 @@ class Bookmarks {
       return;
     }
 
-    const deniedColors = ['#ffffff', '#000000', 'white', '#fff', '#000', 'black', 'hsl(0, 0%, 100%)', null];
+    const deniedColors = ['#ffffff', '#000000', 'white', '#fff', '#000', 'black', 'hsl(0, 0%, 100%)', null, undefined];
 
-    metadata.themeColor = deniedColors.includes(metadata.themeColor) ? '#999' : metadata.themeColor;
+    metadata.themeColor = deniedColors.includes(metadata.themeColor?.toLowerCase()) ? '#999' : metadata.themeColor;
 
     this.recentSites.unshift(metadata);
 

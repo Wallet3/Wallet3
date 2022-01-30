@@ -18,7 +18,7 @@ const appSchemes = [
   'abt:',
 ];
 
-const urls = ['https'];
+const urls = ['https:'];
 
 const supportedSchemes = ['ethereum', '0x', 'wc:', 'wallet3sync:'].concat(appSchemes).concat(urls);
 
@@ -40,7 +40,7 @@ class LinkHub {
 
     if (!scheme) {
       if (isURL(uri)) {
-        PubSub.publish(`CodeScan-https`, { data: uri.startsWith('http') ? uri : `https://${uri}`, extra });
+        PubSub.publish(`CodeScan-https:`, { data: uri.startsWith('http:') ? uri : `https://${uri}`, extra });
         return true;
       }
 
