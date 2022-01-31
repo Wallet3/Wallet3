@@ -9,8 +9,8 @@ import {
   HecoPopularTokens,
   IToken,
   PolygonPopularTokens,
+  RoninPopularTokens,
   xDaiPopularTokens,
-  zkSyncTestPopularTokens,
 } from './Tokens';
 
 export interface INetwork {
@@ -129,7 +129,7 @@ export const PublicNetworks: INetwork[] = [
     chainId: 2020,
     network: 'Ronin',
     color: '#1273EA',
-    defaultTokens: [],
+    defaultTokens: RoninPopularTokens,
     explorer: 'https://explorer.roninchain.com',
     addrPrefix: 'ronin:',
   },

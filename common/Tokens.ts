@@ -628,19 +628,25 @@ const Aurora_DAI = {
   address: '',
 };
 
-const zkSyncTest_USDC = {
-  address: '0xeb8f08a975Ab53E34D8a0330E0D34de942C95926',
+const Ronin_AXS = {
+  address: '0x97a9107C1793BC407d6F527b77e7fff4D812bece',
+  decimals: 18,
+  symbol: 'AXS',
+};
+
+const Ronin_SLP = {
+  address: '0xa8754b9Fa15fc18BB59458815510E40a12cD2014',
+  decimals: 0,
+  symbol: 'SLP',
+};
+
+const Ronin_USDC = {
+  address: '0x0B7007c13325C48911F73A2daD5FA5dCBf808aDc',
   decimals: 6,
   symbol: 'USDC',
 };
 
-const zkSyncTest_DAI = {
-  address: '0x70a4fCF3e4C8591B5B4318CEC5fACbB96a604198',
-  decimals: 18,
-  symbol: 'DAI',
-};
-
-export const zkSyncTestPopularTokens = [zkSyncTest_USDC, zkSyncTest_DAI];
+export const RoninPopularTokens = [Ronin_AXS, Ronin_SLP, Ronin_USDC];
 
 const all = [
   ...Stablecoins,
