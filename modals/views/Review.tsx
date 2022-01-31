@@ -81,7 +81,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
               <Image source={{ uri: vm.avatar }} style={{ width: 15, height: 15, marginEnd: 5, borderRadius: 100 }} />
             ) : undefined}
             <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>
-              {utils.isAddress(vm.to) ? formatAddress(vm.to, 7, 5) : vm.to}
+              {utils.isAddress(vm.to) ? formatAddress(vm.to, 7, 5) : formatAddress(vm.to, 14, 6, '...')}
             </Text>
           </View>
         </View>

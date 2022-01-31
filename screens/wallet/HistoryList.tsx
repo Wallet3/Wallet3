@@ -54,7 +54,7 @@ const Tx = observer(
     const dappIcon = item.readableInfo?.icon;
     const amount: string = item.readableInfo?.amount ?? utils.formatEther(item.value ?? '0');
 
-    const to: string = item.readableInfo?.recipient ?? item.readableInfo.dapp ?? item.to;
+    const to: string = item.readableInfo?.recipient ?? item.readableInfo.dapp ?? item.to ?? '';
     const status = item.blockNumber ? (item.status ? 'confirmed' : 'failed') : 'pending';
     const methodName = t(`home-history-item-type-${method ?? (item.data !== '0x' ? 'contract-interaction' : 'sent')}`);
 
@@ -104,7 +104,7 @@ const Tx = observer(
               <Text style={{ fontWeight: '300', marginEnd: 2, color: textColor }}>{t('home-history-item-to')}:</Text>
             )}
             <Text style={{ fontWeight: '300', maxWidth: 210, color: textColor }} numberOfLines={1}>
-              {to.length === 42 ? formatAddress(to!, 10, 5) : to}
+              {to.startsWith('0x') || to.includes(':') ? formatAddress(to!, 10, 5) : to}
             </Text>
           </View>
           <Text style={{ fontWeight: '300', color: textColor }}>{dayjs(item.timestamp ?? 0).format('YYYY-MM-DD')}</Text>

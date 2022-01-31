@@ -73,7 +73,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         address={currentAccount?.address}
         balance={currentAccount?.balance}
         currency={CurrencyViewmodel.currentCurrency.symbol}
-        network={current.network}
+        network={current}
         chainId={current.chainId}
         avatar={currentAccount?.avatar}
         ens={currentAccount?.ens.name}

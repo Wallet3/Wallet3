@@ -28,6 +28,10 @@ export class TokenTransferring extends BaseTransaction {
     return !utils.isAddress(this.to);
   }
 
+  get hasNonAscii() {
+    return [...this.to].some((char) => char.charCodeAt(0) > 127);
+  }
+
   get isValidAddress() {
     return utils.isAddress(this.toAddress);
   }
@@ -127,6 +131,8 @@ export class TokenTransferring extends BaseTransaction {
     makeObservable(this, {
       to: observable,
       toAddress: observable,
+      isValidAddress: computed,
+      hasNonAscii: computed,
       token: observable,
       amount: observable,
       isResolvingAddress: observable,

@@ -6,6 +6,7 @@ import { numericFontFamily, themeColor } from '../../constants/styles';
 import AnimateNumber from 'react-native-animate-number';
 import ColorLogos from '../../assets/icons/networks/color';
 import CopyableText from '../../components/CopyableText';
+import { INetwork } from '../../common/Networks';
 import Image from 'react-native-expo-cached-image';
 import Langs from '../../viewmodels/settings/Langs';
 import React from 'react';
@@ -18,7 +19,7 @@ interface Props {
   style?: StyleProp<ViewStyle>;
   balance?: number;
   currency?: string;
-  network?: string;
+  network?: INetwork;
   connectedApps?: number;
   address?: string;
   ens?: string;
@@ -55,6 +56,8 @@ export default observer(
   }: Props) => {
     const { t } = i18n;
 
+    const prefixedAddress = network?.addrPrefix ? `${network?.addrPrefix}${address?.substring(2)}` : address;
+
     return (
       <View style={{ ...styles.container, ...((style as any) || {}) }}>
         <View
@@ -69,7 +72,7 @@ export default observer(
               style={{ flexDirection: 'row', alignItems: 'center' }}
               onPress={() => PubSub.publish('openNetworksMenu')}
             >
-              <Text style={{ ...styles.text, fontSize: 16, color: textColor }}>{network}</Text>
+              <Text style={{ ...styles.text, fontSize: 16, color: textColor }}>{network?.network}</Text>
               <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 2 }} color={textColor} size={12} />
             </TouchableOpacity>
 
@@ -97,8 +100,8 @@ export default observer(
         </View>
 
         <CopyableText
-          copyText={address || ''}
-          title={formatAddress(address || '', 8, 5)}
+          copyText={prefixedAddress || ''}
+          title={formatAddress(prefixedAddress || '', 6 + (network?.addrPrefix?.length ?? 0), 5)}
           iconSize={10}
           iconColor={textColor}
           iconStyle={{ marginHorizontal: 5 }}
