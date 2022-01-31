@@ -189,6 +189,13 @@ export class TokenTransferring extends BaseTransaction {
       return;
     }
 
+    if (this.network.addrPrefix && to.toLowerCase().startsWith(this.network.addrPrefix)) {
+      const addr = to.substring(this.network.addrPrefix.length);
+      this.toAddress = addr.startsWith('0x') ? addr : `0x${addr}`;
+      this.isResolvingAddress = false;
+      return;
+    }
+
     if (!to.endsWith('.eth')) return;
     let provider = Networks.MainnetWsProvider;
 

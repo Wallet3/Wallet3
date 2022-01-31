@@ -28,6 +28,7 @@ export interface INetwork {
   blockTimeMs?: number;
   explorer: string;
   rpcUrls?: string[];
+  addrPrefix?: string;
 }
 
 export const PublicNetworks: INetwork[] = [
@@ -121,6 +122,16 @@ export const PublicNetworks: INetwork[] = [
     color: '#70d44b',
     defaultTokens: [],
     explorer: 'https://explorer.aurora.dev',
+  },
+  {
+    symbol: 'RON',
+    comm_id: 'ron',
+    chainId: 2020,
+    network: 'Ronin',
+    color: '#1273EA',
+    defaultTokens: [],
+    explorer: 'https://explorer.roninchain.com',
+    addrPrefix: 'ronin:',
   },
   {
     symbol: 'FTM',

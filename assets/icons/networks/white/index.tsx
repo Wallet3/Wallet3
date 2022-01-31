@@ -13,6 +13,7 @@ import OKEx from './okex.svg';
 import Optimism from './optimism.svg';
 import Polygon from './polygon.svg';
 import React from 'react';
+import Ronin from './ronin.svg';
 import XDai from './xdai.svg';
 import styles from '../styles';
 
@@ -32,4 +33,5 @@ export default {
   1313161554: <Aurora width={49} height={49} style={styles.aurora} />,
   25: <Cronos width={49} height={49} style={styles.cronos} />,
   1666600000: <Harmony width={52} height={52} style={styles.harmony} />,
+  2020: <Ronin width={42} height={42} style={styles.ronin} />,
 };

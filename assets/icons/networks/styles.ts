@@ -105,4 +105,11 @@ export default StyleSheet.create({
     alignSelf: 'flex-end',
     opacity: 0.72,
   },
+
+  ronin: {
+    marginTop: -37,
+    marginEnd: -7,
+    alignSelf: 'flex-end',
+    opacity: 1,
+  },
 });

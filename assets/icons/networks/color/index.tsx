@@ -20,6 +20,7 @@ import OKEx from './okex.svg';
 import Optimism from './optimism.svg';
 import Polygon from './polygon.svg';
 import React from 'react';
+import Ronin from './ronin.svg';
 import XDai from './xdai.svg';
 import ZKSync from './zksync.svg';
 import styles from '../styles';
@@ -85,6 +86,7 @@ const MOONRIVER = generateNetworkIcon({
   style: { marginHorizontal: -2, marginVertical: 1 },
 });
 const MOONBEAM = generateNetworkIcon({ chainId: 1284, width: 32, height: 32 });
+const RONIN = generateNetworkIcon({ chainId: 2020, width: 32, height: 32 });
 
 // const ZSYNC = <ZKSync width={32} height={32} />;
 
@@ -107,6 +109,7 @@ export const NetworkIcons = {
   61: ETC,
   1284: MOONBEAM,
   1285: MOONRIVER,
+  2020: RONIN,
   // zksync: ZSYNC,
 };
 
@@ -160,6 +163,8 @@ export function generateNetworkIcon(props: {
       return <Moonbeam key={chainId} width={width} height={height ?? width} style={style} />;
     case 1285:
       return <Moonriver key={chainId} width={width} height={height ?? width} style={style} />;
+    case 2020:
+      return <Ronin key={chainId} width={width} height={height ?? width} style={style} />;
     default:
       return <EVMIcon key={chainId} size={width} color={color!} style={style} hideEVMTitle={hideEVMTitle} />;
   }
