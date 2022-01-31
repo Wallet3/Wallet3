@@ -264,7 +264,7 @@ export class InpageMetamaskDAppHub extends EventEmitter {
 
       switch (method) {
         case 'personal_sign':
-          msg = Buffer.from(utils.arrayify(params[0])).toString('utf8');
+          msg = utils.isBytesLike(params[0]) ? Buffer.from(utils.arrayify(params[0])).toString('utf8') : params[0];
           type = 'plaintext';
           break;
         case 'eth_signTypedData':

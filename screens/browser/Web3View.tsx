@@ -303,7 +303,7 @@ export default observer((props: Web3ViewProps) => {
                   {generateNetworkIcon({
                     chainId: appNetwork.chainId,
                     color: `${appNetwork.color}`,
-                    width: 22,
+                    width: 23,
                     style: {},
                     hideEVMTitle: true,
                   })}
