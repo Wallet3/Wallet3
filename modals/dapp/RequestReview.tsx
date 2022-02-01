@@ -7,6 +7,7 @@ import { Account } from '../../viewmodels/account/Account';
 import AccountIndicator from '../components/AccountIndicator';
 import AnimateNumber from 'react-native-animate-number';
 import Avatar from '../../components/Avatar';
+import { BioType } from '../../viewmodels/Authentication';
 import Currency from '../../viewmodels/settings/Currency';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';
 import GasReview from '../views/GasReview';
@@ -31,7 +32,7 @@ interface Props {
   onApprove?: () => Promise<void>;
   onGasPress?: () => void;
   account: Account;
-  bioType?: 'faceid' | 'fingerprint';
+  bioType?: BioType;
 }
 
 const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, bioType }: Props) => {

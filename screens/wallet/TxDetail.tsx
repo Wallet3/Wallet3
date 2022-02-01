@@ -1,6 +1,7 @@
 import { Linking, StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
 
+import { Button } from '../../components';
 import { Gwei_1 } from '../../common/Constants';
 import Networks from '../../viewmodels/Networks';
 import Theme from '../../viewmodels/settings/Theme';
@@ -19,7 +20,16 @@ export default observer(({ tx }: { tx?: Transaction }) => {
   const { backgroundColor } = Theme;
 
   return (
-    <View style={{ padding: 16, paddingVertical: 20, backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
+    <View
+      style={{
+        padding: 16,
+        paddingTop: 16,
+        paddingBottom: 24,
+        backgroundColor,
+        borderTopStartRadius: 6,
+        borderTopEndRadius: 6,
+      }}
+    >
       <View style={styles.itemContainer}>
         <Text style={styles.txt}>{t('modal-tx-details-network')}:</Text>
         <View style={{ flexDirection: 'row', alignItems: 'center', width: '50%', justifyContent: 'flex-end' }}>
@@ -129,6 +139,12 @@ export default observer(({ tx }: { tx?: Transaction }) => {
         <TouchableOpacity onPressIn={() => Linking.openURL(`${network.explorer}/tx/${tx?.hash}`)}>
           <Text style={{ fontSize: 12, color: network.color }}>{t('modal-tx-details-view-on-explorer')}</Text>
         </TouchableOpacity>
+      </View>
+
+      <View style={{ flexDirection: 'row' }}>
+        <Button title={t('button-cancel')} reverse themeColor={network.color} style={{ flex: 1 }} />
+        <View style={{ width: 12 }} />
+        <Button title={t('button-speed-up')} themeColor={network.color} style={{ flex: 1 }} />
       </View>
     </View>
   );

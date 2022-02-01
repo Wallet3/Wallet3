@@ -7,6 +7,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaView, StyleProp, View, ViewStyle } from 'react-native';
 import { renderEmptyCircle, renderFilledCircle } from '../../components/PasscodeCircle';
 
+import { BioType } from '../../viewmodels/Authentication';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
@@ -18,7 +19,7 @@ interface Props {
   onCancel?: () => void;
   disableCancel?: boolean;
   style?: StyleProp<ViewStyle>;
-  bioType?: 'fingerprint' | 'faceid';
+  bioType?: BioType;
   onBioAuth?: () => void;
 }
 
@@ -83,7 +84,7 @@ interface FullPasspadProps {
   themeColor?: string;
   onCodeEntered: (code: string) => Promise<boolean>;
   onBioAuth?: () => void;
-  bioType?: 'fingerprint' | 'faceid';
+  bioType?: BioType;
 }
 
 export const FullPasspad = ({ height, themeColor, onCodeEntered, bioType, onBioAuth }: FullPasspadProps) => {

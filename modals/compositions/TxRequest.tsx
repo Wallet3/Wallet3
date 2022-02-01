@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 
+import { BioType } from '../../viewmodels/Authentication';
 import { Passpad } from '../views';
 import { RawTransactionRequest } from '../../viewmodels/transferring/RawTransactionRequest';
 import RequestReview from '../dapp/RequestReview';
@@ -11,7 +12,7 @@ interface Props {
   app: { icon: string; name: string };
   onApprove: (pin?: string) => Promise<boolean>;
   onReject: () => void;
-  bioType?: 'faceid' | 'fingerprint';
+  bioType?: BioType;
 }
 
 export default ({ themeColor, vm, app, onApprove, onReject, bioType }: Props) => {

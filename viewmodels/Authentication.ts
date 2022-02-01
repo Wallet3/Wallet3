@@ -25,6 +25,8 @@ const keys = {
   pin: 'pin',
 };
 
+export type BioType = 'faceid' | 'fingerprint' | 'iris';
+
 export class Authentication extends EventEmitter {
   private lastBackgroundTimestamp = Date.now();
 
@@ -35,7 +37,7 @@ export class Authentication extends EventEmitter {
   appAuthorized = false;
   userSecretsVerified = false;
 
-  get biometricType() {
+  get biometricType(): BioType | undefined {
     if (!this.biometricsSupported || !this.biometricEnabled) return undefined;
 
     switch (this.supportedTypes[0]) {
