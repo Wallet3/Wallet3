@@ -53,6 +53,7 @@ const Tx = observer(
 
     const dappIcon = item.readableInfo?.icon;
     const amount: string = item.readableInfo?.amount ?? utils.formatEther(item.value ?? '0');
+    const cancelTx = item.readableInfo?.cancelTx;
 
     const to: string = item.readableInfo?.recipient ?? item.readableInfo.dapp ?? item.to ?? '';
     const status = item.blockNumber ? (item.status ? 'confirmed' : 'failed') : 'pending';
@@ -65,7 +66,7 @@ const Tx = observer(
             <Coin symbol={tokenSymbol} size={16} style={{ marginEnd: 4 }} />
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text style={{ fontSize: 16, marginEnd: 4, maxWidth: 180, color: textColor }} numberOfLines={1}>
-                {`${methodName}`}
+                {(cancelTx ? `${t('tip-cancel-action')} ` : '') + `${methodName}`}
               </Text>
               {method === 'contract-interaction' ? undefined : (
                 <Text style={{ fontSize: 16, maxWidth: 150, color: textColor }} numberOfLines={1}>

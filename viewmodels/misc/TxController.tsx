@@ -35,7 +35,6 @@ export class TxController {
       });
 
       if (!txHex || error) {
-        console.log(error);
         if (error) showMessage({ type: 'warning', message: error?.message || error });
         return false;
       }
@@ -43,7 +42,7 @@ export class TxController {
       const broadcastTx = {
         txHex,
         tx,
-        readableInfo: this.tx.readableInfo,
+        readableInfo: { ...(this.tx.readableInfo || {}), cancelTx: extra ? true : false },
       };
 
       wallet.sendTx(broadcastTx);

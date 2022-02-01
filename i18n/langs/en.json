@@ -162,6 +162,7 @@
   "tx-hub-confirmed-msg": "Tx: {{hash}} has been confirmed at block: {{block}}",
   "tip-insufficient-funds": "Insufficient funds",
   "tip-copy-link": "Copy Link",
+  "tip-cancel-action": "[Cancel]",
   "msg-invalid-address": "Invalid address",
   "msg-invalid-qr-code": "Invalid QR code",
   "msg-chain-added": "{{name}} network added",

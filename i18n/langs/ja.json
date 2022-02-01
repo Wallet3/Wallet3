@@ -160,6 +160,7 @@
   "tx-hub-confirmed-msg": "トランザクション: {{hash}} がブロック {{block}} で確認されました。",
   "tip-insufficient-funds": "資金不足",
   "tip-copy-link": "コピーリンク",
+  "tip-cancel-action": "[キャンセル]",
   "msg-invalid-address": "無効なアドレス",
   "msg-invalid-qr-code": "無効な QR コード",
   "msg-chain-added": "{{name}} を追加しました",

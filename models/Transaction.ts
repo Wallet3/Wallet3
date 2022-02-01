@@ -52,7 +52,7 @@ export default class Transaction extends BaseEntity {
   gasUsed?: number;
 
   @Column({ nullable: true, type: 'simple-json' })
-  readableInfo: { type: 'transfer' } & any;
+  readableInfo: { type: 'transfer'; dapp?: string; icon?: string; cancelTx?: boolean } & any;
 }
 
 export interface TransferInfo {

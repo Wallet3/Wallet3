@@ -106,7 +106,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
                   ...reviewItemValueStyle,
                   maxWidth: 120,
                   color: vm.maxUint256Amount ? 'deeppink' : fontColor,
-                  marginEnd: 4,
+                  marginEnd: 8,
                   minWidth: 52,
                 }}
               />

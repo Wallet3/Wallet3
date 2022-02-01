@@ -399,7 +399,7 @@ export class InpageMetamaskDAppHub extends EventEmitter {
       return { error: { message: 'Invalid request' } };
 
     const dapp = await this.getDApp(origin);
-    console.log(asset);
+
     return new Promise((resolve) => {
       const approve = async () => {
         const chainId = Number(dapp?.lastUsedChainId || Networks.current.chainId);

@@ -71,7 +71,6 @@ class TxHub {
       .toArray()
       .flat();
 
-    console.log(pendingTxs);
     runInAction(() => this.pendingTxs.push(...pendingTxs));
     setTimeout(() => this.watchPendingTxs(), 0);
   }

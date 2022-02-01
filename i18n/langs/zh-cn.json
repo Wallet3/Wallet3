@@ -160,6 +160,7 @@
   "tx-hub-confirmed-msg": "交易: {{hash}} 已在区块 {{block}} 上确认",
   "tip-insufficient-funds": "手续费不足",
   "tip-copy-link": "复制链接",
+  "tip-cancel-action": "[取消]",
   "msg-invalid-address": "无效地址",
   "msg-invalid-qr-code": "无效的二维码",
   "msg-chain-added": "{{name}} 添加成功",
