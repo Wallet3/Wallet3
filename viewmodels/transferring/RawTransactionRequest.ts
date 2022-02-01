@@ -11,14 +11,14 @@ import { INetwork } from '../../common/Networks';
 import Networks from '../Networks';
 import { WalletConnect_v1 } from '../walletconnect/WalletConnect_v1';
 
-export interface SpeedupAbleParams extends WCCallRequest_eth_sendTransaction {
-  minGasPrice?: number;
+export interface SpeedupAbleSendParams extends WCCallRequest_eth_sendTransaction {
+  speedUp?: boolean;
 }
 
 interface IConstructor {
   network: INetwork;
   account: Account;
-  param: SpeedupAbleParams;
+  param: SpeedupAbleSendParams;
 }
 
 type RequestType = 'Transfer' | 'Contract Interaction' | 'Approve' | 'Unknown';
@@ -77,7 +77,7 @@ export class RawTransactionRequest extends BaseTransaction {
   }
 
   constructor({ param, network, account }: IConstructor) {
-    super({ network, account });
+    super({ network, account }, !param.speedUp);
 
     this.param = param;
 
@@ -100,7 +100,7 @@ export class RawTransactionRequest extends BaseTransaction {
     return this.network.symbol;
   }
 
-  async parseRequest(param: WCCallRequest_eth_sendTransaction) {
+  async parseRequest(param: SpeedupAbleSendParams) {
     const { methodFunc, type } = parseRequestType(param.data);
 
     this.type = type;
@@ -137,6 +137,14 @@ export class RawTransactionRequest extends BaseTransaction {
       runInAction(() => this.setGasLimit(param.gas || param.gasLimit || 0));
     } else {
       this.estimateGas({ from: this.account.address, to: param.to, data: param.data, value: param.value });
+    }
+
+    if (param.gasPrice && param.speedUp) {
+      this.setMaxGasPrice(Number(param.gasPrice) / Gwei_1);
+    }
+
+    if (param.priorityPrice && param.speedUp) {
+      this.setPriorityPrice(Number(param.priorityPrice) / Gwei_1);
     }
 
     if (param.nonce) runInAction(() => this.setNonce(param.nonce));

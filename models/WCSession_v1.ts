@@ -45,6 +45,7 @@ export interface WCCallRequest_eth_sendTransaction {
   from: string;
   to: string;
   gasPrice: string;
+  priorityPrice?: string;
   gas: string;
   gasLimit?: string;
   value: string;

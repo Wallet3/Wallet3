@@ -25,7 +25,7 @@ export class BaseTransaction {
   nonce = 0;
   txException = '';
 
-  constructor(args: { network: INetwork; account: Account }) {
+  constructor(args: { network: INetwork; account: Account }, initChainData = true) {
     this.network = args.network;
     this.account = args.account;
     this.wallet = App.findWallet(this.account.address)!.wallet;
@@ -51,7 +51,8 @@ export class BaseTransaction {
     });
 
     this.nativeToken.getBalance();
-    this.initChainData({ ...args, account: args.account.address });
+
+    if (initChainData) this.initChainData({ ...args, account: args.account.address });
 
     if (this.network.eip1559) this.refreshEIP1559(this.network.chainId);
   }
@@ -105,15 +106,15 @@ export class BaseTransaction {
     } catch (error) {}
   }
 
-  setMaxGasPrice(price: string | number) {
+  setMaxGasPrice(gwei: string | number) {
     try {
-      this.maxGasPrice = Math.max(Math.min(Number(price), MAX_GWEI_PRICE), 0);
+      this.maxGasPrice = Math.max(Math.min(Number(gwei), MAX_GWEI_PRICE), 0);
     } catch {}
   }
 
-  setPriorityPrice(price: string | number) {
+  setPriorityPrice(gwei: string | number) {
     try {
-      this.maxPriorityPrice = Math.max(Math.min(Number(price), MAX_GWEI_PRICE), 0);
+      this.maxPriorityPrice = Math.max(Math.min(Number(gwei), MAX_GWEI_PRICE), 0);
     } catch (error) {}
   }
 

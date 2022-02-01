@@ -32,7 +32,7 @@ export default observer(({ tx }: { tx?: Transaction }) => {
       style={{
         padding: 16,
         paddingTop: 16,
-        paddingBottom: 24,
+        paddingBottom: 32,
         backgroundColor,
         borderTopStartRadius: 6,
         borderTopEndRadius: 6,
@@ -158,7 +158,7 @@ export default observer(({ tx }: { tx?: Transaction }) => {
           onPress={() => speedUp(true)}
         />
         <View style={{ width: 12 }} />
-        <Button title={t('button-speed-up')} themeColor={network.color} style={{ flex: 1 }} onPress={speedUp} />
+        <Button title={t('button-speed-up')} themeColor={network.color} style={{ flex: 1 }} onPress={() => speedUp()} />
       </View>
     </View>
   );

@@ -2,7 +2,7 @@ import { providers, utils } from 'ethers';
 
 import { InpageDAppTxRequest } from '../hubs/InpageMetamaskDAppHub';
 import Networks from '../Networks';
-import { SpeedupAbleParams } from '../transferring/RawTransactionRequest';
+import { SpeedupAbleSendParams } from '../transferring/RawTransactionRequest';
 import Transaction from '../../models/Transaction';
 import { WCCallRequest_eth_sendTransaction } from '../../models/WCSession_v1';
 
@@ -34,8 +34,10 @@ export class TxController {
         data: extra?.data || this.tx.data,
         gas: `${this.tx.gas}`,
         nonce: `${this.tx.nonce}`,
-        minGasPrice: Number.parseInt((this.tx.gasPrice * 1.101) as any),
-      } as SpeedupAbleParams,
+        gasPrice: Number.parseInt((this.tx.gasPrice * 1.101) as any).toString(),
+        priorityPrice: Number.parseInt((this.tx.priorityPrice * 1.101) as any).toString(),
+        speedUp: true,
+      } as SpeedupAbleSendParams,
       chainId: this.network.chainId,
       account: utils.getAddress(this.tx.from),
       app: { name: this.tx.readableInfo.dapp || extra?.title || '🚀 Speed Up', icon: this.tx.readableInfo.icon || '' },
