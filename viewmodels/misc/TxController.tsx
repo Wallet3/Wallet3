@@ -1,10 +1,13 @@
 import { providers, utils } from 'ethers';
 
+import App from '../App';
 import { InpageDAppTxRequest } from '../hubs/InpageMetamaskDAppHub';
 import Networks from '../Networks';
 import { SpeedupAbleSendParams } from '../transferring/RawTransactionRequest';
 import Transaction from '../../models/Transaction';
 import { WCCallRequest_eth_sendTransaction } from '../../models/WCSession_v1';
+import i18n from '../../i18n';
+import { showMessage } from 'react-native-flash-message';
 
 export class TxController {
   private tx: Transaction;
@@ -18,11 +21,37 @@ export class TxController {
   }
 
   speedUp(extra?: { data?: string; to?: string; title?: string }) {
-    const approve = ({ pin, tx, readableInfo }: { pin?: string; tx: providers.TransactionRequest; readableInfo: any }) => {};
+    const approve = async ({ pin, tx }: { pin?: string; tx: providers.TransactionRequest; readableInfo: any }) => {
+      const { wallet, accountIndex } = App.findWallet(this.tx.from) || {};
+      if (!wallet) {
+        showMessage({ message: i18n.t('msg-account-not-found'), type: 'warning' });
+        return false;
+      }
+
+      const { txHex, error } = await wallet.signTx({
+        tx,
+        pin,
+        accountIndex: accountIndex!,
+      });
+
+      if (!txHex || error) {
+        console.log(error);
+        if (error) showMessage({ type: 'warning', message: error?.message || error });
+        return false;
+      }
+
+      const broadcastTx = {
+        txHex,
+        tx,
+        readableInfo: this.tx.readableInfo,
+      };
+
+      wallet.sendTx(broadcastTx);
+
+      return true;
+    };
 
     const reject = () => {};
-
-    console.log(this.tx);
 
     PubSub.publish('openInpageDAppSendTransaction', {
       approve,

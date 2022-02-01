@@ -191,7 +191,7 @@ export class RawTransactionRequest extends BaseTransaction {
       from: this.param.from || this.account.address,
       to: this.param.to,
       data: this.param.data || '0x',
-      value: this.param.value || '0x0',
+      value: BigNumber.from(this.param.value || '0x0'),
 
       nonce: this.nonce,
       gasLimit: this.gasLimit,
