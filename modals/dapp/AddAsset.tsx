@@ -33,7 +33,10 @@ export default ({ themeColor, approve, reject, asset }: Props) => {
         <View style={reviewItemStyle}>
           <Text style={styles.reviewItemTitle}>{t('modal-dapp-add-asset-currency')}</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Image source={{ uri: asset.options?.image }} style={{ width: 19, height: 19, marginEnd: 4 }} />
+            <Image
+              source={{ uri: Array.isArray(asset.options?.image) ? asset.options?.image[0] : asset.options?.image }}
+              style={{ width: 19, height: 19, marginEnd: 4 }}
+            />
             <Text style={{ ...reviewItemValueStyle, maxWidth: 180 }} numberOfLines={1}>
               {asset.options?.symbol}
             </Text>

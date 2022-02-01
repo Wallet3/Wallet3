@@ -5,6 +5,7 @@ import { getTransactionReceipt, sendTransaction } from '../../common/RPC';
 
 import Database from '../../models/Database';
 import Enumerable from 'linq';
+import LINQ from 'linq';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 import { showMessage } from 'react-native-flash-message';
@@ -58,8 +59,20 @@ class TxHub {
       })
     );
 
-    unconfirmedTxs = unconfirmedTxs.filter((tx) => !confirmedTxs.includes(tx));
-    runInAction(() => this.pendingTxs.push(...unconfirmedTxs));
+    const pendingTxs = LINQ.from(unconfirmedTxs)
+      .where((t) => !confirmedTxs.includes(t))
+      .groupBy((t) => t.chainId)
+      .select((g) =>
+        g
+          .orderByDescending((t) => t.gasPrice)
+          .distinct((t) => t.nonce)
+          .toArray()
+      )
+      .toArray()
+      .flat();
+
+    console.log(pendingTxs);
+    runInAction(() => this.pendingTxs.push(...pendingTxs));
     setTimeout(() => this.watchPendingTxs(), 0);
   }
 

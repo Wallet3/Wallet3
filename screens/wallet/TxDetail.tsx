@@ -151,17 +151,19 @@ export default observer(({ tx, close }: { tx?: Transaction; close?: Function }) 
         </TouchableOpacity>
       </View>
 
-      <View style={{ flexDirection: 'row' }}>
-        <Button
-          title={t('button-cancel-tx')}
-          reverse
-          themeColor={network.color}
-          style={{ flex: 1 }}
-          onPress={() => speedUp(true)}
-        />
-        <View style={{ width: 12 }} />
-        <Button title={t('button-speed-up')} themeColor={network.color} style={{ flex: 1 }} onPress={() => speedUp()} />
-      </View>
+      {tx?.blockNumber && tx.blockNumber >= 0 ? undefined : (
+        <View style={{ flexDirection: 'row' }}>
+          <Button
+            title={t('button-cancel-tx')}
+            reverse
+            themeColor={network.color}
+            style={{ flex: 1 }}
+            onPress={() => speedUp(true)}
+          />
+          <View style={{ width: 12 }} />
+          <Button title={t('button-speed-up')} themeColor={network.color} style={{ flex: 1 }} onPress={() => speedUp()} />
+        </View>
+      )}
     </View>
   );
 });

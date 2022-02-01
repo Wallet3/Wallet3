@@ -49,7 +49,7 @@ interface WatchAssetParams {
     address: string; // The address of the token contract
     symbol: string; // A ticker symbol or shorthand, up to 5 characters
     decimals: number; // The number of token decimals
-    image: string; // A string url of the token logo
+    image: string | string[]; // A string url of the token logo
   };
 }
 
@@ -399,7 +399,7 @@ export class InpageMetamaskDAppHub extends EventEmitter {
       return { error: { message: 'Invalid request' } };
 
     const dapp = await this.getDApp(origin);
-
+    console.log(asset);
     return new Promise((resolve) => {
       const approve = async () => {
         const chainId = Number(dapp?.lastUsedChainId || Networks.current.chainId);
@@ -419,7 +419,7 @@ export class InpageMetamaskDAppHub extends EventEmitter {
             address: utils.getAddress(asset.options.address),
             decimals: asset.options.decimals,
             symbol: asset.options.symbol,
-            iconUrl: asset.options.image,
+            iconUrl: Array.isArray(asset.options.image) ? asset.options.image[0] : asset.options.image,
             shown: true,
           },
           chainId

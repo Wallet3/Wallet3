@@ -89,7 +89,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
                 textAlign="right"
                 maxLength={12}
                 style={{ ...reviewItemValueStyle, fontSize: 20 }}
-                defaultValue={`${vm.maxPriorityPrice.toFixed(6)}`}
+                defaultValue={`${Number(vm.maxPriorityPrice.toFixed(6))}`}
                 onChangeText={(txt) => vm.setPriorityPrice(txt)}
               />
               <Text style={{ ...styles.gasGweiLabel, marginTop: -2 }}>Gwei</Text>

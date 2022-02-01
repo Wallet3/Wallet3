@@ -152,7 +152,7 @@
   "modal-tx-details-status-failed": "失败",
   "modal-tx-details-status-pending": "确认中",
   "modal-tx-details-block-height": "区块高度",
-  "modal-tx-details-timestamp": "确认时间",
+  "modal-tx-details-timestamp": "交易时间",
   "modal-tx-details-data": "数据",
   "modal-tx-details-view-on-explorer": "区块链浏览器上查看",
   "tx-hub-transaction-confirmed": "交易已确认",
