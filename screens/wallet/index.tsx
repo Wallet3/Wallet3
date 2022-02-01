@@ -117,7 +117,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
           snapPoint={500}
           modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
         >
-          <TxDetail tx={selectedTx} />
+          <TxDetail tx={selectedTx} close={closeTxDetail} />
         </Modalize>
       </Portal>
     </View>

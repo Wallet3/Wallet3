@@ -69,11 +69,14 @@ export class TxController {
       } as SpeedupAbleSendParams,
       chainId: this.network.chainId,
       account: utils.getAddress(this.tx.from),
-      app: { name: this.tx.readableInfo.dapp || extra?.title || '🚀 Speed Up', icon: this.tx.readableInfo.icon || '' },
+      app: {
+        name: this.tx.readableInfo.dapp || extra?.title || `🚀 ${i18n.t('button-speed-up')}`,
+        icon: this.tx.readableInfo.icon || '',
+      },
     } as InpageDAppTxRequest);
   }
 
   cancel() {
-    this.speedUp({ data: '0x', to: this.tx.from, title: 'Cancel Tx', value: BigNumber.from(0) });
+    this.speedUp({ data: '0x', to: this.tx.from, title: `⛔️ ${i18n.t('button-cancel-tx')}`, value: BigNumber.from(0) });
   }
 }

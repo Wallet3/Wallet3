@@ -15,7 +15,7 @@ import { observer } from 'mobx-react-lite';
 import { thirdFontColor } from '../../constants/styles';
 import { utils } from 'ethers';
 
-export default observer(({ tx }: { tx?: Transaction }) => {
+export default observer(({ tx, close }: { tx?: Transaction; close?: Function }) => {
   const { t } = i18n;
   const [network] = useState(Networks.find(tx?.chainId || 1) || Networks.current);
   const { backgroundColor } = Theme;
@@ -25,6 +25,8 @@ export default observer(({ tx }: { tx?: Transaction }) => {
 
     const vm = new TxController(tx);
     cancelTx ? vm.cancel() : vm.speedUp();
+
+    close?.();
   };
 
   return (
