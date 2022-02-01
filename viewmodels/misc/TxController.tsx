@@ -1,4 +1,4 @@
-import { providers, utils } from 'ethers';
+import { BigNumber, BigNumberish, providers, utils } from 'ethers';
 
 import App from '../App';
 import { InpageDAppTxRequest } from '../hubs/InpageMetamaskDAppHub';
@@ -20,9 +20,9 @@ export class TxController {
     return Networks.find(this.tx.chainId || 1) || Networks.current;
   }
 
-  speedUp(extra?: { data?: string; to?: string; title?: string }) {
+  speedUp(extra?: { data?: string; to?: string; title?: string; value: BigNumberish }) {
     const approve = async ({ pin, tx }: { pin?: string; tx: providers.TransactionRequest; readableInfo: any }) => {
-      const { wallet, accountIndex } = App.findWallet(this.tx.from) || {};
+      const { wallet, accountIndex } = App.findWallet(utils.getAddress(this.tx.from)) || {};
       if (!wallet) {
         showMessage({ message: i18n.t('msg-account-not-found'), type: 'warning' });
         return false;
@@ -59,7 +59,7 @@ export class TxController {
       param: {
         from: this.tx.from,
         to: extra?.to || this.tx.to,
-        value: this.tx.value,
+        value: extra?.value ?? this.tx.value,
         data: extra?.data || this.tx.data,
         gas: `${this.tx.gas}`,
         nonce: `${this.tx.nonce}`,
@@ -74,6 +74,6 @@ export class TxController {
   }
 
   cancel() {
-    this.speedUp({ data: '0x', to: this.tx.from, title: 'Cancel Tx' });
+    this.speedUp({ data: '0x', to: this.tx.from, title: 'Cancel Tx', value: BigNumber.from(0) });
   }
 }

@@ -173,6 +173,8 @@
   "button-next": "继续",
   "button-save": "保存",
   "button-done": "完成",
+  "button-speed-up": "加速交易",
+  "button-cancel-tx": "取消交易",
   "button-cancel": "取消",
   "button-connect": "连接",
   "button-reject": "拒绝",
