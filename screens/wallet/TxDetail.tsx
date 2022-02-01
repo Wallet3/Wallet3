@@ -7,6 +7,7 @@ import Networks from '../../viewmodels/Networks';
 import Theme from '../../viewmodels/settings/Theme';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Transaction from '../../models/Transaction';
+import { TxController } from '../../viewmodels/misc/TxController';
 import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
@@ -18,6 +19,13 @@ export default observer(({ tx }: { tx?: Transaction }) => {
   const { t } = i18n;
   const [network] = useState(Networks.find(tx?.chainId || 1) || Networks.current);
   const { backgroundColor } = Theme;
+
+  const speedUp = (cancelTx?: boolean) => {
+    if (!tx) return;
+
+    const vm = new TxController(tx);
+    cancelTx ? vm.cancel() : vm.speedUp();
+  };
 
   return (
     <View
@@ -142,9 +150,15 @@ export default observer(({ tx }: { tx?: Transaction }) => {
       </View>
 
       <View style={{ flexDirection: 'row' }}>
-        <Button title={t('button-cancel')} reverse themeColor={network.color} style={{ flex: 1 }} />
+        <Button
+          title={t('button-cancel-tx')}
+          reverse
+          themeColor={network.color}
+          style={{ flex: 1 }}
+          onPress={() => speedUp(true)}
+        />
         <View style={{ width: 12 }} />
-        <Button title={t('button-speed-up')} themeColor={network.color} style={{ flex: 1 }} />
+        <Button title={t('button-speed-up')} themeColor={network.color} style={{ flex: 1 }} onPress={speedUp} />
       </View>
     </View>
   );

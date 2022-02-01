@@ -11,10 +11,14 @@ import { INetwork } from '../../common/Networks';
 import Networks from '../Networks';
 import { WalletConnect_v1 } from '../walletconnect/WalletConnect_v1';
 
+export interface SpeedupAbleParams extends WCCallRequest_eth_sendTransaction {
+  minGasPrice?: number;
+}
+
 interface IConstructor {
   network: INetwork;
   account: Account;
-  param: WCCallRequest_eth_sendTransaction;
+  param: SpeedupAbleParams;
 }
 
 type RequestType = 'Transfer' | 'Contract Interaction' | 'Approve' | 'Unknown';
