@@ -1,66 +1,66 @@
 PODS:
   - boost-for-react-native (1.63.0)
   - DoubleConversion (1.1.6)
-  - EXApplication (4.0.1):
+  - EXApplication (4.0.2):
     - ExpoModulesCore
-  - EXBarCodeScanner (11.2.0):
+  - EXBarCodeScanner (11.2.1):
     - EXImageLoader
     - ExpoModulesCore
     - ZXingObjC/OneD
     - ZXingObjC/PDF417
   - EXBlur (11.0.0):
     - ExpoModulesCore
-  - EXClipboard (2.1.0):
+  - EXClipboard (2.1.1):
     - ExpoModulesCore
   - EXConstants (13.0.1):
     - ExpoModulesCore
-  - EXCrypto (10.1.1):
+  - EXCrypto (10.1.2):
     - ExpoModulesCore
-  - EXErrorRecovery (3.0.4):
+  - EXErrorRecovery (3.0.5):
     - ExpoModulesCore
   - EXFileSystem (13.0.3):
     - ExpoModulesCore
-  - EXFont (10.0.4):
+  - EXFont (10.0.5):
     - ExpoModulesCore
   - EXImageLoader (3.1.0):
     - ExpoModulesCore
     - React-Core
   - EXJSONUtils (0.2.0)
-  - EXKeepAwake (10.0.1):
+  - EXKeepAwake (10.0.2):
     - ExpoModulesCore
-  - EXLocalAuthentication (12.1.0):
+  - EXLocalAuthentication (12.1.1):
     - ExpoModulesCore
   - EXManifests (0.2.2):
     - EXJSONUtils
-  - Expo (44.0.5):
+  - Expo (44.0.6):
     - ExpoModulesCore
-  - ExpoHaptics (11.1.0):
+  - ExpoHaptics (11.1.1):
     - ExpoModulesCore
-  - ExpoLocalization (12.0.0):
+  - ExpoLocalization (12.0.1):
     - ExpoModulesCore
-  - ExpoModulesCore (0.6.4):
+  - ExpoModulesCore (0.6.5):
     - React-Core
     - ReactCommon/turbomodule/core
-  - EXRandom (12.1.1):
+  - EXRandom (12.1.2):
     - React-Core
-  - EXScreenCapture (4.1.0):
+  - EXScreenCapture (4.1.1):
     - ExpoModulesCore
-  - EXSecureStore (11.1.0):
+  - EXSecureStore (11.1.1):
     - ExpoModulesCore
-  - EXSplashScreen (0.14.1):
+  - EXSplashScreen (0.14.2):
     - ExpoModulesCore
     - React-Core
-  - EXSQLite (10.1.0):
+  - EXSQLite (10.1.1):
     - ExpoModulesCore
   - EXStructuredHeaders (2.1.0)
-  - EXUpdates (0.11.5):
+  - EXUpdates (0.11.6):
     - EXManifests
     - ExpoModulesCore
     - EXStructuredHeaders
     - EXUpdatesInterface
     - React-Core
   - EXUpdatesInterface (0.5.0)
-  - EXWebBrowser (10.1.0):
+  - EXWebBrowser (10.1.1):
     - ExpoModulesCore
   - FBLazyVector (0.64.3)
   - FBReactNativeSpec (0.64.3):
@@ -619,33 +619,33 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
-  EXApplication: bdc8dc27713235565da1029a34385229f31b8e08
-  EXBarCodeScanner: 7deeeb35f396ce9a13434a75b581c19fc2564205
+  EXApplication: 54fe5bd6268d697771645e8f1aef8b806a65247a
+  EXBarCodeScanner: e5ca0062d8ad1c4c1d2e386d6a308d5a32213020
   EXBlur: 82055865de17cf2cf797ff064c50fb59fcbe703f
-  EXClipboard: 4d6ee6f9572ef999fc323e4b99c8d180e041ad33
+  EXClipboard: 8123fcda680538bb0e1f4e6511106553e52d3760
   EXConstants: 6966f4fa7a22770dd240a66d029819ff94c748c9
-  EXCrypto: e3c0853c2a9ef885928f6227b967b9598132f727
-  EXErrorRecovery: deea88a01d38f8b1c1181b4e1d179b0ba0e4bb5b
+  EXCrypto: ab2ba0df3136a5f2407b8c7e70eb498ac20d704f
+  EXErrorRecovery: b0d7582714a2cc896e94a2308a356f94dbf14ef7
   EXFileSystem: 99aac7962c11c680681819dd9cbca24e20e5b1e7
-  EXFont: 1fb13af43dc517c01c0ff21a6e32f9f9bf2ea602
+  EXFont: 2597c10ac85a69d348d44d7873eccf5a7576ef5e
   EXImageLoader: df83442d32bcfb57b7cfc5690096b6caf8203f8d
   EXJSONUtils: f515cf71710855d7ba5bfc6752af3b9a6f6aad01
-  EXKeepAwake: b571c2ad8323b2fced6e907766e2549f75119471
-  EXLocalAuthentication: 4c7166ed3133d2c75586093833936652e7d2c7fc
+  EXKeepAwake: bf48d7f740a5cd2befed6cf9a49911d385c6c47d
+  EXLocalAuthentication: 3c5f368ee954b79c3778158eb8000cbce4e2f8a2
   EXManifests: 50e42e01335df4e54109dee7be5a91bfd37347db
-  Expo: 337c72b7e9314e93023af79c875930db8e008275
-  ExpoHaptics: c62a5fc7bba0184d0165d559fc2b0fc46168ef40
-  ExpoLocalization: 83582a967db52987a8479490b056d5eb9fd70552
-  ExpoModulesCore: 64abda7af7cf659d2fa092934e29c6f4ea7e849f
-  EXRandom: 06978dcf45075f3c9e17ae5e726b887316ee9877
-  EXScreenCapture: 0146fdf6ca4c3402a1cf62b2ddb739a840e08c94
-  EXSecureStore: fa0fdde1c81ceee2a3cb0519e649feae42767969
-  EXSplashScreen: 7872675b95bb07c25f922b3d3dfae70c76fb5a00
-  EXSQLite: 5b16cc6b280d3c024b0b1d76829dd2161a26acbe
+  Expo: 534e51e607aba8229293297da5585f4b26f50fa1
+  ExpoHaptics: 0d0b69b2414755a4057ffad0a10315902c0ea1b7
+  ExpoLocalization: 72b4524c167da6c4e2a0bbe09176ff8b2c4eddbe
+  ExpoModulesCore: 32c0ccb47f477d330ee93db72505380adf0de09a
+  EXRandom: 1d00fd04d7d874c0c9d1ff87cee59ffe0b638a3d
+  EXScreenCapture: 9bfdadf17f0b1dd082edb704764f1724176b2f27
+  EXSecureStore: b80c74c5ee29d0160c2aace3fd9a24a5edc20015
+  EXSplashScreen: 21669e598804ee810547dbb6692c8deb5dd8dbf3
+  EXSQLite: 908e34753a9dcfbef6a0f3a543ad32a5a6ced452
   EXStructuredHeaders: 2ce79a3770bd3795bade1aab215ada70deae8bbc
-  EXUpdates: 3a24c507f8e444d7c451cb5aebbb2aad0266664c
+  EXUpdates: bd5fa64f02685ed3e96be86b5ca350cdc2cd8d02
   EXUpdatesInterface: f459b515151bd73fff7a35366eace34a6c6a0d3f
-  EXWebBrowser: 37388663fa51cbfc883de2244931a5182d948e5f
+  EXWebBrowser: f1573262c5de753987ed526c630076eda130804d
   FBLazyVector: c71c5917ec0ad2de41d5d06a5855f6d5eda06971
   FBReactNativeSpec: d8ab0d055c0ac12f9a5ef82dea62e7a2f41bc92f
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
