@@ -3,7 +3,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import AppViewModel, { AppVM } from './viewmodels/App';
 import AuthViewModel, { Authentication } from './viewmodels/Authentication';
 import Modals, { LockScreen } from './screens/Modalize';
-import { TouchableOpacity, UIManager } from 'react-native';
+import { Platform, TouchableOpacity, UIManager } from 'react-native';
 
 import { About } from './screens/settings/About';
 import AddToken from './screens/tokens/AddToken';
@@ -59,7 +59,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
               initialRouteName="Root"
               screenOptions={({ navigation }) => {
                 return {
-                  headerTransparent: true,
+                  headerTransparent: Platform.OS === 'ios' ? true : false,
                   headerTintColor: foregroundColor,
                   contentStyle: { backgroundColor },
                   headerLeft: () => (
@@ -71,14 +71,18 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
               }}
             >
               <Screen name="Root" component={Root} options={{ headerShown: false }} />
-              <Screen name="Languages" component={Languages} options={{ title: t('settings-languages') }} />
-              <Screen name="Currencies" component={Currencies} options={{ title: t('settings-currencies') }} />
-              <Screen name="Themes" component={Themes} options={{ title: t('settings-themes') }} />
-              <Screen name="ChangePasscode" component={ChangePasscode} options={{ title: t('settings-security-passcode') }} />
-              <Screen name="Backup" component={Backup} options={{ title: t('settings-security-backup') }} />
-              <Screen name="VerifySecret" component={VerifySecret} options={{ title: t('settings-security-backup-verify') }} />
-              <Screen name="AddToken" component={AddToken} options={{ title: t('home-add-token-title') }} />
-              <Screen name="About" component={About} options={{ title: t('about-title') }} />
+              <Screen name="Languages" component={Languages} options={{ title: t('settings-languages'), headerStyle: { backgroundColor }  }} />
+              <Screen name="Currencies" component={Currencies} options={{ title: t('settings-currencies'), headerStyle: { backgroundColor }  }} />
+              <Screen
+                name="Themes"
+                component={Themes}
+                options={{ title: t('settings-themes'), headerStyle: { backgroundColor } }}
+              />
+              <Screen name="ChangePasscode" component={ChangePasscode} options={{ title: t('settings-security-passcode'), headerStyle: { backgroundColor } }} />
+              <Screen name="Backup" component={Backup} options={{ title: t('settings-security-backup'), headerStyle: { backgroundColor } }} />
+              <Screen name="VerifySecret" component={VerifySecret} options={{ title: t('settings-security-backup-verify'), headerStyle: { backgroundColor } }} />
+              <Screen name="AddToken" component={AddToken} options={{ title: t('home-add-token-title'), headerStyle: { backgroundColor } }} />
+              <Screen name="About" component={About} options={{ title: t('about-title'), headerStyle: { backgroundColor } }} />
               <Screen
                 name="Profile"
                 component={ProfileScreen}
