@@ -62,22 +62,30 @@ export class BaseTransaction {
   }
 
   get txFeeWei() {
-    const maxGasPriceWei = BigNumber.from((this.maxGasPrice * Gwei_1).toFixed(0));
+    try {
+      const maxGasPriceWei = BigNumber.from((this.maxGasPrice * Gwei_1).toFixed(0));
 
-    return this.network.eip1559
-      ? maxGasPriceWei.add(BigNumber.from((Number(this.maxPriorityPrice.toFixed(9)) * Gwei_1).toFixed(0))).mul(this.gasLimit)
-      : maxGasPriceWei.mul(this.gasLimit);
+      return this.network.eip1559
+        ? maxGasPriceWei.add(BigNumber.from((Number(this.maxPriorityPrice.toFixed(9)) * Gwei_1).toFixed(0))).mul(this.gasLimit)
+        : maxGasPriceWei.mul(this.gasLimit);
+    } catch (error) {
+      return BigNumber.from(0);
+    }
   }
 
   get estimatedRealFeeWei() {
-    const maxGasPriceWei = BigNumber.from((this.maxGasPrice * Gwei_1).toFixed(0));
-    const nextBlockBaseFeeWei = BigNumber.from(this.nextBlockBaseFeeWei);
+    try {
+      const maxGasPriceWei = BigNumber.from((this.maxGasPrice * Gwei_1).toFixed(0));
+      const nextBlockBaseFeeWei = BigNumber.from(this.nextBlockBaseFeeWei);
 
-    return this.network.eip1559
-      ? (nextBlockBaseFeeWei.gt(maxGasPriceWei) ? maxGasPriceWei : nextBlockBaseFeeWei)
-          .add(BigNumber.from((Number(this.maxPriorityPrice.toFixed(9)) * Gwei_1).toFixed(0)))
-          .mul(this.gasLimit)
-      : maxGasPriceWei.mul(this.gasLimit);
+      return this.network.eip1559
+        ? (nextBlockBaseFeeWei.gt(maxGasPriceWei) ? maxGasPriceWei : nextBlockBaseFeeWei)
+            .add(BigNumber.from((Number(this.maxPriorityPrice.toFixed(9)) * Gwei_1).toFixed(0)))
+            .mul(this.gasLimit)
+        : maxGasPriceWei.mul(this.gasLimit);
+    } catch (error) {
+      return BigNumber.from(0);
+    }
   }
 
   get txFee() {
