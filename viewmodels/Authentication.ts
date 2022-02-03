@@ -105,7 +105,7 @@ export class Authentication extends EventEmitter {
 
   private async authenticate({ pin, options }: { pin?: string; options?: LocalAuthenticationOptions } = {}): Promise<boolean> {
     if (pin) return await this.verifyPin(pin);
-    if (!this.biometricType) return false;
+    if (!this.biometricsSupported) return false;
 
     const { success } = await authenticateAsync(options);
     return success;
