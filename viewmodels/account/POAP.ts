@@ -84,6 +84,7 @@ export class POAP {
     if (count === 0) return [];
 
     const badges = await this.getTokenDetails(this.owner, count);
+    console.log(badges);
     runInAction(() => (this.badges = badges));
   }
 }

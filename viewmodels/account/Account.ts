@@ -1,3 +1,4 @@
+import { EthereumAddress, POAP } from './POAP';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { genColor, genEmoji } from '../../utils/emoji';
 
@@ -6,7 +7,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import CurrencyViewmodel from '../settings/Currency';
 import { ENSViewer } from './ENSViewer';
 import Networks from '../Networks';
-import { POAP } from './POAP';
 import { formatAddress } from '../../utils/formatter';
 import { getAvatar } from '../../common/ENS';
 
@@ -58,8 +58,6 @@ export class Account {
 
     this.tokens = new AccountTokens(this.address);
     this.ens = new ENSViewer(this.address);
-
-    // new POAP(Networks.MainnetWsProvider).getNFTs('0x84da37133a088Fbf4e21D80Aec2CC260B52eA116').then(console.log);
 
     makeObservable(this, {
       tokens: observable,
