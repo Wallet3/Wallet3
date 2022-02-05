@@ -1,6 +1,7 @@
 import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
 import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { Feather, Ionicons } from '@expo/vector-icons';
+import React, { useEffect, useState } from 'react';
 
 import BrowserScreen from './browser';
 import DAppsScreen from './dapps';
@@ -8,7 +9,6 @@ import Drawer from './drawer';
 import { DrawerNavigationHelpers } from '@react-navigation/drawer/lib/typescript/src/types';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../viewmodels/Networks';
-import React from 'react';
 import SettingScreen from './settings';
 import Theme from '../viewmodels/settings/Theme';
 import WalletScreen from './wallet';
@@ -142,6 +142,15 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
   const { Navigator, Screen } = DrawerRoot;
   const { t } = i18n;
   const { backgroundColor, foregroundColor, borderColor } = Theme;
+  const [swipeEnabled, setSwipeEnabled] = useState(true);
+
+  useEffect(() => {
+    PubSub.subscribe('drawer-swipeEnabled', (_, data) => setSwipeEnabled(data));
+
+    return () => {
+      PubSub.unsubscribe('drawer-swipeEnabled');
+    };
+  }, []);
 
   return (
     <Navigator
@@ -152,6 +161,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
         headerTransparent: false,
         headerTintColor: foregroundColor,
         swipeEdgeWidth: ScreenWidth * 0.25,
+        swipeEnabled,
         drawerType: 'slide',
         headerBackgroundContainerStyle: { borderBottomColor: borderColor },
         headerStyle: { backgroundColor, borderBottomColor: borderColor },

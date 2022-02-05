@@ -131,6 +131,8 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
       : webUrl.startsWith('https://')
       ? setWebRiskLevel('tls')
       : setWebRiskLevel('insecure');
+
+    PubSub.publish('drawer-swipeEnabled', webUrl ? false : true);
   }, [webUrl]);
 
   const refresh = () => {
@@ -201,12 +203,9 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
     setTimeout(
       () =>
         navigation.setOptions({
-          tabBarStyle: {
-            height: 0,
-            backgroundColor,
-            borderTopColor: systemBorderColor,
-            borderTopWidth: safeAreaBottom ? undefined : 0,
-          },
+          tabBarStyle: safeAreaBottom
+            ? { height: 0, backgroundColor, borderTopColor: systemBorderColor }
+            : { height: 0, backgroundColor, borderTopColor: systemBorderColor, borderTopWidth: 0 },
         }),
       100
     );
