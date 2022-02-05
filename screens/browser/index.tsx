@@ -67,7 +67,7 @@ interface Props extends BottomTabScreenProps<any, never> {
 
 export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex }: Props) => {
   const { t } = i18n;
-  const { top } = useSafeAreaInsets();
+  const { top, bottom: safeAreaBottom } = useSafeAreaInsets();
   const { current } = Networks;
   const webview = useRef<WebView>(null);
   const addrRef = useRef<TextInput>(null);
@@ -201,7 +201,12 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
     setTimeout(
       () =>
         navigation.setOptions({
-          tabBarStyle: { height: 0, backgroundColor, borderTopColor: systemBorderColor },
+          tabBarStyle: {
+            height: 0,
+            backgroundColor,
+            borderTopColor: systemBorderColor,
+            borderTopWidth: safeAreaBottom ? undefined : 0,
+          },
         }),
       100
     );

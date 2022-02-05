@@ -210,7 +210,7 @@ export default observer((props: Web3ViewProps) => {
         contentInset={{ bottom: expanded ? 37 + (safeAreaBottom === 0 ? 8 : 0) : 0 }}
         onNavigationStateChange={onNavigationStateChange}
         // applicationNameForUserAgent={appName}
-        userAgent={`Mozilla/5.0 (iPhone; CPU iPhone OS 15_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/97.0.4692.84 Mobile/15E148 Safari/604.1 ${appName}`}
+        userAgent={`Mozilla/5.0 (iPhone; CPU iPhone OS 15_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/98.0.4758.85 Mobile/15E148 Safari/604.1 ${appName}`}
         allowsFullscreenVideo={false}
         forceDarkOn={mode === 'dark'}
         injectedJavaScript={`${GetPageMetadata}\ntrue;\n${HookWalletConnect}\ntrue;`}

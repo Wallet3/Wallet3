@@ -9,7 +9,7 @@ const LightTheme = {
   textColor: '#333333',
   secondaryTextColor: '#999999',
   thirdTextColor: '#75869c',
-  borderColor: '#efefef',
+  borderColor: 'rgb(239, 243, 244)',// '#efefef',
   defaultTintColor: '#6186ff',
 };
 
