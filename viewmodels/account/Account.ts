@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import CurrencyViewmodel from '../settings/Currency';
 import { ENSViewer } from './ENSViewer';
 import Networks from '../Networks';
-import { POAP } from '../services/POAP';
+import { POAP } from './POAP';
 import { formatAddress } from '../../utils/formatter';
 import { getAvatar } from '../../common/ENS';
 

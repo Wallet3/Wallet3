@@ -1,9 +1,10 @@
 import { BigNumber, ethers } from 'ethers';
+import { makeObservable, observable, runInAction } from 'mobx';
 
 import POAPABI from '../../abis/POAP.json';
 import axios from 'axios';
 
-const ContractAddr = '0x22C1f6050E56d2876009903609a2cC3fEf83B415';
+export const EthereumAddress = '0x22C1f6050E56d2876009903609a2cC3fEf83B415';
 
 export interface POAPBadge {
   tokenId: BigNumber;
@@ -23,14 +24,28 @@ export interface POAPBadge {
 
 export class POAP {
   readonly contract: ethers.Contract;
+  readonly owner: string;
 
-  constructor(provider: ethers.providers.BaseProvider) {
-    this.contract = new ethers.Contract(ContractAddr, POAPABI, provider);
+  badges: POAPBadge[] = [];
+
+  constructor({
+    provider,
+    contractAddress,
+    owner,
+  }: {
+    provider: ethers.providers.BaseProvider;
+    contractAddress: string;
+    owner: string;
+  }) {
+    this.owner = owner;
+    this.contract = new ethers.Contract(contractAddress, POAPABI, provider);
+
+    makeObservable(this, { badges: observable });
   }
 
-  async balanceOf(address: string) {
+  async getBalance() {
     try {
-      const amount: BigNumber = await this.contract.balanceOf(address);
+      const amount: BigNumber = await this.contract.balanceOf(this.owner);
       return amount.toNumber();
     } catch (error) {
       return 0;
@@ -59,15 +74,16 @@ export class POAP {
           year: number;
           tags: string[];
         };
-        return { ...basic, tokenURI, metadata, contract: ContractAddr };
+        return { ...basic, tokenURI, metadata, contract: this.contract.address };
       })
     );
   }
 
-  async getNFTs(address: string): Promise<POAPBadge[]> {
-    const count = await this.balanceOf(address);
+  async refresh() {
+    const count = await this.getBalance();
     if (count === 0) return [];
 
-    return await this.getTokenDetails(address, count);
+    const badges = await this.getTokenDetails(this.owner, count);
+    runInAction(() => (this.badges = badges));
   }
 }
