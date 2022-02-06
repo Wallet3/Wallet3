@@ -29,6 +29,11 @@ class UI {
     this.hideBalance = !this.hideBalance;
     AsyncStorage.setItem('hideBalance', JSON.stringify(this.hideBalance));
   }
+
+  reset() {
+    this.gasIndicator = false;
+    this.hideBalance = false;
+  }
 }
 
 export default new UI();

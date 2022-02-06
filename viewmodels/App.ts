@@ -13,6 +13,7 @@ import Key from '../models/Key';
 import LINQ from 'linq';
 import LinkHub from './hubs/LinkHub';
 import Networks from './Networks';
+import Theme from './settings/Theme';
 import TxHub from './hubs/TxHub';
 import UI from './settings/UI';
 import { Wallet } from './Wallet';
@@ -184,6 +185,8 @@ export class AppVM {
     Contacts.reset();
     Networks.reset();
     Bookmarks.reset();
+    Theme.reset();
+    UI.reset();
 
     await Promise.all([
       Database.reset(),

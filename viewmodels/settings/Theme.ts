@@ -92,6 +92,10 @@ class Theme {
   get statusBarStyle() {
     return this.isLightMode ? 'dark' : 'light';
   }
+
+  reset() {
+    this.setTheme('light');
+  }
 }
 
 export default new Theme();
