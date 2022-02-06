@@ -63,6 +63,7 @@
   "settings-general-theme-light": "亮色模式",
   "settings-general-theme-dark": "暗色模式",
   "settings-general-theme-scheduled": "根据时间自动切换",
+  "settings-general-gas-indicator": "Gas 指示器",
   "settings-languages": "语言",
   "settings-currencies": "选择货币",
   "settings-security": "安全",

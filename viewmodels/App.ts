@@ -14,6 +14,7 @@ import LINQ from 'linq';
 import LinkHub from './hubs/LinkHub';
 import Networks from './Networks';
 import TxHub from './hubs/TxHub';
+import UI from './settings/UI';
 import { Wallet } from './Wallet';
 import WalletConnectV1ClientHub from './walletconnect/WalletConnectV1ClientHub';
 import i18n from '../i18n';
@@ -55,7 +56,7 @@ export class AppVM {
       () => {
         this.currentAccount?.tokens.refreshOverview();
         this.allAccounts.forEach((a) => a.tokens.refreshNativeToken());
-        GasPrice.refresh();
+        UI.gasIndicator && GasPrice.refresh();
       }
     );
   }
