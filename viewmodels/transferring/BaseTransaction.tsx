@@ -124,6 +124,7 @@ export class BaseTransaction {
   }
 
   setPriorityPrice(gwei: string | number) {
+    console.log('pirority', gwei);
     try {
       this.maxPriorityPrice = Math.max(Math.min(Number(gwei), MAX_GWEI_PRICE), 0);
     } catch (error) {}
@@ -165,12 +166,12 @@ export class BaseTransaction {
     runInAction(() => {
       this.nextBlockBaseFeeWei = Number(nextBaseFee.toFixed(0));
 
-      const priFee = (priorityFee || Gwei_1) / Gwei_1 + 0.1;
-
       this.setNonce(nonce);
-      this.setPriorityPrice(priFee);
 
       if (eip1559) {
+        const priFee = (priorityFee || Gwei_1) / Gwei_1 + 0.1;
+        this.setPriorityPrice(priFee);
+
         const maxPrice = (nextBaseFee || Gwei_1) / Gwei_1 + priFee;
         const suggestedGwei = Number(Math.min(maxPrice * 1.25, maxPrice + 20).toFixed(6));
         this.setMaxGasPrice(suggestedGwei);

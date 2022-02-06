@@ -88,7 +88,7 @@ export default ({ onPress, onBioAuth, disableDot, bioType, color, mode }: Props)
             mode === 'light' ? (
               <FaceID width={17} height={17} />
             ) : (
-              <FaceID_White width={17} height={17} />
+              <FaceID_White width={17} height={17} style={{ opacity: 0.7 }} />
             )
           ) : (
             <View />

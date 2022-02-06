@@ -46,6 +46,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
   const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
   const reviewItemValueStyle = { ...styles.reviewItemValue, color: textColor };
 
+  console.log(vm.isValidParams, busy);
   return (
     <SafeViewContainer>
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', paddingEnd: 4 }}>
