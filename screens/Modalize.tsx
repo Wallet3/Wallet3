@@ -430,7 +430,7 @@ export const LockScreen = ({ app, appAuth }: { app: AppVM; appAuth: Authenticati
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
       <FullPasspad
-        themeColor={Theme.foregroundColor}
+        themeColor={Theme.isLightMode ? Theme.foregroundColor : `${Theme.foregroundColor}80`}
         bioType={appAuth.biometricType}
         onBioAuth={bioAuth}
         height={ScreenHeight}
