@@ -7,6 +7,7 @@ import App from '../../viewmodels/App';
 import Assets from './Assets';
 import CurrencyViewmodel from '../../viewmodels/settings/Currency';
 import { DrawerScreenProps } from '@react-navigation/drawer';
+import GasPrice from '../../viewmodels/misc/GasPrice';
 import { IToken } from '../../common/Tokens';
 import { Modalize } from 'react-native-modalize';
 import { NavigationContainer } from '@react-navigation/native';
@@ -82,6 +83,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         onSendPress={() => PubSub.publish('openSendFundsModal')}
         onRequestPress={() => PubSub.publish('openRequestFundsModal')}
         onDAppsPress={() => navigation.navigate('DApps')}
+        gasPrice={GasPrice.price}
       />
 
       <Assets

@@ -33,6 +33,7 @@ interface Props {
   onRequestPress?: () => void;
   onDAppsPress?: () => void;
   mode?: 'light' | 'dark';
+  gasPrice?: number;
 }
 
 export default observer(
@@ -53,6 +54,7 @@ export default observer(
     separatorWidth,
     textColor,
     mode,
+    gasPrice,
   }: Props) => {
     const { t } = i18n;
 
@@ -91,12 +93,24 @@ export default observer(
             ) : undefined}
           </View>
 
-          <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={onDAppsPress}>
-            <Text style={{ ...styles.text, color: textColor, fontSize: 14, marginEnd: 5, opacity: connectedApps || 0 }}>
-              {connectedApps}
-            </Text>
-            <Feather name="layers" size={14} color={textColor} style={{ opacity: connectedApps || 0 }} />
-          </TouchableOpacity>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginEnd: 15 }}>
+              <AnimateNumber
+                value={gasPrice || 0}
+                style={{ ...styles.text, color: textColor, marginEnd: 4 }}
+                numberOfLines={1}
+                formatter={(v) => `${v.toFixed(2)} Gwei`}
+              />
+              <MaterialIcons name="local-gas-station" size={17} color={textColor} />
+            </View>
+
+            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={onDAppsPress}>
+              <Text style={{ ...styles.text, color: textColor, fontSize: 14, marginEnd: 5, opacity: connectedApps || 0 }}>
+                {connectedApps}
+              </Text>
+              <Feather name="layers" size={14} color={textColor} style={{ opacity: connectedApps || 0 }} />
+            </TouchableOpacity>
+          </View>
         </View>
 
         <CopyableText

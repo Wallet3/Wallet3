@@ -7,6 +7,7 @@ import Bookmarks from './customs/Bookmarks';
 import Coingecko from '../common/apis/Coingecko';
 import Contacts from './customs/Contacts';
 import Database from '../models/Database';
+import GasPrice from './misc/GasPrice';
 import InpageMetamaskDAppHub from './hubs/InpageMetamaskDAppHub';
 import Key from '../models/Key';
 import LINQ from 'linq';
@@ -54,6 +55,7 @@ export class AppVM {
       () => {
         this.currentAccount?.tokens.refreshOverview();
         this.allAccounts.forEach((a) => a.tokens.refreshNativeToken());
+        GasPrice.refresh();
       }
     );
   }
