@@ -11,6 +11,7 @@ import Image from 'react-native-expo-cached-image';
 import Langs from '../../viewmodels/settings/Langs';
 import React from 'react';
 import Ripple from 'react-native-material-ripple';
+import UI from '../../viewmodels/settings/UI';
 import WhiteLogos from '../../assets/icons/networks/white';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -57,7 +58,7 @@ export default observer(
     gasPrice,
   }: Props) => {
     const { t } = i18n;
-
+    const { hideBalance, gasIndicator } = UI;
     const prefixedAddress = network?.addrPrefix ? `${network?.addrPrefix}${address?.substring(2)}` : address;
 
     return (
@@ -94,22 +95,24 @@ export default observer(
           </View>
 
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginEnd: 15 }}>
-              <AnimateNumber
-                value={gasPrice || 0}
-                style={{ ...styles.text, color: textColor, marginEnd: 4 }}
-                numberOfLines={1}
-                formatter={(v) => `${v.toFixed(2)} Gwei`}
-              />
-              <MaterialIcons name="local-gas-station" size={17} color={textColor} />
-            </View>
+            {gasIndicator ? (
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <AnimateNumber
+                  value={gasPrice || 0}
+                  style={{ ...styles.text, color: textColor, marginEnd: 4 }}
+                  numberOfLines={1}
+                  formatter={(v) => `${v.toFixed(2)} Gwei`}
+                />
+                <MaterialIcons name="local-gas-station" size={17} color={textColor} />
+              </View>
+            ) : undefined}
 
-            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={onDAppsPress}>
-              <Text style={{ ...styles.text, color: textColor, fontSize: 14, marginEnd: 5, opacity: connectedApps || 0 }}>
-                {connectedApps}
-              </Text>
-              <Feather name="layers" size={14} color={textColor} style={{ opacity: connectedApps || 0 }} />
-            </TouchableOpacity>
+            {connectedApps ? (
+              <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginStart: 15 }} onPress={onDAppsPress}>
+                <Text style={{ ...styles.text, color: textColor, fontSize: 14, marginEnd: 5 }}>{connectedApps}</Text>
+                <Feather name="layers" size={14} color={textColor} />
+              </TouchableOpacity>
+            ) : undefined}
           </View>
         </View>
 
@@ -129,12 +132,18 @@ export default observer(
             [Placeholder] DO NOT DELETE ME!!!
           </Text>
 
-          <AnimateNumber
-            value={balance || 0}
-            style={{ ...styles.headline, color: textColor }}
-            numberOfLines={1}
-            formatter={(v) => formatCurrency(v, currency)}
-          />
+          <TouchableOpacity style={{ position: 'absolute', bottom: -8, width: '85%' }} onPress={() => UI.switchHideBalance()}>
+            {hideBalance ? (
+              <Text style={{ ...styles.headline, color: textColor, position: 'relative', bottom: 0 }}>******</Text>
+            ) : (
+              <AnimateNumber
+                value={balance || 0}
+                style={{ ...styles.headline, color: textColor, position: 'relative', bottom: 0 }}
+                numberOfLines={1}
+                formatter={(v) => formatCurrency(v, currency)}
+              />
+            )}
+          </TouchableOpacity>
 
           {mode === 'light' ? WhiteLogos[chainId] : ColorLogos[chainId]}
         </View>

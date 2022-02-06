@@ -30,6 +30,7 @@ import InpageDAppSendTx from '../modals/InpageDAppTxRequest';
 import InpageDAppSign from '../modals/InpageDAppSign';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../viewmodels/Networks';
+import Theme from '../viewmodels/settings/Theme';
 import { TokenTransferring } from '../viewmodels/transferring/TokenTransferring';
 import { WCCallRequestRequest } from '../models/WCSession_v1';
 import { WalletConnect_v1 } from '../viewmodels/walletconnect/WalletConnect_v1';
@@ -429,7 +430,7 @@ export const LockScreen = ({ app, appAuth }: { app: AppVM; appAuth: Authenticati
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
       <FullPasspad
-        themeColor={Networks.current.color}
+        themeColor={Theme.foregroundColor}
         bioType={appAuth.biometricType}
         onBioAuth={bioAuth}
         height={ScreenHeight}

@@ -28,7 +28,7 @@ const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style, bi
   const passcodeLength = 6;
   const [passcode, setPasscode] = useState('');
 
-  const { tintColor, isLightMode, foregroundColor, mode } = Theme;
+  const { isLightMode, foregroundColor, mode } = Theme;
   const passcodeView = useRef<Animatable.View>(null);
 
   useEffect(() => {
@@ -52,11 +52,11 @@ const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style, bi
       <Animatable.View ref={passcodeView as any} style={{ flexDirection: 'row', justifyContent: 'center' }}>
         {new Array(passcode.length)
           .fill(0)
-          .map((_, index) => renderFilledCircle(index, isLightMode ? foregroundColor : tintColor))}
+          .map((_, index) => renderFilledCircle(index, isLightMode ? foregroundColor : themeColor))}
 
         {new Array(passcodeLength - passcode.length)
           .fill(0)
-          .map((_, index) => renderEmptyCircle(index, isLightMode ? foregroundColor : tintColor))}
+          .map((_, index) => renderEmptyCircle(index, isLightMode ? foregroundColor : themeColor))}
       </Animatable.View>
 
       <View style={{ flex: 1 }} />
@@ -66,7 +66,7 @@ const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style, bi
         disableDot
         bioType={bioType}
         onBioAuth={onBioAuth}
-        color={isLightMode ? undefined : tintColor}
+        color={isLightMode ? undefined : themeColor}
         mode={mode}
       />
 

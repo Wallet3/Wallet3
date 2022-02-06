@@ -19,6 +19,7 @@ import { StatusBar } from 'expo-status-bar';
 import Theme from '../../viewmodels/settings/Theme';
 import TokenDetail from './TokenDetail';
 import TxDetail from './TxDetail';
+import UI from '../../viewmodels/settings/UI';
 import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectV1ClientHub';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';

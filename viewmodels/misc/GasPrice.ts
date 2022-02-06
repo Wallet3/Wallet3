@@ -21,6 +21,10 @@ class GasPrice {
     runInAction(() => (this.price = price === undefined ? this.price : price / Gwei_1));
     this.timer = setTimeout(() => this.refresh(), 1000 * 15);
   }
+
+  stop() {
+    clearTimeout(this.timer!);
+  }
 }
 
 export default new GasPrice();
