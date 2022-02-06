@@ -5,6 +5,7 @@ import { estimateGas, getGasPrice, getMaxPriorityFee, getNextBlockBaseFee, getTr
 
 import { Account } from '../account/Account';
 import App from '../App';
+import Coingecko from '../../common/apis/Coingecko';
 import { INetwork } from '../../common/Networks';
 import { NativeToken } from '../../models/NativeToken';
 import { Wallet } from '../Wallet';
@@ -55,6 +56,8 @@ export class BaseTransaction {
     if (initChainData) this.initChainData({ ...args, account: args.account.address });
 
     if (this.network.eip1559) this.refreshEIP1559(this.network.chainId);
+
+    Coingecko.refresh();
   }
 
   get nextBlockBaseFee() {

@@ -19,7 +19,7 @@ export class CurrencyViewmodel {
   ];
 
   constructor() {
-    Coingecko.start();
+    Coingecko.refresh();
 
     this.currentCurrency = this.supportedCurrencies[1];
 
