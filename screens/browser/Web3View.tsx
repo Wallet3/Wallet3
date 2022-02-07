@@ -62,7 +62,7 @@ interface Web3ViewProps extends WebViewProps {
 export default observer((props: Web3ViewProps) => {
   const { t } = i18n;
   const { webViewRef } = props;
-  const [appName] = useState(`Wallet3/Mobile/${DeviceInfo.getVersion() || '0.0.0'}`);
+  const [appName] = useState(`Wallet3/${DeviceInfo.getVersion() || '0.0.0'}`);
   const [ua] = useState(
     DeviceInfo.isTablet()
       ? `Mozilla/5.0 (Macintosh; Intel Mac OS X 12_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.81 Safari/537.36 ${appName}`
