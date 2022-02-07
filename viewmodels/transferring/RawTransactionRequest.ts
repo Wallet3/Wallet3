@@ -168,19 +168,6 @@ export class RawTransactionRequest extends BaseTransaction {
   }
 
   get isValidParams() {
-    console.log(
-      utils.isAddress(this.param.to),
-      this.nonce,
-      this.maxGasPrice,
-      `priority: ${this.maxPriorityPrice}`,
-      this.gasLimit,
-      this.nativeToken.balance.gte(this.valueWei),
-      this.isEstimatingGas,
-      `exception: ${this.txException}`,
-      this.insufficientFee,
-      this.nativeToken.loading
-    );
-
     return (
       utils.isAddress(this.param.to) &&
       this.nonce >= 0 &&

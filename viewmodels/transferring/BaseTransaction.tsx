@@ -124,7 +124,6 @@ export class BaseTransaction {
   }
 
   setPriorityPrice(gwei: string | number) {
-    console.log('pirority', gwei);
     try {
       this.maxPriorityPrice = Math.max(Math.min(Number(gwei), MAX_GWEI_PRICE), 0);
     } catch (error) {}
