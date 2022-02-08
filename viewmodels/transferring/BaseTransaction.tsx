@@ -131,6 +131,7 @@ export class BaseTransaction {
   setPriorityPrice(gwei: string | number) {
     try {
       this.maxPriorityPrice = Math.max(Math.min(Number(gwei), MAX_GWEI_PRICE), 0);
+      this.txException = this.txException || (!this.isValidGas ? 'Invalid gas price' : '');
     } catch (error) {}
   }
 
