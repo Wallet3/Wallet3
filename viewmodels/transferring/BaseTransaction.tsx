@@ -43,6 +43,7 @@ export class BaseTransaction {
       txException: observable,
       txFee: computed,
       txFeeWei: computed,
+      isValidGas: computed,
 
       setNonce: action,
       setGasLimit: action,
@@ -105,6 +106,10 @@ export class BaseTransaction {
     } catch {
       return 0;
     }
+  }
+
+  get isValidGas() {
+    return this.maxGasPrice > 0 && this.maxGasPrice >= this.maxPriorityPrice && this.gasLimit >= 0;
   }
 
   setNonce(nonce: string | number) {

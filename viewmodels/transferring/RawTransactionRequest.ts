@@ -171,9 +171,7 @@ export class RawTransactionRequest extends BaseTransaction {
     return (
       utils.isAddress(this.param.to) &&
       this.nonce >= 0 &&
-      this.maxGasPrice > 0 &&
-      this.maxGasPrice >= (this.maxPriorityPrice || 0) &&
-      this.gasLimit >= 21000 &&
+      this.isValidGas &&
       this.nativeToken.balance.gte(this.valueWei) &&
       !this.isEstimatingGas &&
       !this.txException &&

@@ -78,8 +78,7 @@ export class TokenTransferring extends BaseTransaction {
       this.toAddress &&
       this.isValidAmount &&
       this.nonce >= 0 &&
-      this.maxGasPrice > 0 &&
-      this.gasLimit >= 21000 &&
+      this.isValidGas &&
       this.network &&
       !this.insufficientFee &&
       !this.token.loading &&

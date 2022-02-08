@@ -131,7 +131,13 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
 
       <View style={{ flex: 1 }}></View>
 
-      <Button title="OK" txtStyle={{ textTransform: 'uppercase' }} onPress={onBack} themeColor={themeColor} />
+      <Button
+        title="OK"
+        txtStyle={{ textTransform: 'uppercase' }}
+        onPress={onBack}
+        themeColor={themeColor}
+        disabled={!vm.isValidGas}
+      />
     </SafeViewContainer>
   );
 });
