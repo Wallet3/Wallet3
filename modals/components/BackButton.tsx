@@ -11,7 +11,7 @@ interface Props {
 
 export default ({ size, color, onPress, disabled }: Props) => {
   return (
-    <TouchableOpacity onPress={onPress} disabled>
+    <TouchableOpacity onPress={onPress} disabled={disabled}>
       <Ionicons name="ios-arrow-back-circle-outline" size={size || 33} color={disabled ? '#D3D3D350' : color || '#627EEA'} />
     </TouchableOpacity>
   );
