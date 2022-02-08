@@ -84,7 +84,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         onSendPress={() => PubSub.publish('openSendFundsModal')}
         onRequestPress={() => PubSub.publish('openRequestFundsModal')}
         onDAppsPress={() => navigation.navigate('DApps')}
-        gasPrice={GasPrice.price}
+        gasPrice={GasPrice.currentGwei}
       />
 
       <Assets
