@@ -16,7 +16,7 @@ class GasPrice {
     clearTimeout(this.timer!);
     const { current } = Networks;
 
-    const price = await getGasPrice(current.chainId);
+    const price = current.eip1559 ? await getNextBlockBaseFee(current.chainId) : await getGasPrice(current.chainId);
 
     runInAction(() => (this.price = price === undefined ? this.price : price / Gwei_1));
     this.timer = setTimeout(() => this.refresh(), 1000 * 15);
