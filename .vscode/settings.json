@@ -27,6 +27,7 @@
         "Wordlist",
         "xprivkey",
         "xpub",
-        "Xpubkey"
+        "Xpubkey",
+        "ZWSP"
     ]
 }

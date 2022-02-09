@@ -164,6 +164,7 @@
   "tip-insufficient-funds": "Insufficient funds",
   "tip-copy-link": "Copy Link",
   "tip-cancel-action": "[Cancel]",
+  "tip-zero-width-space": "This name contains zero-width spaces",
   "msg-invalid-address": "Invalid address",
   "msg-invalid-qr-code": "Invalid QR code",
   "msg-chain-added": "{{name}} network added",

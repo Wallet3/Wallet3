@@ -28,8 +28,8 @@ export class TokenTransferring extends BaseTransaction {
     return !utils.isAddress(this.to);
   }
 
-  get hasNonAscii() {
-    return [...this.to].some((char) => char.charCodeAt(0) > 127);
+  get hasZWSP() {
+    return /[\u200B|\u200C|\u200D]/.test(this.to);
   }
 
   get isValidAddress() {
@@ -131,7 +131,7 @@ export class TokenTransferring extends BaseTransaction {
       to: observable,
       toAddress: observable,
       isValidAddress: computed,
-      hasNonAscii: computed,
+      hasZWSP: computed,
       token: observable,
       amount: observable,
       isResolvingAddress: observable,

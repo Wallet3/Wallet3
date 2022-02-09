@@ -162,6 +162,7 @@
   "tip-insufficient-funds": "手续费不足",
   "tip-copy-link": "复制链接",
   "tip-cancel-action": "[取消]",
+  "tip-zero-width-space": "该名称包含零宽空格",
   "msg-invalid-address": "无效地址",
   "msg-invalid-qr-code": "无效的二维码",
   "msg-chain-added": "{{name}} 添加成功",
