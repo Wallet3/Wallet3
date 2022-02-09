@@ -7,6 +7,7 @@ import App from '../../viewmodels/App';
 import Assets from './Assets';
 import CurrencyViewmodel from '../../viewmodels/settings/Currency';
 import { DrawerScreenProps } from '@react-navigation/drawer';
+import GasPrice from '../../viewmodels/misc/GasPrice';
 import { IToken } from '../../common/Tokens';
 import { Modalize } from 'react-native-modalize';
 import { NavigationContainer } from '@react-navigation/native';
@@ -18,6 +19,7 @@ import { StatusBar } from 'expo-status-bar';
 import Theme from '../../viewmodels/settings/Theme';
 import TokenDetail from './TokenDetail';
 import TxDetail from './TxDetail';
+import UI from '../../viewmodels/settings/UI';
 import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectV1ClientHub';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -82,6 +84,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         onSendPress={() => PubSub.publish('openSendFundsModal')}
         onRequestPress={() => PubSub.publish('openRequestFundsModal')}
         onDAppsPress={() => navigation.navigate('DApps')}
+        gasPrice={GasPrice.currentGwei}
       />
 
       <Assets

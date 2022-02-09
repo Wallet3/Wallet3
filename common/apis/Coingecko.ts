@@ -73,7 +73,7 @@ class Coingecko {
   movr = 0;
   glmr = 0;
 
-  timer?: NodeJS.Timer;
+  lastRefreshedTimestamp = 0;
 
   coinSymbolToIds = new Map<string, string[]>();
 
@@ -112,18 +112,13 @@ class Coingecko {
     }
   }
 
-  async start(delay: number = 30) {
-    const run = () => {
-      this.timer = setTimeout(() => this.start(delay), delay * 1000);
-    };
-
-    clearTimeout(this.timer as any);
+  async refresh() {
+    if (Date.now() - this.lastRefreshedTimestamp < 1000 * 5 && !this.eth) return;
 
     try {
       const data = await getPrice();
 
       if (!data) {
-        run();
         return;
       }
 
@@ -145,7 +140,7 @@ class Coingecko {
       });
     } catch {}
 
-    run();
+    // run();
   }
 
   async getCoinDetails(symbol: string, address: string, network: string) {

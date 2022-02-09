@@ -28,7 +28,7 @@ export default observer(({ onItemPress }: Props) => {
 
       <FlatList
         style={{ maxHeight: 52, backgroundColor, borderTopWidth: 0.333, borderColor: systemBorderColor }}
-        contentContainerStyle={{ paddingVertical: 8, paddingHorizontal: 8 }}
+        contentContainerStyle={{ paddingVertical: 8, paddingTop: 8.5, paddingHorizontal: 8 }}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         horizontal

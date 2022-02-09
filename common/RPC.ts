@@ -252,7 +252,7 @@ export async function getMaxPriorityFeeByRPC(url: string) {
     id: Date.now(),
   });
 
-  return Number.parseInt(resp.result);
+  return Number.parseInt(resp.result || 0);
 }
 
 export async function getCode(chainId: number, contract: string) {

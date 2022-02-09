@@ -1,6 +1,7 @@
 import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
 import { DrawerActions, useNavigation } from '@react-navigation/native';
-import { Feather, Ionicons, MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
+import { Feather, Ionicons } from '@expo/vector-icons';
+import React, { useEffect, useState } from 'react';
 
 import BrowserScreen from './browser';
 import DAppsScreen from './dapps';
@@ -8,7 +9,6 @@ import Drawer from './drawer';
 import { DrawerNavigationHelpers } from '@react-navigation/drawer/lib/typescript/src/types';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../viewmodels/Networks';
-import React from 'react';
 import SettingScreen from './settings';
 import Theme from '../viewmodels/settings/Theme';
 import WalletScreen from './wallet';
@@ -16,7 +16,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import i18n from '../i18n';
 import { observer } from 'mobx-react-lite';
-import { useHeaderHeight } from '@react-navigation/elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const DrawerRoot = createDrawerNavigator();
@@ -40,7 +39,7 @@ const RootTab = observer(() => {
   foregroundColor = isLightMode ? foregroundColor : current.color;
   const baseTarBarStyle = { backgroundColor, borderTopColor: systemBorderColor };
   const tabBarStyle = bottom === 0 ? { ...baseTarBarStyle, height: 57 } : baseTarBarStyle;
-  
+
   return (
     <Navigator
       initialRouteName="Wallet"
@@ -83,7 +82,6 @@ const RootTab = observer(() => {
                 style={{ padding: 16, paddingVertical: 4 }}
                 onPress={() => navigation.dispatch(DrawerActions.openDrawer)}
               >
-                {/* <Ionicons name="menu-outline" size={23} color={foregroundColor} /> */}
                 <Feather name="menu" size={20} color={foregroundColor} style={{}} />
               </TouchableOpacity>
 
@@ -93,7 +91,6 @@ const RootTab = observer(() => {
                   style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 0 }}
                 >
                   <Text style={{ fontFamily: 'Questrial', fontSize: 21, color: foregroundColor }}>Wallet 3</Text>
-                  {/* <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 4 }} size={12} /> */}
                 </TouchableOpacity>
               </View>
 
@@ -110,7 +107,6 @@ const RootTab = observer(() => {
                   paddingEnd: 15,
                 }}
               >
-                {/* <MaterialCommunityIcons name="scan-helper" size={16.5} color={foregroundColor} /> */}
                 <Ionicons name="scan-outline" size={21} color={foregroundColor} />
                 <View
                   style={{
@@ -129,22 +125,6 @@ const RootTab = observer(() => {
         }}
       />
 
-      {/* <Screen
-        name="FashionWallet"
-        component={FashionWallet}
-        options={{
-          headerShown: false,
-          headerLeft: () => (
-            <TouchableOpacity
-              style={{ padding: 16, paddingVertical: 0 }}
-              onPress={() => navigation.dispatch(DrawerActions.openDrawer)}
-            >
-              <Ionicons name="menu-outline" size={23} />
-            </TouchableOpacity>
-          ),
-        }}
-      /> */}
-
       <Screen
         name="Explore"
         component={BrowserScreen}
@@ -162,6 +142,15 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
   const { Navigator, Screen } = DrawerRoot;
   const { t } = i18n;
   const { backgroundColor, foregroundColor, borderColor } = Theme;
+  const [swipeEnabled, setSwipeEnabled] = useState(true);
+
+  useEffect(() => {
+    PubSub.subscribe('drawer-swipeEnabled', (_, data) => setSwipeEnabled(data));
+
+    return () => {
+      PubSub.unsubscribe('drawer-swipeEnabled');
+    };
+  }, []);
 
   return (
     <Navigator
@@ -172,6 +161,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
         headerTransparent: false,
         headerTintColor: foregroundColor,
         swipeEdgeWidth: ScreenWidth * 0.25,
+        swipeEnabled,
         drawerType: 'slide',
         headerBackgroundContainerStyle: { borderBottomColor: borderColor },
         headerStyle: { backgroundColor, borderBottomColor: borderColor },

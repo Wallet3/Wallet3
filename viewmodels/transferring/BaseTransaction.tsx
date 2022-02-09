@@ -5,6 +5,7 @@ import { estimateGas, getGasPrice, getMaxPriorityFee, getNextBlockBaseFee, getTr
 
 import { Account } from '../account/Account';
 import App from '../App';
+import Coingecko from '../../common/apis/Coingecko';
 import { INetwork } from '../../common/Networks';
 import { NativeToken } from '../../models/NativeToken';
 import { Wallet } from '../Wallet';
@@ -42,6 +43,7 @@ export class BaseTransaction {
       txException: observable,
       txFee: computed,
       txFeeWei: computed,
+      isValidGas: computed,
 
       setNonce: action,
       setGasLimit: action,
@@ -55,6 +57,8 @@ export class BaseTransaction {
     if (initChainData) this.initChainData({ ...args, account: args.account.address });
 
     if (this.network.eip1559) this.refreshEIP1559(this.network.chainId);
+
+    Coingecko.refresh();
   }
 
   get nextBlockBaseFee() {
@@ -104,6 +108,10 @@ export class BaseTransaction {
     }
   }
 
+  get isValidGas() {
+    return this.maxGasPrice > 0 && this.maxGasPrice >= this.maxPriorityPrice && this.gasLimit >= 0;
+  }
+
   setNonce(nonce: string | number) {
     this.nonce = Number(nonce) || this.nonce;
   }
@@ -123,6 +131,7 @@ export class BaseTransaction {
   setPriorityPrice(gwei: string | number) {
     try {
       this.maxPriorityPrice = Math.max(Math.min(Number(gwei), MAX_GWEI_PRICE), 0);
+      this.isValidGas ? (this.txException = '') : (this.txException = this.txException || 'Invalid gas price');
     } catch (error) {}
   }
 
@@ -162,12 +171,12 @@ export class BaseTransaction {
     runInAction(() => {
       this.nextBlockBaseFeeWei = Number(nextBaseFee.toFixed(0));
 
-      const priFee = (priorityFee || Gwei_1) / Gwei_1 + 0.1;
-
       this.setNonce(nonce);
-      this.setPriorityPrice(priFee);
 
       if (eip1559) {
+        const priFee = (priorityFee || Gwei_1) / Gwei_1 + 0.01;
+        this.setPriorityPrice(priFee);
+
         const maxPrice = (nextBaseFee || Gwei_1) / Gwei_1 + priFee;
         const suggestedGwei = Number(Math.min(maxPrice * 1.25, maxPrice + 20).toFixed(6));
         this.setMaxGasPrice(suggestedGwei);

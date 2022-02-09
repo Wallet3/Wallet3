@@ -63,6 +63,12 @@ export default observer((props: Web3ViewProps) => {
   const { t } = i18n;
   const { webViewRef } = props;
   const [appName] = useState(`Wallet3/${DeviceInfo.getVersion() || '0.0.0'}`);
+  const [ua] = useState(
+    DeviceInfo.isTablet()
+      ? `Mozilla/5.0 (iPad; CPU OS 15_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/98.0.4758.85 Mobile/15E148 Safari/604.1 ${appName}`
+      : `Mozilla/5.0 (iPhone; CPU iPhone OS 15_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/98.0.4758.85 Mobile/15E148 Safari/604.1 ${appName}`
+  );
+
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
   const { onMetadataChange, onGoHome, expanded, onShrinkRequest, onExpandRequest, onBookmarksPress } = props;
 
@@ -209,8 +215,7 @@ export default observer((props: Web3ViewProps) => {
         contentInsetAdjustmentBehavior={'never'}
         contentInset={{ bottom: expanded ? 37 + (safeAreaBottom === 0 ? 8 : 0) : 0 }}
         onNavigationStateChange={onNavigationStateChange}
-        // applicationNameForUserAgent={appName}
-        userAgent={`Mozilla/5.0 (iPhone; CPU iPhone OS 15_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/97.0.4692.84 Mobile/15E148 Safari/604.1 ${appName}`}
+        userAgent={ua}
         allowsFullscreenVideo={false}
         forceDarkOn={mode === 'dark'}
         injectedJavaScript={`${GetPageMetadata}\ntrue;\n${HookWalletConnect}\ntrue;`}
@@ -341,7 +346,7 @@ export default observer((props: Web3ViewProps) => {
           modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <SafeAreaProvider style={{ backgroundColor }}>
+          <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
             <AccountSelector
               single
               accounts={App.allAccounts}

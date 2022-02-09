@@ -94,11 +94,11 @@ export default ({ onDone, onCancel }: { onDone?: () => void; onCancel?: () => vo
           />
 
           <TouchableOpacity
-            style={{ position: 'absolute', bottom: 0, right: 0, padding: 10, alignItems: 'center', justifyContent: 'center' }}
+            style={{ position: 'absolute', bottom: 0, right: 0, padding: 8, alignItems: 'center', justifyContent: 'center' }}
             onPress={() => swiper.current?.scrollTo(1)}
           >
             <Ionicons name="scan-outline" size={21} color={themeColor} />
-            <View style={{ height: 1.2, position: 'absolute', width: 13.5, left: 13,  backgroundColor: themeColor }} />
+            <View style={{ height: 1.2, position: 'absolute', width: 13.5, left: 11,  backgroundColor: themeColor }} />
           </TouchableOpacity>
         </View>
 

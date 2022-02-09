@@ -7,12 +7,15 @@ import Bookmarks from './customs/Bookmarks';
 import Coingecko from '../common/apis/Coingecko';
 import Contacts from './customs/Contacts';
 import Database from '../models/Database';
+import GasPrice from './misc/GasPrice';
 import InpageMetamaskDAppHub from './hubs/InpageMetamaskDAppHub';
 import Key from '../models/Key';
 import LINQ from 'linq';
 import LinkHub from './hubs/LinkHub';
 import Networks from './Networks';
+import Theme from './settings/Theme';
 import TxHub from './hubs/TxHub';
+import UI from './settings/UI';
 import { Wallet } from './Wallet';
 import WalletConnectV1ClientHub from './walletconnect/WalletConnectV1ClientHub';
 import i18n from '../i18n';
@@ -54,6 +57,7 @@ export class AppVM {
       () => {
         this.currentAccount?.tokens.refreshOverview();
         this.allAccounts.forEach((a) => a.tokens.refreshNativeToken());
+        UI.gasIndicator && GasPrice.refresh();
       }
     );
   }
@@ -181,6 +185,8 @@ export class AppVM {
     Contacts.reset();
     Networks.reset();
     Bookmarks.reset();
+    Theme.reset();
+    UI.reset();
 
     await Promise.all([
       Database.reset(),

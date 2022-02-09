@@ -17,6 +17,7 @@ import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
 import Theme from '../../viewmodels/settings/Theme';
+import UI from '../../viewmodels/settings/UI';
 import { styles as appStyles } from '../../constants/styles';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -76,7 +77,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
 
       <TouchableOpacity style={styles.itemContainer} onPress={() => parent?.navigate('Themes')}>
         <View style={styles.itemSubContainer}>
-          <MaterialCommunityIcons name="format-color-fill" style={styles.itemStartSymbol} size={16} color={textColor} />
+          <Ionicons name="color-palette-outline" style={styles.itemStartSymbol} size={16} color={textColor} />
           <Text style={itemText}>{t('settings-general-theme')}</Text>
         </View>
         <View style={styles.itemSubContainer}>
@@ -84,6 +85,21 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
           <Entypo name="chevron-right" style={styles.itemEndSymbol} />
         </View>
       </TouchableOpacity>
+
+      <View style={styles.itemContainer}>
+        <View style={styles.itemSubContainer}>
+          <MaterialCommunityIcons name="gas-station" style={styles.itemStartSymbol} size={16} color={textColor} />
+          <Text style={itemText}>{t('settings-general-gas-indicator')}</Text>
+        </View>
+
+        <View>
+          <Switch
+            value={UI.gasIndicator}
+            onValueChange={(v) => UI.switchGasIndicator(v)}
+            trackColor={{ true: Networks.current.color }}
+          />
+        </View>
+      </View>
 
       <Text style={styles.sectionTitle}>{t('settings-security')}</Text>
 

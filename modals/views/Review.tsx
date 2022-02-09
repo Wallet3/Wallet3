@@ -1,4 +1,5 @@
 import { Button, Coin, SafeViewContainer } from '../../components';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import React, { useRef } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
@@ -9,7 +10,6 @@ import FaceID from '../../assets/icons/app/FaceID-white.svg';
 import GasReview from './GasReview';
 import Image from 'react-native-expo-cached-image';
 import InsufficientFee from '../components/InsufficientFee';
-import { MaterialIcons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/Networks';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
@@ -77,11 +77,17 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
           <Text style={styles.reviewItemTitle}>{t('modal-review-to')}</Text>
 
           <View style={{ flexDirection: 'row', maxWidth: '72%', alignItems: 'center' }}>
+            {vm.hasZWSP && (
+              <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', end: 0, bottom: -10 }}>
+                <Ionicons name="warning" size={8} color="crimson" style={{ marginEnd: 2 }} />
+                <Text style={{ fontSize: 8, color: 'crimson' }}>{t('tip-zero-width-space')}</Text>
+              </View>
+            )}
             {vm.avatar ? (
               <Image source={{ uri: vm.avatar }} style={{ width: 15, height: 15, marginEnd: 5, borderRadius: 100 }} />
             ) : undefined}
-            <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>
-              {utils.isAddress(vm.to) ? formatAddress(vm.to, 7, 5) : formatAddress(vm.to, 14, 6, '...')}
+            <Text style={{ ...reviewItemValueStyle, color: vm.hasZWSP ? 'crimson' : textColor }} numberOfLines={1}>
+              {utils.isAddress(vm.to) ? formatAddress(vm.to, 8, 6) : formatAddress(vm.to, 14, 6, '...')}
             </Text>
           </View>
         </View>
@@ -145,7 +151,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
 
       <Button
         title={sendTitle}
-        themeColor={vm.network.color}
+        themeColor={vm.hasZWSP ? 'crimson' : vm.network.color}
         disabled={!vm.isValidParams || busy}
         onPress={onSendPress}
         onLongPress={onLongSendPress}

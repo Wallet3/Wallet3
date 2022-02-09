@@ -29,7 +29,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
   return (
     <SafeViewContainer style={styles.container}>
       <View style={styles.navBar}>
-        <BackButton onPress={onBack} color={themeColor} />
+        <BackButton onPress={onBack} color={themeColor} disabled={!vm.isValidGas} />
 
         <Text style={styles.navTitle}>{t('modal-review-fee')}</Text>
       </View>
@@ -131,7 +131,13 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
 
       <View style={{ flex: 1 }}></View>
 
-      <Button title="OK" txtStyle={{ textTransform: 'uppercase' }} onPress={onBack} themeColor={themeColor} />
+      <Button
+        title="OK"
+        txtStyle={{ textTransform: 'uppercase' }}
+        onPress={onBack}
+        themeColor={themeColor}
+        disabled={!vm.isValidGas}
+      />
     </SafeViewContainer>
   );
 });
