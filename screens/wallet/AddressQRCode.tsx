@@ -39,7 +39,7 @@ export default observer(({ account }: { account?: Account }) => {
 
             <CopyableText
               iconStyle={{ display: 'none' }}
-              copyText={ens || account?.nickname || `Account ${account?.index}`}
+              copyText={ens || account?.nickname || `Account ${(account?.index ?? 0) + 1}`}
               txtStyle={{ color: thirdTextColor, fontSize: 21, fontWeight: '500', marginStart: 8 }}
             />
           </View>
