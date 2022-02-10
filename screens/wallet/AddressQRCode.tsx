@@ -1,5 +1,6 @@
 import { EvilIcons, Feather, Ionicons } from '@expo/vector-icons';
 import { Image, Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
 
 import { Account } from '../../viewmodels/account/Account';
 import Avatar from '../../components/Avatar';
@@ -8,7 +9,6 @@ import CachedImage from 'react-native-expo-cached-image';
 import CopyableText from '../../components/CopyableText';
 import Networks from '../../viewmodels/Networks';
 import QRCode from 'react-native-qrcode-svg';
-import React from 'react';
 import Theme from '../../viewmodels/settings/Theme';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
@@ -20,6 +20,7 @@ export default observer(({ account }: { account?: Account }) => {
   const { current } = Networks;
   const { address, avatar } = account || {};
   const ens = account?.ens.name;
+  const [showFullAddress, setShowFullAddress] = useState(false);
 
   const prefixedAddress = current?.addrPrefix ? `${current?.addrPrefix}${address?.substring(2)}` : address;
 
@@ -45,22 +46,25 @@ export default observer(({ account }: { account?: Account }) => {
 
           <CopyableText
             copyText={prefixedAddress || ''}
-            title={formatAddress(prefixedAddress || '', 10 + (current?.addrPrefix?.length ?? 0), 5)}
             iconSize={10}
             iconColor={thirdTextColor}
             iconStyle={{ marginStart: 5 }}
-            txtStyle={{ fontSize: 15, color: thirdTextColor }}
+            txtLines={2}
+            txtStyle={{ fontSize: 15, color: thirdTextColor, maxWidth: 200 }}
+            title={
+              showFullAddress ? address : formatAddress(prefixedAddress || '', 10 + (current?.addrPrefix?.length ?? 0), 5)
+            }
           />
         </View>
 
-        <View
+        <TouchableOpacity
+          onPress={() => setShowFullAddress(!showFullAddress)}
           style={{
             position: 'relative',
             justifyContent: 'center',
             alignItems: 'center',
             padding: 24,
             borderRadius: 15,
-
             shadowColor: '#000',
             shadowOffset: {
               width: 0,
@@ -87,7 +91,7 @@ export default observer(({ account }: { account?: Account }) => {
           ) : (
             <Image source={require('../../assets/icon.png')} style={viewStyles.avatar} />
           )}
-        </View>
+        </TouchableOpacity>
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <TouchableOpacity
