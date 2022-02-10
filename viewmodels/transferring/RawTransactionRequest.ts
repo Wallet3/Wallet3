@@ -47,6 +47,7 @@ export class RawTransactionRequest extends BaseTransaction {
   tokenAmountWei = BigNumber.from(0);
   tokenDecimals = 18;
   tokenSymbol = '';
+  tokenAddress = '';
 
   get tokenAmount() {
     try {
@@ -88,6 +89,7 @@ export class RawTransactionRequest extends BaseTransaction {
       tokenAmount: computed,
       tokenDecimals: observable,
       tokenSymbol: observable,
+      tokenAddress: observable,
       isValidParams: computed,
       setApproveAmount: action,
       insufficientFee: computed,
@@ -114,6 +116,7 @@ export class RawTransactionRequest extends BaseTransaction {
         this.to = to;
         this.tokenAmountWei = transferAmount;
 
+        this.tokenAddress = utils.getAddress(param.to);
         erc20.getDecimals().then((decimals) => runInAction(() => (this.tokenDecimals = decimals)));
         erc20.getSymbol().then((symbol) => runInAction(() => (this.tokenSymbol = symbol)));
         break;
@@ -123,6 +126,7 @@ export class RawTransactionRequest extends BaseTransaction {
         this.to = spender;
         this.tokenAmountWei = approveAmount;
 
+        this.tokenAddress = utils.getAddress(param.to);
         erc20.getDecimals().then((decimals) => runInAction(() => (this.tokenDecimals = decimals)));
         erc20.getSymbol().then((symbol) => runInAction(() => (this.tokenSymbol = symbol)));
         break;

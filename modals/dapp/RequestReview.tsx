@@ -111,7 +111,9 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
                 }}
               />
 
-              {vm.tokenSymbol ? <Coin symbol={vm.tokenSymbol} size={20} /> : undefined}
+              {vm.tokenSymbol ? (
+                <Coin symbol={vm.tokenSymbol} size={20} address={vm.tokenAddress} chainId={vm.network.chainId} />
+              ) : undefined}
               {vm.tokenSymbol ? (
                 <Text style={{ ...reviewItemValueStyle, marginStart: 2, maxWidth: 64 }} numberOfLines={1}>
                   {vm.tokenSymbol}

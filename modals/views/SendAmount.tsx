@@ -28,12 +28,14 @@ export default observer(({ onNext, onBack, vm }: Props) => {
         disableButton={!vm.isValidAmount}
         themeColor={themeColor}
         initValue={vm.amount}
+        network={vm.network}
       />
 
       <Tokenlist
         onBack={() => swiper.current?.scrollTo(0)}
         tokens={vm.allTokens}
         themeColor={themeColor}
+        network={vm.network}
         onTokenSelected={(token) => {
           swiper.current?.scrollTo(0);
           vm.setToken(token);
