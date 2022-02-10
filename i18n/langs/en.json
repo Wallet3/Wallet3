@@ -165,6 +165,7 @@
   "tip-copy-link": "Copy Link",
   "tip-cancel-action": "[Cancel]",
   "tip-zero-width-space": "This name contains zero-width spaces",
+  "tip-invalid-gas-price": "Max gas price must be greater than priority price",
   "msg-invalid-address": "Invalid address",
   "msg-invalid-qr-code": "Invalid QR code",
   "msg-chain-added": "{{name}} network added",

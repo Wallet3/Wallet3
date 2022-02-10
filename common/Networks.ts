@@ -71,6 +71,16 @@ export const PublicNetworks: INetwork[] = [
   },
   {
     symbol: 'ETH',
+    comm_id: 'aurora',
+    chainId: 1313161554,
+    network: 'Aurora',
+    color: '#70d44b',
+    defaultTokens: [],
+    explorer: 'https://explorer.aurora.dev',
+    l2: true,
+  },
+  {
+    symbol: 'ETH',
     comm_id: 'boba',
     network: 'Boba',
     chainId: 288,
@@ -113,15 +123,6 @@ export const PublicNetworks: INetwork[] = [
     blockTimeMs: 5 * 1000,
     explorer: 'https://blockscout.com/xdai/mainnet',
     eip1559: true,
-  },
-  {
-    symbol: 'ETH',
-    comm_id: 'aurora',
-    chainId: 1313161554,
-    network: 'Aurora',
-    color: '#70d44b',
-    defaultTokens: [],
-    explorer: 'https://explorer.aurora.dev',
   },
   {
     symbol: 'RON',
