@@ -1,4 +1,4 @@
-import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { formatAddress, formatCurrency } from '../../utils/formatter';
 import { numericFontFamily, themeColor } from '../../constants/styles';
@@ -33,6 +33,7 @@ interface Props {
   onSendPress?: () => void;
   onRequestPress?: () => void;
   onDAppsPress?: () => void;
+  onQRCodePress?: () => void;
   mode?: 'light' | 'dark';
   gasPrice?: number;
 }
@@ -56,6 +57,7 @@ export default observer(
     textColor,
     mode,
     gasPrice,
+    onQRCodePress,
   }: Props) => {
     const { t } = i18n;
     const { hideBalance, gasIndicator } = UI;
@@ -116,14 +118,20 @@ export default observer(
           </View>
         </View>
 
-        <CopyableText
-          copyText={prefixedAddress || ''}
-          title={formatAddress(prefixedAddress || '', 6 + (network?.addrPrefix?.length ?? 0), 5)}
-          iconSize={10}
-          iconColor={textColor}
-          iconStyle={{ marginHorizontal: 5 }}
-          txtStyle={{ ...styles.text, fontSize: 12, color: textColor }}
-        />
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <CopyableText
+            copyText={prefixedAddress || ''}
+            title={formatAddress(prefixedAddress || '', 6 + (network?.addrPrefix?.length ?? 0), 5)}
+            iconSize={10}
+            iconColor={textColor}
+            iconStyle={{ marginStart: 5 }}
+            txtStyle={{ ...styles.text, fontSize: 12, color: textColor }}
+          />
+
+          <TouchableOpacity style={{ paddingHorizontal: 7 }} onPress={onQRCodePress}>
+            <MaterialCommunityIcons name="qrcode" size={12} color={textColor} />
+          </TouchableOpacity>
+        </View>
 
         <View style={{ height: 36, backgroundColor: 'transparent' }} />
 
