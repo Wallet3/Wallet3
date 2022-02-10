@@ -8,6 +8,7 @@ import { BaseTransaction } from '../../viewmodels/transferring/BaseTransaction';
 import Fire from '../../assets/icons/app/fire.svg';
 import React from 'react';
 import Theme from '../../viewmodels/settings/Theme';
+import TxException from '../components/TxException';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
@@ -128,6 +129,8 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
           <Text style={{ ...styles.gasItemText, color: 'darkorchid' }}>{t('modal-gas-review-standard')}</Text>
         </TouchableOpacity>
       </View>
+
+      {!vm.isValidGas && <TxException exception={t('tip-invalid-gas-price')} />}
 
       <View style={{ flex: 1 }}></View>
 

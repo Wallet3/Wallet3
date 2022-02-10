@@ -163,6 +163,7 @@
   "tip-copy-link": "復製鏈接",
   "tip-cancel-action": "[取消]",
   "tip-zero-width-space": "該名稱包含零寬空格",
+  "tip-invalid-gas-price": "最大燃料價格必須大於優先燃料價格",
   "msg-invalid-address": "無效地址",
   "msg-invalid-qr-code": "無效的二維碼",
   "msg-chain-added": "{{name}} 添加成功",

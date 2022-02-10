@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Text, View } from 'react-native';
 import Transaction, { ITransaction } from '../../models/Transaction';
 
-import Actions from './Actions';
+import AddressQRCode from './AddressQRCode';
 import App from '../../viewmodels/App';
 import Assets from './Assets';
 import CurrencyViewmodel from '../../viewmodels/settings/Currency';
@@ -37,6 +37,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
   const { current } = Networks;
   const { ref: tokenDetailModalize, open: openTokenDetail, close: closeTokenDetail } = useModalize();
   const { ref: txDetailModalize, open: openTxDetail, close: closeTxDetail } = useModalize();
+  const { ref: addressQRModalize, open: openAddressQR } = useModalize();
   const [selectedToken, setSelectedToken] = useState<IToken>();
   const [selectedTx, setSelectedTx] = useState<Transaction>();
   const { backgroundColor, foregroundColor, statusBarStyle, isLightMode, mode } = Theme;
@@ -85,6 +86,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         onRequestPress={() => PubSub.publish('openRequestFundsModal')}
         onDAppsPress={() => navigation.navigate('DApps')}
         gasPrice={GasPrice.currentGwei}
+        onQRCodePress={() => openAddressQR()}
       />
 
       <Assets
@@ -121,6 +123,14 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
           modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
         >
           <TxDetail tx={selectedTx} close={closeTxDetail} />
+        </Modalize>
+
+        <Modalize
+          ref={addressQRModalize}
+          adjustToContentHeight
+          modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
+        >
+          <AddressQRCode account={currentAccount || undefined} />
         </Modalize>
       </Portal>
     </View>

@@ -163,6 +163,7 @@
   "tip-copy-link": "コピーリンク",
   "tip-cancel-action": "[キャンセル]",
   "tip-zero-width-space": "この名前にはゼロ幅スペースが含まれます",
+  "tip-invalid-gas-price": "ガス料金の最大値が優先ガス価格より必ず高いこと",
   "msg-invalid-address": "無効なアドレス",
   "msg-invalid-qr-code": "無効な QR コード",
   "msg-chain-added": "{{name}} を追加しました",

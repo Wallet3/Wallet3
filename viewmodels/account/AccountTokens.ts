@@ -4,6 +4,7 @@ import TokensMan, { UserToken } from '../services/TokensMan';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import { ERC20Token } from '../../models/ERC20';
+import LINQ from 'linq';
 import { NativeToken } from '../../models/NativeToken';
 import Networks from '../Networks';
 import { utils } from 'ethers';
@@ -39,10 +40,9 @@ export class AccountTokens {
     const { current } = Networks;
     this.loadingTokens = true;
 
-    const [native, userTokens, userBalance] = await Promise.all([
+    const [native, userTokens] = await Promise.all([
       this.refreshNativeToken(),
       TokensMan.loadUserTokens(current.chainId, this.owner),
-      Debank.getBalance(this.owner, current.comm_id),
     ]);
 
     const shownTokens = userTokens.filter((t) => t.shown);
@@ -52,25 +52,30 @@ export class AccountTokens {
 
     runInAction(() => {
       this.tokens = favTokens;
-      this.balanceUSD = userBalance?.usd_value ?? this.balanceUSD;
-      this.allTokens = [...userTokens];
+      this.allTokens = userTokens;
       this.loadingTokens = false;
     });
 
-    Debank.getTokens(this.owner, Networks.current.comm_id).then((d) => {
-      const suggested = d
-        .filter((i) => !userTokens.find((fav) => fav.address === i.address))
-        .map(
-          (t) =>
-            new ERC20Token({
-              ...t,
-              contract: t.address,
-              owner: this.owner,
-              chainId: Networks.current.chainId,
-            })
-        );
+    const [userBalance, debankTokens] = await Promise.all([
+      Debank.getBalance(this.owner, current.comm_id),
+      Debank.getTokens(this.owner, Networks.current.comm_id),
+    ]);
 
-      runInAction(() => (this.allTokens = [...this.allTokens, ...suggested]));
+    const suggested = debankTokens
+      .filter((i) => !userTokens.find((fav) => fav.address === i.address))
+      .map(
+        (t) =>
+          new ERC20Token({
+            ...t,
+            contract: t.address,
+            owner: this.owner,
+            chainId: Networks.current.chainId,
+          })
+      );
+
+    runInAction(() => {
+      this.balanceUSD = userBalance?.usd_value ?? this.balanceUSD;
+      this.allTokens = [...this.allTokens, ...suggested];
     });
   }
 
