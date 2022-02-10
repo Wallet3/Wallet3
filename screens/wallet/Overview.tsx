@@ -118,20 +118,16 @@ export default observer(
           </View>
         </View>
 
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <CopyableText
-            copyText={prefixedAddress || ''}
-            title={formatAddress(prefixedAddress || '', 6 + (network?.addrPrefix?.length ?? 0), 5)}
-            iconSize={10}
-            iconColor={textColor}
-            iconStyle={{ marginStart: 5 }}
-            txtStyle={{ ...styles.text, fontSize: 12, color: textColor }}
-          />
-
-          <TouchableOpacity style={{ paddingHorizontal: 7 }} onPress={onQRCodePress}>
+        <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={onQRCodePress}>
+         
+          <Text style={{ ...styles.text, fontSize: 12, color: textColor }}>
+            {formatAddress(prefixedAddress || '', 6 + (network?.addrPrefix?.length ?? 0), 5)}
+          </Text>
+          
+          <TouchableOpacity style={{ margin: -7, padding: 7, paddingHorizontal: 12 }}>
             <MaterialCommunityIcons name="qrcode" size={12} color={textColor} />
           </TouchableOpacity>
-        </View>
+        </TouchableOpacity>
 
         <View style={{ height: 36, backgroundColor: 'transparent' }} />
 

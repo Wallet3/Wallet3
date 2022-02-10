@@ -1,6 +1,6 @@
 import { Coin, Separator } from '../../components';
 import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { fontColor, secondaryFontColor } from '../../constants/styles';
 
@@ -50,12 +50,16 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
   const { t } = i18n;
   const { currentAccount } = App;
   const { allTokens } = currentAccount?.tokens ?? { allTokens: [] };
-  const [data, setData] = useState(allTokens);
+  const [data, setData] = useState<UserToken[]>([]);
   const { borderColor, textColor } = Theme;
 
   const renderItem = (props: RenderItemParams<UserToken>) => (
     <DraggableToken {...props} onValueChange={() => currentAccount?.tokens.toggleToken(props.item)} textColor={textColor} />
   );
+
+  useEffect(() => {
+    setData(allTokens);
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

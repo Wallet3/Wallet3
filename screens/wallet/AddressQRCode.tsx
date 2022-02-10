@@ -1,3 +1,4 @@
+import { EvilIcons, Feather, Ionicons } from '@expo/vector-icons';
 import { Image, Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { Account } from '../../viewmodels/account/Account';
@@ -20,6 +21,8 @@ export default observer(({ account }: { account?: Account }) => {
   const { address, avatar } = account || {};
   const ens = account?.ens.name;
 
+  const prefixedAddress = current?.addrPrefix ? `${current?.addrPrefix}${address?.substring(2)}` : address;
+
   return (
     <View style={{ padding: 16, flex: 1, height: 430, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
@@ -33,14 +36,21 @@ export default observer(({ account }: { account?: Account }) => {
               backgroundColor={account?.emojiColor}
             />
 
-            <Text
-              style={{ color: thirdTextColor, fontSize: 21, fontWeight: '500', marginStart: 8, maxWidth: '72%' }}
-              numberOfLines={1}
-            >
-              {ens || account?.nickname || `Account ${account?.index}`}
-            </Text>
+            <CopyableText
+              iconStyle={{ display: 'none' }}
+              copyText={ens || account?.nickname || `Account ${account?.index}`}
+              txtStyle={{ color: thirdTextColor, fontSize: 21, fontWeight: '500', marginStart: 8 }}
+            />
           </View>
-          <Text style={{ color: thirdTextColor, fontSize: 15 }}>{formatAddress(address || '', 12, 5)}</Text>
+
+          <CopyableText
+            copyText={prefixedAddress || ''}
+            title={formatAddress(prefixedAddress || '', 10 + (current?.addrPrefix?.length ?? 0), 5)}
+            iconSize={10}
+            iconColor={thirdTextColor}
+            iconStyle={{ marginStart: 5 }}
+            txtStyle={{ fontSize: 15, color: thirdTextColor }}
+          />
         </View>
 
         <View
@@ -80,19 +90,12 @@ export default observer(({ account }: { account?: Account }) => {
         </View>
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <CopyableText
-            title={t('tip-copy-link')}
-            copyText={address || ''}
-            txtStyle={{ fontSize: 12, maxWidth: 185, color: thirdTextColor }}
-            iconColor={thirdTextColor}
-            iconStyle={{ marginHorizontal: 4, marginEnd: 0 }}
-            iconSize={10}
-          />
-
-          <View style={{ width: 1, backgroundColor: thirdTextColor, height: 10, marginHorizontal: 12 }} />
-
-          <TouchableOpacity onPress={() => Linking.openURL(`${current.explorer}/address/${address}`)}>
-            <Text style={{ color: thirdTextColor, fontSize: 12 }}>Etherscan</Text>
+          <TouchableOpacity
+            onPress={() => Linking.openURL(`${current.explorer}/address/${address}`)}
+            style={{ flexDirection: 'row', alignItems: 'center' }}
+          >
+            <Text style={{ color: thirdTextColor, fontSize: 12, marginEnd: 6 }}>Etherscan</Text>
+            <Ionicons name="open-outline" size={11} color={thirdTextColor} />
           </TouchableOpacity>
         </View>
       </View>
