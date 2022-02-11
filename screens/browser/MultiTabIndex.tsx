@@ -1,19 +1,30 @@
 import { Animated, Text, View } from 'react-native';
 import { BottomTabScreenProps, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import React, { useCallback, useRef, useState } from 'react';
+import { action, makeObservable, observable } from 'mobx';
 
 import { Browser } from '.';
 import { PageMetadata } from './Web3View';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
+import { observer } from 'mobx-react-lite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 class StateViewModel {
   tabBarHidden = false;
   pageState = new Map<number, PageMetadata | undefined>();
+  tabCount = 1;
+
+  constructor() {
+    makeObservable(this, { tabCount: observable, setTabCount: action });
+  }
+
+  setTabCount(count: number) {
+    this.tabCount = count;
+  }
 }
 
-export default (props: BottomTabScreenProps<{}, never>) => {
+export default observer((props: BottomTabScreenProps<{}, never>) => {
   const { navigation } = props;
   const swiper = useRef<Swiper>(null);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
@@ -32,10 +43,11 @@ export default (props: BottomTabScreenProps<{}, never>) => {
       tabIndex={index}
       onPageLoaded={(index, meta) => state.pageState.set(index, meta)}
       onNewTab={onNewTab}
+      globalState={state}
       onTakeOff={() => hideTabBar()}
       onHome={() => {
         showTabBar();
-        state.pageState.delete(index);
+        state.pageState.set(index, undefined);
       }}
     />
   );
@@ -49,6 +61,7 @@ export default (props: BottomTabScreenProps<{}, never>) => {
     }, 0);
 
     setCounts(tabs.size);
+    state.setTabCount(tabs.size);
   };
 
   const hideTabBar = () => {
@@ -108,4 +121,4 @@ export default (props: BottomTabScreenProps<{}, never>) => {
       </Swiper>
     </View>
   );
-};
+});

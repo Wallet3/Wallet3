@@ -59,9 +59,10 @@ interface Props extends BottomTabScreenProps<any, never> {
   onTakeOff?: () => void;
   tabIndex: number;
   onNewTab?: () => void;
+  globalState: { tabCount: number };
 }
 
-export const Browser = observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex, onNewTab }: Props) => {
+export const Browser = observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex, onNewTab, globalState }: Props) => {
   const { t } = i18n;
   const { top } = useSafeAreaInsets();
   const { current } = Networks;
@@ -470,7 +471,7 @@ export const Browser = observer(({ navigation, onPageLoaded, onHome, onTakeOff, 
         </View>
       )}
 
-      {!webUrl && recentSites.length > 0 ? <RecentHistory onItemPress={(url) => goTo(url)} /> : undefined}
+      {!webUrl && recentSites.length > 0 ? <RecentHistory tabCount={globalState.tabCount} onItemPress={(url) => goTo(url)} /> : undefined}
 
       <Portal>
         <Modalize

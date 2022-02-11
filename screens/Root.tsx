@@ -160,7 +160,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
         sceneContainerStyle: { backgroundColor: backgroundColor },
         headerTransparent: false,
         headerTintColor: foregroundColor,
-        swipeEdgeWidth: ScreenWidth * 0.25,
+        swipeEdgeWidth: ScreenWidth * 0.1,
         swipeEnabled,
         drawerType: 'slide',
         headerBackgroundContainerStyle: { borderBottomColor: borderColor },

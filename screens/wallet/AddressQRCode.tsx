@@ -27,7 +27,7 @@ export default observer(({ account }: { account?: Account }) => {
   return (
     <View style={{ padding: 16, flex: 1, height: 430, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
-        <View style={{ alignItems: 'center' }}>
+        <View style={{ alignItems: 'center', marginTop: -16 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 12 }}>
             <Avatar
               size={27}
@@ -57,8 +57,7 @@ export default observer(({ account }: { account?: Account }) => {
           />
         </View>
 
-        <TouchableOpacity
-          onPress={() => setShowFullAddress(!showFullAddress)}
+        <View
           style={{
             position: 'relative',
             justifyContent: 'center',
@@ -91,7 +90,7 @@ export default observer(({ account }: { account?: Account }) => {
           ) : (
             <Image source={require('../../assets/icon.png')} style={viewStyles.avatar} />
           )}
-        </TouchableOpacity>
+        </View>
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <TouchableOpacity
@@ -100,6 +99,12 @@ export default observer(({ account }: { account?: Account }) => {
           >
             <Text style={{ color: thirdTextColor, fontSize: 12, marginEnd: 6 }}>Etherscan</Text>
             <Ionicons name="open-outline" size={11} color={thirdTextColor} />
+          </TouchableOpacity>
+
+          <View style={{ height: 10, width: 1, backgroundColor: thirdTextColor, marginHorizontal: 8 }} />
+
+          <TouchableOpacity onPress={() => setShowFullAddress(!showFullAddress)}>
+            <Text style={{ color: thirdTextColor, fontSize: 12 }}>{t('misc-show-full-address')}</Text>
           </TouchableOpacity>
         </View>
       </View>

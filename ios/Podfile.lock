@@ -340,7 +340,7 @@ PODS:
     - React-cxxreact (= 0.64.3)
     - React-jsi (= 0.64.3)
     - React-perflogger (= 0.64.3)
-  - RNCAsyncStorage (1.16.0):
+  - RNCAsyncStorage (1.16.1):
     - React-Core
   - RNDeviceInfo (8.4.9):
     - React-Core
@@ -348,7 +348,7 @@ PODS:
     - React-Core
   - RNOS (1.2.6):
     - React
-  - RNReanimated (2.3.1):
+  - RNReanimated (2.3.2):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -376,7 +376,7 @@ PODS:
     - React-RCTText
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.11.0):
+  - RNScreens (3.11.1):
     - React-Core
     - React-RCTImage
   - RNSharedElement (0.8.4):
@@ -673,12 +673,12 @@ SPEC CHECKSUMS:
   React-RCTVibration: c7f845861e79eae13dc1e8217a3cf47a3945b504
   React-runtimeexecutor: 493d9abb8b23c3f84e19ae221eeba92cadcb70dc
   ReactCommon: 8fea6422328e2fc093e25c9fac67adbcf0f04fb4
-  RNCAsyncStorage: 848b2c311517837ed36b92aa9b2f40ae3b5812ba
+  RNCAsyncStorage: b49b4e38a1548d03b74b30e558a1d18465b94be7
   RNDeviceInfo: 4944cf8787b9c5bffaf301fda68cc1a2ec003341
   RNGestureHandler: bf572f552ea324acd5b5464b8d30755b2d8c1de6
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
-  RNReanimated: 7f143675d94978c3555345d5bfa8ed6ae800c5d3
-  RNScreens: fd535547baa4ef8aeaee1a8b1e3ffd17b8df44a4
+  RNReanimated: db6fc1362254dfd18b4ef5f921af9bb72b2e42d0
+  RNScreens: 4d83613b50b74ed277026375dc0810893b0c347f
   RNSharedElement: eb7d506733952d58634f34c82ec17e82f557e377
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   TcpSockets: 4ef55305239923b343ed0a378b1fac188b1373b0

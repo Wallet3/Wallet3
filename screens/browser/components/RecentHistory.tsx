@@ -1,9 +1,11 @@
 import * as Animatable from 'react-native-animatable';
 
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
-import { FlatList, NativeSyntheticEvent, ScrollView, Text, TouchableOpacity } from 'react-native';
+import { FlatList, NativeSyntheticEvent, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
+import { BlurView } from 'expo-blur';
 import Bookmarks from '../../../viewmodels/customs/Bookmarks';
+import { Ionicons } from '@expo/vector-icons';
 import { NullableImage } from '../../../components';
 import { PageMetadata } from '../Web3View';
 import React from 'react';
@@ -14,10 +16,11 @@ import { observer } from 'mobx-react-lite';
 
 interface Props {
   onItemPress?: (url: string) => void;
+  tabCount: number;
 }
 
-export default observer(({ onItemPress }: Props) => {
-  const { backgroundColor, borderColor, systemBorderColor } = Theme;
+export default observer(({ onItemPress, tabCount }: Props) => {
+  const { backgroundColor, borderColor, systemBorderColor, foregroundColor, isLightMode, mode, tintColor } = Theme;
   const { t } = i18n;
   const actions = [{ title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' }];
   const { recentSites } = Bookmarks;
@@ -26,58 +29,88 @@ export default observer(({ onItemPress }: Props) => {
     <Animatable.View animation={'fadeInUp'} style={{ flex: 1 }}>
       <ScrollView style={{ flex: 1 }} />
 
-      <FlatList
-        style={{ maxHeight: 52, backgroundColor, borderTopWidth: 0.333, borderColor: systemBorderColor }}
-        contentContainerStyle={{ paddingVertical: 8, paddingTop: 8.5, paddingHorizontal: 8 }}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        horizontal
-        data={recentSites}
-        keyExtractor={(item, index) => `${item?.origin}-${index}`}
-        renderItem={({ item, index }) => {
-          const onActionPress = (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => {
-            const { index } = e.nativeEvent;
-
-            switch (index) {
-              case 0:
-                Bookmarks.removeRecentSite(item);
-                break;
-            }
-          };
-
-          return (
-            <ContextMenu actions={actions} onPress={onActionPress} previewBackgroundColor={backgroundColor}>
-              <TouchableOpacity
-                onPress={() => onItemPress?.(item.origin)}
-                key={`tab-${index}`}
+      <View style={{ flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.333, borderColor: systemBorderColor }}>
+        {tabCount > 1 && (
+          <View
+            style={{
+              paddingTop: 10.5,
+              height: '100%',
+              borderEndWidth: 0.333,
+              borderEndColor: systemBorderColor,
+            }}
+          >
+            <TouchableOpacity style={{ paddingStart: 12, paddingEnd: 10 }}>
+              <View
                 style={{
-                  padding: 8,
-                  borderRadius: 12,
-                  borderWidth: 1,
-                  borderColor: item?.themeColor ?? borderColor,
+                  borderColor: tintColor,
+                  borderWidth: 1.5,
+                  borderRadius: 10,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  flexDirection: 'row',
-                  marginHorizontal: 4,
+                  padding: 4,
+                  height: 29,
+                  width: 37,
                 }}
               >
-                <NullableImage
-                  uri={item.icon}
-                  size={15}
-                  text={item.title}
-                  fontSize={10}
-                  imageRadius={2}
-                  containerStyle={{ marginEnd: 6 }}
-                  imageBackgroundColor={backgroundColor}
-                />
-                <Text style={{ color: item.themeColor || '#999', maxWidth: 150, marginBottom: -1 }} numberOfLines={1}>
-                  {item.title}
-                </Text>
-              </TouchableOpacity>
-            </ContextMenu>
-          );
-        }}
-      />
+                <Text style={{ fontSize: 15, fontWeight: '600', color: tintColor }}>{tabCount > 9 ? '9+' : tabCount}</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        )}
+
+        <FlatList
+          style={{ maxHeight: 52, backgroundColor }}
+          contentContainerStyle={{ paddingVertical: 8, paddingTop: 8.5, paddingHorizontal: 8 }}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          data={recentSites}
+          keyExtractor={(item, index) => `${item?.origin}-${index}`}
+          renderItem={({ item, index }) => {
+            const onActionPress = (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => {
+              const { index } = e.nativeEvent;
+
+              switch (index) {
+                case 0:
+                  Bookmarks.removeRecentSite(item);
+                  break;
+              }
+            };
+
+            return (
+              <ContextMenu actions={actions} onPress={onActionPress} previewBackgroundColor={backgroundColor}>
+                <TouchableOpacity
+                  onPress={() => onItemPress?.(item.origin)}
+                  key={`tab-${index}`}
+                  style={{
+                    padding: 8,
+                    borderRadius: 12,
+                    borderWidth: 1,
+                    borderColor: item?.themeColor ?? borderColor,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                    marginHorizontal: 4,
+                  }}
+                >
+                  <NullableImage
+                    uri={item.icon}
+                    size={15}
+                    text={item.title}
+                    fontSize={10}
+                    imageRadius={2}
+                    containerStyle={{ marginEnd: 6 }}
+                    imageBackgroundColor={backgroundColor}
+                  />
+                  <Text style={{ color: item.themeColor || '#999', maxWidth: 150, marginBottom: -1 }} numberOfLines={1}>
+                    {item.title}
+                  </Text>
+                </TouchableOpacity>
+              </ContextMenu>
+            );
+          }}
+        />
+      </View>
     </Animatable.View>
   );
 });

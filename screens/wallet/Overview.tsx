@@ -119,14 +119,16 @@ export default observer(
         </View>
 
         <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={onQRCodePress}>
-         
           <Text style={{ ...styles.text, fontSize: 12, color: textColor }}>
             {formatAddress(prefixedAddress || '', 6 + (network?.addrPrefix?.length ?? 0), 5)}
           </Text>
-          
-          <TouchableOpacity style={{ margin: -7, padding: 7, paddingHorizontal: 12 }}>
-            <MaterialCommunityIcons name="qrcode" size={12} color={textColor} />
-          </TouchableOpacity>
+
+          <MaterialCommunityIcons
+            name="qrcode"
+            size={12}
+            color={textColor}
+            style={{ margin: -7, padding: 7, paddingHorizontal: 12 }}
+          />
         </TouchableOpacity>
 
         <View style={{ height: 36, backgroundColor: 'transparent' }} />
