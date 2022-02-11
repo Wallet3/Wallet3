@@ -54,6 +54,7 @@ export default (props: BottomTabScreenProps<{}, never>) => {
   const hideTabBar = () => {
     if (state.tabBarHidden) return;
 
+    PubSub.publish('drawer-swipeEnabled', false);
     state.tabBarHidden = true;
 
     const translateY = new Animated.Value(0);
@@ -75,6 +76,7 @@ export default (props: BottomTabScreenProps<{}, never>) => {
   const showTabBar = () => {
     if (!state.tabBarHidden) return;
 
+    PubSub.publish('drawer-swipeEnabled', true);
     state.tabBarHidden = false;
 
     const translateY = new Animated.Value(tabBarHeight);
