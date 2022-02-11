@@ -75,6 +75,7 @@ export class TokenTransferring extends BaseTransaction {
 
   get isValidParams() {
     return (
+      !this.initializing &&
       this.toAddress &&
       this.isValidAmount &&
       this.nonce >= 0 &&

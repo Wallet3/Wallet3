@@ -1,4 +1,5 @@
 import { Coin, SafeViewContainer, Skeleton } from '../../components';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import React, { useRef, useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { fontColor, thirdFontColor } from '../../constants/styles';
@@ -13,7 +14,6 @@ import FaceID from '../../assets/icons/app/FaceID-white.svg';
 import GasReview from '../views/GasReview';
 import Image from 'react-native-expo-cached-image';
 import InsufficientFee from '../components/InsufficientFee';
-import { MaterialIcons } from '@expo/vector-icons';
 import { RawTransactionRequest } from '../../viewmodels/transferring/RawTransactionRequest';
 import RejectApproveButtons from '../components/RejectApproveButtons';
 import Swiper from 'react-native-swiper';
@@ -27,7 +27,7 @@ import styles from '../styles';
 
 interface Props {
   vm: RawTransactionRequest;
-  app: { name: string; icon: string };
+  app: { name: string; icon: string; verified: boolean };
   onReject?: () => void;
   onApprove?: () => Promise<void>;
   onGasPress?: () => void;
@@ -95,6 +95,10 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
           <View style={{ ...reviewItemStyle }}>
             <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-max-approve')}</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              {vm.maxUint256Amount && !app.verified ? (
+                <Ionicons name="warning" color="crimson" size={15} style={{ marginEnd: 4 }} />
+              ) : undefined}
+
               <TextInput
                 numberOfLines={1}
                 defaultValue={vm.maxUint256Amount ? 'Unlimited' : vm.tokenAmount}
@@ -105,7 +109,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
                 style={{
                   ...reviewItemValueStyle,
                   maxWidth: 120,
-                  color: vm.maxUint256Amount ? 'deeppink' : fontColor,
+                  color: vm.maxUint256Amount ? 'crimson' : fontColor,
                   marginEnd: 8,
                   minWidth: 52,
                 }}

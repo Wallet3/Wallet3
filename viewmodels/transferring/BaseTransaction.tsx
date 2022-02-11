@@ -25,6 +25,7 @@ export class BaseTransaction {
   maxPriorityPrice = 0; // Gwei
   nonce = 0;
   txException = '';
+  initializing = false;
 
   constructor(args: { network: INetwork; account: Account }, initChainData = true) {
     this.network = args.network;
@@ -44,6 +45,7 @@ export class BaseTransaction {
       txFee: computed,
       txFeeWei: computed,
       isValidGas: computed,
+      initializing: observable,
 
       setNonce: action,
       setGasLimit: action,
@@ -160,6 +162,8 @@ export class BaseTransaction {
   protected async initChainData({ network, account }: { network: INetwork; account: string }) {
     const { chainId, eip1559 } = network;
 
+    runInAction(() => (this.initializing = true));
+
     const [gasPrice, nextBaseFee, priorityFee, nonce] = await Promise.all([
       getGasPrice(chainId),
       getNextBlockBaseFee(chainId),
@@ -182,6 +186,8 @@ export class BaseTransaction {
       } else {
         this.setMaxGasPrice((gasPrice || Gwei_1) / Gwei_1);
       }
+
+      this.initializing = false;
     });
   }
 

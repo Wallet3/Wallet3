@@ -1,38 +1,33 @@
-import * as Animatable from 'react-native-animatable';
 import * as Linking from 'expo-linking';
 
+import Bookmarks, { Bookmark, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
 import {
-  Animated,
   Dimensions,
-  FlatList,
   Image,
   LayoutAnimation,
   ListRenderItemInfo,
-  ScrollView,
   Share,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
-import Bookmarks, { Bookmark, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
-import { BottomTabScreenProps, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Web3View, { PageMetadata } from './Web3View';
 import { WebView, WebViewNavigation } from 'react-native-webview';
-import { borderColor, secureColor, thirdFontColor } from '../../constants/styles';
 import { renderBookmarkItem, renderUserBookmarkItem } from './components/BookmarkItem';
+import { secureColor, thirdFontColor } from '../../constants/styles';
 
 import { Bar } from 'react-native-progress';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import CachedImage from 'react-native-expo-cached-image';
 import Collapsible from 'react-native-collapsible';
 import { FlatGrid } from 'react-native-super-grid';
+import { Ionicons } from '@expo/vector-icons';
 import { LayoutAnimConfig } from '../../utils/animations';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
-import { NullableImage } from '../../components';
 import PopularDApps from '../../configs/urls/popular.json';
 import { Portal } from 'react-native-portalize';
 import RecentHistory from './components/RecentHistory';
@@ -63,11 +58,12 @@ interface Props extends BottomTabScreenProps<any, never> {
   onHome?: () => void;
   onTakeOff?: () => void;
   tabIndex: number;
+  onNewTab?: () => void;
 }
 
-export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex }: Props) => {
+export const Browser = observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex, onNewTab }: Props) => {
   const { t } = i18n;
-  const { top, bottom: safeAreaBottom } = useSafeAreaInsets();
+  const { top } = useSafeAreaInsets();
   const { current } = Networks;
   const webview = useRef<WebView>(null);
   const addrRef = useRef<TextInput>(null);
@@ -76,8 +72,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
   const [isFocus, setFocus] = useState(false);
   const [hostname, setHostname] = useState('');
   const [webUrl, setWebUrl] = useState('');
-  const [tabBarHidden, setTabBarHidden] = useState(false);
-  const [tabBarHeight] = useState(useBottomTabBarHeight());
+
   const [addr, setAddr] = useState('');
   const [uri, setUri] = useState<string>('');
   const [pageMetadata, setPageMetadata] = useState<{ icon: string; title: string; desc?: string; origin: string }>();
@@ -90,16 +85,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
   const [smallIconSize, setSmallIconSize] = useState(SmallIconSize);
   const [windowWidth, setWindowWidth] = useState(WindowWidth);
   const { history, favs, recentSites } = Bookmarks;
-  const {
-    backgroundColor,
-    textColor,
-    borderColor,
-    systemBorderColor,
-    foregroundColor,
-    isLightMode,
-    statusBarStyle,
-    secondaryTextColor,
-  } = Theme;
+  const { backgroundColor, textColor, borderColor, foregroundColor, isLightMode, statusBarStyle } = Theme;
 
   useEffect(() => {
     const handler = () => {
@@ -132,7 +118,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
       ? setWebRiskLevel('tls')
       : setWebRiskLevel('insecure');
 
-    PubSub.publish('drawer-swipeEnabled', webUrl ? false : true);
+    setIsExpandedSite(Bookmarks.isExpandedSite(webUrl));
   }, [webUrl]);
 
   const refresh = () => {
@@ -171,7 +157,6 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
       setHostname(Linking.parse(url).hostname!);
     } finally {
       addrRef.current?.blur();
-      // setTimeout(() => addrRef.current?.blur(), 10);
     }
 
     onTakeOff?.();
@@ -192,46 +177,6 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
 
     Bookmarks.submitHistory(goTo(addr));
   };
-
-  const hideTabBar = () => {
-    if (tabBarHidden) return;
-
-    setTabBarHidden(true);
-
-    const translateY = new Animated.Value(0);
-    Animated.spring(translateY, { toValue: tabBarHeight, useNativeDriver: true }).start();
-    setTimeout(
-      () =>
-        navigation.setOptions({
-          tabBarStyle: safeAreaBottom
-            ? { height: 0, backgroundColor, borderTopColor: systemBorderColor }
-            : { height: 0, backgroundColor, borderTopColor: systemBorderColor, borderTopWidth: 0 },
-        }),
-      100
-    );
-    navigation.setOptions({
-      tabBarStyle: { transform: [{ translateY }], backgroundColor, borderTopColor: systemBorderColor },
-    });
-  };
-
-  const showTabBar = () => {
-    if (!tabBarHidden) return;
-
-    setTabBarHidden(false);
-
-    const translateY = new Animated.Value(tabBarHeight);
-    Animated.spring(translateY, { toValue: 0, useNativeDriver: true }).start();
-    navigation.setOptions({
-      tabBarStyle: { transform: [{ translateY }], height: tabBarHeight, backgroundColor, borderTopColor: systemBorderColor },
-    });
-  };
-
-  useEffect(() => {
-    if (webUrl) hideTabBar();
-    else showTabBar();
-
-    setIsExpandedSite(Bookmarks.isExpandedSite(webUrl));
-  }, [webUrl]);
 
   const onNavigationStateChange = (event: WebViewNavigation) => {
     if (!event.url) return;
@@ -339,7 +284,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
           </View>
 
           <TouchableOpacity
-            style={{ padding: 8 }}
+            style={{ padding: 6, marginStart: 8 }}
             disabled={loadingProgress < 1 || !pageMetadata}
             onPress={() =>
               Bookmarks.has(webUrl) ? Bookmarks.remove(webUrl) : Bookmarks.add({ ...pageMetadata!, url: webUrl })
@@ -350,6 +295,10 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
               size={17}
               color={loadingProgress < 1 ? 'lightgrey' : foregroundColor}
             />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={{ padding: 4 }} onPress={onNewTab}>
+            <Ionicons name={'add-outline'} size={23} color={loadingProgress < 1 ? 'lightgrey' : foregroundColor} />
           </TouchableOpacity>
         </View>
 
@@ -461,6 +410,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
           onBookmarksPress={openFavs}
           onMetadataChange={(data) => {
             setPageMetadata(data);
+            onPageLoaded?.(tabIndex, data);
             Bookmarks.addRecentSite(data);
           }}
           onShrinkRequest={(webUrl) => {
@@ -555,3 +505,5 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
     </View>
   );
 });
+
+export default Browser;

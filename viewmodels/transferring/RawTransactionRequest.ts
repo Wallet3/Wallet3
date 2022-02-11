@@ -173,6 +173,7 @@ export class RawTransactionRequest extends BaseTransaction {
 
   get isValidParams() {
     return (
+      !this.initializing &&
       utils.isAddress(this.param.to) &&
       this.nonce >= 0 &&
       this.isValidGas &&

@@ -5,6 +5,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 
 import AnimateNumber from 'react-native-animate-number';
 import BackButton from '../components/BackButton';
+import { BioType } from '../../viewmodels/Authentication';
 import Currency from '../../viewmodels/settings/Currency';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';
 import GasReview from './GasReview';
@@ -28,7 +29,7 @@ interface Props {
   onGasPress?: () => void;
   disableBack?: boolean;
   vm: TokenTransferring;
-  biometricType?: 'faceid' | 'fingerprint';
+  biometricType?: BioType;
 }
 
 const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biometricType }: Props) => {

@@ -1,5 +1,6 @@
 import * as Linking from 'expo-linking';
 
+import Bookmarks, { isSecureSite } from '../customs/Bookmarks';
 import { Bytes, providers, utils } from 'ethers';
 import Networks, { AddEthereumChainParameter } from '../Networks';
 import { getCode, rawCall } from '../../common/RPC';
@@ -40,7 +41,7 @@ interface JsonRpcResponse {
 }
 
 interface Payload extends JsonRpcRequest {
-  pageMetadata?: { icon: string; title: string; desc?: string };
+  pageMetadata?: { icon: string; title: string; desc?: string; origin: string };
 }
 
 interface WatchAssetParams {
@@ -73,7 +74,7 @@ export interface InpageDAppTxRequest {
   chainId: number;
   param: WCCallRequest_eth_sendTransaction;
   account: string;
-  app: { name: string; icon: string };
+  app: { name: string; icon: string; verified: boolean };
   approve: (obj: { pin?: string; tx: providers.TransactionRequest; readableInfo: ReadableInfo }) => Promise<boolean>;
   reject: () => void;
 }
@@ -340,7 +341,7 @@ export class InpageMetamaskDAppHub extends EventEmitter {
         return true;
       };
 
-      const reject = () => resolve({ error: { code: 1, message: 'User rejected' } });
+      const reject = () => resolve({ error: { code: -32000, message: 'User rejected' } });
 
       PubSub.publish('openInpageDAppSendTransaction', {
         approve,
@@ -348,7 +349,7 @@ export class InpageMetamaskDAppHub extends EventEmitter {
         param: params[0] as WCCallRequest_eth_sendTransaction,
         chainId: Number(dapp.lastUsedChainId),
         account: dapp.lastUsedAccount,
-        app: { name: pageMetadata!.title, icon: pageMetadata!.icon },
+        app: { name: pageMetadata!.title, icon: pageMetadata!.icon, verified: isSecureSite(pageMetadata!.origin) },
       } as InpageDAppTxRequest);
     });
   }
@@ -504,4 +505,4 @@ export class InpageMetamaskDAppHub extends EventEmitter {
   }
 }
 
-export default new InpageMetamaskDAppHub();
+// export default new InpageMetamaskDAppHub();

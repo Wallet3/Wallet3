@@ -9,7 +9,7 @@ import Swiper from 'react-native-swiper';
 interface Props {
   themeColor?: string;
   vm: RawTransactionRequest;
-  app: { icon: string; name: string };
+  app: { icon: string; name: string; verified: boolean };
   onApprove: (pin?: string) => Promise<boolean>;
   onReject: () => void;
   bioType?: BioType;
