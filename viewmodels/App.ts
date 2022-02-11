@@ -159,7 +159,9 @@ export class AppVM {
     Coingecko.init();
 
     await Promise.all([Database.init(), Authentication.init()]);
-    await Promise.all([TxHub.init(), Networks.init()]);
+    await Promise.all([Networks.init()]);
+
+    TxHub.init();
 
     const wallets = await Promise.all((await Database.keys.find()).map((key) => new Wallet(key).init()));
     const lastUsedAccount = (await AsyncStorage.getItem('lastUsedAccount')) ?? '';
