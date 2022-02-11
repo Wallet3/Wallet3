@@ -63,9 +63,10 @@ interface Props extends BottomTabScreenProps<any, never> {
   onHome?: () => void;
   onTakeOff?: () => void;
   tabIndex: number;
+  onNewTab?: () => void;
 }
 
-export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex }: Props) => {
+export const Browser = observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex, onNewTab }: Props) => {
   const { t } = i18n;
   const { top, bottom: safeAreaBottom } = useSafeAreaInsets();
   const { current } = Networks;
@@ -171,7 +172,6 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
       setHostname(Linking.parse(url).hostname!);
     } finally {
       addrRef.current?.blur();
-      // setTimeout(() => addrRef.current?.blur(), 10);
     }
 
     onTakeOff?.();
@@ -339,7 +339,7 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
           </View>
 
           <TouchableOpacity
-            style={{ padding: 8 }}
+            style={{ padding: 8, marginStart: 2 }}
             disabled={loadingProgress < 1 || !pageMetadata}
             onPress={() =>
               Bookmarks.has(webUrl) ? Bookmarks.remove(webUrl) : Bookmarks.add({ ...pageMetadata!, url: webUrl })
@@ -350,6 +350,10 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
               size={17}
               color={loadingProgress < 1 ? 'lightgrey' : foregroundColor}
             />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={{ padding: 4 }} onPress={onNewTab}>
+            <Ionicons name={'add-outline'} size={21} color={loadingProgress < 1 ? 'lightgrey' : foregroundColor} />
           </TouchableOpacity>
         </View>
 
@@ -555,3 +559,5 @@ export default observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex
     </View>
   );
 });
+
+export default Browser;

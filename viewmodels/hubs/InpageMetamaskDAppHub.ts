@@ -505,4 +505,4 @@ export class InpageMetamaskDAppHub extends EventEmitter {
   }
 }
 
-export default new InpageMetamaskDAppHub();
+// export default new InpageMetamaskDAppHub();
