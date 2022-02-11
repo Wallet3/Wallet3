@@ -68,7 +68,7 @@ interface Props extends BottomTabScreenProps<any, never> {
 
 export const Browser = observer(({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex, onNewTab }: Props) => {
   const { t } = i18n;
-  const { top, bottom: safeAreaBottom } = useSafeAreaInsets();
+  const { top } = useSafeAreaInsets();
   const { current } = Networks;
   const webview = useRef<WebView>(null);
   const addrRef = useRef<TextInput>(null);
@@ -77,8 +77,7 @@ export const Browser = observer(({ navigation, onPageLoaded, onHome, onTakeOff, 
   const [isFocus, setFocus] = useState(false);
   const [hostname, setHostname] = useState('');
   const [webUrl, setWebUrl] = useState('');
-  const [tabBarHidden, setTabBarHidden] = useState(false);
-  const [tabBarHeight] = useState(useBottomTabBarHeight());
+
   const [addr, setAddr] = useState('');
   const [uri, setUri] = useState<string>('');
   const [pageMetadata, setPageMetadata] = useState<{ icon: string; title: string; desc?: string; origin: string }>();
@@ -134,6 +133,7 @@ export const Browser = observer(({ navigation, onPageLoaded, onHome, onTakeOff, 
       : setWebRiskLevel('insecure');
 
     PubSub.publish('drawer-swipeEnabled', webUrl ? false : true);
+    setIsExpandedSite(Bookmarks.isExpandedSite(webUrl));
   }, [webUrl]);
 
   const refresh = () => {
@@ -192,46 +192,6 @@ export const Browser = observer(({ navigation, onPageLoaded, onHome, onTakeOff, 
 
     Bookmarks.submitHistory(goTo(addr));
   };
-
-  const hideTabBar = () => {
-    if (tabBarHidden) return;
-
-    setTabBarHidden(true);
-
-    const translateY = new Animated.Value(0);
-    Animated.spring(translateY, { toValue: tabBarHeight, useNativeDriver: true }).start();
-    setTimeout(
-      () =>
-        navigation.setOptions({
-          tabBarStyle: safeAreaBottom
-            ? { height: 0, backgroundColor, borderTopColor: systemBorderColor }
-            : { height: 0, backgroundColor, borderTopColor: systemBorderColor, borderTopWidth: 0 },
-        }),
-      100
-    );
-    navigation.setOptions({
-      tabBarStyle: { transform: [{ translateY }], backgroundColor, borderTopColor: systemBorderColor },
-    });
-  };
-
-  const showTabBar = () => {
-    if (!tabBarHidden) return;
-
-    setTabBarHidden(false);
-
-    const translateY = new Animated.Value(tabBarHeight);
-    Animated.spring(translateY, { toValue: 0, useNativeDriver: true }).start();
-    navigation.setOptions({
-      tabBarStyle: { transform: [{ translateY }], height: tabBarHeight, backgroundColor, borderTopColor: systemBorderColor },
-    });
-  };
-
-  useEffect(() => {
-    if (webUrl) hideTabBar();
-    else showTabBar();
-
-    setIsExpandedSite(Bookmarks.isExpandedSite(webUrl));
-  }, [webUrl]);
 
   const onNavigationStateChange = (event: WebViewNavigation) => {
     if (!event.url) return;
@@ -339,7 +299,7 @@ export const Browser = observer(({ navigation, onPageLoaded, onHome, onTakeOff, 
           </View>
 
           <TouchableOpacity
-            style={{ padding: 8, marginStart: 2 }}
+            style={{ padding: 6, marginStart: 8 }}
             disabled={loadingProgress < 1 || !pageMetadata}
             onPress={() =>
               Bookmarks.has(webUrl) ? Bookmarks.remove(webUrl) : Bookmarks.add({ ...pageMetadata!, url: webUrl })
@@ -353,7 +313,7 @@ export const Browser = observer(({ navigation, onPageLoaded, onHome, onTakeOff, 
           </TouchableOpacity>
 
           <TouchableOpacity style={{ padding: 4 }} onPress={onNewTab}>
-            <Ionicons name={'add-outline'} size={21} color={loadingProgress < 1 ? 'lightgrey' : foregroundColor} />
+            <Ionicons name={'add-outline'} size={23} color={loadingProgress < 1 ? 'lightgrey' : foregroundColor} />
           </TouchableOpacity>
         </View>
 
@@ -465,6 +425,7 @@ export const Browser = observer(({ navigation, onPageLoaded, onHome, onTakeOff, 
           onBookmarksPress={openFavs}
           onMetadataChange={(data) => {
             setPageMetadata(data);
+            onPageLoaded?.(tabIndex, data);
             Bookmarks.addRecentSite(data);
           }}
           onShrinkRequest={(webUrl) => {

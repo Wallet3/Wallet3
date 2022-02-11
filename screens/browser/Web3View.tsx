@@ -227,6 +227,7 @@ export default observer((props: Web3ViewProps) => {
         allowsBackForwardNavigationGestures
         injectedJavaScriptBeforeContentLoaded={`${MetamaskMobileProvider}\ntrue;`}
         style={{ backgroundColor }}
+        decelerationRate={1}
       />
 
       <Animatable.View
