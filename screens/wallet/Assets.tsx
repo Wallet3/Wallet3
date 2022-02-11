@@ -8,6 +8,7 @@ import { borderColor, secondaryFontColor } from '../../constants/styles';
 
 import ERC20Tokens from './ERC20Tokens';
 import HistoryList from './HistoryList';
+import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/Tokens';
 import { RootNavigationProps } from '../navigations';
 import Swiper from 'react-native-swiper';
@@ -21,6 +22,7 @@ import { useNavigation } from '@react-navigation/core';
 interface Props {
   tokens?: IToken[];
   themeColor: string;
+  network: INetwork;
   loadingTokens?: boolean;
   onRefreshRequest?: () => Promise<void>;
   onTokenPress?: (token: IToken) => void;
@@ -36,7 +38,7 @@ const rotate = {
   },
 };
 
-export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, onTokenPress, onTxPress }: Props) => {
+export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, onTokenPress, onTxPress, network }: Props) => {
   const { t } = i18n;
 
   const [activeTab, setActiveTab] = useState(0);
@@ -127,6 +129,7 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
       >
         <ERC20Tokens
           tokens={tokens}
+          network={network}
           loading={loadingTokens}
           separatorColor={`${borderColor}70`}
           onRefreshRequest={onRefreshRequest}

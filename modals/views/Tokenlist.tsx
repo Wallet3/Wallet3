@@ -2,6 +2,7 @@ import { Coin, SafeViewContainer } from '../../components';
 import { FlatList, ListRenderItemInfo, Text, TouchableOpacity, View } from 'react-native';
 
 import BackButton from '../components/BackButton';
+import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/Tokens';
 import React from 'react';
 import Theme from '../../viewmodels/settings/Theme';
@@ -14,6 +15,7 @@ interface Props {
   onBack?: () => void;
   tokens?: IToken[];
   themeColor?: string;
+  network: INetwork;
 }
 
 export default observer((props: Props) => {
@@ -31,7 +33,13 @@ export default observer((props: Props) => {
         }}
         onPress={() => props.onTokenSelected?.(item)}
       >
-        <Coin symbol={item.symbol} style={{ width: 25, height: 25, marginEnd: 12 }} iconUrl={item.iconUrl} />
+        <Coin
+          address={item.address}
+          chainId={props.network.chainId}
+          symbol={item.symbol}
+          style={{ width: 25, height: 25, marginEnd: 12 }}
+          iconUrl={item.iconUrl}
+        />
         <Text style={{ fontSize: 19, color: textColor, textTransform: 'uppercase' }} numberOfLines={1}>
           {item.symbol}
         </Text>

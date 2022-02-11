@@ -42,7 +42,13 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
   return (
     <View style={{ padding: 16, backgroundColor, borderRadius: 6 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Coin symbol={token?.symbol} size={39} iconUrl={token?.iconUrl} />
+        <Coin
+          chainId={network.chainId}
+          address={token?.address || ''}
+          symbol={token?.symbol}
+          size={39}
+          iconUrl={token?.iconUrl}
+        />
 
         <View style={{ marginStart: 16 }}>
           <Text style={{ fontWeight: '500', fontSize: 19, color: foregroundColor }} numberOfLines={1}>
@@ -89,7 +95,13 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
           <Text style={{ ...styles.subValue, marginEnd: 8, color: foregroundColor }}>
             {`${numeral(token?.amount ?? 0).format('0,0.000000')} ${token?.symbol}`}
           </Text>
-          <Coin symbol={token?.symbol} iconUrl={token?.iconUrl} size={19} />
+          <Coin
+            chainId={network.chainId}
+            address={token?.address || ''}
+            symbol={token?.symbol}
+            iconUrl={token?.iconUrl}
+            size={19}
+          />
         </View>
       </View>
 

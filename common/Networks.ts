@@ -1,6 +1,7 @@
 import {
   AVAXPopularTokens,
   ArbiPopularTokens,
+  AuroraPopularTokens,
   BobaPopularTokens,
   BscPopularTokens,
   CeloPopularTokens,
@@ -75,7 +76,7 @@ export const PublicNetworks: INetwork[] = [
     chainId: 1313161554,
     network: 'Aurora',
     color: '#70d44b',
-    defaultTokens: [],
+    defaultTokens: AuroraPopularTokens,
     explorer: 'https://explorer.aurora.dev',
     l2: true,
   },

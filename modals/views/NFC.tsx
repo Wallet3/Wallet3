@@ -176,7 +176,14 @@ const QRView = observer(({ vm, onBack, themeColor }: Props) => {
 
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Coin symbol={token.symbol} style={{ marginHorizontal: 10, marginTop: -1 }} size={25} forceRefresh />
+          <Coin
+            symbol={token.symbol}
+            address={token.address}
+            chainId={vm.network.chainId}
+            style={{ marginHorizontal: 10, marginTop: -1 }}
+            size={25}
+            forceRefresh
+          />
           <Text style={{ ...styles.navTitle, fontSize: 24, fontWeight: '300', color: thirdFontColor }}>{`${amount}`}</Text>
           <Text style={{ ...styles.navTitle, fontSize: 24, fontWeight: '300', color: thirdFontColor }}>
             {`${token.symbol}`}

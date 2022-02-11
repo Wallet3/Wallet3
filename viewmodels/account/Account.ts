@@ -52,8 +52,8 @@ export class Account {
   }
 
   constructor(address: string, index: number) {
-    // address = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045';
-    // if (index === 2) address = '0xFfec0067F5a79CFf07527f63D83dD5462cCf8BA4';
+    address = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045';
+    if (index === 2) address = '0xFfec0067F5a79CFf07527f63D83dD5462cCf8BA4';
     
     this.address = address;
     this.index = index;

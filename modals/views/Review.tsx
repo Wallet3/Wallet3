@@ -69,7 +69,13 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
               {vm.amount}
             </Text>
             <Text style={{ ...reviewItemValueStyle, marginEnd: 8 }}>{vm.token.symbol}</Text>
-            <Coin symbol={vm.token!.symbol} forceRefresh iconUrl={vm.token?.iconUrl} />
+            <Coin
+              address={vm.token.address}
+              chainId={vm.network.chainId}
+              symbol={vm.token!.symbol}
+              forceRefresh
+              iconUrl={vm.token?.iconUrl}
+            />
           </View>
         </View>
 

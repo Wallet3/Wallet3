@@ -1,6 +1,6 @@
 import { Coin, Separator } from '../../components';
 import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { fontColor, secondaryFontColor } from '../../constants/styles';
 
@@ -20,12 +20,14 @@ const DraggableToken = observer(
     item,
     onValueChange,
     textColor,
+    chainId,
   }: {
     item: UserToken;
     drag: any;
     isActive: boolean;
     onValueChange: (on: boolean) => void;
     textColor: string;
+    chainId: number;
   }) => (
     <TouchableOpacity
       onLongPress={drag}
@@ -38,7 +40,13 @@ const DraggableToken = observer(
         paddingHorizontal: 16,
       }}
     >
-      <Coin symbol={item.symbol} style={{ width: 36, height: 36, marginEnd: 16 }} iconUrl={item.iconUrl} />
+      <Coin
+        chainId={chainId}
+        address={item.address}
+        symbol={item.symbol}
+        style={{ width: 36, height: 36, marginEnd: 16 }}
+        iconUrl={item.iconUrl}
+      />
       <Text style={{ fontSize: 18, color: textColor }}>{item.symbol}</Text>
       <View style={{ flex: 1 }} />
       <Switch value={item.shown} onValueChange={(on) => onValueChange(on)} trackColor={{ true: Networks.current.color }} />
@@ -50,12 +58,22 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
   const { t } = i18n;
   const { currentAccount } = App;
   const { allTokens } = currentAccount?.tokens ?? { allTokens: [] };
-  const [data, setData] = useState(allTokens);
+  const [data, setData] = useState<UserToken[]>([]);
   const { borderColor, textColor } = Theme;
+  const { current } = Networks;
 
   const renderItem = (props: RenderItemParams<UserToken>) => (
-    <DraggableToken {...props} onValueChange={() => currentAccount?.tokens.toggleToken(props.item)} textColor={textColor} />
+    <DraggableToken
+      chainId={current.chainId}
+      {...props}
+      onValueChange={() => currentAccount?.tokens.toggleToken(props.item)}
+      textColor={textColor}
+    />
   );
+
+  useEffect(() => {
+    setData(allTokens);
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

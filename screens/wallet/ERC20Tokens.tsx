@@ -2,13 +2,14 @@ import { Coin, Skeleton } from '../../components';
 import { FlatList, ListRenderItemInfo, RefreshControl, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
 
+import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/Tokens';
 import Theme from '../../viewmodels/settings/Theme';
 import { fontColor } from '../../constants/styles';
 import { formatCurrency } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
 
-const Token = observer(({ item, onPress }: { item: IToken; onPress?: (token: IToken) => void }) => {
+const Token = observer(({ item, onPress, chainId }: { item: IToken; onPress?: (token: IToken) => void; chainId: number }) => {
   const { textColor } = Theme;
 
   return (
@@ -23,7 +24,13 @@ const Token = observer(({ item, onPress }: { item: IToken; onPress?: (token: ITo
         paddingHorizontal: 22,
       }}
     >
-      <Coin symbol={item.symbol} style={{ width: 36, height: 36, marginEnd: 16 }} iconUrl={item.iconUrl} />
+      <Coin
+        chainId={chainId}
+        address={item.address}
+        symbol={item.symbol}
+        style={{ width: 36, height: 36, marginEnd: 16 }}
+        iconUrl={item.iconUrl}
+      />
       <Text style={{ fontSize: 18, color: textColor }} numberOfLines={1}>
         {item.symbol}
       </Text>
@@ -47,14 +54,18 @@ export default observer(
     separatorColor,
     onRefreshRequest,
     onTokenPress,
+    network,
   }: {
     tokens?: IToken[];
     loading?: boolean;
     separatorColor?: string;
     onRefreshRequest?: () => Promise<any>;
     onTokenPress?: (token: IToken) => void;
+    network: INetwork;
   }) => {
-    const renderItem = ({ item, index }: ListRenderItemInfo<IToken>) => <Token item={item} onPress={onTokenPress} />;
+    const renderItem = ({ item }: ListRenderItemInfo<IToken>) => (
+      <Token chainId={network.chainId} item={item} onPress={onTokenPress} />
+    );
     const [manuallyLoading, setManuallyLoading] = useState(false);
 
     return (tokens?.length ?? 0) > 0 && !loading ? (

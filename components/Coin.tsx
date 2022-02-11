@@ -6,6 +6,8 @@ import { observer } from 'mobx-react-lite';
 
 interface CoinProps {
   symbol?: string;
+  address: string;
+  chainId: number;
   style?: StyleProp<ImageStyle>;
   iconUrl?: string;
   forceRefresh?: boolean;

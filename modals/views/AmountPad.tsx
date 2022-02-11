@@ -4,6 +4,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { numericFontFamily, secondaryFontColor } from '../../constants/styles';
 
 import BackButton from '../components/BackButton';
+import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/Tokens';
 import Networks from '../../viewmodels/Networks';
 import Theme from '../../viewmodels/settings/Theme';
@@ -26,6 +27,7 @@ interface SubViewProps {
   onNumChanged?: (num: string) => void;
   themeColor?: string;
   initValue?: string;
+  network: INetwork;
 }
 
 export default observer((props: SubViewProps) => {
@@ -76,7 +78,14 @@ export default observer((props: SubViewProps) => {
             {props.token?.symbol}
           </Text>
 
-          <Coin symbol={props.token?.symbol} style={{ width: 22, height: 22 }} forceRefresh iconUrl={props.token?.iconUrl} />
+          <Coin
+            symbol={props.token?.symbol}
+            style={{ width: 22, height: 22 }}
+            forceRefresh
+            iconUrl={props.token?.iconUrl}
+            address={props.token.address}
+            chainId={props.network.chainId}
+          />
         </TouchableOpacity>
       </View>
 

@@ -1,6 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Text, View } from 'react-native';
-import Transaction, { ITransaction } from '../../models/Transaction';
+import React, { useState } from 'react';
 
 import AddressQRCode from './AddressQRCode';
 import App from '../../viewmodels/App';
@@ -10,20 +8,16 @@ import { DrawerScreenProps } from '@react-navigation/drawer';
 import GasPrice from '../../viewmodels/misc/GasPrice';
 import { IToken } from '../../common/Tokens';
 import { Modalize } from 'react-native-modalize';
-import { NavigationContainer } from '@react-navigation/native';
 import Networks from '../../viewmodels/Networks';
 import Overview from './Overview';
 import { Portal } from 'react-native-portalize';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { StatusBar } from 'expo-status-bar';
 import Theme from '../../viewmodels/settings/Theme';
 import TokenDetail from './TokenDetail';
+import Transaction from '../../models/Transaction';
 import TxDetail from './TxDetail';
-import UI from '../../viewmodels/settings/UI';
+import { View } from 'react-native';
 import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectV1ClientHub';
-import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import { useIsFocused } from '@react-navigation/native';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 type RootStackParamList = {
@@ -96,6 +90,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         onRefreshRequest={async () => await App.refreshAccount()}
         onTokenPress={onTokenPress}
         onTxPress={onTxPress}
+        network={current}
       />
 
       <Portal>

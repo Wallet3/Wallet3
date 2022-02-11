@@ -1,4 +1,6 @@
+import { EvilIcons, Feather, Ionicons } from '@expo/vector-icons';
 import { Image, Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
 
 import { Account } from '../../viewmodels/account/Account';
 import Avatar from '../../components/Avatar';
@@ -7,7 +9,6 @@ import CachedImage from 'react-native-expo-cached-image';
 import CopyableText from '../../components/CopyableText';
 import Networks from '../../viewmodels/Networks';
 import QRCode from 'react-native-qrcode-svg';
-import React from 'react';
 import Theme from '../../viewmodels/settings/Theme';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
@@ -19,6 +20,9 @@ export default observer(({ account }: { account?: Account }) => {
   const { current } = Networks;
   const { address, avatar } = account || {};
   const ens = account?.ens.name;
+  const [showFullAddress, setShowFullAddress] = useState(false);
+
+  const prefixedAddress = current?.addrPrefix ? `${current?.addrPrefix}${address?.substring(2)}` : address;
 
   return (
     <View style={{ padding: 16, flex: 1, height: 430, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
@@ -33,24 +37,34 @@ export default observer(({ account }: { account?: Account }) => {
               backgroundColor={account?.emojiColor}
             />
 
-            <Text
-              style={{ color: thirdTextColor, fontSize: 21, fontWeight: '500', marginStart: 8, maxWidth: '72%' }}
-              numberOfLines={1}
-            >
-              {ens || account?.nickname || `Account ${account?.index}`}
-            </Text>
+            <CopyableText
+              iconStyle={{ display: 'none' }}
+              copyText={ens || account?.nickname || `Account ${(account?.index ?? 0) + 1}`}
+              txtStyle={{ color: thirdTextColor, fontSize: 21, fontWeight: '500', marginStart: 8 }}
+            />
           </View>
-          <Text style={{ color: thirdTextColor, fontSize: 15 }}>{formatAddress(address || '', 12, 5)}</Text>
+
+          <CopyableText
+            copyText={prefixedAddress || ''}
+            iconSize={10}
+            iconColor={thirdTextColor}
+            iconStyle={{ marginStart: 5 }}
+            txtLines={2}
+            txtStyle={{ fontSize: 15, color: thirdTextColor, maxWidth: 200 }}
+            title={
+              showFullAddress ? address : formatAddress(prefixedAddress || '', 10 + (current?.addrPrefix?.length ?? 0), 5)
+            }
+          />
         </View>
 
-        <View
+        <TouchableOpacity
+          onPress={() => setShowFullAddress(!showFullAddress)}
           style={{
             position: 'relative',
             justifyContent: 'center',
             alignItems: 'center',
             padding: 24,
             borderRadius: 15,
-
             shadowColor: '#000',
             shadowOffset: {
               width: 0,
@@ -77,22 +91,15 @@ export default observer(({ account }: { account?: Account }) => {
           ) : (
             <Image source={require('../../assets/icon.png')} style={viewStyles.avatar} />
           )}
-        </View>
+        </TouchableOpacity>
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <CopyableText
-            title={t('tip-copy-link')}
-            copyText={address || ''}
-            txtStyle={{ fontSize: 12, maxWidth: 185, color: thirdTextColor }}
-            iconColor={thirdTextColor}
-            iconStyle={{ marginHorizontal: 4, marginEnd: 0 }}
-            iconSize={10}
-          />
-
-          <View style={{ width: 1, backgroundColor: thirdTextColor, height: 10, marginHorizontal: 12 }} />
-
-          <TouchableOpacity onPress={() => Linking.openURL(`${current.explorer}/address/${address}`)}>
-            <Text style={{ color: thirdTextColor, fontSize: 12 }}>Etherscan</Text>
+          <TouchableOpacity
+            onPress={() => Linking.openURL(`${current.explorer}/address/${address}`)}
+            style={{ flexDirection: 'row', alignItems: 'center' }}
+          >
+            <Text style={{ color: thirdTextColor, fontSize: 12, marginEnd: 6 }}>Etherscan</Text>
+            <Ionicons name="open-outline" size={11} color={thirdTextColor} />
           </TouchableOpacity>
         </View>
       </View>

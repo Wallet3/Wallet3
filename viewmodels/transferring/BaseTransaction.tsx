@@ -109,7 +109,7 @@ export class BaseTransaction {
   }
 
   get isValidGas() {
-    return this.maxGasPrice > 0 && this.maxGasPrice >= this.maxPriorityPrice && this.gasLimit >= 0;
+    return this.maxGasPrice >= 0 && this.maxGasPrice >= this.maxPriorityPrice && this.gasLimit >= 0;
   }
 
   setNonce(nonce: string | number) {
