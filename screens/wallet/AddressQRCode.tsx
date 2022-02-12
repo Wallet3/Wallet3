@@ -50,7 +50,7 @@ export default observer(({ account }: { account?: Account }) => {
             iconColor={thirdTextColor}
             iconStyle={{ marginStart: 5 }}
             txtLines={2}
-            txtStyle={{ fontSize: 15, color: thirdTextColor, maxWidth: 200 }}
+            txtStyle={{ fontSize: 15, color: thirdTextColor, maxWidth: 225 }}
             title={
               showFullAddress ? address : formatAddress(prefixedAddress || '', 10 + (current?.addrPrefix?.length ?? 0), 5)
             }

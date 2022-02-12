@@ -471,7 +471,9 @@ export const Browser = observer(({ navigation, onPageLoaded, onHome, onTakeOff, 
         </View>
       )}
 
-      {!webUrl && recentSites.length > 0 ? <RecentHistory tabCount={globalState.tabCount} onItemPress={(url) => goTo(url)} /> : undefined}
+      {!webUrl && recentSites.length > 0 ? (
+        <RecentHistory tabCount={globalState.tabCount} onItemPress={(url) => goTo(url)} />
+      ) : undefined}
 
       <Portal>
         <Modalize
@@ -481,8 +483,10 @@ export const Browser = observer(({ navigation, onPageLoaded, onHome, onTakeOff, 
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
           modalStyle={{ padding: 0, margin: 0 }}
         >
-          <SafeAreaProvider style={{ padding: 0 }}>
-            <SafeViewContainer style={{ height: 439, flex: 1, padding: 0 }}>
+          <SafeAreaProvider style={{ padding: 0, borderTopEndRadius: 7, borderTopStartRadius: 7 }}>
+            <SafeViewContainer
+              style={{ height: 439, backgroundColor, flex: 1, padding: 0, borderTopEndRadius: 6, borderTopStartRadius: 6 }}
+            >
               <Text style={{ marginHorizontal: 12 }}>{t('browser-favorites')}</Text>
               <FlatGrid
                 style={{ marginTop: 2, padding: 0 }}

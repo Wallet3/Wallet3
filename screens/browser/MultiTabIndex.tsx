@@ -1,14 +1,17 @@
 import { Animated, Text, View } from 'react-native';
 import { BottomTabScreenProps, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import React, { useCallback, useRef, useState } from 'react';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { action, makeObservable, observable } from 'mobx';
 
 import { Browser } from '.';
+import { Modalize } from 'react-native-modalize';
 import { PageMetadata } from './Web3View';
+import { Portal } from 'react-native-portalize';
+import { SafeViewContainer } from '../../components';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
 import { observer } from 'mobx-react-lite';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 class StateViewModel {
   tabBarHidden = false;
@@ -30,11 +33,10 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [counts, setCounts] = useState(1);
   const [state] = useState(new StateViewModel());
+  const { backgroundColor } = Theme;
 
   const [tabBarHeight] = useState(useBottomTabBarHeight());
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
-
-  const { backgroundColor, systemBorderColor } = Theme;
 
   const generateBrowser = (index: number, props: BottomTabScreenProps<{}, never>, onNewTab: () => void) => (
     <Browser
@@ -67,6 +69,8 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
   const hideTabBar = () => {
     if (state.tabBarHidden) return;
 
+    const { backgroundColor, systemBorderColor } = Theme;
+
     PubSub.publish('drawer-swipeEnabled', false);
     state.tabBarHidden = true;
 
@@ -88,6 +92,8 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
 
   const showTabBar = () => {
     if (!state.tabBarHidden) return;
+
+    const { backgroundColor, systemBorderColor } = Theme;
 
     PubSub.publish('drawer-swipeEnabled', true);
     state.tabBarHidden = false;
@@ -119,6 +125,21 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
       >
         {Array.from(tabs.values())}
       </Swiper>
+
+      <Portal>
+        <Modalize
+          adjustToContentHeight
+          disableScrollIfPossible
+          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+          modalStyle={{ padding: 0, margin: 0 }}
+        >
+          <SafeAreaProvider>
+            <SafeViewContainer>
+              
+            </SafeViewContainer>
+          </SafeAreaProvider>
+        </Modalize>
+      </Portal>
     </View>
   );
 });
