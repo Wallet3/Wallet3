@@ -4,7 +4,7 @@ import * as Linking from 'expo-linking';
 import { Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { WebView, WebViewMessageEvent, WebViewNavigation, WebViewProps } from 'react-native-webview';
 
 import { Account } from '../../viewmodels/account/Account';
@@ -24,6 +24,7 @@ import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
 import { NetworksMenu } from '../../modals';
 import { Portal } from 'react-native-portalize';
+import { ReactiveScreen } from '../../utils/device';
 import Theme from '../../viewmodels/settings/Theme';
 import ViewShot from 'react-native-view-shot';
 import WalletConnectLogo from '../../assets/3rd/walletconnect.svg';
@@ -56,6 +57,8 @@ interface Web3ViewProps extends WebViewProps {
   onShrinkRequest?: (webUrl: string) => void;
   onExpandRequest?: (webUrl: string) => void;
   onBookmarksPress?: () => void;
+  onTabPress?: () => void;
+  tabCount?: number;
 
   webViewRef: React.Ref<WebView>;
   viewShotRef?: React.Ref<ViewShot>;
@@ -63,7 +66,7 @@ interface Web3ViewProps extends WebViewProps {
 
 export default observer((props: Web3ViewProps) => {
   const { t } = i18n;
-  const { webViewRef, viewShotRef } = props;
+  const { webViewRef, viewShotRef, tabCount, onTabPress } = props;
   const [hub] = useState(new InpageMetamaskDAppHub());
   const [appName] = useState(`Wallet3/${DeviceInfo.getVersion() || '0.0.0'}`);
   const [ua] = useState(
@@ -250,18 +253,35 @@ export default observer((props: Web3ViewProps) => {
           }}
         >
           <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-            {expanded ? (
-              <TouchableOpacity style={styles.navTouchableItem} onPress={() => onShrinkRequest?.(webUrl)}>
-                <MaterialCommunityIcons name="arrow-collapse-vertical" size={20} color={tintColor} />
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                style={{ ...styles.navTouchableItem, paddingTop: 10, paddingBottom: 9 }}
-                onPress={() => onExpandRequest?.(webUrl)}
+            {ReactiveScreen.width >= 500 ? (
+              expanded ? (
+                <TouchableOpacity style={styles.navTouchableItem} onPress={() => onShrinkRequest?.(webUrl)}>
+                  <MaterialCommunityIcons name="arrow-collapse-vertical" size={20} color={tintColor} />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={{ ...styles.navTouchableItem, paddingTop: 10, paddingBottom: 9 }}
+                  onPress={() => onExpandRequest?.(webUrl)}
+                >
+                  <MaterialCommunityIcons name="arrow-expand" size={19} color={tintColor} />
+                </TouchableOpacity>
+              )
+            ) : undefined}
+
+            <TouchableOpacity style={styles.navTouchableItem} onPress={onTabPress}>
+              <View
+                style={{
+                  borderWidth: 1.2,
+                  borderColor: tintColor,
+                  padding: 2,
+                  paddingHorizontal: 6,
+                  borderRadius: 7,
+                  justifyContent: 'center',
+                }}
               >
-                <MaterialCommunityIcons name="arrow-expand" size={19} color={tintColor} />
-              </TouchableOpacity>
-            )}
+                <Text style={{ fontWeight: '600', fontSize: 12, minWidth: 12, textAlign: 'center' }}>{tabCount}</Text>
+              </View>
+            </TouchableOpacity>
 
             <TouchableOpacity style={styles.navTouchableItem} onPress={onBookmarksPress}>
               <Feather name="book-open" size={20} color={tintColor} />

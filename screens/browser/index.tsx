@@ -426,6 +426,8 @@ export const Browser = observer(
           <Web3View
             webViewRef={webview}
             viewShotRef={viewShot}
+            tabCount={globalState.tabCount}
+            onTabPress={onOpenTabs}
             source={{ uri }}
             onLoadProgress={({ nativeEvent }) => setLoadingProgress(nativeEvent.progress)}
             onLoadEnd={() => {

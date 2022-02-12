@@ -30,6 +30,7 @@ import InpageDAppSendTx from '../modals/InpageDAppTxRequest';
 import InpageDAppSign from '../modals/InpageDAppSign';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../viewmodels/Networks';
+import { ReactiveScreen } from '../utils/device';
 import Theme from '../viewmodels/settings/Theme';
 import { TokenTransferring } from '../viewmodels/transferring/TokenTransferring';
 import { WCCallRequestRequest } from '../models/WCSession_v1';
@@ -41,8 +42,6 @@ import { showMessage } from 'react-native-flash-message';
 import { styles } from '../constants/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { utils } from 'ethers';
-
-const ScreenHeight = Dimensions.get('window').height;
 
 const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app: AppVM }) => {
   const { ref, open, close } = useModalize();
@@ -420,7 +419,7 @@ export const LockScreen = ({ app, appAuth }: { app: AppVM; appAuth: Authenticati
   return (
     <Modalize
       ref={lockScreenRef}
-      modalHeight={ScreenHeight}
+      modalHeight={ReactiveScreen.height}
       closeOnOverlayTap={false}
       withHandle={false}
       disableScrollIfPossible
@@ -433,7 +432,7 @@ export const LockScreen = ({ app, appAuth }: { app: AppVM; appAuth: Authenticati
         themeColor={Theme.isLightMode ? Theme.foregroundColor : `${Theme.foregroundColor}80`}
         bioType={appAuth.biometricType}
         onBioAuth={bioAuth}
-        height={ScreenHeight}
+        height={ReactiveScreen.height}
         onCodeEntered={async (code) => {
           const success = await appAuth.authorize(code);
           if (success) closeLockScreen();

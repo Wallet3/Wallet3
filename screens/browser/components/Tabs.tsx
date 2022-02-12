@@ -118,7 +118,7 @@ export const WebTabs = ({
   const { backgroundColor } = Theme;
 
   return (
-    <View style={{ maxHeight: 600, minHeight: 400, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
+    <View style={{ maxHeight: 600, minHeight: 430, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
       <FlatGrid
         data={Array.from(globalState.pageMetas.keys())}
         keyExtractor={(i) => `Tab-${i}`}

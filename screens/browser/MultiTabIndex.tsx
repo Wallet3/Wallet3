@@ -137,8 +137,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
   };
 
   const [tabs] = useState(new Map<number, JSX.Element>([[0, generateBrowserTab(0, props, newTab)]]));
-  console.log(tabs.size);
-  
+
   return (
     <View style={{ flex: 1, backgroundColor }}>
       <Swiper
@@ -175,7 +174,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
               state.pageCaptureFuncs.delete(pageId);
               state.pageSnapshots.delete(pageId);
               state.setTabCount(tabs.size);
-              setCounts(tabs.size)
+              setCounts(tabs.size);
 
               if (tabs.size === 0) newTab();
 

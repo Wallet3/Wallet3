@@ -8,6 +8,7 @@ import Avatar from '../../components/Avatar';
 import { FlatGrid } from 'react-native-super-grid';
 import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/Networks';
+import { ReactiveScreen } from '../../utils/device';
 import Theme from '../../viewmodels/settings/Theme';
 import { observer } from 'mobx-react-lite';
 
@@ -19,7 +20,7 @@ interface Props {
 export default observer(({ account, onDone }: Props) => {
   const [colors] = useState(
     [account?.emojiColor].concat(
-      new Array(2 * Math.floor((Dimensions.get('window').width - 32) / (52 + 5)) - 1).fill(0).map(() => genColor())
+      new Array(2 * Math.floor((ReactiveScreen.width - 32) / (52 + 5)) - 1).fill(0).map(() => genColor())
     )
   );
 
