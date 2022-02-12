@@ -56,6 +56,7 @@ const { WindowWidth, LargeIconSize, SmallIconSize } = calcIconSize();
 
 interface Props extends BottomTabScreenProps<any, never> {
   onPageLoaded?: (tabIndex: number, metadata?: PageMetadata) => void;
+  onPageLoadEnd?: () => void;
   onHome?: () => void;
   onTakeOff?: () => void;
   tabIndex: number;
@@ -66,7 +67,18 @@ interface Props extends BottomTabScreenProps<any, never> {
 }
 
 export const Browser = observer(
-  ({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex, onNewTab, globalState, onOpenTabs, setCapture }: Props) => {
+  ({
+    navigation,
+    onPageLoaded,
+    onHome,
+    onTakeOff,
+    tabIndex,
+    onNewTab,
+    globalState,
+    onOpenTabs,
+    setCapture,
+    onPageLoadEnd,
+  }: Props) => {
     const { t } = i18n;
     const { top } = useSafeAreaInsets();
     const { current } = Networks;
@@ -416,7 +428,10 @@ export const Browser = observer(
             viewShotRef={viewShot}
             source={{ uri }}
             onLoadProgress={({ nativeEvent }) => setLoadingProgress(nativeEvent.progress)}
-            onLoadEnd={() => setLoadingProgress(1)}
+            onLoadEnd={() => {
+              setLoadingProgress(1);
+              onPageLoadEnd?.();
+            }}
             onNavigationStateChange={onNavigationStateChange}
             onGoHome={goHome}
             expanded={isExpandedSite}

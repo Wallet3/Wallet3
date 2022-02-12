@@ -13,13 +13,15 @@ import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { observer } from 'mobx-react-lite';
+import { useEffect } from 'react';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 class StateViewModel {
   tabBarHidden = false;
   pageMetas = new Map<number, PageMetadata | undefined>();
-  pageCaptures = new Map<number, (() => Promise<string>) | undefined>();
+  pageCaptureFuncs = new Map<number, (() => Promise<string>) | undefined>();
+  pageSnapshots = new Map<number, string | undefined>();
   tabCount = 1;
 
   constructor() {
@@ -31,23 +33,33 @@ class StateViewModel {
   }
 }
 
-const WebTab = ({ index, globalState }: { globalState: StateViewModel; index: number }) => {
-  const meta = globalState.pageMetas.get(index);
+const WebTab = ({
+  pageIndex,
+  globalState,
+  listIndex,
+  onPress,
+}: {
+  globalState: StateViewModel;
+  pageIndex: number;
+  listIndex: number;
+  onPress?: () => void;
+}) => {
+  const meta = globalState.pageMetas.get(pageIndex);
   const themeColor = meta?.themeColor || '#000';
-  const [snapshot, setSnapshot] = useState('');
-  globalState.pageCaptures.get(index)?.().then(setSnapshot);
+  const snapshot = globalState.pageSnapshots.get(pageIndex);
 
   return (
     <TouchableOpacity
+      onPress={onPress}
       style={{
         width: 170,
+        borderRadius: 7,
         backgroundColor: '#fff',
         shadowColor: `#00000060`,
         shadowOffset: {
           width: 0,
           height: 2,
         },
-
         shadowRadius: 3.14,
         shadowOpacity: 0.5,
         elevation: 5,
@@ -71,8 +83,8 @@ const WebTab = ({ index, globalState }: { globalState: StateViewModel; index: nu
           {meta?.title ?? 'Blank Page'}
         </Text>
 
-        <TouchableOpacity style={{ paddingTop: 8, paddingBottom: 6, paddingHorizontal: 12, paddingStart: 16 }}>
-          <Ionicons name="ios-close" color="#fff" />
+        <TouchableOpacity style={{ paddingTop: 7, paddingBottom: 5, paddingHorizontal: 12, paddingStart: 16 }}>
+          <Ionicons name="ios-close" color="#fff" size={15} />
         </TouchableOpacity>
       </View>
 
@@ -116,7 +128,7 @@ const WebTabs = ({ globalState }: { globalState: StateViewModel }) => {
         itemDimension={170}
         spacing={16}
         bounces={false}
-        renderItem={({ item }) => <WebTab globalState={globalState} index={item} />}
+        renderItem={({ item, index }) => <WebTab globalState={globalState} pageIndex={item} listIndex={index} />}
       />
     </View>
   );
@@ -141,15 +153,21 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
         key={`Browser-${index}`}
         tabIndex={index}
         onPageLoaded={(index, meta) => state.pageMetas.set(index, meta)}
+        onPageLoadEnd={() =>
+          state.pageCaptureFuncs
+            .get(index)?.()
+            .then((snapshot) => state.pageSnapshots.set(index, snapshot))
+        }
         onNewTab={onNewTab}
         globalState={state}
         onOpenTabs={openTabs}
         onTakeOff={() => hideTabBar()}
-        setCapture={(func) => state.pageCaptures.set(index, func)}
+        setCapture={(func) => state.pageCaptureFuncs.set(index, func)}
         onHome={() => {
           showTabBar();
           state.pageMetas.set(index, undefined);
-          state.pageCaptures.set(index, undefined);
+          state.pageCaptureFuncs.set(index, undefined);
+          state.pageSnapshots.set(index, undefined);
         }}
       />
     );
