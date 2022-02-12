@@ -516,7 +516,7 @@ export const Browser = observer(
               <SafeViewContainer
                 style={{ height: 439, backgroundColor, flex: 1, padding: 0, borderTopEndRadius: 6, borderTopStartRadius: 6 }}
               >
-                <Text style={{ marginHorizontal: 12 }}>{t('browser-favorites')}</Text>
+                <Text style={{ marginHorizontal: 12, color: textColor }}>{t('browser-favorites')}</Text>
                 <FlatGrid
                   style={{ marginTop: 2, padding: 0 }}
                   contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: 8, paddingTop: 2 }}
