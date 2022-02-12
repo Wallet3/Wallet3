@@ -111,14 +111,15 @@ interface CoinProps {
 }
 
 export default observer((props: CoinProps) => {
+  const [network] = useState(Networks.find(props.chainId));
+  const [githubUrl] = useState(
+    `https://github.com/trustwallet/assets/raw/master/blockchains/${
+      (network?.githubIconFolder || network?.network)?.toLowerCase() ?? 'ethereum'
+    }/assets/${props.address}/logo.png`
+  );
+
   let symbol = props.symbol?.toLowerCase() ?? '';
   symbol = symbol.endsWith('.e') ? symbol.substring(0, symbol.length - 2) : symbol; // Avax
-
-  const network = Networks.find(props.chainId);
-
-  const githubUrl = `https://github.com/trustwallet/assets/raw/master/blockchains/${
-    (network?.githubIconFolder || network?.network)?.toLowerCase() ?? 'ethereum'
-  }/assets/${props.address}/logo.png`;
 
   const [source] = props.forceRefresh
     ? [props.iconUrl && !icons[symbol] ? { uri: props.iconUrl } : icons[symbol] || { uri: githubUrl }]
