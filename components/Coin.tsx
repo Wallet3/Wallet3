@@ -1,6 +1,8 @@
 import { Image, ImageResizeMode, ImageStyle, ImageURISource, StyleProp } from 'react-native';
 import React, { useState } from 'react';
 
+import CachedImage from 'react-native-expo-cached-image';
+import Networks from '../viewmodels/Networks';
 import icons from '../assets/icons/crypto';
 import { observer } from 'mobx-react-lite';
 
@@ -112,15 +114,33 @@ export default observer((props: CoinProps) => {
   let symbol = props.symbol?.toLowerCase() ?? '';
   symbol = symbol.endsWith('.e') ? symbol.substring(0, symbol.length - 2) : symbol; // Avax
 
+  const network = Networks.find(props.chainId);
+
+  const githubUrl = `https://github.com/trustwallet/assets/raw/master/blockchains/${
+    (network?.githubIconFolder || network?.network)?.toLowerCase() ?? 'ethereum'
+  }/assets/${props.address}/logo.png`;
+
   const [source] = props.forceRefresh
-    ? [props.iconUrl && !icons[symbol] ? { uri: props.iconUrl } : icons[symbol] || icons['_coin']]
-    : useState(props.iconUrl && !icons[symbol] ? { uri: props.iconUrl } : icons[symbol] || icons['_coin']);
+    ? [props.iconUrl && !icons[symbol] ? { uri: props.iconUrl } : icons[symbol] || { uri: githubUrl }]
+    : useState(props.iconUrl && !icons[symbol] ? { uri: props.iconUrl } : icons[symbol] || { uri: githubUrl });
 
   const [failedSource, setFailedSource] = useState();
 
   const size = props.size || (props.style as any)?.width || 22;
 
-  return (
+  return source.uri && !failedSource ? (
+    <CachedImage
+      source={source}
+      onError={() => setFailedSource(icons['_coin'])}
+      {...props}
+      style={{
+        width: size,
+        height: size,
+        ...((props.style as any) || {}),
+        borderRadius: props.iconUrl ? size / 2 : 0,
+      }}
+    />
+  ) : (
     <Image
       source={failedSource || source}
       onError={() => setFailedSource(icons['_coin'])}

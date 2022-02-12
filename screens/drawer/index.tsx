@@ -64,6 +64,11 @@ const Drawer = observer((props: DrawerProps) => {
     };
   }, []);
 
+  const navigateTo = (route: string) => {
+    navigation.navigate(route);
+    navigation.closeDrawer();
+  };
+
   return (
     <SafeViewContainer
       style={{ flex: 1, height: screenHeight, paddingHorizontal: 0, paddingTop: 0, paddingBottom: bottom ? 0 : 16 }}
@@ -117,21 +122,21 @@ const Drawer = observer((props: DrawerProps) => {
       <View style={{ paddingBottom: 12 }}>
         <DrawerItem
           label={t('home-drawer-wallet')}
-          onPress={() => navigation.navigate('Home')}
+          onPress={() => navigateTo('Home')}
           labelStyle={{ ...styles.drawerLabel, color: homeHighlight }}
           icon={() => <Feather color={homeHighlight} size={21} name={'home'} />}
         />
 
         <DrawerItem
           label={t('home-drawer-dapps')}
-          onPress={() => navigation.navigate('DApps')}
+          onPress={() => navigateTo('DApps')}
           labelStyle={{ ...styles.drawerLabel, color: dappsHighlight }}
           icon={() => <Feather name="layers" size={20} style={{ width: 21, paddingStart: 1 }} color={dappsHighlight} />}
         />
 
         <DrawerItem
           label={t('home-drawer-settings')}
-          onPress={() => navigation.navigate('Settings')}
+          onPress={() => navigateTo('Settings')}
           labelStyle={{ ...styles.drawerLabel, color: settingsHighlight }}
           icon={() => <Feather color={settingsHighlight} size={21} name={'settings'} />}
         />

@@ -271,10 +271,10 @@ export default observer((props: Web3ViewProps) => {
             <TouchableOpacity style={styles.navTouchableItem} onPress={onTabPress}>
               <View
                 style={{
-                  borderWidth: 1.2,
+                  borderWidth: 1.5,
                   borderColor: tintColor,
                   padding: 2,
-                  paddingHorizontal: 6,
+                  paddingHorizontal: 4,
                   borderRadius: 7,
                   justifyContent: 'center',
                 }}

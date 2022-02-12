@@ -69,7 +69,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
             state.pageCaptureFuncs
               .get(id)?.()
               .then((snapshot) => state.pageSnapshots.set(id, snapshot)),
-          10
+          100
         )
       }
       onHome={() => {
