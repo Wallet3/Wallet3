@@ -110,20 +110,49 @@ export const WebTabs = ({
   globalState,
   onJumpToPage,
   onRemovePage,
+  onNewTab,
 }: {
   globalState: StateViewModel;
   onJumpToPage: (listIndex: number) => void;
   onRemovePage: (pageId: number) => void;
+  onNewTab: () => void;
 }) => {
-  const { backgroundColor } = Theme;
+  const { backgroundColor, foregroundColor, tintColor } = Theme;
 
   return (
     <View style={{ maxHeight: 600, minHeight: 430, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
+      <TouchableOpacity
+        onPress={onNewTab}
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          position: 'absolute',
+          right: 16,
+          bottom: 32,
+          zIndex: 9,
+          borderRadius: 100,
+          width: 48,
+          height: 48,
+          backgroundColor: tintColor,
+          shadowColor: `#00000060`,
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowRadius: 3.14,
+          shadowOpacity: 0.75,
+          elevation: 5,
+        }}
+      >
+        <Ionicons name={'add-outline'} size={32} color={'#fff'} style={{ marginStart: 4, marginTop: 1 }} />
+      </TouchableOpacity>
+
       <FlatGrid
         data={Array.from(globalState.pageMetas.keys())}
         keyExtractor={(i) => `Tab-${i}`}
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 37 }}
+        contentContainerStyle={{ paddingBottom: 37, paddingTop: 4 }}
         itemDimension={170}
         spacing={16}
         renderItem={({ item, index }) => (

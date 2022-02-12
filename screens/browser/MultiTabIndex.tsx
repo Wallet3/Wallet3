@@ -164,6 +164,10 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
         >
           <WebTabs
             globalState={state}
+            onNewTab={() => {
+              newTab();
+              closeTabs();
+            }}
             onJumpToPage={(index) => {
               swiper.current?.scrollTo(index);
               closeTabs();
