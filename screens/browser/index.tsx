@@ -35,6 +35,7 @@ import { SafeViewContainer } from '../../components';
 import { StatusBar } from 'expo-status-bar';
 import SuggestUrls from '../../configs/urls/verified.json';
 import Theme from '../../viewmodels/settings/Theme';
+import ViewShot from 'react-native-view-shot';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
@@ -61,10 +62,11 @@ interface Props extends BottomTabScreenProps<any, never> {
   onNewTab?: () => void;
   globalState: { tabCount: number };
   onOpenTabs?: () => void;
+  viewShotRef?: React.Ref<ViewShot>;
 }
 
 export const Browser = observer(
-  ({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex, onNewTab, globalState, onOpenTabs }: Props) => {
+  ({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex, onNewTab, globalState, onOpenTabs, viewShotRef }: Props) => {
     const { t } = i18n;
     const { top } = useSafeAreaInsets();
     const { current } = Networks;
@@ -404,6 +406,7 @@ export const Browser = observer(
         {uri ? (
           <Web3View
             webViewRef={webview}
+            viewShotRef={viewShotRef}
             source={{ uri }}
             onLoadProgress={({ nativeEvent }) => setLoadingProgress(nativeEvent.progress)}
             onLoadEnd={() => setLoadingProgress(1)}

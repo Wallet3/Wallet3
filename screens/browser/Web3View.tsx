@@ -25,6 +25,7 @@ import Networks from '../../viewmodels/Networks';
 import { NetworksMenu } from '../../modals';
 import { Portal } from 'react-native-portalize';
 import Theme from '../../viewmodels/settings/Theme';
+import ViewShot from 'react-native-view-shot';
 import WalletConnectLogo from '../../assets/3rd/walletconnect.svg';
 import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectV1ClientHub';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
@@ -57,11 +58,12 @@ interface Web3ViewProps extends WebViewProps {
   onBookmarksPress?: () => void;
 
   webViewRef: React.Ref<WebView>;
+  viewShotRef?: React.Ref<ViewShot>;
 }
 
 export default observer((props: Web3ViewProps) => {
   const { t } = i18n;
-  const { webViewRef } = props;
+  const { webViewRef, viewShotRef } = props;
   const [hub] = useState(new InpageMetamaskDAppHub());
   const [appName] = useState(`Wallet3/${DeviceInfo.getVersion() || '0.0.0'}`);
   const [ua] = useState(
@@ -209,26 +211,28 @@ export default observer((props: Web3ViewProps) => {
 
   return (
     <View style={{ flex: 1, position: 'relative' }}>
-      <WebView
-        {...props}
-        ref={webViewRef}
-        automaticallyAdjustContentInsets={false}
-        contentInsetAdjustmentBehavior={'never'}
-        contentInset={{ bottom: expanded ? 37 + (safeAreaBottom === 0 ? 8 : 0) : 0 }}
-        onNavigationStateChange={onNavigationStateChange}
-        userAgent={ua}
-        allowsFullscreenVideo={false}
-        forceDarkOn={mode === 'dark'}
-        injectedJavaScript={`${GetPageMetadata}\ntrue;\n${HookWalletConnect}\ntrue;`}
-        onMessage={onMessage}
-        mediaPlaybackRequiresUserAction
-        pullToRefreshEnabled
-        allowsInlineMediaPlayback
-        allowsBackForwardNavigationGestures
-        injectedJavaScriptBeforeContentLoaded={`${MetamaskMobileProvider}\ntrue;`}
-        style={{ backgroundColor }}
-        decelerationRate={1}
-      />
+      <ViewShot ref={viewShotRef} style={{ flex: 1 }}>
+        <WebView
+          {...props}
+          ref={webViewRef}
+          automaticallyAdjustContentInsets={false}
+          contentInsetAdjustmentBehavior={'never'}
+          contentInset={{ bottom: expanded ? 37 + (safeAreaBottom === 0 ? 8 : 0) : 0 }}
+          onNavigationStateChange={onNavigationStateChange}
+          userAgent={ua}
+          allowsFullscreenVideo={false}
+          forceDarkOn={mode === 'dark'}
+          injectedJavaScript={`${GetPageMetadata}\ntrue;\n${HookWalletConnect}\ntrue;`}
+          onMessage={onMessage}
+          mediaPlaybackRequiresUserAction
+          pullToRefreshEnabled
+          allowsInlineMediaPlayback
+          allowsBackForwardNavigationGestures
+          injectedJavaScriptBeforeContentLoaded={`${MetamaskMobileProvider}\ntrue;`}
+          style={{ backgroundColor }}
+          decelerationRate={1}
+        />
+      </ViewShot>
 
       <Animatable.View
         animation="fadeInUp"

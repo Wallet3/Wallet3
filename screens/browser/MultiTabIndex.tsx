@@ -14,6 +14,7 @@ import { SafeViewContainer } from '../../components';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import ViewShot from 'react-native-view-shot';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
@@ -43,9 +44,8 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
   const { ref: tabsRef, open: openTabs } = useModalize();
 
-  const generateBrowser = (index: number, props: BottomTabScreenProps<{}, never>, onNewTab: () => void) => (
+  const generateBrowserTab = (index: number, props: BottomTabScreenProps<{}, never>, onNewTab: () => void) => (
     <Browser
-      key={index}
       {...props}
       tabIndex={index}
       onPageLoaded={(index, meta) => state.pageState.set(index, meta)}
@@ -62,7 +62,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
 
   const newTab = () => {
     const index = tabs.size;
-    tabs.set(index, generateBrowser(index, props, newTab));
+    tabs.set(index, generateBrowserTab(index, props, newTab));
     state.pageState.set(index, undefined);
 
     setTimeout(() => {
@@ -114,7 +114,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
     });
   };
 
-  const [tabs] = useState(new Map<number, JSX.Element>([[0, generateBrowser(0, props, newTab)]]));
+  const [tabs] = useState(new Map<number, JSX.Element>([[0, generateBrowserTab(0, props, newTab)]]));
 
   return (
     <View style={{ flex: 1, backgroundColor }}>
@@ -126,10 +126,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
         loop={false}
         index={activeTabIndex}
         scrollEnabled
-        onIndexChanged={(index) => {
-          console.log(index, state.pageState.get(index));
-          state.pageState.get(index) ? hideTabBar() : showTabBar();
-        }}
+        onIndexChanged={(index) => (state.pageState.get(index) ? hideTabBar() : showTabBar())}
       >
         {Array.from(tabs.values())}
       </Swiper>
@@ -142,11 +139,12 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
           modalStyle={{ padding: 0, margin: 0 }}
         >
-          <View style={{ paddingBottom: 37, height: 400 }}>
+          <View style={{ height: 400, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
             <FlatGrid
               data={Array.from(state.pageState.keys())}
-              keyExtractor={(i) => `${i}`}
+              keyExtractor={(i) => `Tab-${i}`}
               showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ paddingBottom: 37 }}
               itemDimension={170}
               spacing={16}
               bounces={false}
