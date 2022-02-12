@@ -322,7 +322,7 @@ export const Browser = observer(
               />
             </TouchableOpacity>
 
-            <TouchableOpacity style={{ padding: 4 }} onPress={onNewTab}>
+            <TouchableOpacity style={{ padding: 4 }} onPress={onNewTab} disabled={loadingProgress < 1 || !pageMetadata}>
               <Ionicons name={'add-outline'} size={23} color={loadingProgress < 1 ? 'lightgrey' : foregroundColor} />
             </TouchableOpacity>
           </View>

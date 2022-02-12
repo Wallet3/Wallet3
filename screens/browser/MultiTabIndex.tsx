@@ -7,6 +7,7 @@ import { Browser } from '.';
 import { FlatGrid } from 'react-native-super-grid';
 import { Ionicons } from '@expo/vector-icons';
 import { Modalize } from 'react-native-modalize';
+import { NullableImage } from '../../components';
 import { PageMetadata } from './Web3View';
 import { Portal } from 'react-native-portalize';
 import Swiper from 'react-native-swiper';
@@ -36,16 +37,17 @@ class StateViewModel {
 const WebTab = ({
   pageIndex,
   globalState,
-  listIndex,
+  onRemovePress,
   onPress,
 }: {
   globalState: StateViewModel;
   pageIndex: number;
   listIndex: number;
   onPress?: () => void;
+  onRemovePress?: () => void;
 }) => {
   const meta = globalState.pageMetas.get(pageIndex);
-  const themeColor = meta?.themeColor || '#000';
+  const themeColor = '#000';
   const snapshot = globalState.pageSnapshots.get(pageIndex);
 
   return (
@@ -79,11 +81,26 @@ const WebTab = ({
           justifyContent: 'space-between',
         }}
       >
-        <Text style={{ color: 'white', fontWeight: '500', fontSize: 12 }} numberOfLines={1}>
-          {meta?.title ?? 'Blank Page'}
-        </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          {meta && (
+            <NullableImage
+              imageBackgroundColor={themeColor}
+              uri={meta?.icon}
+              size={12}
+              containerStyle={{ marginEnd: 8 }}
+              imageRadius={2}
+            />
+          )}
 
-        <TouchableOpacity style={{ paddingTop: 7, paddingBottom: 5, paddingHorizontal: 12, paddingStart: 16 }}>
+          <Text style={{ color: 'white', fontWeight: '500', fontSize: 12, maxWidth: 100 }} numberOfLines={1}>
+            {meta?.title ?? 'Blank Page'}
+          </Text>
+        </View>
+
+        <TouchableOpacity
+          style={{ paddingTop: 7, paddingBottom: 5, paddingHorizontal: 12, paddingStart: 16 }}
+          onPress={onRemovePress}
+        >
           <Ionicons name="ios-close" color="#fff" size={15} />
         </TouchableOpacity>
       </View>
@@ -91,7 +108,7 @@ const WebTab = ({
       <View
         style={{
           borderWidth: snapshot ? 0 : 1,
-          height: 120,
+          height: 170,
           borderColor: themeColor,
           borderBottomEndRadius: 5,
           borderBottomStartRadius: 5,
@@ -119,7 +136,7 @@ const WebTabs = ({ globalState }: { globalState: StateViewModel }) => {
   const { backgroundColor } = Theme;
 
   return (
-    <View style={{ height: 430, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
+    <View style={{ maxHeight: 600, minHeight: 400, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
       <FlatGrid
         data={Array.from(globalState.pageMetas.keys())}
         keyExtractor={(i) => `Tab-${i}`}
@@ -127,7 +144,6 @@ const WebTabs = ({ globalState }: { globalState: StateViewModel }) => {
         contentContainerStyle={{ paddingBottom: 37 }}
         itemDimension={170}
         spacing={16}
-        bounces={false}
         renderItem={({ item, index }) => <WebTab globalState={globalState} pageIndex={item} listIndex={index} />}
       />
     </View>
@@ -154,9 +170,13 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
         tabIndex={index}
         onPageLoaded={(index, meta) => state.pageMetas.set(index, meta)}
         onPageLoadEnd={() =>
-          state.pageCaptureFuncs
-            .get(index)?.()
-            .then((snapshot) => state.pageSnapshots.set(index, snapshot))
+          setTimeout(
+            () =>
+              state.pageCaptureFuncs
+                .get(index)?.()
+                .then((snapshot) => state.pageSnapshots.set(index, snapshot)),
+            10
+          )
         }
         onNewTab={onNewTab}
         globalState={state}
