@@ -1,17 +1,21 @@
-import { Animated, Text, View } from 'react-native';
+import { Animated, FlatList, Text, View } from 'react-native';
 import { BottomTabScreenProps, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import React, { useCallback, useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { action, makeObservable, observable } from 'mobx';
 
 import { Browser } from '.';
+import { FlatGrid } from 'react-native-super-grid';
+import { Ionicons } from '@expo/vector-icons';
 import { Modalize } from 'react-native-modalize';
 import { PageMetadata } from './Web3View';
 import { Portal } from 'react-native-portalize';
 import { SafeViewContainer } from '../../components';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { observer } from 'mobx-react-lite';
+import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 class StateViewModel {
   tabBarHidden = false;
@@ -37,6 +41,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
 
   const [tabBarHeight] = useState(useBottomTabBarHeight());
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
+  const { ref: tabsRef, open: openTabs } = useModalize();
 
   const generateBrowser = (index: number, props: BottomTabScreenProps<{}, never>, onNewTab: () => void) => (
     <Browser
@@ -46,6 +51,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
       onPageLoaded={(index, meta) => state.pageState.set(index, meta)}
       onNewTab={onNewTab}
       globalState={state}
+      onOpenTabs={openTabs}
       onTakeOff={() => hideTabBar()}
       onHome={() => {
         showTabBar();
@@ -55,7 +61,9 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
   );
 
   const newTab = () => {
-    tabs.set(tabs.size, generateBrowser(tabs.size, props, newTab));
+    const index = tabs.size;
+    tabs.set(index, generateBrowser(index, props, newTab));
+    state.pageState.set(index, undefined);
 
     setTimeout(() => {
       swiper.current?.scrollTo(tabs.size - 1, true);
@@ -128,16 +136,51 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
 
       <Portal>
         <Modalize
+          ref={tabsRef}
           adjustToContentHeight
           disableScrollIfPossible
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
           modalStyle={{ padding: 0, margin: 0 }}
         >
-          <SafeAreaProvider>
-            <SafeViewContainer>
-              
-            </SafeViewContainer>
-          </SafeAreaProvider>
+          <View style={{ paddingBottom: 37, height: 400 }}>
+            <FlatGrid
+              data={Array.from(state.pageState.keys())}
+              keyExtractor={(i) => `${i}`}
+              showsHorizontalScrollIndicator={false}
+              itemDimension={170}
+              spacing={16}
+              bounces={false}
+              renderItem={({ item }) => {
+                const meta = state.pageState.get(item);
+
+                return (
+                  <View style={{ width: 170, borderRadius: 10, height: 150, overflow: 'hidden' }}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        paddingStart: 10,
+                        backgroundColor: meta?.themeColor || '#000',
+                        borderTopEndRadius: 10,
+                        borderTopStartRadius: 10,
+                        justifyContent: 'space-between',
+                      }}
+                    >
+                      <Text style={{ color: 'white', fontWeight: '500', fontSize: 12 }} numberOfLines={1}>
+                        {meta?.title ?? 'Blank Page'}
+                      </Text>
+
+                      <TouchableOpacity style={{ paddingTop: 8, paddingBottom: 7, paddingHorizontal: 12, paddingStart: 16 }}>
+                        <Ionicons name="ios-close" color="#fff" />
+                      </TouchableOpacity>
+                    </View>
+
+                    <TouchableOpacity></TouchableOpacity>
+                  </View>
+                );
+              }}
+            />
+          </View>
         </Modalize>
       </Portal>
     </View>

@@ -17,9 +17,10 @@ import { observer } from 'mobx-react-lite';
 interface Props {
   onItemPress?: (url: string) => void;
   tabCount: number;
+  onTabsPress?: () => void;
 }
 
-export default observer(({ onItemPress, tabCount }: Props) => {
+export default observer(({ onItemPress, tabCount, onTabsPress }: Props) => {
   const { backgroundColor, borderColor, systemBorderColor, foregroundColor, isLightMode, mode, tintColor } = Theme;
   const { t } = i18n;
   const actions = [{ title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' }];
@@ -39,7 +40,7 @@ export default observer(({ onItemPress, tabCount }: Props) => {
               borderEndColor: systemBorderColor,
             }}
           >
-            <TouchableOpacity style={{ paddingStart: 12, paddingEnd: 10 }}>
+            <TouchableOpacity style={{ paddingStart: 12, paddingEnd: 10 }} onPress={onTabsPress}>
               <View
                 style={{
                   borderColor: tintColor,
