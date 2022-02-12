@@ -50,10 +50,10 @@ const calcIconSize = () => {
   const LargeIconSize = (width - 8 - 16 * NumOfColumns) / NumOfColumns;
   const SmallIconSize = (width - 16 - 16 * (NumOfColumns + 1)) / (NumOfColumns + 1);
 
-  return { WindowWidth: width, NumOfColumns, LargeIconSize, SmallIconSize };
+  return { NumOfColumns, LargeIconSize, SmallIconSize };
 };
 
-const { WindowWidth, LargeIconSize, SmallIconSize } = calcIconSize();
+const { LargeIconSize, SmallIconSize } = calcIconSize();
 
 interface Props extends BottomTabScreenProps<any, never> {
   onPageLoaded?: (tabIndex: number, metadata?: PageMetadata) => void;
@@ -108,7 +108,7 @@ export const Browser = observer(
 
     useEffect(() => {
       const handler = () => {
-        const { WindowWidth, LargeIconSize, SmallIconSize } = calcIconSize();
+        const { LargeIconSize, SmallIconSize } = calcIconSize();
 
         setLargeIconSize(LargeIconSize);
         setSmallIconSize(SmallIconSize);

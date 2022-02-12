@@ -1,5 +1,5 @@
 import { Dimensions, Image, Text, TouchableOpacity, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { FlatGrid } from 'react-native-super-grid';
 import { Ionicons } from '@expo/vector-icons';
@@ -132,7 +132,20 @@ export const WebTabs = ({
   onNewTab: () => void;
 }) => {
   const { backgroundColor, foregroundColor, tintColor } = Theme;
-  const [tabWidth] = useState(calcTabWidth().TabWidth);
+  const [tabWidth, setTabWidth] = useState(calcTabWidth().TabWidth);
+
+  useEffect(() => {
+    const handler = () => {
+      const { TabWidth } = calcTabWidth();
+      setTabWidth(TabWidth);
+    };
+
+    Dimensions.addEventListener('change', handler);
+
+    return () => {
+      Dimensions.removeEventListener('change', handler);
+    };
+  }, []);
 
   return (
     <View style={{ maxHeight: 600, minHeight: 430, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
