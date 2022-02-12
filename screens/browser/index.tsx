@@ -30,6 +30,7 @@ import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
 import PopularDApps from '../../configs/urls/popular.json';
 import { Portal } from 'react-native-portalize';
+import { ReactiveScreen } from '../../utils/device';
 import RecentHistory from './components/RecentHistory';
 import { SafeViewContainer } from '../../components';
 import { StatusBar } from 'expo-status-bar';
@@ -43,7 +44,7 @@ import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 const DefaultIcon = require('../../assets/default-icon.png');
 
 const calcIconSize = () => {
-  const { width } = Dimensions.get('window');
+  const { width } = ReactiveScreen;
 
   const NumOfColumns = Math.ceil(width / 64);
   const LargeIconSize = (width - 8 - 16 * NumOfColumns) / NumOfColumns;
@@ -101,7 +102,7 @@ export const Browser = observer(
 
     const [largeIconSize, setLargeIconSize] = useState(LargeIconSize);
     const [smallIconSize, setSmallIconSize] = useState(SmallIconSize);
-    const [windowWidth, setWindowWidth] = useState(WindowWidth);
+
     const { history, favs, recentSites } = Bookmarks;
     const { backgroundColor, textColor, borderColor, foregroundColor, isLightMode, statusBarStyle } = Theme;
 
@@ -109,7 +110,6 @@ export const Browser = observer(
       const handler = () => {
         const { WindowWidth, LargeIconSize, SmallIconSize } = calcIconSize();
 
-        setWindowWidth(WindowWidth);
         setLargeIconSize(LargeIconSize);
         setSmallIconSize(SmallIconSize);
       };
@@ -411,7 +411,7 @@ export const Browser = observer(
 
           {loadingProgress > 0 && loadingProgress < 1 ? (
             <Bar
-              width={windowWidth}
+              width={ReactiveScreen.width}
               color={current.color}
               height={2}
               borderWidth={0}

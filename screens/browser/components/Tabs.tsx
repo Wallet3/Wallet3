@@ -1,15 +1,26 @@
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Image, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
 
 import { FlatGrid } from 'react-native-super-grid';
 import { Ionicons } from '@expo/vector-icons';
 import { NullableImage } from '../../../components';
-import React from 'react';
+import { ReactiveScreen } from '../../../utils/device';
 import { StateViewModel } from '../MultiTabIndex';
 import Theme from '../../../viewmodels/settings/Theme';
+
+const calcTabWidth = () => {
+  const { width } = ReactiveScreen;
+
+  const NumOfColumns = Math.floor(width / 170);
+  const TabWidth = (width - 16 * 2 - 16 * (NumOfColumns - 1)) / NumOfColumns;
+
+  return { TabWidth };
+};
 
 const WebTab = ({
   pageId,
   globalState,
+  tabWidth,
   onRemovePress,
   listIndex,
   onPress,
@@ -19,6 +30,7 @@ const WebTab = ({
   listIndex: number;
   onPress?: (listIndex: number) => void;
   onRemovePress?: (pageId: number) => void;
+  tabWidth: number;
 }) => {
   const meta = globalState.pageMetas.get(pageId);
   const themeColor = '#000';
@@ -28,7 +40,7 @@ const WebTab = ({
     <TouchableOpacity
       onPress={() => onPress?.(listIndex)}
       style={{
-        width: 170,
+        width: tabWidth,
         borderRadius: 12,
         borderBottomEndRadius: 5,
         borderBottomStartRadius: 5,
@@ -120,6 +132,7 @@ export const WebTabs = ({
   onNewTab: () => void;
 }) => {
   const { backgroundColor, foregroundColor, tintColor } = Theme;
+  const [tabWidth] = useState(calcTabWidth().TabWidth);
 
   return (
     <View style={{ maxHeight: 600, minHeight: 430, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
@@ -160,6 +173,7 @@ export const WebTabs = ({
         renderItem={({ item, index }) => (
           <WebTab
             globalState={globalState}
+            tabWidth={tabWidth}
             pageId={item}
             listIndex={index}
             onPress={onJumpToPage}

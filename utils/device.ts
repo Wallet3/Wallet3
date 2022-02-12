@@ -18,7 +18,7 @@ class ReactScreen {
 
     makeObservable(this, { height: observable, width: observable });
 
-    const updateScreenHeight = () => {
+    const updateScreenDimensions = () => {
       const { height, width } = Dimensions.get('window');
 
       runInAction(() => {
@@ -27,7 +27,7 @@ class ReactScreen {
       });
     };
 
-    Dimensions.addEventListener('change', updateScreenHeight);
+    Dimensions.addEventListener('change', updateScreenDimensions);
   }
 }
 
