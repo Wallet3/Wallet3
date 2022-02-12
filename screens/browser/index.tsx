@@ -59,7 +59,7 @@ interface Props extends BottomTabScreenProps<any, never> {
   onPageLoadEnd?: () => void;
   onHome?: () => void;
   onTakeOff?: () => void;
-  tabIndex: number;
+  tabId: number;
   onNewTab?: () => void;
   globalState: { tabCount: number };
   onOpenTabs?: () => void;
@@ -72,7 +72,7 @@ export const Browser = observer(
     onPageLoaded,
     onHome,
     onTakeOff,
-    tabIndex,
+    tabId,
     onNewTab,
     globalState,
     onOpenTabs,
@@ -335,7 +335,7 @@ export const Browser = observer(
                     key={url}
                     onPress={() => goTo(url)}
                     style={{
-                      backgroundColor: index === 0 ? `${current.color}` : undefined,
+                      backgroundColor: index === 0 ? `${current.color}` : 'transparent',
                       paddingHorizontal: 16,
                       paddingVertical: 6,
                       flexDirection: 'row',
@@ -438,7 +438,7 @@ export const Browser = observer(
             onBookmarksPress={openFavs}
             onMetadataChange={(data) => {
               setPageMetadata(data);
-              onPageLoaded?.(tabIndex, data);
+              onPageLoaded?.(tabId, data);
               Bookmarks.addRecentSite(data);
             }}
             onShrinkRequest={(webUrl) => {

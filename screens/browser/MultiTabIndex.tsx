@@ -1,29 +1,28 @@
-import { Animated, Image, Text, View } from 'react-native';
+import { Animated, View } from 'react-native';
 import { BottomTabScreenProps, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import React, { useRef, useState } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 
 import { Browser } from '.';
-import { FlatGrid } from 'react-native-super-grid';
-import { Ionicons } from '@expo/vector-icons';
 import { Modalize } from 'react-native-modalize';
-import { NullableImage } from '../../components';
 import { PageMetadata } from './Web3View';
 import { Portal } from 'react-native-portalize';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { WebTabs } from './components/Tabs';
 import { observer } from 'mobx-react-lite';
-import { useEffect } from 'react';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-class StateViewModel {
+export class StateViewModel {
+  private id = 1;
+
+  tabCount = 1;
   tabBarHidden = false;
+
   pageMetas = new Map<number, PageMetadata | undefined>();
   pageCaptureFuncs = new Map<number, (() => Promise<string>) | undefined>();
   pageSnapshots = new Map<number, string | undefined>();
-  tabCount = 1;
 
   constructor() {
     makeObservable(this, { tabCount: observable, setTabCount: action });
@@ -32,123 +31,14 @@ class StateViewModel {
   setTabCount(count: number) {
     this.tabCount = count;
   }
+
+  genId() {
+    const id = this.id;
+    this.id++;
+
+    return id;
+  }
 }
-
-const WebTab = ({
-  pageIndex,
-  globalState,
-  onRemovePress,
-  onPress,
-}: {
-  globalState: StateViewModel;
-  pageIndex: number;
-  listIndex: number;
-  onPress?: () => void;
-  onRemovePress?: () => void;
-}) => {
-  const meta = globalState.pageMetas.get(pageIndex);
-  const themeColor = '#000';
-  const snapshot = globalState.pageSnapshots.get(pageIndex);
-
-  return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={{
-        width: 170,
-        borderRadius: 7,
-        backgroundColor: '#fff',
-        shadowColor: `#00000060`,
-        shadowOffset: {
-          width: 0,
-          height: 2,
-        },
-        shadowRadius: 3.14,
-        shadowOpacity: 0.5,
-        elevation: 5,
-      }}
-    >
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingStart: 10,
-          backgroundColor: themeColor,
-          borderColor: themeColor,
-          borderWidth: 1,
-          borderTopEndRadius: 10,
-          borderTopStartRadius: 10,
-
-          justifyContent: 'space-between',
-        }}
-      >
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          {meta && (
-            <NullableImage
-              imageBackgroundColor={themeColor}
-              uri={meta?.icon}
-              size={12}
-              containerStyle={{ marginEnd: 8 }}
-              imageRadius={2}
-            />
-          )}
-
-          <Text style={{ color: 'white', fontWeight: '500', fontSize: 12, maxWidth: 100 }} numberOfLines={1}>
-            {meta?.title ?? 'Blank Page'}
-          </Text>
-        </View>
-
-        <TouchableOpacity
-          style={{ paddingTop: 7, paddingBottom: 5, paddingHorizontal: 12, paddingStart: 16 }}
-          onPress={onRemovePress}
-        >
-          <Ionicons name="ios-close" color="#fff" size={15} />
-        </TouchableOpacity>
-      </View>
-
-      <View
-        style={{
-          borderWidth: snapshot ? 0 : 1,
-          height: 170,
-          borderColor: themeColor,
-          borderBottomEndRadius: 5,
-          borderBottomStartRadius: 5,
-        }}
-      >
-        {snapshot ? (
-          <Image
-            source={{ uri: snapshot }}
-            style={{
-              width: '100%',
-              height: '100%',
-              resizeMode: 'cover',
-
-              borderBottomLeftRadius: 5,
-              borderBottomRightRadius: 5,
-            }}
-          />
-        ) : undefined}
-      </View>
-    </TouchableOpacity>
-  );
-};
-
-const WebTabs = ({ globalState }: { globalState: StateViewModel }) => {
-  const { backgroundColor } = Theme;
-
-  return (
-    <View style={{ maxHeight: 600, minHeight: 400, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
-      <FlatGrid
-        data={Array.from(globalState.pageMetas.keys())}
-        keyExtractor={(i) => `Tab-${i}`}
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 37 }}
-        itemDimension={170}
-        spacing={16}
-        renderItem={({ item, index }) => <WebTab globalState={globalState} pageIndex={item} listIndex={index} />}
-      />
-    </View>
-  );
-};
 
 export default observer((props: BottomTabScreenProps<{}, never>) => {
   const { navigation } = props;
@@ -160,43 +50,42 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
 
   const [tabBarHeight] = useState(useBottomTabBarHeight());
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
-  const { ref: tabsRef, open: openTabs } = useModalize();
+  const { ref: tabsRef, open: openTabs, close: closeTabs } = useModalize();
 
-  const generateBrowserTab = (index: number, props: BottomTabScreenProps<{}, never>, onNewTab: () => void) => {
-    return (
-      <Browser
-        {...props}
-        key={`Browser-${index}`}
-        tabIndex={index}
-        onPageLoaded={(index, meta) => state.pageMetas.set(index, meta)}
-        onPageLoadEnd={() =>
-          setTimeout(
-            () =>
-              state.pageCaptureFuncs
-                .get(index)?.()
-                .then((snapshot) => state.pageSnapshots.set(index, snapshot)),
-            10
-          )
-        }
-        onNewTab={onNewTab}
-        globalState={state}
-        onOpenTabs={openTabs}
-        onTakeOff={() => hideTabBar()}
-        setCapture={(func) => state.pageCaptureFuncs.set(index, func)}
-        onHome={() => {
-          showTabBar();
-          state.pageMetas.set(index, undefined);
-          state.pageCaptureFuncs.set(index, undefined);
-          state.pageSnapshots.set(index, undefined);
-        }}
-      />
-    );
-  };
+  const generateBrowserTab = (id: number, props: BottomTabScreenProps<{}, never>, onNewTab: () => void) => (
+    <Browser
+      {...props}
+      key={`Browser-${id}`}
+      tabId={id}
+      onPageLoaded={(index, meta) => state.pageMetas.set(id, meta)}
+      onNewTab={onNewTab}
+      globalState={state}
+      onOpenTabs={openTabs}
+      onTakeOff={() => hideTabBar()}
+      setCapture={(func) => state.pageCaptureFuncs.set(id, func)}
+      onPageLoadEnd={() =>
+        setTimeout(
+          () =>
+            state.pageCaptureFuncs
+              .get(id)?.()
+              .then((snapshot) => state.pageSnapshots.set(id, snapshot)),
+          10
+        )
+      }
+      onHome={() => {
+        showTabBar();
+        state.pageMetas.set(id, undefined);
+        state.pageCaptureFuncs.set(id, undefined);
+        state.pageSnapshots.set(id, undefined);
+      }}
+    />
+  );
 
   const newTab = () => {
-    const index = tabs.size;
-    tabs.set(index, generateBrowserTab(index, props, newTab));
-    state.pageMetas.set(index, undefined);
+    const id = state.genId();
+
+    tabs.set(id, generateBrowserTab(id, props, newTab));
+    state.pageMetas.set(id, undefined);
 
     setTimeout(() => {
       swiper.current?.scrollTo(tabs.size - 1, true);
@@ -248,7 +137,8 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
   };
 
   const [tabs] = useState(new Map<number, JSX.Element>([[0, generateBrowserTab(0, props, newTab)]]));
-
+  console.log(tabs.size);
+  
   return (
     <View style={{ flex: 1, backgroundColor }}>
       <Swiper
@@ -257,6 +147,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
         showsButtons={false}
         horizontal
         loop={false}
+        removeClippedSubviews={false}
         index={activeTabIndex}
         scrollEnabled
         onIndexChanged={(index) => (state.pageMetas.get(index) ? hideTabBar() : showTabBar())}
@@ -272,7 +163,25 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
           modalStyle={{ padding: 0, margin: 0 }}
         >
-          <WebTabs globalState={state} />
+          <WebTabs
+            globalState={state}
+            onJumpToPage={(index) => {
+              swiper.current?.scrollTo(index);
+              closeTabs();
+            }}
+            onRemovePage={(pageId) => {
+              tabs.delete(pageId);
+              state.pageMetas.delete(pageId);
+              state.pageCaptureFuncs.delete(pageId);
+              state.pageSnapshots.delete(pageId);
+              state.setTabCount(tabs.size);
+              setCounts(tabs.size)
+
+              if (tabs.size === 0) newTab();
+
+              closeTabs();
+            }}
+          />
         </Modalize>
       </Portal>
     </View>
