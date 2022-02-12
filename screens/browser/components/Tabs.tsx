@@ -29,7 +29,9 @@ const WebTab = ({
       onPress={() => onPress?.(listIndex)}
       style={{
         width: 170,
-        borderRadius: 7,
+        borderRadius: 12,
+        borderBottomEndRadius: 5,
+        borderBottomStartRadius: 5,
         backgroundColor: '#fff',
         shadowColor: `#00000060`,
         shadowOffset: {
@@ -66,7 +68,7 @@ const WebTab = ({
             />
           )}
 
-          <Text style={{ color: 'white', fontWeight: '500', fontSize: 12, maxWidth: 100 }} numberOfLines={1}>
+          <Text style={{ color: 'white', fontWeight: '500', fontSize: 12, maxWidth: 120 }} numberOfLines={1}>
             {meta?.title ?? 'Blank Page'}
           </Text>
         </View>

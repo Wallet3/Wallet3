@@ -279,7 +279,9 @@ export default observer((props: Web3ViewProps) => {
                   justifyContent: 'center',
                 }}
               >
-                <Text style={{ fontWeight: '600', fontSize: 12, minWidth: 12, textAlign: 'center' }}>{tabCount}</Text>
+                <Text style={{ fontWeight: '600', fontSize: 12, minWidth: 12, textAlign: 'center', color: tintColor }}>
+                  {tabCount}
+                </Text>
               </View>
             </TouchableOpacity>
 
