@@ -1,3 +1,5 @@
+import * as ExpoLinking from 'expo-linking';
+
 import { EvilIcons, Feather, Ionicons } from '@expo/vector-icons';
 import { Image, Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
@@ -16,11 +18,12 @@ import { observer } from 'mobx-react-lite';
 
 export default observer(({ account }: { account?: Account }) => {
   const { t } = i18n;
-  const { backgroundColor, textColor, foregroundColor, thirdTextColor } = Theme;
+  const { backgroundColor, thirdTextColor } = Theme;
   const { current } = Networks;
   const { address, avatar } = account || {};
   const ens = account?.ens.name;
   const [showFullAddress, setShowFullAddress] = useState(false);
+  const [etherscan] = useState(ExpoLinking.parse(current.explorer).hostname?.split('.')[0]);
 
   const prefixedAddress = current?.addrPrefix ? `${current?.addrPrefix}${address?.substring(2)}` : address;
 
@@ -97,7 +100,7 @@ export default observer(({ account }: { account?: Account }) => {
             onPress={() => Linking.openURL(`${current.explorer}/address/${address}`)}
             style={{ flexDirection: 'row', alignItems: 'center' }}
           >
-            <Text style={{ color: thirdTextColor, fontSize: 12, marginEnd: 6 }}>Etherscan</Text>
+            <Text style={{ color: thirdTextColor, fontSize: 12, marginEnd: 6, textTransform: 'capitalize' }}>{etherscan}</Text>
             <Ionicons name="open-outline" size={11} color={thirdTextColor} />
           </TouchableOpacity>
 

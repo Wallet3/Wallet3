@@ -62,16 +62,16 @@ interface Props extends BottomTabScreenProps<any, never> {
   onNewTab?: () => void;
   globalState: { tabCount: number };
   onOpenTabs?: () => void;
-  viewShotRef?: React.Ref<ViewShot>;
 }
 
 export const Browser = observer(
-  ({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex, onNewTab, globalState, onOpenTabs, viewShotRef }: Props) => {
+  ({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex, onNewTab, globalState, onOpenTabs }: Props) => {
     const { t } = i18n;
     const { top } = useSafeAreaInsets();
     const { current } = Networks;
     const webview = useRef<WebView>(null);
     const addrRef = useRef<TextInput>(null);
+    const viewShot = useRef<ViewShot>(null);
 
     const [loadingProgress, setLoadingProgress] = useState(0);
     const [isFocus, setFocus] = useState(false);
@@ -371,7 +371,6 @@ export const Browser = observer(
                 }}
               >
                 <Ionicons name="md-scan-outline" size={21} color={textColor} />
-                {/* <View style={{ height: 1, backgroundColor: textColor, position: 'absolute', width: 13.5, top: 18.5, left: 19 }} /> */}
               </TouchableOpacity>
 
               {webUrl ? (
@@ -406,7 +405,7 @@ export const Browser = observer(
         {uri ? (
           <Web3View
             webViewRef={webview}
-            viewShotRef={viewShotRef}
+            viewShotRef={viewShot}
             source={{ uri }}
             onLoadProgress={({ nativeEvent }) => setLoadingProgress(nativeEvent.progress)}
             onLoadEnd={() => setLoadingProgress(1)}

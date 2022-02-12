@@ -20,7 +20,7 @@ import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 class StateViewModel {
   tabBarHidden = false;
-  pageState = new Map<number, PageMetadata | undefined>();
+  pageMeta = new Map<number, PageMetadata | undefined>();
   tabCount = 1;
 
   constructor() {
@@ -44,26 +44,29 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
   const { ref: tabsRef, open: openTabs } = useModalize();
 
-  const generateBrowserTab = (index: number, props: BottomTabScreenProps<{}, never>, onNewTab: () => void) => (
-    <Browser
-      {...props}
-      tabIndex={index}
-      onPageLoaded={(index, meta) => state.pageState.set(index, meta)}
-      onNewTab={onNewTab}
-      globalState={state}
-      onOpenTabs={openTabs}
-      onTakeOff={() => hideTabBar()}
-      onHome={() => {
-        showTabBar();
-        state.pageState.set(index, undefined);
-      }}
-    />
-  );
+  const generateBrowserTab = (index: number, props: BottomTabScreenProps<{}, never>, onNewTab: () => void) => {
+    return (
+      <Browser
+        {...props}
+        key={`Browser-${index}`}
+        tabIndex={index}
+        onPageLoaded={(index, meta) => state.pageMeta.set(index, meta)}
+        onNewTab={onNewTab}
+        globalState={state}
+        onOpenTabs={openTabs}
+        onTakeOff={() => hideTabBar()}
+        onHome={() => {
+          showTabBar();
+          state.pageMeta.set(index, undefined);
+        }}
+      />
+    );
+  };
 
   const newTab = () => {
     const index = tabs.size;
     tabs.set(index, generateBrowserTab(index, props, newTab));
-    state.pageState.set(index, undefined);
+    state.pageMeta.set(index, undefined);
 
     setTimeout(() => {
       swiper.current?.scrollTo(tabs.size - 1, true);
@@ -126,7 +129,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
         loop={false}
         index={activeTabIndex}
         scrollEnabled
-        onIndexChanged={(index) => (state.pageState.get(index) ? hideTabBar() : showTabBar())}
+        onIndexChanged={(index) => (state.pageMeta.get(index) ? hideTabBar() : showTabBar())}
       >
         {Array.from(tabs.values())}
       </Swiper>
@@ -139,9 +142,9 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
           modalStyle={{ padding: 0, margin: 0 }}
         >
-          <View style={{ height: 400, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
+          <View style={{ height: 430, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
             <FlatGrid
-              data={Array.from(state.pageState.keys())}
+              data={Array.from(state.pageMeta.keys())}
               keyExtractor={(i) => `Tab-${i}`}
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={{ paddingBottom: 37 }}
@@ -149,16 +152,19 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
               spacing={16}
               bounces={false}
               renderItem={({ item }) => {
-                const meta = state.pageState.get(item);
+                const meta = state.pageMeta.get(item);
+                const themeColor = meta?.themeColor || '#000';
 
                 return (
-                  <View style={{ width: 170, borderRadius: 10, height: 150, overflow: 'hidden' }}>
+                  <TouchableOpacity style={{ width: 170, overflow: 'hidden' }}>
                     <View
                       style={{
                         flexDirection: 'row',
                         alignItems: 'center',
                         paddingStart: 10,
-                        backgroundColor: meta?.themeColor || '#000',
+                        backgroundColor: themeColor,
+                        borderColor: themeColor,
+                        borderWidth: 1,
                         borderTopEndRadius: 10,
                         borderTopStartRadius: 10,
                         justifyContent: 'space-between',
@@ -168,13 +174,22 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
                         {meta?.title ?? 'Blank Page'}
                       </Text>
 
-                      <TouchableOpacity style={{ paddingTop: 8, paddingBottom: 7, paddingHorizontal: 12, paddingStart: 16 }}>
+                      <TouchableOpacity style={{ paddingTop: 6, paddingBottom: 5, paddingHorizontal: 12, paddingStart: 16 }}>
                         <Ionicons name="ios-close" color="#fff" />
                       </TouchableOpacity>
                     </View>
 
-                    <TouchableOpacity></TouchableOpacity>
-                  </View>
+                    <View
+                      style={{
+                        borderWidth: 1,
+                        height: 120,
+                        marginTop: -1,
+                        borderColor: themeColor,
+                        borderBottomEndRadius: 5,
+                        borderBottomStartRadius: 5,
+                      }}
+                    ></View>
+                  </TouchableOpacity>
                 );
               }}
             />

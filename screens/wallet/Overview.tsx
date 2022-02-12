@@ -1,20 +1,18 @@
-import { AntDesign, Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { formatAddress, formatCurrency } from '../../utils/formatter';
-import { numericFontFamily, themeColor } from '../../constants/styles';
 
 import AnimateNumber from 'react-native-animate-number';
 import ColorLogos from '../../assets/icons/networks/color';
-import CopyableText from '../../components/CopyableText';
 import { INetwork } from '../../common/Networks';
 import Image from 'react-native-expo-cached-image';
-import Langs from '../../viewmodels/settings/Langs';
 import React from 'react';
 import Ripple from 'react-native-material-ripple';
 import UI from '../../viewmodels/settings/UI';
 import WhiteLogos from '../../assets/icons/networks/white';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { themeColor } from '../../constants/styles';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
@@ -120,7 +118,7 @@ export default observer(
 
         <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={onQRCodePress}>
           <Text style={{ ...styles.text, fontSize: 12, color: textColor }}>
-            {formatAddress(prefixedAddress || '', 6 + (network?.addrPrefix?.length ?? 0), 5)}
+            {formatAddress(prefixedAddress || '', 7 + (network?.addrPrefix?.length ?? 0), 5)}
           </Text>
 
           <MaterialCommunityIcons
