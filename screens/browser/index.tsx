@@ -62,10 +62,11 @@ interface Props extends BottomTabScreenProps<any, never> {
   onNewTab?: () => void;
   globalState: { tabCount: number };
   onOpenTabs?: () => void;
+  setCapture?: (callback: () => Promise<string>) => void;
 }
 
 export const Browser = observer(
-  ({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex, onNewTab, globalState, onOpenTabs }: Props) => {
+  ({ navigation, onPageLoaded, onHome, onTakeOff, tabIndex, onNewTab, globalState, onOpenTabs, setCapture }: Props) => {
     const { t } = i18n;
     const { top } = useSafeAreaInsets();
     const { current } = Networks;
@@ -113,6 +114,13 @@ export const Browser = observer(
         PubSub.unsubscribe('CodeScan-https:');
       };
     }, []);
+
+    useEffect(() => {
+      const func = viewShot.current?.capture;
+      if (!func) return;
+
+      setCapture?.(func);
+    }, [viewShot.current]);
 
     useEffect(() => {
       isSecureSite(webUrl)

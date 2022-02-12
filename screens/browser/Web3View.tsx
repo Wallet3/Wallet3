@@ -211,7 +211,7 @@ export default observer((props: Web3ViewProps) => {
 
   return (
     <View style={{ flex: 1, position: 'relative' }}>
-      <ViewShot ref={viewShotRef} style={{ flex: 1 }} options={{ result: 'data-uri' }}>
+      <ViewShot ref={viewShotRef} style={{ flex: 1 }} options={{ result: 'data-uri', quality: 0.1, format: 'jpg' }}>
         <WebView
           {...props}
           ref={webViewRef}

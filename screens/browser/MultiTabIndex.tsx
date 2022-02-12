@@ -1,7 +1,6 @@
-import { Animated, FlatList, Text, View } from 'react-native';
+import { Animated, Image, Text, View } from 'react-native';
 import { BottomTabScreenProps, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import React, { useCallback, useRef, useState } from 'react';
-import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+import React, { useRef, useState } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 
 import { Browser } from '.';
@@ -10,17 +9,17 @@ import { Ionicons } from '@expo/vector-icons';
 import { Modalize } from 'react-native-modalize';
 import { PageMetadata } from './Web3View';
 import { Portal } from 'react-native-portalize';
-import { SafeViewContainer } from '../../components';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import ViewShot from 'react-native-view-shot';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 class StateViewModel {
   tabBarHidden = false;
-  pageMeta = new Map<number, PageMetadata | undefined>();
+  pageMetas = new Map<number, PageMetadata | undefined>();
+  pageCaptures = new Map<number, (() => Promise<string>) | undefined>();
   tabCount = 1;
 
   constructor() {
@@ -31,6 +30,97 @@ class StateViewModel {
     this.tabCount = count;
   }
 }
+
+const WebTab = ({ index, globalState }: { globalState: StateViewModel; index: number }) => {
+  const meta = globalState.pageMetas.get(index);
+  const themeColor = meta?.themeColor || '#000';
+  const [snapshot, setSnapshot] = useState('');
+  globalState.pageCaptures.get(index)?.().then(setSnapshot);
+
+  return (
+    <TouchableOpacity
+      style={{
+        width: 170,
+        backgroundColor: '#fff',
+        shadowColor: `#00000060`,
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+
+        shadowRadius: 3.14,
+        shadowOpacity: 0.5,
+        elevation: 5,
+      }}
+    >
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingStart: 10,
+          backgroundColor: themeColor,
+          borderColor: themeColor,
+          borderWidth: 1,
+          borderTopEndRadius: 10,
+          borderTopStartRadius: 10,
+
+          justifyContent: 'space-between',
+        }}
+      >
+        <Text style={{ color: 'white', fontWeight: '500', fontSize: 12 }} numberOfLines={1}>
+          {meta?.title ?? 'Blank Page'}
+        </Text>
+
+        <TouchableOpacity style={{ paddingTop: 8, paddingBottom: 6, paddingHorizontal: 12, paddingStart: 16 }}>
+          <Ionicons name="ios-close" color="#fff" />
+        </TouchableOpacity>
+      </View>
+
+      <View
+        style={{
+          borderWidth: snapshot ? 0 : 1,
+          height: 120,
+          borderColor: themeColor,
+          borderBottomEndRadius: 5,
+          borderBottomStartRadius: 5,
+        }}
+      >
+        {snapshot ? (
+          <Image
+            source={{ uri: snapshot }}
+            style={{
+              width: '100%',
+              height: '100%',
+              resizeMode: 'cover',
+
+              borderBottomLeftRadius: 5,
+              borderBottomRightRadius: 5,
+            }}
+          />
+        ) : undefined}
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+const WebTabs = ({ globalState }: { globalState: StateViewModel }) => {
+  const { backgroundColor } = Theme;
+
+  return (
+    <View style={{ height: 430, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
+      <FlatGrid
+        data={Array.from(globalState.pageMetas.keys())}
+        keyExtractor={(i) => `Tab-${i}`}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 37 }}
+        itemDimension={170}
+        spacing={16}
+        bounces={false}
+        renderItem={({ item }) => <WebTab globalState={globalState} index={item} />}
+      />
+    </View>
+  );
+};
 
 export default observer((props: BottomTabScreenProps<{}, never>) => {
   const { navigation } = props;
@@ -50,14 +140,16 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
         {...props}
         key={`Browser-${index}`}
         tabIndex={index}
-        onPageLoaded={(index, meta) => state.pageMeta.set(index, meta)}
+        onPageLoaded={(index, meta) => state.pageMetas.set(index, meta)}
         onNewTab={onNewTab}
         globalState={state}
         onOpenTabs={openTabs}
         onTakeOff={() => hideTabBar()}
+        setCapture={(func) => state.pageCaptures.set(index, func)}
         onHome={() => {
           showTabBar();
-          state.pageMeta.set(index, undefined);
+          state.pageMetas.set(index, undefined);
+          state.pageCaptures.set(index, undefined);
         }}
       />
     );
@@ -66,7 +158,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
   const newTab = () => {
     const index = tabs.size;
     tabs.set(index, generateBrowserTab(index, props, newTab));
-    state.pageMeta.set(index, undefined);
+    state.pageMetas.set(index, undefined);
 
     setTimeout(() => {
       swiper.current?.scrollTo(tabs.size - 1, true);
@@ -129,7 +221,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
         loop={false}
         index={activeTabIndex}
         scrollEnabled
-        onIndexChanged={(index) => (state.pageMeta.get(index) ? hideTabBar() : showTabBar())}
+        onIndexChanged={(index) => (state.pageMetas.get(index) ? hideTabBar() : showTabBar())}
       >
         {Array.from(tabs.values())}
       </Swiper>
@@ -142,58 +234,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
           modalStyle={{ padding: 0, margin: 0 }}
         >
-          <View style={{ height: 430, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
-            <FlatGrid
-              data={Array.from(state.pageMeta.keys())}
-              keyExtractor={(i) => `Tab-${i}`}
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{ paddingBottom: 37 }}
-              itemDimension={170}
-              spacing={16}
-              bounces={false}
-              renderItem={({ item }) => {
-                const meta = state.pageMeta.get(item);
-                const themeColor = meta?.themeColor || '#000';
-
-                return (
-                  <TouchableOpacity style={{ width: 170, overflow: 'hidden' }}>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        paddingStart: 10,
-                        backgroundColor: themeColor,
-                        borderColor: themeColor,
-                        borderWidth: 1,
-                        borderTopEndRadius: 10,
-                        borderTopStartRadius: 10,
-                        justifyContent: 'space-between',
-                      }}
-                    >
-                      <Text style={{ color: 'white', fontWeight: '500', fontSize: 12 }} numberOfLines={1}>
-                        {meta?.title ?? 'Blank Page'}
-                      </Text>
-
-                      <TouchableOpacity style={{ paddingTop: 6, paddingBottom: 5, paddingHorizontal: 12, paddingStart: 16 }}>
-                        <Ionicons name="ios-close" color="#fff" />
-                      </TouchableOpacity>
-                    </View>
-
-                    <View
-                      style={{
-                        borderWidth: 1,
-                        height: 120,
-                        marginTop: -1,
-                        borderColor: themeColor,
-                        borderBottomEndRadius: 5,
-                        borderBottomStartRadius: 5,
-                      }}
-                    ></View>
-                  </TouchableOpacity>
-                );
-              }}
-            />
-          </View>
+          <WebTabs globalState={state} />
         </Modalize>
       </Portal>
     </View>
