@@ -57,7 +57,7 @@ export default observer(({ onItemPress, tabCount, onTabsPress }: Props) => {
                   width: 37,
                 }}
               >
-                <Text style={{ fontSize: 15, fontWeight: '600', color: tintColor }}>{tabCount > 9 ? '9+' : tabCount}</Text>
+                <Text style={{ fontSize: 15, fontWeight: '600', color: tintColor }}>{tabCount}</Text>
               </View>
             </TouchableOpacity>
           </View>

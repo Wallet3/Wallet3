@@ -1,14 +1,14 @@
-import { Animated, FlatList, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, FlatList, NativeScrollEvent, NativeSyntheticEvent, Text, TouchableOpacity, View } from 'react-native';
 import { BottomTabScreenProps, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import React, { useRef, useState } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 
 import { Browser } from './Browser';
+import LINQ from 'linq';
 import { Modalize } from 'react-native-modalize';
 import { PageMetadata } from './Web3View';
 import { Portal } from 'react-native-portalize';
 import { ReactiveScreen } from '../../utils/device';
-import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
 import { WebTabs } from './components/Tabs';
 import { observer } from 'mobx-react-lite';
@@ -89,14 +89,12 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
     tabs.set(id, tabView);
     state.pageMetas.set(id, undefined);
 
-    setCounts(tabs.size);
     state.setTabCount(tabs.size);
+    setCounts(tabs.size);
 
     setTimeout(() => {
-      // swiper.current?.scrollToIndex({ index: tabs.size - 1, animated: true });
       swiper.current?.scrollToItem({ item: tabView, animated: true });
-      setTimeout(() => setActiveTabIndex(tabs.size - 1), 200); // Important!!!
-    }, 500);
+    }, 200);
   };
 
   const hideTabBar = () => {
@@ -141,6 +139,12 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
 
   const [tabs] = useState(new Map<number, JSX.Element>([[0, generateBrowserTab(0, props, newTab)]]));
 
+  const onScrollEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const pageIndex = Math.min(Math.max(Math.floor(e.nativeEvent.contentOffset.x / ReactiveScreen.width + 0.5), 0), tabs.size);
+    setActiveTabIndex(pageIndex);
+    LINQ.from(state.pageMetas.values()).elementAt(pageIndex) ? hideTabBar() : showTabBar();
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor }}>
       <FlatList
@@ -148,11 +152,18 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
         ref={swiper}
         data={Array.from(tabs.values())}
         renderItem={({ item }) => item}
+        initialNumToRender={99}
         horizontal
         pagingEnabled
+        onMomentumScrollEnd={onScrollEnd}
         showsHorizontalScrollIndicator={false}
         bounces={false}
         initialScrollIndex={0}
+        onScrollToIndexFailed={({ index }) => {
+          new Promise((resolve) => setTimeout(resolve, 200)).then(() =>
+            swiper.current?.scrollToIndex({ index, animated: true })
+          );
+        }}
       />
 
       <Portal>
@@ -174,16 +185,27 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
               closeTabs();
             }}
             onRemovePage={(pageId) => {
-              tabs.delete(pageId);
-              state.pageMetas.delete(pageId);
-              state.pageCaptureFuncs.delete(pageId);
-              state.pageSnapshots.delete(pageId);
-              state.setTabCount(tabs.size);
-              setCounts(tabs.size);
+              const removeTab = () => {
+                tabs.delete(pageId);
+                state.pageMetas.delete(pageId);
+                state.pageCaptureFuncs.delete(pageId);
+                state.pageSnapshots.delete(pageId);
+                state.setTabCount(tabs.size);
+                setCounts(tabs.size);
+              };
 
-              if (tabs.size === 0) newTab();
+              if (tabs.size === 1) {
+                newTab();
 
-              closeTabs();
+                setTimeout(() => {
+                  removeTab();
+                }, 500);
+
+                closeTabs();
+                return;
+              }
+
+              removeTab();
             }}
           />
         </Modalize>
@@ -191,33 +213,3 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
     </View>
   );
 });
-
-const TestStateView = ({
-  onNewTab,
-  onRemoveTab,
-  id,
-}: {
-  id: any;
-  props: any;
-  onNewTab: () => void;
-  onRemoveTab: () => void;
-}) => {
-  const [count, setCount] = useState(0);
-
-  console.log('rendering', id);
-  return (
-    <View key={id} style={{ width: ReactiveScreen.width }}>
-      <TouchableOpacity onPress={() => setCount((prev) => prev + 1)}>
-        <Text style={{ fontSize: 81 }}>{count}</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={onNewTab}>
-        <Text>New Tab</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={onRemoveTab} style={{ marginTop: 24 }}>
-        <Text>Remove Tab</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
