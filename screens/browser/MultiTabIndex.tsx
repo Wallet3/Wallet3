@@ -3,7 +3,7 @@ import { BottomTabScreenProps, useBottomTabBarHeight } from '@react-navigation/b
 import React, { useRef, useState } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 
-import { Browser } from '.';
+import { Browser } from './Browser';
 import { Modalize } from 'react-native-modalize';
 import { PageMetadata } from './Web3View';
 import { Portal } from 'react-native-portalize';

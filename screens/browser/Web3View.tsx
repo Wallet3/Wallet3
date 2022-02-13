@@ -279,14 +279,14 @@ export default observer((props: Web3ViewProps) => {
                   justifyContent: 'center',
                 }}
               >
-                <Text style={{ fontWeight: '600', fontSize: 12, minWidth: 12, textAlign: 'center', color: tintColor }}>
+                <Text style={{ fontWeight: '700', fontSize: 12, minWidth: 12, textAlign: 'center', color: tintColor }}>
                   {tabCount}
                 </Text>
               </View>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.navTouchableItem} onPress={onBookmarksPress}>
-              <Feather name="book-open" size={20.2} color={tintColor} />
+              <Feather name="book-open" size={20.5} color={tintColor} />
             </TouchableOpacity>
           </View>
 
