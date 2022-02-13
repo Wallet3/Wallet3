@@ -82,22 +82,10 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
     />
   );
 
-  // const generateBrowserTab = (id: any, props: any, onNewTab: any) => (
-  //   <TestStateView
-  //     key={`Browser-${id}`}
-  //     props={props}
-  //     id={id}
-  //     onNewTab={onNewTab}
-  //     onRemoveTab={() => {
-  //       console.log(tabs.delete(id));
-  //       setCounts(tabs.size);
-  //     }}
-  //   />
-  // );
-
   const newTab = () => {
     const id = state.genId();
     const tabView = generateBrowserTab(id, props, newTab);
+
     tabs.set(id, tabView);
     state.pageMetas.set(id, undefined);
 
@@ -107,7 +95,6 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
     setTimeout(() => {
       // swiper.current?.scrollToIndex({ index: tabs.size - 1, animated: true });
       swiper.current?.scrollToItem({ item: tabView, animated: true });
-      // swiper.current?.scrollToEnd({ animated: true });
       setTimeout(() => setActiveTabIndex(tabs.size - 1), 200); // Important!!!
     }, 500);
   };

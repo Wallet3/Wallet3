@@ -1,16 +1,12 @@
 import * as Animatable from 'react-native-animatable';
 
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
-import { FlatList, NativeSyntheticEvent, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { NativeSyntheticEvent, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
-import { BlurView } from 'expo-blur';
 import Bookmarks from '../../../viewmodels/customs/Bookmarks';
-import { Ionicons } from '@expo/vector-icons';
 import { NullableImage } from '../../../components';
-import { PageMetadata } from '../Web3View';
 import React from 'react';
 import Theme from '../../../viewmodels/settings/Theme';
-import { borderColor } from '../../../constants/styles';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
 
@@ -28,13 +24,21 @@ export default observer(({ onItemPress, tabCount, onTabsPress }: Props) => {
 
   return (
     <Animatable.View animation={'fadeInUp'} style={{ flex: 1 }}>
-      <View style={{ flex: 1 }} />
+      <ScrollView style={{ flex: 1 }} />
 
-      <View style={{ flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.333, borderColor: systemBorderColor }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          borderTopWidth: 0.333,
+          borderColor: systemBorderColor,
+          paddingVertical: 4.3333,
+        }}
+      >
         {tabCount > 1 && (
           <View
             style={{
-              paddingTop: 10.5,
+              paddingTop: 2.5,
               height: '100%',
               borderEndWidth: 0.333,
               borderEndColor: systemBorderColor,
@@ -59,16 +63,8 @@ export default observer(({ onItemPress, tabCount, onTabsPress }: Props) => {
           </View>
         )}
 
-        <FlatList
-          key="recent-history-list"
-          style={{ maxHeight: 52, backgroundColor }}
-          contentContainerStyle={{ paddingVertical: 8, paddingTop: 8.5, paddingHorizontal: 8 }}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          horizontal
-          data={recentSites}
-          keyExtractor={(item, index) => `${item?.origin}-${index}`}
-          renderItem={({ item, index }) => {
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 5 }}>
+          {recentSites.map((item, index) => {
             const onActionPress = (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => {
               const { index } = e.nativeEvent;
 
@@ -80,7 +76,12 @@ export default observer(({ onItemPress, tabCount, onTabsPress }: Props) => {
             };
 
             return (
-              <ContextMenu actions={actions} onPress={onActionPress} previewBackgroundColor={backgroundColor}>
+              <ContextMenu
+                key={item.origin}
+                actions={actions}
+                onPress={onActionPress}
+                previewBackgroundColor={backgroundColor}
+              >
                 <TouchableOpacity
                   onPress={() => onItemPress?.(item.origin)}
                   key={`tab-${index}`}
@@ -110,8 +111,8 @@ export default observer(({ onItemPress, tabCount, onTabsPress }: Props) => {
                 </TouchableOpacity>
               </ContextMenu>
             );
-          }}
-        />
+          })}
+        </ScrollView>
       </View>
     </Animatable.View>
   );
