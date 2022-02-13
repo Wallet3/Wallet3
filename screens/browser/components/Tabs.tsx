@@ -36,7 +36,26 @@ const WebTab = ({
 }) => {
   const meta = globalState.pageMetas.get(pageId);
   const themeColor = '#000';
-  const snapshot = globalState.pageSnapshots.get(pageId);
+  const [snapshot, setSnapshot] = useState<string | undefined>(globalState.pageSnapshots.get(pageId));
+
+  useEffect(() => {
+    if (snapshot) return;
+
+    const timer = setTimeout(
+      () =>
+        globalState.pageCaptureFuncs
+          .get(pageId)?.()
+          .then((data) => {
+            setSnapshot(data);
+            globalState.pageSnapshots.set(pageId, data);
+          }),
+      listIndex * 100
+    );
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
 
   return (
     <TouchableOpacity

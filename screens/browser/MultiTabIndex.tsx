@@ -59,21 +59,13 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
       {...props}
       key={`Browser-${id}`}
       tabId={id}
-      onPageLoaded={(index, meta) => state.pageMetas.set(id, meta)}
+      onPageLoaded={(_, meta) => state.pageMetas.set(id, meta)}
       onNewTab={onNewTab}
       globalState={state}
       onOpenTabs={openTabs}
       onTakeOff={() => hideTabBar()}
       setCapture={(func) => state.pageCaptureFuncs.set(id, func)}
-      onPageLoadEnd={() =>
-        setTimeout(
-          () =>
-            state.pageCaptureFuncs
-              .get(id)?.()
-              .then((snapshot) => state.pageSnapshots.set(id, snapshot)),
-          1000
-        )
-      }
+      onPageLoadEnd={() => state.pageSnapshots.delete(id)}
       onHome={() => {
         showTabBar();
         state.pageMetas.set(id, undefined);
@@ -202,6 +194,8 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
 
                 if (activeTabIndex === count - 1 || pageIndex < activeTabIndex) {
                   setActiveTabIndex((prev) => prev - 1);
+                  const newIndex = activeTabIndex - 1;
+                  setTimeout(() => (Array.from(state.pageMetas.values())[newIndex] ? hideTabBar() : showTabBar()), 0);
                 }
               };
 
