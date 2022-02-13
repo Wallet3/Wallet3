@@ -84,12 +84,6 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
   );
 
   const newTab = () => {
-    const index = Array.from(state.pageMetas.values()).findIndex((i) => i === undefined);
-    if (index >= 0) {
-      swiper.current?.scrollToIndex({ index, animated: true });
-      return;
-    }
-
     const id = state.genId();
     const tabView = generateBrowserTab(id, props, newTab);
 
@@ -149,7 +143,8 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
   const onScrollEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const pageIndex = Math.min(Math.max(Math.floor(e.nativeEvent.contentOffset.x / ReactiveScreen.width + 0.5), 0), tabs.size);
     setActiveTabIndex(pageIndex);
-    LINQ.from(state.pageMetas.values()).elementAt(pageIndex) ? hideTabBar() : showTabBar();
+
+    Array.from(state.pageMetas.values())[pageIndex] ? hideTabBar() : showTabBar();
   };
 
   return (
@@ -183,6 +178,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
         >
           <WebTabs
             globalState={state}
+            activeIndex={activeTabIndex}
             onNewTab={() => {
               newTab();
               closeTabs();
@@ -192,13 +188,21 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
               closeTabs();
             }}
             onRemovePage={(pageId) => {
+              const pageIndex = Array.from(state.pageMetas.keys()).findIndex((i) => i === pageId);
+
               const removeTab = () => {
+                const count = tabs.size;
+
                 tabs.delete(pageId);
                 state.pageMetas.delete(pageId);
                 state.pageCaptureFuncs.delete(pageId);
                 state.pageSnapshots.delete(pageId);
                 state.setTabCount(tabs.size);
                 setCounts(tabs.size);
+
+                if (activeTabIndex === count - 1 || pageIndex < activeTabIndex) {
+                  setActiveTabIndex((prev) => prev - 1);
+                }
               };
 
               if (tabs.size === 1) {

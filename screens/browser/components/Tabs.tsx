@@ -24,6 +24,7 @@ const WebTab = ({
   onRemovePress,
   listIndex,
   onPress,
+  activeIndex,
 }: {
   globalState: StateViewModel;
   pageId: number;
@@ -31,6 +32,7 @@ const WebTab = ({
   onPress?: (listIndex: number) => void;
   onRemovePress?: (pageId: number) => void;
   tabWidth: number;
+  activeIndex: number;
 }) => {
   const meta = globalState.pageMetas.get(pageId);
   const themeColor = '#000';
@@ -42,8 +44,8 @@ const WebTab = ({
       style={{
         width: tabWidth,
         borderRadius: 12,
-        borderBottomEndRadius: 5,
-        borderBottomStartRadius: 5,
+        borderBottomEndRadius: 7,
+        borderBottomStartRadius: 7,
         backgroundColor: '#fff',
         shadowColor: `#00000060`,
         shadowOffset: {
@@ -53,6 +55,8 @@ const WebTab = ({
         shadowRadius: 3.14,
         shadowOpacity: 0.5,
         elevation: 5,
+        borderWidth: activeIndex === listIndex ? 2.5 : 0,
+        borderColor: 'dodgerblue',
       }}
     >
       <View
@@ -125,11 +129,13 @@ export const WebTabs = ({
   onJumpToPage,
   onRemovePage,
   onNewTab,
+  activeIndex,
 }: {
   globalState: StateViewModel;
   onJumpToPage: (listIndex: number) => void;
   onRemovePage: (pageId: number) => void;
   onNewTab: () => void;
+  activeIndex: number;
 }) => {
   const { backgroundColor, foregroundColor, tintColor } = Theme;
   const [tabWidth, setTabWidth] = useState(calcTabWidth().TabWidth);
@@ -191,6 +197,7 @@ export const WebTabs = ({
             listIndex={index}
             onPress={onJumpToPage}
             onRemovePress={onRemovePage}
+            activeIndex={activeIndex}
           />
         )}
       />
