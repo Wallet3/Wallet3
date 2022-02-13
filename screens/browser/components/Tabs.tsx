@@ -80,14 +80,14 @@ const WebTab = ({
             />
           )}
 
-          <Text style={{ color: 'white', fontWeight: '500', fontSize: 12, maxWidth: 120 }} numberOfLines={1}>
+          <Text style={{ color: 'white', fontWeight: '500', fontSize: 12, maxWidth: 100 }} numberOfLines={1}>
             {meta?.title ?? 'Blank Page'}
           </Text>
         </View>
 
         <TouchableOpacity
-          style={{ paddingTop: 7, paddingBottom: 5, paddingHorizontal: 12, paddingStart: 16, opacity: 0 }}
-          //   onPress={() => onRemovePress?.(pageId)}
+          style={{ paddingTop: 7, paddingBottom: 5, paddingEnd: 10, paddingStart: 16 }}
+          onPress={() => onRemovePress?.(pageId)}
         >
           <Ionicons name="ios-close" color="#fff" size={15} />
         </TouchableOpacity>

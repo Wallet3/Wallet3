@@ -28,7 +28,7 @@ export default observer(({ onItemPress, tabCount, onTabsPress }: Props) => {
 
   return (
     <Animatable.View animation={'fadeInUp'} style={{ flex: 1 }}>
-      <ScrollView style={{ flex: 1 }} />
+      <View style={{ flex: 1 }} />
 
       <View style={{ flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.333, borderColor: systemBorderColor }}>
         {tabCount > 1 && (
@@ -60,6 +60,7 @@ export default observer(({ onItemPress, tabCount, onTabsPress }: Props) => {
         )}
 
         <FlatList
+          key="recent-history-list"
           style={{ maxHeight: 52, backgroundColor }}
           contentContainerStyle={{ paddingVertical: 8, paddingTop: 8.5, paddingHorizontal: 8 }}
           showsVerticalScrollIndicator={false}

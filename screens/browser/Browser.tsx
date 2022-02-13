@@ -232,7 +232,15 @@ export const Browser = observer(
     }, [addr]);
 
     return (
-      <View style={{ backgroundColor: backgroundColor, flex: 1, paddingTop: top, position: 'relative' }}>
+      <View
+        style={{
+          backgroundColor: backgroundColor,
+          flex: 1,
+          width: ReactiveScreen.width,
+          paddingTop: top,
+          position: 'relative',
+        }}
+      >
         <View style={{ position: 'relative', paddingTop: 4, paddingBottom: isFocus ? 0 : 8 }}>
           <View
             style={{

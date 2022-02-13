@@ -26,7 +26,7 @@ class GasPrice {
       : await getGasPrice(current.chainId);
 
     runInAction(() => (this.current = price === undefined ? this.current : price));
-    this.timer = setTimeout(() => this.refresh(), 1000 * 15);
+    this.timer = setTimeout(() => this.refresh(), (current.chainId === 1 ? 12 : 5) * 1000);
   }
 
   stop() {
