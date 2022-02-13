@@ -1,7 +1,7 @@
 import * as Animatable from 'react-native-animatable';
 import * as Linking from 'expo-linking';
 
-import { Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { Entypo, Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -273,7 +273,7 @@ export default observer((props: Web3ViewProps) => {
                 style={{
                   borderWidth: 1.5,
                   borderColor: tintColor,
-                  padding: 2,
+                  paddingVertical: 2,
                   paddingHorizontal: 4,
                   borderRadius: 7,
                   justifyContent: 'center',
@@ -286,7 +286,7 @@ export default observer((props: Web3ViewProps) => {
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.navTouchableItem} onPress={onBookmarksPress}>
-              <Feather name="book-open" size={20} color={tintColor} />
+              <Feather name="book-open" size={20.2} color={tintColor} />
             </TouchableOpacity>
           </View>
 
@@ -300,7 +300,7 @@ export default observer((props: Web3ViewProps) => {
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.navTouchableItem} onPress={onGoHome}>
-              <MaterialIcons name="radio-button-off" size={22} color={tintColor} />
+              <Entypo name="circle" size={19} color={tintColor} />
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -413,5 +413,7 @@ const styles = StyleSheet.create({
     paddingVertical: 9,
     paddingHorizontal: 12,
     paddingTop: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
