@@ -92,7 +92,7 @@ const WebTab = ({
           justifyContent: 'space-between',
         }}
       >
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 1 }}>
           {meta && (
             <NullableImage
               imageBackgroundColor={themeColor}
