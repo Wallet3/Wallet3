@@ -234,6 +234,7 @@ export default observer((props: Web3ViewProps) => {
           injectedJavaScriptBeforeContentLoaded={`${MetamaskMobileProvider}\ntrue;`}
           style={{ backgroundColor }}
           decelerationRate={1}
+          allowsLinkPreview
         />
       </ViewShot>
 
