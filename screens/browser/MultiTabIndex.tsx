@@ -16,7 +16,7 @@ import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export class StateViewModel {
-  private id = 1;
+  private _id = 0;
 
   tabCount = 1;
   tabBarHidden = false;
@@ -24,6 +24,10 @@ export class StateViewModel {
   pageMetas = new Map<number, PageMetadata | undefined>();
   pageCaptureFuncs = new Map<number, (() => Promise<string>) | undefined>();
   pageSnapshots = new Map<number, string | undefined>();
+
+  get id() {
+    return this._id;
+  }
 
   constructor() {
     makeObservable(this, { tabCount: observable, setTabCount: action });
@@ -34,10 +38,7 @@ export class StateViewModel {
   }
 
   genId() {
-    const id = this.id;
-    this.id++;
-
-    return id;
+    return ++this._id;
   }
 }
 
@@ -83,6 +84,12 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
   );
 
   const newTab = () => {
+    const index = Array.from(state.pageMetas.values()).findIndex((i) => i === undefined);
+    if (index >= 0) {
+      swiper.current?.scrollToIndex({ index, animated: true });
+      return;
+    }
+
     const id = state.genId();
     const tabView = generateBrowserTab(id, props, newTab);
 
@@ -206,6 +213,8 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
               }
 
               removeTab();
+
+              if (tabs.size === 1) closeTabs();
             }}
           />
         </Modalize>
