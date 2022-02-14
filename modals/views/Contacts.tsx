@@ -16,6 +16,7 @@ import { TokenTransferring } from '../../viewmodels/transferring/TokenTransferri
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { startLayoutAnimation } from '../../utils/animations';
 import styles from '../styles';
 
 interface Props {
@@ -38,6 +39,7 @@ export default observer(({ onNext, vm }: Props) => {
 
       switch (index) {
         case 0:
+          startLayoutAnimation();
           Contacts.remove(item);
           break;
       }

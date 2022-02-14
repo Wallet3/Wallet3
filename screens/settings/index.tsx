@@ -196,6 +196,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
           <FullPasspad
             themeColor={Networks.current.color}
             height={420}
+            borderRadius={6}
             onCodeEntered={async (code) => {
               const success = await Authentication.verifyPin(code);
               if (!success) return false;

@@ -85,23 +85,36 @@ interface FullPasspadProps {
   themeColor?: string;
   onCodeEntered: (code: string) => Promise<boolean>;
   onBioAuth?: () => void;
+  height?: number;
+  borderRadius?: number;
   bioType?: BioType;
 }
 
-export const FullPasspad = observer(({ themeColor, onCodeEntered, bioType, onBioAuth }: FullPasspadProps) => {
-  const { backgroundColor } = Theme;
-  const { height, width } = ReactiveScreen;
+export const FullPasspad = observer(
+  ({ themeColor, height, onCodeEntered, bioType, onBioAuth, borderRadius }: FullPasspadProps) => {
+    const { backgroundColor } = Theme;
+    const { height: fullScreenHeight, width } = ReactiveScreen;
 
-  return (
-    <SafeAreaProvider style={{ flex: 1, height, width, backgroundColor }}>
-      <Passpad
-        themeColor={themeColor}
-        disableCancel
-        onCodeEntered={onCodeEntered}
-        style={{ marginBottom: 4 }}
-        onBioAuth={onBioAuth}
-        bioType={bioType}
-      />
-    </SafeAreaProvider>
-  );
-});
+    return (
+      <SafeAreaProvider
+        style={{
+          flex: 1,
+          height: height || fullScreenHeight,
+          width,
+          backgroundColor,
+          borderTopLeftRadius: borderRadius,
+          borderTopRightRadius: borderRadius,
+        }}
+      >
+        <Passpad
+          themeColor={themeColor}
+          disableCancel
+          onCodeEntered={onCodeEntered}
+          style={{ marginBottom: 4 }}
+          onBioAuth={onBioAuth}
+          bioType={bioType}
+        />
+      </SafeAreaProvider>
+    );
+  }
+);
