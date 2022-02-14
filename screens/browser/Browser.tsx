@@ -1,17 +1,7 @@
 import * as Linking from 'expo-linking';
 
 import Bookmarks, { Bookmark, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
-import {
-  Dimensions,
-  Image,
-  LayoutAnimation,
-  ListRenderItemInfo,
-  Share,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Dimensions, LayoutAnimation, ListRenderItemInfo, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Web3View, { PageMetadata } from './Web3View';
@@ -21,7 +11,6 @@ import { secureColor, thirdFontColor } from '../../constants/styles';
 
 import { Bar } from 'react-native-progress';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import CachedImage from 'react-native-expo-cached-image';
 import Collapsible from 'react-native-collapsible';
 import { FlatGrid } from 'react-native-super-grid';
 import { Ionicons } from '@expo/vector-icons';
@@ -62,7 +51,7 @@ interface Props extends BottomTabScreenProps<any, never> {
   onTakeOff?: () => void;
   tabId: number;
   onNewTab?: () => void;
-  globalState: { tabCount: number };
+  globalState?: { tabCount: number };
   onOpenTabs?: () => void;
   setCapture?: (callback: () => Promise<string>) => void;
 }
@@ -336,34 +325,32 @@ export const Browser = observer(
           </View>
 
           <Collapsible collapsed={!isFocus} style={{ borderWidth: 0, padding: 0, margin: 0 }} enablePointerEvents>
-            {addr && isFocus ? (
-              <View style={{ marginTop: 8, paddingBottom: 4, borderBottomWidth: 1, borderBottomColor: borderColor }}>
-                {suggests.map((url, index) => (
-                  <TouchableOpacity
-                    key={url}
-                    onPress={() => goTo(url)}
-                    style={{
-                      backgroundColor: index === 0 ? `${current.color}` : 'transparent',
-                      paddingHorizontal: 16,
-                      paddingVertical: 6,
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                    }}
+            <View style={{ marginTop: 8, paddingBottom: 4, borderBottomWidth: 1, borderBottomColor: borderColor }}>
+              {suggests.map((url, index) => (
+                <TouchableOpacity
+                  key={url}
+                  onPress={() => goTo(url)}
+                  style={{
+                    backgroundColor: index === 0 ? `${current.color}` : 'transparent',
+                    paddingHorizontal: 16,
+                    paddingVertical: 6,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Text
+                    numberOfLines={1}
+                    style={{ maxWidth: '80%', fontSize: 16, color: index === 0 ? '#fff' : thirdFontColor }}
                   >
-                    <Text
-                      numberOfLines={1}
-                      style={{ maxWidth: '80%', fontSize: 16, color: index === 0 ? '#fff' : thirdFontColor }}
-                    >
-                      {url}
-                    </Text>
-                    {index === 0 ? <Ionicons name="return-down-back" size={15} color="#fff" /> : undefined}
-                  </TouchableOpacity>
-                ))}
-              </View>
-            ) : undefined}
+                    {url}
+                  </Text>
+                  {index === 0 ? <Ionicons name="return-down-back" size={15} color="#fff" /> : undefined}
+                </TouchableOpacity>
+              ))}
+            </View>
 
-            {uri ? (
+            {/* {uri ? (
               <View
                 style={{
                   flexDirection: 'row',
@@ -374,7 +361,14 @@ export const Browser = observer(
                 }}
               >
                 {PopularDApps.concat(favs.slice(0, 24)).map((item, i) => (
-                  <TouchableOpacity style={{ margin: 8 }} key={`${item.url}-${i}`} onPress={() => goTo(item.url)}>
+                  <TouchableOpacity
+                    style={{ margin: 8 }}
+                    key={`${item.url}-${i}`}
+                    onPress={(e) => {
+                      e.preventDefault();
+                      goTo(item.url);
+                    }}
+                  >
                     {item.icon ? (
                       <CachedImage
                         source={{ uri: item.icon }}
@@ -386,22 +380,24 @@ export const Browser = observer(
                   </TouchableOpacity>
                 ))}
               </View>
-            ) : undefined}
+            ) : undefined} */}
 
             <View style={{ flexDirection: 'row', paddingHorizontal: 0 }}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('QRScan')}
-                style={{
-                  justifyContent: 'center',
-                  paddingHorizontal: 16,
-                  alignItems: 'center',
-                  paddingVertical: 8,
-                }}
-              >
-                <Ionicons name="md-scan-outline" size={21} color={textColor} />
-              </TouchableOpacity>
+              {!webUrl && (
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('QRScan')}
+                  style={{
+                    justifyContent: 'center',
+                    paddingHorizontal: 16,
+                    alignItems: 'center',
+                    paddingVertical: 8,
+                  }}
+                >
+                  <Ionicons name="md-scan-outline" size={21} color={textColor} />
+                </TouchableOpacity>
+              )}
 
-              {webUrl ? (
+              {/* {webUrl ? (
                 <TouchableOpacity
                   onPress={() => Share.share({ url: webUrl, title: pageMetadata?.title })}
                   style={{
@@ -413,7 +409,7 @@ export const Browser = observer(
                 >
                   <Ionicons name="ios-share-outline" size={20.5} color={textColor} />
                 </TouchableOpacity>
-              ) : undefined}
+              ) : undefined} */}
             </View>
           </Collapsible>
 
@@ -434,7 +430,7 @@ export const Browser = observer(
           <Web3View
             webViewRef={webview}
             viewShotRef={viewShot}
-            tabCount={globalState.tabCount}
+            tabCount={globalState?.tabCount}
             onTabPress={onOpenTabs}
             source={{ uri }}
             onLoadProgress={({ nativeEvent }) => setLoadingProgress(nativeEvent.progress)}
@@ -509,7 +505,7 @@ export const Browser = observer(
         )}
 
         {!webUrl && recentSites.length > 0 ? (
-          <RecentHistory tabCount={globalState.tabCount} onItemPress={(url) => goTo(url)} onTabsPress={onOpenTabs} />
+          <RecentHistory tabCount={globalState?.tabCount} onItemPress={(url) => goTo(url)} onTabsPress={onOpenTabs} />
         ) : undefined}
 
         <Portal>

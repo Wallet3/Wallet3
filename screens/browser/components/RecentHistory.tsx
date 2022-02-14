@@ -12,7 +12,7 @@ import { observer } from 'mobx-react-lite';
 
 interface Props {
   onItemPress?: (url: string) => void;
-  tabCount: number;
+  tabCount?: number;
   onTabsPress?: () => void;
 }
 
@@ -35,7 +35,7 @@ export default observer(({ onItemPress, tabCount, onTabsPress }: Props) => {
           paddingVertical: 4.3333,
         }}
       >
-        {tabCount > 1 && (
+        {(tabCount || 0) > 1 && (
           <View
             style={{
               paddingTop: 2.5,
