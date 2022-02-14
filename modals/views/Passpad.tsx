@@ -8,9 +8,11 @@ import { SafeAreaView, StyleProp, View, ViewStyle } from 'react-native';
 import { renderEmptyCircle, renderFilledCircle } from '../../components/PasscodeCircle';
 
 import { BioType } from '../../viewmodels/Authentication';
+import { ReactiveScreen } from '../../utils/device';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
+import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 
 interface Props {
@@ -80,18 +82,18 @@ const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style, bi
 export default Passpad;
 
 interface FullPasspadProps {
-  height?: number;
   themeColor?: string;
   onCodeEntered: (code: string) => Promise<boolean>;
   onBioAuth?: () => void;
   bioType?: BioType;
 }
 
-export const FullPasspad = ({ height, themeColor, onCodeEntered, bioType, onBioAuth }: FullPasspadProps) => {
+export const FullPasspad = observer(({ themeColor, onCodeEntered, bioType, onBioAuth }: FullPasspadProps) => {
   const { backgroundColor } = Theme;
+  const { height, width } = ReactiveScreen;
 
   return (
-    <SafeAreaProvider style={{ flex: 1, height, backgroundColor }}>
+    <SafeAreaProvider style={{ flex: 1, height, width, backgroundColor }}>
       <Passpad
         themeColor={themeColor}
         disableCancel
@@ -102,4 +104,4 @@ export const FullPasspad = ({ height, themeColor, onCodeEntered, bioType, onBioA
       />
     </SafeAreaProvider>
   );
-};
+});

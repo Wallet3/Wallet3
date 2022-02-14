@@ -37,6 +37,7 @@ import { WCCallRequestRequest } from '../models/WCSession_v1';
 import { WalletConnect_v1 } from '../viewmodels/walletconnect/WalletConnect_v1';
 import { autorun } from 'mobx';
 import i18n from '../i18n';
+import { observer } from 'mobx-react-lite';
 import { parse } from 'eth-url-parser';
 import { showMessage } from 'react-native-flash-message';
 import { styles } from '../constants/styles';
@@ -393,7 +394,7 @@ const SendFundsModal = () => {
   );
 };
 
-export const LockScreen = ({ app, appAuth }: { app: AppVM; appAuth: Authentication }) => {
+export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication }) => {
   const { ref: lockScreenRef, open: openLockScreen, close: closeLockScreen } = useModalize();
 
   const bioAuth = async () => {
@@ -425,6 +426,7 @@ export const LockScreen = ({ app, appAuth }: { app: AppVM; appAuth: Authenticati
       disableScrollIfPossible
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
+      rootStyle={{ width: ReactiveScreen.width, height: ReactiveScreen.height }}
       modalStyle={{ borderTopStartRadius: 0, borderTopEndRadius: 0 }}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
@@ -432,7 +434,6 @@ export const LockScreen = ({ app, appAuth }: { app: AppVM; appAuth: Authenticati
         themeColor={Theme.isLightMode ? Theme.foregroundColor : `${Theme.foregroundColor}80`}
         bioType={appAuth.biometricType}
         onBioAuth={bioAuth}
-        height={ReactiveScreen.height}
         onCodeEntered={async (code) => {
           const success = await appAuth.authorize(code);
           if (success) closeLockScreen();
@@ -441,7 +442,7 @@ export const LockScreen = ({ app, appAuth }: { app: AppVM; appAuth: Authenticati
       />
     </Modalize>
   );
-};
+});
 
 export default (props: { app: AppVM; appAuth: Authentication }) => {
   return [

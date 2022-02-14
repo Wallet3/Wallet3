@@ -23,7 +23,11 @@ export default observer(({ account }: { account?: Account }) => {
   const { address, avatar } = account || {};
   const ens = account?.ens.name;
   const [showFullAddress, setShowFullAddress] = useState(false);
-  const [etherscan] = useState(ExpoLinking.parse(current.explorer).hostname?.split('.')[0]);
+  const [etherscan] = useState(
+    ExpoLinking.parse(current.explorer)
+      .hostname?.split('.')
+      .filter((i) => i.length > 3)[0]
+  );
 
   const prefixedAddress = current?.addrPrefix ? `${current?.addrPrefix}${address?.substring(2)}` : address;
 
