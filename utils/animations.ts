@@ -1,13 +1,12 @@
-import { LayoutAnimation } from 'react-native';
+import { LayoutAnimation, LayoutAnimationConfig } from 'react-native';
 
-export const LayoutAnimConfig = {
+export const LayoutAnimConfig: LayoutAnimationConfig = {
   duration: 300,
   update: {
     type: LayoutAnimation.Types.easeInEaseOut,
   },
-  delete: {
-    duration: 300,
-    type: LayoutAnimation.Types.linear,
-    property: LayoutAnimation.Properties.opacity,
-  },
 };
+
+export function startLayoutAnimation() {
+  LayoutAnimation.configureNext(LayoutAnimConfig);
+}

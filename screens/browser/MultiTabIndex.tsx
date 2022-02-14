@@ -12,6 +12,7 @@ import { ReactiveScreen } from '../../utils/device';
 import Theme from '../../viewmodels/settings/Theme';
 import { WebTabs } from './components/Tabs';
 import { observer } from 'mobx-react-lite';
+import { startLayoutAnimation } from '../../utils/animations';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -192,17 +193,24 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
                 state.setTabCount(tabs.size);
                 setCounts(tabs.size);
 
+                // console.log(activeTabIndex, count, count - 1);
+                let newIndex = -1;
+
                 if (activeTabIndex === count - 1 || pageIndex < activeTabIndex) {
                   setActiveTabIndex((prev) => prev - 1);
-                  const newIndex = activeTabIndex - 1;
-                  setTimeout(() => (Array.from(state.pageMetas.values())[newIndex] ? hideTabBar() : showTabBar()), 0);
+                  newIndex = Math.max(0, activeTabIndex - 1);
+                } else if (activeTabIndex === 0) {
+                  newIndex = 1;
                 }
+
+                setTimeout(() => (Array.from(state.pageMetas.values())[newIndex] ? hideTabBar() : showTabBar()), 0);
               };
 
               if (tabs.size === 1) {
                 newTab();
 
                 setTimeout(() => {
+                  startLayoutAnimation();
                   removeTab();
                 }, 500);
 
@@ -210,6 +218,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
                 return;
               }
 
+              startLayoutAnimation();
               removeTab();
 
               if (tabs.size === 1) closeTabs();

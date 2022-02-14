@@ -2,6 +2,7 @@ import * as Linking from 'expo-linking';
 
 import Bookmarks, { Bookmark, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
 import { Dimensions, LayoutAnimation, ListRenderItemInfo, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { LayoutAnimConfig, startLayoutAnimation } from '../../utils/animations';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Web3View, { PageMetadata } from './Web3View';
@@ -14,7 +15,6 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import Collapsible from 'react-native-collapsible';
 import { FlatGrid } from 'react-native-super-grid';
 import { Ionicons } from '@expo/vector-icons';
-import { LayoutAnimConfig } from '../../utils/animations';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
 import PopularDApps from '../../configs/urls/popular.json';
@@ -495,7 +495,7 @@ export const Browser = observer(
                     closeFavs();
                   },
                   onRemove: (item) => {
-                    LayoutAnimation.configureNext(LayoutAnimConfig);
+                    startLayoutAnimation();
                     Bookmarks.remove(item.url);
                   },
                 })

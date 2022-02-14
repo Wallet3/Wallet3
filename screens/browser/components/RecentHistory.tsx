@@ -1,7 +1,8 @@
 import * as Animatable from 'react-native-animatable';
 
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
-import { NativeSyntheticEvent, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { LayoutAnimConfig, startLayoutAnimation } from '../../../utils/animations';
+import { LayoutAnimation, NativeSyntheticEvent, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 import Bookmarks from '../../../viewmodels/customs/Bookmarks';
 import { NullableImage } from '../../../components';
@@ -68,6 +69,7 @@ export default observer(({ onItemPress, tabCount, onTabsPress }: Props) => {
 
               switch (index) {
                 case 0:
+                  startLayoutAnimation();
                   Bookmarks.removeRecentSite(item);
                   break;
               }
