@@ -457,11 +457,11 @@ export const Browser = observer(
             }}
           />
         ) : (
-          <View style={{}}>
+          <View style={{ flex: 1 }}>
             <Text style={{ marginHorizontal: 16, marginTop: 12, color: textColor }}>{t('browser-popular-dapps')}</Text>
 
             <FlatGrid
-              style={{ marginTop: 2, padding: 0 }}
+              style={{ marginTop: 2, padding: 0, paddingBottom: 12 }}
               contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: 8, paddingTop: 2 }}
               itemDimension={LargeIconSize + 8}
               bounces={false}
@@ -473,11 +473,11 @@ export const Browser = observer(
             />
 
             {favs.length > 0 ? (
-              <Text style={{ marginHorizontal: 16, marginTop: 0, color: textColor }}>{t('browser-favorites')}</Text>
+              <Text style={{ marginHorizontal: 16, marginTop: 16, color: textColor }}>{t('browser-favorites')}</Text>
             ) : undefined}
 
             <FlatGrid
-              style={{ marginTop: 2, padding: 0 }}
+              style={{ marginTop: 2, padding: 0, height: '100%' }}
               contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: 8, paddingTop: 2 }}
               itemDimension={LargeIconSize + 8}
               bounces={false}
@@ -522,7 +522,7 @@ export const Browser = observer(
               >
                 <Text style={{ marginHorizontal: 12, color: textColor }}>{t('browser-favorites')}</Text>
                 <FlatGrid
-                  style={{ marginTop: 2, padding: 0 }}
+                  style={{ marginTop: 2, padding: 0, flex: 1 }}
                   contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: 8, paddingTop: 2 }}
                   itemDimension={LargeIconSize + 8}
                   bounces={false}
@@ -530,9 +530,14 @@ export const Browser = observer(
                   itemContainerStyle={{ padding: 0, margin: 0, marginBottom: 12 }}
                   spacing={8}
                   keyExtractor={(v, index) => `${v.url}-${index}`}
-                  data={favs.concat(
-                    PopularDApps.filter((d) => !favs.find((f) => f.url.includes(d.url) || d.url.includes(f.url)))
-                  )}
+                  data={favs}
+                />
+
+                <RecentHistory
+                  onItemPress={(url) => {
+                    goTo(url);
+                    closeFavs();
+                  }}
                 />
               </SafeViewContainer>
             </SafeAreaProvider>

@@ -23,9 +23,7 @@ export default observer(({ onItemPress, tabCount, onTabsPress }: Props) => {
   const { recentSites } = Bookmarks;
 
   return (
-    <Animatable.View animation={'fadeInUp'} style={{ flex: 1 }}>
-      <ScrollView style={{ flex: 1 }} />
-
+    <Animatable.View animation={'fadeInUp'}>
       <View
         style={{
           flexDirection: 'row',
