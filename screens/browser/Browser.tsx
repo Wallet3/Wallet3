@@ -461,7 +461,7 @@ export const Browser = observer(
             <Text style={{ marginHorizontal: 16, marginTop: 12, color: textColor }}>{t('browser-popular-dapps')}</Text>
 
             <FlatGrid
-              style={{ marginTop: 2, padding: 0, paddingBottom: 12 }}
+              style={{ marginTop: 2, padding: 0, paddingBottom: 36 }}
               contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: 8, paddingTop: 2 }}
               itemDimension={LargeIconSize + 8}
               bounces={false}
@@ -473,7 +473,7 @@ export const Browser = observer(
             />
 
             {favs.length > 0 ? (
-              <Text style={{ marginHorizontal: 16, marginTop: 16, color: textColor }}>{t('browser-favorites')}</Text>
+              <Text style={{ marginHorizontal: 16, marginTop: 12, color: textColor }}>{t('browser-favorites')}</Text>
             ) : undefined}
 
             <FlatGrid
