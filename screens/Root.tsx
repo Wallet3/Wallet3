@@ -9,6 +9,7 @@ import Drawer from './drawer';
 import { DrawerNavigationHelpers } from '@react-navigation/drawer/lib/typescript/src/types';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../viewmodels/Networks';
+import { ReactiveScreen } from '../utils/device';
 import SettingScreen from './settings';
 import Theme from '../viewmodels/settings/Theme';
 import WalletScreen from './wallet';
@@ -20,7 +21,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const DrawerRoot = createDrawerNavigator();
 const TabNavigation = createBottomTabNavigator();
-const ScreenWidth = Dimensions.get('window').width;
 
 type RootStackParamList = {
   Home: undefined;
@@ -160,7 +160,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
         sceneContainerStyle: { backgroundColor: backgroundColor },
         headerTransparent: false,
         headerTintColor: foregroundColor,
-        swipeEdgeWidth: ScreenWidth * 0.25,
+        swipeEdgeWidth: ReactiveScreen.width * 0.1,
         swipeEnabled,
         drawerType: 'slide',
         headerBackgroundContainerStyle: { borderBottomColor: borderColor },

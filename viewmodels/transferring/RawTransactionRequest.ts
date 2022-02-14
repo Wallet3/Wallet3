@@ -1,15 +1,13 @@
-import { BigNumber, constants, ethers, providers, utils } from 'ethers';
-import { WCCallRequestRequest, WCCallRequest_eth_sendTransaction, WCClientMeta } from '../../models/WCSession_v1';
+import { BigNumber, constants, providers, utils } from 'ethers';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
 import { Account } from '../account/Account';
-import App from '../App';
 import { BaseTransaction } from './BaseTransaction';
 import { ERC20Token } from '../../models/ERC20';
 import { Gwei_1 } from '../../common/Constants';
 import { INetwork } from '../../common/Networks';
-import Networks from '../Networks';
-import { WalletConnect_v1 } from '../walletconnect/WalletConnect_v1';
+import { WCCallRequest_eth_sendTransaction } from '../../models/WCSession_v1';
+import numeral from 'numeral';
 
 export interface SpeedupAbleSendParams extends WCCallRequest_eth_sendTransaction {
   speedUp?: boolean;
@@ -51,9 +49,8 @@ export class RawTransactionRequest extends BaseTransaction {
 
   get tokenAmount() {
     try {
-      return Number(utils.formatUnits(this.tokenAmountWei, this.tokenDecimals)).toLocaleString(undefined, {
-        maximumFractionDigits: 6,
-      });
+      const value = Number(utils.formatUnits(this.tokenAmountWei, this.tokenDecimals)) || 0;
+      return numeral(value).format(Number.isInteger(value) ? '0,0' : '0,0.00');
     } catch (error) {
       return '0';
     }
@@ -156,6 +153,8 @@ export class RawTransactionRequest extends BaseTransaction {
 
   setApproveAmount(amount: string) {
     if (!this.erc20 || this.erc20.decimals < 0) return;
+    if (amount.endsWith('.')) return;
+    amount = amount.replace(/,/g, '');
 
     try {
       const data = this.erc20.interface.encodeFunctionData('approve', [

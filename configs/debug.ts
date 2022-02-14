@@ -9,5 +9,6 @@ LogBox.ignoreLogs([
   'Webview Process Terminated',
   'source.uri should not be an empty string',
   'check out new Gestures system',
-  'Could not find image file'
+  'Could not find image file',
+  'react-native-view-shot: NativeModules.RNViewShot is undefined.'
 ]);

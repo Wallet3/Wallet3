@@ -1,10 +1,10 @@
 import * as Animatable from 'react-native-animatable';
 import * as Linking from 'expo-linking';
 
-import { Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { Entypo, Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { WebView, WebViewMessageEvent, WebViewNavigation, WebViewProps } from 'react-native-webview';
 
 import { Account } from '../../viewmodels/account/Account';
@@ -24,7 +24,9 @@ import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
 import { NetworksMenu } from '../../modals';
 import { Portal } from 'react-native-portalize';
+import { ReactiveScreen } from '../../utils/device';
 import Theme from '../../viewmodels/settings/Theme';
+import ViewShot from 'react-native-view-shot';
 import WalletConnectLogo from '../../assets/3rd/walletconnect.svg';
 import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectV1ClientHub';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
@@ -55,13 +57,16 @@ interface Web3ViewProps extends WebViewProps {
   onShrinkRequest?: (webUrl: string) => void;
   onExpandRequest?: (webUrl: string) => void;
   onBookmarksPress?: () => void;
+  onTabPress?: () => void;
+  tabCount?: number;
 
   webViewRef: React.Ref<WebView>;
+  viewShotRef?: React.Ref<ViewShot>;
 }
 
 export default observer((props: Web3ViewProps) => {
   const { t } = i18n;
-  const { webViewRef } = props;
+  const { webViewRef, viewShotRef, tabCount, onTabPress } = props;
   const [hub] = useState(new InpageMetamaskDAppHub());
   const [appName] = useState(`Wallet3/${DeviceInfo.getVersion() || '0.0.0'}`);
   const [ua] = useState(
@@ -209,26 +214,29 @@ export default observer((props: Web3ViewProps) => {
 
   return (
     <View style={{ flex: 1, position: 'relative' }}>
-      <WebView
-        {...props}
-        ref={webViewRef}
-        automaticallyAdjustContentInsets={false}
-        contentInsetAdjustmentBehavior={'never'}
-        contentInset={{ bottom: expanded ? 37 + (safeAreaBottom === 0 ? 8 : 0) : 0 }}
-        onNavigationStateChange={onNavigationStateChange}
-        userAgent={ua}
-        allowsFullscreenVideo={false}
-        forceDarkOn={mode === 'dark'}
-        injectedJavaScript={`${GetPageMetadata}\ntrue;\n${HookWalletConnect}\ntrue;`}
-        onMessage={onMessage}
-        mediaPlaybackRequiresUserAction
-        pullToRefreshEnabled
-        allowsInlineMediaPlayback
-        allowsBackForwardNavigationGestures
-        injectedJavaScriptBeforeContentLoaded={`${MetamaskMobileProvider}\ntrue;`}
-        style={{ backgroundColor }}
-        decelerationRate={1}
-      />
+      <ViewShot ref={viewShotRef} style={{ flex: 1 }} options={{ result: 'data-uri', quality: 0.1, format: 'jpg' }}>
+        <WebView
+          {...props}
+          ref={webViewRef}
+          automaticallyAdjustContentInsets={false}
+          contentInsetAdjustmentBehavior={'never'}
+          contentInset={{ bottom: expanded ? 37 + (safeAreaBottom === 0 ? 8 : 0) : 0 }}
+          onNavigationStateChange={onNavigationStateChange}
+          userAgent={ua}
+          allowsFullscreenVideo={false}
+          forceDarkOn={mode === 'dark'}
+          injectedJavaScript={`${GetPageMetadata}\ntrue;\n${HookWalletConnect}\ntrue;`}
+          onMessage={onMessage}
+          mediaPlaybackRequiresUserAction
+          pullToRefreshEnabled
+          allowsInlineMediaPlayback
+          allowsBackForwardNavigationGestures
+          injectedJavaScriptBeforeContentLoaded={`${MetamaskMobileProvider}\ntrue;`}
+          style={{ backgroundColor }}
+          decelerationRate={1}
+          allowsLinkPreview
+        />
+      </ViewShot>
 
       <Animatable.View
         animation="fadeInUp"
@@ -246,21 +254,40 @@ export default observer((props: Web3ViewProps) => {
           }}
         >
           <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-            {expanded ? (
-              <TouchableOpacity style={styles.navTouchableItem} onPress={() => onShrinkRequest?.(webUrl)}>
-                <MaterialCommunityIcons name="arrow-collapse-vertical" size={20} color={tintColor} />
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                style={{ ...styles.navTouchableItem, paddingTop: 10, paddingBottom: 9 }}
-                onPress={() => onExpandRequest?.(webUrl)}
+            {ReactiveScreen.width >= 500 ? (
+              expanded ? (
+                <TouchableOpacity style={styles.navTouchableItem} onPress={() => onShrinkRequest?.(webUrl)}>
+                  <MaterialCommunityIcons name="arrow-collapse-vertical" size={20} color={tintColor} />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={{ ...styles.navTouchableItem, paddingTop: 10, paddingBottom: 9 }}
+                  onPress={() => onExpandRequest?.(webUrl)}
+                >
+                  <MaterialCommunityIcons name="arrow-expand" size={19} color={tintColor} />
+                </TouchableOpacity>
+              )
+            ) : undefined}
+
+            <TouchableOpacity style={styles.navTouchableItem} onPress={onTabPress}>
+              <View
+                style={{
+                  borderWidth: 1.5,
+                  borderColor: tintColor,
+                  paddingVertical: 2,
+                  paddingHorizontal: 4,
+                  borderRadius: 7,
+                  justifyContent: 'center',
+                }}
               >
-                <MaterialCommunityIcons name="arrow-expand" size={19} color={tintColor} />
-              </TouchableOpacity>
-            )}
+                <Text style={{ fontWeight: '700', fontSize: 12, minWidth: 12, textAlign: 'center', color: tintColor }}>
+                  {tabCount}
+                </Text>
+              </View>
+            </TouchableOpacity>
 
             <TouchableOpacity style={styles.navTouchableItem} onPress={onBookmarksPress}>
-              <Feather name="book-open" size={20} color={tintColor} />
+              <Feather name="book-open" size={20.5} color={tintColor} />
             </TouchableOpacity>
           </View>
 
@@ -274,7 +301,7 @@ export default observer((props: Web3ViewProps) => {
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.navTouchableItem} onPress={onGoHome}>
-              <MaterialIcons name="radio-button-off" size={22} color={tintColor} />
+              <Entypo name="circle" size={19} color={tintColor} />
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -387,5 +414,7 @@ const styles = StyleSheet.create({
     paddingVertical: 9,
     paddingHorizontal: 12,
     paddingTop: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

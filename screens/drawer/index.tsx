@@ -11,6 +11,7 @@ import { DrawerActions } from '@react-navigation/core';
 import { INetwork } from '../../common/Networks';
 import Networks from '../../viewmodels/Networks';
 import PubSub from 'pubsub-js';
+import { ReactiveScreen } from '../../utils/device';
 import { SafeViewContainer } from '../../components';
 import Theme from '../../viewmodels/settings/Theme';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -21,7 +22,7 @@ import { observer } from 'mobx-react-lite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { bottom, top } = initialWindowMetrics?.insets ?? { bottom: 0, top: 0 };
-const contentHeight = Dimensions.get('window').height - (bottom + top);
+const contentHeight = ReactiveScreen.height - (bottom + top);
 
 interface DrawerProps extends DrawerContentComponentProps {
   appVM: AppVM;
@@ -62,6 +63,11 @@ const Drawer = observer((props: DrawerProps) => {
       Dimensions.removeEventListener('change', updateScreenHeight);
     };
   }, []);
+
+  const navigateTo = (route: string) => {
+    navigation.navigate(route);
+    setTimeout(() => navigation.dispatch(DrawerActions.closeDrawer()), 0);
+  };
 
   return (
     <SafeViewContainer
@@ -116,21 +122,21 @@ const Drawer = observer((props: DrawerProps) => {
       <View style={{ paddingBottom: 12 }}>
         <DrawerItem
           label={t('home-drawer-wallet')}
-          onPress={() => navigation.navigate('Home')}
+          onPress={() => navigateTo('Home')}
           labelStyle={{ ...styles.drawerLabel, color: homeHighlight }}
           icon={() => <Feather color={homeHighlight} size={21} name={'home'} />}
         />
 
         <DrawerItem
           label={t('home-drawer-dapps')}
-          onPress={() => navigation.navigate('DApps')}
+          onPress={() => navigateTo('DApps')}
           labelStyle={{ ...styles.drawerLabel, color: dappsHighlight }}
           icon={() => <Feather name="layers" size={20} style={{ width: 21, paddingStart: 1 }} color={dappsHighlight} />}
         />
 
         <DrawerItem
           label={t('home-drawer-settings')}
-          onPress={() => navigation.navigate('Settings')}
+          onPress={() => navigateTo('Settings')}
           labelStyle={{ ...styles.drawerLabel, color: settingsHighlight }}
           icon={() => <Feather color={settingsHighlight} size={21} name={'settings'} />}
         />

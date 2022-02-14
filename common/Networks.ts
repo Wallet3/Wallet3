@@ -30,6 +30,7 @@ export interface INetwork {
   explorer: string;
   rpcUrls?: string[];
   addrPrefix?: string;
+  githubIconFolder?: string;
 }
 
 export const PublicNetworks: INetwork[] = [
@@ -112,6 +113,7 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: BscPopularTokens,
     blockTimeMs: 5 * 1000,
     explorer: 'https://bscscan.com',
+    githubIconFolder: 'smartchain',
   },
   {
     symbol: 'xDAI',
@@ -124,6 +126,7 @@ export const PublicNetworks: INetwork[] = [
     blockTimeMs: 5 * 1000,
     explorer: 'https://blockscout.com/xdai/mainnet',
     eip1559: true,
+    githubIconFolder: 'xdai',
   },
   {
     symbol: 'RON',
@@ -168,6 +171,7 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: AVAXPopularTokens,
     blockTimeMs: 5 * 1000,
     explorer: 'https://snowtrace.io',
+    githubIconFolder: 'avalanchec',
   },
   {
     symbol: 'ONE',

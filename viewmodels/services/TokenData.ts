@@ -5,6 +5,7 @@ import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/Tokens';
 import Langs from '../settings/Langs';
 import { UserToken } from './TokensMan';
+import axios from 'axios';
 
 interface ITokenData {
   description: string;
@@ -19,6 +20,7 @@ export class TokenData implements ITokenData {
   readonly address: string;
   readonly symbol: string;
   readonly network: INetwork;
+  readonly infoUrl: string;
 
   coinId?: string;
   description: string = '';
@@ -35,6 +37,9 @@ export class TokenData implements ITokenData {
     this.symbol = token.symbol;
     this.address = token.address;
     this.network = network;
+    this.infoUrl = `https://github.com/trustwallet/assets/raw/master/blockchains/${
+      (network.githubIconFolder || network.network)?.toLowerCase() ?? 'ethereum'
+    }/assets/${token.address}/info.json`;
 
     makeObservable(this, {
       symbol: observable,
@@ -48,13 +53,24 @@ export class TokenData implements ITokenData {
     this.init();
   }
 
+  private async fetchInfo() {
+    if (!this.address) return;
+
+    try {
+      return (await axios(this.infoUrl)).data as { description: string; links: { name: string; url: string }[] };
+    } catch (error) {}
+  }
+
   private async init() {
     runInAction(() => {
       this.description = '';
       this.loading = true;
     });
 
-    const result = await Coingecko.getCoinDetails(this.symbol, this.address, this.network.network);
+    const [result, info] = await Promise.all([
+      Coingecko.getCoinDetails(this.symbol, this.address, this.network.network),
+      this.fetchInfo(),
+    ]);
 
     if (!result) {
       runInAction(() => (this.loading = false));
@@ -67,7 +83,7 @@ export class TokenData implements ITokenData {
 
     this.coinId = id;
 
-    const desc = (description?.[Langs.currentLang.value] || description?.en)?.replace(/<[^>]*>?/gm, '');
+    const desc = info?.description || (description?.[Langs.currentLang.value] || description?.en)?.replace(/<[^>]*>?/gm, '');
     const [first] = desc?.split(/(?:\r?\n)+/);
 
     runInAction(() => {
