@@ -1,19 +1,9 @@
-import {
-  Animated,
-  FlatList,
-  Keyboard,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Animated, FlatList, Keyboard, NativeScrollEvent, NativeSyntheticEvent, View } from 'react-native';
 import { BottomTabScreenProps, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import React, { useEffect, useRef, useState } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 
 import { Browser } from './Browser';
-import LINQ from 'linq';
 import { Modalize } from 'react-native-modalize';
 import { PageMetadata } from './Web3View';
 import { Portal } from 'react-native-portalize';
@@ -30,6 +20,7 @@ export class StateViewModel {
 
   pageCount = 1;
   activePageId = 0;
+  activePageIndex = 0;
   tabBarHidden = false;
 
   pageMetas = new Map<number, PageMetadata | undefined>();
@@ -44,6 +35,7 @@ export class StateViewModel {
     makeObservable(this, {
       pageCount: observable,
       activePageId: observable,
+      activePageIndex: observable,
       setTabCount: action,
       setActivePageIdByPageIndex: action,
     });
@@ -55,6 +47,7 @@ export class StateViewModel {
 
   setActivePageIdByPageIndex(pageIndex: number) {
     this.activePageId = Array.from(this.pageMetas.keys())[pageIndex] ?? 0;
+    this.activePageIndex = pageIndex;
   }
 
   genId() {
@@ -109,7 +102,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
 
     setTimeout(() => {
       swiper.current?.scrollToItem({ item: tabView, animated: true });
-    }, 200);
+    }, 450);
   };
 
   const hideTabBar = () => {
@@ -166,6 +159,18 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
 
     Array.from(state.pageMetas.values())[pageIndex] ? hideTabBar() : showTabBar();
   };
+
+  useEffect(() => {
+    const handler = () => {
+      setTimeout(() => swiper.current?.scrollToIndex({ index: state.activePageIndex, animated: true }), 225);
+    };
+
+    ReactiveScreen.on('change', handler);
+
+    return () => {
+      ReactiveScreen.off('change', handler);
+    };
+  }, []);
 
   return (
     <View style={{ flex: 1, backgroundColor }}>

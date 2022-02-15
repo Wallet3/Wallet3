@@ -107,7 +107,7 @@ export const PublicNetworks: INetwork[] = [
   {
     symbol: 'BNB',
     comm_id: 'bsc',
-    network: 'Binance Smart Chain',
+    network: 'BNB Chain',
     chainId: 56,
     color: '#f3ba2f',
     order: 5,

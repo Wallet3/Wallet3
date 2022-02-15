@@ -371,9 +371,10 @@ export const Browser = observer(
                 padding: 8,
                 borderBottomWidth: 1,
                 borderBottomColor: borderColor,
+                display: uri ? 'flex' : 'none',
               }}
             >
-              {PopularDApps.concat(favs.slice(0, 24)).map((item, i) => (
+              {PopularDApps.concat(favs.slice(0, 24 - PopularDApps.length)).map((item, i) => (
                 <TouchableOpacity
                   style={{ margin: 8 }}
                   key={`${item.url}-${i}`}
