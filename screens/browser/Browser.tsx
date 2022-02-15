@@ -394,7 +394,7 @@ export const Browser = observer(
 
             <View style={{ flexDirection: 'row', paddingHorizontal: 0 }}>
               <TouchableOpacity
-                onPress={() => navigation.navigate('QRScan')}
+                onPress={() => navigation.navigate('QRScan', { tip: t('qrscan-tip-3') })}
                 style={{
                   justifyContent: 'center',
                   paddingHorizontal: 16,
