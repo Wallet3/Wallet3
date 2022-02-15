@@ -25,7 +25,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
 
   const reviewItemStyle = { ...styles.reviewItem, borderColor };
   const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
-  const reviewItemValueStyle = { ...styles.reviewItemValue, color: textColor };
+  const reviewItemValueStyle = { ...styles.reviewItemValue, color: textColor, minWidth: 64 };
 
   return (
     <SafeViewContainer style={styles.container}>
@@ -41,6 +41,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
 
           <TextInput
             keyboardType="number-pad"
+            selectTextOnFocus
             placeholder="21000"
             textAlign="right"
             style={{ ...reviewItemValueStyle, fontSize: 20 }}
@@ -56,6 +57,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
           <View style={{ marginBottom: -8 }}>
             <TextInput
               keyboardType="decimal-pad"
+              selectTextOnFocus
               placeholder="20.00"
               textAlign="right"
               maxLength={12}
@@ -86,6 +88,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
             <View style={{ marginBottom: -8 }}>
               <TextInput
                 keyboardType="decimal-pad"
+                selectTextOnFocus
                 placeholder="1.00"
                 textAlign="right"
                 maxLength={12}
@@ -103,6 +106,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
 
           <TextInput
             keyboardType="number-pad"
+            selectTextOnFocus
             placeholder="0"
             textAlign="right"
             style={{ ...reviewItemValueStyle, fontSize: 20 }}

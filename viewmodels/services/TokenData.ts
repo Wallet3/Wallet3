@@ -38,7 +38,7 @@ export class TokenData implements ITokenData {
     this.address = token.address;
     this.network = network;
     this.infoUrl = `https://github.com/trustwallet/assets/raw/master/blockchains/${
-      (network.githubIconFolder || network.network)?.toLowerCase() ?? 'ethereum'
+      (network.github_dir || network.network)?.toLowerCase() ?? 'ethereum'
     }/assets/${token.address}/info.json`;
 
     makeObservable(this, {

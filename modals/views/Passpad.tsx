@@ -8,9 +8,11 @@ import { SafeAreaView, StyleProp, View, ViewStyle } from 'react-native';
 import { renderEmptyCircle, renderFilledCircle } from '../../components/PasscodeCircle';
 
 import { BioType } from '../../viewmodels/Authentication';
+import { ReactiveScreen } from '../../utils/device';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
+import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 
 interface Props {
@@ -80,26 +82,39 @@ const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style, bi
 export default Passpad;
 
 interface FullPasspadProps {
-  height?: number;
   themeColor?: string;
   onCodeEntered: (code: string) => Promise<boolean>;
   onBioAuth?: () => void;
+  height?: number;
+  borderRadius?: number;
   bioType?: BioType;
 }
 
-export const FullPasspad = ({ height, themeColor, onCodeEntered, bioType, onBioAuth }: FullPasspadProps) => {
-  const { backgroundColor } = Theme;
+export const FullPasspad = observer(
+  ({ themeColor, height, onCodeEntered, bioType, onBioAuth, borderRadius }: FullPasspadProps) => {
+    const { backgroundColor } = Theme;
+    const { height: fullScreenHeight, width } = ReactiveScreen;
 
-  return (
-    <SafeAreaProvider style={{ flex: 1, height, backgroundColor }}>
-      <Passpad
-        themeColor={themeColor}
-        disableCancel
-        onCodeEntered={onCodeEntered}
-        style={{ marginBottom: 4 }}
-        onBioAuth={onBioAuth}
-        bioType={bioType}
-      />
-    </SafeAreaProvider>
-  );
-};
+    return (
+      <SafeAreaProvider
+        style={{
+          flex: 1,
+          height: height || fullScreenHeight,
+          width,
+          backgroundColor,
+          borderTopLeftRadius: borderRadius,
+          borderTopRightRadius: borderRadius,
+        }}
+      >
+        <Passpad
+          themeColor={themeColor}
+          disableCancel
+          onCodeEntered={onCodeEntered}
+          style={{ marginBottom: 4 }}
+          onBioAuth={onBioAuth}
+          bioType={bioType}
+        />
+      </SafeAreaProvider>
+    );
+  }
+);

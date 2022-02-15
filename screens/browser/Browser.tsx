@@ -1,7 +1,8 @@
 import * as Linking from 'expo-linking';
 
 import Bookmarks, { Bookmark, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
-import { Dimensions, LayoutAnimation, ListRenderItemInfo, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Dimensions, ListRenderItemInfo, Share, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { EvilIcons, Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Web3View, { PageMetadata } from './Web3View';
@@ -11,10 +12,9 @@ import { secureColor, thirdFontColor } from '../../constants/styles';
 
 import { Bar } from 'react-native-progress';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import CachedImage from 'react-native-expo-cached-image';
 import Collapsible from 'react-native-collapsible';
 import { FlatGrid } from 'react-native-super-grid';
-import { Ionicons } from '@expo/vector-icons';
-import { LayoutAnimConfig } from '../../utils/animations';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
 import PopularDApps from '../../configs/urls/popular.json';
@@ -27,10 +27,10 @@ import SuggestUrls from '../../configs/urls/verified.json';
 import Theme from '../../viewmodels/settings/Theme';
 import ViewShot from 'react-native-view-shot';
 import i18n from '../../i18n';
+import { isURL } from '../../utils/url';
 import { observer } from 'mobx-react-lite';
+import { startLayoutAnimation } from '../../utils/animations';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
-
-const DefaultIcon = require('../../assets/default-icon.png');
 
 const calcIconSize = () => {
   const { width } = ReactiveScreen;
@@ -45,15 +45,16 @@ const calcIconSize = () => {
 const { LargeIconSize, SmallIconSize } = calcIconSize();
 
 interface Props extends BottomTabScreenProps<any, never> {
-  onPageLoaded?: (tabIndex: number, metadata?: PageMetadata) => void;
+  onPageLoaded?: (pageId: number, metadata?: PageMetadata) => void;
   onPageLoadEnd?: () => void;
   onHome?: () => void;
   onTakeOff?: () => void;
-  tabId: number;
+  pageId: number;
   onNewTab?: () => void;
-  globalState?: { tabCount: number };
+  globalState?: { pageCount: number; activePageId: number };
   onOpenTabs?: () => void;
   setCapture?: (callback: () => Promise<string>) => void;
+  onInputting?: (inputting: boolean) => void;
 }
 
 export const Browser = observer(
@@ -62,12 +63,13 @@ export const Browser = observer(
     onPageLoaded,
     onHome,
     onTakeOff,
-    tabId,
+    pageId,
     onNewTab,
     globalState,
     onOpenTabs,
     setCapture,
     onPageLoadEnd,
+    onInputting,
   }: Props) => {
     const { t } = i18n;
     const { top } = useSafeAreaInsets();
@@ -106,6 +108,8 @@ export const Browser = observer(
       Dimensions.addEventListener('change', handler);
 
       PubSub.subscribe('CodeScan-https:', (msg, { data }) => {
+        if (globalState?.activePageId !== pageId) return;
+
         addrRef.current?.blur();
         setTimeout(() => goTo(data), 1000);
       });
@@ -113,8 +117,12 @@ export const Browser = observer(
       return () => {
         Dimensions.removeEventListener('change', handler);
         PubSub.unsubscribe('CodeScan-https:');
+
+        onInputting = undefined;
       };
     }, []);
+
+    useEffect(() => onInputting?.(isFocus), [isFocus]);
 
     useEffect(() => {
       const func = viewShot.current?.capture;
@@ -156,7 +164,13 @@ export const Browser = observer(
     };
 
     const goTo = (url: string) => {
-      url = url.toLowerCase().startsWith('http') ? url : `https://${url}`;
+      url = url.toLowerCase();
+      url =
+        url.startsWith('https:') || url.startsWith('http:')
+          ? url
+          : isURL(url)
+          ? `https://${url}`
+          : `https://www.google.com/search?client=wallet3&ie=UTF-8&oe=UTF-8&q=${url}`;
 
       try {
         if (url === uri) {
@@ -343,61 +357,55 @@ export const Browser = observer(
                     numberOfLines={1}
                     style={{ maxWidth: '80%', fontSize: 16, color: index === 0 ? '#fff' : thirdFontColor }}
                   >
-                    {url}
+                    {url.startsWith('http') ? url : `https://${url}`}
                   </Text>
                   {index === 0 ? <Ionicons name="return-down-back" size={15} color="#fff" /> : undefined}
                 </TouchableOpacity>
               ))}
             </View>
 
-            {/* {uri ? (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  flexWrap: 'wrap',
-                  padding: 8,
-                  borderBottomWidth: 1,
-                  borderBottomColor: borderColor,
-                }}
-              >
-                {PopularDApps.concat(favs.slice(0, 24)).map((item, i) => (
-                  <TouchableOpacity
-                    style={{ margin: 8 }}
-                    key={`${item.url}-${i}`}
-                    onPress={(e) => {
-                      e.preventDefault();
-                      goTo(item.url);
-                    }}
-                  >
-                    {item.icon ? (
-                      <CachedImage
-                        source={{ uri: item.icon }}
-                        style={{ width: smallIconSize, height: smallIconSize, borderRadius: 3 }}
-                      />
-                    ) : (
-                      <Image source={DefaultIcon} style={{ width: smallIconSize, height: smallIconSize, borderRadius: 3 }} />
-                    )}
-                  </TouchableOpacity>
-                ))}
-              </View>
-            ) : undefined} */}
-
-            <View style={{ flexDirection: 'row', paddingHorizontal: 0 }}>
-              {!webUrl && (
+            <View
+              style={{
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                padding: 8,
+                borderBottomWidth: 1,
+                borderBottomColor: borderColor,
+              }}
+            >
+              {PopularDApps.concat(favs.slice(0, 24)).map((item, i) => (
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('QRScan')}
-                  style={{
-                    justifyContent: 'center',
-                    paddingHorizontal: 16,
-                    alignItems: 'center',
-                    paddingVertical: 8,
+                  style={{ margin: 8 }}
+                  key={`${item.url}-${i}`}
+                  onPress={(e) => {
+                    e.preventDefault();
+                    goTo(item.url);
                   }}
                 >
-                  <Ionicons name="md-scan-outline" size={21} color={textColor} />
+                  {item.icon ? (
+                    <CachedImage
+                      source={{ uri: item.icon }}
+                      style={{ width: smallIconSize, height: smallIconSize, borderRadius: 3 }}
+                    />
+                  ) : undefined}
                 </TouchableOpacity>
-              )}
+              ))}
+            </View>
 
-              {/* {webUrl ? (
+            <View style={{ flexDirection: 'row', paddingHorizontal: 0 }}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('QRScan', { tip: t('qrscan-tip-3') })}
+                style={{
+                  justifyContent: 'center',
+                  paddingHorizontal: 16,
+                  alignItems: 'center',
+                  paddingVertical: 8,
+                }}
+              >
+                <Ionicons name="md-scan-outline" size={21} color={textColor} />
+              </TouchableOpacity>
+
+              {webUrl ? (
                 <TouchableOpacity
                   onPress={() => Share.share({ url: webUrl, title: pageMetadata?.title })}
                   style={{
@@ -407,9 +415,9 @@ export const Browser = observer(
                     paddingHorizontal: 8,
                   }}
                 >
-                  <Ionicons name="ios-share-outline" size={20.5} color={textColor} />
+                  <EvilIcons name="share-apple" size={28.7} color={textColor} />
                 </TouchableOpacity>
-              ) : undefined} */}
+              ) : undefined}
             </View>
           </Collapsible>
 
@@ -430,7 +438,7 @@ export const Browser = observer(
           <Web3View
             webViewRef={webview}
             viewShotRef={viewShot}
-            tabCount={globalState?.tabCount}
+            tabCount={globalState?.pageCount}
             onTabPress={onOpenTabs}
             source={{ uri }}
             onLoadProgress={({ nativeEvent }) => setLoadingProgress(nativeEvent.progress)}
@@ -444,7 +452,7 @@ export const Browser = observer(
             onBookmarksPress={openFavs}
             onMetadataChange={(data) => {
               setPageMetadata(data);
-              onPageLoaded?.(tabId, data);
+              onPageLoaded?.(pageId, data);
               Bookmarks.addRecentSite(data);
             }}
             onShrinkRequest={(webUrl) => {
@@ -457,11 +465,11 @@ export const Browser = observer(
             }}
           />
         ) : (
-          <View style={{}}>
+          <View style={{ flex: 1 }}>
             <Text style={{ marginHorizontal: 16, marginTop: 12, color: textColor }}>{t('browser-popular-dapps')}</Text>
 
             <FlatGrid
-              style={{ marginTop: 2, padding: 0 }}
+              style={{ marginTop: 2, padding: 0, paddingBottom: 36 }}
               contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: 8, paddingTop: 2 }}
               itemDimension={LargeIconSize + 8}
               bounces={false}
@@ -473,11 +481,11 @@ export const Browser = observer(
             />
 
             {favs.length > 0 ? (
-              <Text style={{ marginHorizontal: 16, marginTop: 0, color: textColor }}>{t('browser-favorites')}</Text>
+              <Text style={{ marginHorizontal: 16, marginTop: 12, color: textColor }}>{t('browser-favorites')}</Text>
             ) : undefined}
 
             <FlatGrid
-              style={{ marginTop: 2, padding: 0 }}
+              style={{ marginTop: 2, padding: 0, height: '100%' }}
               contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: 8, paddingTop: 2 }}
               itemDimension={LargeIconSize + 8}
               bounces={false}
@@ -495,7 +503,7 @@ export const Browser = observer(
                     closeFavs();
                   },
                   onRemove: (item) => {
-                    LayoutAnimation.configureNext(LayoutAnimConfig);
+                    startLayoutAnimation();
                     Bookmarks.remove(item.url);
                   },
                 })
@@ -505,7 +513,7 @@ export const Browser = observer(
         )}
 
         {!webUrl && recentSites.length > 0 ? (
-          <RecentHistory tabCount={globalState?.tabCount} onItemPress={(url) => goTo(url)} onTabsPress={onOpenTabs} />
+          <RecentHistory tabCount={globalState?.pageCount} onItemPress={(url) => goTo(url)} onTabsPress={onOpenTabs} />
         ) : undefined}
 
         <Portal>
@@ -522,7 +530,7 @@ export const Browser = observer(
               >
                 <Text style={{ marginHorizontal: 12, color: textColor }}>{t('browser-favorites')}</Text>
                 <FlatGrid
-                  style={{ marginTop: 2, padding: 0 }}
+                  style={{ marginTop: 2, padding: 0, flex: 1 }}
                   contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: 8, paddingTop: 2 }}
                   itemDimension={LargeIconSize + 8}
                   bounces={false}
@@ -530,9 +538,14 @@ export const Browser = observer(
                   itemContainerStyle={{ padding: 0, margin: 0, marginBottom: 12 }}
                   spacing={8}
                   keyExtractor={(v, index) => `${v.url}-${index}`}
-                  data={favs.concat(
-                    PopularDApps.filter((d) => !favs.find((f) => f.url.includes(d.url) || d.url.includes(f.url)))
-                  )}
+                  data={favs}
+                />
+
+                <RecentHistory
+                  onItemPress={(url) => {
+                    goTo(url);
+                    closeFavs();
+                  }}
                 />
               </SafeViewContainer>
             </SafeAreaProvider>

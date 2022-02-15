@@ -21,13 +21,6 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
 
   return (
     <SafeViewContainer style={{ ...styles.rootContainer }} paddingHeader includeTopPadding>
-      {/* <LottieView
-          style={{ width: 200, height: 200, alignSelf: 'center', marginBottom: -125, marginTop: -27 }}
-          autoSize
-          autoPlay
-          loop
-          source={require('../../assets/animations/shield.json')}
-        /> */}
       <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: -12, marginBottom: -8 }}>
         <MaterialCommunityIcons name="shield-key" size={64} color={'#61D800'} />
       </View>

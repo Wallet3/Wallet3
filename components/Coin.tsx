@@ -112,9 +112,9 @@ interface CoinProps {
 
 export default observer((props: CoinProps) => {
   const [network] = useState(Networks.find(props.chainId));
-  const [githubUrl] = useState(
+  const [logoUrl] = useState(
     `https://github.com/trustwallet/assets/raw/master/blockchains/${
-      (network?.githubIconFolder || network?.network)?.toLowerCase() ?? 'ethereum'
+      (network?.github_dir || network?.network)?.toLowerCase() ?? 'ethereum'
     }/assets/${props.address}/logo.png`
   );
 
@@ -122,8 +122,8 @@ export default observer((props: CoinProps) => {
   symbol = symbol.endsWith('.e') ? symbol.substring(0, symbol.length - 2) : symbol; // Avax
 
   const [source] = props.forceRefresh
-    ? [props.iconUrl && !icons[symbol] ? { uri: props.iconUrl } : icons[symbol] || { uri: githubUrl }]
-    : useState(props.iconUrl && !icons[symbol] ? { uri: props.iconUrl } : icons[symbol] || { uri: githubUrl });
+    ? [props.iconUrl && !icons[symbol] ? { uri: props.iconUrl } : icons[symbol] || { uri: logoUrl }]
+    : useState(props.iconUrl && !icons[symbol] ? { uri: props.iconUrl } : icons[symbol] || { uri: logoUrl });
 
   const [failedSource, setFailedSource] = useState();
 

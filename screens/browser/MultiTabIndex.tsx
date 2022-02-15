@@ -1,6 +1,15 @@
-import { Animated, FlatList, NativeScrollEvent, NativeSyntheticEvent, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Animated,
+  FlatList,
+  Keyboard,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { BottomTabScreenProps, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 
 import { Browser } from './Browser';
@@ -12,13 +21,15 @@ import { ReactiveScreen } from '../../utils/device';
 import Theme from '../../viewmodels/settings/Theme';
 import { WebTabs } from './components/Tabs';
 import { observer } from 'mobx-react-lite';
+import { startLayoutAnimation } from '../../utils/animations';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export class StateViewModel {
   private _id = 0;
 
-  tabCount = 1;
+  pageCount = 1;
+  activePageId = 0;
   tabBarHidden = false;
 
   pageMetas = new Map<number, PageMetadata | undefined>();
@@ -30,11 +41,20 @@ export class StateViewModel {
   }
 
   constructor() {
-    makeObservable(this, { tabCount: observable, setTabCount: action });
+    makeObservable(this, {
+      pageCount: observable,
+      activePageId: observable,
+      setTabCount: action,
+      setActivePageIdByPageIndex: action,
+    });
   }
 
   setTabCount(count: number) {
-    this.tabCount = count;
+    this.pageCount = count;
+  }
+
+  setActivePageIdByPageIndex(pageIndex: number) {
+    this.activePageId = Array.from(this.pageMetas.keys())[pageIndex] ?? 0;
   }
 
   genId() {
@@ -45,7 +65,8 @@ export class StateViewModel {
 export default observer((props: BottomTabScreenProps<{}, never>) => {
   const { navigation } = props;
   const swiper = useRef<FlatList>(null);
-  const [activeTabIndex, setActiveTabIndex] = useState(0);
+  const [activePageIndex, setActivePageIndex] = useState(0);
+  const [persistentKeyboard, setPersistentKeyboard] = useState<'always' | 'never'>('never');
   const [counts, setCounts] = useState(1);
   const [state] = useState(new StateViewModel());
   const { backgroundColor } = Theme;
@@ -58,7 +79,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
     <Browser
       {...props}
       key={`Browser-${id}`}
-      tabId={id}
+      pageId={id}
       onPageLoaded={(_, meta) => state.pageMetas.set(id, meta)}
       onNewTab={onNewTab}
       globalState={state}
@@ -66,6 +87,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
       onTakeOff={() => hideTabBar()}
       setCapture={(func) => state.pageCaptureFuncs.set(id, func)}
       onPageLoadEnd={() => state.pageSnapshots.delete(id)}
+      onInputting={(inputting) => setPersistentKeyboard(inputting ? 'always' : 'never')}
       onHome={() => {
         showTabBar();
         state.pageMetas.set(id, undefined);
@@ -133,8 +155,14 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
   const [tabs] = useState(new Map<number, JSX.Element>([[0, generateBrowserTab(0, props, newTab)]]));
 
   const onScrollEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    if (persistentKeyboard === 'always') {
+      Keyboard.dismiss();
+      setPersistentKeyboard('never');
+    }
+
     const pageIndex = Math.min(Math.max(Math.floor(e.nativeEvent.contentOffset.x / ReactiveScreen.width + 0.5), 0), tabs.size);
-    setActiveTabIndex(pageIndex);
+    setActivePageIndex(pageIndex);
+    state.setActivePageIdByPageIndex(pageIndex);
 
     Array.from(state.pageMetas.values())[pageIndex] ? hideTabBar() : showTabBar();
   };
@@ -153,6 +181,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
         showsHorizontalScrollIndicator={false}
         bounces={false}
         initialScrollIndex={0}
+        keyboardShouldPersistTaps={persistentKeyboard}
         onScrollToIndexFailed={({ index }) => {
           new Promise((resolve) => setTimeout(resolve, 200)).then(() =>
             swiper.current?.scrollToIndex({ index, animated: true })
@@ -170,7 +199,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
         >
           <WebTabs
             globalState={state}
-            activeIndex={activeTabIndex}
+            activeIndex={activePageIndex}
             onNewTab={() => {
               newTab();
               closeTabs();
@@ -180,10 +209,21 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
               closeTabs();
             }}
             onRemovePage={(pageId) => {
-              const pageIndex = Array.from(state.pageMetas.keys()).findIndex((i) => i === pageId);
+              const tabIndexToBeRemoved = Array.from(state.pageMetas.keys()).findIndex((i) => i === pageId);
+              if (tabIndexToBeRemoved < 0) return;
 
               const removeTab = () => {
-                const count = tabs.size;
+                startLayoutAnimation();
+
+                let newPageIndex = -1;
+
+                if (activePageIndex === tabs.size - 1 || tabIndexToBeRemoved < activePageIndex) {
+                  newPageIndex = Math.max(0, activePageIndex - 1);
+                } else if (tabIndexToBeRemoved === activePageIndex) {
+                  newPageIndex = tabIndexToBeRemoved;
+                } else {
+                  newPageIndex = activePageIndex;
+                }
 
                 tabs.delete(pageId);
                 state.pageMetas.delete(pageId);
@@ -192,11 +232,13 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
                 state.setTabCount(tabs.size);
                 setCounts(tabs.size);
 
-                if (activeTabIndex === count - 1 || pageIndex < activeTabIndex) {
-                  setActiveTabIndex((prev) => prev - 1);
-                  const newIndex = activeTabIndex - 1;
-                  setTimeout(() => (Array.from(state.pageMetas.values())[newIndex] ? hideTabBar() : showTabBar()), 0);
-                }
+                setActivePageIndex(newPageIndex);
+                state.setActivePageIdByPageIndex(newPageIndex);
+
+                setTimeout(() => {
+                  Array.from(state.pageMetas.values())[newPageIndex] ? hideTabBar() : showTabBar();
+                  if (tabs.size > 1) swiper.current?.scrollToIndex({ index: newPageIndex, animated: false });
+                }, 0);
               };
 
               if (tabs.size === 1) {

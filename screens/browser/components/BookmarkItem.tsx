@@ -8,8 +8,6 @@ import React from 'react';
 import i18n from '../../../i18n';
 import { thirdFontColor } from '../../../constants/styles';
 
-const DefaultIcon = require('../../../assets/default-icon.png');
-const borderRadius = 7;
 const { t } = i18n;
 
 interface Props extends ListRenderItemInfo<Bookmark> {

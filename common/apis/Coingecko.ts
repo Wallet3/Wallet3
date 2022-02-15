@@ -139,8 +139,6 @@ class Coingecko {
         this.glmr = data['moonbeam']?.usd || 0;
       });
     } catch {}
-
-    // run();
   }
 
   async getCoinDetails(symbol: string, address: string, network: string) {

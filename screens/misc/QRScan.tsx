@@ -12,9 +12,11 @@ import { StatusBar } from 'expo-status-bar';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 
-export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
+export default observer(({ navigation, route }: NativeStackScreenProps<{}, never>) => {
   const [scanned, setScanned] = useState(false);
   const { t } = i18n;
+
+  const { tip } = (route.params || {}) as { tip?: string };
 
   const handleBarCodeScanned: BarCodeScannedCallback = ({ data }) => {
     const handled = LinkHub.handleURL(data);
@@ -44,7 +46,7 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
         <AntDesign name="qrcode" size={27} color={'#fff'} />
 
         <Text style={styles.tip} numberOfLines={1}>
-          {Authentication.appAuthorized ? t('qrscan-tip-1') : t('qrscan-tip-desktop-backup-qrcode')}
+          {Authentication.appAuthorized ? tip || t('qrscan-tip-1') : t('qrscan-tip-desktop-backup-qrcode')}
         </Text>
       </View>
 

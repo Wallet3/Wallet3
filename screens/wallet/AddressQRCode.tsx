@@ -23,7 +23,11 @@ export default observer(({ account }: { account?: Account }) => {
   const { address, avatar } = account || {};
   const ens = account?.ens.name;
   const [showFullAddress, setShowFullAddress] = useState(false);
-  const [etherscan] = useState(ExpoLinking.parse(current.explorer).hostname?.split('.')[0]);
+  const [etherscan] = useState(
+    ExpoLinking.parse(current.explorer)
+      .hostname?.split('.')
+      .filter((i) => i.length > 3)[0]
+  );
 
   const prefixedAddress = current?.addrPrefix ? `${current?.addrPrefix}${address?.substring(2)}` : address;
 
@@ -31,7 +35,7 @@ export default observer(({ account }: { account?: Account }) => {
     <View style={{ padding: 16, flex: 1, height: 430, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
         <View style={{ alignItems: 'center', marginTop: -16 }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 12 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 12, maxWidth: '70%' }}>
             <Avatar
               size={27}
               emoji={account?.emojiAvatar}

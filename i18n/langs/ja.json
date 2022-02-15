@@ -45,6 +45,7 @@
   "qrscan-no-permission": "カメラにアクセスできない",
   "qrscan-tip-1": "WalletConnect, ETH アドレス, レシートQRコード",
   "qrscan-tip-2": "ニーモニック, 秘密鍵, Wallet 3 QRCode",
+  "qrscan-tip-3": "URL QRコード",
   "qrscan-tip-desktop-backup-qrcode": "Wallet 3 デスクトップ QRCode",
   "connectedapps-title": "接続された DApps",
   "connectedapps-noapps": "接続されたアプリがない",
