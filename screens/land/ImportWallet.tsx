@@ -49,9 +49,9 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
         style={{
           paddingHorizontal: 16,
           paddingBottom: bottom > 0 ? 0 : 16,
-          paddingTop: headerHeight - top,
+          paddingTop: Math.max(44, headerHeight - top),
           flex: 1,
-          backgroundColor: 'white',
+          backgroundColor: 'transparent',
         }}
       >
         <TextInput

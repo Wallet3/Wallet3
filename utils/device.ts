@@ -1,11 +1,6 @@
-import { makeObservable, observable, runInAction } from 'mobx';
+import { computed, makeObservable, observable, runInAction } from 'mobx';
 
 import { Dimensions } from 'react-native';
-
-export const isPortrait = () => {
-  const dim = Dimensions.get('window');
-  return dim.height >= dim.width;
-};
 
 class ReactScreen {
   height: number;
@@ -16,7 +11,7 @@ class ReactScreen {
     this.height = height;
     this.width = width;
 
-    makeObservable(this, { height: observable, width: observable });
+    makeObservable(this, { height: observable, width: observable, isPortrait: computed });
 
     const updateScreenDimensions = () => {
       const { height, width } = Dimensions.get('window');
@@ -28,6 +23,10 @@ class ReactScreen {
     };
 
     Dimensions.addEventListener('change', updateScreenDimensions);
+  }
+
+  get isPortrait() {
+    return this.height > this.width;
   }
 }
 
