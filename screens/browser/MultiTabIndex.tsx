@@ -181,10 +181,21 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
               closeTabs();
             }}
             onRemovePage={(pageId) => {
-              const pageIndex = Array.from(state.pageMetas.keys()).findIndex((i) => i === pageId);
+              const tabIndexToBeRemoved = Array.from(state.pageMetas.keys()).findIndex((i) => i === pageId);
+              if (tabIndexToBeRemoved < 0) return;
 
               const removeTab = () => {
-                const count = tabs.size;
+                startLayoutAnimation();
+
+                let newIndex = -1;
+
+                if (activeTabIndex === tabs.size - 1 || tabIndexToBeRemoved < activeTabIndex) {
+                  newIndex = Math.max(0, activeTabIndex - 1);
+                } else if (tabIndexToBeRemoved === activeTabIndex) {
+                  newIndex = tabIndexToBeRemoved;
+                } else {
+                  newIndex = activeTabIndex;
+                }
 
                 tabs.delete(pageId);
                 state.pageMetas.delete(pageId);
@@ -193,24 +204,17 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
                 state.setTabCount(tabs.size);
                 setCounts(tabs.size);
 
-                // console.log(activeTabIndex, count, count - 1);
-                let newIndex = -1;
-
-                if (activeTabIndex === count - 1 || pageIndex < activeTabIndex) {
-                  setActiveTabIndex((prev) => prev - 1);
-                  newIndex = Math.max(0, activeTabIndex - 1);
-                } else if (activeTabIndex === 0) {
-                  newIndex = 1;
-                }
-
-                setTimeout(() => (Array.from(state.pageMetas.values())[newIndex] ? hideTabBar() : showTabBar()), 0);
+                setActiveTabIndex(newIndex);
+                setTimeout(() => {
+                  Array.from(state.pageMetas.values())[newIndex] ? hideTabBar() : showTabBar();
+                  if (tabs.size > 1) swiper.current?.scrollToIndex({ index: newIndex, animated: false });
+                }, 0);
               };
 
               if (tabs.size === 1) {
                 newTab();
 
                 setTimeout(() => {
-                  startLayoutAnimation();
                   removeTab();
                 }, 500);
 
@@ -218,7 +222,6 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
                 return;
               }
 
-              startLayoutAnimation();
               removeTab();
 
               if (tabs.size === 1) closeTabs();
