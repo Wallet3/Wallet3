@@ -1,8 +1,7 @@
 import * as Linking from 'expo-linking';
 
 import Bookmarks, { Bookmark, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
-import { Dimensions, LayoutAnimation, ListRenderItemInfo, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { LayoutAnimConfig, startLayoutAnimation } from '../../utils/animations';
+import { Dimensions, ListRenderItemInfo, Share, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Web3View, { PageMetadata } from './Web3View';
@@ -12,6 +11,7 @@ import { secureColor, thirdFontColor } from '../../constants/styles';
 
 import { Bar } from 'react-native-progress';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import CachedImage from 'react-native-expo-cached-image';
 import Collapsible from 'react-native-collapsible';
 import { FlatGrid } from 'react-native-super-grid';
 import { Ionicons } from '@expo/vector-icons';
@@ -29,6 +29,7 @@ import ViewShot from 'react-native-view-shot';
 import i18n from '../../i18n';
 import { isURL } from '../../utils/url';
 import { observer } from 'mobx-react-lite';
+import { startLayoutAnimation } from '../../utils/animations';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 const calcIconSize = () => {
@@ -53,6 +54,7 @@ interface Props extends BottomTabScreenProps<any, never> {
   globalState?: { pageCount: number; activePageId: number };
   onOpenTabs?: () => void;
   setCapture?: (callback: () => Promise<string>) => void;
+  onInputting?: (inputting: boolean) => void;
 }
 
 export const Browser = observer(
@@ -67,6 +69,7 @@ export const Browser = observer(
     onOpenTabs,
     setCapture,
     onPageLoadEnd,
+    onInputting,
   }: Props) => {
     const { t } = i18n;
     const { top } = useSafeAreaInsets();
@@ -106,8 +109,11 @@ export const Browser = observer(
 
       return () => {
         Dimensions.removeEventListener('change', handler);
+        onInputting = undefined;
       };
     }, []);
+
+    useEffect(() => onInputting?.(isFocus), [isFocus]);
 
     useEffect(() => {
       if (uri) return;
@@ -363,54 +369,48 @@ export const Browser = observer(
               ))}
             </View>
 
-            {/* {uri ? (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  flexWrap: 'wrap',
-                  padding: 8,
-                  borderBottomWidth: 1,
-                  borderBottomColor: borderColor,
-                }}
-              >
-                {PopularDApps.concat(favs.slice(0, 24)).map((item, i) => (
-                  <TouchableOpacity
-                    style={{ margin: 8 }}
-                    key={`${item.url}-${i}`}
-                    onPress={(e) => {
-                      e.preventDefault();
-                      goTo(item.url);
-                    }}
-                  >
-                    {item.icon ? (
-                      <CachedImage
-                        source={{ uri: item.icon }}
-                        style={{ width: smallIconSize, height: smallIconSize, borderRadius: 3 }}
-                      />
-                    ) : (
-                      undefined
-                    )}
-                  </TouchableOpacity>
-                ))}
-              </View>
-            ) : undefined} */}
-
-            <View style={{ flexDirection: 'row', paddingHorizontal: 0 }}>
-              {!webUrl && (
+            <View
+              style={{
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                padding: 8,
+                borderBottomWidth: 1,
+                borderBottomColor: borderColor,
+              }}
+            >
+              {PopularDApps.concat(favs.slice(0, 24)).map((item, i) => (
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('QRScan')}
-                  style={{
-                    justifyContent: 'center',
-                    paddingHorizontal: 16,
-                    alignItems: 'center',
-                    paddingVertical: 8,
+                  style={{ margin: 8 }}
+                  key={`${item.url}-${i}`}
+                  onPress={(e) => {
+                    e.preventDefault();
+                    goTo(item.url);
                   }}
                 >
-                  <Ionicons name="md-scan-outline" size={21} color={textColor} />
+                  {item.icon ? (
+                    <CachedImage
+                      source={{ uri: item.icon }}
+                      style={{ width: smallIconSize, height: smallIconSize, borderRadius: 3 }}
+                    />
+                  ) : undefined}
                 </TouchableOpacity>
-              )}
+              ))}
+            </View>
 
-              {/* {webUrl ? (
+            <View style={{ flexDirection: 'row', paddingHorizontal: 0 }}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('QRScan')}
+                style={{
+                  justifyContent: 'center',
+                  paddingHorizontal: 16,
+                  alignItems: 'center',
+                  paddingVertical: 8,
+                }}
+              >
+                <Ionicons name="md-scan-outline" size={21} color={textColor} />
+              </TouchableOpacity>
+
+              {webUrl ? (
                 <TouchableOpacity
                   onPress={() => Share.share({ url: webUrl, title: pageMetadata?.title })}
                   style={{
@@ -422,7 +422,7 @@ export const Browser = observer(
                 >
                   <Ionicons name="ios-share-outline" size={20.5} color={textColor} />
                 </TouchableOpacity>
-              ) : undefined} */}
+              ) : undefined}
             </View>
           </Collapsible>
 

@@ -1,4 +1,13 @@
-import { Animated, FlatList, NativeScrollEvent, NativeSyntheticEvent, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Animated,
+  FlatList,
+  Keyboard,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { BottomTabScreenProps, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import React, { useEffect, useRef, useState } from 'react';
 import { action, makeObservable, observable } from 'mobx';
@@ -57,6 +66,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
   const { navigation } = props;
   const swiper = useRef<FlatList>(null);
   const [activePageIndex, setActivePageIndex] = useState(0);
+  const [persistentKeyboard, setPersistentKeyboard] = useState<'always' | 'never'>('never');
   const [counts, setCounts] = useState(1);
   const [state] = useState(new StateViewModel());
   const { backgroundColor } = Theme;
@@ -77,6 +87,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
       onTakeOff={() => hideTabBar()}
       setCapture={(func) => state.pageCaptureFuncs.set(id, func)}
       onPageLoadEnd={() => state.pageSnapshots.delete(id)}
+      onInputting={(inputting) => setPersistentKeyboard(inputting ? 'always' : 'never')}
       onHome={() => {
         showTabBar();
         state.pageMetas.set(id, undefined);
@@ -144,6 +155,8 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
   const [tabs] = useState(new Map<number, JSX.Element>([[0, generateBrowserTab(0, props, newTab)]]));
 
   const onScrollEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    Keyboard.dismiss();
+
     const pageIndex = Math.min(Math.max(Math.floor(e.nativeEvent.contentOffset.x / ReactiveScreen.width + 0.5), 0), tabs.size);
     setActivePageIndex(pageIndex);
     state.setActivePageIdByPageIndex(pageIndex);
@@ -165,6 +178,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
         showsHorizontalScrollIndicator={false}
         bounces={false}
         initialScrollIndex={0}
+        keyboardShouldPersistTaps={persistentKeyboard}
         onScrollToIndexFailed={({ index }) => {
           new Promise((resolve) => setTimeout(resolve, 200)).then(() =>
             swiper.current?.scrollToIndex({ index, animated: true })
