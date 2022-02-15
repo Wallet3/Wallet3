@@ -1,6 +1,6 @@
 import { Animated, FlatList, NativeScrollEvent, NativeSyntheticEvent, Text, TouchableOpacity, View } from 'react-native';
 import { BottomTabScreenProps, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 
 import { Browser } from './Browser';
@@ -19,7 +19,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 export class StateViewModel {
   private _id = 0;
 
-  tabCount = 1;
+  pageCount = 1;
+  activePageId = 0;
   tabBarHidden = false;
 
   pageMetas = new Map<number, PageMetadata | undefined>();
@@ -31,11 +32,20 @@ export class StateViewModel {
   }
 
   constructor() {
-    makeObservable(this, { tabCount: observable, setTabCount: action });
+    makeObservable(this, {
+      pageCount: observable,
+      activePageId: observable,
+      setTabCount: action,
+      setActivePageIdByPageIndex: action,
+    });
   }
 
   setTabCount(count: number) {
-    this.tabCount = count;
+    this.pageCount = count;
+  }
+
+  setActivePageIdByPageIndex(pageIndex: number) {
+    this.activePageId = Array.from(this.pageMetas.keys())[pageIndex];
   }
 
   genId() {
@@ -46,7 +56,7 @@ export class StateViewModel {
 export default observer((props: BottomTabScreenProps<{}, never>) => {
   const { navigation } = props;
   const swiper = useRef<FlatList>(null);
-  const [activeTabIndex, setActiveTabIndex] = useState(0);
+  const [activePageIndex, setActivePageIndex] = useState(0);
   const [counts, setCounts] = useState(1);
   const [state] = useState(new StateViewModel());
   const { backgroundColor } = Theme;
@@ -59,7 +69,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
     <Browser
       {...props}
       key={`Browser-${id}`}
-      tabId={id}
+      pageId={id}
       onPageLoaded={(_, meta) => state.pageMetas.set(id, meta)}
       onNewTab={onNewTab}
       globalState={state}
@@ -135,7 +145,8 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
 
   const onScrollEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const pageIndex = Math.min(Math.max(Math.floor(e.nativeEvent.contentOffset.x / ReactiveScreen.width + 0.5), 0), tabs.size);
-    setActiveTabIndex(pageIndex);
+    setActivePageIndex(pageIndex);
+    state.setActivePageIdByPageIndex(pageIndex);
 
     Array.from(state.pageMetas.values())[pageIndex] ? hideTabBar() : showTabBar();
   };
@@ -171,7 +182,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
         >
           <WebTabs
             globalState={state}
-            activeIndex={activeTabIndex}
+            activeIndex={activePageIndex}
             onNewTab={() => {
               newTab();
               closeTabs();
@@ -187,14 +198,14 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
               const removeTab = () => {
                 startLayoutAnimation();
 
-                let newIndex = -1;
+                let newPageIndex = -1;
 
-                if (activeTabIndex === tabs.size - 1 || tabIndexToBeRemoved < activeTabIndex) {
-                  newIndex = Math.max(0, activeTabIndex - 1);
-                } else if (tabIndexToBeRemoved === activeTabIndex) {
-                  newIndex = tabIndexToBeRemoved;
+                if (activePageIndex === tabs.size - 1 || tabIndexToBeRemoved < activePageIndex) {
+                  newPageIndex = Math.max(0, activePageIndex - 1);
+                } else if (tabIndexToBeRemoved === activePageIndex) {
+                  newPageIndex = tabIndexToBeRemoved;
                 } else {
-                  newIndex = activeTabIndex;
+                  newPageIndex = activePageIndex;
                 }
 
                 tabs.delete(pageId);
@@ -204,10 +215,12 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
                 state.setTabCount(tabs.size);
                 setCounts(tabs.size);
 
-                setActiveTabIndex(newIndex);
+                setActivePageIndex(newPageIndex);
+                state.setActivePageIdByPageIndex(newPageIndex);
+
                 setTimeout(() => {
-                  Array.from(state.pageMetas.values())[newIndex] ? hideTabBar() : showTabBar();
-                  if (tabs.size > 1) swiper.current?.scrollToIndex({ index: newIndex, animated: false });
+                  Array.from(state.pageMetas.values())[newPageIndex] ? hideTabBar() : showTabBar();
+                  if (tabs.size > 1) swiper.current?.scrollToIndex({ index: newPageIndex, animated: false });
                 }, 0);
               };
 

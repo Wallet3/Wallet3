@@ -31,8 +31,6 @@ import { isURL } from '../../utils/url';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
-const DefaultIcon = require('../../assets/default-icon.png');
-
 const calcIconSize = () => {
   const { width } = ReactiveScreen;
 
@@ -46,13 +44,13 @@ const calcIconSize = () => {
 const { LargeIconSize, SmallIconSize } = calcIconSize();
 
 interface Props extends BottomTabScreenProps<any, never> {
-  onPageLoaded?: (tabIndex: number, metadata?: PageMetadata) => void;
+  onPageLoaded?: (pageId: number, metadata?: PageMetadata) => void;
   onPageLoadEnd?: () => void;
   onHome?: () => void;
   onTakeOff?: () => void;
-  tabId: number;
+  pageId: number;
   onNewTab?: () => void;
-  globalState?: { tabCount: number };
+  globalState?: { pageCount: number; activePageId: number };
   onOpenTabs?: () => void;
   setCapture?: (callback: () => Promise<string>) => void;
 }
@@ -63,7 +61,7 @@ export const Browser = observer(
     onPageLoaded,
     onHome,
     onTakeOff,
-    tabId,
+    pageId,
     onNewTab,
     globalState,
     onOpenTabs,
@@ -106,16 +104,24 @@ export const Browser = observer(
 
       Dimensions.addEventListener('change', handler);
 
+      return () => {
+        Dimensions.removeEventListener('change', handler);
+      };
+    }, []);
+
+    useEffect(() => {
+      if (uri) return;
+      if (globalState?.activePageId !== pageId) return;
+
       PubSub.subscribe('CodeScan-https:', (msg, { data }) => {
         addrRef.current?.blur();
         setTimeout(() => goTo(data), 1000);
       });
 
       return () => {
-        Dimensions.removeEventListener('change', handler);
         PubSub.unsubscribe('CodeScan-https:');
       };
-    }, []);
+    }, [uri]);
 
     useEffect(() => {
       const func = viewShot.current?.capture;
@@ -223,7 +229,7 @@ export const Browser = observer(
         history
           .concat((SuggestUrls as string[]).filter((u) => !history.find((hurl) => hurl.includes(u) || u.includes(hurl))))
           .filter((url) => url.includes(addr) || addr.includes(url))
-          .slice(0, 7)
+          .slice(0, 5)
       );
     }, [addr]);
 
@@ -350,7 +356,7 @@ export const Browser = observer(
                     numberOfLines={1}
                     style={{ maxWidth: '80%', fontSize: 16, color: index === 0 ? '#fff' : thirdFontColor }}
                   >
-                    {url}
+                    {url.startsWith('http') ? url : `https://${url}`}
                   </Text>
                   {index === 0 ? <Ionicons name="return-down-back" size={15} color="#fff" /> : undefined}
                 </TouchableOpacity>
@@ -382,7 +388,7 @@ export const Browser = observer(
                         style={{ width: smallIconSize, height: smallIconSize, borderRadius: 3 }}
                       />
                     ) : (
-                      <Image source={DefaultIcon} style={{ width: smallIconSize, height: smallIconSize, borderRadius: 3 }} />
+                      undefined
                     )}
                   </TouchableOpacity>
                 ))}
@@ -437,7 +443,7 @@ export const Browser = observer(
           <Web3View
             webViewRef={webview}
             viewShotRef={viewShot}
-            tabCount={globalState?.tabCount}
+            tabCount={globalState?.pageCount}
             onTabPress={onOpenTabs}
             source={{ uri }}
             onLoadProgress={({ nativeEvent }) => setLoadingProgress(nativeEvent.progress)}
@@ -451,7 +457,7 @@ export const Browser = observer(
             onBookmarksPress={openFavs}
             onMetadataChange={(data) => {
               setPageMetadata(data);
-              onPageLoaded?.(tabId, data);
+              onPageLoaded?.(pageId, data);
               Bookmarks.addRecentSite(data);
             }}
             onShrinkRequest={(webUrl) => {
@@ -512,7 +518,7 @@ export const Browser = observer(
         )}
 
         {!webUrl && recentSites.length > 0 ? (
-          <RecentHistory tabCount={globalState?.tabCount} onItemPress={(url) => goTo(url)} onTabsPress={onOpenTabs} />
+          <RecentHistory tabCount={globalState?.pageCount} onItemPress={(url) => goTo(url)} onTabsPress={onOpenTabs} />
         ) : undefined}
 
         <Portal>
