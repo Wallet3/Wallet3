@@ -27,6 +27,7 @@ import SuggestUrls from '../../configs/urls/verified.json';
 import Theme from '../../viewmodels/settings/Theme';
 import ViewShot from 'react-native-view-shot';
 import i18n from '../../i18n';
+import { isURL } from '../../utils/url';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
@@ -156,7 +157,13 @@ export const Browser = observer(
     };
 
     const goTo = (url: string) => {
-      url = url.toLowerCase().startsWith('http') ? url : `https://${url}`;
+      url = url.toLowerCase();
+      url =
+        url.startsWith('https:') || url.startsWith('http:')
+          ? url
+          : isURL(url)
+          ? `https://${url}`
+          : `https://www.google.com/search?client=wallet3&ie=UTF-8&oe=UTF-8&q=${url}`;
 
       try {
         if (url === uri) {
