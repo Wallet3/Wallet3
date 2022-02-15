@@ -60,7 +60,7 @@ export class BaseTransaction {
 
     if (this.network.eip1559) this.refreshEIP1559(this.network.chainId);
 
-    Coingecko.refresh();
+    Coingecko.init().then(() => Coingecko.refresh());
   }
 
   get nextBlockBaseFee() {

@@ -8,7 +8,7 @@ import Coingecko from '../common/apis/Coingecko';
 import Contacts from './customs/Contacts';
 import Database from '../models/Database';
 import GasPrice from './misc/GasPrice';
-import InpageMetamaskDAppHub from './hubs/InpageMetamaskDAppHub';
+import { InpageMetamaskDAppHub } from './hubs/InpageMetamaskDAppHub';
 import Key from '../models/Key';
 import LINQ from 'linq';
 import LinkHub from './hubs/LinkHub';
@@ -156,8 +156,6 @@ export class AppVM {
   }
 
   async init() {
-    Coingecko.init();
-
     await Promise.all([Database.init(), Authentication.init()]);
     await Promise.all([Networks.init()]);
 

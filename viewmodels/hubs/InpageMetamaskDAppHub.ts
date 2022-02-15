@@ -501,7 +501,10 @@ export class InpageMetamaskDAppHub extends EventEmitter {
 
   reset() {
     this.apps.clear();
-    return this.dbTable.clear();
+  }
+
+  static reset() {
+    return Database.inpageDApps.clear();
   }
 }
 
