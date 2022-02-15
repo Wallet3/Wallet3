@@ -25,7 +25,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
 
   const reviewItemStyle = { ...styles.reviewItem, borderColor };
   const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
-  const reviewItemValueStyle = { ...styles.reviewItemValue, color: textColor };
+  const reviewItemValueStyle = { ...styles.reviewItemValue, color: textColor, minWidth: 64 };
 
   return (
     <SafeViewContainer style={styles.container}>

@@ -35,7 +35,7 @@ export default observer(({ account }: { account?: Account }) => {
     <View style={{ padding: 16, flex: 1, height: 430, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
         <View style={{ alignItems: 'center', marginTop: -16 }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 12 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 12, maxWidth: '70%' }}>
             <Avatar
               size={27}
               emoji={account?.emojiAvatar}

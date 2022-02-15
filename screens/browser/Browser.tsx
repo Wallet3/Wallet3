@@ -223,7 +223,7 @@ export const Browser = observer(
         history
           .concat((SuggestUrls as string[]).filter((u) => !history.find((hurl) => hurl.includes(u) || u.includes(hurl))))
           .filter((url) => url.includes(addr) || addr.includes(url))
-          .slice(0, 5)
+          .slice(0, 7)
       );
     }, [addr]);
 

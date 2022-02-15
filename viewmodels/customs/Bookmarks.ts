@@ -5,8 +5,8 @@ import { action, makeObservable, observable, runInAction } from 'mobx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NoInsetsSites from '../../configs/urls/no-insets.json';
 import { PageMetadata } from '../../screens/browser/Web3View';
-import RiskyUrls from '../../configs/urls/risky.json';
-import SecureUrls from '../../configs/urls/verified.json';
+import RiskyHosts from '../../configs/urls/risky.json';
+import SecureHosts from '../../configs/urls/verified.json';
 
 export interface Bookmark {
   url: string;
@@ -108,6 +108,8 @@ class Bookmarks {
       return;
     }
 
+    if (isRiskySite(metadata.origin)) return;
+
     const deniedColors = ['#ffffff', '#000000', 'white', '#fff', '#000', 'black', 'hsl(0, 0%, 100%)', null, undefined];
 
     metadata.themeColor = deniedColors.includes(metadata.themeColor?.toLowerCase()) ? '#999' : metadata.themeColor;
@@ -137,10 +139,23 @@ class Bookmarks {
 
 export default new Bookmarks();
 
+const SecureSet = new Set(SecureHosts);
+const RiskySet = new Set(RiskyHosts);
+
 export function isSecureSite(url: string) {
-  return SecureUrls.some((i) => url.startsWith(i));
+  if (!url.startsWith('https://')) return false;
+
+  try {
+    return SecureSet.has(Linking.parse(url).hostname || '');
+  } catch (error) {}
+
+  return false;
 }
 
 export function isRiskySite(url: string) {
-  return RiskyUrls.some((i) => url.includes(i));
+  try {
+    return RiskySet.has(Linking.parse(url).hostname || '');
+  } catch (error) {}
+
+  return false;
 }
