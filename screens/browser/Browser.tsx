@@ -2,6 +2,7 @@ import * as Linking from 'expo-linking';
 
 import Bookmarks, { Bookmark, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
 import { Dimensions, ListRenderItemInfo, Share, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { EvilIcons, Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Web3View, { PageMetadata } from './Web3View';
@@ -14,7 +15,6 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import CachedImage from 'react-native-expo-cached-image';
 import Collapsible from 'react-native-collapsible';
 import { FlatGrid } from 'react-native-super-grid';
-import { Ionicons } from '@expo/vector-icons';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
 import PopularDApps from '../../configs/urls/popular.json';
@@ -107,27 +107,22 @@ export const Browser = observer(
 
       Dimensions.addEventListener('change', handler);
 
-      return () => {
-        Dimensions.removeEventListener('change', handler);
-        onInputting = undefined;
-      };
-    }, []);
-
-    useEffect(() => onInputting?.(isFocus), [isFocus]);
-
-    useEffect(() => {
-      if (uri) return;
-      if (globalState?.activePageId !== pageId) return;
-
       PubSub.subscribe('CodeScan-https:', (msg, { data }) => {
+        if (globalState?.activePageId !== pageId) return;
+
         addrRef.current?.blur();
         setTimeout(() => goTo(data), 1000);
       });
 
       return () => {
+        Dimensions.removeEventListener('change', handler);
         PubSub.unsubscribe('CodeScan-https:');
+
+        onInputting = undefined;
       };
-    }, [uri]);
+    }, []);
+
+    useEffect(() => onInputting?.(isFocus), [isFocus]);
 
     useEffect(() => {
       const func = viewShot.current?.capture;
@@ -420,7 +415,7 @@ export const Browser = observer(
                     paddingHorizontal: 8,
                   }}
                 >
-                  <Ionicons name="ios-share-outline" size={20.5} color={textColor} />
+                  <EvilIcons name="share-apple" size={28.7} color={textColor} />
                 </TouchableOpacity>
               ) : undefined}
             </View>

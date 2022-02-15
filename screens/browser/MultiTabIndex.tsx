@@ -54,7 +54,7 @@ export class StateViewModel {
   }
 
   setActivePageIdByPageIndex(pageIndex: number) {
-    this.activePageId = Array.from(this.pageMetas.keys())[pageIndex];
+    this.activePageId = Array.from(this.pageMetas.keys())[pageIndex] ?? 0;
   }
 
   genId() {
@@ -155,7 +155,10 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
   const [tabs] = useState(new Map<number, JSX.Element>([[0, generateBrowserTab(0, props, newTab)]]));
 
   const onScrollEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-    Keyboard.dismiss();
+    if (persistentKeyboard === 'always') {
+      Keyboard.dismiss();
+      setPersistentKeyboard('never');
+    }
 
     const pageIndex = Math.min(Math.max(Math.floor(e.nativeEvent.contentOffset.x / ReactiveScreen.width + 0.5), 0), tabs.size);
     setActivePageIndex(pageIndex);
