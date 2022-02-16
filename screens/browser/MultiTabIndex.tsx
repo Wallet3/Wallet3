@@ -60,7 +60,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
   const swiper = useRef<FlatList>(null);
   const [activePageIndex, setActivePageIndex] = useState(0);
   const [persistentKeyboard, setPersistentKeyboard] = useState<'always' | 'never'>('never');
-  const [counts, setCounts] = useState(1);
+  const [counts, forceUpdate] = useState(1);
   const [state] = useState(new StateViewModel());
   const { backgroundColor } = Theme;
 
@@ -98,7 +98,8 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
     state.pageMetas.set(id, undefined);
 
     state.setTabCount(tabs.size);
-    setCounts(tabs.size);
+    forceUpdate(tabs.size);
+    Keyboard.dismiss();
 
     setTimeout(() => {
       swiper.current?.scrollToItem({ item: tabView, animated: true });
@@ -214,18 +215,18 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
               closeTabs();
             }}
             onRemovePage={(pageId) => {
-              const tabIndexToBeRemoved = Array.from(state.pageMetas.keys()).findIndex((i) => i === pageId);
-              if (tabIndexToBeRemoved < 0) return;
+              const pageIndexToBeRemoved = Array.from(state.pageMetas.keys()).findIndex((i) => i === pageId);
+              if (pageIndexToBeRemoved < 0) return;
 
               const removeTab = () => {
                 startLayoutAnimation();
 
                 let newPageIndex = -1;
 
-                if (activePageIndex === tabs.size - 1 || tabIndexToBeRemoved < activePageIndex) {
+                if (activePageIndex === tabs.size - 1 || pageIndexToBeRemoved < activePageIndex) {
                   newPageIndex = Math.max(0, activePageIndex - 1);
-                } else if (tabIndexToBeRemoved === activePageIndex) {
-                  newPageIndex = tabIndexToBeRemoved;
+                } else if (pageIndexToBeRemoved === activePageIndex) {
+                  newPageIndex = pageIndexToBeRemoved;
                 } else {
                   newPageIndex = activePageIndex;
                 }
@@ -235,7 +236,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
                 state.pageCaptureFuncs.delete(pageId);
                 state.pageSnapshots.delete(pageId);
                 state.setTabCount(tabs.size);
-                setCounts(tabs.size);
+                forceUpdate(tabs.size);
 
                 setActivePageIndex(newPageIndex);
                 state.setActivePageIdByPageIndex(newPageIndex);
