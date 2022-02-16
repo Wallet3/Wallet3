@@ -1,12 +1,15 @@
 import { computed, makeObservable, observable, runInAction } from 'mobx';
 
 import { Dimensions } from 'react-native';
+import EventEmitter from 'events';
 
-class ReactScreen {
+class ReactScreen extends EventEmitter {
   height: number;
   width: number;
 
   constructor() {
+    super();
+
     const { height, width } = Dimensions.get('window');
     this.height = height;
     this.width = width;
@@ -19,6 +22,7 @@ class ReactScreen {
       runInAction(() => {
         this.height = height;
         this.width = width;
+        this.emit('change');
       });
     };
 

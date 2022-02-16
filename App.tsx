@@ -105,6 +105,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
                   return {
                     animation: 'slide_from_bottom',
                     headerTintColor: '#ffffff',
+                    headerStyle: { backgroundColor:'#000000' },
                     title: t('qrscan-title'),
                     headerLeft: () => (
                       <TouchableOpacity onPress={() => navigation.pop()}>

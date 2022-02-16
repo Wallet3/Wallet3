@@ -1,4 +1,6 @@
 import { BarCodeScannedCallback, BarCodeScanner } from 'expo-barcode-scanner';
+import { Camera } from 'expo-camera';
+
 import React, { useEffect, useState } from 'react';
 import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 
@@ -45,7 +47,15 @@ export default ({ onBarCodeScanned, style }: Props) => {
     );
   }
 
-  return <BarCodeScanner onBarCodeScanned={onBarCodeScanned} style={style} />;
+  return (
+    <Camera
+      onBarCodeScanned={onBarCodeScanned}
+      barCodeScannerSettings={{
+        barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
+      }}
+      style={[StyleSheet.absoluteFill, styles.container]}
+    ></Camera>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -53,9 +63,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
-    position: 'relative',
-    width: '100%',
-    height: '100%',
+    backgroundColor: '#000000', // the rock-solid workaround
   },
 });

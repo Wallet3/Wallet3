@@ -3,6 +3,7 @@ import * as Linking from 'expo-linking';
 import Bookmarks, { Bookmark, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
 import { Dimensions, ListRenderItemInfo, Share, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { EvilIcons, Ionicons } from '@expo/vector-icons';
+import { NullableImage, SafeViewContainer } from '../../components';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Web3View, { PageMetadata } from './Web3View';
@@ -21,7 +22,6 @@ import PopularDApps from '../../configs/urls/popular.json';
 import { Portal } from 'react-native-portalize';
 import { ReactiveScreen } from '../../utils/device';
 import RecentHistory from './components/RecentHistory';
-import { SafeViewContainer } from '../../components';
 import { StatusBar } from 'expo-status-bar';
 import SuggestUrls from '../../configs/urls/verified.json';
 import Theme from '../../viewmodels/settings/Theme';
@@ -364,33 +364,37 @@ export const Browser = observer(
               ))}
             </View>
 
-            <View
-              style={{
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                padding: 8,
-                borderBottomWidth: 1,
-                borderBottomColor: borderColor,
-              }}
-            >
-              {PopularDApps.concat(favs.slice(0, 24)).map((item, i) => (
-                <TouchableOpacity
-                  style={{ margin: 8 }}
-                  key={`${item.url}-${i}`}
-                  onPress={(e) => {
-                    e.preventDefault();
-                    goTo(item.url);
-                  }}
-                >
-                  {item.icon ? (
-                    <CachedImage
-                      source={{ uri: item.icon }}
-                      style={{ width: smallIconSize, height: smallIconSize, borderRadius: 3 }}
+            {uri ? (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  padding: 8,
+                  borderBottomWidth: 1,
+                  borderBottomColor: borderColor,
+                }}
+              >
+                {PopularDApps.concat(favs.slice(0, 24 - PopularDApps.length)).map((item, i) => (
+                  <TouchableOpacity
+                    style={{ margin: 8 }}
+                    key={`${item.url}-${i}`}
+                    onPress={(e) => {
+                      e.preventDefault();
+                      goTo(item.url);
+                    }}
+                  >
+                    <NullableImage
+                      uri={item.icon}
+                      imageBackgroundColor={backgroundColor}
+                      imageRadius={3}
+                      size={smallIconSize}
+                      text={item.title}
+                      fontSize={12}
                     />
-                  ) : undefined}
-                </TouchableOpacity>
-              ))}
-            </View>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            ) : undefined}
 
             <View style={{ flexDirection: 'row', paddingHorizontal: 0 }}>
               <TouchableOpacity
