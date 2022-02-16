@@ -79,7 +79,7 @@ export const PublicNetworks: INetwork[] = [
     network: 'Aurora',
     color: '#70d44b',
     defaultTokens: AuroraPopularTokens,
-    explorer: 'https://explorer.aurora.dev',
+    explorer: 'https://aurorascan.dev',
     l2: true,
   },
   {
