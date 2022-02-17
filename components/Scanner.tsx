@@ -1,4 +1,4 @@
-import { BarCodeScannedCallback, BarCodeScanner } from 'expo-barcode-scanner';
+import { BarCodeScanningResult, Camera } from 'expo-camera';
 import React, { useEffect, useState } from 'react';
 import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 
@@ -8,7 +8,7 @@ import i18n from '../i18n';
 import { openSettings } from 'expo-linking';
 
 interface Props {
-  onBarCodeScanned?: BarCodeScannedCallback;
+  onBarCodeScanned?: (scanningResult: BarCodeScanningResult) => void;
   style?: StyleProp<ViewStyle>;
 }
 
@@ -18,7 +18,7 @@ export default ({ onBarCodeScanned, style }: Props) => {
 
   useEffect(() => {
     (async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync();
+      const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === 'granted');
     })();
   }, []);
@@ -45,7 +45,7 @@ export default ({ onBarCodeScanned, style }: Props) => {
     );
   }
 
-  return <BarCodeScanner onBarCodeScanned={onBarCodeScanned} style={style} />;
+  return <Camera onBarCodeScanned={onBarCodeScanned} style={style} />;
 };
 
 const styles = StyleSheet.create({

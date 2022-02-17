@@ -10,6 +10,8 @@ PODS:
     - ZXingObjC/PDF417
   - EXBlur (11.0.0):
     - ExpoModulesCore
+  - EXCamera (12.1.2):
+    - ExpoModulesCore
   - EXClipboard (2.1.1):
     - ExpoModulesCore
   - EXConstants (13.0.1):
@@ -272,7 +274,7 @@ PODS:
     - React
   - react-native-randombytes (3.6.1):
     - React-Core
-  - react-native-safe-area-context (3.3.2):
+  - react-native-safe-area-context (3.4.0):
     - React-Core
   - react-native-view-shot (3.1.2):
     - React
@@ -399,6 +401,7 @@ DEPENDENCIES:
   - EXApplication (from `../node_modules/expo-application/ios`)
   - EXBarCodeScanner (from `../node_modules/expo-barcode-scanner/ios`)
   - EXBlur (from `../node_modules/expo-blur/ios`)
+  - EXCamera (from `../node_modules/expo-camera/ios`)
   - EXClipboard (from `../node_modules/expo-clipboard/ios`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
   - EXCrypto (from `../node_modules/expo-crypto/ios`)
@@ -483,6 +486,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-barcode-scanner/ios"
   EXBlur:
     :path: "../node_modules/expo-blur/ios"
+  EXCamera:
+    :path: "../node_modules/expo-camera/ios"
   EXClipboard:
     :path: "../node_modules/expo-clipboard/ios"
   EXConstants:
@@ -622,6 +627,7 @@ SPEC CHECKSUMS:
   EXApplication: 54fe5bd6268d697771645e8f1aef8b806a65247a
   EXBarCodeScanner: e5ca0062d8ad1c4c1d2e386d6a308d5a32213020
   EXBlur: 82055865de17cf2cf797ff064c50fb59fcbe703f
+  EXCamera: 4a0d00d6d1e4703c31a75514d8bc804a2eab27bd
   EXClipboard: 8123fcda680538bb0e1f4e6511106553e52d3760
   EXConstants: 6966f4fa7a22770dd240a66d029819ff94c748c9
   EXCrypto: ab2ba0df3136a5f2407b8c7e70eb498ac20d704f
@@ -664,7 +670,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 34e23860273a23695342f58eed3ffd3ba10c31e0
   react-native-context-menu-view: 50aca3f8790ac4b52b6e2385a9378678f69b1e6a
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
-  react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
+  react-native-safe-area-context: f4f7cc09d81ae2d39dfd13e764d718969af07080
   react-native-view-shot: 4475fde003fe8a210053d1f98fb9e06c1d834e1c
   react-native-webview: 380c1a03ec94b7ed764dac8db1e7c9952d08c93a
   React-perflogger: cc76a4254d19640f1d8ad1c66fdee800414b805c

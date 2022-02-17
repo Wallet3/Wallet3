@@ -1,4 +1,7 @@
+import * as Animatable from 'react-native-animatable';
+
 import { Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import React, { useRef } from 'react';
 import { StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { formatAddress, formatCurrency } from '../../utils/formatter';
 
@@ -6,12 +9,12 @@ import AnimateNumber from 'react-native-animate-number';
 import ColorLogos from '../../assets/icons/networks/color';
 import { INetwork } from '../../common/Networks';
 import Image from 'react-native-expo-cached-image';
-import React from 'react';
 import Ripple from 'react-native-material-ripple';
 import UI from '../../viewmodels/settings/UI';
 import WhiteLogos from '../../assets/icons/networks/white';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { setString } from 'expo-clipboard';
 import { themeColor } from '../../constants/styles';
 
 interface Props {
@@ -59,7 +62,9 @@ export default observer(
   }: Props) => {
     const { t } = i18n;
     const { hideBalance, gasIndicator } = UI;
-    const prefixedAddress = network?.addrPrefix ? `${network?.addrPrefix}${address?.substring(2)}` : address;
+    const addrTextView = useRef<Animatable.Text>(null);
+
+    const prefixedAddress = (network?.addrPrefix ? `${network?.addrPrefix}${address?.substring(2)}` : address) || '';
 
     return (
       <View style={{ ...styles.container, ...((style as any) || {}) }}>
@@ -116,10 +121,17 @@ export default observer(
           </View>
         </View>
 
-        <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={onQRCodePress}>
-          <Text style={{ ...styles.text, fontSize: 12, color: textColor }}>
-            {formatAddress(prefixedAddress || '', 7 + (network?.addrPrefix?.length ?? 0), 5)}
-          </Text>
+        <TouchableOpacity
+          style={{ flexDirection: 'row', alignItems: 'center' }}
+          onPress={onQRCodePress}
+          onLongPress={() => {
+            setString(prefixedAddress);
+            addrTextView.current?.flash?.();
+          }}
+        >
+          <Animatable.Text ref={addrTextView as any} style={{ ...styles.text, fontSize: 12, color: textColor }}>
+            {formatAddress(prefixedAddress, 7 + (network?.addrPrefix?.length ?? 0), 5)}
+          </Animatable.Text>
 
           <MaterialCommunityIcons
             name="qrcode"
