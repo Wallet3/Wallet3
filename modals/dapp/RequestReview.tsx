@@ -211,9 +211,9 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
         onReject={onReject}
         themeColor={network?.color}
         rejectTitle={t('button-reject')}
-        approveTitle={t(bioType === 'faceid' ? 'modal-review-button-hold-to-send' : 'button-send')}
+        approveTitle={t(bioType === 'faceid' ? 'modal-review-button-slide-to-send' : 'button-send')}
         disabledApprove={!vm.isValidParams || busy}
-        longConfirm={bioType === 'faceid'}
+        swipeConfirm={bioType === 'faceid'}
         approveIcon={bioType === 'faceid' ? () => <FaceID width={12.5} height={12.5} style={{ marginEnd: 2 }} /> : undefined}
         onApprove={async () => {
           setBusy(true);

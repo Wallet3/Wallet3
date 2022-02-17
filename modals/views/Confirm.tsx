@@ -6,6 +6,7 @@ import React from 'react';
 
 interface Props {
   onLongConfirm?: () => void;
+  onSwipeConfirm?: () => void;
   onConfirm?: () => void;
   onCancel?: () => void;
   desc: string;
@@ -18,6 +19,7 @@ interface Props {
 
 export function Confirm({
   onLongConfirm,
+  onSwipeConfirm,
   onConfirm,
   onCancel,
   desc,
@@ -38,7 +40,13 @@ export function Confirm({
 
       <View style={{ flex: 1 }} />
 
-      <Button title={confirmButtonTitle} themeColor={themeColor} onPress={onConfirm} onLongPress={onLongConfirm} />
+      <Button
+        title={confirmButtonTitle}
+        themeColor={themeColor}
+        onPress={onConfirm}
+        onLongPress={onLongConfirm}
+        onSwipeSuccess={onSwipeConfirm}
+      />
 
       {cancelable && (
         <Button title={cancelButtonTitle} reverse themeColor={themeColor} onPress={onCancel} style={{ marginTop: 12 }} />

@@ -10,6 +10,7 @@ interface Props {
   themeColor?: string;
   disabledApprove?: boolean;
   longConfirm?: boolean;
+  swipeConfirm?: boolean;
   approveIcon?: () => JSX.Element;
 }
 
@@ -21,6 +22,7 @@ export default ({
   approveTitle,
   disabledApprove,
   longConfirm,
+  swipeConfirm,
   approveIcon,
 }: Props) => {
   return (
@@ -34,7 +36,8 @@ export default ({
         disabled={disabledApprove}
         onPress={longConfirm ? undefined : onApprove}
         onLongPress={longConfirm ? onApprove : undefined}
-        style={{ flex: 10 }}
+        onSwipeSuccess={swipeConfirm ? onApprove : undefined}
+        style={{ flex: swipeConfirm ? 11 : 10 }}
         themeColor={themeColor}
         icon={approveIcon}
       />

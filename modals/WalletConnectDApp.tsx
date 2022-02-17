@@ -102,7 +102,7 @@ const ConnectDApp = observer(({ client, close }: ConnectDAppProps) => {
 
   const swipeTo = (index: number) => {
     setPanel(index);
-    setTimeout(() => swiper.current?.scrollTo(1), 0);
+    setTimeout(() => swiper.current?.scrollTo(1), 25);
   };
 
   return (

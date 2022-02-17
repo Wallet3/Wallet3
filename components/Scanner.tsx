@@ -1,6 +1,4 @@
-import { BarCodeScannedCallback, BarCodeScanner } from 'expo-barcode-scanner';
-import { Camera } from 'expo-camera';
-
+import { BarCodeScanningResult, Camera } from 'expo-camera';
 import React, { useEffect, useState } from 'react';
 import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 
@@ -10,7 +8,7 @@ import i18n from '../i18n';
 import { openSettings } from 'expo-linking';
 
 interface Props {
-  onBarCodeScanned?: BarCodeScannedCallback;
+  onBarCodeScanned?: (scanningResult: BarCodeScanningResult) => void;
   style?: StyleProp<ViewStyle>;
 }
 
@@ -20,7 +18,7 @@ export default ({ onBarCodeScanned, style }: Props) => {
 
   useEffect(() => {
     (async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync();
+      const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === 'granted');
     })();
   }, []);
@@ -47,15 +45,7 @@ export default ({ onBarCodeScanned, style }: Props) => {
     );
   }
 
-  return (
-    <Camera
-      onBarCodeScanned={onBarCodeScanned}
-      barCodeScannerSettings={{
-        barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
-      }}
-      style={[StyleSheet.absoluteFill, styles.container]}
-    ></Camera>
-  );
+  return <Camera onBarCodeScanned={onBarCodeScanned} style={style} />;
 };
 
 const styles = StyleSheet.create({
@@ -63,6 +53,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#000000', // the rock-solid workaround
+    backgroundColor: '#fff',
+    position: 'relative',
+    width: '100%',
+    height: '100%',
   },
 });

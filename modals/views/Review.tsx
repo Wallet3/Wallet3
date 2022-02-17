@@ -43,7 +43,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
     setBusy(false);
   };
 
-  const sendTitle = biometricType === 'faceid' ? t('modal-review-button-hold-to-send') : t('modal-review-button-send');
+  const sendTitle = biometricType === 'faceid' ? t('modal-review-button-slide-to-send') : t('modal-review-button-send');
   const onLongSendPress = biometricType === 'faceid' ? send : undefined;
   const onSendPress = biometricType === 'faceid' ? undefined : send;
   const authIcon =
@@ -162,6 +162,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
         disabled={!vm.isValidParams || busy}
         onPress={onSendPress}
         onLongPress={onLongSendPress}
+        onSwipeSuccess={onLongSendPress}
         icon={authIcon}
       />
     </SafeViewContainer>

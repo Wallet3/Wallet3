@@ -1,16 +1,17 @@
 import { EVMIcon, NetworkIcons } from '../assets/icons/networks/color';
 import { FlatList, ListRenderItemInfo, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeViewContainer, Separator } from '../components';
+import { useEffect, useState } from 'react';
 
 import { Feather } from '@expo/vector-icons';
 import { INetwork } from '../common/Networks';
 import Networks from '../viewmodels/Networks';
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import Swiper from 'react-native-swiper';
 import Theme from '../viewmodels/settings/Theme';
 import i18n from '../i18n';
 import { observer } from 'mobx-react-lite';
-import { secondaryFontColor } from '../constants/styles';
 import styles from './styles';
 
 interface Props {
@@ -23,8 +24,14 @@ interface Props {
 export default observer(({ title, onNetworkPress, networks, selectedNetwork }: Props) => {
   const { t } = i18n;
   const { backgroundColor, secondaryTextColor, borderColor } = Theme;
-  selectedNetwork = selectedNetwork ?? Networks.current;
-  networks = networks ?? Networks.all;
+  const [nets, setNets] = useState<INetwork[]>();
+
+  useEffect(() => {
+    const timer = setTimeout(() => setNets(networks ?? Networks.all), 25);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [networks]);
 
   const renderItem = ({ item }: ListRenderItemInfo<INetwork>) => {
     return (
@@ -36,7 +43,7 @@ export default observer(({ title, onNetworkPress, networks, selectedNetwork }: P
           name="check"
           color={item.color}
           size={15}
-          style={{ opacity: selectedNetwork?.network === item.network ? 1 : 0 }}
+          style={{ opacity: (selectedNetwork ?? Networks.current)?.network === item.network ? 1 : 0 }}
         />
 
         <View style={{ width: 32, alignItems: 'center', justifyContent: 'center', marginStart: 8 }}>
@@ -60,19 +67,21 @@ export default observer(({ title, onNetworkPress, networks, selectedNetwork }: P
 
   return (
     <SafeAreaProvider style={{ ...styles.safeArea, backgroundColor }}>
-      <SafeViewContainer style={{ padding: 16 }}>
-        <Text style={{ color: secondaryTextColor }} numberOfLines={1}>
-          {title ?? t('modal-networks-switch')}
-        </Text>
-        <Separator style={{ marginVertical: 4, backgroundColor: borderColor }} />
-        <FlatList
-          keyExtractor={(i) => i.network}
-          data={networks}
-          renderItem={renderItem}
-          contentContainerStyle={{ paddingBottom: 36 }}
-          style={{ marginHorizontal: -16, paddingHorizontal: 16, marginTop: -4, marginBottom: -36 }}
-        />
-      </SafeViewContainer>
+      <Swiper scrollEnabled={false}>
+        <SafeViewContainer style={{ padding: 16 }}>
+          <Text style={{ color: secondaryTextColor }} numberOfLines={1}>
+            {title ?? t('modal-networks-switch')}
+          </Text>
+          <Separator style={{ marginVertical: 4, backgroundColor: borderColor }} />
+          <FlatList
+            keyExtractor={(i) => i.network}
+            data={nets}
+            renderItem={renderItem}
+            contentContainerStyle={{ paddingBottom: 36 }}
+            style={{ marginHorizontal: -16, paddingHorizontal: 16, marginTop: -4, marginBottom: -36 }}
+          />
+        </SafeViewContainer>
+      </Swiper>
     </SafeAreaProvider>
   );
 });
