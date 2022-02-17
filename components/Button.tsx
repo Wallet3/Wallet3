@@ -1,3 +1,5 @@
+import * as Animatable from 'react-native-animatable';
+
 import { StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
 
 import { Ionicons } from '@expo/vector-icons';
@@ -39,9 +41,19 @@ export default (props: Props) => {
 
   const arrowIcon = () => <Ionicons name="arrow-forward" size={19} color={backgroundColor} style={{}} />;
 
+  const breath = {
+    0: { opacity: 1 },
+    0.5: { opacity: 0.75 },
+    1: { opacity: 1 },
+  };
+
   return onSwipeSuccess ? (
-    <View style={{ backgroundColor, borderRadius: 7 }}>
-      <View
+    <View style={{ ...((props?.style as any) || {}), backgroundColor, borderRadius: 7, height: 42 }}>
+      <Animatable.View
+        animation={breath}
+        duration={2500}
+        iterationCount={'infinite'}
+        easing="linear"
         style={{
           flexDirection: 'row',
           position: 'absolute',
@@ -52,8 +64,11 @@ export default (props: Props) => {
         }}
       >
         {props.icon?.()}
-        <Text style={txtStyle}>{title}</Text>
-      </View>
+        <Text style={{ ...txtStyle, maxWidth: '100%' }} numberOfLines={1}>
+          {title}
+        </Text>
+      </Animatable.View>
+
       <SwipeButton
         disabled={disabled}
         disabledRailBackgroundColor={backgroundColor}

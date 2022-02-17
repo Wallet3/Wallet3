@@ -107,7 +107,7 @@
   "modal-review-network": "网络",
   "modal-review-fee": "交易费",
   "modal-review-button-send": "发送",
-  "modal-review-button-hold-to-send": "长按发送",
+  "modal-review-button-slide-to-send": "滑动发送",
   "modal-gas-review-limit": "燃料上限",
   "modal-gas-review-max-price": "燃料价格上限",
   "modal-gas-review-priority-price": "优先费",
