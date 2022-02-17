@@ -78,7 +78,7 @@
   "settings-legal-privacy": "Privacy Policy",
   "settings-legal-about": "About",
   "settings-modal-erase": "I'm sure to erase all data.",
-  "settings-modal-button-confirm": "Hold To Confirm",
+  "settings-reset-modal-button-confirm": "Slide To Reset",
   "about-title": "About",
   "about-slogan": "A Secure Wallet for Web3.",
   "about-features": "Features",

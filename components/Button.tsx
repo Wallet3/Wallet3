@@ -74,7 +74,7 @@ export default (props: Props) => {
         disabledRailBackgroundColor="transparent"
         disabledThumbIconBackgroundColor="#fff"
         shouldResetAfterSuccess
-        swipeSuccessThreshold={90}
+        swipeSuccessThreshold={95}
         containerStyles={{
           backgroundColor: 'transparent',
           margin: 0,

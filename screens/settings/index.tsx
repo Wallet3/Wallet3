@@ -224,8 +224,8 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
         >
           <SafeAreaProvider style={{ height: 270, backgroundColor }}>
             <Confirm
-              onLongConfirm={() => App.reset()}
-              confirmButtonTitle={t('settings-modal-button-confirm')}
+              onSwipeConfirm={() => App.reset()}
+              confirmButtonTitle={t('settings-reset-modal-button-confirm')}
               desc={t('settings-modal-erase')}
               themeColor="crimson"
               style={{ flex: 1 }}
