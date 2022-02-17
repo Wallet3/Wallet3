@@ -162,6 +162,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
         disabled={!vm.isValidParams || busy}
         onPress={onSendPress}
         onLongPress={onLongSendPress}
+        onSwipeSuccess={onLongSendPress}
         icon={authIcon}
       />
     </SafeViewContainer>

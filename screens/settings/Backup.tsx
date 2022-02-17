@@ -123,7 +123,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
           modalStyle={styles.modalStyle}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <FullPasspad themeColor={themeColor} height={420} onCodeEntered={(code) => verify(code)} />
+          <FullPasspad themeColor={themeColor} height={420} borderRadius={6} onCodeEntered={(code) => verify(code)} />
         </Modalize>
       </Portal>
     </SafeViewContainer>
