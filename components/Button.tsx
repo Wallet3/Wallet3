@@ -43,7 +43,7 @@ export default (props: Props) => {
 
   const breath = {
     0: { opacity: 1 },
-    0.5: { opacity: 0.75 },
+    0.5: { opacity: 0.25 },
     1: { opacity: 1 },
   };
 
@@ -51,9 +51,9 @@ export default (props: Props) => {
     <View style={{ ...((props?.style as any) || {}), backgroundColor, borderRadius: 7, height: 42 }}>
       <Animatable.View
         animation={breath}
-        duration={2500}
+        duration={2200}
         iterationCount={'infinite'}
-        easing="linear"
+        easing="ease-in-out"
         style={{
           flexDirection: 'row',
           position: 'absolute',
@@ -71,8 +71,8 @@ export default (props: Props) => {
 
       <SwipeButton
         disabled={disabled}
-        disabledRailBackgroundColor={backgroundColor}
-        disabledThumbIconBackgroundColor={'#fff'}
+        disabledRailBackgroundColor="transparent"
+        disabledThumbIconBackgroundColor="#fff"
         shouldResetAfterSuccess
         swipeSuccessThreshold={90}
         containerStyles={{
