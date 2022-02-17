@@ -31,7 +31,6 @@
     "events": "^3.3.0",
     "expo": "^44.0.6",
     "expo-asset": "~8.4.6",
-    "expo-barcode-scanner": "~11.2.1",
     "expo-blur": "~11.0.0",
     "expo-camera": "^12.1.2",
     "expo-clipboard": "~2.1.1",
