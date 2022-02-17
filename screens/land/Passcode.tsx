@@ -37,8 +37,8 @@ export default observer(({}: NativeStackScreenProps<LandScreenStack, 'Backup'>) 
   return (
     <SafeViewContainer style={styles.rootContainer} paddingHeader>
       <ConfirmPasscode
-        biometricsSupported={Authentication.biometricsSupported}
-        biometricsEnabled={Authentication.biometricEnabled}
+        biometricSupported={Authentication.biometricSupported}
+        biometricEnabled={Authentication.biometricEnabled}
         onBiometricValueChange={(v) => Authentication.setBiometrics(v)}
         onDone={finishInitialization}
         themeColor={themeColor}

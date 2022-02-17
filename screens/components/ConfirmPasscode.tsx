@@ -11,14 +11,14 @@ import { observer } from 'mobx-react-lite';
 import { secondaryFontColor } from '../../constants/styles';
 
 interface Props {
-  biometricsSupported?: boolean;
-  biometricsEnabled?: boolean;
+  biometricSupported?: boolean;
+  biometricEnabled?: boolean;
   themeColor?: string;
   onBiometricValueChange?: (value: boolean) => void;
   onDone?: (passcode: string) => void;
 }
 
-export default observer(({ biometricsSupported, biometricsEnabled, themeColor, onBiometricValueChange, onDone }: Props) => {
+export default observer(({ biometricSupported, biometricEnabled, themeColor, onBiometricValueChange, onDone }: Props) => {
   const { t } = i18n;
   const { foregroundColor, tintColor, isLightMode, mode } = Theme;
 
@@ -87,7 +87,7 @@ export default observer(({ biometricsSupported, biometricsEnabled, themeColor, o
 
       <View style={{ flex: 1 }} />
 
-      {biometricsSupported ? (
+      {biometricSupported ? (
         <View
           style={{
             flexDirection: 'row',
@@ -98,7 +98,7 @@ export default observer(({ biometricsSupported, biometricsEnabled, themeColor, o
         >
           <Text style={{ marginBottom: -2, color: secondaryFontColor }}>{t('land-passcode-enable-biometric')}</Text>
 
-          <Switch value={biometricsEnabled} trackColor={{ true: themeColor }} onValueChange={onBiometricValueChange} />
+          <Switch value={biometricEnabled} trackColor={{ true: themeColor }} onValueChange={onBiometricValueChange} />
         </View>
       ) : undefined}
 

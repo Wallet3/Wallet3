@@ -398,7 +398,7 @@ export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Aut
   const { ref: lockScreenRef, open: openLockScreen, close: closeLockScreen } = useModalize();
 
   const bioAuth = async () => {
-    if (!appAuth.biometricEnabled || !appAuth.biometricsSupported) return;
+    if (!appAuth.biometricEnabled || !appAuth.biometricSupported) return;
 
     const success = await appAuth.authorize();
     if (success) closeLockScreen();
