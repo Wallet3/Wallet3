@@ -222,7 +222,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
           modalStyle={appStyles.modalStyle}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <SafeAreaProvider style={{ height: 270, backgroundColor }}>
+          <SafeAreaProvider style={{ height: 270, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
             <Confirm
               onSwipeConfirm={() => App.reset()}
               confirmButtonTitle={t('settings-reset-modal-button-confirm')}
