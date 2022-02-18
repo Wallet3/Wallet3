@@ -84,16 +84,23 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
           <Text style={styles.reviewItemTitle}>{t('modal-review-to')}</Text>
 
           <View style={{ flexDirection: 'row', maxWidth: '72%', alignItems: 'center' }}>
-            {vm.hasZWSP && (
+            {(vm.hasZWSP || vm.isContractRecipient) && (
               <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', end: 0, bottom: -10 }}>
                 <Ionicons name="warning" size={8} color="crimson" style={{ marginEnd: 2 }} />
-                <Text style={{ fontSize: 8, color: 'crimson' }}>{t('tip-zero-width-space')}</Text>
+                <Text style={{ fontSize: 8, color: 'crimson' }}>
+                  {t(vm.isContractRecipient ? 'tip-recipient-is-contract' : 'tip-zero-width-space')}
+                </Text>
               </View>
             )}
+
             {vm.avatar ? (
               <Image source={{ uri: vm.avatar }} style={{ width: 15, height: 15, marginEnd: 5, borderRadius: 100 }} />
             ) : undefined}
-            <Text style={{ ...reviewItemValueStyle, color: vm.hasZWSP ? 'crimson' : textColor }} numberOfLines={1}>
+
+            <Text
+              style={{ ...reviewItemValueStyle, color: vm.hasZWSP || vm.isContractRecipient ? 'crimson' : textColor }}
+              numberOfLines={1}
+            >
               {utils.isAddress(vm.to) ? formatAddress(vm.to, 8, 6) : formatAddress(vm.to, 14, 6, '...')}
             </Text>
           </View>

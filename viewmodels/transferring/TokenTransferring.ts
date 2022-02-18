@@ -1,5 +1,6 @@
 import { BigNumber, providers, utils } from 'ethers';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { getCode, getGasPrice } from '../../common/RPC';
 
 import App from '../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,7 +11,6 @@ import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/Tokens';
 import Networks from '../Networks';
 import { getAvatar } from '../../common/ENS';
-import { getGasPrice } from '../../common/RPC';
 
 export class TokenTransferring extends BaseTransaction {
   to = '';
@@ -19,6 +19,7 @@ export class TokenTransferring extends BaseTransaction {
   token: IToken;
   amount = '0';
   isResolvingAddress = false;
+  isContractRecipient = false;
 
   get allTokens() {
     return [this.account.tokens.tokens[0], ...this.account.tokens.allTokens];
@@ -136,6 +137,7 @@ export class TokenTransferring extends BaseTransaction {
       token: observable,
       amount: observable,
       isResolvingAddress: observable,
+      isContractRecipient: observable,
       insufficientFee: computed,
       isValidParams: computed,
       amountWei: computed,
@@ -177,6 +179,11 @@ export class TokenTransferring extends BaseTransaction {
     });
   }
 
+  async checkToAddress() {
+    const code = await getCode(this.network.chainId, this.toAddress);
+    runInAction(() => (this.isContractRecipient = (code?.length || 0) > 2));
+  }
+
   async setTo(to?: string, avatar?: string) {
     if (to === undefined || to === null) return;
 
@@ -192,6 +199,7 @@ export class TokenTransferring extends BaseTransaction {
     if (utils.isAddress(to)) {
       this.toAddress = to;
       this.isResolvingAddress = false;
+      this.checkToAddress();
       return;
     }
 
@@ -199,6 +207,7 @@ export class TokenTransferring extends BaseTransaction {
       const addr = to.substring(this.network.addrPrefix.length);
       this.toAddress = addr.startsWith('0x') ? addr : `0x${addr}`;
       this.isResolvingAddress = false;
+      this.checkToAddress();
       return;
     }
 
@@ -211,6 +220,7 @@ export class TokenTransferring extends BaseTransaction {
     runInAction(() => {
       this.toAddress = address;
       this.isResolvingAddress = false;
+      this.checkToAddress();
       provider.destroy();
     });
 
