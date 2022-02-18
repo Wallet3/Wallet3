@@ -342,8 +342,6 @@ const SendFundsModal = () => {
       setTimeout(() => openSendModal(), 0);
     });
 
-    PubSub.subscribe('closeSendFundsModal', () => closeSendModal());
-
     PubSub.subscribe(`CodeScan-ethereum`, (_, { data }) => {
       try {
         const erc681 = parse(data) as ERC681;
@@ -378,6 +376,7 @@ const SendFundsModal = () => {
     vm?.dispose();
     setVM(undefined);
     setIsERC681(false);
+    closeSendModal();
   };
 
   return (
