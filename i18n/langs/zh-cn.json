@@ -165,6 +165,7 @@
   "tip-cancel-action": "[取消]",
   "tip-zero-width-space": "请注意，该名称包含不可见字符",
   "tip-invalid-gas-price": "最大燃料价格必须大于优先燃料价格",
+  "tip-recipient-is-contract": "请注意，收款方是合约地址",
   "tx-type-approve": "授权",
   "tx-type-transfer": "转账",
   "tx-type-contract-interaction": "合约交互",

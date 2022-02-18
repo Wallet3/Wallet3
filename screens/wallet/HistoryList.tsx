@@ -63,7 +63,7 @@ const Tx = observer(
       <TouchableOpacity style={{ paddingVertical: 12, paddingHorizontal: 8 }} onPress={() => onPress?.(item as Transaction)}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1, alignItems: 'center' }}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Coin symbol={tokenSymbol} size={16} style={{ marginEnd: 4 }} />
+            <Coin symbol={tokenSymbol} size={16} style={{ marginEnd: 4 }} chainId={chainId} address={item.to} />
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text style={{ fontSize: 16, marginEnd: 4, maxWidth: 180, color: textColor }} numberOfLines={1}>
                 {(cancelTx ? `${t('tip-cancel-action')} ` : '') + `${methodName}`}

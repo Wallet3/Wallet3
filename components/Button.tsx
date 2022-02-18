@@ -3,6 +3,7 @@ import * as Animatable from 'react-native-animatable';
 import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+import { BreathAnimation } from '../utils/animations';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import SwipeButton from 'rn-swipe-button';
@@ -20,12 +21,6 @@ interface Props {
   themeColor?: string;
   reverse?: boolean;
 }
-
-const breath = {
-  0: { opacity: 1 },
-  0.5: { opacity: 0.25 },
-  1: { opacity: 1 },
-};
 
 export default (props: Props) => {
   const { disabled, reverse, themeColor, onLongPress, onPress, onSwipeSuccess, title } = props;
@@ -51,7 +46,7 @@ export default (props: Props) => {
   return onSwipeSuccess ? (
     <View style={{ ...((props?.style as any) || {}), backgroundColor, borderRadius: 7, height: 42 }}>
       <Animatable.View
-        animation={disabled ? undefined : breath}
+        animation={disabled ? undefined : BreathAnimation}
         duration={2200}
         iterationCount={'infinite'}
         easing="ease-in-out"
@@ -63,7 +58,7 @@ export default (props: Props) => {
           justifyContent: 'center',
           alignItems: 'center',
           width: '100%',
-          paddingStart: 21,
+          paddingStart: 19,
         }}
       >
         {props.icon?.()}
