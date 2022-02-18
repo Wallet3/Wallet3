@@ -1,5 +1,5 @@
 import { Button, Coin, SafeViewContainer } from '../../components';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import React, { useRef } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
@@ -46,8 +46,11 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
   const sendTitle = biometricType === 'faceid' ? t('modal-review-button-slide-to-send') : t('modal-review-button-send');
   const onLongSendPress = biometricType === 'faceid' ? send : undefined;
   const onSendPress = biometricType === 'faceid' ? undefined : send;
-  const authIcon =
-    biometricType === 'faceid' ? () => <FaceID width={12.5} height={12.5} style={{ marginEnd: 2 }} /> : undefined;
+  const authIcon = biometricType
+    ? biometricType === 'fingerprint'
+      ? () => <MaterialCommunityIcons name="fingerprint" size={19} color="#fff" />
+      : () => <FaceID width={12.5} height={12.5} style={{ marginEnd: 4 }} />
+    : undefined;
 
   const reviewItemStyle = { ...styles.reviewItem, borderColor };
   const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };

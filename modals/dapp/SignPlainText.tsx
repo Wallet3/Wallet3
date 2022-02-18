@@ -9,6 +9,7 @@ import AccountIndicator from '../components/AccountIndicator';
 import Avatar from '../../components/Avatar';
 import { BioType } from '../../viewmodels/Authentication';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import RejectApproveButtons from '../components/RejectApproveButtons';
 import { ScrollView } from 'react-native-gesture-handler';
 import Theme from '../../viewmodels/settings/Theme';
@@ -32,7 +33,11 @@ export default observer(({ msg, themeColor, onReject, onSign, account, bioType }
   const { t } = i18n;
   const { borderColor } = Theme;
   const [busy, setBusy] = useState(false);
-  const authIcon = bioType === 'faceid' ? () => <FaceID width={12.5} height={12.5} style={{ marginEnd: 2 }} /> : undefined;
+  const authIcon = bioType
+    ? bioType === 'faceid'
+      ? () => <FaceID width={12.5} height={12.5} style={{ marginEnd: 2 }} />
+      : () => <MaterialCommunityIcons name="fingerprint" size={19} color="#fff" />
+    : undefined;
 
   return (
     <SafeViewContainer style={{}}>

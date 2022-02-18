@@ -8303,10 +8303,10 @@ react-native-device-info@^8.4.9:
   resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-8.4.9.tgz#3089ea0bf9c9a28327d3ba683469a32b093172dd"
   integrity sha512-EEdeoaBhaLTOZmCy5xtfepVAfvodteiDHoIxBPUgnNe5p0JLv90BLKtVytbJhlllWScUO48+2u9S7M6WNYsXDQ==
 
-react-native-draggable-flatlist@^3.0.5:
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/react-native-draggable-flatlist/-/react-native-draggable-flatlist-3.0.5.tgz#687e6f06e3b8f4bb9be493cfa8f2bd17c326bcd4"
-  integrity sha512-mfCt5Mak3Q/71GS5Wha9Yb2P2LmwGRoUbaFb2kSDSjQpCHWi+9emL7YKrRhiyvJ31UHmu960BQ8io+VFCxiIIw==
+react-native-draggable-flatlist@^3.0.6:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/react-native-draggable-flatlist/-/react-native-draggable-flatlist-3.0.6.tgz#51bbb6944ed67ebc3297ccbacd1f692dfd86105b"
+  integrity sha512-eyqFGpXsWU3kHVkLkjrBTqtR+a2HFfwMt5QaOIGUz47lkpKLwvq8IbPw1hKEqcDyRVk6IUnTPcwJ9NK0SGmkJw==
 
 react-native-expo-cached-image@^1.3.1:
   version "1.3.1"
@@ -8517,10 +8517,10 @@ react-native-view-shot@^3.1.2:
   resolved "https://registry.yarnpkg.com/react-native-view-shot/-/react-native-view-shot-3.1.2.tgz#8c8e84c67a4bc8b603e697dbbd59dbc9b4f84825"
   integrity sha512-9u9fPtp6a52UMoZ/UCPrCjKZk8tnkI9To0Eh6yYnLKFEGkRZ7Chm6DqwDJbYJHeZrheCCopaD5oEOnRqhF4L2Q==
 
-react-native-web@0.17.5:
-  version "0.17.5"
-  resolved "https://registry.yarnpkg.com/react-native-web/-/react-native-web-0.17.5.tgz#2c27452b4654fb098c3c412cb04c379add1015a6"
-  integrity sha512-pdieIZi2/YeVTaOuIaeaLC6FMkk8h3pvPNruedH+6cWiE15Oz6BGjJ+5IafdXEyiipb1Y0+QuecW81fa3DVM4g==
+react-native-web@0.17.6:
+  version "0.17.6"
+  resolved "https://registry.yarnpkg.com/react-native-web/-/react-native-web-0.17.6.tgz#67805f7e009691a7f59a8513b451fcf16a6803d6"
+  integrity sha512-upVbcb7XKDRKFDMQCFqjYHyX/WKv7TZeWqPyrumcWqkS0tIR5xfSdF7RDXtqhmSG3RSxd5kob5n2pNZ0Mmr7Gg==
   dependencies:
     array-find-index "^1.0.2"
     create-react-class "^15.7.0"
