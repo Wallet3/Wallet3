@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import { Account } from '../../viewmodels/account/Account';
+import { BioType } from '../../viewmodels/Authentication';
 import { Passpad } from '../views';
 import SignPlainText from '../dapp/SignPlainText';
 import SignTypedData from '../dapp/SignTypedData';
 import Swiper from 'react-native-swiper';
-import Theme from '../../viewmodels/settings/Theme';
 
 interface Props {
   type: string;
@@ -15,15 +15,15 @@ interface Props {
   onSign: () => Promise<boolean>;
   sign: (pin: string) => Promise<boolean>;
   typedData?: any;
-  biometricEnabled?: boolean;
+  biometricType?: BioType;
   account?: Account;
 }
 
-export default ({ type, msg, themeColor, onReject, typedData, sign, biometricEnabled, onSign, account }: Props) => {
+export default ({ type, msg, themeColor, onReject, typedData, sign, biometricType, onSign, account }: Props) => {
   const swiper = useRef<Swiper>(null);
-  
+
   const onSignPress = async () => {
-    if (!biometricEnabled) {
+    if (!biometricType) {
       swiper.current?.scrollTo(1);
       return;
     }
@@ -43,11 +43,25 @@ export default ({ type, msg, themeColor, onReject, typedData, sign, biometricEna
       automaticallyAdjustContentInsets
     >
       {type === 'plaintext' ? (
-        <SignPlainText msg={msg!} themeColor={themeColor} onReject={onReject} onSign={onSignPress} account={account} />
+        <SignPlainText
+          msg={msg!}
+          themeColor={themeColor}
+          onReject={onReject}
+          onSign={onSignPress}
+          account={account}
+          bioType={biometricType}
+        />
       ) : undefined}
 
       {type === 'typedData' ? (
-        <SignTypedData data={typedData!} onReject={onReject} onSign={onSignPress} themeColor={themeColor} account={account} />
+        <SignTypedData
+          data={typedData!}
+          onReject={onReject}
+          onSign={onSignPress}
+          themeColor={themeColor}
+          account={account}
+          bioType={biometricType}
+        />
       ) : undefined}
 
       <Passpad themeColor={themeColor} onCodeEntered={(c) => sign(c)} onCancel={() => swiper.current?.scrollTo(0)} />

@@ -108,6 +108,7 @@
   "modal-review-fee": "交易費",
   "modal-review-button-send": "發送",
   "modal-review-button-slide-to-send": "滑動確認",
+  "modal-review-button-confirm": "確認",
   "modal-gas-review-limit": "燃料上限",
   "modal-gas-review-max-price": "燃料價格上限",
   "modal-gas-review-priority-price": "優先費",
