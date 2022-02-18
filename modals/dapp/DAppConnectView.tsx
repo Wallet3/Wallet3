@@ -93,6 +93,7 @@ export default observer(
               height: 16,
               color: network.color,
               hideEVMTitle: true,
+              symbol: network.symbol,
             })}
 
             <Text style={{ color: network.color, marginStart: 6, maxWidth: 120 }} numberOfLines={1}>

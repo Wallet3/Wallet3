@@ -100,15 +100,16 @@ export default observer(({ client, onDisconnect, onNetworkPress, onAccountsPress
             style={{ flexDirection: 'row-reverse', maxWidth: 185 }}
             contentContainerStyle={{ alignItems: 'center' }}
           >
-            {client.chains.map((c) =>
-              generateNetworkIcon({
-                color: Networks.all.find((n) => n.chainId === c)?.color,
+            {client.chains.map((c) => {
+              const network = Networks.find(c) || {};
+              return generateNetworkIcon({
+                ...network,
                 chainId: c,
                 width: 15,
                 height: 15,
                 style: { marginHorizontal: 4 },
-              })
-            )}
+              });
+            })}
           </ScrollView>
 
           <Text style={{ ...viewStyles.itemTxt, marginStart: 2, maxWidth: 100 }} numberOfLines={1}>

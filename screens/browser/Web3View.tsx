@@ -335,8 +335,7 @@ export default observer((props: Web3ViewProps) => {
                   style={{ paddingStart: 16, paddingEnd: 10, position: 'relative' }}
                 >
                   {generateNetworkIcon({
-                    chainId: appNetwork.chainId,
-                    color: `${appNetwork.color}`,
+                    ...appNetwork,
                     width: 23,
                     style: {},
                     hideEVMTitle: true,

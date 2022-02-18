@@ -1,4 +1,4 @@
-import { EVMIcon, NetworkIcons } from '../assets/icons/networks/color';
+import { EVMIcon, NetworkIcons, generateNetworkIcon } from '../assets/icons/networks/color';
 import { FlatList, ListRenderItemInfo, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeViewContainer, Separator } from '../components';
 import { useEffect, useState } from 'react';
@@ -47,7 +47,8 @@ export default observer(({ title, onNetworkPress, networks, selectedNetwork }: P
         />
 
         <View style={{ width: 32, alignItems: 'center', justifyContent: 'center', marginStart: 8 }}>
-          {NetworkIcons[item.chainId] || <EVMIcon title={item.network} color={item.color} />}
+          {NetworkIcons[item.chainId] ??
+            generateNetworkIcon({ chainId: item.chainId, color: item.color, width: 32, height: 30, symbol: item.symbol })}
         </View>
 
         <Text style={{ fontSize: 16, marginStart: 12, fontWeight: '500', color: item.color, maxWidth: 300 }} numberOfLines={1}>
