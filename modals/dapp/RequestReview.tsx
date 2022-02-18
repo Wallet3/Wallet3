@@ -66,7 +66,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
         <View style={{ ...reviewItemStyle }}>
           <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-type')}</Text>
           <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>
-            {vm.type}
+            {t(`tx-type-${vm.type.toLowerCase().replace(' ', '-')}`)}
           </Text>
         </View>
 
