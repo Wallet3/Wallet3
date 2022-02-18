@@ -62,7 +62,7 @@ export default (props: Props) => {
           justifyContent: 'center',
           alignItems: 'center',
           width: '100%',
-          paddingStart: 18,
+          paddingStart: 21,
         }}
       >
         {props.icon?.()}
