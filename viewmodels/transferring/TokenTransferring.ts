@@ -196,18 +196,22 @@ export class TokenTransferring extends BaseTransaction {
     this.toAddress = '';
     this.txException = '';
 
-    if (utils.isAddress(to)) {
+    const setToAddress = (to: string) => {
       this.toAddress = to;
       this.isResolvingAddress = false;
       this.checkToAddress();
+    };
+
+    if (utils.isAddress(to)) {
+      setToAddress(utils.getAddress(to));
       return;
     }
 
     if (this.network.addrPrefix && to.toLowerCase().startsWith(this.network.addrPrefix)) {
-      const addr = to.substring(this.network.addrPrefix.length);
-      this.toAddress = addr.startsWith('0x') ? addr : `0x${addr}`;
-      this.isResolvingAddress = false;
-      this.checkToAddress();
+      let addr = to.substring(this.network.addrPrefix.length);
+      addr = addr.startsWith('0x') ? addr : `0x${addr}`;
+
+      utils.isAddress(addr) ? setToAddress(utils.getAddress(addr)) : undefined;
       return;
     }
 
@@ -218,9 +222,7 @@ export class TokenTransferring extends BaseTransaction {
     const address = (await provider.resolveName(to)) || '';
 
     runInAction(() => {
-      this.toAddress = address;
-      this.isResolvingAddress = false;
-      this.checkToAddress();
+      setToAddress(address);
       provider.destroy();
     });
 
