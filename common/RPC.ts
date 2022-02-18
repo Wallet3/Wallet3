@@ -136,6 +136,7 @@ export async function estimateGas(
 ) {
   const urls = getUrls(chainId);
   let errorMessage = '';
+  let errors = 0;
 
   for (let url of urls) {
     try {
@@ -148,6 +149,8 @@ export async function estimateGas(
 
       if (resp.error) {
         errorMessage = resp.error.message;
+        if (errors++ > 3) break; // Speed up error checking
+
         continue;
       }
 
