@@ -24,7 +24,7 @@ export default observer((props: InpageDAppAddAsset & { close: Function }) => {
 
   return (
     <SafeAreaProvider style={{ ...styles.safeArea, backgroundColor }}>
-      <AddAsset {...props} themeColor={themeColor} approve={onApprove} reject={onReject} />
+      <AddAsset {...props} themeColor={themeColor} approve={onApprove} reject={onReject} chainId={Networks.current.chainId} />
     </SafeAreaProvider>
   );
 });

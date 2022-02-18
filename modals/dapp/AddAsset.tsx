@@ -1,9 +1,9 @@
+import { Coin, SafeViewContainer } from '../../components';
 import { Image, Text, View } from 'react-native';
 import { InpageDAppAddAsset, InpageDAppAddEthereumChain } from '../../viewmodels/hubs/InpageMetamaskDAppHub';
 
 import React from 'react';
 import RejectApproveButtons from '../components/RejectApproveButtons';
-import { SafeViewContainer } from '../../components';
 import Theme from '../../viewmodels/settings/Theme';
 import { borderColor } from '../../constants/styles';
 import { formatAddress } from '../../utils/formatter';
@@ -13,9 +13,10 @@ import { utils } from 'ethers';
 
 interface Props extends InpageDAppAddAsset {
   themeColor: string;
+  chainId: number;
 }
 
-export default ({ themeColor, approve, reject, asset }: Props) => {
+export default ({ themeColor, approve, reject, asset, chainId }: Props) => {
   const { t } = i18n;
   const { textColor, borderColor } = Theme;
 
@@ -33,9 +34,13 @@ export default ({ themeColor, approve, reject, asset }: Props) => {
         <View style={reviewItemStyle}>
           <Text style={styles.reviewItemTitle}>{t('modal-dapp-add-asset-currency')}</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Image
-              source={{ uri: Array.isArray(asset.options?.image) ? asset.options?.image[0] : asset.options?.image }}
-              style={{ width: 19, height: 19, marginEnd: 4 }}
+            <Coin
+              symbol={asset.options?.symbol}
+              iconUrl={Array.isArray(asset.options?.image) ? asset.options?.image[0] : asset.options?.image}
+              size={19}
+              chainId={chainId}
+              address={asset.options?.address || ''}
+              style={{ marginEnd: 4 }}
             />
             <Text style={{ ...reviewItemValueStyle, maxWidth: 180 }} numberOfLines={1}>
               {asset.options?.symbol}
