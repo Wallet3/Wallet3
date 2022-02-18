@@ -20,6 +20,12 @@ interface Props {
   reverse?: boolean;
 }
 
+const breath = {
+  0: { opacity: 1 },
+  0.5: { opacity: 0.25 },
+  1: { opacity: 1 },
+};
+
 export default (props: Props) => {
   const { disabled, reverse, themeColor, onLongPress, onPress, onSwipeSuccess, title } = props;
 
@@ -41,16 +47,10 @@ export default (props: Props) => {
 
   const arrowIcon = () => <Ionicons name="arrow-forward" size={19} color={backgroundColor} style={{}} />;
 
-  const breath = {
-    0: { opacity: 1 },
-    0.5: { opacity: 0.25 },
-    1: { opacity: 1 },
-  };
-
   return onSwipeSuccess ? (
     <View style={{ ...((props?.style as any) || {}), backgroundColor, borderRadius: 7, height: 42 }}>
       <Animatable.View
-        animation={breath}
+        animation={disabled ? undefined : breath}
         duration={2200}
         iterationCount={'infinite'}
         easing="ease-in-out"
@@ -61,6 +61,8 @@ export default (props: Props) => {
           height: 42,
           justifyContent: 'center',
           alignItems: 'center',
+          width: '100%',
+          paddingStart: 18,
         }}
       >
         {props.icon?.()}

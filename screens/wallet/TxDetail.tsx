@@ -44,8 +44,7 @@ export default observer(({ tx, close }: { tx?: Transaction; close?: Function }) 
         <Text style={styles.txt}>{t('modal-tx-details-network')}:</Text>
         <View style={{ flexDirection: 'row', alignItems: 'center', width: '50%', justifyContent: 'flex-end' }}>
           {generateNetworkIcon({
-            color: network.color,
-            chainId: network.chainId,
+            ...network,
             width: 16,
             height: 16,
             style: { marginEnd: 7 },

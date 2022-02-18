@@ -1,10 +1,9 @@
-import { AntDesign, Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import App from '../../viewmodels/App';
+import { AntDesign } from '@expo/vector-icons';
 import Authentication from '../../viewmodels/Authentication';
-import { BarCodeScannedCallback } from 'expo-barcode-scanner';
+import { BarCodeScanningResult } from 'expo-camera';
 import LinkHub from '../../viewmodels/hubs/LinkHub';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Scanner from '../../components/Scanner';
@@ -18,7 +17,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<{}, never
 
   const { tip } = (route.params || {}) as { tip?: string };
 
-  const handleBarCodeScanned: BarCodeScannedCallback = ({ data }) => {
+  const handleBarCodeScanned = ({ data }: BarCodeScanningResult) => {
     const handled = LinkHub.handleURL(data);
     setScanned(handled || false);
 

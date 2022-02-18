@@ -164,8 +164,7 @@ const QRView = observer(({ vm, onBack, themeColor }: Props) => {
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           {generateNetworkIcon({
-            chainId: network.chainId,
-            color: network.color,
+            ...network,
             width: 17,
             height: 17,
             style: { marginEnd: 5 },

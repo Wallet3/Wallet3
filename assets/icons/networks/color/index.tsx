@@ -6,6 +6,7 @@ import Avalanche from './avalanche.svg';
 import Boba from './boba.svg';
 import Bsc from './bsc.svg';
 import Celo from './celo.svg';
+import { Coin } from '../../../../components';
 import Cronos from './cronos.svg';
 import { Entypo } from '@expo/vector-icons';
 import Ethereum from './ethereum2.svg';
@@ -120,8 +121,9 @@ export function generateNetworkIcon(props: {
   height?: number;
   style?: StyleProp<ViewStyle>;
   hideEVMTitle?: boolean;
+  symbol?: string;
 }) {
-  const { chainId, width, height, style, color, hideEVMTitle } = props;
+  const { chainId, width, height, style, color, hideEVMTitle, symbol } = props;
 
   switch (chainId) {
     case 1:
@@ -166,7 +168,11 @@ export function generateNetworkIcon(props: {
     case 2020:
       return <Ronin key={chainId} width={width} height={height ?? width} style={style} />;
     default:
-      return <EVMIcon key={chainId} size={width} color={color!} style={style} hideEVMTitle={hideEVMTitle} />;
+      return symbol ? (
+        <Coin symbol={symbol} size={height ?? width} address="" chainId={chainId} style={style as any} />
+      ) : (
+        <EVMIcon key={chainId} size={width} color={color!} style={style} hideEVMTitle={hideEVMTitle} />
+      );
   }
 }
 

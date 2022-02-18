@@ -342,8 +342,6 @@ const SendFundsModal = () => {
       setTimeout(() => openSendModal(), 0);
     });
 
-    PubSub.subscribe('closeSendFundsModal', () => closeSendModal());
-
     PubSub.subscribe(`CodeScan-ethereum`, (_, { data }) => {
       try {
         const erc681 = parse(data) as ERC681;
@@ -378,6 +376,7 @@ const SendFundsModal = () => {
     vm?.dispose();
     setVM(undefined);
     setIsERC681(false);
+    closeSendModal();
   };
 
   return (
@@ -398,7 +397,7 @@ export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Aut
   const { ref: lockScreenRef, open: openLockScreen, close: closeLockScreen } = useModalize();
 
   const bioAuth = async () => {
-    if (!appAuth.biometricEnabled || !appAuth.biometricsSupported) return;
+    if (!appAuth.biometricEnabled || !appAuth.biometricSupported) return;
 
     const success = await appAuth.authorize();
     if (success) closeLockScreen();

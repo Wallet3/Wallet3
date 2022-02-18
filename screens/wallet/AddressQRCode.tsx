@@ -1,8 +1,9 @@
+import * as Animatable from 'react-native-animatable';
 import * as ExpoLinking from 'expo-linking';
 
 import { EvilIcons, Feather, Ionicons } from '@expo/vector-icons';
 import { Image, Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { Account } from '../../viewmodels/account/Account';
 import Avatar from '../../components/Avatar';
@@ -15,6 +16,7 @@ import Theme from '../../viewmodels/settings/Theme';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { setString } from 'expo-clipboard';
 
 export default observer(({ account }: { account?: Account }) => {
   const { t } = i18n;
@@ -23,6 +25,8 @@ export default observer(({ account }: { account?: Account }) => {
   const { address, avatar } = account || {};
   const ens = account?.ens.name;
   const [showFullAddress, setShowFullAddress] = useState(false);
+  const explorerView = useRef<Animatable.View>(null);
+
   const [etherscan] = useState(
     ExpoLinking.parse(current.explorer)
       .hostname?.split('.')
@@ -100,13 +104,21 @@ export default observer(({ account }: { account?: Account }) => {
         </View>
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <TouchableOpacity
-            onPress={() => Linking.openURL(`${current.explorer}/address/${address}`)}
-            style={{ flexDirection: 'row', alignItems: 'center' }}
-          >
-            <Text style={{ color: thirdTextColor, fontSize: 12, marginEnd: 6, textTransform: 'capitalize' }}>{etherscan}</Text>
-            <Ionicons name="open-outline" size={11} color={thirdTextColor} />
-          </TouchableOpacity>
+          <Animatable.View ref={explorerView as any}>
+            <TouchableOpacity
+              style={{ flexDirection: 'row', alignItems: 'center' }}
+              onPress={() => Linking.openURL(`${current.explorer}/address/${address}`)}
+              onLongPress={() => {
+                setString(`${current.explorer}/address/${address}`);
+                explorerView.current?.flash?.();
+              }}
+            >
+              <Text style={{ color: thirdTextColor, fontSize: 12, marginEnd: 6, textTransform: 'capitalize' }}>
+                {etherscan}
+              </Text>
+              <Ionicons name="open-outline" size={11} color={thirdTextColor} />
+            </TouchableOpacity>
+          </Animatable.View>
 
           <View style={{ height: 10, width: 1, backgroundColor: thirdTextColor, marginHorizontal: 8 }} />
 

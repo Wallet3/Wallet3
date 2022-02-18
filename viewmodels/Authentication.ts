@@ -30,7 +30,7 @@ export type BioType = 'faceid' | 'fingerprint' | 'iris';
 export class Authentication extends EventEmitter {
   private lastBackgroundTimestamp = Date.now();
 
-  biometricsSupported = false;
+  biometricSupported = false;
   supportedTypes: AuthenticationType[] = [];
   biometricEnabled = true;
 
@@ -38,7 +38,7 @@ export class Authentication extends EventEmitter {
   userSecretsVerified = false;
 
   get biometricType(): BioType | undefined {
-    if (!this.biometricsSupported || !this.biometricEnabled) return undefined;
+    if (!this.biometricSupported || !this.biometricEnabled) return undefined;
 
     switch (this.supportedTypes[0]) {
       case AuthenticationType.FINGERPRINT:
@@ -56,7 +56,7 @@ export class Authentication extends EventEmitter {
     super();
 
     makeObservable(this, {
-      biometricsSupported: observable,
+      biometricSupported: observable,
       supportedTypes: observable,
       biometricEnabled: observable,
       appAuthorized: observable,
@@ -96,7 +96,7 @@ export class Authentication extends EventEmitter {
     }
 
     runInAction(() => {
-      this.biometricsSupported = supported && enrolled;
+      this.biometricSupported = supported && enrolled;
       this.supportedTypes = supportedTypes;
       this.biometricEnabled = enableBiometrics === 'true';
       this.userSecretsVerified = userSecretsVerified === 'true';
@@ -105,7 +105,7 @@ export class Authentication extends EventEmitter {
 
   private async authenticate({ pin, options }: { pin?: string; options?: LocalAuthenticationOptions } = {}): Promise<boolean> {
     if (pin) return await this.verifyPin(pin);
-    if (!this.biometricsSupported) return false;
+    if (!this.biometricSupported) return false;
 
     const { success } = await authenticateAsync(options);
     return success;

@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import App from '../viewmodels/App';
 import Authentication from '../viewmodels/Authentication';
 import Contacts from '../viewmodels/customs/Contacts';
+import { ReactiveScreen } from '../utils/device';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Success from './views/Success';
 import Swiper from 'react-native-swiper';
@@ -16,7 +17,7 @@ import styles from './styles';
 interface Props {
   vm: TokenTransferring;
   erc681?: boolean;
-  onClose?: () => void;
+  onClose: () => void;
 }
 
 export default observer(({ vm, onClose, erc681 }: Props) => {
@@ -25,7 +26,13 @@ export default observer(({ vm, onClose, erc681 }: Props) => {
   const { backgroundColor } = Theme;
 
   useEffect(() => {
-    return () => onClose?.();
+    const close = () => onClose?.();
+    ReactiveScreen.on('change', close);
+
+    return () => {
+      close();
+      ReactiveScreen.off('change', close);
+    };
   }, []);
 
   const sendTx = async (pin?: string) => {
@@ -42,7 +49,7 @@ export default observer(({ vm, onClose, erc681 }: Props) => {
     }
 
     setVerified(true);
-    setTimeout(() => PubSub.publish('closeSendFundsModal'), 1700);
+    setTimeout(() => onClose?.(), 1700);
 
     vm.wallet?.sendTx({
       tx,

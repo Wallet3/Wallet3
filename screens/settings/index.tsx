@@ -103,7 +103,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
 
       <Text style={styles.sectionTitle}>{t('settings-security')}</Text>
 
-      {Authentication.biometricsSupported ? (
+      {Authentication.biometricSupported ? (
         <View style={styles.itemContainer}>
           <View style={styles.itemSubContainer}>
             <Ionicons name="finger-print-outline" style={styles.itemStartSymbol} size={16} color={textColor} />

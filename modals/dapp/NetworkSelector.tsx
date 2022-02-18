@@ -52,9 +52,9 @@ export default observer(({ networks, selectedChains, onDone, single }: Props) =>
       >
         <Feather name="check" color={item.color} size={15} style={{ opacity: selected.includes(item.chainId) ? 1 : 0 }} />
         {generateNetworkIcon({
-          chainId: item.chainId,
+          ...item,
           width: 23,
-          color: item.color,
+          height: 23,
           style: { marginHorizontal: 10, marginStart: item.chainId === 1 ? 9 : undefined },
         })}
 
