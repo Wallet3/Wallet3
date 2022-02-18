@@ -1,6 +1,7 @@
 import { Button, SafeViewContainer } from '../../components';
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import AnimateNumber from 'react-native-animate-number';
 import BackButton from '../components/BackButton';

@@ -1,7 +1,9 @@
 import { Button, Loader, SafeViewContainer } from '../../components';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useEffect, useRef, useState } from 'react';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Text, TextInput, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
 import { borderColor, secondaryFontColor } from '../../constants/styles';
 
 import App from '../../viewmodels/App';

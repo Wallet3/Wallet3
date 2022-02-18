@@ -1,5 +1,7 @@
 import { Button, SafeViewContainer, TextBox } from '../../components';
-import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Text, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
 import React, { useState } from 'react';
 import { emojis, genColor } from '../../utils/emoji';
 

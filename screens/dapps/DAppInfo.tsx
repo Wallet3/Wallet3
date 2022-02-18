@@ -1,5 +1,6 @@
 import { Button, SafeViewContainer } from '../../components';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { Account } from '../../viewmodels/account/Account';
 import Avatar from '../../components/Avatar';

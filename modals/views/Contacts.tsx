@@ -1,7 +1,9 @@
 import Contacts, { IContact } from '../../viewmodels/customs/Contacts';
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
-import { ListRenderItemInfo, NativeSyntheticEvent, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
+import { ListRenderItemInfo, NativeSyntheticEvent, Text, TouchableHighlight, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeViewContainer, Skeleton, TextBox } from '../../components';
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';

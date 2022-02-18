@@ -1,6 +1,8 @@
 import { Button, Coin, Numpad, SafeViewContainer } from '../../components';
 import React, { useEffect, useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
 import { numericFontFamily, secondaryFontColor } from '../../constants/styles';
 
 import BackButton from '../components/BackButton';

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Text, TouchableHighlight, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
 import Enumerable from 'linq';

@@ -1,4 +1,6 @@
-import { Dimensions, Image, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Image, Text, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
 import React, { useEffect, useState } from 'react';
 
 import { FlatGrid } from 'react-native-super-grid';

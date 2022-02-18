@@ -1,7 +1,8 @@
 import * as Animatable from 'react-native-animatable';
 
 import React, { useRef } from 'react';
-import { StyleProp, TextStyle, TouchableOpacity, ViewStyle } from 'react-native';
+import { StyleProp, TextStyle, ViewStyle } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { Feather } from '@expo/vector-icons';
 import { setString } from 'expo-clipboard';

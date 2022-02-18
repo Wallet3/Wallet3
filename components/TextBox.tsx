@@ -1,5 +1,7 @@
 import React, { useRef, useState } from 'react';
-import { StyleProp, Text, TextInput, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { StyleProp, Text, TextInput, View, ViewStyle } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
 import { borderColor, fontColor, secondaryFontColor } from '../constants/styles';
 
 import { Ionicons } from '@expo/vector-icons';

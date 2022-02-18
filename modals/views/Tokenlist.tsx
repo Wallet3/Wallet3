@@ -1,5 +1,6 @@
 import { Coin, SafeViewContainer } from '../../components';
-import { FlatList, ListRenderItemInfo, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, ListRenderItemInfo, Text, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import BackButton from '../components/BackButton';
 import { INetwork } from '../../common/Networks';

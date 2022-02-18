@@ -1,5 +1,6 @@
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
-import { Image, ListRenderItemInfo, NativeSyntheticEvent, Share, Text, TouchableOpacity } from 'react-native';
+import { Image, ListRenderItemInfo, NativeSyntheticEvent, Share, Text } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { Bookmark } from '../../../viewmodels/customs/Bookmarks';
 import CachedImage from 'react-native-expo-cached-image';

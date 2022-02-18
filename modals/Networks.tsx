@@ -1,5 +1,7 @@
 import { EVMIcon, NetworkIcons, generateNetworkIcon } from '../assets/icons/networks/color';
-import { FlatList, ListRenderItemInfo, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, ListRenderItemInfo, SafeAreaView, ScrollView, Text, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
 import { SafeViewContainer, Separator } from '../components';
 import { useEffect, useState } from 'react';
 
