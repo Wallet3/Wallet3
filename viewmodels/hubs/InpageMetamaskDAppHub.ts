@@ -461,8 +461,10 @@ export class InpageMetamaskDAppHub extends EventEmitter {
     const dapp = await this.getDApp(origin);
     if (!dapp) return;
 
-    dapp.lastUsedChainId = `${chainId}`;
-    dapp.save();
+    try {
+      dapp.lastUsedChainId = `${chainId}`;
+      dapp.save();
+    } catch (error) {}
 
     this.emit('appChainUpdated_metamask', {
       origin,
@@ -479,8 +481,10 @@ export class InpageMetamaskDAppHub extends EventEmitter {
     const dapp = await this.getDApp(origin);
     if (!dapp) return;
 
-    dapp.lastUsedAccount = account;
-    dapp.save();
+    try {
+      dapp.lastUsedAccount = account;
+      dapp.save();
+    } catch (error) {}
 
     this.emit('appAccountUpdated_metamask', {
       origin,
@@ -493,19 +497,18 @@ export class InpageMetamaskDAppHub extends EventEmitter {
     });
   }
 
-  async removeAccount(address: string) {
-    const items = await this.dbTable.find({ where: { lastUsedAccount: address } });
-    items.forEach((i) => this.apps.delete(i.origin));
-    await this.dbTable.remove(items);
-  }
-
   reset() {
     this.apps.clear();
+  }
+
+  static async removeAccount(address: string) {
+    const dbTable = Database.inpageDApps;
+    const items = await dbTable.find({ where: { lastUsedAccount: address } });
+    // items.forEach((i) => this.apps.delete(i.origin));
+    await dbTable.remove(items);
   }
 
   static reset() {
     return Database.inpageDApps.clear();
   }
 }
-
-// export default new InpageMetamaskDAppHub();
