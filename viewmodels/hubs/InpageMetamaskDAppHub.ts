@@ -9,6 +9,7 @@ import { Account } from '../account/Account';
 import App from '../App';
 import Database from '../../models/Database';
 import DeviceInfo from 'react-native-device-info';
+import { ERC20Token } from '../../models/ERC20';
 import EventEmitter from 'events';
 import { INetwork } from '../../common/Networks';
 import InpageDApp from '../../models/InpageDApp';
@@ -405,11 +406,22 @@ export class InpageMetamaskDAppHub extends EventEmitter {
       const approve = async () => {
         const chainId = Number(dapp?.lastUsedChainId || Networks.current.chainId);
 
-        const code = await getCode(chainId, asset.options.address);
+        try {
+          const testToken = new ERC20Token({
+            contract: asset.options.address,
+            chainId,
+            owner: dapp?.lastUsedAccount || App.currentAccount!.address,
+          });
 
-        if (code === '0x' || !code) {
-          showMessage({ message: i18n.t('msg-asset-can-not-added'), type: 'warning' });
-          resolve({ error: { code: 1, message: 'Invalid address' } });
+          const [n, s] = await Promise.all([testToken.getName(), testToken.getSymbol()]);
+
+          if (!n && !s) {
+            showMessage({ message: i18n.t('msg-asset-can-not-added'), type: 'warning' });
+            resolve({ error: { code: 1, message: 'Invalid address' } });
+            return;
+          }
+        } catch (error) {
+          showMessage({ message: JSON.stringify(error), type: 'warning' });
           return;
         }
 

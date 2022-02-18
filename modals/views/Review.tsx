@@ -165,7 +165,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
 
       <Button
         title={sendTitle}
-        themeColor={vm.hasZWSP ? 'crimson' : vm.network.color}
+        themeColor={vm.hasZWSP || vm.isContractRecipient ? 'crimson' : vm.network.color}
         disabled={!vm.isValidParams || busy}
         onPress={onSendPress}
         onLongPress={onLongSendPress}

@@ -181,7 +181,7 @@ export class TokenTransferring extends BaseTransaction {
 
   async checkToAddress() {
     const code = await getCode(this.network.chainId, this.toAddress);
-    runInAction(() => (this.isContractRecipient = (code?.length || 0) > 2));
+    runInAction(() => (this.isContractRecipient = code !== '0x'));
   }
 
   async setTo(to?: string, avatar?: string) {
