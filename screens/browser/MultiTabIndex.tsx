@@ -189,9 +189,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
         initialScrollIndex={0}
         keyboardShouldPersistTaps={persistentKeyboard}
         onScrollToIndexFailed={({ index }) => {
-          new Promise((resolve) => setTimeout(resolve, 200)).then(() =>
-            swiper.current?.scrollToIndex({ index, animated: true })
-          );
+          console.error('onScrollToIndexFailed', index);
         }}
       />
 

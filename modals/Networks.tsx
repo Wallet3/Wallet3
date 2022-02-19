@@ -1,7 +1,7 @@
 import { EVMIcon, NetworkIcons, generateNetworkIcon } from '../assets/icons/networks/color';
 import { FlatList, ListRenderItemInfo, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeViewContainer, Separator } from '../components';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Feather } from '@expo/vector-icons';
 import { INetwork } from '../common/Networks';
@@ -25,13 +25,29 @@ export default observer(({ title, onNetworkPress, networks, selectedNetwork }: P
   const { t } = i18n;
   const { backgroundColor, secondaryTextColor, borderColor } = Theme;
   const [nets, setNets] = useState<INetwork[]>();
+  const flatList = useRef<FlatList>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => setNets(networks ?? Networks.all), 25);
+
     return () => {
       clearTimeout(timer);
     };
   }, [networks]);
+
+  useEffect(() => {
+    const jumpTimer = setTimeout(() => {
+      const index =
+        (networks || Networks.all)?.findIndex((n) => n.chainId === (selectedNetwork || Networks.current).chainId) ?? 0;
+      if (index < 0) return;
+
+      flatList.current?.scrollToIndex({ animated: true, index });
+    }, 200);
+
+    return () => {
+      clearTimeout(jumpTimer);
+    };
+  }, []);
 
   const renderItem = ({ item }: ListRenderItemInfo<INetwork>) => {
     return (
@@ -75,11 +91,13 @@ export default observer(({ title, onNetworkPress, networks, selectedNetwork }: P
           </Text>
           <Separator style={{ marginVertical: 4, backgroundColor: borderColor }} />
           <FlatList
+            ref={flatList}
             keyExtractor={(i) => i.network}
             data={nets}
             renderItem={renderItem}
             contentContainerStyle={{ paddingBottom: 36 }}
             style={{ marginHorizontal: -16, paddingHorizontal: 16, marginTop: -4, marginBottom: -36 }}
+            onScrollToIndexFailed={({}) => {}}
           />
         </SafeViewContainer>
       </Swiper>

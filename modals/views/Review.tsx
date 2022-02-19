@@ -12,6 +12,7 @@ import GasReview from './GasReview';
 import Image from 'react-native-expo-cached-image';
 import InsufficientFee from '../components/InsufficientFee';
 import Networks from '../../viewmodels/Networks';
+import { ReactiveScreen } from '../../utils/device';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
 import { TokenTransferring } from '../../viewmodels/transferring/TokenTransferring';
@@ -69,7 +70,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
           <Text style={styles.reviewItemTitle}>{t('modal-review-send')}</Text>
 
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-            <Text style={{ ...reviewItemValueStyle, marginEnd: 8, maxWidth: 200 }} numberOfLines={1}>
+            <Text style={{ ...reviewItemValueStyle, marginEnd: 8, maxWidth: ReactiveScreen.width - 180 }} numberOfLines={1}>
               {vm.amount}
             </Text>
 
