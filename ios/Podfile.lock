@@ -291,7 +291,7 @@ PODS:
     - React
   - react-native-randombytes (3.6.1):
     - React-Core
-  - react-native-safe-area-context (3.4.0):
+  - react-native-safe-area-context (3.4.1):
     - React-Core
   - react-native-view-shot (3.1.2):
     - React
@@ -694,7 +694,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 34e23860273a23695342f58eed3ffd3ba10c31e0
   react-native-context-menu-view: 50aca3f8790ac4b52b6e2385a9378678f69b1e6a
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
-  react-native-safe-area-context: f4f7cc09d81ae2d39dfd13e764d718969af07080
+  react-native-safe-area-context: 9e40fb181dac02619414ba1294d6c2a807056ab9
   react-native-view-shot: 4475fde003fe8a210053d1f98fb9e06c1d834e1c
   react-native-webview: 380c1a03ec94b7ed764dac8db1e7c9952d08c93a
   React-perflogger: cc76a4254d19640f1d8ad1c66fdee800414b805c
