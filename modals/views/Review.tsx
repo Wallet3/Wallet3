@@ -69,10 +69,10 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
           <Text style={styles.reviewItemTitle}>{t('modal-review-send')}</Text>
 
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-            <Text style={{ ...reviewItemValueStyle, marginEnd: 8, maxWidth: '50%' }} numberOfLines={1}>
+            <Text style={{ ...reviewItemValueStyle, marginEnd: 8, maxWidth: 200 }} numberOfLines={1}>
               {vm.amount}
             </Text>
-            <Text style={{ ...reviewItemValueStyle, marginEnd: 8 }}>{vm.token.symbol}</Text>
+
             <Coin
               address={vm.token.address}
               chainId={vm.network.chainId}
@@ -80,6 +80,8 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
               forceRefresh
               iconUrl={vm.token?.iconUrl}
             />
+
+            <Text style={{ ...reviewItemValueStyle, marginStart: 8 }}>{vm.token.symbol}</Text>
           </View>
         </View>
 
