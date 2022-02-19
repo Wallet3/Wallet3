@@ -546,6 +546,7 @@ export const Browser = observer(
                 />
 
                 <RecentHistory
+                  disableContextMenu
                   onItemPress={(url) => {
                     goTo(url);
                     closeFavs();

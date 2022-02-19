@@ -16,9 +16,10 @@ interface Props {
   onItemPress?: (url: string) => void;
   tabCount?: number;
   onTabsPress?: () => void;
+  disableContextMenu?: boolean;
 }
 
-export default observer(({ onItemPress, tabCount, onTabsPress }: Props) => {
+export default observer(({ onItemPress, tabCount, onTabsPress, disableContextMenu }: Props) => {
   const { backgroundColor, borderColor, systemBorderColor, foregroundColor, isLightMode, mode, tintColor } = Theme;
   const { t } = i18n;
   const { recentSites } = Bookmarks;
@@ -85,7 +86,7 @@ export default observer(({ onItemPress, tabCount, onTabsPress }: Props) => {
             return (
               <ContextMenu
                 key={item.origin}
-                actions={actions}
+                actions={disableContextMenu ? [] : actions}
                 onPress={onActionPress}
                 previewBackgroundColor={backgroundColor}
               >
