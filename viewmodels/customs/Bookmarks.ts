@@ -153,6 +153,8 @@ export function isSecureSite(url: string) {
 }
 
 export function isRiskySite(url: string) {
+  if (!url) return false;
+
   try {
     return RiskySet.has(Linking.parse(url).hostname || '');
   } catch (error) {}
