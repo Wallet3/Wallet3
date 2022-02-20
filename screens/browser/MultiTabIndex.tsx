@@ -53,6 +53,10 @@ export class StateViewModel {
   genId() {
     return ++this._id;
   }
+
+  findBlankPageIndex() {
+    return Array.from(this.pageMetas).findIndex(([id, meta]) => meta === undefined);
+  }
 }
 
 export default observer((props: BottomTabScreenProps<{}, never>) => {
@@ -66,7 +70,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
 
   const [tabBarHeight] = useState(useBottomTabBarHeight());
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
-  const { ref: tabsRef, open: openTabs, close: closeTabs } = useModalize();
+  const { ref: tabsRef, open: openTabs, close: closeTabsModal } = useModalize();
 
   const generateBrowserTab = (id: number, props: BottomTabScreenProps<{}, never>, onNewTab: () => void) => (
     <Browser
@@ -91,6 +95,13 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
   );
 
   const newTab = () => {
+    const index = state.findBlankPageIndex();
+
+    if (index >= 0) {
+      swiper.current?.scrollToIndex({ index, animated: true });
+      return;
+    }
+
     const id = state.genId();
     const tabView = generateBrowserTab(id, props, newTab);
 
@@ -206,11 +217,11 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
             activeIndex={activePageIndex}
             onNewTab={() => {
               newTab();
-              closeTabs();
+              closeTabsModal();
             }}
             onJumpToPage={(index) => {
               swiper.current?.scrollToIndex({ index, animated: true });
-              closeTabs();
+              closeTabsModal();
             }}
             onRemovePage={(pageId) => {
               const pageIndexToBeRemoved = Array.from(state.pageMetas.keys()).findIndex((i) => i === pageId);
@@ -252,13 +263,13 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
                   removeTab();
                 }, 500);
 
-                closeTabs();
+                closeTabsModal();
                 return;
               }
 
               removeTab();
 
-              if (tabs.size === 1) closeTabs();
+              if (tabs.size === 1) closeTabsModal();
             }}
           />
         </Modalize>
