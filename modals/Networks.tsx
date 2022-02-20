@@ -13,15 +13,17 @@ import Theme from '../viewmodels/settings/Theme';
 import i18n from '../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
+import ContextMenu from 'react-native-context-menu-view';
 
 interface Props {
   onNetworkPress?: (network: INetwork) => void;
   networks?: INetwork[];
   selectedNetwork?: INetwork | null;
   title?: string;
+  useContextMenu?: boolean;
 }
 
-export default observer(({ title, onNetworkPress, networks, selectedNetwork }: Props) => {
+export default observer(({ title, onNetworkPress, networks, selectedNetwork, useContextMenu }: Props) => {
   const { t } = i18n;
   const { backgroundColor, secondaryTextColor, borderColor } = Theme;
   const [nets, setNets] = useState<INetwork[]>();
@@ -52,7 +54,7 @@ export default observer(({ title, onNetworkPress, networks, selectedNetwork }: P
   const renderItem = ({ item }: ListRenderItemInfo<INetwork>) => {
     return (
       <TouchableOpacity
-        style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 9 }}
+        style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 9, paddingHorizontal: 16 }}
         onPress={() => onNetworkPress?.(item)}
       >
         <Feather
@@ -82,6 +84,16 @@ export default observer(({ title, onNetworkPress, networks, selectedNetwork }: P
     );
   };
 
+  const renderContextMenuItem = (props: ListRenderItemInfo<INetwork>) => {
+    const { item } = props;
+    const actions = [
+      { title: t('button-edit'), systemIcon: 'square.and.pencil' },
+      { title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' },
+    ];
+
+    return <ContextMenu actions={item.isUserAdded ? actions : undefined}>{renderItem(props)}</ContextMenu>;
+  };
+
   return (
     <SafeAreaProvider style={{ ...styles.safeArea, backgroundColor }}>
       <Swiper scrollEnabled={false}>
@@ -94,9 +106,9 @@ export default observer(({ title, onNetworkPress, networks, selectedNetwork }: P
             ref={flatList}
             keyExtractor={(i) => i.network}
             data={nets}
-            renderItem={renderItem}
+            renderItem={useContextMenu ? renderContextMenuItem : renderItem}
             contentContainerStyle={{ paddingBottom: 36 }}
-            style={{ marginHorizontal: -16, paddingHorizontal: 16, marginTop: -4, marginBottom: -36 }}
+            style={{ marginHorizontal: -16, marginTop: -4, marginBottom: -36 }}
             onScrollToIndexFailed={({}) => {}}
           />
         </SafeViewContainer>

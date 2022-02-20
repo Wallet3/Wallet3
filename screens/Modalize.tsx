@@ -272,6 +272,7 @@ const GlobalNetworksMenuModal = () => {
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
       <NetworksMenu
+        useContextMenu
         onNetworkPress={(network) => {
           closeNetworksModal();
           Networks.switch(network);

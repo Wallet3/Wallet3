@@ -28,7 +28,6 @@ export interface AddEthereumChainParameter {
 
 class Networks {
   current: INetwork = PublicNetworks[0];
-  cache = new Map<number, ethers.providers.JsonRpcProvider | ethers.providers.WebSocketProvider>();
   userChains: INetwork[] = [];
 
   get Ethereum() {
@@ -78,6 +77,7 @@ class Networks {
             network: c.name,
             rpcUrls: c.rpcUrls,
             eip1559: c.customize?.eip1559,
+            isUserAdded: true,
           };
         });
     });
@@ -138,6 +138,7 @@ class Networks {
         symbol: nc.symbol,
         rpcUrls: chain.rpcUrls,
         eip1559: nc.customize?.eip1559,
+        isUserAdded: true,
       });
     });
 
@@ -146,26 +147,8 @@ class Networks {
     return true;
   }
 
-  get currentProvider() {
-    const chainId = this.current.chainId;
-
-    if (this.cache.has(chainId)) {
-      return this.cache.get(chainId)!;
-    }
-
-    const [url] = providers[chainId] as string[];
-
-    const provider = url.startsWith('ws')
-      ? new ethers.providers.WebSocketProvider(url, chainId)
-      : new ethers.providers.JsonRpcProvider(url, chainId);
-
-    this.cache.set(chainId, provider);
-
-    return provider;
-  }
-
   get MainnetWsProvider() {
-    const [ws] = providers[1] as string[];
+    const [ws] = providers['1'] as string[];
     const provider = new ethers.providers.WebSocketProvider(ws, 1);
 
     return provider;

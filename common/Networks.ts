@@ -31,6 +31,7 @@ export interface INetwork {
   rpcUrls?: string[];
   addrPrefix?: string;
   github_dir?: string;
+  isUserAdded?: boolean;
 }
 
 export const PublicNetworks: INetwork[] = [
