@@ -151,11 +151,13 @@ export const WebTabs = ({
   onRemovePage,
   onNewTab,
   activeIndex,
+  onRemoveAll,
 }: {
   globalState: StateViewModel;
   onJumpToPage: (listIndex: number) => void;
   onRemovePage: (pageId: number) => void;
   onNewTab: () => void;
+  onRemoveAll: () => void;
   activeIndex: number;
 }) => {
   const { backgroundColor, thirdTextColor, tintColor } = Theme;
@@ -188,6 +190,7 @@ export const WebTabs = ({
         }}
       >
         <TouchableOpacity
+          onPress={onRemoveAll}
           style={{
             padding: 8,
             borderRadius: 10,
