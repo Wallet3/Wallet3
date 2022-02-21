@@ -17,21 +17,27 @@ import styles from './styles';
 interface Props {
   vm: TokenTransferring;
   erc681?: boolean;
-  onClose: () => void;
+  onClose?: () => void;
 }
 
 export default observer(({ vm, onClose, erc681 }: Props) => {
   const [verified, setVerified] = useState(false);
   const swiper = useRef<Swiper>(null);
   const { backgroundColor } = Theme;
+  const [active] = useState({ index: 0 });
 
   useEffect(() => {
-    const close = () => onClose?.();
-    ReactiveScreen.on('change', close);
+    const jump = () =>
+      setTimeout(() => {
+        try {
+          verified ? undefined : swiper.current?.scrollTo(Math.max(0, active.index - 1));
+        } catch {}
+      }, 100);
+
+    ReactiveScreen.on('change', jump);
 
     return () => {
-      close();
-      ReactiveScreen.off('change', close);
+      ReactiveScreen.off('change', jump);
     };
   }, []);
 
@@ -97,6 +103,7 @@ export default observer(({ vm, onClose, erc681 }: Props) => {
           showsButtons={false}
           scrollEnabled={false}
           loop={false}
+          onIndexChanged={(index) => (active.index = index)}
           automaticallyAdjustContentInsets
         >
           {erc681 ? undefined : <ContactsPad onNext={() => swiper.current?.scrollTo(1, true)} vm={vm} />}
