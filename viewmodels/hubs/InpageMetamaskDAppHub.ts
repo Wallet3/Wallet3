@@ -360,8 +360,14 @@ export class InpageMetamaskDAppHub extends EventEmitter {
 
     const chain = params[0];
 
-    if (!Array.isArray(chain.rpcUrls) || !Array.isArray(chain.blockExplorerUrls) || !chain.nativeCurrency)
+    if (
+      !Array.isArray(chain.rpcUrls) ||
+      !Array.isArray(chain.blockExplorerUrls) ||
+      !chain.nativeCurrency ||
+      !Number.isInteger(Number(chain.chainId))
+    ) {
       return { error: { message: 'Invalid request' } };
+    }
 
     if (Networks.has(chain.chainId)) {
       setTimeout(() => this.wallet_switchEthereumChain(origin, [{ chainId: chain.chainId }]), 200);

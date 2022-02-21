@@ -3,7 +3,7 @@ import { FlatList, ListRenderItemInfo, SafeAreaView, ScrollView, Text, View } fr
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { SafeViewContainer, Separator } from '../components';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Feather } from '@expo/vector-icons';
 import { INetwork } from '../common/Networks';
@@ -15,30 +15,48 @@ import Theme from '../viewmodels/settings/Theme';
 import i18n from '../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
+import ContextMenu from 'react-native-context-menu-view';
 
 interface Props {
   onNetworkPress?: (network: INetwork) => void;
   networks?: INetwork[];
   selectedNetwork?: INetwork | null;
   title?: string;
+  useContextMenu?: boolean;
 }
 
-export default observer(({ title, onNetworkPress, networks, selectedNetwork }: Props) => {
+export default observer(({ title, onNetworkPress, networks, selectedNetwork, useContextMenu }: Props) => {
   const { t } = i18n;
   const { backgroundColor, secondaryTextColor, borderColor } = Theme;
   const [nets, setNets] = useState<INetwork[]>();
+  const flatList = useRef<FlatList>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => setNets(networks ?? Networks.all), 25);
+
     return () => {
       clearTimeout(timer);
     };
   }, [networks]);
 
+  useEffect(() => {
+    const jumpTimer = setTimeout(() => {
+      const index =
+        (networks || Networks.all)?.findIndex((n) => n.chainId === (selectedNetwork || Networks.current).chainId) ?? 0;
+      if (index < 0) return;
+
+      flatList.current?.scrollToIndex({ animated: true, index });
+    }, 200);
+
+    return () => {
+      clearTimeout(jumpTimer);
+    };
+  }, []);
+
   const renderItem = ({ item }: ListRenderItemInfo<INetwork>) => {
     return (
       <TouchableOpacity
-        style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 9 }}
+        style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 9, paddingHorizontal: 16 }}
         onPress={() => onNetworkPress?.(item)}
       >
         <Feather
@@ -68,20 +86,32 @@ export default observer(({ title, onNetworkPress, networks, selectedNetwork }: P
     );
   };
 
+  const renderContextMenuItem = (props: ListRenderItemInfo<INetwork>) => {
+    const { item } = props;
+    const actions = [
+      { title: t('button-edit'), systemIcon: 'square.and.pencil' },
+      { title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' },
+    ];
+
+    return <ContextMenu actions={item.isUserAdded ? actions : undefined}>{renderItem(props)}</ContextMenu>;
+  };
+
   return (
     <SafeAreaProvider style={{ ...styles.safeArea, backgroundColor }}>
       <Swiper scrollEnabled={false}>
-        <SafeViewContainer style={{ padding: 16 }}>
-          <Text style={{ color: secondaryTextColor }} numberOfLines={1}>
+        <SafeViewContainer style={{ padding: 16, paddingTop: 12 }}>
+          <Text style={{ color: secondaryTextColor, paddingBottom: 2 }} numberOfLines={1}>
             {title ?? t('modal-networks-switch')}
           </Text>
           <Separator style={{ marginVertical: 4, backgroundColor: borderColor }} />
           <FlatList
+            ref={flatList}
             keyExtractor={(i) => i.network}
             data={nets}
-            renderItem={renderItem}
+            renderItem={useContextMenu ? renderContextMenuItem : renderItem}
             contentContainerStyle={{ paddingBottom: 36 }}
-            style={{ marginHorizontal: -16, paddingHorizontal: 16, marginTop: -4, marginBottom: -36 }}
+            style={{ marginHorizontal: -16, marginTop: -4, marginBottom: -36 }}
+            onScrollToIndexFailed={({}) => {}}
           />
         </SafeViewContainer>
       </Swiper>

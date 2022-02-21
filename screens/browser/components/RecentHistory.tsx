@@ -6,6 +6,7 @@ import { LayoutAnimation, NativeSyntheticEvent, ScrollView, Text, View } from 'r
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import Bookmarks from '../../../viewmodels/customs/Bookmarks';
+import { FlatList } from 'react-native-gesture-handler';
 import { NullableImage } from '../../../components';
 import React from 'react';
 import Theme from '../../../viewmodels/settings/Theme';
@@ -16,13 +17,14 @@ interface Props {
   onItemPress?: (url: string) => void;
   tabCount?: number;
   onTabsPress?: () => void;
+  disableContextMenu?: boolean;
 }
 
-export default observer(({ onItemPress, tabCount, onTabsPress }: Props) => {
+export default observer(({ onItemPress, tabCount, onTabsPress, disableContextMenu }: Props) => {
   const { backgroundColor, borderColor, systemBorderColor, foregroundColor, isLightMode, mode, tintColor } = Theme;
   const { t } = i18n;
-  const actions = [{ title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' }];
   const { recentSites } = Bookmarks;
+  const actions = [{ title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' }];
 
   return (
     <Animatable.View animation={'fadeInUp'}>
@@ -63,8 +65,14 @@ export default observer(({ onItemPress, tabCount, onTabsPress }: Props) => {
           </View>
         )}
 
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 5 }}>
-          {recentSites.map((item, index) => {
+        <FlatList
+          data={recentSites}
+          horizontal
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 5 }}
+          keyExtractor={(item) => item.origin}
+          renderItem={({ item, index }) => {
             const onActionPress = (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => {
               const { index } = e.nativeEvent;
 
@@ -79,7 +87,7 @@ export default observer(({ onItemPress, tabCount, onTabsPress }: Props) => {
             return (
               <ContextMenu
                 key={item.origin}
-                actions={actions}
+                actions={disableContextMenu ? [] : actions}
                 onPress={onActionPress}
                 previewBackgroundColor={backgroundColor}
               >
@@ -112,8 +120,8 @@ export default observer(({ onItemPress, tabCount, onTabsPress }: Props) => {
                 </TouchableOpacity>
               </ContextMenu>
             );
-          })}
-        </ScrollView>
+          }}
+        />
       </View>
     </Animatable.View>
   );

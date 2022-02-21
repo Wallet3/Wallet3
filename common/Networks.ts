@@ -31,6 +31,7 @@ export interface INetwork {
   rpcUrls?: string[];
   addrPrefix?: string;
   github_dir?: string;
+  isUserAdded?: boolean;
 }
 
 export const PublicNetworks: INetwork[] = [
@@ -151,6 +152,15 @@ export const PublicNetworks: INetwork[] = [
     explorer: 'https://ftmscan.com',
   },
   {
+    symbol: 'ONE',
+    comm_id: 'harmony',
+    network: 'Harmony',
+    chainId: 1666600000,
+    explorer: 'https://explorer.harmony.one',
+    color: '#00aee9',
+    defaultTokens: [],
+  },
+  {
     symbol: 'CELO',
     comm_id: 'celo',
     chainId: 42220,
@@ -173,15 +183,6 @@ export const PublicNetworks: INetwork[] = [
     blockTimeMs: 5 * 1000,
     explorer: 'https://snowtrace.io',
     github_dir: 'avalanchec',
-  },
-  {
-    symbol: 'ONE',
-    comm_id: 'harmony',
-    network: 'Harmony',
-    chainId: 1666600000,
-    explorer: 'https://explorer.harmony.one',
-    color: '#00aee9',
-    defaultTokens: [],
   },
   {
     symbol: 'MOVR',

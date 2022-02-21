@@ -3,6 +3,11 @@ PODS:
   - DoubleConversion (1.1.6)
   - EXApplication (4.0.2):
     - ExpoModulesCore
+  - EXBarCodeScanner (11.2.1):
+    - EXImageLoader
+    - ExpoModulesCore
+    - ZXingObjC/OneD
+    - ZXingObjC/PDF417
   - EXBlur (11.0.0):
     - ExpoModulesCore
   - EXCamera (12.1.2):
@@ -19,6 +24,9 @@ PODS:
     - ExpoModulesCore
   - EXFont (10.0.5):
     - ExpoModulesCore
+  - EXImageLoader (3.1.1):
+    - ExpoModulesCore
+    - React-Core
   - EXJSONUtils (0.2.0)
   - EXKeepAwake (10.0.2):
     - ExpoModulesCore
@@ -266,7 +274,7 @@ PODS:
     - React
   - react-native-randombytes (3.6.1):
     - React-Core
-  - react-native-safe-area-context (3.4.0):
+  - react-native-safe-area-context (3.4.1):
     - React-Core
   - react-native-view-shot (3.1.2):
     - React
@@ -382,10 +390,16 @@ PODS:
   - TcpSockets (4.0.0):
     - React
   - Yoga (1.14.0)
+  - ZXingObjC/Core (3.6.5)
+  - ZXingObjC/OneD (3.6.5):
+    - ZXingObjC/Core
+  - ZXingObjC/PDF417 (3.6.5):
+    - ZXingObjC/Core
 
 DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - EXApplication (from `../node_modules/expo-application/ios`)
+  - EXBarCodeScanner (from `../node_modules/expo-barcode-scanner/ios`)
   - EXBlur (from `../node_modules/expo-blur/ios`)
   - EXCamera (from `../node_modules/expo-camera/ios`)
   - EXClipboard (from `../node_modules/expo-clipboard/ios`)
@@ -394,6 +408,7 @@ DEPENDENCIES:
   - EXErrorRecovery (from `../node_modules/expo-error-recovery/ios`)
   - EXFileSystem (from `../node_modules/expo-file-system/ios`)
   - EXFont (from `../node_modules/expo-font/ios`)
+  - EXImageLoader (from `../node_modules/expo-image-loader/ios`)
   - EXJSONUtils (from `../node_modules/expo-json-utils/ios`)
   - EXKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - EXLocalAuthentication (from `../node_modules/expo-local-authentication/ios`)
@@ -460,12 +475,15 @@ SPEC REPOS:
   trunk:
     - boost-for-react-native
     - lottie-ios
+    - ZXingObjC
 
 EXTERNAL SOURCES:
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   EXApplication:
     :path: "../node_modules/expo-application/ios"
+  EXBarCodeScanner:
+    :path: "../node_modules/expo-barcode-scanner/ios"
   EXBlur:
     :path: "../node_modules/expo-blur/ios"
   EXCamera:
@@ -482,6 +500,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-file-system/ios"
   EXFont:
     :path: "../node_modules/expo-font/ios"
+  EXImageLoader:
+    :path: "../node_modules/expo-image-loader/ios"
   EXJSONUtils:
     :path: "../node_modules/expo-json-utils/ios"
   EXKeepAwake:
@@ -605,6 +625,7 @@ SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   EXApplication: 54fe5bd6268d697771645e8f1aef8b806a65247a
+  EXBarCodeScanner: e5ca0062d8ad1c4c1d2e386d6a308d5a32213020
   EXBlur: 82055865de17cf2cf797ff064c50fb59fcbe703f
   EXCamera: 4a0d00d6d1e4703c31a75514d8bc804a2eab27bd
   EXClipboard: 8123fcda680538bb0e1f4e6511106553e52d3760
@@ -613,6 +634,7 @@ SPEC CHECKSUMS:
   EXErrorRecovery: b0d7582714a2cc896e94a2308a356f94dbf14ef7
   EXFileSystem: 99aac7962c11c680681819dd9cbca24e20e5b1e7
   EXFont: 2597c10ac85a69d348d44d7873eccf5a7576ef5e
+  EXImageLoader: 347b72c2ec2df65120ccec40ea65a4c4f24317ff
   EXJSONUtils: f515cf71710855d7ba5bfc6752af3b9a6f6aad01
   EXKeepAwake: bf48d7f740a5cd2befed6cf9a49911d385c6c47d
   EXLocalAuthentication: 3c5f368ee954b79c3778158eb8000cbce4e2f8a2
@@ -648,7 +670,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 34e23860273a23695342f58eed3ffd3ba10c31e0
   react-native-context-menu-view: 50aca3f8790ac4b52b6e2385a9378678f69b1e6a
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
-  react-native-safe-area-context: f4f7cc09d81ae2d39dfd13e764d718969af07080
+  react-native-safe-area-context: 9e40fb181dac02619414ba1294d6c2a807056ab9
   react-native-view-shot: 4475fde003fe8a210053d1f98fb9e06c1d834e1c
   react-native-webview: 380c1a03ec94b7ed764dac8db1e7c9952d08c93a
   React-perflogger: cc76a4254d19640f1d8ad1c66fdee800414b805c
@@ -673,6 +695,7 @@ SPEC CHECKSUMS:
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   TcpSockets: 4ef55305239923b343ed0a378b1fac188b1373b0
   Yoga: e6ecf3fa25af9d4c87e94ad7d5d292eedef49749
+  ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
 PODFILE CHECKSUM: 96e05ca4d046427cf00171440cec777f0cb76233
 

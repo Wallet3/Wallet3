@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Networks from '../Networks';
 
 const LightTheme = {
-  backgroundColor: '#fff',
+  backgroundColor: '#ffffff',
   foregroundColor: '#000000',
   textColor: '#333333',
   secondaryTextColor: '#999999',

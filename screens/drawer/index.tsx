@@ -66,7 +66,7 @@ const Drawer = observer((props: DrawerProps) => {
 
   const navigateTo = (route: string) => {
     navigation.navigate(route);
-    setTimeout(() => navigation.dispatch(DrawerActions.closeDrawer()), 0);
+    setTimeout(() => navigation.dispatch(DrawerActions.closeDrawer()), 25);
   };
 
   return (

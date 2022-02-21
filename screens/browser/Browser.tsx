@@ -447,6 +447,20 @@ export const Browser = observer(
             tabCount={globalState?.pageCount}
             onTabPress={onOpenTabs}
             source={{ uri }}
+            onLoadStart={() => {
+              let hostname = '';
+              try {
+                hostname = Linking.parse(uri).hostname!;
+              } catch (error) {}
+
+              onPageLoaded?.(pageId, {
+                hostname,
+                origin: uri,
+                icon: '',
+                themeColor: '#ccc',
+                title: hostname,
+              });
+            }}
             onLoadProgress={({ nativeEvent }) => setLoadingProgress(nativeEvent.progress)}
             onLoadEnd={() => {
               setLoadingProgress(1);
@@ -454,6 +468,7 @@ export const Browser = observer(
             }}
             onNavigationStateChange={onNavigationStateChange}
             onGoHome={goHome}
+            onNewTab={onNewTab}
             expanded={isExpandedSite}
             onBookmarksPress={openFavs}
             onMetadataChange={(data) => {
@@ -548,6 +563,7 @@ export const Browser = observer(
                 />
 
                 <RecentHistory
+                  disableContextMenu
                   onItemPress={(url) => {
                     goTo(url);
                     closeFavs();

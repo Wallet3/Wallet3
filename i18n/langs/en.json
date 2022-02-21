@@ -108,6 +108,7 @@
   "modal-review-fee": "Tx Fee",
   "modal-review-button-send": "Send",
   "modal-review-button-slide-to-send": "Slide to Send",
+  "modal-review-button-confirm": "Confirm",
   "modal-gas-review-limit": "Gas Limit",
   "modal-gas-review-max-price": "Max Gas Price",
   "modal-gas-review-priority-price": "Priority Price",
@@ -197,5 +198,6 @@
   "button-confirm": "Confirm",
   "button-edit": "Edit",
   "button-remove": "Remove",
+  "button-close-all": "Close All",
   "button-share": "Share"
 }

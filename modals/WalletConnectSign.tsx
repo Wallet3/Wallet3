@@ -1,3 +1,4 @@
+import Authentication, { BioType } from '../viewmodels/Authentication';
 import React, { useEffect, useRef, useState } from 'react';
 
 import App from '../viewmodels/App';
@@ -18,10 +19,9 @@ interface Props {
   request: WCCallRequestRequest;
   close: Function;
   client: WalletConnect_v1;
-  biometricEnabled?: boolean;
 }
 
-export default observer(({ request, client, close, biometricEnabled }: Props) => {
+export default observer(({ request, client, close }: Props) => {
   const [msg, setMsg] = useState<string>();
   const [typedData, setTypedData] = useState();
   const [type, setType] = useState('');
@@ -99,7 +99,7 @@ export default observer(({ request, client, close, biometricEnabled }: Props) =>
           onSign={sign}
           sign={sign}
           typedData={typedData}
-          biometricEnabled
+          biometricType={Authentication.biometricType}
           account={client.activeAccount!}
         />
       )}

@@ -10,6 +10,8 @@ import { ReactiveScreen } from '../../../utils/device';
 import { StateViewModel } from '../MultiTabIndex';
 import Theme from '../../../viewmodels/settings/Theme';
 
+import i18n from '../../../i18n';
+
 const calcTabWidth = () => {
   const { width } = ReactiveScreen;
 
@@ -105,7 +107,7 @@ const WebTab = ({
             />
           )}
 
-          <Text style={{ color: 'white', fontWeight: '500', fontSize: 12, maxWidth: 100 }} numberOfLines={1}>
+          <Text style={{ color: 'white', fontWeight: '500', fontSize: 12, maxWidth: 81 }} numberOfLines={1}>
             {meta?.title ?? 'Blank Page'}
           </Text>
         </View>
@@ -151,15 +153,18 @@ export const WebTabs = ({
   onRemovePage,
   onNewTab,
   activeIndex,
+  onRemoveAll,
 }: {
   globalState: StateViewModel;
   onJumpToPage: (listIndex: number) => void;
   onRemovePage: (pageId: number) => void;
   onNewTab: () => void;
+  onRemoveAll: () => void;
   activeIndex: number;
 }) => {
-  const { backgroundColor, foregroundColor, tintColor } = Theme;
+  const { backgroundColor, thirdTextColor, tintColor, mode } = Theme;
   const [tabWidth, setTabWidth] = useState(calcTabWidth().TabWidth);
+  const { t } = i18n;
 
   useEffect(() => {
     const handler = () => {
@@ -175,7 +180,38 @@ export const WebTabs = ({
   }, []);
 
   return (
-    <View style={{ maxHeight: 600, minHeight: 430, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
+    <View style={{ maxHeight: 600, minHeight: 439, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'flex-end',
+          zIndex: 10,
+          left: 0,
+          right: 0,
+          paddingTop: 4,
+          paddingEnd: 8,
+          position: 'absolute',
+          borderTopRightRadius: 6,
+          borderTopLeftRadius: 6,
+          backgroundColor: `${backgroundColor}e0`,
+        }}
+      >
+        <TouchableOpacity
+          onPress={onRemoveAll}
+          style={{
+            padding: 8,
+            borderRadius: 10,
+            borderWidth: 0,
+            borderColor: tintColor,
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+        >
+          <Ionicons name="close-circle-outline" size={12} color={thirdTextColor} />
+          <Text style={{ fontSize: 12, color: thirdTextColor, marginStart: 4, marginTop: -1 }}>{t('button-close-all')}</Text>
+        </TouchableOpacity>
+      </View>
+
       <TouchableOpacity
         onPress={onNewTab}
         style={{
@@ -207,8 +243,8 @@ export const WebTabs = ({
         data={Array.from(globalState.pageMetas.keys())}
         keyExtractor={(i) => `Tab-${i}`}
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 37, paddingTop: 4 }}
-        itemDimension={170}
+        contentContainerStyle={{ paddingBottom: 37, paddingTop: 20 }}
+        itemDimension={tabWidth}
         spacing={16}
         renderItem={({ item, index }) => (
           <WebTab

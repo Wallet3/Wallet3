@@ -53,6 +53,18 @@ export class StateViewModel {
   genId() {
     return ++this._id;
   }
+
+  findBlankPageIndex() {
+    return Array.from(this.pageMetas).findIndex(([id, meta]) => meta === undefined);
+  }
+
+  clear() {
+    this.pageMetas.clear();
+    this.pageCaptureFuncs.clear();
+    this.pageSnapshots.clear();
+    this.setTabCount(0);
+    this.setActivePageIdByPageIndex(0);
+  }
 }
 
 export default observer((props: BottomTabScreenProps<{}, never>) => {
@@ -66,7 +78,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
 
   const [tabBarHeight] = useState(useBottomTabBarHeight());
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
-  const { ref: tabsRef, open: openTabs, close: closeTabs } = useModalize();
+  const { ref: tabsRef, open: openTabs, close: closeTabsModal } = useModalize();
 
   const generateBrowserTab = (id: number, props: BottomTabScreenProps<{}, never>, onNewTab: () => void) => (
     <Browser
@@ -90,7 +102,14 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
     />
   );
 
-  const newTab = () => {
+  const newTab = (force = false) => {
+    const index = state.findBlankPageIndex();
+
+    if (!force && index >= 0) {
+      swiper.current?.scrollToIndex({ index, animated: true });
+      return;
+    }
+
     const id = state.genId();
     const tabView = generateBrowserTab(id, props, newTab);
 
@@ -173,6 +192,55 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
     };
   }, []);
 
+  const removePageId = (pageId: number) => {
+    const pageIndexToBeRemoved = Array.from(state.pageMetas.keys()).findIndex((i) => i === pageId);
+    if (pageIndexToBeRemoved < 0) return;
+
+    const removeTab = () => {
+      startLayoutAnimation();
+
+      let newPageIndex = -1;
+
+      if (activePageIndex === tabs.size - 1 || pageIndexToBeRemoved < activePageIndex) {
+        newPageIndex = Math.max(0, activePageIndex - 1);
+      } else if (pageIndexToBeRemoved === activePageIndex) {
+        newPageIndex = pageIndexToBeRemoved;
+      } else {
+        newPageIndex = activePageIndex;
+      }
+
+      tabs.delete(pageId);
+      state.pageMetas.delete(pageId);
+      state.pageCaptureFuncs.delete(pageId);
+      state.pageSnapshots.delete(pageId);
+      state.setTabCount(tabs.size);
+      forceUpdate(tabs.size);
+
+      setActivePageIndex(newPageIndex);
+      state.setActivePageIdByPageIndex(newPageIndex);
+
+      setTimeout(() => {
+        Array.from(state.pageMetas.values())[newPageIndex] ? hideTabBar() : showTabBar();
+        if (tabs.size > 1) swiper.current?.scrollToIndex({ index: newPageIndex, animated: false });
+      }, 0);
+    };
+
+    if (tabs.size === 1) {
+      newTab();
+
+      setTimeout(() => {
+        removeTab();
+      }, 500);
+
+      closeTabsModal();
+      return;
+    }
+
+    removeTab();
+
+    if (tabs.size === 1) closeTabsModal();
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor }}>
       <FlatList
@@ -189,9 +257,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
         initialScrollIndex={0}
         keyboardShouldPersistTaps={persistentKeyboard}
         onScrollToIndexFailed={({ index }) => {
-          new Promise((resolve) => setTimeout(resolve, 200)).then(() =>
-            swiper.current?.scrollToIndex({ index, animated: true })
-          );
+          console.error('onScrollToIndexFailed', index);
         }}
       />
 
@@ -206,61 +272,22 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
           <WebTabs
             globalState={state}
             activeIndex={activePageIndex}
-            onNewTab={() => {
+            onRemovePage={removePageId}
+            onRemoveAll={() => {
+              tabs.clear();
+              state.clear();
               newTab();
-              closeTabs();
+              closeTabsModal();
+              setActivePageIndex(0);
+              showTabBar();
+            }}
+            onNewTab={() => {
+              newTab(true);
+              closeTabsModal();
             }}
             onJumpToPage={(index) => {
               swiper.current?.scrollToIndex({ index, animated: true });
-              closeTabs();
-            }}
-            onRemovePage={(pageId) => {
-              const pageIndexToBeRemoved = Array.from(state.pageMetas.keys()).findIndex((i) => i === pageId);
-              if (pageIndexToBeRemoved < 0) return;
-
-              const removeTab = () => {
-                startLayoutAnimation();
-
-                let newPageIndex = -1;
-
-                if (activePageIndex === tabs.size - 1 || pageIndexToBeRemoved < activePageIndex) {
-                  newPageIndex = Math.max(0, activePageIndex - 1);
-                } else if (pageIndexToBeRemoved === activePageIndex) {
-                  newPageIndex = pageIndexToBeRemoved;
-                } else {
-                  newPageIndex = activePageIndex;
-                }
-
-                tabs.delete(pageId);
-                state.pageMetas.delete(pageId);
-                state.pageCaptureFuncs.delete(pageId);
-                state.pageSnapshots.delete(pageId);
-                state.setTabCount(tabs.size);
-                forceUpdate(tabs.size);
-
-                setActivePageIndex(newPageIndex);
-                state.setActivePageIdByPageIndex(newPageIndex);
-
-                setTimeout(() => {
-                  Array.from(state.pageMetas.values())[newPageIndex] ? hideTabBar() : showTabBar();
-                  if (tabs.size > 1) swiper.current?.scrollToIndex({ index: newPageIndex, animated: false });
-                }, 0);
-              };
-
-              if (tabs.size === 1) {
-                newTab();
-
-                setTimeout(() => {
-                  removeTab();
-                }, 500);
-
-                closeTabs();
-                return;
-              }
-
-              removeTab();
-
-              if (tabs.size === 1) closeTabs();
+              closeTabsModal();
             }}
           />
         </Modalize>

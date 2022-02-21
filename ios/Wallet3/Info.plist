@@ -41,11 +41,9 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>20220218144702</string>
+	<string>20220221085710</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NFCReaderUsageDescription</key>
-	<string>Allow $(PRODUCT_NAME) to interact with nearby NFC devices.</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -93,13 +91,5 @@
 	<string>Light</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>com.apple.developer.nfc.readersession.felica.systemcodes</key>
-	<array>
-		<string>8008</string>
-	</array>
-	<key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
-	<array>
-		<string>A0000002471001</string>
-	</array>
 </dict>
 </plist>

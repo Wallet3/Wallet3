@@ -77,7 +77,12 @@ const POLY = generateNetworkIcon({ chainId: 137, width: 27, height: 32 });
 const xDAI = generateNetworkIcon({ chainId: 100, width: 32 });
 const BOBA = generateNetworkIcon({ chainId: 288, width: 32 });
 const AURORA = generateNetworkIcon({ chainId: 1313161554, width: 32 });
-const HARMONYONE = generateNetworkIcon({ chainId: 1666600000, width: 34, height: 32, style: { marginHorizontal: -5 } });
+const HARMONYONE = generateNetworkIcon({
+  chainId: 1666600000,
+  width: 37,
+  height: 37,
+  style: { marginHorizontal: -5, marginVertical: -2.5 },
+});
 const CRONOS = generateNetworkIcon({ chainId: 25, width: 32, style: { marginStart: 0 } });
 const ETC = generateNetworkIcon({ chainId: 61, width: 32, height: 30, style: { marginHorizontal: -5, marginVertical: 1 } });
 const MOONRIVER = generateNetworkIcon({

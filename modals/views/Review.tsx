@@ -1,5 +1,5 @@
 import { Button, Coin, SafeViewContainer } from '../../components';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import React, { useRef } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
@@ -12,6 +12,7 @@ import GasReview from './GasReview';
 import Image from 'react-native-expo-cached-image';
 import InsufficientFee from '../components/InsufficientFee';
 import Networks from '../../viewmodels/Networks';
+import { ReactiveScreen } from '../../utils/device';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
 import { TokenTransferring } from '../../viewmodels/transferring/TokenTransferring';
@@ -46,8 +47,11 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
   const sendTitle = biometricType === 'faceid' ? t('modal-review-button-slide-to-send') : t('modal-review-button-send');
   const onLongSendPress = biometricType === 'faceid' ? send : undefined;
   const onSendPress = biometricType === 'faceid' ? undefined : send;
-  const authIcon =
-    biometricType === 'faceid' ? () => <FaceID width={12.5} height={12.5} style={{ marginEnd: 2 }} /> : undefined;
+  const authIcon = biometricType
+    ? biometricType === 'fingerprint'
+      ? () => <MaterialCommunityIcons name="fingerprint" size={19} color="#fff" />
+      : () => <FaceID width={12.5} height={12.5} style={{ marginEnd: 4 }} />
+    : undefined;
 
   const reviewItemStyle = { ...styles.reviewItem, borderColor };
   const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
@@ -66,10 +70,10 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
           <Text style={styles.reviewItemTitle}>{t('modal-review-send')}</Text>
 
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-            <Text style={{ ...reviewItemValueStyle, marginEnd: 8, maxWidth: '50%' }} numberOfLines={1}>
+            <Text style={{ ...reviewItemValueStyle, marginEnd: 8, maxWidth: ReactiveScreen.width - 180 }} numberOfLines={1}>
               {vm.amount}
             </Text>
-            <Text style={{ ...reviewItemValueStyle, marginEnd: 8 }}>{vm.token.symbol}</Text>
+
             <Coin
               address={vm.token.address}
               chainId={vm.network.chainId}
@@ -77,6 +81,8 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
               forceRefresh
               iconUrl={vm.token?.iconUrl}
             />
+
+            <Text style={{ ...reviewItemValueStyle, marginStart: 8 }}>{vm.token.symbol}</Text>
           </View>
         </View>
 

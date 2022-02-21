@@ -80,8 +80,8 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
       <Text style={{ paddingHorizontal: 16, color: secondaryFontColor, paddingBottom: 4 }}>{t('home-tokens-drag-tip')}</Text>
       <Separator style={{ backgroundColor: borderColor }} />
       <DraggableFlatList
-        style={{ marginBottom: -36 }}
-        contentContainerStyle={{ paddingBottom: 42 }}
+        style={{ marginBottom: -37 }}
+        contentContainerStyle={{ paddingBottom: 64 }}
         data={data}
         renderItem={renderItem}
         keyExtractor={(item) => item.address}
