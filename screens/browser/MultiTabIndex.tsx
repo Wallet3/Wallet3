@@ -94,10 +94,10 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
     />
   );
 
-  const newTab = () => {
+  const newTab = (force = false) => {
     const index = state.findBlankPageIndex();
 
-    if (index >= 0) {
+    if (!force && index >= 0) {
       swiper.current?.scrollToIndex({ index, animated: true });
       return;
     }
@@ -216,7 +216,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
             globalState={state}
             activeIndex={activePageIndex}
             onNewTab={() => {
-              newTab();
+              newTab(true);
               closeTabsModal();
             }}
             onJumpToPage={(index) => {

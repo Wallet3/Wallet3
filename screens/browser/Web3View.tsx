@@ -53,6 +53,7 @@ interface ConnectedBrowserDApp {
 interface Web3ViewProps extends WebViewProps {
   onMetadataChange?: (metadata: PageMetadata) => void;
   onGoHome?: () => void;
+  onNewTab?: () => void;
   expanded?: boolean;
   onShrinkRequest?: (webUrl: string) => void;
   onExpandRequest?: (webUrl: string) => void;
@@ -76,7 +77,7 @@ export default observer((props: Web3ViewProps) => {
   );
 
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
-  const { onMetadataChange, onGoHome, expanded, onShrinkRequest, onExpandRequest, onBookmarksPress } = props;
+  const { onMetadataChange, onGoHome, onNewTab, expanded, onShrinkRequest, onExpandRequest, onBookmarksPress } = props;
 
   const [canGoBack, setCanGoBack] = useState(false);
   const [canGoForward, setCanGoForward] = useState(false);
@@ -300,7 +301,7 @@ export default observer((props: Web3ViewProps) => {
               <Ionicons name="chevron-back-outline" size={22} color={canGoBack ? tintColor : '#dddddd50'} />
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.navTouchableItem} onPress={onGoHome}>
+            <TouchableOpacity style={styles.navTouchableItem} onPress={() => (dapp ? onNewTab?.() : onGoHome?.())}>
               <Entypo name="circle" size={19} color={tintColor} />
             </TouchableOpacity>
 

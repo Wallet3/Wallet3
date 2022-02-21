@@ -465,7 +465,8 @@ export const Browser = observer(
               onPageLoadEnd?.();
             }}
             onNavigationStateChange={onNavigationStateChange}
-            onGoHome={onNewTab}
+            onGoHome={goHome}
+            onNewTab={onNewTab}
             expanded={isExpandedSite}
             onBookmarksPress={openFavs}
             onMetadataChange={(data) => {
