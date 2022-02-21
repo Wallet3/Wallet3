@@ -160,7 +160,7 @@ export const WebTabs = ({
   onRemoveAll: () => void;
   activeIndex: number;
 }) => {
-  const { backgroundColor, thirdTextColor, tintColor } = Theme;
+  const { backgroundColor, thirdTextColor, tintColor, mode } = Theme;
   const [tabWidth, setTabWidth] = useState(calcTabWidth().TabWidth);
   const { t } = i18n;
 
@@ -178,15 +178,20 @@ export const WebTabs = ({
   }, []);
 
   return (
-    <View style={{ maxHeight: 600, minHeight: 430, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
+    <View style={{ maxHeight: 600, minHeight: 439, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
       <View
         style={{
           flexDirection: 'row',
           justifyContent: 'flex-end',
           zIndex: 10,
+          left: 0,
           right: 0,
-          paddingTop: 8,
+          paddingTop: 4,
           paddingEnd: 8,
+          position: 'absolute',
+          borderTopRightRadius: 6,
+          borderTopLeftRadius: 6,
+          backgroundColor: `${backgroundColor}e0`,
         }}
       >
         <TouchableOpacity
@@ -236,7 +241,7 @@ export const WebTabs = ({
         data={Array.from(globalState.pageMetas.keys())}
         keyExtractor={(i) => `Tab-${i}`}
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 37, paddingTop: 0 }}
+        contentContainerStyle={{ paddingBottom: 37, paddingTop: 20 }}
         itemDimension={tabWidth}
         spacing={16}
         renderItem={({ item, index }) => (

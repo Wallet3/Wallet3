@@ -97,8 +97,8 @@ export default observer(({ title, onNetworkPress, networks, selectedNetwork, use
   return (
     <SafeAreaProvider style={{ ...styles.safeArea, backgroundColor }}>
       <Swiper scrollEnabled={false}>
-        <SafeViewContainer style={{ padding: 16 }}>
-          <Text style={{ color: secondaryTextColor }} numberOfLines={1}>
+        <SafeViewContainer style={{ padding: 16, paddingTop: 12 }}>
+          <Text style={{ color: secondaryTextColor, paddingBottom: 2 }} numberOfLines={1}>
             {title ?? t('modal-networks-switch')}
           </Text>
           <Separator style={{ marginVertical: 4, backgroundColor: borderColor }} />
