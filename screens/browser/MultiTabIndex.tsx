@@ -277,6 +277,9 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
               tabs.clear();
               state.clear();
               newTab();
+              closeTabsModal();
+              setActivePageIndex(0);
+              showTabBar();
             }}
             onNewTab={() => {
               newTab(true);
