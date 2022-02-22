@@ -27,6 +27,7 @@ import { DrawerActions } from '@react-navigation/native';
 import MetamaskDAppsHub from '../../viewmodels/walletconnect/MetamaskDAppsHub';
 import { MetamaskDApp } from '../../viewmodels/walletconnect/MetamaskDApp';
 import { startLayoutAnimation } from '../../utils/animations';
+import { useHeaderHeight } from '@react-navigation/elements';
 
 interface Props {
   client: WalletConnect_v1 | MetamaskDApp;
@@ -190,20 +191,22 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
     />
   );
 
+  const headerHeight = 49;
+
   const logos = [
     <View
       key="walletconnect"
-      style={{ padding: 12, flexDirection: 'row', alignItems: 'center', height: 52, justifyContent: 'center' }}
+      style={{ padding: 12, flexDirection: 'row', alignItems: 'center', height: headerHeight, justifyContent: 'center' }}
     >
       <WalletConnectLogo width={15} height={15} />
-      <Text style={{ color: '#3b99fc', fontWeight: '600', marginStart: 8, fontSize: 18 }}>{`WalletConnect`}</Text>
+      <Text style={{ color: '#3b99fc', fontWeight: '500', marginStart: 8, fontSize: 18 }}>{`WalletConnect`}</Text>
     </View>,
     <View
       key="metamask"
-      style={{ padding: 12, flexDirection: 'row', alignItems: 'center', height: 52, justifyContent: 'center' }}
+      style={{ padding: 12, flexDirection: 'row', alignItems: 'center', height: headerHeight, justifyContent: 'center' }}
     >
       <MetamaskLogo width={12.5} height={12.5} />
-      <Text style={{ color: '#f5841f', fontWeight: '600', marginStart: 8, fontSize: 18 }}>{`Metamask`}</Text>
+      <Text style={{ color: '#f5841f', fontWeight: '500', marginStart: 8, fontSize: 18 }}>{`Metamask`}</Text>
     </View>,
   ];
 
@@ -217,7 +220,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
         style={{ flexDirection: 'row', alignItems: 'center', borderBottomWidth: 0.333, borderBottomColor: systemBorderColor }}
       >
         <TouchableOpacity
-          style={{ padding: 16, paddingVertical: 0, position: 'absolute', zIndex: 9 }}
+          style={{ padding: 16, paddingVertical: 8, position: 'absolute', zIndex: 9 }}
           onPress={() => navigation.dispatch(DrawerActions.openDrawer)}
         >
           <Feather name="menu" size={20} color={foregroundColor} style={{}} />
@@ -238,7 +241,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
             data={logos}
             renderItem={({ item }) => item}
             contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
-            style={{ height: 52 }}
+            style={{ height: headerHeight }}
           />
         </View>
       </View>
