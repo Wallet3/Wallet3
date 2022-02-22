@@ -20,6 +20,7 @@ import { Wallet } from './Wallet';
 import WalletConnectV1ClientHub from './walletconnect/WalletConnectV1ClientHub';
 import i18n from '../i18n';
 import { showMessage } from 'react-native-flash-message';
+import MetamaskDAppsHub from './walletconnect/MetamaskDAppsHub';
 
 export class AppVM {
   private lastRefreshedTime = 0;
@@ -166,6 +167,7 @@ export class AppVM {
 
     Authentication.once('appAuthorized', () => {
       WalletConnectV1ClientHub.init();
+      MetamaskDAppsHub.init();
       LinkHub.start();
     });
 

@@ -1,9 +1,10 @@
+import EventEmitter from 'events';
 import InpageDApp from '../../models/InpageDApp';
 import { WCClientMeta } from '../../models/WCSession_v1';
 import App from '../App';
 import Networks from '../Networks';
 
-export class MetamaskDApp {
+export class MetamaskDApp extends EventEmitter {
   dapp: InpageDApp;
   appMeta: WCClientMeta | null = null;
 
@@ -34,6 +35,8 @@ export class MetamaskDApp {
   }
 
   constructor(app: InpageDApp) {
+    super();
+
     this.dapp = app;
     this.appMeta = {
       description: app.metadata.desc || '',
@@ -55,5 +58,6 @@ export class MetamaskDApp {
 
   killSession() {
     this.dapp.remove();
+    this.emit('removed', this);
   }
 }

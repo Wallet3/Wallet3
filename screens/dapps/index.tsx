@@ -24,8 +24,9 @@ import { styles } from '../../constants/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { WalletConnect as WalletConnectLogo, Metamask as MetamaskLogo } from '../../assets/3rd';
 import { DrawerActions } from '@react-navigation/native';
-import { MetamaskDAppsHub } from '../../viewmodels/walletconnect/MetamaskDAppsHub';
+import MetamaskDAppsHub from '../../viewmodels/walletconnect/MetamaskDAppsHub';
 import { MetamaskDApp } from '../../viewmodels/walletconnect/MetamaskDApp';
+import { startLayoutAnimation } from '../../utils/animations';
 
 interface Props {
   client: WalletConnect_v1 | MetamaskDApp;
@@ -43,6 +44,7 @@ const DApp = observer(({ client, allAccounts, close }: Props) => {
   const { backgroundColor } = Theme;
 
   const disconnect = () => {
+    startLayoutAnimation();
     client.killSession();
     close();
   };
@@ -116,6 +118,11 @@ const DAppItem = observer(
     const { appMeta } = item;
     const { t } = i18n;
 
+    const remove = () => {
+      startLayoutAnimation();
+      item.killSession();
+    };
+
     return (
       <View style={{ paddingHorizontal: 16, paddingVertical: 12, flexDirection: 'row', alignItems: 'center' }}>
         <TouchableOpacity style={{ flex: 1, alignItems: 'center', flexDirection: 'row' }} onPress={() => openApp(item)}>
@@ -144,7 +151,7 @@ const DAppItem = observer(
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity style={{ padding: 12, marginEnd: -12 }} onPress={() => item.killSession()}>
+        <TouchableOpacity style={{ padding: 12, marginEnd: -12 }} onPress={() => remove()}>
           <FontAwesome name="trash-o" size={19} color={textColor} />
         </TouchableOpacity>
       </View>
@@ -160,10 +167,9 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedClient, setSelectedClient] = useState<WalletConnect_v1 | MetamaskDApp>();
   const { top } = useSafeAreaInsets();
-  const [metamaskHub] = useState(new MetamaskDAppsHub());
 
   const { sortedClients, connectedCount } = WalletConnectV1ClientHub;
-  const { dapps } = metamaskHub;
+  const { dapps } = MetamaskDAppsHub;
 
   const openApp = (client: WalletConnect_v1 | MetamaskDApp) => {
     setSelectedClient(client);
@@ -190,19 +196,20 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
           style={{
             flex: 1,
             flexDirection: 'row',
-            justifyContent: 'space-evenly',
+            justifyContent: 'space-around',
             marginBottom: -1,
+            marginStart: 48,
           }}
         >
           <TouchableOpacity
             onPress={() => swiper.current?.scrollTo(0)}
             style={{ padding: 16, flexDirection: 'row', alignItems: 'center' }}
           >
-            <WalletConnectLogo width={14} height={14} />
+            <WalletConnectLogo width={15} height={15} />
             <Text
-              style={{ color: activeIndex === 0 ? '#3b99fc' : textColor, fontWeight: '500', marginStart: 8, fontSize: 16 }}
+              style={{ color: activeIndex === 0 ? '#3b99fc' : textColor, fontWeight: '500', marginStart: 8, fontSize: 17 }}
             >
-              {`WalletConnect (${connectedCount})`}
+              {`WalletConnect`}
             </Text>
           </TouchableOpacity>
 
@@ -212,9 +219,9 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
           >
             <MetamaskLogo width={14} height={14} />
             <Text
-              style={{ color: activeIndex === 1 ? '#f5841f' : textColor, fontWeight: '500', marginStart: 8, fontSize: 16 }}
+              style={{ color: activeIndex === 1 ? '#f5841f' : textColor, fontWeight: '500', marginStart: 8, fontSize: 17 }}
             >
-              {`Metamask (${dapps.length})`}
+              {`Metamask`}
             </Text>
           </TouchableOpacity>
         </View>

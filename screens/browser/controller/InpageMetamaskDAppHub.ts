@@ -19,6 +19,7 @@ import { WCCallRequest_eth_sendTransaction } from '../../../models/WCSession_v1'
 import WebView from 'react-native-webview';
 import i18n from '../../../i18n';
 import { showMessage } from 'react-native-flash-message';
+import MetamaskDAppsHub from '../../../viewmodels/walletconnect/MetamaskDAppsHub';
 
 const NOTIFICATION_NAMES = {
   accountsChanged: 'metamask_accountsChanged',
@@ -218,6 +219,8 @@ export class InpageMetamaskDAppHub extends EventEmitter {
 
         this.emit('dappConnected', app);
         app.save();
+
+        MetamaskDAppsHub.add(app);
       };
 
       const reject = () => resolve({ error: { code: 4001, message: 'User rejected' } });
