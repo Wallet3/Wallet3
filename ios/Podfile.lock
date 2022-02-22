@@ -350,6 +350,8 @@ PODS:
     - React-Core
   - RNGestureHandler (2.2.0):
     - React-Core
+  - RNImageColors (1.5.0):
+    - React-Core
   - RNOS (1.2.6):
     - React
   - RNReanimated (2.3.2):
@@ -463,6 +465,7 @@ DEPENDENCIES:
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNImageColors (from `../node_modules/react-native-image-colors`)
   - RNOS (from `../node_modules/react-native-os`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -606,6 +609,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-device-info"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNImageColors:
+    :path: "../node_modules/react-native-image-colors"
   RNOS:
     :path: "../node_modules/react-native-os"
   RNReanimated:
@@ -688,6 +693,7 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: b49b4e38a1548d03b74b30e558a1d18465b94be7
   RNDeviceInfo: 4944cf8787b9c5bffaf301fda68cc1a2ec003341
   RNGestureHandler: bf572f552ea324acd5b5464b8d30755b2d8c1de6
+  RNImageColors: ed00190f4e743ff4fb1a61285572b5d4e6a0a8f0
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
   RNReanimated: db6fc1362254dfd18b4ef5f921af9bb72b2e42d0
   RNScreens: 2559f98b0835103cbef3b26ba77fa61d4bb37ae7

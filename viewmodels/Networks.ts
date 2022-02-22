@@ -3,10 +3,11 @@ import * as ethers from 'ethers';
 import { INetwork, PublicNetworks } from '../common/Networks';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { getMaxPriorityFeeByRPC, getNextBlockBaseFeeByRPC } from '../common/RPC';
-
+import ImageColors from 'react-native-image-colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Chain from '../models/Chain';
 import Database from '../models/Database';
+import icons from '../assets/icons/crypto';
 import providers from '../configs/providers.json';
 
 const ChainColors = {
@@ -125,6 +126,16 @@ class Networks {
     try {
       const priFee = await getNextBlockBaseFeeByRPC(chain.rpcUrls[0]);
       nc.customize.eip1559 = priFee >= 1;
+
+      const result = await ImageColors.getColors(icons[nc.symbol.toLowerCase()]);
+      switch (result.platform) {
+        case 'android':
+          nc.customize.color = result.dominant || nc.customize.color;
+          break;
+        case 'ios':
+          nc.customize.color = result.background || nc.customize.color;
+          break;
+      }
     } catch (error) {}
 
     runInAction(() => {
