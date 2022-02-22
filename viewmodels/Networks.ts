@@ -9,6 +9,7 @@ import Chain from '../models/Chain';
 import Database from '../models/Database';
 import icons from '../assets/icons/crypto';
 import providers from '../configs/providers.json';
+import { Any, In } from 'typeorm';
 
 const ChainColors = {
   61: '#3ab83a',
@@ -56,6 +57,7 @@ class Networks {
       current: observable,
       switch: action,
       reset: action,
+      remove: action,
       userChains: observable,
       all: computed,
     });
@@ -102,6 +104,19 @@ class Networks {
 
   find(chainId: number | string) {
     return this.all.find((n) => n.chainId === Number(chainId));
+  }
+
+  async remove(chainId: number) {
+    const chain = this.userChains.find((c) => c.chainId === chainId);
+    if (!chain) return;
+
+    this.userChains = this.userChains.filter((c) => c.chainId !== chainId);
+
+    const userChain = await Database.chains.findOne({
+      where: { id: In([`0x${chainId.toString(16)}`, `${chainId}`, chainId.toString(16)]) },
+    });
+
+    await userChain?.remove();
   }
 
   reset() {

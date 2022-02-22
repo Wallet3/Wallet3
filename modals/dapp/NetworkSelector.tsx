@@ -1,6 +1,6 @@
 import { Button, SafeViewContainer } from '../../components';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { borderColor, secondaryFontColor } from '../../constants/styles';
 
 import { Feather } from '@expo/vector-icons';
@@ -19,9 +19,18 @@ interface Props {
 
 export default observer(({ networks, selectedChains, onDone, single }: Props) => {
   const [selected, setSelected] = useState<number[]>(selectedChains);
-  const defaultNetwork = networks.find((n) => n.chainId === (selectedChains[0] || 1));
+  const [nets, setNets] = useState<INetwork[]>();
+  const [defaultNetwork] = useState(networks.find((n) => n.chainId === (selectedChains[0] || 1)));
   const { t } = i18n;
   const { borderColor } = Theme;
+
+  useEffect(() => {
+    const timer = setTimeout(() => setNets(networks), 25);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [networks]);
 
   const toggleNetwork = (network: INetwork) => {
     if (single) {
@@ -74,7 +83,7 @@ export default observer(({ networks, selectedChains, onDone, single }: Props) =>
       <FlatList
         data={networks}
         renderItem={renderItem}
-        keyExtractor={(i) => i.network}
+        keyExtractor={(i) => `${i.chainId}`}
         contentContainerStyle={{ paddingBottom: 8 }}
         style={{ flex: 1, marginHorizontal: -16, paddingHorizontal: 16, marginBottom: 12 }}
       />

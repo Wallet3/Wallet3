@@ -63,7 +63,7 @@ const DApp = observer(({ client, allAccounts, close }: Props) => {
 
   const swipeTo = (index: number) => {
     setPanel(index);
-    setTimeout(() => swiper.current?.scrollTo(1), 0);
+    setTimeout(() => swiper.current?.scrollTo(1), 5);
   };
 
   return (
@@ -177,7 +177,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
 
   const openApp = (client: WalletConnect_v1 | MetamaskDApp) => {
     setSelectedClient(client);
-    setTimeout(() => open(), 0);
+    setTimeout(() => open(), 5);
   };
 
   const renderItem = ({ item }: { item: WalletConnect_v1 | MetamaskDApp }) => (

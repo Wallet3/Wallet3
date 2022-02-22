@@ -362,7 +362,6 @@ export default observer((props: Web3ViewProps) => {
         >
           <NetworksMenu
             title={t('modal-dapp-switch-network', { app: pageMetadata?.title?.split(' ')?.[0] ?? '' })}
-            networks={Networks.all}
             selectedNetwork={appNetwork}
             onNetworkPress={(network) => updateDAppNetworkConfig(network)}
           />

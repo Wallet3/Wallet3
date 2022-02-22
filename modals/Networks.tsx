@@ -1,5 +1,5 @@
-import { EVMIcon, NetworkIcons, generateNetworkIcon } from '../assets/icons/networks/color';
-import { FlatList, ListRenderItemInfo, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { NetworkIcons, generateNetworkIcon } from '../assets/icons/networks/color';
+import { FlatList, ListRenderItemInfo, NativeSyntheticEvent, Text, TouchableOpacity, View } from 'react-native';
 import { SafeViewContainer, Separator } from '../components';
 import { useEffect, useRef, useState } from 'react';
 
@@ -13,7 +13,7 @@ import Theme from '../viewmodels/settings/Theme';
 import i18n from '../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
-import ContextMenu from 'react-native-context-menu-view';
+import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
 
 interface Props {
   onNetworkPress?: (network: INetwork) => void;
@@ -23,24 +23,23 @@ interface Props {
   useContextMenu?: boolean;
 }
 
-export default observer(({ title, onNetworkPress, networks, selectedNetwork, useContextMenu }: Props) => {
+export default observer(({ title, onNetworkPress, selectedNetwork, useContextMenu }: Props) => {
   const { t } = i18n;
   const { backgroundColor, secondaryTextColor, borderColor } = Theme;
   const [nets, setNets] = useState<INetwork[]>();
   const flatList = useRef<FlatList>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => setNets(networks ?? Networks.all), 25);
+    const timer = setTimeout(() => setNets(Networks.all), 25);
 
     return () => {
       clearTimeout(timer);
     };
-  }, [networks]);
+  }, []);
 
   useEffect(() => {
     const jumpTimer = setTimeout(() => {
-      const index =
-        (networks || Networks.all)?.findIndex((n) => n.chainId === (selectedNetwork || Networks.current).chainId) ?? 0;
+      const index = Networks.all.findIndex((n) => n.chainId === (selectedNetwork || Networks.current).chainId) ?? 0;
       if (index < 0) return;
 
       flatList.current?.scrollToIndex({ animated: true, index });
@@ -91,7 +90,24 @@ export default observer(({ title, onNetworkPress, networks, selectedNetwork, use
       { title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' },
     ];
 
-    return <ContextMenu actions={item.isUserAdded ? actions : undefined}>{renderItem(props)}</ContextMenu>;
+    const onActionPress = (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => {
+      const { index } = e.nativeEvent;
+      switch (index) {
+        case 0:
+          break;
+        case 1:
+          Networks.remove(item.chainId).then(() => setNets(Networks.all));
+          break;
+      }
+    };
+
+    return item.isUserAdded ? (
+      <ContextMenu onPress={onActionPress} actions={actions}>
+        {renderItem(props)}
+      </ContextMenu>
+    ) : (
+      renderItem(props)
+    );
   };
 
   return (
