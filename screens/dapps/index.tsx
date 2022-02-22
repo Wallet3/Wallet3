@@ -167,6 +167,8 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
 
   return (
     <View style={{ flex: 1 }}>
+      <View style={{ flexDirection: 'row' }}></View>
+
       {connectedCount > 0 ? (
         <FlatList
           data={sortedClients}

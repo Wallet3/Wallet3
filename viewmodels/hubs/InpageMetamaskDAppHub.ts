@@ -210,6 +210,9 @@ export class InpageMetamaskDAppHub extends EventEmitter {
         app.origin = origin;
         app.lastUsedAccount = account.address;
         app.lastUsedChainId = `0x${Number(network.chainId).toString(16)}`;
+        app.lastUsedTimestamp = Date.now();
+        app.metadata = payload.pageMetadata || { icon: '', title: origin };
+
         this.apps.set(origin, app);
         resolve([account.address]);
 
@@ -244,6 +247,11 @@ export class InpageMetamaskDAppHub extends EventEmitter {
       showMessage({ message: i18n.t('msg-account-not-found'), type: 'warning' });
       return { error: { code: 4001, message: 'Invalid account' } };
     }
+
+    try {
+      dapp.lastUsedTimestamp = Date.now();
+      dapp.save();
+    } catch (error) {}
 
     return new Promise((resolve) => {
       let msg: string | undefined = undefined;
@@ -303,6 +311,11 @@ export class InpageMetamaskDAppHub extends EventEmitter {
     if (!dapp) return null;
 
     const { params, pageMetadata } = payload;
+
+    try {
+      dapp.lastUsedTimestamp = Date.now();
+      dapp.save();
+    } catch (error) {}
 
     return new Promise<string | any>((resolve) => {
       const approve = async ({
