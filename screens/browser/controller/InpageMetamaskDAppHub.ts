@@ -1,23 +1,23 @@
 import * as Linking from 'expo-linking';
 
-import Bookmarks, { isSecureSite } from '../customs/Bookmarks';
+import Bookmarks, { isSecureSite } from '../../../viewmodels/customs/Bookmarks';
 import { Bytes, providers, utils } from 'ethers';
-import Networks, { AddEthereumChainParameter } from '../Networks';
-import { getCode, rawCall } from '../../common/RPC';
+import Networks, { AddEthereumChainParameter } from '../../../viewmodels/Networks';
+import { getCode, rawCall } from '../../../common/RPC';
 
-import { Account } from '../account/Account';
-import App from '../App';
-import Database from '../../models/Database';
+import { Account } from '../../../viewmodels/account/Account';
+import App from '../../../viewmodels/App';
+import Database from '../../../models/Database';
 import DeviceInfo from 'react-native-device-info';
-import { ERC20Token } from '../../models/ERC20';
+import { ERC20Token } from '../../../models/ERC20';
 import EventEmitter from 'events';
-import { INetwork } from '../../common/Networks';
-import InpageDApp from '../../models/InpageDApp';
-import { ReadableInfo } from '../../models/Transaction';
+import { INetwork } from '../../../common/Networks';
+import InpageDApp from '../../../models/InpageDApp';
+import { ReadableInfo } from '../../../models/Transaction';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
-import { WCCallRequest_eth_sendTransaction } from '../../models/WCSession_v1';
+import { WCCallRequest_eth_sendTransaction } from '../../../models/WCSession_v1';
 import WebView from 'react-native-webview';
-import i18n from '../../i18n';
+import i18n from '../../../i18n';
 import { showMessage } from 'react-native-flash-message';
 
 const NOTIFICATION_NAMES = {

@@ -1,7 +1,7 @@
 import { BigNumber, BigNumberish, providers, utils } from 'ethers';
 
 import App from '../App';
-import { InpageDAppTxRequest } from '../hubs/InpageMetamaskDAppHub';
+import { InpageDAppTxRequest } from '../../screens/browser/controller/InpageMetamaskDAppHub';
 import Networks from '../Networks';
 import { SpeedupAbleSendParams } from '../transferring/RawTransactionRequest';
 import Transaction from '../../models/Transaction';

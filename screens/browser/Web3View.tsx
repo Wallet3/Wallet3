@@ -16,7 +16,7 @@ import DeviceInfo from 'react-native-device-info';
 import GetPageMetadata from './scripts/Metadata';
 import HookWalletConnect from './scripts/InjectWalletConnectObserver';
 import { INetwork } from '../../common/Networks';
-import { InpageMetamaskDAppHub } from '../../viewmodels/hubs/InpageMetamaskDAppHub';
+import { InpageMetamaskDAppHub } from './controller/InpageMetamaskDAppHub';
 import { JS_POST_MESSAGE_TO_PROVIDER } from './scripts/Utils';
 import LinkHub from '../../viewmodels/hubs/LinkHub';
 import MetamaskMobileProvider from './scripts/Metamask-mobile-provider';

@@ -4,7 +4,7 @@ import { Text, View } from 'react-native';
 
 import App from '../viewmodels/App';
 import Authentication from '../viewmodels/Authentication';
-import { InpageDAppTxRequest } from '../viewmodels/hubs/InpageMetamaskDAppHub';
+import { InpageDAppTxRequest } from '../screens/browser/controller/InpageMetamaskDAppHub';
 import { Ionicons } from '@expo/vector-icons';
 import Networks from '../viewmodels/Networks';
 import { RawTransactionRequest } from '../viewmodels/transferring/RawTransactionRequest';

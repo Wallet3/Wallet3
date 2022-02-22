@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import AddAsset from './dapp/AddAsset';
-import { InpageDAppAddAsset } from '../viewmodels/hubs/InpageMetamaskDAppHub';
+import { InpageDAppAddAsset } from '../screens/browser/controller/InpageMetamaskDAppHub';
 import Networks from '../viewmodels/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Theme from '../viewmodels/settings/Theme';
