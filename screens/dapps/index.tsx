@@ -162,6 +162,7 @@ const DAppItem = observer(
 export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
   const { t } = i18n;
   const swiper = useRef<Swiper>(null);
+  const scroller = useRef<FlatList>(null);
   const { ref, open, close } = useModalize();
   const { secondaryTextColor, textColor, systemBorderColor, foregroundColor } = Theme;
   const [activeIndex, setActiveIndex] = useState(0);
@@ -180,6 +181,32 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
     <DAppItem textColor={textColor} item={item} openApp={openApp} secondaryTextColor={secondaryTextColor} />
   );
 
+  const logos = [
+    <View
+      key="walletconnect"
+      style={{ padding: 12, flexDirection: 'row', alignItems: 'center', height: 52, justifyContent: 'center' }}
+    >
+      <WalletConnectLogo width={15} height={15} />
+      <Text style={{ color: activeIndex === 0 ? '#3b99fc' : textColor, fontWeight: '600', marginStart: 8, fontSize: 18 }}>
+        {`WalletConnect`}
+      </Text>
+    </View>,
+    <View
+      key="metamask"
+      style={{ padding: 12, flexDirection: 'row', alignItems: 'center', height: 52, justifyContent: 'center' }}
+    >
+      <MetamaskLogo width={12.5} height={12.5} />
+      <Text style={{ color: activeIndex === 1 ? '#f5841f' : textColor, fontWeight: '600', marginStart: 8, fontSize: 18 }}>
+        {`Metamask`}
+      </Text>
+    </View>,
+  ];
+
+  const scrollToIndex = (index: number) => {
+    scroller.current?.scrollToIndex({ index, animated: true });
+    setActiveIndex(index);
+  };
+
   return (
     <View style={{ flex: 1, paddingTop: top }}>
       <View
@@ -196,38 +223,23 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
           style={{
             flex: 1,
             flexDirection: 'row',
-            justifyContent: 'space-around',
-            marginBottom: -1,
-            marginStart: 48,
+            justifyContent: 'center',
+            marginBottom: -2,
           }}
         >
-          <TouchableOpacity
-            onPress={() => swiper.current?.scrollTo(0)}
-            style={{ padding: 16, flexDirection: 'row', alignItems: 'center' }}
-          >
-            <WalletConnectLogo width={15} height={15} />
-            <Text
-              style={{ color: activeIndex === 0 ? '#3b99fc' : textColor, fontWeight: '500', marginStart: 8, fontSize: 17 }}
-            >
-              {`WalletConnect`}
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => swiper.current?.scrollTo(1)}
-            style={{ padding: 16, flexDirection: 'row', alignItems: 'center' }}
-          >
-            <MetamaskLogo width={14} height={14} />
-            <Text
-              style={{ color: activeIndex === 1 ? '#f5841f' : textColor, fontWeight: '500', marginStart: 8, fontSize: 17 }}
-            >
-              {`Metamask`}
-            </Text>
-          </TouchableOpacity>
+          <FlatList
+            ref={scroller}
+            scrollEnabled={false}
+            pagingEnabled
+            data={logos}
+            renderItem={({ item }) => item}
+            contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
+            style={{ height: 52 }}
+          />
         </View>
       </View>
 
-      <Swiper ref={swiper} showsPagination={false} showsButtons={false} loop={false} onIndexChanged={setActiveIndex}>
+      <Swiper ref={swiper} showsPagination={false} showsButtons={false} loop={false} onIndexChanged={scrollToIndex}>
         <View style={{ width: '100%', height: '100%' }}>
           {connectedCount > 0 ? (
             <FlatList
