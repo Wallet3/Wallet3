@@ -121,14 +121,14 @@ export default observer((props: Web3ViewProps) => {
       return;
     }
 
-    hub.getDApp(hostname).then((app) => updateDAppState(app));
+    updateDAppState(hub.getDApp(hostname));
   };
 
   useEffect(() => {
     const notifyWebView = async (appState) => {
       const webview = (webViewRef as any).current as WebView;
       webview?.injectJavaScript(JS_POST_MESSAGE_TO_PROVIDER(appState));
-      updateDAppState(await hub.getDApp(appState.origin));
+      updateDAppState(hub.getDApp(appState.origin));
     };
 
     hub.on('appChainUpdated_metamask', notifyWebView);
