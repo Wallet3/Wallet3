@@ -42,7 +42,7 @@ export default observer(({ client, onDisconnect, onNetworkPress, onAccountsPress
         <Text style={viewStyles.itemTxt}>DApp:</Text>
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Image source={{ uri: appMeta?.icons[0] }} style={{ width: 17, height: 17, marginEnd: 4 }} />
+          <Image source={{ uri: appMeta?.icons[0] }} style={{ width: 17, height: 17, marginEnd: 4, borderRadius: 2 }} />
           <Text style={viewStyles.itemTxt} numberOfLines={1}>
             {appMeta?.name}
           </Text>

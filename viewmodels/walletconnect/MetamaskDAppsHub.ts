@@ -25,6 +25,7 @@ class MetamaskDAppsHub {
   }
 
   remove(dapp: MetamaskDApp) {
+    this.cache.delete(dapp.hostname);
     this.dapps = this.dapps.filter((i) => i !== dapp);
   }
 

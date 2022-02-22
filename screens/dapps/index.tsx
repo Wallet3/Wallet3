@@ -127,7 +127,7 @@ const DAppItem = observer(
       <View style={{ paddingHorizontal: 16, paddingVertical: 12, flexDirection: 'row', alignItems: 'center' }}>
         <TouchableOpacity style={{ flex: 1, alignItems: 'center', flexDirection: 'row' }} onPress={() => openApp(item)}>
           <View style={{ marginEnd: 12, borderWidth: 1, borderRadius: 5, borderColor, padding: 2 }}>
-            <Image source={{ uri: appMeta?.icons[0] }} style={{ width: 27, height: 27 }} />
+            <Image source={{ uri: appMeta?.icons[0] }} style={{ width: 27, height: 27, borderRadius: 2 }} />
           </View>
 
           <View style={{ flex: 1 }}>
@@ -259,7 +259,13 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
           )}
         </View>
 
-        <FlatList data={dapps} renderItem={renderItem} style={{ width: '100%', height: '100%' }} keyExtractor={(i) => i.hostname} />
+        <FlatList
+          data={dapps}
+          renderItem={renderItem}
+          style={{ width: '100%', height: '100%' }}
+          keyExtractor={(i) => i.hostname}
+          bounces={false}
+        />
       </Swiper>
 
       <Portal>
