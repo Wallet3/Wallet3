@@ -8,7 +8,7 @@ import Coingecko from '../common/apis/Coingecko';
 import Contacts from './customs/Contacts';
 import Database from '../models/Database';
 import GasPrice from './misc/GasPrice';
-import { InpageMetamaskDAppHub } from '../screens/browser/controller/InpageMetamaskDAppHub';
+import { InpageDAppController } from '../screens/browser/controller/InpageDAppController';
 import Key from '../models/Key';
 import LINQ from 'linq';
 import LinkHub from './hubs/LinkHub';
@@ -195,7 +195,7 @@ export class AppVM {
       AsyncStorage.clear(),
       Authentication.reset(),
       WalletConnectV1ClientHub.reset(),
-      InpageMetamaskDAppHub.reset(),
+      InpageDAppController.reset(),
     ]);
   }
 }

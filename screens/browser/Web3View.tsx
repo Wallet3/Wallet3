@@ -16,7 +16,7 @@ import DeviceInfo from 'react-native-device-info';
 import GetPageMetadata from './scripts/Metadata';
 import HookWalletConnect from './scripts/InjectWalletConnectObserver';
 import { INetwork } from '../../common/Networks';
-import { InpageMetamaskDAppHub } from './controller/InpageMetamaskDAppHub';
+import { InpageDAppController } from './controller/InpageDAppController';
 import { JS_POST_MESSAGE_TO_PROVIDER } from './scripts/Utils';
 import LinkHub from '../../viewmodels/hubs/LinkHub';
 import MetamaskMobileProvider from './scripts/Metamask-mobile-provider';
@@ -68,7 +68,7 @@ interface Web3ViewProps extends WebViewProps {
 export default observer((props: Web3ViewProps) => {
   const { t } = i18n;
   const { webViewRef, viewShotRef, tabCount, onTabPress } = props;
-  const [hub] = useState(new InpageMetamaskDAppHub());
+  const [hub] = useState(new InpageDAppController());
   const [appName] = useState(`Wallet3/${DeviceInfo.getVersion() || '0.0.0'}`);
   const [ua] = useState(
     DeviceInfo.isTablet()

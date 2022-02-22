@@ -15,7 +15,7 @@ import {
   InpageDAppAddEthereumChain,
   InpageDAppSignRequest,
   InpageDAppTxRequest,
-} from './browser/controller/InpageMetamaskDAppHub';
+} from './browser/controller/InpageDAppController';
 import { ERC681, ERC681Transferring } from '../viewmodels/transferring/ERC681Transferring';
 import React, { useEffect, useState } from 'react';
 

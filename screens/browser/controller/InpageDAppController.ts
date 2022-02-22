@@ -93,7 +93,7 @@ export interface InpageDAppAddAsset {
   asset: WatchAssetParams;
 }
 
-export class InpageMetamaskDAppHub extends EventEmitter {
+export class InpageDAppController extends EventEmitter {
   apps = new Map<string, InpageDApp>();
 
   private get dbTable() {

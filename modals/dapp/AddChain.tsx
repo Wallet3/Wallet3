@@ -1,6 +1,6 @@
 import { Image, Text, View } from 'react-native';
 
-import { InpageDAppAddEthereumChain } from '../../screens/browser/controller/InpageMetamaskDAppHub';
+import { InpageDAppAddEthereumChain } from '../../screens/browser/controller/InpageDAppController';
 import React from 'react';
 import RejectApproveButtons from '../components/RejectApproveButtons';
 import { SafeViewContainer } from '../../components';
