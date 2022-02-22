@@ -178,7 +178,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
       <Screen name="Home" component={RootTab} options={{ headerShown: false }} />
 
       <Screen name="Settings" component={SettingScreen} options={{ title: t('home-drawer-settings') }} />
-      <Screen name="DApps" component={DAppsScreen} options={{ title: t('connectedapps-title') }} />
+      <Screen name="DApps" component={DAppsScreen} options={{ title: t('connectedapps-title'), headerShown: false }} />
     </Navigator>
   );
 });

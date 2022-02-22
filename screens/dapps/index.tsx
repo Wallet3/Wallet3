@@ -1,5 +1,5 @@
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
-import { FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Feather, FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useRef, useState } from 'react';
 import { borderColor, secondaryFontColor } from '../../constants/styles';
 
@@ -13,7 +13,7 @@ import { Modalize } from 'react-native-modalize';
 import NetworkSelector from '../../modals/dapp/NetworkSelector';
 import Networks from '../../viewmodels/Networks';
 import { Portal } from 'react-native-portalize';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
 import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectV1ClientHub';
@@ -22,6 +22,8 @@ import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { styles } from '../../constants/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
+import { WalletConnect as WalletConnectLogo, Metamask as MetamaskLogo } from '../../assets/3rd';
+import { DrawerActions } from '@react-navigation/native';
 
 interface Props {
   client: WalletConnect_v1;
@@ -152,7 +154,10 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
   const { t } = i18n;
   const [selectedClient, setSelectedClient] = useState<WalletConnect_v1>();
   const { ref, open, close } = useModalize();
-  const { secondaryTextColor, textColor } = Theme;
+  const { secondaryTextColor, textColor, systemBorderColor, foregroundColor } = Theme;
+  const [activeIndex, setActiveIndex] = useState(0);
+  const swiper = useRef<Swiper>(null);
+  const { top } = useSafeAreaInsets();
 
   const { sortedClients, connectedCount } = WalletConnectV1ClientHub;
 
@@ -166,25 +171,73 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
   );
 
   return (
-    <View style={{ flex: 1 }}>
-      <View style={{ flexDirection: 'row' }}></View>
+    <View style={{ flex: 1, paddingTop: top }}>
+      <View
+        style={{ flexDirection: 'row', alignItems: 'center', borderBottomWidth: 0.333, borderBottomColor: systemBorderColor }}
+      >
+        <TouchableOpacity
+          style={{ padding: 16, paddingVertical: 0, position: 'absolute', zIndex: 9 }}
+          onPress={() => navigation.dispatch(DrawerActions.openDrawer)}
+        >
+          <Feather name="menu" size={20} color={foregroundColor} style={{}} />
+        </TouchableOpacity>
 
-      {connectedCount > 0 ? (
-        <FlatList
-          data={sortedClients}
-          renderItem={renderItem}
-          keyExtractor={(i) => i.peerId}
-          style={{ flex: 1 }}
-          alwaysBounceVertical={false}
-        />
-      ) : (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <TouchableOpacity style={{ padding: 12 }} onPress={() => navigation.getParent()?.navigate('QRScan')}>
-            <MaterialCommunityIcons name="qrcode-scan" size={32} color={secondaryTextColor} />
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+            marginBottom: -1,
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => swiper.current?.scrollTo(0)}
+            style={{ padding: 16, flexDirection: 'row', alignItems: 'center' }}
+          >
+            <WalletConnectLogo width={14} height={14} />
+            <Text
+              style={{ color: activeIndex === 0 ? '#3b99fc' : textColor, fontWeight: '500', marginStart: 8, fontSize: 16 }}
+            >
+              {`WalletConnect (${connectedCount})`}
+            </Text>
           </TouchableOpacity>
-          <Text style={{ color: secondaryFontColor, marginTop: 24 }}>{t('connectedapps-noapps')}</Text>
+
+          <TouchableOpacity
+            onPress={() => swiper.current?.scrollTo(1)}
+            style={{ padding: 16, flexDirection: 'row', alignItems: 'center' }}
+          >
+            <MetamaskLogo width={14} height={14} />
+            <Text
+              style={{ color: activeIndex === 1 ? '#f5841f' : textColor, fontWeight: '500', marginStart: 8, fontSize: 16 }}
+            >
+              Metamask
+            </Text>
+          </TouchableOpacity>
         </View>
-      )}
+      </View>
+
+      <Swiper ref={swiper} showsPagination={false} showsButtons={false} loop={false} onIndexChanged={setActiveIndex}>
+        <View style={{ width: '100%', height: '100%' }}>
+          {connectedCount > 0 ? (
+            <FlatList
+              data={sortedClients}
+              renderItem={renderItem}
+              keyExtractor={(i) => i.peerId}
+              style={{ flex: 1 }}
+              alwaysBounceVertical={false}
+            />
+          ) : (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <TouchableOpacity style={{ padding: 12 }} onPress={() => navigation.getParent()?.navigate('QRScan')}>
+                <MaterialCommunityIcons name="qrcode-scan" size={32} color={secondaryTextColor} />
+              </TouchableOpacity>
+              <Text style={{ color: secondaryFontColor, marginTop: 24 }}>{t('connectedapps-noapps')}</Text>
+            </View>
+          )}
+        </View>
+
+        <FlatList data={sortedClients} renderItem={renderItem} style={{ width: '100%', height: '100%' }} />
+      </Swiper>
 
       <Portal>
         <Modalize adjustToContentHeight ref={ref} disableScrollIfPossible modalStyle={styles.modalStyle}>
