@@ -16,9 +16,10 @@ import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { thirdFontColor } from '../../constants/styles';
+import { MetamaskDApp } from '../../viewmodels/walletconnect/MetamaskDApp';
 
 interface Props {
-  client: WalletConnect_v1;
+  client: WalletConnect_v1 | MetamaskDApp;
   defaultAccount?: Account;
   defaultNetwork?: INetwork;
 

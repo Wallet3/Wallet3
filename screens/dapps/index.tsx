@@ -24,9 +24,11 @@ import { styles } from '../../constants/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { WalletConnect as WalletConnectLogo, Metamask as MetamaskLogo } from '../../assets/3rd';
 import { DrawerActions } from '@react-navigation/native';
+import { MetamaskDAppsHub } from '../../viewmodels/walletconnect/MetamaskDAppsHub';
+import { MetamaskDApp } from '../../viewmodels/walletconnect/MetamaskDApp';
 
 interface Props {
-  client: WalletConnect_v1;
+  client: WalletConnect_v1 | MetamaskDApp;
   allAccounts: Account[];
   close: Function;
 }
@@ -106,8 +108,8 @@ const DAppItem = observer(
     openApp,
     secondaryTextColor,
   }: {
-    item: WalletConnect_v1;
-    openApp: (item: WalletConnect_v1) => void;
+    item: WalletConnect_v1 | MetamaskDApp;
+    openApp: (item: WalletConnect_v1 | MetamaskDApp) => void;
     textColor: string;
     secondaryTextColor: string;
   }) => {
@@ -152,21 +154,23 @@ const DAppItem = observer(
 
 export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
   const { t } = i18n;
-  const [selectedClient, setSelectedClient] = useState<WalletConnect_v1>();
+  const swiper = useRef<Swiper>(null);
   const { ref, open, close } = useModalize();
   const { secondaryTextColor, textColor, systemBorderColor, foregroundColor } = Theme;
   const [activeIndex, setActiveIndex] = useState(0);
-  const swiper = useRef<Swiper>(null);
+  const [selectedClient, setSelectedClient] = useState<WalletConnect_v1 | MetamaskDApp>();
   const { top } = useSafeAreaInsets();
+  const [metamaskHub] = useState(new MetamaskDAppsHub());
 
   const { sortedClients, connectedCount } = WalletConnectV1ClientHub;
+  const { dapps } = metamaskHub;
 
-  const openApp = (client: WalletConnect_v1) => {
+  const openApp = (client: WalletConnect_v1 | MetamaskDApp) => {
     setSelectedClient(client);
     setTimeout(() => open(), 0);
   };
 
-  const renderItem = ({ item }: { item: WalletConnect_v1 }) => (
+  const renderItem = ({ item }: { item: WalletConnect_v1 | MetamaskDApp }) => (
     <DAppItem textColor={textColor} item={item} openApp={openApp} secondaryTextColor={secondaryTextColor} />
   );
 
@@ -210,7 +214,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
             <Text
               style={{ color: activeIndex === 1 ? '#f5841f' : textColor, fontWeight: '500', marginStart: 8, fontSize: 16 }}
             >
-              Metamask
+              {`Metamask (${dapps.length})`}
             </Text>
           </TouchableOpacity>
         </View>
@@ -236,7 +240,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
           )}
         </View>
 
-        <FlatList data={sortedClients} renderItem={renderItem} style={{ width: '100%', height: '100%' }} />
+        <FlatList data={dapps} renderItem={renderItem} style={{ width: '100%', height: '100%' }} keyExtractor={(i) => i.id} />
       </Swiper>
 
       <Portal>
