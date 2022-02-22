@@ -13,7 +13,12 @@ class MetamaskDAppsHub {
   }
 
   async init() {
-    const dapps = await Database.inpageDApps.find();
+    let dapps = await Database.inpageDApps.find();
+    const expiredTime = Date.now() - 1000 * 60 * 60 * 24 * 30;
+    dapps.filter((d) => d.lastUsedTimestamp < expiredTime).map((item) => item.remove());
+
+    dapps = dapps.filter((d) => d.lastUsedTimestamp >= expiredTime);
+
     const items = dapps.map((app) => {
       const item = new MetamaskDApp(app);
       item.once('removed', (obj) => this.remove(obj));
