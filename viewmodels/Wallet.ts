@@ -1,18 +1,17 @@
 import * as ethSignUtil from '@metamask/eth-sig-util';
 
-import { Bytes, Wallet as EthersWallet, providers, utils } from 'ethers';
-import { action, makeObservable, observable, reaction, runInAction } from 'mobx';
+import { Wallet as EthersWallet, providers, utils } from 'ethers';
+import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import { Account } from './account/Account';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Authentication from './Authentication';
-import { InpageDAppController } from '../screens/browser/controller/InpageDAppController';
 import Key from '../models/Key';
 import LINQ from 'linq';
-import Networks from './Networks';
 import { ReadableInfo } from '../models/Transaction';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import TxHub from './hubs/TxHub';
+import MetamaskDAppsHub from './walletconnect/MetamaskDAppsHub';
 
 type SignTxRequest = {
   accountIndex: number;
@@ -127,7 +126,7 @@ export class Wallet {
       AsyncStorage.removeItem(storeKey);
     }
 
-    InpageDAppController.removeAccount(account.address);
+    MetamaskDAppsHub.removeAccount(account.address);
   }
 
   private async unlockPrivateKey({ pin, accountIndex }: { pin?: string; accountIndex?: number }) {

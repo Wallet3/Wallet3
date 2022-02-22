@@ -195,7 +195,7 @@ export class AppVM {
       AsyncStorage.clear(),
       Authentication.reset(),
       WalletConnectV1ClientHub.reset(),
-      InpageDAppController.reset(),
+      MetamaskDAppsHub.reset(),
     ]);
   }
 }

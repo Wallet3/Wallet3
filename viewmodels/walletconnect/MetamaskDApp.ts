@@ -30,8 +30,20 @@ export class MetamaskDApp extends EventEmitter {
     return [this.dapp.lastUsedAccount];
   }
 
-  get id() {
+  get hostname() {
     return this.dapp.origin;
+  }
+
+  get origin() {
+    return this.dapp.origin;
+  }
+
+  get lastUsedAccount() {
+    return this.dapp.lastUsedAccount;
+  }
+
+  get lastUsedChainId() {
+    return this.dapp.lastUsedChainId;
   }
 
   constructor(app: InpageDApp) {
@@ -46,14 +58,25 @@ export class MetamaskDApp extends EventEmitter {
     };
   }
 
-  setLastUsedChain(chainId: number) {
-    this.dapp.lastUsedChainId = `${chainId}`;
-    this.dapp.save();
+  setLastUsedChain(chainId: number | string) {
+    try {
+      this.dapp.lastUsedChainId = `${chainId}`;
+      this.dapp.save();
+    } catch (error) {}
   }
 
   setLastUsedAccount(account: string) {
-    this.dapp.lastUsedAccount = account;
-    this.dapp.save();
+    try {
+      this.dapp.lastUsedAccount = account;
+      this.dapp.save();
+    } catch (error) {}
+  }
+
+  setLastUsedTimestamp(timestamp: number) {
+    try {
+      this.dapp.lastUsedTimestamp = timestamp;
+      this.dapp.save();
+    } catch (error) {}
   }
 
   killSession() {

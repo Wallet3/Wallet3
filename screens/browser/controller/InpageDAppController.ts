@@ -1,13 +1,12 @@
 import * as Linking from 'expo-linking';
 
-import Bookmarks, { isSecureSite } from '../../../viewmodels/customs/Bookmarks';
-import { Bytes, providers, utils } from 'ethers';
+import { isSecureSite } from '../../../viewmodels/customs/Bookmarks';
+import { providers, utils } from 'ethers';
 import Networks, { AddEthereumChainParameter } from '../../../viewmodels/Networks';
-import { getCode, rawCall } from '../../../common/RPC';
+import { rawCall } from '../../../common/RPC';
 
 import { Account } from '../../../viewmodels/account/Account';
 import App from '../../../viewmodels/App';
-import Database from '../../../models/Database';
 import DeviceInfo from 'react-native-device-info';
 import { ERC20Token } from '../../../models/ERC20';
 import EventEmitter from 'events';
@@ -16,7 +15,7 @@ import InpageDApp from '../../../models/InpageDApp';
 import { ReadableInfo } from '../../../models/Transaction';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import { WCCallRequest_eth_sendTransaction } from '../../../models/WCSession_v1';
-import WebView from 'react-native-webview';
+
 import i18n from '../../../i18n';
 import { showMessage } from 'react-native-flash-message';
 import MetamaskDAppsHub from '../../../viewmodels/walletconnect/MetamaskDAppsHub';
@@ -94,12 +93,6 @@ export interface InpageDAppAddAsset {
 }
 
 export class InpageDAppController extends EventEmitter {
-  apps = new Map<string, InpageDApp>();
-
-  private get dbTable() {
-    return Database.inpageDApps;
-  }
-
   constructor() {
     super();
   }
@@ -123,21 +116,21 @@ export class InpageDAppController extends EventEmitter {
         result = `Wallet3/${DeviceInfo.getVersion()}/Mobile`;
         break;
       case 'eth_accounts':
-        const account = (await this.getDApp(hostname!))?.lastUsedAccount;
+        const account = this.getDApp(hostname!)?.lastUsedAccount;
         result = account && App.allAccounts.find((a) => a.address === account) ? [account] : [];
         break;
       case 'eth_coinbase':
-        const coinbase = (await this.getDApp(hostname!))?.lastUsedAccount;
+        const coinbase = this.getDApp(hostname!)?.lastUsedAccount;
         result = account ? [coinbase] : null;
         break;
       case 'eth_requestAccounts':
         result = await this.eth_requestAccounts(hostname!, payload);
         break;
       case 'net_version':
-        result = `${Number((await this.getDApp(hostname!))?.lastUsedChainId ?? 1)}`;
+        result = `${Number(this.getDApp(hostname!)?.lastUsedChainId ?? 1)}`;
         break;
       case 'eth_chainId':
-        result = `0x${Number((await this.getDApp(hostname!))?.lastUsedChainId ?? Networks.current.chainId).toString(16)}`;
+        result = `0x${Number(this.getDApp(hostname!)?.lastUsedChainId ?? Networks.current.chainId).toString(16)}`;
         break;
       case 'wallet_switchEthereumChain':
         result = await this.wallet_switchEthereumChain(hostname!, params);
@@ -167,7 +160,7 @@ export class InpageDAppController extends EventEmitter {
         result = await this.personal_ecRecover(hostname!, params);
         break;
       default:
-        const dapp = await this.getDApp(hostname!);
+        const dapp = this.getDApp(hostname!);
         if (dapp) result = await rawCall(dapp.lastUsedChainId, { method, params });
         break;
     }
@@ -176,32 +169,22 @@ export class InpageDAppController extends EventEmitter {
       name: 'metamask-provider',
       data: { id, jsonrpc, error: undefined, result },
     };
-    // return JSON.stringify({ id, jsonrpc, result, error: undefined });
   }
 
-  async getDApp(hostname: string) {
-    let dapp = this.apps.get(hostname);
-    if (dapp) return dapp;
-
-    dapp = await this.dbTable.findOne({ where: { origin: hostname } });
-    if (dapp) this.apps.set(hostname, dapp);
-
-    return dapp;
+  getDApp(hostname: string) {
+    return MetamaskDAppsHub.find(hostname);
   }
 
   private async eth_requestAccounts(origin: string, payload: Payload) {
     if (!App.currentAccount) return [];
 
-    const dapp = await this.getDApp(origin);
+    const dapp = this.getDApp(origin);
 
     if (dapp) {
       const account = App.allAccounts.find((a) => a.address === dapp.lastUsedAccount); // Ensure last used account is still available)
 
       if (account) {
         return [account.address];
-      } else {
-        this.apps.delete(origin);
-        await dapp.remove();
       }
     }
 
@@ -214,7 +197,6 @@ export class InpageDAppController extends EventEmitter {
         app.lastUsedTimestamp = Date.now();
         app.metadata = payload.pageMetadata || { icon: '', title: origin };
 
-        this.apps.set(origin, app);
         resolve([account.address]);
 
         this.emit('dappConnected', app);
@@ -229,7 +211,7 @@ export class InpageDAppController extends EventEmitter {
   }
 
   private async wallet_switchEthereumChain(origin: string, params: { chainId: string }[]) {
-    const dapp = await this.getDApp(origin);
+    const dapp = this.getDApp(origin);
     if (!dapp) return null;
 
     const targetChainId = params[0].chainId;
@@ -242,7 +224,7 @@ export class InpageDAppController extends EventEmitter {
   }
 
   private async sign(origin: string, params: string[], method: string) {
-    const dapp = await this.getDApp(origin);
+    const dapp = this.getDApp(origin);
     if (!dapp) return;
 
     const { wallet, account, accountIndex } = App.findWallet(dapp.lastUsedAccount) || {};
@@ -251,10 +233,7 @@ export class InpageDAppController extends EventEmitter {
       return { error: { code: 4001, message: 'Invalid account' } };
     }
 
-    try {
-      dapp.lastUsedTimestamp = Date.now();
-      dapp.save();
-    } catch (error) {}
+    dapp.setLastUsedTimestamp(Date.now());
 
     return new Promise((resolve) => {
       let msg: string | undefined = undefined;
@@ -310,15 +289,12 @@ export class InpageDAppController extends EventEmitter {
   }
 
   private async eth_sendTransaction(origin: string, payload: Payload) {
-    const dapp = await this.getDApp(origin);
+    const dapp = this.getDApp(origin);
     if (!dapp) return null;
 
     const { params, pageMetadata } = payload;
 
-    try {
-      dapp.lastUsedTimestamp = Date.now();
-      dapp.save();
-    } catch (error) {}
+    dapp.setLastUsedTimestamp(Date.now());
 
     return new Promise<string | any>((resolve) => {
       const approve = async ({
@@ -388,7 +364,7 @@ export class InpageDAppController extends EventEmitter {
     if (Networks.has(chain.chainId)) {
       setTimeout(() => this.wallet_switchEthereumChain(origin, [{ chainId: chain.chainId }]), 200);
 
-      const dapp = await this.getDApp(origin);
+      const dapp = this.getDApp(origin);
 
       if (Number(dapp?.lastUsedChainId) !== Networks.current.chainId) {
         showMessage({ message: i18n.t('msg-chain-already-exists', { name: chain.chainName }), type: 'info' });
@@ -422,7 +398,7 @@ export class InpageDAppController extends EventEmitter {
     if (!asset || !asset.options || !asset.options.address || asset.type !== 'ERC20')
       return { error: { message: 'Invalid request' } };
 
-    const dapp = await this.getDApp(origin);
+    const dapp = this.getDApp(origin);
 
     return new Promise((resolve) => {
       const approve = async () => {
@@ -481,7 +457,7 @@ export class InpageDAppController extends EventEmitter {
   }
 
   private async personal_ecRecover(origin: string, params: string[]) {
-    const dapp = await this.getDApp(origin);
+    const dapp = this.getDApp(origin);
     if (!dapp) return null;
 
     const [hexMsg, signature] = params;
@@ -492,13 +468,10 @@ export class InpageDAppController extends EventEmitter {
   }
 
   async setDAppChainId(origin: string, chainId: string | number) {
-    const dapp = await this.getDApp(origin);
+    const dapp = this.getDApp(origin);
     if (!dapp) return;
 
-    try {
-      dapp.lastUsedChainId = `${chainId}`;
-      dapp.save();
-    } catch (error) {}
+    dapp.setLastUsedChain(chainId);
 
     this.emit('appChainUpdated_metamask', {
       origin,
@@ -512,13 +485,10 @@ export class InpageDAppController extends EventEmitter {
   }
 
   async setDAppAccount(origin: string, account: string) {
-    const dapp = await this.getDApp(origin);
+    const dapp = this.getDApp(origin);
     if (!dapp) return;
 
-    try {
-      dapp.lastUsedAccount = account;
-      dapp.save();
-    } catch (error) {}
+    dapp.setLastUsedAccount(account);
 
     this.emit('appAccountUpdated_metamask', {
       origin,
@@ -529,20 +499,5 @@ export class InpageDAppController extends EventEmitter {
         params: [account],
       },
     });
-  }
-
-  reset() {
-    this.apps.clear();
-  }
-
-  static async removeAccount(address: string) {
-    const dbTable = Database.inpageDApps;
-    const items = await dbTable.find({ where: { lastUsedAccount: address } });
-    // items.forEach((i) => this.apps.delete(i.origin));
-    await dbTable.remove(items);
-  }
-
-  static reset() {
-    return Database.inpageDApps.clear();
   }
 }

@@ -259,7 +259,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
           )}
         </View>
 
-        <FlatList data={dapps} renderItem={renderItem} style={{ width: '100%', height: '100%' }} keyExtractor={(i) => i.id} />
+        <FlatList data={dapps} renderItem={renderItem} style={{ width: '100%', height: '100%' }} keyExtractor={(i) => i.hostname} />
       </Swiper>
 
       <Portal>
