@@ -165,7 +165,6 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
   const scroller = useRef<FlatList>(null);
   const { ref, open, close } = useModalize();
   const { secondaryTextColor, textColor, systemBorderColor, foregroundColor } = Theme;
-  const [activeIndex, setActiveIndex] = useState(0);
   const [selectedClient, setSelectedClient] = useState<WalletConnect_v1 | MetamaskDApp>();
   const { top } = useSafeAreaInsets();
 
@@ -187,24 +186,19 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
       style={{ padding: 12, flexDirection: 'row', alignItems: 'center', height: 52, justifyContent: 'center' }}
     >
       <WalletConnectLogo width={15} height={15} />
-      <Text style={{ color: activeIndex === 0 ? '#3b99fc' : textColor, fontWeight: '600', marginStart: 8, fontSize: 18 }}>
-        {`WalletConnect`}
-      </Text>
+      <Text style={{ color: '#3b99fc', fontWeight: '600', marginStart: 8, fontSize: 18 }}>{`WalletConnect`}</Text>
     </View>,
     <View
       key="metamask"
       style={{ padding: 12, flexDirection: 'row', alignItems: 'center', height: 52, justifyContent: 'center' }}
     >
       <MetamaskLogo width={12.5} height={12.5} />
-      <Text style={{ color: activeIndex === 1 ? '#f5841f' : textColor, fontWeight: '600', marginStart: 8, fontSize: 18 }}>
-        {`Metamask`}
-      </Text>
+      <Text style={{ color: '#f5841f', fontWeight: '600', marginStart: 8, fontSize: 18 }}>{`Metamask`}</Text>
     </View>,
   ];
 
   const scrollToIndex = (index: number) => {
     scroller.current?.scrollToIndex({ index, animated: true });
-    setActiveIndex(index);
   };
 
   return (
