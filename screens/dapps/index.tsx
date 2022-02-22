@@ -109,11 +109,13 @@ const DAppItem = observer(
     item,
     openApp,
     secondaryTextColor,
+    backgroundColor,
   }: {
     item: WalletConnect_v1 | MetamaskDApp;
     openApp: (item: WalletConnect_v1 | MetamaskDApp) => void;
     textColor: string;
     secondaryTextColor: string;
+    backgroundColor: string;
   }) => {
     const { appMeta } = item;
     const { t } = i18n;
@@ -124,7 +126,9 @@ const DAppItem = observer(
     };
 
     return (
-      <View style={{ paddingHorizontal: 16, paddingVertical: 12, flexDirection: 'row', alignItems: 'center' }}>
+      <View
+        style={{ paddingHorizontal: 16, paddingVertical: 12, flexDirection: 'row', alignItems: 'center', backgroundColor }}
+      >
         <TouchableOpacity style={{ flex: 1, alignItems: 'center', flexDirection: 'row' }} onPress={() => openApp(item)}>
           <View style={{ marginEnd: 12, borderWidth: 1, borderRadius: 5, borderColor, padding: 2 }}>
             <Image source={{ uri: appMeta?.icons[0] }} style={{ width: 27, height: 27, borderRadius: 2 }} />
@@ -164,7 +168,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
   const swiper = useRef<Swiper>(null);
   const scroller = useRef<FlatList>(null);
   const { ref, open, close } = useModalize();
-  const { secondaryTextColor, textColor, systemBorderColor, foregroundColor } = Theme;
+  const { secondaryTextColor, textColor, systemBorderColor, foregroundColor, backgroundColor } = Theme;
   const [selectedClient, setSelectedClient] = useState<WalletConnect_v1 | MetamaskDApp>();
   const { top } = useSafeAreaInsets();
 
@@ -177,7 +181,13 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
   };
 
   const renderItem = ({ item }: { item: WalletConnect_v1 | MetamaskDApp }) => (
-    <DAppItem textColor={textColor} item={item} openApp={openApp} secondaryTextColor={secondaryTextColor} />
+    <DAppItem
+      textColor={textColor}
+      item={item}
+      openApp={openApp}
+      secondaryTextColor={secondaryTextColor}
+      backgroundColor={backgroundColor}
+    />
   );
 
   const logos = [
@@ -235,6 +245,8 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
 
       <Swiper ref={swiper} showsPagination={false} showsButtons={false} loop={false} onIndexChanged={scrollToIndex}>
         <View style={{ width: '100%', height: '100%' }}>
+          <Ionicons name="arrow-forward" size={19} color="lightgrey" style={{ position: 'absolute', right: 16, top: '50%' }} />
+
           {connectedCount > 0 ? (
             <FlatList
               data={sortedClients}
