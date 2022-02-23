@@ -1,6 +1,6 @@
 import * as ethers from 'ethers';
 
-import { INetwork, PublicNetworks } from '../common/Networks';
+import { INetwork, PublicNetworks, AllNetworks } from '../common/Networks';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { deleteRPCUrlCache, getMaxPriorityFeeByRPC, getNextBlockBaseFeeByRPC } from '../common/RPC';
 import ImageColors from 'react-native-image-colors';
@@ -49,7 +49,7 @@ class Networks {
   }
 
   get all() {
-    return PublicNetworks.concat(this.userChains);
+    return (__DEV__ ? AllNetworks : PublicNetworks).concat(this.userChains);
   }
 
   constructor() {
@@ -68,7 +68,7 @@ class Networks {
 
     runInAction(() => {
       this.userChains = chains
-        .filter((c) => !PublicNetworks.find((n) => n.chainId === Number(c.id)))
+        .filter((c) => !(__DEV__ ? AllNetworks : PublicNetworks).find((n) => n.chainId === Number(c.id)))
         .map<INetwork>((c) => {
           return {
             chainId: Number(c.id),
@@ -126,7 +126,7 @@ class Networks {
 
   async add(chain: AddEthereumChainParameter) {
     if (!Number.isSafeInteger(Number(chain?.chainId))) return false;
-    if (PublicNetworks.find((n) => n.chainId === Number(chain.chainId))) return false;
+    if (this.find(chain.chainId)) return false;
     if (chain.rpcUrls?.length === 0) return false;
 
     const nc = (await Database.chains.findOne({ where: { id: chain.chainId } })) || new Chain();

@@ -280,4 +280,4 @@ export const Testnets: INetwork[] = [
   },
 ];
 
-export const Networks: INetwork[] = [...PublicNetworks, ...Testnets];
+export const AllNetworks: INetwork[] = [...PublicNetworks, ...Testnets];

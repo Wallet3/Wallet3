@@ -148,6 +148,7 @@ export class TokenTransferring extends BaseTransaction {
       amountWei: computed,
       isValidAmount: computed,
       allTokens: computed,
+      safeTo: computed,
 
       setTo: action,
       setAmount: action,
