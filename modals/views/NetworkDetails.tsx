@@ -104,7 +104,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
         onPress={() =>
           onDone({
             ...network,
-            symbol: symbol.trim(),
+            symbol: symbol.toUpperCase().trim(),
             rpcUrls: rpc.split(',').map((url) => url.trim()),
             explorer: explorer.trim(),
           })
