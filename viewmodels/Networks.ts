@@ -142,14 +142,18 @@ class Networks {
       const priFee = await getNextBlockBaseFeeByRPC(chain.rpcUrls[0]);
       nc.customize.eip1559 = priFee >= 1;
 
-      const result = await ImageColors.getColors(icons[nc.symbol.toLowerCase()]);
-      switch (result.platform) {
-        case 'android':
-          nc.customize.color = result.dominant || nc.customize.color;
-          break;
-        case 'ios':
-          nc.customize.color = result.background || nc.customize.color;
-          break;
+      const icon = icons[nc.symbol.toLowerCase()];
+
+      if (icon) {
+        const result = await ImageColors.getColors(icon);
+        switch (result.platform) {
+          case 'android':
+            nc.customize.color = result.dominant || nc.customize.color;
+            break;
+          case 'ios':
+            nc.customize.color = result.background || nc.customize.color;
+            break;
+        }
       }
     } catch (error) {}
 
