@@ -14,6 +14,8 @@ import i18n from '../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
+import NetworkDetails from './views/NetworkDetails';
+import { ReactiveScreen } from '../utils/device';
 
 interface Props {
   onNetworkPress?: (network: INetwork) => void;
@@ -27,13 +29,19 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
   const { t } = i18n;
   const { backgroundColor, secondaryTextColor, borderColor } = Theme;
   const [nets, setNets] = useState<INetwork[]>();
+  const [editNetwork, setEditNetwork] = useState<INetwork>();
+  const swiper = useRef<Swiper>(null);
   const flatList = useRef<FlatList>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => setNets(Networks.all), 25);
+    const reset = () => swiper.current?.scrollTo(0);
+
+    ReactiveScreen.on('change', reset);
 
     return () => {
       clearTimeout(timer);
+      ReactiveScreen.off('change', reset);
     };
   }, []);
 
@@ -85,15 +93,19 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
 
   const renderContextMenuItem = (props: ListRenderItemInfo<INetwork>) => {
     const { item } = props;
-    const actions = [
+    const editableActions = [
       { title: t('button-edit'), systemIcon: 'square.and.pencil' },
       { title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' },
     ];
+
+    const viewActions = [{ title: t('button-view'), systemIcon: 'lanyardcard' }];
 
     const onActionPress = (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => {
       const { index } = e.nativeEvent;
       switch (index) {
         case 0:
+          setEditNetwork(item);
+          setTimeout(() => swiper.current?.scrollTo(1), 25);
           break;
         case 1:
           Networks.remove(item.chainId).then(() => setNets(Networks.all));
@@ -101,18 +113,21 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
       }
     };
 
-    return item.isUserAdded ? (
-      <ContextMenu onPress={onActionPress} actions={actions}>
+    return (
+      <ContextMenu onPress={onActionPress} actions={item.isUserAdded ? editableActions : viewActions}>
         {renderItem(props)}
       </ContextMenu>
-    ) : (
-      renderItem(props)
     );
+  };
+
+  const onSaveNetwork = (network: INetwork) => {
+    swiper.current?.scrollTo(0);
+    Networks.update(network);
   };
 
   return (
     <SafeAreaProvider style={{ ...styles.safeArea, backgroundColor }}>
-      <Swiper scrollEnabled={false}>
+      <Swiper ref={swiper} showsPagination={false} showsButtons={false} loop={false} scrollEnabled={false}>
         <SafeViewContainer style={{ padding: 16 }}>
           <Text style={{ color: secondaryTextColor }} numberOfLines={1}>
             {title ?? t('modal-networks-switch')}
@@ -128,6 +143,8 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
             onScrollToIndexFailed={({}) => {}}
           />
         </SafeViewContainer>
+
+        <NetworkDetails network={editNetwork} onDone={onSaveNetwork} />
       </Swiper>
     </SafeAreaProvider>
   );

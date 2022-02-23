@@ -75,16 +75,6 @@ export const PublicNetworks: INetwork[] = [
   },
   {
     symbol: 'ETH',
-    comm_id: 'aurora',
-    chainId: 1313161554,
-    network: 'Aurora',
-    color: '#70d44b',
-    defaultTokens: AuroraPopularTokens,
-    explorer: 'https://aurorascan.dev',
-    l2: true,
-  },
-  {
-    symbol: 'ETH',
     comm_id: 'boba',
     network: 'Boba',
     chainId: 288,
@@ -116,6 +106,15 @@ export const PublicNetworks: INetwork[] = [
     blockTimeMs: 5 * 1000,
     explorer: 'https://bscscan.com',
     github_dir: 'smartchain',
+  },
+  {
+    symbol: 'ETH',
+    comm_id: 'aurora',
+    chainId: 1313161554,
+    network: 'Aurora',
+    color: '#70d44b',
+    defaultTokens: AuroraPopularTokens,
+    explorer: 'https://aurorascan.dev',
   },
   {
     symbol: 'ONE',

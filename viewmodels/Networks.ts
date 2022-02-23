@@ -177,6 +177,27 @@ class Networks {
     return true;
   }
 
+  async update(network: INetwork) {
+    const value = this.find(network.chainId);
+    if (!value || !value.isUserAdded) return;
+
+    value.symbol = network.symbol;
+    value.explorer = network.explorer;
+    value.color = network.color;
+    value.rpcUrls = network.rpcUrls;
+
+    const userChain = await Database.chains.findOne({
+      where: { id: In([`0x${value.chainId.toString(16)}`, `${value.chainId}`, value.chainId.toString(16)]) },
+    });
+
+    if (!userChain) return;
+    userChain.customize!.color = network.color;
+    userChain.explorer = network.explorer;
+    userChain.rpcUrls = network.rpcUrls || [];
+    userChain.symbol = network.symbol;
+    userChain.save();
+  }
+
   get MainnetWsProvider() {
     const [ws] = providers['1'] as string[];
     const provider = new ethers.providers.WebSocketProvider(ws, 1);

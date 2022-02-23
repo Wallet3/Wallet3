@@ -5,7 +5,7 @@ import { post } from '../utils/fetch';
 
 const cache = new Map<string | number, string[]>();
 
-function getUrls(chainId: number | string): string[] {
+export function getUrls(chainId: number | string): string[] {
   if (cache.has(chainId)) return cache.get(chainId) || [];
 
   let urls: string[] =
