@@ -50,7 +50,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
         <View style={reviewItemStyle}>
           <Text style={styles.reviewItemTitle}>{t('modal-dapp-add-new-network-network')}</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            {generateNetworkIcon({ ...network, width: 15, style: { marginEnd: 8 } })}
+            {generateNetworkIcon({ ...network, width: 17, style: { marginEnd: 8 } })}
             <Text style={{ ...reviewItemValueStyle, maxWidth: 180, color: network.color }} numberOfLines={1}>
               {network.network}
             </Text>
@@ -91,7 +91,9 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
         </View>
 
         <View style={{ ...reviewItemStyle, borderBottomWidth: 0 }}>
-          <Text style={styles.reviewItemTitle}>{t('modal-dapp-add-new-network-explorer')}</Text>
+          <Text style={styles.reviewItemTitle} numberOfLines={1}>
+            {t('modal-dapp-add-new-network-explorer')}
+          </Text>
           <TextInput
             selectTextOnFocus
             editable={editable}
