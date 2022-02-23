@@ -22,7 +22,17 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
     setExplorer(network.explorer);
     setRpc(
       network.rpcUrls?.join(', ') ||
-        getUrls(network.chainId).filter((url) => !(url.includes('infura.io') || url.includes('alchemyapi.io')))[0]
+        getUrls(network.chainId)
+          .map((url) =>
+            url.includes('infura.io') || url.includes('alchemyapi.io')
+              ? url
+                  .split('/')
+                  .slice(0, url.split('/').length - 1)
+                  .join('/')
+              : url
+          )
+          .join(', ') ||
+        ''
     );
   }, [network]);
 
