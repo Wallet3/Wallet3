@@ -4,7 +4,11 @@ import { utils } from 'ethers';
 const host = 'https://openapi.debank.com';
 type chain = 'eth' | 'bsc' | 'xdai' | 'matic' | string;
 
-const nativeTokens = ['0x471EcE3750Da237f93B8E339c536989b8978a438', '0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000']; // Celo native
+const nativeTokens = [
+  '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+  '0x471EcE3750Da237f93B8E339c536989b8978a438',
+  '0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000', // Celo native
+];
 
 export async function getBalance(address: string, chain: chain) {
   try {

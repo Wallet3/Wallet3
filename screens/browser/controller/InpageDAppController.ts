@@ -214,6 +214,8 @@ export class InpageDAppController extends EventEmitter {
     const dapp = this.getDApp(origin);
     if (!dapp) return null;
 
+    if (!Array.isArray(params)) return null;
+
     const targetChainId = params[0].chainId;
     if (Number(dapp.lastUsedChainId) === Number(targetChainId)) return null;
     if (!Networks.has(targetChainId)) return { error: { code: 4902, message: 'the chain has not been added to Wallet 3' } };

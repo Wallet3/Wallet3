@@ -117,15 +117,6 @@ export const PublicNetworks: INetwork[] = [
     explorer: 'https://aurorascan.dev',
   },
   {
-    symbol: 'ONE',
-    comm_id: 'harmony',
-    network: 'Harmony',
-    chainId: 1666600000,
-    explorer: 'https://explorer.harmony.one',
-    color: '#00aee9',
-    defaultTokens: [],
-  },
-  {
     symbol: 'xDAI',
     comm_id: 'xdai',
     network: 'Gnosis Chain (xDai)',
@@ -148,6 +139,15 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: CeloPopularTokens,
     blockTimeMs: 5 * 1000,
     explorer: 'https://explorer.celo.org',
+  },
+  {
+    symbol: 'ONE',
+    comm_id: 'harmony',
+    network: 'Harmony',
+    chainId: 1666600000,
+    explorer: 'https://explorer.harmony.one',
+    color: '#00aee9',
+    defaultTokens: [],
   },
   {
     symbol: 'RON',
