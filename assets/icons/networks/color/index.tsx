@@ -25,6 +25,7 @@ import Ronin from './ronin.svg';
 import XDai from './xdai.svg';
 import ZKSync from './zksync.svg';
 import styles from '../styles';
+import coins from '../../crypto';
 
 export const EVMIcon = ({
   color,
@@ -173,7 +174,7 @@ export function generateNetworkIcon(props: {
     case 2020:
       return <Ronin key={chainId} width={width} height={height ?? width} style={style} />;
     default:
-      return symbol ? (
+      return coins[symbol?.toLowerCase() || ''] ? (
         <Coin symbol={symbol} size={height ?? width} address="" chainId={chainId} style={style as any} />
       ) : (
         <EVMIcon key={chainId} size={width} color={color!} style={style} hideEVMTitle={hideEVMTitle} />

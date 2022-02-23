@@ -248,7 +248,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
 
       <Swiper ref={swiper} showsPagination={false} showsButtons={false} loop={false} onIndexChanged={scrollToIndex}>
         <View style={{ width: '100%', height: '100%' }}>
-          <Ionicons name="arrow-forward" size={19} color="lightgrey" style={{ position: 'absolute', right: 16, top: '50%' }} />
+          <Ionicons name="arrow-forward" size={19} color="lightgrey" style={{ position: 'absolute', right: 16, top: '45%' }} />
 
           {connectedCount > 0 ? (
             <FlatList
