@@ -2,14 +2,14 @@ import * as ethers from 'ethers';
 
 import { INetwork, PublicNetworks } from '../common/Networks';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
-import { getMaxPriorityFeeByRPC, getNextBlockBaseFeeByRPC } from '../common/RPC';
+import { deleteRPCUrlCache, getMaxPriorityFeeByRPC, getNextBlockBaseFeeByRPC } from '../common/RPC';
 import ImageColors from 'react-native-image-colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Chain from '../models/Chain';
 import Database from '../models/Database';
 import icons from '../assets/icons/crypto';
 import providers from '../configs/providers.json';
-import { Any, In } from 'typeorm';
+import { In } from 'typeorm';
 
 const ChainColors = {
   61: '#3ab83a',
@@ -181,21 +181,26 @@ class Networks {
     const value = this.find(network.chainId);
     if (!value || !value.isUserAdded) return;
 
-    value.symbol = network.symbol;
-    value.explorer = network.explorer;
-    value.color = network.color;
-    value.rpcUrls = network.rpcUrls;
+    runInAction(() => {
+      value.symbol = network.symbol;
+      value.explorer = network.explorer;
+      value.color = network.color;
+      value.rpcUrls = network.rpcUrls;
+    });
 
     const userChain = await Database.chains.findOne({
       where: { id: In([`0x${value.chainId.toString(16)}`, `${value.chainId}`, value.chainId.toString(16)]) },
     });
 
     if (!userChain) return;
+
     userChain.customize!.color = network.color;
     userChain.explorer = network.explorer;
     userChain.rpcUrls = network.rpcUrls || [];
     userChain.symbol = network.symbol;
     userChain.save();
+
+    deleteRPCUrlCache(value.chainId);
   }
 
   get MainnetWsProvider() {

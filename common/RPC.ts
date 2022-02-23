@@ -3,18 +3,22 @@ import Networks from '../viewmodels/Networks';
 import Providers from '../configs/providers.json';
 import { post } from '../utils/fetch';
 
-const cache = new Map<string | number, string[]>();
+const cache = new Map<number, string[]>();
 
 export function getUrls(chainId: number | string): string[] {
-  if (cache.has(chainId)) return cache.get(chainId) || [];
+  if (cache.has(Number(chainId))) return cache.get(Number(chainId)) || [];
 
   let urls: string[] =
     Providers[`${Number(chainId)}`]?.filter((p) => p.startsWith('http')) ?? (Networks.find(chainId)?.rpcUrls || []);
 
   if (urls.length === 0) return [];
 
-  cache.set(chainId, urls);
+  cache.set(Number(chainId), urls);
   return urls;
+}
+
+export function deleteRPCUrlCache(chainId: number | string) {
+  cache.delete(Number(chainId));
 }
 
 export async function getBalance(chainId: number, address: string): Promise<BigNumber> {
