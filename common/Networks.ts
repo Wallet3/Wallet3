@@ -202,6 +202,15 @@ export const PublicNetworks: INetwork[] = [
     explorer: 'https://moonbeam.moonscan.io',
   },
   {
+    symbol: 'KLAY',
+    chainId: 8217,
+    comm_id: 'klay',
+    network: 'Klaytn',
+    color: '#de6b8f',
+    defaultTokens: [],
+    explorer: 'https://scope.klaytn.com',
+  },
+  {
     symbol: 'CRO',
     comm_id: 'cro',
     network: 'Cronos',
