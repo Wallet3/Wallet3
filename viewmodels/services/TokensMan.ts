@@ -1,9 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ERC20Token } from '../../models/ERC20';
 import { IToken } from '../../common/Tokens';
-import LINQ from 'linq';
-import { Networks } from '../../common/Networks';
-import { providers } from 'ethers';
+
+import Networks from '../Networks';
 
 export interface UserToken extends IToken {
   order?: number;
@@ -27,7 +26,7 @@ export default class TokensMan {
   }
 
   static async loadUserTokens(chainId: number, account: string) {
-    const popTokens = Networks.find((n) => n.chainId === chainId)?.defaultTokens ?? [];
+    const popTokens = Networks.find(chainId)?.defaultTokens ?? [];
     const customized: UserToken[] = JSON.parse((await AsyncStorage.getItem(`${chainId}-${account}`)) || '[]');
 
     const tokens: UserToken[] = customized.length === 0 ? popTokens : customized;

@@ -1,7 +1,12 @@
+<<<<<<< HEAD
 import { EVMIcon, NetworkIcons, generateNetworkIcon } from '../assets/icons/networks/color';
 import { FlatList, ListRenderItemInfo, SafeAreaView, ScrollView, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+=======
+import { NetworkIcons, generateNetworkIcon } from '../assets/icons/networks/color';
+import { FlatList, ListRenderItemInfo, NativeSyntheticEvent, Text, TouchableOpacity, View } from 'react-native';
+>>>>>>> main
 import { SafeViewContainer, Separator } from '../components';
 import { useEffect, useRef, useState } from 'react';
 
@@ -15,7 +20,9 @@ import Theme from '../viewmodels/settings/Theme';
 import i18n from '../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
-import ContextMenu from 'react-native-context-menu-view';
+import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
+import NetworkDetails from './views/NetworkDetails';
+import { ReactiveScreen } from '../utils/device';
 
 interface Props {
   onNetworkPress?: (network: INetwork) => void;
@@ -25,24 +32,29 @@ interface Props {
   useContextMenu?: boolean;
 }
 
-export default observer(({ title, onNetworkPress, networks, selectedNetwork, useContextMenu }: Props) => {
+export default observer(({ title, onNetworkPress, selectedNetwork, useContextMenu }: Props) => {
   const { t } = i18n;
   const { backgroundColor, secondaryTextColor, borderColor } = Theme;
   const [nets, setNets] = useState<INetwork[]>();
+  const [editNetwork, setEditNetwork] = useState<INetwork>();
+  const swiper = useRef<Swiper>(null);
   const flatList = useRef<FlatList>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => setNets(networks ?? Networks.all), 25);
+    const timer = setTimeout(() => setNets(Networks.all), 25);
+    const reset = () => swiper.current?.scrollTo(0);
+
+    ReactiveScreen.on('change', reset);
 
     return () => {
       clearTimeout(timer);
+      ReactiveScreen.off('change', reset);
     };
-  }, [networks]);
+  }, []);
 
   useEffect(() => {
     const jumpTimer = setTimeout(() => {
-      const index =
-        (networks || Networks.all)?.findIndex((n) => n.chainId === (selectedNetwork || Networks.current).chainId) ?? 0;
+      const index = Networks.all.findIndex((n) => n.chainId === (selectedNetwork || Networks.current).chainId) ?? 0;
       if (index < 0) return;
 
       flatList.current?.scrollToIndex({ animated: true, index });
@@ -88,19 +100,43 @@ export default observer(({ title, onNetworkPress, networks, selectedNetwork, use
 
   const renderContextMenuItem = (props: ListRenderItemInfo<INetwork>) => {
     const { item } = props;
-    const actions = [
+    const editableActions = [
       { title: t('button-edit'), systemIcon: 'square.and.pencil' },
       { title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' },
     ];
 
-    return <ContextMenu actions={item.isUserAdded ? actions : undefined}>{renderItem(props)}</ContextMenu>;
+    const viewActions = [{ title: t('button-view'), systemIcon: 'lanyardcard' }];
+
+    const onActionPress = (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => {
+      const { index } = e.nativeEvent;
+      switch (index) {
+        case 0:
+          setEditNetwork(item);
+          setTimeout(() => swiper.current?.scrollTo(1), 25);
+          break;
+        case 1:
+          Networks.remove(item.chainId).then(() => setNets(Networks.all));
+          break;
+      }
+    };
+
+    return (
+      <ContextMenu onPress={onActionPress} actions={item.isUserAdded ? editableActions : viewActions}>
+        {renderItem(props)}
+      </ContextMenu>
+    );
+  };
+
+  const onSaveNetwork = (network: INetwork) => {
+    swiper.current?.scrollTo(0);
+    Networks.update(network);
   };
 
   return (
     <SafeAreaProvider style={{ ...styles.safeArea, backgroundColor }}>
-      <Swiper scrollEnabled={false}>
-        <SafeViewContainer style={{ padding: 16, paddingTop: 12 }}>
-          <Text style={{ color: secondaryTextColor, paddingBottom: 2 }} numberOfLines={1}>
+      <Swiper ref={swiper} showsPagination={false} showsButtons={false} loop={false} scrollEnabled={false}>
+        <SafeViewContainer style={{ padding: 16 }}>
+          <Text style={{ color: secondaryTextColor }} numberOfLines={1}>
             {title ?? t('modal-networks-switch')}
           </Text>
           <Separator style={{ marginVertical: 4, backgroundColor: borderColor }} />
@@ -114,6 +150,8 @@ export default observer(({ title, onNetworkPress, networks, selectedNetwork, use
             onScrollToIndexFailed={({}) => {}}
           />
         </SafeViewContainer>
+
+        <NetworkDetails network={editNetwork} onDone={onSaveNetwork} />
       </Swiper>
     </SafeAreaProvider>
   );

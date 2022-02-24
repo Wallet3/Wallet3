@@ -86,6 +86,8 @@ export class TokenData implements ITokenData {
     const desc = info?.description || (description?.[Langs.currentLang.value] || description?.en)?.replace(/<[^>]*>?/gm, '');
     const [first] = desc?.split(/(?:\r?\n)+/);
 
+    await this.refreshHistoryPrices();
+
     runInAction(() => {
       this.firstDescription = first || '';
       this.description = desc || '';
@@ -94,8 +96,6 @@ export class TokenData implements ITokenData {
       this.priceChangePercentIn24 = market_data.price_change_percentage_24h || 0;
       this.loading = false;
     });
-
-    this.refreshHistoryPrices();
   }
 
   async refreshHistoryPrices() {

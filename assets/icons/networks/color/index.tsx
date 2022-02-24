@@ -14,6 +14,7 @@ import EthereumClassic from './ethereum-classic.svg';
 import Fantom from './fantom.svg';
 import Harmony from './harmony-one.svg';
 import Heco from './heco.svg';
+import Klaytn from './klaytn.svg';
 import Moonbeam from './moonbeam.svg';
 import Moonriver from './moonriver.svg';
 import Mumbai from './mumbai.svg';
@@ -24,6 +25,7 @@ import React from 'react';
 import Ronin from './ronin.svg';
 import XDai from './xdai.svg';
 import ZKSync from './zksync.svg';
+import coins from '../../crypto';
 import styles from '../styles';
 
 export const EVMIcon = ({
@@ -93,8 +95,8 @@ const MOONRIVER = generateNetworkIcon({
 });
 const MOONBEAM = generateNetworkIcon({ chainId: 1284, width: 32, height: 32 });
 const RONIN = generateNetworkIcon({ chainId: 2020, width: 32, height: 32 });
-
-// const ZSYNC = <ZKSync width={32} height={32} />;
+const ZSYNC = generateNetworkIcon({ chainId: 280, width: 32, height: 32, style: { marginStart: 0 } });
+const KLAYTN = generateNetworkIcon({ chainId: 8217, width: 27, height: 32 });
 
 export const NetworkIcons = {
   1: ETH,
@@ -116,7 +118,8 @@ export const NetworkIcons = {
   1284: MOONBEAM,
   1285: MOONRIVER,
   2020: RONIN,
-  // zksync: ZSYNC,
+  280: ZSYNC,
+  8217: KLAYTN,
 };
 
 export function generateNetworkIcon(props: {
@@ -172,8 +175,12 @@ export function generateNetworkIcon(props: {
       return <Moonriver key={chainId} width={width} height={height ?? width} style={style} />;
     case 2020:
       return <Ronin key={chainId} width={width} height={height ?? width} style={style} />;
+    case 280:
+      return <ZKSync key={chainId} width={width} height={height ?? width} style={style} />;
+    case 8217:
+      return <Klaytn key={chainId} width={width} height={height ?? width} style={style} />;
     default:
-      return symbol ? (
+      return coins[symbol?.toLowerCase() || ''] ? (
         <Coin symbol={symbol} size={height ?? width} address="" chainId={chainId} style={style as any} />
       ) : (
         <EVMIcon key={chainId} size={width} color={color!} style={style} hideEVMTitle={hideEVMTitle} />

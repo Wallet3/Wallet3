@@ -123,8 +123,11 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
                   return {
                     title: t('home-tokens-title'),
                     headerRight: () => (
-                      <TouchableOpacity onPress={() => navigation.navigate('AddToken')}>
-                        <Ionicons name="add-circle-outline" size={24} color={foregroundColor} />
+                      <TouchableOpacity
+                        onPress={() => navigation.navigate('AddToken')}
+                        style={{ margin: -8, padding: 8, marginBottom: -15 }}
+                      >
+                        <Ionicons name="add-circle-outline" size={25} color={foregroundColor} />
                       </TouchableOpacity>
                     ),
                   };

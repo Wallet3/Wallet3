@@ -2,21 +2,20 @@ import * as shape from 'd3-shape';
 
 import { Button, Coin, Skeleton } from '../../components';
 import { Defs, LinearGradient, Stop } from 'react-native-svg';
-import React, { useEffect, useState } from 'react';
+import { FontAwesome, Ionicons } from '@expo/vector-icons';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { fontColor, thirdFontColor } from '../../constants/styles';
 
-import { FontAwesome } from '@expo/vector-icons';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/Tokens';
 import { LineChart } from 'react-native-svg-charts';
 import Theme from '../../viewmodels/settings/Theme';
 import { TokenData } from '../../viewmodels/services/TokenData';
-import { UserToken } from '../../viewmodels/services/TokensMan';
 import { formatCurrency } from '../../utils/formatter';
 import i18n from '../../i18n';
 import numeral from 'numeral';
 import { observer } from 'mobx-react-lite';
+import { thirdFontColor } from '../../constants/styles';
 
 interface Props {
   token?: IToken;
@@ -37,7 +36,7 @@ const Gradient = () => (
 export default observer(({ token, themeColor, onSendPress, network }: Props) => {
   const [vm] = useState<TokenData>(new TokenData({ token: token!, network }));
   const { t } = i18n;
-  const { backgroundColor, textColor, foregroundColor } = Theme;
+  const { backgroundColor, thirdTextColor, foregroundColor } = Theme;
 
   return (
     <View style={{ padding: 16, backgroundColor, borderRadius: 6 }}>
@@ -68,19 +67,26 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
         </View>
       </View>
 
-      <LineChart
-        style={{ height: 200, marginHorizontal: -16, marginVertical: 16 }}
-        data={vm.historyPrices}
-        contentInset={{ top: 20, bottom: 20 }}
-        curve={shape.curveNatural}
-        animate
-        svg={{
-          strokeWidth: 3,
-          stroke: 'url(#gradient)',
-        }}
-      >
-        <Gradient />
-      </LineChart>
+      {!vm.loading && vm.historyPrices.length === 0 ? (
+        <View style={{ height: 200, justifyContent: 'center', alignItems: 'center' }}>
+          <Ionicons name="bandage-outline" size={27} color={thirdTextColor} />
+          <Text style={{ color: thirdTextColor, marginTop: 8 }}>No Data</Text>
+        </View>
+      ) : (
+        <LineChart
+          style={{ height: 200, marginHorizontal: -16, marginVertical: 16 }}
+          data={vm.historyPrices}
+          contentInset={{ top: 20, bottom: 20 }}
+          curve={shape.curveNatural}
+          animate
+          svg={{
+            strokeWidth: 3,
+            stroke: 'url(#gradient)',
+          }}
+        >
+          <Gradient />
+        </LineChart>
+      )}
 
       <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
         <Text style={styles.subTitle}>{t('modal-token-details-value')}</Text>
@@ -121,7 +127,7 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
         {vm.loading ? (
           <Skeleton style={{ flex: 1, width: '100%', height: 32 }} />
         ) : (
-          <Text style={{ lineHeight: 22, color: '#75869c', fontSize: 15 }}>{vm.firstDescription}</Text>
+          <Text style={{ lineHeight: 22, color: '#75869c', fontSize: 15 }}>{vm.firstDescription || 'No Data'}</Text>
         )}
       </View>
     </View>

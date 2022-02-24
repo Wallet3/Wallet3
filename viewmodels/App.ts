@@ -8,7 +8,7 @@ import Coingecko from '../common/apis/Coingecko';
 import Contacts from './customs/Contacts';
 import Database from '../models/Database';
 import GasPrice from './misc/GasPrice';
-import { InpageMetamaskDAppHub } from './hubs/InpageMetamaskDAppHub';
+import { InpageDAppController } from '../screens/browser/controller/InpageDAppController';
 import Key from '../models/Key';
 import LINQ from 'linq';
 import LinkHub from './hubs/LinkHub';
@@ -20,6 +20,7 @@ import { Wallet } from './Wallet';
 import WalletConnectV1ClientHub from './walletconnect/WalletConnectV1ClientHub';
 import i18n from '../i18n';
 import { showMessage } from 'react-native-flash-message';
+import MetamaskDAppsHub from './walletconnect/MetamaskDAppsHub';
 
 export class AppVM {
   private lastRefreshedTime = 0;
@@ -166,6 +167,7 @@ export class AppVM {
 
     Authentication.once('appAuthorized', () => {
       WalletConnectV1ClientHub.init();
+      MetamaskDAppsHub.init();
       LinkHub.start();
     });
 
@@ -193,7 +195,7 @@ export class AppVM {
       AsyncStorage.clear(),
       Authentication.reset(),
       WalletConnectV1ClientHub.reset(),
-      InpageMetamaskDAppHub.reset(),
+      MetamaskDAppsHub.reset(),
     ]);
   }
 }

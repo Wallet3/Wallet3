@@ -18,7 +18,7 @@ import DeviceInfo from 'react-native-device-info';
 import GetPageMetadata from './scripts/Metadata';
 import HookWalletConnect from './scripts/InjectWalletConnectObserver';
 import { INetwork } from '../../common/Networks';
-import { InpageMetamaskDAppHub } from '../../viewmodels/hubs/InpageMetamaskDAppHub';
+import { InpageDAppController } from './controller/InpageDAppController';
 import { JS_POST_MESSAGE_TO_PROVIDER } from './scripts/Utils';
 import LinkHub from '../../viewmodels/hubs/LinkHub';
 import MetamaskMobileProvider from './scripts/Metamask-mobile-provider';
@@ -70,7 +70,7 @@ interface Web3ViewProps extends WebViewProps {
 export default observer((props: Web3ViewProps) => {
   const { t } = i18n;
   const { webViewRef, viewShotRef, tabCount, onTabPress } = props;
-  const [hub] = useState(new InpageMetamaskDAppHub());
+  const [hub] = useState(new InpageDAppController());
   const [appName] = useState(`Wallet3/${DeviceInfo.getVersion() || '0.0.0'}`);
   const [ua] = useState(
     DeviceInfo.isTablet()
@@ -123,14 +123,14 @@ export default observer((props: Web3ViewProps) => {
       return;
     }
 
-    hub.getDApp(hostname).then((app) => updateDAppState(app));
+    updateDAppState(hub.getDApp(hostname));
   };
 
   useEffect(() => {
     const notifyWebView = async (appState) => {
       const webview = (webViewRef as any).current as WebView;
       webview?.injectJavaScript(JS_POST_MESSAGE_TO_PROVIDER(appState));
-      updateDAppState(await hub.getDApp(appState.origin));
+      updateDAppState(hub.getDApp(appState.origin));
     };
 
     hub.on('appChainUpdated_metamask', notifyWebView);
@@ -364,7 +364,6 @@ export default observer((props: Web3ViewProps) => {
         >
           <NetworksMenu
             title={t('modal-dapp-switch-network', { app: pageMetadata?.title?.split(' ')?.[0] ?? '' })}
-            networks={Networks.all}
             selectedNetwork={appNetwork}
             onNetworkPress={(network) => updateDAppNetworkConfig(network)}
           />

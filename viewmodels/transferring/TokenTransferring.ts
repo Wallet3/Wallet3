@@ -21,6 +21,10 @@ export class TokenTransferring extends BaseTransaction {
   isResolvingAddress = false;
   isContractRecipient = false;
 
+  get safeTo() {
+    return this.to.replace(/[\u200B|\u200C|\u200D]/g, '[?]');
+  }
+
   get allTokens() {
     return [this.account.tokens.tokens[0], ...this.account.tokens.allTokens];
   }
@@ -144,6 +148,7 @@ export class TokenTransferring extends BaseTransaction {
       amountWei: computed,
       isValidAmount: computed,
       allTokens: computed,
+      safeTo: computed,
 
       setTo: action,
       setAmount: action,

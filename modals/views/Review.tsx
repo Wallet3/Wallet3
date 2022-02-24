@@ -107,7 +107,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
               style={{ ...reviewItemValueStyle, color: vm.hasZWSP || vm.isContractRecipient ? 'crimson' : textColor }}
               numberOfLines={1}
             >
-              {utils.isAddress(vm.to) ? formatAddress(vm.to, 8, 6) : formatAddress(vm.to, 14, 6, '...')}
+              {utils.isAddress(vm.to) ? formatAddress(vm.to, 8, 6) : formatAddress(vm.safeTo, 14, 6, '...')}
             </Text>
           </View>
         </View>

@@ -132,7 +132,8 @@
   "modal-dapp-add-new-network-network": "ネットワーク",
   "modal-dapp-add-new-network-chainid": "ネットワーク ID",
   "modal-dapp-add-new-network-currency": "貨幣記号",
-  "modal-dapp-add-new-network-explorer": "エクスプローラ",
+  "modal-dapp-add-new-network-color": "テーマカラー",
+  "modal-dapp-add-new-network-explorer": "Explorer",
   "modal-dapp-add-asset-title": "アセットの追加",
   "modal-dapp-add-asset-currency": "通貨",
   "modal-dapp-add-asset-type": "タイプ",
@@ -194,6 +195,7 @@
   "button-send": "送金",
   "button-request": "リクエスト",
   "button-edit": "エディット",
+  "button-view": "表示",
   "button-remove": "削除",
   "button-close-all": "全て閉じる",
   "button-share": "共有"
