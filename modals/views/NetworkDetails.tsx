@@ -50,7 +50,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
         <View style={reviewItemStyle}>
           <Text style={styles.reviewItemTitle}>{t('modal-dapp-add-new-network-network')}</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            {generateNetworkIcon({ ...network, width: 17, style: { marginEnd: 8 } })}
+            {generateNetworkIcon({ ...network, width: 17, height: 17, hideEVMTitle: true, style: { marginEnd: 8 } })}
             <Text style={{ ...reviewItemValueStyle, maxWidth: 180, color: network.color }} numberOfLines={1}>
               {network.network}
             </Text>
