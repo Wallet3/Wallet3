@@ -256,7 +256,8 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
               renderItem={renderItem}
               keyExtractor={(i) => i.peerId}
               style={{ flex: 1 }}
-              alwaysBounceVertical={false}
+              bounces={connectedCount > 12}
+              contentContainerStyle={{ paddingBottom: 37 }}
             />
           ) : (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -272,8 +273,9 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
           data={dapps}
           renderItem={renderItem}
           style={{ width: '100%', height: '100%' }}
+          contentContainerStyle={{ paddingBottom: 37 }}
           keyExtractor={(i) => i.hostname}
-          bounces={false}
+          bounces={dapps.length >= 12}
         />
       </Swiper>
 
