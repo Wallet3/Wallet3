@@ -1,33 +1,32 @@
-import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { Feather, FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { FlatList, Text, TouchableOpacity, View } from 'react-native';
+import { Metamask as MetamaskLogo, WalletConnect as WalletConnectLogo } from '../../assets/3rd';
 import React, { useRef, useState } from 'react';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { borderColor, secondaryFontColor } from '../../constants/styles';
 
 import { Account } from '../../viewmodels/account/Account';
 import AccountSelector from '../../modals/dapp/AccountSelector';
 import App from '../../viewmodels/App';
 import DAppInfo from './DAppInfo';
+import { DrawerActions } from '@react-navigation/native';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import Image from 'react-native-expo-cached-image';
+import { MetamaskDApp } from '../../viewmodels/walletconnect/MetamaskDApp';
+import MetamaskDAppsHub from '../../viewmodels/walletconnect/MetamaskDAppsHub';
 import { Modalize } from 'react-native-modalize';
 import NetworkSelector from '../../modals/dapp/NetworkSelector';
 import Networks from '../../viewmodels/Networks';
 import { Portal } from 'react-native-portalize';
-import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
 import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectV1ClientHub';
 import { WalletConnect_v1 } from '../../viewmodels/walletconnect/WalletConnect_v1';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { startLayoutAnimation } from '../../utils/animations';
 import { styles } from '../../constants/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
-import { WalletConnect as WalletConnectLogo, Metamask as MetamaskLogo } from '../../assets/3rd';
-import { DrawerActions } from '@react-navigation/native';
-import MetamaskDAppsHub from '../../viewmodels/walletconnect/MetamaskDAppsHub';
-import { MetamaskDApp } from '../../viewmodels/walletconnect/MetamaskDApp';
-import { startLayoutAnimation } from '../../utils/animations';
-import { useHeaderHeight } from '@react-navigation/elements';
 
 interface Props {
   client: WalletConnect_v1 | MetamaskDApp;
@@ -183,6 +182,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
 
   const renderItem = ({ item }: { item: WalletConnect_v1 | MetamaskDApp }) => (
     <DAppItem
+      key={item['hostname'] || item['peerId']}
       textColor={textColor}
       item={item}
       openApp={openApp}
