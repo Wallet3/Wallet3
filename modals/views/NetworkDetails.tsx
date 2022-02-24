@@ -54,7 +54,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
           <Text style={styles.reviewItemTitle}>{t('modal-dapp-add-new-network-network')}</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             {generateNetworkIcon({ ...network, width: 17, height: 17, hideEVMTitle: true, style: { marginEnd: 8 } })}
-            <Text style={{ ...reviewItemValueStyle, maxWidth: 180, color: color }} numberOfLines={1}>
+            <Text style={{ ...reviewItemValueStyle, maxWidth: 180, color: color || network.color }} numberOfLines={1}>
               {network.network}
             </Text>
           </View>
@@ -91,7 +91,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
                 numberOfLines={1}
                 defaultValue={color}
                 maxLength={7}
-                onChangeText={(txt) => setColor(txt.substring(0, 6).toUpperCase())}
+                onChangeText={(txt) => setColor(txt.substring(0, 7).toUpperCase())}
               />
             </View>
           </View>
@@ -128,7 +128,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
       <View style={{ flex: 1 }} />
 
       <Button
-        themeColor={network?.color}
+        themeColor={color || network.color}
         disabled={!rpc.length || !symbol.length || !explorer.length}
         title="OK"
         txtStyle={{ textTransform: 'uppercase' }}

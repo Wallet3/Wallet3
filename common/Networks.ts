@@ -278,6 +278,16 @@ export const Testnets: INetwork[] = [
     defaultTokens: [],
     explorer: 'https://kovan.etherscan.io',
   },
+  {
+    comm_id: '',
+    symbol: 'ETH',
+    network: 'zkSync 2.0 Testnet Goerli',
+    chainId: 280,
+    color: '#8C8DFC',
+    test: true,
+    defaultTokens: [],
+    explorer: 'https://zksync2-testnet.zkscan.io',
+  },
 ];
 
 export const AllNetworks: INetwork[] = [...PublicNetworks, ...Testnets];
