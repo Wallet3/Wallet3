@@ -90,7 +90,8 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
                 style={{ ...reviewItemValueStyle, maxWidth: 180 }}
                 numberOfLines={1}
                 defaultValue={color}
-                onChangeText={(txt) => setColor(txt.toUpperCase())}
+                maxLength={7}
+                onChangeText={(txt) => setColor(txt.substring(0, 6).toUpperCase())}
               />
             </View>
           </View>
