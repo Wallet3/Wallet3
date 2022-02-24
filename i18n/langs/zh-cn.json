@@ -132,6 +132,7 @@
   "modal-dapp-add-new-network-network": "网络名称",
   "modal-dapp-add-new-network-chainid": "网络 ID",
   "modal-dapp-add-new-network-currency": "原生代币",
+  "modal-dapp-add-new-network-color": "主题色",
   "modal-dapp-add-new-network-explorer": "浏览器",
   "modal-dapp-add-asset-title": "添加资产",
   "modal-dapp-add-asset-currency": "货币",

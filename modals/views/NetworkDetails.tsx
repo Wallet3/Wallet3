@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput } from 'react-native';
-import { generateNetworkIcon } from '../../assets/icons/networks/color';
-import { INetwork } from '../../common/Networks';
-import { getUrls } from '../../common/RPC';
 import { Button, SafeViewContainer } from '../../components';
-import i18n from '../../i18n';
+import React, { useEffect, useState } from 'react';
+import { Text, TextInput, View } from 'react-native';
+
+import { INetwork } from '../../common/Networks';
 import Theme from '../../viewmodels/settings/Theme';
+import { generateNetworkIcon } from '../../assets/icons/networks/color';
+import { getUrls } from '../../common/RPC';
+import i18n from '../../i18n';
 import styles from '../styles';
 
 export default ({ network, onDone }: { network?: INetwork; onDone: (network: INetwork) => void }) => {
@@ -14,12 +15,14 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
   const [symbol, setSymbol] = useState('');
   const [explorer, setExplorer] = useState('');
   const [rpc, setRpc] = useState('');
+  const [color, setColor] = useState('');
 
   useEffect(() => {
     if (!network) return;
 
     setSymbol(network.symbol);
     setExplorer(network.explorer);
+    setColor(network.color);
     setRpc(
       network.rpcUrls?.join(', ') ||
         getUrls(network.chainId)
@@ -51,7 +54,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
           <Text style={styles.reviewItemTitle}>{t('modal-dapp-add-new-network-network')}</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             {generateNetworkIcon({ ...network, width: 17, height: 17, hideEVMTitle: true, style: { marginEnd: 8 } })}
-            <Text style={{ ...reviewItemValueStyle, maxWidth: 180, color: network.color }} numberOfLines={1}>
+            <Text style={{ ...reviewItemValueStyle, maxWidth: 180, color: color }} numberOfLines={1}>
               {network.network}
             </Text>
           </View>
@@ -77,6 +80,21 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
             />
           </View>
         </View>
+
+        {network.isUserAdded && (
+          <View style={reviewItemStyle}>
+            <Text style={styles.reviewItemTitle}>{t('modal-dapp-add-new-network-color')}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <TextInput
+                editable={editable}
+                style={{ ...reviewItemValueStyle, maxWidth: 180 }}
+                numberOfLines={1}
+                defaultValue={color}
+                onChangeText={(txt) => setColor(txt.toUpperCase())}
+              />
+            </View>
+          </View>
+        )}
 
         <View style={reviewItemStyle}>
           <Text style={styles.reviewItemTitle}>RPC URL</Text>
@@ -117,6 +135,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
           onDone({
             ...network,
             symbol: symbol.toUpperCase().trim(),
+            color,
             rpcUrls: rpc.split(',').map((url) => url.trim()),
             explorer: explorer.trim(),
           })
