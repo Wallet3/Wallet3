@@ -1,15 +1,16 @@
 import * as ethers from 'ethers';
 
-import { INetwork, PublicNetworks, AllNetworks } from '../common/Networks';
+import { AllNetworks, INetwork, PublicNetworks } from '../common/Networks';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { deleteRPCUrlCache, getMaxPriorityFeeByRPC, getNextBlockBaseFeeByRPC } from '../common/RPC';
-import ImageColors from 'react-native-image-colors';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Chain from '../models/Chain';
 import Database from '../models/Database';
+import ImageColors from 'react-native-image-colors';
+import { In } from 'typeorm';
 import icons from '../assets/icons/crypto';
 import providers from '../configs/providers.json';
-import { In } from 'typeorm';
 
 const ChainColors = {
   61: '#3ab83a',
@@ -110,12 +111,16 @@ class Networks {
     const chain = this.userChains.find((c) => c.chainId === chainId);
     if (!chain) return;
 
+    const isCurrent = this.current.chainId === chainId;
+
     this.userChains = this.userChains.filter((c) => c.chainId !== chainId);
 
     const userChain = await Database.chains.findOne({
       where: { id: In([`0x${chainId.toString(16)}`, `${chainId}`, chainId.toString(16)]) },
     });
 
+    if (isCurrent) this.switch(this.Ethereum);
+    
     await userChain?.remove();
   }
 
