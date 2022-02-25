@@ -9,6 +9,7 @@ import { borderColor, fontColor, secondaryFontColor } from '../../constants/styl
 import Avatar from '../../components/Avatar';
 import { DrawerActions } from '@react-navigation/core';
 import { INetwork } from '../../common/Networks';
+import MessageKeys from '../../common/MessageKeys';
 import Networks from '../../viewmodels/Networks';
 import PubSub from 'pubsub-js';
 import { ReactiveScreen } from '../../utils/device';
@@ -99,7 +100,7 @@ const Drawer = observer((props: DrawerProps) => {
           style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 8 }}
           onPress={() => {
             navigation.dispatch(DrawerActions.closeDrawer());
-            PubSub.publish('openAccountsMenu');
+            PubSub.publish(MessageKeys.openAccountsMenu);
           }}
         >
           <Text
@@ -169,7 +170,7 @@ const Drawer = observer((props: DrawerProps) => {
           style={{ flexDirection: 'row', alignItems: 'center' }}
           onPress={() => {
             navigation.dispatch(DrawerActions.closeDrawer());
-            PubSub.publish('openNetworksMenu');
+            PubSub.publish(MessageKeys.openNetworksMenu);
           }}
         >
           {NetworkIcons[current.chainId] || <EVMIcon color={current.color} hideEVMTitle />}

@@ -258,10 +258,10 @@ const GlobalNetworksMenuModal = () => {
   const { ref: networksRef, open: openNetworksModal, close: closeNetworksModal } = useModalize();
 
   useEffect(() => {
-    PubSub.subscribe('openNetworksMenu', () => openNetworksModal());
+    PubSub.subscribe(MessageKeys.openNetworksMenu, () => openNetworksModal());
 
     return () => {
-      PubSub.unsubscribe('openNetworksMenu');
+      PubSub.unsubscribe(MessageKeys.openNetworksMenu);
     };
   }, []);
 
@@ -288,10 +288,10 @@ const GlobalAccountsMenuModal = () => {
   const { ref, open, close } = useModalize();
 
   useEffect(() => {
-    PubSub.subscribe('openAccountsMenu', () => open());
+    PubSub.subscribe(MessageKeys.openAccountsMenu, () => open());
 
     return () => {
-      PubSub.unsubscribe('openAccountsMenu');
+      PubSub.unsubscribe(MessageKeys.openAccountsMenu);
     };
   }, []);
 
