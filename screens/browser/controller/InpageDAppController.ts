@@ -206,7 +206,7 @@ export class InpageDAppController extends EventEmitter {
       };
 
       const reject = () => resolve({ error: { code: 4001, message: 'User rejected' } });
-      PubSub.publish('openConnectInpageDApp', { approve, reject, origin, ...payload } as ConnectInpageDApp);
+      PubSub.publish(MessageKeys.openConnectInpageDApp, { approve, reject, origin, ...payload } as ConnectInpageDApp);
     });
   }
 
@@ -278,7 +278,7 @@ export class InpageDAppController extends EventEmitter {
           break;
       }
 
-      PubSub.publish('openInpageDAppSign', {
+      PubSub.publish(MessageKeys.openInpageDAppSign, {
         msg,
         typedData,
         type,
@@ -338,7 +338,7 @@ export class InpageDAppController extends EventEmitter {
 
       const reject = () => resolve({ error: { code: -32000, message: 'User rejected' } });
 
-      PubSub.publish('openInpageDAppSendTransaction', {
+      PubSub.publish(MessageKeys.openInpageDAppSendTransaction, {
         approve,
         reject,
         param: params[0] as WCCallRequest_eth_sendTransaction,
@@ -392,7 +392,7 @@ export class InpageDAppController extends EventEmitter {
         resolve({ error: { code: 1, message: 'User rejected' } });
       };
 
-      PubSub.publish('openAddEthereumChain', {
+      PubSub.publish(MessageKeys.openAddEthereumChain, {
         approve,
         reject,
         chain: params[0],
@@ -454,7 +454,7 @@ export class InpageDAppController extends EventEmitter {
         resolve(null);
       };
 
-      PubSub.publish('openAddAsset', {
+      PubSub.publish(MessageKeys.openAddAsset, {
         asset,
         approve,
         reject,

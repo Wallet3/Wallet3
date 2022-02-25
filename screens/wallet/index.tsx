@@ -7,6 +7,7 @@ import CurrencyViewmodel from '../../viewmodels/settings/Currency';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import GasPrice from '../../viewmodels/misc/GasPrice';
 import { IToken } from '../../common/Tokens';
+import MessageKeys from '../../common/MessageKeys';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
 import Overview from './Overview';
@@ -76,8 +77,8 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         ens={currentAccount?.ens.name}
         connectedApps={WalletConnectV1ClientHub.connectedCount}
         disabled={currentAccount?.tokens.loadingTokens}
-        onSendPress={() => PubSub.publish('openSendFundsModal')}
-        onRequestPress={() => PubSub.publish('openRequestFundsModal')}
+        onSendPress={() => PubSub.publish(MessageKeys.openSendFundsModal)}
+        onRequestPress={() => PubSub.publish(MessageKeys.openRequestFundsModal)}
         onDAppsPress={() => navigation.navigate('DApps')}
         gasPrice={GasPrice.currentGwei}
         onQRCodePress={() => openAddressQR()}
@@ -105,7 +106,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
             network={current}
             themeColor={current.color}
             onSendPress={(token) => {
-              PubSub.publish('openSendFundsModal', { token });
+              PubSub.publish(MessageKeys.openSendFundsModal, { token });
               closeTokenDetail();
             }}
           />

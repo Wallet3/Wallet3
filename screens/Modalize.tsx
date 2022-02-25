@@ -162,7 +162,7 @@ const InpageDAppConnect = () => {
       });
     };
 
-    PubSub.subscribe('openConnectInpageDApp', (_, data: ConnectInpageDApp) => {
+    PubSub.subscribe(MessageKeys.openConnectInpageDApp, (_, data: ConnectInpageDApp) => {
       if (data.pageMetadata) updatePageInfo(undefined, data.pageMetadata);
 
       setData(data);
@@ -170,7 +170,7 @@ const InpageDAppConnect = () => {
     });
 
     return () => {
-      PubSub.unsubscribe('openConnectInpageDApp');
+      PubSub.unsubscribe(MessageKeys.openConnectInpageDApp);
     };
   }, []);
 
@@ -201,35 +201,35 @@ const InpageDAppRequests = () => {
   const [type, setType] = useState('');
 
   useEffect(() => {
-    PubSub.subscribe('openInpageDAppSign', (_, data: InpageDAppSignRequest) => {
+    PubSub.subscribe(MessageKeys.openInpageDAppSign, (_, data: InpageDAppSignRequest) => {
       setSignRequest(data);
       setType('sign');
       open();
     });
 
-    PubSub.subscribe('openInpageDAppSendTransaction', (_, data: InpageDAppTxRequest) => {
+    PubSub.subscribe(MessageKeys.openInpageDAppSendTransaction, (_, data: InpageDAppTxRequest) => {
       setTxRequest(data);
       setType('sendTx');
       open();
     });
 
-    PubSub.subscribe('openAddEthereumChain', (_, data: InpageDAppAddEthereumChain) => {
+    PubSub.subscribe(MessageKeys.openAddEthereumChain, (_, data: InpageDAppAddEthereumChain) => {
       setAddChain(data);
       setType('addChain');
       open();
     });
 
-    PubSub.subscribe('openAddAsset', (_, data: InpageDAppAddAsset) => {
+    PubSub.subscribe(MessageKeys.openAddAsset, (_, data: InpageDAppAddAsset) => {
       setAddAsset(data);
       setType('addAsset');
       open();
     });
 
     return () => {
-      PubSub.unsubscribe('openInpageDAppSign');
-      PubSub.unsubscribe('openInpageDAppSendTransaction');
-      PubSub.unsubscribe('openAddEthereumChain');
-      PubSub.unsubscribe('openAddAsset');
+      PubSub.unsubscribe(MessageKeys.openInpageDAppSign);
+      PubSub.unsubscribe(MessageKeys.openInpageDAppSendTransaction);
+      PubSub.unsubscribe(MessageKeys.openAddEthereumChain);
+      PubSub.unsubscribe(MessageKeys.openAddAsset);
     };
   }, []);
 
@@ -351,10 +351,10 @@ const RequestFundsModal = () => {
   const { ref: requestRef, open: openRequestModal } = useModalize();
 
   useEffect(() => {
-    PubSub.subscribe('openRequestFundsModal', () => openRequestModal());
+    PubSub.subscribe(MessageKeys.openRequestFundsModal, () => openRequestModal());
 
     return () => {
-      PubSub.unsubscribe('openRequestFundsModal');
+      PubSub.unsubscribe(MessageKeys.openRequestFundsModal);
     };
   }, []);
 
@@ -378,7 +378,7 @@ const SendFundsModal = () => {
   const { ref: sendRef, open: openSendModal, close: closeSendModal } = useModalize();
 
   useEffect(() => {
-    PubSub.subscribe('openSendFundsModal', (_, data) => {
+    PubSub.subscribe(MessageKeys.openSendFundsModal, (_, data) => {
       const { token } = data || {};
       setVM(new TokenTransferring({ targetNetwork: Networks.current, defaultToken: token }));
       setTimeout(() => openSendModal(), 0);
@@ -407,8 +407,7 @@ const SendFundsModal = () => {
     });
 
     return () => {
-      PubSub.unsubscribe('openSendFundsModal');
-      PubSub.unsubscribe('closeSendFundsModal');
+      PubSub.unsubscribe(MessageKeys.openSendFundsModal);
       PubSub.unsubscribe(`CodeScan-ethereum`);
       PubSub.unsubscribe(`CodeScan-0x`);
     };
