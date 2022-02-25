@@ -53,35 +53,38 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
   const [callRequest, setCallRequest] = useState<WCCallRequestRequest>();
 
   useEffect(() => {
-    PubSub.subscribe('wc_request', (_, { client, request }: { client: WalletConnect_v1; request: WCCallRequestRequest }) => {
-      if (!appAuth.appAuthorized) {
-        client.rejectRequest(request.id, 'Unauthorized');
-        return;
+    PubSub.subscribe(
+      MessageKeys.wc_request,
+      (_, { client, request }: { client: WalletConnect_v1; request: WCCallRequestRequest }) => {
+        if (!appAuth.appAuthorized) {
+          client.rejectRequest(request.id, 'Unauthorized');
+          return;
+        }
+
+        setType(undefined);
+        setCallRequest(undefined);
+        setClient(client);
+
+        switch (request.method) {
+          case 'eth_sign':
+          case 'personal_sign':
+          case 'eth_signTypedData':
+            setCallRequest(request);
+            setType('sign');
+            break;
+          case 'eth_sendTransaction':
+          case 'eth_signTransaction':
+            setCallRequest(request);
+            setType('sendTx');
+            break;
+        }
+
+        setTimeout(() => open(), 0);
       }
-
-      setType(undefined);
-      setCallRequest(undefined);
-      setClient(client);
-
-      switch (request.method) {
-        case 'eth_sign':
-        case 'personal_sign':
-        case 'eth_signTypedData':
-          setCallRequest(request);
-          setType('sign');
-          break;
-        case 'eth_sendTransaction':
-        case 'eth_signTransaction':
-          setCallRequest(request);
-          setType('sendTx');
-          break;
-      }
-
-      setTimeout(() => open(), 0);
-    });
+    );
 
     return () => {
-      PubSub.unsubscribe('wc_request');
+      PubSub.unsubscribe(MessageKeys.wc_request);
     };
   }, []);
 
@@ -111,14 +114,14 @@ const WalletConnectV1 = () => {
   const [extra, setExtra] = useState<any>();
 
   useEffect(() => {
-    PubSub.subscribe('CodeScan-wc:', (_, { data, extra }) => {
+    PubSub.subscribe(MessageKeys.CodeScan_wc, (_, { data, extra }) => {
       setConnectUri(data);
       setExtra(extra);
       openConnectDapp();
     });
 
     return () => {
-      PubSub.unsubscribe('CodeScan-wc:');
+      PubSub.unsubscribe(MessageKeys.CodeScan_wc);
     };
   }, []);
 

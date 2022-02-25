@@ -146,10 +146,10 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
   const [swipeEnabled, setSwipeEnabled] = useState(true);
 
   useEffect(() => {
-    PubSub.subscribe('drawer-swipeEnabled', (_, data) => setSwipeEnabled(data));
+    PubSub.subscribe(MessageKeys.drawerSwipeEnabled, (_, data) => setSwipeEnabled(data));
 
     return () => {
-      PubSub.unsubscribe('drawer-swipeEnabled');
+      PubSub.unsubscribe(MessageKeys.drawerSwipeEnabled);
     };
   }, []);
 

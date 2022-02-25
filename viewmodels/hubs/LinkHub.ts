@@ -1,6 +1,7 @@
 import * as Linking from 'expo-linking';
 
 import Authentication from '../Authentication';
+import MessageKeys from '../../common/MessageKeys';
 import i18n from '../../i18n';
 import { isURL } from '../../utils/url';
 import { showMessage } from 'react-native-flash-message';
@@ -40,7 +41,10 @@ class LinkHub {
 
     if (!scheme) {
       if (isURL(uri)) {
-        PubSub.publish(`CodeScan-https:`, { data: uri.startsWith('http:') ? uri : `https://${uri}`, extra });
+        PubSub.publish(MessageKeys.CodeScan_https, {
+          data: uri.startsWith('https:') || uri.startsWith('http:') ? uri : `https://${uri}`,
+          extra,
+        });
         return true;
       }
 
@@ -67,7 +71,7 @@ class LinkHub {
 
         const data = queryParams.key ? `${queryParams.uri}&key=${queryParams.key}` : `${queryParams.uri}`;
 
-        PubSub.publish(`CodeScan-wc:`, { data, extra });
+        PubSub.publish(MessageKeys.CodeScan_wc, { data, extra });
       } catch (error) {}
     } else {
       if (scheme === 'wc:') this.handledWCUrls.add(uri);

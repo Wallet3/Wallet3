@@ -16,6 +16,7 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import CachedImage from 'react-native-expo-cached-image';
 import Collapsible from 'react-native-collapsible';
 import { FlatGrid } from 'react-native-super-grid';
+import MessageKeys from '../../common/MessageKeys';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
 import PopularDApps from '../../configs/urls/popular.json';
@@ -107,7 +108,7 @@ export const Browser = observer(
 
       Dimensions.addEventListener('change', handler);
 
-      PubSub.subscribe('CodeScan-https:', (msg, { data }) => {
+      PubSub.subscribe(MessageKeys.CodeScan_https, (msg, { data }) => {
         if (globalState?.activePageId !== pageId) return;
 
         addrRef.current?.blur();
@@ -116,7 +117,7 @@ export const Browser = observer(
 
       return () => {
         Dimensions.removeEventListener('change', handler);
-        PubSub.unsubscribe('CodeScan-https:');
+        PubSub.unsubscribe(MessageKeys.CodeScan_https);
 
         onInputting = undefined;
       };
