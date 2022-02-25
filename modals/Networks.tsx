@@ -1,21 +1,22 @@
-import { NetworkIcons, generateNetworkIcon } from '../assets/icons/networks/color';
+import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
 import { FlatList, ListRenderItemInfo, NativeSyntheticEvent, Text, TouchableOpacity, View } from 'react-native';
+import { NetworkIcons, generateNetworkIcon } from '../assets/icons/networks/color';
 import { SafeViewContainer, Separator } from '../components';
 import { useEffect, useRef, useState } from 'react';
 
 import { Feather } from '@expo/vector-icons';
 import { INetwork } from '../common/Networks';
+import NetworkDetails from './views/NetworkDetails';
 import Networks from '../viewmodels/Networks';
 import React from 'react';
+import { ReactiveScreen } from '../utils/device';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
 import Theme from '../viewmodels/settings/Theme';
 import i18n from '../i18n';
 import { observer } from 'mobx-react-lite';
+import { startLayoutAnimation } from '../utils/animations';
 import styles from './styles';
-import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
-import NetworkDetails from './views/NetworkDetails';
-import { ReactiveScreen } from '../utils/device';
 
 interface Props {
   onNetworkPress?: (network: INetwork) => void;
@@ -108,6 +109,7 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
           setTimeout(() => swiper.current?.scrollTo(1), 25);
           break;
         case 1:
+          startLayoutAnimation();
           Networks.remove(item.chainId).then(() => setNets(Networks.all));
           break;
       }

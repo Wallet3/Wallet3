@@ -1,9 +1,7 @@
 import * as Linking from 'expo-linking';
 
-import { isSecureSite } from '../../../viewmodels/customs/Bookmarks';
-import { providers, utils } from 'ethers';
 import Networks, { AddEthereumChainParameter } from '../../../viewmodels/Networks';
-import { rawCall } from '../../../common/RPC';
+import { providers, utils } from 'ethers';
 
 import { Account } from '../../../viewmodels/account/Account';
 import App from '../../../viewmodels/App';
@@ -12,13 +10,15 @@ import { ERC20Token } from '../../../models/ERC20';
 import EventEmitter from 'events';
 import { INetwork } from '../../../common/Networks';
 import InpageDApp from '../../../models/InpageDApp';
+import MessageKeys from '../../../common/MessageKeys';
+import MetamaskDAppsHub from '../../../viewmodels/walletconnect/MetamaskDAppsHub';
 import { ReadableInfo } from '../../../models/Transaction';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import { WCCallRequest_eth_sendTransaction } from '../../../models/WCSession_v1';
-
 import i18n from '../../../i18n';
+import { isSecureSite } from '../../../viewmodels/customs/Bookmarks';
+import { rawCall } from '../../../common/RPC';
 import { showMessage } from 'react-native-flash-message';
-import MetamaskDAppsHub from '../../../viewmodels/walletconnect/MetamaskDAppsHub';
 
 const NOTIFICATION_NAMES = {
   accountsChanged: 'metamask_accountsChanged',
@@ -377,11 +377,15 @@ export class InpageDAppController extends EventEmitter {
 
     return new Promise((resolve) => {
       const approve = async () => {
+        PubSub.publish(MessageKeys.openLoadingModal);
+
         if (await Networks.add(chain))
           showMessage({ message: i18n.t('msg-chain-added', { name: chain.chainName }), type: 'success' });
 
         resolve(null);
-        this.wallet_switchEthereumChain(origin, [{ chainId: chain.chainId }]);
+
+        await this.wallet_switchEthereumChain(origin, [{ chainId: chain.chainId }]);
+        PubSub.publish(MessageKeys.closeLoadingModal);
       };
 
       const reject = () => {

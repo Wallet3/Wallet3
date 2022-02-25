@@ -21,16 +21,18 @@ import React, { useEffect, useState } from 'react';
 
 import { AppVM } from '../viewmodels/App';
 import { Authentication } from '../viewmodels/Authentication';
-import { Dimensions } from 'react-native';
 import { FullPasspad } from '../modals/views/Passpad';
 import InpageConnectDApp from '../modals/InpageConnectDApp';
 import InpageDAppAddAssetModal from '../modals/InpageDAppAddAsset';
 import InpageDAppAddChain from '../modals/InpageDAppAddChain';
 import InpageDAppSendTx from '../modals/InpageDAppTxRequest';
 import InpageDAppSign from '../modals/InpageDAppSign';
+import Loading from '../modals/views/Loading';
+import MessageKeys from '../common/MessageKeys';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../viewmodels/Networks';
 import { ReactiveScreen } from '../utils/device';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Theme from '../viewmodels/settings/Theme';
 import { TokenTransferring } from '../viewmodels/transferring/TokenTransferring';
 import { WCCallRequestRequest } from '../models/WCSession_v1';
@@ -306,6 +308,45 @@ const GlobalAccountsMenuModal = () => {
   );
 };
 
+const GlobalLoadingModal = () => {
+  const { ref, open, close } = useModalize();
+
+  useEffect(() => {
+    PubSub.subscribe(MessageKeys.openLoadingModal, () => open());
+    PubSub.subscribe(MessageKeys.closeLoadingModal, () => close());
+
+    return () => {
+      PubSub.unsubscribe(MessageKeys.openLoadingModal);
+      PubSub.unsubscribe(MessageKeys.closeLoadingModal);
+    };
+  }, []);
+
+  return (
+    <Modalize
+      ref={ref}
+      adjustToContentHeight
+      disableScrollIfPossible
+      closeOnOverlayTap={false}
+      withHandle={false}
+      modalStyle={styles.modalStyle}
+      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+    >
+      <SafeAreaProvider
+        style={{
+          backgroundColor: Theme.backgroundColor,
+          height: 439,
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderTopRightRadius: 6,
+          borderTopLeftRadius: 6,
+        }}
+      >
+        <Loading />
+      </SafeAreaProvider>
+    </Modalize>
+  );
+};
+
 const RequestFundsModal = () => {
   const { ref: requestRef, open: openRequestModal } = useModalize();
 
@@ -451,6 +492,7 @@ export default (props: { app: AppVM; appAuth: Authentication }) => {
     <RequestFundsModal key="request-funds" />,
     <GlobalNetworksMenuModal key="networks-menu" />,
     <GlobalAccountsMenuModal key="accounts-menu" />,
+    <GlobalLoadingModal key="loading-modal" />,
     <WalletConnectV1 key="walletconnect" />,
     <WalletConnectRequests key="walletconnect-requests" {...props} />,
     <InpageDAppConnect key="inpage-dapp-connect" />,

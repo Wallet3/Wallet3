@@ -173,7 +173,10 @@ const Drawer = observer((props: DrawerProps) => {
           }}
         >
           {NetworkIcons[current.chainId] || <EVMIcon color={current.color} hideEVMTitle />}
-          <Text style={{ marginStart: 8, fontSize: 16, color: current.color, fontWeight: '500' }} numberOfLines={1}>
+          <Text
+            style={{ marginStart: 8, fontSize: 16, color: current.color, fontWeight: '500', maxWidth: '80%' }}
+            numberOfLines={1}
+          >
             {current.network}
           </Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}></View>

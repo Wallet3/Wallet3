@@ -151,6 +151,7 @@ class Networks {
 
       if (icon) {
         const result = await ImageColors.getColors(icon);
+        console.log(result)
         switch (result.platform) {
           case 'android':
             nc.customize.color = result.dominant || nc.customize.color;
