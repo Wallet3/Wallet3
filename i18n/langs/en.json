@@ -161,6 +161,7 @@
   "modal-tx-details-timestamp": "Timestamp",
   "modal-tx-details-data": "Data",
   "modal-tx-details-view-on-explorer": "View on Block Explorer",
+  "modal-sign-typed-msg-items": "Items: {{count}}",
   "tx-hub-transaction-confirmed": "Transaction confirmed",
   "tx-hub-transaction-failed": "Transaction failed",
   "tx-hub-confirmed-msg": "Tx: {{hash}} has been confirmed at block: {{block}}",

@@ -168,7 +168,7 @@ class TxHub {
       ];
     });
 
-    this.watchTimer = setTimeout(() => this.watchPendingTxs(), 700);
+    this.watchTimer = setTimeout(() => this.watchPendingTxs(), 1000);
 
     return hash;
   }
