@@ -237,6 +237,8 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
           <FlatList
             ref={scroller}
             scrollEnabled={false}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
             pagingEnabled
             data={logos}
             renderItem={({ item }) => item}
