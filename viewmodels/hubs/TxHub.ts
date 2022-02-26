@@ -100,7 +100,10 @@ class TxHub {
         duration: 3000,
       });
 
-      await tx.save();
+      try {
+        await tx.save();
+      } catch (error) {}
+
       confirmedTxs.push(tx);
 
       const invalidTxs = await this.repository.find({
@@ -156,7 +159,8 @@ class TxHub {
       this.pendingTxs = [maxPriTx, ...this.pendingTxs.filter((t) => t.nonce !== pendingTx.nonce)];
     });
 
-    setTimeout(() => this.watchPendingTxs(), 100);
+    clearTimeout(this.watchTimer);
+    this.watchTimer = setTimeout(() => this.watchPendingTxs(), 1000);
 
     return hash;
   }
@@ -181,7 +185,6 @@ class TxHub {
     t.readableInfo = tx.readableInfo;
 
     await t.save();
-
     return t;
   };
 

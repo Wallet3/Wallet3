@@ -12,6 +12,7 @@ import {
   PolygonPopularTokens,
   RoninPopularTokens,
   xDaiPopularTokens,
+  zkSyncPopularTokens,
 } from './Tokens';
 
 export interface INetwork {
@@ -294,7 +295,7 @@ export const Testnets: INetwork[] = [
     chainId: 280,
     color: '#8C8DFC',
     test: true,
-    defaultTokens: [],
+    defaultTokens: zkSyncPopularTokens,
     explorer: 'https://zksync2-testnet.zkscan.io',
   },
 ];
