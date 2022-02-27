@@ -11,8 +11,10 @@ import RejectApproveButtons from '../components/RejectApproveButtons';
 import { SafeViewContainer } from '../../components';
 import { ScrollView } from 'react-native-gesture-handler';
 import Theme from '../../viewmodels/settings/Theme';
+import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { utils } from 'ethers';
 
 interface Props {
   themeColor: string;
@@ -93,14 +95,14 @@ const generateItem = ({ data }: { data: { key: string; value: any | any[] }[] })
             flexDirection: 'row',
             justifyContent: 'space-between',
             paddingVertical: 4,
-            maxWidth: '100%',
-            alignItems: 'flex-start',
+            width: '100%',
+            overflow: 'hidden',
           }}
         >
           <Text style={{ fontWeight: '500', paddingEnd: 16, fontSize: 16, color: textColor }} numberOfLines={1}>
             {item.key}
           </Text>
-          <Text style={{ color: textColor, fontSize: 14 }}>{item.value}</Text>
+          <Text style={{ color: textColor, fontSize: 14, marginTop: 2.25, maxWidth: '80%' }}>{item.value}</Text>
         </View>
       );
     }
@@ -134,7 +136,7 @@ export default observer(({ themeColor, data, onReject, onSign, account, bioType 
         {account ? <AccountIndicator account={account} /> : undefined}
       </View>
 
-      <ScrollView style={{ flex: 1, marginHorizontal: -16, paddingHorizontal: 12 }} bounces={false}>
+      <ScrollView style={{ flex: 1, marginHorizontal: -16, paddingHorizontal: 16 }} bounces={false}>
         {data?.message ? generateItem({ data: parse(data.message)! }) : generateItem({ data: parse(data)! })}
       </ScrollView>
 
