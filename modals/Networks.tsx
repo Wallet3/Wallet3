@@ -46,19 +46,6 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
     };
   }, []);
 
-  useEffect(() => {
-    const jumpTimer = setTimeout(() => {
-      const index = Networks.all.findIndex((n) => n.chainId === (selectedNetwork || Networks.current).chainId) ?? 0;
-      if (index < 0) return;
-
-      flatList.current?.scrollToIndex({ animated: true, index });
-    }, 200);
-
-    return () => {
-      clearTimeout(jumpTimer);
-    };
-  }, []);
-
   const renderItem = ({ item }: ListRenderItemInfo<INetwork>) => {
     return (
       <TouchableOpacity
