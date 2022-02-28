@@ -205,4 +205,5 @@ export default {
   25: <Cronos width={49} height={49} style={{ ...styles.cronos, opacity: 1 }} />,
   1666600000: <Harmony width={52} height={52} style={{ ...styles.harmony, opacity: 1 }} />,
   2020: <Ronin width={40} height={40} style={{ ...styles.ronin, opacity: 1 }} />,
+  280: <ZKSync width={49} height={49} style={{ ...styles.zkSync, opacity: 1 }} />,
 };

@@ -15,6 +15,7 @@ import Polygon from './polygon.svg';
 import React from 'react';
 import Ronin from './ronin.svg';
 import XDai from './xdai.svg';
+import ZkSync from './zksync.svg';
 import styles from '../styles';
 
 export default {
@@ -34,4 +35,5 @@ export default {
   25: <Cronos width={49} height={49} style={styles.cronos} />,
   1666600000: <Harmony width={52} height={52} style={styles.harmony} />,
   2020: <Ronin width={42} height={42} style={styles.ronin} />,
+  280: <ZkSync width={49} height={49} style={styles.zkSync} />,
 };
