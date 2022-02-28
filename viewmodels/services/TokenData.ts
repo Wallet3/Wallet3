@@ -2,10 +2,10 @@ import Coingecko, { getMarketChart } from '../../common/apis/Coingecko';
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import { INetwork } from '../../common/Networks';
-import { IToken } from '../../common/Tokens';
 import Langs from '../settings/Langs';
 import { UserToken } from './TokensMan';
 import axios from 'axios';
+import { startSpringLayoutAnimation } from '../../utils/animations';
 
 interface ITokenData {
   description: string;
@@ -83,12 +83,13 @@ export class TokenData implements ITokenData {
 
     this.coinId = id;
 
-    const desc = info?.description || (description?.[Langs.currentLang.value] || description?.en)?.replace(/<[^>]*>?/gm, '');
+    const desc = (description?.[Langs.currentLang.value] || description?.en)?.replace(/<[^>]*>?/gm, '') || info?.description;
     const [first] = desc?.split(/(?:\r?\n)+/);
 
     await this.refreshHistoryPrices();
 
     runInAction(() => {
+      startSpringLayoutAnimation();
       this.firstDescription = first || '';
       this.description = desc || '';
       this.price = market_data.current_price?.usd ?? 0;

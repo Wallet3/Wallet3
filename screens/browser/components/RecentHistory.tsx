@@ -1,8 +1,7 @@
 import * as Animatable from 'react-native-animatable';
 
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
-import { LayoutAnimConfig, startLayoutAnimation } from '../../../utils/animations';
-import { LayoutAnimation, NativeSyntheticEvent, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { NativeSyntheticEvent, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 import Bookmarks from '../../../viewmodels/customs/Bookmarks';
 import { FlatList } from 'react-native-gesture-handler';
@@ -11,6 +10,7 @@ import React from 'react';
 import Theme from '../../../viewmodels/settings/Theme';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
+import { startLayoutAnimation } from '../../../utils/animations';
 
 interface Props {
   onItemPress?: (url: string) => void;

@@ -151,7 +151,7 @@ export class BaseTransaction {
     runInAction(() => {
       switch (speed) {
         case 'rapid':
-          this.setMaxGasPrice(basePrice + (this.network.eip1559 ? this.maxPriorityPrice : 0) + 10);
+          this.setMaxGasPrice(basePrice + (this.network.eip1559 ? priPrice : 0) + 10);
           if (eip1559) this.setPriorityPrice(priPrice + 3);
           break;
         case 'fast':
