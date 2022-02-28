@@ -72,16 +72,9 @@ export class TokenData implements ITokenData {
       this.fetchInfo(),
     ]);
 
-    if (!result) {
-      runInAction(() => (this.loading = false));
-      return;
-    }
+    const { description, links, market_data, id } = result || {};
 
-    const { description, links, market_data, error, id } = result;
-
-    if (error || !id || !market_data) return;
-
-    this.coinId = id;
+    this.coinId = id || '';
 
     const desc = (description?.[Langs.currentLang.value] || description?.en)?.replace(/<[^>]*>?/gm, '') || info?.description;
     const [first] = desc?.split(/(?:\r?\n)+/);
@@ -92,9 +85,9 @@ export class TokenData implements ITokenData {
       startSpringLayoutAnimation();
       this.firstDescription = first || '';
       this.description = desc || '';
-      this.price = market_data.current_price?.usd ?? 0;
-      this.priceChangeIn24 = market_data.price_change_24h || 0;
-      this.priceChangePercentIn24 = market_data.price_change_percentage_24h || 0;
+      this.price = market_data?.current_price?.usd ?? 0;
+      this.priceChangeIn24 = market_data?.price_change_24h || 0;
+      this.priceChangePercentIn24 = market_data?.price_change_percentage_24h || 0;
       this.loading = false;
     });
   }
@@ -106,7 +99,7 @@ export class TokenData implements ITokenData {
     if (!data) return;
 
     const { prices } = data;
-    if (!prices) return;
+    if (!prices || !Array.isArray(prices)) return;
 
     runInAction(() => (this.historyPrices = prices.map((item) => item[1])));
   }
