@@ -103,7 +103,11 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
     };
 
     return (
-      <ContextMenu onPress={onActionPress} actions={item.isUserAdded ? editableActions : viewActions}>
+      <ContextMenu
+        onPress={onActionPress}
+        actions={item.isUserAdded ? editableActions : viewActions}
+        previewBackgroundColor={backgroundColor}
+      >
         {renderItem(props)}
       </ContextMenu>
     );
