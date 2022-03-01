@@ -115,7 +115,7 @@
   "modal-gas-review-nonce": "Nonce",
   "modal-gas-review-rapid": "Rapid",
   "modal-gas-review-fast": "Fast",
-  "modal-gas-review-standard": "Standard",
+  "modal-gas-review-standard": "Slow",
   "modal-message-signing": "Message Signing",
   "modal-dapp-connection-timeout": "Connection Timeout",
   "modal-dapp-connection-wc-failed": "Failed to connect DApp",

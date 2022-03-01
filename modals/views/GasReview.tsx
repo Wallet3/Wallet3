@@ -1,5 +1,5 @@
-import { Button, SafeViewContainer } from '../../components';
-import { FontAwesome5, Ionicons } from '@expo/vector-icons';
+import { Button, Coin, SafeViewContainer } from '../../components';
+import { Entypo, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import AnimateNumber from 'react-native-animate-number';
@@ -11,6 +11,7 @@ import Theme from '../../viewmodels/settings/Theme';
 import TxException from '../components/TxException';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { secondaryFontColor } from '../../constants/styles';
 import styles from '../styles';
 
 interface GasProps {
@@ -21,7 +22,7 @@ interface GasProps {
 
 export default observer(({ onBack, vm, themeColor }: GasProps) => {
   const { t } = i18n;
-  const { borderColor, textColor } = Theme;
+  const { borderColor, textColor, secondaryTextColor } = Theme;
 
   const reviewItemStyle = { ...styles.reviewItem, borderColor };
   const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
@@ -117,21 +118,55 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
         </View>
       </View>
 
-      <View style={{ ...reviewItemsContainer, flexDirection: 'row' }}>
-        <TouchableOpacity style={styles.gasItem} onPress={() => vm.setGas('rapid')}>
-          <Ionicons name="rocket" size={12} color="tomato" />
-          <Text style={{ ...styles.gasItemText, color: 'tomato' }}>{t('modal-gas-review-rapid')}</Text>
-        </TouchableOpacity>
+      <View style={{ flexDirection: 'row' }}>
+        <View
+          style={{
+            ...reviewItemsContainer,
+            justifyContent: 'space-around',
+            flexDirection: 'row',
+            flex: 1,
+          }}
+        >
+          <TouchableOpacity style={styles.gasSpeedItem} onPress={() => vm.setGas('rapid')}>
+            <Ionicons name="rocket" size={12} color="tomato" />
+            <Text style={{ ...styles.gasItemText, color: 'tomato' }}>{t('modal-gas-review-rapid')}</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity style={styles.gasItem} onPress={() => vm.setGas('fast')}>
-          <Ionicons name="car-sport" size={13} color="dodgerblue" />
-          <Text style={{ ...styles.gasItemText, color: 'dodgerblue' }}>{t('modal-gas-review-fast')}</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.gasSpeedItem} onPress={() => vm.setGas('fast')}>
+            <Ionicons name="car-sport" size={13} color="dodgerblue" />
+            <Text style={{ ...styles.gasItemText, color: 'dodgerblue' }}>{t('modal-gas-review-fast')}</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity style={styles.gasItem} onPress={() => vm.setGas('standard')}>
-          <FontAwesome5 name="walking" size={12} color="darkorchid" />
-          <Text style={{ ...styles.gasItemText, color: 'darkorchid' }}>{t('modal-gas-review-standard')}</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.gasSpeedItem} onPress={() => vm.setGas('standard')}>
+            <FontAwesome5 name="walking" size={12} color="darkorchid" />
+            <Text style={{ ...styles.gasItemText, color: 'darkorchid' }} numberOfLines={1}>
+              {t('modal-gas-review-standard')}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={{ ...reviewItemsContainer, marginStart: 12 }}>
+          <TouchableOpacity
+            style={{ ...styles.gasSpeedItem, paddingStart: 8, paddingEnd: 4, flexDirection: 'row', alignItems: 'center' }}
+          >
+            <Coin symbol="USDC" address="" chainId={1} size={14} />
+            <Text
+              numberOfLines={1}
+              style={{
+                ...styles.gasItemText,
+                fontSize: 14,
+                marginStart: 6,
+                marginEnd: 2,
+                color: textColor,
+                fontWeight: '500',
+                maxWidth: 100,
+              }}
+            >
+              USDC
+            </Text>
+            <Entypo name="chevron-right" color={secondaryTextColor} />
+          </TouchableOpacity>
+        </View>
       </View>
 
       {!vm.isValidGas && <TxException exception={t('tip-invalid-gas-price')} />}
