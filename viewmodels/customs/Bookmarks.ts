@@ -105,6 +105,7 @@ class Bookmarks {
     if (index !== -1) {
       const [item] = this.recentSites.splice(index, 1);
       this.recentSites.unshift(item);
+      AsyncStorage.setItem('recent-sites', JSON.stringify(this.recentSites));
       return;
     }
 
