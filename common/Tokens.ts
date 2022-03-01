@@ -684,6 +684,8 @@ const zkSync_USDC = {
 
 export const zkSyncPopularTokens = [zkSync_USDC];
 
+export const zkSyncFeeTokens = [ETH, zkSync_USDC];
+
 const all = [
   ...Stablecoins,
   WETH,

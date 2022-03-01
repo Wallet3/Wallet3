@@ -159,7 +159,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
           <View style={{ ...reviewItemsContainer, marginStart: 12 }}>
             <TouchableOpacity
               onPress={() => swiper.current?.scrollTo(1)}
-              style={{ ...styles.gasSpeedItem, paddingStart: 8, paddingEnd: 4, flexDirection: 'row', alignItems: 'center' }}
+              style={{ ...styles.gasSpeedItem, paddingStart: 10, paddingEnd: 6, flexDirection: 'row', alignItems: 'center' }}
             >
               <Coin symbol="USDC" address="" chainId={1} size={14} />
               <Text

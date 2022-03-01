@@ -1,6 +1,8 @@
 import { action, makeObservable, observable, runInAction } from 'mobx';
+
 import Database from '../../models/Database';
 import InpageDApp from '../../models/InpageDApp';
+import LINQ from 'linq';
 import { MetamaskDApp } from './MetamaskDApp';
 
 class MetamaskDAppsHub {
@@ -17,14 +19,16 @@ class MetamaskDAppsHub {
     const expiredTime = Date.now() - 1000 * 60 * 60 * 24 * 30;
     dapps.filter((d) => d.lastUsedTimestamp < expiredTime).map((item) => item.remove());
 
-    dapps = dapps.filter((d) => d.lastUsedTimestamp >= expiredTime);
-
-    const items = dapps.map((app) => {
-      const item = new MetamaskDApp(app);
-      item.once('removed', (obj) => this.remove(obj));
-      this.cache.set(item.hostname, item);
-      return item;
-    });
+    const items = LINQ.from(dapps)
+      .where((d) => d.lastUsedTimestamp >= expiredTime)
+      .orderByDescending((d) => d.lastUsedTimestamp)
+      .select((app) => {
+        const item = new MetamaskDApp(app);
+        item.once('removed', (obj) => this.remove(obj));
+        this.cache.set(item.hostname, item);
+        return item;
+      })
+      .toArray();
 
     runInAction(() => (this.dapps = items));
   }
@@ -38,7 +42,7 @@ class MetamaskDAppsHub {
     const item = new MetamaskDApp(dapp);
     item.once('removed', (obj) => this.remove(obj));
     this.cache.set(item.hostname, item);
-    this.dapps = [...this.dapps, item];
+    this.dapps.unshift(item);
   }
 
   find(hostname: string) {
