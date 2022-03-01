@@ -1,7 +1,6 @@
 import * as Animatable from 'react-native-animatable';
 import * as Linking from 'expo-linking';
 
-import { Directions, Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { Entypo, Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -33,7 +32,6 @@ import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConne
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import { runOnJS } from 'react-native-reanimated';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 export interface PageMetadata {
@@ -61,7 +59,6 @@ interface Web3ViewProps extends WebViewProps {
   onExpandRequest?: (webUrl: string) => void;
   onBookmarksPress?: () => void;
   onTabPress?: () => void;
-  onRemoveAllTabs?: () => void;
   tabCount?: number;
 
   webViewRef: React.Ref<WebView>;
@@ -70,7 +67,7 @@ interface Web3ViewProps extends WebViewProps {
 
 export default observer((props: Web3ViewProps) => {
   const { t } = i18n;
-  const { webViewRef, viewShotRef, tabCount, onTabPress, onRemoveAllTabs } = props;
+  const { webViewRef, viewShotRef, tabCount, onTabPress } = props;
   const [hub] = useState(new InpageDAppController());
   const [appName] = useState(`Wallet3/${DeviceInfo.getVersion() || '0.0.0'}`);
   const [ua] = useState(
@@ -91,16 +88,6 @@ export default observer((props: Web3ViewProps) => {
   const [dapp, setDApp] = useState<ConnectedBrowserDApp | undefined>();
   const [webUrl, setWebUrl] = useState('');
   const { mode, foregroundColor, isLightMode, backgroundColor, borderColor, systemBorderColor } = Theme;
-
-  function callRemoveAllTabs() {
-    'worklet';
-    if (!onRemoveAllTabs) return;
-    runOnJS(onRemoveAllTabs!)();
-  }
-
-  const flingGesture = Gesture.Fling()
-    .direction(Directions.UP)
-    .onEnd(() => callRemoveAllTabs());
 
   const updateDAppState = (dapp?: ConnectedBrowserDApp) => {
     setDApp(dapp);
@@ -283,24 +270,22 @@ export default observer((props: Web3ViewProps) => {
               )
             ) : undefined}
 
-            <GestureDetector gesture={flingGesture}>
-              <TouchableOpacity style={styles.navTouchableItem} onPress={onTabPress}>
-                <View
-                  style={{
-                    borderWidth: 1.5,
-                    borderColor: tintColor,
-                    paddingVertical: 2,
-                    paddingHorizontal: 4,
-                    borderRadius: 7,
-                    justifyContent: 'center',
-                  }}
-                >
-                  <Text style={{ fontWeight: '700', fontSize: 12, minWidth: 12, textAlign: 'center', color: tintColor }}>
-                    {tabCount}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </GestureDetector>
+            <TouchableOpacity style={styles.navTouchableItem} onPress={onTabPress}>
+              <View
+                style={{
+                  borderWidth: 1.5,
+                  borderColor: tintColor,
+                  paddingVertical: 2,
+                  paddingHorizontal: 4,
+                  borderRadius: 7,
+                  justifyContent: 'center',
+                }}
+              >
+                <Text style={{ fontWeight: '700', fontSize: 12, minWidth: 12, textAlign: 'center', color: tintColor }}>
+                  {tabCount}
+                </Text>
+              </View>
+            </TouchableOpacity>
 
             <TouchableOpacity style={styles.navTouchableItem} onPress={onBookmarksPress}>
               <Feather name="book-open" size={20.5} color={tintColor} />

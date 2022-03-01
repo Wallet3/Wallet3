@@ -13,7 +13,6 @@ import { secureColor, thirdFontColor } from '../../constants/styles';
 
 import { Bar } from 'react-native-progress';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import CachedImage from 'react-native-expo-cached-image';
 import Collapsible from 'react-native-collapsible';
 import { FlatGrid } from 'react-native-super-grid';
 import MessageKeys from '../../common/MessageKeys';
@@ -56,7 +55,6 @@ interface Props extends BottomTabScreenProps<any, never> {
   onOpenTabs?: () => void;
   setCapture?: (callback: () => Promise<string>) => void;
   onInputting?: (inputting: boolean) => void;
-  onRemoveAllTabs?: () => void;
 }
 
 export const Browser = observer(
@@ -72,7 +70,6 @@ export const Browser = observer(
     setCapture,
     onPageLoadEnd,
     onInputting,
-    onRemoveAllTabs,
   }: Props) => {
     const { t } = i18n;
     const { top } = useSafeAreaInsets();
@@ -472,7 +469,6 @@ export const Browser = observer(
             onNewTab={onNewTab}
             expanded={isExpandedSite}
             onBookmarksPress={openFavs}
-            onRemoveAllTabs={onRemoveAllTabs}
             onMetadataChange={(data) => {
               setPageMetadata(data);
               onPageLoaded?.(pageId, data);
@@ -536,12 +532,7 @@ export const Browser = observer(
         )}
 
         {!webUrl && recentSites.length > 0 ? (
-          <RecentHistory
-            onRemoveAllTabs={onRemoveAllTabs}
-            tabCount={globalState?.pageCount}
-            onItemPress={(url) => goTo(url)}
-            onTabsPress={onOpenTabs}
-          />
+          <RecentHistory tabCount={globalState?.pageCount} onItemPress={(url) => goTo(url)} onTabsPress={onOpenTabs} />
         ) : undefined}
 
         <Portal>
