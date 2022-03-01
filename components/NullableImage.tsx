@@ -29,14 +29,14 @@ export default ({
   imageRadius,
   imageBackgroundColor,
 }: Props) => {
-  const [iconFailed, setIconFailed] = useState(false);
+  const [iconFailed, setIconFailed] = useState(uri ? false : true);
   const [defaultColor] = useState(genColor());
 
   width = width ?? size;
   height = height ?? size;
 
   return (
-    <View style={{ position: 'relative', ...(containerStyle || ({} as any)) }}>
+    <View style={{ position: 'relative', minWidth: width, minHeight: height, ...(containerStyle || ({} as any)) }}>
       {iconFailed && (
         <View
           style={{
@@ -53,16 +53,18 @@ export default ({
         </View>
       )}
 
-      <Image
-        source={{ uri }}
-        onError={() => setIconFailed(true)}
-        style={{
-          width,
-          height,
-          borderRadius: imageRadius,
-          backgroundColor: iconFailed ? undefined : imageBackgroundColor,
-        }}
-      />
+      {iconFailed ? undefined : (
+        <Image
+          source={{ uri }}
+          onError={() => setIconFailed(true)}
+          style={{
+            width,
+            height,
+            borderRadius: imageRadius,
+            backgroundColor: iconFailed ? undefined : imageBackgroundColor,
+          }}
+        />
+      )}
     </View>
   );
 };

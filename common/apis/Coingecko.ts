@@ -98,18 +98,20 @@ class Coingecko {
 
     if (!coins) return;
 
-    for (let { symbol, id } of coins) {
-      if (id.includes('-wormhole')) continue;
-      let ids = this.coinSymbolToIds.get(symbol.toLowerCase());
+    try {
+      for (let { symbol, id } of coins) {
+        if (id.includes('-wormhole')) continue;
+        let ids = this.coinSymbolToIds.get(symbol.toLowerCase());
 
-      if (!ids) {
-        ids = [id];
-        this.coinSymbolToIds.set(symbol.toLowerCase(), ids);
-        continue;
+        if (!ids) {
+          ids = [id];
+          this.coinSymbolToIds.set(symbol.toLowerCase(), ids);
+          continue;
+        }
+
+        ids.push(id);
       }
-
-      ids.push(id);
-    }
+    } catch (error) {}
   }
 
   async refresh() {
@@ -148,24 +150,26 @@ class Coingecko {
     address = address.toLowerCase();
     network = network.toLowerCase();
 
-    for (let id of ids!) {
-      const coin = await getCoin(id);
-      if (!coin) continue;
-      if (ids.length === 1) return coin;
+    try {
+      for (let id of ids!) {
+        const coin = await getCoin(id);
+        if (!coin) continue;
+        if (ids.length === 1) return coin;
 
-      const platforms = Object.getOwnPropertyNames(coin.platforms).filter((k) => k);
+        const platforms = Object.getOwnPropertyNames(coin.platforms).filter((k) => k);
 
-      if (platforms.length === 0 && !address && coin.name.toLowerCase() === network) return coin;
-      if (platforms.length === 0) continue;
+        if (platforms.length === 0 && !address && coin.name.toLowerCase() === network) return coin;
+        if (platforms.length === 0) continue;
 
-      const found = platforms.find((platform) => coin.platforms[platform]?.toLowerCase() === address);
-      if (found) return coin;
+        const found = platforms.find((platform) => coin.platforms[platform]?.toLowerCase() === address);
+        if (found) return coin;
 
-      const nativeToken = platforms.find((p) => coin.platforms[id]?.toLowerCase() === symbol.toLowerCase());
-      if (nativeToken) return coin;
+        const nativeToken = platforms.find((p) => coin.platforms[id]?.toLowerCase() === symbol.toLowerCase());
+        if (nativeToken) return coin;
 
-      if (!address && coin.name.toLowerCase() === network) return coin;
-    }
+        if (!address && coin.name.toLowerCase() === network) return coin;
+      }
+    } catch (error) {}
   }
 
   getCoinIds(symbol: string) {

@@ -1,15 +1,11 @@
 import { Coin, SafeViewContainer, Skeleton } from '../../components';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import React, { useRef, useState } from 'react';
-import { Text, TextInput, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-
-import { fontColor, thirdFontColor } from '../../constants/styles';
+import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { Account } from '../../viewmodels/account/Account';
 import AccountIndicator from '../components/AccountIndicator';
 import AnimateNumber from 'react-native-animate-number';
-import Avatar from '../../components/Avatar';
 import { BioType } from '../../viewmodels/Authentication';
 import Currency from '../../viewmodels/settings/Currency';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';
@@ -29,7 +25,7 @@ import styles from '../styles';
 
 interface Props {
   vm: RawTransactionRequest;
-  app: { name: string; icon: string; verified: boolean };
+  app: { name: string; icon: string; verified?: boolean };
   onReject?: () => void;
   onApprove?: () => Promise<void>;
   onGasPress?: () => void;
@@ -111,7 +107,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
                 style={{
                   ...reviewItemValueStyle,
                   maxWidth: 120,
-                  color: vm.maxUint256Amount ? 'crimson' : fontColor,
+                  color: vm.maxUint256Amount ? 'crimson' : textColor,
                   marginEnd: 8,
                   minWidth: 52,
                 }}

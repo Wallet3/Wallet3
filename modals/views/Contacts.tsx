@@ -125,6 +125,7 @@ export default observer(({ onNext, vm }: Props) => {
       <FlatList
         data={contacts}
         renderItem={renderContact}
+        bounces={contacts.length > 7}
         style={{ flex: 1, marginHorizontal: -16 }}
         keyExtractor={(item) => `${item.ens}_${item.address}_${item.avatar}`}
         ItemSeparatorComponent={() => <View style={{ backgroundColor: borderColor, height: 1, marginHorizontal: 16 }} />}

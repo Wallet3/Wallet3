@@ -21,16 +21,18 @@ import React, { useEffect, useState } from 'react';
 
 import { AppVM } from '../viewmodels/App';
 import { Authentication } from '../viewmodels/Authentication';
-import { Dimensions } from 'react-native';
 import { FullPasspad } from '../modals/views/Passpad';
 import InpageConnectDApp from '../modals/InpageConnectDApp';
 import InpageDAppAddAssetModal from '../modals/InpageDAppAddAsset';
 import InpageDAppAddChain from '../modals/InpageDAppAddChain';
 import InpageDAppSendTx from '../modals/InpageDAppTxRequest';
 import InpageDAppSign from '../modals/InpageDAppSign';
+import Loading from '../modals/views/Loading';
+import MessageKeys from '../common/MessageKeys';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../viewmodels/Networks';
 import { ReactiveScreen } from '../utils/device';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Theme from '../viewmodels/settings/Theme';
 import { TokenTransferring } from '../viewmodels/transferring/TokenTransferring';
 import { WCCallRequestRequest } from '../models/WCSession_v1';
@@ -51,35 +53,38 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
   const [callRequest, setCallRequest] = useState<WCCallRequestRequest>();
 
   useEffect(() => {
-    PubSub.subscribe('wc_request', (_, { client, request }: { client: WalletConnect_v1; request: WCCallRequestRequest }) => {
-      if (!appAuth.appAuthorized) {
-        client.rejectRequest(request.id, 'Unauthorized');
-        return;
+    PubSub.subscribe(
+      MessageKeys.wc_request,
+      (_, { client, request }: { client: WalletConnect_v1; request: WCCallRequestRequest }) => {
+        if (!appAuth.appAuthorized) {
+          client.rejectRequest(request.id, 'Unauthorized');
+          return;
+        }
+
+        setType(undefined);
+        setCallRequest(undefined);
+        setClient(client);
+
+        switch (request.method) {
+          case 'eth_sign':
+          case 'personal_sign':
+          case 'eth_signTypedData':
+            setCallRequest(request);
+            setType('sign');
+            break;
+          case 'eth_sendTransaction':
+          case 'eth_signTransaction':
+            setCallRequest(request);
+            setType('sendTx');
+            break;
+        }
+
+        setTimeout(() => open(), 0);
       }
-
-      setType(undefined);
-      setCallRequest(undefined);
-      setClient(client);
-
-      switch (request.method) {
-        case 'eth_sign':
-        case 'personal_sign':
-        case 'eth_signTypedData':
-          setCallRequest(request);
-          setType('sign');
-          break;
-        case 'eth_sendTransaction':
-        case 'eth_signTransaction':
-          setCallRequest(request);
-          setType('sendTx');
-          break;
-      }
-
-      setTimeout(() => open(), 0);
-    });
+    );
 
     return () => {
-      PubSub.unsubscribe('wc_request');
+      PubSub.unsubscribe(MessageKeys.wc_request);
     };
   }, []);
 
@@ -109,14 +114,14 @@ const WalletConnectV1 = () => {
   const [extra, setExtra] = useState<any>();
 
   useEffect(() => {
-    PubSub.subscribe('CodeScan-wc:', (_, { data, extra }) => {
+    PubSub.subscribe(MessageKeys.CodeScan_wc, (_, { data, extra }) => {
       setConnectUri(data);
       setExtra(extra);
       openConnectDapp();
     });
 
     return () => {
-      PubSub.unsubscribe('CodeScan-wc:');
+      PubSub.unsubscribe(MessageKeys.CodeScan_wc);
     };
   }, []);
 
@@ -160,7 +165,7 @@ const InpageDAppConnect = () => {
       });
     };
 
-    PubSub.subscribe('openConnectInpageDApp', (_, data: ConnectInpageDApp) => {
+    PubSub.subscribe(MessageKeys.openConnectInpageDApp, (_, data: ConnectInpageDApp) => {
       if (data.pageMetadata) updatePageInfo(undefined, data.pageMetadata);
 
       setData(data);
@@ -168,7 +173,7 @@ const InpageDAppConnect = () => {
     });
 
     return () => {
-      PubSub.unsubscribe('openConnectInpageDApp');
+      PubSub.unsubscribe(MessageKeys.openConnectInpageDApp);
     };
   }, []);
 
@@ -199,35 +204,35 @@ const InpageDAppRequests = () => {
   const [type, setType] = useState('');
 
   useEffect(() => {
-    PubSub.subscribe('openInpageDAppSign', (_, data: InpageDAppSignRequest) => {
+    PubSub.subscribe(MessageKeys.openInpageDAppSign, (_, data: InpageDAppSignRequest) => {
       setSignRequest(data);
       setType('sign');
       open();
     });
 
-    PubSub.subscribe('openInpageDAppSendTransaction', (_, data: InpageDAppTxRequest) => {
+    PubSub.subscribe(MessageKeys.openInpageDAppSendTransaction, (_, data: InpageDAppTxRequest) => {
       setTxRequest(data);
       setType('sendTx');
       open();
     });
 
-    PubSub.subscribe('openAddEthereumChain', (_, data: InpageDAppAddEthereumChain) => {
+    PubSub.subscribe(MessageKeys.openAddEthereumChain, (_, data: InpageDAppAddEthereumChain) => {
       setAddChain(data);
       setType('addChain');
       open();
     });
 
-    PubSub.subscribe('openAddAsset', (_, data: InpageDAppAddAsset) => {
+    PubSub.subscribe(MessageKeys.openAddAsset, (_, data: InpageDAppAddAsset) => {
       setAddAsset(data);
       setType('addAsset');
       open();
     });
 
     return () => {
-      PubSub.unsubscribe('openInpageDAppSign');
-      PubSub.unsubscribe('openInpageDAppSendTransaction');
-      PubSub.unsubscribe('openAddEthereumChain');
-      PubSub.unsubscribe('openAddAsset');
+      PubSub.unsubscribe(MessageKeys.openInpageDAppSign);
+      PubSub.unsubscribe(MessageKeys.openInpageDAppSendTransaction);
+      PubSub.unsubscribe(MessageKeys.openAddEthereumChain);
+      PubSub.unsubscribe(MessageKeys.openAddAsset);
     };
   }, []);
 
@@ -256,10 +261,10 @@ const GlobalNetworksMenuModal = () => {
   const { ref: networksRef, open: openNetworksModal, close: closeNetworksModal } = useModalize();
 
   useEffect(() => {
-    PubSub.subscribe('openNetworksMenu', () => openNetworksModal());
+    PubSub.subscribe(MessageKeys.openNetworksMenu, () => openNetworksModal());
 
     return () => {
-      PubSub.unsubscribe('openNetworksMenu');
+      PubSub.unsubscribe(MessageKeys.openNetworksMenu);
     };
   }, []);
 
@@ -286,10 +291,10 @@ const GlobalAccountsMenuModal = () => {
   const { ref, open, close } = useModalize();
 
   useEffect(() => {
-    PubSub.subscribe('openAccountsMenu', () => open());
+    PubSub.subscribe(MessageKeys.openAccountsMenu, () => open());
 
     return () => {
-      PubSub.unsubscribe('openAccountsMenu');
+      PubSub.unsubscribe(MessageKeys.openAccountsMenu);
     };
   }, []);
 
@@ -306,14 +311,53 @@ const GlobalAccountsMenuModal = () => {
   );
 };
 
+const GlobalLoadingModal = () => {
+  const { ref, open, close } = useModalize();
+
+  useEffect(() => {
+    PubSub.subscribe(MessageKeys.openLoadingModal, () => open());
+    PubSub.subscribe(MessageKeys.closeLoadingModal, () => close());
+
+    return () => {
+      PubSub.unsubscribe(MessageKeys.openLoadingModal);
+      PubSub.unsubscribe(MessageKeys.closeLoadingModal);
+    };
+  }, []);
+
+  return (
+    <Modalize
+      ref={ref}
+      adjustToContentHeight
+      disableScrollIfPossible
+      closeOnOverlayTap={false}
+      withHandle={false}
+      modalStyle={styles.modalStyle}
+      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+    >
+      <SafeAreaProvider
+        style={{
+          backgroundColor: Theme.backgroundColor,
+          height: 439,
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderTopRightRadius: 6,
+          borderTopLeftRadius: 6,
+        }}
+      >
+        <Loading />
+      </SafeAreaProvider>
+    </Modalize>
+  );
+};
+
 const RequestFundsModal = () => {
   const { ref: requestRef, open: openRequestModal } = useModalize();
 
   useEffect(() => {
-    PubSub.subscribe('openRequestFundsModal', () => openRequestModal());
+    PubSub.subscribe(MessageKeys.openRequestFundsModal, () => openRequestModal());
 
     return () => {
-      PubSub.unsubscribe('openRequestFundsModal');
+      PubSub.unsubscribe(MessageKeys.openRequestFundsModal);
     };
   }, []);
 
@@ -337,7 +381,7 @@ const SendFundsModal = () => {
   const { ref: sendRef, open: openSendModal, close: closeSendModal } = useModalize();
 
   useEffect(() => {
-    PubSub.subscribe('openSendFundsModal', (_, data) => {
+    PubSub.subscribe(MessageKeys.openSendFundsModal, (_, data) => {
       const { token } = data || {};
       setVM(new TokenTransferring({ targetNetwork: Networks.current, defaultToken: token }));
       setTimeout(() => openSendModal(), 0);
@@ -366,8 +410,7 @@ const SendFundsModal = () => {
     });
 
     return () => {
-      PubSub.unsubscribe('openSendFundsModal');
-      PubSub.unsubscribe('closeSendFundsModal');
+      PubSub.unsubscribe(MessageKeys.openSendFundsModal);
       PubSub.unsubscribe(`CodeScan-ethereum`);
       PubSub.unsubscribe(`CodeScan-0x`);
     };
@@ -451,6 +494,7 @@ export default (props: { app: AppVM; appAuth: Authentication }) => {
     <RequestFundsModal key="request-funds" />,
     <GlobalNetworksMenuModal key="networks-menu" />,
     <GlobalAccountsMenuModal key="accounts-menu" />,
+    <GlobalLoadingModal key="loading-modal" />,
     <WalletConnectV1 key="walletconnect" />,
     <WalletConnectRequests key="walletconnect-requests" {...props} />,
     <InpageDAppConnect key="inpage-dapp-connect" />,

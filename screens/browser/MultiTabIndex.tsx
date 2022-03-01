@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 
 import { Browser } from './Browser';
+import MessageKeys from '../../common/MessageKeys';
 import { Modalize } from 'react-native-modalize';
 import { PageMetadata } from './Web3View';
 import { Portal } from 'react-native-portalize';
@@ -130,7 +131,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
 
     const { backgroundColor, systemBorderColor } = Theme;
 
-    PubSub.publish('drawer-swipeEnabled', false);
+    PubSub.publish(MessageKeys.drawerSwipeEnabled, false);
     state.tabBarHidden = true;
 
     const translateY = new Animated.Value(0);
@@ -154,7 +155,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
 
     const { backgroundColor, systemBorderColor } = Theme;
 
-    PubSub.publish('drawer-swipeEnabled', true);
+    PubSub.publish(MessageKeys.drawerSwipeEnabled, true);
     state.tabBarHidden = false;
 
     const translateY = new Animated.Value(tabBarHeight);
@@ -241,6 +242,15 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
     if (tabs.size === 1) closeTabsModal();
   };
 
+  const removeAllTabs = () => {
+    tabs.clear();
+    state.clear();
+    newTab();
+    closeTabsModal();
+    setActivePageIndex(0);
+    showTabBar();
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor }}>
       <FlatList
@@ -273,14 +283,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
             globalState={state}
             activeIndex={activePageIndex}
             onRemovePage={removePageId}
-            onRemoveAll={() => {
-              tabs.clear();
-              state.clear();
-              newTab();
-              closeTabsModal();
-              setActivePageIndex(0);
-              showTabBar();
-            }}
+            onRemoveAll={removeAllTabs}
             onNewTab={() => {
               newTab(true);
               closeTabsModal();

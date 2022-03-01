@@ -1,14 +1,26 @@
 import { LayoutAnimation, LayoutAnimationConfig } from 'react-native';
 
-export const LayoutAnimConfig: LayoutAnimationConfig = {
+const LayoutAnimConfig: LayoutAnimationConfig = {
   duration: 300,
   update: {
     type: LayoutAnimation.Types.easeInEaseOut,
   },
 };
 
+const SpringLayoutAnimConfig: LayoutAnimationConfig = {
+  duration: 300,
+  update: {
+    type: LayoutAnimation.Types.spring,
+    springDamping: 0.65,
+  },
+};
+
 export function startLayoutAnimation() {
   LayoutAnimation.configureNext(LayoutAnimConfig);
+}
+
+export function startSpringLayoutAnimation() {
+  LayoutAnimation.configureNext(SpringLayoutAnimConfig);
 }
 
 export const BreathAnimation = {

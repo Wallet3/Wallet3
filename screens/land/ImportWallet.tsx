@@ -7,6 +7,7 @@ import { borderColor, secondaryFontColor, themeColor } from '../../constants/sty
 
 import { Button } from '../../components';
 import { LandScreenStack } from '../navigations';
+import MessageKeys from '../../common/MessageKeys';
 import MnemonicOnce from '../../viewmodels/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { decode } from 'js-base64';
@@ -27,7 +28,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
   }, [mnemonic]);
 
   useEffect(() => {
-    PubSub.subscribe('CodeScan-wallet3sync:', (_, { data }: { data: string }) => {
+    PubSub.subscribe(MessageKeys.CodeScan_wallet3sync, (_, { data }: { data: string }) => {
       const encoded = data.substring(12);
       const decoded = decode(encoded).replaceAll(',', ' ').trim();
 
@@ -37,7 +38,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
     });
 
     return () => {
-      PubSub.unsubscribe('CodeScan-wallet3sync:');
+      PubSub.unsubscribe(MessageKeys.CodeScan_wallet3sync);
     };
   }, []);
 

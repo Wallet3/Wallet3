@@ -1,22 +1,22 @@
+import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
+import { FlatList, ListRenderItemInfo, NativeSyntheticEvent, Text, TouchableOpacity, View } from 'react-native';
 import { NetworkIcons, generateNetworkIcon } from '../assets/icons/networks/color';
-import { FlatList, ListRenderItemInfo, NativeSyntheticEvent, Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeViewContainer, Separator } from '../components';
 import { useEffect, useRef, useState } from 'react';
 
 import { Feather } from '@expo/vector-icons';
 import { INetwork } from '../common/Networks';
+import NetworkDetails from './views/NetworkDetails';
 import Networks from '../viewmodels/Networks';
 import React from 'react';
+import { ReactiveScreen } from '../utils/device';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
 import Theme from '../viewmodels/settings/Theme';
 import i18n from '../i18n';
 import { observer } from 'mobx-react-lite';
+import { startLayoutAnimation } from '../utils/animations';
 import styles from './styles';
-import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
-import NetworkDetails from './views/NetworkDetails';
-import { ReactiveScreen } from '../utils/device';
 
 interface Props {
   onNetworkPress?: (network: INetwork) => void;
@@ -43,19 +43,6 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
     return () => {
       clearTimeout(timer);
       ReactiveScreen.off('change', reset);
-    };
-  }, []);
-
-  useEffect(() => {
-    const jumpTimer = setTimeout(() => {
-      const index = Networks.all.findIndex((n) => n.chainId === (selectedNetwork || Networks.current).chainId) ?? 0;
-      if (index < 0) return;
-
-      flatList.current?.scrollToIndex({ animated: true, index });
-    }, 200);
-
-    return () => {
-      clearTimeout(jumpTimer);
     };
   }, []);
 
@@ -109,13 +96,18 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
           setTimeout(() => swiper.current?.scrollTo(1), 25);
           break;
         case 1:
+          startLayoutAnimation();
           Networks.remove(item.chainId).then(() => setNets(Networks.all));
           break;
       }
     };
 
     return (
-      <ContextMenu onPress={onActionPress} actions={item.isUserAdded ? editableActions : viewActions}>
+      <ContextMenu
+        onPress={onActionPress}
+        actions={item.isUserAdded ? editableActions : viewActions}
+        previewBackgroundColor={backgroundColor}
+      >
         {renderItem(props)}
       </ContextMenu>
     );

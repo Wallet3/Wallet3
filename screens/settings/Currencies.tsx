@@ -6,7 +6,6 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import { SafeViewContainer } from '../../components';
 import Theme from '../../viewmodels/settings/Theme';
-import { borderColor } from '../../constants/styles';
 import { observer } from 'mobx-react-lite';
 
 const CurrencyItem = observer(({ item, onPress, textColor }: { item: Currency; onPress: () => void; textColor: string }) => {
@@ -26,7 +25,7 @@ const CurrencyItem = observer(({ item, onPress, textColor }: { item: Currency; o
 });
 
 export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
-  const { textColor } = Theme;
+  const { textColor, borderColor } = Theme;
   const setCurrency = (item: Currency) => {
     CurrencyViewmodel.setCurrency(item);
     navigation?.goBack();

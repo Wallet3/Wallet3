@@ -112,4 +112,11 @@ export default StyleSheet.create({
     alignSelf: 'flex-end',
     opacity: 1,
   },
+
+  zkSync: {
+    marginTop: -36,
+    marginEnd: -7,
+    alignSelf: 'flex-end',
+    opacity: 0.5,
+  },
 });

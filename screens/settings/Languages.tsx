@@ -6,7 +6,6 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import { SafeViewContainer } from '../../components';
 import Theme from '../../viewmodels/settings/Theme';
-import { borderColor } from '../../constants/styles';
 import { observer } from 'mobx-react-lite';
 
 const LangItem = observer(({ item, onPress, textColor }: { onPress: () => void; item: Lang; textColor: string }) => {
@@ -20,7 +19,7 @@ const LangItem = observer(({ item, onPress, textColor }: { onPress: () => void; 
 });
 
 export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
-  const { textColor } = Theme;
+  const { textColor, borderColor } = Theme;
   const setLang = (item: Lang) => {
     Langs.setLang(item);
     navigation?.goBack();

@@ -1,6 +1,6 @@
 import App, { AppVM } from '../../viewmodels/App';
 import { Arbitrum, EVMIcon, Ethereum, NetworkIcons, Optimism, Polygon } from '../../assets/icons/networks/color';
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
@@ -9,12 +9,12 @@ import { borderColor, fontColor, secondaryFontColor } from '../../constants/styl
 import Avatar from '../../components/Avatar';
 import { DrawerActions } from '@react-navigation/core';
 import { INetwork } from '../../common/Networks';
+import MessageKeys from '../../common/MessageKeys';
 import Networks from '../../viewmodels/Networks';
 import PubSub from 'pubsub-js';
 import { ReactiveScreen } from '../../utils/device';
 import { SafeViewContainer } from '../../components';
 import Theme from '../../viewmodels/settings/Theme';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import i18n from '../../i18n';
 import icons from '../../assets/icons/crypto';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
@@ -66,7 +66,7 @@ const Drawer = observer((props: DrawerProps) => {
 
   const navigateTo = (route: string) => {
     navigation.navigate(route);
-    setTimeout(() => navigation.dispatch(DrawerActions.closeDrawer()), 25);
+    setTimeout(() => navigation.dispatch(DrawerActions.closeDrawer()), 200);
   };
 
   return (
@@ -99,7 +99,7 @@ const Drawer = observer((props: DrawerProps) => {
           style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 8 }}
           onPress={() => {
             navigation.dispatch(DrawerActions.closeDrawer());
-            PubSub.publish('openAccountsMenu');
+            PubSub.publish(MessageKeys.openAccountsMenu);
           }}
         >
           <Text
@@ -169,11 +169,14 @@ const Drawer = observer((props: DrawerProps) => {
           style={{ flexDirection: 'row', alignItems: 'center' }}
           onPress={() => {
             navigation.dispatch(DrawerActions.closeDrawer());
-            PubSub.publish('openNetworksMenu');
+            PubSub.publish(MessageKeys.openNetworksMenu);
           }}
         >
           {NetworkIcons[current.chainId] || <EVMIcon color={current.color} hideEVMTitle />}
-          <Text style={{ marginStart: 8, fontSize: 16, color: current.color, fontWeight: '500' }} numberOfLines={1}>
+          <Text
+            style={{ marginStart: 8, fontSize: 16, color: current.color, fontWeight: '500', maxWidth: '80%' }}
+            numberOfLines={1}
+          >
             {current.network}
           </Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}></View>

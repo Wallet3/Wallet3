@@ -83,7 +83,7 @@ class TxHub {
     for (let tx of this.pendingTxs) {
       const receipt = await getTransactionReceipt(tx.chainId, tx.hash);
 
-      if (!receipt) {
+      if (!receipt || receipt.status === null || !receipt.blockHash) {
         continue;
       }
 
@@ -100,7 +100,10 @@ class TxHub {
         duration: 3000,
       });
 
-      await tx.save();
+      try {
+        await tx.save();
+      } catch (error) {}
+
       confirmedTxs.push(tx);
 
       const invalidTxs = await this.repository.find({
@@ -149,14 +152,23 @@ class TxHub {
     const pendingTx = await this.saveTx({ ...tx, hash });
     if (!pendingTx) return undefined;
 
+    clearTimeout(this.watchTimer);
+
     runInAction(() => {
-      const sameNonces = [pendingTx, ...this.pendingTxs.filter((i) => i.nonce === pendingTx.nonce)];
+      const sameNonces = [
+        pendingTx,
+        ...this.pendingTxs.filter((i) => i.nonce === pendingTx.nonce && i.chainId === pendingTx.chainId),
+      ];
+
       const maxPriTx = Enumerable.from(sameNonces).maxBy((t) => t.gasPrice);
 
-      this.pendingTxs = [maxPriTx, ...this.pendingTxs.filter((t) => t.nonce !== pendingTx.nonce)];
+      this.pendingTxs = [
+        maxPriTx,
+        ...this.pendingTxs.filter((t) => t.nonce !== pendingTx.nonce && t.chainId === pendingTx.chainId),
+      ];
     });
 
-    setTimeout(() => this.watchPendingTxs(), 100);
+    this.watchTimer = setTimeout(() => this.watchPendingTxs(), 1000);
 
     return hash;
   }
@@ -181,7 +193,6 @@ class TxHub {
     t.readableInfo = tx.readableInfo;
 
     await t.save();
-
     return t;
   };
 

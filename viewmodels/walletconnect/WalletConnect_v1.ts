@@ -11,6 +11,7 @@ import App from '../App';
 import { EventEmitter } from 'events';
 import { INetwork } from '../../common/Networks';
 import { ISessionStatus } from '@walletconnect/types';
+import MessageKeys from '../../common/MessageKeys';
 import Networks from '../Networks';
 import PubSub from 'pubsub-js';
 import WalletConnectClient from '@walletconnect/client';
@@ -188,7 +189,7 @@ export class WalletConnect_v1 extends EventEmitter {
       return;
     }
 
-    PubSub.publish('wc_request', { client: this, request });
+    PubSub.publish(MessageKeys.wc_request, { client: this, request });
 
     this.emit('sessionUpdated');
   };

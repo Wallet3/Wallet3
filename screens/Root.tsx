@@ -9,6 +9,7 @@ import BrowserScreen from './browser/MultiTabIndex';
 import DAppsScreen from './dapps';
 import Drawer from './drawer';
 import { DrawerNavigationHelpers } from '@react-navigation/drawer/lib/typescript/src/types';
+import MessageKeys from '../common/MessageKeys';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../viewmodels/Networks';
 import { ReactiveScreen } from '../utils/device';
@@ -89,7 +90,7 @@ const RootTab = observer(() => {
 
               <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <TouchableOpacity
-                  onPress={() => PubSub.publish('openAccountsMenu')}
+                  onPress={() => PubSub.publish(MessageKeys.openAccountsMenu)}
                   style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 0 }}
                 >
                   <Text style={{ fontFamily: 'Questrial', fontSize: 21, color: foregroundColor }}>Wallet 3</Text>
@@ -147,10 +148,10 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
   const [swipeEnabled, setSwipeEnabled] = useState(true);
 
   useEffect(() => {
-    PubSub.subscribe('drawer-swipeEnabled', (_, data) => setSwipeEnabled(data));
+    PubSub.subscribe(MessageKeys.drawerSwipeEnabled, (_, data) => setSwipeEnabled(data));
 
     return () => {
-      PubSub.unsubscribe('drawer-swipeEnabled');
+      PubSub.unsubscribe(MessageKeys.drawerSwipeEnabled);
     };
   }, []);
 

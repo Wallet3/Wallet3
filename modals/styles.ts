@@ -68,10 +68,10 @@ export default StyleSheet.create({
     fontWeight: '500',
   },
 
-  gasItem: {
+  gasSpeedItem: {
     flexDirection: 'row',
     padding: 8,
-    flex: 1,
+    paddingHorizontal: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },

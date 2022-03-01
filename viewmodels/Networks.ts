@@ -120,7 +120,7 @@ class Networks {
     });
 
     if (isCurrent) this.switch(this.Ethereum);
-    
+
     await userChain?.remove();
   }
 
@@ -141,7 +141,7 @@ class Networks {
     nc.explorer = chain.blockExplorerUrls?.[0] || '';
     nc.rpcUrls = chain.rpcUrls;
     nc.customize = nc.customize ?? { color: ChainColors[Number(chain.chainId)] || '#7B68EE', eip1559: false };
-    nc.symbol = chain.nativeCurrency.symbol || 'ETH';
+    nc.symbol = (chain.nativeCurrency.symbol || 'ETH').toUpperCase();
 
     try {
       const priFee = await getNextBlockBaseFeeByRPC(chain.rpcUrls[0]);
@@ -151,6 +151,7 @@ class Networks {
 
       if (icon) {
         const result = await ImageColors.getColors(icon);
+
         switch (result.platform) {
           case 'android':
             nc.customize.color = result.dominant || nc.customize.color;

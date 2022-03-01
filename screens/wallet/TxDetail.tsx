@@ -1,11 +1,10 @@
-import { Linking, StyleSheet, Text, View } from 'react-native';
+import { Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
 
 import { Button } from '../../components';
 import { Gwei_1 } from '../../common/Constants';
 import Networks from '../../viewmodels/Networks';
 import Theme from '../../viewmodels/settings/Theme';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import Transaction from '../../models/Transaction';
 import { TxController } from '../../viewmodels/misc/TxController';
 import { formatAddress } from '../../utils/formatter';

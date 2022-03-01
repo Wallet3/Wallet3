@@ -676,6 +676,16 @@ const Ronin_USDC = {
 
 export const RoninPopularTokens = [Ronin_AXS, Ronin_SLP, Ronin_USDC];
 
+const zkSync_USDC = {
+  address: '0xd35CCeEAD182dcee0F148EbaC9447DA2c4D449c4',
+  decimals: 6,
+  symbol: 'USDC',
+};
+
+export const zkSyncPopularTokens = [zkSync_USDC];
+
+export const zkSyncFeeTokens = [ETH, zkSync_USDC];
+
 const all = [
   ...Stablecoins,
   WETH,

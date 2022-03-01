@@ -12,6 +12,8 @@ import {
   PolygonPopularTokens,
   RoninPopularTokens,
   xDaiPopularTokens,
+  zkSyncFeeTokens,
+  zkSyncPopularTokens,
 } from './Tokens';
 
 export interface INetwork {
@@ -32,6 +34,7 @@ export interface INetwork {
   addrPrefix?: string;
   github_dir?: string;
   isUserAdded?: boolean;
+  feeTokens?: IToken[];
 }
 
 export const PublicNetworks: INetwork[] = [
@@ -294,8 +297,9 @@ export const Testnets: INetwork[] = [
     chainId: 280,
     color: '#8C8DFC',
     test: true,
-    defaultTokens: [],
+    defaultTokens: zkSyncPopularTokens,
     explorer: 'https://zksync2-testnet.zkscan.io',
+    feeTokens: zkSyncFeeTokens,
   },
 ];
 

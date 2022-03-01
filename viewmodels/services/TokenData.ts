@@ -2,10 +2,10 @@ import Coingecko, { getMarketChart } from '../../common/apis/Coingecko';
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import { INetwork } from '../../common/Networks';
-import { IToken } from '../../common/Tokens';
 import Langs from '../settings/Langs';
 import { UserToken } from './TokensMan';
 import axios from 'axios';
+import { startSpringLayoutAnimation } from '../../utils/animations';
 
 interface ITokenData {
   description: string;
@@ -72,28 +72,22 @@ export class TokenData implements ITokenData {
       this.fetchInfo(),
     ]);
 
-    if (!result) {
-      runInAction(() => (this.loading = false));
-      return;
-    }
+    const { description, links, market_data, id } = result || {};
 
-    const { description, links, market_data, error, id } = result;
+    this.coinId = id || '';
 
-    if (error || !id || !market_data) return;
-
-    this.coinId = id;
-
-    const desc = info?.description || (description?.[Langs.currentLang.value] || description?.en)?.replace(/<[^>]*>?/gm, '');
+    const desc = (description?.[Langs.currentLang.value] || description?.en)?.replace(/<[^>]*>?/gm, '') || info?.description;
     const [first] = desc?.split(/(?:\r?\n)+/);
 
     await this.refreshHistoryPrices();
 
     runInAction(() => {
+      startSpringLayoutAnimation();
       this.firstDescription = first || '';
       this.description = desc || '';
-      this.price = market_data.current_price?.usd ?? 0;
-      this.priceChangeIn24 = market_data.price_change_24h || 0;
-      this.priceChangePercentIn24 = market_data.price_change_percentage_24h || 0;
+      this.price = market_data?.current_price?.usd ?? 0;
+      this.priceChangeIn24 = market_data?.price_change_24h || 0;
+      this.priceChangePercentIn24 = market_data?.price_change_percentage_24h || 0;
       this.loading = false;
     });
   }
@@ -105,7 +99,7 @@ export class TokenData implements ITokenData {
     if (!data) return;
 
     const { prices } = data;
-    if (!prices) return;
+    if (!prices || !Array.isArray(prices)) return;
 
     runInAction(() => (this.historyPrices = prices.map((item) => item[1])));
   }

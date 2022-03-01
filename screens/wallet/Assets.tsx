@@ -2,7 +2,7 @@ import * as Animatable from 'react-native-animatable';
 
 import { Feather, Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Transaction, { ITransaction } from '../../models/Transaction';
 import { borderColor, secondaryFontColor } from '../../constants/styles';
 
@@ -13,7 +13,6 @@ import { IToken } from '../../common/Tokens';
 import { RootNavigationProps } from '../navigations';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import TxHub from '../../viewmodels/hubs/TxHub';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';

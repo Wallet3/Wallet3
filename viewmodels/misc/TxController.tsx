@@ -2,10 +2,10 @@ import { BigNumber, BigNumberish, providers, utils } from 'ethers';
 
 import App from '../App';
 import { InpageDAppTxRequest } from '../../screens/browser/controller/InpageDAppController';
+import MessageKeys from '../../common/MessageKeys';
 import Networks from '../Networks';
 import { SpeedupAbleSendParams } from '../transferring/RawTransactionRequest';
 import Transaction from '../../models/Transaction';
-import { WCCallRequest_eth_sendTransaction } from '../../models/WCSession_v1';
 import i18n from '../../i18n';
 import { showMessage } from 'react-native-flash-message';
 
@@ -52,7 +52,7 @@ export class TxController {
 
     const reject = () => {};
 
-    PubSub.publish('openInpageDAppSendTransaction', {
+    PubSub.publish(MessageKeys.openInpageDAppSendTransaction, {
       approve,
       reject,
       param: {

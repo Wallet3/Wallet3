@@ -36,13 +36,17 @@ export default observer(({ request, client, close }: Props) => {
     setTypedData(undefined);
 
     try {
+      let requestMsg: any;
+
       switch (method) {
         case 'eth_sign':
-          setMsg(Buffer.from(utils.arrayify(params[1])).toString('utf8'));
+          requestMsg = params[1];
+          setMsg(utils.isBytesLike(requestMsg) ? Buffer.from(utils.arrayify(requestMsg)).toString('utf8') : requestMsg);
           setType('plaintext');
           break;
         case 'personal_sign':
-          setMsg(Buffer.from(utils.arrayify(params[0])).toString('utf8'));
+          requestMsg = params[0];
+          setMsg(utils.isBytesLike(requestMsg) ? Buffer.from(utils.arrayify(requestMsg)).toString('utf8') : requestMsg);
           setType('plaintext');
           break;
         case 'eth_signTypedData':

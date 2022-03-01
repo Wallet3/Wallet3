@@ -9,6 +9,7 @@ import AnimateNumber from 'react-native-animate-number';
 import ColorLogos from '../../assets/icons/networks/color';
 import { INetwork } from '../../common/Networks';
 import Image from 'react-native-expo-cached-image';
+import MessageKeys from '../../common/MessageKeys';
 import Ripple from 'react-native-material-ripple';
 import UI from '../../viewmodels/settings/UI';
 import WhiteLogos from '../../assets/icons/networks/white';
@@ -78,9 +79,11 @@ export default observer(
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <TouchableOpacity
               style={{ flexDirection: 'row', alignItems: 'center' }}
-              onPress={() => PubSub.publish('openNetworksMenu')}
+              onPress={() => PubSub.publish(MessageKeys.openNetworksMenu)}
             >
-              <Text style={{ ...styles.text, fontSize: 16, color: textColor }}>{network?.network}</Text>
+              <Text style={{ ...styles.text, fontSize: 16, color: textColor, maxWidth: 165 }} numberOfLines={1}>
+                {network?.network}
+              </Text>
               <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 2 }} color={textColor} size={12} />
             </TouchableOpacity>
 

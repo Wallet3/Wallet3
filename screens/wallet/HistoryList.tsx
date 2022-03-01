@@ -1,12 +1,11 @@
 import { Coin, NullableImage } from '../../components';
-import { FlatList, ListRenderItemInfo, Text, View } from 'react-native';
+import { FlatList, ListRenderItemInfo, Text, TouchableOpacity, View } from 'react-native';
 
 import Image from 'react-native-expo-cached-image';
 import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/Networks';
 import React from 'react';
 import Theme from '../../viewmodels/settings/Theme';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import Transaction from '../../models/Transaction';
 import dayjs from 'dayjs';
 import { formatAddress } from '../../utils/formatter';
