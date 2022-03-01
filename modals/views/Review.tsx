@@ -188,7 +188,7 @@ export default observer((props: Props) => {
 
   return (
     <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
-      <ReviewView {...props} onGasPress={() => swiper.current?.scrollTo(1)} />
+      <ReviewView {...props} onGasPress={() => swiper.current?.scrollBy(1)} />
       <GasReview onBack={() => swiper.current?.scrollTo(0)} vm={vm} themeColor={vm.network.color} />
     </Swiper>
   );
