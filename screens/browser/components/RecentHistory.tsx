@@ -1,15 +1,16 @@
 import * as Animatable from 'react-native-animatable';
 
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
+import { Directions, FlatList, Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { NativeSyntheticEvent, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 import Bookmarks from '../../../viewmodels/customs/Bookmarks';
-import { FlatList } from 'react-native-gesture-handler';
 import { NullableImage } from '../../../components';
 import React from 'react';
 import Theme from '../../../viewmodels/settings/Theme';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
+import { runOnJS } from 'react-native-reanimated';
 import { startLayoutAnimation } from '../../../utils/animations';
 
 interface Props {
@@ -17,13 +18,24 @@ interface Props {
   tabCount?: number;
   onTabsPress?: () => void;
   disableContextMenu?: boolean;
+  onRemoveAllTabs?: () => void;
 }
 
-export default observer(({ onItemPress, tabCount, onTabsPress, disableContextMenu }: Props) => {
+export default observer(({ onItemPress, tabCount, onTabsPress, disableContextMenu, onRemoveAllTabs }: Props) => {
   const { backgroundColor, borderColor, systemBorderColor, foregroundColor, isLightMode, mode, tintColor } = Theme;
   const { t } = i18n;
   const { recentSites } = Bookmarks;
   const actions = [{ title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' }];
+
+  function callRemoveAllTabs() {
+    'worklet';
+    if (!onRemoveAllTabs) return;
+    runOnJS(onRemoveAllTabs!)();
+  }
+
+  const flingGesture = Gesture.Fling()
+    .direction(Directions.UP)
+    .onEnd(() => callRemoveAllTabs());
 
   return (
     <Animatable.View animation={'fadeInUp'}>
@@ -37,31 +49,33 @@ export default observer(({ onItemPress, tabCount, onTabsPress, disableContextMen
         }}
       >
         {(tabCount || 0) > 1 && (
-          <View
-            style={{
-              paddingTop: 2.5,
-              height: '100%',
-              borderEndWidth: 0.333,
-              borderEndColor: systemBorderColor,
-            }}
-          >
-            <TouchableOpacity style={{ paddingStart: 12, paddingEnd: 10 }} onPress={onTabsPress}>
-              <View
-                style={{
-                  borderColor: tintColor,
-                  borderWidth: 1.5,
-                  borderRadius: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  padding: 4,
-                  height: 29,
-                  width: 37,
-                }}
-              >
-                <Text style={{ fontSize: 15, fontWeight: '600', color: tintColor }}>{tabCount}</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
+          <GestureDetector gesture={flingGesture}>
+            <View
+              style={{
+                paddingTop: 2.5,
+                height: '100%',
+                borderEndWidth: 0.333,
+                borderEndColor: systemBorderColor,
+              }}
+            >
+              <TouchableOpacity style={{ paddingStart: 12, paddingEnd: 10 }} onPress={onTabsPress}>
+                <View
+                  style={{
+                    borderColor: tintColor,
+                    borderWidth: 1.5,
+                    borderRadius: 10,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: 4,
+                    height: 29,
+                    width: 37,
+                  }}
+                >
+                  <Text style={{ fontSize: 15, fontWeight: '600', color: tintColor }}>{tabCount}</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </GestureDetector>
         )}
 
         <FlatList

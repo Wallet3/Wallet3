@@ -94,6 +94,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
       setCapture={(func) => state.pageCaptureFuncs.set(id, func)}
       onPageLoadEnd={() => state.pageSnapshots.delete(id)}
       onInputting={(inputting) => setPersistentKeyboard(inputting ? 'always' : 'never')}
+      onRemoveAllTabs={removeAllTabs}
       onHome={() => {
         showTabBar();
         state.pageMetas.set(id, undefined);
@@ -242,6 +243,15 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
     if (tabs.size === 1) closeTabsModal();
   };
 
+  function removeAllTabs() {
+    tabs.clear();
+    state.clear();
+    newTab();
+    closeTabsModal();
+    setActivePageIndex(0);
+    showTabBar();
+  }
+
   return (
     <View style={{ flex: 1, backgroundColor }}>
       <FlatList
@@ -274,14 +284,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
             globalState={state}
             activeIndex={activePageIndex}
             onRemovePage={removePageId}
-            onRemoveAll={() => {
-              tabs.clear();
-              state.clear();
-              newTab();
-              closeTabsModal();
-              setActivePageIndex(0);
-              showTabBar();
-            }}
+            onRemoveAll={removeAllTabs}
             onNewTab={() => {
               newTab(true);
               closeTabsModal();

@@ -1,13 +1,12 @@
 import { Button, Mnemonic, SafeViewContainer } from '../../components';
 import React, { useEffect } from 'react';
-import { Text, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { fontColor, secondaryFontColor, themeColor } from '../../constants/styles';
 
 import { LandScreenStack } from '../navigations';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import MnemonicOnce from '../../viewmodels/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';

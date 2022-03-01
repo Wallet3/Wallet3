@@ -56,6 +56,7 @@ interface Props extends BottomTabScreenProps<any, never> {
   onOpenTabs?: () => void;
   setCapture?: (callback: () => Promise<string>) => void;
   onInputting?: (inputting: boolean) => void;
+  onRemoveAllTabs?: () => void;
 }
 
 export const Browser = observer(
@@ -71,6 +72,7 @@ export const Browser = observer(
     setCapture,
     onPageLoadEnd,
     onInputting,
+    onRemoveAllTabs,
   }: Props) => {
     const { t } = i18n;
     const { top } = useSafeAreaInsets();
@@ -470,6 +472,7 @@ export const Browser = observer(
             onNewTab={onNewTab}
             expanded={isExpandedSite}
             onBookmarksPress={openFavs}
+            onRemoveAllTabs={onRemoveAllTabs}
             onMetadataChange={(data) => {
               setPageMetadata(data);
               onPageLoaded?.(pageId, data);
@@ -533,7 +536,12 @@ export const Browser = observer(
         )}
 
         {!webUrl && recentSites.length > 0 ? (
-          <RecentHistory tabCount={globalState?.pageCount} onItemPress={(url) => goTo(url)} onTabsPress={onOpenTabs} />
+          <RecentHistory
+            onRemoveAllTabs={onRemoveAllTabs}
+            tabCount={globalState?.pageCount}
+            onItemPress={(url) => goTo(url)}
+            onTabsPress={onOpenTabs}
+          />
         ) : undefined}
 
         <Portal>

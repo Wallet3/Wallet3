@@ -1,6 +1,6 @@
 import App, { AppVM } from '../../viewmodels/App';
 import { Arbitrum, EVMIcon, Ethereum, NetworkIcons, Optimism, Polygon } from '../../assets/icons/networks/color';
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
@@ -15,7 +15,6 @@ import PubSub from 'pubsub-js';
 import { ReactiveScreen } from '../../utils/device';
 import { SafeViewContainer } from '../../components';
 import Theme from '../../viewmodels/settings/Theme';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import i18n from '../../i18n';
 import icons from '../../assets/icons/crypto';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
