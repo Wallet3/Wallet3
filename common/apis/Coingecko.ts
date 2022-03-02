@@ -19,7 +19,7 @@ interface ChainsPrice {
 const host = 'https://api.coingecko.com';
 
 export async function getPrice(
-  ids = 'ethereum,matic-network,fantom,okexchain,huobi-token,binancecoin,avalanche-2,celo,crypto-com-chain,harmony,moonriver,moonbeam',
+  ids = 'ethereum,matic-network,fantom,okexchain,huobi-token,binancecoin,avalanche-2,celo,crypto-com-chain,harmony,moonriver,moonbeam,wrapped-bitcoin',
   currencies = 'usd'
 ) {
   try {
@@ -72,6 +72,9 @@ class Coingecko {
   one = 0;
   movr = 0;
   glmr = 0;
+  usdc = 1;
+  dai = 1;
+  wbtc = 0;
 
   lastRefreshedTimestamp = 0;
 
@@ -139,6 +142,7 @@ class Coingecko {
         this.one = data['harmony']?.usd || 0;
         this.movr = data['moonriver']?.usd || 0;
         this.glmr = data['moonbeam']?.usd || 0;
+        this.wbtc = data['wrapped-bitcoin']?.usd || 0;
       });
     } catch {}
   }

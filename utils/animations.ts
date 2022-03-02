@@ -8,7 +8,7 @@ const LayoutAnimConfig: LayoutAnimationConfig = {
 };
 
 const SpringLayoutAnimConfig: LayoutAnimationConfig = {
-  duration: 300,
+  duration: 420,
   update: {
     type: LayoutAnimation.Types.spring,
     springDamping: 0.65,

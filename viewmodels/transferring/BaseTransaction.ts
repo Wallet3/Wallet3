@@ -7,6 +7,7 @@ import { Account } from '../account/Account';
 import App from '../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Coingecko from '../../common/apis/Coingecko';
+import { ERC20Token } from '../../models/ERC20';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/Tokens';
 import { NativeToken } from '../../models/NativeToken';
@@ -28,7 +29,7 @@ export class BaseTransaction {
   nonce = 0;
   txException = '';
   initializing = false;
-  feeToken: IToken | null = null;
+  feeToken: ERC20Token | null = null;
 
   constructor(args: { network: INetwork; account: Account }, initChainData = true) {
     this.network = args.network;
@@ -50,6 +51,7 @@ export class BaseTransaction {
       isValidGas: computed,
       initializing: observable,
       feeToken: observable,
+      insufficientFee: computed,
 
       setNonce: action,
       setGasLimit: action,
@@ -85,6 +87,10 @@ export class BaseTransaction {
     }
   }
 
+  get insufficientFee() {
+    return this.txFeeWei.gt(this.nativeToken.balance);
+  }
+
   get estimatedRealFeeWei() {
     try {
       const maxGasPriceWei = BigNumber.from((this.maxGasPrice * Gwei_1).toFixed(0));
@@ -106,6 +112,10 @@ export class BaseTransaction {
     } catch (error) {
       return 0;
     }
+  }
+
+  get feeTokenSymbol() {
+    return this.feeToken?.symbol ?? this.network.symbol;
   }
 
   get estimatedRealFee() {
@@ -144,7 +154,9 @@ export class BaseTransaction {
 
   setFeeToken(token: IToken) {
     if (!this.network.feeTokens) return;
-    this.feeToken = this.network.feeTokens.find((t) => t.address === token.address) ?? this.network.feeTokens[0];
+    const feeToken = this.network.feeTokens.find((t) => t.address === token.address) ?? this.network.feeTokens[0];
+    this.feeToken = new ERC20Token({ ...this.network, ...feeToken, owner: this.account.address, contract: feeToken.address });
+    this.feeToken.getBalance();
     AsyncStorage.setItem(`${this.network.chainId}_feeToken`, this.feeToken.address);
   }
 
@@ -237,6 +249,8 @@ export class BaseTransaction {
     if (!this.network.feeTokens) return;
     const tokenAddress = await AsyncStorage.getItem(`${this.network.chainId}_feeToken`);
     const token = this.network.feeTokens.find((token) => token.address === tokenAddress) ?? this.network.feeTokens[0];
-    runInAction(() => (this.feeToken = token));
+    const feeToken = new ERC20Token({ ...this.network, ...token, owner: this.account.address, contract: token.address });
+    feeToken.getBalance();
+    runInAction(() => (this.feeToken = feeToken));
   }
 }

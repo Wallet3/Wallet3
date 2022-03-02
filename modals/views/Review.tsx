@@ -148,7 +148,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
           }}
         >
           <Text style={{ ...styles.reviewItemTitle, fontSize: 15 }}>
-            {`(${Currency.tokenToUSD(vm.estimatedRealFee, vm.network.symbol).toFixed(2)} USD)`}
+            {`(${Currency.tokenToUSD(vm.estimatedRealFee, vm.feeTokenSymbol).toFixed(2)} USD)`}
           </Text>
 
           <AnimateNumber

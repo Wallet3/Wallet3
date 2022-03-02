@@ -20,7 +20,6 @@ interface IConstructor {
   param: SpeedupAbleSendParams;
 }
 
-
 export function parseRequestType(data = ''): { type: RequestType; methodFunc: string } {
   if (typeof data !== 'string') return { type: 'Unknown', methodFunc: '' };
   const methodFunc = (data || '').slice(0, 10);
@@ -84,7 +83,6 @@ export class RawTransactionRequest extends BaseTransaction {
       tokenAddress: observable,
       isValidParams: computed,
       setApproveAmount: action,
-      insufficientFee: computed,
     });
 
     runInAction(() => this.parseRequest(param));
@@ -177,10 +175,6 @@ export class RawTransactionRequest extends BaseTransaction {
       !this.insufficientFee &&
       !this.nativeToken.loading
     );
-  }
-
-  get insufficientFee() {
-    return this.txFeeWei.gt(this.nativeToken.balance);
   }
 
   get txRequest(): providers.TransactionRequest {
