@@ -22,18 +22,8 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
         <View style={{ flex: 1 }}>
           <View style={{ flex: 1 }} />
 
-          <View style={{ justifyContent: 'center', flexDirection: 'row' }}>
-            <AnimatedLottieView
-              style={{
-                width: 200,
-                height: 200,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-              loop={false}
-              autoPlay
-              source={require('../../assets/animations/success.json')}
-            />
+          <View style={{ justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
+            <AnimatedLottieView autoPlay autoSize source={require('../../assets/animations/bubble-explosion.json')} />
           </View>
 
           <View style={{ flex: 1 }} />
