@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { WalletConnectTransactionRequest, parseRequestType } from '../viewmodels/transferring/TransactionRequest';
+import { WalletConnectTransactionRequest, parseRequestType } from '../viewmodels/transferring/WalletConnectTransactionRequest';
 
 import App from '../viewmodels/App';
 import Authentication from '../viewmodels/Authentication';

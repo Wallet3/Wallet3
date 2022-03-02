@@ -1,7 +1,6 @@
+import { Methods, RequestType } from './RequestTypes';
 import { WCCallRequestRequest, WCCallRequest_eth_sendTransaction } from '../../models/WCSession_v1';
 
-import App from '../App';
-import Networks from '../Networks';
 import { RawTransactionRequest } from './RawTransactionRequest';
 import { WalletConnect_v1 } from '../walletconnect/WalletConnect_v1';
 
@@ -9,16 +8,6 @@ interface IConstructor {
   client: WalletConnect_v1;
   request: WCCallRequestRequest;
 }
-
-type RequestType = 'Transfer' | 'Contract Interaction' | 'Approve' | 'Unknown';
-
-const Transfer = '0xa9059cbb';
-const Approve = '0x095ea7b3';
-const Methods = new Map<string, RequestType>([
-  [Transfer, 'Transfer'],
-  ['0x', 'Transfer'],
-  [Approve, 'Approve'],
-]);
 
 export function parseRequestType(data: string): { type: RequestType; methodFunc: string } {
   if (typeof data !== 'string') return { type: 'Unknown', methodFunc: '' };

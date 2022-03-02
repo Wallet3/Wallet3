@@ -1,4 +1,4 @@
-import { computed, makeObservable, runInAction } from 'mobx';
+import { makeObservable, runInAction } from 'mobx';
 
 import App from '../App';
 import { ERC20Token } from '../../models/ERC20';
