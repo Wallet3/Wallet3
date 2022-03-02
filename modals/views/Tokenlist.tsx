@@ -3,6 +3,7 @@ import { FlatList, ListRenderItemInfo, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import BackButton from '../components/BackButton';
+import { Feather } from '@expo/vector-icons';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/Tokens';
 import React from 'react';
@@ -13,6 +14,7 @@ import styles from '../styles';
 
 interface Props {
   onTokenSelected?: (token: IToken) => void;
+  selectedToken?: IToken | null;
   onBack?: () => void;
   tokens?: IToken[];
   themeColor?: string;
@@ -25,6 +27,7 @@ export default observer((props: Props) => {
   const renderItem = ({ item }: ListRenderItemInfo<IToken>) => {
     return (
       <TouchableOpacity
+        onPress={() => props.onTokenSelected?.(item)}
         style={{
           flexDirection: 'row',
           alignItems: 'center',
@@ -32,7 +35,6 @@ export default observer((props: Props) => {
           padding: 8,
           paddingVertical: 12,
         }}
-        onPress={() => props.onTokenSelected?.(item)}
       >
         <Coin
           address={item.address}
@@ -44,6 +46,8 @@ export default observer((props: Props) => {
         <Text style={{ fontSize: 19, color: textColor, textTransform: 'uppercase' }} numberOfLines={1}>
           {item.symbol}
         </Text>
+        <View style={{ flex: 1 }} />
+        {props.selectedToken === item && <Feather name="check" size={16} color={props.themeColor} />}
       </TouchableOpacity>
     );
   };

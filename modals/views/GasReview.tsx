@@ -156,29 +156,37 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
             </TouchableOpacity>
           </View>
 
-          <View style={{ ...reviewItemsContainer, marginStart: 12 }}>
-            <TouchableOpacity
-              onPress={() => swiper.current?.scrollTo(1)}
-              style={{ ...styles.gasSpeedItem, paddingStart: 10, paddingEnd: 6, flexDirection: 'row', alignItems: 'center' }}
-            >
-              <Coin symbol="USDC" address="" chainId={1} size={14} />
-              <Text
-                numberOfLines={1}
-                style={{
-                  ...styles.gasItemText,
-                  fontSize: 14,
-                  marginStart: 6,
-                  marginEnd: 2,
-                  color: textColor,
-                  fontWeight: '500',
-                  maxWidth: 100,
-                }}
+          {vm.feeToken ? (
+            <View style={{ ...reviewItemsContainer, marginStart: 12 }}>
+              <TouchableOpacity
+                onPress={() => swiper.current?.scrollTo(1)}
+                style={{ ...styles.gasSpeedItem, paddingStart: 10, paddingEnd: 6, flexDirection: 'row', alignItems: 'center' }}
               >
-                USDC
-              </Text>
-              <Entypo name="chevron-right" color={secondaryTextColor} />
-            </TouchableOpacity>
-          </View>
+                <Coin
+                  forceRefresh
+                  symbol={vm.feeToken.symbol}
+                  address={vm.feeToken.address}
+                  chainId={vm.network.chainId}
+                  size={14}
+                />
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    ...styles.gasItemText,
+                    fontSize: 14,
+                    marginStart: 6,
+                    marginEnd: 2,
+                    color: textColor,
+                    fontWeight: '500',
+                    maxWidth: 100,
+                  }}
+                >
+                  {vm.feeToken.symbol}
+                </Text>
+                <Entypo name="chevron-right" color={secondaryTextColor} />
+              </TouchableOpacity>
+            </View>
+          ) : undefined}
         </View>
 
         {!vm.isValidGas && <TxException exception={t('tip-invalid-gas-price')} />}
@@ -194,7 +202,17 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
         />
       </SafeViewContainer>
 
-      <Tokenlist network={vm.network} tokens={[]} onBack={() => swiper.current?.scrollTo(0)} />
+      <Tokenlist
+        network={vm.network}
+        tokens={vm.network.feeTokens}
+        selectedToken={vm.feeToken}
+        themeColor={vm.network.color}
+        onBack={() => swiper.current?.scrollTo(0)}
+        onTokenSelected={(token) => {
+          vm.setFeeToken(token);
+          swiper.current?.scrollTo(0);
+        }}
+      />
     </Swiper>
   );
 });

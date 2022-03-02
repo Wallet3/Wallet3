@@ -1,3 +1,4 @@
+import { Approve, Methods, RequestType, Transfer } from './RequestTypes';
 import { BigNumber, constants, providers, utils } from 'ethers';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
@@ -18,16 +19,6 @@ interface IConstructor {
   account: Account;
   param: SpeedupAbleSendParams;
 }
-
-type RequestType = 'Transfer' | 'Contract Interaction' | 'Approve' | 'Unknown';
-
-const Transfer = '0xa9059cbb';
-const Approve = '0x095ea7b3';
-const Methods = new Map<string, RequestType>([
-  [Transfer, 'Transfer'],
-  ['0x', 'Transfer'],
-  [Approve, 'Approve'],
-]);
 
 export function parseRequestType(data = ''): { type: RequestType; methodFunc: string } {
   if (typeof data !== 'string') return { type: 'Unknown', methodFunc: '' };
@@ -92,7 +83,6 @@ export class RawTransactionRequest extends BaseTransaction {
       tokenAddress: observable,
       isValidParams: computed,
       setApproveAmount: action,
-      insufficientFee: computed,
     });
 
     runInAction(() => this.parseRequest(param));
@@ -185,10 +175,6 @@ export class RawTransactionRequest extends BaseTransaction {
       !this.insufficientFee &&
       !this.nativeToken.loading
     );
-  }
-
-  get insufficientFee() {
-    return this.txFeeWei.gt(this.nativeToken.balance);
   }
 
   get txRequest(): providers.TransactionRequest {

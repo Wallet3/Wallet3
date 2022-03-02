@@ -64,10 +64,6 @@ export class TokenTransferring extends BaseTransaction {
     }
   }
 
-  get feeTokenSymbol() {
-    return this.network.symbol;
-  }
-
   get isNativeToken() {
     return !this.token.address;
   }
@@ -143,7 +139,6 @@ export class TokenTransferring extends BaseTransaction {
       amount: observable,
       isResolvingAddress: observable,
       isContractRecipient: observable,
-      insufficientFee: computed,
       isValidParams: computed,
       amountWei: computed,
       isValidAmount: computed,

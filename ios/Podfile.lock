@@ -348,13 +348,13 @@ PODS:
     - React-Core
   - RNDeviceInfo (8.4.9):
     - React-Core
-  - RNGestureHandler (2.2.0):
+  - RNGestureHandler (2.3.0):
     - React-Core
   - RNImageColors (1.5.0):
     - React-Core
   - RNOS (1.2.6):
     - React
-  - RNReanimated (2.3.2):
+  - RNReanimated (2.3.3):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -692,10 +692,10 @@ SPEC CHECKSUMS:
   ReactCommon: 8fea6422328e2fc093e25c9fac67adbcf0f04fb4
   RNCAsyncStorage: b49b4e38a1548d03b74b30e558a1d18465b94be7
   RNDeviceInfo: 4944cf8787b9c5bffaf301fda68cc1a2ec003341
-  RNGestureHandler: bf572f552ea324acd5b5464b8d30755b2d8c1de6
+  RNGestureHandler: 77d59828d40838c9fabb76a12d2d0a80c006906f
   RNImageColors: ed00190f4e743ff4fb1a61285572b5d4e6a0a8f0
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
-  RNReanimated: db6fc1362254dfd18b4ef5f921af9bb72b2e42d0
+  RNReanimated: 0e5ef4a7e4e79f84efbe5b40771c31044c51e7d0
   RNScreens: 2559f98b0835103cbef3b26ba77fa61d4bb37ae7
   RNSharedElement: eb7d506733952d58634f34c82ec17e82f557e377
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f

@@ -70,7 +70,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
           <Text style={styles.reviewItemTitle}>{t('modal-review-send')}</Text>
 
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-            <Text style={{ ...reviewItemValueStyle, marginEnd: 8, maxWidth: ReactiveScreen.width - 180 }} numberOfLines={1}>
+            <Text style={{ ...reviewItemValueStyle, marginEnd: 8, maxWidth: ReactiveScreen.width - 190 }} numberOfLines={1}>
               {vm.amount}
             </Text>
 
@@ -148,7 +148,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
           }}
         >
           <Text style={{ ...styles.reviewItemTitle, fontSize: 15 }}>
-            {`(${Currency.tokenToUSD(vm.estimatedRealFee, vm.network.symbol).toFixed(2)} USD)`}
+            {`(${Currency.tokenToUSD(vm.estimatedRealFee, vm.feeTokenSymbol).toFixed(2)} USD)`}
           </Text>
 
           <AnimateNumber
