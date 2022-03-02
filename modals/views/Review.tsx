@@ -152,14 +152,16 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
           </Text>
 
           <AnimateNumber
-            style={{ ...reviewItemValueStyle, marginHorizontal: 2 }}
+            style={{ ...reviewItemValueStyle, marginStart: 2, marginEnd: 5 }}
             numberOfLines={1}
             value={vm.txFee}
             duration={1500}
-            formatter={(val) => `${val.toFixed(5)} ${vm.feeTokenSymbol}`}
+            formatter={(val) => val.toFixed(5)}
           />
 
-          <MaterialIcons name="keyboard-arrow-right" size={15} color={secondaryTextColor} />
+          <Text style={{ ...reviewItemValueStyle }}>{vm.feeTokenSymbol}</Text>
+
+          <MaterialIcons name="keyboard-arrow-right" size={15} color={secondaryTextColor} style={{ marginBottom: -1 }} />
         </TouchableOpacity>
       </View>
 

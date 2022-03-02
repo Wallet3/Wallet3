@@ -184,18 +184,20 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
           }}
         >
           <Text style={{ ...styles.reviewItemTitle, fontSize: 15 }}>
-            {`(${Currency.tokenToUSD(vm.estimatedRealFee, vm.network.symbol).toFixed(2)} USD)`}
+            {`(${Currency.tokenToUSD(vm.estimatedRealFee, vm.feeTokenSymbol).toFixed(2)} USD)`}
           </Text>
 
           <AnimateNumber
-            style={{ ...reviewItemValueStyle, marginHorizontal: 2 }}
+            style={{ ...reviewItemValueStyle, marginStart: 2, marginEnd: 5 }}
             numberOfLines={1}
             timing="linear"
             value={vm.txFee}
-            formatter={(val) => `${val.toFixed(5)} ${vm.feeTokenSymbol}`}
+            formatter={(val) => val.toFixed(5)}
           />
 
-          <MaterialIcons name="keyboard-arrow-right" size={15} color={secondaryTextColor} />
+          <Text style={reviewItemValueStyle}>{vm.feeTokenSymbol}</Text>
+
+          <MaterialIcons name="keyboard-arrow-right" size={15} color={secondaryTextColor} style={{ marginBottom: -1 }} />
         </TouchableOpacity>
       </View>
 
