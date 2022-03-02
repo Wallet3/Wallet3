@@ -5,8 +5,10 @@ import { estimateGas, getGasPrice, getMaxPriorityFee, getNextBlockBaseFee, getTr
 
 import { Account } from '../account/Account';
 import App from '../App';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Coingecko from '../../common/apis/Coingecko';
 import { INetwork } from '../../common/Networks';
+import { IToken } from '../../common/Tokens';
 import { NativeToken } from '../../models/NativeToken';
 import { Wallet } from '../Wallet';
 
@@ -26,6 +28,7 @@ export class BaseTransaction {
   nonce = 0;
   txException = '';
   initializing = false;
+  feeToken: IToken | null = null;
 
   constructor(args: { network: INetwork; account: Account }, initChainData = true) {
     this.network = args.network;
@@ -46,12 +49,14 @@ export class BaseTransaction {
       txFeeWei: computed,
       isValidGas: computed,
       initializing: observable,
+      feeToken: observable,
 
       setNonce: action,
       setGasLimit: action,
       setMaxGasPrice: action,
       setPriorityPrice: action,
       setGas: action,
+      setFeeToken: action,
     });
 
     this.nativeToken.getBalance();
@@ -59,6 +64,7 @@ export class BaseTransaction {
     if (initChainData) this.initChainData({ ...args, account: args.account.address });
 
     if (this.network.eip1559) this.refreshEIP1559(this.network.chainId);
+    if (this.network.feeTokens) this.initFeeToken();
 
     Coingecko.refresh();
   }
@@ -134,6 +140,12 @@ export class BaseTransaction {
     try {
       this.maxPriorityPrice = Math.max(Math.min(Number(gwei), MAX_GWEI_PRICE), 0);
     } catch (error) {}
+  }
+
+  setFeeToken(token: IToken) {
+    if (!this.network.feeTokens) return;
+    this.feeToken = this.network.feeTokens.find((t) => t.address === token.address) ?? this.network.feeTokens[0];
+    AsyncStorage.setItem(`${this.network.chainId}_feeToken`, this.feeToken.address);
   }
 
   async setGas(speed: 'rapid' | 'fast' | 'standard') {
@@ -219,5 +231,12 @@ export class BaseTransaction {
       runInAction(() => (this.nextBlockBaseFeeWei = nextBaseFee));
       this.timer = setTimeout(() => this.refreshEIP1559(chainId), 1000 * (chainId === 1 ? 10 : 5));
     });
+  }
+
+  protected async initFeeToken() {
+    if (!this.network.feeTokens) return;
+    const tokenAddress = await AsyncStorage.getItem(`${this.network.chainId}_feeToken`);
+    const token = this.network.feeTokens.find((token) => token.address === tokenAddress) ?? this.network.feeTokens[0];
+    runInAction(() => (this.feeToken = token));
   }
 }

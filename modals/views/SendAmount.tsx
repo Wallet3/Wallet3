@@ -35,6 +35,7 @@ export default observer(({ onNext, onBack, vm }: Props) => {
         onBack={() => swiper.current?.scrollTo(0)}
         tokens={vm.allTokens}
         themeColor={themeColor}
+        selectedToken={vm.token}
         network={vm.network}
         onTokenSelected={(token) => {
           swiper.current?.scrollTo(0);

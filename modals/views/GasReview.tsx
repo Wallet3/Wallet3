@@ -156,13 +156,19 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
             </TouchableOpacity>
           </View>
 
-          {vm.network.feeTokens ? (
+          {vm.feeToken ? (
             <View style={{ ...reviewItemsContainer, marginStart: 12 }}>
               <TouchableOpacity
                 onPress={() => swiper.current?.scrollTo(1)}
                 style={{ ...styles.gasSpeedItem, paddingStart: 10, paddingEnd: 6, flexDirection: 'row', alignItems: 'center' }}
               >
-                <Coin symbol="USDC" address="" chainId={1} size={14} />
+                <Coin
+                  forceRefresh
+                  symbol={vm.feeToken.symbol}
+                  address={vm.feeToken.address}
+                  chainId={vm.network.chainId}
+                  size={14}
+                />
                 <Text
                   numberOfLines={1}
                   style={{
@@ -175,7 +181,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
                     maxWidth: 100,
                   }}
                 >
-                  USDC
+                  {vm.feeToken.symbol}
                 </Text>
                 <Entypo name="chevron-right" color={secondaryTextColor} />
               </TouchableOpacity>
@@ -196,7 +202,17 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
         />
       </SafeViewContainer>
 
-      <Tokenlist network={vm.network} tokens={vm.network.feeTokens} onBack={() => swiper.current?.scrollTo(0)} />
+      <Tokenlist
+        network={vm.network}
+        tokens={vm.network.feeTokens}
+        selectedToken={vm.feeToken}
+        themeColor={vm.network.color}
+        onBack={() => swiper.current?.scrollTo(0)}
+        onTokenSelected={(token) => {
+          vm.setFeeToken(token);
+          swiper.current?.scrollTo(0);
+        }}
+      />
     </Swiper>
   );
 });
