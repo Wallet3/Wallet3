@@ -1,5 +1,6 @@
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
-import { FlatList, ListRenderItemInfo, NativeSyntheticEvent, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, ListRenderItemInfo, NativeSyntheticEvent, Text, View, Platform } from 'react-native';
+import { TouchableOpacity} from 'react-native-gesture-handler'
 import { NetworkIcons, generateNetworkIcon } from '../assets/icons/networks/color';
 import { SafeViewContainer, Separator } from '../components';
 import { useEffect, useRef, useState } from 'react';
@@ -130,7 +131,7 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
             ref={flatList}
             keyExtractor={(i) => i.network}
             data={nets}
-            renderItem={useContextMenu ? renderContextMenuItem : renderItem}
+            renderItem={useContextMenu && Platform.OS === 'ios' ? renderContextMenuItem : renderItem}
             contentContainerStyle={{ paddingBottom: 36 }}
             style={{ marginHorizontal: -16, marginTop: -4, marginBottom: -36 }}
             onScrollToIndexFailed={({}) => {}}

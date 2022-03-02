@@ -3,8 +3,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import AppViewModel, { AppVM } from './viewmodels/App';
 import AuthViewModel, { Authentication } from './viewmodels/Authentication';
 import Modals, { LockScreen } from './screens/Modalize';
-import { Platform, UIManager } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Platform, UIManager, TouchableOpacity } from 'react-native';
 
 import { About } from './screens/settings/About';
 import AddToken from './screens/tokens/AddToken';
