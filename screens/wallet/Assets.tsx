@@ -10,6 +10,8 @@ import ERC20Tokens from './ERC20Tokens';
 import HistoryList from './HistoryList';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/Tokens';
+import NFTs from './NFTs';
+import { Nft } from '../../common/apis/Rarible.types';
 import { RootNavigationProps } from '../navigations';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
@@ -65,12 +67,6 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
           >
             {t('home-tabs-assets')}
           </Text>
-          {/* <Text
-            style={{ ...styles.headerLabel, ...(activeTab === 1 ? { ...styles.headerLabelActive, color: themeColor } : {}) }}
-            onPress={() => swipeTo(1)}
-          >
-            {t('home-tabs-nfts')}
-          </Text> */}
           <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12 }}>
             <Text
               style={{
@@ -134,9 +130,6 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
           onRefreshRequest={onRefreshRequest}
           onTokenPress={onTokenPress}
         />
-        {/* <View style={{ flex: 1 }}>
-          <Text>Nfts</Text>
-        </View> */}
         <View style={{ flex: 1 }}>
           <HistoryList data={TxHub.allTxs} onTxPress={onTxPress} />
         </View>

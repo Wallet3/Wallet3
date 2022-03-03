@@ -491,6 +491,7 @@ export const Browser = observer(
               style={{ marginTop: 2, padding: 0, paddingBottom: 36 }}
               contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: 8, paddingTop: 2 }}
               itemDimension={LargeIconSize + 8}
+              showsVerticalScrollIndicator={false}
               bounces={false}
               data={PopularDApps}
               itemContainerStyle={{ padding: 0, margin: 0, marginBottom: 4 }}

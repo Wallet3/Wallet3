@@ -12,6 +12,7 @@ import { InpageDAppController } from '../screens/browser/controller/InpageDAppCo
 import Key from '../models/Key';
 import LINQ from 'linq';
 import LinkHub from './hubs/LinkHub';
+import MetamaskDAppsHub from './walletconnect/MetamaskDAppsHub';
 import Networks from './Networks';
 import Theme from './settings/Theme';
 import TxHub from './hubs/TxHub';
@@ -20,7 +21,6 @@ import { Wallet } from './Wallet';
 import WalletConnectV1ClientHub from './walletconnect/WalletConnectV1ClientHub';
 import i18n from '../i18n';
 import { showMessage } from 'react-native-flash-message';
-import MetamaskDAppsHub from './walletconnect/MetamaskDAppsHub';
 
 export class AppVM {
   private lastRefreshedTime = 0;
@@ -120,6 +120,7 @@ export class AppVM {
     if (!target) return;
 
     target.tokens.refreshOverview();
+    target.nfts.refresh();
     this.currentAccount = target;
 
     clearTimeout(this.refreshTimer);
