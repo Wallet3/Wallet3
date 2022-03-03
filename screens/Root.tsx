@@ -8,6 +8,7 @@ import DAppsScreen from './dapps';
 import Drawer from './drawer';
 import { DrawerNavigationHelpers } from '@react-navigation/drawer/lib/typescript/src/types';
 import MessageKeys from '../common/MessageKeys';
+import NFTs from './nfts/NFTs';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../viewmodels/Networks';
 import { ReactiveScreen } from '../utils/device';
@@ -55,13 +56,15 @@ const RootTab = observer(() => {
           const icons = {
             Wallet: 'credit-card',
             Explore: 'compass',
-            FashionWallet: 'credit-card',
+            NFTs: 'star',
           };
 
           return <Feather name={icons[route.name]} size={size} color={focused ? current.color : 'gray'} />;
         },
       })}
     >
+      <Screen name="NFTs" component={NFTs} options={{ tabBarLabel: 'NFTs', headerShown: false }} />
+
       <Screen
         name="Wallet"
         component={WalletScreen}

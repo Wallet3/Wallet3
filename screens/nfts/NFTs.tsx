@@ -1,10 +1,13 @@
 import { FlatList, Image, ListRenderItemInfo, Text, View } from 'react-native';
 import React, { useState } from 'react';
 
+import App from '../../viewmodels/App';
 import { FlatGrid } from 'react-native-super-grid';
 import { Nft } from '../../common/apis/Rarible.types';
 import { ReactiveScreen } from '../../utils/device';
+import Theme from '../../viewmodels/settings/Theme';
 import { observer } from 'mobx-react-lite';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const calcIconSize = () => {
   const { width } = ReactiveScreen;
@@ -17,22 +20,30 @@ const calcIconSize = () => {
   return { NumOfColumns, Size };
 };
 
-export default observer(({ data }: { data?: Nft[] }) => {
+export default observer(() => {
   const [size, setSize] = useState(calcIconSize().Size);
+  const { currentAccount } = App;
+  const { top } = useSafeAreaInsets();
+  const { backgroundColor } = Theme;
+
+  if (!currentAccount) return null;
 
   const renderItem = ({ item }: ListRenderItemInfo<Nft>) => {
     return (
-      <View key={item.id} style={{ marginBottom: 0 }}>
-        <Image source={{ uri: item.meta?.image?.url?.PREVIEW }} style={{ width: size, height: size, borderRadius: 10 }} />
+      <View key={item.id} style={{ marginBottom: 16 }}>
+        <Image source={{ uri: item.meta?.image?.url?.PREVIEW }} style={{ width: '100%', height: 270, borderRadius: 10 }} />
       </View>
     );
   };
 
-  return data && data.length > 0 ? (
-    <FlatGrid spacing={10} data={data} renderItem={renderItem} style={{ paddingHorizontal: 2 }} itemDimension={size} />
-  ) : (
-    <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-      <Text>No NFTs</Text>
+  return (
+    <View style={{ flex: 1, backgroundColor }}>
+      <View />
+      <FlatList
+        data={currentAccount.nfts.nfts}
+        renderItem={renderItem}
+        contentContainerStyle={{ marginHorizontal: 16, paddingTop: top }}
+      />
     </View>
   );
 });

@@ -10,8 +10,6 @@ import ERC20Tokens from './ERC20Tokens';
 import HistoryList from './HistoryList';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/Tokens';
-import NFTs from './NFTs';
-import { Nft } from '../../common/apis/Rarible.types';
 import { RootNavigationProps } from '../navigations';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
