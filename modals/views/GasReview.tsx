@@ -205,7 +205,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
       <Tokenlist
         network={vm.network}
         tokens={vm.network.feeTokens}
-        selectedToken={vm.feeToken}
+        selectedToken={vm.network.feeTokens?.find((t) => t.address === vm.feeToken?.address)}
         themeColor={vm.network.color}
         onBack={() => swiper.current?.scrollTo(0)}
         onTokenSelected={(token) => {

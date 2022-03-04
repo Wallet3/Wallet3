@@ -65,12 +65,6 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
           >
             {t('home-tabs-assets')}
           </Text>
-          {/* <Text
-            style={{ ...styles.headerLabel, ...(activeTab === 1 ? { ...styles.headerLabelActive, color: themeColor } : {}) }}
-            onPress={() => swipeTo(1)}
-          >
-            {t('home-tabs-nfts')}
-          </Text> */}
           <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12 }}>
             <Text
               style={{
@@ -134,9 +128,6 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
           onRefreshRequest={onRefreshRequest}
           onTokenPress={onTokenPress}
         />
-        {/* <View style={{ flex: 1 }}>
-          <Text>Nfts</Text>
-        </View> */}
         <View style={{ flex: 1 }}>
           <HistoryList data={TxHub.allTxs} onTxPress={onTxPress} />
         </View>

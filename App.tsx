@@ -15,6 +15,7 @@ import { Host } from 'react-native-portalize';
 import { Ionicons } from '@expo/vector-icons';
 import LandScreen from './screens/land';
 import Languages from './screens/settings/Languages';
+import NFTDetails from './screens/nfts/Details';
 import { NavigationContainer } from '@react-navigation/native';
 import ProfileScreen from './screens/profile';
 import QRScan from './screens/misc/QRScan';
@@ -25,6 +26,7 @@ import Theme from './viewmodels/settings/Theme';
 import Themes from './screens/settings/Themes';
 import Tokens from './screens/tokens/SortTokens';
 import VerifySecret from './screens/settings/VerifySecret';
+// import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import i18n from './i18n';
 import { observer } from 'mobx-react-lite';
@@ -122,14 +124,19 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
                   return {
                     title: t('home-tokens-title'),
                     headerRight: () => (
-                      <TouchableOpacity
-                        onPress={() => navigation.navigate('AddToken')}
-                        style={{ margin: -8, padding: 8, marginBottom: -15 }}
-                      >
+                      <TouchableOpacity onPress={() => navigation.navigate('AddToken')} style={{ margin: -8, padding: 8 }}>
                         <Ionicons name="add-circle-outline" size={25} color={foregroundColor} />
                       </TouchableOpacity>
                     ),
                   };
+                }}
+              />
+
+              <Screen
+                name="NFTDetails"
+                component={NFTDetails}
+                options={() => {
+                  return { headerShown: false };
                 }}
               />
             </Navigator>

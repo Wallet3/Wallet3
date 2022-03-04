@@ -88,10 +88,6 @@ export class RawTransactionRequest extends BaseTransaction {
     runInAction(() => this.parseRequest(param));
   }
 
-  get feeTokenSymbol() {
-    return this.network.symbol;
-  }
-
   async parseRequest(param: SpeedupAbleSendParams) {
     const { methodFunc, type } = parseRequestType(param.data);
 

@@ -51,6 +51,7 @@ export class BaseTransaction {
       isValidGas: computed,
       initializing: observable,
       feeToken: observable,
+      feeTokenSymbol: computed,
       insufficientFee: computed,
 
       setNonce: action,
@@ -212,7 +213,7 @@ export class BaseTransaction {
       this.setNonce(nonce);
 
       if (eip1559) {
-        const priFee = (priorityFee || Gwei_1) / Gwei_1 + (chainId === 1 ? 0.2 : 0.01);
+        const priFee = (priorityFee || Gwei_1) / Gwei_1 + (chainId === 1 ? 0.2 : 0.05);
         this.setPriorityPrice(priFee);
 
         const maxPrice = (nextBaseFee || Gwei_1) / Gwei_1 + priFee;

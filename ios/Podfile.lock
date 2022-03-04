@@ -387,8 +387,8 @@ PODS:
     - React-RCTImage
   - RNSharedElement (0.8.4):
     - React-Core
-  - RNSVG (12.1.1):
-    - React
+  - RNSVG (12.3.0):
+    - React-Core
   - TcpSockets (4.0.0):
     - React
   - Yoga (1.14.0)
@@ -698,7 +698,7 @@ SPEC CHECKSUMS:
   RNReanimated: 0e5ef4a7e4e79f84efbe5b40771c31044c51e7d0
   RNScreens: 2559f98b0835103cbef3b26ba77fa61d4bb37ae7
   RNSharedElement: eb7d506733952d58634f34c82ec17e82f557e377
-  RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
+  RNSVG: 302bfc9905bd8122f08966dc2ce2d07b7b52b9f8
   TcpSockets: 4ef55305239923b343ed0a378b1fac188b1373b0
   Yoga: e6ecf3fa25af9d4c87e94ad7d5d292eedef49749
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
