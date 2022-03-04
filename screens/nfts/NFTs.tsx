@@ -2,48 +2,123 @@ import { FlatList, Image, ListRenderItemInfo, Text, View } from 'react-native';
 import React, { useState } from 'react';
 
 import App from '../../viewmodels/App';
-import { FlatGrid } from 'react-native-super-grid';
+import { BlurView } from 'expo-blur';
+import { Ionicons } from '@expo/vector-icons';
+import Networks from '../../viewmodels/Networks';
 import { Nft } from '../../common/apis/Rarible.types';
 import { ReactiveScreen } from '../../utils/device';
+import { TextInput } from 'react-native-gesture-handler';
 import Theme from '../../viewmodels/settings/Theme';
+import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import { observer } from 'mobx-react-lite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const calcIconSize = () => {
-  const { width } = ReactiveScreen;
-
-  const NumOfColumns = Math.ceil(width / 100);
-  const Size = (width - 8 * NumOfColumns - 10 * NumOfColumns) / NumOfColumns;
-
-  console.log(NumOfColumns, Size);
-
-  return { NumOfColumns, Size };
-};
-
 export default observer(() => {
-  const [size, setSize] = useState(calcIconSize().Size);
   const { currentAccount } = App;
+  const { current } = Networks;
   const { top } = useSafeAreaInsets();
-  const { backgroundColor } = Theme;
+  const { backgroundColor, shadow, mode, foregroundColor, borderColor } = Theme;
+  const imageHeight = (ReactiveScreen.width - 16 * 2) * 0.95;
+  const [activeSearch, setActiveSearch] = useState(false);
 
   if (!currentAccount) return null;
 
   const renderItem = ({ item }: ListRenderItemInfo<Nft>) => {
     return (
-      <View key={item.id} style={{ marginBottom: 16 }}>
-        <Image source={{ uri: item.meta?.image?.url?.PREVIEW }} style={{ width: '100%', height: 270, borderRadius: 10 }} />
+      <View key={item.id} style={{ marginBottom: 16, ...shadow }}>
+        <Image
+          source={{ uri: item.meta?.image?.url?.PREVIEW }}
+          style={{ width: '100%', height: imageHeight, backgroundColor, borderRadius: 10 }}
+        />
+
+        <View
+          style={{
+            position: 'absolute',
+            bottom: 12,
+            left: '15%',
+            right: '15%',
+            ...shadow,
+            shadowOffset: { height: 1, width: 0 },
+            shadowOpacity: 0.2,
+          }}
+        >
+          <View
+            style={{
+              borderRadius: 25,
+              overflow: 'hidden',
+            }}
+          >
+            <BlurView
+              tint={mode}
+              intensity={25}
+              style={{
+                padding: 16,
+                paddingVertical: 15,
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexDirection: 'row',
+                backgroundColor: `${backgroundColor}20`,
+              }}
+            >
+              <Text style={{ color: foregroundColor, fontWeight: '500', fontSize: 17, maxWidth: '80%' }} numberOfLines={1}>
+                {item.meta?.name}
+              </Text>
+              {generateNetworkIcon({ ...current, hideEVMTitle: true, width: 22, style: { marginStart: 8 } })}
+            </BlurView>
+          </View>
+        </View>
       </View>
     );
   };
 
+  const headerHeight = 44;
+
   return (
     <View style={{ flex: 1, backgroundColor }}>
-      <View />
       <FlatList
         data={currentAccount.nfts.nfts}
         renderItem={renderItem}
-        contentContainerStyle={{ marginHorizontal: 16, paddingTop: top }}
+        initialNumToRender={5}
+        style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0 }}
+        contentContainerStyle={{ marginHorizontal: 16, paddingTop: headerHeight + top + 16 }}
       />
+      <BlurView
+        tint={mode}
+        intensity={50}
+        style={{
+          height: headerHeight + top + 6,
+          width: '100%',
+          paddingTop: top + 4,
+          ...shadow,
+          shadowOpacity: 0.2,
+          paddingHorizontal: 16,
+          paddingBottom: 2,
+        }}
+      >
+        <View
+          style={{
+            borderWidth: 1,
+            borderColor: activeSearch ? `${foregroundColor}7a` : `${foregroundColor}10`,
+            borderRadius: 10,
+            flexDirection: 'row',
+            alignItems: 'center',
+            padding: 8,
+            paddingVertical: 8,
+          }}
+        >
+          <Ionicons
+            name="ios-search-outline"
+            size={18}
+            color={activeSearch ? `${foregroundColor}7a` : `${foregroundColor}10`}
+            style={{ marginBottom: -1 }}
+          />
+          <TextInput
+            onBlur={() => setActiveSearch(false)}
+            onFocus={() => setActiveSearch(true)}
+            style={{ fontSize: 17, color: foregroundColor, flex: 1, marginStart: 8 }}
+          />
+        </View>
+      </BlurView>
     </View>
   );
 });

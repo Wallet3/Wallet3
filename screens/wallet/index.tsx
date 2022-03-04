@@ -19,6 +19,7 @@ import TxDetail from './TxDetail';
 import { View } from 'react-native';
 import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectV1ClientHub';
 import { observer } from 'mobx-react-lite';
+import { useHeaderHeight } from '@react-navigation/elements';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 type RootStackParamList = {

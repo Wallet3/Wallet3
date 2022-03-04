@@ -3,6 +3,7 @@ import { makeObservable, observable, runInAction } from 'mobx';
 import Networks from '../Networks';
 import { Nft } from '../../common/apis/Rarible.types';
 import { getNftsByOwner } from '../../common/apis/Rarible';
+import { setString } from 'expo-clipboard';
 
 export class NFTViewer {
   private cache = new Map<number, Nft[]>();
@@ -25,14 +26,12 @@ export class NFTViewer {
       return;
     }
 
-    const result = await getNftsByOwner(this.owner, { chain: current.network.toLowerCase(), size: 100 });
+    const result = await getNftsByOwner(this.owner, { chain: current.network.toLowerCase(), size: 500 });
     if (!result) return;
 
     const { items } = result;
     const validItems = items.filter((i) => i.meta?.image?.meta);
     this.cache.set(current.chainId, validItems);
-    
-    console.log(validItems.length, items.length);
 
     runInAction(() => (this.nfts = validItems));
   }
