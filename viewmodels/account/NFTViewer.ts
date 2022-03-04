@@ -26,13 +26,14 @@ export class NFTViewer {
       return;
     }
 
-    runInAction(() => (this.nfts = []));
-
     const result = await getNftsByOwner(this.owner, { chain: current.network.toLowerCase(), size: 500 });
     if (!result) return;
 
     const { items } = result;
-    if (!Array.isArray(items)) return;
+    if (!Array.isArray(items)) {
+      runInAction(() => (this.nfts = cacheItems || []));
+      return;
+    }
 
     const validItems = items.filter((i) => i.meta?.image?.url?.PREVIEW || i.meta?.image?.url?.ORIGINAL);
     this.cache.set(current.chainId, validItems);

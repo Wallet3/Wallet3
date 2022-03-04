@@ -4,16 +4,18 @@ import React, { useState } from 'react';
 import App from '../../viewmodels/App';
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/Networks';
 import { Nft } from '../../common/apis/Rarible.types';
 import { ReactiveScreen } from '../../utils/device';
+import { SharedElement } from 'react-navigation-shared-element';
 import { TextInput } from 'react-native-gesture-handler';
 import Theme from '../../viewmodels/settings/Theme';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import { observer } from 'mobx-react-lite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-export default observer(() => {
+export default observer(({ navigation }: NativeStackScreenProps<any, any>) => {
   const { currentAccount } = App;
   const { current } = Networks;
   const { top } = useSafeAreaInsets();
@@ -30,8 +32,15 @@ export default observer(() => {
       ) || item.meta?.image?.url?.ORIGINAL;
 
     return (
-      <View key={item.id} style={{ marginBottom: 16, ...shadow }}>
-        <Image source={{ uri: image }} style={{ width: '100%', height: imageHeight, backgroundColor, borderRadius: 10 }} />
+      <TouchableOpacity
+        key={item.id}
+        activeOpacity={0.75}
+        style={{ marginBottom: 16, ...shadow }}
+        onPress={() => navigation.push('NFTDetails', { item })}
+      >
+        <SharedElement id={`nft.${item.id}.photo`}>
+          <Image source={{ uri: image }} style={{ width: '100%', height: imageHeight, backgroundColor, borderRadius: 10 }} />
+        </SharedElement>
 
         <TouchableOpacity
           style={{
@@ -70,7 +79,7 @@ export default observer(() => {
             </BlurView>
           </View>
         </TouchableOpacity>
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -83,9 +92,9 @@ export default observer(() => {
         renderItem={renderItem}
         initialNumToRender={5}
         style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0 }}
-        contentContainerStyle={{ marginHorizontal: 16, paddingTop: headerHeight + top + 16 }}
+        contentContainerStyle={{ marginHorizontal: 16, paddingTop: top }}
       />
-      <BlurView
+      {/* <BlurView
         tint={mode}
         intensity={45}
         style={{
@@ -121,7 +130,7 @@ export default observer(() => {
             style={{ fontSize: 17, color: foregroundColor, flex: 1, marginStart: 8 }}
           />
         </View>
-      </BlurView>
+      </BlurView> */}
     </View>
   );
 });
