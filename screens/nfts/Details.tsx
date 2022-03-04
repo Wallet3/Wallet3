@@ -1,13 +1,11 @@
-import * as Animatable from 'react-native-animatable';
-
-import { Animated, Image, Text, TouchableOpacity, View } from 'react-native';
-import { EvilIcons, Ionicons } from '@expo/vector-icons';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 
 import { BlurView } from 'expo-blur';
 import Etherscan from '../../assets/3rd/etherscan-logo-circle.svg';
 // import Image from 'react-native-expo-cached-image';
-import ImageColors from 'react-native-image-colors';
+import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
+import { Ionicons } from '@expo/vector-icons';
 import LINQ from 'linq';
 import MultiSourceImage from '../../components/MultiSourceImage';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -15,10 +13,8 @@ import Networks from '../../viewmodels/Networks';
 import { Nft } from '../../common/apis/Rarible.types';
 import { ReactiveScreen } from '../../utils/device';
 import { ScrollView } from 'react-native-gesture-handler';
-import { SharedElement } from 'react-navigation-shared-element';
 import { StatusBar } from 'expo-status-bar';
 import Theme from '../../viewmodels/settings/Theme';
-import { observable } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import { openURL } from 'expo-linking';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -31,39 +27,21 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
   const [dominantColor, setDominantColor] = useState(backgroundColor);
   const [primaryColor, setPrimaryColor] = useState(foregroundColor);
   const [detailColor, setDetailColor] = useState(foregroundColor);
-  const [imageUrl, setImageUrl] = useState(item.meta?.image?.url?.ORIGINAL);
-  const images = [item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.BIG, item.meta?.image?.url?.PREVIEW].filter(
-    (i) => i
-  ) as string[];
 
-  const parseColor = async () => {
-    const images = [item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.BIG, item.meta?.image?.url?.PREVIEW];
+  const images = [item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.BIG, item.meta?.image?.url?.PREVIEW];
 
-    for (let url of images) {
-      if (!url) continue;
-
-      try {
-        const result = await ImageColors.getColors(url, { cache: true });
-        switch (result.platform) {
-          case 'android':
-            setDominantColor(result.dominant || backgroundColor);
-            break;
-          case 'ios':
-            setDominantColor(result.background || backgroundColor);
-            setPrimaryColor(result.primary || foregroundColor);
-            setDetailColor(result.detail || foregroundColor);
-            break;
-        }
-
-        setImageUrl(url);
+  const parseColor = async (result: ImageColorsResult) => {
+    switch (result.platform) {
+      case 'android':
+        setDominantColor(result.dominant || backgroundColor);
         break;
-      } catch (error) {}
+      case 'ios':
+        setDominantColor(result.background || backgroundColor);
+        setPrimaryColor(result.primary || foregroundColor);
+        setDetailColor(result.detail || foregroundColor);
+        break;
     }
   };
-
-  useEffect(() => {
-    parseColor();
-  }, []);
 
   return (
     <BlurView intensity={10} style={{ flex: 1, backgroundColor: dominantColor }}>
@@ -80,9 +58,10 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
           }}
         >
           <MultiSourceImage
-            source={{ uri: '' }}
+            source={{ }}
             uriSources={images}
             style={{ width: '100%', height: '100%', borderRadius: 15, backgroundColor }}
+            onColorParsed={parseColor}
           />
         </View>
         {/* <SharedElement id={`nft.${item.id}.photo`}></SharedElement> */}
@@ -113,7 +92,6 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
 
         <View style={{ padding: 16, paddingTop: 0 }}>
           <TouchableOpacity
-            style={{ paddingVertical: 8 }}
             onPress={() => openURL(`${current.explorer}/nft/${item.id.split(':')[0]}/${item.id.split(':')[1]}`)}
           >
             <Etherscan width={24} height={24} />

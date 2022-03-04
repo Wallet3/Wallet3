@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import App from '../../viewmodels/App';
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
+import MultiSourceImage from '../../components/MultiSourceImage';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/Networks';
 import { Nft } from '../../common/apis/Rarible.types';
@@ -26,10 +27,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, any>) => {
   if (!currentAccount) return null;
 
   const renderItem = ({ item }: ListRenderItemInfo<Nft>) => {
-    const [image] =
-      [item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.PREVIEW, item.meta?.image?.url?.BIG].filter(
-        (i) => !i?.endsWith('.svg')
-      ) || item.meta?.image?.url?.ORIGINAL;
+    const images = [item.meta?.image?.url?.BIG, item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.PREVIEW];
 
     return (
       <TouchableOpacity
@@ -39,7 +37,11 @@ export default observer(({ navigation }: NativeStackScreenProps<any, any>) => {
         onPress={() => navigation.push('NFTDetails', { item })}
       >
         <SharedElement id={`nft.${item.id}.photo`}>
-          <Image source={{ uri: image }} style={{ width: '100%', height: imageHeight, backgroundColor, borderRadius: 10 }} />
+          <MultiSourceImage
+            source={{}}
+            uriSources={images}
+            style={{ width: '100%', height: imageHeight, backgroundColor, borderRadius: 10 }}
+          />
         </SharedElement>
 
         <View
