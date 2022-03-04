@@ -9,6 +9,7 @@ import Etherscan from '../../assets/3rd/etherscan-logo-circle.svg';
 // import Image from 'react-native-expo-cached-image';
 import ImageColors from 'react-native-image-colors';
 import LINQ from 'linq';
+import MultiSourceImage from '../../components/MultiSourceImage';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/Networks';
 import { Nft } from '../../common/apis/Rarible.types';
@@ -30,14 +31,19 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
   const [dominantColor, setDominantColor] = useState(backgroundColor);
   const [primaryColor, setPrimaryColor] = useState(foregroundColor);
   const [detailColor, setDetailColor] = useState(foregroundColor);
+  const [imageUrl, setImageUrl] = useState(item.meta?.image?.url?.ORIGINAL);
+  const images = [item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.BIG, item.meta?.image?.url?.PREVIEW].filter(
+    (i) => i
+  ) as string[];
 
-  const url = item.meta?.image?.url?.PREVIEW || item.meta?.image?.url?.ORIGINAL;
+  const parseColor = async () => {
+    const images = [item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.BIG, item.meta?.image?.url?.PREVIEW];
 
-  useEffect(() => {
-    if (!url) return;
+    for (let url of images) {
+      if (!url) continue;
 
-    ImageColors.getColors(url, { cache: true })
-      .then((result) => {
+      try {
+        const result = await ImageColors.getColors(url, { cache: true });
         switch (result.platform) {
           case 'android':
             setDominantColor(result.dominant || backgroundColor);
@@ -48,9 +54,16 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
             setDetailColor(result.detail || foregroundColor);
             break;
         }
-      })
-      .catch(console.log);
-  });
+
+        setImageUrl(url);
+        break;
+      } catch (error) {}
+    }
+  };
+
+  useEffect(() => {
+    parseColor();
+  }, []);
 
   return (
     <BlurView intensity={10} style={{ flex: 1, backgroundColor: dominantColor }}>
@@ -66,7 +79,11 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
             marginBottom: 16,
           }}
         >
-          <Image source={{ uri: url }} style={{ width: '100%', height: '100%', borderRadius: 15, backgroundColor }} />
+          <MultiSourceImage
+            source={{ uri: '' }}
+            uriSources={images}
+            style={{ width: '100%', height: '100%', borderRadius: 15, backgroundColor }}
+          />
         </View>
         {/* <SharedElement id={`nft.${item.id}.photo`}></SharedElement> */}
 
@@ -86,8 +103,8 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
                   key={`${attr.key}-${index}`}
                   style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}
                 >
-                  <Text style={{ color: primaryColor }}>{attr.key}</Text>
-                  <Text style={{ color: primaryColor }}>{attr.value}</Text>
+                  <Text style={{ color: primaryColor, fontWeight: '500', textTransform: 'capitalize' }}>{attr.key}</Text>
+                  <Text style={{ color: primaryColor, fontWeight: '500', textTransform: 'capitalize' }}>{attr.value}</Text>
                 </View>
               );
             })}

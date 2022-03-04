@@ -20,14 +20,14 @@ export default observer(({ navigation }: NativeStackScreenProps<any, any>) => {
   const { current } = Networks;
   const { top } = useSafeAreaInsets();
   const { backgroundColor, shadow, mode, foregroundColor, borderColor } = Theme;
-  const imageHeight = (ReactiveScreen.width - 16 * 2) * 0.95;
+  const imageHeight = ReactiveScreen.width - 16 * 2;
   const [activeSearch, setActiveSearch] = useState(false);
 
   if (!currentAccount) return null;
 
   const renderItem = ({ item }: ListRenderItemInfo<Nft>) => {
     const [image] =
-      [item.meta?.image?.url?.PREVIEW, item.meta?.image?.url?.BIG, item.meta?.image?.url?.ORIGINAL].filter(
+      [item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.PREVIEW, item.meta?.image?.url?.BIG].filter(
         (i) => !i?.endsWith('.svg')
       ) || item.meta?.image?.url?.ORIGINAL;
 
