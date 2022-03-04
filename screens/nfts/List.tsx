@@ -42,7 +42,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, any>) => {
           <Image source={{ uri: image }} style={{ width: '100%', height: imageHeight, backgroundColor, borderRadius: 10 }} />
         </SharedElement>
 
-        <TouchableOpacity
+        <View
           style={{
             position: 'absolute',
             bottom: 12,
@@ -78,7 +78,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, any>) => {
               {generateNetworkIcon({ ...current, hideEVMTitle: true, width: 22, style: { marginStart: 8 } })}
             </BlurView>
           </View>
-        </TouchableOpacity>
+        </View>
       </TouchableOpacity>
     );
   };

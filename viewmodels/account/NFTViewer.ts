@@ -35,7 +35,7 @@ export class NFTViewer {
       return;
     }
 
-    const validItems = items.filter((i) => i.meta?.image?.url?.PREVIEW || i.meta?.image?.url?.ORIGINAL);
+    const validItems = items.filter((i) => !i.deleted && (i.meta?.image?.url?.PREVIEW || i.meta?.image?.url?.ORIGINAL));
     this.cache.set(current.chainId, validItems);
 
     runInAction(() => (this.nfts = validItems));

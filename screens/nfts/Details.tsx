@@ -7,9 +7,11 @@ import React, { useEffect, useState } from 'react';
 import { BlurView } from 'expo-blur';
 // import Image from 'react-native-expo-cached-image';
 import ImageColors from 'react-native-image-colors';
+import LINQ from 'linq';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Nft } from '../../common/apis/Rarible.types';
 import { ReactiveScreen } from '../../utils/device';
+import { ScrollView } from 'react-native-gesture-handler';
 import { SharedElement } from 'react-navigation-shared-element';
 import { StatusBar } from 'expo-status-bar';
 import Theme from '../../viewmodels/settings/Theme';
@@ -22,6 +24,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
   const { top } = useSafeAreaInsets();
   const { backgroundColor, shadow, foregroundColor } = Theme;
   const [dominantColor, setDominantColor] = useState(backgroundColor);
+  const [primaryColor, setPrimaryColor] = useState(foregroundColor);
   const [detailColor, setDetailColor] = useState(foregroundColor);
 
   const url = item.meta?.image?.url?.PREVIEW || item.meta?.image?.url?.ORIGINAL;
@@ -37,8 +40,8 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
             break;
           case 'ios':
             setDominantColor(result.background || backgroundColor);
-            setDetailColor(result.primary || foregroundColor);
-            console.log(result);
+            setPrimaryColor(result.primary || foregroundColor);
+            setDetailColor(result.detail || foregroundColor);
             break;
         }
       })
@@ -47,20 +50,42 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
 
   return (
     <BlurView intensity={10} style={{ flex: 1, backgroundColor: dominantColor }}>
-      <View
-        style={{
-          marginTop: top + 57,
-          ...shadow,
-          shadowRadius: 16,
-          shadowOpacity: 0.8,
-          width: '90%',
-          height: ReactiveScreen.width * 0.9,
-          alignSelf: 'center',
-        }}
-      >
-        <Image source={{ uri: url }} style={{ width: '100%', height: '100%', borderRadius: 15, backgroundColor }} />
-      </View>
-      {/* <SharedElement id={`nft.${item.id}.photo`}></SharedElement> */}
+      <ScrollView contentContainerStyle={{ paddingTop: top + 57 }}>
+        <View
+          style={{
+            ...shadow,
+            shadowRadius: 16,
+            shadowOpacity: 0.8,
+            width: '90%',
+            height: ReactiveScreen.width * 0.9,
+            alignSelf: 'center',
+          }}
+        >
+          <Image source={{ uri: url }} style={{ width: '100%', height: '100%', borderRadius: 15, backgroundColor }} />
+        </View>
+        {/* <SharedElement id={`nft.${item.id}.photo`}></SharedElement> */}
+
+        {item.meta?.description ? (
+          <View style={{ padding: 16 }}>
+            <Text style={{ color: detailColor, fontSize: 20, fontWeight: '600', marginBottom: 8 }}>Description</Text>
+            <Text style={{ color: primaryColor }}>{item.meta?.description}</Text>
+          </View>
+        ) : undefined}
+
+        {item.meta?.attributes ? (
+          <View style={{ padding: 16, paddingTop: 0 }}>
+            <Text style={{ color: detailColor, fontSize: 20, fontWeight: '600', marginBottom: 8 }}>Attributes</Text>
+            {LINQ.from(item.meta?.attributes).select((attr, index) => {
+              return (
+                <View key={`${attr.key}-${index}`} style={{ flexDirection: 'row' }}>
+                  <Text>{attr.key}</Text>
+                  <Text>{attr.value}</Text>
+                </View>
+              );
+            })}
+          </View>
+        ) : undefined}
+      </ScrollView>
 
       <View
         style={{
@@ -73,12 +98,12 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
         }}
       >
         <TouchableOpacity onPress={() => navigation.pop()}>
-          <Ionicons name="arrow-back-outline" size={20} color={detailColor} />
+          <Ionicons name="arrow-back-outline" size={20} color={primaryColor} />
         </TouchableOpacity>
 
         <Text
           style={{
-            color: detailColor,
+            color: primaryColor,
             alignSelf: 'center',
             fontSize: 19,
             marginStart: 12,
@@ -94,7 +119,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
         <View style={{ flex: 1 }} />
 
         <TouchableOpacity style={{ marginBottom: -1 }}>
-          <Ionicons name="share-outline" size={24} color={detailColor} />
+          <Ionicons name="share-outline" size={24} color={primaryColor} />
         </TouchableOpacity>
       </View>
 
