@@ -5,10 +5,12 @@ import { EvilIcons, Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 
 import { BlurView } from 'expo-blur';
+import Etherscan from '../../assets/3rd/etherscan-logo-circle.svg';
 // import Image from 'react-native-expo-cached-image';
 import ImageColors from 'react-native-image-colors';
 import LINQ from 'linq';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import Networks from '../../viewmodels/Networks';
 import { Nft } from '../../common/apis/Rarible.types';
 import { ReactiveScreen } from '../../utils/device';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -17,11 +19,13 @@ import { StatusBar } from 'expo-status-bar';
 import Theme from '../../viewmodels/settings/Theme';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react-lite';
+import { openURL } from 'expo-linking';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default observer(({ navigation, route }: NativeStackScreenProps<any, any>) => {
   const { item } = route.params as { item: Nft };
   const { top } = useSafeAreaInsets();
+  const { current } = Networks;
   const { backgroundColor, shadow, foregroundColor } = Theme;
   const [dominantColor, setDominantColor] = useState(backgroundColor);
   const [primaryColor, setPrimaryColor] = useState(foregroundColor);
@@ -59,6 +63,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
             width: '90%',
             height: ReactiveScreen.width * 0.9,
             alignSelf: 'center',
+            marginBottom: 16,
           }}
         >
           <Image source={{ uri: url }} style={{ width: '100%', height: '100%', borderRadius: 15, backgroundColor }} />
@@ -66,25 +71,37 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
         {/* <SharedElement id={`nft.${item.id}.photo`}></SharedElement> */}
 
         {item.meta?.description ? (
-          <View style={{ padding: 16 }}>
+          <View style={{ padding: 16, paddingTop: 0 }}>
             <Text style={{ color: detailColor, fontSize: 20, fontWeight: '600', marginBottom: 8 }}>Description</Text>
             <Text style={{ color: primaryColor }}>{item.meta?.description}</Text>
           </View>
         ) : undefined}
 
-        {item.meta?.attributes ? (
+        {item.meta?.attributes && item.meta.attributes.length > 0 ? (
           <View style={{ padding: 16, paddingTop: 0 }}>
             <Text style={{ color: detailColor, fontSize: 20, fontWeight: '600', marginBottom: 8 }}>Attributes</Text>
             {LINQ.from(item.meta?.attributes).select((attr, index) => {
               return (
-                <View key={`${attr.key}-${index}`} style={{ flexDirection: 'row' }}>
-                  <Text>{attr.key}</Text>
-                  <Text>{attr.value}</Text>
+                <View
+                  key={`${attr.key}-${index}`}
+                  style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}
+                >
+                  <Text style={{ color: primaryColor }}>{attr.key}</Text>
+                  <Text style={{ color: primaryColor }}>{attr.value}</Text>
                 </View>
               );
             })}
           </View>
         ) : undefined}
+
+        <View style={{ padding: 16, paddingTop: 0 }}>
+          <TouchableOpacity
+            style={{ paddingVertical: 8 }}
+            onPress={() => openURL(`${current.explorer}/nft/${item.id.split(':')[0]}/${item.id.split(':')[1]}`)}
+          >
+            <Etherscan width={24} height={24} />
+          </TouchableOpacity>
+        </View>
       </ScrollView>
 
       <View
