@@ -57,6 +57,7 @@ export class AppVM {
       () => Networks.current,
       () => {
         this.currentAccount?.tokens.refreshOverview();
+        this.currentAccount?.nfts.refresh();
         this.allAccounts.forEach((a) => a.tokens.refreshNativeToken());
         UI.gasIndicator && GasPrice.refresh();
       }

@@ -1,4 +1,4 @@
-import { FlatList, Image, ListRenderItemInfo, Text, View } from 'react-native';
+import { FlatList, Image, ListRenderItemInfo, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
 
 import App from '../../viewmodels/App';
@@ -24,14 +24,16 @@ export default observer(() => {
   if (!currentAccount) return null;
 
   const renderItem = ({ item }: ListRenderItemInfo<Nft>) => {
+    const [image] =
+      [item.meta?.image?.url?.PREVIEW, item.meta?.image?.url?.BIG, item.meta?.image?.url?.ORIGINAL].filter(
+        (i) => !i?.endsWith('.svg')
+      ) || item.meta?.image?.url?.ORIGINAL;
+
     return (
       <View key={item.id} style={{ marginBottom: 16, ...shadow }}>
-        <Image
-          source={{ uri: item.meta?.image?.url?.PREVIEW }}
-          style={{ width: '100%', height: imageHeight, backgroundColor, borderRadius: 10 }}
-        />
+        <Image source={{ uri: image }} style={{ width: '100%', height: imageHeight, backgroundColor, borderRadius: 10 }} />
 
-        <View
+        <TouchableOpacity
           style={{
             position: 'absolute',
             bottom: 12,
@@ -66,7 +68,7 @@ export default observer(() => {
               {generateNetworkIcon({ ...current, hideEVMTitle: true, width: 22, style: { marginStart: 8 } })}
             </BlurView>
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
     );
   };
@@ -84,7 +86,7 @@ export default observer(() => {
       />
       <BlurView
         tint={mode}
-        intensity={50}
+        intensity={45}
         style={{
           height: headerHeight + top + 6,
           width: '100%',
