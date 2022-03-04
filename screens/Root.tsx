@@ -8,7 +8,7 @@ import DAppsScreen from './dapps';
 import Drawer from './drawer';
 import { DrawerNavigationHelpers } from '@react-navigation/drawer/lib/typescript/src/types';
 import MessageKeys from '../common/MessageKeys';
-import NFTs from './nfts/NFTs';
+import NFTList from './nfts/List';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../viewmodels/Networks';
 import { ReactiveScreen } from '../utils/device';
@@ -63,7 +63,7 @@ const RootTab = observer(() => {
         },
       })}
     >
-      <Screen name="NFTs" component={NFTs} options={{ tabBarLabel: 'NFTs', headerShown: false }} />
+      <Screen name="NFTs" component={NFTList} options={{ tabBarLabel: 'NFTs', headerShown: false }} />
 
       <Screen
         name="Wallet"

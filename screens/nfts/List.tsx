@@ -55,6 +55,7 @@ export default observer(() => {
               intensity={25}
               style={{
                 padding: 16,
+                paddingStart: 20,
                 paddingVertical: 15,
                 justifyContent: 'space-between',
                 alignItems: 'center',
