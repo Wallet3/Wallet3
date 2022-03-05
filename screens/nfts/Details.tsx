@@ -16,7 +16,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import Theme from '../../viewmodels/settings/Theme';
 import { observer } from 'mobx-react-lite';
-import { openURL } from 'expo-linking';
+import { openBrowserAsync } from 'expo-web-browser';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default observer(({ navigation, route }: NativeStackScreenProps<any, any>) => {
@@ -91,7 +91,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
         ) : undefined}
 
         <View style={{ padding: 16, paddingTop: 0 }}>
-          <TouchableOpacity onPress={() => openURL(`${current.explorer}/nft/${item.contract}/${item.tokenId}`)}>
+          <TouchableOpacity onPress={() => openBrowserAsync(`${current.explorer}/nft/${item.contract}/${item.tokenId}`, {})}>
             <Etherscan width={22} height={22} />
           </TouchableOpacity>
         </View>
