@@ -28,6 +28,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, any>) => {
 
   const renderItem = ({ item }: ListRenderItemInfo<Nft>) => {
     const images = [item.meta?.image?.url?.BIG, item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.PREVIEW];
+    const type = item.meta?.image?.meta?.ORIGINAL?.type;
 
     return (
       <TouchableOpacity
@@ -38,9 +39,10 @@ export default observer(({ navigation }: NativeStackScreenProps<any, any>) => {
       >
         <SharedElement id={`nft.${item.id}.photo`}>
           <MultiSourceImage
-            source={{}}
             uriSources={images}
+            type={type}
             style={{ width: '100%', height: imageHeight, backgroundColor, borderRadius: 10 }}
+            paused
           />
         </SharedElement>
 

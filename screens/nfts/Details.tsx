@@ -58,10 +58,11 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
           }}
         >
           <MultiSourceImage
-            source={{}}
             uriSources={images}
             style={{ width: '100%', height: '100%', borderRadius: 15, backgroundColor }}
             onColorParsed={parseColor}
+            type={item.meta?.image?.meta?.ORIGINAL?.type}
+            controls
           />
         </View>
         {/* <SharedElement id={`nft.${item.id}.photo`}></SharedElement> */}

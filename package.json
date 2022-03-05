@@ -117,6 +117,7 @@
     "@types/react-native": "~0.64.24",
     "@types/react-native-material-ripple": "^0.9.2",
     "@types/react-native-svg-charts": "^5.0.12",
+    "@types/react-native-video": "^5.0.12",
     "babel-plugin-transform-typescript-metadata": "^0.3.2",
     "react-native-svg-transformer": "^1.0.0",
     "rn-nodeify": "^10.3.0",

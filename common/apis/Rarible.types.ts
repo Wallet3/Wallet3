@@ -21,12 +21,13 @@ export interface Url {
 
 export interface PREVIEW {
   type: string;
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
 }
 
 export interface Meta2 {
   PREVIEW?: PREVIEW;
+  ORIGINAL?: PREVIEW;
 }
 
 export interface Image {
