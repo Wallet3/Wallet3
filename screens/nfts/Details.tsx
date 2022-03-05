@@ -1,6 +1,6 @@
 import { Entypo, Ionicons } from '@expo/vector-icons';
 import { Etherscan, Opensea, Rarible } from '../../assets/3rd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
 import { BlurView } from 'expo-blur';
@@ -20,7 +20,7 @@ import { openBrowserAsync } from 'expo-web-browser';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default observer(({ navigation, route }: NativeStackScreenProps<any, any>) => {
-  const { item } = route.params as { item: Nft };
+  const { item, colorResult } = route.params as { item: Nft; colorResult?: ImageColorsResult };
   const { top } = useSafeAreaInsets();
   const { current } = Networks;
   const { backgroundColor, shadow, foregroundColor } = Theme;
@@ -28,7 +28,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
   const [primaryColor, setPrimaryColor] = useState(foregroundColor);
   const [detailColor, setDetailColor] = useState(foregroundColor);
 
-  const images = [item.meta?.image?.url?.BIG, item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.PREVIEW];
+  const images = [item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.BIG, item.meta?.image?.url?.PREVIEW];
 
   const parseColor = async (result: ImageColorsResult) => {
     switch (result.platform) {
@@ -42,6 +42,11 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
         break;
     }
   };
+
+  useEffect(() => {
+    if (!colorResult) return;
+    parseColor(colorResult);
+  }, [colorResult]);
 
   return (
     <BlurView intensity={10} style={{ flex: 1, backgroundColor: dominantColor }}>
@@ -81,7 +86,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
             shadowOpacity: 0.9,
           }}
           themeColor={primaryColor}
-          icon={() => <Entypo name="paper-plane" color="white" size={16} />}
+          icon={() => <Entypo name="paper-plane" color={dominantColor} size={16} />}
         />
 
         {item.meta?.description ? (
