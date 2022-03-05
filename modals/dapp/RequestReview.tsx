@@ -10,7 +10,7 @@ import { BioType } from '../../viewmodels/Authentication';
 import Currency from '../../viewmodels/settings/Currency';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';
 import GasReview from '../views/GasReview';
-import Image from 'react-native-expo-cached-image';
+import Image from 'react-native-fast-image';
 import InsufficientFee from '../components/InsufficientFee';
 import { RawTransactionRequest } from '../../viewmodels/transferring/RawTransactionRequest';
 import RejectApproveButtons from '../components/RejectApproveButtons';

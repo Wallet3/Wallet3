@@ -9,7 +9,7 @@ import { BioType } from '../../viewmodels/Authentication';
 import Currency from '../../viewmodels/settings/Currency';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';
 import GasReview from './GasReview';
-import Image from 'react-native-expo-cached-image';
+import Image from 'react-native-fast-image';
 import InsufficientFee from '../components/InsufficientFee';
 import Networks from '../../viewmodels/Networks';
 import { ReactiveScreen } from '../../utils/device';

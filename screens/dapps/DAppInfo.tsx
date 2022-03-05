@@ -5,7 +5,8 @@ import { Account } from '../../viewmodels/account/Account';
 import Avatar from '../../components/Avatar';
 import { Entypo } from '@expo/vector-icons';
 import { INetwork } from '../../common/Networks';
-import Image from 'react-native-expo-cached-image';
+import Image from 'react-native-fast-image';
+import { MetamaskDApp } from '../../viewmodels/walletconnect/MetamaskDApp';
 import Networks from '../../viewmodels/Networks';
 import React from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -16,7 +17,6 @@ import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { thirdFontColor } from '../../constants/styles';
-import { MetamaskDApp } from '../../viewmodels/walletconnect/MetamaskDApp';
 
 interface Props {
   client: WalletConnect_v1 | MetamaskDApp;

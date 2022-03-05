@@ -8,7 +8,7 @@ import React, { useRef, useState } from 'react';
 import { Account } from '../../viewmodels/account/Account';
 import Avatar from '../../components/Avatar';
 import { BlankPNG } from '../../common/Constants';
-import CachedImage from 'react-native-expo-cached-image';
+import CachedImage from 'react-native-fast-image';
 import CopyableText from '../../components/CopyableText';
 import Networks from '../../viewmodels/Networks';
 import QRCode from 'react-native-qrcode-svg';

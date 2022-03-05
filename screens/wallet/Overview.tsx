@@ -8,7 +8,7 @@ import { formatAddress, formatCurrency } from '../../utils/formatter';
 import AnimateNumber from 'react-native-animate-number';
 import ColorLogos from '../../assets/icons/networks/color';
 import { INetwork } from '../../common/Networks';
-import Image from 'react-native-expo-cached-image';
+import Image from 'react-native-fast-image';
 import MessageKeys from '../../common/MessageKeys';
 import Ripple from 'react-native-material-ripple';
 import UI from '../../viewmodels/settings/UI';

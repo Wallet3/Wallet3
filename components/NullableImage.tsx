@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleProp, Text, View, ViewStyle } from 'react-native';
 
-import Image from 'react-native-expo-cached-image';
+import Image from 'react-native-fast-image';
 import { genColor } from '../utils/emoji';
 
 interface Props {

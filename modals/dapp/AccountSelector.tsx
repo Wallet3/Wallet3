@@ -1,16 +1,14 @@
 import { Button, SafeViewContainer } from '../../components';
 import { FlatList, StyleProp, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import React, { useState } from 'react';
-import { borderColor, fontColor, secondaryFontColor, themeColor } from '../../constants/styles';
 
 import { Account } from '../../viewmodels/account/Account';
 import Avatar from '../../components/Avatar';
 import { Feather } from '@expo/vector-icons';
-import Image from 'react-native-expo-cached-image';
 import Theme from '../../viewmodels/settings/Theme';
-import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { secondaryFontColor } from '../../constants/styles';
 
 interface Props {
   accounts: Account[];

@@ -2,7 +2,7 @@ import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context
 import { Image, ListRenderItemInfo, NativeSyntheticEvent, Share, Text, TouchableOpacity } from 'react-native';
 
 import { Bookmark } from '../../../viewmodels/customs/Bookmarks';
-import CachedImage from 'react-native-expo-cached-image';
+import CachedImage from 'react-native-fast-image';
 import { NullableImage } from '../../../components';
 import React from 'react';
 import i18n from '../../../i18n';

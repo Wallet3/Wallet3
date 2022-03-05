@@ -9,7 +9,7 @@ import { borderColor, fontColor, secondaryFontColor } from '../../constants/styl
 import Avatar from '../../components/Avatar';
 import Button from '../../components/Button';
 import { FlatList } from 'react-native-gesture-handler';
-import Image from 'react-native-expo-cached-image';
+import Image from 'react-native-fast-image';
 import Networks from '../../viewmodels/Networks';
 import Theme from '../../viewmodels/settings/Theme';
 import { TokenTransferring } from '../../viewmodels/transferring/TokenTransferring';

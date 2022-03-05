@@ -1,6 +1,6 @@
 import { Image, StyleProp, Text, TextStyle, View, ViewStyle } from 'react-native';
 
-import CachedImage from 'react-native-expo-cached-image';
+import CachedImage from 'react-native-fast-image';
 import React from 'react';
 
 interface Props {

@@ -1,7 +1,7 @@
 import { Coin, NullableImage } from '../../components';
 import { FlatList, ListRenderItemInfo, Text, TouchableOpacity, View } from 'react-native';
 
-import Image from 'react-native-expo-cached-image';
+import Image from 'react-native-fast-image';
 import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/Networks';
 import React from 'react';

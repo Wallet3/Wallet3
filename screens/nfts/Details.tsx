@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 
 import { BlurView } from 'expo-blur';
 import Etherscan from '../../assets/3rd/etherscan-logo-circle.svg';
-// import Image from 'react-native-expo-cached-image';
+// import Image from 'react-native-fast-image';
 import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
 import { Ionicons } from '@expo/vector-icons';
 import LINQ from 'linq';
@@ -28,7 +28,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
   const [primaryColor, setPrimaryColor] = useState(foregroundColor);
   const [detailColor, setDetailColor] = useState(foregroundColor);
 
-  const images = [item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.BIG, item.meta?.image?.url?.PREVIEW];
+  const images = [item.meta?.image?.url?.BIG, item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.PREVIEW];
 
   const parseColor = async (result: ImageColorsResult) => {
     switch (result.platform) {
@@ -58,7 +58,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
           }}
         >
           <MultiSourceImage
-            source={{ }}
+            source={{}}
             uriSources={images}
             style={{ width: '100%', height: '100%', borderRadius: 15, backgroundColor }}
             onColorParsed={parseColor}
@@ -91,10 +91,8 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
         ) : undefined}
 
         <View style={{ padding: 16, paddingTop: 0 }}>
-          <TouchableOpacity
-            onPress={() => openURL(`${current.explorer}/nft/${item.id.split(':')[0]}/${item.id.split(':')[1]}`)}
-          >
-            <Etherscan width={24} height={24} />
+          <TouchableOpacity onPress={() => openURL(`${current.explorer}/nft/${item.contract}/${item.tokenId}`)}>
+            <Etherscan width={22} height={22} />
           </TouchableOpacity>
         </View>
       </ScrollView>
