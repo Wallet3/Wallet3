@@ -93,7 +93,7 @@ class Networks {
   }
 
   switch(network: INetwork) {
-    if (this.current === network) return;
+    if (this.current.chainId === network.chainId) return;
 
     this.current = network;
     AsyncStorage.setItem('network', JSON.stringify(network.chainId));
