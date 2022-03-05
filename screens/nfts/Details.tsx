@@ -34,6 +34,8 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
     switch (result.platform) {
       case 'android':
         setDominantColor(result.dominant || backgroundColor);
+        setPrimaryColor(result.average || foregroundColor);
+        setDetailColor(result.vibrant || foregroundColor);
         break;
       case 'ios':
         setDominantColor(result.background || backgroundColor);
