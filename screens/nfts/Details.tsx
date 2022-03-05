@@ -1,3 +1,4 @@
+import { Entypo, Ionicons } from '@expo/vector-icons';
 import { Etherscan, Opensea, Rarible } from '../../assets/3rd';
 import React, { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
@@ -5,7 +6,6 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { Button } from '../../components';
 import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
-import { Ionicons } from '@expo/vector-icons';
 import LINQ from 'linq';
 import MultiSourceImage from '../../components/MultiSourceImage';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -70,8 +70,18 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
 
         <Button
           title="Transfer"
-          style={{ marginHorizontal: 16, borderRadius: 25, marginVertical: 16 }}
+          txtStyle={{ color: dominantColor }}
+          style={{
+            marginHorizontal: 16,
+            borderRadius: 25,
+            marginVertical: 16,
+            ...shadow,
+            shadowOffset: { height: 0, width: 0 },
+            shadowRadius: 12,
+            shadowOpacity: 0.9,
+          }}
           themeColor={primaryColor}
+          icon={() => <Entypo name="paper-plane" color="white" size={16} />}
         />
 
         {item.meta?.description ? (

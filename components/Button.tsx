@@ -38,7 +38,7 @@ export default (props: Props) => {
     borderWidth: reverse ? 1 : 0,
   };
 
-  const txtStyle = { ...styles.text, ...((props?.txtStyle as any) || {}), color: reverse ? themeColor : '#fff' };
+  const txtStyle = { ...styles.text, color: reverse ? themeColor : '#fff', ...((props?.txtStyle as any) || {}) };
 
   const arrowIcon = () => <Ionicons name="arrow-forward" size={19} color={backgroundColor} style={{}} />;
 
