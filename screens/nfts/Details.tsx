@@ -1,9 +1,9 @@
+import { Etherscan, Opensea, Rarible } from '../../assets/3rd';
 import React, { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
 import { BlurView } from 'expo-blur';
-import Etherscan from '../../assets/3rd/etherscan-logo-circle.svg';
-// import Image from 'react-native-fast-image';
+import { Button } from '../../components';
 import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
 import { Ionicons } from '@expo/vector-icons';
 import LINQ from 'linq';
@@ -64,8 +64,15 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
             type={item.meta?.image?.meta?.ORIGINAL?.type}
             controls
           />
+
+          {/* <SharedElement id={`nft.${item.id}.photo`}></SharedElement> */}
         </View>
-        {/* <SharedElement id={`nft.${item.id}.photo`}></SharedElement> */}
+
+        <Button
+          title="Transfer"
+          style={{ marginHorizontal: 16, borderRadius: 25, marginVertical: 16 }}
+          themeColor={primaryColor}
+        />
 
         {item.meta?.description ? (
           <View style={{ padding: 16, paddingTop: 0 }}>
@@ -91,9 +98,26 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
           </View>
         ) : undefined}
 
-        <View style={{ padding: 16, paddingTop: 0 }}>
-          <TouchableOpacity onPress={() => openBrowserAsync(`${current.explorer}/nft/${item.contract}/${item.tokenId}`, {})}>
+        <View style={{ padding: 16, paddingTop: 0, flexDirection: 'row', alignItems: 'center' }}>
+          <TouchableOpacity
+            style={{ paddingEnd: 16 }}
+            onPress={() => openBrowserAsync(`${current.explorer}/nft/${item.contract}/${item.tokenId}`, {})}
+          >
             <Etherscan width={22} height={22} />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={{ paddingEnd: 16 }}
+            onPress={() => openBrowserAsync(`https://opensea.io/assets/${item.contract}/${item.tokenId}`, {})}
+          >
+            <Opensea width={22} height={22} />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={{ paddingEnd: 16 }}
+            onPress={() => openBrowserAsync(`https://rarible.com/token/${item.contract}:${item.tokenId}?tab=details`, {})}
+          >
+            <Rarible width={22} height={22} />
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -113,6 +137,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
         </TouchableOpacity>
 
         <Text
+          numberOfLines={1}
           style={{
             color: primaryColor,
             alignSelf: 'center',
@@ -122,7 +147,6 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
             marginBottom: -1,
             maxWidth: '75%',
           }}
-          numberOfLines={1}
         >
           {item.meta?.name}
         </Text>

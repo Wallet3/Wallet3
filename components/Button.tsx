@@ -105,7 +105,7 @@ export default (props: Props) => {
       />
     </View>
   ) : (
-    <TouchableOpacity onPress={onPress} onLongPress={onLongPress} disabled={disabled} style={buttonStyle}>
+    <TouchableOpacity activeOpacity={0.5} onPress={onPress} onLongPress={onLongPress} disabled={disabled} style={buttonStyle}>
       {props.icon?.()}
       <Text style={txtStyle}>{title}</Text>
     </TouchableOpacity>
