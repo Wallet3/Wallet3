@@ -210,7 +210,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
           modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          {vm ? <SendNFT vm={vm} /> : undefined}
+          {vm ? <SendNFT vm={vm} onClose={closeSendModal} /> : undefined}
         </Modalize>
       </Portal>
     </BlurView>
