@@ -12,7 +12,7 @@ import GasReview from './GasReview';
 import Image from 'react-native-fast-image';
 import InsufficientFee from '../components/InsufficientFee';
 import MultiSourceImage from '../../components/MultiSourceImage';
-import { NFTTransferring } from '../../viewmodels/transferring/NFTTransferring';
+import { NFTTransferring } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
 import Networks from '../../viewmodels/Networks';
 import { ReactiveScreen } from '../../utils/device';
 import Swiper from 'react-native-swiper';

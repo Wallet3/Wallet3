@@ -29,7 +29,7 @@ export class NFTTransferring extends BaseTransaction {
   erc721: ERC721;
   erc1155: ERC1155;
   nftType: 'erc721' | 'erc1155' | null = null;
-  erc1155Balance = 0n;
+  erc1155Balance = BigInt(0);
 
   get isValidParams() {
     return (
@@ -134,6 +134,9 @@ export class NFTTransferring extends BaseTransaction {
   }
 
   sendTx(pin?: string) {
-    return super.sendRawTx({ tx: this.txRequest, readableInfo: { type: 'transfer-nft' } }, pin);
+    return super.sendRawTx(
+      { tx: this.txRequest, readableInfo: { type: 'transfer-nft', recipient: this.to, amount: 1, nft: this.nft.title } },
+      pin
+    );
   }
 }

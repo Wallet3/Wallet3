@@ -22,6 +22,8 @@ interface Props {
 
 const Methods = new Map([
   ['0xa9059cbb', 'sent'],
+  ['0x23b872dd', 'sent'], // Sent ERC-721
+  ['0xf242432a', 'sent'], // Sent ERC-1155
   ['0x095ea7b3', 'approve'],
   ['0x', 'sent'],
 ]);
@@ -50,6 +52,7 @@ const Tx = observer(
     const { chainId } = item;
     const [tokenSymbol] = useState(item.readableInfo?.symbol?.trim() || Networks.find(chainId)?.symbol);
 
+    const nft = item.readableInfo?.nft;
     const dappIcon = item.readableInfo?.icon;
     const amount = Number(item.readableInfo?.amount ?? utils.formatEther(item.value ?? '0'));
     const cancelTx = item.readableInfo?.cancelTx;
@@ -68,7 +71,7 @@ const Tx = observer(
               </Text>
               {method === 'contract-interaction' ? undefined : (
                 <Text style={{ fontSize: 16, maxWidth: 150, color: textColor }} numberOfLines={1}>
-                  {`${amount >= 0 ? amount : ''} ${tokenSymbol}`}
+                  {`${amount >= 0 ? amount : ''} ${nft || tokenSymbol}`}
                 </Text>
               )}
             </View>

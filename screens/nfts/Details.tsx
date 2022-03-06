@@ -9,7 +9,7 @@ import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/type
 import LINQ from 'linq';
 import { Modalize } from 'react-native-modalize';
 import MultiSourceImage from '../../components/MultiSourceImage';
-import { NFTTransferring } from '../../viewmodels/transferring/NFTTransferring';
+import { NFTTransferring } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/Networks';
 import { Nft } from '../../common/apis/Rarible.types';

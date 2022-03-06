@@ -5,7 +5,7 @@ import App from '../viewmodels/App';
 import Authentication from '../viewmodels/Authentication';
 import Contacts from '../viewmodels/customs/Contacts';
 import NFTReview from './views/NFTReview';
-import { NFTTransferring } from '../viewmodels/transferring/NFTTransferring';
+import { NFTTransferring } from '../viewmodels/transferring/NonFungibleTokenTransferring';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Success from './views/Success';
 import Swiper from 'react-native-swiper';
