@@ -13,32 +13,11 @@ import Networks from '../Networks';
 import { getAvatar } from '../../common/ENS';
 
 export class TokenTransferring extends BaseTransaction {
-  to = '';
-  toAddress = '';
-  avatar?: string = '';
   token: IToken;
   amount = '0';
-  isResolvingAddress = false;
-  isContractRecipient = false;
-
-  get safeTo() {
-    return this.to.replace(/[\u200B|\u200C|\u200D]/g, '[?]');
-  }
 
   get allTokens() {
     return [this.account.tokens.tokens[0], ...this.account.tokens.allTokens];
-  }
-
-  get isEns() {
-    return !utils.isAddress(this.to);
-  }
-
-  get hasZWSP() {
-    return /[\u200B|\u200C|\u200D]/.test(this.to);
-  }
-
-  get isValidAddress() {
-    return utils.isAddress(this.toAddress);
   }
 
   get amountWei() {
@@ -131,21 +110,13 @@ export class TokenTransferring extends BaseTransaction {
     this.token = defaultToken || this.account.tokens.tokens[0];
 
     makeObservable(this, {
-      to: observable,
-      toAddress: observable,
-      isValidAddress: computed,
-      hasZWSP: computed,
       token: observable,
       amount: observable,
-      isResolvingAddress: observable,
-      isContractRecipient: observable,
       isValidParams: computed,
       amountWei: computed,
       isValidAmount: computed,
       allTokens: computed,
-      safeTo: computed,
-
-      setTo: action,
+      
       setAmount: action,
       setToken: action,
     });
@@ -178,61 +149,6 @@ export class TokenTransferring extends BaseTransaction {
       this.setGasLimit(gas || 0);
       this.txException = errorMessage || '';
     });
-  }
-
-  async checkToAddress() {
-    const code = await getCode(this.network.chainId, this.toAddress);
-    runInAction(() => (this.isContractRecipient = code !== '0x'));
-  }
-
-  async setTo(to?: string, avatar?: string) {
-    if (to === undefined || to === null) return;
-
-    to = to.trim();
-    this.avatar = avatar;
-
-    if (this.to.toLowerCase() === to.toLowerCase()) return;
-
-    this.to = to;
-    this.toAddress = '';
-    this.txException = '';
-
-    const setToAddress = (to: string) => {
-      this.toAddress = to;
-      this.isResolvingAddress = false;
-      this.checkToAddress();
-    };
-
-    if (utils.isAddress(to)) {
-      setToAddress(utils.getAddress(to));
-      return;
-    }
-
-    if (this.network.addrPrefix && to.toLowerCase().startsWith(this.network.addrPrefix)) {
-      let addr = to.substring(this.network.addrPrefix.length);
-      addr = addr.startsWith('0x') ? addr : `0x${addr}`;
-
-      utils.isAddress(addr) ? setToAddress(utils.getAddress(addr)) : undefined;
-      return;
-    }
-
-    if (!to.endsWith('.eth')) return;
-    let provider = Networks.MainnetWsProvider;
-
-    this.isResolvingAddress = true;
-    const address = (await provider.resolveName(to)) || '';
-
-    runInAction(() => {
-      setToAddress(address);
-      provider.destroy();
-    });
-
-    if (avatar) return;
-
-    const img = await getAvatar(to, address);
-    if (!img?.url) return;
-
-    runInAction(() => (this.avatar = img.url));
   }
 
   setToken(token: IToken) {

@@ -1,7 +1,14 @@
 import { BigNumber, utils } from 'ethers';
 import { Gwei_1, MAX_GWEI_PRICE } from '../../common/Constants';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
-import { estimateGas, getGasPrice, getMaxPriorityFee, getNextBlockBaseFee, getTransactionCount } from '../../common/RPC';
+import {
+  estimateGas,
+  getCode,
+  getGasPrice,
+  getMaxPriorityFee,
+  getNextBlockBaseFee,
+  getTransactionCount,
+} from '../../common/RPC';
 
 import { Account } from '../account/Account';
 import App from '../App';
@@ -11,7 +18,9 @@ import { ERC20Token } from '../../models/ERC20';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/Tokens';
 import { NativeToken } from '../../models/NativeToken';
+import Networks from '../Networks';
 import { Wallet } from '../Wallet';
+import { getAvatar } from '../../common/ENS';
 
 export class BaseTransaction {
   private timer?: NodeJS.Timer;
@@ -20,6 +29,12 @@ export class BaseTransaction {
   readonly account: Account;
   readonly wallet: Wallet;
   readonly nativeToken: NativeToken;
+
+  to = '';
+  toAddress = '';
+  avatar?: string = '';
+  isResolvingAddress = false;
+  isContractRecipient = false;
 
   isEstimatingGas = false;
   gasLimit = 21000;
@@ -38,6 +53,14 @@ export class BaseTransaction {
     this.nativeToken = new NativeToken({ ...this.network, owner: this.account.address });
 
     makeObservable(this, {
+      to: observable,
+      toAddress: observable,
+      isValidAddress: computed,
+      isResolvingAddress: observable,
+      isContractRecipient: observable,
+      hasZWSP: computed,
+      safeTo: computed,
+
       isEstimatingGas: observable,
       gasLimit: observable,
       nextBlockBaseFeeWei: observable,
@@ -58,6 +81,8 @@ export class BaseTransaction {
       setGasLimit: action,
       setMaxGasPrice: action,
       setPriorityPrice: action,
+      setTo: action,
+      setToAddress: action,
       setGas: action,
       setFeeToken: action,
     });
@@ -70,6 +95,22 @@ export class BaseTransaction {
     if (this.network.feeTokens) this.initFeeToken();
 
     Coingecko.refresh();
+  }
+
+  get safeTo() {
+    return this.to.replace(/[\u200B|\u200C|\u200D]/g, '[?]');
+  }
+
+  get isValidAddress() {
+    return utils.isAddress(this.toAddress);
+  }
+
+  get isEns() {
+    return this.to.toLowerCase().endsWith('.eth');
+  }
+
+  get hasZWSP() {
+    return /[\u200B|\u200C|\u200D]/.test(this.to);
   }
 
   get nextBlockBaseFee() {
@@ -129,6 +170,56 @@ export class BaseTransaction {
 
   get isValidGas() {
     return this.maxGasPrice >= 0 && this.maxGasPrice >= this.maxPriorityPrice && this.gasLimit >= 0;
+  }
+
+  setToAddress(to: string) {
+    this.toAddress = to;
+    this.isResolvingAddress = false;
+    this.checkToAddress();
+  }
+
+  async setTo(to?: string, avatar?: string) {
+    if (to === undefined || to === null) return;
+
+    to = to.trim();
+    this.avatar = avatar;
+
+    if (this.to.toLowerCase() === to.toLowerCase()) return;
+
+    this.to = to;
+    this.toAddress = '';
+    this.txException = '';
+
+    if (utils.isAddress(to)) {
+      this.setToAddress(utils.getAddress(to));
+      return;
+    }
+
+    if (this.network.addrPrefix && to.toLowerCase().startsWith(this.network.addrPrefix)) {
+      let addr = to.substring(this.network.addrPrefix.length);
+      addr = addr.startsWith('0x') ? addr : `0x${addr}`;
+
+      utils.isAddress(addr) ? this.setToAddress(utils.getAddress(addr)) : undefined;
+      return;
+    }
+
+    if (!to.endsWith('.eth')) return;
+    let provider = Networks.MainnetWsProvider;
+
+    this.isResolvingAddress = true;
+    const address = (await provider.resolveName(to)) || '';
+
+    runInAction(() => {
+      this.setToAddress(address);
+      provider.destroy();
+    });
+
+    if (avatar) return;
+
+    const img = await getAvatar(to, address);
+    if (!img?.url) return;
+
+    runInAction(() => (this.avatar = img.url));
   }
 
   setNonce(nonce: string | number) {
@@ -193,6 +284,11 @@ export class BaseTransaction {
 
   dispose() {
     clearTimeout(this.timer as any);
+  }
+
+  async checkToAddress() {
+    const code = await getCode(this.network.chainId, this.toAddress);
+    runInAction(() => (this.isContractRecipient = code !== '0x'));
   }
 
   protected async initChainData({ network, account }: { network: INetwork; account: string }) {

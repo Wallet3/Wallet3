@@ -7,12 +7,12 @@ import { SafeViewContainer, Skeleton, TextBox } from '../../components';
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
 import Avatar from '../../components/Avatar';
+import { BaseTransaction } from '../../viewmodels/transferring/BaseTransaction';
 import Button from '../../components/Button';
 import { FlatList } from 'react-native-gesture-handler';
 import Image from 'react-native-fast-image';
 import Networks from '../../viewmodels/Networks';
 import Theme from '../../viewmodels/settings/Theme';
-import { TokenTransferring } from '../../viewmodels/transferring/TokenTransferring';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -20,7 +20,7 @@ import { startLayoutAnimation } from '../../utils/animations';
 import styles from '../styles';
 
 interface Props {
-  vm: TokenTransferring;
+  vm: BaseTransaction;
   background?: string;
   onNext?: () => void;
 }

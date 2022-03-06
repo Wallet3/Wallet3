@@ -53,7 +53,6 @@ const Tx = observer(
     const dappIcon = item.readableInfo?.icon;
     const amount = Number(item.readableInfo?.amount ?? utils.formatEther(item.value ?? '0'));
     const cancelTx = item.readableInfo?.cancelTx;
-
     const to: string = item.readableInfo?.recipient ?? item.readableInfo.dapp ?? item.to ?? '';
     const status = item.blockNumber ? (item.status ? 'confirmed' : 'failed') : 'pending';
     const methodName = t(`home-history-item-type-${method ?? (item.data !== '0x' ? 'contract-interaction' : 'sent')}`);
@@ -69,7 +68,7 @@ const Tx = observer(
               </Text>
               {method === 'contract-interaction' ? undefined : (
                 <Text style={{ fontSize: 16, maxWidth: 150, color: textColor }} numberOfLines={1}>
-                  {`${amount || ''} ${tokenSymbol}`}
+                  {`${amount >= 0 ? amount : ''} ${tokenSymbol}`}
                 </Text>
               )}
             </View>
