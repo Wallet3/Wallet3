@@ -1,50 +1,81 @@
-import { ContactsPad, Passpad, ReviewPad, SendAmount } from './views';
-import React, { useEffect, useRef, useState } from 'react';
+import { ContactsPad, Passpad } from './views';
+import React, { useRef, useState } from 'react';
 
 import App from '../viewmodels/App';
 import Authentication from '../viewmodels/Authentication';
 import Contacts from '../viewmodels/customs/Contacts';
 import NFTReview from './views/NFTReview';
 import { NFTTransferring } from '../viewmodels/transferring/NFTTransferring';
-import { ReactiveScreen } from '../utils/device';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Success from './views/Success';
 import Swiper from 'react-native-swiper';
 import Theme from '../viewmodels/settings/Theme';
-import { TokenTransferring } from '../viewmodels/transferring/TokenTransferring';
 import { observer } from 'mobx-react-lite';
-import { showMessage } from 'react-native-flash-message';
 import styles from './styles';
 
 interface Props {
   vm: NFTTransferring;
-  erc681?: boolean;
   onClose?: () => void;
 }
 
-export default observer(({ vm }: Props) => {
+export default observer(({ vm, onClose }: Props) => {
   const { backgroundColor } = Theme;
   const swiper = useRef<Swiper>(null);
+  const [verified, setVerified] = useState(false);
 
-  const onSendClick = async () => {};
+  const sendTx = async (pin?: string) => {
+    const result = await vm.sendTx(pin);
+
+    if (result) {
+      setVerified(true);
+      setTimeout(() => onClose?.(), 1700);
+    }
+
+    return result;
+  };
+
+  const onSendClick = async () => {
+    const selfAccount = App.allAccounts.find((c) => c.address === vm.toAddress);
+
+    Contacts.saveContact({
+      address: vm.toAddress,
+      ens: vm.isEns ? vm.to : undefined,
+      name: selfAccount?.nickname,
+      emoji: selfAccount ? { icon: selfAccount.emojiAvatar, color: selfAccount.emojiColor } : undefined,
+    });
+
+    if (!Authentication.biometricEnabled) {
+      swiper.current?.scrollTo(2);
+      return;
+    }
+
+    if (await sendTx()) return;
+
+    swiper.current?.scrollTo(2);
+  };
 
   return (
     <SafeAreaProvider style={{ ...styles.safeArea, backgroundColor }}>
-      <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
-        <ContactsPad
-          vm={vm}
-          onNext={() => {
-            swiper.current?.scrollTo(1, true);
-            vm.estimateGas();
-          }}
-        />
-        <NFTReview
-          onBack={() => swiper.current?.scrollTo(0)}
-          vm={vm}
-          onSend={onSendClick}
-          biometricType={Authentication.biometricType}
-        />
-      </Swiper>
+      {verified ? (
+        <Success />
+      ) : (
+        <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
+          <ContactsPad
+            vm={vm}
+            onNext={() => {
+              swiper.current?.scrollTo(1, true);
+              vm.estimateGas();
+            }}
+          />
+          <NFTReview
+            onBack={() => swiper.current?.scrollTo(0)}
+            vm={vm}
+            onSend={onSendClick}
+            biometricType={Authentication.biometricType}
+          />
+          <Passpad themeColor={vm.network.color} onCodeEntered={sendTx} onCancel={() => swiper.current?.scrollTo(2)} />
+        </Swiper>
+      )}
     </SafeAreaProvider>
   );
 });

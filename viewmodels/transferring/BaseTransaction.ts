@@ -1,4 +1,4 @@
-import { BigNumber, utils } from 'ethers';
+import { BigNumber, providers, utils } from 'ethers';
 import { Gwei_1, MAX_GWEI_PRICE } from '../../common/Constants';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import {
@@ -21,6 +21,7 @@ import { NativeToken } from '../../models/NativeToken';
 import Networks from '../Networks';
 import { Wallet } from '../Wallet';
 import { getAvatar } from '../../common/ENS';
+import { showMessage } from 'react-native-flash-message';
 
 export class BaseTransaction {
   private timer?: NodeJS.Timer;
@@ -349,5 +350,28 @@ export class BaseTransaction {
     const feeToken = new ERC20Token({ ...this.network, ...token, owner: this.account.address, contract: token.address });
     feeToken.getBalance();
     runInAction(() => (this.feeToken = feeToken));
+  }
+
+  async sendRawTx(args: { tx: providers.TransactionRequest; readableInfo?: any }, pin?: string) {
+    const { tx, readableInfo } = args;
+
+    const { txHex, error } = await this.wallet!.signTx({
+      accountIndex: this.account.index,
+      tx,
+      pin,
+    });
+
+    if (!txHex || error) {
+      if (error) showMessage({ message: error, type: 'warning' });
+      return false;
+    }
+
+    this.wallet?.sendTx({
+      tx,
+      txHex,
+      readableInfo,
+    });
+
+    return true;
   }
 }

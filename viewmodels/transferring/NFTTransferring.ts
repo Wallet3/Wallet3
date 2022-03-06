@@ -1,4 +1,4 @@
-import { BigNumber, providers } from 'ethers';
+import { BigNumber, providers, utils } from 'ethers';
 import { call, estimateGas } from '../../common/RPC';
 import { computed, makeObservable, observable, runInAction } from 'mobx';
 
@@ -71,7 +71,10 @@ export class NFTTransferring extends BaseTransaction {
       call<string>(this.network.chainId, { from: this.account.address, data: erc1155Data, to: this.erc1155.address }),
     ]);
 
-    if (erc721Owner === this.account.address) {
+    if (
+      utils.isAddress(erc721Owner?.substring(26) || '') &&
+      utils.getAddress(erc721Owner!.substring(26)) === this.account.address
+    ) {
       runInAction(() => (this.nftType = 'erc721'));
     }
 
@@ -128,5 +131,9 @@ export class NFTTransferring extends BaseTransaction {
     }
 
     return tx;
+  }
+
+  sendTx(pin?: string) {
+    return super.sendRawTx({ tx: this.txRequest, readableInfo: { type: 'transfer-nft' } }, pin);
   }
 }

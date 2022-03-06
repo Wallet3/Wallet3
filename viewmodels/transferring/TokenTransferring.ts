@@ -116,7 +116,7 @@ export class TokenTransferring extends BaseTransaction {
       amountWei: computed,
       isValidAmount: computed,
       allTokens: computed,
-      
+
       setAmount: action,
       setToken: action,
     });
@@ -164,5 +164,22 @@ export class TokenTransferring extends BaseTransaction {
   setAmount(amount: string) {
     this.amount = amount;
     this.txException = '';
+  }
+
+  sendTx(pin?: string) {
+    return super.sendRawTx(
+      {
+        tx: this.txRequest,
+        readableInfo: {
+          type: 'transfer',
+          symbol: this.token.symbol,
+          decimals: this.token.decimals,
+          amountWei: this.amountWei.toString(),
+          amount: Number(this.amount).toLocaleString(undefined, { maximumFractionDigits: 7 }),
+          recipient: this.to || this.toAddress,
+        },
+      },
+      pin
+    );
   }
 }

@@ -42,35 +42,14 @@ export default observer(({ vm, onClose, erc681 }: Props) => {
   }, []);
 
   const sendTx = async (pin?: string) => {
-    const tx = vm.txRequest;
-    const { txHex, error } = await vm.wallet!.signTx({
-      accountIndex: vm.account.index,
-      tx,
-      pin,
-    });
+    const result = await vm.sendTx(pin);
 
-    if (!txHex || error) {
-      if (error) showMessage({ message: error, type: 'warning' });
-      return false;
+    if (result) {
+      setVerified(true);
+      setTimeout(() => onClose?.(), 1700);
     }
 
-    setVerified(true);
-    setTimeout(() => onClose?.(), 1700);
-
-    vm.wallet?.sendTx({
-      tx,
-      txHex,
-      readableInfo: {
-        type: 'transfer',
-        symbol: vm.token.symbol,
-        decimals: vm.token.decimals,
-        amountWei: vm.amountWei.toString(),
-        amount: Number(vm.amount).toLocaleString(undefined, { maximumFractionDigits: 7 }),
-        recipient: vm.to || vm.toAddress,
-      },
-    });
-
-    return true;
+    return result;
   };
 
   const onSendClick = async () => {
