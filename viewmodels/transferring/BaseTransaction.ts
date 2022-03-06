@@ -355,7 +355,7 @@ export class BaseTransaction {
   async sendRawTx(args: { tx: providers.TransactionRequest; readableInfo?: any }, pin?: string) {
     const { tx, readableInfo } = args;
 
-    const { txHex, error } = await this.wallet!.signTx({
+    const { txHex, error } = await this.wallet.signTx({
       accountIndex: this.account.index,
       tx,
       pin,
@@ -363,15 +363,15 @@ export class BaseTransaction {
 
     if (!txHex || error) {
       if (error) showMessage({ message: error, type: 'warning' });
-      return false;
+      return { success: false, error };
     }
 
-    this.wallet?.sendTx({
+    this.wallet.sendTx({
       tx,
       txHex,
       readableInfo,
     });
 
-    return true;
+    return { success: true, txHex, tx: utils.parseTransaction(txHex) };
   }
 }

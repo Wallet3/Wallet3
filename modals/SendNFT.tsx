@@ -26,12 +26,12 @@ export default observer(({ vm, onClose }: Props) => {
   const sendTx = async (pin?: string) => {
     const result = await vm.sendTx(pin);
 
-    if (result) {
+    if (result.success) {
       setVerified(true);
       setTimeout(() => onClose?.(), 1700);
     }
 
-    return result;
+    return result.success;
   };
 
   const onSendClick = async () => {

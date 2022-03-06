@@ -11,7 +11,6 @@ import Swiper from 'react-native-swiper';
 import Theme from '../viewmodels/settings/Theme';
 import { TokenTransferring } from '../viewmodels/transferring/TokenTransferring';
 import { observer } from 'mobx-react-lite';
-import { showMessage } from 'react-native-flash-message';
 import styles from './styles';
 
 interface Props {
@@ -44,12 +43,12 @@ export default observer(({ vm, onClose, erc681 }: Props) => {
   const sendTx = async (pin?: string) => {
     const result = await vm.sendTx(pin);
 
-    if (result) {
+    if (result.success) {
       setVerified(true);
       setTimeout(() => onClose?.(), 1700);
     }
 
-    return result;
+    return result.success;
   };
 
   const onSendClick = async () => {
@@ -105,11 +104,7 @@ export default observer(({ vm, onClose, erc681 }: Props) => {
             biometricType={Authentication.biometricType}
           />
 
-          <Passpad
-            themeColor={vm.network.color}
-            onCodeEntered={(c) => sendTx(c)}
-            onCancel={() => swiper.current?.scrollTo(2)}
-          />
+          <Passpad themeColor={vm.network.color} onCodeEntered={sendTx} onCancel={() => swiper.current?.scrollTo(2)} />
         </Swiper>
       )}
     </SafeAreaProvider>

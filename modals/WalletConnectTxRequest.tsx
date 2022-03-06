@@ -34,34 +34,15 @@ export default observer(({ client, request, close }: Props) => {
   };
 
   const sendTx = async (pin?: string) => {
-    const tx = vm.txRequest;
+    const result = await vm.sendTx(pin);
 
-    const { txHex, error } = await vm.wallet.signTx({
-      accountIndex: vm.account.index,
-      tx,
-      pin,
-    });
-
-    if (!txHex || error) {
-      if (error) showMessage({ message: error, type: 'warning' });
-      return false;
+    if (result.success) {
+      setVerified(true);
+      client.approveRequest(request.id, result.tx?.hash || '');
+      setTimeout(() => close(), 1700);
     }
 
-    const hash = await vm.wallet.sendTx({
-      txHex,
-      tx,
-      readableInfo: {
-        type: 'dapp-interaction',
-        dapp: vm.appMeta.name,
-        icon: vm.appMeta.icon,
-      },
-    });
-
-    setVerified(true);
-    client.approveRequest(request.id, hash);
-    setTimeout(() => close(), 1700);
-
-    return true;
+    return result.success;
   };
 
   return (
