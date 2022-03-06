@@ -1,5 +1,6 @@
+import { BigNumber, ethers } from 'ethers';
+
 import ERC1155ABI from '../abis/ERC1155.json';
-import { ethers } from 'ethers';
 
 export class ERC1155 {
   readonly contract: ethers.Contract;
@@ -21,5 +22,9 @@ export class ERC1155 {
 
   encodeBalanceOf(owner: string, tokenId: string) {
     return this.interface.encodeFunctionData('balanceOf', [owner, tokenId]);
+  }
+
+  encodeSafeTransferFrom(from: string, to: string, id: string, amount: string) {
+    return this.interface.encodeFunctionData('safeTransferFrom', [from, to, id, amount, '0x00']);
   }
 }

@@ -31,7 +31,13 @@ export default observer(({ vm }: Props) => {
   return (
     <SafeAreaProvider style={{ ...styles.safeArea, backgroundColor }}>
       <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
-        <ContactsPad onNext={() => swiper.current?.scrollTo(1, true)} vm={vm} />
+        <ContactsPad
+          vm={vm}
+          onNext={() => {
+            swiper.current?.scrollTo(1, true);
+            vm.estimateGas();
+          }}
+        />
         <NFTReview
           onBack={() => swiper.current?.scrollTo(0)}
           vm={vm}

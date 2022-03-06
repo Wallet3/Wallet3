@@ -19,8 +19,8 @@ export class ERC721 {
     this.owner = props.owner;
   }
 
-  encodeTransferFrom(to: string, tokenId: string) {
-    return this.interface.encodeFunctionData('transferFrom', [this.owner, to, tokenId]);
+  encodeTransferFrom(owner: string, to: string, tokenId: string) {
+    return this.interface.encodeFunctionData('transferFrom', [owner, to, tokenId]);
   }
 
   encodeOwnerOf(tokenId: string) {
