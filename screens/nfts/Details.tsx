@@ -7,16 +7,21 @@ import { BlurView } from 'expo-blur';
 import { Button } from '../../components';
 import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
 import LINQ from 'linq';
+import { Modalize } from 'react-native-modalize';
 import MultiSourceImage from '../../components/MultiSourceImage';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/Networks';
 import { Nft } from '../../common/apis/Rarible.types';
+import { Portal } from 'react-native-portalize';
 import { ReactiveScreen } from '../../utils/device';
 import { ScrollView } from 'react-native-gesture-handler';
+import SendNFT from '../../modals/SendNFT';
 import { StatusBar } from 'expo-status-bar';
 import Theme from '../../viewmodels/settings/Theme';
+import { TokenTransferring } from '../../viewmodels/transferring/TokenTransferring';
 import { observer } from 'mobx-react-lite';
 import { openBrowserAsync } from 'expo-web-browser';
+import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default observer(({ navigation, route }: NativeStackScreenProps<any, any>) => {
@@ -27,8 +32,10 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
   const [dominantColor, setDominantColor] = useState(backgroundColor);
   const [primaryColor, setPrimaryColor] = useState(foregroundColor);
   const [detailColor, setDetailColor] = useState(foregroundColor);
-
+  const [vm] = useState(new TokenTransferring({ targetNetwork: current }));
   const images = [item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.BIG, item.meta?.image?.url?.PREVIEW];
+
+  const { ref: sendRef, open: openSendModal, close: closeSendModal } = useModalize();
 
   const parseColor = async (result: ImageColorsResult) => {
     switch (result.platform) {
@@ -78,6 +85,9 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
         <Button
           title="Transfer"
           txtStyle={{ color: dominantColor }}
+          themeColor={primaryColor}
+          icon={() => <Entypo name="paper-plane" color={dominantColor} size={16} />}
+          onPress={() => openSendModal()}
           style={{
             marginHorizontal: 16,
             borderRadius: 25,
@@ -87,8 +97,6 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
             shadowRadius: 12,
             shadowOpacity: 0.9,
           }}
-          themeColor={primaryColor}
-          icon={() => <Entypo name="paper-plane" color={dominantColor} size={16} />}
         />
 
         {item.meta?.description ? (
@@ -176,6 +184,18 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
       </View>
 
       <StatusBar style="light" />
+
+      <Portal>
+        <Modalize
+          ref={sendRef}
+          adjustToContentHeight
+          disableScrollIfPossible
+          modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
+          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+        >
+          <SendNFT vm={vm} />
+        </Modalize>
+      </Portal>
     </BlurView>
   );
 });

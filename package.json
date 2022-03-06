@@ -84,7 +84,7 @@
     "react-native-randombytes": "^3.6.1",
     "react-native-reanimated": "~2.3.3",
     "react-native-safe-area-context": "3.4.1",
-    "react-native-screens": "~3.12.0",
+    "react-native-screens": "~3.13.1",
     "react-native-shared-element": "^0.8.4",
     "react-native-super-grid": "^4.2.0",
     "react-native-svg": "12.3.0",

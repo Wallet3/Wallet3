@@ -38,7 +38,6 @@ const NFTItem = ({
   const images = [nft.meta?.image?.url?.BIG, nft.meta?.image?.url?.ORIGINAL, nft.meta?.image?.url?.PREVIEW];
   const type = nft.meta?.image?.meta?.ORIGINAL?.type;
   const [colorResult, setColorResult] = useState<ImageColorsResult>();
-  const [detailColor, setDetailColor] = useState(foregroundColor);
 
   return (
     <TouchableOpacity
@@ -53,10 +52,7 @@ const NFTItem = ({
           type={type}
           style={{ width: '100%', height: imageHeight, backgroundColor, borderRadius: 10 }}
           paused
-          onColorParsed={(result) => {
-            setColorResult(result);
-            setDetailColor(result?.['detail'] || result?.['vibrant'] || foregroundColor);
-          }}
+          onColorParsed={(result) => setColorResult(result)}
         />
       </SharedElement>
 
@@ -90,7 +86,7 @@ const NFTItem = ({
               backgroundColor: `${backgroundColor}20`,
             }}
           >
-            <Text style={{ color: detailColor, fontWeight: '500', fontSize: 17, maxWidth: '80%' }} numberOfLines={1}>
+            <Text style={{ color: foregroundColor, fontWeight: '500', fontSize: 17, maxWidth: '80%' }} numberOfLines={1}>
               {nft.meta?.name}
             </Text>
             {generateNetworkIcon({ ...network, hideEVMTitle: true, width: 22, style: { marginStart: 8 } })}
