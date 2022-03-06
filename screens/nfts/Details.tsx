@@ -1,7 +1,7 @@
 import { Entypo, Ionicons } from '@expo/vector-icons';
 import { Etherscan, Opensea, Rarible } from '../../assets/3rd';
 import React, { useEffect, useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Share, Text, TouchableOpacity, View } from 'react-native';
 
 import { BlurView } from 'expo-blur';
 import { Button } from '../../components';
@@ -31,7 +31,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
   const { t } = i18n;
   const { top } = useSafeAreaInsets();
   const { current } = Networks;
-  const { backgroundColor, shadow, foregroundColor } = Theme;
+  const { backgroundColor, shadow, foregroundColor, mode } = Theme;
   const [dominantColor, setDominantColor] = useState(backgroundColor);
   const [primaryColor, setPrimaryColor] = useState(foregroundColor);
   const [detailColor, setDetailColor] = useState(foregroundColor);
@@ -200,12 +200,15 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
 
         <View style={{ flex: 1 }} />
 
-        <TouchableOpacity style={{ marginBottom: -1 }}>
+        <TouchableOpacity
+          style={{ marginBottom: -1 }}
+          onPress={() => Share.share({ message: item.meta?.name || '', url: images.find((i) => i) })}
+        >
           <Ionicons name="share-outline" size={24} color={primaryColor} />
         </TouchableOpacity>
       </View>
 
-      <StatusBar style="light" />
+      <StatusBar style={detailColor === foregroundColor ? 'light' : mode} />
 
       <Portal>
         <Modalize
