@@ -39,7 +39,12 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
   const { ref: sendRef, open: openSendModal, close: closeSendModal } = useModalize();
 
   const open = () => {
-    setVM(new NFTTransferring({ network: current, nft: { ...item, images, title: item.meta?.name } }));
+    setVM(
+      new NFTTransferring({
+        network: current,
+        nft: { ...item, images, title: item.meta?.name, type: item.meta?.image?.meta?.ORIGINAL?.type },
+      })
+    );
     setTimeout(() => openSendModal(), 10);
   };
 

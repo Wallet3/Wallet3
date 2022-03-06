@@ -76,7 +76,11 @@ const NFTReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, b
               {vm.nft.title}
             </Text>
 
-            <MultiSourceImage uriSources={vm.nft.images} style={{ width: 20, height: 20, borderRadius: 2 }} />
+            <MultiSourceImage
+              uriSources={vm.nft.images}
+              style={{ width: 20, height: 20, borderRadius: 2 }}
+              type={vm.nft.type}
+            />
           </View>
         </View>
 
@@ -168,7 +172,7 @@ const NFTReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, b
       <Button
         title={sendTitle}
         themeColor={vm.hasZWSP || vm.isContractRecipient ? 'crimson' : vm.network.color}
-        // disabled={!vm.isValidParams || busy}
+        disabled={!vm.isValidParams || busy}
         onPress={onSendPress}
         onLongPress={onLongSendPress}
         onSwipeSuccess={onLongSendPress}
