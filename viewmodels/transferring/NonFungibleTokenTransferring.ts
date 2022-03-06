@@ -135,7 +135,7 @@ export class NFTTransferring extends BaseTransaction {
 
   sendTx(pin?: string) {
     return super.sendRawTx(
-      { tx: this.txRequest, readableInfo: { type: 'transfer-nft', recipient: this.to, amount: 1, nft: this.nft.title } },
+      { tx: this.txRequest, readableInfo: { type: 'transfer-nft', recipient: this.to, nft: this.nft.title } },
       pin
     );
   }

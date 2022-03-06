@@ -20,6 +20,7 @@ import SendNFT from '../../modals/SendNFT';
 import { StatusBar } from 'expo-status-bar';
 import Theme from '../../viewmodels/settings/Theme';
 import { TokenTransferring } from '../../viewmodels/transferring/TokenTransferring';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { openBrowserAsync } from 'expo-web-browser';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
@@ -27,6 +28,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default observer(({ navigation, route }: NativeStackScreenProps<any, any>) => {
   const { item, colorResult } = route.params as { item: Nft; colorResult?: ImageColorsResult };
+  const { t } = i18n;
   const { top } = useSafeAreaInsets();
   const { current } = Networks;
   const { backgroundColor, shadow, foregroundColor } = Theme;
@@ -99,7 +101,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
         </View>
 
         <Button
-          title="Transfer"
+          title={t('nft-button-transfer')}
           txtStyle={{ color: dominantColor }}
           themeColor={primaryColor}
           icon={() => <Entypo name="paper-plane" color={dominantColor} size={16} />}
@@ -117,14 +119,18 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
 
         {item.meta?.description ? (
           <View style={{ padding: 16, paddingTop: 0 }}>
-            <Text style={{ color: detailColor, fontSize: 20, fontWeight: '600', marginBottom: 8 }}>Description</Text>
+            <Text style={{ color: detailColor, fontSize: 20, fontWeight: '600', marginBottom: 8 }}>
+              {t('nft-txt-description')}
+            </Text>
             <Text style={{ color: primaryColor }}>{item.meta?.description}</Text>
           </View>
         ) : undefined}
 
         {item.meta?.attributes && item.meta.attributes.length > 0 ? (
           <View style={{ padding: 16, paddingTop: 0 }}>
-            <Text style={{ color: detailColor, fontSize: 20, fontWeight: '600', marginBottom: 8 }}>Attributes</Text>
+            <Text style={{ color: detailColor, fontSize: 20, fontWeight: '600', marginBottom: 8 }}>
+              {t('nft-txt-attributes')}
+            </Text>
             {LINQ.from(item.meta?.attributes).select((attr, index) => {
               return (
                 <View
