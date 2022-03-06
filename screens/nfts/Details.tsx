@@ -34,9 +34,19 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
   const [primaryColor, setPrimaryColor] = useState(foregroundColor);
   const [detailColor, setDetailColor] = useState(foregroundColor);
   const images = [item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.BIG, item.meta?.image?.url?.PREVIEW];
-  const [vm] = useState(new NFTTransferring({ network: current, nft: { ...item, images, title: item.meta?.name } }));
+  const [vm, setVM] = useState<NFTTransferring>();
 
   const { ref: sendRef, open: openSendModal, close: closeSendModal } = useModalize();
+
+  const open = () => {
+    setVM(new NFTTransferring({ network: current, nft: { ...item, images, title: item.meta?.name } }));
+    setTimeout(() => openSendModal(), 10);
+  };
+
+  const cleanVM = () => {
+    vm?.dispose();
+    setVM(undefined);
+  };
 
   const parseColor = async (result: ImageColorsResult) => {
     switch (result.platform) {
@@ -88,7 +98,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
           txtStyle={{ color: dominantColor }}
           themeColor={primaryColor}
           icon={() => <Entypo name="paper-plane" color={dominantColor} size={16} />}
-          onPress={() => openSendModal()}
+          onPress={open}
           style={{
             marginHorizontal: 16,
             borderRadius: 25,
@@ -191,10 +201,11 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
           ref={sendRef}
           adjustToContentHeight
           disableScrollIfPossible
+          onClosed={cleanVM}
           modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <SendNFT vm={vm} />
+          {vm ? <SendNFT vm={vm} /> : undefined}
         </Modalize>
       </Portal>
     </BlurView>
