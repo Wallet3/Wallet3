@@ -9,6 +9,7 @@ import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/type
 import LINQ from 'linq';
 import { Modalize } from 'react-native-modalize';
 import MultiSourceImage from '../../components/MultiSourceImage';
+import { NFTTransferring } from '../../viewmodels/transferring/NFTTransferring';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/Networks';
 import { Nft } from '../../common/apis/Rarible.types';
@@ -32,8 +33,8 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
   const [dominantColor, setDominantColor] = useState(backgroundColor);
   const [primaryColor, setPrimaryColor] = useState(foregroundColor);
   const [detailColor, setDetailColor] = useState(foregroundColor);
-  const [vm] = useState(new TokenTransferring({ targetNetwork: current }));
   const images = [item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.BIG, item.meta?.image?.url?.PREVIEW];
+  const [vm] = useState(new NFTTransferring({ network: current, nft: { ...item, images, title: item.meta?.name } }));
 
   const { ref: sendRef, open: openSendModal, close: closeSendModal } = useModalize();
 
