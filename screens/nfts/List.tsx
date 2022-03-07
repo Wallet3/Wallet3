@@ -53,7 +53,7 @@ const NFTItem = ({
       <SharedElement id={`nft.${nft.id}.photo`}>
         <MultiSourceImage
           uriSources={images}
-          types={types}
+          sourceTypes={types}
           style={{ width: '100%', height: imageHeight, backgroundColor, borderRadius: 10 }}
           paused
           onColorParsed={(result) => setColorResult(result)}
