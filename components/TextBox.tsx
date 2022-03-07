@@ -86,7 +86,7 @@ export default ({
       )}
 
       <TouchableOpacity onPress={(_) => readClipboard()}>
-        <Ionicons name="clipboard-outline" size={20} style={{ marginStart: 12 }} color={iconColor} />
+        <Ionicons name="clipboard-outline" size={20} style={{ marginStart: 12, marginEnd: 2 }} color={iconColor} />
       </TouchableOpacity>
     </View>
   );

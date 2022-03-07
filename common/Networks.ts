@@ -153,15 +153,6 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: [],
   },
   {
-    symbol: 'FRA',
-    comm_id: 'fra',
-    network: 'Findora',
-    chainId: 2152,
-    explorer: 'https://evm.findorascan.io',
-    color: '#7733FF',
-    defaultTokens: [],
-  },
-  {
     symbol: 'RON',
     comm_id: 'ron',
     chainId: 2020,
@@ -221,6 +212,15 @@ export const PublicNetworks: INetwork[] = [
     color: '#de6b8f',
     defaultTokens: [],
     explorer: 'https://scope.klaytn.com',
+  },
+  {
+    symbol: 'FRA',
+    comm_id: 'fra',
+    network: 'Findora',
+    chainId: 2152,
+    explorer: 'https://evm.findorascan.io',
+    color: '#7733FF',
+    defaultTokens: [],
   },
   {
     symbol: 'CRO',

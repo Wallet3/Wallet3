@@ -21,6 +21,7 @@ import { StatusBar } from 'expo-status-bar';
 import Theme from '../../viewmodels/settings/Theme';
 import { TokenTransferring } from '../../viewmodels/transferring/TokenTransferring';
 import i18n from '../../i18n';
+import { lightOrDark } from '../../utils/color';
 import { observer } from 'mobx-react-lite';
 import { openBrowserAsync } from 'expo-web-browser';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
@@ -31,10 +32,11 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
   const { t } = i18n;
   const { top } = useSafeAreaInsets();
   const { current } = Networks;
-  const { backgroundColor, shadow, foregroundColor, mode } = Theme;
+  const { backgroundColor, shadow, foregroundColor } = Theme;
   const [dominantColor, setDominantColor] = useState(backgroundColor);
   const [primaryColor, setPrimaryColor] = useState(foregroundColor);
   const [detailColor, setDetailColor] = useState(foregroundColor);
+  const [mode, setMode] = useState(Theme.mode);
   const [vm, setVM] = useState<NFTTransferring>();
 
   const images = [item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.BIG, item.meta?.image?.url?.PREVIEW];
@@ -43,8 +45,6 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
     item.meta?.image?.meta?.BIG?.type,
     item.meta?.image?.meta?.PREVIEW?.type,
   ];
-
-  console.log(images, types);
 
   const { ref: sendRef, open: openSendModal, close: closeSendModal } = useModalize();
 
@@ -82,6 +82,10 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
     if (!colorResult) return;
     parseColor(colorResult);
   }, [colorResult]);
+
+  useEffect(() => {
+    setMode(lightOrDark(dominantColor) === 'light' ? 'dark' : 'light');
+  }, [dominantColor]);
 
   return (
     <BlurView intensity={10} style={{ flex: 1, backgroundColor: dominantColor }}>
