@@ -50,6 +50,7 @@
   "qrscan-tip-2": "Mnemonic Words, Private Key, Wallet 3 Backup QRCode",
   "qrscan-tip-3": "URL QRCode",
   "qrscan-tip-desktop-backup-qrcode": "Wallet 3 Desktop Backup QRCode",
+  "qrscan-tip-eth-address": "ETH Address, ENS",
   "connectedapps-title": "Connected DApps",
   "connectedapps-noapps": "No Connected Apps",
   "connectedapps-list-last-used": "Last used",

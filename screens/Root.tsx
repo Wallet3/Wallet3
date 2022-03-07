@@ -125,6 +125,7 @@ const RootTab = observer(() => {
                     marginEnd: 15,
                     marginStart: 14,
                     backgroundColor: foregroundColor,
+                    borderRadius: 2,
                   }}
                 />
               </TouchableOpacity>

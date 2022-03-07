@@ -39,7 +39,7 @@ export default (props: Props) => {
     //   style={props.style}
     //   width={(props.style as any)?.width}
     //   height={(props.style as any).height}
-    // />
+    // /> app will crash if you pass invalid svg+xml
     <View style={{ ...(props.style || ({} as any)), justifyContent: 'center', alignItems: 'center' }}>
       <Text>SVG not supported yet</Text>
     </View>
