@@ -3,6 +3,7 @@ import { Etherscan, Opensea, Rarible } from '../../assets/3rd';
 import React, { useEffect, useState } from 'react';
 import { Share, Text, TouchableOpacity, View } from 'react-native';
 
+import Avatar from '../../components/Avatar';
 import { BlurView } from 'expo-blur';
 import { Button } from '../../components';
 import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
@@ -29,14 +30,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 export default observer(({ navigation, route }: NativeStackScreenProps<any, any>) => {
   const { item, colorResult } = route.params as { item: Nft; colorResult?: ImageColorsResult };
   const { t } = i18n;
-  const { top } = useSafeAreaInsets();
+  const { top, bottom } = useSafeAreaInsets();
   const { current } = Networks;
   const { backgroundColor, shadow, foregroundColor, statusBarStyle } = Theme;
   const [dominantColor, setDominantColor] = useState(backgroundColor);
   const [primaryColor, setPrimaryColor] = useState(foregroundColor);
   const [detailColor, setDetailColor] = useState(foregroundColor);
   const [mode, setMode] = useState<'light' | 'dark'>(statusBarStyle);
-  const [vm, setVM] = useState<NFTTransferring>();
 
   const images = [item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.BIG, item.meta?.image?.url?.PREVIEW];
   const types = [
@@ -45,21 +45,17 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
     item.meta?.image?.meta?.PREVIEW?.type,
   ];
 
+  const [vm] = useState<NFTTransferring | undefined>(
+    new NFTTransferring({
+      network: current,
+      nft: { ...item, images, types, title: item.meta?.name },
+    })
+  );
+
   const { ref: sendRef, open: openSendModal, close: closeSendModal } = useModalize();
 
   const open = () => {
-    setVM(
-      new NFTTransferring({
-        network: current,
-        nft: { ...item, images, types, title: item.meta?.name },
-      })
-    );
     setTimeout(() => openSendModal(), 10);
-  };
-
-  const cleanVM = () => {
-    vm?.dispose();
-    setVM(undefined);
   };
 
   const parseColor = async (result: ImageColorsResult) => {
@@ -87,9 +83,15 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
     setMode(lightOrDark(dominantColor) === 'light' ? 'dark' : 'light');
   }, [dominantColor]);
 
+  useEffect(() => {
+    return () => {
+      vm?.dispose();
+    };
+  }, []);
+
   return (
     <BlurView intensity={10} style={{ flex: 1, backgroundColor: dominantColor }}>
-      <ScrollView contentContainerStyle={{ paddingTop: top + 57 }}>
+      <ScrollView contentContainerStyle={{ paddingTop: top + 57, paddingBottom: bottom }}>
         <View
           style={{
             ...shadow,
@@ -131,6 +133,41 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
           }}
         />
 
+        {vm?.nftType ? (
+          <View style={{ padding: 16, paddingTop: 0 }}>
+            <Text style={{ color: detailColor, fontSize: 20, fontWeight: '600', marginBottom: 8 }}>
+              {t('nft-txt-ownership')}
+            </Text>
+
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 }}>
+              <Text style={{ color: primaryColor, fontWeight: '500', textTransform: 'capitalize' }}>{t('nft-txt-owner')}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Avatar
+                  uri={vm.account.avatar}
+                  size={15}
+                  emoji={vm.account.emojiAvatar}
+                  backgroundColor={vm.account.emojiColor}
+                  emojiSize={9}
+                  style={{ marginEnd: 6 }}
+                />
+
+                <Text style={{ fontSize: 14, color: primaryColor, fontWeight: '500', maxWidth: '80%' }} numberOfLines={1}>
+                  {vm.account.displayName}
+                </Text>
+              </View>
+            </View>
+
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 }}>
+              <Text style={{ color: primaryColor, fontWeight: '500' }}>{t('nft-txt-nft-type')}</Text>
+              <View style={{ backgroundColor: primaryColor, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 4 }}>
+                <Text style={{ fontSize: 12, color: dominantColor, fontWeight: '600', textTransform: 'uppercase' }}>
+                  {vm.nftType}
+                </Text>
+              </View>
+            </View>
+          </View>
+        ) : undefined}
+
         {item.meta?.description ? (
           <View style={{ padding: 16, paddingTop: 0 }}>
             <Text style={{ color: detailColor, fontSize: 20, fontWeight: '600', marginBottom: 8 }}>
@@ -140,18 +177,20 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
           </View>
         ) : undefined}
 
-        {item.meta?.attributes && item.meta.attributes.length > 0 ? (
+        {item.meta?.attributes && item.meta.attributes.filter((a) => a.value).length > 0 ? (
           <View style={{ padding: 16, paddingTop: 0 }}>
             <Text style={{ color: detailColor, fontSize: 20, fontWeight: '600', marginBottom: 8 }}>
               {t('nft-txt-attributes')}
             </Text>
-            {LINQ.from(item.meta?.attributes).select((attr, index) => {
+            {LINQ.from(item.meta?.attributes.filter((a) => a.value)).select((attr, index) => {
               return (
                 <View
                   key={`${attr.key}-${index}`}
-                  style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}
+                  style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 }}
                 >
-                  <Text style={{ color: primaryColor, fontWeight: '500', textTransform: 'capitalize' }}>{attr.key}</Text>
+                  <Text style={{ color: primaryColor, fontWeight: '500' }}>
+                    {attr.key[0]?.toUpperCase() + attr.key.slice(1)}
+                  </Text>
                   <Text style={{ color: primaryColor, fontWeight: '500', textTransform: 'capitalize' }}>{attr.value}</Text>
                 </View>
               );
@@ -242,7 +281,6 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
           ref={sendRef}
           adjustToContentHeight
           disableScrollIfPossible
-          onClosed={cleanVM}
           modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >

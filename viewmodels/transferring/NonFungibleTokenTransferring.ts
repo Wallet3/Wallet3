@@ -9,6 +9,7 @@ import { ERC1155 } from '../../models/ERC1155';
 import { ERC721 } from '../../models/ERC721';
 import { Gwei_1 } from '../../common/Constants';
 import { INetwork } from '../../common/Networks';
+import { startLayoutAnimation } from '../../utils/animations';
 
 interface NFT {
   tokenId: string;
@@ -28,7 +29,7 @@ export class NFTTransferring extends BaseTransaction {
   readonly nft: NFT;
   erc721: ERC721;
   erc1155: ERC1155;
-  nftType: 'erc721' | 'erc1155' | null = null;
+  nftType: 'erc-721' | 'erc-1155' | null = null;
   erc1155Balance = BigInt(0);
 
   get isValidParams() {
@@ -45,7 +46,7 @@ export class NFTTransferring extends BaseTransaction {
   }
 
   get txData() {
-    return this.nftType === 'erc721'
+    return this.nftType === 'erc-721'
       ? this.erc721.encodeTransferFrom(this.account.address, this.toAddress, this.nft.tokenId)
       : this.erc1155.encodeSafeTransferFrom(this.account.address, this.toAddress, this.nft.tokenId, `${this.erc1155Balance}`);
   }
@@ -75,13 +76,17 @@ export class NFTTransferring extends BaseTransaction {
       utils.isAddress(erc721Owner?.substring(26) || '') &&
       utils.getAddress(erc721Owner!.substring(26)) === this.account.address
     ) {
-      runInAction(() => (this.nftType = 'erc721'));
+      runInAction(() => {
+        startLayoutAnimation();
+        this.nftType = 'erc-721';
+      });
     }
 
     try {
       if (BigInt(erc1155Balance || 0) > 0) {
         runInAction(() => {
-          this.nftType = 'erc1155';
+          startLayoutAnimation();
+          this.nftType = 'erc-1155';
           this.erc1155Balance = BigInt(erc1155Balance!);
         });
       }
