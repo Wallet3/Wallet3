@@ -63,15 +63,15 @@ const Tx = observer(
     return (
       <TouchableOpacity style={{ paddingVertical: 12, paddingHorizontal: 8 }} onPress={() => onPress?.(item as Transaction)}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1, alignItems: 'center' }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Coin symbol={tokenSymbol} size={16} style={{ marginEnd: 4 }} chainId={chainId} address={item.to} />
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+            <Coin symbol={tokenSymbol} size={16} style={{ marginEnd: 6 }} chainId={chainId} address={item.to} />
+            <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
               <Text style={{ fontSize: 16, marginEnd: 4, maxWidth: 180, color: textColor }} numberOfLines={1}>
                 {(cancelTx ? `${t('tip-cancel-action')} ` : '') + `${methodName}`}
               </Text>
               {method === 'contract-interaction' ? undefined : (
-                <Text style={{ fontSize: 16, maxWidth: 150, color: textColor }} numberOfLines={1}>
-                  {`${amount >= 0 ? amount : ''} ${nft || tokenSymbol}`}
+                <Text style={{ fontSize: 16, color: textColor }} numberOfLines={1}>
+                  {`${amount > 0 ? amount : ''} ${nft || tokenSymbol}`.trim()}
                 </Text>
               )}
             </View>
@@ -100,10 +100,10 @@ const Tx = observer(
                 imageRadius={3}
                 imageBackgroundColor={iconBackgroundColor}
                 text={to}
-                containerStyle={{ marginEnd: 4 }}
+                containerStyle={{ marginEnd: 5 }}
               />
             ) : (
-              <Text style={{ fontWeight: '300', marginEnd: 2, color: textColor }}>{t('home-history-item-to')}:</Text>
+              <Text style={{ fontWeight: '300', marginEnd: 3, color: textColor }}>{t('home-history-item-to')}:</Text>
             )}
             <Text style={{ fontWeight: '300', maxWidth: 210, color: textColor }} numberOfLines={1}>
               {to.startsWith('0x') || to.includes(':') ? formatAddress(to!, 10, 5) : to}

@@ -43,7 +43,7 @@ export default (props: Props) => {
     ...styles.text,
     color: reverse ? themeColor : '#fff',
     ...((props?.txtStyle as any) || {}),
-    marginStart: props.icon ? 6 : -6,
+    marginStart: props.icon ? 6 : 0,
   };
 
   const arrowIcon = () => <Ionicons name="arrow-forward" size={19} color={backgroundColor} style={{}} />;
@@ -132,7 +132,6 @@ const styles = StyleSheet.create({
   text: {
     color: 'white',
     textTransform: 'capitalize',
-    marginStart: 6,
     fontSize: 17,
     fontWeight: '500',
   },

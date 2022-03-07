@@ -43,7 +43,7 @@ export default ({
             width,
             height,
             position: 'absolute',
-            borderRadius: (width || size || 0) / 2,
+            borderRadius: imageRadius || (width || size || 0) / 2,
             backgroundColor: defaultColor,
             justifyContent: 'center',
             alignItems: 'center',

@@ -19,8 +19,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 import SendNFT from '../../modals/SendNFT';
 import { StatusBar } from 'expo-status-bar';
 import Theme from '../../viewmodels/settings/Theme';
-import { TokenTransferring } from '../../viewmodels/transferring/TokenTransferring';
 import i18n from '../../i18n';
+import { lightOrDark } from '../../utils/color';
 import { observer } from 'mobx-react-lite';
 import { openBrowserAsync } from 'expo-web-browser';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
@@ -31,10 +31,11 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
   const { t } = i18n;
   const { top } = useSafeAreaInsets();
   const { current } = Networks;
-  const { backgroundColor, shadow, foregroundColor, mode } = Theme;
+  const { backgroundColor, shadow, foregroundColor } = Theme;
   const [dominantColor, setDominantColor] = useState(backgroundColor);
   const [primaryColor, setPrimaryColor] = useState(foregroundColor);
   const [detailColor, setDetailColor] = useState(foregroundColor);
+  const [mode, setMode] = useState<'light' | 'dark'>(Theme.mode === 'light' ? 'dark' : 'light');
   const [vm, setVM] = useState<NFTTransferring>();
 
   const images = [item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.BIG, item.meta?.image?.url?.PREVIEW];
@@ -43,8 +44,6 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
     item.meta?.image?.meta?.BIG?.type,
     item.meta?.image?.meta?.PREVIEW?.type,
   ];
-
-  console.log(images, types);
 
   const { ref: sendRef, open: openSendModal, close: closeSendModal } = useModalize();
 
@@ -82,6 +81,11 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
     if (!colorResult) return;
     parseColor(colorResult);
   }, [colorResult]);
+
+  useEffect(() => {
+    if (types.find((t) => t?.endsWith('mp4'))) return;
+    setMode(lightOrDark(dominantColor) === 'light' ? 'dark' : 'light');
+  }, [dominantColor]);
 
   return (
     <BlurView intensity={10} style={{ flex: 1, backgroundColor: dominantColor }}>
@@ -165,14 +169,27 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
 
           <TouchableOpacity
             style={{ paddingEnd: 16 }}
-            onPress={() => openBrowserAsync(`https://opensea.io/assets/${item.contract}/${item.tokenId}`, {})}
+            onPress={() =>
+              openBrowserAsync(
+                current.chainId === 1
+                  ? `https://opensea.io/assets/${item.contract}/${item.tokenId}`
+                  : `https://opensea.io/assets/${current.symbol.toLowerCase()}/${item.contract}/${item.tokenId}`,
+                {}
+              )
+            }
           >
             <Opensea width={22} height={22} />
           </TouchableOpacity>
 
           <TouchableOpacity
             style={{ paddingEnd: 16 }}
-            onPress={() => openBrowserAsync(`https://rarible.com/token/${item.contract}:${item.tokenId}?tab=details`, {})}
+            onPress={() =>
+              openBrowserAsync(
+                current.chainId === 1
+                  ? `https://rarible.com/token/${item.contract}:${item.tokenId}`
+                  : `https://rarible.com/token/${current.network.toLowerCase()}/${item.contract}:${item.tokenId}`
+              )
+            }
           >
             <Rarible width={22} height={22} />
           </TouchableOpacity>
@@ -218,7 +235,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
         </TouchableOpacity>
       </View>
 
-      <StatusBar style={detailColor === foregroundColor ? 'light' : mode} />
+      <StatusBar style={mode} />
 
       <Portal>
         <Modalize
