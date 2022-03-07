@@ -1,9 +1,9 @@
 import FastImage, { FastImageProps } from 'react-native-fast-image';
+import { ImageSourcePropType, Text, View } from 'react-native';
 import React, { useState } from 'react';
 
 import ImageColors from 'react-native-image-colors';
 import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
-import { ImageSourcePropType } from 'react-native';
 import { SvgUri } from 'react-native-svg';
 import Video from 'react-native-video';
 
@@ -34,12 +34,15 @@ export default (props: Props) => {
   return sourceTypes[index]?.endsWith('mp4') ? (
     <Video source={{ uri: uriSources[index] }} style={props.style} controls={controls} paused={paused} />
   ) : sourceTypes[index]?.endsWith('svg+xml') || sourceTypes[index]?.endsWith('svg') ? (
-    <SvgUri
-      uri={uriSources[index] || null}
-      style={props.style}
-      width={(props.style as any)?.width}
-      height={(props.style as any).height}
-    />
+    // <SvgUri
+    //   uri={uriSources[index] || null}
+    //   style={props.style}
+    //   width={(props.style as any)?.width}
+    //   height={(props.style as any).height}
+    // />
+    <View style={{ ...(props.style || ({} as any)), justifyContent: 'center', alignItems: 'center' }}>
+      <Text>SVG not supported yet</Text>
+    </View>
   ) : (
     <FastImage
       {...props}
