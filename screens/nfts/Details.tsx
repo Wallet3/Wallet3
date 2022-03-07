@@ -35,8 +35,14 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
   const [dominantColor, setDominantColor] = useState(backgroundColor);
   const [primaryColor, setPrimaryColor] = useState(foregroundColor);
   const [detailColor, setDetailColor] = useState(foregroundColor);
-  const images = [item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.BIG, item.meta?.image?.url?.PREVIEW];
   const [vm, setVM] = useState<NFTTransferring>();
+
+  const images = [item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.BIG, item.meta?.image?.url?.PREVIEW];
+  const types = [
+    item.meta?.image?.meta?.ORIGINAL?.type,
+    item.meta?.image?.meta?.BIG?.type,
+    item.meta?.image?.meta?.PREVIEW?.type,
+  ];
 
   const { ref: sendRef, open: openSendModal, close: closeSendModal } = useModalize();
 
@@ -44,7 +50,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
     setVM(
       new NFTTransferring({
         network: current,
-        nft: { ...item, images, title: item.meta?.name, type: item.meta?.image?.meta?.ORIGINAL?.type },
+        nft: { ...item, images, types, title: item.meta?.name },
       })
     );
     setTimeout(() => openSendModal(), 10);
@@ -93,7 +99,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
             uriSources={images}
             style={{ width: '100%', height: '100%', borderRadius: 15, backgroundColor }}
             onColorParsed={parseColor}
-            type={item.meta?.image?.meta?.ORIGINAL?.type}
+            types={types}
             controls
           />
 

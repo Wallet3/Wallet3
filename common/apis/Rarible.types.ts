@@ -20,7 +20,7 @@ export interface Url {
 }
 
 export interface PREVIEW {
-  type: string;
+  type?: string;
   width?: number;
   height?: number;
 }
@@ -28,6 +28,7 @@ export interface PREVIEW {
 export interface Meta2 {
   PREVIEW?: PREVIEW;
   ORIGINAL?: PREVIEW;
+  BIG?: PREVIEW;
 }
 
 export interface Image {

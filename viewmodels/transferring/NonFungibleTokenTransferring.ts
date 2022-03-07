@@ -15,7 +15,7 @@ interface NFT {
   contract: string;
   title?: string;
   images: (string | undefined)[];
-  type?: string;
+  types: (string | undefined)[];
 }
 
 interface IConstructor {

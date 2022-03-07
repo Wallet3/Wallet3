@@ -36,7 +36,11 @@ const NFTItem = ({
   nft: Nft;
 }) => {
   const images = [nft.meta?.image?.url?.BIG, nft.meta?.image?.url?.ORIGINAL, nft.meta?.image?.url?.PREVIEW];
-  const type = nft.meta?.image?.meta?.ORIGINAL?.type;
+  const types = [
+    nft.meta?.image?.meta?.BIG?.type,
+    nft.meta?.image?.meta?.ORIGINAL?.type,
+    nft.meta?.image?.meta?.PREVIEW?.type,
+  ];
   const [colorResult, setColorResult] = useState<ImageColorsResult>();
 
   return (
@@ -49,7 +53,7 @@ const NFTItem = ({
       <SharedElement id={`nft.${nft.id}.photo`}>
         <MultiSourceImage
           uriSources={images}
-          type={type}
+          types={types}
           style={{ width: '100%', height: imageHeight, backgroundColor, borderRadius: 10 }}
           paused
           onColorParsed={(result) => setColorResult(result)}
