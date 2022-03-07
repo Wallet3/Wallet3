@@ -68,7 +68,7 @@ export default ({
       />
 
       {onScanRequest && (
-        <TouchableOpacity style={{ paddingStart: 12 }} onPress={onScanRequest}>
+        <TouchableOpacity style={{ paddingHorizontal: 6 }} onPress={onScanRequest}>
           <Ionicons name="scan-outline" size={20} color={iconColor} />
           <View
             style={{
@@ -76,7 +76,7 @@ export default ({
               width: 14,
               height: 1,
               backgroundColor: iconColor,
-              left: 14,
+              left: 8,
               top: 10.5,
               opacity: 1.5,
               borderRadius: 2,
@@ -86,7 +86,7 @@ export default ({
       )}
 
       <TouchableOpacity onPress={(_) => readClipboard()}>
-        <Ionicons name="clipboard-outline" size={20} style={{ marginStart: 12, marginEnd: 2 }} color={iconColor} />
+        <Ionicons name="clipboard-outline" size={20} style={{ marginHorizontal: 5, marginEnd: 2 }} color={iconColor} />
       </TouchableOpacity>
     </View>
   );
