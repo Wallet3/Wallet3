@@ -165,14 +165,27 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
 
           <TouchableOpacity
             style={{ paddingEnd: 16 }}
-            onPress={() => openBrowserAsync(`https://opensea.io/assets/${item.contract}/${item.tokenId}`, {})}
+            onPress={() =>
+              openBrowserAsync(
+                current.chainId === 1
+                  ? `https://opensea.io/assets/${item.contract}/${item.tokenId}`
+                  : `https://opensea.io/assets/${current.symbol.toLowerCase()}/${item.contract}/${item.tokenId}`,
+                {}
+              )
+            }
           >
             <Opensea width={22} height={22} />
           </TouchableOpacity>
 
           <TouchableOpacity
             style={{ paddingEnd: 16 }}
-            onPress={() => openBrowserAsync(`https://rarible.com/token/${item.contract}:${item.tokenId}?tab=details`, {})}
+            onPress={() =>
+              openBrowserAsync(
+                current.chainId === 1
+                  ? `https://rarible.com/token/${item.contract}:${item.tokenId}`
+                  : `https://rarible.com/token/${current.network.toLowerCase()}/${item.contract}:${item.tokenId}`
+              )
+            }
           >
             <Rarible width={22} height={22} />
           </TouchableOpacity>
