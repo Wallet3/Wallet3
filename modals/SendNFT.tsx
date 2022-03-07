@@ -1,5 +1,5 @@
 import { ContactsPad, Passpad } from './views';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import App from '../viewmodels/App';
 import Authentication from '../viewmodels/Authentication';
@@ -22,6 +22,12 @@ export default observer(({ vm, onClose }: Props) => {
   const { backgroundColor } = Theme;
   const swiper = useRef<Swiper>(null);
   const [verified, setVerified] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      vm.dispose();
+    };
+  }, []);
 
   const sendTx = async (pin?: string) => {
     const result = await vm.sendTx(pin);
