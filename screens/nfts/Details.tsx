@@ -19,7 +19,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 import SendNFT from '../../modals/SendNFT';
 import { StatusBar } from 'expo-status-bar';
 import Theme from '../../viewmodels/settings/Theme';
-import { TokenTransferring } from '../../viewmodels/transferring/TokenTransferring';
 import i18n from '../../i18n';
 import { lightOrDark } from '../../utils/color';
 import { observer } from 'mobx-react-lite';
@@ -36,7 +35,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
   const [dominantColor, setDominantColor] = useState(backgroundColor);
   const [primaryColor, setPrimaryColor] = useState(foregroundColor);
   const [detailColor, setDetailColor] = useState(foregroundColor);
-  const [mode, setMode] = useState(Theme.mode);
+  const [mode, setMode] = useState<'light' | 'dark'>(Theme.mode === 'light' ? 'dark' : 'light');
   const [vm, setVM] = useState<NFTTransferring>();
 
   const images = [item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.BIG, item.meta?.image?.url?.PREVIEW];
@@ -84,6 +83,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
   }, [colorResult]);
 
   useEffect(() => {
+    if (types.find((t) => t?.endsWith('mp4'))) return;
     setMode(lightOrDark(dominantColor) === 'light' ? 'dark' : 'light');
   }, [dominantColor]);
 
@@ -235,7 +235,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
         </TouchableOpacity>
       </View>
 
-      <StatusBar style={detailColor === foregroundColor ? 'light' : mode} />
+      <StatusBar style={mode} />
 
       <Portal>
         <Modalize
