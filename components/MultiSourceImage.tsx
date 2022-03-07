@@ -38,7 +38,7 @@ export default (props: Props) => {
   };
 
   return (
-    <View style={{ backgroundColor: 'pink', borderRadius, overflow: 'hidden' }}>
+    <View style={{ backgroundColor, borderRadius, overflow: 'hidden' }}>
       {!imageLoaded && (
         <Animatable.View
           animation={'fadeIn'}
@@ -58,7 +58,13 @@ export default (props: Props) => {
       )}
 
       {sourceTypes[index]?.endsWith('mp4') ? (
-        <Video source={{ uri: uriSources[index] }} style={props.style} controls={controls} paused={paused} />
+        <Video
+          source={{ uri: uriSources[index] }}
+          style={props.style}
+          controls={controls}
+          paused={paused}
+          onLoad={() => setImageLoaded(true)}
+        />
       ) : sourceTypes[index]?.endsWith('svg+xml') || sourceTypes[index]?.endsWith('svg') ? (
         // <SvgUri
         //   uri={uriSources[index] || null}
