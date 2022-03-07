@@ -132,7 +132,7 @@ export class AccountTokens {
     const tokens =
       targetChainId === currentChainId ? this.allTokens : await TokensMan.loadUserTokens(targetChainId, this.owner);
 
-    const found = tokens.find((t) => t.address === token.address);
+    const found = tokens.find((t) => t.address.toLowerCase() === token.address.toLowerCase());
 
     if (found) {
       if (targetChainId === currentChainId) {

@@ -39,7 +39,12 @@ export default (props: Props) => {
     borderWidth: reverse ? 1 : 0,
   };
 
-  const txtStyle = { ...styles.text, ...((props?.txtStyle as any) || {}), color: reverse ? themeColor : '#fff' };
+  const txtStyle = {
+    ...styles.text,
+    color: reverse ? themeColor : '#fff',
+    ...((props?.txtStyle as any) || {}),
+    marginStart: props.icon ? 6 : -6,
+  };
 
   const arrowIcon = () => <Ionicons name="arrow-forward" size={19} color={backgroundColor} style={{}} />;
 
@@ -106,7 +111,7 @@ export default (props: Props) => {
       />
     </View>
   ) : (
-    <TouchableOpacity onPress={onPress} onLongPress={onLongPress} disabled={disabled} style={buttonStyle}>
+    <TouchableOpacity activeOpacity={0.5} onPress={onPress} onLongPress={onLongPress} disabled={disabled} style={buttonStyle}>
       {props.icon?.()}
       <Text style={txtStyle}>{title}</Text>
     </TouchableOpacity>

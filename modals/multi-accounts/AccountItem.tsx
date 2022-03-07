@@ -1,13 +1,11 @@
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
-import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { FlatList, ListRenderItemInfo, NativeSyntheticEvent, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useEffect, useRef } from 'react';
-import { SafeViewContainer, Separator } from '../../components';
+import { NativeSyntheticEvent, Text, TouchableOpacity, View } from 'react-native';
 
 import { Account } from '../../viewmodels/account/Account';
 import App from '../../viewmodels/App';
 import Avatar from '../../components/Avatar';
-import CachedImage from 'react-native-expo-cached-image';
+import { Feather } from '@expo/vector-icons';
+import React from 'react';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { secondaryFontColor } from '../../constants/styles';

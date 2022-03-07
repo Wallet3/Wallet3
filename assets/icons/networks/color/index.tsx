@@ -12,6 +12,7 @@ import { Entypo } from '@expo/vector-icons';
 import Ethereum from './ethereum2.svg';
 import EthereumClassic from './ethereum-classic.svg';
 import Fantom from './fantom.svg';
+import Findora from './findora.svg';
 import Harmony from './harmony-one.svg';
 import Heco from './heco.svg';
 import Klaytn from './klaytn.svg';
@@ -97,6 +98,7 @@ const MOONBEAM = generateNetworkIcon({ chainId: 1284, width: 32, height: 32 });
 const RONIN = generateNetworkIcon({ chainId: 2020, width: 32, height: 32 });
 const ZSYNC = generateNetworkIcon({ chainId: 280, width: 32, height: 32, style: { marginStart: 0 } });
 const KLAYTN = generateNetworkIcon({ chainId: 8217, width: 27, height: 32 });
+const FINDORA = generateNetworkIcon({ chainId: 2152, width: 32, height: 32 });
 
 export const NetworkIcons = {
   1: ETH,
@@ -120,6 +122,7 @@ export const NetworkIcons = {
   2020: RONIN,
   280: ZSYNC,
   8217: KLAYTN,
+  2152: FINDORA,
 };
 
 export function generateNetworkIcon(props: {
@@ -179,6 +182,8 @@ export function generateNetworkIcon(props: {
       return <ZKSync key={chainId} width={width} height={height ?? width} style={style} />;
     case 8217:
       return <Klaytn key={chainId} width={width} height={height ?? width} style={style} />;
+    case 2152:
+      return <Findora key={chainId} width={width} height={height ?? width} style={style} />;
     default:
       return coins[symbol?.toLowerCase() || ''] ? (
         <Coin symbol={symbol} size={height ?? width} address="" chainId={chainId} style={style as any} />

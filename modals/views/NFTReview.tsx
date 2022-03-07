@@ -11,6 +11,8 @@ import FaceID from '../../assets/icons/app/FaceID-white.svg';
 import GasReview from './GasReview';
 import Image from 'react-native-fast-image';
 import InsufficientFee from '../components/InsufficientFee';
+import MultiSourceImage from '../../components/MultiSourceImage';
+import { NFTTransferring } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
 import Networks from '../../viewmodels/Networks';
 import { ReactiveScreen } from '../../utils/device';
 import Swiper from 'react-native-swiper';
@@ -29,11 +31,11 @@ interface Props {
   onSend?: () => Promise<void>;
   onGasPress?: () => void;
   disableBack?: boolean;
-  vm: TokenTransferring;
+  vm: NFTTransferring;
   biometricType?: BioType;
 }
 
-const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biometricType }: Props) => {
+const NFTReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biometricType }: Props) => {
   const { t } = i18n;
   const [busy, setBusy] = React.useState(false);
   const { borderColor, textColor, isLightMode, tintColor, secondaryTextColor } = Theme;
@@ -71,18 +73,15 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
 
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
             <Text style={{ ...reviewItemValueStyle, marginEnd: 8, maxWidth: ReactiveScreen.width - 190 }} numberOfLines={1}>
-              {vm.amount}
+              {vm.nft.title}
             </Text>
 
-            <Coin
-              address={vm.token.address}
-              chainId={vm.network.chainId}
-              symbol={vm.token!.symbol}
-              forceRefresh
-              iconUrl={vm.token?.iconUrl}
+            <MultiSourceImage
+              uriSources={vm.nft.images}
+              style={{ width: 20, height: 20 }}
+              borderRadius={2}
+              sourceTypes={vm.nft.types}
             />
-
-            <Text style={{ ...reviewItemValueStyle, marginStart: 8 }}>{vm.token.symbol}</Text>
           </View>
         </View>
 
@@ -190,7 +189,7 @@ export default observer((props: Props) => {
 
   return (
     <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
-      <ReviewView {...props} onGasPress={() => swiper.current?.scrollBy(1)} />
+      <NFTReviewView {...props} onGasPress={() => swiper.current?.scrollBy(1)} />
       <GasReview onBack={() => swiper.current?.scrollTo(0)} vm={vm} themeColor={vm.network.color} />
     </Swiper>
   );

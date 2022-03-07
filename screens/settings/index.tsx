@@ -21,7 +21,7 @@ import UI from '../../viewmodels/settings/UI';
 import { styles as appStyles } from '../../constants/styles';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import { openURL } from 'expo-linking';
+import { openBrowserAsync } from 'expo-web-browser';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 type SettingsStack = {
@@ -163,7 +163,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
         </View>
       </TouchableOpacity> */}
 
-      <TouchableOpacity style={styles.itemContainer} onPress={() => openURL('https://chainbow.co.jp/privacy.html')}>
+      <TouchableOpacity style={styles.itemContainer} onPress={() => openBrowserAsync('https://chainbow.co.jp/privacy.html')}>
         <View style={styles.itemSubContainer}>
           <Ionicons name="magnet-outline" style={styles.itemStartSymbol} size={16} color={textColor} />
           <Text style={itemText}>{t('settings-legal-privacy')}</Text>

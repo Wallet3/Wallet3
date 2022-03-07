@@ -3,7 +3,7 @@ import { Image, ListRenderItemInfo, NativeSyntheticEvent, Share, Text } from 're
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { Bookmark } from '../../../viewmodels/customs/Bookmarks';
-import CachedImage from 'react-native-expo-cached-image';
+import CachedImage from 'react-native-fast-image';
 import { NullableImage } from '../../../components';
 import React from 'react';
 import i18n from '../../../i18n';

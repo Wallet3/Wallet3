@@ -1,7 +1,7 @@
 import { Coin, NullableImage } from '../../components';
 import { FlatList, ListRenderItemInfo, Text, TouchableOpacity, View } from 'react-native';
 
-import Image from 'react-native-expo-cached-image';
+import Image from 'react-native-fast-image';
 import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/Networks';
 import React from 'react';
@@ -22,6 +22,8 @@ interface Props {
 
 const Methods = new Map([
   ['0xa9059cbb', 'sent'],
+  ['0x23b872dd', 'sent'], // Sent ERC-721
+  ['0xf242432a', 'sent'], // Sent ERC-1155
   ['0x095ea7b3', 'approve'],
   ['0x', 'sent'],
 ]);
@@ -50,10 +52,10 @@ const Tx = observer(
     const { chainId } = item;
     const [tokenSymbol] = useState(item.readableInfo?.symbol?.trim() || Networks.find(chainId)?.symbol);
 
+    const nft = item.readableInfo?.nft;
     const dappIcon = item.readableInfo?.icon;
-    const amount: string = item.readableInfo?.amount ?? utils.formatEther(item.value ?? '0');
+    const amount = Number(item.readableInfo?.amount ?? utils.formatEther(item.value ?? '0'));
     const cancelTx = item.readableInfo?.cancelTx;
-
     const to: string = item.readableInfo?.recipient ?? item.readableInfo.dapp ?? item.to ?? '';
     const status = item.blockNumber ? (item.status ? 'confirmed' : 'failed') : 'pending';
     const methodName = t(`home-history-item-type-${method ?? (item.data !== '0x' ? 'contract-interaction' : 'sent')}`);
@@ -69,7 +71,7 @@ const Tx = observer(
               </Text>
               {method === 'contract-interaction' ? undefined : (
                 <Text style={{ fontSize: 16, maxWidth: 150, color: textColor }} numberOfLines={1}>
-                  {`${amount?.substring?.(0, 7)} ${tokenSymbol}`}
+                  {`${amount >= 0 ? amount : ''} ${nft || tokenSymbol}`}
                 </Text>
               )}
             </View>

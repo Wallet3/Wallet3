@@ -37,4 +37,18 @@ export class WalletConnectTransactionRequest extends RawTransactionRequest {
     const { description, icons, name, url } = this.client.appMeta!;
     return { desc: description, icon: icons[0], name, url };
   }
+
+  sendTx(pin?: string) {
+    return super.sendRawTx(
+      {
+        tx: this.txRequest,
+        readableInfo: {
+          type: 'dapp-interaction',
+          dapp: this.appMeta.name,
+          icon: this.appMeta.icon,
+        },
+      },
+      pin
+    );
+  }
 }

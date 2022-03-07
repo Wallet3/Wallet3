@@ -1,10 +1,10 @@
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import React, { useRef, useState } from 'react';
 import { StyleProp, Text, TextInput, View, ViewStyle } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { borderColor, fontColor, secondaryFontColor } from '../constants/styles';
 
-import { Ionicons } from '@expo/vector-icons';
 import { getStringAsync } from 'expo-clipboard';
 
 interface Props {
@@ -16,9 +16,20 @@ interface Props {
   style?: StyleProp<ViewStyle>;
   iconColor?: string;
   textColor?: string;
+  onScanRequest?: () => void;
 }
 
-export default ({ value, onChangeText, title, style, placeholder, defaultValue, iconColor, textColor }: Props) => {
+export default ({
+  value,
+  onChangeText,
+  title,
+  style,
+  placeholder,
+  defaultValue,
+  iconColor,
+  textColor,
+  onScanRequest,
+}: Props) => {
   const addrRef = useRef<TextInput>(null);
 
   const readClipboard = async () => {
@@ -57,6 +68,24 @@ export default ({ value, onChangeText, title, style, placeholder, defaultValue, 
         autoCorrect={false}
         onChangeText={(t) => onChangeText(t)}
       />
+
+      {onScanRequest && (
+        <TouchableOpacity style={{ paddingStart: 12 }} onPress={onScanRequest}>
+          <Ionicons name="scan-outline" size={20} color={iconColor} />
+          <View
+            style={{
+              position: 'absolute',
+              width: 14,
+              height: 1,
+              backgroundColor: iconColor,
+              left: 14,
+              top: 10.5,
+              opacity: 1.5,
+              borderRadius: 2,
+            }}
+          />
+        </TouchableOpacity>
+      )}
 
       <TouchableOpacity onPress={(_) => readClipboard()}>
         <Ionicons name="clipboard-outline" size={20} style={{ marginStart: 12 }} color={iconColor} />

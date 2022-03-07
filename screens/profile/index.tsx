@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { secondaryFontColor, thirdFontColor } from '../../constants/styles';
 
 import App from '../../viewmodels/App';
-import CachedImage from 'react-native-expo-cached-image';
+import CachedImage from 'react-native-fast-image';
 import CopyableText from '../../components/CopyableText';
 import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/Networks';

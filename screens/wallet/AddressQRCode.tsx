@@ -8,7 +8,7 @@ import React, { useRef, useState } from 'react';
 import { Account } from '../../viewmodels/account/Account';
 import Avatar from '../../components/Avatar';
 import { BlankPNG } from '../../common/Constants';
-import CachedImage from 'react-native-expo-cached-image';
+import CachedImage from 'react-native-fast-image';
 import CopyableText from '../../components/CopyableText';
 import Networks from '../../viewmodels/Networks';
 import QRCode from 'react-native-qrcode-svg';
@@ -16,6 +16,7 @@ import Theme from '../../viewmodels/settings/Theme';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { openBrowserAsync } from 'expo-web-browser';
 import { setString } from 'expo-clipboard';
 
 export default observer(({ account }: { account?: Account }) => {
@@ -107,7 +108,7 @@ export default observer(({ account }: { account?: Account }) => {
           <Animatable.View ref={explorerView as any}>
             <TouchableOpacity
               style={{ flexDirection: 'row', alignItems: 'center' }}
-              onPress={() => Linking.openURL(`${current.explorer}/address/${address}`)}
+              onPress={() => openBrowserAsync(`${current.explorer}/address/${address}`)}
               onLongPress={() => {
                 setString(`${current.explorer}/address/${address}`);
                 explorerView.current?.flash?.();

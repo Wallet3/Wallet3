@@ -5,6 +5,7 @@ import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 
+import App from '../viewmodels/App';
 import BrowserScreen from './browser/MultiTabIndex';
 import DAppsScreen from './dapps';
 import Drawer from './drawer';
@@ -35,9 +36,10 @@ type RootStackParamList = {
 const RootTab = observer(() => {
   const { t } = i18n;
   const { current } = Networks;
-  const navigation = useNavigation() as DrawerNavigationHelpers;
   const { Navigator, Screen } = TabNavigation;
   const { bottom, top } = useSafeAreaInsets();
+  const navigation = useNavigation() as DrawerNavigationHelpers;
+  const { currentAccount } = App;
   let { foregroundColor, backgroundColor, systemBorderColor, borderColor, isLightMode } = Theme;
 
   foregroundColor = isLightMode ? foregroundColor : current.color;
@@ -65,7 +67,9 @@ const RootTab = observer(() => {
         },
       })}
     >
-      <Screen name="NFTs" component={NFTList} options={{ tabBarLabel: 'NFTs', headerShown: false }} />
+      {currentAccount?.nfts.nfts.length ?? 0 > 0 ? (
+        <Screen name="NFTs" component={NFTList} options={{ tabBarLabel: 'NFTs', headerShown: false }} />
+      ) : undefined}
 
       <Screen
         name="Wallet"
@@ -123,6 +127,7 @@ const RootTab = observer(() => {
                     marginEnd: 15,
                     marginStart: 14,
                     backgroundColor: foregroundColor,
+                    borderRadius: 2,
                   }}
                 />
               </TouchableOpacity>

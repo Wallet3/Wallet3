@@ -2,7 +2,7 @@ import * as shape from 'd3-shape';
 
 import { Button, Coin, Skeleton } from '../../components';
 import { Defs, LinearGradient, Stop } from 'react-native-svg';
-import { FontAwesome, Ionicons } from '@expo/vector-icons';
+import { Entypo, FontAwesome, Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -115,7 +115,7 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
         themeColor={themeColor}
         title={t('button-send')}
         style={{ borderRadius: 50, marginVertical: 16 }}
-        icon={() => <FontAwesome name="send-o" color="white" size={14} />}
+        icon={() => <Entypo name="paper-plane" color="white" size={16} />}
         onPress={() => onSendPress?.(token)}
       />
 

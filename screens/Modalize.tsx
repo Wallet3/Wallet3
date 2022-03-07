@@ -439,7 +439,6 @@ const SendFundsModal = () => {
 
 export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication }) => {
   const { ref: lockScreenRef, open: openLockScreen, close: closeLockScreen } = useModalize();
-  const { width, height } = ReactiveScreen;
 
   const bioAuth = async () => {
     if (!appAuth.biometricEnabled || !appAuth.biometricSupported) return;
@@ -470,7 +469,6 @@ export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Aut
       disableScrollIfPossible
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
-      rootStyle={{ width, height }}
       modalStyle={{ borderTopStartRadius: 0, borderTopEndRadius: 0 }}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >

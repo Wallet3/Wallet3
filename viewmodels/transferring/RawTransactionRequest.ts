@@ -31,7 +31,6 @@ export class RawTransactionRequest extends BaseTransaction {
   private erc20?: ERC20Token;
 
   type!: RequestType;
-  to!: string;
   valueWei = BigNumber.from(0);
   tokenAmountWei = BigNumber.from(0);
   tokenDecimals = 18;
@@ -99,7 +98,7 @@ export class RawTransactionRequest extends BaseTransaction {
       case Transfer:
         const [to, transferAmount] = erc20.interface.decodeFunctionData('transfer', param.data) as [string, BigNumber];
 
-        this.to = to;
+        this.setTo(to);
         this.tokenAmountWei = transferAmount;
 
         this.tokenAddress = utils.getAddress(param.to);
@@ -109,7 +108,7 @@ export class RawTransactionRequest extends BaseTransaction {
       case Approve:
         const [spender, approveAmount] = erc20.interface.decodeFunctionData('approve', param.data) as [string, BigNumber];
 
-        this.to = spender;
+        this.setTo(spender);
         this.tokenAmountWei = approveAmount;
 
         this.tokenAddress = utils.getAddress(param.to);
@@ -118,7 +117,7 @@ export class RawTransactionRequest extends BaseTransaction {
         break;
 
       default:
-        this.to = param.to;
+        this.setTo(param.to);
         this.valueWei = BigNumber.from(param.value || 0);
         break;
     }

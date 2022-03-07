@@ -1,42 +1,31 @@
-import { ContactsPad, Passpad, ReviewPad, SendAmount } from './views';
+import { ContactsPad, Passpad } from './views';
 import React, { useEffect, useRef, useState } from 'react';
 
 import App from '../viewmodels/App';
 import Authentication from '../viewmodels/Authentication';
 import Contacts from '../viewmodels/customs/Contacts';
-import { ReactiveScreen } from '../utils/device';
+import NFTReview from './views/NFTReview';
+import { NFTTransferring } from '../viewmodels/transferring/NonFungibleTokenTransferring';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Success from './views/Success';
 import Swiper from 'react-native-swiper';
 import Theme from '../viewmodels/settings/Theme';
-import { TokenTransferring } from '../viewmodels/transferring/TokenTransferring';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
 
 interface Props {
-  vm: TokenTransferring;
-  erc681?: boolean;
+  vm: NFTTransferring;
   onClose?: () => void;
 }
 
-export default observer(({ vm, onClose, erc681 }: Props) => {
-  const [verified, setVerified] = useState(false);
-  const swiper = useRef<Swiper>(null);
+export default observer(({ vm, onClose }: Props) => {
   const { backgroundColor } = Theme;
-  const [active] = useState({ index: 0 });
+  const swiper = useRef<Swiper>(null);
+  const [verified, setVerified] = useState(false);
 
   useEffect(() => {
-    const jump = () =>
-      setTimeout(() => {
-        try {
-          verified ? undefined : swiper.current?.scrollTo(Math.max(0, active.index - 1));
-        } catch {}
-      }, 100);
-
-    ReactiveScreen.on('change', jump);
-
     return () => {
-      ReactiveScreen.off('change', jump);
+      vm.dispose();
     };
   }, []);
 
@@ -62,12 +51,13 @@ export default observer(({ vm, onClose, erc681 }: Props) => {
     });
 
     if (!Authentication.biometricEnabled) {
-      swiper.current?.scrollTo(3);
+      swiper.current?.scrollTo(2);
       return;
     }
 
     if (await sendTx()) return;
-    swiper.current?.scrollTo(3);
+
+    swiper.current?.scrollTo(2);
   };
 
   return (
@@ -75,35 +65,20 @@ export default observer(({ vm, onClose, erc681 }: Props) => {
       {verified ? (
         <Success />
       ) : (
-        <Swiper
-          ref={swiper}
-          showsPagination={false}
-          showsButtons={false}
-          scrollEnabled={false}
-          loop={false}
-          onIndexChanged={(index) => (active.index = index)}
-          automaticallyAdjustContentInsets
-        >
-          {erc681 ? undefined : <ContactsPad onNext={() => swiper.current?.scrollTo(1, true)} vm={vm} />}
-          {erc681 ? undefined : (
-            <SendAmount
-              vm={vm}
-              onBack={() => swiper.current?.scrollTo(0)}
-              onNext={() => {
-                swiper.current?.scrollTo(2);
-                vm.estimateGas();
-              }}
-            />
-          )}
-
-          <ReviewPad
-            onBack={() => swiper.current?.scrollTo(1)}
+        <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
+          <ContactsPad
+            vm={vm}
+            onNext={() => {
+              swiper.current?.scrollTo(1, true);
+              vm.estimateGas();
+            }}
+          />
+          <NFTReview
+            onBack={() => swiper.current?.scrollTo(0)}
             vm={vm}
             onSend={onSendClick}
-            disableBack={erc681}
             biometricType={Authentication.biometricType}
           />
-
           <Passpad themeColor={vm.network.color} onCodeEntered={sendTx} onCancel={() => swiper.current?.scrollTo(2)} />
         </Swiper>
       )}

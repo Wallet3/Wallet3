@@ -7,7 +7,7 @@ import { secondaryFontColor, thirdFontColor } from '../../constants/styles';
 
 import BackButton from '../components/BackButton';
 import { BlankPNG } from '../../common/Constants';
-import CachedImage from 'react-native-expo-cached-image';
+import CachedImage from 'react-native-fast-image';
 import CopyableText from '../../components/CopyableText';
 import IPhone from '../../assets/icons/app/IPhone.svg';
 import { IToken } from '../../common/Tokens';

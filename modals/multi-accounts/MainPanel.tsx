@@ -9,7 +9,7 @@ import { SafeViewContainer, Separator } from '../../components';
 import { Account } from '../../viewmodels/account/Account';
 import AccountItem from './AccountItem';
 import App from '../../viewmodels/App';
-import CachedImage from 'react-native-expo-cached-image';
+import CachedImage from 'react-native-fast-image';
 import Networks from '../../viewmodels/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Theme from '../../viewmodels/settings/Theme';

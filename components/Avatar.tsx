@@ -1,6 +1,6 @@
 import { Image, StyleProp, Text, TextStyle, View, ViewStyle } from 'react-native';
 
-import CachedImage from 'react-native-expo-cached-image';
+import CachedImage from 'react-native-fast-image';
 import React from 'react';
 
 interface Props {
@@ -16,29 +16,16 @@ interface Props {
 
 export default ({ uri, backgroundColor, emoji, size, emojiSize, style, emojiMarginStart, emojiMarginTop }: Props) => {
   return uri ? (
-    uri.endsWith('.gif') ? (
-      <Image
-        source={{ uri }}
-        style={{
-          ...(style || ({} as any)),
-          width: size,
-          height: size,
-          borderRadius: size / 2,
-          backgroundColor: backgroundColor,
-        }}
-      />
-    ) : (
-      <CachedImage
-        source={{ uri }}
-        style={{
-          ...(style || ({} as any)),
-          width: size,
-          height: size,
-          borderRadius: size / 2,
-          backgroundColor: backgroundColor,
-        }}
-      />
-    )
+    <CachedImage
+      source={{ uri }}
+      style={{
+        ...(style || ({} as any)),
+        width: size,
+        height: size,
+        borderRadius: size / 2,
+        backgroundColor: backgroundColor,
+      }}
+    />
   ) : (
     <View
       style={{
