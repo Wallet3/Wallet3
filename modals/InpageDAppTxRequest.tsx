@@ -55,7 +55,7 @@ export default observer(({ param, chainId, approve, reject, close, account, app 
       readableInfo: {
         type: 'dapp-interaction',
         symbol: vm.token?.symbol,
-        amount: Number(vm.tokenAmount).toLocaleString(undefined, { maximumFractionDigits: 7 }),
+        amount: Number(vm.tokenAmount).toString(),
       },
     });
 

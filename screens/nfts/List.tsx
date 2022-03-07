@@ -121,8 +121,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, any>) => {
       <FlatList
         data={currentAccount.nfts.nfts}
         initialNumToRender={5}
-        style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0 }}
-        contentContainerStyle={{ marginHorizontal: 16, paddingTop: top }}
+        contentContainerStyle={{ marginHorizontal: 16, paddingTop: top + 4 }}
         renderItem={({ item }) => (
           <NFTItem
             nft={item}
@@ -136,20 +135,21 @@ export default observer(({ navigation }: NativeStackScreenProps<any, any>) => {
           />
         )}
       />
-      {/* <BlurView
+
+      <BlurView
         tint={mode}
-        intensity={45}
+        intensity={25}
         style={{
-          height: headerHeight + top + 6,
+          height: top,
+          position: 'absolute',
           width: '100%',
-          paddingTop: top + 4,
           ...shadow,
-          shadowOpacity: 0.2,
+          shadowOpacity: 0.05,
           paddingHorizontal: 16,
           paddingBottom: 2,
         }}
       >
-        <View
+        {/* <View
           style={{
             borderWidth: 1,
             borderColor: activeSearch ? `${foregroundColor}7a` : `${foregroundColor}10`,
@@ -171,8 +171,8 @@ export default observer(({ navigation }: NativeStackScreenProps<any, any>) => {
             onFocus={() => setActiveSearch(true)}
             style={{ fontSize: 17, color: foregroundColor, flex: 1, marginStart: 8 }}
           />
-        </View>
-      </BlurView> */}
+        </View> */}
+      </BlurView>
     </View>
   );
 });
