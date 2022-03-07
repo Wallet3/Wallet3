@@ -1,6 +1,6 @@
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import App from '../../viewmodels/App';
 import { BlurView } from 'expo-blur';
@@ -14,6 +14,7 @@ import { ReactiveScreen } from '../../utils/device';
 import { SharedElement } from 'react-navigation-shared-element';
 import Theme from '../../viewmodels/settings/Theme';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
+import { lightOrDark } from '../../utils/color';
 import { observer } from 'mobx-react-lite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -36,13 +37,21 @@ const NFTItem = ({
   network: INetwork;
   nft: Nft;
 }) => {
+  const [colorResult, setColorResult] = useState<ImageColorsResult>();
+  const [nftBackgroundColor, setNftBackgroundColor] = useState<string>();
+  const [titleColor, setTitleColor] = useState(foregroundColor);
+
   const images = [nft.meta?.image?.url?.BIG, nft.meta?.image?.url?.ORIGINAL, nft.meta?.image?.url?.PREVIEW];
   const types = [
     nft.meta?.image?.meta?.BIG?.type,
     nft.meta?.image?.meta?.ORIGINAL?.type,
     nft.meta?.image?.meta?.PREVIEW?.type,
   ];
-  const [colorResult, setColorResult] = useState<ImageColorsResult>();
+
+  useEffect(() => {
+    if (!nftBackgroundColor) return;
+    setTitleColor(lightOrDark(nftBackgroundColor) === 'light' ? '#222' : '#ffffffee');
+  }, [nftBackgroundColor]);
 
   return (
     <TouchableOpacity
@@ -59,7 +68,10 @@ const NFTItem = ({
           borderRadius={10}
           style={{ width: '100%', height: imageHeight }}
           paused
-          onColorParsed={(result) => setColorResult(result)}
+          onColorParsed={(result) => {
+            setColorResult(result);
+            setNftBackgroundColor(result['background'] || result['dominant']);
+          }}
         />
       </SharedElement>
 
@@ -93,7 +105,19 @@ const NFTItem = ({
               backgroundColor: `${backgroundColor}20`,
             }}
           >
-            <Text style={{ color: foregroundColor, fontWeight: '500', fontSize: 17, maxWidth: '80%' }} numberOfLines={1}>
+            <Text
+              style={{
+                color: titleColor,
+                fontWeight: '500',
+                fontSize: 17,
+                maxWidth: '80%',
+                paddingStart: 2,
+                textShadowColor: nftBackgroundColor || '#585858',
+                textShadowOffset: { width: 0, height: 0 },
+                textShadowRadius: 4,
+              }}
+              numberOfLines={1}
+            >
               {nft.meta?.name}
             </Text>
             {generateNetworkIcon({ ...network, hideEVMTitle: true, width: 22, style: { marginStart: 8 } })}
