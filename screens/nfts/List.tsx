@@ -94,7 +94,7 @@ const NFTItem = ({
         >
           <BlurView
             tint={mode}
-            intensity={25}
+            intensity={20}
             style={{
               padding: 16,
               paddingStart: 20,

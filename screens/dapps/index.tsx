@@ -17,6 +17,7 @@ import MetamaskDAppsHub from '../../viewmodels/walletconnect/MetamaskDAppsHub';
 import { Modalize } from 'react-native-modalize';
 import NetworkSelector from '../../modals/dapp/NetworkSelector';
 import Networks from '../../viewmodels/Networks';
+import { NullableImage } from '../../components';
 import { Portal } from 'react-native-portalize';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
@@ -130,8 +131,25 @@ const DAppItem = observer(
         style={{ paddingHorizontal: 16, paddingVertical: 12, flexDirection: 'row', alignItems: 'center', backgroundColor }}
       >
         <TouchableOpacity style={{ flex: 1, alignItems: 'center', flexDirection: 'row' }} onPress={() => openApp(item)}>
-          <View style={{ marginEnd: 12, borderWidth: 1, borderRadius: 5, borderColor, padding: 2 }}>
-            <Image source={{ uri: appMeta?.icons[0] }} style={{ width: 27, height: 27, borderRadius: 2 }} />
+          <View
+            style={{
+              marginEnd: 12,
+              borderWidth: 0,
+              borderRadius: 5,
+              borderColor,
+              padding: 2,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <NullableImage
+              uri={appMeta?.icons[0]}
+              size={27}
+              imageRadius={2}
+              text={appMeta?.name}
+              containerStyle={{ width: 27, height: 27, borderRadius: 2 }}
+              imageBackgroundColor={backgroundColor}
+            />
           </View>
 
           <View style={{ flex: 1 }}>
