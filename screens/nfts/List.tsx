@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 
 import App from '../../viewmodels/App';
 import { BlurView } from 'expo-blur';
-import { Feather } from '@expo/vector-icons';
 import { INetwork } from '../../common/Networks';
 import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
 import MultiSourceImage from '../../components/MultiSourceImage';
@@ -132,7 +131,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, any>) => {
   const { currentAccount } = App;
   const { current } = Networks;
   const { top } = useSafeAreaInsets();
-  const { backgroundColor, shadow, mode, foregroundColor, borderColor } = Theme;
+  const { backgroundColor, shadow, mode, foregroundColor } = Theme;
   const imageHeight = ReactiveScreen.width - 16 * 2;
   const [activeSearch, setActiveSearch] = useState(false);
 
@@ -167,10 +166,6 @@ export default observer(({ navigation }: NativeStackScreenProps<any, any>) => {
           height: top,
           position: 'absolute',
           width: '100%',
-          ...shadow,
-          shadowOpacity: 0.05,
-          paddingHorizontal: 16,
-          paddingBottom: 2,
         }}
       >
         {/* <View

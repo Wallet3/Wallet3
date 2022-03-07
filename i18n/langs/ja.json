@@ -151,6 +151,7 @@
   "modal-tx-details-from": "アカウント",
   "modal-tx-details-to": "送信先",
   "modal-tx-details-value": "価値",
+  "modal-tx-details-token": "トークン",
   "modal-tx-details-gas-limit": "ガスリミット",
   "modal-tx-details-gas-price": "ガス価格",
   "modal-tx-details-nonce": "ナンス",

@@ -151,6 +151,7 @@
   "modal-tx-details-from": "发送地址",
   "modal-tx-details-to": "目标地址",
   "modal-tx-details-value": "价值",
+  "modal-tx-details-token": "代币",
   "modal-tx-details-gas-limit": "燃料上限",
   "modal-tx-details-gas-price": "燃料价格",
   "modal-tx-details-nonce": "流水号",

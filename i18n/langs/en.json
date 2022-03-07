@@ -153,6 +153,7 @@
   "modal-tx-details-from": "From",
   "modal-tx-details-to": "To",
   "modal-tx-details-value": "Value",
+  "modal-tx-details-token": "Token",
   "modal-tx-details-gas-limit": "Gas Limit",
   "modal-tx-details-gas-price": "Gas Price",
   "modal-tx-details-nonce": "Nonce",

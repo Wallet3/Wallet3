@@ -54,7 +54,7 @@ const Tx = observer(
 
     const nft = item.readableInfo?.nft;
     const dappIcon = item.readableInfo?.icon;
-    const amount = Number(item.readableInfo?.amount ?? utils.formatEther(item.value ?? '0'));
+    const amount = Number(item.readableInfo?.amount) || Number(utils.formatEther(item.value ?? '0'));
     const cancelTx = item.readableInfo?.cancelTx;
     const to: string = item.readableInfo?.recipient ?? item.readableInfo.dapp ?? item.to ?? '';
     const status = item.blockNumber ? (item.status ? 'confirmed' : 'failed') : 'pending';
