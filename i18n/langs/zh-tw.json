@@ -50,7 +50,7 @@
   "qrscan-tip-2": "助記詞, 私鑰, Wallet 3 桌面版同步碼",
   "qrscan-tip-3": "URL 二維碼",
   "qrscan-tip-desktop-backup-qrcode": "Wallet 3 桌面版同步碼",
-  "qrscan-tip-eth-address": "ETH 地址, ENS",
+  "qrscan-tip-eth-address": "ENS, ETH 地址",
   "connectedapps-title": "已鏈接的 DApps",
   "connectedapps-noapps": "未連接任何 DApp",
   "connectedapps-list-last-used": "上次使用",
