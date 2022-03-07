@@ -20,6 +20,7 @@ import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { startLayoutAnimation } from '../../utils/animations';
 import styles from '../styles';
+import { utils } from 'ethers';
 
 interface Props {
   vm: BaseTransaction;
@@ -31,8 +32,19 @@ export default observer(({ onNext, vm }: Props) => {
   const { t } = i18n;
   const swiper = useRef<Swiper>(null);
   const [addr, setAddr] = useState<string>();
+  const [scanEnabled, setScanEnabled] = useState(false);
   const { borderColor, tintColor, isLightMode, textColor, foregroundColor, secondaryTextColor, backgroundColor } = Theme;
   const { contacts } = Contacts;
+
+  const goToScan = () => {
+    setScanEnabled(true);
+    swiper.current?.scrollTo(1);
+  };
+
+  const cancelScan = () => {
+    setScanEnabled(false);
+    swiper.current?.scrollTo(0);
+  };
 
   const renderContact = ({ item }: ListRenderItemInfo<IContact>) => {
     const actions = [{ title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' }];
@@ -109,7 +121,7 @@ export default observer(({ onNext, vm }: Props) => {
           textColor={textColor}
           style={{ borderColor: isLightMode ? borderColor : tintColor }}
           iconColor={isLightMode ? `${foregroundColor}80` : tintColor}
-          onScanRequest={() => swiper.current?.scrollTo(1)}
+          onScanRequest={goToScan}
           onChangeText={(t) => {
             setAddr(t);
             vm.setTo(t);
@@ -143,7 +155,18 @@ export default observer(({ onNext, vm }: Props) => {
         />
       </SafeViewContainer>
 
-      <MiniScanner tipText={t('qrscan-tip-eth-address')} onBack={() => swiper.current?.scrollTo(0)} />
+      <MiniScanner
+        tipText={t('qrscan-tip-eth-address')}
+        enabled={scanEnabled}
+        onBack={cancelScan}
+        onBarCodeScanned={({ data }) => {
+          if (!utils.isAddress(data) && !data.endsWith('.eth')) return;
+
+          setAddr(data);
+          vm.setTo(data);
+          cancelScan();
+        }}
+      />
     </Swiper>
   );
 });
