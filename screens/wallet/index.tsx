@@ -100,7 +100,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
           adjustToContentHeight
           ref={tokenDetailModalize}
           snapPoint={500}
-          modalStyle={{ borderTopStartRadius: 15, borderTopEndRadius: 15 }}
+          modalStyle={{ borderTopStartRadius: 16, borderTopEndRadius: 16 }}
         >
           <TokenDetail
             token={selectedToken}

@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import { Feather } from '@expo/vector-icons';
 import ImageColors from 'react-native-image-colors';
 import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
-import { SvgUri } from 'react-native-svg';
+import SvgImage from 'react-native-remote-svg';
 import Video from 'react-native-video';
 
 // @ts-ignore
@@ -65,16 +65,10 @@ export default (props: Props) => {
           paused={paused}
           onLoad={() => setImageLoaded(true)}
         />
-      ) : sourceTypes[index]?.endsWith('svg+xml') || sourceTypes[index]?.endsWith('svg') ? (
-        // <SvgUri
-        //   uri={uriSources[index] || null}
-        //   style={props.style}
-        //   width={(props.style as any)?.width}
-        //   height={(props.style as any).height}
-        // /> app will crash if you pass invalid svg+xml
-        <View style={{ ...(props.style || ({} as any)), justifyContent: 'center', alignItems: 'center', backgroundColor }}>
-          <Text>SVG not supported yet</Text>
-        </View>
+      ) : uriSources[index]?.endsWith('.svg') ||
+        sourceTypes[index]?.endsWith('svg+xml') ||
+        sourceTypes[index]?.endsWith('svg') ? (
+        <SvgImage source={{ uri: uriSources[index] }} style={props.style} onLoadEnd={() => setImageLoaded(true)} />
       ) : (
         <FastImage
           {...props}

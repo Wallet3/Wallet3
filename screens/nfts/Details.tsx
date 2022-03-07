@@ -31,11 +31,11 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
   const { t } = i18n;
   const { top } = useSafeAreaInsets();
   const { current } = Networks;
-  const { backgroundColor, shadow, foregroundColor } = Theme;
+  const { backgroundColor, shadow, foregroundColor, statusBarStyle } = Theme;
   const [dominantColor, setDominantColor] = useState(backgroundColor);
   const [primaryColor, setPrimaryColor] = useState(foregroundColor);
   const [detailColor, setDetailColor] = useState(foregroundColor);
-  const [mode, setMode] = useState<'light' | 'dark'>(Theme.mode === 'light' ? 'dark' : 'light');
+  const [mode, setMode] = useState<'light' | 'dark'>(statusBarStyle);
   const [vm, setVM] = useState<NFTTransferring>();
 
   const images = [item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.BIG, item.meta?.image?.url?.PREVIEW];
