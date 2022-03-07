@@ -45,7 +45,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
   ];
 
   console.log(images, types);
-  
+
   const { ref: sendRef, open: openSendModal, close: closeSendModal } = useModalize();
 
   const open = () => {
@@ -99,7 +99,9 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
         >
           <MultiSourceImage
             uriSources={images}
-            style={{ width: '100%', height: '100%', borderRadius: 15, backgroundColor }}
+            style={{ width: '100%', height: '100%', borderRadius: 15 }}
+            backgroundColor={backgroundColor}
+            borderRadius={15}
             onColorParsed={parseColor}
             sourceTypes={types}
             controls

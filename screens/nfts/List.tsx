@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 
 import App from '../../viewmodels/App';
 import { BlurView } from 'expo-blur';
+import { Feather } from '@expo/vector-icons';
 import { INetwork } from '../../common/Networks';
 import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
 import MultiSourceImage from '../../components/MultiSourceImage';
@@ -54,7 +55,9 @@ const NFTItem = ({
         <MultiSourceImage
           uriSources={images}
           sourceTypes={types}
-          style={{ width: '100%', height: imageHeight, backgroundColor, borderRadius: 10 }}
+          backgroundColor={backgroundColor}
+          borderRadius={10}
+          style={{ width: '100%', height: imageHeight }}
           paused
           onColorParsed={(result) => setColorResult(result)}
         />

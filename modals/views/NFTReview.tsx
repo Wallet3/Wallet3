@@ -78,7 +78,8 @@ const NFTReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, b
 
             <MultiSourceImage
               uriSources={vm.nft.images}
-              style={{ width: 20, height: 20, borderRadius: 2 }}
+              style={{ width: 20, height: 20 }}
+              borderRadius={2}
               sourceTypes={vm.nft.types}
             />
           </View>
