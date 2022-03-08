@@ -91,7 +91,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
 
   return (
     <BlurView intensity={10} style={{ flex: 1, backgroundColor: dominantColor }}>
-      <ScrollView contentContainerStyle={{ paddingTop: top + 57, paddingBottom: bottom }}>
+      <ScrollView contentContainerStyle={{ paddingTop: top + 57, paddingBottom: bottom }} showsVerticalScrollIndicator={false}>
         <View
           style={{
             ...shadow,
@@ -261,6 +261,9 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
             fontWeight: '600',
             marginBottom: -1,
             maxWidth: '75%',
+            textShadowColor: dominantColor || '#585858',
+            textShadowOffset: { width: 0, height: 0 },
+            textShadowRadius: 4,
           }}
         >
           {item.meta?.name}
@@ -275,11 +278,6 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
           <Ionicons name="share-outline" size={24} color={primaryColor} />
         </TouchableOpacity>
       </View>
-
-      <BlurView
-        intensity={10}
-        style={{ position: 'absolute', left: 0, right: 0, top: 0, height: top, backgroundColor: `${dominantColor}20` }}
-      />
 
       <StatusBar style={mode} />
 

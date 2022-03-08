@@ -107,7 +107,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
           <Text style={styles.reviewItemTitle}>RPC URLs</Text>
           <TextInput
             editable={true}
-            style={{ ...reviewItemValueStyle, maxWidth: '70%' }}
+            style={{ ...reviewItemValueStyle, maxWidth: '70%', minWidth: 180, textAlign: 'right' }}
             numberOfLines={1}
             onChangeText={setRpc}
             defaultValue={rpc}
