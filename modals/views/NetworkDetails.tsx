@@ -144,8 +144,12 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
             network: name.trim(),
             symbol: symbol.toUpperCase().trim(),
             color,
-            rpcUrls: rpc.split(',').map((url) => url.trim()),
             explorer: explorer.trim(),
+            rpcUrls: rpc
+              .split(',')
+              .map((url) => url.split(/\s/))
+              .flat()
+              .map((i) => i.trim()),
           })
         }
       />
