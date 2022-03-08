@@ -1,5 +1,5 @@
+import { AntDesign, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { Button, Coin, SafeViewContainer } from '../../components';
-import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import React, { useRef } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
@@ -79,7 +79,7 @@ const NFTReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, b
             <MultiSourceImage
               uriSources={vm.nft.images}
               style={{ width: 20, height: 20 }}
-              borderRadius={2}
+              borderRadius={3}
               sourceTypes={vm.nft.types}
             />
           </View>
@@ -108,6 +108,31 @@ const NFTReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, b
             >
               {utils.isAddress(vm.to) ? formatAddress(vm.to, 8, 6) : formatAddress(vm.safeTo, 14, 6, '...')}
             </Text>
+          </View>
+        </View>
+
+        <View style={reviewItemStyle}>
+          <Text style={styles.reviewItemTitle}>{t('modal-review-amount')}</Text>
+
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+            {vm.erc1155Balance > 1 && (
+              <TouchableOpacity style={{ padding: 4, paddingEnd: 8, marginEnd: 8 }} onPress={() => vm.decreaseAmount()}>
+                <AntDesign name="minuscircleo" size={12} color={textColor} />
+              </TouchableOpacity>
+            )}
+
+            <Text style={{ ...reviewItemValueStyle, maxWidth: ReactiveScreen.width - 190 }} numberOfLines={1}>
+              {vm.erc1155TransferAmount}
+            </Text>
+
+            {vm.erc1155Balance > 1 && (
+              <TouchableOpacity
+                style={{ padding: 4, paddingStart: 8, marginStart: 8, paddingEnd: 0 }}
+                onPress={() => vm.increaseAmount()}
+              >
+                <AntDesign name="pluscircleo" size={12} color={textColor} />
+              </TouchableOpacity>
+            )}
           </View>
         </View>
 

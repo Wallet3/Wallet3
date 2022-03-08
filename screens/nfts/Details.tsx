@@ -134,7 +134,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
         />
 
         {vm?.nftType ? (
-          <View style={{ padding: 16, paddingTop: 0 }}>
+          <View style={{ padding: 16, paddingTop: 8 }}>
             <Text style={{ color: detailColor, fontSize: 20, fontWeight: '600', marginBottom: 8 }}>
               {t('nft-txt-ownership')}
             </Text>
@@ -279,6 +279,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
       <Portal>
         <Modalize
           ref={sendRef}
+          onClosed={() => vm?.setTo('')}
           adjustToContentHeight
           disableScrollIfPossible
           modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}

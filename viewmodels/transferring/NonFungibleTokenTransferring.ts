@@ -1,6 +1,6 @@
 import { BigNumber, providers, utils } from 'ethers';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { call, estimateGas } from '../../common/RPC';
-import { computed, makeObservable, observable, runInAction } from 'mobx';
 
 import { Account } from '../account/Account';
 import App from '../App';
@@ -27,10 +27,12 @@ interface IConstructor {
 
 export class NFTTransferring extends BaseTransaction {
   readonly nft: NFT;
-  erc721: ERC721;
-  erc1155: ERC1155;
+  readonly erc721: ERC721;
+  readonly erc1155: ERC1155;
+
   nftType: 'erc-721' | 'erc-1155' | null = null;
   erc1155Balance = BigInt(0);
+  erc1155TransferAmount = 1;
 
   get isValidParams() {
     return (
@@ -48,7 +50,12 @@ export class NFTTransferring extends BaseTransaction {
   get txData() {
     return this.nftType === 'erc-721'
       ? this.erc721.encodeTransferFrom(this.account.address, this.toAddress, this.nft.tokenId)
-      : this.erc1155.encodeSafeTransferFrom(this.account.address, this.toAddress, this.nft.tokenId, `${this.erc1155Balance}`);
+      : this.erc1155.encodeSafeTransferFrom(
+          this.account.address,
+          this.toAddress,
+          this.nft.tokenId,
+          `${this.erc1155TransferAmount}`
+        );
   }
 
   constructor(args: IConstructor) {
@@ -58,7 +65,13 @@ export class NFTTransferring extends BaseTransaction {
     this.erc721 = new ERC721({ ...args.network, ...args.nft, owner: this.account.address });
     this.erc1155 = new ERC1155({ ...args.network, ...args.nft, owner: this.account.address });
 
-    makeObservable(this, { nftType: observable, isValidParams: computed });
+    makeObservable(this, {
+      nftType: observable,
+      erc1155TransferAmount: observable,
+      erc1155Balance: observable,
+      isValidParams: computed,
+      setTransferAmount: action,
+    });
 
     this.checkNFT();
   }
@@ -95,6 +108,18 @@ export class NFTTransferring extends BaseTransaction {
     if (this.toAddress) {
       setTimeout(() => this.estimateGas(), 0);
     }
+  }
+
+  setTransferAmount(amount: number) {
+    this.erc1155TransferAmount = Math.max(1, Math.min(amount, Number(this.erc1155Balance)));
+  }
+
+  increaseAmount() {
+    this.setTransferAmount(this.erc1155TransferAmount + 1);
+  }
+
+  decreaseAmount() {
+    this.setTransferAmount(this.erc1155TransferAmount - 1);
   }
 
   async estimateGas() {
@@ -140,7 +165,7 @@ export class NFTTransferring extends BaseTransaction {
 
   sendTx(pin?: string) {
     return super.sendRawTx(
-      { tx: this.txRequest, readableInfo: { type: 'transfer-nft', recipient: this.to, nft: this.nft.title } },
+      { tx: this.txRequest, readableInfo: { type: 'transfer-nft', amount: 1, recipient: this.to, nft: this.nft.title } },
       pin
     );
   }
