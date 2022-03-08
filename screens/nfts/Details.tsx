@@ -141,7 +141,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 }}>
               <Text style={{ color: primaryColor, fontWeight: '500', textTransform: 'capitalize' }}>{t('nft-txt-owner')}</Text>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', maxWidth: '80%' }}>
                 <Avatar
                   uri={vm.account.avatar}
                   size={15}
@@ -151,7 +151,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
                   style={{ marginEnd: 6 }}
                 />
 
-                <Text style={{ fontSize: 14, color: primaryColor, fontWeight: '500', maxWidth: '80%' }} numberOfLines={1}>
+                <Text style={{ fontSize: 14, color: primaryColor, fontWeight: '500' }} numberOfLines={1}>
                   {vm.account.displayName}
                 </Text>
               </View>
