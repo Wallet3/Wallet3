@@ -248,7 +248,12 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
         }}
       >
         <TouchableOpacity onPress={() => navigation.pop()}>
-          <Ionicons name="arrow-back-outline" size={20} color={primaryColor} />
+          <Ionicons
+            name="arrow-back-outline"
+            size={20}
+            color={primaryColor}
+            style={{ shadowColor: dominantColor, shadowOffset: { width: 0, height: 0 }, shadowRadius: 3, shadowOpacity: 0.5 }}
+          />
         </TouchableOpacity>
 
         <Text
@@ -263,7 +268,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
             maxWidth: '75%',
             textShadowColor: dominantColor || '#585858',
             textShadowOffset: { width: 0, height: 0 },
-            textShadowRadius: 4,
+            textShadowRadius: 3,
           }}
         >
           {item.meta?.name}
@@ -275,7 +280,12 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
           style={{ marginBottom: -1 }}
           onPress={() => Share.share({ message: item.meta?.name || '', url: images.find((i) => i) })}
         >
-          <Ionicons name="share-outline" size={24} color={primaryColor} />
+          <Ionicons
+            name="share-outline"
+            size={24}
+            color={primaryColor}
+            style={{ shadowColor: dominantColor, shadowOffset: { width: 0, height: 0 }, shadowRadius: 3, shadowOpacity: 0.5 }}
+          />
         </TouchableOpacity>
       </View>
 
