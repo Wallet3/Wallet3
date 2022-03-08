@@ -259,6 +259,7 @@ const InpageDAppRequests = () => {
 
 const GlobalNetworksMenuModal = () => {
   const { ref: networksRef, open: openNetworksModal, close: closeNetworksModal } = useModalize();
+  const [editing, setEditing] = useState(false);
 
   useEffect(() => {
     PubSub.subscribe(MessageKeys.openNetworksMenu, () => openNetworksModal());
@@ -274,10 +275,14 @@ const GlobalNetworksMenuModal = () => {
       adjustToContentHeight
       disableScrollIfPossible
       modalStyle={styles.modalStyle}
+      closeOnOverlayTap={!editing}
+      panGestureEnabled={!editing}
+      withHandle={!editing}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
       <NetworksMenu
         useContextMenu
+        onEditing={setEditing}
         onNetworkPress={(network) => {
           closeNetworksModal();
           Networks.switch(network);
