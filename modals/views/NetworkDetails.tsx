@@ -7,12 +7,12 @@ import Networks from '../../viewmodels/Networks';
 import Theme from '../../viewmodels/settings/Theme';
 import TxException from '../components/TxException';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
-import { getUrls } from '../../common/RPC';
+import { getRPCUrls } from '../../common/RPC';
 import i18n from '../../i18n';
 import { startLayoutAnimation } from '../../utils/animations';
 import styles from '../styles';
 
-export default ({ network, onDone }: { network?: INetwork; onDone: (network: INetwork) => void }) => {
+export default ({ network, onDone }: { network?: INetwork; onDone: (network?: INetwork) => void }) => {
   if (!network) return null;
 
   const [symbol, setSymbol] = useState('');
@@ -32,7 +32,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
     setColor(network.color);
     setRpc(
       network.rpcUrls?.join(', ') ||
-        getUrls(network.chainId)
+        getRPCUrls(network.chainId)
           .map((url) =>
             url.includes('infura.io') || url.includes('alchemyapi.io')
               ? url
@@ -147,12 +147,24 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
         title="OK"
         txtStyle={{ textTransform: 'uppercase' }}
         onPress={async () => {
-          const rpcUrls = rpc
+          let rpcUrls = rpc
             .split(',')
             .map((url) => url.trim().split(/\s/))
             .flat()
-            .map((i) => i.toLowerCase().trim())
-            .filter((i) => i.startsWith('http'));
+            .map((i) => i.trim())
+            .filter((i) => i.toLowerCase().startsWith('http'));
+
+          if (
+            symbol.toLowerCase() === network.symbol.toLowerCase() &&
+            explorer.toLowerCase() === network.explorer.toLowerCase() &&
+            name.toLowerCase() === network.network.toLowerCase() &&
+            rpcUrls.every((url) => (network.rpcUrls || getRPCUrls(network.chainId)).includes(url)) &&
+            rpcUrls.length === (network.rpcUrls || getRPCUrls(network.chainId))?.length
+          ) {
+            setException('');
+            onDone();
+            return;
+          }
 
           startLayoutAnimation();
           setBusy(true);
@@ -161,7 +173,9 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
           const match = await Promise.all(rpcUrls.map((url) => Networks.testRPC(url, network.chainId)));
           setBusy(false);
 
-          if (!match.every((i) => i)) {
+          rpcUrls = match.map((v, i) => (v ? rpcUrls[i] : null)).filter((i) => i) as string[];
+
+          if (rpcUrls.length === 0) {
             setException(`RPC chainId does not match current network id`);
             return;
           }

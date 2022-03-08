@@ -125,10 +125,12 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
     );
   };
 
-  const onSaveNetwork = (network: INetwork) => {
+  const onSaveNetwork = (network?: INetwork) => {
     swiper.current?.scrollTo(0);
-    Networks.update(network);
     onEditing?.(false);
+
+    if (!network) return;
+    Networks.update(network);
   };
 
   return (
