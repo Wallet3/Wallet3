@@ -146,9 +146,10 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
             explorer: explorer.trim(),
             rpcUrls: rpc
               .split(',')
-              .map((url) => url.split(/\s/))
+              .map((url) => url.trim().split(/\s/))
               .flat()
-              .map((i) => i.trim()),
+              .map((i) => i.toLowerCase().trim())
+              .filter((i) => i.startsWith('http')),
           })
         }
       />

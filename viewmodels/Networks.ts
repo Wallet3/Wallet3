@@ -216,7 +216,7 @@ class Networks {
 
     userChain.name = network.network;
     userChain.explorer = network.explorer;
-    userChain.rpcUrls = network.rpcUrls || [];
+    userChain.rpcUrls = network.rpcUrls?.filter((i) => i) || [];
     userChain.symbol = network.symbol;
 
     if (userChain.customize) {
