@@ -1,12 +1,15 @@
+import { ActivityIndicator, Text, TextInput, View } from 'react-native';
 import { Button, SafeViewContainer } from '../../components';
 import React, { useEffect, useState } from 'react';
-import { Text, TextInput, View } from 'react-native';
 
 import { INetwork } from '../../common/Networks';
+import Networks from '../../viewmodels/Networks';
 import Theme from '../../viewmodels/settings/Theme';
+import TxException from '../components/TxException';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import { getUrls } from '../../common/RPC';
 import i18n from '../../i18n';
+import { startLayoutAnimation } from '../../utils/animations';
 import styles from '../styles';
 
 export default ({ network, onDone }: { network?: INetwork; onDone: (network: INetwork) => void }) => {
@@ -17,6 +20,8 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
   const [rpc, setRpc] = useState('');
   const [color, setColor] = useState('');
   const [name, setName] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [exception, setException] = useState('');
 
   useEffect(() => {
     if (!network) return;
@@ -63,6 +68,8 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
               defaultValue={name}
               onChangeText={setName}
             />
+
+            {busy && <ActivityIndicator animating style={{ marginStart: 8 }} size={'small'} color={network.color} />}
           </View>
         </View>
 
@@ -107,7 +114,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
           <Text style={styles.reviewItemTitle}>RPC URLs</Text>
           <TextInput
             editable={true}
-            style={{ ...reviewItemValueStyle, maxWidth: '70%', minWidth: 180, textAlign: 'right' }}
+            style={{ ...reviewItemValueStyle, maxWidth: '70%', minWidth: 64 }}
             numberOfLines={1}
             onChangeText={setRpc}
             defaultValue={rpc}
@@ -130,28 +137,43 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
         </View>
       </View>
 
+      {exception ? <TxException exception={exception} /> : undefined}
+
       <View style={{ flex: 1 }} />
 
       <Button
         themeColor={color || network.color}
-        disabled={!rpc?.startsWith('http') || !symbol.length || !explorer.length || !name.length}
+        disabled={!rpc?.startsWith('http') || !symbol.length || !explorer.length || !name.length || busy}
         title="OK"
         txtStyle={{ textTransform: 'uppercase' }}
-        onPress={() =>
+        onPress={async () => {
+          const rpcUrls = rpc
+            .split(',')
+            .map((url) => url.trim().split(/\s/))
+            .flat()
+            .map((i) => i.toLowerCase().trim())
+            .filter((i) => i.startsWith('http'));
+
+          startLayoutAnimation();
+          setBusy(true);
+          setException('');
+          const match = await Promise.race(rpcUrls.map((url) => Networks.testRPC(url, network.chainId)));
+          setBusy(false);
+
+          if (!match) {
+            setException(`RPC chainId does not match current network id`);
+            return;
+          }
+
           onDone({
             ...network,
             network: name.trim(),
             symbol: symbol.toUpperCase().trim(),
             color,
             explorer: explorer.trim(),
-            rpcUrls: rpc
-              .split(',')
-              .map((url) => url.trim().split(/\s/))
-              .flat()
-              .map((i) => i.toLowerCase().trim())
-              .filter((i) => i.startsWith('http')),
-          })
-        }
+            rpcUrls,
+          });
+        }}
       />
     </SafeViewContainer>
   );

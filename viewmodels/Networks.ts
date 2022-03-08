@@ -235,10 +235,10 @@ class Networks {
     return provider;
   }
 
-  async testRPC(rpcUrl: string, expectedChainId: number) {
+  async testRPC(rpcUrl: string, expectedChainId: number | string) {
     try {
       const chainId = await callRPC(rpcUrl, { method: 'eth_chainId' });
-      return Number(chainId) === expectedChainId;
+      return Number(chainId) === Number(expectedChainId);
     } catch (error) {}
 
     return false;
