@@ -147,7 +147,9 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
                   size={15}
                   emoji={vm.account.emojiAvatar}
                   backgroundColor={vm.account.emojiColor}
-                  emojiSize={9}
+                  emojiSize={6}
+                  emojiMarginTop={0}
+                  emojiMarginStart={0}
                   style={{ marginEnd: 6 }}
                 />
 
