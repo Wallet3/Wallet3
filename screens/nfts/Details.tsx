@@ -276,6 +276,11 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
         </TouchableOpacity>
       </View>
 
+      <BlurView
+        intensity={10}
+        style={{ position: 'absolute', left: 0, right: 0, top: 0, height: top, backgroundColor: `${dominantColor}20` }}
+      />
+
       <StatusBar style={mode} />
 
       <Portal>
