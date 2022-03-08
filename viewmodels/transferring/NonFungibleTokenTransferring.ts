@@ -110,8 +110,13 @@ export class NFTTransferring extends BaseTransaction {
     }
   }
 
+  private estimatingTimer: any;
   setTransferAmount(amount: number) {
     this.erc1155TransferAmount = Math.max(1, Math.min(amount, Number(this.erc1155Balance)));
+    this.isEstimatingGas = true;
+
+    clearTimeout(this.estimatingTimer);
+    this.estimatingTimer = setTimeout(() => this.estimateGas(), 1000);
   }
 
   increaseAmount() {
@@ -168,5 +173,10 @@ export class NFTTransferring extends BaseTransaction {
       { tx: this.txRequest, readableInfo: { type: 'transfer-nft', amount: 1, recipient: this.to, nft: this.nft.title } },
       pin
     );
+  }
+
+  dispose() {
+    super.dispose();
+    clearTimeout(this.estimatingTimer);
   }
 }
