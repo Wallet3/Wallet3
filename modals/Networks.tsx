@@ -4,9 +4,9 @@ import { NetworkIcons, generateNetworkIcon } from '../assets/icons/networks/colo
 import { SafeViewContainer, Separator } from '../components';
 import { useEffect, useRef, useState } from 'react';
 
+import EditNetwork from './views/EditNetwork';
 import { Feather } from '@expo/vector-icons';
 import { INetwork } from '../common/Networks';
-import NetworkDetails from './views/NetworkDetails';
 import Networks from '../viewmodels/Networks';
 import React from 'react';
 import { ReactiveScreen } from '../utils/device';
@@ -152,7 +152,7 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
           />
         </SafeViewContainer>
 
-        <NetworkDetails network={editNetwork} onDone={onSaveNetwork} />
+        <EditNetwork network={editNetwork} onDone={onSaveNetwork} />
       </Swiper>
     </SafeAreaProvider>
   );
