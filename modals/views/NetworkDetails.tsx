@@ -161,7 +161,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
           const match = await Promise.all(rpcUrls.map((url) => Networks.testRPC(url, network.chainId)));
           setBusy(false);
 
-          if (!match) {
+          if (!match.every((i) => i)) {
             setException(`RPC chainId does not match current network id`);
             return;
           }
