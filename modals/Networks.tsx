@@ -61,7 +61,14 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
 
         <View style={{ width: 32, alignItems: 'center', justifyContent: 'center', marginStart: 8 }}>
           {NetworkIcons[item.chainId] ??
-            generateNetworkIcon({ chainId: item.chainId, color: item.color, width: 32, height: 30, symbol: item.symbol })}
+            generateNetworkIcon({
+              chainId: item.chainId,
+              color: item.color,
+              width: 32,
+              height: 30,
+              symbol: item.symbol,
+              hideEVMTitle: true,
+            })}
         </View>
 
         <Text style={{ fontSize: 16, marginStart: 12, fontWeight: '500', color: item.color, maxWidth: 300 }} numberOfLines={1}>
@@ -86,7 +93,7 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
       { title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' },
     ];
 
-    const viewActions = [{ title: t('button-view'), systemIcon: 'lanyardcard' }];
+    const viewActions = [{ title: `${t('button-edit')} RPC URLs`, systemIcon: 'square.and.pencil' }];
 
     const onActionPress = (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => {
       const { index } = e.nativeEvent;
@@ -128,7 +135,7 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
           <Separator style={{ marginVertical: 4, backgroundColor: borderColor }} />
           <FlatList
             ref={flatList}
-            keyExtractor={(i) => i.network}
+            keyExtractor={(i) => `${i.chainId}`}
             data={nets}
             renderItem={useContextMenu ? renderContextMenuItem : renderItem}
             contentContainerStyle={{ paddingBottom: 36 }}

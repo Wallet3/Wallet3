@@ -8,8 +8,12 @@ const cache = new Map<number, string[]>();
 export function getUrls(chainId: number | string): string[] {
   if (cache.has(Number(chainId))) return cache.get(Number(chainId)) || [];
 
-  let urls: string[] =
-    Providers[`${Number(chainId)}`]?.filter((p) => p.startsWith('http')) ?? (Networks.find(chainId)?.rpcUrls || []);
+  let urls: string[] = Providers[`${Number(chainId)}`]?.filter((p) => p.startsWith('http')) ?? [];
+
+  const network = Networks.find(chainId);
+
+  urls.unshift(...(network?.rpcUrls ?? []));
+  urls = Array.from(new Set(urls)); // Remove duplicate urls
 
   if (urls.length === 0) return [];
 

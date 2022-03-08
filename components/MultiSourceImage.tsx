@@ -4,6 +4,7 @@ import FastImage, { FastImageProps } from 'react-native-fast-image';
 import { ImageSourcePropType, Text, View } from 'react-native';
 import React, { useState } from 'react';
 
+import { BreathAnimation } from '../utils/animations';
 import { Feather } from '@expo/vector-icons';
 import ImageColors from 'react-native-image-colors';
 import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
@@ -41,7 +42,7 @@ export default (props: Props) => {
     <View style={{ backgroundColor, borderRadius, overflow: 'hidden' }}>
       {!imageLoaded && (
         <Animatable.View
-          animation={'fadeIn'}
+          animation={BreathAnimation}
           iterationCount="infinite"
           useNativeDriver
           duration={3000}

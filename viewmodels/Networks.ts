@@ -66,24 +66,36 @@ class Networks {
 
   async init() {
     const chains = await Database.chains.find();
+    const systemChains = chains.filter((c) =>
+      (__DEV__ ? AllNetworks : PublicNetworks).find((n) => n.chainId === Number(c.id))
+    );
+
+    for (let sc of systemChains) {
+      const pn = PublicNetworks.find((n) => n.chainId === Number(sc.id));
+      if (!pn) continue;
+
+      pn.rpcUrls = sc.rpcUrls;
+    }
+
+    console.log(systemChains.length);
+
+    const userChains = chains.filter((c) => !systemChains.find((sc) => sc.id === c.id));
 
     runInAction(() => {
-      this.userChains = chains
-        .filter((c) => !(__DEV__ ? AllNetworks : PublicNetworks).find((n) => n.chainId === Number(c.id)))
-        .map<INetwork>((c) => {
-          return {
-            chainId: Number(c.id),
-            color: c.customize?.color || '#7B68EE',
-            comm_id: c.name.toLowerCase(),
-            explorer: c.explorer,
-            symbol: c.symbol,
-            defaultTokens: [],
-            network: c.name,
-            rpcUrls: c.rpcUrls,
-            eip1559: c.customize?.eip1559,
-            isUserAdded: true,
-          };
-        });
+      this.userChains = userChains.map<INetwork>((c) => {
+        return {
+          chainId: Number(c.id),
+          color: c.customize?.color || '#7B68EE',
+          comm_id: c.name.toLowerCase(),
+          explorer: c.explorer,
+          symbol: c.symbol,
+          defaultTokens: [],
+          network: c.name,
+          rpcUrls: c.rpcUrls,
+          eip1559: c.customize?.eip1559,
+          isUserAdded: true,
+        };
+      });
     });
 
     AsyncStorage.getItem('network').then((chainId) => {
@@ -185,33 +197,42 @@ class Networks {
 
   async update(network: INetwork) {
     const value = this.find(network.chainId);
-    if (!value || !value.isUserAdded) return;
+    if (!value) return;
 
     runInAction(() => {
+      value.network = network.network;
       value.symbol = network.symbol;
       value.explorer = network.explorer;
       value.color = network.color;
       value.rpcUrls = network.rpcUrls;
     });
 
-    const userChain = await Database.chains.findOne({
+    let userChain = await Database.chains.findOne({
       where: { id: In([`0x${value.chainId.toString(16)}`, `${value.chainId}`, value.chainId.toString(16)]) },
     });
 
-    if (!userChain) return;
+    if (!userChain) {
+      userChain = new Chain();
+      userChain.id = `${network.chainId}`;
+    }
 
-    userChain.customize!.color = network.color;
+    userChain.name = network.network;
     userChain.explorer = network.explorer;
     userChain.rpcUrls = network.rpcUrls || [];
     userChain.symbol = network.symbol;
+
+    if (userChain.customize) {
+      userChain.customize!.color = network.color;
+    }
+
     userChain.save();
 
     deleteRPCUrlCache(value.chainId);
   }
 
   get MainnetWsProvider() {
-    const [ws] = providers['1'] as string[];
-    const provider = new ethers.providers.WebSocketProvider(ws, 1);
+    const [wss] = (providers['1'] as string[]).filter((r) => r.startsWith('wss://'));
+    const provider = new ethers.providers.WebSocketProvider(wss, 1);
 
     return provider;
   }
