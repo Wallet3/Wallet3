@@ -54,7 +54,7 @@ const Tx = observer(
 
     const nft = item.readableInfo?.nft;
     const dappIcon = item.readableInfo?.icon;
-    const amount = Number(item.readableInfo?.amount ?? utils.formatEther(item.value ?? '0'));
+    const amount = Number(item.readableInfo?.amount) || Number(utils.formatEther(item.value ?? '0'));
     const cancelTx = item.readableInfo?.cancelTx;
     const to: string = item.readableInfo?.recipient ?? item.readableInfo.dapp ?? item.to ?? '';
     const status = item.blockNumber ? (item.status ? 'confirmed' : 'failed') : 'pending';
@@ -63,7 +63,7 @@ const Tx = observer(
     return (
       <TouchableOpacity style={{ paddingVertical: 12, paddingHorizontal: 8 }} onPress={() => onPress?.(item as Transaction)}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1, alignItems: 'center' }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', maxWidth: '64%' }}>
             <Coin symbol={tokenSymbol} size={16} style={{ marginEnd: 6 }} chainId={chainId} address={item.to} />
             <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
               <Text style={{ fontSize: 16, marginEnd: 4, maxWidth: 180, color: textColor }} numberOfLines={1}>

@@ -89,7 +89,8 @@
   "bridge.harmony.one/one",
   "lido.fi",
   "app.multichain.org",
-  "chainlist.tokenpocket.pro",
+  "defillama.com",
+  "chainlist.defillama.com",
   "chat.blockscan.com",
   "zipswap.fi",
   "superrare.com",
@@ -129,5 +130,7 @@
   "www.airswap.io",
   "app.ubeswap.org",
   "mento.finance",
-  "www.celodex.org"
+  "www.celodex.org",
+  "stratosnft.io",
+  "izumi.finance"
 ]

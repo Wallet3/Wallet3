@@ -25,9 +25,10 @@ interface Props {
   selectedNetwork?: INetwork | null;
   title?: string;
   useContextMenu?: boolean;
+  onEditing?: (editing: boolean) => void;
 }
 
-export default observer(({ title, onNetworkPress, selectedNetwork, useContextMenu }: Props) => {
+export default observer(({ title, onNetworkPress, selectedNetwork, useContextMenu, onEditing }: Props) => {
   const { t } = i18n;
   const { backgroundColor, secondaryTextColor, borderColor } = Theme;
   const [nets, setNets] = useState<INetwork[]>();
@@ -37,7 +38,10 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
 
   useEffect(() => {
     const timer = setTimeout(() => setNets(Networks.all), 25);
-    const reset = () => swiper.current?.scrollTo(0);
+    const reset = () => {
+      swiper.current?.scrollTo(0);
+      onEditing?.(false);
+    };
 
     ReactiveScreen.on('change', reset);
 
@@ -62,7 +66,14 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
 
         <View style={{ width: 32, alignItems: 'center', justifyContent: 'center', marginStart: 8 }}>
           {NetworkIcons[item.chainId] ??
-            generateNetworkIcon({ chainId: item.chainId, color: item.color, width: 32, height: 30, symbol: item.symbol })}
+            generateNetworkIcon({
+              chainId: item.chainId,
+              color: item.color,
+              width: 32,
+              height: 30,
+              symbol: item.symbol,
+              hideEVMTitle: true,
+            })}
         </View>
 
         <Text style={{ fontSize: 16, marginStart: 12, fontWeight: '500', color: item.color, maxWidth: 300 }} numberOfLines={1}>
@@ -87,7 +98,7 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
       { title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' },
     ];
 
-    const viewActions = [{ title: t('button-view'), systemIcon: 'lanyardcard' }];
+    const viewActions = [{ title: `${t('button-edit')} RPC URLs`, systemIcon: 'square.and.pencil' }];
 
     const onActionPress = (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => {
       const { index } = e.nativeEvent;
@@ -95,6 +106,7 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
         case 0:
           setEditNetwork(item);
           setTimeout(() => swiper.current?.scrollTo(1), 25);
+          onEditing?.(true);
           break;
         case 1:
           startLayoutAnimation();
@@ -117,6 +129,7 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
   const onSaveNetwork = (network: INetwork) => {
     swiper.current?.scrollTo(0);
     Networks.update(network);
+    onEditing?.(false);
   };
 
   return (
@@ -129,7 +142,7 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
           <Separator style={{ marginVertical: 4, backgroundColor: borderColor }} />
           <FlatList
             ref={flatList}
-            keyExtractor={(i) => i.network}
+            keyExtractor={(i) => `${i.chainId}`}
             data={nets}
             renderItem={useContextMenu && Platform.OS === 'ios' ? renderContextMenuItem : renderItem}
             contentContainerStyle={{ paddingBottom: 36 }}

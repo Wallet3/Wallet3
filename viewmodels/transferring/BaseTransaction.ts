@@ -191,6 +191,8 @@ export class BaseTransaction {
     this.toAddress = '';
     this.txException = '';
 
+    if (!to) return;
+
     if (utils.isAddress(to)) {
       this.setToAddress(utils.getAddress(to));
       return;

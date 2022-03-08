@@ -16,10 +16,12 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
   const [explorer, setExplorer] = useState('');
   const [rpc, setRpc] = useState('');
   const [color, setColor] = useState('');
+  const [name, setName] = useState('');
 
   useEffect(() => {
     if (!network) return;
 
+    setName(network.network);
     setSymbol(network.symbol);
     setExplorer(network.explorer);
     setColor(network.color);
@@ -54,9 +56,13 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
           <Text style={styles.reviewItemTitle}>{t('modal-dapp-add-new-network-network')}</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             {generateNetworkIcon({ ...network, width: 17, height: 17, hideEVMTitle: true, style: { marginEnd: 8 } })}
-            <Text style={{ ...reviewItemValueStyle, maxWidth: 180, color: color || network.color }} numberOfLines={1}>
-              {network.network}
-            </Text>
+            <TextInput
+              editable={editable}
+              style={{ ...reviewItemValueStyle, maxWidth: 180, color: color || network.color }}
+              numberOfLines={1}
+              defaultValue={name}
+              onChangeText={setName}
+            />
           </View>
         </View>
 
@@ -98,11 +104,10 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
         )}
 
         <View style={reviewItemStyle}>
-          <Text style={styles.reviewItemTitle}>RPC URL</Text>
+          <Text style={styles.reviewItemTitle}>RPC URLs</Text>
           <TextInput
-            selectTextOnFocus
-            editable={editable}
-            style={{ ...reviewItemValueStyle, maxWidth: '70%' }}
+            editable={true}
+            style={{ ...reviewItemValueStyle, maxWidth: '70%', minWidth: 180, textAlign: 'right' }}
             numberOfLines={1}
             onChangeText={setRpc}
             defaultValue={rpc}
@@ -129,16 +134,22 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
 
       <Button
         themeColor={color || network.color}
-        disabled={!rpc.length || !symbol.length || !explorer.length}
+        disabled={!rpc?.startsWith('http') || !symbol.length || !explorer.length || !name.length}
         title="OK"
         txtStyle={{ textTransform: 'uppercase' }}
         onPress={() =>
           onDone({
             ...network,
+            network: name.trim(),
             symbol: symbol.toUpperCase().trim(),
             color,
-            rpcUrls: rpc.split(',').map((url) => url.trim()),
             explorer: explorer.trim(),
+            rpcUrls: rpc
+              .split(',')
+              .map((url) => url.trim().split(/\s/))
+              .flat()
+              .map((i) => i.toLowerCase().trim())
+              .filter((i) => i.startsWith('http')),
           })
         }
       />

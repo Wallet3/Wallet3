@@ -79,9 +79,18 @@ export default observer(({ tx, close }: { tx?: Transaction; close?: Function }) 
       <View style={styles.itemContainer}>
         <Text style={styles.txt}>{t('modal-tx-details-value')}:</Text>
         <Text style={styles.txt} numberOfLines={1}>
-          {`${tx?.readableInfo?.amount ?? utils.formatEther(tx?.value ?? '0')} ${tx?.readableInfo?.symbol ?? network.symbol}`}
+          {`${utils.formatEther(tx?.value ?? '0')} ${network.symbol}`}
         </Text>
       </View>
+
+      {Number(tx?.readableInfo?.amount) > 0 && (
+        <View style={styles.itemContainer}>
+          <Text style={styles.txt}>{t('modal-tx-details-token')}:</Text>
+          <Text style={styles.txt} numberOfLines={1}>
+            {`${tx?.readableInfo?.amount} ${tx?.readableInfo?.symbol ?? tx?.readableInfo?.nft}`}
+          </Text>
+        </View>
+      )}
 
       <View style={styles.itemContainer}>
         <Text style={styles.txt}>{t('modal-tx-details-gas-limit')}:</Text>
