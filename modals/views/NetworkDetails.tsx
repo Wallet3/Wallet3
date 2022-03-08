@@ -106,7 +106,6 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
         <View style={reviewItemStyle}>
           <Text style={styles.reviewItemTitle}>RPC URLs</Text>
           <TextInput
-            selectTextOnFocus
             editable={true}
             style={{ ...reviewItemValueStyle, maxWidth: '70%' }}
             numberOfLines={1}

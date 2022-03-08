@@ -66,20 +66,18 @@ class Networks {
 
   async init() {
     const chains = await Database.chains.find();
-    const systemChains = chains.filter((c) =>
+    const userEditedSystemChains = chains.filter((c) =>
       (__DEV__ ? AllNetworks : PublicNetworks).find((n) => n.chainId === Number(c.id))
     );
 
-    for (let sc of systemChains) {
+    for (let sc of userEditedSystemChains) {
       const pn = PublicNetworks.find((n) => n.chainId === Number(sc.id));
       if (!pn) continue;
 
       pn.rpcUrls = sc.rpcUrls;
     }
 
-    console.log(systemChains.length);
-
-    const userChains = chains.filter((c) => !systemChains.find((sc) => sc.id === c.id));
+    const userChains = chains.filter((c) => !userEditedSystemChains.find((sc) => sc.id === c.id));
 
     runInAction(() => {
       this.userChains = userChains.map<INetwork>((c) => {
