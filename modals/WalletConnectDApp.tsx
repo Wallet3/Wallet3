@@ -174,7 +174,7 @@ export default observer(({ uri, close, extra }: Props) => {
   useEffect(() => {
     if (!uri) return;
     if (client) return;
-
+    
     let wc_client = WalletConnectV1ClientHub.connect(uri, extra);
     if (!wc_client) {
       setErrorMsg(t('modal-dapp-connection-wc-failed'));
@@ -200,7 +200,7 @@ export default observer(({ uri, close, extra }: Props) => {
 
   return (
     <SafeAreaProvider style={{ ...styles.safeArea, backgroundColor }}>
-      {connecting ? <Loading /> : undefined}
+      {connecting && !connectTimeout ? <Loading /> : undefined}
       {client ? <ConnectDApp client={client} close={close} extra={extra} /> : undefined}
       {connectTimeout ? <TimeoutView close={close} msg={errorMsg} /> : undefined}
     </SafeAreaProvider>

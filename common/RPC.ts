@@ -131,6 +131,11 @@ export async function rawCall(chainId: number | string, payload: any) {
   }
 }
 
+export async function callRPC(url: string, payload: { method: string; data?: string }) {
+  const resp = await post(url, { jsonrpc: '2.0', id: Date.now(), ...payload });
+  return resp.result;
+}
+
 export async function estimateGas(
   chainId: number,
   args: {

@@ -268,7 +268,10 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
 
       <Swiper ref={swiper} showsPagination={false} showsButtons={false} loop={false} onIndexChanged={scrollToIndex}>
         <View style={{ width: '100%', height: '100%' }}>
-          <Ionicons name="arrow-forward" size={19} color="lightgrey" style={{ position: 'absolute', right: 16, top: '45%' }} />
+          <View style={{ flexDirection: 'row', position: 'absolute', right: 16, top: '45%', alignItems: 'center' }}>
+            <MetamaskLogo width={17} style={{ marginTop: -3, marginEnd: 5, opacity: 0.8 }} />
+            <Ionicons name="arrow-forward" size={18} color="orange" style={{ opacity: 0.6 }} />
+          </View>
 
           {connectedCount > 0 ? (
             <FlatList
@@ -280,7 +283,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
               contentContainerStyle={{ paddingBottom: 37 }}
             />
           ) : (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: -32 }}>
               <TouchableOpacity style={{ padding: 12 }} onPress={() => navigation.getParent()?.navigate('QRScan')}>
                 <MaterialCommunityIcons name="qrcode-scan" size={32} color={secondaryTextColor} />
               </TouchableOpacity>
