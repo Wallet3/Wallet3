@@ -157,7 +157,8 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
           startLayoutAnimation();
           setBusy(true);
           setException('');
-          const match = await Promise.race(rpcUrls.map((url) => Networks.testRPC(url, network.chainId)));
+
+          const match = await Promise.all(rpcUrls.map((url) => Networks.testRPC(url, network.chainId)));
           setBusy(false);
 
           if (!match) {
