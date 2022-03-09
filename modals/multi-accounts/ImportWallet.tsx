@@ -98,7 +98,7 @@ export default ({ onDone, onCancel }: { onDone?: () => void; onCancel?: () => vo
             onPress={() => swiper.current?.scrollTo(1)}
           >
             <Ionicons name="scan-outline" size={21} color={themeColor} />
-            <View style={{ height: 1.2, position: 'absolute', width: 13.5, left: 11,  backgroundColor: themeColor }} />
+            <View style={{ height: 1.2, position: 'absolute', width: 13.5, left: 11, backgroundColor: themeColor }} />
           </TouchableOpacity>
         </View>
 
@@ -117,6 +117,7 @@ export default ({ onDone, onCancel }: { onDone?: () => void; onCancel?: () => vo
           <TextInput
             style={{ fontSize: 17, color: themeColor }}
             defaultValue={`m/44'/60'/0'/0/0`}
+            autoCorrect={false}
             onChangeText={(txt) => mnemonic.setDerivationPath(txt)}
           />
         </View>

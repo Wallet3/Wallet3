@@ -61,6 +61,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
           placeholder={t('land-import-placeholder')}
           onChangeText={(txt) => setMnemonic(txt)}
           autoCapitalize="none"
+          autoCorrect={false}
           keyboardType="default"
           secureTextEntry={true}
           style={{
@@ -90,6 +91,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
           <TextInput
             style={{ fontSize: 17, color: themeColor }}
             defaultValue={`m/44'/60'/0'/0/0`}
+            autoCorrect={false}
             onChangeText={(txt) => MnemonicOnce.setDerivationPath(txt)}
           />
         </View>

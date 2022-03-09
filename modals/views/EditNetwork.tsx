@@ -67,6 +67,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
               numberOfLines={1}
               defaultValue={name}
               onChangeText={setName}
+              autoCorrect={false}
             />
 
             {busy && <ActivityIndicator animating style={{ marginStart: 8 }} size={'small'} color={network.color} />}
@@ -90,6 +91,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
               numberOfLines={1}
               defaultValue={symbol}
               onChangeText={setSymbol}
+              autoCorrect={false}
             />
           </View>
         </View>
@@ -105,6 +107,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
                 defaultValue={color}
                 maxLength={7}
                 onChangeText={(txt) => setColor(txt.substring(0, 7).toUpperCase())}
+                autoCorrect={false}
               />
             </View>
           </View>
@@ -118,6 +121,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
             numberOfLines={1}
             onChangeText={setRpc}
             defaultValue={rpc}
+            autoCorrect={false}
           />
         </View>
 
@@ -131,6 +135,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
             style={{ ...reviewItemValueStyle, maxWidth: '70%' }}
             numberOfLines={1}
             onChangeText={setExplorer}
+            autoCorrect={false}
           >
             {explorer}
           </TextInput>
