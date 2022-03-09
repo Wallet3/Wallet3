@@ -75,7 +75,7 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
             })}
         </View>
 
-        <Text style={{ fontSize: 16, marginStart: 12, fontWeight: '500', color: item.color, maxWidth: 300 }} numberOfLines={1}>
+        <Text style={{ fontSize: 16, marginStart: 12, fontWeight: '500', color: item.color, maxWidth: '70%' }} numberOfLines={1}>
           {item.network}
         </Text>
 

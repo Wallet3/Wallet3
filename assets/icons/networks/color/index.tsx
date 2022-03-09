@@ -188,7 +188,14 @@ export function generateNetworkIcon(props: {
     case 2152:
       return <Findora key={chainId} width={width} height={height ?? width} style={style} />;
     case 1088:
-      return <Metis key={chainId} width={width} height={height ?? width} style={style} />;
+      return (
+        <Metis
+          key={chainId}
+          width={width + (style ? 0 : 9)}
+          height={(height ?? width) + (style ? 0 : 9)}
+          style={{ ...(style || ({ margin: -9, marginEnd: -3 } as any)) }}
+        />
+      );
     default:
       return coins[symbol?.toLowerCase() || ''] ? (
         <Coin symbol={symbol} size={height ?? width} address="" chainId={chainId} style={style as any} />
