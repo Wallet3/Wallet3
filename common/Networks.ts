@@ -88,16 +88,6 @@ export const PublicNetworks: INetwork[] = [
     explorer: 'https://blockexplorer.boba.network',
   },
   {
-    symbol: 'ETH',
-    comm_id: 'metis',
-    network: 'Metis',
-    chainId: 1088,
-    color: '#00DACC',
-    l2: true,
-    defaultTokens: MetisPopularTokens,
-    explorer: 'https://andromeda-explorer.metis.io',
-  },
-  {
     symbol: 'MATIC',
     comm_id: 'matic',
     network: 'Polygon',
@@ -162,6 +152,15 @@ export const PublicNetworks: INetwork[] = [
     explorer: 'https://explorer.harmony.one',
     color: '#00aee9',
     defaultTokens: [],
+  },
+  {
+    symbol: 'Metis',
+    comm_id: 'metis',
+    network: 'Metis',
+    chainId: 1088,
+    color: '#00DACC',
+    defaultTokens: MetisPopularTokens,
+    explorer: 'https://andromeda-explorer.metis.io',
   },
   {
     symbol: 'RON',

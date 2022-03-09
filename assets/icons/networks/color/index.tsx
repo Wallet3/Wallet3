@@ -100,7 +100,7 @@ const RONIN = generateNetworkIcon({ chainId: 2020, width: 32, height: 32 });
 const ZSYNC = generateNetworkIcon({ chainId: 280, width: 32, height: 32, style: { marginStart: 0 } });
 const KLAYTN = generateNetworkIcon({ chainId: 8217, width: 27, height: 32 });
 const FINDORA = generateNetworkIcon({ chainId: 2152, width: 32, height: 32 });
-const METIS = generateNetworkIcon({ chainId: 1088, width: 37, style: { marginVertical: -2.5, marginStart: -4 } });
+const METIS = generateNetworkIcon({ chainId: 1088, width: 42, style: { marginVertical: -5, marginStart: -4 } });
 
 export const NetworkIcons = {
   1: ETH,

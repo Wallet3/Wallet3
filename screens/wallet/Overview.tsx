@@ -76,12 +76,12 @@ export default observer(
             justifyContent: 'space-between',
           }}
         >
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', maxWidth: '36%' }}>
             <TouchableOpacity
-              style={{ flexDirection: 'row', alignItems: 'center' }}
+              style={{ flexDirection: 'row', alignItems: 'center', marginEnd: 8 }}
               onPress={() => PubSub.publish(MessageKeys.openNetworksMenu)}
             >
-              <Text style={{ ...styles.text, fontSize: 16, color: textColor, maxWidth: 165 }} numberOfLines={1}>
+              <Text style={{ ...styles.text, fontSize: 16, color: textColor }} numberOfLines={1}>
                 {network?.network}
               </Text>
               <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 2 }} color={textColor} size={12} />
@@ -94,7 +94,7 @@ export default observer(
                   width: 16,
                   height: 16,
                   borderRadius: 100,
-                  marginHorizontal: 8,
+                  marginEnd: 8,
                   borderWidth: 1,
                   borderColor: '#ffffff90',
                 }}
