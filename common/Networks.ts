@@ -88,7 +88,7 @@ export const PublicNetworks: INetwork[] = [
     explorer: 'https://blockexplorer.boba.network',
   },
   {
-    symbol: 'Metis',
+    symbol: 'ETH',
     comm_id: 'metis',
     network: 'Metis',
     chainId: 1088,
