@@ -70,7 +70,7 @@
     "react-native-context-menu-view": "^1.3.0",
     "react-native-crypto": "^2.2.0",
     "react-native-device-info": "^8.5.0",
-    "react-native-draggable-flatlist": "^3.0.6",
+    "react-native-draggable-flatlist": "^3.0.7",
     "react-native-fast-image": "^8.5.11",
     "react-native-flash-message": "^0.2.1",
     "react-native-gesture-handler": "~2.3.0",

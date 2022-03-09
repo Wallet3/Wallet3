@@ -116,22 +116,24 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
           {/* <SharedElement id={`nft.${item.id}.photo`}></SharedElement> */}
         </View>
 
-        <Button
-          title={t('nft-button-transfer')}
-          txtStyle={{ color: dominantColor }}
-          themeColor={primaryColor}
-          icon={() => <Entypo name="paper-plane" color={dominantColor} size={16} />}
-          onPress={open}
-          style={{
-            marginHorizontal: 16,
-            borderRadius: 25,
-            marginVertical: 16,
-            ...shadow,
-            shadowOffset: { height: 0, width: 0 },
-            shadowRadius: 12,
-            shadowOpacity: 0.9,
-          }}
-        />
+        {vm?.nftType && (
+          <Button
+            title={t('nft-button-transfer')}
+            txtStyle={{ color: dominantColor }}
+            themeColor={primaryColor}
+            icon={() => <Entypo name="paper-plane" color={dominantColor} size={16} />}
+            onPress={open}
+            style={{
+              marginHorizontal: 16,
+              borderRadius: 25,
+              marginVertical: 16,
+              ...shadow,
+              shadowOffset: { height: 0, width: 0 },
+              shadowRadius: 12,
+              shadowOpacity: 0.9,
+            }}
+          />
+        )}
 
         {vm?.nftType ? (
           <View style={{ padding: 16, paddingTop: 8 }}>
