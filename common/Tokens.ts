@@ -676,6 +676,14 @@ const Ronin_USDC = {
 
 export const RoninPopularTokens = [Ronin_AXS, Ronin_SLP, Ronin_USDC];
 
+const Metis_DAO = {
+  address: '0x9E32b13ce7f2E80A01932B42553652E053D6ed8e',
+  decimals: 18,
+  symbol: 'Metis',
+};
+
+export const MetisPopularTokens = [Metis_DAO];
+
 const zkSync_USDC = {
   address: '0xd35CCeEAD182dcee0F148EbaC9447DA2c4D449c4',
   decimals: 6,

@@ -119,4 +119,11 @@ export default StyleSheet.create({
     alignSelf: 'flex-end',
     opacity: 0.5,
   },
+
+  metis: {
+    marginTop: -49,
+    marginEnd: -7,
+    alignSelf: 'flex-end',
+    opacity: 0.7,
+  },
 });

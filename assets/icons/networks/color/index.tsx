@@ -16,6 +16,7 @@ import Findora from './findora.svg';
 import Harmony from './harmony-one.svg';
 import Heco from './heco.svg';
 import Klaytn from './klaytn.svg';
+import Metis from './metis.svg';
 import Moonbeam from './moonbeam.svg';
 import Moonriver from './moonriver.svg';
 import Mumbai from './mumbai.svg';
@@ -99,6 +100,7 @@ const RONIN = generateNetworkIcon({ chainId: 2020, width: 32, height: 32 });
 const ZSYNC = generateNetworkIcon({ chainId: 280, width: 32, height: 32, style: { marginStart: 0 } });
 const KLAYTN = generateNetworkIcon({ chainId: 8217, width: 27, height: 32 });
 const FINDORA = generateNetworkIcon({ chainId: 2152, width: 32, height: 32 });
+const METIS = generateNetworkIcon({ chainId: 1088, width: 37, style: { marginVertical: -2.5, marginStart: -4 } });
 
 export const NetworkIcons = {
   1: ETH,
@@ -123,6 +125,7 @@ export const NetworkIcons = {
   280: ZSYNC,
   8217: KLAYTN,
   2152: FINDORA,
+  1088: METIS,
 };
 
 export function generateNetworkIcon(props: {
@@ -184,6 +187,8 @@ export function generateNetworkIcon(props: {
       return <Klaytn key={chainId} width={width} height={height ?? width} style={style} />;
     case 2152:
       return <Findora key={chainId} width={width} height={height ?? width} style={style} />;
+    case 1088:
+      return <Metis key={chainId} width={width} height={height ?? width} style={style} />;
     default:
       return coins[symbol?.toLowerCase() || ''] ? (
         <Coin symbol={symbol} size={height ?? width} address="" chainId={chainId} style={style as any} />
