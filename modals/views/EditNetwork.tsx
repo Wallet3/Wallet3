@@ -158,7 +158,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
             symbol.toLowerCase() === network.symbol.toLowerCase() &&
             explorer.toLowerCase() === network.explorer.toLowerCase() &&
             name.toLowerCase() === network.network.toLowerCase() &&
-            color.toLowerCase() === network.network.toLowerCase() &&
+            color.toLowerCase() === network.color.toLowerCase() &&
             rpcUrls.every((url) => (network.rpcUrls || getRPCUrls(network.chainId)).includes(url)) &&
             rpcUrls.length === (network.rpcUrls || getRPCUrls(network.chainId))?.length
           ) {
