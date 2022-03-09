@@ -126,4 +126,32 @@ export default StyleSheet.create({
     alignSelf: 'flex-end',
     opacity: 0.7,
   },
+
+  klaytn: {
+    marginTop: -32,
+    marginEnd: -2,
+    alignSelf: 'flex-end',
+    opacity: 0.5,
+  },
+
+  findora: {
+    marginTop: -33,
+    marginEnd: -5,
+    alignSelf: 'flex-end',
+    opacity: 0.5,
+  },
+
+  moonrivier: {
+    marginTop: -36,
+    marginEnd: -7,
+    alignSelf: 'flex-end',
+    opacity: 0.5,
+  },
+
+  moonbeam: {
+    marginTop: -37,
+    marginEnd: -2,
+    alignSelf: 'flex-end',
+    opacity: 0.5,
+  },
 });
