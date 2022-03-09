@@ -1,6 +1,8 @@
 import { Button } from '../../components';
 import React from 'react';
+import { ReactiveScreen } from '../../utils/device';
 import { View } from 'react-native';
+import { observer } from 'mobx-react-lite';
 
 interface Props {
   onReject?: () => void;
@@ -14,33 +16,38 @@ interface Props {
   approveIcon?: () => JSX.Element;
 }
 
-export default ({
-  onReject,
-  onApprove,
-  themeColor,
-  rejectTitle,
-  approveTitle,
-  disabledApprove,
-  longConfirm,
-  swipeConfirm,
-  approveIcon,
-}: Props) => {
-  return (
-    <View style={{ flexDirection: 'row', marginTop: 12 }}>
-      <Button title={rejectTitle} onPress={onReject} reverse themeColor={themeColor} style={{ flex: 10 }} />
+export default observer(
+  ({
+    onReject,
+    onApprove,
+    themeColor,
+    rejectTitle,
+    approveTitle,
+    disabledApprove,
+    longConfirm,
+    swipeConfirm,
+    approveIcon,
+  }: Props) => {
+    const { width } = ReactiveScreen;
+    const buttonWidth = (width - 32 - 12) / 2;
 
-      <View style={{ width: 12 }} />
+    return (
+      <View style={{ flexDirection: 'row', marginTop: 12 }}>
+        <Button title={rejectTitle} onPress={onReject} reverse themeColor={themeColor} style={{ width: buttonWidth }} />
 
-      <Button
-        title={approveTitle}
-        disabled={disabledApprove}
-        onPress={longConfirm ? undefined : onApprove}
-        onLongPress={longConfirm ? onApprove : undefined}
-        onSwipeSuccess={swipeConfirm ? onApprove : undefined}
-        style={{ flex: swipeConfirm ? 11 : 10 }}
-        themeColor={themeColor}
-        icon={approveIcon}
-      />
-    </View>
-  );
-};
+        <View style={{ width: 12 }} />
+
+        <Button
+          title={approveTitle}
+          disabled={disabledApprove}
+          onPress={longConfirm ? undefined : onApprove}
+          onLongPress={longConfirm ? onApprove : undefined}
+          onSwipeSuccess={swipeConfirm ? onApprove : undefined}
+          style={{ width: buttonWidth }}
+          themeColor={themeColor}
+          icon={approveIcon}
+        />
+      </View>
+    );
+  }
+);
