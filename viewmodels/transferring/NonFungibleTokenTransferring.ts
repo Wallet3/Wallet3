@@ -31,7 +31,7 @@ export class NFTTransferring extends BaseTransaction {
   readonly erc1155: ERC1155;
 
   nftType: 'erc-721' | 'erc-1155' | null = null;
-  erc1155Balance = BigInt(0);
+  erc1155Balance = BigNumber.from(0);
   erc1155TransferAmount = 1;
 
   get isValidParams() {
@@ -96,11 +96,11 @@ export class NFTTransferring extends BaseTransaction {
     }
 
     try {
-      if (BigInt(erc1155Balance || 0) > 0) {
+      if (BigNumber.from(erc1155Balance || '0').gt(0)) {
         runInAction(() => {
           startLayoutAnimation();
           this.nftType = 'erc-1155';
-          this.erc1155Balance = BigInt(erc1155Balance!);
+          this.erc1155Balance = BigNumber.from(erc1155Balance!);
         });
       }
     } catch (error) {}

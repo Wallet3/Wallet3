@@ -272,7 +272,7 @@ export const Browser = observer(
                 onChangeText={(t) => setAddr(t)}
                 onSubmitEditing={() => onAddrSubmit()}
                 style={{
-                  backgroundColor: isFocus ? '#fff' : isLightMode ? '#f5f5f5' : '#f5f5f520',
+                  backgroundColor: isFocus ? (isLightMode ? '#fff' : '#000') : isLightMode ? '#f5f5f5' : '#f5f5f520',
                   fontSize: 16,
                   paddingHorizontal: isFocus ? 8 : 20,
                   flex: 1,
@@ -288,7 +288,7 @@ export const Browser = observer(
                         : '#66db0d'
                       : webRiskLevel === 'risky'
                       ? 'red'
-                      : undefined,
+                      : textColor,
                 }}
               />
 
