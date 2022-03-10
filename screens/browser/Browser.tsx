@@ -490,7 +490,7 @@ export const Browser = observer(
             <Text style={{ marginHorizontal: 16, marginTop: 12, color: textColor }}>{t('browser-popular-dapps')}</Text>
 
             <FlatGrid
-              style={{ marginTop: 2, padding: 0, paddingBottom: 36 }}
+              style={{ marginTop: 2, padding: 0, paddingBottom: 42 }}
               contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: 8, paddingTop: 2 }}
               itemDimension={LargeIconSize + 8}
               showsVerticalScrollIndicator={false}
