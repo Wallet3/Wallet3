@@ -407,17 +407,18 @@ const styles = StyleSheet.create({
   blurView: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 4,
+    
+    paddingHorizontal: Platform.OS === 'android' ? undefined : 4,
 
-    shadowColor: `#00000060`,
-    shadowOffset: {
+    shadowColor: Platform.OS === 'android' ? undefined : `#00000060`,
+    shadowOffset: Platform.OS === 'android' ? undefined : {
       width: 0,
       height: -2,
     },
 
-    shadowRadius: 3.14,
+    shadowRadius: Platform.OS === 'android' ? undefined : 3.14,
 
-    elevation: 5,
+    elevation: Platform.OS === 'android' ? undefined : 5,
     borderTopColor: 'rgb(216, 216, 216)',
   },
 
