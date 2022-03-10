@@ -1,6 +1,4 @@
-import { Dimensions, Image, Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-
+import { Dimensions, Image, Platform, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 
 import { FlatGrid } from 'react-native-super-grid';
@@ -9,14 +7,14 @@ import { NullableImage } from '../../../components';
 import { ReactiveScreen } from '../../../utils/device';
 import { StateViewModel } from '../MultiTabIndex';
 import Theme from '../../../viewmodels/settings/Theme';
-
 import i18n from '../../../i18n';
 
 const calcTabWidth = () => {
   const { width } = ReactiveScreen;
 
   const NumOfColumns = Math.floor(width / 170);
-  const TabWidth = (width - 16 * 2 - 16 * (NumOfColumns - 1)) / NumOfColumns;
+  let TabWidth = (width - 16 * 2 - 16 * (NumOfColumns - 1)) / NumOfColumns;
+  TabWidth = Platform.OS === 'android' ? TabWidth - 2 : TabWidth;
 
   return { TabWidth };
 };

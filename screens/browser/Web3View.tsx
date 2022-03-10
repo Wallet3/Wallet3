@@ -2,11 +2,9 @@ import * as Animatable from 'react-native-animatable';
 import * as Linking from 'expo-linking';
 
 import { Entypo, Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { StyleSheet, Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-
 import { WebView, WebViewMessageEvent, WebViewNavigation, WebViewProps } from 'react-native-webview';
 
 import { Account } from '../../viewmodels/account/Account';
@@ -251,9 +249,9 @@ export default observer((props: Web3ViewProps) => {
         animation="fadeInUp"
         style={{ bottom: 0, left: 0, right: 0, position: expanded ? 'absolute' : 'relative' }}
       >
-        <BlurView
-          intensity={isLightMode ? 25 : 75}
-          tint={mode}
+        <View
+          // intensity={isLightMode ? 25 : 75}
+          // tint={mode}
           style={{
             ...styles.blurView,
             paddingVertical: safeAreaBottom === 0 ? 4 : undefined,
@@ -263,7 +261,7 @@ export default observer((props: Web3ViewProps) => {
           }}
         >
           <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-            {ReactiveScreen.width >= 500 ? (
+            {/* {ReactiveScreen.width >= 500 ? (
               expanded ? (
                 <TouchableOpacity style={styles.navTouchableItem} onPress={() => onShrinkRequest?.(webUrl)}>
                   <MaterialCommunityIcons name="arrow-collapse-vertical" size={20} color={tintColor} />
@@ -276,7 +274,7 @@ export default observer((props: Web3ViewProps) => {
                   <MaterialCommunityIcons name="arrow-expand" size={19} color={tintColor} />
                 </TouchableOpacity>
               )
-            ) : undefined}
+            ) : undefined} */}
 
             <TouchableOpacity style={styles.navTouchableItem} onPress={onTabPress}>
               <View
@@ -309,7 +307,10 @@ export default observer((props: Web3ViewProps) => {
               <Ionicons name="chevron-back-outline" size={22} color={canGoBack ? tintColor : '#dddddd50'} />
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.navTouchableItem} onPress={() => (dapp ? onNewTab?.() : onGoHome?.())}>
+            <TouchableOpacity
+              style={styles.navTouchableItem}
+              onPress={() => (Platform.OS === 'android' ? onGoHome?.() : dapp ? onNewTab?.() : onGoHome?.())}
+            >
               <Entypo name="circle" size={19} color={tintColor} />
             </TouchableOpacity>
 
@@ -360,7 +361,7 @@ export default observer((props: Web3ViewProps) => {
               </Animatable.View>
             ) : undefined}
           </View>
-        </BlurView>
+        </View>
       </Animatable.View>
 
       <Portal>
