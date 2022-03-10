@@ -77,6 +77,7 @@ export default observer(({ account }: { account?: Account }) => {
             justifyContent: 'center',
             alignItems: 'center',
             padding: 24,
+            borderRadius: 15,
           }}
         >
           <QRCode
