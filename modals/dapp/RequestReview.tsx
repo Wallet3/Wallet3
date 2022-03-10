@@ -1,5 +1,5 @@
 import { Coin, SafeViewContainer, Skeleton } from '../../components';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import React, { useRef, useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 
@@ -21,6 +21,7 @@ import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { openBrowserAsync } from 'expo-web-browser';
 import styles from '../styles';
 
 interface Props {
@@ -130,9 +131,17 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
         {vm.type !== 'Contract Interaction' ? (
           <View style={{ ...reviewItemStyle }}>
             <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-to')}</Text>
-            <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>
-              {formatAddress(vm.to, 9, 5)}
-            </Text>
+
+            <TouchableOpacity
+              style={{ flexDirection: 'row', alignItems: 'center' }}
+              onPress={() => openBrowserAsync(`${network.explorer}/address/${vm.toAddress}`)}
+            >
+              <Text style={{ ...reviewItemValueStyle, marginEnd: 6 }} numberOfLines={1}>
+                {formatAddress(vm.to, 9, 5)}
+              </Text>
+
+              <Ionicons name="search-outline" size={15} color={textColor} />
+            </TouchableOpacity>
           </View>
         ) : (
           <View style={{ ...reviewItemStyle }}>

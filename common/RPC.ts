@@ -5,7 +5,7 @@ import { post } from '../utils/fetch';
 
 const cache = new Map<number, string[]>();
 
-export function getUrls(chainId: number | string): string[] {
+export function getRPCUrls(chainId: number | string): string[] {
   if (cache.has(Number(chainId))) return cache.get(Number(chainId)) || [];
 
   let urls: string[] = Providers[`${Number(chainId)}`]?.filter((p) => p.startsWith('http')) ?? [];
@@ -26,7 +26,7 @@ export function deleteRPCUrlCache(chainId: number | string) {
 }
 
 export async function getBalance(chainId: number, address: string): Promise<BigNumber> {
-  const urls = getUrls(chainId);
+  const urls = getRPCUrls(chainId);
 
   for (let url of urls) {
     try {
@@ -45,7 +45,7 @@ export async function getBalance(chainId: number, address: string): Promise<BigN
 }
 
 export async function sendTransaction(chainId: number, txHex: string) {
-  const urls = getUrls(chainId);
+  const urls = getRPCUrls(chainId);
   let error: { code: number; message: string } | undefined = undefined;
 
   for (let url of urls) {
@@ -70,7 +70,7 @@ export async function sendTransaction(chainId: number, txHex: string) {
 }
 
 export async function getTransactionCount(chainId: number, address: string) {
-  const urls = getUrls(chainId);
+  const urls = getRPCUrls(chainId);
 
   for (let url of urls) {
     try {
@@ -100,7 +100,7 @@ export async function call<T>(
     data: string;
   }
 ) {
-  const urls = getUrls(chainId);
+  const urls = getRPCUrls(chainId);
 
   for (let url of urls) {
     try {
@@ -121,7 +121,7 @@ export async function call<T>(
 }
 
 export async function rawCall(chainId: number | string, payload: any) {
-  const urls = getUrls(chainId);
+  const urls = getRPCUrls(chainId);
 
   for (let url of urls) {
     try {
@@ -129,6 +129,11 @@ export async function rawCall(chainId: number | string, payload: any) {
       return resp.result;
     } catch (error) {}
   }
+}
+
+export async function callRPC(url: string, payload: { method: string; data?: string }) {
+  const resp = await post(url, { jsonrpc: '2.0', id: Date.now(), ...payload });
+  return resp.result;
 }
 
 export async function estimateGas(
@@ -142,7 +147,7 @@ export async function estimateGas(
     data: string;
   }
 ) {
-  const urls = getUrls(chainId);
+  const urls = getRPCUrls(chainId);
   let errorMessage = '';
   let errors = 0;
 
@@ -170,7 +175,7 @@ export async function estimateGas(
 }
 
 export async function getGasPrice(chainId: number) {
-  const urls = getUrls(chainId);
+  const urls = getRPCUrls(chainId);
 
   for (let url of urls) {
     try {
@@ -191,7 +196,7 @@ export async function getGasPrice(chainId: number) {
 }
 
 export async function getTransactionReceipt(chainId: number, hash: string) {
-  const urls = getUrls(chainId);
+  const urls = getRPCUrls(chainId);
 
   for (let url of urls) {
     try {
@@ -217,7 +222,7 @@ export async function getTransactionReceipt(chainId: number, hash: string) {
 }
 
 export async function getNextBlockBaseFee(chainId: number) {
-  const urls = getUrls(chainId);
+  const urls = getRPCUrls(chainId);
 
   for (let url of urls) {
     try {
@@ -244,7 +249,7 @@ export async function getNextBlockBaseFeeByRPC(url: string) {
 }
 
 export async function getMaxPriorityFee(chainId: number) {
-  const urls = getUrls(chainId);
+  const urls = getRPCUrls(chainId);
 
   for (let url of urls) {
     try {
@@ -267,7 +272,7 @@ export async function getMaxPriorityFeeByRPC(url: string) {
 }
 
 export async function getCode(chainId: number, contract: string) {
-  const urls = getUrls(chainId);
+  const urls = getRPCUrls(chainId);
 
   for (let url of urls) {
     try {

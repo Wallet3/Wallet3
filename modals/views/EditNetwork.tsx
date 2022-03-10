@@ -1,15 +1,18 @@
+import { ActivityIndicator, Text, TextInput, View } from 'react-native';
 import { Button, SafeViewContainer } from '../../components';
 import React, { useEffect, useState } from 'react';
-import { Text, TextInput, View } from 'react-native';
 
 import { INetwork } from '../../common/Networks';
+import Networks from '../../viewmodels/Networks';
 import Theme from '../../viewmodels/settings/Theme';
+import TxException from '../components/TxException';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
-import { getUrls } from '../../common/RPC';
+import { getRPCUrls } from '../../common/RPC';
 import i18n from '../../i18n';
+import { startLayoutAnimation } from '../../utils/animations';
 import styles from '../styles';
 
-export default ({ network, onDone }: { network?: INetwork; onDone: (network: INetwork) => void }) => {
+export default ({ network, onDone }: { network?: INetwork; onDone: (network?: INetwork) => void }) => {
   if (!network) return null;
 
   const [symbol, setSymbol] = useState('');
@@ -17,6 +20,8 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
   const [rpc, setRpc] = useState('');
   const [color, setColor] = useState('');
   const [name, setName] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [exception, setException] = useState('');
 
   useEffect(() => {
     if (!network) return;
@@ -27,7 +32,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
     setColor(network.color);
     setRpc(
       network.rpcUrls?.join(', ') ||
-        getUrls(network.chainId)
+        getRPCUrls(network.chainId)
           .map((url) =>
             url.includes('infura.io') || url.includes('alchemyapi.io')
               ? url
@@ -62,7 +67,10 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
               numberOfLines={1}
               defaultValue={name}
               onChangeText={setName}
+              autoCorrect={false}
             />
+
+            {busy && <ActivityIndicator animating style={{ marginStart: 8 }} size={'small'} color={network.color} />}
           </View>
         </View>
 
@@ -83,6 +91,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
               numberOfLines={1}
               defaultValue={symbol}
               onChangeText={setSymbol}
+              autoCorrect={false}
             />
           </View>
         </View>
@@ -98,6 +107,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
                 defaultValue={color}
                 maxLength={7}
                 onChangeText={(txt) => setColor(txt.substring(0, 7).toUpperCase())}
+                autoCorrect={false}
               />
             </View>
           </View>
@@ -107,10 +117,11 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
           <Text style={styles.reviewItemTitle}>RPC URLs</Text>
           <TextInput
             editable={true}
-            style={{ ...reviewItemValueStyle, maxWidth: '70%', minWidth: 180, textAlign: 'right' }}
+            style={{ ...reviewItemValueStyle, maxWidth: '70%', minWidth: 64 }}
             numberOfLines={1}
             onChangeText={setRpc}
             defaultValue={rpc}
+            autoCorrect={false}
           />
         </View>
 
@@ -124,34 +135,66 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network: INe
             style={{ ...reviewItemValueStyle, maxWidth: '70%' }}
             numberOfLines={1}
             onChangeText={setExplorer}
+            autoCorrect={false}
           >
             {explorer}
           </TextInput>
         </View>
       </View>
 
+      {exception ? <TxException exception={exception} /> : undefined}
+
       <View style={{ flex: 1 }} />
 
       <Button
         themeColor={color || network.color}
-        disabled={!rpc?.startsWith('http') || !symbol.length || !explorer.length || !name.length}
+        disabled={!rpc?.startsWith('http') || !symbol.length || !explorer.length || !name.length || busy}
         title="OK"
         txtStyle={{ textTransform: 'uppercase' }}
-        onPress={() =>
+        onPress={async () => {
+          let rpcUrls = rpc
+            .split(',')
+            .map((url) => url.trim().split(/\s/))
+            .flat()
+            .map((i) => i.trim())
+            .filter((i) => i.toLowerCase().startsWith('http'));
+
+          if (
+            symbol.toLowerCase() === network.symbol.toLowerCase() &&
+            explorer.toLowerCase() === network.explorer.toLowerCase() &&
+            name.toLowerCase() === network.network.toLowerCase() &&
+            color.toLowerCase() === network.color.toLowerCase() &&
+            rpcUrls.every((url) => (network.rpcUrls || getRPCUrls(network.chainId)).includes(url)) &&
+            rpcUrls.length === (network.rpcUrls || getRPCUrls(network.chainId))?.length
+          ) {
+            setException('');
+            onDone();
+            return;
+          }
+
+          startLayoutAnimation();
+          setBusy(true);
+          setException('');
+
+          const match = await Promise.all(rpcUrls.map((url) => Networks.testRPC(url, network.chainId)));
+          setBusy(false);
+
+          rpcUrls = match.map((v, i) => (v ? rpcUrls[i] : null)).filter((i) => i) as string[];
+
+          if (rpcUrls.length === 0) {
+            setException(`RPC chainId does not match current network id`);
+            return;
+          }
+
           onDone({
             ...network,
             network: name.trim(),
             symbol: symbol.toUpperCase().trim(),
             color,
             explorer: explorer.trim(),
-            rpcUrls: rpc
-              .split(',')
-              .map((url) => url.trim().split(/\s/))
-              .flat()
-              .map((i) => i.toLowerCase().trim())
-              .filter((i) => i.startsWith('http')),
-          })
-        }
+            rpcUrls,
+          });
+        }}
       />
     </SafeViewContainer>
   );

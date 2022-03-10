@@ -7,8 +7,13 @@ import Celo from './celo.svg';
 import Cronos from './cronos.svg';
 import Ethereum from './ethereum.svg';
 import Fantom from './fantom.svg';
+import Findora from './findora.svg';
 import Harmony from './harmony-one.svg';
 import Heco from './heco.svg';
+import Klaytn from './klaytn.svg';
+import Metis from './metis.svg';
+import Moonbeam from './moonbeam.svg';
+import Moonrivier from './moonriver.svg';
 import OKEx from './okex.svg';
 import Optimism from './optimism.svg';
 import Polygon from './polygon.svg';
@@ -36,4 +41,9 @@ export default {
   1666600000: <Harmony width={52} height={52} style={styles.harmony} />,
   2020: <Ronin width={42} height={42} style={styles.ronin} />,
   280: <ZkSync width={49} height={49} style={styles.zkSync} />,
+  1088: <Metis width={64} height={64} style={styles.metis} />,
+  8217: <Klaytn width={37} height={37} style={styles.klaytn} />,
+  2152: <Findora width={42} height={42} style={styles.findora} />,
+  1284: <Moonbeam width={42} height={42} style={styles.moonbeam} />,
+  1285: <Moonrivier width={42} height={42} style={styles.moonrivier} />,
 };

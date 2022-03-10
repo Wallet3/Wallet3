@@ -220,7 +220,7 @@ export class InpageDAppController extends EventEmitter {
     if (Number(dapp.lastUsedChainId) === Number(targetChainId)) return null;
     if (!Networks.has(targetChainId)) return { error: { code: 4902, message: 'the chain has not been added to Wallet 3' } };
 
-    this.setDAppChainId(origin, targetChainId);
+    this.setDAppChainId(origin, targetChainId, 'inpage');
 
     return null;
   }
@@ -473,21 +473,25 @@ export class InpageDAppController extends EventEmitter {
     return dapp.lastUsedAccount === address ? address : null;
   }
 
-  async setDAppChainId(origin: string, chainId: string | number) {
+  async setDAppChainId(origin: string, chainId: string | number, from: 'user' | 'inpage' = 'user') {
     const dapp = this.getDApp(origin);
     if (!dapp) return;
 
     dapp.setLastUsedChain(chainId);
 
-    this.emit('appChainUpdated_metamask', {
-      origin,
-      name: 'metamask-provider',
-      data: {
-        method: NOTIFICATION_NAMES.chainChanged,
-        jsonrpc: '2.0',
-        params: { chainId: `0x${Number(chainId).toString(16)}`, networkVersion: `${chainId}` },
+    this.emit(
+      'appChainUpdated_metamask',
+      {
+        origin,
+        name: 'metamask-provider',
+        data: {
+          method: NOTIFICATION_NAMES.chainChanged,
+          jsonrpc: '2.0',
+          params: { chainId: `0x${Number(chainId).toString(16)}`, networkVersion: `${chainId}` },
+        },
       },
-    });
+      from
+    );
   }
 
   async setDAppAccount(origin: string, account: string) {

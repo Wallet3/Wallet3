@@ -9,6 +9,7 @@ import {
   FTMPopularTokens,
   HecoPopularTokens,
   IToken,
+  MetisPopularTokens,
   PolygonPopularTokens,
   RoninPopularTokens,
   xDaiPopularTokens,
@@ -151,6 +152,15 @@ export const PublicNetworks: INetwork[] = [
     explorer: 'https://explorer.harmony.one',
     color: '#00aee9',
     defaultTokens: [],
+  },
+  {
+    symbol: 'Metis',
+    comm_id: 'metis',
+    network: 'Metis',
+    chainId: 1088,
+    color: '#00DACC',
+    defaultTokens: MetisPopularTokens,
+    explorer: 'https://andromeda-explorer.metis.io',
   },
   {
     symbol: 'RON',

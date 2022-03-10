@@ -5,9 +5,9 @@ import { NetworkIcons, generateNetworkIcon } from '../assets/icons/networks/colo
 import { SafeViewContainer, Separator } from '../components';
 import { useEffect, useRef, useState } from 'react';
 
+import EditNetwork from './views/EditNetwork';
 import { Feather } from '@expo/vector-icons';
 import { INetwork } from '../common/Networks';
-import NetworkDetails from './views/NetworkDetails';
 import Networks from '../viewmodels/Networks';
 import React from 'react';
 import { ReactiveScreen } from '../utils/device';
@@ -76,7 +76,7 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
             })}
         </View>
 
-        <Text style={{ fontSize: 16, marginStart: 12, fontWeight: '500', color: item.color, maxWidth: 300 }} numberOfLines={1}>
+        <Text style={{ fontSize: 16, marginStart: 12, fontWeight: '500', color: item.color, maxWidth: '70%' }} numberOfLines={1}>
           {item.network}
         </Text>
 
@@ -126,10 +126,12 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
     );
   };
 
-  const onSaveNetwork = (network: INetwork) => {
+  const onSaveNetwork = (network?: INetwork) => {
     swiper.current?.scrollTo(0);
-    Networks.update(network);
     onEditing?.(false);
+
+    if (!network) return;
+    Networks.update(network);
   };
 
   return (
@@ -151,7 +153,7 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
           />
         </SafeViewContainer>
 
-        <NetworkDetails network={editNetwork} onDone={onSaveNetwork} />
+        <EditNetwork network={editNetwork} onDone={onSaveNetwork} />
       </Swiper>
     </SafeAreaProvider>
   );

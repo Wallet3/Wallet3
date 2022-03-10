@@ -2,7 +2,7 @@ import * as Animatable from 'react-native-animatable';
 import * as Linking from 'expo-linking';
 
 import { Entypo, Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -81,6 +81,8 @@ export default observer((props: Web3ViewProps) => {
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
   const { onMetadataChange, onGoHome, onNewTab, expanded, onShrinkRequest, onExpandRequest, onBookmarksPress } = props;
 
+  const networkIndicator = useRef<Animatable.View>(null);
+
   const [canGoBack, setCanGoBack] = useState(false);
   const [canGoForward, setCanGoForward] = useState(false);
 
@@ -89,6 +91,7 @@ export default observer((props: Web3ViewProps) => {
   const [appAccount, setAppAccount] = useState<Account>();
   const [dapp, setDApp] = useState<ConnectedBrowserDApp | undefined>();
   const [webUrl, setWebUrl] = useState('');
+
   const { mode, foregroundColor, isLightMode, backgroundColor, borderColor, systemBorderColor } = Theme;
 
   const updateDAppState = (dapp?: ConnectedBrowserDApp) => {
@@ -127,10 +130,13 @@ export default observer((props: Web3ViewProps) => {
   };
 
   useEffect(() => {
-    const notifyWebView = async (appState) => {
+    const notifyWebView = async (appState, from?: 'user' | 'inpage') => {
       const webview = (webViewRef as any).current as WebView;
       webview?.injectJavaScript(JS_POST_MESSAGE_TO_PROVIDER(appState));
       updateDAppState(hub.getDApp(appState.origin));
+
+      if (from !== 'inpage') return;
+      networkIndicator.current?.flash?.();
     };
 
     hub.on('appChainUpdated_metamask', notifyWebView);
@@ -332,7 +338,11 @@ export default observer((props: Web3ViewProps) => {
             )}
 
             {dapp && appNetwork ? (
-              <Animatable.View animation={'fadeInUp'} style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Animatable.View
+                ref={networkIndicator as any}
+                animation={'fadeInUp'}
+                style={{ flexDirection: 'row', alignItems: 'center' }}
+              >
                 <TouchableOpacity
                   onPress={() => openNetworksModal()}
                   style={{ paddingStart: 16, paddingEnd: 10, position: 'relative' }}
@@ -340,7 +350,6 @@ export default observer((props: Web3ViewProps) => {
                   {generateNetworkIcon({
                     ...appNetwork,
                     width: 23,
-                    style: {},
                     hideEVMTitle: true,
                   })}
 

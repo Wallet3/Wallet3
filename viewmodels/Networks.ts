@@ -2,7 +2,7 @@ import * as ethers from 'ethers';
 
 import { AllNetworks, INetwork, PublicNetworks } from '../common/Networks';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
-import { deleteRPCUrlCache, getMaxPriorityFeeByRPC, getNextBlockBaseFeeByRPC } from '../common/RPC';
+import { call, callRPC, deleteRPCUrlCache, getMaxPriorityFeeByRPC, getNextBlockBaseFeeByRPC } from '../common/RPC';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Chain from '../models/Chain';
@@ -233,6 +233,15 @@ class Networks {
     const provider = new ethers.providers.WebSocketProvider(wss, 1);
 
     return provider;
+  }
+
+  async testRPC(rpcUrl: string, expectedChainId: number | string) {
+    try {
+      const chainId = await callRPC(rpcUrl, { method: 'eth_chainId' });
+      return Number(chainId) === Number(expectedChainId);
+    } catch (error) {}
+
+    return false;
   }
 }
 
