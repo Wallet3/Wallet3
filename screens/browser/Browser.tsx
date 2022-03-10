@@ -467,21 +467,21 @@ export const Browser = observer(
             onNavigationStateChange={onNavigationStateChange}
             onGoHome={goHome}
             onNewTab={onNewTab}
-            expanded={isExpandedSite}
             onBookmarksPress={openFavs}
             onMetadataChange={(data) => {
               setPageMetadata(data);
               onPageLoaded?.(pageId, data);
               Bookmarks.addRecentSite(data);
             }}
-            onShrinkRequest={(webUrl) => {
-              Bookmarks.removeExpandedSite(webUrl);
-              setIsExpandedSite(false);
-            }}
-            onExpandRequest={(webUrl) => {
-              Bookmarks.addExpandedSite(webUrl);
-              setIsExpandedSite(true);
-            }}
+            // expanded={isExpandedSite}
+            // onShrinkRequest={(webUrl) => {
+            //   Bookmarks.removeExpandedSite(webUrl);
+            //   setIsExpandedSite(false);
+            // }}
+            // onExpandRequest={(webUrl) => {
+            //   Bookmarks.addExpandedSite(webUrl);
+            //   setIsExpandedSite(true);
+            // }}
           />
         ) : (
           <View style={{ flex: 1 }}>
@@ -541,10 +541,10 @@ export const Browser = observer(
             ref={favsRef}
             adjustToContentHeight
             disableScrollIfPossible
-            scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
             modalStyle={{ padding: 0, margin: 0 }}
+            scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
           >
-            <SafeAreaProvider style={{ padding: 0, borderTopEndRadius: 7, borderTopStartRadius: 7 }}>
+            <SafeAreaProvider style={{ height: 439, padding: 0, borderTopEndRadius: 7, borderTopStartRadius: 7 }}>
               <SafeViewContainer
                 style={{ height: 439, backgroundColor, flex: 1, padding: 0, borderTopEndRadius: 6, borderTopStartRadius: 6 }}
               >

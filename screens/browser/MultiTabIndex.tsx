@@ -103,10 +103,10 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
     />
   );
 
-  const newTab = (force = false) => {
+  const newTab = (forceGenerate = false) => {
     const index = state.findBlankPageIndex();
 
-    if (!force && index >= 0) {
+    if (!forceGenerate && index >= 0) {
       swiper.current?.scrollToIndex({ index, animated: true });
       return;
     }
