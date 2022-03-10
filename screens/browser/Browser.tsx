@@ -88,7 +88,7 @@ export const Browser = observer(
     const [pageMetadata, setPageMetadata] = useState<{ icon: string; title: string; desc?: string; origin: string }>();
     const [suggests, setSuggests] = useState<string[]>([]);
     const [webRiskLevel, setWebRiskLevel] = useState('');
-    const [isExpandedSite, setIsExpandedSite] = useState(false);
+
     const { ref: favsRef, open: openFavs, close: closeFavs } = useModalize();
 
     const [largeIconSize, setLargeIconSize] = useState(LargeIconSize);
@@ -139,8 +139,6 @@ export const Browser = observer(
         : webUrl.startsWith('https://')
         ? setWebRiskLevel('tls')
         : setWebRiskLevel('insecure');
-
-      setIsExpandedSite(Bookmarks.isExpandedSite(webUrl));
     }, [webUrl]);
 
     const refresh = () => {
@@ -227,10 +225,14 @@ export const Browser = observer(
 
     useEffect(() => {
       setSuggests(
-        history
-          .concat((SuggestUrls as string[]).filter((u) => !history.find((hurl) => hurl.includes(u) || u.includes(hurl))))
-          .filter((url) => url.includes(addr) || addr.includes(url))
-          .slice(0, 5)
+        Array.from(
+          new Set(
+            history
+              .concat((SuggestUrls as string[]).filter((u) => !history.find((hurl) => hurl.includes(u) || u.includes(hurl))))
+              .filter((url) => url.includes(addr) || addr.includes(url))
+              .slice(0, 5)
+          )
+        )
       );
     }, [addr]);
 
@@ -473,15 +475,6 @@ export const Browser = observer(
               onPageLoaded?.(pageId, data);
               Bookmarks.addRecentSite(data);
             }}
-            // expanded={isExpandedSite}
-            // onShrinkRequest={(webUrl) => {
-            //   Bookmarks.removeExpandedSite(webUrl);
-            //   setIsExpandedSite(false);
-            // }}
-            // onExpandRequest={(webUrl) => {
-            //   Bookmarks.addExpandedSite(webUrl);
-            //   setIsExpandedSite(true);
-            // }}
           />
         ) : (
           <View style={{ flex: 1 }}>

@@ -3,7 +3,6 @@ import * as Linking from 'expo-linking';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import NoInsetsSites from '../../configs/urls/no-insets.json';
 import { PageMetadata } from '../../screens/browser/Web3View';
 import RiskyHosts from '../../configs/urls/risky.json';
 import SecureHosts from '../../configs/urls/verified.json';
@@ -18,7 +17,6 @@ class Bookmarks {
   favs: Bookmark[] = [];
   history: string[] = [];
   recentSites: PageMetadata[] = [];
-  expandedSites: string[] = [];
 
   constructor() {
     makeObservable(this, {
@@ -28,9 +26,7 @@ class Bookmarks {
       add: action,
       submitHistory: action,
       reset: action,
-      expandedSites: observable,
-      addExpandedSite: action,
-      removeExpandedSite: action,
+
       recentSites: observable,
       addRecentSite: action,
       removeRecentSite: action,
@@ -42,10 +38,6 @@ class Bookmarks {
 
     AsyncStorage.getItem(`history-urls`)
       .then((v) => runInAction(() => (this.history = JSON.parse(v || '[]'))))
-      .catch(() => {});
-
-    AsyncStorage.getItem(`expanded-sites`)
-      .then((v) => runInAction(() => (this.expandedSites = v ? JSON.parse(v || '[]') : NoInsetsSites)))
       .catch(() => {});
 
     AsyncStorage.getItem('recent-sites')
@@ -74,29 +66,6 @@ class Bookmarks {
   submitHistory(url: string) {
     this.history = [url, ...this.history.filter((i) => !i.includes(url) || !url.includes(i))];
     AsyncStorage.setItem(`history-urls`, JSON.stringify(this.history.slice(0, 100)));
-  }
-
-  addExpandedSite(url: string) {
-    const { hostname } = Linking.parse(url || 'https://');
-    if (!hostname) return;
-
-    this.expandedSites.push(hostname);
-    AsyncStorage.setItem('expanded-sites', JSON.stringify(this.expandedSites));
-  }
-
-  removeExpandedSite(url: string) {
-    const { hostname } = Linking.parse(url || 'https://');
-    if (!hostname) return;
-
-    this.expandedSites = this.expandedSites.filter((i) => i !== hostname);
-    AsyncStorage.setItem('expanded-sites', JSON.stringify(this.expandedSites));
-  }
-
-  isExpandedSite(url: string) {
-    const { hostname } = Linking.parse(url || 'https://');
-    if (!hostname) return false;
-
-    return this.expandedSites.includes(hostname) || this.expandedSites.some((i) => hostname.includes(i));
   }
 
   addRecentSite(metadata: PageMetadata) {
@@ -136,7 +105,6 @@ class Bookmarks {
     this.favs = [];
     this.history = [];
     this.recentSites = [];
-    this.expandedSites = NoInsetsSites;
   }
 }
 
