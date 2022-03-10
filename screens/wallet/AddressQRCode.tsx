@@ -2,7 +2,9 @@ import * as Animatable from 'react-native-animatable';
 import * as ExpoLinking from 'expo-linking';
 
 import { EvilIcons, Feather, Ionicons } from '@expo/vector-icons';
-import { Image, Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Linking, StyleSheet, Text, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
 import React, { useRef, useState } from 'react';
 
 import { Account } from '../../viewmodels/account/Account';
@@ -75,15 +77,6 @@ export default observer(({ account }: { account?: Account }) => {
             justifyContent: 'center',
             alignItems: 'center',
             padding: 24,
-            borderRadius: 15,
-            shadowColor: '#000',
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.23,
-            shadowRadius: 2.62,
-            elevation: 5,
           }}
         >
           <QRCode
@@ -108,7 +101,7 @@ export default observer(({ account }: { account?: Account }) => {
           <Animatable.View ref={explorerView as any}>
             <TouchableOpacity
               style={{ flexDirection: 'row', alignItems: 'center' }}
-              onPress={() => openBrowserAsync(`${current.explorer}/address/${address}`)}
+              onPressOut={() => openBrowserAsync(`${current.explorer}/address/${address}`)}
               onLongPress={() => {
                 setString(`${current.explorer}/address/${address}`);
                 explorerView.current?.flash?.();
@@ -123,7 +116,7 @@ export default observer(({ account }: { account?: Account }) => {
 
           <View style={{ height: 10, width: 1, backgroundColor: thirdTextColor, marginHorizontal: 8 }} />
 
-          <TouchableOpacity onPress={() => setShowFullAddress(!showFullAddress)}>
+          <TouchableOpacity onPressOut={() => setShowFullAddress(!showFullAddress)}>
             <Text style={{ color: thirdTextColor, fontSize: 12 }}>{t('misc-show-full-address')}</Text>
           </TouchableOpacity>
         </View>
