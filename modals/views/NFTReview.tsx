@@ -38,7 +38,7 @@ interface Props {
 const NFTReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biometricType }: Props) => {
   const { t } = i18n;
   const [busy, setBusy] = React.useState(false);
-  const { borderColor, textColor, isLightMode, tintColor, secondaryTextColor } = Theme;
+  const { borderColor, textColor, secondaryTextColor } = Theme;
 
   const send = async () => {
     setBusy(true);
@@ -115,7 +115,7 @@ const NFTReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, b
           <Text style={styles.reviewItemTitle}>{t('modal-review-amount')}</Text>
 
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-            {vm.erc1155Balance > 1 && (
+            {vm.erc1155Balance.gt(1) && (
               <TouchableOpacity style={{ padding: 4, paddingEnd: 8, marginEnd: 8 }} onPress={() => vm.decreaseAmount()}>
                 <AntDesign name="minuscircleo" size={12} color={textColor} />
               </TouchableOpacity>
@@ -125,7 +125,7 @@ const NFTReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, b
               {vm.erc1155TransferAmount}
             </Text>
 
-            {vm.erc1155Balance > 1 && (
+            {vm.erc1155Balance.gt(1) && (
               <TouchableOpacity
                 style={{ padding: 4, paddingStart: 8, marginStart: 8, paddingEnd: 0 }}
                 onPress={() => vm.increaseAmount()}

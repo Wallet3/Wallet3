@@ -1,9 +1,7 @@
 import * as Linking from 'expo-linking';
 
 import Bookmarks, { Bookmark, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
-import { Dimensions, ListRenderItemInfo, Share, Text, TextInput, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-
+import { Dimensions, ListRenderItemInfo, Share, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { EvilIcons, Ionicons } from '@expo/vector-icons';
 import { NullableImage, SafeViewContainer } from '../../components';
 import React, { useEffect, useRef, useState } from 'react';
@@ -90,7 +88,7 @@ export const Browser = observer(
     const [pageMetadata, setPageMetadata] = useState<{ icon: string; title: string; desc?: string; origin: string }>();
     const [suggests, setSuggests] = useState<string[]>([]);
     const [webRiskLevel, setWebRiskLevel] = useState('');
-    const [isExpandedSite, setIsExpandedSite] = useState(false);
+
     const { ref: favsRef, open: openFavs, close: closeFavs } = useModalize();
 
     const [largeIconSize, setLargeIconSize] = useState(LargeIconSize);
@@ -141,8 +139,6 @@ export const Browser = observer(
         : webUrl.startsWith('https://')
         ? setWebRiskLevel('tls')
         : setWebRiskLevel('insecure');
-
-      setIsExpandedSite(Bookmarks.isExpandedSite(webUrl));
     }, [webUrl]);
 
     const refresh = () => {
@@ -229,10 +225,14 @@ export const Browser = observer(
 
     useEffect(() => {
       setSuggests(
-        history
-          .concat((SuggestUrls as string[]).filter((u) => !history.find((hurl) => hurl.includes(u) || u.includes(hurl))))
-          .filter((url) => url.includes(addr) || addr.includes(url))
-          .slice(0, 5)
+        Array.from(
+          new Set(
+            history
+              .concat((SuggestUrls as string[]).filter((u) => !history.find((hurl) => hurl.includes(u) || u.includes(hurl))))
+              .filter((url) => url.includes(addr) || addr.includes(url))
+              .slice(0, 5)
+          )
+        )
       );
     }, [addr]);
 
@@ -272,7 +272,7 @@ export const Browser = observer(
                 onChangeText={(t) => setAddr(t)}
                 onSubmitEditing={() => onAddrSubmit()}
                 style={{
-                  backgroundColor: isFocus ? (isLightMode ? '#fff' : '#000') : (isLightMode ? '#f5f5f5' : '#f5f5f520'),
+                  backgroundColor: isFocus ? (isLightMode ? '#fff' : '#000') : isLightMode ? '#f5f5f5' : '#f5f5f520',
                   fontSize: 16,
                   paddingHorizontal: isFocus ? 8 : 20,
                   flex: 1,
@@ -475,22 +475,13 @@ export const Browser = observer(
               onPageLoaded?.(pageId, data);
               Bookmarks.addRecentSite(data);
             }}
-            // expanded={isExpandedSite}
-            // onShrinkRequest={(webUrl) => {
-            //   Bookmarks.removeExpandedSite(webUrl);
-            //   setIsExpandedSite(false);
-            // }}
-            // onExpandRequest={(webUrl) => {
-            //   Bookmarks.addExpandedSite(webUrl);
-            //   setIsExpandedSite(true);
-            // }}
           />
         ) : (
           <View style={{ flex: 1 }}>
             <Text style={{ marginHorizontal: 16, marginTop: 12, color: textColor }}>{t('browser-popular-dapps')}</Text>
 
             <FlatGrid
-              style={{ marginTop: 2, padding: 0, paddingBottom: 42 }}
+              style={{ marginTop: 2, padding: 0, paddingBottom: 36 }}
               contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: 8, paddingTop: 2 }}
               itemDimension={LargeIconSize + 8}
               showsVerticalScrollIndicator={false}
