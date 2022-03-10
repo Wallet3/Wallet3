@@ -135,8 +135,8 @@ android {
         applicationId 'jp.co.chainbow.wallet3.mobile'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 7
-        versionName "1.8.0"
+        versionCode 9
+        versionName "1.8.1"
     }
     splits {
         abi {
