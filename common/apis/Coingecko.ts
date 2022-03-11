@@ -82,6 +82,7 @@ class Coingecko {
   lastRefreshedTimestamp = 0;
 
   coinSymbolToIds = new Map<string, string[]>();
+  coinDetails = new Map<string, CoinDetails>();
 
   constructor() {
     makeObservable(this, {
@@ -160,9 +161,13 @@ class Coingecko {
     address = address.toLowerCase();
     network = network.toLowerCase();
 
+    let coin = this.coinDetails.get(address);
+    if (coin) return coin;
+
     try {
       for (let id of ids!) {
-        const coin = await getCoin(id);
+        coin = await getCoin(id);
+
         if (!coin) continue;
         if (ids.length === 1) return coin;
 
@@ -171,15 +176,19 @@ class Coingecko {
         if (platforms.length === 0 && !address && coin.name.toLowerCase() === network) return coin;
         if (platforms.length === 0) continue;
 
-        const found = platforms.find((platform) => coin.platforms[platform]?.toLowerCase() === address);
+        const found = platforms.find((platform) => coin!.platforms[platform]?.toLowerCase() === address);
         if (found) return coin;
 
-        const nativeToken = platforms.find((p) => coin.platforms[id]?.toLowerCase() === symbol.toLowerCase());
+        const nativeToken = platforms.find((p) => coin!.platforms[id]?.toLowerCase() === symbol.toLowerCase());
         if (nativeToken) return coin;
 
         if (!address && coin.name.toLowerCase() === network) return coin;
       }
-    } catch (error) {}
+    } catch (error) {
+    } finally {
+      if (!coin) return;
+      this.coinDetails.set(address, coin);
+    }
   }
 
   getCoinIds(symbol: string) {
