@@ -159,7 +159,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, any>) => {
         )}
       />
 
-      <BlurView
+      {/* <BlurView
         tint={mode}
         intensity={25}
         style={{
@@ -168,7 +168,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, any>) => {
           width: '100%',
         }}
       >
-        {/* <View
+        <View
           style={{
             borderWidth: 1,
             borderColor: activeSearch ? `${foregroundColor}7a` : `${foregroundColor}10`,
@@ -190,8 +190,8 @@ export default observer(({ navigation }: NativeStackScreenProps<any, any>) => {
             onFocus={() => setActiveSearch(true)}
             style={{ fontSize: 17, color: foregroundColor, flex: 1, marginStart: 8 }}
           />
-        </View> */}
-      </BlurView>
+        </View>
+      </BlurView> */}
     </View>
   );
 });

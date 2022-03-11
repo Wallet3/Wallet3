@@ -255,8 +255,7 @@ export default observer((props: Web3ViewProps) => {
           style={{
             ...styles.blurView,
             paddingVertical: safeAreaBottom === 0 ? 4 : undefined,
-            borderTopWidth: expanded ? 0 : 0.33,
-            shadowOpacity: expanded ? 0.25 : 0,
+            borderTopWidth: 0.333,
             borderTopColor: systemBorderColor,
           }}
         >
@@ -409,15 +408,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 4,
 
-    shadowColor: `#00000060`,
-    shadowOffset: {
-      width: 0,
-      height: -2,
-    },
-
-    shadowRadius: 3.14,
-
-    elevation: 5,
     borderTopColor: 'rgb(216, 216, 216)',
   },
 
