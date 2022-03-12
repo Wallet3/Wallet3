@@ -1,11 +1,13 @@
 import { Button, SafeViewContainer } from '../../components';
 import { Text, View } from 'react-native-animatable';
-import { secondaryFontColor, themeColor } from '../../constants/styles';
+import { secondaryFontColor, themeColor, thirdFontColor } from '../../constants/styles';
 
+import { Ionicons } from '@expo/vector-icons';
 import { LandScreenStack } from '../navigations';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
+import { TouchableOpacity } from 'react-native';
 import i18n from '../../i18n';
 import { useFonts } from 'expo-font';
 
@@ -24,6 +26,17 @@ export default ({ navigation }: NativeStackScreenProps<LandScreenStack, 'Welcome
       <View style={{ flex: 1 }} />
 
       <View style={{ width: '100%' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', paddingStart: 2 }}>
+          <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 12 }}>
+            <Ionicons name="checkbox" color="lightgrey" />
+            <Text style={{ color: thirdFontColor, marginStart: 8 }}>I have read the</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity>
+            <Text style={{ color: thirdFontColor, textDecorationLine: 'underline' }}> Terms of Use.</Text>
+          </TouchableOpacity>
+        </View>
+
         <View animation="fadeInUp" delay={300}>
           <Button
             title={t('land-welcome-import-wallet')}

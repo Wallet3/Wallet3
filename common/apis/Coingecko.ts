@@ -16,6 +16,13 @@ interface ChainsPrice {
   avax: Price;
 }
 
+interface CoinMarket {
+  prices: [timestamp: number, price: number][];
+  market_caps: number[][];
+  total_volumes: number[][];
+  error?: string;
+}
+
 const host = 'https://api.coingecko.com';
 
 export async function getPrice(
@@ -44,20 +51,6 @@ async function getCoin(id: string) {
   } catch (error) {}
 }
 
-export async function getMarketChart(id: string, days = 1) {
-  try {
-    const resp = await (
-      await fetch(`${host}/api/v3/coins/${id}/market_chart?vs_currency=usd&days=${days}`, { cache: 'force-cache' })
-    ).json();
-    return resp as {
-      prices: [timestamp: number, price: number][];
-      market_caps: number[][];
-      total_volumes: number[][];
-      error?: string;
-    };
-  } catch (error) {}
-}
-
 class Coingecko {
   eth: number = 0;
   matic = 0;
@@ -83,6 +76,7 @@ class Coingecko {
 
   coinSymbolToIds = new Map<string, string[]>();
   coinDetails = new Map<string, CoinDetails>();
+  coinIdToMarkets = new Map<string, { market: CoinMarket; timestamp: number }>();
 
   constructor() {
     makeObservable(this, {
@@ -193,6 +187,23 @@ class Coingecko {
 
   getCoinIds(symbol: string) {
     return this.coinSymbolToIds.get(symbol.toLowerCase());
+  }
+
+  async getMarketChart(id: string, days = 1) {
+    const tuple = this.coinIdToMarkets.get(id);
+    if (tuple && tuple.timestamp > Date.now() - 1000 * 60 * 10) return tuple.market;
+
+    try {
+      const resp = await (
+        await fetch(`${host}/api/v3/coins/${id}/market_chart?vs_currency=usd&days=${days}`, { cache: 'force-cache' })
+      ).json();
+
+      const market = resp as CoinMarket;
+      if (!market) return;
+
+      this.coinIdToMarkets.set(id, { market, timestamp: Date.now() });
+      return market;
+    } catch (error) {}
   }
 }
 
