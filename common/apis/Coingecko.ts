@@ -191,7 +191,7 @@ class Coingecko {
 
   async getMarketChart(id: string, days = 1) {
     const tuple = this.coinIdToMarkets.get(id);
-    if (tuple && tuple.timestamp > Date.now() - 1000 * 60 * 10) return tuple.market;
+    if (tuple && tuple.timestamp > Date.now() - 1000 * 60 * 2) return tuple.market;
 
     try {
       const resp = await (
