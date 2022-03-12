@@ -22,6 +22,7 @@ import React, { useEffect, useState } from 'react';
 import { AppVM } from '../viewmodels/App';
 import { Authentication } from '../viewmodels/Authentication';
 import { FullPasspad } from '../modals/views/Passpad';
+import InappBrowser from '../modals/InappBrowser';
 import InpageConnectDApp from '../modals/InpageConnectDApp';
 import InpageDAppAddAssetModal from '../modals/InpageDAppAddAsset';
 import InpageDAppAddChain from '../modals/InpageDAppAddChain';
@@ -441,6 +442,47 @@ const SendFundsModal = () => {
     </Modalize>
   );
 };
+
+export const InappBrowserModal = observer(() => {
+  const { ref, open, close } = useModalize();
+  const [props, setProps] = useState<{ initUrl: string }>();
+  const { height, width } = ReactiveScreen;
+
+  useEffect(() => {
+    PubSub.subscribe(MessageKeys.openInappBrowser, (_, data) => {
+      setProps(data);
+      setTimeout(() => open(), 10);
+    });
+
+    return () => {
+      PubSub.unsubscribe(MessageKeys.openInappBrowser);
+    };
+  }, []);
+
+  return (
+    <Modalize
+      ref={ref}
+      closeOnOverlayTap={false}
+      withHandle={false}
+      modalHeight={height}
+      disableScrollIfPossible
+      panGestureEnabled={false}
+      panGestureComponentEnabled={false}
+    >
+      {props ? (
+        <SafeAreaProvider style={{ width, height }}>
+          <InappBrowser
+            {...props}
+            onClose={() => {
+              close();
+              setProps(undefined);
+            }}
+          />
+        </SafeAreaProvider>
+      ) : undefined}
+    </Modalize>
+  );
+});
 
 export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication }) => {
   const { ref: lockScreenRef, open: openLockScreen, close: closeLockScreen } = useModalize();

@@ -10,6 +10,7 @@ export default {
   openAddAsset: 'openAddAsset',
   openRequestFundsModal: 'openRequestFundsModal',
   openSendFundsModal: 'openSendFundsModal',
+  openInappBrowser: 'openInappBrowser',
   drawerSwipeEnabled: 'drawer-swipeEnabled',
   wc_request: 'wc_request',
   CodeScan_wc: 'CodeScan-wc:',

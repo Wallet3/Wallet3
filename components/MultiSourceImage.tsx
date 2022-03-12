@@ -40,24 +40,6 @@ export default (props: Props) => {
 
   return (
     <View style={{ backgroundColor, borderRadius, overflow: 'hidden' }}>
-      {!imageLoaded && (
-        <Animatable.View
-          animation={BreathAnimation}
-          iterationCount="infinite"
-          useNativeDriver
-          duration={3000}
-          style={{
-            position: 'absolute',
-            width: '100%',
-            height: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <Feather name="hexagon" size={64} color="#55555555" />
-        </Animatable.View>
-      )}
-
       {sourceTypes[index]?.endsWith('mp4') ? (
         <Video
           source={{ uri: uriSources[index] }}
@@ -81,6 +63,25 @@ export default (props: Props) => {
             setImageLoaded(true);
           }}
         />
+      )}
+
+      {!imageLoaded && (
+        <Animatable.View
+          animation={BreathAnimation}
+          iterationCount="infinite"
+          useNativeDriver
+          duration={3000}
+          style={{
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'transparent',
+          }}
+        >
+          <Feather name="hexagon" size={64} color="#55555555" />
+        </Animatable.View>
       )}
     </View>
   );

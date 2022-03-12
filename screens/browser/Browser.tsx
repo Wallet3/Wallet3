@@ -58,6 +58,7 @@ interface Props {
   onInputting?: (inputting: boolean) => void;
   initUrl?: string;
   disableExtraFuncs?: boolean;
+  singlePage?: boolean;
 }
 
 export const Browser = observer(
@@ -74,6 +75,7 @@ export const Browser = observer(
     onPageLoadEnd,
     onInputting,
     disableExtraFuncs,
+    singlePage,
     initUrl,
   }: Props) => {
     const { t } = i18n;
@@ -345,7 +347,7 @@ export const Browser = observer(
               />
             </TouchableOpacity>
 
-            {disableExtraFuncs ? undefined : (
+            {singlePage ? undefined : (
               <TouchableOpacity style={{ padding: 4 }} onPress={onNewTab} disabled={loadingProgress < 1 || !pageMetadata}>
                 <Ionicons name={'add-outline'} size={23} color={loadingProgress < 1 ? 'lightgrey' : foregroundColor} />
               </TouchableOpacity>
