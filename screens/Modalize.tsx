@@ -462,6 +462,7 @@ export const InappBrowserModal = observer(() => {
   return (
     <Modalize
       ref={ref}
+      useNativeDriver
       closeOnOverlayTap={false}
       withHandle={false}
       modalHeight={height}
@@ -516,6 +517,7 @@ export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Aut
   return (
     <Modalize
       ref={lockScreenRef}
+      useNativeDriver
       modalHeight={ReactiveScreen.height}
       closeOnOverlayTap={false}
       withHandle={false}

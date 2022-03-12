@@ -92,6 +92,9 @@ export interface InpageDAppAddAsset {
   asset: WatchAssetParams;
 }
 
+const Code_InvalidParams = -32602;
+const Code_UserRejected = 4001;
+
 export class InpageDAppController extends EventEmitter {
   constructor() {
     super();
@@ -121,7 +124,7 @@ export class InpageDAppController extends EventEmitter {
         break;
       case 'eth_coinbase':
         const coinbase = this.getDApp(hostname!)?.lastUsedAccount;
-        result = account ? [coinbase] : null;
+        result = coinbase ? [coinbase] : null;
         break;
       case 'eth_requestAccounts':
         result = await this.eth_requestAccounts(hostname!, payload);
@@ -205,7 +208,7 @@ export class InpageDAppController extends EventEmitter {
         MetamaskDAppsHub.add(app);
       };
 
-      const reject = () => resolve({ error: { code: 4001, message: 'User rejected' } });
+      const reject = () => resolve({ error: { code: Code_UserRejected, message: 'The request was rejected by the user' } });
       PubSub.publish(MessageKeys.openConnectInpageDApp, { approve, reject, origin, ...payload } as ConnectInpageDApp);
     });
   }
@@ -232,7 +235,7 @@ export class InpageDAppController extends EventEmitter {
     const { wallet, account, accountIndex } = App.findWallet(dapp.lastUsedAccount) || {};
     if (!wallet || !account || accountIndex === undefined) {
       showMessage({ message: i18n.t('msg-account-not-found'), type: 'warning' });
-      return { error: { code: 4001, message: 'Invalid account' } };
+      return { error: { code: Code_InvalidParams, message: 'Invalid account' } };
     }
 
     dapp.setLastUsedTimestamp(Date.now());
@@ -254,7 +257,7 @@ export class InpageDAppController extends EventEmitter {
         return signed ? true : false;
       };
 
-      const reject = () => resolve({ error: { code: 1, message: 'User rejected' } });
+      const reject = () => resolve({ error: { code: Code_UserRejected, message: 'User rejected' } });
 
       switch (method) {
         case 'personal_sign':
@@ -311,7 +314,7 @@ export class InpageDAppController extends EventEmitter {
         const { wallet, accountIndex } = App.findWallet(dapp.lastUsedAccount) || {};
         if (!wallet) {
           showMessage({ message: i18n.t('msg-account-not-found'), type: 'warning' });
-          return resolve({ error: { code: 4001, message: 'Invalid account' } });
+          return resolve({ error: { code: Code_InvalidParams, message: 'Invalid account' } });
         }
 
         const { txHex, error } = await wallet.signTx({
@@ -336,7 +339,7 @@ export class InpageDAppController extends EventEmitter {
         return true;
       };
 
-      const reject = () => resolve({ error: { code: -32000, message: 'User rejected' } });
+      const reject = () => resolve({ error: { code: Code_UserRejected, message: 'The request was rejected by the user' } });
 
       PubSub.publish(MessageKeys.openInpageDAppSendTransaction, {
         approve,
@@ -350,7 +353,7 @@ export class InpageDAppController extends EventEmitter {
   }
 
   private async wallet_addEthereumChain(origin: string, params: AddEthereumChainParameter[]) {
-    if (!params || !params.length) return { error: { message: 'Invalid request' } };
+    if (!params || !params.length) return { error: { code: Code_InvalidParams, message: 'Invalid request' } };
 
     const chain = params[0];
 
@@ -360,7 +363,7 @@ export class InpageDAppController extends EventEmitter {
       !chain.nativeCurrency ||
       !Number.isInteger(Number(chain.chainId))
     ) {
-      return { error: { message: 'Invalid request' } };
+      return { error: { code: Code_InvalidParams, message: 'Invalid request' } };
     }
 
     if (Networks.has(chain.chainId)) {
@@ -389,7 +392,7 @@ export class InpageDAppController extends EventEmitter {
       };
 
       const reject = () => {
-        resolve({ error: { code: 1, message: 'User rejected' } });
+        resolve({ error: { code: Code_UserRejected, message: 'The request was rejected by the user' } });
       };
 
       PubSub.publish(MessageKeys.openAddEthereumChain, {
@@ -402,7 +405,7 @@ export class InpageDAppController extends EventEmitter {
 
   private async wallet_watchAsset(origin: string, asset: WatchAssetParams) {
     if (!asset || !asset.options || !asset.options.address || asset.type !== 'ERC20')
-      return { error: { message: 'Invalid request' } };
+      return { error: { code: Code_InvalidParams, message: 'Invalid request' } };
 
     const dapp = this.getDApp(origin);
 
@@ -421,7 +424,7 @@ export class InpageDAppController extends EventEmitter {
 
           if (!n && !s) {
             showMessage({ message: i18n.t('msg-asset-can-not-added'), type: 'warning' });
-            resolve({ error: { code: 1, message: 'Invalid address' } });
+            resolve({ error: { code: Code_InvalidParams, message: 'Invalid address' } });
             return;
           }
         } catch (error) {

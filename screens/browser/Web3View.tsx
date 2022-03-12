@@ -252,6 +252,7 @@ export default observer((props: Web3ViewProps) => {
         <View
           style={{
             ...styles.blurView,
+            backgroundColor,
             paddingVertical: safeAreaBottom === 0 ? 4 : undefined,
             borderTopWidth: 0.333,
             borderTopColor: systemBorderColor,

@@ -24,7 +24,6 @@ import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { lightOrDark } from '../../utils/color';
 import { observer } from 'mobx-react-lite';
-import { openBrowserAsync } from 'expo-web-browser';
 import { openInappBrowser } from '../../modals/InappBrowser';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
