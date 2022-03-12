@@ -494,50 +494,56 @@ export const Browser = observer(
           />
         ) : (
           <View style={{ flex: 1 }}>
-            <Text style={{ marginHorizontal: 16, marginTop: 12, color: textColor }}>{t('browser-popular-dapps')}</Text>
+            {disableExtraFuncs ? undefined : (
+              <Text style={{ marginHorizontal: 16, marginTop: 12, color: textColor }}>{t('browser-popular-dapps')}</Text>
+            )}
 
-            <FlatGrid
-              style={{ marginTop: 2, padding: 0, paddingBottom: 36 }}
-              contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: 8, paddingTop: 2 }}
-              itemDimension={LargeIconSize + 8}
-              showsVerticalScrollIndicator={false}
-              bounces={false}
-              data={PopularDApps}
-              itemContainerStyle={{ padding: 0, margin: 0, marginBottom: 4 }}
-              spacing={8}
-              keyExtractor={(v, index) => `${v.url}-${index}`}
-              renderItem={renderItem}
-            />
+            {disableExtraFuncs ? undefined : (
+              <FlatGrid
+                style={{ marginTop: 2, padding: 0, paddingBottom: 36 }}
+                contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: 8, paddingTop: 2 }}
+                itemDimension={LargeIconSize + 8}
+                showsVerticalScrollIndicator={false}
+                bounces={false}
+                data={PopularDApps}
+                itemContainerStyle={{ padding: 0, margin: 0, marginBottom: 4 }}
+                spacing={8}
+                keyExtractor={(v, index) => `${v.url}-${index}`}
+                renderItem={renderItem}
+              />
+            )}
 
-            {favs.length > 0 ? (
+            {disableExtraFuncs ? undefined : favs.length > 0 ? (
               <Text style={{ marginHorizontal: 16, marginTop: 12, color: textColor }}>{t('browser-favorites')}</Text>
             ) : undefined}
 
-            <FlatGrid
-              style={{ marginTop: 2, padding: 0, height: '100%' }}
-              contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: 8, paddingTop: 2 }}
-              itemDimension={LargeIconSize + 8}
-              bounces={false}
-              data={favs}
-              itemContainerStyle={{ padding: 0, margin: 0, marginBottom: 8 }}
-              spacing={8}
-              keyExtractor={(v, index) => `${v.url}-${index}`}
-              renderItem={(p) =>
-                renderUserBookmarkItem({
-                  ...p,
-                  iconSize: LargeIconSize,
-                  imageBackgroundColor: backgroundColor,
-                  onPress: (item) => {
-                    goTo(item.url);
-                    closeFavs();
-                  },
-                  onRemove: (item) => {
-                    startLayoutAnimation();
-                    Bookmarks.remove(item.url);
-                  },
-                })
-              }
-            />
+            {disableExtraFuncs ? undefined : (
+              <FlatGrid
+                style={{ marginTop: 2, padding: 0, height: '100%' }}
+                contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: 8, paddingTop: 2 }}
+                itemDimension={LargeIconSize + 8}
+                bounces={false}
+                data={favs}
+                itemContainerStyle={{ padding: 0, margin: 0, marginBottom: 8 }}
+                spacing={8}
+                keyExtractor={(v, index) => `${v.url}-${index}`}
+                renderItem={(p) =>
+                  renderUserBookmarkItem({
+                    ...p,
+                    iconSize: LargeIconSize,
+                    imageBackgroundColor: backgroundColor,
+                    onPress: (item) => {
+                      goTo(item.url);
+                      closeFavs();
+                    },
+                    onRemove: (item) => {
+                      startLayoutAnimation();
+                      Bookmarks.remove(item.url);
+                    },
+                  })
+                }
+              />
+            )}
           </View>
         )}
 
