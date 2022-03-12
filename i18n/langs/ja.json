@@ -1,6 +1,8 @@
 {
   "land-welcome-import-wallet": "ウォレットのインポート",
   "land-welcome-create-wallet": "ウォレットの新規作成",
+  "land-welcome-i-agree-to": "確認しました",
+  "land-welcome-terms-of-use": "利用規約",
   "land-import-placeholder": "ニーモニック/秘密鍵を入力してください。",
   "land-import-derivation-path": "派生パス",
   "land-import-button-sync": "Wallet 3 デスクトップ版との同期",

@@ -34,10 +34,10 @@ export default ({ navigation }: NativeStackScreenProps<LandScreenStack, 'Welcome
             onPress={() => setRead(!read)}
           >
             <Ionicons name="checkbox" color={read ? themeColor : 'lightgrey'} />
-            <Text style={{ color: thirdFontColor, marginStart: 8 }}>I have read the </Text>
+            <Text style={{ color: thirdFontColor, marginStart: 8, marginEnd: 4 }}>{t('land-welcome-i-agree-to')}</Text>
 
             <TouchableOpacity onPress={() => openBrowserAsync(`https://chainbow.io/tos-en`)}>
-              <Text style={{ color: thirdFontColor, textDecorationLine: 'underline' }}>Terms of Use.</Text>
+              <Text style={{ color: thirdFontColor, textDecorationLine: 'underline' }}>{t('land-welcome-terms-of-use')}.</Text>
             </TouchableOpacity>
           </TouchableOpacity>
         </View>

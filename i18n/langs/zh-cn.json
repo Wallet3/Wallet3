@@ -1,6 +1,8 @@
 {
   "land-welcome-import-wallet": "导入钱包",
   "land-welcome-create-wallet": "创建钱包",
+  "land-welcome-i-agree-to": "我已阅读并同意",
+  "land-welcome-terms-of-use": "使用条款",
   "land-import-placeholder": "请输入助记词组或私钥",
   "land-import-derivation-path": "地址派生路径",
   "land-import-button-sync": "使用 Wallet 3 桌面版同步",
