@@ -1,6 +1,7 @@
 import * as Linking from 'expo-linking';
 
 import Bookmarks, { Bookmark, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
+import { BottomTabNavigationProp, BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { Dimensions, ListRenderItemInfo, Share, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { EvilIcons, Ionicons } from '@expo/vector-icons';
 import { NullableImage, SafeViewContainer } from '../../components';
@@ -12,7 +13,6 @@ import { renderBookmarkItem, renderUserBookmarkItem } from './components/Bookmar
 import { secureColor, thirdFontColor } from '../../constants/styles';
 
 import { Bar } from 'react-native-progress';
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import Collapsible from 'react-native-collapsible';
 import { FlatGrid } from 'react-native-super-grid';
 import MessageKeys from '../../common/MessageKeys';
@@ -44,17 +44,20 @@ const calcIconSize = () => {
 
 const { LargeIconSize, SmallIconSize } = calcIconSize();
 
-interface Props extends BottomTabScreenProps<any, never> {
+interface Props {
+  pageId: number;
+  navigation?: BottomTabNavigationProp<any, any>;
   onPageLoaded?: (pageId: number, metadata?: PageMetadata) => void;
   onPageLoadEnd?: () => void;
   onHome?: () => void;
   onTakeOff?: () => void;
-  pageId: number;
   onNewTab?: () => void;
   globalState?: { pageCount: number; activePageId: number };
   onOpenTabs?: () => void;
   setCapture?: (callback: () => Promise<string>) => void;
   onInputting?: (inputting: boolean) => void;
+  initUrl?: string;
+  disableExtraFuncs?: boolean;
 }
 
 export const Browser = observer(
@@ -70,6 +73,8 @@ export const Browser = observer(
     setCapture,
     onPageLoadEnd,
     onInputting,
+    disableExtraFuncs,
+    initUrl,
   }: Props) => {
     const { t } = i18n;
     const { top } = useSafeAreaInsets();
@@ -236,6 +241,11 @@ export const Browser = observer(
       );
     }, [addr]);
 
+    useEffect(() => {
+      if (!initUrl) return;
+      goTo(initUrl);
+    }, [initUrl]);
+
     return (
       <View
         style={{
@@ -335,9 +345,11 @@ export const Browser = observer(
               />
             </TouchableOpacity>
 
-            <TouchableOpacity style={{ padding: 4 }} onPress={onNewTab} disabled={loadingProgress < 1 || !pageMetadata}>
-              <Ionicons name={'add-outline'} size={23} color={loadingProgress < 1 ? 'lightgrey' : foregroundColor} />
-            </TouchableOpacity>
+            {disableExtraFuncs ? undefined : (
+              <TouchableOpacity style={{ padding: 4 }} onPress={onNewTab} disabled={loadingProgress < 1 || !pageMetadata}>
+                <Ionicons name={'add-outline'} size={23} color={loadingProgress < 1 ? 'lightgrey' : foregroundColor} />
+              </TouchableOpacity>
+            )}
           </View>
 
           <Collapsible collapsed={!isFocus} style={{ borderWidth: 0, padding: 0, margin: 0 }} enablePointerEvents>
@@ -398,33 +410,35 @@ export const Browser = observer(
               </View>
             ) : undefined}
 
-            <View style={{ flexDirection: 'row', paddingHorizontal: 0 }}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('QRScan', { tip: t('qrscan-tip-3') })}
-                style={{
-                  justifyContent: 'center',
-                  paddingHorizontal: 16,
-                  alignItems: 'center',
-                  paddingVertical: 8,
-                }}
-              >
-                <Ionicons name="md-scan-outline" size={21} color={textColor} />
-              </TouchableOpacity>
-
-              {webUrl ? (
+            {disableExtraFuncs ? undefined : (
+              <View style={{ flexDirection: 'row', paddingHorizontal: 0 }}>
                 <TouchableOpacity
-                  onPress={() => Share.share({ url: webUrl, title: pageMetadata?.title })}
+                  onPress={() => navigation?.navigate('QRScan', { tip: t('qrscan-tip-3') })}
                   style={{
                     justifyContent: 'center',
+                    paddingHorizontal: 16,
                     alignItems: 'center',
                     paddingVertical: 8,
-                    paddingHorizontal: 8,
                   }}
                 >
-                  <EvilIcons name="share-apple" size={28.7} color={textColor} />
+                  <Ionicons name="md-scan-outline" size={21} color={textColor} />
                 </TouchableOpacity>
-              ) : undefined}
-            </View>
+
+                {webUrl ? (
+                  <TouchableOpacity
+                    onPress={() => Share.share({ url: webUrl, title: pageMetadata?.title })}
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      paddingVertical: 8,
+                      paddingHorizontal: 8,
+                    }}
+                  >
+                    <EvilIcons name="share-apple" size={28.7} color={textColor} />
+                  </TouchableOpacity>
+                ) : undefined}
+              </View>
+            )}
           </Collapsible>
 
           {loadingProgress > 0 && loadingProgress < 1 ? (
