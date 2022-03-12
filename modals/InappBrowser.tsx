@@ -14,12 +14,22 @@ interface Props {
 
 export default observer(({ initUrl, onClose }: Props) => {
   const { width, height } = ReactiveScreen;
-  const { backgroundColor } = Theme;
+  const { backgroundColor, systemBorderColor } = Theme;
   const { bottom } = useSafeAreaInsets();
 
   return (
-    <View style={{ backgroundColor, paddingBottom: bottom, width, height }}>
+    <View style={{ backgroundColor, width, height }}>
       <Browser disableExtraFuncs singlePage pageId={Date.now()} initUrl={initUrl} onHome={onClose} onNewTab={onClose} />
+      {bottom > 0 && (
+        <View
+          style={{
+            height: bottom,
+            width: '100%',
+            borderTopColor: systemBorderColor,
+            borderTopWidth: 0.333,
+          }}
+        />
+      )}
     </View>
   );
 });

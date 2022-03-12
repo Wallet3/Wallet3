@@ -468,6 +468,12 @@ export const InappBrowserModal = observer(() => {
       disableScrollIfPossible
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
+      scrollViewProps={{
+        scrollEnabled: false,
+        showsVerticalScrollIndicator: false,
+        showsHorizontalScrollIndicator: false,
+        bounces: false,
+      }}
     >
       {props ? (
         <SafeAreaProvider style={{ width, height }}>
