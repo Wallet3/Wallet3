@@ -146,7 +146,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
           </View>
         ) : undefined}
 
-        {vm.type !== 'Transfer' ? (
+        {vm.type === 'Contract Interaction' ? (
           <View style={{ ...reviewItemStyle }}>
             <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-value')}</Text>
             <View style={{ flexDirection: 'row' }}>
