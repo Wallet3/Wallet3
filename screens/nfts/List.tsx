@@ -144,7 +144,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, any>) => {
       <FlatList
         data={currentAccount.nfts.nfts}
         initialNumToRender={5}
-        contentContainerStyle={{ marginHorizontal: 16, paddingTop: top + 4 }}
+        contentContainerStyle={{ marginHorizontal: 16, paddingTop: top }}
         renderItem={({ item }) => (
           <NFTItem
             nft={item}

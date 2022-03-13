@@ -30,6 +30,7 @@ export default ({ navigation }: NativeStackScreenProps<LandScreenStack, 'Welcome
       <View style={{ width: '100%' }}>
         <View animation="fadeInUp" style={{ flexDirection: 'row', alignItems: 'center', paddingStart: 2 }}>
           <TouchableOpacity
+            activeOpacity={0.5}
             style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 12 }}
             onPress={() => setRead(!read)}
           >
