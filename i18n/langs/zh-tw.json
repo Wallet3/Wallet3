@@ -136,6 +136,7 @@
   "modal-dapp-request-amount": "數量",
   "modal-dapp-request-value": "價值",
   "modal-dapp-request-to": "目標地址",
+  "modal-dapp-request-deploy-contract": "部署合約",
   "modal-dapp-not-supported-network": "未支持的網絡",
   "modal-dapp-add-new-network-title": "添加 EVM 網絡",
   "modal-dapp-add-new-network-network": "網絡名稱",

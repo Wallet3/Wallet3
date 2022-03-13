@@ -44,6 +44,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
   const reviewItemStyle = { ...styles.reviewItem, borderColor };
   const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
   const reviewItemValueStyle = { ...styles.reviewItemValue, color: textColor };
+  console.log(vm.type, `'${vm.to}'`);
 
   return (
     <SafeViewContainer>
@@ -128,7 +129,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
           </View>
         ) : undefined}
 
-        {vm.type !== 'Contract Interaction' ? (
+        {vm.type !== 'Transfer' ? (
           <View style={{ ...reviewItemStyle }}>
             <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-to')}</Text>
 
@@ -136,14 +137,16 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
               style={{ flexDirection: 'row', alignItems: 'center' }}
               onPress={() => openBrowserAsync(`${network.explorer}/address/${vm.toAddress}`)}
             >
-              <Text style={{ ...reviewItemValueStyle, marginEnd: 6 }} numberOfLines={1}>
-                {formatAddress(vm.to, 9, 5)}
+              <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>
+                {vm.toAddress ? formatAddress(vm.to, 9, 5) : t('modal-dapp-request-deploy-contract')}
               </Text>
 
-              <Ionicons name="search-outline" size={15} color={textColor} />
+              {vm.to ? <Ionicons name="search-outline" size={15} color={textColor} style={{ marginStart: 6 }} /> : undefined}
             </TouchableOpacity>
           </View>
-        ) : (
+        ) : undefined}
+
+        {vm.type !== 'Transfer' ? (
           <View style={{ ...reviewItemStyle }}>
             <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-value')}</Text>
             <View style={{ flexDirection: 'row' }}>
@@ -156,7 +159,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
               </Text>
             </View>
           </View>
-        )}
+        ) : undefined}
 
         <View style={{ ...reviewItemStyle, borderBottomWidth: 0 }}>
           <Text style={styles.reviewItemTitle}>{t('modal-review-network')}</Text>
