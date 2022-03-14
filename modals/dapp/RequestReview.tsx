@@ -44,7 +44,6 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
   const reviewItemStyle = { ...styles.reviewItem, borderColor };
   const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
   const reviewItemValueStyle = { ...styles.reviewItemValue, color: textColor };
-  console.log(vm.type, `'${vm.to}'`);
 
   return (
     <SafeViewContainer>
@@ -56,7 +55,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
         <View style={reviewItemStyle}>
           <Text style={styles.reviewItemTitle}>DApp</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Image source={{ uri: app.icon }} style={{ width: 19, height: 19, marginEnd: 4, borderRadius: 3 }} />
+            <Image source={{ uri: app.icon }} style={{ width: 19, height: 19, marginEnd: 5, borderRadius: 3 }} />
             <Text style={{ ...reviewItemValueStyle, maxWidth: 180 }} numberOfLines={1}>
               {app.name}
             </Text>
