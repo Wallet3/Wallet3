@@ -16,6 +16,13 @@ interface ChainsPrice {
   avax: Price;
 }
 
+interface CoinMarket {
+  prices: [timestamp: number, price: number][];
+  market_caps: number[][];
+  total_volumes: number[][];
+  error?: string;
+}
+
 const host = 'https://api.coingecko.com';
 
 export async function getPrice(
@@ -44,20 +51,6 @@ async function getCoin(id: string) {
   } catch (error) {}
 }
 
-export async function getMarketChart(id: string, days = 1) {
-  try {
-    const resp = await (
-      await fetch(`${host}/api/v3/coins/${id}/market_chart?vs_currency=usd&days=${days}`, { cache: 'force-cache' })
-    ).json();
-    return resp as {
-      prices: [timestamp: number, price: number][];
-      market_caps: number[][];
-      total_volumes: number[][];
-      error?: string;
-    };
-  } catch (error) {}
-}
-
 class Coingecko {
   eth: number = 0;
   matic = 0;
@@ -82,6 +75,8 @@ class Coingecko {
   lastRefreshedTimestamp = 0;
 
   coinSymbolToIds = new Map<string, string[]>();
+  coinDetails = new Map<string, CoinDetails>();
+  coinIdToMarkets = new Map<string, { market: CoinMarket; timestamp: number }>();
 
   constructor() {
     makeObservable(this, {
@@ -160,9 +155,13 @@ class Coingecko {
     address = address.toLowerCase();
     network = network.toLowerCase();
 
+    let coin = this.coinDetails.get(address);
+    if (coin) return coin;
+
     try {
       for (let id of ids!) {
-        const coin = await getCoin(id);
+        coin = await getCoin(id);
+
         if (!coin) continue;
         if (ids.length === 1) return coin;
 
@@ -171,19 +170,40 @@ class Coingecko {
         if (platforms.length === 0 && !address && coin.name.toLowerCase() === network) return coin;
         if (platforms.length === 0) continue;
 
-        const found = platforms.find((platform) => coin.platforms[platform]?.toLowerCase() === address);
+        const found = platforms.find((platform) => coin!.platforms[platform]?.toLowerCase() === address);
         if (found) return coin;
 
-        const nativeToken = platforms.find((p) => coin.platforms[id]?.toLowerCase() === symbol.toLowerCase());
+        const nativeToken = platforms.find((p) => coin!.platforms[id]?.toLowerCase() === symbol.toLowerCase());
         if (nativeToken) return coin;
 
         if (!address && coin.name.toLowerCase() === network) return coin;
       }
-    } catch (error) {}
+    } catch (error) {
+    } finally {
+      if (!coin) return;
+      this.coinDetails.set(address, coin);
+    }
   }
 
   getCoinIds(symbol: string) {
     return this.coinSymbolToIds.get(symbol.toLowerCase());
+  }
+
+  async getMarketChart(id: string, days = 1) {
+    const tuple = this.coinIdToMarkets.get(id);
+    if (tuple && tuple.timestamp > Date.now() - 1000 * 60 * 2) return tuple.market;
+
+    try {
+      const resp = await (
+        await fetch(`${host}/api/v3/coins/${id}/market_chart?vs_currency=usd&days=${days}`, { cache: 'force-cache' })
+      ).json();
+
+      const market = resp as CoinMarket;
+      if (!market) return;
+
+      this.coinIdToMarkets.set(id, { market, timestamp: Date.now() });
+      return market;
+    } catch (error) {}
   }
 }
 

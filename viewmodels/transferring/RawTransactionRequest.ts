@@ -91,11 +91,11 @@ export class RawTransactionRequest extends BaseTransaction {
     const { methodFunc, type } = parseRequestType(param.data);
 
     this.type = type;
-    const erc20 = new ERC20Token({ chainId: this.network.chainId, contract: param.to, owner: this.account.address });
-    this.erc20 = erc20;
+    let erc20: ERC20Token | undefined;
 
     switch (methodFunc) {
       case Transfer:
+        erc20 = new ERC20Token({ chainId: this.network.chainId, contract: param.to, owner: this.account.address });
         const [to, transferAmount] = erc20.interface.decodeFunctionData('transfer', param.data) as [string, BigNumber];
 
         this.setTo(to);
@@ -106,6 +106,7 @@ export class RawTransactionRequest extends BaseTransaction {
         erc20.getSymbol().then((symbol) => runInAction(() => (this.tokenSymbol = symbol)));
         break;
       case Approve:
+        erc20 = new ERC20Token({ chainId: this.network.chainId, contract: param.to, owner: this.account.address });
         const [spender, approveAmount] = erc20.interface.decodeFunctionData('approve', param.data) as [string, BigNumber];
 
         this.setTo(spender);
@@ -121,6 +122,8 @@ export class RawTransactionRequest extends BaseTransaction {
         this.valueWei = BigNumber.from(param.value || 0);
         break;
     }
+
+    this.erc20 = erc20;
 
     if (param.gas || param.gasLimit) {
       runInAction(() => this.setGasLimit(param.gas || param.gasLimit || 0));
@@ -161,7 +164,7 @@ export class RawTransactionRequest extends BaseTransaction {
   get isValidParams() {
     return (
       !this.initializing &&
-      utils.isAddress(this.param.to) &&
+      (utils.isAddress(this.param.to) || this.param.to === '') && // Empty address is allowed - it means contract deploying
       this.nonce >= 0 &&
       this.isValidGas &&
       this.nativeToken.balance.gte(this.valueWei) &&

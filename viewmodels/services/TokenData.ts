@@ -1,6 +1,6 @@
-import Coingecko, { getMarketChart } from '../../common/apis/Coingecko';
 import { makeObservable, observable, runInAction } from 'mobx';
 
+import Coingecko from '../../common/apis/Coingecko';
 import { INetwork } from '../../common/Networks';
 import Langs from '../settings/Langs';
 import { UserToken } from './TokensMan';
@@ -95,7 +95,7 @@ export class TokenData implements ITokenData {
   async refreshHistoryPrices() {
     if (!this.coinId) return;
 
-    const data = await getMarketChart(this.coinId, this.historyDays);
+    const data = await Coingecko.getMarketChart(this.coinId, this.historyDays);
     if (!data) return;
 
     const { prices } = data;

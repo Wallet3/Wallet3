@@ -34,14 +34,14 @@ export default (props: Props) => {
   const buttonStyle = {
     ...styles.default,
     ...((props?.style as any) || {}),
-    backgroundColor,
-    borderColor: reverse ? themeColor : 'transparent',
+    backgroundColor: reverse && disabled ? 'transparent' : backgroundColor,
+    borderColor: reverse ? (disabled ? 'lightgrey' : themeColor) : 'transparent',
     borderWidth: reverse ? 1 : 0,
   };
 
   const txtStyle = {
     ...styles.text,
-    color: reverse ? themeColor : '#fff',
+    color: reverse ? (disabled ? 'lightgrey' : themeColor) : '#fff',
     ...((props?.txtStyle as any) || {}),
     marginStart: props.icon ? 6 : 0,
   };

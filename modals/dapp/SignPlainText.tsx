@@ -59,6 +59,7 @@ export default observer(({ msg, themeColor, onReject, onSign, account, bioType }
       <ScrollView
         style={{ flex: 1, marginHorizontal: -16, paddingHorizontal: 16 }}
         alwaysBounceVertical={false}
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingVertical: 8 }}
       >
         <Text style={{ color: thirdFontColor }}>{msg}</Text>

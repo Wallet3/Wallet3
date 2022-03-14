@@ -250,48 +250,33 @@ export default observer((props: Web3ViewProps) => {
         style={{ bottom: 0, left: 0, right: 0, position: expanded ? 'absolute' : 'relative' }}
       >
         <View
-          // intensity={isLightMode ? 25 : 75}
-          // tint={mode}
           style={{
             ...styles.blurView,
+            backgroundColor,
             paddingVertical: safeAreaBottom === 0 ? 4 : undefined,
-            borderTopWidth: expanded ? 0 : 0.33,
-            shadowOpacity: expanded ? 0.25 : 0,
+            borderTopWidth: 0.333,
             borderTopColor: systemBorderColor,
           }}
         >
           <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-            {/* {ReactiveScreen.width >= 500 ? (
-              expanded ? (
-                <TouchableOpacity style={styles.navTouchableItem} onPress={() => onShrinkRequest?.(webUrl)}>
-                  <MaterialCommunityIcons name="arrow-collapse-vertical" size={20} color={tintColor} />
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                  style={{ ...styles.navTouchableItem, paddingTop: 10, paddingBottom: 9 }}
-                  onPress={() => onExpandRequest?.(webUrl)}
+            {(tabCount || 0) > 0 ? (
+              <TouchableOpacity style={styles.navTouchableItem} onPress={onTabPress}>
+                <View
+                  style={{
+                    borderWidth: 1.5,
+                    borderColor: tintColor,
+                    paddingVertical: 2,
+                    paddingHorizontal: 4,
+                    borderRadius: 7,
+                    justifyContent: 'center',
+                  }}
                 >
-                  <MaterialCommunityIcons name="arrow-expand" size={19} color={tintColor} />
-                </TouchableOpacity>
-              )
-            ) : undefined} */}
-
-            <TouchableOpacity style={styles.navTouchableItem} onPress={onTabPress}>
-              <View
-                style={{
-                  borderWidth: 1.5,
-                  borderColor: tintColor,
-                  paddingVertical: 2,
-                  paddingHorizontal: 4,
-                  borderRadius: 7,
-                  justifyContent: 'center',
-                }}
-              >
-                <Text style={{ fontWeight: '700', fontSize: 12, minWidth: 12, textAlign: 'center', color: tintColor }}>
-                  {tabCount}
-                </Text>
-              </View>
-            </TouchableOpacity>
+                  <Text style={{ fontWeight: '700', fontSize: 12, minWidth: 12, textAlign: 'center', color: tintColor }}>
+                    {tabCount}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            ) : undefined}
 
             <TouchableOpacity style={styles.navTouchableItem} onPress={onBookmarksPress}>
               <Feather name="book-open" size={20.5} color={tintColor} />
@@ -407,18 +392,8 @@ const styles = StyleSheet.create({
   blurView: {
     flexDirection: 'row',
     alignItems: 'center',
-    
-    paddingHorizontal: Platform.OS === 'android' ? undefined : 4,
+    paddingHorizontal: 4,
 
-    shadowColor: Platform.OS === 'android' ? undefined : `#00000060`,
-    shadowOffset: Platform.OS === 'android' ? undefined : {
-      width: 0,
-      height: -2,
-    },
-
-    shadowRadius: Platform.OS === 'android' ? undefined : 3.14,
-
-    elevation: Platform.OS === 'android' ? undefined : 5,
     borderTopColor: 'rgb(216, 216, 216)',
   },
 

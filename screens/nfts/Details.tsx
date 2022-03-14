@@ -7,6 +7,7 @@ import Avatar from '../../components/Avatar';
 import { BlurView } from 'expo-blur';
 import { Button } from '../../components';
 import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
+import { InappBrowserModal } from '../Modalize';
 import LINQ from 'linq';
 import { Modalize } from 'react-native-modalize';
 import MultiSourceImage from '../../components/MultiSourceImage';
@@ -23,7 +24,7 @@ import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { lightOrDark } from '../../utils/color';
 import { observer } from 'mobx-react-lite';
-import { openBrowserAsync } from 'expo-web-browser';
+import { openInappBrowser } from '../../modals/InappBrowser';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -202,40 +203,43 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
           </View>
         ) : undefined}
 
-        <View style={{ padding: 16, paddingTop: 0, flexDirection: 'row', alignItems: 'center' }}>
-          <TouchableOpacity
-            style={{ paddingEnd: 16 }}
-            onPress={() => openBrowserAsync(`${current.explorer}/nft/${item.contract}/${item.tokenId}`, {})}
-          >
-            <Etherscan width={22} height={22} />
-          </TouchableOpacity>
+        <View style={{ padding: 16 }}>
+          <Text style={{ color: detailColor, fontSize: 20, fontWeight: '600', marginBottom: 8 }}>{t('nft-txt-web3')}</Text>
 
-          <TouchableOpacity
-            style={{ paddingEnd: 16 }}
-            onPress={() =>
-              openBrowserAsync(
-                current.chainId === 1
-                  ? `https://opensea.io/assets/${item.contract}/${item.tokenId}`
-                  : `https://opensea.io/assets/${current.symbol.toLowerCase()}/${item.contract}/${item.tokenId}`,
-                {}
-              )
-            }
-          >
-            <Opensea width={22} height={22} />
-          </TouchableOpacity>
+          <View style={{ paddingTop: 4, flexDirection: 'row', alignItems: 'center' }}>
+            <TouchableOpacity
+              style={{ paddingEnd: 24 }}
+              onPress={() => openInappBrowser(`${current.explorer}/nft/${item.contract}/${item.tokenId}`)}
+            >
+              <Etherscan width={24} height={24} />
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            style={{ paddingEnd: 16 }}
-            onPress={() =>
-              openBrowserAsync(
-                current.chainId === 1
-                  ? `https://rarible.com/token/${item.contract}:${item.tokenId}`
-                  : `https://rarible.com/token/${current.network.toLowerCase()}/${item.contract}:${item.tokenId}`
-              )
-            }
-          >
-            <Rarible width={22} height={22} />
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={{ paddingEnd: 24 }}
+              onPress={() =>
+                openInappBrowser(
+                  current.chainId === 1
+                    ? `https://opensea.io/assets/${item.contract}/${item.tokenId}`
+                    : `https://opensea.io/assets/${current.symbol.toLowerCase()}/${item.contract}/${item.tokenId}`
+                )
+              }
+            >
+              <Opensea width={24} height={24} />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{ paddingEnd: 24 }}
+              onPress={() =>
+                openInappBrowser(
+                  current.chainId === 1
+                    ? `https://rarible.com/token/${item.contract}:${item.tokenId}`
+                    : `https://rarible.com/token/${current.network.toLowerCase()}/${item.contract}:${item.tokenId}`
+                )
+              }
+            >
+              <Rarible width={24} height={24} />
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
 
@@ -304,6 +308,8 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
         >
           {vm ? <SendNFT vm={vm} onClose={closeSendModal} /> : undefined}
         </Modalize>
+
+        <InappBrowserModal />
       </Portal>
     </BlurView>
   );
