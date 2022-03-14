@@ -70,7 +70,11 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
           <Text style={styles.reviewItemTitle}>{t('modal-review-send')}</Text>
 
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-            <Text style={{ ...reviewItemValueStyle, marginEnd: 8, maxWidth: ReactiveScreen.width - 190 }} numberOfLines={1}>
+            <Text
+              style={{ ...reviewItemValueStyle, marginEnd: 8, maxWidth: ReactiveScreen.width - 190 }}
+              numberOfLines={1}
+              ellipsizeMode="middle"
+            >
               {vm.amount}
             </Text>
 
