@@ -65,7 +65,7 @@ export default observer((props: SubViewProps) => {
 
   return (
     <SafeViewContainer style={styles.container}>
-      <View style={{ ...styles.navBar, marginBottom: 4 }}>
+      <View style={{ ...styles.navBar }}>
         {props.disableBack ? <View /> : <BackButton onPress={props.onBack} color={Networks.current.color} />}
 
         <TouchableOpacity
@@ -98,6 +98,7 @@ export default observer((props: SubViewProps) => {
         style={{
           fontFamily: numericFontFamily,
           fontWeight: '600',
+          marginBottom: -19,
           maxHeight: 89,
           textAlign: 'center',
           color: props.themeColor,
