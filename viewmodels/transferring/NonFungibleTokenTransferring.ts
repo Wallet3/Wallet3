@@ -11,12 +11,17 @@ import { Gwei_1 } from '../../common/Constants';
 import { INetwork } from '../../common/Networks';
 import { startLayoutAnimation } from '../../utils/animations';
 
-interface NFT {
+export interface NFT {
+  id: string;
   tokenId: string;
   contract: string;
   title?: string;
   images: (string | undefined)[];
   types: (string | undefined)[];
+  previews: (string | undefined)[];
+  previewTypes: (string | undefined)[];
+  description?: string;
+  attributes?: { key: string; value: string }[];
 }
 
 interface IConstructor {

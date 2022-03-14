@@ -7,6 +7,7 @@ import { BlurView } from 'expo-blur';
 import { INetwork } from '../../common/Networks';
 import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
 import MultiSourceImage from '../../components/MultiSourceImage';
+import { NFT } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
 import Networks from '../../viewmodels/Networks';
 import { Nft } from '../../common/apis/Rarible.types';
 import { ReactiveScreen } from '../../utils/device';
@@ -34,18 +35,12 @@ const NFTItem = ({
   backgroundColor: string;
   foregroundColor: string;
   network: INetwork;
-  nft: Nft;
+  nft: NFT;
 }) => {
   const [colorResult, setColorResult] = useState<ImageColorsResult>();
   const [nftBackgroundColor, setNftBackgroundColor] = useState<string>();
   const [titleColor, setTitleColor] = useState(foregroundColor);
-
-  const images = [nft.meta?.image?.url?.BIG, nft.meta?.image?.url?.ORIGINAL, nft.meta?.image?.url?.PREVIEW];
-  const types = [
-    nft.meta?.image?.meta?.BIG?.type,
-    nft.meta?.image?.meta?.ORIGINAL?.type,
-    nft.meta?.image?.meta?.PREVIEW?.type,
-  ];
+  const { previews, previewTypes } = nft;
 
   useEffect(() => {
     if (!nftBackgroundColor) return;
@@ -61,8 +56,8 @@ const NFTItem = ({
     >
       <SharedElement id={`nft.${nft.id}.photo`}>
         <MultiSourceImage
-          uriSources={images}
-          sourceTypes={types}
+          uriSources={previews}
+          sourceTypes={previewTypes}
           backgroundColor={backgroundColor}
           borderRadius={10}
           style={{ width: '100%', height: imageHeight }}
@@ -117,7 +112,7 @@ const NFTItem = ({
               }}
               numberOfLines={1}
             >
-              {nft.meta?.name}
+              {nft.title}
             </Text>
             {generateNetworkIcon({ ...network, hideEVMTitle: true, width: 22, style: { marginStart: 8 } })}
           </BlurView>
