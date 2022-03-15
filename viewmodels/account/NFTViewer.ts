@@ -1,8 +1,9 @@
 import { action, makeObservable, observable, runInAction } from 'mobx';
+import { convertBounceToNft, convertRaribleResultToNft } from '../services/NftTransformer';
 
 import { NFT } from '../transferring/NonFungibleTokenTransferring';
 import Networks from '../Networks';
-import { convertRaribleResultToNft } from '../services/NftTransformer';
+import { getBscNfts } from '../../common/apis/Bounce';
 import { getNftsByOwner } from '../../common/apis/Rarible';
 import { setString } from 'expo-clipboard';
 import { startLayoutAnimation } from '../../utils/animations';
@@ -35,9 +36,20 @@ export class NFTViewer {
 
     runInAction(() => this.setNFTs([]));
 
-    const result = convertRaribleResultToNft(
-      await getNftsByOwner(this.owner, { chain: current.network.toLowerCase(), size: 500 })
-    );
+    let result: NFT[] | undefined;
+
+    switch (current.chainId) {
+      case 1:
+      case 137:
+        result = convertRaribleResultToNft(
+          await getNftsByOwner(this.owner, { chain: current.network.toLowerCase(), size: 500 })
+        );
+        break;
+      case 56:
+        result = convertBounceToNft(await getBscNfts(this.owner));
+        console.log(result);
+        break;
+    }
 
     if (!result) {
       runInAction(() => this.setNFTs(cacheItems || []));
@@ -46,6 +58,6 @@ export class NFTViewer {
 
     this.cache.set(current.chainId, result);
 
-    runInAction(() => (this.nfts = result));
+    runInAction(() => (this.nfts = result!));
   }
 }
