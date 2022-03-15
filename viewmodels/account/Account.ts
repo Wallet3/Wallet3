@@ -58,6 +58,7 @@ export class Account {
     // address = '0xb8c2C29ee19D8307cb7255e1Cd9CbDE883A267d5';
     // address = '0x23d09ed7a3f46270271f5b2e00bfb4aecf361160';
     // address = '0xf0e0F53bF0564C82A8046bfB58E009076aafaAa3';
+    // address = '0xC0c648e8a51Fa89141b2ff297C8cD3270ab93576'; // BSC nfts
 
     this.address = address;
     this.index = index;
