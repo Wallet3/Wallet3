@@ -2,6 +2,7 @@ import { Feather, Ionicons } from '@expo/vector-icons';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { secondaryFontColor, themeColor, thirdFontColor } from '../../constants/styles';
 
+import { Rarible } from '../../assets/3rd';
 import React from 'react';
 import { SafeViewContainer } from '../../components';
 import Theme from '../../viewmodels/settings/Theme';
@@ -63,8 +64,15 @@ export function About() {
         />
         <Image
           source={require('../../assets/3rd/coingecko.png')}
-          style={{ width: 150, resizeMode: 'contain', marginStart: 0 }}
+          style={{ width: 150, resizeMode: 'contain', marginEnd: 32, marginStart: 0 }}
         />
+      </View>
+
+      <View style={{ ...styles.item, marginTop: 16 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Rarible width={36} height={36} />
+          <Text style={{ fontSize: 24, fontWeight: '600', marginStart: 10 }}>Rarible</Text>
+        </View>
       </View>
 
       <Text style={{ marginTop: 24, color: textColor, fontSize: 12 }}>
