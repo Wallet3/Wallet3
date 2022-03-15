@@ -107,7 +107,7 @@ export default observer(({ account }: { account?: Account }) => {
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Animatable.View ref={explorerView as any}>
             <TouchableOpacity
-              style={{ flexDirection: 'row', alignItems: 'center' }}
+              style={{ flexDirection: 'row', alignItems: 'center', margin: -16, padding: 16 }}
               onPress={() => openBrowserAsync(`${current.explorer}/address/${address}`)}
               onLongPress={() => {
                 setString(`${current.explorer}/address/${address}`);
@@ -123,7 +123,7 @@ export default observer(({ account }: { account?: Account }) => {
 
           <View style={{ height: 10, width: 1, backgroundColor: thirdTextColor, marginHorizontal: 8 }} />
 
-          <TouchableOpacity onPress={() => setShowFullAddress(!showFullAddress)}>
+          <TouchableOpacity onPress={() => setShowFullAddress(!showFullAddress)} style={{ margin: -16, padding: 16 }}>
             <Text style={{ color: thirdTextColor, fontSize: 12 }}>{t('misc-show-full-address')}</Text>
           </TouchableOpacity>
         </View>
