@@ -366,7 +366,7 @@ PODS:
     - React-Core
     - SDWebImage (~> 5.11.1)
     - SDWebImageWebPCoder (~> 0.8.4)
-  - RNGestureHandler (2.3.1):
+  - RNGestureHandler (2.3.2):
     - React-Core
   - RNImageColors (1.5.0):
     - React-Core
@@ -728,7 +728,7 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: b49b4e38a1548d03b74b30e558a1d18465b94be7
   RNDeviceInfo: a674f06c5a5bd496aebb809cbc3be61cfd612a65
   RNFastImage: 1f2cab428712a4baaf78d6169eaec7f622556dd7
-  RNGestureHandler: 68f660f1080d3300936a67ce5c6879bd8f26ecc2
+  RNGestureHandler: 6e757e487a4834e7280e98e9bac66d2d9c575e9c
   RNImageColors: ed00190f4e743ff4fb1a61285572b5d4e6a0a8f0
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
   RNReanimated: 0e5ef4a7e4e79f84efbe5b40771c31044c51e7d0

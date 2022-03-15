@@ -40,7 +40,7 @@ export default (props: Props) => {
 
   return (
     <View style={{ backgroundColor, borderRadius, overflow: 'hidden' }}>
-      {sourceTypes[index]?.endsWith('mp4') ? (
+      {uriSources[index]?.endsWith('mp4') || sourceTypes[index]?.endsWith('mp4') ? (
         <Video
           source={{ uri: uriSources[index] }}
           style={props.style}

@@ -82,6 +82,7 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDon
         ref={list}
         data={App.allAccounts}
         renderItem={renderAccount}
+        initialNumToRender={20}
         keyExtractor={(i) => i.address}
         style={{ flex: 1, marginHorizontal: -16 }}
         contentContainerStyle={{ paddingVertical: 4 }}

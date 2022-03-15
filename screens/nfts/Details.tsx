@@ -201,14 +201,14 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
 
           <View style={{ paddingTop: 4, flexDirection: 'row', alignItems: 'center' }}>
             <TouchableOpacity
-              style={{ paddingEnd: 24 }}
+              style={{ paddingEnd: 20 }}
               onPress={() => openInappBrowser(`${current.explorer}/nft/${item.contract}/${item.tokenId}`)}
             >
               <Etherscan width={24} height={24} />
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={{ paddingEnd: 24 }}
+              style={{ paddingEnd: 20 }}
               onPress={() =>
                 openInappBrowser(
                   current.chainId === 1
@@ -221,7 +221,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={{ paddingEnd: 24 }}
+              style={{ paddingEnd: 20 }}
               onPress={() =>
                 openInappBrowser(
                   current.chainId === 1
