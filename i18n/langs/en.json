@@ -1,7 +1,7 @@
 {
   "land-welcome-import-wallet": "Import a wallet",
   "land-welcome-create-wallet": "Create a wallet",
-  "land-welcome-i-agree-to": "I have read and agreed to the",
+  "land-welcome-i-agree-to": "I have read and agree to the",
   "land-welcome-terms-of-use": "Terms of Use",
   "land-import-placeholder": "Please enter recovery phrase or private key here",
   "land-import-derivation-path": "Derivation Path",

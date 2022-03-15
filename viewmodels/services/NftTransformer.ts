@@ -13,6 +13,8 @@ export function convertRaribleResultToNft(result?: NftsByOwner): NFT[] | undefin
           contract: item.contract,
           tokenId: item.tokenId,
           title: item.meta?.name,
+          description: item.meta?.description,
+          attributes: item.meta?.attributes,
           previews: [item.meta?.image?.url?.BIG, item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.PREVIEW],
           previewTypes: [
             item.meta?.image?.meta?.BIG?.type,
