@@ -67,6 +67,10 @@ export class RawTransactionRequest extends BaseTransaction {
     return this.erc20;
   }
 
+  get exceedTokenBalance() {
+    return this.token ? this.tokenAmountWei.gt(this.token.balance) : false;
+  }
+
   constructor({ param, network, account }: IConstructor) {
     super({ network, account }, !param.speedUp);
 
@@ -82,6 +86,7 @@ export class RawTransactionRequest extends BaseTransaction {
       tokenAddress: observable,
       isValidParams: computed,
       setApproveAmount: action,
+      exceedTokenBalance: computed,
     });
 
     runInAction(() => this.parseRequest(param));
@@ -123,6 +128,7 @@ export class RawTransactionRequest extends BaseTransaction {
         break;
     }
 
+    erc20?.getBalance();
     this.erc20 = erc20;
 
     if (param.gas || param.gasLimit) {

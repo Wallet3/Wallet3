@@ -1,5 +1,5 @@
 import { Coin, SafeViewContainer, Skeleton } from '../../components';
-import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import React, { useRef, useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 
@@ -108,7 +108,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
                 style={{
                   ...reviewItemValueStyle,
                   maxWidth: 120,
-                  color: vm.maxUint256Amount ? 'crimson' : textColor,
+                  color: vm.maxUint256Amount || vm.exceedTokenBalance ? 'crimson' : textColor,
                   marginEnd: 8,
                   minWidth: 52,
                 }}
@@ -225,7 +225,13 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
         approveTitle={t(bioType === 'faceid' ? 'modal-review-button-confirm' : 'button-send')}
         disabledApprove={!vm.isValidParams || busy}
         swipeConfirm={bioType === 'faceid'}
-        approveIcon={bioType === 'faceid' ? () => <FaceID width={12.5} height={12.5} style={{ marginEnd: 2 }} /> : undefined}
+        approveIcon={
+          bioType === 'faceid'
+            ? () => <FaceID width={12.5} height={12.5} style={{ marginEnd: 2 }} />
+            : bioType === 'fingerprint'
+            ? () => <MaterialCommunityIcons name="fingerprint" size={19} color="#fff" />
+            : undefined
+        }
         onApprove={async () => {
           setBusy(true);
           await onApprove?.();

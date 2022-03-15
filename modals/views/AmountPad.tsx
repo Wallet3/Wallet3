@@ -1,3 +1,4 @@
+import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { Button, Coin, Numpad, SafeViewContainer } from '../../components';
 import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
@@ -91,20 +92,22 @@ export default observer((props: SubViewProps) => {
         </TouchableOpacity>
       </View>
 
-      <Text
-        numberOfLines={1}
+      <AutoSizeText
+        fontSize={64}
+        numberOfLines={2}
+        mode={ResizeTextMode.max_lines}
+        adjustsFontSizeToFit
         style={{
-          fontSize: 64,
           fontFamily: numericFontFamily,
           fontWeight: '600',
-          marginTop: 4,
-          marginBottom: -14,
+          marginBottom: -19,
+          maxHeight: 89,
           textAlign: 'center',
           color: props.themeColor,
         }}
       >
         {amount}
-      </Text>
+      </AutoSizeText>
 
       <View style={{ flex: 1 }} />
 

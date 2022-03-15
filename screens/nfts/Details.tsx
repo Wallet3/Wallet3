@@ -1,5 +1,6 @@
 import { Entypo, Ionicons } from '@expo/vector-icons';
 import { Etherscan, Opensea, Rarible } from '../../assets/3rd';
+import { NFT, NFTTransferring } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
 import React, { useEffect, useState } from 'react';
 import { Share, Text, TouchableOpacity, View } from 'react-native';
 
@@ -11,10 +12,8 @@ import { InappBrowserModal } from '../Modalize';
 import LINQ from 'linq';
 import { Modalize } from 'react-native-modalize';
 import MultiSourceImage from '../../components/MultiSourceImage';
-import { NFTTransferring } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/Networks';
-import { Nft } from '../../common/apis/Rarible.types';
 import { Portal } from 'react-native-portalize';
 import { ReactiveScreen } from '../../utils/device';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -29,7 +28,7 @@ import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default observer(({ navigation, route }: NativeStackScreenProps<any, any>) => {
-  const { item, colorResult } = route.params as { item: Nft; colorResult?: ImageColorsResult };
+  const { item, colorResult } = route.params as { item: NFT; colorResult?: ImageColorsResult };
   const { t } = i18n;
   const { top, bottom } = useSafeAreaInsets();
   const { current } = Networks;
@@ -38,18 +37,12 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
   const [primaryColor, setPrimaryColor] = useState(foregroundColor);
   const [detailColor, setDetailColor] = useState(foregroundColor);
   const [mode, setMode] = useState<'light' | 'dark'>(statusBarStyle);
-
-  const images = [item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.BIG, item.meta?.image?.url?.PREVIEW];
-  const types = [
-    item.meta?.image?.meta?.ORIGINAL?.type,
-    item.meta?.image?.meta?.BIG?.type,
-    item.meta?.image?.meta?.PREVIEW?.type,
-  ];
+  const { images, types } = item;
 
   const [vm] = useState<NFTTransferring | undefined>(
     new NFTTransferring({
       network: current,
-      nft: { ...item, images, types, title: item.meta?.name },
+      nft: item,
     })
   );
 
@@ -173,21 +166,21 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
           </View>
         ) : undefined}
 
-        {item.meta?.description ? (
+        {item.description ? (
           <View style={{ padding: 16, paddingTop: 0 }}>
             <Text style={{ color: detailColor, fontSize: 20, fontWeight: '600', marginBottom: 8 }}>
               {t('nft-txt-description')}
             </Text>
-            <Text style={{ color: primaryColor }}>{item.meta?.description}</Text>
+            <Text style={{ color: primaryColor }}>{item.description}</Text>
           </View>
         ) : undefined}
 
-        {item.meta?.attributes && item.meta.attributes.filter((a) => a.value).length > 0 ? (
+        {item.attributes && item.attributes.filter((a) => a.value).length > 0 ? (
           <View style={{ padding: 16, paddingTop: 0 }}>
             <Text style={{ color: detailColor, fontSize: 20, fontWeight: '600', marginBottom: 8 }}>
               {t('nft-txt-attributes')}
             </Text>
-            {LINQ.from(item.meta?.attributes.filter((a) => a.value)).select((attr, index) => {
+            {LINQ.from(item.attributes.filter((a) => a.value)).select((attr, index) => {
               return (
                 <View
                   key={`${attr.key}-${index}`}
@@ -277,14 +270,14 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
             textShadowRadius: 3,
           }}
         >
-          {item.meta?.name}
+          {item.title}
         </Text>
 
         <View style={{ flex: 1 }} />
 
         <TouchableOpacity
           style={{ marginBottom: -1 }}
-          onPress={() => Share.share({ message: item.meta?.name || '', url: images.find((i) => i) })}
+          onPress={() => Share.share({ message: item.title || '', url: images.find((i) => i) })}
         >
           <Ionicons
             name="share-outline"

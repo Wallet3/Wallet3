@@ -1,16 +1,17 @@
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
+import { NFT } from '../transferring/NonFungibleTokenTransferring';
 import Networks from '../Networks';
-import { Nft } from '../../common/apis/Rarible.types';
+import { convertRaribleResultToNft } from '../services/NftTransformer';
 import { getNftsByOwner } from '../../common/apis/Rarible';
 import { setString } from 'expo-clipboard';
 import { startLayoutAnimation } from '../../utils/animations';
 
 export class NFTViewer {
-  private cache = new Map<number, Nft[]>();
+  private cache = new Map<number, NFT[]>();
 
   readonly owner: string;
-  nfts: Nft[] = [];
+  nfts: NFT[] = [];
 
   constructor(owner: string) {
     this.owner = owner;
@@ -18,7 +19,7 @@ export class NFTViewer {
     makeObservable(this, { nfts: observable, setNFTs: action });
   }
 
-  setNFTs(nfts: Nft[]) {
+  setNFTs(nfts: NFT[]) {
     startLayoutAnimation();
     this.nfts = nfts;
   }
@@ -34,21 +35,17 @@ export class NFTViewer {
 
     runInAction(() => this.setNFTs([]));
 
-    const result = await getNftsByOwner(this.owner, { chain: current.network.toLowerCase(), size: 500 });
+    const result = convertRaribleResultToNft(
+      await getNftsByOwner(this.owner, { chain: current.network.toLowerCase(), size: 500 })
+    );
+
     if (!result) {
       runInAction(() => this.setNFTs(cacheItems || []));
       return;
     }
 
-    const { items } = result;
-    if (!Array.isArray(items)) {
-      runInAction(() => this.setNFTs(cacheItems || []));
-      return;
-    }
+    this.cache.set(current.chainId, result);
 
-    const validItems = items.filter((i) => !i.deleted && (i.meta?.image?.url?.PREVIEW || i.meta?.image?.url?.ORIGINAL));
-    this.cache.set(current.chainId, validItems);
-
-    runInAction(() => (this.nfts = validItems));
+    runInAction(() => (this.nfts = result));
   }
 }
