@@ -1,18 +1,16 @@
+import Networks, { AddEthereumChainParameter } from '../Networks';
 import WCSession_v1, {
   IRawWcSession,
   WCCallRequestRequest,
   WCClientMeta,
   WCSessionRequestRequest,
 } from '../../models/WCSession_v1';
-import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 
-import { Account } from '../account/Account';
 import App from '../App';
 import { EventEmitter } from 'events';
-import { INetwork } from '../../common/Networks';
-import { ISessionStatus } from '@walletconnect/types';
+import { InpageDAppAddEthereumChain } from '../../screens/browser/controller/InpageDAppController';
 import MessageKeys from '../../common/MessageKeys';
-import Networks from '../Networks';
 import PubSub from 'pubsub-js';
 import WalletConnectClient from '@walletconnect/client';
 import i18n from '../../i18n';
@@ -183,9 +181,67 @@ export class WalletConnect_v1 extends EventEmitter {
       return;
     }
 
+    console.log(request);
+
     if (this.activeAccount?.address !== this.lastUsedAccount || !this.lastUsedAccount) {
       this.rejectRequest(request.id, 'Not authorized');
       showMessage({ message: i18n.t('msg-account-not-found'), type: 'warning' });
+      return;
+    }
+
+    switch (request.method as string) {
+      case 'wallet_addEthereumChain':
+        const [addChainParams] = (request.params as AddEthereumChainParameter[]) || [];
+        if (!addChainParams) {
+          this.rejectRequest(request.id, 'Invalid parameters');
+          return;
+        }
+
+        if (Networks.has(addChainParams.chainId)) {
+          this.setLastUsedChain(Number(addChainParams.chainId), true);
+          this.approveRequest(request.id, null);
+          return;
+        }
+
+        const approve = async () => {
+          PubSub.publish(MessageKeys.openLoadingModal);
+
+          if ((await Networks.add(addChainParams)) === false) {
+            this.rejectRequest(request.id, 'Client error occurs');
+            return;
+          }
+
+          showMessage({ message: i18n.t('msg-chain-added', { name: addChainParams.chainName }), type: 'success' });
+          this.setLastUsedChain(Number(addChainParams.chainId), true);
+          this.approveRequest(request.id, null);
+        };
+
+        const reject = () => this.rejectRequest(request.id, 'User rejected');
+
+        PubSub.publish(MessageKeys.openAddEthereumChain, {
+          approve,
+          reject,
+          chain: addChainParams,
+        } as InpageDAppAddEthereumChain);
+        return;
+      case 'wallet_switchEthereumChain':
+        const [switchChainParams] = (request.params as { chainId: string }[]) || [];
+        if (!Networks.has(switchChainParams.chainId)) {
+          this.rejectRequest(request.id, 'Chain not supported');
+          return;
+        }
+
+        this.setLastUsedChain(Number(addChainParams.chainId), true);
+        this.approveRequest(request.id, null);
+        return;
+    }
+
+    if (
+      !['eth_sendTransaction', 'eth_signTransaction', 'eth_sign', 'personal_sign', 'eth_signTypedData'].some(
+        (method) => request.method === method
+      )
+    ) {
+      this.rejectRequest(request.id, 'Method not supported');
       return;
     }
 

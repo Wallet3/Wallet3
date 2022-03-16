@@ -80,7 +80,7 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
             break;
         }
 
-        setTimeout(() => open(), 0);
+        setTimeout(() => open(), 10);
       }
     );
 
