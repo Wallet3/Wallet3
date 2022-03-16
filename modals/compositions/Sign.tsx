@@ -9,7 +9,7 @@ import Swiper from 'react-native-swiper';
 
 interface Props {
   type: string;
-  msg?: string;
+  msg?: string | Uint8Array;
   themeColor: string;
   onReject: () => void;
   onSign: () => Promise<boolean>;

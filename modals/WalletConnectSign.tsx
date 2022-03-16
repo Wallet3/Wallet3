@@ -11,6 +11,7 @@ import { WCCallRequestRequest } from '../models/WCSession_v1';
 import { WalletConnect_v1 } from '../viewmodels/walletconnect/WalletConnect_v1';
 import i18n from '../i18n';
 import { observer } from 'mobx-react-lite';
+import { parseSignParams } from '../utils/sign';
 import { showMessage } from 'react-native-flash-message';
 import styles from './styles';
 import { utils } from 'ethers';
@@ -22,7 +23,7 @@ interface Props {
 }
 
 export default observer(({ request, client, close }: Props) => {
-  const [msg, setMsg] = useState<string>();
+  const [msg, setMsg] = useState<string | Uint8Array>();
   const [typedData, setTypedData] = useState();
   const [type, setType] = useState('');
   const [verified, setVerified] = useState(false);
@@ -35,18 +36,16 @@ export default observer(({ request, client, close }: Props) => {
     setMsg(undefined);
     setTypedData(undefined);
 
-    try {
-      let requestMsg: any;
+    const { data, isLegacy } = parseSignParams(params);
 
+    try {
       switch (method) {
         case 'eth_sign':
-          requestMsg = params[1];
-          setMsg(utils.isBytesLike(requestMsg) ? Buffer.from(utils.arrayify(requestMsg)).toString('utf8') : requestMsg);
+          setMsg(data);
           setType('plaintext');
           break;
         case 'personal_sign':
-          requestMsg = params[0];
-          setMsg(utils.isBytesLike(requestMsg) ? Buffer.from(utils.arrayify(requestMsg)).toString('utf8') : requestMsg);
+          setMsg(data);
           setType('plaintext');
           break;
         case 'eth_signTypedData':

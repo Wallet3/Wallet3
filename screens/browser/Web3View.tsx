@@ -121,8 +121,6 @@ export default observer((props: Web3ViewProps) => {
       });
 
       wcApp.on('lastUsedChainChanged', (chainId, from) => {
-        console.log(chainId, from);
-        
         updateDAppState({
           lastUsedChainId: wcApp.lastUsedChainId,
           lastUsedAccount: wcApp.lastUsedAccount,

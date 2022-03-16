@@ -17,6 +17,7 @@ import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import { WCCallRequest_eth_sendTransaction } from '../../../models/WCSession_v1';
 import i18n from '../../../i18n';
 import { isSecureSite } from '../../../viewmodels/customs/Bookmarks';
+import { parseSignParams } from '../../../utils/sign';
 import { rawCall } from '../../../common/RPC';
 import { showMessage } from 'react-native-flash-message';
 
@@ -138,14 +139,12 @@ export class InpageDAppController extends EventEmitter {
       case 'wallet_switchEthereumChain':
         result = await this.wallet_switchEthereumChain(hostname!, params);
         break;
+      case 'eth_sign':
       case 'personal_sign':
       case 'eth_signTypedData':
       case 'eth_signTypedData_v3':
       case 'eth_signTypedData_v4':
         result = await this.sign(hostname!, params, method);
-        break;
-      case 'eth_sign':
-        result = { error: { message: 'eth_sign is not supported' } };
         break;
       case 'eth_sendTransaction':
         result = await this.eth_sendTransaction(hostname!, payload);
@@ -240,8 +239,10 @@ export class InpageDAppController extends EventEmitter {
 
     dapp.setLastUsedTimestamp(Date.now());
 
+    console.log(params, method);
+
     return new Promise((resolve) => {
-      let msg: string | undefined = undefined;
+      let msg: Uint8Array | string | undefined = undefined;
       let typedData: any;
       let type: 'plaintext' | 'typedData' = 'plaintext';
       let typedVersion = SignTypedDataVersion.V4;
@@ -261,7 +262,9 @@ export class InpageDAppController extends EventEmitter {
 
       switch (method) {
         case 'personal_sign':
-          msg = utils.isBytesLike(params[0]) ? Buffer.from(utils.arrayify(params[0])).toString('utf8') : params[0];
+        case 'eth_sign':
+          const { data } = parseSignParams(params);
+          msg = data;
           type = 'plaintext';
           break;
         case 'eth_signTypedData':

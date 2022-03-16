@@ -21,7 +21,7 @@ import styles from '../styles';
 import { utils } from 'ethers';
 
 interface Props {
-  msg: string;
+  msg: string | Uint8Array;
   themeColor: string;
   onReject?: () => void;
   onSign?: () => Promise<void>;

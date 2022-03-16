@@ -8,10 +8,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Authentication from './Authentication';
 import Key from '../models/Key';
 import LINQ from 'linq';
+import MetamaskDAppsHub from './walletconnect/MetamaskDAppsHub';
 import { ReadableInfo } from '../models/Transaction';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import TxHub from './hubs/TxHub';
-import MetamaskDAppsHub from './walletconnect/MetamaskDAppsHub';
 
 type SignTxRequest = {
   accountIndex: number;
@@ -27,7 +27,7 @@ type SendTxRequest = {
 
 type SignMessageRequest = {
   accountIndex: number;
-  msg: string;
+  msg: string | Uint8Array;
   pin?: string;
 };
 
@@ -163,8 +163,14 @@ export class Wallet {
 
   async signMessage(request: SignMessageRequest) {
     try {
+      const key = await this.unlockPrivateKey(request);
+      if (!key) return undefined;
+
+      // return ethSignUtil.personalSign({ privateKey: Buffer.from(utils.arrayify(key)), data: request.msg });
       return (await this.openWallet(request))?.signMessage(request.msg);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async signTypedData(request: SignTypedDataRequest) {
