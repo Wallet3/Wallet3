@@ -500,7 +500,7 @@ export const Browser = observer(
 
             {disableExtraFuncs ? undefined : (
               <FlatGrid
-                style={{ marginTop: 2, padding: 0, paddingBottom: 36 }}
+                style={{ marginTop: 2, padding: 0, paddingBottom: 62 }}
                 contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: 8, paddingTop: 2 }}
                 itemDimension={LargeIconSize + 8}
                 showsVerticalScrollIndicator={false}
