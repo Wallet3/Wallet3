@@ -36,7 +36,7 @@ export default ({ navigation }: NativeStackScreenProps<LandScreenStack, 'Welcome
             <Ionicons name="checkbox" color={read ? themeColor : 'lightgrey'} />
             <Text style={{ color: thirdFontColor, marginStart: 8, marginEnd: 4 }}>{t('land-welcome-i-agree-to')}</Text>
 
-            <TouchableOpacity onPress={() => openBrowserAsync(`https://chainbow.co.jp/tos-en`)}>
+            <TouchableOpacity onPress={() => openBrowserAsync(`https://chainbow.co.jp/tos-en.html`)}>
               <Text style={{ color: thirdFontColor, textDecorationLine: 'underline' }}>{t('land-welcome-terms-of-use')}.</Text>
             </TouchableOpacity>
           </TouchableOpacity>
