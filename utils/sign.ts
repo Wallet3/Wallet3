@@ -9,7 +9,7 @@ export function parseSignParams(params: string[]) {
     from = params[0];
   }
 
-  if (data.length === 66 && data.startsWith('0x')) {
+  if ((data.length === 66 || data.length === 64) && utils.isBytesLike(data)) {
     return { data: utils.arrayify(data), from, isLegacy: true };
   }
 
