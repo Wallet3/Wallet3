@@ -117,8 +117,20 @@ export default observer((props: Web3ViewProps) => {
         // console.log(dapp?.origin, wcApp.origin);
         // if (!dapp?.isWalletConnect) return;
         // if (dapp.origin !== origin) return;
-
         updateDAppState(undefined);
+      });
+
+      wcApp.on('lastUsedChainChanged', (chainId, from) => {
+        console.log(chainId, from);
+        
+        updateDAppState({
+          lastUsedChainId: wcApp.lastUsedChainId,
+          lastUsedAccount: wcApp.lastUsedAccount,
+          origin: wcApp.origin,
+          isWalletConnect: true,
+        });
+
+        if (from === 'inpage') networkIndicator.current?.flash?.();
       });
 
       return;

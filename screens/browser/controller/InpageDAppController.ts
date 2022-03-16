@@ -382,8 +382,9 @@ export class InpageDAppController extends EventEmitter {
       const approve = async () => {
         PubSub.publish(MessageKeys.openLoadingModal);
 
-        if (await Networks.add(chain))
+        if (await Networks.add(chain)) {
           showMessage({ message: i18n.t('msg-chain-added', { name: chain.chainName }), type: 'success' });
+        }
 
         resolve(null);
 
