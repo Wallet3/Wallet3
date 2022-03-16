@@ -164,12 +164,11 @@ export class Wallet {
   async signMessage(request: SignMessageRequest) {
     try {
       if (utils.isBytes(request.msg)) {
-        // eth_sign(legacy)
         const privateKey = await this.unlockPrivateKey(request);
         if (!privateKey) return undefined;
 
         const signed = new utils.SigningKey(privateKey).signDigest(request.msg);
-        return signed.compact;
+        return utils.joinSignature(signed);
       } else {
         return (await this.openWallet(request))?.signMessage(request.msg);
       }
