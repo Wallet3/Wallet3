@@ -110,7 +110,7 @@ export const FullPasspad = observer(
           themeColor={themeColor}
           disableCancel
           onCodeEntered={onCodeEntered}
-          style={{ marginBottom: 4 }}
+          style={{ marginBottom: 4, width, height: height || fullScreenHeight }}
           onBioAuth={onBioAuth}
           bioType={bioType}
         />

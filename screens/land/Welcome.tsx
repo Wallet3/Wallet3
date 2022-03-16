@@ -10,7 +10,6 @@ import { StatusBar } from 'expo-status-bar';
 import { TouchableOpacity } from 'react-native';
 import i18n from '../../i18n';
 import { openBrowserAsync } from 'expo-web-browser';
-import { useFonts } from 'expo-font';
 
 export default ({ navigation }: NativeStackScreenProps<LandScreenStack, 'Welcome'>) => {
   const { t } = i18n;
@@ -37,7 +36,7 @@ export default ({ navigation }: NativeStackScreenProps<LandScreenStack, 'Welcome
             <Ionicons name="checkbox" color={read ? themeColor : 'lightgrey'} />
             <Text style={{ color: thirdFontColor, marginStart: 8, marginEnd: 4 }}>{t('land-welcome-i-agree-to')}</Text>
 
-            <TouchableOpacity onPress={() => openBrowserAsync(`https://chainbow.io/tos-en`)}>
+            <TouchableOpacity onPress={() => openBrowserAsync(`https://chainbow.co.jp/tos-en`)}>
               <Text style={{ color: thirdFontColor, textDecorationLine: 'underline' }}>{t('land-welcome-terms-of-use')}.</Text>
             </TouchableOpacity>
           </TouchableOpacity>

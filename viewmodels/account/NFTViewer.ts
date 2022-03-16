@@ -47,7 +47,6 @@ export class NFTViewer {
         break;
       case 56:
         result = convertBounceToNft(await getBscNfts(this.owner));
-        console.log(result);
         break;
     }
 

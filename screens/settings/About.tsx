@@ -2,6 +2,7 @@ import { Feather, Ionicons } from '@expo/vector-icons';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { secondaryFontColor, themeColor, thirdFontColor } from '../../constants/styles';
 
+import { Rarible } from '../../assets/3rd';
 import React from 'react';
 import { SafeViewContainer } from '../../components';
 import Theme from '../../viewmodels/settings/Theme';
@@ -9,7 +10,7 @@ import i18n from '../../i18n';
 
 export function About() {
   const { t } = i18n;
-  let { textColor, isLightMode } = Theme;
+  let { textColor, isLightMode, foregroundColor } = Theme;
 
   textColor = isLightMode ? thirdFontColor : textColor;
   const txtStyle = { ...styles.txt, color: textColor };
@@ -23,11 +24,11 @@ export function About() {
       </Text>
 
       <View style={styles.item}>
-        <Feather name="box" size={16} color={textColor} />
+        <Feather name="box" size={16} color={textColor} style={{ marginTop: 1 }} />
         <Text style={txtStyle}>{t('about-features-1')}</Text>
       </View>
 
-      <View style={{ ...styles.item, alignItems: 'flex-start' }}>
+      <View style={{ ...styles.item }}>
         <Feather name="compass" size={16} color={textColor} style={{ marginTop: 1 }} />
         <Text style={txtStyle}>{t('about-features-6')}</Text>
       </View>
@@ -38,7 +39,7 @@ export function About() {
       </View>
 
       <View style={styles.item}>
-        <Feather name="cpu" size={16} color={textColor} />
+        <Feather name="cpu" size={16} color={textColor} style={{ marginTop: 1 }} />
         <Text style={txtStyle}>{t('about-features-3')}</Text>
       </View>
 
@@ -56,15 +57,22 @@ export function About() {
         {t('about-data-providers')}
       </Text>
 
-      <View style={{ ...styles.item, height: 40 }}>
+      <View style={{ ...styles.item, height: 40, alignItems: 'center' }}>
         <Image
           source={require('../../assets/3rd/debank-logo.png')}
           style={{ width: 190, resizeMode: 'contain', marginStart: -30 }}
         />
         <Image
           source={require('../../assets/3rd/coingecko.png')}
-          style={{ width: 150, resizeMode: 'contain', marginStart: 0 }}
+          style={{ width: 150, resizeMode: 'contain', marginEnd: 32, marginStart: 0 }}
         />
+      </View>
+
+      <View style={{ ...styles.item, marginTop: 16 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Rarible width={36} height={36} />
+          <Text style={{ fontSize: 24, fontWeight: '600', marginStart: 10, color: foregroundColor }}>Rarible</Text>
+        </View>
       </View>
 
       <Text style={{ marginTop: 24, color: textColor, fontSize: 12 }}>
@@ -83,7 +91,7 @@ const styles = StyleSheet.create({
 
   item: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     marginVertical: 8,
     marginEnd: 12,
   },
