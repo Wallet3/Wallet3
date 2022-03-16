@@ -1,5 +1,4 @@
 import * as ethSignUtil from '@metamask/eth-sig-util';
-import * as secp256k1 from '@noble/secp256k1';
 
 import { Wallet as EthersWallet, providers, utils } from 'ethers';
 import { action, makeObservable, observable, runInAction } from 'mobx';
@@ -165,6 +164,7 @@ export class Wallet {
   async signMessage(request: SignMessageRequest) {
     try {
       if (utils.isBytes(request.msg)) {
+        // eth_sign(legacy)
         const privateKey = await this.unlockPrivateKey(request);
         if (!privateKey) return undefined;
 

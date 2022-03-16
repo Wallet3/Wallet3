@@ -1,7 +1,6 @@
 import { utils } from 'ethers';
 
 export function parseSignParams(params: string[]) {
-  console.log(params);
   let data = params[0];
   let from = params[1];
 

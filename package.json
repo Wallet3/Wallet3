@@ -28,7 +28,7 @@
     "dayjs": "^1.11.0",
     "eth-url-parser": "^1.0.4",
     "ethereumjs-util": "^7.1.4",
-    "ethers": "^5.6.0",
+    "ethers": "^5.6.1",
     "events": "^3.3.0",
     "expo": "^44.0.6",
     "expo-asset": "~8.4.6",

@@ -239,8 +239,6 @@ export class InpageDAppController extends EventEmitter {
 
     dapp.setLastUsedTimestamp(Date.now());
 
-    console.log(params, method);
-
     return new Promise((resolve) => {
       let msg: Uint8Array | string | undefined = undefined;
       let typedData: any;
