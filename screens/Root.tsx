@@ -1,4 +1,4 @@
-import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Platform, Text, TouchableOpacity, View } from 'react-native';
 import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
@@ -14,6 +14,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../viewmodels/Networks';
 import { ReactiveScreen } from '../utils/device';
 import SettingScreen from './settings';
+import SinglePageBrowserScreen from './browser/Browser';
 import Theme from '../viewmodels/settings/Theme';
 import WalletScreen from './wallet';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -136,7 +137,7 @@ const RootTab = observer(() => {
 
       <Screen
         name="Explore"
-        component={BrowserScreen}
+        component={Platform.OS === 'android' ? SinglePageBrowserScreen : BrowserScreen}
         options={{
           tabBarLabel: 'Web3',
           headerShown: false,

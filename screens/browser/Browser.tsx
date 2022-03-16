@@ -347,11 +347,11 @@ export const Browser = observer(
               />
             </TouchableOpacity>
 
-            {singlePage ? undefined : (
+            {singlePage ? undefined : onNewTab ? (
               <TouchableOpacity style={{ padding: 4 }} onPress={onNewTab} disabled={loadingProgress < 1 || !pageMetadata}>
                 <Ionicons name={'add-outline'} size={23} color={loadingProgress < 1 ? 'lightgrey' : foregroundColor} />
               </TouchableOpacity>
-            )}
+            ) : undefined}
           </View>
 
           <Collapsible collapsed={!isFocus} style={{ borderWidth: 0, padding: 0, margin: 0 }} enablePointerEvents>
