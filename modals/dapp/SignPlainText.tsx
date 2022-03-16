@@ -33,6 +33,7 @@ export default observer(({ msg, themeColor, onReject, onSign, account, bioType }
   const { t } = i18n;
   const { borderColor } = Theme;
   const [busy, setBusy] = useState(false);
+  const [displayMsg] = useState(utils.isBytes(msg) ? utils.hexlify(msg) : msg);
   const authIcon = bioType
     ? bioType === 'faceid'
       ? () => <FaceID width={12.5} height={12.5} style={{ marginEnd: 2 }} />
@@ -62,7 +63,7 @@ export default observer(({ msg, themeColor, onReject, onSign, account, bioType }
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingVertical: 8 }}
       >
-        <Text style={{ color: thirdFontColor }}>{msg}</Text>
+        <Text style={{ color: thirdFontColor }}>{displayMsg}</Text>
       </ScrollView>
 
       <RejectApproveButtons
