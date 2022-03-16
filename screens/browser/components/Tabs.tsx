@@ -195,7 +195,7 @@ export const WebTabs = ({
         }}
       >
         <TouchableOpacity
-          onPress={onRemoveAll}
+          onPressOut={onRemoveAll}
           style={{
             padding: 8,
             borderRadius: 10,
@@ -224,14 +224,6 @@ export const WebTabs = ({
           width: 48,
           height: 48,
           backgroundColor: tintColor,
-          shadowColor: `#00000060`,
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowRadius: 3.14,
-          shadowOpacity: 0.75,
-          elevation: 5,
         }}
       >
         <Ionicons name={'add-outline'} size={32} color={'#fff'} style={{ marginStart: 4, marginTop: 1 }} />

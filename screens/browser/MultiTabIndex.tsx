@@ -123,7 +123,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
 
     setTimeout(() => {
       swiper.current?.scrollToIndex({ index: tabs.size - 1, animated: true }); // swiper.current?.scrollToItem({ item: tabView, animated: true });
-    }, 450);
+    }, 1500);
   };
 
   const hideTabBar = () => {
@@ -183,7 +183,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
 
   useEffect(() => {
     const handler = () => {
-      setTimeout(() => swiper.current?.scrollToIndex({ index: state.activePageIndex, animated: true }), 225);
+      setTimeout(() => swiper.current?.scrollToIndex({ index: state.activePageIndex, animated: true }), 500);
     };
 
     ReactiveScreen.on('change', handler);
@@ -222,8 +222,15 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
 
       setTimeout(() => {
         Array.from(state.pageMetas.values())[newPageIndex] ? hideTabBar() : showTabBar();
-        if (tabs.size > 1) swiper.current?.scrollToIndex({ index: newPageIndex, animated: false });
-      }, 0);
+        if (tabs.size > 1) {
+          swiper.current?.scrollToIndex({ index: newPageIndex, animated: false });
+        }
+        setTimeout(() => {
+          if (tabs.size > 1) {
+            forceUpdate(tabs.size);
+          }
+        }, 500);
+        }, 100);
     };
 
     if (tabs.size === 1) {

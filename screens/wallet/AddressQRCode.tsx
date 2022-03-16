@@ -76,14 +76,6 @@ export default observer(({ account }: { account?: Account }) => {
             alignItems: 'center',
             padding: 24,
             borderRadius: 15,
-            shadowColor: '#000',
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.23,
-            shadowRadius: 2.62,
-            elevation: 5,
           }}
         >
           <QRCode
