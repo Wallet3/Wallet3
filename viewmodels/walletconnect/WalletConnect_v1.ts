@@ -108,13 +108,15 @@ export class WalletConnect_v1 extends EventEmitter {
     this.client?.updateSession(session as any);
   }
 
-  setLastUsedChain(chainId: number, persistent = false) {
+  setLastUsedChain(chainId: number, persistent = false, from: 'user' | 'inpage' = 'user') {
     this.updateSession({ chainId });
+
     if (!this.store) return;
 
     this.store.lastUsedChainId = `${chainId}`;
-
     if (persistent) this.store.save();
+
+    this.emit('lastUsedChainChanged', chainId, from);
   }
 
   setLastUsedAccount(account: string, persistent = false) {
@@ -181,8 +183,6 @@ export class WalletConnect_v1 extends EventEmitter {
       return;
     }
 
-    console.log(request);
-
     if (this.activeAccount?.address !== this.lastUsedAccount || !this.lastUsedAccount) {
       this.rejectRequest(request.id, 'Not authorized');
       showMessage({ message: i18n.t('msg-account-not-found'), type: 'warning' });
@@ -198,7 +198,7 @@ export class WalletConnect_v1 extends EventEmitter {
         }
 
         if (Networks.has(addChainParams.chainId)) {
-          this.setLastUsedChain(Number(addChainParams.chainId), true);
+          this.setLastUsedChain(Number(addChainParams.chainId), true, 'inpage');
           this.approveRequest(request.id, null);
           return;
         }
@@ -212,7 +212,7 @@ export class WalletConnect_v1 extends EventEmitter {
           }
 
           showMessage({ message: i18n.t('msg-chain-added', { name: addChainParams.chainName }), type: 'success' });
-          this.setLastUsedChain(Number(addChainParams.chainId), true);
+          this.setLastUsedChain(Number(addChainParams.chainId), true, 'inpage');
           this.approveRequest(request.id, null);
         };
 
@@ -231,7 +231,7 @@ export class WalletConnect_v1 extends EventEmitter {
           return;
         }
 
-        this.setLastUsedChain(Number(addChainParams.chainId), true);
+        this.setLastUsedChain(Number(addChainParams.chainId), true, 'inpage');
         this.approveRequest(request.id, null);
         return;
     }
