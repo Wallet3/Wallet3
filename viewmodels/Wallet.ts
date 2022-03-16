@@ -1,4 +1,5 @@
 import * as ethSignUtil from '@metamask/eth-sig-util';
+import * as secp256k1 from '@noble/secp256k1';
 
 import { Wallet as EthersWallet, providers, utils } from 'ethers';
 import { action, makeObservable, observable, runInAction } from 'mobx';
@@ -163,11 +164,15 @@ export class Wallet {
 
   async signMessage(request: SignMessageRequest) {
     try {
-      const key = await this.unlockPrivateKey(request);
-      if (!key) return undefined;
+      if (utils.isBytes(request.msg)) {
+        const privateKey = await this.unlockPrivateKey(request);
+        if (!privateKey) return undefined;
 
-      // return ethSignUtil.personalSign({ privateKey: Buffer.from(utils.arrayify(key)), data: request.msg });
-      return (await this.openWallet(request))?.signMessage(request.msg);
+        const signed = new utils.SigningKey(privateKey).signDigest(request.msg);
+        return signed.compact;
+      } else {
+        return (await this.openWallet(request))?.signMessage(request.msg);
+      }
     } catch (error) {
       console.log(error);
     }
