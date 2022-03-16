@@ -122,7 +122,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
     Keyboard.dismiss();
 
     setTimeout(() => {
-      swiper.current?.scrollToItem({ item: tabView, animated: true });
+      swiper.current?.scrollToIndex({ index: tabs.size - 1, animated: true }); // swiper.current?.scrollToItem({ item: tabView, animated: true });
     }, 450);
   };
 
