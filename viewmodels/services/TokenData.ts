@@ -79,19 +79,20 @@ export class TokenData implements ITokenData {
     const desc = (description?.[Langs.currentLang.value] || description?.en)?.replace(/<[^>]*>?/gm, '') || info?.description;
     const [first] = desc?.split(/(?:\r?\n)+/);
 
-    await this.refreshHistoryPrices();
-
+    const prices = await this.refreshHistoryPrices();
+    console.log(prices);
     runInAction(() => {
       startSpringLayoutAnimation();
       this.firstDescription = first || '';
       this.description = desc || '';
 
-      const latestPrice = this.historyPrices[this.historyPrices.length - 1][1];
-      const oldestPrice = this.historyPrices[0][1];
+      const latestPrice = prices?.[this.historyPrices.length - 1] || market_data?.current_price?.usd || 0;
+      const oldestPrice = prices?.[0] || latestPrice;
+
       this.price = latestPrice;
       this.priceChangeIn24 = latestPrice - oldestPrice;
-      this.priceChangePercentIn24 = latestPrice / oldestPrice - 1;
-      
+      this.priceChangePercentIn24 = (latestPrice / oldestPrice - 1) * 100;
+
       this.loading = false;
     });
   }
@@ -105,6 +106,6 @@ export class TokenData implements ITokenData {
     const { prices } = data;
     if (!prices || !Array.isArray(prices)) return;
 
-    runInAction(() => (this.historyPrices = prices.map((item) => item[1])));
+    return runInAction(() => (this.historyPrices = prices.map((item) => item[1])));
   }
 }

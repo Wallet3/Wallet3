@@ -2,7 +2,7 @@ import * as shape from 'd3-shape';
 
 import { Button, Coin, Skeleton } from '../../components';
 import { Defs, LinearGradient, Stop } from 'react-native-svg';
-import { Entypo, FontAwesome, Ionicons } from '@expo/vector-icons';
+import { Entypo, Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -57,7 +57,7 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
             <Skeleton style={{ height: 14, marginTop: 2 }} />
           ) : (
             <Text style={{ fontSize: 14, color: vm.priceChangePercentIn24 > 0 ? 'yellowgreen' : 'crimson' }} numberOfLines={1}>
-              {`$ ${vm.price} (${
+              {`$ ${vm.price.toFixed(2)} (${
                 vm.priceChangePercentIn24 > 0
                   ? '+' + vm.priceChangePercentIn24.toFixed(2)
                   : vm.priceChangePercentIn24.toFixed(2)

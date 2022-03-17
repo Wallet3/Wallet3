@@ -108,12 +108,15 @@ export class InpageDAppController extends EventEmitter {
 
     switch (method) {
       case 'metamask_getProviderState':
+        const initDApp = this.getDApp(hostname!);
+        const initAccount = initDApp?.lastUsedAccount || '';
+
         result = {
           isInitialized: true,
           isUnlocked: true,
-          network: Networks.current.chainId,
-          selectedAddress: App.currentAccount?.address!,
-          accounts: [App.currentAccount?.address!],
+          network: Number(initDApp?.lastUsedChainId) || Networks.current.chainId,
+          selectedAddress: initAccount,
+          accounts: [initAccount],
         };
         break;
       case 'web3_clientVersion':
