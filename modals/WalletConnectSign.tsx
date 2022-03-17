@@ -63,7 +63,9 @@ export default observer(({ request, client, close }: Props) => {
     close();
   };
 
-  const sign = async (pin?: string) => {
+  const sign = async ({ pin, standardMode }: { pin?: string; standardMode?: boolean } = {}) => {
+    console.log(pin, standardMode);
+
     if (!client.lastUsedAccount) {
       showMessage({ message: i18n.t('msg-no-account-authorized-to-dapp'), type: 'warning' });
       return false;
@@ -77,7 +79,7 @@ export default observer(({ request, client, close }: Props) => {
 
     const signed = typedData
       ? await wallet.signTypedData({ typedData, pin, accountIndex })
-      : await wallet.signMessage({ msg: msg!, pin, accountIndex });
+      : await wallet.signMessage({ msg: msg!, pin, accountIndex, standardMode });
 
     if (signed) {
       client.approveRequest(request.id, signed);

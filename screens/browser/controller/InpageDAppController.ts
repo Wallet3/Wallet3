@@ -67,7 +67,7 @@ export interface InpageDAppSignRequest {
   chainId: number;
   msg?: string;
   typedData?: any;
-  approve: (pin?: string) => Promise<boolean>;
+  approve: (opt?: { pin?: string; standardMode?: boolean }) => Promise<boolean>;
   reject: () => void;
   account: Account;
 }
@@ -245,11 +245,11 @@ export class InpageDAppController extends EventEmitter {
       let type: 'plaintext' | 'typedData' = 'plaintext';
       let typedVersion = SignTypedDataVersion.V4;
 
-      const approve = async (pin?: string) => {
+      const approve = async ({ pin, standardMode }: { pin?: string; standardMode?: boolean } = {}) => {
         const signed =
           type === 'typedData'
             ? await wallet.signTypedData({ typedData, pin, accountIndex, version: typedVersion })
-            : await wallet.signMessage({ msg: msg!, pin, accountIndex });
+            : await wallet.signMessage({ msg: msg!, pin, accountIndex, standardMode });
 
         if (signed) resolve(signed);
 

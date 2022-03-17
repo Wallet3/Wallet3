@@ -28,6 +28,7 @@ type SendTxRequest = {
 type SignMessageRequest = {
   accountIndex: number;
   msg: string | Uint8Array;
+  standardMode?: boolean;
   pin?: string;
 };
 
@@ -163,11 +164,11 @@ export class Wallet {
 
   async signMessage(request: SignMessageRequest) {
     try {
-      if (utils.isBytes(request.msg)) {
+      if (utils.isBytes(request.msg) && !request.standardMode) {
         const privateKey = await this.unlockPrivateKey(request);
         if (!privateKey) return undefined;
 
-        const signed = new utils.SigningKey(privateKey).signDigest(request.msg);
+        const signed = new utils.SigningKey(privateKey).signDigest(request.msg); // eth_sign(legacy)
         return utils.joinSignature(signed);
       } else {
         return (await this.openWallet(request))?.signMessage(request.msg);

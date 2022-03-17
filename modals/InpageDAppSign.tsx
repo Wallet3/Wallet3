@@ -24,8 +24,8 @@ export default observer(({ msg, type, chainId, typedData, approve, reject, close
     close();
   };
 
-  const onApprove = async (pin?: string) => {
-    const result = await approve(pin);
+  const onApprove = async (opt?: { pin?: string; standardMode?: boolean }) => {
+    const result = await approve(opt);
     setVerified(result);
     if (result) setTimeout(() => close(), 1750);
     return result;
@@ -41,8 +41,8 @@ export default observer(({ msg, type, chainId, typedData, approve, reject, close
           type={type}
           themeColor={themeColor}
           onReject={onReject}
-          onSign={() => onApprove()}
-          sign={(p) => onApprove(p)}
+          onSign={onApprove}
+          sign={onApprove}
           typedData={typedData}
           biometricType={Authentication.biometricType}
           account={account}

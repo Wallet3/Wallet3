@@ -1,7 +1,7 @@
 import { Button, SafeViewContainer } from '../../components';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { Text, View } from 'react-native';
+import { Switch, Text, View } from 'react-native';
 import { borderColor, thirdFontColor } from '../../constants/styles';
 
 import { Account } from '../../viewmodels/account/Account';
@@ -27,13 +27,16 @@ interface Props {
   onSign?: () => Promise<void>;
   account?: Account;
   bioType?: BioType;
+  onStandardModeOn: (on: boolean) => void;
 }
 
-export default observer(({ msg, themeColor, onReject, onSign, account, bioType }: Props) => {
+export default observer(({ msg, themeColor, onReject, onSign, account, bioType, onStandardModeOn }: Props) => {
   const { t } = i18n;
   const { borderColor } = Theme;
   const [busy, setBusy] = useState(false);
   const [displayMsg] = useState(utils.isBytes(msg) ? utils.hexlify(msg) : msg);
+  const [isByte] = useState(utils.isBytes(msg));
+  const [standardMode, setStandardMode] = useState(false);
   const authIcon = bioType
     ? bioType === 'faceid'
       ? () => <FaceID width={12.5} height={12.5} style={{ marginEnd: 2 }} />
@@ -65,6 +68,20 @@ export default observer(({ msg, themeColor, onReject, onSign, account, bioType }
       >
         <Text style={{ color: thirdFontColor }}>{displayMsg}</Text>
       </ScrollView>
+
+      {isByte ? (
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 }}>
+          <Text style={{ color: thirdFontColor }}>Sign with Standard Mode</Text>
+          <Switch
+            value={standardMode}
+            trackColor={{ true: themeColor }}
+            onValueChange={(v) => {
+              setStandardMode(v);
+              onStandardModeOn(v);
+            }}
+          />
+        </View>
+      ) : undefined}
 
       <RejectApproveButtons
         disabledApprove={busy}
