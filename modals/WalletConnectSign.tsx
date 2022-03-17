@@ -1,8 +1,7 @@
-import Authentication, { BioType } from '../viewmodels/Authentication';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import App from '../viewmodels/App';
-import Networks from '../viewmodels/Networks';
+import Authentication from '../viewmodels/Authentication';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Sign from './compositions/Sign';
 import Success from './views/Success';
@@ -14,7 +13,6 @@ import { observer } from 'mobx-react-lite';
 import { parseSignParams } from '../utils/sign';
 import { showMessage } from 'react-native-flash-message';
 import styles from './styles';
-import { utils } from 'ethers';
 
 interface Props {
   request: WCCallRequestRequest;
@@ -36,15 +34,12 @@ export default observer(({ request, client, close }: Props) => {
     setMsg(undefined);
     setTypedData(undefined);
 
-    const { data, isLegacy } = parseSignParams(params);
-
     try {
       switch (method) {
         case 'eth_sign':
-          setMsg(data);
-          setType('plaintext');
-          break;
         case 'personal_sign':
+          const { data } = parseSignParams(params, method === 'eth_sign');
+
           setMsg(data);
           setType('plaintext');
           break;
@@ -64,8 +59,6 @@ export default observer(({ request, client, close }: Props) => {
   };
 
   const sign = async ({ pin, standardMode }: { pin?: string; standardMode?: boolean } = {}) => {
-    console.log(pin, standardMode);
-
     if (!client.lastUsedAccount) {
       showMessage({ message: i18n.t('msg-no-account-authorized-to-dapp'), type: 'warning' });
       return false;

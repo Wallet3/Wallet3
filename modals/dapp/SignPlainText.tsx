@@ -71,7 +71,7 @@ export default observer(({ msg, themeColor, onReject, onSign, account, bioType, 
 
       {isByte ? (
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 }}>
-          <Text style={{ color: thirdFontColor }}>Sign with Standard Mode</Text>
+          <Text style={{ color: thirdFontColor }}>{t('modal-sign-with-stand-mode')}</Text>
           <Switch
             value={standardMode}
             trackColor={{ true: themeColor }}

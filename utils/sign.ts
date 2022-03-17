@@ -1,6 +1,6 @@
 import { utils } from 'ethers';
 
-export function parseSignParams(params: string[]) {
+export function parseSignParams(params: string[], eth_sign = false) {
   let data = params[0];
   let from = params[1];
 
@@ -9,7 +9,7 @@ export function parseSignParams(params: string[]) {
     from = params[0];
   }
 
-  if ((data.length === 66 || data.length === 64) && utils.isBytesLike(data)) {
+  if ((data.length === 66 || data.length === 64) && utils.isBytesLike(data) && eth_sign) {
     return { data: utils.arrayify(data), from, isLegacy: true };
   }
 

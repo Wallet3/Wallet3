@@ -172,6 +172,7 @@
   "modal-tx-details-data": "数据",
   "modal-tx-details-view-on-explorer": "区块链浏览器上查看",
   "modal-sign-typed-msg-items": "{{count}} 个项目",
+  "modal-sign-with-stand-mode": "使用标准模式",
   "tx-hub-transaction-confirmed": "交易已确认",
   "tx-hub-transaction-failed": "交易失败",
   "tx-hub-confirmed-msg": "交易: {{hash}} 已在区块 {{block}} 上确认",

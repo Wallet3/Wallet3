@@ -261,7 +261,7 @@ export class InpageDAppController extends EventEmitter {
       switch (method) {
         case 'personal_sign':
         case 'eth_sign':
-          const { data } = parseSignParams(params);
+          const { data } = parseSignParams(params, method === 'eth_sign');
           msg = data;
           type = 'plaintext';
           break;
