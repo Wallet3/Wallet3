@@ -7,23 +7,21 @@ function isASCII(str: string, extended?: boolean) {
 export function parseSignParams(params: string[], eth_sign = false) {
   let data = params[0];
   let from = params[1];
-  let rawData = utils.isBytesLike(data) ? utils.arrayify(data) : undefined;
 
   if (!utils.isAddress(from)) {
     data = params[1];
     from = params[0];
-    rawData = utils.isBytesLike(data) ? utils.arrayify(data) : undefined;
   }
 
   if ((data.length === 66 || data.length === 64) && utils.isBytesLike(data) && eth_sign) {
-    return { data: utils.arrayify(data), rawData, from, isLegacy: true };
+    return { data: utils.arrayify(data), from, isLegacy: true };
   }
 
   const msg = utils.isBytesLike(data) ? Buffer.from(utils.arrayify(data)).toString('utf-8') : '';
 
   data = utils.isBytesLike(data) ? (data.length === 66 && utils.isBytesLike(data) ? (isASCII(msg) ? msg : data) : msg) : data;
 
-  return { data, from, rawData, isLegacy: false };
+  return { data, from, isLegacy: false };
 }
 
 //   const msg = Buffer.from(utils.arrayify(params[0])).toString('utf8');
