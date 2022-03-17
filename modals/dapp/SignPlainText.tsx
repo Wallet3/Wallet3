@@ -34,8 +34,8 @@ export default observer(({ msg, themeColor, onReject, onSign, account, bioType, 
   const { t } = i18n;
   const { borderColor } = Theme;
   const [busy, setBusy] = useState(false);
-  const [displayMsg] = useState(utils.isBytes(msg) ? utils.hexlify(msg) : msg);
   const [isByte] = useState(utils.isBytes(msg));
+  const [displayMsg] = useState(isByte ? utils.hexlify(msg) : msg);
   const [standardMode, setStandardMode] = useState(false);
   const authIcon = bioType
     ? bioType === 'faceid'

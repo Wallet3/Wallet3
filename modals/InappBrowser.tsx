@@ -37,6 +37,6 @@ export default observer(({ initUrl, onClose }: Props) => {
   );
 });
 
-export function openInappBrowser(url: string) {
-  PubSub.publish(MessageKeys.openInappBrowser, { initUrl: url });
+export function openInappBrowser(url: string, pageKey = '') {
+  PubSub.publish(`${MessageKeys.openInappBrowser}_${pageKey}`, { initUrl: url });
 }

@@ -443,19 +443,19 @@ const SendFundsModal = () => {
   );
 };
 
-export const InappBrowserModal = observer(() => {
+export const InappBrowserModal = observer(({ pageKey }: { pageKey?: string }) => {
   const { ref, open, close } = useModalize();
   const [props, setProps] = useState<{ initUrl: string }>();
   const { height, width } = ReactiveScreen;
 
   useEffect(() => {
-    PubSub.subscribe(MessageKeys.openInappBrowser, (_, data) => {
+    PubSub.subscribe(`${MessageKeys.openInappBrowser}_${pageKey || ''}`, (_, data) => {
       setProps(data);
       setTimeout(() => open(), 10);
     });
 
     return () => {
-      PubSub.unsubscribe(MessageKeys.openInappBrowser);
+      PubSub.unsubscribe(`${MessageKeys.openInappBrowser}_${pageKey || ''}`);
     };
   }, []);
 

@@ -13,7 +13,12 @@ export function parseSignParams(params: string[], eth_sign = false) {
     return { data: utils.arrayify(data), from, isLegacy: true };
   }
 
-  data = utils.isBytesLike(data) ? Buffer.from(utils.arrayify(data)).toString('utf8') : data;
+  data = utils.isBytesLike(data)
+    ? data.startsWith('0x') && data.length === 66
+      ? data
+      : Buffer.from(utils.arrayify(data)).toString('utf8')
+    : data;
+
   return { data, from, isLegacy: false };
 }
 
