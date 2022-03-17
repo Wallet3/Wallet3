@@ -1,11 +1,11 @@
 import { action, makeObservable, observable, runInAction } from 'mobx';
-import { convertBounceToNft, convertRaribleResultToNft } from '../services/NftTransformer';
+import { convertBounceToNft as convertBounceToNfts, convertOpenseaAssetsToNft, convertRaribleResultToNft as convertRaribleResultToNfts } from '../services/NftTransformer';
 
 import { NFT } from '../transferring/NonFungibleTokenTransferring';
 import Networks from '../Networks';
-import { getBscNfts } from '../../common/apis/Bounce';
+import { getBounceNfts } from '../../common/apis/Bounce';
 import { getNftsByOwner } from '../../common/apis/Rarible';
-import { setString } from 'expo-clipboard';
+import { getOpenseaNfts } from '../../common/apis/Opensea';
 import { startLayoutAnimation } from '../../utils/animations';
 
 export class NFTViewer {
@@ -41,12 +41,12 @@ export class NFTViewer {
     switch (current.chainId) {
       case 1:
       case 137:
-        result = convertRaribleResultToNft(
+        result = convertRaribleResultToNfts(
           await getNftsByOwner(this.owner, { chain: current.network.toLowerCase(), size: 500 })
         );
         break;
       case 56:
-        result = convertBounceToNft(await getBscNfts(this.owner));
+        result = convertBounceToNfts(await getBounceNfts(this.owner));
         break;
     }
 
