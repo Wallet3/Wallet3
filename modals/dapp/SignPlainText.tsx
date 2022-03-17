@@ -1,7 +1,7 @@
 import { Button, SafeViewContainer } from '../../components';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { Text, View } from 'react-native';
+import { Switch, Text, View } from 'react-native';
 import { borderColor, thirdFontColor } from '../../constants/styles';
 
 import { Account } from '../../viewmodels/account/Account';
@@ -21,18 +21,22 @@ import styles from '../styles';
 import { utils } from 'ethers';
 
 interface Props {
-  msg: string;
+  msg: string | Uint8Array;
   themeColor: string;
   onReject?: () => void;
   onSign?: () => Promise<void>;
   account?: Account;
   bioType?: BioType;
+  onStandardModeOn: (on: boolean) => void;
 }
 
-export default observer(({ msg, themeColor, onReject, onSign, account, bioType }: Props) => {
+export default observer(({ msg, themeColor, onReject, onSign, account, bioType, onStandardModeOn }: Props) => {
   const { t } = i18n;
   const { borderColor } = Theme;
   const [busy, setBusy] = useState(false);
+  const [isByte] = useState(utils.isBytes(msg));
+  const [displayMsg] = useState(isByte ? utils.hexlify(msg) : msg);
+  const [standardMode, setStandardMode] = useState(false);
   const authIcon = bioType
     ? bioType === 'faceid'
       ? () => <FaceID width={12.5} height={12.5} style={{ marginEnd: 2 }} />
@@ -62,8 +66,22 @@ export default observer(({ msg, themeColor, onReject, onSign, account, bioType }
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingVertical: 8 }}
       >
-        <Text style={{ color: thirdFontColor }}>{msg}</Text>
+        <Text style={{ color: thirdFontColor }}>{displayMsg}</Text>
       </ScrollView>
+
+      {isByte ? (
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 }}>
+          <Text style={{ color: thirdFontColor }}>{t('modal-sign-with-stand-mode')}</Text>
+          <Switch
+            value={standardMode}
+            trackColor={{ true: themeColor }}
+            onValueChange={(v) => {
+              setStandardMode(v);
+              onStandardModeOn(v);
+            }}
+          />
+        </View>
+      ) : undefined}
 
       <RejectApproveButtons
         disabledApprove={busy}

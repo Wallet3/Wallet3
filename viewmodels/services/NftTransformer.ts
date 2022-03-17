@@ -2,6 +2,13 @@ import { BounceResponse, Nfts1155, Nfts721 } from '../../common/apis/Bounce.type
 
 import { NFT } from '../transferring/NonFungibleTokenTransferring';
 import { NftsByOwner } from '../../common/apis/Rarible.types';
+import { OpenseaAssetsResponse } from '../../common/apis/Opensea.types';
+
+const convertProtocol = (items: (string | undefined)[]) => {
+  return items
+    .map((i) => (i?.startsWith('ipfs://') ? i.replace('ipfs://', 'https://ipfs.io/ipfs/') : i))
+    .filter((i) => i) as string[];
+};
 
 export function convertRaribleResultToNft(result?: NftsByOwner): NFT[] | undefined {
   if (!result) return;
@@ -37,12 +44,6 @@ export function convertRaribleResultToNft(result?: NftsByOwner): NFT[] | undefin
 export function convertBounceToNft(result?: BounceResponse) {
   if (!result) return;
 
-  const convertProtocol = (items: (string | undefined)[]) => {
-    return items
-      .map((i) => (i?.startsWith('ipfs://') ? i.replace('ipfs://', 'https://ipfs.io/ipfs/') : i))
-      .filter((i) => i) as string[];
-  };
-
   const convertToNft = (item: Nfts1155 | Nfts721, images: string[]) => {
     return {
       id: `${item.contract_addr}:${item.token_id}`,
@@ -70,4 +71,28 @@ export function convertBounceToNft(result?: BounceResponse) {
 
     return erc1155.concat(erc721).filter((i) => i.images.some((img) => img?.startsWith('http')));
   } catch (error) {}
+}
+
+export function convertOpenseaAssetsToNft(result?: OpenseaAssetsResponse): NFT[] | undefined {
+  if (!result) return;
+
+  return result.assets.map((a) => {
+    const previews = convertProtocol([a.image_preview_url, a.image_url, a.animation_url]);
+    const images = convertProtocol([a.image_url, a.image_preview_url, a.animation_url]);
+
+    return {
+      id: `${a.asset_contract.address}:${a.token_id}`,
+      title: a.name,
+      contract: a.asset_contract.address,
+      description: a.description,
+      tokenId: a.token_id,
+      attributes: a.traits.map((trait) => {
+        return { key: trait.trait_type, value: trait.value };
+      }),
+      images,
+      types: [],
+      previewTypes: [],
+      previews,
+    };
+  });
 }

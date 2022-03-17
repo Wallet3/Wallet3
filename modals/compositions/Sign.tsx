@@ -9,11 +9,11 @@ import Swiper from 'react-native-swiper';
 
 interface Props {
   type: string;
-  msg?: string;
+  msg?: string | Uint8Array;
   themeColor: string;
   onReject: () => void;
-  onSign: () => Promise<boolean>;
-  sign: (pin: string) => Promise<boolean>;
+  onSign: (opt?: { pin?: string; standardMode?: boolean }) => Promise<boolean>;
+  sign: (opt: { pin: string; standardMode?: boolean }) => Promise<boolean>;
   typedData?: any;
   biometricType?: BioType;
   account?: Account;
@@ -21,6 +21,7 @@ interface Props {
 
 export default ({ type, msg, themeColor, onReject, typedData, sign, biometricType, onSign, account }: Props) => {
   const swiper = useRef<Swiper>(null);
+  const [standardMode, setStandardMode] = useState<boolean>();
 
   const onSignPress = async () => {
     if (!biometricType) {
@@ -28,7 +29,7 @@ export default ({ type, msg, themeColor, onReject, typedData, sign, biometricTyp
       return;
     }
 
-    if (await onSign()) return;
+    if (await onSign({ standardMode })) return;
 
     swiper.current?.scrollTo(1);
   };
@@ -50,6 +51,7 @@ export default ({ type, msg, themeColor, onReject, typedData, sign, biometricTyp
           onSign={onSignPress}
           account={account}
           bioType={biometricType}
+          onStandardModeOn={setStandardMode}
         />
       ) : undefined}
 
@@ -64,7 +66,11 @@ export default ({ type, msg, themeColor, onReject, typedData, sign, biometricTyp
         />
       ) : undefined}
 
-      <Passpad themeColor={themeColor} onCodeEntered={(c) => sign(c)} onCancel={() => swiper.current?.scrollTo(0)} />
+      <Passpad
+        themeColor={themeColor}
+        onCodeEntered={(c) => sign({ pin: c, standardMode })}
+        onCancel={() => swiper.current?.scrollTo(0)}
+      />
     </Swiper>
   );
 };

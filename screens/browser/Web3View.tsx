@@ -121,8 +121,6 @@ export default observer((props: Web3ViewProps) => {
       });
 
       wcApp.on('lastUsedChainChanged', (chainId, from) => {
-        console.log(chainId, from);
-        
         updateDAppState({
           lastUsedChainId: wcApp.lastUsedChainId,
           lastUsedAccount: wcApp.lastUsedAccount,
@@ -306,7 +304,7 @@ export default observer((props: Web3ViewProps) => {
 
             <TouchableOpacity
               style={styles.navTouchableItem}
-              onPress={() => (Platform.OS === 'android' ? onGoHome?.() : dapp ? onNewTab?.() : onGoHome?.())}
+              onPress={() => (Platform.OS === 'android' ? onGoHome?.() : dapp ? (onNewTab || onGoHome)?.() : onGoHome?.())}
             >
               <Entypo name="circle" size={19} color={tintColor} />
             </TouchableOpacity>

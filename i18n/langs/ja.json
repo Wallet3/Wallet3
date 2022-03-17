@@ -172,6 +172,7 @@
   "modal-tx-details-data": "データ",
   "modal-tx-details-view-on-explorer": "ブロックエクスプローラーで見る",
   "modal-sign-typed-msg-items": "{{count}}",
+  "modal-sign-with-stand-mode": "標準モードでのサイン",
   "tx-hub-transaction-confirmed": "トランザクションの確認",
   "tx-hub-transaction-failed": "トランザクションに失敗しました。",
   "tx-hub-confirmed-msg": "トランザクション: {{hash}} がブロック {{block}} で確認されました。",

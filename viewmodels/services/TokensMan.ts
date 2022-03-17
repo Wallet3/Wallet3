@@ -3,6 +3,7 @@ import { ERC20Token } from '../../models/ERC20';
 import { IToken } from '../../common/Tokens';
 import LINQ from 'linq';
 import Networks from '../Networks';
+import { utils } from 'ethers';
 
 export interface UserToken extends IToken {
   order?: number;
@@ -32,7 +33,7 @@ export default class TokensMan {
     const tokens: UserToken[] = customized.length === 0 ? popTokens : customized;
     return LINQ.from(tokens)
       .orderBy((t) => t.order || 0)
-      .select((t) => new ERC20Token({ ...t, owner: account, chainId, contract: t.address }))
+      .select((t) => new ERC20Token({ ...t, owner: account, chainId, contract: utils.getAddress(t.address) }))
       .distinct((t) => t.address)
       .toArray();
   }

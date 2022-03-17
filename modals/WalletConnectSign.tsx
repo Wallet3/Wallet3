@@ -1,8 +1,7 @@
-import Authentication, { BioType } from '../viewmodels/Authentication';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import App from '../viewmodels/App';
-import Networks from '../viewmodels/Networks';
+import Authentication from '../viewmodels/Authentication';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Sign from './compositions/Sign';
 import Success from './views/Success';
@@ -11,9 +10,9 @@ import { WCCallRequestRequest } from '../models/WCSession_v1';
 import { WalletConnect_v1 } from '../viewmodels/walletconnect/WalletConnect_v1';
 import i18n from '../i18n';
 import { observer } from 'mobx-react-lite';
+import { parseSignParams } from '../utils/sign';
 import { showMessage } from 'react-native-flash-message';
 import styles from './styles';
-import { utils } from 'ethers';
 
 interface Props {
   request: WCCallRequestRequest;
@@ -22,7 +21,7 @@ interface Props {
 }
 
 export default observer(({ request, client, close }: Props) => {
-  const [msg, setMsg] = useState<string>();
+  const [msg, setMsg] = useState<string | Uint8Array>();
   const [typedData, setTypedData] = useState();
   const [type, setType] = useState('');
   const [verified, setVerified] = useState(false);
@@ -36,17 +35,12 @@ export default observer(({ request, client, close }: Props) => {
     setTypedData(undefined);
 
     try {
-      let requestMsg: any;
-
       switch (method) {
         case 'eth_sign':
-          requestMsg = params[1];
-          setMsg(utils.isBytesLike(requestMsg) ? Buffer.from(utils.arrayify(requestMsg)).toString('utf8') : requestMsg);
-          setType('plaintext');
-          break;
         case 'personal_sign':
-          requestMsg = params[0];
-          setMsg(utils.isBytesLike(requestMsg) ? Buffer.from(utils.arrayify(requestMsg)).toString('utf8') : requestMsg);
+          const { data } = parseSignParams(params, method === 'eth_sign');
+
+          setMsg(data);
           setType('plaintext');
           break;
         case 'eth_signTypedData':
@@ -64,7 +58,7 @@ export default observer(({ request, client, close }: Props) => {
     close();
   };
 
-  const sign = async (pin?: string) => {
+  const sign = async ({ pin, standardMode }: { pin?: string; standardMode?: boolean } = {}) => {
     if (!client.lastUsedAccount) {
       showMessage({ message: i18n.t('msg-no-account-authorized-to-dapp'), type: 'warning' });
       return false;
@@ -78,7 +72,7 @@ export default observer(({ request, client, close }: Props) => {
 
     const signed = typedData
       ? await wallet.signTypedData({ typedData, pin, accountIndex })
-      : await wallet.signMessage({ msg: msg!, pin, accountIndex });
+      : await wallet.signMessage({ msg: msg!, pin, accountIndex, standardMode });
 
     if (signed) {
       client.approveRequest(request.id, signed);
