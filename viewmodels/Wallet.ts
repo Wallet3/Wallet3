@@ -171,7 +171,9 @@ export class Wallet {
         const signed = new utils.SigningKey(privateKey).signDigest(request.msg); // eth_sign(legacy)
         return utils.joinSignature(signed);
       } else {
-        return (await this.openWallet(request))?.signMessage(request.msg);
+        return (await this.openWallet(request))?.signMessage(
+          typeof request.msg === 'string' && utils.isBytesLike(request.msg) ? utils.arrayify(request.msg) : request.msg
+        );
       }
     } catch (error) {
       console.log(error);
