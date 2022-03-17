@@ -1,5 +1,9 @@
 import { utils } from 'ethers';
 
+function isASCII(str: string, extended?: boolean) {
+  return (extended ? /^[\x00-\xFF]*$/ : /^[\x00-\x7F]*$/).test(str);
+}
+
 export function parseSignParams(params: string[], eth_sign = false) {
   let data = params[0];
   let from = params[1];
@@ -13,11 +17,9 @@ export function parseSignParams(params: string[], eth_sign = false) {
     return { data: utils.arrayify(data), from, isLegacy: true };
   }
 
-  data = utils.isBytesLike(data)
-    ? data.startsWith('0x') && data.length === 66
-      ? data
-      : Buffer.from(utils.arrayify(data)).toString('utf8')
-    : data;
+  const msg = utils.isBytesLike(data) ? Buffer.from(utils.arrayify(data)).toString('utf-8') : '';
+
+  data = utils.isBytesLike(data) ? (data.length === 66 && utils.isBytesLike(data) ? (isASCII(msg) ? msg : data) : msg) : data;
 
   return { data, from, isLegacy: false };
 }
