@@ -1,5 +1,5 @@
 import { getAvatar, getText } from '../../common/ENS';
-import { makeObservable, observable, runInAction } from 'mobx';
+import { makeAutoObservable, runInAction } from 'mobx';
 
 import Networks from '../Networks';
 
@@ -14,10 +14,12 @@ export class ENSViewer {
   twitter = '';
   github = '';
   coins: { [index: string]: string } = {};
+  loading = false;
 
   constructor(owner: string) {
     this.owner = owner;
-    makeObservable(this, { name: observable, avatar: observable });
+    makeAutoObservable(this);
+
     this.fetchBasicInfo();
   }
 
@@ -42,6 +44,7 @@ export class ENSViewer {
     if (!this.name) return;
 
     const ens = this.name;
+    this.loading = true;
 
     const resolver = await MainnetWsProvider.getResolver(ens);
     const [btc, ltc, doge, bch, atom] = await Promise.all([
@@ -71,5 +74,6 @@ export class ENSViewer {
     this.location = location;
     this.twitter = twitter;
     this.github = github;
+    this.loading = false;
   }
 }

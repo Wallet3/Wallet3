@@ -8,6 +8,7 @@ import CachedImage from 'react-native-fast-image';
 import CopyableText from '../../components/CopyableText';
 import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/Networks';
+import { Skeleton } from '../../components';
 import { StatusBar } from 'expo-status-bar';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
@@ -27,6 +28,7 @@ export default observer(() => {
   const { current } = Networks;
 
   useEffect(() => {
+    ens?.fetchMoreInfo();
     return () => {};
   }, []);
 
@@ -99,9 +101,13 @@ export default observer(() => {
           </View>
         </View>
 
-        <Text style={{ lineHeight: 19, marginTop: 8, color: thirdFontColor }} numberOfLines={2}>
-          {ens?.description || 'No description'}
-        </Text>
+        {ens?.loading ? (
+          <Skeleton style={{ height: 19, marginTop: 8 }} />
+        ) : (
+          <Text style={{ lineHeight: 19, marginTop: 8, color: thirdFontColor }} numberOfLines={2}>
+            {ens?.description || 'No description'}
+          </Text>
+        )}
       </View>
 
       <Text style={styles.subtitle}>{t('profile-accounts')}</Text>
@@ -136,7 +142,12 @@ export default observer(() => {
             return (
               <View style={styles.socialContainer} key={`${symbol}-${address}`}>
                 <Image source={icons[symbol]} style={styles.coin} />
-                <CopyableText copyText={address} title={formatAddress(address || '', 6, 4)} iconStyle={{ marginStart: 5 }} iconColor="black" />
+                <CopyableText
+                  copyText={address}
+                  title={formatAddress(address || '', 6, 4)}
+                  iconStyle={{ marginStart: 5 }}
+                  iconColor="black"
+                />
               </View>
             );
           })}
