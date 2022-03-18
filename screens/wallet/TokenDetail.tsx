@@ -4,17 +4,18 @@ import { Button, Coin, Skeleton } from '../../components';
 import { Defs, LinearGradient, Stop } from 'react-native-svg';
 import { Entypo, Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { formatAddress, formatCurrency } from '../../utils/formatter';
 
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/Tokens';
 import { LineChart } from 'react-native-svg-charts';
 import Theme from '../../viewmodels/settings/Theme';
 import { TokenData } from '../../viewmodels/services/TokenData';
-import { formatCurrency } from '../../utils/formatter';
 import i18n from '../../i18n';
 import numeral from 'numeral';
 import { observer } from 'mobx-react-lite';
+import { openBrowserAsync } from 'expo-web-browser';
 import { thirdFontColor } from '../../constants/styles';
 
 interface Props {
@@ -119,16 +120,104 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
         onPress={() => onSendPress?.(token)}
       />
 
-      <Text style={{ fontSize: 21, marginTop: 12, color: '#75869c', fontWeight: '600', opacity: 0.72 }}>
-        {t('modal-token-details-about', { token: token?.symbol })}
-      </Text>
+      <Text style={styles.sectionTitle}>{t('modal-token-details-about', { token: token?.symbol })}</Text>
 
       <View style={{ marginVertical: 8 }}>
         {vm.loading ? (
           <Skeleton style={{ flex: 1, width: '100%', height: 32 }} />
         ) : (
-          <Text style={{ lineHeight: 22, color: '#75869c', fontSize: 15 }}>{vm.firstDescription || 'No Data'}</Text>
+          <Text style={{ ...styles.sectionValue, maxWidth: '100%' }}>{vm.firstDescription || 'No Data'}</Text>
         )}
+      </View>
+
+      <Text style={styles.sectionTitle}>{t('modal-token-details-more')}</Text>
+
+      <View style={{ marginVertical: 8 }}>
+        {vm.address ? (
+          <View style={styles.sectionItem}>
+            <View style={styles.sectionItem}>
+              <Ionicons name="code-slash" style={styles.icon} />
+              <Text style={styles.sectionValue}>{t('modal-token-details-contract-address')}</Text>
+            </View>
+
+            <TouchableOpacity
+              style={styles.sectionItem}
+              onPress={() => openBrowserAsync(`${network.explorer}/address/${vm.address}`)}
+            >
+              <Text style={styles.sectionValue} numberOfLines={1}>
+                {formatAddress(vm.address, 7, 5)}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        ) : undefined}
+
+        {vm.links?.homepage && vm.links.homepage[0] ? (
+          <View style={styles.sectionItem}>
+            <View style={styles.sectionItem}>
+              <Ionicons name="home-outline" style={styles.icon} />
+              <Text style={styles.sectionValue}>Homepage</Text>
+            </View>
+
+            <TouchableOpacity style={styles.sectionItem} onPress={() => openBrowserAsync(vm.links!.homepage[0])}>
+              <Text style={styles.sectionValue} numberOfLines={1}>
+                {vm.links.homepage[0]}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        ) : vm.loading ? (
+          <Skeleton style={{ flex: 1, width: '100%', height: 15 }} />
+        ) : undefined}
+
+        {vm.links?.twitter_screen_name ? (
+          <View style={styles.sectionItem}>
+            <View style={styles.sectionItem}>
+              <Ionicons name="logo-twitter" style={styles.icon} />
+              <Text style={styles.sectionValue}>Twitter</Text>
+            </View>
+
+            <TouchableOpacity
+              style={styles.sectionItem}
+              onPress={() => openBrowserAsync(`https://twitter.com/${vm.links!.twitter_screen_name}`)}
+            >
+              <Text style={styles.sectionValue} numberOfLines={1}>
+                {`@${vm.links.twitter_screen_name}`}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        ) : undefined}
+
+        {vm.links?.subreddit_url ? (
+          <View style={styles.sectionItem}>
+            <View style={styles.sectionItem}>
+              <Ionicons name="logo-reddit" style={styles.icon} />
+              <Text style={styles.sectionValue}>Reddit</Text>
+            </View>
+
+            <TouchableOpacity style={styles.sectionItem} onPress={() => openBrowserAsync(vm.links!.subreddit_url)}>
+              <Text style={styles.sectionValue} numberOfLines={1}>
+                {`/r/${vm.links.subreddit_url.split('/').pop()}`}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        ) : undefined}
+
+        {vm.links?.facebook_username ? (
+          <View style={styles.sectionItem}>
+            <View style={styles.sectionItem}>
+              <Ionicons name="logo-facebook" style={styles.icon} />
+              <Text style={styles.sectionValue}>Facebook</Text>
+            </View>
+
+            <TouchableOpacity
+              style={styles.sectionItem}
+              onPress={() => openBrowserAsync(`https://facebook.com/${vm.links?.facebook_username}`)}
+            >
+              <Text style={styles.sectionValue} numberOfLines={1}>
+                {`@${vm.links.facebook_username}`}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        ) : undefined}
       </View>
     </View>
   );
@@ -145,5 +234,27 @@ const styles = StyleSheet.create({
   subValue: {
     fontSize: 17,
     fontWeight: '500',
+  },
+
+  sectionTitle: { fontSize: 21, marginTop: 12, color: '#75869c', fontWeight: '600', opacity: 0.72 },
+
+  sectionItem: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 1,
+  },
+
+  sectionValue: {
+    lineHeight: 22,
+    color: '#75869c',
+    fontSize: 15,
+    maxWidth: 200,
+  },
+
+  icon: {
+    marginEnd: 8,
+    color: '#75869c',
   },
 });
