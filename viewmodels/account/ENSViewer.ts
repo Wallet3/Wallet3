@@ -55,12 +55,6 @@ export class ENSViewer {
       resolver?.getAddress(118),
     ]);
 
-    this.coins['BTC'] = btc || '';
-    this.coins['LTC'] = ltc || '';
-    this.coins['DOGE'] = doge || '';
-    this.coins['BCH'] = bch || '';
-    this.coins['ATOM'] = atom || '';
-
     const [email, desc, location, twitter, github] = await Promise.all([
       getText(ens, 'email'),
       getText(ens, 'description'),
@@ -69,11 +63,19 @@ export class ENSViewer {
       getText(ens, 'com.github'),
     ]);
 
-    this.email = email;
-    this.description = desc;
-    this.location = location;
-    this.twitter = twitter;
-    this.github = github;
-    this.loading = false;
+    runInAction(() => {
+      this.coins['BTC'] = btc || '';
+      this.coins['LTC'] = ltc || '';
+      this.coins['DOGE'] = doge || '';
+      this.coins['BCH'] = bch || '';
+      this.coins['ATOM'] = atom || '';
+
+      this.email = email;
+      this.description = desc;
+      this.location = location;
+      this.twitter = twitter;
+      this.github = github;
+      this.loading = false;
+    });
   }
 }
