@@ -1,8 +1,7 @@
 import * as Animatable from 'react-native-animatable';
 import * as ExpoLinking from 'expo-linking';
 
-import { EvilIcons, Feather, Ionicons } from '@expo/vector-icons';
-import { Image, Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useRef, useState } from 'react';
 
 import { Account } from '../../viewmodels/account/Account';
@@ -10,13 +9,14 @@ import Avatar from '../../components/Avatar';
 import { BlankPNG } from '../../common/Constants';
 import CachedImage from 'react-native-fast-image';
 import CopyableText from '../../components/CopyableText';
+import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/Networks';
 import QRCode from 'react-native-qrcode-svg';
 import Theme from '../../viewmodels/settings/Theme';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import { openBrowserAsync } from 'expo-web-browser';
+import { openInappBrowser } from '../../modals/InappBrowser';
 import { setString } from 'expo-clipboard';
 
 export default observer(({ account }: { account?: Account }) => {
@@ -108,7 +108,7 @@ export default observer(({ account }: { account?: Account }) => {
           <Animatable.View ref={explorerView as any}>
             <TouchableOpacity
               style={{ flexDirection: 'row', alignItems: 'center', margin: -16, padding: 16 }}
-              onPress={() => openBrowserAsync(`${current.explorer}/address/${address}`)}
+              onPress={() => openInappBrowser(`${current.explorer}/address/${address}`, 'wallet')}
               onLongPress={() => {
                 setString(`${current.explorer}/address/${address}`);
                 explorerView.current?.flash?.();

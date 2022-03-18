@@ -202,7 +202,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
           <View style={{ paddingTop: 4, flexDirection: 'row', alignItems: 'center' }}>
             <TouchableOpacity
               style={{ paddingEnd: 20 }}
-              onPress={() => openInappBrowser(`${current.explorer}/nft/${item.contract}/${item.tokenId}`)}
+              onPress={() => openInappBrowser(`${current.explorer}/nft/${item.contract}/${item.tokenId}`, 'nft')}
             >
               <Etherscan width={24} height={24} />
             </TouchableOpacity>
@@ -213,7 +213,8 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
                 openInappBrowser(
                   current.chainId === 1
                     ? `https://opensea.io/assets/${item.contract}/${item.tokenId}`
-                    : `https://opensea.io/assets/${current.symbol.toLowerCase()}/${item.contract}/${item.tokenId}`
+                    : `https://opensea.io/assets/${current.symbol.toLowerCase()}/${item.contract}/${item.tokenId}`,
+                  'nft'
                 )
               }
             >
@@ -226,7 +227,8 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
                 openInappBrowser(
                   current.chainId === 1
                     ? `https://rarible.com/token/${item.contract}:${item.tokenId}`
-                    : `https://rarible.com/token/${current.network.toLowerCase()}/${item.contract}:${item.tokenId}`
+                    : `https://rarible.com/token/${current.network.toLowerCase()}/${item.contract}:${item.tokenId}`,
+                  'nft'
                 )
               }
             >
@@ -302,7 +304,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
           {vm ? <SendNFT vm={vm} onClose={closeSendModal} /> : undefined}
         </Modalize>
 
-        <InappBrowserModal />
+        <InappBrowserModal pageKey="nft" />
       </Portal>
     </BlurView>
   );

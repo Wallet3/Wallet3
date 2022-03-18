@@ -3,7 +3,7 @@ import * as shape from 'd3-shape';
 import { Button, Coin, Skeleton } from '../../components';
 import { Defs, LinearGradient, Stop } from 'react-native-svg';
 import { Entypo, Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { formatAddress, formatCurrency } from '../../utils/formatter';
 
@@ -13,9 +13,10 @@ import { LineChart } from 'react-native-svg-charts';
 import Theme from '../../viewmodels/settings/Theme';
 import { TokenData } from '../../viewmodels/services/TokenData';
 import i18n from '../../i18n';
+import { isURL } from '../../utils/url';
 import numeral from 'numeral';
 import { observer } from 'mobx-react-lite';
-import { openBrowserAsync } from 'expo-web-browser';
+import { openInappBrowser } from '../../modals/InappBrowser';
 import { thirdFontColor } from '../../constants/styles';
 
 interface Props {
@@ -35,9 +36,13 @@ const Gradient = () => (
 );
 
 export default observer(({ token, themeColor, onSendPress, network }: Props) => {
-  const [vm] = useState<TokenData>(new TokenData({ token: token!, network }));
+  const [vm, setVM] = useState<TokenData>();
   const { t } = i18n;
   const { backgroundColor, thirdTextColor, foregroundColor } = Theme;
+
+  useEffect(() => {
+    setVM(token ? new TokenData({ token: token!, network }) : undefined);
+  }, [token]);
 
   return (
     <View style={{ padding: 16, backgroundColor, borderTopLeftRadius: 10, borderTopRightRadius: 10, paddingBottom: 24 }}>
@@ -54,21 +59,24 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
           <Text style={{ fontWeight: '500', fontSize: 19, color: foregroundColor }} numberOfLines={1}>
             {token?.symbol}
           </Text>
-          {vm.loading ? (
+          {vm?.loading ? (
             <Skeleton style={{ height: 14, marginTop: 2 }} />
           ) : (
-            <Text style={{ fontSize: 14, color: vm.priceChangePercentIn24 > 0 ? 'yellowgreen' : 'crimson' }} numberOfLines={1}>
-              {`$ ${vm.price.toFixed(2)} (${
-                vm.priceChangePercentIn24 > 0
-                  ? '+' + vm.priceChangePercentIn24.toFixed(2)
-                  : vm.priceChangePercentIn24.toFixed(2)
+            <Text
+              style={{ fontSize: 14, color: (vm?.priceChangePercentIn24 || 0) > 0 ? 'yellowgreen' : 'crimson' }}
+              numberOfLines={1}
+            >
+              {`$ ${vm?.price.toFixed(2)} (${
+                (vm?.priceChangePercentIn24 || 0) > 0
+                  ? '+' + vm?.priceChangePercentIn24.toFixed(2)
+                  : vm?.priceChangePercentIn24.toFixed(2)
               }% 24h)`}
             </Text>
           )}
         </View>
       </View>
 
-      {!vm.loading && vm.historyPrices.length === 0 ? (
+      {!vm?.loading && vm?.historyPrices.length === 0 ? (
         <View style={{ height: 200, justifyContent: 'center', alignItems: 'center' }}>
           <Ionicons name="bandage-outline" size={27} color={thirdTextColor} />
           <Text style={{ color: thirdTextColor, marginTop: 8 }}>No Data</Text>
@@ -76,7 +84,7 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
       ) : (
         <LineChart
           style={{ height: 200, marginHorizontal: -16, marginVertical: 16 }}
-          data={vm.historyPrices}
+          data={vm?.historyPrices || []}
           contentInset={{ top: 20, bottom: 20 }}
           curve={shape.curveNatural}
           animate
@@ -96,7 +104,7 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
 
       <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
         <Text style={{ ...styles.subValue, color: foregroundColor }} numberOfLines={1}>
-          {formatCurrency(Number(token?.amount || 0) * vm.price)}
+          {formatCurrency(Number(token?.amount || 0) * (vm?.price || 0))}
         </Text>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={{ ...styles.subValue, marginEnd: 8, color: foregroundColor }}>
@@ -123,17 +131,17 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
       <Text style={styles.sectionTitle}>{t('modal-token-details-about', { token: token?.symbol })}</Text>
 
       <View style={{ marginVertical: 8 }}>
-        {vm.loading ? (
+        {vm?.loading ? (
           <Skeleton style={{ flex: 1, width: '100%', height: 32 }} />
         ) : (
-          <Text style={{ ...styles.sectionValue, maxWidth: '100%' }}>{vm.firstDescription || 'No Data'}</Text>
+          <Text style={{ ...styles.sectionValue, maxWidth: '100%' }}>{vm?.firstDescription || 'No Data'}</Text>
         )}
       </View>
 
       <Text style={styles.sectionTitle}>{t('modal-token-details-more')}</Text>
 
       <View style={{ marginVertical: 8 }}>
-        {vm.address ? (
+        {vm?.address ? (
           <View style={styles.sectionItem}>
             <View style={styles.sectionItem}>
               <Ionicons name="code-slash" style={styles.icon} />
@@ -142,33 +150,33 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
 
             <TouchableOpacity
               style={styles.sectionItem}
-              onPress={() => openBrowserAsync(`${network.explorer}/address/${vm.address}`)}
+              onPress={() => openInappBrowser(`${network.explorer}/address/${vm?.address}`, 'wallet')}
             >
               <Text style={styles.sectionValue} numberOfLines={1}>
-                {formatAddress(vm.address, 7, 5)}
+                {formatAddress(vm?.address, 7, 5)}
               </Text>
             </TouchableOpacity>
           </View>
         ) : undefined}
 
-        {vm.links?.homepage && vm.links.homepage[0] ? (
+        {vm?.links?.homepage && isURL(vm?.links.homepage[0]) ? (
           <View style={styles.sectionItem}>
             <View style={styles.sectionItem}>
               <Ionicons name="home-outline" style={styles.icon} />
               <Text style={styles.sectionValue}>Homepage</Text>
             </View>
 
-            <TouchableOpacity style={styles.sectionItem} onPress={() => openBrowserAsync(vm.links!.homepage[0])}>
+            <TouchableOpacity style={styles.sectionItem} onPress={() => openInappBrowser(vm?.links!.homepage[0], 'wallet')}>
               <Text style={styles.sectionValue} numberOfLines={1}>
-                {vm.links.homepage[0]}
+                {vm?.links.homepage[0]}
               </Text>
             </TouchableOpacity>
           </View>
-        ) : vm.loading ? (
+        ) : vm?.loading ? (
           <Skeleton style={{ flex: 1, width: '100%', height: 19 }} />
         ) : undefined}
 
-        {vm.links?.twitter_screen_name ? (
+        {vm?.links?.twitter_screen_name ? (
           <View style={styles.sectionItem}>
             <View style={styles.sectionItem}>
               <Ionicons name="logo-twitter" style={styles.icon} />
@@ -177,31 +185,31 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
 
             <TouchableOpacity
               style={styles.sectionItem}
-              onPress={() => openBrowserAsync(`https://twitter.com/${vm.links!.twitter_screen_name}`)}
+              onPress={() => openInappBrowser(`https://twitter.com/${vm?.links!.twitter_screen_name}`, 'wallet')}
             >
               <Text style={styles.sectionValue} numberOfLines={1}>
-                {`@${vm.links.twitter_screen_name}`}
+                {`@${vm?.links.twitter_screen_name}`}
               </Text>
             </TouchableOpacity>
           </View>
         ) : undefined}
 
-        {vm.links?.subreddit_url ? (
+        {vm?.links?.subreddit_url && isURL(vm?.links.subreddit_url) ? (
           <View style={styles.sectionItem}>
             <View style={styles.sectionItem}>
               <Ionicons name="logo-reddit" style={styles.icon} />
               <Text style={styles.sectionValue}>Reddit</Text>
             </View>
 
-            <TouchableOpacity style={styles.sectionItem} onPress={() => openBrowserAsync(vm.links!.subreddit_url)}>
+            <TouchableOpacity style={styles.sectionItem} onPress={() => openInappBrowser(vm?.links!.subreddit_url, 'wallet')}>
               <Text style={styles.sectionValue} numberOfLines={1}>
-                {`/r/${vm.links.subreddit_url.split('/').pop()}`}
+                {`/r/${vm?.links.subreddit_url.split('/').pop()}`}
               </Text>
             </TouchableOpacity>
           </View>
         ) : undefined}
 
-        {vm.links?.facebook_username ? (
+        {vm?.links?.facebook_username ? (
           <View style={styles.sectionItem}>
             <View style={styles.sectionItem}>
               <Ionicons name="logo-facebook" style={styles.icon} />
@@ -210,10 +218,10 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
 
             <TouchableOpacity
               style={styles.sectionItem}
-              onPress={() => openBrowserAsync(`https://facebook.com/${vm.links?.facebook_username}`)}
+              onPress={() => openInappBrowser(`https://facebook.com/${vm?.links?.facebook_username}`, 'wallet')}
             >
               <Text style={styles.sectionValue} numberOfLines={1}>
-                {`@${vm.links.facebook_username}`}
+                {`@${vm?.links.facebook_username}`}
               </Text>
             </TouchableOpacity>
           </View>

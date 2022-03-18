@@ -6,14 +6,17 @@ import { secondaryFontColor, thirdFontColor } from '../../constants/styles';
 import App from '../../viewmodels/App';
 import CachedImage from 'react-native-fast-image';
 import CopyableText from '../../components/CopyableText';
+import { InappBrowserModal } from '../Modalize';
 import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/Networks';
+import { Portal } from 'react-native-portalize';
 import { Skeleton } from '../../components';
 import { StatusBar } from 'expo-status-bar';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 import icons from '../../assets/icons/crypto';
 import { observer } from 'mobx-react-lite';
+import { openInappBrowser } from '../../modals/InappBrowser';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -114,19 +117,28 @@ export default observer(() => {
 
       <View style={styles.contentWrapper}>
         {ens?.twitter ? (
-          <TouchableOpacity style={styles.socialContainer}>
+          <TouchableOpacity
+            style={styles.socialContainer}
+            onPress={() => openInappBrowser(`https://twitter.com/${ens.twitter}`, 'profile')}
+          >
             <Twitter width={20} height={20} />
             <Text style={styles.socialTxt}>{ens?.twitter}</Text>
           </TouchableOpacity>
         ) : undefined}
 
-        <TouchableOpacity style={styles.socialContainer}>
+        <TouchableOpacity
+          style={styles.socialContainer}
+          onPress={() => openInappBrowser(`https://opensea.io/${ens?.owner}`, 'profile')}
+        >
           <Opensea width={20} height={20} />
           <Text style={styles.socialTxt}>{ens?.name || formatAddress(currentAccount?.address ?? '', 9, 5)}</Text>
         </TouchableOpacity>
 
         {ens?.github ? (
-          <TouchableOpacity style={styles.socialContainer}>
+          <TouchableOpacity
+            style={styles.socialContainer}
+            onPress={() => openInappBrowser(`https://github.com/${ens.github}`, 'profile')}
+          >
             <Github width={20} height={20} />
             <Text style={styles.socialTxt}>{ens?.github}</Text>
           </TouchableOpacity>
@@ -157,6 +169,10 @@ export default observer(() => {
       <View style={styles.contentWrapper}></View>
 
       <StatusBar style="light" />
+
+      <Portal>
+        <InappBrowserModal pageKey="profile" />
+      </Portal>
     </View>
   );
 });

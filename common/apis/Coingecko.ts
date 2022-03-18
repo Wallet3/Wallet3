@@ -155,7 +155,7 @@ class Coingecko {
     address = address.toLowerCase();
     network = network.toLowerCase();
 
-    let coin = this.coinDetails.get(address);
+    let coin = this.coinDetails.get(address || symbol.toLowerCase());
     if (coin) return coin;
 
     try {
@@ -181,7 +181,7 @@ class Coingecko {
     } catch (error) {
     } finally {
       if (!coin) return;
-      this.coinDetails.set(address, coin);
+      this.coinDetails.set(address || symbol.toLowerCase(), coin);
     }
   }
 

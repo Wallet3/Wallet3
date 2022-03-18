@@ -7,6 +7,7 @@ import CurrencyViewmodel from '../../viewmodels/settings/Currency';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import GasPrice from '../../viewmodels/misc/GasPrice';
 import { IToken } from '../../common/Tokens';
+import { InappBrowserModal } from '../Modalize';
 import MessageKeys from '../../common/MessageKeys';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
@@ -19,7 +20,6 @@ import TxDetail from './TxDetail';
 import { View } from 'react-native';
 import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectV1ClientHub';
 import { observer } from 'mobx-react-lite';
-import { useHeaderHeight } from '@react-navigation/elements';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 type RootStackParamList = {
@@ -36,7 +36,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
   const { ref: addressQRModalize, open: openAddressQR } = useModalize();
   const [selectedToken, setSelectedToken] = useState<IToken>();
   const [selectedTx, setSelectedTx] = useState<Transaction>();
-  const { backgroundColor, foregroundColor, statusBarStyle, isLightMode, mode } = Theme;
+  const { backgroundColor, isLightMode, mode } = Theme;
 
   const onTokenPress = (token: IToken) => {
     setSelectedToken(token);
@@ -129,6 +129,8 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         >
           <AddressQRCode account={currentAccount || undefined} />
         </Modalize>
+
+        <InappBrowserModal pageKey="wallet" />
       </Portal>
     </View>
   );
