@@ -28,6 +28,8 @@ export class ENSViewer {
     const ens = await MainnetWsProvider.lookupAddress(this.owner);
     if (!ens) return;
 
+    // console.log(await Promise.all([MainnetWsProvider.getAvatar(this.owner), MainnetWsProvider.getAvatar(ens)]));
+
     runInAction(() => (this.name = ens));
 
     getAvatar(ens, this.owner).then((v) => {

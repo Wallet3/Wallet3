@@ -165,7 +165,7 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
             </TouchableOpacity>
           </View>
         ) : vm.loading ? (
-          <Skeleton style={{ flex: 1, width: '100%', height: 15 }} />
+          <Skeleton style={{ flex: 1, width: '100%', height: 19 }} />
         ) : undefined}
 
         {vm.links?.twitter_screen_name ? (
