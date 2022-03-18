@@ -80,7 +80,7 @@ export class TokenData implements ITokenData {
     const [first] = desc?.split(/(?:\r?\n)+/);
 
     const prices = await this.refreshHistoryPrices();
-    console.log(prices);
+
     runInAction(() => {
       startSpringLayoutAnimation();
       this.firstDescription = first || '';
