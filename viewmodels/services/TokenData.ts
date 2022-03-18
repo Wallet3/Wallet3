@@ -79,15 +79,20 @@ export class TokenData implements ITokenData {
     const desc = (description?.[Langs.currentLang.value] || description?.en)?.replace(/<[^>]*>?/gm, '') || info?.description;
     const [first] = desc?.split(/(?:\r?\n)+/);
 
-    await this.refreshHistoryPrices();
+    const prices = await this.refreshHistoryPrices();
 
     runInAction(() => {
       startSpringLayoutAnimation();
       this.firstDescription = first || '';
       this.description = desc || '';
-      this.price = market_data?.current_price?.usd ?? 0;
-      this.priceChangeIn24 = market_data?.price_change_24h || 0;
-      this.priceChangePercentIn24 = market_data?.price_change_percentage_24h || 0;
+
+      const latestPrice = prices?.[this.historyPrices.length - 1] || market_data?.current_price?.usd || 0;
+      const oldestPrice = prices?.[0] || latestPrice;
+
+      this.price = latestPrice;
+      this.priceChangeIn24 = latestPrice - oldestPrice;
+      this.priceChangePercentIn24 = (latestPrice / oldestPrice - 1) * 100;
+
       this.loading = false;
     });
   }
@@ -101,6 +106,6 @@ export class TokenData implements ITokenData {
     const { prices } = data;
     if (!prices || !Array.isArray(prices)) return;
 
-    runInAction(() => (this.historyPrices = prices.map((item) => item[1])));
+    return runInAction(() => (this.historyPrices = prices.map((item) => item[1])));
   }
 }
