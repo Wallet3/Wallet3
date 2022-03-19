@@ -6,6 +6,7 @@ import App from '../../viewmodels/App';
 import { BlurView } from 'expo-blur';
 import { INetwork } from '../../common/Networks';
 import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
+import { Ionicons } from '@expo/vector-icons';
 import MultiSourceImage from '../../components/MultiSourceImage';
 import { NFT } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
 import Networks from '../../viewmodels/Networks';
@@ -126,7 +127,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, any>) => {
   const { currentAccount } = App;
   const { current } = Networks;
   const { top } = useSafeAreaInsets();
-  const { backgroundColor, shadow, mode, foregroundColor } = Theme;
+  const { backgroundColor, shadow, mode, foregroundColor, secondaryTextColor } = Theme;
   const imageHeight = ReactiveScreen.width - 16 * 2;
   const [activeSearch, setActiveSearch] = useState(false);
 
@@ -136,6 +137,15 @@ export default observer(({ navigation }: NativeStackScreenProps<any, any>) => {
 
   return (
     <View style={{ flex: 1, backgroundColor }}>
+      {currentAccount.nfts.nfts.length === 0 && (
+        <View
+          style={{ justifyContent: 'center', alignItems: 'center', alignSelf: 'center', position: 'absolute', top: '50%' }}
+        >
+          <Ionicons name="server-outline" size={32} color={secondaryTextColor} />
+          <Text style={{ marginTop: 12, color: secondaryTextColor }}>No NFTs Yet</Text>
+        </View>
+      )}
+
       <FlatList
         data={currentAccount.nfts.nfts}
         initialNumToRender={5}

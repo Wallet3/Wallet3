@@ -8,6 +8,7 @@ import Avatar from '../../components/Avatar';
 import { BlurView } from 'expo-blur';
 import { Button } from '../../components';
 import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
+import { InappBrowserModal } from '../Modalize';
 import LINQ from 'linq';
 import { Modalize } from 'react-native-modalize';
 import MultiSourceImage from '../../components/MultiSourceImage';
@@ -300,6 +301,8 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
         >
           {vm ? <SendNFT vm={vm} onClose={closeSendModal} /> : undefined}
         </Modalize>
+
+        <InappBrowserModal pageKey="nfts" />
       </Portal>
     </BlurView>
   );

@@ -1,3 +1,4 @@
+import * as ExpoLinking from 'expo-linking';
 import * as shape from 'd3-shape';
 
 import { Button, Coin, Skeleton } from '../../components';
@@ -168,7 +169,7 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
 
             <TouchableOpacity style={styles.sectionItem} onPress={() => openInappBrowser(vm?.links!.homepage[0], 'wallet')}>
               <Text style={styles.sectionValue} numberOfLines={1}>
-                {vm?.links.homepage[0]}
+                {`https://${ExpoLinking.parse(vm?.links.homepage[0]).hostname}`}
               </Text>
             </TouchableOpacity>
           </View>
@@ -203,7 +204,10 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
 
             <TouchableOpacity style={styles.sectionItem} onPress={() => openInappBrowser(vm?.links!.subreddit_url, 'wallet')}>
               <Text style={styles.sectionValue} numberOfLines={1}>
-                {`/r/${vm?.links.subreddit_url.split('/').pop()}`}
+                {`/r/${vm?.links.subreddit_url
+                  .split('/')
+                  .filter((i) => i)
+                  .pop()}`}
               </Text>
             </TouchableOpacity>
           </View>

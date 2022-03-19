@@ -79,7 +79,7 @@ export class TokenData implements ITokenData {
     this.coinId = id || '';
 
     const desc = (description?.[Langs.currentLang.value] || description?.en)?.replace(/<[^>]*>?/gm, '') || info?.description;
-    const [first] = desc?.split(/(?:\r?\n)+/);
+    const [first] = desc?.split(/(?:\r?\n)+/) || [];
 
     const prices = await this.refreshHistoryPrices();
 
