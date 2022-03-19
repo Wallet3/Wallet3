@@ -152,6 +152,14 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
         title="OK"
         txtStyle={{ textTransform: 'uppercase' }}
         onPress={async () => {
+          const modified = {
+            ...network,
+            network: name.trim(),
+            symbol: symbol.toUpperCase().trim(),
+            color,
+            explorer: explorer.trim(),
+          };
+
           let rpcUrls = rpc
             .split(',')
             .map((url) => url.trim().split(/\s/))
@@ -173,6 +181,12 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
             return;
           }
 
+          if (rpcUrls.length === 0 && !network.isUserAdded) {
+            setException('');
+            onDone({ ...modified, rpcUrls: [] });
+            return;
+          }
+
           startLayoutAnimation();
           setBusy(true);
           setException('');
@@ -181,7 +195,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
 
           if (newUrls.length === 0) {
             setException('');
-            onDone();
+            onDone(modified); // no new rpc urls
             setBusy(false);
             return;
           }
@@ -197,14 +211,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
             return;
           }
 
-          onDone({
-            ...network,
-            network: name.trim(),
-            symbol: symbol.toUpperCase().trim(),
-            color,
-            explorer: explorer.trim(),
-            rpcUrls: checkedUrls,
-          });
+          onDone({ ...modified, rpcUrls: checkedUrls });
         }}
       />
     </SafeViewContainer>

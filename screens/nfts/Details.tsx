@@ -196,44 +196,46 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
           </View>
         ) : undefined}
 
-        <View style={{ padding: 16 }}>
-          <Text style={{ color: detailColor, fontSize: 20, fontWeight: '600', marginBottom: 8 }}>{t('nft-txt-web3')}</Text>
+        {[1, 137].includes(current.chainId) && (
+          <View style={{ padding: 16 }}>
+            <Text style={{ color: detailColor, fontSize: 20, fontWeight: '600', marginBottom: 8 }}>{t('nft-txt-web3')}</Text>
 
-          <View style={{ paddingTop: 4, flexDirection: 'row', alignItems: 'center' }}>
-            <TouchableOpacity
-              style={{ paddingEnd: 20 }}
-              onPress={() => openBrowserAsync(`${current.explorer}/nft/${item.contract}/${item.tokenId}`)}
-            >
-              <Etherscan width={24} height={24} />
-            </TouchableOpacity>
+            <View style={{ paddingTop: 4, flexDirection: 'row', alignItems: 'center' }}>
+              <TouchableOpacity
+                style={{ paddingEnd: 20 }}
+                onPress={() => openBrowserAsync(`${current.explorer}/nft/${item.contract}/${item.tokenId}`)}
+              >
+                <Etherscan width={24} height={24} />
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              style={{ paddingEnd: 20 }}
-              onPress={() =>
-                openBrowserAsync(
-                  current.chainId === 1
-                    ? `https://opensea.io/assets/${item.contract}/${item.tokenId}`
-                    : `https://opensea.io/assets/${current.symbol.toLowerCase()}/${item.contract}/${item.tokenId}`
-                )
-              }
-            >
-              <Opensea width={24} height={24} />
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={{ paddingEnd: 20 }}
+                onPress={() =>
+                  openBrowserAsync(
+                    current.chainId === 1
+                      ? `https://opensea.io/assets/${item.contract}/${item.tokenId}`
+                      : `https://opensea.io/assets/${current.symbol.toLowerCase()}/${item.contract}/${item.tokenId}`
+                  )
+                }
+              >
+                <Opensea width={24} height={24} />
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              style={{ paddingEnd: 20 }}
-              onPress={() =>
-                openBrowserAsync(
-                  current.chainId === 1
-                    ? `https://rarible.com/token/${item.contract}:${item.tokenId}`
-                    : `https://rarible.com/token/${current.network.toLowerCase()}/${item.contract}:${item.tokenId}`
-                )
-              }
-            >
-              <Rarible width={24} height={24} />
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={{ paddingEnd: 20 }}
+                onPress={() =>
+                  openBrowserAsync(
+                    current.chainId === 1
+                      ? `https://rarible.com/token/${item.contract}:${item.tokenId}`
+                      : `https://rarible.com/token/${current.network.toLowerCase()}/${item.contract}:${item.tokenId}`
+                  )
+                }
+              >
+                <Rarible width={24} height={24} />
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        )}
       </ScrollView>
 
       <View
