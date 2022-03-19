@@ -33,14 +33,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
     setRpc(
       network.rpcUrls?.join(', ') ||
         getRPCUrls(network.chainId)
-          .map((url) =>
-            url.includes('infura.io') || url.includes('alchemyapi.io')
-              ? url
-                  .split('/')
-                  .slice(0, url.split('/').length - 1)
-                  .join('/')
-              : url
-          )
+          .filter((i) => !(i.includes('infura.io') || i.includes('alchemyapi.io')))
           .join(', ') ||
         ''
     );
@@ -51,7 +44,14 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
 
   const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
   const reviewItemStyle = { ...styles.reviewItem, borderColor };
-  const reviewItemValueStyle = { ...styles.reviewItemValue, color: textColor };
+  const reviewItemValueStyle: any = {
+    ...styles.reviewItemValue,
+    color: textColor,
+    textAlign: 'right',
+    maxWidth: '70%',
+    minWidth: 128,
+  };
+
   const editable = network.isUserAdded ? true : false;
 
   return (
@@ -63,7 +63,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
             {generateNetworkIcon({ ...network, width: 17, height: 17, hideEVMTitle: true, style: { marginEnd: 8 } })}
             <TextInput
               editable={editable}
-              style={{ ...reviewItemValueStyle, maxWidth: 180, color: color || network.color }}
+              style={{ ...styles.reviewItemValue, color: color || network.color }}
               numberOfLines={1}
               defaultValue={name}
               onChangeText={setName}
@@ -76,7 +76,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
 
         <View style={reviewItemStyle}>
           <Text style={styles.reviewItemTitle}>{t('modal-dapp-add-new-network-chainid')}</Text>
-          <Text style={{ ...reviewItemValueStyle, maxWidth: 180 }} numberOfLines={1}>
+          <Text style={reviewItemValueStyle} numberOfLines={1}>
             {Number(network.chainId)}
           </Text>
         </View>
@@ -87,7 +87,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
             <TextInput
               selectTextOnFocus
               editable={editable}
-              style={{ ...reviewItemValueStyle, maxWidth: 180 }}
+              style={reviewItemValueStyle}
               numberOfLines={1}
               defaultValue={symbol}
               onChangeText={setSymbol}
@@ -102,7 +102,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <TextInput
                 editable={editable}
-                style={{ ...reviewItemValueStyle, maxWidth: 180 }}
+                style={reviewItemValueStyle}
                 numberOfLines={1}
                 defaultValue={color}
                 maxLength={7}
@@ -117,7 +117,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
           <Text style={styles.reviewItemTitle}>RPC URLs</Text>
           <TextInput
             editable={true}
-            style={{ ...reviewItemValueStyle, maxWidth: '70%', minWidth: 64 }}
+            style={reviewItemValueStyle}
             numberOfLines={1}
             onChangeText={setRpc}
             defaultValue={rpc}
@@ -132,7 +132,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
           <TextInput
             selectTextOnFocus
             editable={editable}
-            style={{ ...reviewItemValueStyle, maxWidth: '70%' }}
+            style={reviewItemValueStyle}
             numberOfLines={1}
             onChangeText={setExplorer}
             autoCorrect={false}
@@ -148,7 +148,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
 
       <Button
         themeColor={color || network.color}
-        disabled={!rpc?.startsWith('http') || !symbol.length || !explorer.length || !name.length || busy}
+        disabled={(!rpc && network.isUserAdded) || !symbol || !explorer || !name || busy}
         title="OK"
         txtStyle={{ textTransform: 'uppercase' }}
         onPress={async () => {
@@ -159,13 +159,14 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
             .map((i) => i.trim())
             .filter((i) => i.toLowerCase().startsWith('http'));
 
+          const builtinRPCs = getRPCUrls(network.chainId);
+
           if (
             symbol.toLowerCase() === network.symbol.toLowerCase() &&
             explorer.toLowerCase() === network.explorer.toLowerCase() &&
             name.toLowerCase() === network.network.toLowerCase() &&
             color.toLowerCase() === network.color.toLowerCase() &&
-            rpcUrls.every((url) => (network.rpcUrls || getRPCUrls(network.chainId)).includes(url)) &&
-            rpcUrls.length === (network.rpcUrls || getRPCUrls(network.chainId))?.length
+            (rpcUrls.length > 0 ? rpcUrls.every((url) => (network.rpcUrls || builtinRPCs).includes(url)) : true)
           ) {
             setException('');
             onDone();
@@ -176,7 +177,12 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
           setBusy(true);
           setException('');
 
-          const match = await Promise.all(rpcUrls.map((url) => Networks.testRPC(url, network.chainId)));
+          // console.log(rpcUrls.filter((i) => !builtinRPCs.includes(i)));
+
+          const match = await Promise.all(
+            rpcUrls.filter((i) => !builtinRPCs.includes(i)).map((url) => Networks.testRPC(url, network.chainId))
+          );
+
           setBusy(false);
 
           rpcUrls = match.map((v, i) => (v ? rpcUrls[i] : null)).filter((i) => i) as string[];
