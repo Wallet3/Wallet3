@@ -71,7 +71,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
 
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
             <Text
-              style={{ ...reviewItemValueStyle, marginEnd: 8, maxWidth: ReactiveScreen.width - 190 }}
+              style={{ ...reviewItemValueStyle, marginEnd: 8, maxWidth: ReactiveScreen.width - 205 }}
               numberOfLines={1}
               ellipsizeMode="middle"
             >

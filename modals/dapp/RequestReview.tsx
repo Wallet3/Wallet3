@@ -128,28 +128,26 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
           </View>
         ) : undefined}
 
-        {vm.type !== 'Transfer' ? (
-          <View style={{ ...reviewItemStyle }}>
-            <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-to')}</Text>
+        <View style={{ ...reviewItemStyle }}>
+          <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-to')}</Text>
 
-            <TouchableOpacity
-              style={{ flexDirection: 'row', alignItems: 'center' }}
-              onPress={() => openBrowserAsync(`${network.explorer}/address/${vm.toAddress}`)}
-            >
-              <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>
-                {vm.toAddress ? formatAddress(vm.to, 9, 5) : t('modal-dapp-request-deploy-contract')}
-              </Text>
+          <TouchableOpacity
+            style={{ flexDirection: 'row', alignItems: 'center' }}
+            onPress={() => openBrowserAsync(`${network.explorer}/address/${vm.toAddress}`)}
+          >
+            <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>
+              {vm.toAddress ? formatAddress(vm.to, 9, 5) : t('modal-dapp-request-deploy-contract')}
+            </Text>
 
-              {vm.to ? <Ionicons name="search-outline" size={15} color={textColor} style={{ marginStart: 6 }} /> : undefined}
-            </TouchableOpacity>
-          </View>
-        ) : undefined}
+            {vm.to ? <Ionicons name="search-outline" size={15} color={textColor} style={{ marginStart: 6 }} /> : undefined}
+          </TouchableOpacity>
+        </View>
 
         {vm.type === 'Contract Interaction' ? (
           <View style={{ ...reviewItemStyle }}>
             <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-value')}</Text>
             <View style={{ flexDirection: 'row' }}>
-              <Text style={{ ...reviewItemValueStyle, maxWidth: 120, marginEnd: 4 }} numberOfLines={1}>
+              <Text style={{ ...reviewItemValueStyle, maxWidth: 150, marginEnd: 4 }} numberOfLines={1}>
                 {vm.value}
               </Text>
 
