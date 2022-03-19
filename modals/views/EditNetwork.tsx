@@ -177,17 +177,22 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
           setBusy(true);
           setException('');
 
-          // console.log(rpcUrls.filter((i) => !builtinRPCs.includes(i)));
+          const newUrls = rpcUrls.filter((i) => !builtinRPCs.includes(i));
 
-          const match = await Promise.all(
-            rpcUrls.filter((i) => !builtinRPCs.includes(i)).map((url) => Networks.testRPC(url, network.chainId))
-          );
+          if (newUrls.length === 0) {
+            setException('');
+            onDone();
+            setBusy(false);
+            return;
+          }
+
+          const match = await Promise.all(newUrls.map((url) => Networks.testRPC(url, network.chainId)));
 
           setBusy(false);
 
-          rpcUrls = match.map((v, i) => (v ? rpcUrls[i] : null)).filter((i) => i) as string[];
+          const checkedUrls = match.map((v, i) => (v ? rpcUrls[i] : null)).filter((i) => i) as string[];
 
-          if (rpcUrls.length === 0) {
+          if (checkedUrls.length === 0) {
             setException(`RPC chainId does not match current network id`);
             return;
           }
@@ -198,7 +203,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
             symbol: symbol.toUpperCase().trim(),
             color,
             explorer: explorer.trim(),
-            rpcUrls,
+            rpcUrls: checkedUrls,
           });
         }}
       />
