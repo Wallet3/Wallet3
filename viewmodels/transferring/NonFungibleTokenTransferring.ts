@@ -187,4 +187,18 @@ export class NFTTransferring extends BaseTransaction {
     super.dispose();
     clearTimeout(this.estimatingTimer);
   }
+
+  get openseaLink() {
+    return this.network.chainId === 1
+      ? `https://opensea.io/assets/${this.nft.contract}/${this.nft.tokenId}`
+      : `https://opensea.io/assets/${this.network.symbol.toLowerCase()}/${this.nft.contract}/${this.nft.tokenId}`;
+  }
+
+  get raribleLink() {
+    const item = this.nft;
+
+    return this.network.chainId === 1
+      ? `https://rarible.com/token/${item.contract}:${item.tokenId}`
+      : `https://rarible.com/token/${this.network.network.toLowerCase()}/${item.contract}:${item.tokenId}`;
+  }
 }

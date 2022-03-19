@@ -1,4 +1,4 @@
-import { Entypo, Ionicons } from '@expo/vector-icons';
+import { Entypo, EvilIcons, FontAwesome, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { Etherscan, Opensea, Rarible } from '../../assets/3rd';
 import { NFT, NFTTransferring } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
 import React, { useEffect, useState } from 'react';
@@ -112,11 +112,11 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
 
         {vm?.nftType && (
           <Button
-            title={t('nft-button-transfer')}
-            txtStyle={{ color: dominantColor }}
+            title={t('nft-button-view-on-opensea')}
+            txtStyle={{ color: dominantColor, textTransform: 'none' }}
             themeColor={primaryColor}
-            icon={() => <Entypo name="paper-plane" color={dominantColor} size={16} />}
-            onPress={open}
+            icon={() => <Ionicons name="compass" color={dominantColor} size={18} style={{ marginEnd: 2 }} />}
+            onPress={() => openBrowserAsync(vm.openseaLink)}
             style={{
               marginHorizontal: 16,
               borderRadius: 25,
@@ -208,29 +208,11 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
                 <Etherscan width={24} height={24} />
               </TouchableOpacity>
 
-              <TouchableOpacity
-                style={{ paddingEnd: 20 }}
-                onPress={() =>
-                  openBrowserAsync(
-                    current.chainId === 1
-                      ? `https://opensea.io/assets/${item.contract}/${item.tokenId}`
-                      : `https://opensea.io/assets/${current.symbol.toLowerCase()}/${item.contract}/${item.tokenId}`
-                  )
-                }
-              >
+              <TouchableOpacity style={{ paddingEnd: 20 }} onPress={() => openBrowserAsync(vm?.openseaLink || '')}>
                 <Opensea width={24} height={24} />
               </TouchableOpacity>
 
-              <TouchableOpacity
-                style={{ paddingEnd: 20 }}
-                onPress={() =>
-                  openBrowserAsync(
-                    current.chainId === 1
-                      ? `https://rarible.com/token/${item.contract}:${item.tokenId}`
-                      : `https://rarible.com/token/${current.network.toLowerCase()}/${item.contract}:${item.tokenId}`
-                  )
-                }
-              >
+              <TouchableOpacity style={{ paddingEnd: 20 }} onPress={() => openBrowserAsync(vm?.raribleLink || '')}>
                 <Rarible width={24} height={24} />
               </TouchableOpacity>
             </View>
@@ -266,7 +248,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
             marginStart: 12,
             fontWeight: '600',
             marginBottom: -1,
-            maxWidth: '75%',
+            maxWidth: '65%',
             textShadowColor: dominantColor || '#585858',
             textShadowOffset: { width: 0, height: 0 },
             textShadowRadius: 3,
@@ -276,6 +258,15 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
         </Text>
 
         <View style={{ flex: 1 }} />
+
+        <TouchableOpacity style={{ paddingHorizontal: 8, marginEnd: 8 }} onPress={open}>
+          <EvilIcons
+            name="sc-telegram"
+            size={31}
+            color={primaryColor}
+            style={{ shadowColor: dominantColor, shadowOffset: { width: 0, height: 0 }, shadowRadius: 3, shadowOpacity: 0.5 }}
+          />
+        </TouchableOpacity>
 
         <TouchableOpacity
           style={{ marginBottom: -1 }}
