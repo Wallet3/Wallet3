@@ -112,7 +112,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
 
         {vm?.nftType && (
           <Button
-            title={t('nft-button-view-on-opensea')}
+            title={t('nft-button-view-on-website')}
             txtStyle={{ color: dominantColor, textTransform: 'none' }}
             themeColor={primaryColor}
             icon={() => <Ionicons name="compass" color={dominantColor} size={18} style={{ marginEnd: 2 }} />}
