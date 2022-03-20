@@ -1,8 +1,8 @@
-import { Entypo, EvilIcons, FontAwesome, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { Etherscan, Opensea, Rarible } from '../../assets/3rd';
+import { EvilIcons, Ionicons } from '@expo/vector-icons';
 import { NFT, NFTTransferring } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
+import { Platform, Share, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { Share, Text, TouchableOpacity, View } from 'react-native';
 
 import Avatar from '../../components/Avatar';
 import { BlurView } from 'expo-blur';
@@ -24,6 +24,7 @@ import i18n from '../../i18n';
 import { lightOrDark } from '../../utils/color';
 import { observer } from 'mobx-react-lite';
 import { openBrowserAsync } from 'expo-web-browser';
+import { openInappBrowser } from '../../modals/InappBrowser';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -83,6 +84,11 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
     };
   }, []);
 
+  const openBrowser = (url?: string) => {
+    const web = 'https://wallet3.io';
+    Platform.OS === 'ios' ? openBrowserAsync(url || web) : openInappBrowser(url || web, 'nfts');
+  };
+
   return (
     <BlurView intensity={10} style={{ flex: 1, backgroundColor: dominantColor }}>
       <ScrollView contentContainerStyle={{ paddingTop: top + 57, paddingBottom: bottom }} showsVerticalScrollIndicator={false}>
@@ -116,7 +122,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
             txtStyle={{ color: dominantColor, textTransform: 'none' }}
             themeColor={primaryColor}
             icon={() => <Ionicons name="compass" color={dominantColor} size={18} style={{ marginEnd: 2 }} />}
-            onPress={() => openBrowserAsync(vm.openseaLink)}
+            onPress={() => openBrowser(vm.openseaLink)}
             style={{
               marginHorizontal: 16,
               borderRadius: 25,
@@ -203,16 +209,16 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
             <View style={{ paddingTop: 4, flexDirection: 'row', alignItems: 'center' }}>
               <TouchableOpacity
                 style={{ paddingEnd: 20 }}
-                onPress={() => openBrowserAsync(`${current.explorer}/nft/${item.contract}/${item.tokenId}`)}
+                onPress={() => openBrowser(`${current.explorer}/nft/${item.contract}/${item.tokenId}`)}
               >
                 <Etherscan width={24} height={24} />
               </TouchableOpacity>
 
-              <TouchableOpacity style={{ paddingEnd: 20 }} onPress={() => openBrowserAsync(vm?.openseaLink || '')}>
+              <TouchableOpacity style={{ paddingEnd: 20 }} onPress={() => openBrowser(vm?.openseaLink)}>
                 <Opensea width={24} height={24} />
               </TouchableOpacity>
 
-              <TouchableOpacity style={{ paddingEnd: 20 }} onPress={() => openBrowserAsync(vm?.raribleLink || '')}>
+              <TouchableOpacity style={{ paddingEnd: 20 }} onPress={() => openBrowser(vm?.raribleLink)}>
                 <Rarible width={24} height={24} />
               </TouchableOpacity>
             </View>
