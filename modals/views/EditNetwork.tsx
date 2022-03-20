@@ -59,11 +59,11 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
       <View style={reviewItemsContainer}>
         <View style={reviewItemStyle}>
           <Text style={styles.reviewItemTitle}>{t('modal-dapp-add-new-network-network')}</Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
             {generateNetworkIcon({ ...network, width: 17, height: 17, hideEVMTitle: true, style: { marginEnd: 8 } })}
             <TextInput
               editable={editable}
-              style={{ ...styles.reviewItemValue, color: color || network.color }}
+              style={{ ...styles.reviewItemValue, color: color || network.color, maxWidth: 170 }}
               numberOfLines={1}
               defaultValue={name}
               onChangeText={setName}
@@ -191,7 +191,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
 
           if (newUrls.length === 0) {
             setException('');
-            onDone(modified); // no new rpc urls
+            onDone({ ...modified, rpcUrls }); // no new rpc urls
             setBusy(false);
             return;
           }
