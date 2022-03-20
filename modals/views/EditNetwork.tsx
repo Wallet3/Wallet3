@@ -48,8 +48,8 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
     ...styles.reviewItemValue,
     color: textColor,
     textAlign: 'right',
+    width: 220,
     maxWidth: '70%',
-    minWidth: 128,
   };
 
   const editable = network.isUserAdded ? true : false;
@@ -83,33 +83,29 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
 
         <View style={reviewItemStyle}>
           <Text style={styles.reviewItemTitle}>{t('modal-dapp-add-new-network-currency')}</Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <TextInput
-              selectTextOnFocus
-              editable={editable}
-              style={reviewItemValueStyle}
-              numberOfLines={1}
-              defaultValue={symbol}
-              onChangeText={setSymbol}
-              autoCorrect={false}
-            />
-          </View>
+          <TextInput
+            selectTextOnFocus
+            editable={editable}
+            style={reviewItemValueStyle}
+            numberOfLines={1}
+            defaultValue={symbol}
+            onChangeText={setSymbol}
+            autoCorrect={false}
+          />
         </View>
 
         {network.isUserAdded && (
           <View style={reviewItemStyle}>
             <Text style={styles.reviewItemTitle}>{t('modal-dapp-add-new-network-color')}</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <TextInput
-                editable={editable}
-                style={reviewItemValueStyle}
-                numberOfLines={1}
-                defaultValue={color}
-                maxLength={7}
-                onChangeText={(txt) => setColor(txt.substring(0, 7).toUpperCase())}
-                autoCorrect={false}
-              />
-            </View>
+            <TextInput
+              editable={editable}
+              style={reviewItemValueStyle}
+              numberOfLines={1}
+              defaultValue={color}
+              maxLength={7}
+              onChangeText={(txt) => setColor(txt.substring(0, 7).toUpperCase())}
+              autoCorrect={false}
+            />
           </View>
         )}
 
