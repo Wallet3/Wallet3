@@ -191,8 +191,6 @@ export class AppVM {
     this.wallets = [];
     this.currentAccount = null;
 
-    PubSub.clearAllSubscriptions();
-
     TxHub.reset();
     Contacts.reset();
     Networks.reset();

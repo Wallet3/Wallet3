@@ -183,7 +183,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
         ) : undefined}
 
         {item.attributes && item.attributes.filter((a) => a.value).length > 0 ? (
-          <View style={{ padding: 16, paddingTop: 0 }}>
+          <View style={{ padding: 16, paddingTop: 12 }}>
             <Text style={{ color: detailColor, fontSize: 20, fontWeight: '600', marginBottom: 8 }}>
               {t('nft-txt-attributes')}
             </Text>
