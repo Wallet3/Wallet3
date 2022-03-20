@@ -86,7 +86,8 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
 
   const openBrowser = (url?: string) => {
     const web = 'https://wallet3.io';
-    Platform.OS === 'ios' ? openBrowserAsync(url || web) : openInappBrowser(url || web, 'nfts');
+    // Platform.OS === 'ios' ? openBrowserAsync(url || web) :
+    openInappBrowser(url || web, 'nfts');
   };
 
   return (

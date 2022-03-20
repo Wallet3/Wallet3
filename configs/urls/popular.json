@@ -15,5 +15,10 @@
   },
   { "url": "https://foundation.app", "icon": "https://foundation.app/apple-touch-icon.png", "title": "Foundation" },
   { "url": "https://mirror.xyz", "icon": "https://mirror.xyz/icon/apple-touch-icon.png", "title": "Mirror" },
-  { "url": "https://oasis.app", "icon": "https://github.com/trustwallet/assets/raw/master/blockchains/ethereum/assets/0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2/logo.png", "title": "MakerDAO" }
+  {
+    "url": "https://oasis.app",
+    "icon": "https://github.com/trustwallet/assets/raw/master/blockchains/ethereum/assets/0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2/logo.png",
+    "title": "MakerDAO"
+  },
+  { "url": "Connext", "icon": "https://bridge.connext.network/favicon.png", "title": "Connext" }
 ]

@@ -21,6 +21,7 @@ import React, { useEffect, useState } from 'react';
 
 import { AppVM } from '../viewmodels/App';
 import { Authentication } from '../viewmodels/Authentication';
+import BackupSecretTip from '../modals/BackupSecretTip';
 import { FullPasspad } from '../modals/views/Passpad';
 import InappBrowser from '../modals/InappBrowser';
 import InpageConnectDApp from '../modals/InpageConnectDApp';
@@ -443,6 +444,39 @@ const SendFundsModal = () => {
   );
 };
 
+const BackupTipsModal = () => {
+  const { ref, open, close } = useModalize();
+
+  useEffect(() => {
+    PubSub.subscribe(MessageKeys.openBackupSecretTip, () => open());
+
+    return () => {
+      PubSub.unsubscribe(MessageKeys.openBackupSecretTip);
+    };
+  }, []);
+
+  return (
+    <Modalize
+      ref={ref}
+      useNativeDriver
+      closeOnOverlayTap={false}
+      withHandle={false}
+      adjustToContentHeight
+      disableScrollIfPossible
+      panGestureEnabled={false}
+      panGestureComponentEnabled={false}
+      scrollViewProps={{
+        scrollEnabled: false,
+        showsVerticalScrollIndicator: false,
+        showsHorizontalScrollIndicator: false,
+        bounces: false,
+      }}
+    >
+      <BackupSecretTip onDone={close} />
+    </Modalize>
+  );
+};
+
 export const InappBrowserModal = observer(({ pageKey }: { pageKey?: string }) => {
   const { ref, open, close } = useModalize();
   const [props, setProps] = useState<{ initUrl: string }>();
@@ -552,5 +586,6 @@ export default (props: { app: AppVM; appAuth: Authentication }) => {
     <WalletConnectRequests key="walletconnect-requests" {...props} />,
     <InpageDAppConnect key="inpage-dapp-connect" />,
     <InpageDAppRequests key="inpage-dapp-requests" />,
+    <BackupTipsModal key="backup-tip" />,
   ];
 };

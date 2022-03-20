@@ -12,6 +12,7 @@ import { InpageDAppController } from '../screens/browser/controller/InpageDAppCo
 import Key from '../models/Key';
 import LINQ from 'linq';
 import LinkHub from './hubs/LinkHub';
+import MessageKeys from '../common/MessageKeys';
 import MetamaskDAppsHub from './walletconnect/MetamaskDAppsHub';
 import Networks from './Networks';
 import Theme from './settings/Theme';
@@ -173,6 +174,11 @@ export class AppVM {
       LinkHub.start();
     });
 
+    PubSub.subscribe(MessageKeys.userSecretsNotVerified, () => {
+      if ((this.currentAccount?.balance || 0) === 0) return;
+      setTimeout(() => PubSub.publish(MessageKeys.openBackupSecretTip), 1000);
+    });
+
     runInAction(() => {
       this.initialized = true;
       this.wallets = wallets;
@@ -184,6 +190,8 @@ export class AppVM {
     this.wallets.forEach((w) => w.dispose());
     this.wallets = [];
     this.currentAccount = null;
+
+    PubSub.clearAllSubscriptions();
 
     TxHub.reset();
     Contacts.reset();

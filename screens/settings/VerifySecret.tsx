@@ -6,6 +6,7 @@ import AnimatedLottieView from 'lottie-react-native';
 import Authentication from '../../viewmodels/Authentication';
 import MnemonicOnce from '../../viewmodels/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import Networks from '../../viewmodels/Networks';
 import { SortWords } from '../components/SecretWords';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
@@ -28,7 +29,12 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
 
           <View style={{ flex: 1 }} />
 
-          <Button title="OK" onPress={() => navigation.popToTop()} txtStyle={{ textTransform: 'uppercase' }} />
+          <Button
+            title="OK"
+            themeColor={Networks.current.color}
+            onPress={() => navigation.popToTop()}
+            txtStyle={{ textTransform: 'uppercase' }}
+          />
         </View>
       ) : (
         <View>

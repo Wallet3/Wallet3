@@ -186,6 +186,7 @@
   "tip-zero-width-space": "見えない文字が含まれ、ご注意ください",
   "tip-invalid-gas-price": "ガス料金の最大値が優先ガス価格より必ず高いこと",
   "tip-recipient-is-contract": "受信者はコントラクトアドレス",
+  "tip-backup-secret-key": "秘密鍵のバックアップをとっていない。送信する前に秘密鍵をバックアップしてください。",
   "tx-type-approve": "承認",
   "tx-type-transfer": "送金",
   "tx-type-contract-interaction": "コントラクト・インタラクション",
