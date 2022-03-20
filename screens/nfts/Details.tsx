@@ -265,7 +265,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
 
         <View style={{ flex: 1 }} />
 
-        <TouchableOpacity style={{ paddingHorizontal: 8, marginEnd: 8 }} onPress={open}>
+        <TouchableOpacity style={{ paddingHorizontal: 8, marginEnd: 8, marginTop: -1 }} onPress={open}>
           <EvilIcons
             name="sc-telegram"
             size={31}
