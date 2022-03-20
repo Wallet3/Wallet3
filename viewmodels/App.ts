@@ -191,6 +191,8 @@ export class AppVM {
     this.wallets = [];
     this.currentAccount = null;
 
+    PubSub.unsubscribe(MessageKeys.userSecretsNotVerified);
+
     TxHub.reset();
     Contacts.reset();
     Networks.reset();
