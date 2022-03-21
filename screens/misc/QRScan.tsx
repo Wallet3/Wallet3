@@ -42,7 +42,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<{}, never
           alignItems: 'center',
         }}
       >
-        <AntDesign name="qrcode" size={30} color={'#fff'} />
+        <AntDesign name="qrcode" size={29} color={'#fff'} />
 
         <View>
           <Text style={styles.tip} numberOfLines={1}>
