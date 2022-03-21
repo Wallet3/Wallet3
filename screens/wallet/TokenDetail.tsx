@@ -125,7 +125,7 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
         themeColor={themeColor}
         title={t('button-send')}
         style={{ borderRadius: 50, marginVertical: 16 }}
-        icon={() => <EvilIcons name="sc-telegram" color="white" size={22} style={{ marginTop: -1 }} />}
+        icon={() => <EvilIcons name="sc-telegram" color="white" size={22} style={{ marginTop: -1.25 }} />}
         onPress={() => onSendPress?.(token)}
       />
 

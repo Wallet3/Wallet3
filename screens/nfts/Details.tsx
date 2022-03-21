@@ -119,11 +119,13 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
 
         {vm?.nftType && (
           <Button
-            title={t('nft-button-view-on-website')}
+            title={t('nft-button-transfer')}
             txtStyle={{ color: dominantColor, textTransform: 'none' }}
             themeColor={primaryColor}
-            icon={() => <Ionicons name="compass" color={dominantColor} size={18} style={{ marginEnd: 2 }} />}
-            onPress={() => openBrowser(vm.openseaLink)}
+            onPress={open}
+            icon={() => (
+              <EvilIcons name="sc-telegram" color={dominantColor} size={22} style={{ marginEnd: 2, marginTop: -1.25 }} />
+            )}
             style={{
               marginHorizontal: 16,
               borderRadius: 25,
@@ -266,14 +268,14 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
 
         <View style={{ flex: 1 }} />
 
-        <TouchableOpacity style={{ paddingHorizontal: 8, marginEnd: 8, marginTop: -1 }} onPress={open}>
+        {/* <TouchableOpacity style={{ paddingHorizontal: 8, marginEnd: 8, marginTop: -1 }} onPress={open}>
           <EvilIcons
             name="sc-telegram"
             size={31}
             color={primaryColor}
             style={{ shadowColor: dominantColor, shadowOffset: { width: 0, height: 0 }, shadowRadius: 3, shadowOpacity: 0.5 }}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <TouchableOpacity
           style={{ marginBottom: -1 }}
