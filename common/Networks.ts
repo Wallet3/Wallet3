@@ -146,7 +146,7 @@ export const PublicNetworks: INetwork[] = [
   },
   {
     symbol: 'ONE',
-    comm_id: 'harmony',
+    comm_id: 'hmy',
     network: 'Harmony',
     chainId: 1666600000,
     explorer: 'https://explorer.harmony.one',
@@ -231,6 +231,15 @@ export const PublicNetworks: INetwork[] = [
     explorer: 'https://evm.findorascan.io',
     color: '#7733FF',
     defaultTokens: [],
+  },
+  {
+    symbol: 'FUSE',
+    comm_id: 'fuse',
+    chainId: 122,
+    network: 'Fuse',
+    color: '#58ed67',
+    defaultTokens: [],
+    explorer: 'https://explorer.fuse.io',
   },
   {
     symbol: 'CRO',

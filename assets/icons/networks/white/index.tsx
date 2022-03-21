@@ -8,6 +8,7 @@ import Cronos from './cronos.svg';
 import Ethereum from './ethereum.svg';
 import Fantom from './fantom.svg';
 import Findora from './findora.svg';
+import Fuse from './fuse.svg';
 import Harmony from './harmony-one.svg';
 import Heco from './heco.svg';
 import Klaytn from './klaytn.svg';
@@ -46,4 +47,5 @@ export default {
   2152: <Findora width={42} height={42} style={styles.findora} />,
   1284: <Moonbeam width={42} height={42} style={styles.moonbeam} />,
   1285: <Moonrivier width={42} height={42} style={styles.moonrivier} />,
+  122: <Fuse width={40} height={40} style={styles.fuse} />,
 };

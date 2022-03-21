@@ -154,4 +154,11 @@ export default StyleSheet.create({
     alignSelf: 'flex-end',
     opacity: 0.5,
   },
+
+  fuse: {
+    marginTop: -36,
+    marginEnd: -2,
+    alignSelf: 'flex-end',
+    opacity: 0.5,
+  },
 });
