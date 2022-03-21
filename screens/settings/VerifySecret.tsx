@@ -1,6 +1,6 @@
 import { Button, SafeViewContainer } from '../../components';
 import React, { useState } from 'react';
-import { SafeAreaView, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 import AnimatedLottieView from 'lottie-react-native';
 import Authentication from '../../viewmodels/Authentication';
@@ -25,6 +25,12 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
 
           <View style={{ justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
             <AnimatedLottieView autoPlay autoSize source={require('../../assets/animations/bubble-explosion.json')} />
+            <AnimatedLottieView
+              autoPlay
+              loop={false}
+              source={require('../../assets/animations/success.json')}
+              style={{ position: 'absolute', marginTop: -12, marginRight: -12, width: 220, height: 220 }}
+            />
           </View>
 
           <View style={{ flex: 1 }} />
