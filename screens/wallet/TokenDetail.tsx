@@ -3,7 +3,7 @@ import * as shape from 'd3-shape';
 
 import { Button, Coin, Skeleton } from '../../components';
 import { Defs, LinearGradient, Stop } from 'react-native-svg';
-import { Entypo, Ionicons } from '@expo/vector-icons';
+import { EvilIcons, Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { formatAddress, formatCurrency } from '../../utils/formatter';
@@ -125,7 +125,7 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
         themeColor={themeColor}
         title={t('button-send')}
         style={{ borderRadius: 50, marginVertical: 16 }}
-        icon={() => <Entypo name="paper-plane" color="white" size={16} />}
+        icon={() => <EvilIcons name="sc-telegram" color="white" size={22} style={{ marginTop: -1 }} />}
         onPress={() => onSendPress?.(token)}
       />
 
