@@ -2,11 +2,12 @@ import * as ethers from 'ethers';
 
 import { AllNetworks, INetwork, PublicNetworks } from '../common/Networks';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
-import { call, callRPC, deleteRPCUrlCache, getMaxPriorityFeeByRPC, getNextBlockBaseFeeByRPC } from '../common/RPC';
+import { callRPC, deleteRPCUrlCache, getNextBlockBaseFeeByRPC } from '../common/RPC';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Chain from '../models/Chain';
 import Database from '../models/Database';
+import { DebankSupportedChains } from '../common/apis/Debank';
 import ImageColors from 'react-native-image-colors';
 import { In } from 'typeorm';
 import icons from '../assets/icons/crypto';
@@ -178,7 +179,7 @@ class Networks {
         chainId: Number(chain.chainId),
         color: nc.customize!.color!,
         network: nc.name,
-        comm_id: nc.symbol.toLowerCase(),
+        comm_id: DebankSupportedChains.get(Number(chain.chainId)) || nc.symbol.toLowerCase(),
         defaultTokens: [],
         explorer: nc.explorer,
         symbol: nc.symbol,
