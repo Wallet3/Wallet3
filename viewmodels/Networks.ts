@@ -85,7 +85,7 @@ class Networks {
         return {
           chainId: Number(c.id),
           color: c.customize?.color || '#7B68EE',
-          comm_id: c.name.toLowerCase(),
+          comm_id: c.customize?.comm_id || c.name.toLowerCase(),
           explorer: c.explorer,
           symbol: c.symbol,
           defaultTokens: [],
@@ -151,8 +151,12 @@ class Networks {
     nc.name = chain.chainName || 'EVM-Compatible';
     nc.explorer = chain.blockExplorerUrls?.[0] || '';
     nc.rpcUrls = chain.rpcUrls;
-    nc.customize = nc.customize ?? { color: ChainColors[Number(chain.chainId)] || '#7B68EE', eip1559: false };
     nc.symbol = (chain.nativeCurrency.symbol || 'ETH').toUpperCase();
+    nc.customize = nc.customize ?? {
+      color: ChainColors[Number(chain.chainId)] || '#7B68EE',
+      eip1559: false,
+      comm_id: DebankSupportedChains.get(Number(chain.chainId)),
+    };
 
     try {
       const priFee = await getNextBlockBaseFeeByRPC(chain.rpcUrls[0]);
