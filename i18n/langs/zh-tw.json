@@ -187,6 +187,7 @@
   "tip-zero-width-space": "請註意，該名稱包含不可見字符",
   "tip-invalid-gas-price": "最大燃料價格必須大於優先燃料價格",
   "tip-recipient-is-contract": "請註意，收款方是合約地址",
+  "tip-recipient-is-contract-wallet": "收款方是合約錢包",
   "tip-backup-secret-key": "您還未備份您的私鑰，請先備份",
   "tip-app-not-authorized": "請先導入/創建錢包後，再掃描此類二維碼",
   "tx-type-approve": "授權",

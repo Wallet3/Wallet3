@@ -1,6 +1,6 @@
 import { BigNumber, providers, utils } from 'ethers';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
-import { call, estimateGas } from '../../common/RPC';
+import { estimateGas, eth_call } from '../../common/RPC';
 
 import { Account } from '../account/Account';
 import App from '../App';
@@ -86,8 +86,8 @@ export class NFTTransferring extends BaseTransaction {
     const erc1155Data = this.erc1155.encodeBalanceOf(this.account.address, this.nft.tokenId);
 
     const [erc721Owner, erc1155Balance] = await Promise.all([
-      call<string>(this.network.chainId, { from: this.account.address, data: erc721Data, to: this.erc721.address }),
-      call<string>(this.network.chainId, { from: this.account.address, data: erc1155Data, to: this.erc1155.address }),
+      eth_call<string>(this.network.chainId, { from: this.account.address, data: erc721Data, to: this.erc721.address }),
+      eth_call<string>(this.network.chainId, { from: this.account.address, data: erc1155Data, to: this.erc1155.address }),
     ]);
 
     if (

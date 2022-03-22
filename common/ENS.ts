@@ -2,7 +2,7 @@ import { BigNumber, Contract, constants, utils } from 'ethers';
 
 import ENSRegistryABI from '../abis/ENSRegistry.json';
 import ENSResolverABI from '../abis/ENSPublicResolver.json';
-import { call } from './RPC';
+import { eth_call } from './RPC';
 
 const ENSRegistryAddress = '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e';
 const ENSResolverAddress = '0x4976fb03C32e5B8cfe2b6cCB31c09Ba78EBaBa41';
@@ -58,7 +58,7 @@ export async function getAvatar(name: string, owner: string) {
 
     const [resolver] = ENSRegistry.interface.decodeFunctionResult(
       'resolver',
-      (await call<string>(1, { to: ENSRegistryAddress, data: resolverCallData }))!
+      (await eth_call<string>(1, { to: ENSRegistryAddress, data: resolverCallData }))!
     );
 
     return await fetchAvatar(nodehash, owner, resolver);
@@ -72,7 +72,7 @@ export async function getText(ens: string, field: string, resolver?: string) {
 
     const [result] = ENSResolver.interface.decodeFunctionResult(
       'text',
-      (await call<string>(1, { to: ENSResolverAddress, data }))!
+      (await eth_call<string>(1, { to: ENSResolverAddress, data }))!
     );
 
     if (result) return result;
@@ -82,7 +82,7 @@ export async function getText(ens: string, field: string, resolver?: string) {
 
     const [resolverAddress] = ENSRegistry.interface.decodeFunctionResult(
       'resolver',
-      (await call<string>(1, { to: ENSRegistryAddress, data: resolverCallData }))!
+      (await eth_call<string>(1, { to: ENSRegistryAddress, data: resolverCallData }))!
     );
 
     return getText(ens, field, resolverAddress);
@@ -95,7 +95,7 @@ async function fetchAvatar(nodehash: string, owner: string, resolver = ENSResolv
   const avatarData = ENSResolver.interface.encodeFunctionData('text', [nodehash, 'avatar']);
   const [avatar] = ENSResolver.interface.decodeFunctionResult(
     'text',
-    (await call<string>(1, { to: resolver, data: avatarData }))!
+    (await eth_call<string>(1, { to: resolver, data: avatarData }))!
   );
 
   const linkage: Array<{ type: string; content: string }> = [];
@@ -138,7 +138,7 @@ async function fetchAvatar(nodehash: string, owner: string, resolver = ENSResolv
         if (match[1] === 'erc721') {
           // ownerOf(uint256 tokenId)
           const tokenOwner = callAddress(
-            await call(1, {
+            await eth_call(1, {
               to: addr,
               data: utils.hexConcat(['0x6352211e', tokenId]),
             })
@@ -152,7 +152,7 @@ async function fetchAvatar(nodehash: string, owner: string, resolver = ENSResolv
         } else if (match[1] === 'erc1155') {
           // balanceOf(address owner, uint256 tokenId)
           const balance = BigNumber.from(
-            await call(1, {
+            await eth_call(1, {
               to: addr,
               data: utils.hexConcat(['0x00fdd58e', utils.hexZeroPad(owner, 32), tokenId]),
             })
@@ -169,7 +169,7 @@ async function fetchAvatar(nodehash: string, owner: string, resolver = ENSResolv
           to: utils.getAddress(comps[0]),
           data: utils.hexConcat([selector, tokenId]),
         };
-        let metadataUrl = _parseString((await call(1, tx))!);
+        let metadataUrl = _parseString((await eth_call(1, tx))!);
         if (metadataUrl == null) {
           return null;
         }

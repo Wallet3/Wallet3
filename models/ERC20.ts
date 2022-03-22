@@ -1,6 +1,6 @@
 import { BigNumber, BigNumberish, ethers, utils } from 'ethers';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
-import { call, estimateGas } from '../common/RPC';
+import { estimateGas, eth_call } from '../common/RPC';
 
 import ERC20ABI from '../abis/ERC20.json';
 
@@ -77,7 +77,7 @@ export class ERC20Token {
   async getBalance(setLoading = true): Promise<BigNumber> {
     this.loading = setLoading;
 
-    let result: string = (await call(this.chainId, { to: this.address, data: this.call_balanceOfOwner })) || '0';
+    let result: string = (await eth_call(this.chainId, { to: this.address, data: this.call_balanceOfOwner })) || '0';
     const balance = BigNumber.from(result.substring(0, 66));
 
     runInAction(() => {
@@ -97,7 +97,7 @@ export class ERC20Token {
 
     const [name] = this.erc20.interface.decodeFunctionResult(
       'name',
-      (await call<string>(this.chainId, { to: this.address, data: call_name })) || ''
+      (await eth_call<string>(this.chainId, { to: this.address, data: call_name })) || ''
     ) as string[];
 
     runInAction(() => (this.name = name));
@@ -108,7 +108,7 @@ export class ERC20Token {
     if (this.decimals >= 0) return this.decimals;
 
     const decimals = BigNumber.from(
-      (await call<string>(this.chainId, { to: this.address, data: call_decimals })) || '0'
+      (await eth_call<string>(this.chainId, { to: this.address, data: call_decimals })) || '0'
     ).toNumber();
 
     runInAction(() => (this.decimals = decimals));
@@ -120,7 +120,7 @@ export class ERC20Token {
 
     const [symbol] = this.erc20.interface.decodeFunctionResult(
       'symbol',
-      (await call<string>(this.chainId, { to: this.address, data: call_symbol })) || ''
+      (await eth_call<string>(this.chainId, { to: this.address, data: call_symbol })) || ''
     );
 
     runInAction(() => (this.symbol = symbol));

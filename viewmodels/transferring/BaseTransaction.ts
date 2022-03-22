@@ -1,8 +1,10 @@
-import { BigNumber, providers, utils } from 'ethers';
+import { BigNumber, ethers, providers, utils } from 'ethers';
 import { Gwei_1, MAX_GWEI_PRICE } from '../../common/Constants';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import {
   estimateGas,
+  eth_call,
+  eth_call_return,
   getCode,
   getGasPrice,
   getMaxPriorityFee,
@@ -14,6 +16,7 @@ import { Account } from '../account/Account';
 import App from '../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Coingecko from '../../common/apis/Coingecko';
+import ERC1271_ABI from '../../abis/ERC1271.json';
 import { ERC20Token } from '../../models/ERC20';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/Tokens';
@@ -36,6 +39,7 @@ export class BaseTransaction {
   avatar?: string = '';
   isResolvingAddress = false;
   isContractRecipient = false;
+  isContractWallet = false;
 
   isEstimatingGas = false;
   gasLimit = 21000;
@@ -59,6 +63,7 @@ export class BaseTransaction {
       isValidAddress: computed,
       isResolvingAddress: observable,
       isContractRecipient: observable,
+      isContractWallet: observable,
       hasZWSP: computed,
       safeTo: computed,
 
@@ -291,7 +296,32 @@ export class BaseTransaction {
 
   async checkToAddress() {
     const code = await getCode(this.network.chainId, this.toAddress);
-    runInAction(() => (this.isContractRecipient = code !== '0x'));
+    if (code === '0x') {
+      runInAction(() => (this.isContractRecipient = false));
+      return;
+    }
+
+    const erc1271 = new ethers.Contract(this.toAddress, ERC1271_ABI);
+    let encoded: string = '0x';
+
+    try {
+      encoded = erc1271.interface.encodeFunctionData('isValidSignature', [
+        '0x1c8aff950685c2ed4bc3174f3472287b56d9517b9c948127319a09a7a36deac8',
+        '0x659b1bcd331201b0ff8b6ec0e6f12b96056c50807a51d504de2c950e8b79e04e34f5e0ceaf26a0b48aca9fc5431b0e942bb6166fd835d1bd581c8e1284da1dd11b',
+      ]);
+    } catch (error) {
+      console.log(error);
+    }
+
+    const result = await eth_call_return(this.network.chainId, { to: this.toAddress, data: encoded });
+
+    const errorCode = Number(result?.error?.code);
+    const isContractWallet = Boolean(result?.error?.data && errorCode !== -32000);
+
+    runInAction(() => {
+      this.isContractWallet = isContractWallet;
+      this.isContractRecipient = code !== '0x';
+    });
   }
 
   protected async initChainData({ network, account }: { network: INetwork; account: string }) {
