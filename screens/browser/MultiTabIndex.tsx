@@ -183,7 +183,14 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
 
   useEffect(() => {
     const handler = () => {
-      setTimeout(() => swiper.current?.scrollToIndex({ index: state.activePageIndex, animated: true }), 225);
+      setTimeout(
+        () =>
+          swiper.current?.scrollToIndex({
+            index: Math.max(0, Math.min(state.activePageIndex, tabs.size - 1)),
+            animated: true,
+          }),
+        225
+      );
     };
 
     ReactiveScreen.on('change', handler);
