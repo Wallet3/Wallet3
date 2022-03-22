@@ -16,4 +16,6 @@ export default {
   CodeScan_wc: 'CodeScan-wc:',
   CodeScan_https: 'CodeScan-https:',
   CodeScan_wallet3sync: 'CodeScan-wallet3sync:',
+  openBackupSecretTip: 'openBackupSecretTip',
+  userSecretsNotVerified: 'userSecretsNotVerified',
 };

@@ -13,6 +13,7 @@ import Ethereum from './ethereum2.svg';
 import EthereumClassic from './ethereum-classic.svg';
 import Fantom from './fantom.svg';
 import Findora from './findora.svg';
+import Fuse from './fuse.svg';
 import Harmony from './harmony-one.svg';
 import Heco from './heco.svg';
 import Klaytn from './klaytn.svg';
@@ -101,6 +102,7 @@ const ZSYNC = generateNetworkIcon({ chainId: 280, width: 32, height: 32, style: 
 const KLAYTN = generateNetworkIcon({ chainId: 8217, width: 27, height: 32 });
 const FINDORA = generateNetworkIcon({ chainId: 2152, width: 32, height: 32 });
 const METIS = generateNetworkIcon({ chainId: 1088, width: 42, style: { marginVertical: -5, marginStart: -4 } });
+const FUSE = generateNetworkIcon({ chainId: 122, width: 28, height: 32 });
 
 export const NetworkIcons = {
   1: ETH,
@@ -126,6 +128,7 @@ export const NetworkIcons = {
   8217: KLAYTN,
   2152: FINDORA,
   1088: METIS,
+  122: FUSE,
 };
 
 export function generateNetworkIcon(props: {
@@ -196,6 +199,8 @@ export function generateNetworkIcon(props: {
           style={{ ...(style || ({ margin: -9, marginEnd: -3 } as any)) }}
         />
       );
+    case 122:
+      return <Fuse key={chainId} width={width} height={height ?? width} style={style} />;
     default:
       return coins[symbol?.toLowerCase() || ''] ? (
         <Coin symbol={symbol} size={height ?? width} address="" chainId={chainId} style={style as any} />

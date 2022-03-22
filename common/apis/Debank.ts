@@ -43,10 +43,17 @@ export async function getTokens(address: string, chain: chain, is_all = false) {
   }
 }
 
+export const DebankSupportedChains = new Map<number, string>();
+
 export async function fetchChainsOverview(address: string) {
   try {
     const resp = await fetch(`${host}/v1/user/total_balance?id=${address}`.toLowerCase());
     const data = (await resp.json()) as ITotalBalance;
+
+    for (let chain of data.chain_list) {
+      DebankSupportedChains.set(Number(chain.community_id), chain.id);
+    }
+
     return data;
   } catch (error) {
     return undefined;

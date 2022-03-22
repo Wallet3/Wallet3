@@ -1,11 +1,12 @@
 import { Button, SafeViewContainer } from '../../components';
 import React, { useState } from 'react';
-import { SafeAreaView, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 import AnimatedLottieView from 'lottie-react-native';
 import Authentication from '../../viewmodels/Authentication';
 import MnemonicOnce from '../../viewmodels/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import Networks from '../../viewmodels/Networks';
 import { SortWords } from '../components/SecretWords';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
@@ -24,11 +25,22 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
 
           <View style={{ justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
             <AnimatedLottieView autoPlay autoSize source={require('../../assets/animations/bubble-explosion.json')} />
+            <AnimatedLottieView
+              autoPlay
+              loop={false}
+              source={require('../../assets/animations/success.json')}
+              style={{ position: 'absolute', marginTop: -12, marginRight: -12, width: 220, height: 220 }}
+            />
           </View>
 
           <View style={{ flex: 1 }} />
 
-          <Button title="OK" onPress={() => navigation.popToTop()} txtStyle={{ textTransform: 'uppercase' }} />
+          <Button
+            title="OK"
+            themeColor={Networks.current.color}
+            onPress={() => navigation.popToTop()}
+            txtStyle={{ textTransform: 'uppercase' }}
+          />
         </View>
       ) : (
         <View>

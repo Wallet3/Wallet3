@@ -1,7 +1,7 @@
 import * as Animatable from 'react-native-animatable';
 import * as Linking from 'expo-linking';
 
-import { Entypo, Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Entypo, Feather, Ionicons } from '@expo/vector-icons';
 import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -11,7 +11,6 @@ import { Account } from '../../viewmodels/account/Account';
 import AccountSelector from '../../modals/dapp/AccountSelector';
 import App from '../../viewmodels/App';
 import Avatar from '../../components/Avatar';
-import { BlurView } from 'expo-blur';
 import DeviceInfo from 'react-native-device-info';
 import GetPageMetadata from './scripts/Metadata';
 import HookWalletConnect from './scripts/InjectWalletConnectObserver';
@@ -24,7 +23,6 @@ import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
 import { NetworksMenu } from '../../modals';
 import { Portal } from 'react-native-portalize';
-import { ReactiveScreen } from '../../utils/device';
 import Theme from '../../viewmodels/settings/Theme';
 import ViewShot from 'react-native-view-shot';
 import WalletConnectLogo from '../../assets/3rd/walletconnect.svg';
@@ -52,11 +50,10 @@ interface ConnectedBrowserDApp {
 
 interface Web3ViewProps extends WebViewProps {
   onMetadataChange?: (metadata: PageMetadata) => void;
+  onAppNetworkChange?: (network?: INetwork) => void;
   onGoHome?: () => void;
   onNewTab?: () => void;
   expanded?: boolean;
-  onShrinkRequest?: (webUrl: string) => void;
-  onExpandRequest?: (webUrl: string) => void;
   onBookmarksPress?: () => void;
   onTabPress?: () => void;
   tabCount?: number;
@@ -77,7 +74,7 @@ export default observer((props: Web3ViewProps) => {
   );
 
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
-  const { onMetadataChange, onGoHome, onNewTab, expanded, onShrinkRequest, onExpandRequest, onBookmarksPress } = props;
+  const { onMetadataChange, onGoHome, onNewTab, expanded, onBookmarksPress, onAppNetworkChange } = props;
 
   const networkIndicator = useRef<Animatable.View>(null);
 
@@ -95,8 +92,11 @@ export default observer((props: Web3ViewProps) => {
   const updateDAppState = (dapp?: ConnectedBrowserDApp) => {
     setDApp(dapp);
 
-    setAppNetwork(Networks.find(dapp?.lastUsedChainId ?? -1));
+    const network = Networks.find(dapp?.lastUsedChainId ?? -1);
+    setAppNetwork(network);
     setAppAccount(App.findAccount(dapp?.lastUsedAccount ?? ''));
+
+    onAppNetworkChange?.(network);
   };
 
   const updateGlobalState = () => {

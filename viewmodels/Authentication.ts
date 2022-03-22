@@ -17,6 +17,7 @@ import { decrypt, encrypt, sha256 } from '../utils/cipher';
 import { AppState } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import EventEmitter from 'events';
+import MessageKeys from '../common/MessageKeys';
 
 const keys = {
   enableBiometrics: 'enableBiometrics',
@@ -134,10 +135,16 @@ export class Authentication extends EventEmitter {
 
   async authorize(pin?: string) {
     const success = await this.authenticate({ pin });
+
     if (!this.appAuthorized) {
       runInAction(() => (this.appAuthorized = success));
-      if (success) this.emit('appAuthorized');
+
+      if (success) {
+        this.emit('appAuthorized');
+        if (!this.userSecretsVerified) PubSub.publish(MessageKeys.userSecretsNotVerified);
+      }
     }
+
     return success;
   }
 
@@ -159,7 +166,7 @@ export class Authentication extends EventEmitter {
     this.appAuthorized = false;
     this.userSecretsVerified = false;
     this.biometricEnabled = false;
-    SecureStore.setItemAsync(keys.masterKey, Buffer.from(Random.getRandomBytes(16)).toString('hex'));
+    return SecureStore.setItemAsync(keys.masterKey, Buffer.from(Random.getRandomBytes(16)).toString('hex'));
   }
 }
 

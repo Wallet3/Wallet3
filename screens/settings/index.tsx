@@ -9,6 +9,7 @@ import { Confirm } from '../../modals/views/Confirm';
 import CurrencyViewmodel from '../../viewmodels/settings/Currency';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import { FullPasspad } from '../../modals/views/Passpad';
+import { InappBrowserModal } from '../Modalize';
 import Langs from '../../viewmodels/settings/Langs';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
@@ -21,7 +22,7 @@ import UI from '../../viewmodels/settings/UI';
 import { styles as appStyles } from '../../constants/styles';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import { openBrowserAsync } from 'expo-web-browser';
+import { openInappBrowser } from '../../modals/InappBrowser';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 type SettingsStack = {
@@ -163,7 +164,10 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
         </View>
       </TouchableOpacity> */}
 
-      <TouchableOpacity style={styles.itemContainer} onPress={() => openBrowserAsync('https://chainbow.co.jp/privacy.html')}>
+      <TouchableOpacity
+        style={styles.itemContainer}
+        onPress={() => openInappBrowser('https://chainbow.co.jp/privacy.html', 'settings')}
+      >
         <View style={styles.itemSubContainer}>
           <Ionicons name="magnet-outline" style={styles.itemStartSymbol} size={16} color={textColor} />
           <Text style={itemText}>{t('settings-legal-privacy')}</Text>
@@ -212,9 +216,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
             }}
           />
         </Modalize>
-      </Portal>
 
-      <Portal>
         <Modalize
           ref={resetRef}
           modalHeight={270}
@@ -232,6 +234,8 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
             />
           </SafeAreaProvider>
         </Modalize>
+
+        <InappBrowserModal pageKey="settings" />
       </Portal>
     </ScrollView>
   );

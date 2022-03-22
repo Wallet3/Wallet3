@@ -19,6 +19,7 @@ interface Props {
 
 export default ({ onBack, enabled, onBarCodeScanned, tipText }: Props) => {
   const { bottom } = useSafeAreaInsets();
+  const { t } = i18n;
 
   return (
     <View style={{ flex: 1, position: 'relative', backgroundColor: '#000' }}>
@@ -44,13 +45,13 @@ export default ({ onBack, enabled, onBarCodeScanned, tipText }: Props) => {
           alignItems: 'center',
         }}
       >
-        <AntDesign name="qrcode" size={27} color={'#fff'} />
-        <Text
-          style={{ color: '#fff', marginHorizontal: 8, fontWeight: '500', maxHeight: '50%', fontSize: 14 }}
-          numberOfLines={2}
-        >
-          {tipText}
-        </Text>
+        <AntDesign name="qrcode" size={29} color={'#fff'} />
+        <View style={{ marginStart: 8 }}>
+          <Text style={{ color: '#fff', fontWeight: '500', fontSize: 14 }} numberOfLines={1}>
+            {tipText}
+          </Text>
+          <Text style={{ color: '#fff', fontWeight: '500', fontSize: 9 }}>{t('qrscan-tip-above-types')}</Text>
+        </View>
       </View>
     </View>
   );

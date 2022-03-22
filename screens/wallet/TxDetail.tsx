@@ -11,7 +11,7 @@ import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import { openBrowserAsync } from 'expo-web-browser';
+import { openInappBrowser } from '../../modals/InappBrowser';
 import { thirdFontColor } from '../../constants/styles';
 import { utils } from 'ethers';
 
@@ -154,7 +154,7 @@ export default observer(({ tx, close }: { tx?: Transaction; close?: Function }) 
           paddingBottom: 8,
         }}
       >
-        <TouchableOpacity onPressIn={() => openBrowserAsync(`${network.explorer}/tx/${tx?.hash}`)}>
+        <TouchableOpacity onPressIn={() => openInappBrowser(`${network.explorer}/tx/${tx?.hash}`, 'wallet')}>
           <Text style={{ fontSize: 12, color: network.color }}>{t('modal-tx-details-view-on-explorer')}</Text>
         </TouchableOpacity>
       </View>

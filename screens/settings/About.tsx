@@ -1,18 +1,18 @@
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { Image, StyleSheet, Text, View } from 'react-native';
-import { secondaryFontColor, themeColor, thirdFontColor } from '../../constants/styles';
 
 import { Rarible } from '../../assets/3rd';
 import React from 'react';
 import { SafeViewContainer } from '../../components';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
+import { thirdFontColor } from '../../constants/styles';
 
 export function About() {
   const { t } = i18n;
-  let { textColor, isLightMode, foregroundColor } = Theme;
+  let { textColor, isLightMode, foregroundColor, thirdTextColor } = Theme;
 
-  textColor = isLightMode ? thirdFontColor : textColor;
+  textColor = isLightMode ? thirdTextColor : textColor;
   const txtStyle = { ...styles.txt, color: textColor };
 
   return (
@@ -34,7 +34,7 @@ export function About() {
       </View>
 
       <View style={styles.item}>
-        <Feather name="link-2" size={16} color={textColor} />
+        <Feather name="link-2" size={16} color={textColor} style={{ marginTop: 1 }} />
         <Text style={txtStyle}>{t('about-features-2')}</Text>
       </View>
 
@@ -44,12 +44,12 @@ export function About() {
       </View>
 
       <View style={styles.item}>
-        <Ionicons name="shield-checkmark-outline" size={16} color={textColor} />
+        <Ionicons name="shield-checkmark-outline" size={16} color={textColor} style={{ marginTop: 1 }} />
         <Text style={txtStyle}>{t('about-features-4')}</Text>
       </View>
 
       <View style={styles.item}>
-        <Ionicons name="logo-github" size={16} color={textColor} />
+        <Ionicons name="logo-github" size={16} color={textColor} style={{ marginTop: 1 }} />
         <Text style={txtStyle}>{t('about-features-5')}</Text>
       </View>
 

@@ -6,13 +6,17 @@ import { secondaryFontColor, thirdFontColor } from '../../constants/styles';
 import App from '../../viewmodels/App';
 import CachedImage from 'react-native-fast-image';
 import CopyableText from '../../components/CopyableText';
+import { InappBrowserModal } from '../Modalize';
 import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/Networks';
+import { Portal } from 'react-native-portalize';
+import { Skeleton } from '../../components';
 import { StatusBar } from 'expo-status-bar';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 import icons from '../../assets/icons/crypto';
 import { observer } from 'mobx-react-lite';
+import { openInappBrowser } from '../../modals/InappBrowser';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -27,6 +31,7 @@ export default observer(() => {
   const { current } = Networks;
 
   useEffect(() => {
+    ens?.fetchMoreInfo();
     return () => {};
   }, []);
 
@@ -99,28 +104,41 @@ export default observer(() => {
           </View>
         </View>
 
-        <Text style={{ lineHeight: 19, marginTop: 8, color: thirdFontColor }} numberOfLines={2}>
-          {ens?.description || 'No description'}
-        </Text>
+        {ens?.loading ? (
+          <Skeleton style={{ height: 19, marginTop: 8 }} />
+        ) : (
+          <Text style={{ lineHeight: 19, marginTop: 8, color: thirdFontColor }} numberOfLines={2}>
+            {ens?.description || 'No description'}
+          </Text>
+        )}
       </View>
 
       <Text style={styles.subtitle}>{t('profile-accounts')}</Text>
 
       <View style={styles.contentWrapper}>
         {ens?.twitter ? (
-          <TouchableOpacity style={styles.socialContainer}>
+          <TouchableOpacity
+            style={styles.socialContainer}
+            onPress={() => openInappBrowser(`https://twitter.com/${ens.twitter}`, 'profile')}
+          >
             <Twitter width={20} height={20} />
             <Text style={styles.socialTxt}>{ens?.twitter}</Text>
           </TouchableOpacity>
         ) : undefined}
 
-        <TouchableOpacity style={styles.socialContainer}>
+        <TouchableOpacity
+          style={styles.socialContainer}
+          onPress={() => openInappBrowser(`https://opensea.io/${ens?.owner}`, 'profile')}
+        >
           <Opensea width={20} height={20} />
           <Text style={styles.socialTxt}>{ens?.name || formatAddress(currentAccount?.address ?? '', 9, 5)}</Text>
         </TouchableOpacity>
 
         {ens?.github ? (
-          <TouchableOpacity style={styles.socialContainer}>
+          <TouchableOpacity
+            style={styles.socialContainer}
+            onPress={() => openInappBrowser(`https://github.com/${ens.github}`, 'profile')}
+          >
             <Github width={20} height={20} />
             <Text style={styles.socialTxt}>{ens?.github}</Text>
           </TouchableOpacity>
@@ -136,7 +154,12 @@ export default observer(() => {
             return (
               <View style={styles.socialContainer} key={`${symbol}-${address}`}>
                 <Image source={icons[symbol]} style={styles.coin} />
-                <CopyableText copyText={address} title={formatAddress(address || '', 6, 4)} iconStyle={{ marginStart: 5 }} iconColor="black" />
+                <CopyableText
+                  copyText={address}
+                  title={formatAddress(address || '', 6, 4)}
+                  iconStyle={{ marginStart: 5 }}
+                  iconColor="black"
+                />
               </View>
             );
           })}
@@ -146,6 +169,10 @@ export default observer(() => {
       <View style={styles.contentWrapper}></View>
 
       <StatusBar style="light" />
+
+      <Portal>
+        <InappBrowserModal pageKey="profile" />
+      </Portal>
     </View>
   );
 });

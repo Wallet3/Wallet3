@@ -42,11 +42,14 @@ export default observer(({ navigation, route }: NativeStackScreenProps<{}, never
           alignItems: 'center',
         }}
       >
-        <AntDesign name="qrcode" size={27} color={'#fff'} />
+        <AntDesign name="qrcode" size={29} color={'#fff'} />
 
-        <Text style={styles.tip} numberOfLines={1}>
-          {Authentication.appAuthorized ? tip || t('qrscan-tip-1') : t('qrscan-tip-desktop-backup-qrcode')}
-        </Text>
+        <View>
+          <Text style={styles.tip} numberOfLines={1}>
+            {Authentication.appAuthorized ? tip || t('qrscan-tip-1') : t('qrscan-tip-desktop-backup-qrcode')}
+          </Text>
+          <Text style={{ ...styles.tip, fontSize: 9 }}>{t('qrscan-tip-above-types')}</Text>
+        </View>
       </View>
 
       <StatusBar style="light" />

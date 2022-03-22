@@ -58,6 +58,7 @@ class LinkHub {
     if (!Authentication.appAuthorized) {
       if (scheme === 'wallet3sync:') {
       } else {
+        showMessage({ message: i18n.t('tip-app-not-authorized'), type: 'warning' });
         return false;
       }
     }

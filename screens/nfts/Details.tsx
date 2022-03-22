@@ -1,8 +1,8 @@
-import { Entypo, Ionicons } from '@expo/vector-icons';
 import { Etherscan, Opensea, Rarible } from '../../assets/3rd';
+import { EvilIcons, Ionicons } from '@expo/vector-icons';
 import { NFT, NFTTransferring } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
+import { Platform, Share, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { Share, Text, TouchableOpacity, View } from 'react-native';
 
 import Avatar from '../../components/Avatar';
 import { BlurView } from 'expo-blur';
@@ -23,6 +23,7 @@ import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { lightOrDark } from '../../utils/color';
 import { observer } from 'mobx-react-lite';
+import { openBrowserAsync } from 'expo-web-browser';
 import { openInappBrowser } from '../../modals/InappBrowser';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -83,6 +84,12 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
     };
   }, []);
 
+  const openBrowser = (url?: string) => {
+    const web = 'https://wallet3.io';
+    // Platform.OS === 'ios' ? openBrowserAsync(url || web) :
+    openInappBrowser(url || web, 'nfts');
+  };
+
   return (
     <BlurView intensity={10} style={{ flex: 1, backgroundColor: dominantColor }}>
       <ScrollView contentContainerStyle={{ paddingTop: top + 57, paddingBottom: bottom }} showsVerticalScrollIndicator={false}>
@@ -113,10 +120,12 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
         {vm?.nftType && (
           <Button
             title={t('nft-button-transfer')}
-            txtStyle={{ color: dominantColor }}
+            txtStyle={{ color: dominantColor, textTransform: 'none' }}
             themeColor={primaryColor}
-            icon={() => <Entypo name="paper-plane" color={dominantColor} size={16} />}
             onPress={open}
+            icon={() => (
+              <EvilIcons name="sc-telegram" color={dominantColor} size={22} style={{ marginEnd: 2, marginTop: -1.25 }} />
+            )}
             style={{
               marginHorizontal: 16,
               borderRadius: 25,
@@ -130,7 +139,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
         )}
 
         {vm?.nftType ? (
-          <View style={{ padding: 16, paddingTop: 8 }}>
+          <View style={{ padding: 16, paddingTop: 10, paddingBottom: 6 }}>
             <Text style={{ color: detailColor, fontSize: 20, fontWeight: '600', marginBottom: 8 }}>
               {t('nft-txt-ownership')}
             </Text>
@@ -167,7 +176,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
         ) : undefined}
 
         {item.description ? (
-          <View style={{ padding: 16, paddingTop: 0 }}>
+          <View style={{ padding: 16 }}>
             <Text style={{ color: detailColor, fontSize: 20, fontWeight: '600', marginBottom: 8 }}>
               {t('nft-txt-description')}
             </Text>
@@ -176,7 +185,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
         ) : undefined}
 
         {item.attributes && item.attributes.filter((a) => a.value).length > 0 ? (
-          <View style={{ padding: 16, paddingTop: 0 }}>
+          <View style={{ padding: 16 }}>
             <Text style={{ color: detailColor, fontSize: 20, fontWeight: '600', marginBottom: 8 }}>
               {t('nft-txt-attributes')}
             </Text>
@@ -196,44 +205,28 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
           </View>
         ) : undefined}
 
-        <View style={{ padding: 16 }}>
-          <Text style={{ color: detailColor, fontSize: 20, fontWeight: '600', marginBottom: 8 }}>{t('nft-txt-web3')}</Text>
+        {[1, 137].includes(current.chainId) && (
+          <View style={{ padding: 16 }}>
+            <Text style={{ color: detailColor, fontSize: 20, fontWeight: '600', marginBottom: 8 }}>{t('nft-txt-web3')}</Text>
 
-          <View style={{ paddingTop: 4, flexDirection: 'row', alignItems: 'center' }}>
-            <TouchableOpacity
-              style={{ paddingEnd: 20 }}
-              onPress={() => openInappBrowser(`${current.explorer}/nft/${item.contract}/${item.tokenId}`)}
-            >
-              <Etherscan width={24} height={24} />
-            </TouchableOpacity>
+            <View style={{ paddingTop: 4, flexDirection: 'row', alignItems: 'center' }}>
+              <TouchableOpacity
+                style={{ paddingEnd: 20 }}
+                onPress={() => openBrowser(`${current.explorer}/nft/${item.contract}/${item.tokenId}`)}
+              >
+                <Etherscan width={24} height={24} />
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              style={{ paddingEnd: 20 }}
-              onPress={() =>
-                openInappBrowser(
-                  current.chainId === 1
-                    ? `https://opensea.io/assets/${item.contract}/${item.tokenId}`
-                    : `https://opensea.io/assets/${current.symbol.toLowerCase()}/${item.contract}/${item.tokenId}`
-                )
-              }
-            >
-              <Opensea width={24} height={24} />
-            </TouchableOpacity>
+              <TouchableOpacity style={{ paddingEnd: 20 }} onPress={() => openBrowser(vm?.openseaLink)}>
+                <Opensea width={24} height={24} />
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              style={{ paddingEnd: 20 }}
-              onPress={() =>
-                openInappBrowser(
-                  current.chainId === 1
-                    ? `https://rarible.com/token/${item.contract}:${item.tokenId}`
-                    : `https://rarible.com/token/${current.network.toLowerCase()}/${item.contract}:${item.tokenId}`
-                )
-              }
-            >
-              <Rarible width={24} height={24} />
-            </TouchableOpacity>
+              <TouchableOpacity style={{ paddingEnd: 20 }} onPress={() => openBrowser(vm?.raribleLink)}>
+                <Rarible width={24} height={24} />
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        )}
       </ScrollView>
 
       <View
@@ -264,7 +257,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
             marginStart: 12,
             fontWeight: '600',
             marginBottom: -1,
-            maxWidth: '75%',
+            maxWidth: '65%',
             textShadowColor: dominantColor || '#585858',
             textShadowOffset: { width: 0, height: 0 },
             textShadowRadius: 3,
@@ -274,6 +267,15 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
         </Text>
 
         <View style={{ flex: 1 }} />
+
+        {/* <TouchableOpacity style={{ paddingHorizontal: 8, marginEnd: 8, marginTop: -1 }} onPress={open}>
+          <EvilIcons
+            name="sc-telegram"
+            size={31}
+            color={primaryColor}
+            style={{ shadowColor: dominantColor, shadowOffset: { width: 0, height: 0 }, shadowRadius: 3, shadowOpacity: 0.5 }}
+          />
+        </TouchableOpacity> */}
 
         <TouchableOpacity
           style={{ marginBottom: -1 }}
@@ -302,7 +304,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
           {vm ? <SendNFT vm={vm} onClose={closeSendModal} /> : undefined}
         </Modalize>
 
-        <InappBrowserModal />
+        <InappBrowserModal pageKey="nfts" />
       </Portal>
     </BlurView>
   );

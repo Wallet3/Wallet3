@@ -5,6 +5,7 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { ScrollView, Text, TextInput, View } from 'react-native';
 import { borderColor, secondaryFontColor, themeColor } from '../../constants/styles';
 
+import Authentication from '../../viewmodels/Authentication';
 import { Button } from '../../components';
 import { LandScreenStack } from '../navigations';
 import MessageKeys from '../../common/MessageKeys';
@@ -24,7 +25,9 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
   const [verified, setVerified] = React.useState(false);
 
   useEffect(() => {
-    setVerified(MnemonicOnce.setSecret(mnemonic));
+    const success = MnemonicOnce.setSecret(mnemonic);
+    setVerified(success);
+    Authentication.setUserSecretsVerified(success);
   }, [mnemonic]);
 
   useEffect(() => {

@@ -1,5 +1,5 @@
 import { getAvatar, getText } from '../../common/ENS';
-import { makeObservable, observable, runInAction } from 'mobx';
+import { makeAutoObservable, runInAction } from 'mobx';
 
 import Networks from '../Networks';
 
@@ -14,10 +14,12 @@ export class ENSViewer {
   twitter = '';
   github = '';
   coins: { [index: string]: string } = {};
+  loading = false;
 
   constructor(owner: string) {
     this.owner = owner;
-    makeObservable(this, { name: observable, avatar: observable });
+    makeAutoObservable(this);
+
     this.fetchBasicInfo();
   }
 
@@ -27,6 +29,8 @@ export class ENSViewer {
 
     const ens = await MainnetWsProvider.lookupAddress(this.owner);
     if (!ens) return;
+
+    // console.log(await Promise.all([MainnetWsProvider.getAvatar(this.owner), MainnetWsProvider.getAvatar(ens)]));
 
     runInAction(() => (this.name = ens));
 
@@ -40,6 +44,7 @@ export class ENSViewer {
     if (!this.name) return;
 
     const ens = this.name;
+    this.loading = true;
 
     const resolver = await MainnetWsProvider.getResolver(ens);
     const [btc, ltc, doge, bch, atom] = await Promise.all([
@@ -50,12 +55,6 @@ export class ENSViewer {
       resolver?.getAddress(118),
     ]);
 
-    this.coins['BTC'] = btc || '';
-    this.coins['LTC'] = ltc || '';
-    this.coins['DOGE'] = doge || '';
-    this.coins['BCH'] = bch || '';
-    this.coins['ATOM'] = atom || '';
-
     const [email, desc, location, twitter, github] = await Promise.all([
       getText(ens, 'email'),
       getText(ens, 'description'),
@@ -64,10 +63,19 @@ export class ENSViewer {
       getText(ens, 'com.github'),
     ]);
 
-    this.email = email;
-    this.description = desc;
-    this.location = location;
-    this.twitter = twitter;
-    this.github = github;
+    runInAction(() => {
+      this.coins['BTC'] = btc || '';
+      this.coins['LTC'] = ltc || '';
+      this.coins['DOGE'] = doge || '';
+      this.coins['BCH'] = bch || '';
+      this.coins['ATOM'] = atom || '';
+
+      this.email = email;
+      this.description = desc;
+      this.location = location;
+      this.twitter = twitter;
+      this.github = github;
+      this.loading = false;
+    });
   }
 }

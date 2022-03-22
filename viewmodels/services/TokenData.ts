@@ -3,6 +3,7 @@ import { makeObservable, observable, runInAction } from 'mobx';
 import Coingecko from '../../common/apis/Coingecko';
 import { INetwork } from '../../common/Networks';
 import Langs from '../settings/Langs';
+import { Links } from '../../common/apis/Coingecko.d';
 import { UserToken } from './TokensMan';
 import axios from 'axios';
 import { startSpringLayoutAnimation } from '../../utils/animations';
@@ -32,6 +33,7 @@ export class TokenData implements ITokenData {
 
   historyPrices: number[] = [];
   historyDays = 1;
+  links?: Links;
 
   constructor({ token, network }: { token: UserToken; network: INetwork }) {
     this.symbol = token.symbol;
@@ -77,7 +79,7 @@ export class TokenData implements ITokenData {
     this.coinId = id || '';
 
     const desc = (description?.[Langs.currentLang.value] || description?.en)?.replace(/<[^>]*>?/gm, '') || info?.description;
-    const [first] = desc?.split(/(?:\r?\n)+/);
+    const [first] = desc?.split(/(?:\r?\n)+/) || [];
 
     const prices = await this.refreshHistoryPrices();
 
@@ -85,6 +87,7 @@ export class TokenData implements ITokenData {
       startSpringLayoutAnimation();
       this.firstDescription = first || '';
       this.description = desc || '';
+      this.links = links;
 
       const latestPrice = prices?.[this.historyPrices.length - 1] || market_data?.current_price?.usd || 0;
       const oldestPrice = prices?.[0] || latestPrice;

@@ -80,11 +80,12 @@ export const Browser = observer(
   }: Props) => {
     const { t } = i18n;
     const { top } = useSafeAreaInsets();
-    const { current } = Networks;
+
     const webview = useRef<WebView>(null);
     const addrRef = useRef<TextInput>(null);
     const viewShot = useRef<ViewShot>(null);
 
+    const [appNetworkColor, setAppNetworkColor] = useState(Networks.current.color);
     const [loadingProgress, setLoadingProgress] = useState(0);
     const [isFocus, setFocus] = useState(false);
     const [hostname, setHostname] = useState('');
@@ -361,7 +362,7 @@ export const Browser = observer(
                   key={url}
                   onPress={() => goTo(url)}
                   style={{
-                    backgroundColor: index === 0 ? `${current.color}` : 'transparent',
+                    backgroundColor: index === 0 ? `${appNetworkColor}` : 'transparent',
                     paddingHorizontal: 16,
                     paddingVertical: 6,
                     flexDirection: 'row',
@@ -446,7 +447,7 @@ export const Browser = observer(
           {loadingProgress > 0 && loadingProgress < 1 ? (
             <Bar
               width={ReactiveScreen.width}
-              color={current.color}
+              color={appNetworkColor}
               height={2}
               borderWidth={0}
               borderRadius={0}
@@ -482,6 +483,7 @@ export const Browser = observer(
               setLoadingProgress(1);
               onPageLoadEnd?.();
             }}
+            onAppNetworkChange={(network) => setAppNetworkColor((network || Networks.current).color)}
             onNavigationStateChange={onNavigationStateChange}
             onGoHome={goHome}
             onNewTab={onNewTab}
