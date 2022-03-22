@@ -112,7 +112,8 @@ export class BaseTransaction {
   }
 
   get isEns() {
-    return this.to.toLowerCase().endsWith('.eth');
+    const lower = this.to.toLowerCase();
+    return lower.endsWith('.eth') || lower.endsWith('.xyz');
   }
 
   get hasZWSP() {
@@ -211,16 +212,15 @@ export class BaseTransaction {
       return;
     }
 
-    if (!to.endsWith('.eth')) return;
+    if (!to.endsWith('.eth') && !to.endsWith('.xyz')) return;
     let provider = Networks.MainnetWsProvider;
 
     this.isResolvingAddress = true;
     const address = (await provider.resolveName(to)) || '';
+    provider.destroy();
 
-    runInAction(() => {
-      this.setToAddress(address);
-      provider.destroy();
-    });
+    console.log(address);
+    runInAction(() => this.setToAddress(address));
 
     if (avatar) return;
 
