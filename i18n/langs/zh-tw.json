@@ -5,7 +5,7 @@
   "land-welcome-terms-of-use": "使用條款",
   "land-import-placeholder": "請輸入助記詞組或私鑰",
   "land-import-derivation-path": "地址派生路徑",
-  "land-import-button-sync": "使用 Wallet 3 桌面版同步",
+  "land-import-button-sync": "從 Wallet 3 桌面版導入",
   "land-create-security-tips": "安全提示",
   "land-create-security-tips-1": "助記詞組由一串英語單詞組成，請安全保存",
   "land-create-security-tips-2": "一旦助記詞丟失，錢包將無法恢復，並且您的所有資產也將永久丟失",

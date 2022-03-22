@@ -5,7 +5,7 @@
   "land-welcome-terms-of-use": "Terms of Use",
   "land-import-placeholder": "Please enter recovery phrase or private key here",
   "land-import-derivation-path": "Derivation Path",
-  "land-import-button-sync": "Sync with Wallet 3 Desktop",
+  "land-import-button-sync": "Import from Wallet 3 Desktop",
   "land-create-security-tips": "Security Tips",
   "land-create-security-tips-1": "The mnemonic consists of english words, please keep them safe.",
   "land-create-security-tips-2": "Once the mnemonic gets lost, it cannot be retrieved, and you would lose all your funds.",
