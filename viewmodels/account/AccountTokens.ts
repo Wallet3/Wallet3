@@ -4,7 +4,6 @@ import TokensMan, { UserToken } from '../services/TokensMan';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import { ERC20Token } from '../../models/ERC20';
-import LINQ from 'linq';
 import { NativeToken } from '../../models/NativeToken';
 import Networks from '../Networks';
 import { utils } from 'ethers';
@@ -57,8 +56,8 @@ export class AccountTokens {
     });
 
     const [userBalance, debankTokens] = await Promise.all([
-      Debank.getBalance(this.owner, current.comm_id),
-      Debank.getTokens(this.owner, Networks.current.comm_id),
+      Debank.getBalance(this.owner, current.chainId, current.comm_id),
+      Debank.getTokens(this.owner, current.chainId, current.comm_id),
     ]);
 
     const suggested = debankTokens
@@ -100,8 +99,10 @@ export class AccountTokens {
   }
 
   async refreshTokensBalance() {
+    const { current } = Networks;
+
     const [balance, _] = await Promise.all([
-      Debank.getBalance(this.owner, Networks.current.comm_id),
+      Debank.getBalance(this.owner, current.chainId, current.comm_id),
       this.tokens.map((t) => (t as ERC20Token).getBalance?.(false)),
     ]);
 

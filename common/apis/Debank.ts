@@ -10,9 +10,13 @@ const nativeTokens = [
   '0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000', // Celo native
 ];
 
-export async function getBalance(address: string, chain: chain) {
+export const DebankSupportedChains = new Map<number, string>();
+
+export async function getBalance(address: string, chainId: number, debankId: chain) {
   try {
-    const resp = await fetch(`${host}/v1/user/chain_balance?id=${address}&chain_id=${chain}`.toLowerCase());
+    const resp = await fetch(
+      `${host}/v1/user/chain_balance?id=${address}&chain_id=${DebankSupportedChains.get(chainId) || debankId}`.toLowerCase()
+    );
     const data = (await resp.json()) as { usd_value: number };
     return data;
   } catch (error) {
@@ -20,9 +24,13 @@ export async function getBalance(address: string, chain: chain) {
   }
 }
 
-export async function getTokens(address: string, chain: chain, is_all = false) {
+export async function getTokens(address: string, chainId: number, debankId: chain, is_all = false) {
   try {
-    const resp = await fetch(`${host}/v1/user/token_list?id=${address}&chain_id=${chain}&is_all=${is_all}`.toLowerCase());
+    const resp = await fetch(
+      `${host}/v1/user/token_list?id=${address}&chain_id=${
+        DebankSupportedChains.get(chainId) || debankId
+      }&is_all=${is_all}`.toLowerCase()
+    );
     const data = (await resp.json()) as ITokenBalance[];
 
     return data
@@ -42,8 +50,6 @@ export async function getTokens(address: string, chain: chain, is_all = false) {
     return [];
   }
 }
-
-export const DebankSupportedChains = new Map<number, string>();
 
 export async function fetchChainsOverview(address: string) {
   try {
