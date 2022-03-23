@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { Account } from '../../viewmodels/account/Account';
 import { BioType } from '../../viewmodels/Authentication';
+import { PageMetadata } from '../../screens/browser/Web3View';
 import { Passpad } from '../views';
 import SignPlainText from '../dapp/SignPlainText';
 import SignTypedData from '../dapp/SignTypedData';
@@ -17,9 +18,10 @@ interface Props {
   typedData?: any;
   biometricType?: BioType;
   account?: Account;
+  metadata?: PageMetadata;
 }
 
-export default ({ type, msg, themeColor, onReject, typedData, sign, biometricType, onSign, account }: Props) => {
+export default ({ type, msg, themeColor, onReject, typedData, sign, biometricType, onSign, account, metadata }: Props) => {
   const swiper = useRef<Swiper>(null);
   const [standardMode, setStandardMode] = useState<boolean>();
 
@@ -52,6 +54,7 @@ export default ({ type, msg, themeColor, onReject, typedData, sign, biometricTyp
           account={account}
           bioType={biometricType}
           onStandardModeOn={setStandardMode}
+          metadata={metadata}
         />
       ) : undefined}
 
