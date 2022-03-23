@@ -96,9 +96,20 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
           <View style={{ flexDirection: 'row', maxWidth: '72%', alignItems: 'center' }}>
             {(vm.hasZWSP || vm.isContractRecipient) && (
               <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', end: 0, bottom: -10 }}>
-                <Ionicons name="warning" size={8} color="crimson" style={{ marginEnd: 2 }} />
-                <Text style={{ fontSize: 8, color: 'crimson' }}>
-                  {t(vm.isContractRecipient ? 'tip-recipient-is-contract' : 'tip-zero-width-space')}
+                <Ionicons
+                  name={vm.isContractWallet ? 'wallet-outline' : 'warning'}
+                  size={8}
+                  color={vm.isContractWallet ? 'dodgerblue' : 'crimson'}
+                  style={{ marginEnd: 4 }}
+                />
+                <Text style={{ fontSize: 8, color: vm.isContractWallet ? 'dodgerblue' : 'crimson' }}>
+                  {t(
+                    vm.isContractRecipient
+                      ? vm.isContractWallet
+                        ? 'tip-recipient-is-contract-wallet'
+                        : 'tip-recipient-is-contract'
+                      : 'tip-zero-width-space'
+                  )}
                 </Text>
               </View>
             )}
@@ -108,8 +119,11 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
             ) : undefined}
 
             <Text
-              style={{ ...reviewItemValueStyle, color: vm.hasZWSP || vm.isContractRecipient ? 'crimson' : textColor }}
               numberOfLines={1}
+              style={{
+                ...reviewItemValueStyle,
+                color: vm.hasZWSP || vm.isContractRecipient ? (vm.isContractWallet ? 'dodgerblue' : 'crimson') : textColor,
+              }}
             >
               {utils.isAddress(vm.to) ? formatAddress(vm.to, 8, 6) : formatAddress(vm.safeTo, 14, 6, '...')}
             </Text>
@@ -177,7 +191,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
 
       <Button
         title={sendTitle}
-        themeColor={vm.hasZWSP || vm.isContractRecipient ? 'crimson' : vm.network.color}
+        themeColor={vm.hasZWSP || (vm.isContractRecipient && !vm.isContractWallet) ? 'crimson' : vm.network.color}
         disabled={!vm.isValidParams || busy}
         onPress={onSendPress}
         onLongPress={onLongSendPress}

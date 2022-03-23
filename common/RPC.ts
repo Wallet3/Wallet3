@@ -89,7 +89,22 @@ export async function getTransactionCount(chainId: number, address: string) {
   return 0;
 }
 
-export async function call<T>(
+export async function eth_call<T>(
+  chainId: number | string,
+  args: {
+    from?: string;
+    to: string;
+    gas?: string | number;
+    gasPrice?: string | number;
+    value?: string | number;
+    data: string;
+  }
+) {
+  const resp = await eth_call_return(chainId, args);
+  return resp?.result as T;
+}
+
+export async function eth_call_return(
   chainId: number | string,
   args: {
     from?: string;
@@ -111,7 +126,7 @@ export async function call<T>(
         id: Date.now(),
       });
 
-      return resp.result as T;
+      return resp;
     } catch (error) {
       console.log(error);
     }
