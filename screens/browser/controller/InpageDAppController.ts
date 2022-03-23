@@ -12,6 +12,7 @@ import { INetwork } from '../../../common/Networks';
 import InpageDApp from '../../../models/InpageDApp';
 import MessageKeys from '../../../common/MessageKeys';
 import MetamaskDAppsHub from '../../../viewmodels/walletconnect/MetamaskDAppsHub';
+import { PageMetadata } from '../Web3View';
 import { ReadableInfo } from '../../../models/Transaction';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import { WCCallRequest_eth_sendTransaction } from '../../../models/WCSession_v1';
@@ -63,13 +64,14 @@ export interface ConnectInpageDApp extends Payload {
 }
 
 export interface InpageDAppSignRequest {
-  type: 'plaintext' | 'typedData' | 'signInWithEthereum';
+  type: 'plaintext' | 'typedData';
   chainId: number;
   msg?: string;
   typedData?: any;
   approve: (opt?: { pin?: string; standardMode?: boolean }) => Promise<boolean>;
   reject: () => void;
   account: Account;
+  metadata: PageMetadata;
 }
 
 export interface InpageDAppTxRequest {
@@ -293,6 +295,7 @@ export class InpageDAppController extends EventEmitter {
         reject,
         chainId: Number(dapp.lastUsedChainId),
         account,
+        metadata: { ...dapp.appMeta },
       } as InpageDAppSignRequest);
     });
   }

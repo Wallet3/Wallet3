@@ -23,7 +23,7 @@ interface Props {
 export default observer(({ request, client, close }: Props) => {
   const [msg, setMsg] = useState<string | Uint8Array>();
   const [typedData, setTypedData] = useState();
-  const [type, setType] = useState('');
+  const [type, setType] = useState<'plaintext' | 'typedData'>();
   const [verified, setVerified] = useState(false);
   const { backgroundColor } = Theme;
 

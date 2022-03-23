@@ -14,7 +14,7 @@ interface Props extends InpageDAppSignRequest {
   close: () => void;
 }
 
-export default observer(({ msg, type, chainId, typedData, approve, reject, close, account }: Props) => {
+export default observer(({ msg, type, chainId, typedData, approve, reject, close, account, metadata }: Props) => {
   const [verified, setVerified] = useState(false);
   const [themeColor] = useState(Networks.find(chainId)?.color ?? Networks.Ethereum.color);
   const { backgroundColor } = Theme;
@@ -46,6 +46,7 @@ export default observer(({ msg, type, chainId, typedData, approve, reject, close
           typedData={typedData}
           biometricType={Authentication.biometricType}
           account={account}
+          metadata={metadata}
         />
       )}
     </SafeAreaProvider>
