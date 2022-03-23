@@ -131,7 +131,7 @@ export default observer(({ themeColor, data, onReject, onSign, account, bioType 
           alignItems: 'center',
         }}
       >
-        <Text style={{ fontSize: 21, color: themeColor, fontWeight: '500' }}>{t('modal-message-signing')}</Text>
+        <Text style={{ fontSize: 21, color: themeColor, fontWeight: '500' }}>{t('modal-message-signing-title')}</Text>
 
         {account ? <AccountIndicator account={account} /> : undefined}
       </View>

@@ -295,7 +295,7 @@ export class InpageDAppController extends EventEmitter {
         reject,
         chainId: Number(dapp.lastUsedChainId),
         account,
-        metadata: { ...dapp.appMeta },
+        metadata: { ...dapp.appMeta, icon: dapp.appMeta?.icons?.[0], origin: dapp.appMeta?.url },
       } as InpageDAppSignRequest);
     });
   }

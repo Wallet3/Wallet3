@@ -89,6 +89,7 @@ export default observer(({ onItemPress, tabCount, onTabsPress, disableContextMen
                 actions={disableContextMenu ? [] : actions}
                 onPress={onActionPress}
                 previewBackgroundColor={backgroundColor}
+                style={{ marginHorizontal: 4 }}
               >
                 <TouchableOpacity
                   onPress={() => onItemPress?.(item.origin)}
@@ -101,7 +102,6 @@ export default observer(({ onItemPress, tabCount, onTabsPress, disableContextMen
                     justifyContent: 'center',
                     alignItems: 'center',
                     flexDirection: 'row',
-                    marginHorizontal: 4,
                   }}
                 >
                   <NullableImage
