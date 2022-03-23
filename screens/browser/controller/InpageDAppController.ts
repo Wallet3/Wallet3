@@ -63,7 +63,7 @@ export interface ConnectInpageDApp extends Payload {
 }
 
 export interface InpageDAppSignRequest {
-  type: 'plaintext' | 'typedData' | 'signInWithEthereum';
+  type: 'plaintext' | 'typedData';
   chainId: number;
   msg?: string;
   typedData?: any;

@@ -8,7 +8,7 @@ import SignTypedData from '../dapp/SignTypedData';
 import Swiper from 'react-native-swiper';
 
 interface Props {
-  type: string;
+  type?: 'plaintext' | 'typedData';
   msg?: string | Uint8Array;
   themeColor: string;
   onReject: () => void;

@@ -296,7 +296,10 @@ export class BaseTransaction {
   async checkToAddress() {
     const code = await getCode(this.network.chainId, this.toAddress);
     if (code === '0x') {
-      runInAction(() => (this.isContractRecipient = false));
+      runInAction(() => {
+        this.isContractRecipient = false;
+        this.isContractWallet = false;
+      });
       return;
     }
 
@@ -306,7 +309,7 @@ export class BaseTransaction {
     const result = await eth_call_return(this.network.chainId, { to: this.toAddress, data: encodedERC1271Data });
 
     const errorCode = Number(result?.error?.code);
-    const isContractWallet = Boolean(result?.error?.data && errorCode !== -32000);
+    const isContractWallet = Boolean(result?.error?.data && Number.isInteger(errorCode) && errorCode !== -32000);
 
     runInAction(() => {
       this.isContractWallet = isContractWallet;
