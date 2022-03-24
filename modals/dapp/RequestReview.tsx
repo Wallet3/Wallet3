@@ -102,13 +102,13 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
                 numberOfLines={1}
                 defaultValue={vm.maxUint256Amount ? 'Unlimited' : vm.tokenAmount}
                 keyboardType="decimal-pad"
-                onChangeText={(t) => vm.setApproveAmount(t)}
+                onChangeText={(t) => vm.setERC20ApproveAmount(t)}
                 selectTextOnFocus
                 textAlign="right"
                 style={{
                   ...reviewItemValueStyle,
                   maxWidth: 120,
-                  color: vm.maxUint256Amount || vm.exceedTokenBalance ? 'crimson' : textColor,
+                  color: vm.maxUint256Amount || vm.exceedERC20Balance ? 'crimson' : textColor,
                   marginEnd: 8,
                   minWidth: 52,
                 }}

@@ -7,6 +7,9 @@ export type RequestType =
   | 'Unknown';
 
 export const Transfer_ERC20 = '0xa9059cbb';
+export const Transfer_ERC1155 = '0xf242432a';
+export const Transfer_ERC721 = '0x23b872dd';
+
 export const Approve_ERC20 = '0x095ea7b3';
 export const Approve_ERC721 = Approve_ERC20;
 export const ERC1155_ApprovalForAll = '0xa22cb465';

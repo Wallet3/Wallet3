@@ -29,10 +29,11 @@ export function parseRequestType(data = ''): { type: RequestType; methodFunc: st
 
 export class RawTransactionRequest extends BaseTransaction {
   private param: WCCallRequest_eth_sendTransaction;
-  private erc20?: ERC20Token;
-  private erc721?: ERC721Token;
 
-  type!: RequestType;
+  erc721?: ERC721Token;
+  erc20?: ERC20Token;
+
+  type: RequestType = 'Unknown';
   valueWei = BigNumber.from(0);
   tokenAmountWei = BigNumber.from(0);
   tokenDecimals = 18;
@@ -65,12 +66,8 @@ export class RawTransactionRequest extends BaseTransaction {
     }
   }
 
-  get token() {
-    return this.erc20;
-  }
-
-  get exceedTokenBalance() {
-    return this.token ? this.tokenAmountWei.gt(this.token.balance) : false;
+  get exceedERC20Balance() {
+    return this.erc20 ? this.tokenAmountWei.gt(this.erc20.balance) : false;
   }
 
   constructor({ param, network, account }: IConstructor) {
@@ -79,6 +76,7 @@ export class RawTransactionRequest extends BaseTransaction {
     this.param = param;
 
     makeObservable(this, {
+      type: observable,
       valueWei: observable,
       value: computed,
       tokenAmountWei: observable,
@@ -87,11 +85,12 @@ export class RawTransactionRequest extends BaseTransaction {
       tokenSymbol: observable,
       tokenAddress: observable,
       isValidParams: computed,
-      setApproveAmount: action,
-      exceedTokenBalance: computed,
+      setERC20ApproveAmount: action,
+      exceedERC20Balance: computed,
+      parseRequest: action,
     });
 
-    runInAction(() => this.parseRequest(param));
+    this.parseRequest(param);
   }
 
   async parseRequest(param: SpeedupAbleSendParams) {
@@ -136,17 +135,20 @@ export class RawTransactionRequest extends BaseTransaction {
         const owner = (await erc721.ownerOf(approveAmountOrTokenId.toString())) || '';
         const isERC721 = utils.isAddress(owner) && owner === this.account.address;
 
-        if (isERC721) {
-          this.erc721 = erc721;
-          this.type = 'Approve_ERC721';
-        } else {
-          this.erc20 = erc20;
-          this.tokenAmountWei = approveAmountOrTokenId;
-          this.tokenAddress = utils.getAddress(param.to);
-          erc20.getDecimals().then((decimals) => runInAction(() => (this.tokenDecimals = decimals)));
-          erc20.getSymbol().then((symbol) => runInAction(() => (this.tokenSymbol = symbol)));
-          erc20.getBalance();
-        }
+        runInAction(() => {
+          if (isERC721) {
+            this.erc721 = erc721;
+            this.type = 'Approve_ERC721';
+          } else {
+            this.erc20 = erc20;
+            this.tokenAmountWei = approveAmountOrTokenId;
+            this.tokenAddress = utils.getAddress(param.to);
+          }
+        });
+
+        erc20.getDecimals().then((decimals) => runInAction(() => (this.tokenDecimals = decimals)));
+        erc20.getSymbol().then((symbol) => runInAction(() => (this.tokenSymbol = symbol)));
+        erc20.getBalance();
 
         break;
 
@@ -173,7 +175,7 @@ export class RawTransactionRequest extends BaseTransaction {
     if (param.nonce) runInAction(() => this.setNonce(param.nonce));
   }
 
-  setApproveAmount(amount: string) {
+  setERC20ApproveAmount(amount: string) {
     if (!this.erc20 || this.erc20.decimals < 0) return;
     if (amount.endsWith('.')) return;
     amount = amount.replace(/,/g, '');
