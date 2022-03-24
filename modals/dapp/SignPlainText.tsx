@@ -26,7 +26,7 @@ interface Props {
   account?: Account;
   bioType?: BioType;
   onStandardModeOn: (on: boolean) => void;
-  metadata?: PageMetadata;
+  metadata?: { origin: string; icon: string; title: string };
 }
 
 export default observer(({ msg, themeColor, onReject, onSign, account, bioType, onStandardModeOn, metadata }: Props) => {

@@ -131,7 +131,6 @@
   "modal-message-signing-title": "消息签名",
   "modal-siwe-title": "使用以太坊登录",
   "modal-siwe-request-msg": "{{domain}} 请求使用以太坊登录",
-  "modal-siwe-interact-with-button": "通过 签入 按钮完成请求",
   "modal-siwe-see-details": "查看详情",
   "modal-siwe-warning-not-match": "警告: {{domain}} 与 {{origin}} 不匹配",
   "modal-siwe-phishing-warning": "疑似钓鱼请求",

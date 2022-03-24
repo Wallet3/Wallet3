@@ -18,7 +18,7 @@ interface Props {
   typedData?: any;
   biometricType?: BioType;
   account?: Account;
-  metadata?: PageMetadata;
+  metadata?: { origin: string; icon: string; title: string };
 }
 
 export default ({ type, msg, themeColor, onReject, typedData, sign, biometricType, onSign, account, metadata }: Props) => {

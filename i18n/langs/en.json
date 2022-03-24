@@ -131,7 +131,6 @@
   "modal-message-signing-title": "Message Signing",
   "modal-siwe-title": "Sign-In with Ethereum",
   "modal-siwe-request-msg": "{{domain}} wants you to Sign-In with Ethereum",
-  "modal-siwe-interact-with-button": "Interact with Sign-In button to complete this request",
   "modal-siwe-see-details": "See details",
   "modal-siwe-warning-not-match": "Warning: {{domain}} is not matched with {{origin}}",
   "modal-siwe-phishing-warning": "Phishing Detected",

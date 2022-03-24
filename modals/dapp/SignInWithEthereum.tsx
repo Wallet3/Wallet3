@@ -14,7 +14,7 @@ import { observer } from 'mobx-react-lite';
 
 interface Props {
   rawMsg: string;
-  metadata?: PageMetadata;
+  metadata?: { origin: string; icon: string; title: string };
   siwe: ParsedMessage;
   account?: Account;
 }
@@ -22,9 +22,9 @@ interface Props {
 export default observer(({ metadata, siwe, account, rawMsg }: Props) => {
   const swiper = useRef<Swiper>(null);
   const { backgroundColor, foregroundColor, tintColor, borderColor, secondaryTextColor, thirdTextColor } = Theme;
-  const consistent = siwe.domain === 'abc'// metadata?.origin;
   const { t } = i18n;
-  console.log(siwe.domain, metadata?.hostname, metadata);
+
+  const consistent = siwe.domain === metadata?.origin;
 
   return (
     <Swiper
@@ -57,7 +57,7 @@ export default observer(({ metadata, siwe, account, rawMsg }: Props) => {
           <NullableImage
             size={72}
             uri={metadata?.icon}
-            text={metadata?.title || metadata?.hostname}
+            text={metadata?.title || metadata?.origin}
             fontSize={36}
             imageRadius={5}
             fontStyle={{ marginTop: 2, marginStart: 2 }}
@@ -75,10 +75,6 @@ export default observer(({ metadata, siwe, account, rawMsg }: Props) => {
               </Text>
 
               <Text style={{ ...styles.text, fontSize: 12, marginTop: 12, color: secondaryTextColor }}>{siwe.statement}</Text>
-
-              <Text style={{ ...styles.text, fontSize: 12, fontWeight: '400', marginTop: 12, color: secondaryTextColor }}>
-                {t('modal-siwe-interact-with-button')}
-              </Text>
             </View>
           ) : (
             <View style={{ justifyContent: 'center', alignItems: 'center' }}>

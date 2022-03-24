@@ -1,3 +1,5 @@
+import * as ExpoLinking from 'expo-linking';
+
 import React, { useEffect, useState } from 'react';
 
 import App from '../viewmodels/App';
@@ -99,6 +101,11 @@ export default observer(({ request, client, close }: Props) => {
           typedData={typedData}
           biometricType={Authentication.biometricType}
           account={client.activeAccount!}
+          metadata={{
+            origin: client.origin,
+            icon: client.appMeta?.icons?.[0] || '',
+            title: client.appMeta?.name || '',
+          }}
         />
       )}
     </SafeAreaProvider>

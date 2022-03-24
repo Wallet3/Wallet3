@@ -131,7 +131,6 @@
   "modal-message-signing-title": "メッセージサイン",
   "modal-siwe-title": "Ethereum でサインイン",
   "modal-siwe-request-msg": "{{domain}} が Ethereum でサインインすることを求めています",
-  "modal-siwe-interact-with-button": "サインインボタンでリクエストを完了する",
   "modal-siwe-see-details": "詳細はこちら",
   "modal-siwe-warning-not-match": "警告: {{domain}} は {{origin}} とマッチングしません",
   "modal-siwe-phishing-warning": "フィッシング検出",
