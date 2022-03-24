@@ -6,7 +6,6 @@ import { Account } from '../../viewmodels/account/Account';
 import AccountIndicator from '../components/AccountIndicator';
 import { BioType } from '../../viewmodels/Authentication';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';
-import { PageMetadata } from '../../screens/browser/Web3View';
 import { ParsedMessage } from '../../utils/siwe';
 import RejectApproveButtons from '../components/RejectApproveButtons';
 import { SafeViewContainer } from '../../components';
@@ -31,7 +30,7 @@ interface Props {
 
 export default observer(({ msg, themeColor, onReject, onSign, account, bioType, onStandardModeOn, metadata }: Props) => {
   const { t } = i18n;
-  const { borderColor, backgroundColor, foregroundColor } = Theme;
+  const { borderColor } = Theme;
   const [busy, setBusy] = useState(false);
   const [isByte] = useState(utils.isBytes(msg));
   const [displayMsg] = useState(isByte ? utils.hexlify(msg) : (msg as string));
@@ -110,7 +109,7 @@ export default observer(({ msg, themeColor, onReject, onSign, account, bioType, 
       <RejectApproveButtons
         disabledApprove={busy}
         onReject={onReject}
-        themeColor={siwe ? (siwe.domain === metadata?.origin ? themeColor : 'crimson') : themeColor}
+        themeColor={siwe && metadata ? (siwe.domain === metadata.origin ? themeColor : 'crimson') : themeColor}
         swipeConfirm={bioType === 'faceid'}
         rejectTitle={t('button-reject')}
         approveTitle={t(siwe ? 'button-sign-in' : 'button-sign')}

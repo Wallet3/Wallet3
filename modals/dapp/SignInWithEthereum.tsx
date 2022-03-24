@@ -24,7 +24,7 @@ export default observer(({ metadata, siwe, account, rawMsg }: Props) => {
   const { backgroundColor, foregroundColor, tintColor, borderColor, secondaryTextColor, thirdTextColor } = Theme;
   const { t } = i18n;
 
-  const consistent = siwe.domain === metadata?.origin;
+  const consistent = metadata ? siwe.domain === metadata.origin : true;
 
   return (
     <Swiper
@@ -122,8 +122,10 @@ export default observer(({ metadata, siwe, account, rawMsg }: Props) => {
             alignItems: 'center',
           }}
         >
-          <FontAwesome5 name="ethereum" size={25} color={tintColor} />
-          <Text style={{ fontSize: 21, color: tintColor, fontWeight: '500', marginStart: 8 }}>{t('modal-siwe-title')}</Text>
+          <FontAwesome5 name="ethereum" size={24} color={consistent ? tintColor : 'crimson'} />
+          <Text style={{ fontSize: 21, color: consistent ? tintColor : 'crimson', fontWeight: '500', marginStart: 8 }}>
+            {t('modal-siwe-title')}
+          </Text>
         </View>
 
         <ScrollView

@@ -101,11 +101,6 @@ export default observer(({ request, client, close }: Props) => {
           typedData={typedData}
           biometricType={Authentication.biometricType}
           account={client.activeAccount!}
-          metadata={{
-            origin: client.origin,
-            icon: client.appMeta?.icons?.[0] || '',
-            title: client.appMeta?.name || '',
-          }}
         />
       )}
     </SafeAreaProvider>
