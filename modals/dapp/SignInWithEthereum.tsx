@@ -2,7 +2,6 @@ import { Button, NullableImage } from '../../components';
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import React, { useRef } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { borderColor, secondaryFontColor, thirdFontColor } from '../../constants/styles';
 
 import { Account } from '../../viewmodels/account/Account';
 import AccountIndicator from '../components/AccountIndicator';
@@ -22,8 +21,8 @@ interface Props {
 
 export default observer(({ metadata, siwe, account, rawMsg }: Props) => {
   const swiper = useRef<Swiper>(null);
-  const { backgroundColor, foregroundColor, tintColor, borderColor } = Theme;
-  const consistent = siwe.domain === metadata?.origin;
+  const { backgroundColor, foregroundColor, tintColor, borderColor, secondaryTextColor, thirdTextColor } = Theme;
+  const consistent = siwe.domain === 'abc'// metadata?.origin;
   const { t } = i18n;
   console.log(siwe.domain, metadata?.hostname, metadata);
 
@@ -37,8 +36,18 @@ export default observer(({ metadata, siwe, account, rawMsg }: Props) => {
       style={{ marginHorizontal: 0 }}
     >
       <View style={{ width: '100%', height: '100%' }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <View />
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          {consistent ? (
+            <View />
+          ) : (
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <FontAwesome5 name="fish" size={10} color="crimson" />
+              <Text style={{ fontSize: 10, color: 'crimson', fontWeight: '600', marginStart: 4 }}>
+                {t('modal-siwe-phishing-warning')}
+              </Text>
+            </View>
+          )}
+
           {account && <AccountIndicator account={account} />}
         </View>
 
@@ -58,24 +67,29 @@ export default observer(({ metadata, siwe, account, rawMsg }: Props) => {
 
           {consistent ? (
             <View style={{ alignItems: 'center' }}>
-              <Text style={{ ...styles.text, fontWeight: '500', color: foregroundColor }}>
-                {`${siwe.domain} wants you to Sign-In with Ethereum`}
+              <Text
+                style={{ ...styles.text, fontSize: 16, fontWeight: '500', color: foregroundColor, textAlign: 'center' }}
+                numberOfLines={2}
+              >
+                {t('modal-siwe-request-msg', { domain: siwe.domain })}
               </Text>
 
-              <Text style={{ ...styles.text, fontSize: 12, fontWeight: '400', marginTop: 16, color: secondaryFontColor }}>
-                {`Click Sign-In to complete this request `}
+              <Text style={{ ...styles.text, fontSize: 12, marginTop: 12, color: secondaryTextColor }}>{siwe.statement}</Text>
+
+              <Text style={{ ...styles.text, fontSize: 12, fontWeight: '400', marginTop: 12, color: secondaryTextColor }}>
+                {t('modal-siwe-interact-with-button')}
               </Text>
             </View>
           ) : (
             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-              <Text style={{ ...styles.text, color: '#aaaaaac0', fontWeight: '500' }} numberOfLines={1}>
-                {`${siwe.domain} wants you to Sign-In with Ethereum`}
+              <Text style={{ ...styles.text, color: '#aaaaaac0', fontWeight: '500', fontSize: 12 }} numberOfLines={1}>
+                {t('modal-siwe-request-msg', { domain: siwe.domain })}
               </Text>
 
-              <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
-                <Ionicons name="warning" color={'crimson'} size={15} style={{ marginEnd: 4 }} />
-                <Text numberOfLines={2} style={{ ...styles.text, fontSize: 16, color: 'crimson' }}>
-                  {`Warning: ${siwe.domain} is not match ${metadata?.origin}`}
+              <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginTop: 8, paddingHorizontal: 8 }}>
+                <Ionicons name="warning" color={'crimson'} size={15} style={{ marginEnd: 4, marginTop: 2 }} />
+                <Text numberOfLines={2} style={{ ...styles.text, fontSize: 16, color: 'crimson', fontWeight: '500' }}>
+                  {t('modal-siwe-warning-not-match', { domain: siwe.domain, origin: metadata?.origin })}
                 </Text>
               </View>
             </View>
@@ -95,8 +109,10 @@ export default observer(({ metadata, siwe, account, rawMsg }: Props) => {
             marginBottom: 12,
           }}
         >
-          <Text style={{ color: consistent ? secondaryFontColor : 'crimson', marginEnd: 3 }}>See details</Text>
-          <Ionicons name="chevron-forward" size={10} color={consistent ? secondaryFontColor : 'crimson'} />
+          <Text style={{ color: consistent ? secondaryTextColor : 'crimson', marginEnd: 3 }}>
+            {t('modal-siwe-see-details')}
+          </Text>
+          <Ionicons name="chevron-forward" size={10} color={consistent ? secondaryTextColor : 'crimson'} />
         </TouchableOpacity>
       </View>
 
@@ -111,9 +127,7 @@ export default observer(({ metadata, siwe, account, rawMsg }: Props) => {
           }}
         >
           <FontAwesome5 name="ethereum" size={25} color={tintColor} />
-          <Text style={{ fontSize: 21, color: tintColor, fontWeight: '500', marginStart: 8 }}>
-            {t('modal-message-signing-sign-in-with-ethereum')}
-          </Text>
+          <Text style={{ fontSize: 21, color: tintColor, fontWeight: '500', marginStart: 8 }}>{t('modal-siwe-title')}</Text>
         </View>
 
         <ScrollView
@@ -122,7 +136,7 @@ export default observer(({ metadata, siwe, account, rawMsg }: Props) => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingVertical: 8 }}
         >
-          <Text style={{ color: thirdFontColor }}>{rawMsg}</Text>
+          <Text style={{ color: thirdTextColor }}>{rawMsg}</Text>
         </ScrollView>
       </View>
     </Swiper>

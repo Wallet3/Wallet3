@@ -110,7 +110,7 @@ export default observer(({ msg, themeColor, onReject, onSign, account, bioType, 
       <RejectApproveButtons
         disabledApprove={busy}
         onReject={onReject}
-        themeColor={themeColor}
+        themeColor={siwe ? (siwe.domain === metadata?.origin ? themeColor : 'crimson') : themeColor}
         swipeConfirm={bioType === 'faceid'}
         rejectTitle={t('button-reject')}
         approveTitle={t(siwe ? 'button-sign-in' : 'button-sign')}
