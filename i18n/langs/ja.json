@@ -144,6 +144,7 @@
   "modal-dapp-request-amount": "金額",
   "modal-dapp-request-value": "金額",
   "modal-dapp-request-to": "送信先",
+  "modal-dapp-approve-to": "承認先",
   "modal-dapp-request-deploy-contract": "Deploy Contract",
   "modal-dapp-not-supported-network": "非対応 ネットワーク",
   "modal-dapp-add-new-network-title": "EVM ネットワーク追加",

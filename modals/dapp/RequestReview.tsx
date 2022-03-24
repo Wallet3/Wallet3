@@ -12,7 +12,9 @@ import FaceID from '../../assets/icons/app/FaceID-white.svg';
 import GasReview from '../views/GasReview';
 import Image from 'react-native-fast-image';
 import InsufficientFee from '../components/InsufficientFee';
+import MultiSourceImage from '../../components/MultiSourceImage';
 import { RawTransactionRequest } from '../../viewmodels/transferring/RawTransactionRequest';
+import { ReactiveScreen } from '../../utils/device';
 import RejectApproveButtons from '../components/RejectApproveButtons';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
@@ -131,43 +133,26 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
         {vm.type === 'Approve_ERC721' ? (
           <View style={{ ...reviewItemStyle }}>
             <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-type-nft-id')}</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              {vm.maxUint256Amount && !app.verified ? (
-                <Ionicons name="warning" color="crimson" size={15} style={{ marginEnd: 4 }} />
-              ) : undefined}
 
-              <TextInput
-                numberOfLines={1}
-                defaultValue={vm.maxUint256Amount ? 'Unlimited' : vm.tokenAmount}
-                keyboardType="decimal-pad"
-                onChangeText={(t) => vm.setERC20ApproveAmount(t)}
-                selectTextOnFocus
-                textAlign="right"
-                style={{
-                  ...reviewItemValueStyle,
-                  maxWidth: 120,
-                  color: vm.maxUint256Amount || vm.exceedERC20Balance ? 'crimson' : textColor,
-                  marginEnd: 8,
-                  minWidth: 52,
-                }}
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+              <Text style={{ ...reviewItemValueStyle, marginEnd: 8, maxWidth: ReactiveScreen.width - 215 }} numberOfLines={1}>
+                {vm.erc721?.metadata?.title}
+              </Text>
+
+              <MultiSourceImage
+                uriSources={vm.erc721?.metadata?.images || []}
+                style={{ width: 20, height: 20 }}
+                borderRadius={3}
+                sourceTypes={vm.erc721?.metadata?.types || []}
               />
-
-              {vm.tokenSymbol ? (
-                <Coin symbol={vm.tokenSymbol} size={20} address={vm.tokenAddress} chainId={vm.network.chainId} />
-              ) : undefined}
-              {vm.tokenSymbol ? (
-                <Text style={{ ...reviewItemValueStyle, marginStart: 4, maxWidth: 64 }} numberOfLines={1}>
-                  {vm.tokenSymbol}
-                </Text>
-              ) : (
-                <Skeleton style={{ width: 52, height: 19, marginStart: 4 }} />
-              )}
             </View>
           </View>
         ) : undefined}
 
         <View style={{ ...reviewItemStyle }}>
-          <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-to')}</Text>
+          <Text style={styles.reviewItemTitle}>
+            {t(vm.type.startsWith('Approve') ? 'modal-dapp-approve-to' : 'modal-dapp-request-to')}
+          </Text>
 
           <TouchableOpacity
             style={{ flexDirection: 'row', alignItems: 'center' }}

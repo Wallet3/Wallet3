@@ -1,9 +1,10 @@
-import { Approve_ERC20, Approve_ERC721, Methods, RequestType, Transfer_ERC20 } from './RequestTypes';
+import { Approve_ERC1155, Approve_ERC20, Approve_ERC721, Methods, RequestType, Transfer_ERC20 } from './RequestTypes';
 import { BigNumber, constants, providers, utils } from 'ethers';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
 import { Account } from '../account/Account';
 import { BaseTransaction } from './BaseTransaction';
+import { ERC1155Token } from '../../models/ERC1155';
 import { ERC20Token } from '../../models/ERC20';
 import { ERC721Token } from '../../models/ERC721';
 import { Gwei_1 } from '../../common/Constants';
@@ -119,6 +120,9 @@ export class RawTransactionRequest extends BaseTransaction {
       case Approve_ERC20:
       case Approve_ERC721:
         erc20 = new ERC20Token({ chainId: this.network.chainId, contract: param.to, owner: this.account.address });
+
+        if (param.data.length < 136) break;
+
         const [spender, approveAmountOrTokenId] = erc20.interface.decodeFunctionData('approve', param.data) as [
           string,
           BigNumber
@@ -152,6 +156,21 @@ export class RawTransactionRequest extends BaseTransaction {
         erc20.getDecimals().then((decimals) => runInAction(() => (this.tokenDecimals = decimals)));
         erc20.getSymbol().then((symbol) => runInAction(() => (this.tokenSymbol = symbol)));
         erc20.getBalance();
+
+        break;
+
+      case Approve_ERC1155:
+        const erc1155 = new ERC1155Token({
+          chainId: this.network.chainId,
+          contract: param.to,
+          owner: this.account.address,
+          tokenId: '1',
+        });
+
+        try {
+          const [operator] = erc1155.interface.decodeFunctionData('setApprovalForAll', param.data) as [string, boolean];
+          this.setTo(operator);
+        } catch (error) {}
 
         break;
 
