@@ -1,4 +1,4 @@
-import { NftItem, NftsByOwner } from './Rarible.types';
+import { Nft, NftsByOwner } from './Rarible.types';
 
 export async function getNftsByOwner(
   owner: string,
@@ -25,6 +25,6 @@ export async function getNftById(contract: string, tokenId: string, chain: 'ethe
 
   try {
     const resp = await fetch(uri);
-    return (await resp.json()) as NftItem;
+    return (await resp.json()) as Nft;
   } catch {}
 }

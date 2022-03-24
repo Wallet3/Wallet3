@@ -1,8 +1,8 @@
-import { BigNumber, ethers } from 'ethers';
-
 import ERC1155ABI from '../abis/ERC1155.json';
+import { NonFungibleToken } from './NFT';
+import { ethers } from 'ethers';
 
-export class ERC1155Token {
+export class ERC1155Token extends NonFungibleToken {
   readonly contract: ethers.Contract;
 
   address: string;
@@ -13,7 +13,9 @@ export class ERC1155Token {
     return this.contract.interface;
   }
 
-  constructor(props: { contract: string; tokenId: string; chainId: number; owner: string }) {
+  constructor(props: { contract: string; tokenId: string; chainId: number; owner: string; fetchMetadata?: boolean }) {
+    super(props);
+
     this.address = props.contract;
     this.contract = new ethers.Contract(this.address, ERC1155ABI);
     this.chainId = props.chainId;

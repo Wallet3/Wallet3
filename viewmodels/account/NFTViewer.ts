@@ -1,11 +1,10 @@
 import { action, makeObservable, observable, runInAction } from 'mobx';
-import { convertBounceToNft as convertBounceToNfts, convertOpenseaAssetsToNft, convertRaribleResultToNft as convertRaribleResultToNfts } from '../services/NftTransformer';
+import { convertBounceToNfts, convertRaribleResultToNfts } from '../services/NftTransformer';
 
 import { NFT } from '../transferring/NonFungibleTokenTransferring';
 import Networks from '../Networks';
 import { getBounceNfts } from '../../common/apis/Bounce';
 import { getNftsByOwner } from '../../common/apis/Rarible';
-import { getOpenseaNfts } from '../../common/apis/Opensea';
 import { startLayoutAnimation } from '../../utils/animations';
 
 export class NFTViewer {

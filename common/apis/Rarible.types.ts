@@ -82,29 +82,3 @@ export interface NftsByOwner {
   continuation: string;
   items: Nft[];
 }
-
-export interface Creator {
-  account: string;
-  value: number;
-}
-
-export interface Attribute {
-  key: string;
-  value: string;
-}
-
-export interface NftItem {
-  id: string;
-  contract: string;
-  tokenId: string;
-  creators: Creator[];
-  supply: string;
-  lazySupply: string;
-  owners: string[];
-  royalties: any[];
-  lastUpdatedAt: Date;
-  mintedAt: Date;
-  pending: any[];
-  deleted: boolean;
-  meta: Meta;
-}

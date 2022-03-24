@@ -128,6 +128,44 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
           </View>
         ) : undefined}
 
+        {vm.type === 'Approve_ERC721' ? (
+          <View style={{ ...reviewItemStyle }}>
+            <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-type-nft-id')}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              {vm.maxUint256Amount && !app.verified ? (
+                <Ionicons name="warning" color="crimson" size={15} style={{ marginEnd: 4 }} />
+              ) : undefined}
+
+              <TextInput
+                numberOfLines={1}
+                defaultValue={vm.maxUint256Amount ? 'Unlimited' : vm.tokenAmount}
+                keyboardType="decimal-pad"
+                onChangeText={(t) => vm.setERC20ApproveAmount(t)}
+                selectTextOnFocus
+                textAlign="right"
+                style={{
+                  ...reviewItemValueStyle,
+                  maxWidth: 120,
+                  color: vm.maxUint256Amount || vm.exceedERC20Balance ? 'crimson' : textColor,
+                  marginEnd: 8,
+                  minWidth: 52,
+                }}
+              />
+
+              {vm.tokenSymbol ? (
+                <Coin symbol={vm.tokenSymbol} size={20} address={vm.tokenAddress} chainId={vm.network.chainId} />
+              ) : undefined}
+              {vm.tokenSymbol ? (
+                <Text style={{ ...reviewItemValueStyle, marginStart: 4, maxWidth: 64 }} numberOfLines={1}>
+                  {vm.tokenSymbol}
+                </Text>
+              ) : (
+                <Skeleton style={{ width: 52, height: 19, marginStart: 4 }} />
+              )}
+            </View>
+          </View>
+        ) : undefined}
+
         <View style={{ ...reviewItemStyle }}>
           <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-to')}</Text>
 

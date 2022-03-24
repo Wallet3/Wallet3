@@ -139,6 +139,7 @@
   "modal-dapp-connection-refresh-again": "Please refresh webpage and try again.",
   "modal-dapp-request-type": "Type",
   "modal-dapp-request-type-approve": "Approve",
+  "modal-dapp-request-type-nft-id": "NFT ID",
   "modal-dapp-request-max-approve": "Amount",
   "modal-dapp-request-type-transfer": "Transfer",
   "modal-dapp-request-type-contract-interaction": "Contract Interaction",

@@ -1,7 +1,7 @@
 import { BounceResponse, Nfts1155, Nfts721 } from '../../common/apis/Bounce.types';
+import { Nft, NftsByOwner } from '../../common/apis/Rarible.types';
 
 import { NFT } from '../transferring/NonFungibleTokenTransferring';
-import { NftsByOwner } from '../../common/apis/Rarible.types';
 import { OpenseaAssetsResponse } from '../../common/apis/Opensea.types';
 
 const convertProtocol = (items: (string | undefined)[]) => {
@@ -10,38 +10,36 @@ const convertProtocol = (items: (string | undefined)[]) => {
     .filter((i) => i) as string[];
 };
 
-export function convertRaribleResultToNft(result?: NftsByOwner): NFT[] | undefined {
+export function convertRaribleNftToNft(item: Nft) {
+  return {
+    id: item.id,
+    contract: item.contract,
+    tokenId: item.tokenId,
+    title: item.meta?.name,
+    description: item.meta?.description,
+    attributes: item.meta?.attributes,
+    previews: [item.meta?.image?.url?.BIG, item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.PREVIEW],
+    previewTypes: [
+      item.meta?.image?.meta?.BIG?.type,
+      item.meta?.image?.meta?.ORIGINAL?.type,
+      item.meta?.image?.meta?.PREVIEW?.type,
+    ],
+    images: [item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.BIG, item.meta?.image?.url?.PREVIEW],
+    types: [item.meta?.image?.meta?.ORIGINAL?.type, item.meta?.image?.meta?.BIG?.type, item.meta?.image?.meta?.PREVIEW?.type],
+  };
+}
+
+export function convertRaribleResultToNfts(result?: NftsByOwner): NFT[] | undefined {
   if (!result) return;
 
   try {
     return result.items
       .filter((i) => !i.deleted && (i.meta?.image?.url?.PREVIEW || i.meta?.image?.url?.ORIGINAL))
-      .map((item) => {
-        return {
-          id: item.id,
-          contract: item.contract,
-          tokenId: item.tokenId,
-          title: item.meta?.name,
-          description: item.meta?.description,
-          attributes: item.meta?.attributes,
-          previews: [item.meta?.image?.url?.BIG, item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.PREVIEW],
-          previewTypes: [
-            item.meta?.image?.meta?.BIG?.type,
-            item.meta?.image?.meta?.ORIGINAL?.type,
-            item.meta?.image?.meta?.PREVIEW?.type,
-          ],
-          images: [item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.BIG, item.meta?.image?.url?.PREVIEW],
-          types: [
-            item.meta?.image?.meta?.ORIGINAL?.type,
-            item.meta?.image?.meta?.BIG?.type,
-            item.meta?.image?.meta?.PREVIEW?.type,
-          ],
-        };
-      });
+      .map(convertRaribleNftToNft);
   } catch (error) {}
 }
 
-export function convertBounceToNft(result?: BounceResponse) {
+export function convertBounceToNfts(result?: BounceResponse) {
   if (!result) return;
 
   const convertToNft = (item: Nfts1155 | Nfts721, images: string[]) => {
