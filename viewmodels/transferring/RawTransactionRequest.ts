@@ -140,6 +140,8 @@ export class RawTransactionRequest extends BaseTransaction {
           if (isERC721) {
             this.erc721 = erc721;
             this.type = 'Approve_ERC721';
+
+            erc721?.fetchMetadata();
           } else {
             this.erc20 = erc20;
             this.tokenAmountWei = approveAmountOrTokenId;

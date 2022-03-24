@@ -113,7 +113,7 @@ export default observer(({ msg, themeColor, onReject, onSign, account, bioType, 
         swipeConfirm={bioType === 'faceid'}
         rejectTitle={t('button-reject')}
         approveTitle={t(siwe ? 'button-sign-in' : 'button-sign')}
-        approveIcon={siwe ? () => <FontAwesome5 name="ethereum" size={20} color="#fff" style={{ marginEnd: 2 }} /> : authIcon}
+        approveIcon={siwe ? () => <FontAwesome5 name="ethereum" size={18} color="#fff" style={{ marginEnd: 1 }} /> : authIcon}
         onApprove={() => {
           setBusy(true);
           onSign?.().then(() => setBusy(false));

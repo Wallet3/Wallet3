@@ -7,24 +7,13 @@ import { eth_call } from '../common/RPC';
 export class ERC721Token extends NonFungibleToken {
   readonly contract: ethers.Contract;
 
-  chainId: number;
-  readonly address: string;
-  readonly owner: string;
-  readonly tokenId: string;
-
   get interface() {
     return this.contract.interface;
   }
 
   constructor(props: { contract: string; tokenId: string; chainId: number; owner: string; fetchMetadata?: boolean }) {
     super(props);
-
-    this.address = props.contract;
     this.contract = new ethers.Contract(this.address, ERC721ABI);
-
-    this.chainId = props.chainId;
-    this.owner = props.owner;
-    this.tokenId = props.tokenId;
   }
 
   async ownerOf(tokenId: string) {
