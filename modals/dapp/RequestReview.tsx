@@ -90,7 +90,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
           </View>
         ) : undefined}
 
-        {vm.type === 'Approve' ? (
+        {vm.type === 'Approve_ERC20' ? (
           <View style={{ ...reviewItemStyle }}>
             <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-max-approve')}</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>

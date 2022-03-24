@@ -22,8 +22,8 @@ interface Props {
 
 const Methods = new Map([
   ['0xa9059cbb', 'sent'],
-  ['0x23b872dd', 'sent'], // Sent ERC-721
-  ['0xf242432a', 'sent'], // Sent ERC-1155
+  ['0x23b872dd', 'sent'], // Transfer ERC-721
+  ['0xf242432a', 'sent'], // Transfer ERC-1155
   ['0x095ea7b3', 'approve'],
   ['0x', 'sent'],
 ]);

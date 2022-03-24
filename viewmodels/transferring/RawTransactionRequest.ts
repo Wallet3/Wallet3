@@ -1,4 +1,4 @@
-import { Approve, Methods, RequestType, Transfer } from './RequestTypes';
+import { Approve_ERC20, Methods, RequestType, Transfer } from './RequestTypes';
 import { BigNumber, constants, providers, utils } from 'ethers';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
@@ -110,7 +110,7 @@ export class RawTransactionRequest extends BaseTransaction {
         erc20.getDecimals().then((decimals) => runInAction(() => (this.tokenDecimals = decimals)));
         erc20.getSymbol().then((symbol) => runInAction(() => (this.tokenSymbol = symbol)));
         break;
-      case Approve:
+      case Approve_ERC20:
         erc20 = new ERC20Token({ chainId: this.network.chainId, contract: param.to, owner: this.account.address });
         const [spender, approveAmount] = erc20.interface.decodeFunctionData('approve', param.data) as [string, BigNumber];
 
