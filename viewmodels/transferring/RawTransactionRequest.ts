@@ -1,10 +1,11 @@
-import { Approve_ERC20, Methods, RequestType, Transfer } from './RequestTypes';
+import { Approve_ERC20, Approve_ERC721, Methods, RequestType, Transfer_ERC20 } from './RequestTypes';
 import { BigNumber, constants, providers, utils } from 'ethers';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
 import { Account } from '../account/Account';
 import { BaseTransaction } from './BaseTransaction';
 import { ERC20Token } from '../../models/ERC20';
+import { ERC721Token } from '../../models/ERC721';
 import { Gwei_1 } from '../../common/Constants';
 import { INetwork } from '../../common/Networks';
 import { WCCallRequest_eth_sendTransaction } from '../../models/WCSession_v1';
@@ -29,6 +30,7 @@ export function parseRequestType(data = ''): { type: RequestType; methodFunc: st
 export class RawTransactionRequest extends BaseTransaction {
   private param: WCCallRequest_eth_sendTransaction;
   private erc20?: ERC20Token;
+  private erc721?: ERC721Token;
 
   type!: RequestType;
   valueWei = BigNumber.from(0);
@@ -97,9 +99,10 @@ export class RawTransactionRequest extends BaseTransaction {
 
     this.type = type;
     let erc20: ERC20Token | undefined;
+    let erc721: ERC721Token | undefined;
 
     switch (methodFunc) {
-      case Transfer:
+      case Transfer_ERC20:
         erc20 = new ERC20Token({ chainId: this.network.chainId, contract: param.to, owner: this.account.address });
         const [to, transferAmount] = erc20.interface.decodeFunctionData('transfer', param.data) as [string, BigNumber];
 
@@ -109,17 +112,42 @@ export class RawTransactionRequest extends BaseTransaction {
         this.tokenAddress = utils.getAddress(param.to);
         erc20.getDecimals().then((decimals) => runInAction(() => (this.tokenDecimals = decimals)));
         erc20.getSymbol().then((symbol) => runInAction(() => (this.tokenSymbol = symbol)));
+        erc20.getBalance();
+        this.erc20 = erc20;
         break;
+
       case Approve_ERC20:
+      case Approve_ERC721:
         erc20 = new ERC20Token({ chainId: this.network.chainId, contract: param.to, owner: this.account.address });
-        const [spender, approveAmount] = erc20.interface.decodeFunctionData('approve', param.data) as [string, BigNumber];
+        const [spender, approveAmountOrTokenId] = erc20.interface.decodeFunctionData('approve', param.data) as [
+          string,
+          BigNumber
+        ];
+
+        erc721 = new ERC721Token({
+          chainId: this.network.chainId,
+          contract: param.to,
+          owner: this.account.address,
+          tokenId: approveAmountOrTokenId.toString(),
+        });
 
         this.setTo(spender);
-        this.tokenAmountWei = approveAmount;
 
-        this.tokenAddress = utils.getAddress(param.to);
-        erc20.getDecimals().then((decimals) => runInAction(() => (this.tokenDecimals = decimals)));
-        erc20.getSymbol().then((symbol) => runInAction(() => (this.tokenSymbol = symbol)));
+        const owner = (await erc721.ownerOf(approveAmountOrTokenId.toString())) || '';
+        const isERC721 = utils.isAddress(owner) && owner === this.account.address;
+
+        if (isERC721) {
+          this.erc721 = erc721;
+          this.type = 'Approve_ERC721';
+        } else {
+          this.erc20 = erc20;
+          this.tokenAmountWei = approveAmountOrTokenId;
+          this.tokenAddress = utils.getAddress(param.to);
+          erc20.getDecimals().then((decimals) => runInAction(() => (this.tokenDecimals = decimals)));
+          erc20.getSymbol().then((symbol) => runInAction(() => (this.tokenSymbol = symbol)));
+          erc20.getBalance();
+        }
+
         break;
 
       default:
@@ -127,9 +155,6 @@ export class RawTransactionRequest extends BaseTransaction {
         this.valueWei = BigNumber.from(param.value || 0);
         break;
     }
-
-    erc20?.getBalance();
-    this.erc20 = erc20;
 
     if (param.gas || param.gasLimit) {
       runInAction(() => this.setGasLimit(param.gas || param.gasLimit || 0));

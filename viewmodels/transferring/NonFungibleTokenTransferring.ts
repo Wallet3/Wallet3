@@ -5,8 +5,8 @@ import { estimateGas, eth_call } from '../../common/RPC';
 import { Account } from '../account/Account';
 import App from '../App';
 import { BaseTransaction } from './BaseTransaction';
-import { ERC1155 } from '../../models/ERC1155';
-import { ERC721 } from '../../models/ERC721';
+import { ERC1155Token } from '../../models/ERC1155';
+import { ERC721Token } from '../../models/ERC721';
 import { Gwei_1 } from '../../common/Constants';
 import { INetwork } from '../../common/Networks';
 import { startLayoutAnimation } from '../../utils/animations';
@@ -32,8 +32,8 @@ interface IConstructor {
 
 export class NFTTransferring extends BaseTransaction {
   readonly nft: NFT;
-  readonly erc721: ERC721;
-  readonly erc1155: ERC1155;
+  readonly erc721: ERC721Token;
+  readonly erc1155: ERC1155Token;
 
   nftType: 'erc-721' | 'erc-1155' | null = null;
   erc1155Balance = BigNumber.from(0);
@@ -67,8 +67,8 @@ export class NFTTransferring extends BaseTransaction {
     super({ network: args.network, account: args.account || App.currentAccount! });
 
     this.nft = args.nft;
-    this.erc721 = new ERC721({ ...args.network, ...args.nft, owner: this.account.address });
-    this.erc1155 = new ERC1155({ ...args.network, ...args.nft, owner: this.account.address });
+    this.erc721 = new ERC721Token({ ...args.network, ...args.nft, owner: this.account.address });
+    this.erc1155 = new ERC1155Token({ ...args.network, ...args.nft, owner: this.account.address });
 
     makeObservable(this, {
       nftType: observable,
