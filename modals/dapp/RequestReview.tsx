@@ -136,7 +136,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
 
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
               <Text style={{ ...reviewItemValueStyle, marginEnd: 8, maxWidth: ReactiveScreen.width - 215 }} numberOfLines={1}>
-                {vm.erc721?.metadata?.title}
+                {vm.erc721?.metadata?.title || vm.erc721?.tokenId}
               </Text>
 
               <MultiSourceImage
@@ -230,6 +230,12 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
           <Text style={reviewItemValueStyle}>{vm.feeTokenSymbol}</Text>
 
           <MaterialIcons name="keyboard-arrow-right" size={15} color={secondaryTextColor} style={{ marginBottom: -1 }} />
+
+          {vm.type !== 'Contract Interaction' && vm.type !== 'Transfer' && vm.valueWei.gt(0) && (
+            <Text style={{ position: 'absolute', fontSize: 8, right: 19, bottom: 2, color: 'crimson', fontWeight: '500' }}>
+              {`+ ${vm.value} ${vm.network.symbol}`}
+            </Text>
+          )}
         </TouchableOpacity>
       </View>
 
