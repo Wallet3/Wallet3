@@ -10,6 +10,7 @@ import { Gwei_1 } from '../../common/Constants';
 import { INetwork } from '../../common/Networks';
 import { WCCallRequest_eth_sendTransaction } from '../../models/WCSession_v1';
 import numeral from 'numeral';
+import { showMessage } from 'react-native-flash-message';
 
 export interface SpeedupAbleSendParams extends WCCallRequest_eth_sendTransaction {
   speedUp?: boolean;
@@ -208,26 +209,30 @@ export class RawTransactionRequest extends BaseTransaction {
     );
   }
 
-  get txRequest(): providers.TransactionRequest {
-    const tx: providers.TransactionRequest = {
-      chainId: this.network.chainId,
-      from: this.param.from || this.account.address,
-      to: this.param.to,
-      data: this.param.data || '0x',
-      value: BigNumber.from(this.param.value || '0x0'),
+  get txRequest(): providers.TransactionRequest | undefined {
+    try {
+      const tx: providers.TransactionRequest = {
+        chainId: this.network.chainId,
+        from: this.param.from || this.account.address,
+        to: this.param.to,
+        data: this.param.data || '0x',
+        value: BigNumber.from(this.param.value || '0x0'),
 
-      nonce: this.nonce,
-      gasLimit: this.gasLimit,
-      type: this.network.eip1559 ? 2 : 0,
-    };
+        nonce: this.nonce,
+        gasLimit: this.gasLimit,
+        type: this.network.eip1559 ? 2 : 0,
+      };
 
-    if (tx.type === 0) {
-      tx.gasPrice = Number.parseInt((this.maxGasPrice * Gwei_1) as any);
-    } else {
-      tx.maxFeePerGas = Number.parseInt((this.maxGasPrice * Gwei_1) as any);
-      tx.maxPriorityFeePerGas = Number.parseInt((this.maxPriorityPrice * Gwei_1) as any);
+      if (tx.type === 0) {
+        tx.gasPrice = Number.parseInt((this.maxGasPrice * Gwei_1) as any);
+      } else {
+        tx.maxFeePerGas = Number.parseInt((this.maxGasPrice * Gwei_1) as any);
+        tx.maxPriorityFeePerGas = Number.parseInt((this.maxPriorityPrice * Gwei_1) as any);
+      }
+
+      return tx;
+    } catch (error) {
+      showMessage((error as any)?.message);
     }
-
-    return tx;
   }
 }

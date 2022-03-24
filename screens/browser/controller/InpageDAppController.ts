@@ -79,7 +79,7 @@ export interface InpageDAppTxRequest {
   param: WCCallRequest_eth_sendTransaction;
   account: string;
   app: { name: string; icon: string; verified: boolean };
-  approve: (obj: { pin?: string; tx: providers.TransactionRequest; readableInfo: ReadableInfo }) => Promise<boolean>;
+  approve: (obj: { pin?: string; tx?: providers.TransactionRequest; readableInfo: ReadableInfo }) => Promise<boolean>;
   reject: () => void;
 }
 

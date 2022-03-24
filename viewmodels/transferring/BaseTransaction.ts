@@ -377,8 +377,10 @@ export class BaseTransaction {
     runInAction(() => (this.feeToken = feeToken));
   }
 
-  async sendRawTx(args: { tx: providers.TransactionRequest; readableInfo?: any }, pin?: string) {
+  async sendRawTx(args: { tx?: providers.TransactionRequest; readableInfo?: any }, pin?: string) {
     const { tx, readableInfo } = args;
+
+    if (!tx) return { success: false, error: 'No transaction' };
 
     const { txHex, error } = await this.wallet.signTx({
       accountIndex: this.account.index,
