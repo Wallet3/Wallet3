@@ -1,7 +1,7 @@
+import { ActivityIndicator, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Coin, SafeViewContainer, Skeleton } from '../../components';
 import { Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import React, { useRef, useState } from 'react';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { Account } from '../../viewmodels/account/Account';
 import AccountIndicator from '../components/AccountIndicator';
@@ -185,9 +185,12 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
           <Text style={styles.reviewItemTitle}>{t('modal-review-network')}</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             {generateNetworkIcon({ ...network, width: 15, style: { marginEnd: 6 } })}
+
             <Text style={{ ...reviewItemValueStyle, color: network?.color }} numberOfLines={1}>
               {network?.network?.split(' ')?.[0]}
             </Text>
+
+            {vm.initializing ? <ActivityIndicator size="small" style={{ marginStart: 5 }} /> : undefined}
           </View>
         </View>
       </View>
