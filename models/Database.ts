@@ -1,6 +1,7 @@
 import { Connection, Repository, createConnection } from 'typeorm';
 
 import Chain from './Chain';
+import EtherscanContract from './Etherscan';
 import InpageDApp from './InpageDApp';
 import Key from './Key';
 import Transaction from './Transaction';
@@ -14,6 +15,7 @@ class Database {
   wcV1Sessions!: Repository<WCSession_v1>;
   inpageDApps!: Repository<InpageDApp>;
   chains!: Repository<Chain>;
+  etherscan_contracts!: Repository<EtherscanContract>;
 
   async init() {
     if (this._connection) return;
@@ -23,7 +25,7 @@ class Database {
       database: __DEV__ ? 'dev5' : 'appdata',
       driver: require('expo-sqlite'),
       synchronize: true,
-      entities: [Key, Transaction, WCSession_v1, InpageDApp, Chain],
+      entities: [Key, Transaction, WCSession_v1, InpageDApp, Chain, EtherscanContract],
     });
 
     this.keys = this._connection.getRepository(Key);
@@ -31,6 +33,7 @@ class Database {
     this.wcV1Sessions = this._connection.getRepository(WCSession_v1);
     this.inpageDApps = this._connection.getRepository(InpageDApp);
     this.chains = this._connection.getRepository(Chain);
+    this.etherscan_contracts = this._connection.getRepository(EtherscanContract);
   }
 
   async reset() {

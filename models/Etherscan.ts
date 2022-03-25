@@ -1,7 +1,7 @@
 import { BaseEntity, Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({ name: 'contracts' })
-export default class Contract extends BaseEntity {
+@Entity({ name: 'etherscan_contracts' })
+export default class EtherscanContract extends BaseEntity {
   @PrimaryColumn()
   contract!: string;
 
@@ -9,5 +9,8 @@ export default class Contract extends BaseEntity {
   chainId!: number;
 
   @Column({ type: 'simple-json' })
-  abi!: string;
+  abi!: any;
+
+  @Column({ type: 'text', nullable: true })
+  sourceCode?: string;
 }
