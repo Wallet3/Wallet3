@@ -25,6 +25,7 @@ import Networks from '../Networks';
 import { Wallet } from '../Wallet';
 import { getAvatar } from '../../common/ENS';
 import { showMessage } from 'react-native-flash-message';
+import { startLayoutAnimation } from '../../utils/animations';
 
 export class BaseTransaction {
   private timer?: NodeJS.Timer;
@@ -336,6 +337,8 @@ export class BaseTransaction {
     ]);
 
     runInAction(() => {
+      startLayoutAnimation();
+
       this.nextBlockBaseFeeWei = Number(nextBaseFee.toFixed(0));
 
       this.setNonce(nonce);

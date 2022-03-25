@@ -19,7 +19,16 @@ export default observer(({ initUrl, onClose }: Props) => {
 
   return (
     <View style={{ backgroundColor, width, height }}>
-      <Browser disableExtraFuncs singlePage pageId={Date.now()} initUrl={initUrl} onHome={onClose} onNewTab={onClose} />
+      <Browser
+        disableExtraFuncs
+        singlePage
+        pageId={Date.now()}
+        initUrl={initUrl}
+        onHome={onClose}
+        onNewTab={onClose}
+        disableRecordHistory
+      />
+
       {bottom > 0 && (
         <View
           useNativeDriver

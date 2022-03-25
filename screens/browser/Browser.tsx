@@ -59,6 +59,7 @@ interface Props {
   initUrl?: string;
   disableExtraFuncs?: boolean;
   singlePage?: boolean;
+  disableRecordHistory?: boolean;
 }
 
 export const Browser = observer(
@@ -77,6 +78,7 @@ export const Browser = observer(
     disableExtraFuncs,
     singlePage,
     initUrl,
+    disableRecordHistory,
   }: Props) => {
     const { t } = i18n;
     const { top } = useSafeAreaInsets();
@@ -209,7 +211,9 @@ export const Browser = observer(
         return;
       }
 
-      Bookmarks.submitHistory(goTo(addr));
+      const goneUrl = goTo(addr);
+
+      if (!disableRecordHistory) Bookmarks.submitHistory(goneUrl);
     };
 
     const onNavigationStateChange = (event: WebViewNavigation) => {
