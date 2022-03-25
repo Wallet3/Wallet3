@@ -33,34 +33,24 @@ class TxHub {
 
   async init() {
     let [minedTxs, unconfirmedTxs] = await Promise.all([
-      this.repository.find({ where: { blockNumber: MoreThan(0) }, order: { timestamp: 'DESC' }, take: 100 }),
+      this.repository.find({
+        where: { blockNumber: MoreThan(0), hash: Not(IsNull()) },
+        order: { timestamp: 'DESC' },
+        take: 100,
+      }),
       this.repository.find({ where: { blockNumber: IsNull() } }),
     ]);
 
     runInAction(() => (this.txs = minedTxs));
 
-    let confirmedTxs: Transaction[] = [];
-
-    await Promise.all(
-      unconfirmedTxs.map(async (pendingTx) => {
-        const newerTxs = await this.repository.find({
-          where: {
-            from: pendingTx.from,
-            chainId: pendingTx.chainId,
-            nonce: MoreThan(pendingTx.nonce),
-            blockNumber: Not(IsNull()),
-          },
-        });
-
-        if (newerTxs.length > 0) {
-          await pendingTx.remove();
-          confirmedTxs.push(pendingTx);
-        }
-      })
+    const abandonedTxs = unconfirmedTxs.filter(
+      (tx) => !minedTxs.find((t) => t.from === tx.from && t.chainId === tx.chainId && t.nonce >= tx.nonce)
     );
 
+    abandonedTxs.map((t) => t.remove());
+    unconfirmedTxs = unconfirmedTxs.filter((un) => !abandonedTxs.find((ab) => ab.hash === un.hash));
+
     const pendingTxs = LINQ.from(unconfirmedTxs)
-      .where((t) => !confirmedTxs.includes(t))
       .groupBy((t) => t.chainId)
       .select((g) =>
         g
@@ -79,9 +69,15 @@ class TxHub {
     clearTimeout(this.watchTimer);
 
     const confirmedTxs: Transaction[] = [];
+    const abandonedTxs: Transaction[] = [];
 
     for (let tx of this.pendingTxs) {
       const receipt = await getTransactionReceipt(tx.chainId, tx.hash);
+
+      if (this.txs.find((t) => t.from === tx.from && t.chainId === tx.chainId && t.nonce >= tx.nonce && t.blockHash)) {
+        abandonedTxs.push(tx);
+        continue;
+      }
 
       if (!receipt || receipt.status === null || !receipt.blockHash) {
         continue;
@@ -110,28 +106,35 @@ class TxHub {
         where: { from: tx.from, chainId: tx.chainId, nonce: LessThanOrEqual(tx.nonce), blockNumber: IsNull() },
       });
 
-      confirmedTxs.push(...invalidTxs);
+      abandonedTxs.push(...invalidTxs);
       await Promise.all(invalidTxs.map((t) => t.remove()));
     }
 
     if (this.pendingTxs.length > 0) this.watchTimer = setTimeout(() => this.watchPendingTxs(), 1000 * 3);
 
-    if (confirmedTxs.length === 0) return;
+    if (confirmedTxs.length === 0 && abandonedTxs.length === 0) return;
 
     runInAction(() => {
+      const newTxs = this.txs.filter((tx) => !abandonedTxs.find((t) => t.hash === tx.hash));
+      newTxs.unshift(...confirmedTxs.filter((t) => t.blockHash && !this.txs.find((t2) => t2.hash === t.hash)));
+
       startLayoutAnimation();
 
-      this.txs.unshift(...confirmedTxs.filter((t) => t.blockHash && !this.txs.find((t2) => t2.hash === t.hash)));
+      this.txs = LINQ.from(newTxs)
+        .distinct((t) => t.hash)
+        .toArray();
 
       this.pendingTxs = this.pendingTxs.filter(
         (pt) =>
-          !confirmedTxs.find((tx) => pt.hash === tx.hash) ||
+          ((pt.hash && !confirmedTxs.find((tx) => pt.hash === tx.hash)) || !abandonedTxs.find((tx) => tx.hash === pt.hash)) &&
           pt.nonce >
             LINQ.from(this.txs)
               .where((t) => t.chainId === pt.chainId)
               .take(5)
               .maxBy((i) => i.nonce).nonce
       );
+
+      abandonedTxs.map((t) => t.remove());
     });
   }
 
