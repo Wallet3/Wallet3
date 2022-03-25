@@ -29,6 +29,7 @@ import InpageDAppAddAssetModal from '../modals/InpageDAppAddAsset';
 import InpageDAppAddChain from '../modals/InpageDAppAddChain';
 import InpageDAppSendTx from '../modals/InpageDAppTxRequest';
 import InpageDAppSign from '../modals/InpageDAppSign';
+import { Keyboard } from 'react-native';
 import Loading from '../modals/views/Loading';
 import MessageKeys from '../common/MessageKeys';
 import { Modalize } from 'react-native-modalize';
@@ -541,6 +542,7 @@ export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Aut
 
       openLockScreen();
       bioAuth();
+      Keyboard.dismiss();
     });
 
     return () => {
