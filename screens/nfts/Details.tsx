@@ -117,7 +117,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
           {/* <SharedElement id={`nft.${item.id}.photo`}></SharedElement> */}
         </View>
 
-        {vm?.nftType && (
+        {vm?.nftStandard && (
           <Button
             title={t('nft-button-transfer')}
             txtStyle={{ color: dominantColor, textTransform: 'none' }}
@@ -138,7 +138,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
           />
         )}
 
-        {vm?.nftType ? (
+        {vm?.nftStandard ? (
           <View style={{ padding: 16, paddingTop: 10, paddingBottom: 6 }}>
             <Text style={{ color: detailColor, fontSize: 20, fontWeight: '600', marginBottom: 8 }}>
               {t('nft-txt-ownership')}
@@ -165,10 +165,10 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
             </View>
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 }}>
-              <Text style={{ color: primaryColor, fontWeight: '500' }}>{t('nft-txt-nft-type')}</Text>
+              <Text style={{ color: primaryColor, fontWeight: '500' }}>{t('nft-txt-nft-standard')}</Text>
               <View style={{ backgroundColor: primaryColor, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 4 }}>
                 <Text style={{ fontSize: 12, color: dominantColor, fontWeight: '600', textTransform: 'uppercase' }}>
-                  {vm.nftType}
+                  {vm.nftStandard}
                 </Text>
               </View>
             </View>

@@ -1,5 +1,6 @@
 import { Approve_ERC1155, Approve_ERC20, Approve_ERC721, Methods, RequestType, Transfer_ERC20 } from './RequestTypes';
 import { BigNumber, constants, providers, utils } from 'ethers';
+import EtherscanHub, { DecodedFunc } from '../hubs/EtherscanHub';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
 import { Account } from '../account/Account';
@@ -7,7 +8,6 @@ import { BaseTransaction } from './BaseTransaction';
 import { ERC1155Token } from '../../models/ERC1155';
 import { ERC20Token } from '../../models/ERC20';
 import { ERC721Token } from '../../models/ERC721';
-import EtherscanHub from '../hubs/EtherscanHub';
 import { Gwei_1 } from '../../common/Constants';
 import { INetwork } from '../../common/Networks';
 import { WCCallRequest_eth_sendTransaction } from '../../models/WCSession_v1';
@@ -42,7 +42,7 @@ export class RawTransactionRequest extends BaseTransaction {
   tokenDecimals = 18;
   tokenSymbol = '';
   tokenAddress = '';
-  decodedFunc = '';
+  decodedFunc: DecodedFunc | null = null;
 
   get tokenAmount() {
     try {
@@ -183,10 +183,10 @@ export class RawTransactionRequest extends BaseTransaction {
 
         if (param.data?.length <= 2) break;
 
-        const { func } = (await EtherscanHub.decodeCall(this.network, param.to, param.data)) || {};
-        if (!func) break;
+        const decodedFunc = await EtherscanHub.decodeCall(this.network, param.to, param.data);
+        if (!decodedFunc) break;
 
-        runInAction(() => (this.decodedFunc = func || ''));
+        runInAction(() => (this.decodedFunc = decodedFunc || ''));
     }
 
     if (param.gas || param.gasLimit) {

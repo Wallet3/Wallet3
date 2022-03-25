@@ -21,12 +21,18 @@ export interface AbiItem {
   type: string;
 }
 
+export interface DecodedFunc {
+  func: string;
+  fullFunc: string;
+  params: ethers.utils.Result;
+}
+
 class EtherscanHub {
   private get table() {
     return Database.etherscan_contracts;
   }
 
-  async decodeCall(network: INetwork, contractAddress: string, calldata: string) {
+  async decodeCall(network: INetwork, contractAddress: string, calldata: string): Promise<DecodedFunc | undefined> {
     if (!network.etherscanApi) return;
 
     const existOne = await this.table.findOne({ where: { contract: contractAddress, chainId: network.chainId } });
@@ -40,6 +46,7 @@ class EtherscanHub {
       entity.contract = contractAddress;
       entity.chainId = network.chainId;
       entity.abi = abi;
+      entity.lastUpdatedTimestamp = Date.now();
       entity.save();
     }
 
@@ -47,8 +54,8 @@ class EtherscanHub {
 
     for (let func of LINQ.from(contract.interface.functions)) {
       try {
-        const result = contract.interface.decodeFunctionData(func.key, calldata);
-        return { func: func.value.name, fullFunc: func.key, result };
+        const params = contract.interface.decodeFunctionData(func.key, calldata);
+        return { func: func.value.name, fullFunc: func.key, params };
       } catch (error) {}
     }
   }

@@ -71,11 +71,10 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
           </Text>
 
           <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', right: 16, bottom: 4 }}>
-            <Ionicons name="code-slash-outline" size={9} color={tintColor} />
-
-            {vm.decodedFunc ? (
-              <Text style={{ fontSize: 9, color: tintColor, fontWeight: '600', marginStart: 5 }}>{vm.decodedFunc}</Text>
-            ) : undefined}
+            {vm.decodedFunc && <Ionicons name="code-slash-outline" size={9} color={tintColor} />}
+            {vm.decodedFunc && (
+              <Text style={{ fontSize: 9, color: tintColor, fontWeight: '600', marginStart: 5 }}>{vm.decodedFunc.func}</Text>
+            )}
 
             {vm.type !== 'Contract Interaction' && vm.type !== 'Transfer' && vm.valueWei.gt(0) && (
               <Text style={{ fontSize: 9, color: tintColor, fontWeight: '600', marginStart: 3 }}>

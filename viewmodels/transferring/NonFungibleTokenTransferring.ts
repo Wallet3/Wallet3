@@ -36,7 +36,7 @@ export class NFTTransferring extends BaseTransaction {
   readonly erc721: ERC721Token;
   readonly erc1155: ERC1155Token;
 
-  nftType: 'erc-721' | 'erc-1155' | null = null;
+  nftStandard: 'erc-721' | 'erc-1155' | null = null;
   erc1155Balance = BigNumber.from(0);
   erc1155TransferAmount = 1;
 
@@ -46,7 +46,7 @@ export class NFTTransferring extends BaseTransaction {
       this.nonce >= 0 &&
       this.isValidGas &&
       this.network &&
-      this.nftType &&
+      this.nftStandard &&
       !this.insufficientFee &&
       !this.isEstimatingGas &&
       !this.txException
@@ -54,7 +54,7 @@ export class NFTTransferring extends BaseTransaction {
   }
 
   get txData() {
-    return this.nftType === 'erc-721'
+    return this.nftStandard === 'erc-721'
       ? this.erc721.encodeTransferFrom(this.account.address, this.toAddress, this.nft.tokenId)
       : this.erc1155.encodeSafeTransferFrom(
           this.account.address,
@@ -72,7 +72,7 @@ export class NFTTransferring extends BaseTransaction {
     this.erc1155 = new ERC1155Token({ ...args.network, ...args.nft, owner: this.account.address });
 
     makeObservable(this, {
-      nftType: observable,
+      nftStandard: observable,
       erc1155TransferAmount: observable,
       erc1155Balance: observable,
       isValidParams: computed,
@@ -97,7 +97,7 @@ export class NFTTransferring extends BaseTransaction {
     ) {
       runInAction(() => {
         startLayoutAnimation();
-        this.nftType = 'erc-721';
+        this.nftStandard = 'erc-721';
       });
     }
 
@@ -105,7 +105,7 @@ export class NFTTransferring extends BaseTransaction {
       if (BigNumber.from(erc1155Balance || '0').gt(0)) {
         runInAction(() => {
           startLayoutAnimation();
-          this.nftType = 'erc-1155';
+          this.nftStandard = 'erc-1155';
           this.erc1155Balance = BigNumber.from(erc1155Balance!);
         });
       }
@@ -134,7 +134,7 @@ export class NFTTransferring extends BaseTransaction {
   }
 
   async estimateGas() {
-    if (!this.nftType) return;
+    if (!this.nftStandard) return;
     if (!this.toAddress) return;
 
     runInAction(() => (this.isEstimatingGas = true));
