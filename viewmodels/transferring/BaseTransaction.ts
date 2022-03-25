@@ -185,6 +185,8 @@ export class BaseTransaction {
     this.checkToAddress();
   }
 
+  private _ensProvider?: providers.WebSocketProvider;
+
   async setTo(to?: string, avatar?: string) {
     if (to === undefined || to === null) return;
 
@@ -196,6 +198,8 @@ export class BaseTransaction {
     this.to = to;
     this.toAddress = '';
     this.txException = '';
+    this._ensProvider?.destroy();
+    this._ensProvider = undefined;
 
     if (!to) return;
 
@@ -213,11 +217,13 @@ export class BaseTransaction {
     }
 
     if (!to.endsWith('.eth') && !to.endsWith('.xyz')) return;
-    let provider = Networks.MainnetWsProvider;
+    this._ensProvider = Networks.MainnetWsProvider;
 
     this.isResolvingAddress = true;
-    const address = (await provider.resolveName(to)) || '';
-    provider.destroy();
+    const address = (await this._ensProvider.resolveName(to)) || '';
+
+    if (!this._ensProvider) return;
+    this._ensProvider?.destroy();
 
     runInAction(() => this.setToAddress(address));
 
@@ -377,8 +383,10 @@ export class BaseTransaction {
     runInAction(() => (this.feeToken = feeToken));
   }
 
-  async sendRawTx(args: { tx: providers.TransactionRequest; readableInfo?: any }, pin?: string) {
+  async sendRawTx(args: { tx?: providers.TransactionRequest; readableInfo?: any }, pin?: string) {
     const { tx, readableInfo } = args;
+
+    if (!tx) return { success: false, error: 'No transaction' };
 
     const { txHex, error } = await this.wallet.signTx({
       accountIndex: this.account.index,

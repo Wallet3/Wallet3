@@ -54,7 +54,7 @@ export default observer(({ param, chainId, approve, reject, close, account, app 
       tx: vm.txRequest,
       readableInfo: {
         type: 'dapp-interaction',
-        symbol: vm.token?.symbol,
+        symbol: vm.erc20?.symbol,
         amount: Number(vm.tokenAmount).toString(),
       },
     });

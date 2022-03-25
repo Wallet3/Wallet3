@@ -1,3 +1,5 @@
+import * as ExpoLinking from 'expo-linking';
+
 import React, { useEffect, useState } from 'react';
 
 import App from '../viewmodels/App';

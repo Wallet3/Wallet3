@@ -5,10 +5,11 @@ import { estimateGas, eth_call } from '../../common/RPC';
 import { Account } from '../account/Account';
 import App from '../App';
 import { BaseTransaction } from './BaseTransaction';
-import { ERC1155 } from '../../models/ERC1155';
-import { ERC721 } from '../../models/ERC721';
+import { ERC1155Token } from '../../models/ERC1155';
+import { ERC721Token } from '../../models/ERC721';
 import { Gwei_1 } from '../../common/Constants';
 import { INetwork } from '../../common/Networks';
+import { showMessage } from 'react-native-flash-message';
 import { startLayoutAnimation } from '../../utils/animations';
 
 export interface NFT {
@@ -32,8 +33,8 @@ interface IConstructor {
 
 export class NFTTransferring extends BaseTransaction {
   readonly nft: NFT;
-  readonly erc721: ERC721;
-  readonly erc1155: ERC1155;
+  readonly erc721: ERC721Token;
+  readonly erc1155: ERC1155Token;
 
   nftType: 'erc-721' | 'erc-1155' | null = null;
   erc1155Balance = BigNumber.from(0);
@@ -67,8 +68,8 @@ export class NFTTransferring extends BaseTransaction {
     super({ network: args.network, account: args.account || App.currentAccount! });
 
     this.nft = args.nft;
-    this.erc721 = new ERC721({ ...args.network, ...args.nft, owner: this.account.address });
-    this.erc1155 = new ERC1155({ ...args.network, ...args.nft, owner: this.account.address });
+    this.erc721 = new ERC721Token({ ...args.network, ...args.nft, owner: this.account.address });
+    this.erc1155 = new ERC1155Token({ ...args.network, ...args.nft, owner: this.account.address });
 
     makeObservable(this, {
       nftType: observable,
@@ -151,26 +152,30 @@ export class NFTTransferring extends BaseTransaction {
     });
   }
 
-  get txRequest(): providers.TransactionRequest {
-    const tx: providers.TransactionRequest = {
-      chainId: this.network.chainId,
-      from: this.account.address,
-      to: this.nft.contract,
-      value: 0,
-      nonce: this.nonce,
-      data: this.txData,
-      gasLimit: this.gasLimit,
-      type: this.network.eip1559 ? 2 : 0,
-    };
+  get txRequest(): providers.TransactionRequest | undefined {
+    try {
+      const tx: providers.TransactionRequest = {
+        chainId: this.network.chainId,
+        from: this.account.address,
+        to: this.nft.contract,
+        value: 0,
+        nonce: this.nonce,
+        data: this.txData,
+        gasLimit: this.gasLimit,
+        type: this.network.eip1559 ? 2 : 0,
+      };
 
-    if (tx.type === 0) {
-      tx.gasPrice = Number.parseInt((this.maxGasPrice * Gwei_1) as any);
-    } else {
-      tx.maxFeePerGas = Number.parseInt((this.maxGasPrice * Gwei_1) as any);
-      tx.maxPriorityFeePerGas = Number.parseInt((this.maxPriorityPrice * Gwei_1) as any);
+      if (tx.type === 0) {
+        tx.gasPrice = Number.parseInt((this.maxGasPrice * Gwei_1) as any);
+      } else {
+        tx.maxFeePerGas = Number.parseInt((this.maxGasPrice * Gwei_1) as any);
+        tx.maxPriorityFeePerGas = Number.parseInt((this.maxPriorityPrice * Gwei_1) as any);
+      }
+
+      return tx;
+    } catch (error) {
+      showMessage((error as any).message);
     }
-
-    return tx;
   }
 
   sendTx(pin?: string) {

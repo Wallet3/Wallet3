@@ -4,11 +4,11 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 import { getTransactionReceipt, sendTransaction } from '../../common/RPC';
 
 import Database from '../../models/Database';
-import Enumerable from 'linq';
 import LINQ from 'linq';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 import { showMessage } from 'react-native-flash-message';
+import { startLayoutAnimation } from '../../utils/animations';
 
 class TxHub {
   private watchTimer!: NodeJS.Timeout;
@@ -119,14 +119,18 @@ class TxHub {
     if (confirmedTxs.length === 0) return;
 
     runInAction(() => {
+      startLayoutAnimation();
+
       this.txs.unshift(...confirmedTxs.filter((t) => t.blockHash && !this.txs.find((t2) => t2.hash === t.hash)));
 
-      const latestNonce = Enumerable.from(this.txs)
-        .take(10)
-        .maxBy((i) => i.nonce).nonce;
-
       this.pendingTxs = this.pendingTxs.filter(
-        (pt) => !confirmedTxs.find((tx) => pt.hash === tx.hash) || pt.nonce > latestNonce
+        (pt) =>
+          !confirmedTxs.find((tx) => pt.hash === tx.hash) ||
+          pt.nonce >
+            LINQ.from(this.txs)
+              .where((t) => t.chainId === pt.chainId)
+              .take(5)
+              .maxBy((i) => i.nonce).nonce
       );
     });
   }
@@ -159,13 +163,11 @@ class TxHub {
         pendingTx,
         ...this.pendingTxs.filter((i) => i.nonce === pendingTx.nonce && i.chainId === pendingTx.chainId),
       ];
+      55;
 
-      const maxPriTx = Enumerable.from(sameNonces).maxBy((t) => t.gasPrice);
+      const maxPriTx = LINQ.from(sameNonces).maxBy((t) => t.gasPrice);
 
-      this.pendingTxs = [
-        maxPriTx,
-        ...this.pendingTxs.filter((t) => t.nonce !== pendingTx.nonce && t.chainId === pendingTx.chainId),
-      ];
+      this.pendingTxs = [maxPriTx, ...this.pendingTxs.filter((t) => !sameNonces.find((t2) => t2.hash === t.hash))];
     });
 
     this.watchTimer = setTimeout(() => this.watchPendingTxs(), 1000);

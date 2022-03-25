@@ -45,7 +45,7 @@ export interface ORIGINAL {
 }
 
 export interface Meta3 {
-  ORIGINAL: ORIGINAL;
+  ORIGINAL?: ORIGINAL;
 }
 
 export interface Animation {
