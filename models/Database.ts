@@ -1,10 +1,10 @@
 import { Connection, Repository, createConnection } from 'typeorm';
-import WCSession_v1, { WCSession_v1_legacy } from './WCSession_v1';
 
 import Chain from './Chain';
 import InpageDApp from './InpageDApp';
 import Key from './Key';
 import Transaction from './Transaction';
+import WCSession_v1 from './WCSession_v1';
 
 class Database {
   private _connection!: Connection;
@@ -12,7 +12,6 @@ class Database {
   keys!: Repository<Key>;
   txs!: Repository<Transaction>;
   wcV1Sessions!: Repository<WCSession_v1>;
-  wcV1Sessions_legacy!: Repository<WCSession_v1_legacy>;
   inpageDApps!: Repository<InpageDApp>;
   chains!: Repository<Chain>;
 
@@ -24,13 +23,12 @@ class Database {
       database: __DEV__ ? 'dev5' : 'appdata',
       driver: require('expo-sqlite'),
       synchronize: true,
-      entities: [Key, Transaction, WCSession_v1_legacy, WCSession_v1, InpageDApp, Chain],
+      entities: [Key, Transaction, WCSession_v1, InpageDApp, Chain],
     });
 
     this.keys = this._connection.getRepository(Key);
     this.txs = this._connection.getRepository(Transaction);
     this.wcV1Sessions = this._connection.getRepository(WCSession_v1);
-    this.wcV1Sessions_legacy = this._connection.getRepository(WCSession_v1_legacy);
     this.inpageDApps = this._connection.getRepository(InpageDApp);
     this.chains = this._connection.getRepository(Chain);
   }
