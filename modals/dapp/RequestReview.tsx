@@ -39,7 +39,7 @@ interface Props {
 const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, bioType }: Props) => {
   const { network } = vm;
   const { t } = i18n;
-  const { textColor, borderColor, secondaryTextColor } = Theme;
+  const { textColor, borderColor, secondaryTextColor, tintColor } = Theme;
 
   const [busy, setBusy] = useState(false);
 
@@ -69,6 +69,20 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
           <Text style={{ ...reviewItemValueStyle, maxWidth: '70%' }} numberOfLines={1}>
             {t(`tx-type-${vm.type.toLowerCase().replace(' ', '-')}`)}
           </Text>
+
+          <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', right: 16, bottom: 4 }}>
+            <Ionicons name="code-slash-outline" size={9} color={tintColor} />
+
+            {vm.decodedFunc ? (
+              <Text style={{ fontSize: 9, color: tintColor, fontWeight: '600', marginStart: 5 }}>{vm.decodedFunc}</Text>
+            ) : undefined}
+
+            {vm.type !== 'Contract Interaction' && vm.type !== 'Transfer' && vm.valueWei.gt(0) && (
+              <Text style={{ fontSize: 9, color: tintColor, fontWeight: '600', marginStart: 3 }}>
+                {`+ ${vm.value} ${vm.network.symbol}`}
+              </Text>
+            )}
+          </View>
         </View>
 
         {vm.type === 'Transfer' ? (
@@ -233,12 +247,6 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
           <Text style={reviewItemValueStyle}>{vm.feeTokenSymbol}</Text>
 
           <MaterialIcons name="keyboard-arrow-right" size={15} color={secondaryTextColor} style={{ marginBottom: -1 }} />
-
-          {vm.type !== 'Contract Interaction' && vm.type !== 'Transfer' && vm.valueWei.gt(0) && (
-            <Text style={{ position: 'absolute', fontSize: 8, right: 19, bottom: 2, color: 'crimson', fontWeight: '500' }}>
-              {`+ ${vm.value} ${vm.network.symbol}`}
-            </Text>
-          )}
         </TouchableOpacity>
       </View>
 

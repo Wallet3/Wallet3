@@ -7,6 +7,7 @@ import { BaseTransaction } from './BaseTransaction';
 import { ERC1155Token } from '../../models/ERC1155';
 import { ERC20Token } from '../../models/ERC20';
 import { ERC721Token } from '../../models/ERC721';
+import EtherscanHub from '../hubs/EtherscanHub';
 import { Gwei_1 } from '../../common/Constants';
 import { INetwork } from '../../common/Networks';
 import { WCCallRequest_eth_sendTransaction } from '../../models/WCSession_v1';
@@ -41,6 +42,7 @@ export class RawTransactionRequest extends BaseTransaction {
   tokenDecimals = 18;
   tokenSymbol = '';
   tokenAddress = '';
+  decodedFunc = '';
 
   get tokenAmount() {
     try {
@@ -86,6 +88,7 @@ export class RawTransactionRequest extends BaseTransaction {
       tokenDecimals: observable,
       tokenSymbol: observable,
       tokenAddress: observable,
+      decodedFunc: observable,
       isValidParams: computed,
       setERC20ApproveAmount: action,
       exceedERC20Balance: computed,
@@ -177,7 +180,13 @@ export class RawTransactionRequest extends BaseTransaction {
       default:
         this.setTo(param.to);
         this.valueWei = BigNumber.from(param.value || 0);
-        break;
+
+        if (param.data?.length <= 2) break;
+
+        const { func } = (await EtherscanHub.decodeCall(this.network, param.to, param.data)) || {};
+        if (!func) break;
+
+        runInAction(() => (this.decodedFunc = func || ''));
     }
 
     if (param.gas || param.gasLimit) {

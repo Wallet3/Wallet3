@@ -1,8 +1,10 @@
+import * as ethers from 'ethers';
+
 import Database from '../../models/Database';
 import EtherscanContract from '../../models/EtherscanContract';
 import { INetwork } from '../../common/Networks';
+import LINQ from 'linq';
 import { getAbi } from '../../common/apis/Etherscan';
-import { utils } from 'ethers';
 
 interface IO {
   name: string;
@@ -19,8 +21,8 @@ export interface AbiItem {
   type: string;
 }
 
-class Etherscan {
-  get table() {
+class EtherscanHub {
+  private get table() {
     return Database.etherscan_contracts;
   }
 
@@ -41,16 +43,15 @@ class Etherscan {
       entity.save();
     }
 
-    const functions: AbiItem[] = abi.filter((i) => i.type === 'function');
-    const contract = new utils.Interface(abi);
+    const contract = new ethers.Contract(contractAddress, abi);
 
-    for (let func of functions) {
+    for (let func of LINQ.from(contract.interface.functions)) {
       try {
-        const result = (contract.functions[func.name] as any)?.decode(calldata);
-        return { func, result };
+        const result = contract.interface.decodeFunctionData(func.key, calldata);
+        return { func: func.value.name, fullFunc: func.key, result };
       } catch (error) {}
     }
   }
 }
 
-export default new Etherscan();
+export default new EtherscanHub();
