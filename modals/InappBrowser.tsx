@@ -26,7 +26,7 @@ export default observer(({ initUrl, onClose }: Props) => {
         initUrl={initUrl}
         onHome={onClose}
         onNewTab={onClose}
-        disableRecordHistory
+        disableRecordRecentHistory
       />
 
       {bottom > 0 && (

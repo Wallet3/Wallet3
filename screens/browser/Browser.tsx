@@ -59,7 +59,7 @@ interface Props {
   initUrl?: string;
   disableExtraFuncs?: boolean;
   singlePage?: boolean;
-  disableRecordHistory?: boolean;
+  disableRecordRecentHistory?: boolean;
 }
 
 export const Browser = observer(
@@ -78,7 +78,7 @@ export const Browser = observer(
     disableExtraFuncs,
     singlePage,
     initUrl,
-    disableRecordHistory,
+    disableRecordRecentHistory,
   }: Props) => {
     const { t } = i18n;
     const { top } = useSafeAreaInsets();
@@ -191,6 +191,8 @@ export const Browser = observer(
         setUri(url);
         setWebUrl(url);
         setHostname(Linking.parse(url).hostname!);
+
+        if (!disableRecordRecentHistory) Bookmarks.submitHistory(url);
       } finally {
         addrRef.current?.blur();
       }
@@ -211,9 +213,7 @@ export const Browser = observer(
         return;
       }
 
-      const goneUrl = goTo(addr);
-
-      if (!disableRecordHistory) Bookmarks.submitHistory(goneUrl);
+      goTo(addr);
     };
 
     const onNavigationStateChange = (event: WebViewNavigation) => {
@@ -495,7 +495,7 @@ export const Browser = observer(
             onMetadataChange={(data) => {
               setPageMetadata(data);
               onPageLoaded?.(pageId, data);
-              Bookmarks.addRecentSite(data);
+              if (!disableRecordRecentHistory) Bookmarks.addRecentSite(data);
             }}
           />
         ) : (
