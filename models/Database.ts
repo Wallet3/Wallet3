@@ -1,7 +1,7 @@
 import { Connection, Repository, createConnection } from 'typeorm';
 
 import Chain from './Chain';
-import EtherscanContract from './Etherscan';
+import EtherscanContract from './EtherscanContract';
 import InpageDApp from './InpageDApp';
 import Key from './Key';
 import Transaction from './Transaction';

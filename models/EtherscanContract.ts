@@ -8,9 +8,12 @@ export default class EtherscanContract extends BaseEntity {
   @Column({ nullable: false })
   chainId!: number;
 
-  @Column({ type: 'simple-json' })
+  @Column({ type: 'simple-json', nullable: true })
   abi!: any;
 
   @Column({ type: 'text', nullable: true })
   sourceCode?: string;
+
+  @Column({ default: 0 })
+  lastUpdatedTimestamp!: number;
 }
