@@ -36,7 +36,7 @@ interface Props {
 const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biometricType }: Props) => {
   const { t } = i18n;
   const [busy, setBusy] = React.useState(false);
-  const { borderColor, textColor, isLightMode, tintColor, secondaryTextColor } = Theme;
+  const { borderColor, textColor, secondaryTextColor } = Theme;
 
   const send = async () => {
     setBusy(true);
@@ -125,7 +125,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
                 color: vm.hasZWSP || vm.isContractRecipient ? (vm.isContractWallet ? 'dodgerblue' : 'crimson') : textColor,
               }}
             >
-              {utils.isAddress(vm.to) ? formatAddress(vm.to, 8, 6) : formatAddress(vm.safeTo, 14, 6, '...')}
+              {utils.isAddress(vm.to) ? formatAddress(vm.toAddress, 8, 6) : formatAddress(vm.safeTo, 14, 6, '...')}
             </Text>
           </View>
         </View>
