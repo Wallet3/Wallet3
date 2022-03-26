@@ -396,7 +396,7 @@ export const Browser = observer(
                 borderBottomColor: borderColor,
               }}
             >
-              {PopularDApps.concat(favs.slice(0, 24 - PopularDApps.length)).map((item, i) => (
+              {PopularDApps.concat(uri ? favs.slice(0, 24 - PopularDApps.length) : []).map((item, i) => (
                 <TouchableOpacity
                   style={{ margin: 8 }}
                   key={`${item.url}-${i}`}
