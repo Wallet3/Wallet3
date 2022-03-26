@@ -48,6 +48,7 @@
   "nft-txt-attributes": "Attributes",
   "nft-txt-web3": "Links",
   "browser-enter-address": "enter an address",
+  "browser-enter-address-tip": "Enter an address to explore web3",
   "browser-popular-dapps": "Popular DApps",
   "browser-favorites": "Favorites",
   "qrscan-title": "Scan",

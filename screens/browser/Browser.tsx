@@ -1,7 +1,9 @@
+import * as Animatable from 'react-native-animatable';
 import * as Linking from 'expo-linking';
 
 import Bookmarks, { Bookmark, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
 import { BottomTabNavigationProp, BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { BreathAnimation, startLayoutAnimation } from '../../utils/animations';
 import { Dimensions, ListRenderItemInfo, Share, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { EvilIcons, Ionicons } from '@expo/vector-icons';
 import { NullableImage, SafeViewContainer } from '../../components';
@@ -12,6 +14,7 @@ import { WebView, WebViewNavigation } from 'react-native-webview';
 import { renderBookmarkItem, renderUserBookmarkItem } from './components/BookmarkItem';
 import { secureColor, thirdFontColor } from '../../constants/styles';
 
+import AnimatedLottieView from 'lottie-react-native';
 import { Bar } from 'react-native-progress';
 import Collapsible from 'react-native-collapsible';
 import { FlatGrid } from 'react-native-super-grid';
@@ -29,7 +32,6 @@ import ViewShot from 'react-native-view-shot';
 import i18n from '../../i18n';
 import { isURL } from '../../utils/url';
 import { observer } from 'mobx-react-lite';
-import { startLayoutAnimation } from '../../utils/animations';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 const calcIconSize = () => {
@@ -500,23 +502,31 @@ export const Browser = observer(
           />
         ) : (
           <View style={{ flex: 1 }}>
-            {disableExtraFuncs ? undefined : (
-              <Text style={{ marginHorizontal: 16, marginTop: 12, color: textColor }}>{t('browser-popular-dapps')}</Text>
-            )}
-
-            {disableExtraFuncs ? undefined : (
-              <FlatGrid
-                style={{ marginTop: 2, padding: 0, paddingBottom: 36 }}
-                contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: 8, paddingTop: 2 }}
-                itemDimension={LargeIconSize + 8}
-                showsVerticalScrollIndicator={false}
-                bounces={false}
-                data={PopularDApps}
-                itemContainerStyle={{ padding: 0, margin: 0, marginBottom: 4 }}
-                spacing={8}
-                keyExtractor={(v, index) => `${v.url}-${index}`}
-                renderItem={renderItem}
-              />
+            {favs.length === 0 && !disableExtraFuncs && (
+              <View
+                style={{
+                  position: 'absolute',
+                  left: ReactiveScreen.width / 2 - 182,
+                  marginTop: 4,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <Animatable.View
+                  animation={BreathAnimation}
+                  iterationCount="infinite"
+                  duration={4000}
+                  style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}
+                >
+                  <Ionicons name="arrow-up" color={textColor} size={16} style={{ marginEnd: 8 }} />
+                  <Text>{t('browser-enter-address-tip')}</Text>
+                </Animatable.View>
+                <AnimatedLottieView
+                  source={require('../../assets/animations/web-dev.json')}
+                  autoPlay
+                  style={{ width: 300, height: 300 }}
+                />
+              </View>
             )}
 
             {disableExtraFuncs ? undefined : favs.length > 0 ? (

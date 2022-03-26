@@ -48,6 +48,7 @@
   "nft-txt-attributes": "属性",
   "nft-txt-web3": "链接",
   "browser-enter-address": "输入网址",
+  "browser-enter-address-tip": "输入网址来探索 Web3 吧",
   "browser-popular-dapps": "顶级 DApps",
   "browser-favorites": "收藏",
   "qrscan-title": "扫描二维码",
