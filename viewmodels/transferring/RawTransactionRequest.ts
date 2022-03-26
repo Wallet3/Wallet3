@@ -181,7 +181,7 @@ export class RawTransactionRequest extends BaseTransaction {
         this.setTo(param.to);
         this.valueWei = BigNumber.from(param.value || 0);
 
-        if (param.data?.length <= 2) break;
+        if (param.data?.length < 10) break;
 
         const decodedFunc = await EtherscanHub.decodeCall(this.network, param.to, param.data);
         if (!decodedFunc) break;
