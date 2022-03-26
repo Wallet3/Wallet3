@@ -387,37 +387,35 @@ export const Browser = observer(
               ))}
             </View>
 
-            {uri ? (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  flexWrap: 'wrap',
-                  padding: 8,
-                  borderBottomWidth: 1,
-                  borderBottomColor: borderColor,
-                }}
-              >
-                {PopularDApps.concat(favs.slice(0, 24 - PopularDApps.length)).map((item, i) => (
-                  <TouchableOpacity
-                    style={{ margin: 8 }}
-                    key={`${item.url}-${i}`}
-                    onPress={(e) => {
-                      e.preventDefault();
-                      goTo(item.url);
-                    }}
-                  >
-                    <NullableImage
-                      uri={item.icon}
-                      imageBackgroundColor={backgroundColor}
-                      imageRadius={3}
-                      size={smallIconSize}
-                      text={item.title}
-                      fontSize={12}
-                    />
-                  </TouchableOpacity>
-                ))}
-              </View>
-            ) : undefined}
+            <View
+              style={{
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                padding: 8,
+                borderBottomWidth: 1,
+                borderBottomColor: borderColor,
+              }}
+            >
+              {PopularDApps.concat(favs.slice(0, 24 - PopularDApps.length)).map((item, i) => (
+                <TouchableOpacity
+                  style={{ margin: 8 }}
+                  key={`${item.url}-${i}`}
+                  onPress={(e) => {
+                    e.preventDefault();
+                    goTo(item.url);
+                  }}
+                >
+                  <NullableImage
+                    uri={item.icon}
+                    imageBackgroundColor={backgroundColor}
+                    imageRadius={3}
+                    size={smallIconSize}
+                    text={item.title}
+                    fontSize={12}
+                  />
+                </TouchableOpacity>
+              ))}
+            </View>
 
             {disableExtraFuncs ? undefined : (
               <View style={{ flexDirection: 'row', paddingHorizontal: 0 }}>
