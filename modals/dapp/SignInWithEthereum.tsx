@@ -11,6 +11,7 @@ import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import styles from '../styles';
 
 interface Props {
   rawMsg: string;
@@ -67,24 +68,21 @@ export default observer(({ metadata, siwe, account, rawMsg }: Props) => {
 
           {consistent ? (
             <View style={{ alignItems: 'center' }}>
-              <Text
-                style={{ ...styles.text, fontSize: 16, fontWeight: '500', color: foregroundColor, textAlign: 'center' }}
-                numberOfLines={2}
-              >
+              <Text style={{ fontSize: 16, fontWeight: '500', color: foregroundColor, textAlign: 'center' }} numberOfLines={2}>
                 {t('modal-siwe-request-msg', { domain: siwe.domain })}
               </Text>
 
-              <Text style={{ ...styles.text, fontSize: 12, marginTop: 12, color: secondaryTextColor }}>{siwe.statement}</Text>
+              <Text style={{ fontSize: 12, marginTop: 12, color: secondaryTextColor }}>{siwe.statement}</Text>
             </View>
           ) : (
             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-              <Text style={{ ...styles.text, color: '#aaaaaac0', fontWeight: '500', fontSize: 12 }} numberOfLines={1}>
+              <Text style={{ color: '#aaaaaac0', fontWeight: '500', fontSize: 12 }} numberOfLines={1}>
                 {t('modal-siwe-request-msg', { domain: siwe.domain })}
               </Text>
 
               <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginTop: 8, paddingHorizontal: 8 }}>
                 <Ionicons name="warning" color={'crimson'} size={15} style={{ marginEnd: 4, marginTop: 2 }} />
-                <Text numberOfLines={2} style={{ ...styles.text, fontSize: 16, color: 'crimson', fontWeight: '500' }}>
+                <Text numberOfLines={2} style={{ fontSize: 16, color: 'crimson', fontWeight: '500' }}>
                   {t('modal-siwe-warning-not-match', { domain: siwe.domain, origin: metadata?.origin })}
                 </Text>
               </View>
@@ -115,11 +113,8 @@ export default observer(({ metadata, siwe, account, rawMsg }: Props) => {
       <View style={{ width: '100%', height: '100%' }}>
         <View
           style={{
-            paddingBottom: 5,
-            borderBottomWidth: 1,
+            ...styles.modalTitleContainer,
             borderBottomColor: borderColor,
-            flexDirection: 'row',
-            alignItems: 'center',
           }}
         >
           <FontAwesome5 name="ethereum" size={24} color={consistent ? tintColor : 'crimson'} />
@@ -139,10 +134,4 @@ export default observer(({ metadata, siwe, account, rawMsg }: Props) => {
       </View>
     </Swiper>
   );
-});
-
-const styles = StyleSheet.create({
-  text: {
-    fontSize: 15,
-  },
 });

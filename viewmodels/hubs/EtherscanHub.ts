@@ -24,6 +24,8 @@ export interface AbiItem {
 export interface DecodedFunc {
   func: string;
   fullFunc: string;
+  methodID: string;
+  inputs: ethers.utils.ParamType[];
   params: ethers.utils.Result;
 }
 
@@ -55,7 +57,9 @@ class EtherscanHub {
     for (let func of LINQ.from(contract.interface.functions)) {
       try {
         const params = contract.interface.decodeFunctionData(func.key, calldata);
-        return { func: func.value.name, fullFunc: func.key, params };
+        const fullFunc = `${func.value.name}(${func.value.inputs.map((i) => `${i.type} ${i.name}`).join(', ')})`;
+
+        return { func: func.value.name, fullFunc, inputs: func.value.inputs, params, methodID: calldata.substring(0, 10) };
       } catch (error) {}
     }
   }

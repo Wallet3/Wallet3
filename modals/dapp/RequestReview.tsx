@@ -10,6 +10,7 @@ import { BioType } from '../../viewmodels/Authentication';
 import Currency from '../../viewmodels/settings/Currency';
 import { DecodedFunc } from '../../viewmodels/hubs/EtherscanHub';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';
+import FuncReview from '../views/FuncReview';
 import GasReview from '../views/GasReview';
 import Image from 'react-native-fast-image';
 import InsufficientFee from '../components/InsufficientFee';
@@ -72,7 +73,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, onDecodedFuncP
           <TouchableOpacity
             disabled={!vm.decodedFunc}
             onPress={() => (vm.decodedFunc ? onDecodedFuncPress?.(vm.decodedFunc) : undefined)}
-            style={{ maxWidth: '72%' }}
+            style={{ maxWidth: '72%', marginTop: -8, paddingTop: 8 }}
           >
             <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>
               {t(`tx-type-${vm.type.toLowerCase().replace(' ', '-')}`)}
@@ -298,19 +299,29 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, onDecodedFuncP
 export default observer((props: Props) => {
   const swiper = useRef<Swiper>(null);
   const [type, setType] = useState<'gas' | 'func'>('gas');
+  const [decodedFunc, setDecodedFunc] = useState<DecodedFunc>();
 
   const swipeTo = (type: 'gas' | 'func') => {
     setType(type);
     setTimeout(() => swiper.current?.scrollTo(1), 10);
   };
 
+  const goBack = () => swiper.current?.scrollTo(0);
+
   return (
     <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
-      <TxReview {...props} onGasPress={() => swipeTo('gas')} />
+      <TxReview
+        {...props}
+        onGasPress={() => swipeTo('gas')}
+        onDecodedFuncPress={(func) => {
+          setDecodedFunc(func);
+          swipeTo('func');
+        }}
+      />
 
-      {type === 'gas' && (
-        <GasReview onBack={() => swiper.current?.scrollTo(0)} vm={props.vm} themeColor={props.vm.network.color} />
-      )}
+      {type === 'gas' && <GasReview onBack={goBack} vm={props.vm} themeColor={props.vm.network.color} />}
+
+      {type === 'func' && <FuncReview onBack={goBack} themeColor={props.vm.network.color} decodedFunc={decodedFunc} />}
     </Swiper>
   );
 });

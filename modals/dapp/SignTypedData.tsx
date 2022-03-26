@@ -14,6 +14,7 @@ import Theme from '../../viewmodels/settings/Theme';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import styles from '../styles';
 import { utils } from 'ethers';
 
 interface Props {
@@ -123,15 +124,11 @@ export default observer(({ themeColor, data, onReject, onSign, account, bioType 
     <SafeViewContainer style={{ flex: 1 }}>
       <View
         style={{
-          paddingBottom: 5,
-          borderBottomWidth: 1,
+          ...styles.modalTitleContainer,
           borderBottomColor: borderColor,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
         }}
       >
-        <Text style={{ fontSize: 21, color: themeColor, fontWeight: '500' }}>{t('modal-message-signing-title')}</Text>
+        <Text style={{ ...styles.modalTitle, color: themeColor }}>{t('modal-message-signing-title')}</Text>
 
         {account ? <AccountIndicator account={account} /> : undefined}
       </View>
