@@ -17,7 +17,7 @@ interface Props {
 }
 
 export default observer(({ onBack, decodedFunc, themeColor }: Props) => {
-  const { borderColor, thirdTextColor } = Theme;
+  const { borderColor, thirdTextColor, isLightMode } = Theme;
 
   const txtStyle = { color: thirdTextColor };
   const tableHeaderTxtStyle: any = { ...txtStyle, fontSize: 12, fontWeight: '600' };
@@ -41,9 +41,16 @@ export default observer(({ onBack, decodedFunc, themeColor }: Props) => {
       </View>
 
       <ScrollView
-        style={{ flex: 1, borderWidth: 1, borderColor, borderRadius: 10, marginBottom: 12 }}
         bounces={false}
         contentContainerStyle={{ padding: 10, paddingVertical: 8 }}
+        style={{
+          flex: 1,
+          borderWidth: 1,
+          borderColor,
+          borderRadius: 10,
+          marginBottom: 12,
+          backgroundColor: isLightMode ? '#f9f9f9a0' : undefined,
+        }}
       >
         <Text style={txtStyle}>{t('modal-func-review-function')}:</Text>
         <Text style={{ ...txtStyle, marginTop: 2 }}>{`${decodedFunc?.fullFunc}`}</Text>
@@ -64,10 +71,10 @@ export default observer(({ onBack, decodedFunc, themeColor }: Props) => {
           return (
             <View
               key={`${index}_${input.name}`}
-              style={{ flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#cccccc2f', paddingVertical: 4 }}
+              style={{ flexDirection: 'row', borderTopWidth: 1, borderTopColor: borderColor, paddingVertical: 4 }}
             >
               <Text style={{ ...txtStyle, width: 24 }}>{index}</Text>
-              <Text style={{ ...txtStyle, width: 72, paddingEnd: 10 }} numberOfLines={1}>
+              <Text style={{ ...txtStyle, width: 72, paddingEnd: 10 }} ellipsizeMode="middle" numberOfLines={1}>
                 {input.name}
               </Text>
               <Text style={{ ...txtStyle, width: 72, paddingEnd: 10 }} numberOfLines={1}>

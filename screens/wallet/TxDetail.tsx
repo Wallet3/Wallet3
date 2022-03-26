@@ -142,6 +142,7 @@ export default observer(({ tx, close }: { tx?: Transaction; close?: Function }) 
       <View style={{ ...styles.itemContainer, flexDirection: 'column' }}>
         <Text style={styles.txt}>{t('modal-tx-details-data')}:</Text>
         <Text style={{ ...styles.txt, maxWidth: '100%' }} numberOfLines={5}>
+          {tx?.readableInfo?.decodedFunc ? `${tx.readableInfo.decodedFunc}\n\n` : undefined}
           {tx?.data}
         </Text>
       </View>

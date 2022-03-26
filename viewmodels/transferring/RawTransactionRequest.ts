@@ -43,6 +43,7 @@ export class RawTransactionRequest extends BaseTransaction {
   tokenSymbol = '';
   tokenAddress = '';
   decodedFunc: DecodedFunc | null = null;
+  decodingFunc = false;
 
   get tokenAmount() {
     try {
@@ -183,10 +184,14 @@ export class RawTransactionRequest extends BaseTransaction {
 
         if (param.data?.length < 10) break;
 
+        this.decodingFunc = true;
         const decodedFunc = await EtherscanHub.decodeCall(this.network, param.to, param.data);
         if (!decodedFunc) break;
 
-        runInAction(() => (this.decodedFunc = decodedFunc || ''));
+        runInAction(() => {
+          this.decodedFunc = decodedFunc || '';
+          this.decodingFunc = false;
+        });
     }
 
     if (param.gas || param.gasLimit) {

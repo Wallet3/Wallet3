@@ -55,7 +55,7 @@ export default class Transaction extends BaseEntity {
   readableInfo: { type: 'transfer'; dapp?: string; icon?: string; cancelTx?: boolean } & any;
 }
 
-export interface TransferInfo {
+interface TransferInfo {
   symbol?: string;
   recipient?: string;
   amountWei?: string;
@@ -63,12 +63,16 @@ export interface TransferInfo {
   amount?: string;
 }
 
-export interface DAppInteraction {
+interface DAppInteraction {
   dapp: string;
   icon?: string;
 }
 
-export type ReadableInfo = { type: 'transfer' | 'dapp-interaction' } & (TransferInfo | DAppInteraction);
+interface ExtraInfo {
+  decodedFunc?: string;
+}
+
+export type ReadableInfo = { type: 'transfer' | 'dapp-interaction' } & ExtraInfo & (TransferInfo | DAppInteraction);
 
 export interface ITransaction extends providers.TransactionRequest {
   hash?: string;

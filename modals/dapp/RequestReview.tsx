@@ -91,6 +91,8 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, onDecodedFuncP
             </View>
 
             <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', right: 0, bottom: -11.5 }}>
+              {vm.decodingFunc && <Skeleton style={{ height: 9, width: 72 }} />}
+
               {vm.decodedFunc && <Ionicons name="code-slash-outline" size={9} color={vm.network.color} />}
               {vm.decodedFunc && (
                 <Text style={{ fontSize: 9, color: vm.network.color, fontWeight: '600', marginStart: 5 }}>
