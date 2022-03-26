@@ -3,8 +3,16 @@ export const pinEncryptKey = '';
 export const OpenseaApiKey = '';
 
 export const etherscanApiKeys: { [chainId: number]: string[] } = {
-  1: [''],
-  10: [''],
-  42161: [''],
-  137: [''],
+  1: [],
+  10: [], // optimism
+  42161: [], // arbitrum
+  137: [],
+  56: [],
+  1313161554: [],
+
+  250: [], // fantom
+  43114: [], // avalanche
+  1285: [], // Moonriver
+  1284: [], // Moonbeam
+  128: [],
 };
