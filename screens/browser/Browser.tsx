@@ -516,8 +516,8 @@ export const Browser = observer(
                   duration={4000}
                   style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}
                 >
-                  <Ionicons name="arrow-up" color={textColor} size={16} style={{ marginEnd: 8 }} />
-                  <Text>{t('browser-enter-address-tip')}</Text>
+                  <Ionicons name="arrow-up" color="#70d44b" size={16} style={{ marginEnd: 8 }} />
+                  <Text style={{ color: '#70d44b' }}>{t('browser-enter-address-tip')}</Text>
                 </Animatable.View>
                 <AnimatedLottieView
                   source={require('../../assets/animations/web-dev.json')}
