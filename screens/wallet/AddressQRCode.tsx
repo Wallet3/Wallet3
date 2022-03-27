@@ -46,6 +46,7 @@ export default observer(({ account }: { account?: Account }) => {
               emoji={account?.emojiAvatar}
               emojiMarginStart={1}
               emojiMarginTop={1}
+              emojiSize={11}
               backgroundColor={account?.emojiColor}
             />
 
