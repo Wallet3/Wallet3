@@ -29,6 +29,7 @@ export default observer(({ vm, onNext, themeColor, close }: Props) => {
   return (
     <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
       <AmountPad
+        account={vm.currentAccount}
         onNext={onNext}
         disableBack
         close={close}

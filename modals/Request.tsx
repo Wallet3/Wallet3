@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+import { Account } from '../viewmodels/account/Account';
 import App from '../viewmodels/App';
 import { NFCPad } from './views';
 import Networks from '../viewmodels/Networks';

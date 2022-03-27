@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { numericFontFamily, secondaryFontColor } from '../../constants/styles';
 
+import { Account } from '../../viewmodels/account/Account';
+import Avatar from '../../components/Avatar';
 import BackButton from '../components/BackButton';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/Tokens';
@@ -33,12 +35,13 @@ interface SubViewProps {
   themeColor?: string;
   initValue?: string;
   network: INetwork;
+  account?: Account;
 }
 
 export default observer((props: SubViewProps) => {
   const { t } = i18n;
   const [amount, setAmount] = useState(props.initValue ?? '0');
-  const { tintColor, borderColor, isLightMode, mode } = Theme;
+  const { tintColor, borderColor, isLightMode, mode, thirdTextColor } = Theme;
 
   const onNumPress = (num: string) => {
     if (num === '.') {
@@ -79,8 +82,16 @@ export default observer((props: SubViewProps) => {
                 props.close?.();
               }}
             >
-              <MaterialIcons name="qr-code-2" color={props.themeColor} size={20} />
-              <Text style={{ marginStart: 5, color: props.themeColor, fontWeight: '500' }}>{t('profile-my-qrcode')}</Text>
+              <Avatar
+                size={22}
+                backgroundColor={props.account?.emojiColor}
+                emoji={props.account?.emojiAvatar}
+                uri={props.account?.avatar}
+                emojiSize={9}
+              />
+              <Text style={{ marginStart: 8, color: thirdTextColor }}>
+                {t('profile-my-qrcode') || props.account?.miniDisplayName}
+              </Text>
             </TouchableOpacity>
           ) : (
             <View />
