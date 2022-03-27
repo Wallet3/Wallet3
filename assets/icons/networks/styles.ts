@@ -141,7 +141,7 @@ export default StyleSheet.create({
     opacity: 0.5,
   },
 
-  moonrivier: {
+  moonriver: {
     marginTop: -36,
     marginEnd: -7,
     alignSelf: 'flex-end',

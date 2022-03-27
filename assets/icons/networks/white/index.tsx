@@ -14,7 +14,7 @@ import Heco from './heco.svg';
 import Klaytn from './klaytn.svg';
 import Metis from './metis.svg';
 import Moonbeam from './moonbeam.svg';
-import Moonrivier from './moonriver.svg';
+import Moonriver from './moonriver.svg';
 import OKEx from './okex.svg';
 import Optimism from './optimism.svg';
 import Polygon from './polygon.svg';
@@ -47,7 +47,7 @@ export default {
   8217: <Klaytn width={37} height={37} style={styles.klaytn} />,
   2152: <Findora width={42} height={42} style={styles.findora} />,
   1284: <Moonbeam width={42} height={42} style={styles.moonbeam} />,
-  1285: <Moonrivier width={42} height={42} style={styles.moonrivier} />,
+  1285: <Moonriver width={42} height={42} style={styles.moonriver} />,
   122: <Fuse width={32} height={32} style={styles.fuse} />,
   336: <Shiden width={40} height={40} style={styles.shiden} />,
 };

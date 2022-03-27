@@ -235,6 +235,8 @@ export default {
   1666600000: <Harmony width={52} height={52} style={{ ...styles.harmony, opacity: 1 }} />,
   2020: <Ronin width={40} height={40} style={{ ...styles.ronin, opacity: 1 }} />,
   280: <ZKSync width={49} height={49} style={{ ...styles.zkSync, opacity: 1 }} />,
+  1284: <Moonbeam width={42} height={42} style={{ ...styles.moonbeam, opacity: 1 }} />,
+  1285: <Moonriver width={42} height={42} style={{ ...styles.moonriver, opacity: 1 }} />,
   122: <Fuse width={32} height={32} style={{ ...styles.fuse, opacity: 1 }} />,
   336: <Shiden width={40} height={40} style={{ ...styles.shiden, opacity: 1 }} />,
 };
