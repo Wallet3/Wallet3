@@ -12,7 +12,7 @@ import { TransferRequesting } from '../viewmodels/transferring/TransferRequestin
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
 
-export default observer(() => {
+export default observer((props: { close?: () => void }) => {
   const swiper = useRef<Swiper>(null);
   const [vm] = useState(new TransferRequesting(Networks.current));
 
@@ -30,7 +30,7 @@ export default observer(() => {
         removeClippedSubviews
         style={{ overflow: 'hidden' }}
       >
-        <RequestAmount onNext={() => swiper.current?.scrollTo(1)} vm={vm} themeColor={tintColor} />
+        <RequestAmount {...props} onNext={() => swiper.current?.scrollTo(1)} vm={vm} themeColor={tintColor} />
         <NFCPad onBack={() => swiper.current?.scrollTo(0)} vm={vm} themeColor={tintColor} />
       </Swiper>
     </SafeAreaProvider>

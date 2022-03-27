@@ -105,6 +105,7 @@
   "profile-accounts": "ソーシャルアカウント",
   "profile-addresses": "アドレス",
   "profile-more-records": "他のレコード",
+  "profile-my-qrcode": "マイQRCode",
   "modal-multi-accounts-title": "アカウント",
   "modal-multi-accounts-remove-account-desc": "このアカウントを削除してよいのですか？\n{{addr}}",
   "modal-multi-accounts-button-create-account": "アカウントの新規作成",

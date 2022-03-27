@@ -9,11 +9,12 @@ import { observer } from 'mobx-react-lite';
 
 interface Props {
   onNext?: () => void;
+  close?: () => void;
   vm: TransferRequesting;
   themeColor: string;
 }
 
-export default observer(({ vm, onNext, themeColor }: Props) => {
+export default observer(({ vm, onNext, themeColor, close }: Props) => {
   const swiper = useRef<Swiper>(null);
 
   const selectToken = (token: IToken) => {
@@ -30,6 +31,8 @@ export default observer(({ vm, onNext, themeColor }: Props) => {
       <AmountPad
         onNext={onNext}
         disableBack
+        close={close}
+        showMyQRCodeButton
         onTokenPress={() => swiper.current?.scrollTo(1)}
         token={vm.token!}
         onNumChanged={setAmount}

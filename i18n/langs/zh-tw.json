@@ -105,6 +105,7 @@
   "profile-accounts": "社交賬號",
   "profile-addresses": "地址",
   "profile-more-records": "其它",
+  "profile-my-qrcode": "我的地址",
   "modal-multi-accounts-title": "賬戶",
   "modal-multi-accounts-remove-account-desc": "確定刪除該賬戶？\n{{addr}}",
   "modal-multi-accounts-button-create-account": "創建新賬戶",
