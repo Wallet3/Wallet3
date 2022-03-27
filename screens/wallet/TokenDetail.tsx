@@ -69,8 +69,8 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
             >
               {`$ ${vm?.price.toFixed(2)} (${
                 (vm?.priceChangePercentIn24 || 0) > 0
-                  ? '+' + vm?.priceChangePercentIn24.toFixed(2)
-                  : vm?.priceChangePercentIn24.toFixed(2)
+                  ? '+' + (vm?.priceChangePercentIn24 || 0).toFixed(2)
+                  : (vm?.priceChangePercentIn24 || 0).toFixed(2)
               }% 24h)`}
             </Text>
           )}
