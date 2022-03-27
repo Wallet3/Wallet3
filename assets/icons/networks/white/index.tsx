@@ -20,6 +20,7 @@ import Optimism from './optimism.svg';
 import Polygon from './polygon.svg';
 import React from 'react';
 import Ronin from './ronin.svg';
+import Shiden from './shiden.svg';
 import XDai from './xdai.svg';
 import ZkSync from './zksync.svg';
 import styles from '../styles';
@@ -47,5 +48,6 @@ export default {
   2152: <Findora width={42} height={42} style={styles.findora} />,
   1284: <Moonbeam width={42} height={42} style={styles.moonbeam} />,
   1285: <Moonrivier width={42} height={42} style={styles.moonrivier} />,
-  122: <Fuse width={40} height={40} style={styles.fuse} />,
+  122: <Fuse width={32} height={32} style={styles.fuse} />,
+  336: <Shiden width={40} height={40} style={styles.shiden} />,
 };

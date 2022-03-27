@@ -89,7 +89,7 @@ export default observer((props: SubViewProps) => {
                 uri={props.account?.avatar}
                 emojiSize={9}
               />
-              <Text style={{ marginStart: 8, color: thirdTextColor }}>
+              <Text style={{ marginStart: 8, color: thirdTextColor, marginBottom: -1 }}>
                 {t('profile-my-qrcode') || props.account?.miniDisplayName}
               </Text>
             </TouchableOpacity>

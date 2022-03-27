@@ -26,6 +26,7 @@ import Optimism from './optimism.svg';
 import Polygon from './polygon.svg';
 import React from 'react';
 import Ronin from './ronin.svg';
+import Shiden from './shiden.svg';
 import XDai from './xdai.svg';
 import ZKSync from './zksync.svg';
 import coins from '../../crypto';
@@ -104,6 +105,8 @@ const FINDORA = generateNetworkIcon({ chainId: 2152, width: 32, height: 32 });
 const METIS = generateNetworkIcon({ chainId: 1088, width: 42, style: { marginVertical: -5, marginStart: -4 } });
 const FUSE = generateNetworkIcon({ chainId: 122, width: 28, height: 32 });
 
+const SHIDEN = generateNetworkIcon({ chainId: 336, width: 22, height: 32 });
+
 export const NetworkIcons = {
   1: ETH,
   42161: ARB,
@@ -129,6 +132,8 @@ export const NetworkIcons = {
   2152: FINDORA,
   1088: METIS,
   122: FUSE,
+
+  336: SHIDEN,
 };
 
 export function generateNetworkIcon(props: {
@@ -201,6 +206,8 @@ export function generateNetworkIcon(props: {
       );
     case 122:
       return <Fuse key={chainId} width={width} height={height ?? width} style={style} />;
+    case 336:
+      return <Shiden key={chainId} width={width} height={height ?? width} style={style} />;
     default:
       return coins[symbol?.toLowerCase() || ''] ? (
         <Coin symbol={symbol} size={height ?? width} address="" chainId={chainId} style={style as any} />
@@ -228,4 +235,6 @@ export default {
   1666600000: <Harmony width={52} height={52} style={{ ...styles.harmony, opacity: 1 }} />,
   2020: <Ronin width={40} height={40} style={{ ...styles.ronin, opacity: 1 }} />,
   280: <ZKSync width={49} height={49} style={{ ...styles.zkSync, opacity: 1 }} />,
+  122: <Fuse width={32} height={32} style={{ ...styles.fuse, opacity: 1 }} />,
+  336: <Shiden width={40} height={40} style={{ ...styles.shiden, opacity: 1 }} />,
 };
