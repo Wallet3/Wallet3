@@ -52,6 +52,7 @@ class MetamaskDAppsHub {
     const item = this.dapps.find((dapp) => dapp.hostname === hostname);
     if (!item) return undefined;
 
+    item.setLastUsedTimestamp(Date.now());
     this.cache.set(hostname, item);
     return item;
   }
@@ -68,6 +69,8 @@ class MetamaskDAppsHub {
   }
 
   reset() {
+    this.dapps.forEach((dapp) => dapp.removeAllListeners());
+
     this.dapps = [];
     this.cache.clear();
   }
