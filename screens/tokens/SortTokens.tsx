@@ -66,8 +66,11 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
     <DraggableToken
       chainId={current.chainId}
       {...props}
-      onValueChange={() => currentAccount?.tokens.toggleToken(props.item)}
       textColor={textColor}
+      onValueChange={() => {
+        currentAccount?.tokens.toggleToken(props.item);
+        setData(currentAccount!.tokens.allTokens);
+      }}
     />
   );
 

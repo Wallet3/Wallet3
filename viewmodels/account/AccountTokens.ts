@@ -4,8 +4,10 @@ import TokensMan, { UserToken } from '../services/TokensMan';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import { ERC20Token } from '../../models/ERC20';
+import LINQ from 'linq';
 import { NativeToken } from '../../models/NativeToken';
 import Networks from '../Networks';
+import { startLayoutAnimation } from '../../utils/animations';
 import { utils } from 'ethers';
 
 export class AccountTokens {
@@ -112,6 +114,14 @@ export class AccountTokens {
 
   toggleToken(token: UserToken) {
     token.shown = !token.shown;
+
+    startLayoutAnimation();
+
+    this.allTokens = [
+      ...this.allTokens.filter((t) => t.shown && t.address !== token.address),
+      token,
+      ...this.allTokens.filter((t) => !t.shown && t.address !== token.address),
+    ];
 
     this.tokens = [this.tokens[0], ...this.allTokens.filter((t) => t.shown)];
     if (token.shown) (token as ERC20Token).getBalance?.();
