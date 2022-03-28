@@ -141,6 +141,7 @@ export default observer(({ data, onTxPress, onEndReached }: Props) => {
       keyExtractor={(i) => `${i.hash} ${i.blockNumber} ${i.timestamp}`}
       renderItem={renderItem}
       style={{ paddingHorizontal: 16 }}
+      onEndReachedThreshold={0.5}
       onEndReached={onEndReached}
     />
   );
