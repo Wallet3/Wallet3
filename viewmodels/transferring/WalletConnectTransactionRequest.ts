@@ -46,6 +46,7 @@ export class WalletConnectTransactionRequest extends RawTransactionRequest {
           type: 'dapp-interaction',
           dapp: this.appMeta.name,
           icon: this.appMeta.icon,
+          decodedFunc: this.decodedFunc?.fullFunc,
         },
       },
       pin

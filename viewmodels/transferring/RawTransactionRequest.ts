@@ -1,5 +1,6 @@
 import { Approve_ERC1155, Approve_ERC20, Approve_ERC721, Methods, RequestType, Transfer_ERC20 } from './RequestTypes';
 import { BigNumber, constants, providers, utils } from 'ethers';
+import EtherscanHub, { DecodedFunc } from '../hubs/EtherscanHub';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
 import { Account } from '../account/Account';
@@ -41,6 +42,8 @@ export class RawTransactionRequest extends BaseTransaction {
   tokenDecimals = 18;
   tokenSymbol = '';
   tokenAddress = '';
+  decodedFunc: DecodedFunc | null = null;
+  decodingFunc = false;
 
   get tokenAmount() {
     try {
@@ -86,6 +89,7 @@ export class RawTransactionRequest extends BaseTransaction {
       tokenDecimals: observable,
       tokenSymbol: observable,
       tokenAddress: observable,
+      decodedFunc: observable,
       isValidParams: computed,
       setERC20ApproveAmount: action,
       exceedERC20Balance: computed,
@@ -177,7 +181,17 @@ export class RawTransactionRequest extends BaseTransaction {
       default:
         this.setTo(param.to);
         this.valueWei = BigNumber.from(param.value || 0);
-        break;
+
+        if (param.data?.length < 10) break;
+
+        this.decodingFunc = true;
+        const decodedFunc = await EtherscanHub.decodeCall(this.network, param.to, param.data);
+        if (!decodedFunc) break;
+
+        runInAction(() => {
+          this.decodedFunc = decodedFunc || '';
+          this.decodingFunc = false;
+        });
     }
 
     if (param.gas || param.gasLimit) {

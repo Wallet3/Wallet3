@@ -31,6 +31,7 @@ export interface INetwork {
   showOverview?: boolean;
   blockTimeMs?: number;
   explorer: string;
+  etherscanApi?: string;
   rpcUrls?: string[];
   addrPrefix?: string;
   github_dir?: string;
@@ -48,9 +49,9 @@ export const PublicNetworks: INetwork[] = [
     eip1559: true,
     order: 1,
     defaultTokens: EthereumPopularTokens,
-
     blockTimeMs: 12 * 1000,
     explorer: 'https://etherscan.io',
+    etherscanApi: 'https://api.etherscan.io/api',
   },
   {
     symbol: 'ETH',
@@ -63,6 +64,7 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: ArbiPopularTokens,
     showOverview: false,
     explorer: 'https://arbiscan.io',
+    etherscanApi: 'https://api.arbiscan.io/api',
     github_dir: 'arbitrum',
   },
   {
@@ -76,6 +78,7 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: [],
     showOverview: false,
     explorer: 'https://optimistic.etherscan.io',
+    etherscanApi: 'https://api-optimistic.etherscan.io/api',
   },
   {
     symbol: 'ETH',
@@ -86,6 +89,7 @@ export const PublicNetworks: INetwork[] = [
     l2: true,
     defaultTokens: BobaPopularTokens,
     explorer: 'https://blockexplorer.boba.network',
+    etherscanApi: 'https://blockexplorer.boba.network/api',
   },
   {
     symbol: 'MATIC',
@@ -98,6 +102,7 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: PolygonPopularTokens,
     blockTimeMs: 3 * 1000,
     explorer: 'https://polygonscan.com',
+    etherscanApi: 'https://api.polygonscan.com/api',
   },
   {
     symbol: 'BNB',
@@ -109,6 +114,7 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: BscPopularTokens,
     blockTimeMs: 5 * 1000,
     explorer: 'https://bscscan.com',
+    etherscanApi: 'https://api.bscscan.com/api',
     github_dir: 'smartchain',
   },
   {
@@ -119,6 +125,7 @@ export const PublicNetworks: INetwork[] = [
     color: '#70d44b',
     defaultTokens: AuroraPopularTokens,
     explorer: 'https://aurorascan.dev',
+    etherscanApi: 'https://api.aurorascan.dev/api',
   },
   {
     symbol: 'xDAI',
@@ -130,6 +137,7 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: xDaiPopularTokens,
     blockTimeMs: 5 * 1000,
     explorer: 'https://blockscout.com/xdai/mainnet',
+    etherscanApi: 'https://blockscout.com/xdai/mainnet/api',
     eip1559: true,
     github_dir: 'xdai',
   },
@@ -143,6 +151,7 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: CeloPopularTokens,
     blockTimeMs: 5 * 1000,
     explorer: 'https://explorer.celo.org',
+    etherscanApi: 'https://explorer.celo.org/api',
   },
   {
     symbol: 'ONE',
@@ -161,6 +170,7 @@ export const PublicNetworks: INetwork[] = [
     color: '#00DACC',
     defaultTokens: MetisPopularTokens,
     explorer: 'https://andromeda-explorer.metis.io',
+    etherscanApi: 'https://andromeda-explorer.metis.io/api',
   },
   {
     symbol: 'RON',
@@ -182,6 +192,7 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: FTMPopularTokens,
     blockTimeMs: 10 * 1000,
     explorer: 'https://ftmscan.com',
+    etherscanApi: 'https://api.ftmscan.com/api',
   },
   {
     symbol: 'AVAX',
@@ -194,6 +205,7 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: AVAXPopularTokens,
     blockTimeMs: 5 * 1000,
     explorer: 'https://snowtrace.io',
+    etherscanApi: 'https://api.snowtrace.io/api',
     github_dir: 'avalanchec',
   },
   {
@@ -204,6 +216,7 @@ export const PublicNetworks: INetwork[] = [
     color: '#53cbc9',
     defaultTokens: [],
     explorer: 'https://moonriver.moonscan.io',
+    etherscanApi: 'https://api-moonriver.moonscan.io/api',
   },
   {
     symbol: 'GLMR',
@@ -213,6 +226,7 @@ export const PublicNetworks: INetwork[] = [
     color: '#53cbc9',
     defaultTokens: [],
     explorer: 'https://moonbeam.moonscan.io',
+    etherscanApi: 'https://api-moonbeam.moonscan.io/api',
   },
   {
     symbol: 'KLAY',
@@ -240,13 +254,15 @@ export const PublicNetworks: INetwork[] = [
     color: '#58ed67',
     defaultTokens: [],
     explorer: 'https://explorer.fuse.io',
+    etherscanApi: 'https://explorer.fuse.io/api',
   },
   {
     symbol: 'CRO',
     comm_id: 'cro',
     network: 'Cronos',
     chainId: 25,
-    explorer: 'https://cronos.crypto.org/explorer',
+    explorer: 'https://cronos.org/explorer',
+    etherscanApi: 'https://cronos.org/explorer/api',
     color: '#474169',
     defaultTokens: [],
   },
@@ -260,6 +276,7 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: HecoPopularTokens,
     blockTimeMs: 5 * 1000,
     explorer: 'https://hecoinfo.com',
+    etherscanApi: 'https://api.hecoinfo.com/api',
   },
   {
     symbol: 'OKB',

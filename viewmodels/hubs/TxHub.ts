@@ -43,8 +43,8 @@ class TxHub {
 
     runInAction(() => (this.txs = minedTxs));
 
-    const abandonedTxs = unconfirmedTxs.filter(
-      (tx) => !minedTxs.find((t) => t.from === tx.from && t.chainId === tx.chainId && t.nonce >= tx.nonce)
+    const abandonedTxs = unconfirmedTxs.filter((tx) =>
+      minedTxs.find((t) => t.from === tx.from && t.chainId === tx.chainId && t.nonce >= tx.nonce)
     );
 
     abandonedTxs.map((t) => t.remove());
@@ -150,10 +150,8 @@ class TxHub {
         duration: 3000,
         icon: 'warning',
       });
-    }
 
-    if (!hash) {
-      return undefined;
+      return;
     }
 
     const pendingTx = await this.saveTx({ ...tx, hash });

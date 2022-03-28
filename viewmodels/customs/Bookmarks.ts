@@ -88,7 +88,7 @@ class Bookmarks {
 
     this.recentSites.unshift(metadata);
 
-    if (this.recentSites.length > 10) this.recentSites.pop();
+    if (this.recentSites.length > 15) this.recentSites.pop();
 
     AsyncStorage.setItem('recent-sites', JSON.stringify(this.recentSites));
   }

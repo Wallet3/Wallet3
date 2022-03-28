@@ -8,7 +8,9 @@ import AccountIndicator from '../components/AccountIndicator';
 import AnimateNumber from 'react-native-animate-number';
 import { BioType } from '../../viewmodels/Authentication';
 import Currency from '../../viewmodels/settings/Currency';
+import { DecodedFunc } from '../../viewmodels/hubs/EtherscanHub';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';
+import FuncReview from '../views/FuncReview';
 import GasReview from '../views/GasReview';
 import Image from 'react-native-fast-image';
 import InsufficientFee from '../components/InsufficientFee';
@@ -32,11 +34,12 @@ interface Props {
   onReject?: () => void;
   onApprove?: () => Promise<void>;
   onGasPress?: () => void;
+  onDecodedFuncPress?: (decodedFunc: DecodedFunc) => void;
   account: Account;
   bioType?: BioType;
 }
 
-const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, bioType }: Props) => {
+const TxReview = observer(({ vm, onReject, onApprove, onGasPress, onDecodedFuncPress, app, account, bioType }: Props) => {
   const { network } = vm;
   const { t } = i18n;
   const { textColor, borderColor, secondaryTextColor } = Theme;
@@ -66,9 +69,44 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
 
         <View style={{ ...reviewItemStyle }}>
           <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-type')}</Text>
-          <Text style={{ ...reviewItemValueStyle, maxWidth: '70%' }} numberOfLines={1}>
-            {t(`tx-type-${vm.type.toLowerCase().replace(' ', '-')}`)}
-          </Text>
+
+          <TouchableOpacity
+            disabled={!vm.decodedFunc}
+            onPress={() => (vm.decodedFunc ? onDecodedFuncPress?.(vm.decodedFunc) : undefined)}
+            style={{ maxWidth: '72%', marginTop: -8, paddingTop: 8 }}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>
+                {t(`tx-type-${vm.type.toLowerCase().replace(' ', '-')}`)}
+              </Text>
+
+              {vm.decodedFunc && (
+                <MaterialIcons
+                  name="keyboard-arrow-right"
+                  size={15}
+                  color={secondaryTextColor}
+                  style={{ marginStart: 2, marginEnd: -3, marginBottom: -1 }}
+                />
+              )}
+            </View>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', right: 0, bottom: -11.5 }}>
+              {vm.decodingFunc && <Skeleton style={{ height: 9, width: 72 }} />}
+
+              {vm.decodedFunc && <Ionicons name="code-slash-outline" size={9} color={vm.network.color} />}
+              {vm.decodedFunc && (
+                <Text style={{ fontSize: 9, color: vm.network.color, fontWeight: '600', marginStart: 5 }}>
+                  {vm.decodedFunc.func}
+                </Text>
+              )}
+
+              {vm.type !== 'Contract Interaction' && vm.type !== 'Transfer' && vm.valueWei.gt(0) && (
+                <Text style={{ fontSize: 9, color: vm.network.color, fontWeight: '600', marginStart: 3 }}>
+                  {`+ ${vm.value} ${vm.network.symbol}`}
+                </Text>
+              )}
+            </View>
+          </TouchableOpacity>
         </View>
 
         {vm.type === 'Transfer' ? (
@@ -213,7 +251,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
             alignItems: 'center',
             padding: 16,
             paddingVertical: 12,
-            paddingEnd: 14,
+            paddingEnd: 12,
             justifyContent: 'flex-end',
             width: '75%',
           }}
@@ -232,13 +270,12 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
 
           <Text style={reviewItemValueStyle}>{vm.feeTokenSymbol}</Text>
 
-          <MaterialIcons name="keyboard-arrow-right" size={15} color={secondaryTextColor} style={{ marginBottom: -1 }} />
-
-          {vm.type !== 'Contract Interaction' && vm.type !== 'Transfer' && vm.valueWei.gt(0) && (
-            <Text style={{ position: 'absolute', fontSize: 8, right: 19, bottom: 2, color: 'crimson', fontWeight: '500' }}>
-              {`+ ${vm.value} ${vm.network.symbol}`}
-            </Text>
-          )}
+          <MaterialIcons
+            name="keyboard-arrow-right"
+            size={15}
+            color={secondaryTextColor}
+            style={{ marginStart: 2, marginBottom: -1 }}
+          />
         </TouchableOpacity>
       </View>
 
@@ -274,11 +311,30 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, app, account, 
 
 export default observer((props: Props) => {
   const swiper = useRef<Swiper>(null);
+  const [type, setType] = useState<'gas' | 'func'>('gas');
+  const [decodedFunc, setDecodedFunc] = useState<DecodedFunc>();
+
+  const swipeTo = (type: 'gas' | 'func') => {
+    setType(type);
+    setTimeout(() => swiper.current?.scrollTo(1), 10);
+  };
+
+  const goBack = () => swiper.current?.scrollTo(0);
 
   return (
     <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
-      <TxReview {...props} onGasPress={() => swiper.current?.scrollTo(1)} />
-      <GasReview onBack={() => swiper.current?.scrollTo(0)} vm={props.vm} themeColor={props.vm.network.color} />
+      <TxReview
+        {...props}
+        onGasPress={() => swipeTo('gas')}
+        onDecodedFuncPress={(func) => {
+          setDecodedFunc(func);
+          swipeTo('func');
+        }}
+      />
+
+      {type === 'gas' && <GasReview onBack={goBack} vm={props.vm} themeColor={props.vm.network.color} />}
+
+      {type === 'func' && <FuncReview onBack={goBack} themeColor={props.vm.network.color} decodedFunc={decodedFunc} />}
     </Swiper>
   );
 });

@@ -29,6 +29,19 @@ export default StyleSheet.create({
     color: `${borderColor}99`,
   },
 
+  modalTitleContainer: {
+    paddingBottom: 5,
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
+  modalTitle: {
+    fontSize: 21,
+    fontWeight: '500',
+  },
+
   navMoreButton: {
     borderRadius: 50,
     borderWidth: 1,

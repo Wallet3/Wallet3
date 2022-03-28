@@ -1,12 +1,10 @@
 import * as Linking from 'expo-linking';
 
-import { action, autorun, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
-import App from '../App';
 import Database from '../../models/Database';
 import EventEmitter from 'events';
 import LINQ from 'linq';
-import Networks from '../Networks';
 import WCSession_v1 from '../../models/WCSession_v1';
 import { WalletConnect_v1 } from './WalletConnect_v1';
 
@@ -28,29 +26,7 @@ class WalletConnectV1ClientHub extends EventEmitter {
     makeObservable(this, { clients: observable, sortedClients: computed, connectedCount: computed, reset: action });
   }
 
-  private async upgrade() {
-    const legacyEntities = await Database.wcV1Sessions_legacy.find();
-    if (legacyEntities.length === 0) return;
-
-    await Promise.all(
-      legacyEntities.map(async (e) => {
-        const session = new WCSession_v1();
-        session.id = e.id;
-        session.session = e.session;
-        session.lastUsedTimestamp = e.lastUsedTimestamp;
-        session.lastUsedAccount = App.currentAccount?.address || '';
-        session.lastUsedChainId = `${Networks.current?.chainId || 1}`;
-        await session.save();
-        return session;
-      })
-    );
-
-    await Database.wcV1Sessions_legacy.clear();
-  }
-
   async init() {
-    await this.upgrade();
-
     // Restore sessions
     const sessions = await Database.wcV1Sessions.find();
     const cs = await Promise.all(

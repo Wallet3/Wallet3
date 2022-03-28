@@ -14,6 +14,7 @@ import SignInWithEthereum from './SignInWithEthereum';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import styles from '../styles';
 import { thirdFontColor } from '../../constants/styles';
 import { utils } from 'ethers';
 
@@ -65,15 +66,11 @@ export default observer(({ msg, themeColor, onReject, onSign, account, bioType, 
       {siwe ? undefined : (
         <View
           style={{
-            paddingBottom: 5,
-            borderBottomWidth: 1,
+            ...styles.modalTitleContainer,
             borderBottomColor: borderColor,
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
           }}
         >
-          <Text style={{ fontSize: 21, color: themeColor, fontWeight: '500' }}>{t('modal-message-signing-title')}</Text>
+          <Text style={{ ...styles.modalTitle, color: themeColor }}>{t('modal-message-signing-title')}</Text>
 
           {account ? <AccountIndicator account={account} /> : undefined}
         </View>
