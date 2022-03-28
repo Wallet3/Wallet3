@@ -129,7 +129,7 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
           onTokenPress={onTokenPress}
         />
         <View style={{ flex: 1 }}>
-          <HistoryList data={TxHub.allTxs} onTxPress={onTxPress} />
+          <HistoryList data={TxHub.allTxs} onTxPress={onTxPress} onEndReached={TxHub.loadMore} />
         </View>
       </Swiper>
     </View>

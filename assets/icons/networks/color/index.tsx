@@ -103,7 +103,7 @@ const ZSYNC = generateNetworkIcon({ chainId: 280, width: 32, height: 32, style: 
 const KLAYTN = generateNetworkIcon({ chainId: 8217, width: 27, height: 32 });
 const FINDORA = generateNetworkIcon({ chainId: 2152, width: 32, height: 32 });
 const METIS = generateNetworkIcon({ chainId: 1088, width: 42, style: { marginVertical: -5, marginStart: -4 } });
-const FUSE = generateNetworkIcon({ chainId: 122, width: 28, height: 32 });
+const FUSE = generateNetworkIcon({ chainId: 122, width: 27, height: 32 });
 
 const SHIDEN = generateNetworkIcon({ chainId: 336, width: 22, height: 32 });
 
