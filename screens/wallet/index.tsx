@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import AddressQRCode from './AddressQRCode';
 import App from '../../viewmodels/App';
@@ -47,6 +47,14 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
     setSelectedTx(tx);
     setTimeout(() => openTxDetail(), 0);
   };
+
+  useEffect(() => {
+    PubSub.subscribe(MessageKeys.openMyAddressQRCode, () => openAddressQR());
+
+    return () => {
+      PubSub.unsubscribe(MessageKeys.openMyAddressQRCode);
+    };
+  }, []);
 
   return (
     <View

@@ -11,6 +11,7 @@ export default {
   openRequestFundsModal: 'openRequestFundsModal',
   openSendFundsModal: 'openSendFundsModal',
   openInappBrowser: 'openInappBrowser',
+  openMyAddressQRCode: 'openMyAddressQRCode',
   drawerSwipeEnabled: 'drawer-swipeEnabled',
   wc_request: 'wc_request',
   CodeScan_wc: 'CodeScan-wc:',

@@ -57,13 +57,18 @@ export default observer(({ onBack, decodedFunc, themeColor }: Props) => {
         <Text style={{ ...txtStyle, marginTop: 20 }}>{t('modal-func-review-method-id')}:</Text>
         <Text style={{ ...txtStyle, marginTop: 2, marginBottom: 20 }}>{`${decodedFunc?.methodID}`}</Text>
 
-        <Text style={{ ...txtStyle, marginBottom: 4 }}>{t('modal-func-review-inputs')}:</Text>
-        <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
-          <Text style={{ ...tableHeaderTxtStyle, width: 24 }}>#</Text>
-          <Text style={{ ...tableHeaderTxtStyle, width: 72 }}>{t('modal-func-review-input-name')}</Text>
-          <Text style={{ ...tableHeaderTxtStyle, width: 72 }}>{t('modal-func-review-input-type')}</Text>
-          <Text style={{ ...tableHeaderTxtStyle, flex: 1 }}>{t('modal-func-review-input-value')}</Text>
-        </View>
+        {(decodedFunc?.inputs?.length ?? 0) > 0 && (
+          <Text style={{ ...txtStyle, marginBottom: 4 }}>{t('modal-func-review-inputs')}:</Text>
+        )}
+
+        {(decodedFunc?.inputs?.length ?? 0) > 0 && (
+          <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
+            <Text style={{ ...tableHeaderTxtStyle, width: 24 }}>#</Text>
+            <Text style={{ ...tableHeaderTxtStyle, width: 72 }}>{t('modal-func-review-input-name')}</Text>
+            <Text style={{ ...tableHeaderTxtStyle, width: 72 }}>{t('modal-func-review-input-type')}</Text>
+            <Text style={{ ...tableHeaderTxtStyle, flex: 1 }}>{t('modal-func-review-input-value')}</Text>
+          </View>
+        )}
 
         {decodedFunc?.inputs.map((input, index) => {
           const param = decodedFunc?.params[index];
@@ -74,13 +79,13 @@ export default observer(({ onBack, decodedFunc, themeColor }: Props) => {
               style={{ flexDirection: 'row', borderTopWidth: 1, borderTopColor: borderColor, paddingVertical: 4 }}
             >
               <Text style={{ ...txtStyle, width: 24 }}>{index}</Text>
-              <Text style={{ ...txtStyle, width: 72, paddingEnd: 10 }} ellipsizeMode="middle" numberOfLines={1}>
+              <Text style={{ ...txtStyle, width: 72, paddingEnd: 10 }} numberOfLines={1}>
                 {input.name}
               </Text>
               <Text style={{ ...txtStyle, width: 72, paddingEnd: 10 }} numberOfLines={1}>
                 {input.type}
               </Text>
-              <Text style={{ ...txtStyle, flex: 1 }} numberOfLines={1}>
+              <Text style={{ ...txtStyle, flex: 1 }} numberOfLines={1} ellipsizeMode="middle">
                 {param?.toString?.()}
               </Text>
             </View>

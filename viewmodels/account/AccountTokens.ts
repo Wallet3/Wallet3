@@ -112,6 +112,12 @@ export class AccountTokens {
   toggleToken(token: UserToken) {
     token.shown = !token.shown;
 
+    this.allTokens = [
+      ...this.allTokens.filter((t) => t.shown && t.address !== token.address),
+      token,
+      ...this.allTokens.filter((t) => !t.shown && t.address !== token.address),
+    ];
+
     this.tokens = [this.tokens[0], ...this.allTokens.filter((t) => t.shown)];
     if (token.shown) (token as ERC20Token).getBalance?.();
 

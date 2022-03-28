@@ -359,7 +359,7 @@ const GlobalLoadingModal = () => {
 };
 
 const RequestFundsModal = () => {
-  const { ref: requestRef, open: openRequestModal } = useModalize();
+  const { ref: requestRef, open: openRequestModal, close } = useModalize();
 
   useEffect(() => {
     PubSub.subscribe(MessageKeys.openRequestFundsModal, () => openRequestModal());
@@ -377,7 +377,7 @@ const RequestFundsModal = () => {
       modalStyle={styles.modalStyle}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
-      <Request />
+      <Request close={close} />
     </Modalize>
   );
 };

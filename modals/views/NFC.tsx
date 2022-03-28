@@ -183,7 +183,11 @@ const QRView = observer(({ vm, onBack, themeColor }: Props) => {
             size={25}
             forceRefresh
           />
-          <Text style={{ ...styles.navTitle, fontSize: 24, fontWeight: '300', color: thirdFontColor }}>{`${amount}`}</Text>
+          <Text
+            style={{ ...styles.navTitle, fontSize: 24, fontWeight: '300', color: thirdFontColor, maxWidth: '70%' }}
+            ellipsizeMode="middle"
+            numberOfLines={1}
+          >{`${amount}`}</Text>
           <Text style={{ ...styles.navTitle, fontSize: 24, fontWeight: '300', color: thirdFontColor }}>
             {`${token.symbol}`}
           </Text>

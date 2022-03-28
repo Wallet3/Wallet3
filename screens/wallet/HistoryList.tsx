@@ -19,6 +19,7 @@ import { utils } from 'ethers';
 interface Props {
   data: Transaction[];
   onTxPress?: (tx: Transaction) => void;
+  onEndReached?: () => void;
 }
 
 const Methods = new Map([
@@ -117,7 +118,7 @@ const Tx = observer(
   }
 );
 
-export default observer(({ data, onTxPress }: Props) => {
+export default observer(({ data, onTxPress, onEndReached }: Props) => {
   const { t } = i18n;
   const { textColor, backgroundColor } = Theme;
 
@@ -140,6 +141,8 @@ export default observer(({ data, onTxPress }: Props) => {
       keyExtractor={(i) => `${i.hash} ${i.blockNumber} ${i.timestamp}`}
       renderItem={renderItem}
       style={{ paddingHorizontal: 16 }}
+      onEndReachedThreshold={0.5}
+      onEndReached={onEndReached}
     />
   );
 });

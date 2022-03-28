@@ -69,8 +69,8 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
             >
               {`$ ${vm?.price.toFixed(2)} (${
                 (vm?.priceChangePercentIn24 || 0) > 0
-                  ? '+' + vm?.priceChangePercentIn24.toFixed(2)
-                  : vm?.priceChangePercentIn24.toFixed(2)
+                  ? '+' + (vm?.priceChangePercentIn24 || 0).toFixed(2)
+                  : (vm?.priceChangePercentIn24 || 0).toFixed(2)
               }% 24h)`}
             </Text>
           )}
@@ -174,7 +174,7 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
             </TouchableOpacity>
           </View>
         ) : vm?.loading ? (
-          <Skeleton style={{ flex: 1, width: '100%', height: 19 }} />
+          <Skeleton style={{ flex: 1, width: '100%', height: 19, marginTop: 2 }} />
         ) : undefined}
 
         {vm?.links?.twitter_screen_name ? (

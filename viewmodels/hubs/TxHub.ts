@@ -65,6 +65,19 @@ class TxHub {
     setTimeout(() => this.watchPendingTxs(), 0);
   }
 
+  loadMore = async () => {
+    if (!this.repository) return;
+
+    const moreTxs = await this.repository.find({
+      where: { blockNumber: MoreThan(0), hash: Not(IsNull()) },
+      order: { timestamp: 'DESC' },
+      skip: this.txs.length,
+      take: 100,
+    });
+
+    runInAction(() => this.txs.push(...moreTxs));
+  };
+
   async watchPendingTxs() {
     clearTimeout(this.watchTimer);
 

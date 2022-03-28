@@ -60,7 +60,7 @@ export default observer(({ client, onDisconnect, onNetworkPress, onAccountsPress
         <Text style={viewStyles.itemTxt}>URL:</Text>
         <TouchableOpacity>
           <Text style={viewStyles.itemTxt} numberOfLines={1}>
-            {appMeta?.url}
+            {appMeta?.url?.startsWith('http') ? appMeta?.url : `https://${appMeta?.url}`}
           </Text>
         </TouchableOpacity>
       </View>

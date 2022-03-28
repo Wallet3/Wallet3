@@ -115,6 +115,7 @@ export default observer(({ metadata, siwe, account, rawMsg }: Props) => {
           style={{
             ...styles.modalTitleContainer,
             borderBottomColor: borderColor,
+            justifyContent: 'flex-start',
           }}
         >
           <FontAwesome5 name="ethereum" size={24} color={consistent ? tintColor : 'crimson'} />

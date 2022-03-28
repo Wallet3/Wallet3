@@ -141,7 +141,7 @@ export default StyleSheet.create({
     opacity: 0.5,
   },
 
-  moonrivier: {
+  moonriver: {
     marginTop: -36,
     marginEnd: -7,
     alignSelf: 'flex-end',
@@ -156,8 +156,15 @@ export default StyleSheet.create({
   },
 
   fuse: {
+    marginTop: -29,
+    marginEnd: -0,
+    alignSelf: 'flex-end',
+    opacity: 0.5,
+  },
+
+  shiden: {
     marginTop: -36,
-    marginEnd: -2,
+    marginEnd: -5,
     alignSelf: 'flex-end',
     opacity: 0.5,
   },

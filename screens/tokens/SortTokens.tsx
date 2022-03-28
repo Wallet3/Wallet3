@@ -12,6 +12,7 @@ import Theme from '../../viewmodels/settings/Theme';
 import { UserToken } from '../../viewmodels/services/TokensMan';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { startLayoutAnimation } from '../../utils/animations';
 
 const DraggableToken = observer(
   ({
@@ -66,8 +67,12 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
     <DraggableToken
       chainId={current.chainId}
       {...props}
-      onValueChange={() => currentAccount?.tokens.toggleToken(props.item)}
       textColor={textColor}
+      onValueChange={() => {
+        currentAccount?.tokens.toggleToken(props.item);
+        startLayoutAnimation();
+        setData(currentAccount!.tokens.allTokens);
+      }}
     />
   );
 
