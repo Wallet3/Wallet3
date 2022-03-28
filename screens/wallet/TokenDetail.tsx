@@ -67,11 +67,13 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
               style={{ fontSize: 14, color: (vm?.priceChangePercentIn24 || 0) > 0 ? 'yellowgreen' : 'crimson' }}
               numberOfLines={1}
             >
-              {`$ ${vm?.price.toFixed(2)} (${
-                (vm?.priceChangePercentIn24 || 0) > 0
-                  ? '+' + (vm?.priceChangePercentIn24 || 0).toFixed(2)
-                  : (vm?.priceChangePercentIn24 || 0).toFixed(2)
-              }% 24h)`}
+              {vm?.price
+                ? `$ ${vm?.price.toFixed(2)} (${
+                    (vm?.priceChangePercentIn24 || 0) > 0
+                      ? '+' + (vm?.priceChangePercentIn24 || 0).toFixed(2)
+                      : (vm?.priceChangePercentIn24 || 0).toFixed(2)
+                  }% 24h)`
+                : '-'}
             </Text>
           )}
         </View>
@@ -105,7 +107,7 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
 
       <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
         <Text style={{ ...styles.subValue, color: foregroundColor }} numberOfLines={1}>
-          {formatCurrency(Number(token?.amount || 0) * (vm?.price || 0))}
+          {vm?.price ? formatCurrency(Number(token?.amount || 0) * (vm?.price || 0)) : '-'}
         </Text>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={{ ...styles.subValue, marginEnd: 8, color: foregroundColor }}>
