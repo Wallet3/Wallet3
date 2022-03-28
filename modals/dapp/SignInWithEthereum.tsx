@@ -18,11 +18,12 @@ interface Props {
   metadata?: { origin: string; icon: string; title: string };
   siwe: ParsedMessage;
   account?: Account;
+  themeColor?: string;
 }
 
-export default observer(({ metadata, siwe, account, rawMsg }: Props) => {
+export default observer(({ metadata, siwe, account, rawMsg, themeColor }: Props) => {
   const swiper = useRef<Swiper>(null);
-  const { backgroundColor, foregroundColor, tintColor, borderColor, secondaryTextColor, thirdTextColor } = Theme;
+  const { backgroundColor, foregroundColor, borderColor, secondaryTextColor, thirdTextColor } = Theme;
   const { t } = i18n;
 
   const consistent = metadata ? siwe.domain === metadata.origin : true;
@@ -118,16 +119,17 @@ export default observer(({ metadata, siwe, account, rawMsg }: Props) => {
             justifyContent: 'flex-start',
           }}
         >
-          <FontAwesome5 name="ethereum" size={24} color={consistent ? tintColor : 'crimson'} />
-          <Text style={{ fontSize: 21, color: consistent ? tintColor : 'crimson', fontWeight: '500', marginStart: 8 }}>
+          <FontAwesome5 name="ethereum" size={24} color={consistent ? themeColor : 'crimson'} />
+          <Text style={{ fontSize: 21, color: consistent ? themeColor : 'crimson', fontWeight: '500', marginStart: 8 }}>
             {t('modal-siwe-title')}
           </Text>
         </View>
 
         <ScrollView
           style={{ width: '100%', height: '100%' }}
-          alwaysBounceVertical={false}
+          bounces={false}
           showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingVertical: 8 }}
         >
           <Text style={{ color: thirdTextColor }}>{rawMsg}</Text>

@@ -66,6 +66,7 @@ class TxHub {
   }
 
   loadMore = async () => {
+    if (this.txs.length <= 100) return;
     if (!this.repository) return;
 
     const moreTxs = await this.repository.find({
