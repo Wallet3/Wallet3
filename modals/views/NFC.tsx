@@ -165,11 +165,11 @@ const QRView = observer(({ vm, onBack, themeColor }: Props) => {
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           {generateNetworkIcon({
             ...network,
-            width: 17,
-            height: 17,
-            style: { marginEnd: 5 },
+            width: 24,
+            height: 24,
+            // style: { marginEnd: 5 },
           })}
-          <Text style={{ fontSize: 16, fontWeight: '500', color: network.color }}>{network.network}</Text>
+          {/* <Text style={{ fontSize: 17, fontWeight: '500', color: network.color }}>{network.network}</Text> */}
         </View>
       </View>
 

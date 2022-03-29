@@ -66,6 +66,7 @@ class TxHub {
   }
 
   loadMore = async () => {
+    if (this.txs.length <= 100) return;
     if (!this.repository) return;
 
     const moreTxs = await this.repository.find({
@@ -184,7 +185,7 @@ class TxHub {
       this.pendingTxs = [maxPriTx, ...this.pendingTxs.filter((t) => !sameNonces.find((t2) => t2.hash === t.hash))];
     });
 
-    this.watchTimer = setTimeout(() => this.watchPendingTxs(), 1000);
+    this.watchTimer = setTimeout(() => this.watchPendingTxs(), 1200);
 
     return hash;
   }

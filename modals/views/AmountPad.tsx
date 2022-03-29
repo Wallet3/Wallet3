@@ -78,7 +78,13 @@ export default observer((props: SubViewProps) => {
         {props.disableBack ? (
           props.showMyQRCodeButton ? (
             <TouchableOpacity
-              style={{ paddingHorizontal: 6, flexDirection: 'row', alignItems: 'center' }}
+              style={{
+                paddingHorizontal: 6,
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginVertical: -12,
+                paddingVertical: 12,
+              }}
               onPress={() => {
                 PubSub.publish(MessageKeys.openMyAddressQRCode);
                 props.close?.();
@@ -133,6 +139,7 @@ export default observer((props: SubViewProps) => {
           fontFamily: numericFontFamily,
           fontWeight: '600',
           marginTop: props.max ? 2 : 12,
+          marginBottom: -19, // for Fullscreen iPhone
           maxHeight: 89,
           textAlign: 'center',
           color: props.themeColor,

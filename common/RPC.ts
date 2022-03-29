@@ -46,29 +46,27 @@ export async function getBalance(chainId: number, address: string): Promise<BigN
 
 export async function sendTransaction(chainId: number, txHex: string) {
   const urls = getRPCUrls(chainId);
+  let error: { code: number; message: string } | undefined = undefined;
 
-  try {
-    return await Promise.race(
-      urls.map(async (url) => {
-        try {
-          const resp = await post(url, {
-            jsonrpc: '2.0',
-            method: 'eth_sendRawTransaction',
-            params: [txHex],
-            id: Date.now(),
-          });
+  for (let url of urls) {
+    try {
+      const resp = await post(url, {
+        jsonrpc: '2.0',
+        method: 'eth_sendRawTransaction',
+        params: [txHex],
+        id: Date.now(),
+      });
 
-          if (resp.error) {
-            throw new Error(resp.error.message);
-          }
+      if (resp.error) {
+        error = resp.error;
+        continue;
+      }
 
-          return resp as { id: number; result: string; error: { code: number; message: string } };
-        } catch {}
-      })
-    );
-  } catch (error) {}
+      return resp as { id: number; result: string; error: { code: number; message: string } };
+    } catch {}
+  }
 
-  return { error: { code: -1, message: 'Failed to send transaction' }, result: null };
+  return { error, id: 0, result: undefined };
 }
 
 export async function getTransactionCount(chainId: number, address: string) {

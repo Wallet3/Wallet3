@@ -77,7 +77,7 @@ export default observer(({ msg, themeColor, onReject, onSign, account, bioType, 
       )}
 
       {siwe ? (
-        <SignInWithEthereum rawMsg={displayMsg} account={account} metadata={metadata} siwe={siwe} />
+        <SignInWithEthereum rawMsg={displayMsg} account={account} metadata={metadata} siwe={siwe} themeColor={themeColor} />
       ) : (
         <ScrollView
           style={{ flex: 1, marginHorizontal: -16, paddingHorizontal: 16 }}

@@ -43,6 +43,8 @@ export default observer(({ onBack, decodedFunc, themeColor }: Props) => {
       <ScrollView
         bounces={false}
         contentContainerStyle={{ padding: 10, paddingVertical: 8 }}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
         style={{
           flex: 1,
           borderWidth: 1,
