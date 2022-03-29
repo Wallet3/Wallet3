@@ -141,7 +141,7 @@
   "modal-siwe-title": "Ethereum でサインイン",
   "modal-siwe-request-msg": "{{domain}} が Ethereum でサインインすることを求めています",
   "modal-siwe-see-details": "詳細はこちら",
-  "modal-siwe-warning-not-match": "警告: {{domain}} は {{origin}} と一致しません",
+  "modal-siwe-warning-not-match": "警告: {{domain}} は {{origin}} と一致しない",
   "modal-siwe-phishing-warning": "フィッシング詐欺サイトを検出しました",
   "modal-dapp-connection-timeout": "接続タイムアウト",
   "modal-dapp-connection-wc-failed": "DAppの接続に失敗しました",
