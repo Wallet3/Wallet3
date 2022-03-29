@@ -1,5 +1,5 @@
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
-import { NativeSyntheticEvent, Text, TouchableOpacity, View } from 'react-native';
+import { NativeSyntheticEvent, Text, TouchableOpacity, View, Platform } from 'react-native';
 
 import { Account } from '../../viewmodels/account/Account';
 import App from '../../viewmodels/App';
@@ -30,6 +30,8 @@ export default observer(({ account, themeColor, onPress, onEdit, onRemove, textC
   const { t } = i18n;
 
   const onActionPress = (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => {
+    if (Platform.OS !== 'ios') return;
+
     const { index } = e.nativeEvent;
 
     switch (index) {
@@ -43,12 +45,14 @@ export default observer(({ account, themeColor, onPress, onEdit, onRemove, textC
   };
 
   const actions =
-    App.allAccounts.length > 1
-      ? [
-          { title: t('button-edit'), systemIcon: 'square.and.pencil' },
-          { title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' },
-        ]
-      : [{ title: t('button-edit'), systemIcon: 'square.and.pencil' }];
+    Platform.OS === 'ios'
+      ? App.allAccounts.length > 1
+        ? [
+            { title: t('button-edit'), systemIcon: 'square.and.pencil' },
+            { title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' },
+          ]
+        : [{ title: t('button-edit'), systemIcon: 'square.and.pencil' }]
+      : [];
 
   return (
     <ContextMenu onPress={onActionPress} actions={actions} previewBackgroundColor={previewBackgroundColor}>
