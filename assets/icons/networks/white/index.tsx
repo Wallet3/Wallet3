@@ -1,7 +1,7 @@
 import Arbitrum from './arbitrum.svg';
 import Aurora from './aurora.svg';
 import Avalanche from './avalanche.svg';
-import BSC from './bsc.svg';
+import BSC from './bnb.svg';
 import Boba from './boba.svg';
 import Celo from './celo.svg';
 import Cronos from './cronos.svg';
@@ -36,7 +36,7 @@ export default {
   42220: <Celo width={49} height={49} style={styles.celo} />,
   128: <Heco width={52} height={52} style={styles.heco} />,
   66: <OKEx width={49} height={49} style={styles.okex} />,
-  56: <BSC width={49} height={49} style={styles.bsc} />,
+  56: <BSC width={42} height={42} style={styles.bsc} />,
   288: <Boba width={49} height={49} style={styles.boba} />,
   1313161554: <Aurora width={49} height={49} style={styles.aurora} />,
   25: <Cronos width={49} height={49} style={styles.cronos} />,

@@ -4,7 +4,7 @@ import Arbitrum from './arbitrum.svg';
 import Aurora from './aurora.svg';
 import Avalanche from './avalanche.svg';
 import Boba from './boba.svg';
-import Bsc from './bsc.svg';
+import Bsc from './bnb.svg';
 import Celo from './celo.svg';
 import { Coin } from '../../../../components';
 import Cronos from './cronos.svg';
@@ -74,7 +74,7 @@ const ETH = generateNetworkIcon({ chainId: 1, width: 32, style: { marginHorizont
 const ARB = generateNetworkIcon({ chainId: 42161, width: 32 });
 const OPT = generateNetworkIcon({ chainId: 10, width: 30, height: 32 });
 const AVL = generateNetworkIcon({ chainId: 43114, width: 30, height: 32 });
-const BSC = generateNetworkIcon({ chainId: 56, width: 31, height: 32 });
+const BSC = generateNetworkIcon({ chainId: 56, width: 30, height: 32 });
 const CELO = generateNetworkIcon({ chainId: 42220, width: 32 });
 const FTM = generateNetworkIcon({ chainId: 250, width: 32 });
 const HECO = generateNetworkIcon({ chainId: 128, width: 32 });

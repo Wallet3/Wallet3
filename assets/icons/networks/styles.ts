@@ -79,7 +79,7 @@ export default StyleSheet.create({
   },
 
   bsc: {
-    marginTop: -47,
+    marginTop: -39,
     marginEnd: -3,
     alignSelf: 'flex-end',
     opacity: 0.72,
