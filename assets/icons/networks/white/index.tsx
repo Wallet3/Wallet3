@@ -28,7 +28,7 @@ import styles from '../styles';
 export default {
   1: <Ethereum width={64} height={64} style={styles.ethereum} />,
   42161: <Arbitrum width={54} height={54} style={styles.arbitrum} />,
-  10: <Optimism width={54} height={54} style={styles.optimism} />,
+  10: <Optimism width={47} height={47} style={styles.optimism} />,
   100: <XDai width={50} height={50} style={styles.xdai} />,
   137: <Polygon width={45} height={45} style={styles.polygon} />,
   43114: <Avalanche width={60} height={60} style={styles.avalanche} />,

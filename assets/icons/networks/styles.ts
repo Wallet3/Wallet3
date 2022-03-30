@@ -16,7 +16,7 @@ export default StyleSheet.create({
   },
 
   optimism: {
-    marginTop: -52,
+    marginTop: -43,
     marginEnd: -2,
     alignSelf: 'flex-end',
     opacity: 0.8,
