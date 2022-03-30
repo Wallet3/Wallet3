@@ -2414,10 +2414,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@react-native-async-storage/async-storage@~1.17.0":
-  version "1.17.0"
-  resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-1.17.0.tgz#6666e980af590d77f017065982ead74c1420f93a"
-  integrity sha512-Kr6HOHbLOZjFXnLwT9c9i1Nwb96Zj7D/bwhrJg+L4b3BCR4DlvJhUQ8gBbc45JiTOiU6SMn/1KS7MDuOjIhCzA==
+"@react-native-async-storage/async-storage@~1.17.1":
+  version "1.17.1"
+  resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-1.17.1.tgz#01ba1c46cc1b5af06c76cdf5acacef8797a9ce0f"
+  integrity sha512-2WBcKjPfiG7S962liruXDBJFdzAZEXJnZGK2EHuxwlYYnt2U+BGwrwfBXiEIkctdMwQo0nvRJNHUWri7TnIuOQ==
   dependencies:
     merge-options "^3.0.4"
 
@@ -2910,10 +2910,10 @@
     "@types/react-native" "*"
     react-native-svg "^6.2.1"
 
-"@types/react-native-video@^5.0.12":
-  version "5.0.12"
-  resolved "https://registry.yarnpkg.com/@types/react-native-video/-/react-native-video-5.0.12.tgz#a90c00ec222923430d5f576cca337f49d11c148a"
-  integrity sha512-ohc2zsFGF+AQbd1joRq+dk4lJHimaRMDjYofCdALBRh0SPKQtNu2NQHcTfgyJDrFVL1yh01G++Z9WjofySJABQ==
+"@types/react-native-video@^5.0.13":
+  version "5.0.13"
+  resolved "https://registry.yarnpkg.com/@types/react-native-video/-/react-native-video-5.0.13.tgz#4a6df3156c5d9ad4e3a37edb320199eaeb22ea20"
+  integrity sha512-pXdF+uM5Kqmsx90eQzOArkz06QOzKQi8uekdcqD+KeNXuQfwJ6hiuGTiC46VcgxGdQVCKAa1AYMg6oUMPaygew==
   dependencies:
     "@types/react" "*"
     "@types/react-native" "*"
@@ -7847,10 +7847,10 @@ react-native-crypto@^2.2.0:
     public-encrypt "^4.0.0"
     randomfill "^1.0.3"
 
-react-native-device-info@^8.6.0:
-  version "8.6.0"
-  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-8.6.0.tgz#333e998d2e61fb801d659b4d58e72e01d1299d5b"
-  integrity sha512-LxxaHkx2XQDuRFhk6545uBvjbjL/Xq7YNa8ufOCKg/BSPuZZPWmOW8SUwxDn/bteAGOx6Djv1YqGOMolX+bzSw==
+react-native-device-info@^8.7.0:
+  version "8.7.0"
+  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-8.7.0.tgz#0873d93950ac651b754f62965bb6f18059431c3c"
+  integrity sha512-Zr0JNHSEPy2RWObWwUp9npTEWSG5HyY+nR/mRkf6ZTU5zd8oskarnPcCxAgwYhJbvshHSZbZIDRxCVCskXSpEA==
 
 react-native-draggable-flatlist@^3.0.7:
   version "3.0.7"
