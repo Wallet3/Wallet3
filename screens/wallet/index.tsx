@@ -6,7 +6,7 @@ import Assets from './Assets';
 import CurrencyViewmodel from '../../viewmodels/settings/Currency';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import GasPrice from '../../viewmodels/misc/GasPrice';
-import { IToken } from '../../common/Tokens';
+import { IToken } from '../../common/tokens';
 import { InappBrowserModal } from '../Modalize';
 import MessageKeys from '../../common/MessageKeys';
 import { Modalize } from 'react-native-modalize';

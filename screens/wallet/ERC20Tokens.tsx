@@ -3,9 +3,8 @@ import { FlatList, ListRenderItemInfo, RefreshControl, Text, TouchableOpacity, V
 import React, { useState } from 'react';
 
 import { INetwork } from '../../common/Networks';
-import { IToken } from '../../common/Tokens';
+import { IToken } from '../../common/tokens';
 import Theme from '../../viewmodels/settings/Theme';
-import { fontColor } from '../../constants/styles';
 import { formatCurrency } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
 

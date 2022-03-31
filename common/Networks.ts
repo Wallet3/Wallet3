@@ -15,7 +15,7 @@ import {
   xDaiPopularTokens,
   zkSyncFeeTokens,
   zkSyncPopularTokens,
-} from './Tokens';
+} from './tokens';
 
 export interface INetwork {
   comm_id: string;

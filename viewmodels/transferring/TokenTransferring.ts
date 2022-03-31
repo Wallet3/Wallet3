@@ -1,6 +1,5 @@
 import { BigNumber, providers, utils } from 'ethers';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
-import { getCode, getGasPrice } from '../../common/RPC';
 
 import App from '../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -8,9 +7,7 @@ import { BaseTransaction } from './BaseTransaction';
 import { ERC20Token } from '../../models/ERC20';
 import { Gwei_1 } from '../../common/Constants';
 import { INetwork } from '../../common/Networks';
-import { IToken } from '../../common/Tokens';
-import Networks from '../Networks';
-import { getAvatar } from '../../common/ENS';
+import { IToken } from '../../common/tokens';
 
 export class TokenTransferring extends BaseTransaction {
   token: IToken;

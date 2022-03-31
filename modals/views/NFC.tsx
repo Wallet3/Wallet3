@@ -10,7 +10,6 @@ import { BlankPNG } from '../../common/Constants';
 import CachedImage from 'react-native-fast-image';
 import CopyableText from '../../components/CopyableText';
 import IPhone from '../../assets/icons/app/IPhone.svg';
-import { IToken } from '../../common/Tokens';
 import { Ionicons } from '@expo/vector-icons';
 import QRCode from 'react-native-qrcode-svg';
 import Swiper from 'react-native-swiper';

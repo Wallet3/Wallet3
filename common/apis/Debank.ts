@@ -1,4 +1,4 @@
-import { IToken } from '../Tokens';
+import { IToken } from '../tokens';
 import { utils } from 'ethers';
 
 const host = 'https://openapi.debank.com';

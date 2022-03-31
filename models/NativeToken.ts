@@ -2,7 +2,7 @@ import { BigNumber, utils } from 'ethers';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { estimateGas, getBalance } from '../common/RPC';
 
-import { IToken } from '../common/Tokens';
+import { IToken } from '../common/tokens';
 
 export class NativeToken implements IToken {
   readonly owner: string;
