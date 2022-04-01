@@ -4,7 +4,7 @@ import Arbitrum from './arbitrum.svg';
 import Aurora from './aurora.svg';
 import Avalanche from './avalanche.svg';
 import Boba from './boba.svg';
-import Bsc from './bsc.svg';
+import Bsc from './bnb.svg';
 import Celo from './celo.svg';
 import { Coin } from '../../../../components';
 import Cronos from './cronos.svg';
@@ -74,7 +74,7 @@ const ETH = generateNetworkIcon({ chainId: 1, width: 32, style: { marginHorizont
 const ARB = generateNetworkIcon({ chainId: 42161, width: 32 });
 const OPT = generateNetworkIcon({ chainId: 10, width: 30, height: 32 });
 const AVL = generateNetworkIcon({ chainId: 43114, width: 30, height: 32 });
-const BSC = generateNetworkIcon({ chainId: 56, width: 31, height: 32 });
+const BSC = generateNetworkIcon({ chainId: 56, width: 30, height: 32 });
 const CELO = generateNetworkIcon({ chainId: 42220, width: 32 });
 const FTM = generateNetworkIcon({ chainId: 250, width: 32 });
 const HECO = generateNetworkIcon({ chainId: 128, width: 32 });
@@ -220,7 +220,7 @@ export function generateNetworkIcon(props: {
 export default {
   1: <Ethereum width={52} height={52} style={{ ...styles.ethereum, marginTop: -47, marginEnd: -12, opacity: 1 }} />,
   42161: <Arbitrum width={48} height={48} style={{ ...styles.arbitrum, marginTop: -45, marginEnd: -4, opacity: 1 }} />,
-  10: <Optimism width={46} height={46} style={{ ...styles.optimism, marginTop: -44, marginEnd: -2, opacity: 1 }} />,
+  10: <Optimism width={47} height={47} style={{ ...styles.optimism, marginTop: -44, marginEnd: -2, opacity: 1 }} />,
   100: <XDai width={45} height={45} style={{ ...styles.xdai, marginTop: -43, marginEnd: -1, opacity: 1 }} />,
   137: <Polygon width={40} height={40} style={{ ...styles.polygon, marginTop: -36, marginEnd: -2, opacity: 1 }} />,
   43114: <Avalanche width={43} height={43} style={{ ...styles.avalanche, marginTop: -42, marginEnd: -2, opacity: 1 }} />,

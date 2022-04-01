@@ -10,7 +10,7 @@ import { Account } from '../../viewmodels/account/Account';
 import Avatar from '../../components/Avatar';
 import BackButton from '../components/BackButton';
 import { INetwork } from '../../common/Networks';
-import { IToken } from '../../common/Tokens';
+import { IToken } from '../../common/tokens';
 import { MaterialIcons } from '@expo/vector-icons';
 import MessageKeys from '../../common/MessageKeys';
 import Networks from '../../viewmodels/Networks';

@@ -5,10 +5,9 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import BackButton from '../components/BackButton';
 import { Feather } from '@expo/vector-icons';
 import { INetwork } from '../../common/Networks';
-import { IToken } from '../../common/Tokens';
+import { IToken } from '../../common/tokens';
 import React from 'react';
 import Theme from '../../viewmodels/settings/Theme';
-import { fontColor } from '../../constants/styles';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 

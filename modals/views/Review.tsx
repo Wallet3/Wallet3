@@ -95,7 +95,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biom
 
           <View style={{ flexDirection: 'row', maxWidth: '72%', alignItems: 'center' }}>
             {(vm.hasZWSP || vm.isContractRecipient) && (
-              <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', end: 0, bottom: -10 }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', end: 0, bottom: -11.5 }}>
                 <Ionicons
                   name={vm.isContractWallet ? 'wallet-outline' : 'warning'}
                   size={8}

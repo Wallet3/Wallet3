@@ -1,4 +1,5 @@
-import { BigNumber } from 'ethers';
+import { BigNumber, utils } from 'ethers';
+
 import Networks from '../viewmodels/Networks';
 import Providers from '../configs/providers.json';
 import { post } from '../utils/fetch';
@@ -50,19 +51,22 @@ export async function sendTransaction(chainId: number, txHex: string) {
 
   for (let url of urls) {
     try {
-      const resp = await post(url, {
+      const resp = (await post(url, {
         jsonrpc: '2.0',
         method: 'eth_sendRawTransaction',
         params: [txHex],
         id: Date.now(),
-      });
+      })) as { id: number; result: string; error: { code: number; message: string } };
 
       if (resp.error) {
         error = resp.error;
         continue;
       }
 
-      return resp as { id: number; result: string; error: { code: number; message: string } };
+      if (utils.isBytesLike(resp.result)) {
+      }
+
+      return resp;
     } catch {}
   }
 

@@ -34,15 +34,15 @@ class EtherscanHub {
     return Database.etherscan_contracts;
   }
 
-  async decodeCall(network: INetwork, contractAddress: string, calldata: string): Promise<DecodedFunc | undefined> {
-    if (!network.etherscanApi) return;
+  async decodeCall(network: INetwork, contractAddress: string, calldata: string): Promise<DecodedFunc | null> {
+    if (!network.etherscanApi) return null;
 
     const existOne = await this.table.findOne({ where: { contract: contractAddress, chainId: network.chainId } });
     let abi: any[] | undefined = existOne?.abi;
 
     if (!abi) {
       abi = await getAbi(contractAddress, network.chainId, network.etherscanApi);
-      if (!abi || !Array.isArray(abi)) return;
+      if (!abi || !Array.isArray(abi)) return null;
 
       const entity = new EtherscanContract();
       entity.contract = contractAddress;
@@ -62,6 +62,8 @@ class EtherscanHub {
         return { func: func.value.name, fullFunc, inputs: func.value.inputs, params, methodID: calldata.substring(0, 10) };
       } catch (error) {}
     }
+
+    return null;
   }
 }
 

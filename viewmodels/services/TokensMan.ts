@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ERC20Token } from '../../models/ERC20';
-import { IToken } from '../../common/Tokens';
+import { IToken } from '../../common/tokens';
 import LINQ from 'linq';
 import Networks from '../Networks';
 import { utils } from 'ethers';

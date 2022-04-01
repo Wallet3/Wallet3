@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 
 import AmountPad from './AmountPad';
-import { IToken } from '../../common/Tokens';
+import { IToken } from '../../common/tokens';
 import Swiper from 'react-native-swiper';
 import Tokenlist from './Tokenlist';
 import { TransferRequesting } from '../../viewmodels/transferring/TransferRequesting';

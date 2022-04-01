@@ -1,8 +1,9 @@
-import CachedImage, { FastImageProps } from 'react-native-fast-image';
-import { Image, ImageResizeMode, ImageSourcePropType, ImageStyle, ImageURISource, StyleProp } from 'react-native';
+import FastImage, { FastImageProps } from 'react-native-fast-image';
+import { Image, ImageSourcePropType, View } from 'react-native';
 import React, { useState } from 'react';
 
 import Networks from '../viewmodels/Networks';
+import SvgImage from 'react-native-remote-svg';
 import icons from '../assets/icons/crypto';
 import { observer } from 'mobx-react-lite';
 
@@ -32,34 +33,31 @@ export default observer((props: CoinProps) => {
     ? [props.iconUrl && !icons[symbol] ? { uri: props.iconUrl } : icons[symbol] || { uri: logoUrl }]
     : useState(props.iconUrl && !icons[symbol] ? { uri: props.iconUrl } : icons[symbol] || { uri: logoUrl });
 
-  const [failedSource, setFailedSource] = useState();
+  const [failedSource, setFailedSource] = useState(
+    source?.uri?.startsWith?.('data:image/svg+xml') || source?.uri?.endsWith?.('.svg') ? icons['_coin'] : undefined
+  );
 
   const size = props.size || (props.style as any)?.width || 22;
+  const style = {
+    width: size,
+    height: size,
+    ...((props.style as any) || {}),
+    borderRadius: props.iconUrl ? size / 2 : 0,
+  };
 
-  return source.uri && !failedSource ? (
-    <CachedImage
-      {...props}
-      onError={() => setFailedSource(icons['_coin'])}
-      source={source}
-      style={{
-        width: size,
-        height: size,
-        ...((props.style as any) || {}),
-        borderRadius: props.iconUrl ? size / 2 : 0,
-      }}
-    />
+  return failedSource ? (
+    // @ts-ignore
+    <Image {...props} source={icons['_coin']} style={style} />
+  ) : source.uri ? (
+    <FastImage {...props} source={source} onError={() => setFailedSource(icons['_coin'])} style={style} />
   ) : (
     // @ts-ignore
     <Image
       {...props}
-      source={failedSource || source}
+      source={source}
+      defaultSource={icons['_coin']}
       onError={() => setFailedSource(icons['_coin'])}
-      style={{
-        width: size,
-        height: size,
-        ...((props.style as any) || {}),
-        borderRadius: props.iconUrl ? size / 2 : 0,
-      }}
+      style={style}
     />
   );
 });

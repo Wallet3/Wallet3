@@ -186,10 +186,9 @@ export class RawTransactionRequest extends BaseTransaction {
 
         this.decodingFunc = true;
         const decodedFunc = await EtherscanHub.decodeCall(this.network, param.to, param.data);
-        if (!decodedFunc) break;
 
         runInAction(() => {
-          this.decodedFunc = decodedFunc || '';
+          this.decodedFunc = decodedFunc;
           this.decodingFunc = false;
         });
     }

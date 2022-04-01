@@ -9,7 +9,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { formatAddress, formatCurrency } from '../../utils/formatter';
 
 import { INetwork } from '../../common/Networks';
-import { IToken } from '../../common/Tokens';
+import { IToken } from '../../common/tokens';
 import { LineChart } from 'react-native-svg-charts';
 import Theme from '../../viewmodels/settings/Theme';
 import { TokenData } from '../../viewmodels/services/TokenData';
