@@ -1,17 +1,17 @@
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { convertBounceToNfts, convertRaribleResultToNfts } from '../services/NftTransformer';
 
-import { NFT } from '../transferring/NonFungibleTokenTransferring';
+import { NFTMetadata } from '../transferring/NonFungibleTokenTransferring';
 import Networks from '../Networks';
 import { getBounceNfts } from '../../common/apis/Bounce';
 import { getNftsByOwner } from '../../common/apis/Rarible';
 import { startLayoutAnimation } from '../../utils/animations';
 
 export class NFTViewer {
-  private cache = new Map<number, NFT[]>();
+  private cache = new Map<number, NFTMetadata[]>();
 
   readonly owner: string;
-  nfts: NFT[] = [];
+  nfts: NFTMetadata[] = [];
 
   constructor(owner: string) {
     this.owner = owner;
@@ -19,7 +19,7 @@ export class NFTViewer {
     makeObservable(this, { nfts: observable, setNFTs: action });
   }
 
-  setNFTs(nfts: NFT[]) {
+  setNFTs(nfts: NFTMetadata[]) {
     startLayoutAnimation();
     this.nfts = nfts;
   }
@@ -35,7 +35,7 @@ export class NFTViewer {
 
     runInAction(() => this.setNFTs([]));
 
-    let result: NFT[] | undefined;
+    let result: NFTMetadata[] | undefined;
 
     switch (current.chainId) {
       case 1:

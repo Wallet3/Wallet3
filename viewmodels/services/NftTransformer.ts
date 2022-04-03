@@ -1,7 +1,7 @@
 import { BounceResponse, Nfts1155, Nfts721 } from '../../common/apis/Bounce.types';
 import { Nft, NftsByOwner } from '../../common/apis/Rarible.types';
 
-import { NFT } from '../transferring/NonFungibleTokenTransferring';
+import { NFTMetadata } from '../transferring/NonFungibleTokenTransferring';
 import { OpenseaAssetsResponse } from '../../common/apis/Opensea.types';
 
 const convertProtocol = (items: (string | undefined)[]) => {
@@ -29,7 +29,7 @@ export function convertRaribleNftToNft(item: Nft) {
   };
 }
 
-export function convertRaribleResultToNfts(result?: NftsByOwner): NFT[] | undefined {
+export function convertRaribleResultToNfts(result?: NftsByOwner): NFTMetadata[] | undefined {
   if (!result) return;
 
   try {
@@ -71,7 +71,7 @@ export function convertBounceToNfts(result?: BounceResponse) {
   } catch (error) {}
 }
 
-export function convertOpenseaAssetsToNft(result?: OpenseaAssetsResponse): NFT[] | undefined {
+export function convertOpenseaAssetsToNft(result?: OpenseaAssetsResponse): NFTMetadata[] | undefined {
   if (!result) return;
 
   return result.assets.map((a) => {

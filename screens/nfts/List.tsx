@@ -8,7 +8,7 @@ import { INetwork } from '../../common/Networks';
 import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
 import { Ionicons } from '@expo/vector-icons';
 import MultiSourceImage from '../../components/MultiSourceImage';
-import { NFT } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
+import { NFTMetadata } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
 import Networks from '../../viewmodels/Networks';
 import { Nft } from '../../common/apis/Rarible.types';
 import { ReactiveScreen } from '../../utils/device';
@@ -36,7 +36,7 @@ const NFTItem = ({
   backgroundColor: string;
   foregroundColor: string;
   network: INetwork;
-  nft: NFT;
+  nft: NFTMetadata;
 }) => {
   const [colorResult, setColorResult] = useState<ImageColorsResult>();
   const [nftBackgroundColor, setNftBackgroundColor] = useState<string>();
