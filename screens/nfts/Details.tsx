@@ -1,4 +1,4 @@
-import { Etherscan, Opensea, Rarible, Polygon } from '../../assets/3rd';
+import { Etherscan, Opensea, Polygon, Rarible } from '../../assets/3rd';
 import { EvilIcons, Ionicons } from '@expo/vector-icons';
 import { NFTMetadata, NFTTransferring } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
 import { Platform, Share, Text, TouchableOpacity, View } from 'react-native';
@@ -223,7 +223,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
                   style={{ paddingEnd: 20 }}
                   onPress={() => openBrowser(`${current.explorer}/token/${item.contract}?a=${item.tokenId}`)}
                 >
-                  <Polygon width={24} height={24} />
+                  <Polygon width={23} height={24} />
                 </TouchableOpacity>
               )}
 

@@ -4,6 +4,7 @@ import Polygon from './polygon.svg';
 import Github from './github.svg';
 import Metamask from './metamask.svg';
 import Opensea from './opensea.svg';
+import Polygon from './polygon.svg';
 import Rarible from './rarible.svg';
 import Twitter from './twitter.svg';
 import WalletConnect from './walletconnect.svg';
