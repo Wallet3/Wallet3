@@ -1,4 +1,4 @@
-import { Etherscan, Opensea, Rarible } from '../../assets/3rd';
+import { Etherscan, Opensea, Rarible, Polygon } from '../../assets/3rd';
 import { EvilIcons, Ionicons } from '@expo/vector-icons';
 import { NFTMetadata, NFTTransferring } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
 import { Platform, Share, Text, TouchableOpacity, View } from 'react-native';
@@ -210,12 +210,22 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
             <Text style={{ color: detailColor, fontSize: 20, fontWeight: '600', marginBottom: 8 }}>{t('nft-txt-web3')}</Text>
 
             <View style={{ paddingTop: 4, flexDirection: 'row', alignItems: 'center' }}>
-              <TouchableOpacity
-                style={{ paddingEnd: 20 }}
-                onPress={() => openBrowser(`${current.explorer}/nft/${item.contract}/${item.tokenId}`)}
-              >
-                <Etherscan width={24} height={24} />
-              </TouchableOpacity>
+              {[1].includes(current.chainId) && (
+                <TouchableOpacity
+                  style={{ paddingEnd: 20 }}
+                  onPress={() => openBrowser(`${current.explorer}/nft/${item.contract}/${item.tokenId}`)}
+                >
+                  <Etherscan width={24} height={24} />
+                </TouchableOpacity>
+              )}
+              {[137].includes(current.chainId) && (
+                <TouchableOpacity
+                  style={{ paddingEnd: 20 }}
+                  onPress={() => openBrowser(`${current.explorer}/token/${item.contract}?a=${item.tokenId}`)}
+                >
+                  <Polygon width={24} height={24} />
+                </TouchableOpacity>
+              )}
 
               <TouchableOpacity style={{ paddingEnd: 20 }} onPress={() => openBrowser(vm?.openseaLink)}>
                 <Opensea width={24} height={24} />

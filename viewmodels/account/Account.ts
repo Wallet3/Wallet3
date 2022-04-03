@@ -59,6 +59,7 @@ export class Account {
     // address = '0x23d09ed7a3f46270271f5b2e00bfb4aecf361160';
     // address = '0xf0e0F53bF0564C82A8046bfB58E009076aafaAa3'; // japanese artist
     // address = '0xC0c648e8a51Fa89141b2ff297C8cD3270ab93576'; // BSC nfts
+    // address = '0x1B1cDE3174a2e4b864764A592b6fD5170Ff50FE7'; //ETH and Polygon NFT
 
     this.address = address;
     this.index = index;
