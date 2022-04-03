@@ -1,6 +1,7 @@
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { convertBounceToNfts, convertRaribleResultToNfts } from '../services/NftTransformer';
 
+import NFTHub from '../hubs/NFTHub';
 import { NFTMetadata } from '../transferring/NonFungibleTokenTransferring';
 import Networks from '../Networks';
 import { getBounceNfts } from '../../common/apis/Bounce';
@@ -41,7 +42,10 @@ export class NFTViewer {
       case 1:
       case 137:
         result = convertRaribleResultToNfts(
-          await getNftsByOwner(this.owner, { chain: current.network.toLowerCase(), size: 500 })
+          await NFTHub.fillRaribleNFTs(
+            current,
+            await getNftsByOwner(this.owner, { chain: current.network.toLowerCase(), size: 500 })
+          )
         );
         break;
       case 56:

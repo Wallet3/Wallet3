@@ -7,7 +7,7 @@ export default class NFT extends BaseEntity {
   @PrimaryColumn()
   contract!: string;
 
-  @Column()
+  @PrimaryColumn()
   tokenId!: string;
 
   @Column({ nullable: false })
