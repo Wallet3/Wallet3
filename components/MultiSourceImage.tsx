@@ -1,7 +1,7 @@
 import * as Animatable from 'react-native-animatable';
 
 import FastImage, { FastImageProps } from 'react-native-fast-image';
-import { ImageSourcePropType, Text, View } from 'react-native';
+import { ImageSourcePropType, View } from 'react-native';
 import React, { useState } from 'react';
 
 import { BreathAnimation } from '../utils/animations';
@@ -10,6 +10,7 @@ import ImageColors from 'react-native-image-colors';
 import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
 import SvgImage from 'react-native-remote-svg';
 import Video from 'react-native-video';
+import { getMemorySize } from '../utils/device';
 
 // @ts-ignore
 interface Props extends FastImageProps {
@@ -31,6 +32,7 @@ export default (props: Props) => {
   const parseColor = async (url: string) => {
     if (!url) return;
     if (!onColorParsed) return;
+    if ((await getMemorySize()) < 3072) return;
 
     try {
       const result = await ImageColors.getColors(url, { cache: true });

@@ -1,5 +1,6 @@
 import { computed, makeObservable, observable, runInAction } from 'mobx';
 
+import DeviceInfo from 'react-native-device-info';
 import { Dimensions } from 'react-native';
 import EventEmitter from 'events';
 
@@ -35,3 +36,14 @@ class ReactScreen extends EventEmitter {
 }
 
 export const ReactiveScreen = new ReactScreen();
+
+let maxMemory = 0;
+
+export async function getMemorySize() {
+  if (maxMemory) return maxMemory;
+
+  const memory = await DeviceInfo.getTotalMemory();
+  maxMemory = Math.ceil(memory / 1024 / 1024);
+
+  return maxMemory;
+}
