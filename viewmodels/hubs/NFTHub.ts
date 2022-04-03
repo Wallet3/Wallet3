@@ -46,7 +46,7 @@ class NFTHub {
         item.meta = {
           name: metadata.title || '',
           description: metadata.description || '',
-          attributes: metadata.attributes,
+          attributes: metadata.attributes || [],
           image: {
             url: {
               ORIGINAL: metadata.images?.[0] || '',
