@@ -1,6 +1,6 @@
 import { Etherscan, Opensea, Rarible } from '../../assets/3rd';
 import { EvilIcons, Ionicons } from '@expo/vector-icons';
-import { NFT, NFTTransferring } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
+import { NFTMetadata, NFTTransferring } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
 import { Platform, Share, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 
@@ -29,7 +29,7 @@ import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default observer(({ navigation, route }: NativeStackScreenProps<any, any>) => {
-  const { item, colorResult } = route.params as { item: NFT; colorResult?: ImageColorsResult };
+  const { item, colorResult } = route.params as { item: NFTMetadata; colorResult?: ImageColorsResult };
   const { t } = i18n;
   const { top, bottom } = useSafeAreaInsets();
   const { current } = Networks;

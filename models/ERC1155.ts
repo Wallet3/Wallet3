@@ -1,5 +1,5 @@
 import ERC1155ABI from '../abis/ERC1155.json';
-import { NonFungibleToken } from './NFT';
+import { NonFungibleToken } from './NonFungibleToken';
 import { ethers } from 'ethers';
 
 export class ERC1155Token extends NonFungibleToken {

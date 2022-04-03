@@ -12,7 +12,7 @@ import { INetwork } from '../../common/Networks';
 import { showMessage } from 'react-native-flash-message';
 import { startLayoutAnimation } from '../../utils/animations';
 
-export interface NFT {
+export interface NFTMetadata {
   id: string;
   tokenId: string;
   contract: string;
@@ -26,13 +26,13 @@ export interface NFT {
 }
 
 interface IConstructor {
-  nft: NFT;
+  nft: NFTMetadata;
   network: INetwork;
   account?: Account;
 }
 
 export class NFTTransferring extends BaseTransaction {
-  readonly nft: NFT;
+  readonly nft: NFTMetadata;
   readonly erc721: ERC721Token;
   readonly erc1155: ERC1155Token;
 

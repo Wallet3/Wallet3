@@ -1,7 +1,7 @@
 import { ethers, utils } from 'ethers';
 
 import ERC721ABI from '../abis/ERC721.json';
-import { NonFungibleToken } from './NFT';
+import { NonFungibleToken } from './NonFungibleToken';
 import { eth_call } from '../common/RPC';
 
 export class ERC721Token extends NonFungibleToken {

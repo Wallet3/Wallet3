@@ -4,6 +4,7 @@ import Chain from './Chain';
 import EtherscanContract from './EtherscanContract';
 import InpageDApp from './InpageDApp';
 import Key from './Key';
+import NFT from './NFT';
 import Transaction from './Transaction';
 import WCSession_v1 from './WCSession_v1';
 
@@ -16,6 +17,7 @@ class Database {
   inpageDApps!: Repository<InpageDApp>;
   chains!: Repository<Chain>;
   etherscan_contracts!: Repository<EtherscanContract>;
+  nfts!: Repository<NFT>;
 
   async init() {
     if (this._connection) return;
@@ -25,7 +27,7 @@ class Database {
       database: __DEV__ ? 'dev5' : 'appdata',
       driver: require('expo-sqlite'),
       synchronize: true,
-      entities: [Key, Transaction, WCSession_v1, InpageDApp, Chain, EtherscanContract],
+      entities: [Key, Transaction, WCSession_v1, InpageDApp, Chain, EtherscanContract, NFT],
     });
 
     this.keys = this._connection.getRepository(Key);
@@ -34,6 +36,7 @@ class Database {
     this.inpageDApps = this._connection.getRepository(InpageDApp);
     this.chains = this._connection.getRepository(Chain);
     this.etherscan_contracts = this._connection.getRepository(EtherscanContract);
+    this.nfts = this._connection.getRepository(NFT);
   }
 
   async reset() {

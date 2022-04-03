@@ -1,47 +1,18 @@
-import { makeObservable, observable, runInAction } from 'mobx';
+import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
 
-import { NFT } from '../viewmodels/transferring/NonFungibleTokenTransferring';
-import { convertRaribleNftToNft } from '../viewmodels/services/NftTransformer';
-import { getNftById } from '../common/apis/Rarible';
+import { NFTMetadata } from '../viewmodels/transferring/NonFungibleTokenTransferring';
 
-export abstract class NonFungibleToken {
-  metadata: NFT | null = null;
+@Entity({ name: 'nfts' })
+export default class NFT extends BaseEntity {
+  @PrimaryColumn()
+  contract!: string;
 
-  readonly chainId: number;
-  readonly address: string;
-  readonly owner: string;
-  readonly tokenId: string;
+  @PrimaryColumn()
+  tokenId!: string;
 
-  constructor({
-    contract,
-    tokenId,
-    chainId,
-    fetchMetadata,
-  }: {
-    contract: string;
-    tokenId: string;
-    chainId: number;
-    fetchMetadata?: boolean;
-  }) {
-    this.address = contract;
-    this.chainId = chainId;
-    this.owner = tokenId;
-    this.tokenId = tokenId;
+  @Column({ nullable: false })
+  chainId!: number;
 
-    makeObservable(this, { metadata: observable });
-
-    if (fetchMetadata) this.fetchMetadata();
-  }
-
-  async fetchMetadata() {
-    switch (this.chainId) {
-      case 1:
-      case 137:
-        const nft = await getNftById(this.address, this.tokenId, this.chainId === 1 ? 'ethereum' : 'polygon');
-        if (nft) runInAction(() => (this.metadata = convertRaribleNftToNft(nft)));
-        break;
-      case 56:
-        break;
-    }
-  }
+  @Column({ type: 'simple-json', nullable: true })
+  metadata!: NFTMetadata;
 }
