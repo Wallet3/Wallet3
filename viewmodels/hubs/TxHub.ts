@@ -34,21 +34,22 @@ class TxHub {
   async init() {
     let [minedTxs, unconfirmedTxs] = await Promise.all([
       this.repository.find({
-        where: { blockNumber: MoreThan(0), hash: Not(IsNull()) },
+        where: { blockHash: Not(IsNull()) },
         order: { timestamp: 'DESC' },
         take: 100,
       }),
-      this.repository.find({ where: { blockNumber: IsNull() } }),
+      this.repository.find({ where: { blockHash: IsNull() } }),
     ]);
 
     runInAction(() => (this.txs = minedTxs));
 
-    const abandonedTxs = unconfirmedTxs.filter((tx) =>
-      minedTxs.find((t) => t.from === tx.from && t.chainId === tx.chainId && t.nonce >= tx.nonce)
+    const abandonedTxs = unconfirmedTxs.filter((un) =>
+      minedTxs.find((t) => t.from.toLowerCase() === un.from.toLowerCase() && t.chainId === un.chainId && t.nonce >= un.nonce)
     );
 
-    abandonedTxs.map((t) => t.remove());
     unconfirmedTxs = unconfirmedTxs.filter((un) => !abandonedTxs.find((ab) => ab.hash === un.hash));
+
+    abandonedTxs.map((t) => t.remove());
 
     const pendingTxs = LINQ.from(unconfirmedTxs)
       .groupBy((t) => t.chainId)
@@ -62,7 +63,7 @@ class TxHub {
       .flat();
 
     runInAction(() => this.pendingTxs.push(...pendingTxs));
-    setTimeout(() => this.watchPendingTxs(), 0);
+    setTimeout(() => this.watchPendingTxs(), 10);
   }
 
   loadMore = async () => {
@@ -144,7 +145,7 @@ class TxHub {
           pt.nonce >
             LINQ.from(this.txs)
               .where((t) => t.chainId === pt.chainId)
-              .take(5)
+              .take(3)
               .maxBy((i) => i.nonce).nonce
       );
 
