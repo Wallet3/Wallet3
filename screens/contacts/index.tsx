@@ -1,10 +1,10 @@
 import Contacts, { IContact } from '../../viewmodels/customs/Contacts';
+import { EvilIcons, FontAwesome } from '@expo/vector-icons';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
 
 import Avatar from '../../components/Avatar';
 import ContactDetails from './ContactDetails';
-import { FontAwesome } from '@expo/vector-icons';
 import { Modalize } from 'react-native-modalize';
 import { Portal } from 'react-native-portalize';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -13,6 +13,7 @@ import Theme from '../../viewmodels/settings/Theme';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { startLayoutAnimation } from '../../utils/animations';
 import { styles } from '../../constants/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
@@ -36,12 +37,12 @@ export default observer(() => {
             setTimeout(() => openAccountModal(), 5);
           }}
         >
-          <View style={{ marginEnd: 12 }}>
-            <FontAwesome
-              name="user-circle-o"
-              size={32}
+          <View style={{ marginEnd: 12, alignItems: 'center', justifyContent: 'center' }}>
+            <EvilIcons
+              name="user"
+              size={45}
               color={secondaryTextColor}
-              style={{ opacity: 0.5, position: 'absolute' }}
+              style={{ opacity: 0.5, position: 'absolute', marginStart: -11 }}
             />
             <Avatar size={32} emoji={item.emoji?.icon} backgroundColor={item.emoji?.color} uri={item.avatar} />
           </View>
@@ -94,6 +95,7 @@ export default observer(() => {
               onEditing={setEditing}
               onSave={() => {
                 closeAccountModal();
+                startLayoutAnimation();
                 Contacts.saveContact(selectedContact!);
               }}
             />

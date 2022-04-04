@@ -1,4 +1,4 @@
-import { AntDesign, FontAwesome, Ionicons } from '@expo/vector-icons';
+import { AntDesign, EvilIcons, FontAwesome, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { Button, SafeViewContainer } from '../../components';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 
@@ -20,16 +20,16 @@ export default observer(
 
     return (
       <SafeViewContainer style={{ padding: 16, height: 430 }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 24 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
           <View>
             <Text
               numberOfLines={1}
               style={{
-                fontSize: 27,
+                fontSize: 24,
                 color: thirdTextColor,
                 textShadowColor: tintColor,
                 textShadowOffset: { width: 0, height: 0 },
-                textShadowRadius: 1.5,
+                textShadowRadius: 0.1,
               }}
             >
               {contact?.name || contact?.ens || formatAddress(contact?.address || '', 7, 5)}
@@ -40,14 +40,14 @@ export default observer(
             </Text>
           </View>
 
-          <View>
-            <FontAwesome
-              name="user-circle-o"
-              size={48}
+          <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+            <EvilIcons
+              name="user"
+              size={55}
               color={secondaryTextColor}
-              style={{ opacity: 0.5, position: 'absolute' }}
+              style={{ opacity: 0.5, position: 'absolute', marginStart: -10 }}
             />
-            <Avatar size={48} emoji={contact?.emoji?.icon} backgroundColor={contact?.emoji?.color} uri={contact?.avatar} />
+            <Avatar size={42} emoji={contact?.emoji?.icon} backgroundColor={contact?.emoji?.color} uri={contact?.avatar} />
           </View>
         </View>
 
