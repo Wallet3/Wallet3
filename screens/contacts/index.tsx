@@ -3,6 +3,7 @@ import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
 
 import Avatar from '../../components/Avatar';
+import ContactDetails from './ContactDetails';
 import { FontAwesome } from '@expo/vector-icons';
 import { Modalize } from 'react-native-modalize';
 import { Portal } from 'react-native-portalize';
@@ -16,10 +17,11 @@ import { styles } from '../../constants/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 export default observer(() => {
-  const { textColor, secondaryTextColor, thirdTextColor, tintColor } = Theme;
+  const { textColor, secondaryTextColor } = Theme;
   const { t } = i18n;
   const [selectedContact, setSelectedContact] = useState<IContact>();
-  const { ref: accountModal, open: openAccount, close: closeAccount } = useModalize();
+  const { ref: accountModal, open: openAccountModal, close: closeAccountModal } = useModalize();
+  const [editing, setEditing] = useState(false);
 
   const renderItem = ({ item }: { item: IContact }) => {
     return (
@@ -31,7 +33,7 @@ export default observer(() => {
           style={{ flexDirection: 'row', flex: 1, alignItems: 'center' }}
           onPress={() => {
             setSelectedContact(item);
-            setTimeout(() => openAccount(), 5);
+            setTimeout(() => openAccountModal(), 5);
           }}
         >
           <View style={{ marginEnd: 12 }}>
@@ -80,48 +82,21 @@ export default observer(() => {
         <Modalize
           ref={accountModal}
           modalHeight={430}
+          withHandle={!editing}
+          closeOnOverlayTap={!editing}
           disableScrollIfPossible
           modalStyle={styles.modalStyle}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
           <SafeAreaProvider>
-            <SafeViewContainer style={{ padding: 16, height: 430 }}>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <View>
-                  <Text
-                    numberOfLines={1}
-                    style={{
-                      fontSize: 27,
-                      color: thirdTextColor,
-                      textShadowColor: tintColor,
-                      textShadowOffset: { width: 0, height: 0 },
-                      textShadowRadius: 1.5,
-                    }}
-                  >
-                    {selectedContact?.name || selectedContact?.ens || formatAddress(selectedContact?.address || '', 7, 5)}
-                  </Text>
-
-                  <Text style={{ fontSize: 12.5, color: secondaryTextColor }} numberOfLines={1}>
-                    {selectedContact?.name || selectedContact?.ens ? formatAddress(selectedContact?.address) : ''}
-                  </Text>
-                </View>
-
-                <View>
-                  <FontAwesome
-                    name="user-circle-o"
-                    size={48}
-                    color={secondaryTextColor}
-                    style={{ opacity: 0.5, position: 'absolute' }}
-                  />
-                  <Avatar
-                    size={48}
-                    emoji={selectedContact?.emoji?.icon}
-                    backgroundColor={selectedContact?.emoji?.color}
-                    uri={selectedContact?.avatar}
-                  />
-                </View>
-              </View>
-            </SafeViewContainer>
+            <ContactDetails
+              contact={selectedContact}
+              onEditing={setEditing}
+              onSave={() => {
+                closeAccountModal();
+                Contacts.saveContact(selectedContact!);
+              }}
+            />
           </SafeAreaProvider>
         </Modalize>
       </Portal>

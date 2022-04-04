@@ -11,6 +11,7 @@ export interface IContact {
   avatar?: string;
   name?: string;
   emoji?: { color: string; icon: string };
+  more?: { tel?: string; email?: string; twitter?: string; note?: string };
 }
 
 class Contacts {
@@ -28,6 +29,8 @@ class Contacts {
     AsyncStorage.getItem(`contacts`).then((v) => {
       const contacts: IContact[] = JSON.parse(v || '[]');
       for (let c of contacts) {
+        c.more = c.more || {};
+
         const a = App.findAccount(c.address);
         if (!a) continue;
 
