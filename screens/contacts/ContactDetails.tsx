@@ -54,14 +54,14 @@ export default observer(
         <View style={styles.itemContainer}>
           <View style={styles.itemTitleContainer}>
             <Ionicons name="people-outline" size={21} color={secondaryTextColor} />
-            <Text style={titleStyle}>Name</Text>
+            <Text style={titleStyle}>{t('contacts-detail-name')}</Text>
           </View>
 
           <TextInput
             style={textInputStyle}
             numberOfLines={1}
             defaultValue={contact?.name || contact?.ens}
-            placeholder="tap to edit"
+            placeholder={t('contacts-detail-tap-to-edit')}
             placeholderTextColor="#dfdfdfc0"
             onFocus={() => onEditing?.(true)}
             onBlur={() => onEditing?.(false)}
@@ -72,14 +72,14 @@ export default observer(
         <View style={styles.itemContainer}>
           <View style={styles.itemTitleContainer}>
             <Ionicons name="call-outline" size={21} color={secondaryTextColor} />
-            <Text style={titleStyle}>Telephone</Text>
+            <Text style={titleStyle}>{t('contacts-detail-telephone')}</Text>
           </View>
 
           <TextInput
             style={textInputStyle}
             numberOfLines={1}
             defaultValue={contact?.more?.tel}
-            placeholder="tap to edit"
+            placeholder={t('contacts-detail-tap-to-edit')}
             placeholderTextColor="#dfdfdfc0"
             onFocus={() => onEditing?.(true)}
             onBlur={() => onEditing?.(false)}
@@ -89,22 +89,17 @@ export default observer(
 
         <View style={styles.itemContainer}>
           <View style={styles.itemTitleContainer}>
-            <Ionicons
-              name="at-outline"
-              size={21}
-              color={secondaryTextColor}
-              placeholder="tap to edit"
-              placeholderTextColor="#dfdfdfc0"
-            />
-            <Text style={titleStyle}>Mail</Text>
+            <Ionicons name="at-outline" size={21} color={secondaryTextColor} placeholderTextColor="#dfdfdfc0" />
+            <Text style={titleStyle}>{t('contacts-detail-email')}</Text>
           </View>
 
           <TextInput
             style={textInputStyle}
             numberOfLines={1}
             defaultValue={contact?.more?.email}
-            placeholder="tap to edit"
+            placeholder={t('contacts-detail-tap-to-edit')}
             placeholderTextColor="#dfdfdfc0"
+            keyboardType="email-address"
             onFocus={() => onEditing?.(true)}
             onBlur={() => onEditing?.(false)}
             onChangeText={(text) => runInAction(() => (contact!.more!.email = text))}
@@ -114,14 +109,14 @@ export default observer(
         <View style={styles.itemContainer}>
           <View style={styles.itemTitleContainer}>
             <Ionicons name="document-text-outline" size={21} color={secondaryTextColor} />
-            <Text style={titleStyle}>Note</Text>
+            <Text style={titleStyle}>{t('contacts-detail-note')}</Text>
           </View>
 
           <TextInput
             style={textInputStyle}
             numberOfLines={1}
             defaultValue={contact?.more?.note}
-            placeholder="tap to edit"
+            placeholder={t('contacts-detail-tap-to-edit')}
             placeholderTextColor="#dfdfdfc0"
             onFocus={() => onEditing?.(true)}
             onBlur={() => onEditing?.(false)}
