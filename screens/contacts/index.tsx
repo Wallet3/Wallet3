@@ -40,9 +40,9 @@ export default observer(() => {
           <View style={{ marginEnd: 12, alignItems: 'center', justifyContent: 'center' }}>
             <EvilIcons
               name="user"
-              size={45}
+              size={42}
               color={secondaryTextColor}
-              style={{ opacity: 0.5, position: 'absolute', marginStart: -11 }}
+              style={{ opacity: 0.5, position: 'absolute', marginStart: -12 }}
             />
             <Avatar size={32} emoji={item.emoji?.icon} backgroundColor={item.emoji?.color} uri={item.avatar} />
           </View>
@@ -82,14 +82,14 @@ export default observer(() => {
       <Portal>
         <Modalize
           ref={accountModal}
-          modalHeight={430}
+          adjustToContentHeight
           withHandle={!editing}
           closeOnOverlayTap={!editing}
           disableScrollIfPossible
           modalStyle={styles.modalStyle}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <SafeAreaProvider>
+          <SafeAreaProvider style={{ height: 430 }}>
             <ContactDetails
               contact={selectedContact}
               onEditing={setEditing}

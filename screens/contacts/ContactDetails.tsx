@@ -19,7 +19,7 @@ export default observer(
     const textInputStyle = { ...styles.textInput, color: secondaryTextColor };
 
     return (
-      <SafeViewContainer style={{ padding: 16, height: 430 }}>
+      <SafeViewContainer style={{ padding: 16 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
           <View>
             <Text
@@ -61,7 +61,7 @@ export default observer(
             style={textInputStyle}
             numberOfLines={1}
             defaultValue={contact?.name || contact?.ens}
-            placeholder="Tap to edit"
+            placeholder="tap to edit"
             placeholderTextColor="#dfdfdfc0"
             onFocus={() => onEditing?.(true)}
             onBlur={() => onEditing?.(false)}
@@ -142,6 +142,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 16,
+    // paddingBottom: 6,
+    // borderBottomColor: '#dfdfdf70',
+    // borderBottomWidth: 1,
   },
 
   itemTitleContainer: {
