@@ -62,6 +62,7 @@
   "qrscan-tip-eth-address": "ENS, ETH Address",
   "qrscan-tip-above-types": "Please scan for one of the above types of QRCode.",
   "contacts-no-more-info": "No more information",
+  "contacts-remote-confirm-desc": "Are you sure to delete this contact?",
   "connectedapps-title": "Connected DApps",
   "connectedapps-noapps": "No Connected Apps",
   "connectedapps-list-last-used": "Last used",

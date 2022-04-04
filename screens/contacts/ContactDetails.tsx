@@ -79,7 +79,7 @@ export default observer(
             style={textInputStyle}
             numberOfLines={1}
             defaultValue={contact?.more?.tel}
-            placeholder="Tap to edit"
+            placeholder="tap to edit"
             placeholderTextColor="#dfdfdfc0"
             onFocus={() => onEditing?.(true)}
             onBlur={() => onEditing?.(false)}
@@ -93,7 +93,7 @@ export default observer(
               name="at-outline"
               size={21}
               color={secondaryTextColor}
-              placeholder="Tap to edit"
+              placeholder="tap to edit"
               placeholderTextColor="#dfdfdfc0"
             />
             <Text style={titleStyle}>Mail</Text>
@@ -103,7 +103,7 @@ export default observer(
             style={textInputStyle}
             numberOfLines={1}
             defaultValue={contact?.more?.email}
-            placeholder="Tap to edit"
+            placeholder="tap to edit"
             placeholderTextColor="#dfdfdfc0"
             onFocus={() => onEditing?.(true)}
             onBlur={() => onEditing?.(false)}
@@ -121,7 +121,7 @@ export default observer(
             style={textInputStyle}
             numberOfLines={1}
             defaultValue={contact?.more?.note}
-            placeholder="Tap to edit"
+            placeholder="tap to edit"
             placeholderTextColor="#dfdfdfc0"
             onFocus={() => onEditing?.(true)}
             onBlur={() => onEditing?.(false)}

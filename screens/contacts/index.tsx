@@ -4,6 +4,7 @@ import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
 
 import Avatar from '../../components/Avatar';
+import { Confirm } from '../../modals/views/Confirm';
 import ContactDetails from './ContactDetails';
 import { Modalize } from 'react-native-modalize';
 import { Portal } from 'react-native-portalize';
@@ -18,10 +19,11 @@ import { styles } from '../../constants/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 export default observer(() => {
-  const { textColor, secondaryTextColor } = Theme;
+  const { textColor, secondaryTextColor, backgroundColor } = Theme;
   const { t } = i18n;
   const [selectedContact, setSelectedContact] = useState<IContact>();
   const { ref: accountModal, open: openAccountModal, close: closeAccountModal } = useModalize();
+  const { ref: confirmModal, open: openConfirmModal, close: closeConfirmModal } = useModalize();
   const [editing, setEditing] = useState(false);
 
   const renderItem = ({ item }: { item: IContact }) => {
@@ -62,6 +64,7 @@ export default observer(() => {
           style={{ padding: 12, marginEnd: -12 }}
           onPress={() => {
             setSelectedContact(item);
+            setTimeout(() => openConfirmModal(), 5);
           }}
         >
           <FontAwesome name="trash-o" size={19} color={textColor} />
@@ -89,7 +92,7 @@ export default observer(() => {
           modalStyle={styles.modalStyle}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <SafeAreaProvider style={{ height: 430 }}>
+          <SafeAreaProvider style={{ height: 430, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
             <ContactDetails
               contact={selectedContact}
               onEditing={setEditing}
@@ -97,6 +100,28 @@ export default observer(() => {
                 closeAccountModal();
                 startLayoutAnimation();
                 Contacts.saveContact(selectedContact!);
+              }}
+            />
+          </SafeAreaProvider>
+        </Modalize>
+
+        <Modalize
+          ref={confirmModal}
+          adjustToContentHeight
+          disableScrollIfPossible
+          modalStyle={styles.modalStyle}
+          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+        >
+          <SafeAreaProvider style={{ height: 270, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
+            <Confirm
+              confirmButtonTitle={t('button-confirm')}
+              desc={t('contacts-remote-confirm-desc')}
+              themeColor="crimson"
+              style={{ flex: 1 }}
+              onConfirm={() => {
+                closeConfirmModal();
+                startLayoutAnimation();
+                Contacts.remove(selectedContact!);
               }}
             />
           </SafeAreaProvider>

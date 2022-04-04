@@ -11,7 +11,7 @@ export const numericFontFamily = 'Avenir Next';
 
 export const styles = StyleSheet.create({
   modalStyle: {
-    borderTopStartRadius: 7,
-    borderTopEndRadius: 7,
+    borderTopRightRadius: 7,
+    borderTopLeftRadius: 7,
   },
 });
