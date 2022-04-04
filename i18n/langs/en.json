@@ -61,6 +61,7 @@
   "qrscan-tip-desktop-backup-qrcode": "Wallet 3 Desktop Backup QRCode",
   "qrscan-tip-eth-address": "ENS, ETH Address",
   "qrscan-tip-above-types": "Please scan for one of the above types of QRCode.",
+  "contacts-no-more-info": "No more information",
   "connectedapps-title": "Connected DApps",
   "connectedapps-noapps": "No Connected Apps",
   "connectedapps-list-last-used": "Last used",

@@ -61,6 +61,7 @@
   "qrscan-tip-desktop-backup-qrcode": "Wallet 3 デスクトップ版 QRコード",
   "qrscan-tip-eth-address": "ENS, ETH アドレス",
   "qrscan-tip-above-types": "上記のいずれかのQRコードをスキャンしてください",
+  "contacts-no-more-info": "情報なし",
   "connectedapps-title": "接続された DApps",
   "connectedapps-noapps": "接続されたアプリがない",
   "connectedapps-list-last-used": "最後に使った時間",

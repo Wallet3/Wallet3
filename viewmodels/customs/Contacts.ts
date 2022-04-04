@@ -1,4 +1,4 @@
-import { action, makeObservable, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Networks from '../Networks';
@@ -15,8 +15,12 @@ export interface IContact {
 class Contacts {
   contacts: IContact[] = [];
 
+  get sorted() {
+    return this.contacts.filter((i) => i.name || i.ens).concat(this.contacts.filter((i) => !i.name && !i.ens));
+  }
+
   constructor() {
-    makeObservable(this, { contacts: observable, saveContact: action, reset: action, remove: action });
+    makeObservable(this, { contacts: observable, sorted: computed, saveContact: action, reset: action, remove: action });
   }
 
   init() {

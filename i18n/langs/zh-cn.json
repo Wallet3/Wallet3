@@ -61,6 +61,7 @@
   "qrscan-tip-desktop-backup-qrcode": "Wallet 3 桌面版同步码",
   "qrscan-tip-eth-address": "ENS, ETH 地址",
   "qrscan-tip-above-types": "请扫描上述任一类型的二维码",
+  "contacts-no-more-info": "没有更多信息",
   "connectedapps-title": "已链接的 DApps",
   "connectedapps-noapps": "未连接任何 DApp",
   "connectedapps-list-last-used": "上次使用",
