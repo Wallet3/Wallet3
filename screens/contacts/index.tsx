@@ -4,26 +4,34 @@ import React, { useState } from 'react';
 
 import Avatar from '../../components/Avatar';
 import { FontAwesome } from '@expo/vector-icons';
+import { Modalize } from 'react-native-modalize';
+import { Portal } from 'react-native-portalize';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeViewContainer } from '../../components';
 import Theme from '../../viewmodels/settings/Theme';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { styles } from '../../constants/styles';
+import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 export default observer(() => {
-  const { textColor, secondaryTextColor } = Theme;
+  const { textColor, secondaryTextColor, thirdTextColor, tintColor } = Theme;
   const { t } = i18n;
   const [selectedContact, setSelectedContact] = useState<IContact>();
+  const { ref: accountModal, open: openAccount, close: closeAccount } = useModalize();
 
   const renderItem = ({ item }: { item: IContact }) => {
     return (
       <View
-        key={item.address}
+        key={`${item.address}-${item.name}`}
         style={{ paddingHorizontal: 16, paddingVertical: 8, flexDirection: 'row', alignItems: 'center' }}
       >
         <TouchableOpacity
           style={{ flexDirection: 'row', flex: 1, alignItems: 'center' }}
           onPress={() => {
             setSelectedContact(item);
+            setTimeout(() => openAccount(), 5);
           }}
         >
           <View style={{ marginEnd: 12 }}>
@@ -65,8 +73,58 @@ export default observer(() => {
         data={Contacts.sorted}
         renderItem={renderItem}
         contentContainerStyle={{ paddingTop: 8 }}
-        keyExtractor={(i) => i.address}
+        keyExtractor={(i) => `${i.address}-${i.name}`}
       />
+
+      <Portal>
+        <Modalize
+          ref={accountModal}
+          modalHeight={430}
+          disableScrollIfPossible
+          modalStyle={styles.modalStyle}
+          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+        >
+          <SafeAreaProvider>
+            <SafeViewContainer style={{ padding: 16, height: 430 }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <View>
+                  <Text
+                    numberOfLines={1}
+                    style={{
+                      fontSize: 27,
+                      color: thirdTextColor,
+                      textShadowColor: tintColor,
+                      textShadowOffset: { width: 0, height: 0 },
+                      textShadowRadius: 1.5,
+                    }}
+                  >
+                    {selectedContact?.name || selectedContact?.ens || formatAddress(selectedContact?.address || '', 7, 5)}
+                  </Text>
+
+                  <Text style={{ fontSize: 12.5, color: secondaryTextColor }} numberOfLines={1}>
+                    {selectedContact?.name || selectedContact?.ens ? formatAddress(selectedContact?.address) : ''}
+                  </Text>
+                </View>
+
+                <View>
+                  <FontAwesome
+                    name="user-circle-o"
+                    size={48}
+                    color={secondaryTextColor}
+                    style={{ opacity: 0.5, position: 'absolute' }}
+                  />
+                  <Avatar
+                    size={48}
+                    emoji={selectedContact?.emoji?.icon}
+                    backgroundColor={selectedContact?.emoji?.color}
+                    uri={selectedContact?.avatar}
+                  />
+                </View>
+              </View>
+            </SafeViewContainer>
+          </SafeAreaProvider>
+        </Modalize>
+      </Portal>
     </View>
   );
 });

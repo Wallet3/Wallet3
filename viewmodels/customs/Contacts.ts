@@ -1,5 +1,6 @@
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
+import App from '../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Networks from '../Networks';
 import { getAvatar } from '../../common/ENS';
@@ -25,7 +26,15 @@ class Contacts {
 
   init() {
     AsyncStorage.getItem(`contacts`).then((v) => {
-      const contacts = JSON.parse(v || '[]');
+      const contacts: IContact[] = JSON.parse(v || '[]');
+      for (let c of contacts) {
+        const a = App.findAccount(c.address);
+        if (!a) continue;
+
+        c.name = a.nickname || c.ens || `Account ${a.index}`;
+        c.emoji = { color: a.emojiColor, icon: a.emojiAvatar };
+      }
+
       runInAction(() => (this.contacts = contacts));
     });
   }
