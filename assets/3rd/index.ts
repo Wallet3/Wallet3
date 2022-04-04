@@ -1,6 +1,5 @@
 import Discord from './discord.svg';
 import Etherscan from './etherscan-logo-circle.svg';
-import Polygon from './polygon.svg';
 import Github from './github.svg';
 import Metamask from './metamask.svg';
 import Opensea from './opensea.svg';
