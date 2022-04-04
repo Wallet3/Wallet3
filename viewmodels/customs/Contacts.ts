@@ -17,9 +17,12 @@ class Contacts {
 
   constructor() {
     makeObservable(this, { contacts: observable, saveContact: action, reset: action, remove: action });
+  }
 
+  init() {
     AsyncStorage.getItem(`contacts`).then((v) => {
-      runInAction(() => (this.contacts = JSON.parse(v || '[]')));
+      const contacts = JSON.parse(v || '[]');
+      runInAction(() => (this.contacts = contacts));
     });
   }
 
