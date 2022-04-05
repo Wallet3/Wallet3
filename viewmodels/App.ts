@@ -172,6 +172,7 @@ export class AppVM {
       WalletConnectV1ClientHub.init();
       MetamaskDAppsHub.init();
       LinkHub.start();
+      Contacts.init();
     });
 
     PubSub.subscribe(MessageKeys.userSecretsNotVerified, () => {

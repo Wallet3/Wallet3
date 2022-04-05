@@ -15,10 +15,11 @@ class NFTHub {
     if (!this.table) return;
 
     const lostItems = result.items.filter((i) => !i.deleted && !i.meta);
-    const length = Math.ceil(lostItems.length / 10);
+    const count = 5;
+    const groups = Math.ceil(lostItems.length / count);
 
-    for (let i = 0; i < length; i++) {
-      const requests = lostItems.slice(i * 10, (i + 1) * 10).map(async (item) => {
+    for (let i = 0; i < groups; i++) {
+      const requests = lostItems.slice(i * count, (i + 1) * count).map(async (item) => {
         let nft = await this.table.findOne({
           where: { contract: item.contract, tokenId: item.tokenId, chainId: network.chainId },
         });
@@ -63,6 +64,7 @@ class NFTHub {
       });
 
       await Promise.all(requests);
+      await new Promise((resolve) => setTimeout(resolve, 1001));
     }
 
     return result;

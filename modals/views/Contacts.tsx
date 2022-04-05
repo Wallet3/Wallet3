@@ -145,7 +145,9 @@ export default observer(({ onNext, vm }: Props) => {
           bounces={contacts.length > 7}
           style={{ flex: 1, marginHorizontal: -16 }}
           keyExtractor={(item) => `${item.ens}_${item.address}_${item.avatar}`}
-          ItemSeparatorComponent={() => <View style={{ backgroundColor: borderColor, height: 1, marginHorizontal: 16 }} />}
+          ItemSeparatorComponent={() => (
+            <View style={{ backgroundColor: borderColor, height: 1, marginHorizontal: 16, opacity: 0.75 }} />
+          )}
         />
 
         <Button
@@ -162,7 +164,7 @@ export default observer(({ onNext, vm }: Props) => {
         enabled={scanEnabled}
         onBack={cancelScan}
         onBarCodeScanned={({ data }) => {
-          if (!utils.isAddress(data) && !data.endsWith('.eth')) return;
+          if (!utils.isAddress(data) && !data.endsWith('.eth') && !data.endsWith('.xyz')) return;
 
           setAddr(data);
           vm.setTo(data);

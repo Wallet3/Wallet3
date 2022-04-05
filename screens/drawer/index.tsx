@@ -39,8 +39,9 @@ const Drawer = observer((props: DrawerProps) => {
   const { index } = navigation.getState();
 
   const homeHighlight = index === 0 ? current.color : foregroundColor;
-  const settingsHighlight = index === 1 ? current.color : foregroundColor;
-  const dappsHighlight = index === 2 ? current.color : foregroundColor;
+  const contactsHighlight = index === 1 ? current.color : foregroundColor;
+  const settingsHighlight = index === 2 ? current.color : foregroundColor;
+  const dappsHighlight = index === 3 ? current.color : foregroundColor;
 
   const fastSwitchNetwork = (network: INetwork) => {
     Networks.switch(network);
@@ -125,6 +126,13 @@ const Drawer = observer((props: DrawerProps) => {
           onPress={() => navigateTo('Home')}
           labelStyle={{ ...styles.drawerLabel, color: homeHighlight }}
           icon={() => <Feather color={homeHighlight} size={21} name={'home'} />}
+        />
+
+        <DrawerItem
+          label={t('home-drawer-contacts')}
+          onPress={() => navigateTo('Contacts')}
+          labelStyle={{ ...styles.drawerLabel, color: contactsHighlight }}
+          icon={() => <Feather name="users" size={20} style={{ width: 21, paddingStart: 1 }} color={contactsHighlight} />}
         />
 
         <DrawerItem

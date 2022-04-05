@@ -1,5 +1,6 @@
-import { action, makeObservable, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
+import App from '../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Networks from '../Networks';
 import { getAvatar } from '../../common/ENS';
@@ -10,16 +11,34 @@ export interface IContact {
   avatar?: string;
   name?: string;
   emoji?: { color: string; icon: string };
+  more?: { tel?: string; email?: string; twitter?: string; note?: string };
 }
 
 class Contacts {
   contacts: IContact[] = [];
 
-  constructor() {
-    makeObservable(this, { contacts: observable, saveContact: action, reset: action, remove: action });
+  get sorted() {
+    return this.contacts.filter((i) => i.name || i.ens).concat(this.contacts.filter((i) => !i.name && !i.ens));
+  }
 
+  constructor() {
+    makeObservable(this, { contacts: observable, sorted: computed, saveContact: action, reset: action, remove: action });
+  }
+
+  init() {
     AsyncStorage.getItem(`contacts`).then((v) => {
-      runInAction(() => (this.contacts = JSON.parse(v || '[]')));
+      const contacts: IContact[] = JSON.parse(v || '[]');
+      for (let c of contacts) {
+        c.more = c.more || {};
+
+        const a = App.findAccount(c.address);
+        if (!a) continue;
+
+        c.name = a.nickname || c.ens || `Account ${a.index}`;
+        c.emoji = { color: a.emojiColor, icon: a.emojiAvatar };
+      }
+
+      runInAction(() => (this.contacts = contacts));
     });
   }
 

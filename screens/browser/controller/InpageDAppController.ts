@@ -365,6 +365,7 @@ export class InpageDAppController extends EventEmitter {
     const chain = params[0];
 
     if (
+      !chain ||
       !Array.isArray(chain.rpcUrls) ||
       !Array.isArray(chain.blockExplorerUrls) ||
       !chain.nativeCurrency ||
@@ -379,7 +380,7 @@ export class InpageDAppController extends EventEmitter {
       const dapp = this.getDApp(origin);
 
       if (Number(dapp?.lastUsedChainId) !== Networks.current.chainId) {
-        showMessage({ message: i18n.t('msg-chain-already-exists', { name: chain.chainName }), type: 'info' });
+        showMessage({ message: i18n.t('msg-chain-already-exists', { name: chain.chainName || chain.chainId }), type: 'info' });
       }
 
       return null;
@@ -390,7 +391,7 @@ export class InpageDAppController extends EventEmitter {
         PubSub.publish(MessageKeys.openLoadingModal);
 
         if (await Networks.add(chain)) {
-          showMessage({ message: i18n.t('msg-chain-added', { name: chain.chainName }), type: 'success' });
+          showMessage({ message: i18n.t('msg-chain-added', { name: chain.chainName || chain.chainId }), type: 'success' });
         }
 
         resolve(null);

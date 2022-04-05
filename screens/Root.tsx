@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 
 import App from '../viewmodels/App';
 import BrowserScreen from './browser/MultiTabIndex';
+import ContactsScreen from './contacts';
 import DAppsScreen from './dapps';
 import Drawer from './drawer';
 import { DrawerNavigationHelpers } from '@react-navigation/drawer/lib/typescript/src/types';
@@ -186,7 +187,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
       }}
     >
       <Screen name="Home" component={RootTab} options={{ headerShown: false }} />
-
+      <Screen name="Contacts" component={ContactsScreen} options={{ title: t('home-drawer-contacts') }} />
       <Screen name="Settings" component={SettingScreen} options={{ title: t('home-drawer-settings') }} />
       <Screen name="DApps" component={DAppsScreen} options={{ title: t('connectedapps-title'), headerShown: false }} />
     </Navigator>
