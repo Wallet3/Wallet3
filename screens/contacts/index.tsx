@@ -42,9 +42,9 @@ export default observer(() => {
           <View style={{ marginEnd: 12, alignItems: 'center', justifyContent: 'center' }}>
             <EvilIcons
               name="user"
-              size={42}
+              size={43}
               color={secondaryTextColor}
-              style={{ opacity: 0.5, position: 'absolute', marginStart: -12 }}
+              style={{ opacity: 0.5, position: 'absolute', marginStart: -11 }}
             />
             <Avatar size={32} emoji={item.emoji?.icon} backgroundColor={item.emoji?.color} uri={item.avatar} />
           </View>
