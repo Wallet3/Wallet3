@@ -65,11 +65,12 @@ export default observer(
               size={24}
               emojiSize={9}
               emoji={account?.emojiAvatar}
+              emojiMarginStart={1}
               backgroundColor={account?.emojiColor}
               uri={account?.avatar}
             />
 
-            <Text style={{ color: thirdFontColor, maxWidth: 125, marginStart: 8 }} numberOfLines={1}>
+            <Text style={{ color: thirdFontColor, maxWidth: 125, marginStart: 8, marginBottom: -1 }} numberOfLines={1}>
               {account?.miniDisplayName}
             </Text>
           </TouchableOpacity>

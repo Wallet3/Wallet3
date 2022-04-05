@@ -81,6 +81,7 @@ export default observer(
             defaultValue={contact?.more?.tel}
             placeholder={t('contacts-detail-tap-to-edit')}
             placeholderTextColor="#dfdfdfc0"
+            keyboardType='phone-pad'
             onFocus={() => onEditing?.(true)}
             onBlur={() => onEditing?.(false)}
             onChangeText={(text) => runInAction(() => (contact!.more!.tel = text))}
