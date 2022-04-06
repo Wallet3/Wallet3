@@ -81,7 +81,7 @@ export default observer(
             defaultValue={contact?.more?.tel}
             placeholder={t('contacts-detail-tap-to-edit')}
             placeholderTextColor="#dfdfdfc0"
-            keyboardType='phone-pad'
+            keyboardType="phone-pad"
             onFocus={() => onEditing?.(true)}
             onBlur={() => onEditing?.(false)}
             onChangeText={(text) => runInAction(() => (contact!.more!.tel = text))}
@@ -137,10 +137,10 @@ const styles = StyleSheet.create({
   itemContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
-    // paddingBottom: 6,
-    // borderBottomColor: '#dfdfdf70',
-    // borderBottomWidth: 1,
+    marginBottom: 12,
+    paddingBottom: 6,
+    borderBottomColor: '#75869c10',
+    borderBottomWidth: 1,
   },
 
   itemTitleContainer: {

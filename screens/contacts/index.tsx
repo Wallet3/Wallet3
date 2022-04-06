@@ -78,7 +78,7 @@ export default observer(() => {
       <FlatList
         data={Contacts.sorted}
         renderItem={renderItem}
-        contentContainerStyle={{ paddingTop: 8 }}
+        contentContainerStyle={{ paddingTop: 4 }}
         keyExtractor={(i) => `${i.address}-${i.name}`}
       />
 
