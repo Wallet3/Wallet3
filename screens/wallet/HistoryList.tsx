@@ -2,7 +2,6 @@ import { Approve_ERC20, Transfer_ERC1155, Transfer_ERC20, Transfer_ERC721 } from
 import { Coin, NullableImage } from '../../components';
 import { FlatList, ListRenderItemInfo, Text, TouchableOpacity, View } from 'react-native';
 
-import Image from 'react-native-fast-image';
 import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/Networks';
 import React from 'react';
@@ -10,6 +9,7 @@ import Theme from '../../viewmodels/settings/Theme';
 import Transaction from '../../models/Transaction';
 import dayjs from 'dayjs';
 import { formatAddress } from '../../utils/formatter';
+import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { secondaryFontColor } from '../../constants/styles';
@@ -52,7 +52,8 @@ const Tx = observer(
     const { t } = i18n;
 
     const { chainId } = item;
-    const [tokenSymbol] = useState(item.readableInfo?.symbol?.trim() || Networks.find(chainId)?.symbol);
+    const [network] = useState(Networks.find(chainId));
+    const [tokenSymbol] = useState(item.readableInfo?.symbol?.trim() || network?.symbol);
 
     const nft = item.readableInfo?.nft;
     const dappIcon = item.readableInfo?.icon;
@@ -66,7 +67,12 @@ const Tx = observer(
       <TouchableOpacity style={{ paddingVertical: 12, paddingHorizontal: 8 }} onPress={() => onPress?.(item as Transaction)}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1, alignItems: 'center' }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', maxWidth: '64%' }}>
-            <Coin symbol={tokenSymbol} size={16} style={{ marginEnd: 6 }} chainId={chainId} address={item.to} />
+            {tokenSymbol === network?.symbol ? (
+              generateNetworkIcon({ ...network!, width: 15, style: { marginEnd: 6, marginStart: 1 } })
+            ) : (
+              <Coin symbol={tokenSymbol} size={16} style={{ marginEnd: 6 }} chainId={chainId} address={item.to} />
+            )}
+
             <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
               <Text style={{ fontSize: 16, marginEnd: 4, maxWidth: 180, color: textColor }} numberOfLines={1}>
                 {(cancelTx ? `${t('tip-cancel-action')} ` : '') + `${methodName}`}
@@ -102,7 +108,7 @@ const Tx = observer(
                 imageRadius={3}
                 imageBackgroundColor={iconBackgroundColor}
                 text={to}
-                containerStyle={{ marginEnd: 5 }}
+                containerStyle={{ marginEnd: 6 }}
               />
             ) : (
               <Text style={{ fontWeight: '300', marginEnd: 3, color: textColor }}>{t('home-history-item-to')}:</Text>

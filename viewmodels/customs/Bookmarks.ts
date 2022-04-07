@@ -4,6 +4,7 @@ import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { PageMetadata } from '../../screens/browser/Web3View';
+import PhishingConfig from 'eth-phishing-detect/src/config.json';
 import RiskyHosts from '../../configs/urls/risky.json';
 import SecureHosts from '../../configs/urls/verified.json';
 
@@ -111,7 +112,7 @@ class Bookmarks {
 export default new Bookmarks();
 
 const SecureSet = new Set(SecureHosts);
-const RiskySet = new Set(RiskyHosts);
+const RiskySet = new Set(PhishingConfig.blacklist.concat(RiskyHosts));
 
 export function isSecureSite(url: string) {
   if (!url.startsWith('https://')) return false;
