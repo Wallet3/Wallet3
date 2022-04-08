@@ -4751,9 +4751,10 @@ etag@~1.8.1:
   resolved "https://registry.npmjs.org/etag/-/etag-1.8.1.tgz"
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
 
-eth-phishing-detect@MetaMask/eth-phishing-detect:
+eth-phishing-detect@^1.1.16:
   version "1.1.16"
-  resolved "https://codeload.github.com/MetaMask/eth-phishing-detect/tar.gz/018fb4009c1c182ee2d8761b3ec9e9c8618fcea9"
+  resolved "https://registry.yarnpkg.com/eth-phishing-detect/-/eth-phishing-detect-1.1.16.tgz#637158d5774819e1a861f6d169e6d77d076a47fd"
+  integrity sha512-/o9arK5qFOKVdfZK9hJVAQP0eKXjAvImIKNBMfF9Nj1HGicD3wfsVuXDu1OHrxuEi6+4kYtD9wyAn/3G7g7VrA==
   dependencies:
     fast-levenshtein "^2.0.6"
 

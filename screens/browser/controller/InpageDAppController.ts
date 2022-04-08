@@ -21,6 +21,7 @@ import { isSecureSite } from '../../../viewmodels/customs/Bookmarks';
 import { parseSignParams } from '../../../utils/sign';
 import { rawCall } from '../../../common/RPC';
 import { showMessage } from 'react-native-flash-message';
+import { sleep } from '../../../utils/async';
 
 const NOTIFICATION_NAMES = {
   accountsChanged: 'metamask_accountsChanged',
@@ -99,8 +100,19 @@ const Code_InvalidParams = -32602;
 const Code_UserRejected = 4001;
 
 export class InpageDAppController extends EventEmitter {
+  private static _lastModalRequestTimestamp = Date.now();
+
   constructor() {
     super();
+  }
+
+  private async awaitModalFinished() {
+    if (Date.now() - InpageDAppController._lastModalRequestTimestamp < 2000) {
+      console.log('Waiting for modal to finish');
+      await sleep(1750);
+    }
+
+    InpageDAppController._lastModalRequestTimestamp = Date.now();
   }
 
   async handle(origin: string, payload: Payload) {
@@ -149,10 +161,14 @@ export class InpageDAppController extends EventEmitter {
       case 'eth_signTypedData':
       case 'eth_signTypedData_v3':
       case 'eth_signTypedData_v4':
+        await this.awaitModalFinished();
         result = await this.sign(hostname!, params, method);
+        await this.awaitModalFinished();
         break;
       case 'eth_sendTransaction':
+        await this.awaitModalFinished();
         result = await this.eth_sendTransaction(hostname!, payload);
+        await this.awaitModalFinished();
         break;
       case 'wallet_addEthereumChain':
         result = await this.wallet_addEthereumChain(hostname!, params);

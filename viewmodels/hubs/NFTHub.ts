@@ -4,6 +4,7 @@ import NFT from '../../models/NFT';
 import { NftsByOwner } from '../../common/apis/Rarible.types';
 import { convertRaribleNftToNft } from '../services/NftTransformer';
 import { getNftById } from '../../common/apis/Rarible';
+import { sleep } from '../../utils/async';
 
 class NFTHub {
   get table() {
@@ -64,7 +65,7 @@ class NFTHub {
       });
 
       await Promise.all(requests);
-      await new Promise((resolve) => setTimeout(resolve, 1001));
+      await sleep(1001);
     }
 
     return result;
