@@ -73,7 +73,9 @@ export async function sendTransaction(chainId: number, txHex: string) {
       if (utils.isBytesLike(resp.result)) {
       }
 
-      urls.slice(urls.indexOf(url)).map((rpcUrl) => eth_sendRawTransaction(rpcUrl).catch(() => {}));
+      if (chainId !== 1 || !urls.find((url) => url.includes('rpc.flashbots.net'))) {
+        urls.slice(urls.indexOf(url)).map((rpcUrl) => eth_sendRawTransaction(rpcUrl).catch(() => {}));
+      }
 
       return resp;
     } catch {}
