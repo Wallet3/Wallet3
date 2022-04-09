@@ -108,7 +108,6 @@ export class InpageDAppController extends EventEmitter {
 
   private async awaitModalFinished() {
     if (Date.now() - InpageDAppController._lastModalRequestTimestamp < 2000) {
-      console.log('Waiting for modal to finish');
       await sleep(1750);
     }
 

@@ -49,14 +49,21 @@ export async function sendTransaction(chainId: number, txHex: string) {
   const urls = getRPCUrls(chainId);
   let error: { code: number; message: string } | undefined = undefined;
 
+  const eth_sendRawTransaction = (url: string) =>
+    post(url, {
+      jsonrpc: '2.0',
+      method: 'eth_sendRawTransaction',
+      params: [txHex],
+      id: Date.now(),
+    });
+
   for (let url of urls) {
     try {
-      const resp = (await post(url, {
-        jsonrpc: '2.0',
-        method: 'eth_sendRawTransaction',
-        params: [txHex],
-        id: Date.now(),
-      })) as { id: number; result: string; error: { code: number; message: string } };
+      const resp = (await eth_sendRawTransaction(url)) as {
+        id: number;
+        result: string;
+        error: { code: number; message: string };
+      };
 
       if (resp.error) {
         error = resp.error;
@@ -65,6 +72,8 @@ export async function sendTransaction(chainId: number, txHex: string) {
 
       if (utils.isBytesLike(resp.result)) {
       }
+
+      urls.slice(urls.indexOf(url)).map((rpcUrl) => eth_sendRawTransaction(rpcUrl).catch(() => {}));
 
       return resp;
     } catch {}
