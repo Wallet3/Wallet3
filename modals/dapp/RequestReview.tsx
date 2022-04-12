@@ -95,7 +95,11 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, onDecodedFuncP
 
               {vm.decodedFunc && <Ionicons name="code-slash-outline" size={9} color={vm.network.color} />}
               {vm.decodedFunc && (
-                <Text style={{ fontSize: 9, color: vm.network.color, fontWeight: '600', marginStart: 5 }}>
+                <Text
+                  style={{ fontSize: 9, color: vm.network.color, fontWeight: '600', marginStart: 5 }}
+                  numberOfLines={1}
+                  ellipsizeMode="middle"
+                >
                   {vm.decodedFunc.func}
                 </Text>
               )}
