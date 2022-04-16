@@ -76,7 +76,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, onDecodedFuncP
             style={{ maxWidth: '72%', marginTop: -8, paddingTop: 8 }}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>
+              <Text style={{ ...reviewItemValueStyle, minWidth: 150, textAlign: 'right' }} numberOfLines={1}>
                 {t(`tx-type-${vm.type.toLowerCase().replace(' ', '-')}`)}
               </Text>
 
@@ -96,7 +96,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, onDecodedFuncP
               {vm.decodedFunc && <Ionicons name="code-slash-outline" size={9} color={vm.network.color} />}
               {vm.decodedFunc && (
                 <Text
-                  style={{ fontSize: 9, color: vm.network.color, fontWeight: '600', marginStart: 5 }}
+                  style={{ fontSize: 9, color: vm.network.color, fontWeight: '600', marginStart: 5, maxWidth: 150 }}
                   numberOfLines={1}
                   ellipsizeMode="middle"
                 >
