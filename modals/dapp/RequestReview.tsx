@@ -75,8 +75,8 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, onDecodedFuncP
             onPress={() => (vm.decodedFunc ? onDecodedFuncPress?.(vm.decodedFunc) : undefined)}
             style={{ maxWidth: '72%', marginTop: -8, paddingTop: 8 }}
           >
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={{ ...reviewItemValueStyle, minWidth: 150, textAlign: 'right' }} numberOfLines={1}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', minWidth: 180, justifyContent: 'flex-end' }}>
+              <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>
                 {t(`tx-type-${vm.type.toLowerCase().replace(' ', '-')}`)}
               </Text>
 
