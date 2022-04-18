@@ -20,5 +20,6 @@
     "icon": "https://github.com/trustwallet/assets/raw/master/blockchains/ethereum/assets/0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2/logo.png",
     "title": "MakerDAO"
   },
-  { "url": "https://li.finance", "icon": "https://li.finance/icon192.png", "title": "Li.finance" }
+  { "url": "https://app.hop.exchange", "icon": "https://app.hop.exchange/favicon.ico", "title": "Hop" },
+  { "url": "https://transferto.xyz/swap", "icon": "https://transferto.xyz/favicon.png", "title": "Transfer" }
 ]

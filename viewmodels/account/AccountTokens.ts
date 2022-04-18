@@ -152,6 +152,7 @@ export class AccountTokens {
     }
 
     token.shown = true;
+    (token as ERC20Token).getBalance?.();
 
     if (targetChainId === Networks.current.chainId) {
       runInAction(() => {

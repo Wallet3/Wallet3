@@ -1689,7 +1689,22 @@
   dependencies:
     "@types/hammerjs" "^2.0.36"
 
-"@ethersproject/abi@5.6.0", "@ethersproject/abi@^5.6.0":
+"@ethersproject/abi@5.6.1":
+  version "5.6.1"
+  resolved "https://registry.yarnpkg.com/@ethersproject/abi/-/abi-5.6.1.tgz#f7de888edeb56b0a657b672bdd1b3a1135cd14f7"
+  integrity sha512-0cqssYh6FXjlwKWBmLm3+zH2BNARoS5u/hxbz+LpQmcDB3w0W553h2btWui1/uZp2GBM/SI3KniTuMcYyHpA5w==
+  dependencies:
+    "@ethersproject/address" "^5.6.0"
+    "@ethersproject/bignumber" "^5.6.0"
+    "@ethersproject/bytes" "^5.6.0"
+    "@ethersproject/constants" "^5.6.0"
+    "@ethersproject/hash" "^5.6.0"
+    "@ethersproject/keccak256" "^5.6.0"
+    "@ethersproject/logger" "^5.6.0"
+    "@ethersproject/properties" "^5.6.0"
+    "@ethersproject/strings" "^5.6.0"
+
+"@ethersproject/abi@^5.6.0":
   version "5.6.0"
   resolved "https://registry.yarnpkg.com/@ethersproject/abi/-/abi-5.6.0.tgz#ea07cbc1eec2374d32485679c12408005895e9f3"
   integrity sha512-AhVByTwdXCc2YQ20v300w6KVHle9g2OFc28ZAFCPnJyEpkv1xKXjZcSTgWOlv1i+0dqlgF8RCF2Rn2KC1t+1Vg==
@@ -1864,10 +1879,10 @@
   resolved "https://registry.yarnpkg.com/@ethersproject/logger/-/logger-5.6.0.tgz#d7db1bfcc22fd2e4ab574cba0bb6ad779a9a3e7a"
   integrity sha512-BiBWllUROH9w+P21RzoxJKzqoqpkyM1pRnEKG69bulE9TSQD8SAIvTQqIMZmmCO8pUNkgLP1wndX1gKghSpBmg==
 
-"@ethersproject/networks@5.6.1":
-  version "5.6.1"
-  resolved "https://registry.yarnpkg.com/@ethersproject/networks/-/networks-5.6.1.tgz#7a21ed1f83e86121737b16841961ec99ccf5c9c7"
-  integrity sha512-b2rrupf3kCTcc3jr9xOWBuHylSFtbpJf79Ga7QR98ienU2UqGimPGEsYMgbI29KHJfA5Us89XwGVmxrlxmSrMg==
+"@ethersproject/networks@5.6.2":
+  version "5.6.2"
+  resolved "https://registry.yarnpkg.com/@ethersproject/networks/-/networks-5.6.2.tgz#2bacda62102c0b1fcee408315f2bed4f6fbdf336"
+  integrity sha512-9uEzaJY7j5wpYGTojGp8U89mSsgQLc40PCMJLMCnFXTs7nhBveZ0t7dbqWUNrepWTszDbFkYD6WlL8DKx5huHA==
   dependencies:
     "@ethersproject/logger" "^5.6.0"
 
@@ -1893,10 +1908,10 @@
   dependencies:
     "@ethersproject/logger" "^5.6.0"
 
-"@ethersproject/providers@5.6.2":
-  version "5.6.2"
-  resolved "https://registry.yarnpkg.com/@ethersproject/providers/-/providers-5.6.2.tgz#b9807b1c8c6f59fa2ee4b3cf6519724d07a9f422"
-  integrity sha512-6/EaFW/hNWz+224FXwl8+HdMRzVHt8DpPmu5MZaIQqx/K/ELnC9eY236SMV7mleCM3NnEArFwcAAxH5kUUgaRg==
+"@ethersproject/providers@5.6.4":
+  version "5.6.4"
+  resolved "https://registry.yarnpkg.com/@ethersproject/providers/-/providers-5.6.4.tgz#1a49c211b57b0b2703c320819abbbfa35c83dff7"
+  integrity sha512-WAdknnaZ52hpHV3qPiJmKx401BLpup47h36Axxgre9zT+doa/4GC/Ne48ICPxTm0BqndpToHjpLP1ZnaxyE+vw==
   dependencies:
     "@ethersproject/abstract-provider" "^5.6.0"
     "@ethersproject/abstract-signer" "^5.6.0"
@@ -2891,10 +2906,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.17.60.tgz#35f3d6213daed95da7f0f73e75bcc6980e90597b"
   integrity sha512-F0KIgDJfy2nA3zMLmWGKxcH2ZVEtCZXHHdOQs2gSaQ27+lNeEfGxzkIw90aXswATX7AZ33tahPbzy6KAfUreVw==
 
-"@types/node@^17.0.23":
-  version "17.0.23"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.23.tgz#3b41a6e643589ac6442bdbd7a4a3ded62f33f7da"
-  integrity sha512-UxDxWn7dl97rKVeVS61vErvw086aCYhDLyvRQZ5Rk65rZKepaFdm53GeqXaKBuOhED4e9uWq34IC3TdSdJJ2Gw==
+"@types/node@^17.0.24":
+  version "17.0.24"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.24.tgz#20ba1bf69c1b4ab405c7a01e950c4f446b05029f"
+  integrity sha512-aveCYRQbgTH9Pssp1voEP7HiuWlD2jW2BO56w+bVrJn04i61yh6mRfoKO6hEYQD9vF+W8Chkwc6j1M36uPkx4g==
 
 "@types/numeral@^2.0.2":
   version "2.0.2"
@@ -2973,10 +2988,10 @@
     "@types/scheduler" "*"
     csstype "^3.0.2"
 
-"@types/react@~17.0.43":
-  version "17.0.43"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.43.tgz#4adc142887dd4a2601ce730bc56c3436fdb07a55"
-  integrity sha512-8Q+LNpdxf057brvPu1lMtC5Vn7J119xrP1aq4qiaefNioQUYANF/CYeK4NsKorSZyUGJ66g0IM+4bbjwx45o2A==
+"@types/react@~17.0.44":
+  version "17.0.44"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.44.tgz#c3714bd34dd551ab20b8015d9d0dbec812a51ec7"
+  integrity sha512-Ye0nlw09GeMp2Suh8qoOv0odfgCoowfM/9MG6WeRD60Gq9wS90bdkdRtYbRkNhXOpG4H+YXGvj4wOWhAC0LJ1g==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -3365,10 +3380,10 @@ async-limiter@~1.0.0:
   resolved "https://registry.npmjs.org/async-limiter/-/async-limiter-1.0.1.tgz"
   integrity sha512-csOlWGAcRFJaI6m+F2WKdnMKr4HhdhFVBk0H/QbJFMCr+uO2kwohwXQPxw/9OCxp05r5ghVBFSyioixx3gfkNQ==
 
-async@^2.4.0:
-  version "2.6.3"
-  resolved "https://registry.npmjs.org/async/-/async-2.6.3.tgz"
-  integrity sha512-zflvls11DCy+dQWzTW2dzuilv8Z5X/pjfmZOWba6TNIVDm+2UDaJmXSOXlasHKfNBs8oo3M0aT50fDEWfKZjXg==
+async@2.6.4, async@^2.4.0:
+  version "2.6.4"
+  resolved "https://registry.yarnpkg.com/async/-/async-2.6.4.tgz#706b7ff6084664cd7eae713f6f965433b5504221"
+  integrity sha512-mzo5dfJYwAn29PeiJ0zvwTo04zj8HDJj0Mn8TD7sno7q12prdbnasKJHhkm2c1LgrhlJ0teaea8860oxi51mGA==
   dependencies:
     lodash "^4.17.14"
 
@@ -4381,10 +4396,10 @@ d3-time@1:
   resolved "https://registry.npmjs.org/d3-time/-/d3-time-1.1.0.tgz"
   integrity sha512-Xh0isrZ5rPYYdqhAVk8VLnMEidhz5aP7htAADH6MfzgmmicPkTo8LhkLxci61/lCB7n7UmE3bN0leRt+qvkLxA==
 
-dayjs@^1.11.0:
-  version "1.11.0"
-  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.0.tgz#009bf7ef2e2ea2d5db2e6583d2d39a4b5061e805"
-  integrity sha512-JLC809s6Y948/FuCZPm5IX8rRhQwOiyMb2TfVVQEixG7P8Lm/gt5S7yoQZmC8x1UehI9Pb7sksEt4xx14m+7Ug==
+dayjs@^1.11.1:
+  version "1.11.1"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.1.tgz#90b33a3dda3417258d48ad2771b415def6545eb0"
+  integrity sha512-ER7EjqVAMkRRsxNCC5YqJ9d9VQYuWdGt7aiH2qA5R5wt8ZmWaP2dLUSIK6y/kVzLMlmh1Tvu5xUf4M/wdGJ5KA==
 
 dayjs@^1.8.15:
   version "1.10.7"
@@ -4751,9 +4766,10 @@ etag@~1.8.1:
   resolved "https://registry.npmjs.org/etag/-/etag-1.8.1.tgz"
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
 
-eth-phishing-detect@MetaMask/eth-phishing-detect:
+eth-phishing-detect@^1.1.16:
   version "1.1.16"
-  resolved "https://codeload.github.com/MetaMask/eth-phishing-detect/tar.gz/018fb4009c1c182ee2d8761b3ec9e9c8618fcea9"
+  resolved "https://registry.yarnpkg.com/eth-phishing-detect/-/eth-phishing-detect-1.1.16.tgz#637158d5774819e1a861f6d169e6d77d076a47fd"
+  integrity sha512-/o9arK5qFOKVdfZK9hJVAQP0eKXjAvImIKNBMfF9Nj1HGicD3wfsVuXDu1OHrxuEi6+4kYtD9wyAn/3G7g7VrA==
   dependencies:
     fast-levenshtein "^2.0.6"
 
@@ -4818,12 +4834,12 @@ ethereumjs-util@^7.1.4:
     ethereum-cryptography "^0.1.3"
     rlp "^2.2.4"
 
-ethers@^5.6.2:
-  version "5.6.2"
-  resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.6.2.tgz#e75bac7f038c5e0fdde667dba62fc223924143a2"
-  integrity sha512-EzGCbns24/Yluu7+ToWnMca3SXJ1Jk1BvWB7CCmVNxyOeM4LLvw2OLuIHhlkhQk1dtOcj9UMsdkxUh8RiG1dxQ==
+ethers@^5.6.4:
+  version "5.6.4"
+  resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.6.4.tgz#23629e9a7d4bc5802dfb53d4da420d738744b53c"
+  integrity sha512-62UIfxAQXdf67TeeOaoOoPctm5hUlYgfd0iW3wxfj7qRYKDcvvy0f+sJ3W2/Pyx77R8dblvejA8jokj+lS+ATQ==
   dependencies:
-    "@ethersproject/abi" "5.6.0"
+    "@ethersproject/abi" "5.6.1"
     "@ethersproject/abstract-provider" "5.6.0"
     "@ethersproject/abstract-signer" "5.6.0"
     "@ethersproject/address" "5.6.0"
@@ -4838,10 +4854,10 @@ ethers@^5.6.2:
     "@ethersproject/json-wallets" "5.6.0"
     "@ethersproject/keccak256" "5.6.0"
     "@ethersproject/logger" "5.6.0"
-    "@ethersproject/networks" "5.6.1"
+    "@ethersproject/networks" "5.6.2"
     "@ethersproject/pbkdf2" "5.6.0"
     "@ethersproject/properties" "5.6.0"
-    "@ethersproject/providers" "5.6.2"
+    "@ethersproject/providers" "5.6.4"
     "@ethersproject/random" "5.6.0"
     "@ethersproject/rlp" "5.6.0"
     "@ethersproject/sha2" "5.6.0"
@@ -7895,10 +7911,10 @@ react-native-device-info@^8.7.0:
   resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-8.7.0.tgz#0873d93950ac651b754f62965bb6f18059431c3c"
   integrity sha512-Zr0JNHSEPy2RWObWwUp9npTEWSG5HyY+nR/mRkf6ZTU5zd8oskarnPcCxAgwYhJbvshHSZbZIDRxCVCskXSpEA==
 
-react-native-draggable-flatlist@^3.0.7:
-  version "3.0.7"
-  resolved "https://registry.yarnpkg.com/react-native-draggable-flatlist/-/react-native-draggable-flatlist-3.0.7.tgz#1baba5101a8fa85efaadef33e2e109d51f5fb331"
-  integrity sha512-osza+3J14OOlTBJpwUyGXyUyXoo7imUMy1SzjMhotVAjb8Gul/vmOJf0hScuwgaZvRZXAFqa55DBAldoCW73FQ==
+react-native-draggable-flatlist@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-draggable-flatlist/-/react-native-draggable-flatlist-3.1.0.tgz#c18b429aaa5d333f792c84e38740da32eaf96bf4"
+  integrity sha512-o6TzR9/Uk8jW+j9Mdi6f9v5Vb9lkbYEnlCNmTYnYNa4DKxC3Ldm51py0Rq2vcTaynBnnUaZR6wWVvuZFiKDtdQ==
 
 react-native-fast-image@^8.5.11:
   version "8.5.11"
