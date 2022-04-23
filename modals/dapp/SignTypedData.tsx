@@ -133,7 +133,11 @@ export default observer(({ themeColor, data, onReject, onSign, account, bioType 
         {account ? <AccountIndicator account={account} /> : undefined}
       </View>
 
-      <ScrollView style={{ flex: 1, marginHorizontal: -16, paddingHorizontal: 16 }} bounces={false}>
+      <ScrollView
+        style={{ flex: 1, marginHorizontal: -16, paddingHorizontal: 16 }}
+        contentContainerStyle={{ paddingTop: 4 }}
+        bounces={false}
+      >
         {data?.message ? generateItem({ data: parse(data.message)! }) : generateItem({ data: parse(data)! })}
       </ScrollView>
 

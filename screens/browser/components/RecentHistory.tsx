@@ -34,6 +34,7 @@ export default observer(({ onItemPress, tabCount, onTabsPress, disableContextMen
           borderTopWidth: 0.333,
           borderColor: systemBorderColor,
           paddingVertical: 4.3333,
+          backgroundColor,
         }}
       >
         {(tabCount || 0) > 1 && (
