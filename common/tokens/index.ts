@@ -12,6 +12,7 @@ export * from './Polygon';
 export * from './Ronin';
 export * from './zkSync';
 export * from './Metis';
+export * from './Optimism';
 
 import { BigNumberish } from '@ethersproject/bignumber';
 

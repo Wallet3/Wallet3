@@ -16,4 +16,10 @@ const Boba_DAI = {
   symbol: 'DAI',
 };
 
-export const BobaPopularTokens = [Boba_DAI, Boba_USDC, Boba_USDT];
+const Boba = {
+  address: '0xa18bF3994C0Cc6E3b63ac420308E5383f53120D7',
+  decimals: 18,
+  symbol: 'BOBA',
+};
+
+export const BobaPopularTokens = [Boba, Boba_DAI, Boba_USDC, Boba_USDT];
