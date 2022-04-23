@@ -13,6 +13,8 @@ export * from './Ronin';
 export * from './zkSync';
 export * from './Metis';
 export * from './Optimism';
+export * from './Harmony';
+export * from './Moonriver';
 
 import { BigNumberish } from '@ethersproject/bignumber';
 
