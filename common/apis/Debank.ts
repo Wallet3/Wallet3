@@ -8,6 +8,7 @@ const nativeTokens = [
   '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
   '0x471EcE3750Da237f93B8E339c536989b8978a438',
   '0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000', // Celo native
+  '0x4200000000000000000000000000000000000006', // Boba network
 ];
 
 export async function getBalance(address: string, chain: chain) {

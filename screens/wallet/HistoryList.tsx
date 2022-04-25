@@ -68,7 +68,7 @@ const Tx = observer(
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1, alignItems: 'center' }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', maxWidth: '64%' }}>
             {tokenSymbol === network?.symbol ? (
-              generateNetworkIcon({ ...network!, width: 15, style: { marginEnd: 6.5, marginStart: 0.5 } })
+              generateNetworkIcon({ ...network!, width: 15, style: { marginEnd: 6.5, marginStart: 0.5, marginTop: -1 } })
             ) : (
               <Coin symbol={tokenSymbol} size={16} style={{ marginEnd: 6 }} chainId={chainId} address={item.to} />
             )}

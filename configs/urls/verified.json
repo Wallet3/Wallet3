@@ -127,6 +127,7 @@
   "stargate.finance",
   "bribe.vetoken.finance",
   "dagen.life",
+  "chainlist.org",
   "app.perp.com",
   "app.olympusdao.finance",
   "gomirror.xyz",
@@ -154,5 +155,6 @@
   "token-faucet.defillama.com",
   "app.umbra.cash",
   "llama.airforce",
-  "votium.app"
+  "votium.app",
+  "context.app"
 ]

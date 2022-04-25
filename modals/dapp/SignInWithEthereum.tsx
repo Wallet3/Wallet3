@@ -6,7 +6,7 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-nati
 import { Account } from '../../viewmodels/account/Account';
 import AccountIndicator from '../components/AccountIndicator';
 import { PageMetadata } from '../../screens/browser/Web3View';
-import { ParsedMessage } from '../../utils/siwe';
+import { ParsedMessage } from '../../utils/siwe_plain';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';

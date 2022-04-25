@@ -5,16 +5,21 @@ import Providers from '../configs/providers.json';
 import { post } from '../utils/fetch';
 
 const cache = new Map<number, string[]>();
+const failedRPCs = new Map<number, Set<string>>();
 
 export function getRPCUrls(chainId: number | string): string[] {
   if (cache.has(Number(chainId))) return cache.get(Number(chainId)) || [];
 
   let urls: string[] = Providers[`${Number(chainId)}`]?.filter((p) => p.startsWith('http')) ?? [];
+  let availableUrls: string[];
 
   const network = Networks.find(chainId);
+  const failed = failedRPCs.get(Number(chainId));
 
   urls.unshift(...(network?.rpcUrls ?? []));
-  urls = Array.from(new Set(urls)); // Remove duplicate urls
+
+  availableUrls = urls.filter((url) => !(failed?.has(url) ?? false));
+  urls = Array.from(new Set(availableUrls.length === 0 ? urls : availableUrls));
 
   if (urls.length === 0) return [];
 
@@ -24,6 +29,17 @@ export function getRPCUrls(chainId: number | string): string[] {
 
 export function deleteRPCUrlCache(chainId: number | string) {
   cache.delete(Number(chainId));
+}
+
+function markRPCFailed(chainId: number | string, rpc: string) {
+  let cache = failedRPCs.get(Number(chainId));
+
+  if (!cache) {
+    cache = new Set();
+    failedRPCs.set(Number(chainId), cache);
+  }
+
+  cache.add(rpc);
 }
 
 export async function getBalance(chainId: number, address: string): Promise<BigNumber> {
@@ -39,7 +55,9 @@ export async function getBalance(chainId: number, address: string): Promise<BigN
       });
 
       return BigNumber.from(result.result);
-    } catch (error) {}
+    } catch (error) {
+      markRPCFailed(chainId, url);
+    }
   }
 
   return BigNumber.from(0);
@@ -98,7 +116,9 @@ export async function getTransactionCount(chainId: number, address: string) {
 
       const { result } = resp as { id: number; result: string };
       return Number.parseInt(result);
-    } catch (error) {}
+    } catch (error) {
+      markRPCFailed(chainId, url);
+    }
   }
 
   return 0;
@@ -144,6 +164,7 @@ export async function eth_call_return(
       return resp;
     } catch (error) {
       console.log(error);
+      markRPCFailed(chainId, url);
     }
   }
 
@@ -157,7 +178,9 @@ export async function rawCall(chainId: number | string, payload: any) {
     try {
       const resp = await post(url, { jsonrpc: '2.0', id: Date.now(), ...payload });
       return resp.result;
-    } catch (error) {}
+    } catch (error) {
+      markRPCFailed(chainId, url);
+    }
   }
 }
 
@@ -198,7 +221,9 @@ export async function estimateGas(
       }
 
       return { gas: Number(resp.result as string) };
-    } catch (error) {}
+    } catch (error) {
+      markRPCFailed(chainId, url);
+    }
   }
 
   return { errorMessage };
@@ -219,7 +244,9 @@ export async function getGasPrice(chainId: number) {
       if (resp.error) continue;
 
       return Number.parseInt(resp.result);
-    } catch (error) {}
+    } catch (error) {
+      markRPCFailed(chainId, url);
+    }
   }
 
   return undefined;
@@ -245,7 +272,9 @@ export async function getTransactionReceipt(chainId: number, hash: string) {
         status: string;
         gasUsed: string;
       };
-    } catch (error) {}
+    } catch (error) {
+      markRPCFailed(chainId, url);
+    }
   }
 
   return undefined;
@@ -257,7 +286,9 @@ export async function getNextBlockBaseFee(chainId: number) {
   for (let url of urls) {
     try {
       return await getNextBlockBaseFeeByRPC(url);
-    } catch (error) {}
+    } catch (error) {
+      markRPCFailed(chainId, url);
+    }
   }
 
   return 0;
@@ -311,7 +342,9 @@ export async function getCode(chainId: number, contract: string) {
       if (resp.error) continue;
 
       return resp.result as string;
-    } catch (error) {}
+    } catch (error) {
+      markRPCFailed(chainId, url);
+    }
   }
 
   return undefined;
