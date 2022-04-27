@@ -300,7 +300,7 @@ PODS:
     - React
   - react-native-randombytes (3.6.1):
     - React-Core
-  - react-native-safe-area-context (4.2.4):
+  - react-native-safe-area-context (4.2.5):
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
@@ -737,7 +737,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 34e23860273a23695342f58eed3ffd3ba10c31e0
   react-native-context-menu-view: c72d4120597f5cf3917dcb348cf819f215ed9207
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
-  react-native-safe-area-context: f98b0b16d1546d208fc293b4661e3f81a895afd9
+  react-native-safe-area-context: ebf8c413eb8b5f7c392a036a315eb7b46b96845f
   react-native-video: a4c2635d0802f983594b7057e1bce8f442f0ad28
   react-native-view-shot: 4475fde003fe8a210053d1f98fb9e06c1d834e1c
   react-native-webview: 380c1a03ec94b7ed764dac8db1e7c9952d08c93a

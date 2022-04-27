@@ -1,3 +1,9 @@
+const OP = {
+  address: '0x4200000000000000000000000000000000000042',
+  decimals: 18,
+  symbol: 'OP',
+};
+
 const USDC = {
   address: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
   decimals: 6,
@@ -28,4 +34,4 @@ const WBTC = {
   symbol: 'WBTC',
 };
 
-export const OpPopularTokens = [DAI, USDC, USDT, UST, WBTC];
+export const OpPopularTokens = [OP, DAI, USDC, USDT, UST, WBTC];
