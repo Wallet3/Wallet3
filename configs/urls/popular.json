@@ -1,6 +1,6 @@
 [
   { "url": "https://app.uniswap.org", "icon": "https://app.uniswap.org/favicon.png", "title": "Uniswap" },
-  { "url": "https://curve.fi", "icon": "https://curve.fi/apple-touch-icon.png", "title": "Curve" },
+  { "url": "https://curve.exchange", "icon": "https://curve.fi/apple-touch-icon.png", "title": "Curve" },
   { "url": "https://app.compound.finance", "icon": "https://compound.finance/images/compound-512.png", "title": "Compound" },
   { "url": "https://trade.dydx.exchange", "icon": "https://dydx.exchange/meta/apple-icon-180x180.png", "title": "dYdX" },
   {
