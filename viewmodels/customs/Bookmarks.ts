@@ -110,8 +110,9 @@ class Bookmarks {
 }
 
 export default new Bookmarks();
+export const SecureUrls = Object.getOwnPropertyNames(SecureHosts).flatMap((category) => SecureHosts[category]);
 
-const SecureSet = new Set(Object.getOwnPropertyNames(SecureHosts).flatMap((category) => SecureHosts[category]));
+const SecureSet = new Set(SecureUrls);
 const RiskySet = new Set(PhishingConfig.blacklist.concat(RiskyHosts));
 
 export function isSecureSite(url: string) {

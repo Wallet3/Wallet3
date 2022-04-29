@@ -1,8 +1,7 @@
 import * as Animatable from 'react-native-animatable';
 import * as Linking from 'expo-linking';
 
-import Bookmarks, { Bookmark, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
-import { BottomTabNavigationProp, BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import Bookmarks, { Bookmark, SecureUrls, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
 import { BreathAnimation, startLayoutAnimation } from '../../utils/animations';
 import { Dimensions, ListRenderItemInfo, Share, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { EvilIcons, Ionicons } from '@expo/vector-icons';
@@ -16,6 +15,7 @@ import { secureColor, thirdFontColor } from '../../constants/styles';
 
 import AnimatedLottieView from 'lottie-react-native';
 import { Bar } from 'react-native-progress';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import Collapsible from 'react-native-collapsible';
 import { FlatGrid } from 'react-native-super-grid';
 import MessageKeys from '../../common/MessageKeys';
@@ -242,7 +242,7 @@ export const Browser = observer(
         Array.from(
           new Set(
             history
-              .concat((SuggestUrls as string[]).filter((u) => !history.find((hurl) => hurl.includes(u) || u.includes(hurl))))
+              .concat(SecureUrls.filter((u) => !history.find((hurl) => hurl.includes(u) || u.includes(hurl))))
               .filter((url) => url.includes(addr) || addr.includes(url))
               .slice(0, 5)
           )
