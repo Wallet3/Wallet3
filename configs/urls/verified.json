@@ -47,7 +47,6 @@
     "app.frax.finance",
     "app.cream.finance",
     "app.lyra.finance",
-    "app.wepiggy.com",
     "matcha.xyz",
     "app.dforce.network",
     "zipswap.fi",
@@ -124,6 +123,7 @@
     "oncyber.io",
     "cyber.xyz"
   ],
+  "Innovations": ["app.union.finance"],
   "Games": [
     "axieinfinity.com",
     "www.sandbox.game",

@@ -529,16 +529,15 @@ export const Browser = observer(
             {disableExtraFuncs ? undefined : (
               <SectionGrid
                 sections={favs}
-                style={{ marginTop: 2, padding: 0, height: '100%' }}
-                contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: 8, paddingTop: 2 }}
+                style={{ marginTop: 0, padding: 0, height: '100%' }}
                 itemDimension={LargeIconSize + 8}
-                bounces={false}
+                bounces={favs.length > 6 && Bookmarks.flatFavs.length > 20 ? true : false}
                 data={favs}
                 itemContainerStyle={{ padding: 0, margin: 0, marginBottom: 8 }}
                 spacing={8}
                 keyExtractor={(v, index) => `${v.url}-${index}`}
                 renderSectionHeader={({ section }) => (
-                  <Text style={{ fontSize: 12, marginHorizontal: 15 }}>{section.title}</Text>
+                  <Text style={{ fontSize: 12, paddingHorizontal: 15 }}>{section.title}</Text>
                 )}
                 renderItem={(p) =>
                   renderUserBookmarkItem({
