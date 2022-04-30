@@ -1,12 +1,24 @@
 import * as Linking from 'expo-linking';
 
-import { action, makeObservable, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import LINQ from 'linq';
 import { PageMetadata } from '../../screens/browser/Web3View';
 import PhishingConfig from 'eth-phishing-detect/src/config.json';
 import RiskyHosts from '../../configs/urls/risky.json';
 import SecureHosts from '../../configs/urls/verified.json';
+
+const Priorities = new Map<string, number>([
+  ['DeFi', 1],
+  ['NFT', 2],
+  ['NFTs', 2],
+  ['SocialFi', 3],
+  ['Games', 4],
+  ['Bridges', 5],
+  ['Tools', 6],
+  ['Others', 999999],
+]);
 
 export interface Bookmark {
   url: string;
@@ -15,14 +27,58 @@ export interface Bookmark {
 }
 
 class Bookmarks {
-  favs: Bookmark[] = [];
+  favs: { title: string; data: Bookmark[] }[] = [];
   history: string[] = [];
   recentSites: PageMetadata[] = [];
+
+  get flatFavs() {
+    return this.favs.flatMap((g) => g.data);
+  }
+
+  static findCategory(url: string) {
+    try {
+      const hostname = url.startsWith('https://') ? Linking.parse(url).hostname : url;
+      const categories = Object.getOwnPropertyNames(SecureHosts);
+      return categories.find((c) => SecureHosts[c].includes(hostname)) || 'Others';
+    } catch (error) {}
+
+    return 'Others';
+  }
+
+  async upgrade() {
+    const v = await AsyncStorage.getItem(`bookmarks`);
+    const items = JSON.parse(v || '[]') as Bookmark[];
+    if (!v || items.length === 0) return false;
+
+    const groups = LINQ.from(items)
+      .groupBy((item) => Bookmarks.findCategory(item.url))
+      .orderBy((i) => Priorities.get(i.key()))
+      .toArray();
+
+    const favs: { title: string; data: Bookmark[] }[] = [];
+
+    for (let group of groups) {
+      favs.push({
+        title: group.key(),
+        data: group.toArray(),
+      });
+    }
+
+    await AsyncStorage.removeItem('bookmarks');
+    await AsyncStorage.setItem(`bookmarks_v2`, JSON.stringify(favs));
+
+    runInAction(() => {
+      this.favs = favs;
+    });
+
+    return true;
+  }
 
   constructor() {
     makeObservable(this, {
       history: observable,
       favs: observable,
+      flatFavs: computed,
       remove: action,
       add: action,
       submitHistory: action,
@@ -33,8 +89,14 @@ class Bookmarks {
       removeRecentSite: action,
     });
 
-    AsyncStorage.getItem(`bookmarks`)
-      .then((v) => runInAction(() => (this.favs = JSON.parse(v || '[]'))))
+    this.upgrade()
+      .then((v) =>
+        v
+          ? undefined
+          : AsyncStorage.getItem(`bookmarks_v2`)
+              .then((v) => runInAction(() => (this.favs = JSON.parse(v || '[]'))))
+              .catch(() => {})
+      )
       .catch(() => {});
 
     AsyncStorage.getItem(`history-urls`)
@@ -48,20 +110,38 @@ class Bookmarks {
 
   add(bookmark: Bookmark) {
     bookmark.title = bookmark.title || Linking.parse(bookmark.url).hostname || bookmark.url;
-    this.favs.push(bookmark);
-    AsyncStorage.setItem(`bookmarks`, JSON.stringify(this.favs));
+
+    const category = Bookmarks.findCategory(bookmark.url);
+
+    const group = this.favs.find((g) => g.title === category);
+    if (group) {
+      group.data.push(bookmark);
+    } else {
+      this.favs = LINQ.from([...this.favs, { title: category, data: [bookmark] }])
+        .orderBy((i) => Priorities.get(i.title))
+        .toArray();
+    }
+
+    AsyncStorage.setItem(`bookmarks_v2`, JSON.stringify(this.favs));
   }
 
   remove(url: string) {
-    const index = this.favs.findIndex((i) => i.url === url);
-    if (index === -1) return;
+    const group = this.has(url);
+    if (!group) return;
 
-    this.favs.splice(index, 1);
-    AsyncStorage.setItem(`bookmarks`, JSON.stringify(this.favs));
+    const index = group.data.findIndex((i) => i.url === url);
+    group.data.splice(index, 1);
+
+    if (group.data.length === 0) {
+      const groupIndex = this.favs.findIndex((g) => g.title === group.title);
+      this.favs.splice(groupIndex, 1);
+    }
+
+    AsyncStorage.setItem(`bookmarks_v2`, JSON.stringify(this.favs));
   }
 
   has(url: string) {
-    return this.favs.find((i) => i.url === url) ? true : false;
+    return this.favs.find((g) => g.data.find((i) => i.url === url));
   }
 
   submitHistory(url: string) {

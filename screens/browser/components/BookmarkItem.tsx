@@ -71,7 +71,7 @@ export const renderUserBookmarkItem = (props: UserBookmarkProps) => {
         />
       </ContextMenu>
 
-      <Text numberOfLines={1} style={{ maxWidth: iconSize + 8, marginTop: 4, fontSize: 9, color: thirdFontColor }}>
+      <Text numberOfLines={1} style={{ maxWidth: iconSize, marginTop: 4, fontSize: 9, color: thirdFontColor }}>
         {item.title}
       </Text>
     </TouchableOpacity>

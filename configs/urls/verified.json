@@ -102,7 +102,7 @@
     "app.poap.xyz",
     "gm.xyz"
   ],
-  "NFT": [
+  "NFTs": [
     "quixotic.io",
     "www.genie.xyz",
     "looksrare.org",
@@ -152,6 +152,7 @@
     "debank.com",
     "chainlist.defillama.com",
     "fees.wtf",
+    "wallet3.io",
     "moonriver.moonscan.io",
     "moonbeam.moonscan.io",
     "shiden.subscan.io",
