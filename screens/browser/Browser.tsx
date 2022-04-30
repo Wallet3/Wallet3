@@ -531,13 +531,25 @@ export const Browser = observer(
                 sections={favs}
                 style={{ marginTop: 0, padding: 0, height: '100%' }}
                 itemDimension={LargeIconSize + 8}
-                bounces={favs.length > 6 && Bookmarks.flatFavs.length > 20 ? true : false}
+                bounces={favs.length >= 5 && Bookmarks.flatFavs.length > 20 ? true : false}
                 data={favs}
                 itemContainerStyle={{ padding: 0, margin: 0, marginBottom: 8 }}
                 spacing={8}
                 keyExtractor={(v, index) => `${v.url}-${index}`}
                 renderSectionHeader={({ section }) => (
-                  <Text style={{ fontSize: 12, paddingHorizontal: 15 }}>{section.title}</Text>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      paddingHorizontal: 15,
+                      fontWeight: '400',
+                      textShadowColor: '#fff',
+                      textShadowOffset: { width: 0, height: 0 },
+                      textShadowRadius: 3,
+                      color: foregroundColor,
+                    }}
+                  >
+                    {section.title}
+                  </Text>
                 )}
                 renderItem={(p) =>
                   renderUserBookmarkItem({

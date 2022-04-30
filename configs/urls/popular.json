@@ -21,5 +21,6 @@
     "title": "MakerDAO"
   },
   { "url": "https://app.hop.exchange", "icon": "https://app.hop.exchange/favicon.ico", "title": "Hop" },
-  { "url": "https://transferto.xyz/swap", "icon": "https://transferto.xyz/favicon.png", "title": "Transfer" }
+  { "url": "https://transferto.xyz/swap", "icon": "https://transferto.xyz/favicon.png", "title": "Transfer" },
+  { "url": "https://gm.xyz", "icon": "https://gm.xyz/static/favicons/apple-touch-icon.png", "title": "gm" }
 ]
