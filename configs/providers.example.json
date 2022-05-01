@@ -53,5 +53,12 @@
   "1666600000": ["https://api.harmony.one"],
   "1285": ["https://moonriver.api.onfinality.io/public", "https://rpc.moonriver.moonbeam.network"],
   "1313161554": ["https://mainnet.aurora.dev"],
-  "25": ["https://evm-cronos.crypto.org"]
+  "25": ["https://evm-cronos.crypto.org"],
+  "2020": ["https://api.roninchain.com/rpc"],
+  "8217": ["https://public-node-api.klaytnapi.com/v1/cypress"],
+  "2152": ["https://prod-mainnet.prod.findora.org:8545"],
+  "122": ["https://rpc.fuse.io"],
+  "592": ["https://rpc.astar.network:8545"],
+  "336": ["https://rpc.shiden.astar.network:8545"],
+  "9001": ["https://eth.bd.evmos.org:8545"]
 }

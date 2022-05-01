@@ -8027,10 +8027,10 @@ react-native-crypto@^2.2.0:
     public-encrypt "^4.0.0"
     randomfill "^1.0.3"
 
-react-native-device-info@^8.7.0:
-  version "8.7.0"
-  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-8.7.0.tgz#0873d93950ac651b754f62965bb6f18059431c3c"
-  integrity sha512-Zr0JNHSEPy2RWObWwUp9npTEWSG5HyY+nR/mRkf6ZTU5zd8oskarnPcCxAgwYhJbvshHSZbZIDRxCVCskXSpEA==
+react-native-device-info@^8.7.1:
+  version "8.7.1"
+  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-8.7.1.tgz#fbb06f87dbbc4423abe713874699fb2e6e99fd15"
+  integrity sha512-cVMZztFa2Qn6qpQa601W61CtUwZQ1KXfqCOeltejAWEXmgIWivC692WGSdtGudj4upSi1UgMSaGcvKjfcpdGjg==
 
 react-native-draggable-flatlist@^3.1.1:
   version "3.1.1"
@@ -8169,10 +8169,10 @@ react-native-shared-element@^0.8.4:
   resolved "https://registry.yarnpkg.com/react-native-shared-element/-/react-native-shared-element-0.8.4.tgz#dd97b992e53633a57ea728327f7c02bad3c5af14"
   integrity sha512-agRuD5AB4daw4QLo7KCTBqCtmIjbQkqpwsT/aYrxDu/McvTCdDuXVttaVMrqeyAgdDkU1egp41FdiExS1L/hJw==
 
-react-native-super-grid@^4.3.0:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/react-native-super-grid/-/react-native-super-grid-4.3.0.tgz#b8bfb1db469131508a0593ce21720e0c57563a8b"
-  integrity sha512-r1rzcn5BSl5rrtakH3idRE4oOFy+3Gy4FDlo8azX37btsczKKRLOkpMk4kDnBnA2QDoAqM5ODog9R9HgFyTCcA==
+react-native-super-grid@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/react-native-super-grid/-/react-native-super-grid-4.4.0.tgz#4566a288563d035548bcf68354c0c262bc69489e"
+  integrity sha512-0msesnKyrOuT0xtlmFzQMgbRLBKnQel/AgJWWh/4UZAnRtLgQufzuVvnuQnyFQQb0ioQa3GkfMwr2ayFn5BHoA==
   dependencies:
     prop-types "^15.6.0"
 
