@@ -13,6 +13,7 @@ const Priorities = new Map<string, number>([
   ['DeFi', 1],
   ['NFT', 2],
   ['NFTs', 2],
+  ['Social', 3],
   ['SocialFi', 3],
   ['Games', 4],
   ['Bridges', 5],
