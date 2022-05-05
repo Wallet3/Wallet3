@@ -1,4 +1,5 @@
 {
+  "Education": ["app.banklessacademy.com"],
   "DeFi": [
     "app.uniswap.org",
     "curve.fi",
@@ -169,6 +170,7 @@
   "Bridges": [
     "gateway.optimism.io",
     "bridge.arbitrum.io",
+    "app.optimism.io",
     "bridge.renproject.io",
     "rainbowbridge.app",
     "bridge.connext.network",

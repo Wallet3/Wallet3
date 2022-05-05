@@ -26,7 +26,7 @@ export interface IToken {
   balance?: BigNumberish;
   iconUrl?: string;
   name?: string;
-
   amount?: string;
+  shown?: boolean;
   loading?: boolean;
 }
