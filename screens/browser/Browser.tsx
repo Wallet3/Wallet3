@@ -1,11 +1,11 @@
 import * as Animatable from 'react-native-animatable';
 import * as Linking from 'expo-linking';
 
-import Bookmarks, { Bookmark, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
-import { BottomTabNavigationProp, BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import Bookmarks, { Bookmark, SecureUrls, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
 import { BreathAnimation, startLayoutAnimation } from '../../utils/animations';
 import { Dimensions, ListRenderItemInfo, Share, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { EvilIcons, Ionicons } from '@expo/vector-icons';
+import { FlatGrid, SectionGrid } from 'react-native-super-grid';
 import { NullableImage, SafeViewContainer } from '../../components';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -16,8 +16,8 @@ import { secureColor, thirdFontColor } from '../../constants/styles';
 
 import AnimatedLottieView from 'lottie-react-native';
 import { Bar } from 'react-native-progress';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import Collapsible from 'react-native-collapsible';
-import { FlatGrid } from 'react-native-super-grid';
 import MessageKeys from '../../common/MessageKeys';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
@@ -26,7 +26,6 @@ import { Portal } from 'react-native-portalize';
 import { ReactiveScreen } from '../../utils/device';
 import RecentHistory from './components/RecentHistory';
 import { StatusBar } from 'expo-status-bar';
-import SuggestUrls from '../../configs/urls/verified.json';
 import Theme from '../../viewmodels/settings/Theme';
 import ViewShot from 'react-native-view-shot';
 import i18n from '../../i18n';
@@ -242,7 +241,7 @@ export const Browser = observer(
         Array.from(
           new Set(
             history
-              .concat((SuggestUrls as string[]).filter((u) => !history.find((hurl) => hurl.includes(u) || u.includes(hurl))))
+              .concat(SecureUrls.filter((u) => !history.find((hurl) => hurl.includes(u) || u.includes(hurl))))
               .filter((url) => url.includes(addr) || addr.includes(url))
               .slice(0, 5)
           )
@@ -396,7 +395,7 @@ export const Browser = observer(
                 borderBottomColor: borderColor,
               }}
             >
-              {PopularDApps.concat(uri ? favs.slice(0, 24 - PopularDApps.length) : []).map((item, i) => (
+              {PopularDApps.concat(uri ? Bookmarks.flatFavs.slice(0, 24 - PopularDApps.length) : []).map((item, i) => (
                 <TouchableOpacity
                   style={{ margin: 8 }}
                   key={`${item.url}-${i}`}
@@ -527,20 +526,31 @@ export const Browser = observer(
               </View>
             )}
 
-            {disableExtraFuncs ? undefined : favs.length > 0 ? (
-              <Text style={{ marginHorizontal: 16, marginTop: 12, color: textColor }}>{t('browser-favorites')}</Text>
-            ) : undefined}
-
             {disableExtraFuncs ? undefined : (
-              <FlatGrid
-                style={{ marginTop: 2, padding: 0, height: '100%' }}
-                contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: 8, paddingTop: 2 }}
+              <SectionGrid
+                sections={favs}
+                style={{ marginTop: 0, padding: 0, height: '100%' }}
                 itemDimension={LargeIconSize + 8}
-                bounces={false}
+                bounces={favs.length >= 5 && Bookmarks.flatFavs.length > 20 ? true : false}
                 data={favs}
                 itemContainerStyle={{ padding: 0, margin: 0, marginBottom: 8 }}
                 spacing={8}
                 keyExtractor={(v, index) => `${v.url}-${index}`}
+                renderSectionHeader={({ section }) => (
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      paddingHorizontal: 15,
+                      fontWeight: '400',
+                      textShadowColor: '#fff',
+                      textShadowOffset: { width: 0, height: 0 },
+                      textShadowRadius: 3,
+                      color: foregroundColor,
+                    }}
+                  >
+                    {section.title}
+                  </Text>
+                )}
                 renderItem={(p) =>
                   renderUserBookmarkItem({
                     ...p,
@@ -587,7 +597,7 @@ export const Browser = observer(
                   itemContainerStyle={{ padding: 0, margin: 0, marginBottom: 12 }}
                   spacing={8}
                   keyExtractor={(v, index) => `${v.url}-${index}`}
-                  data={favs}
+                  data={Bookmarks.flatFavs}
                 />
 
                 <RecentHistory

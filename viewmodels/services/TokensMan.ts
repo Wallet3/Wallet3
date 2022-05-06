@@ -7,7 +7,6 @@ import { utils } from 'ethers';
 
 export interface UserToken extends IToken {
   order?: number;
-  shown?: boolean;
 }
 
 export default class TokensMan {

@@ -1,6 +1,6 @@
 [
   { "url": "https://app.uniswap.org", "icon": "https://app.uniswap.org/favicon.png", "title": "Uniswap" },
-  { "url": "https://curve.fi", "icon": "https://curve.fi/apple-touch-icon.png", "title": "Curve" },
+  { "url": "https://curve.exchange", "icon": "https://curve.fi/apple-touch-icon.png", "title": "Curve" },
   { "url": "https://app.compound.finance", "icon": "https://compound.finance/images/compound-512.png", "title": "Compound" },
   { "url": "https://trade.dydx.exchange", "icon": "https://dydx.exchange/meta/apple-icon-180x180.png", "title": "dYdX" },
   {
@@ -20,6 +20,11 @@
     "icon": "https://github.com/trustwallet/assets/raw/master/blockchains/ethereum/assets/0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2/logo.png",
     "title": "MakerDAO"
   },
-  { "url": "https://app.hop.exchange", "icon": "https://app.hop.exchange/favicon.ico", "title": "Hop" },
-  { "url": "https://transferto.xyz/swap", "icon": "https://transferto.xyz/favicon.png", "title": "Transfer" }
+  {
+    "url": "https://stargate.finance/transfer",
+    "icon": "https://stargate.finance/favicons/favicon-196x196.png",
+    "title": "Stargate"
+  },
+  { "url": "https://gm.xyz", "icon": "https://gm.xyz/static/favicons/apple-touch-icon.png", "title": "gm" },
+  { "url": "https://quixotic.io", "icon": "https://quixotic.io/opt_favicon.png", "title": "quixotic" }
 ]

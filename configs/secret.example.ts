@@ -1,6 +1,7 @@
 export const appEncryptKey = '';
 export const pinEncryptKey = '';
 export const OpenseaApiKey = '';
+export const QuixoticApiKey = '';
 
 export const etherscanApiKeys: { [chainId: number]: string[] } = {
   1: [],
