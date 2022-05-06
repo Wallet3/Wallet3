@@ -1,12 +1,9 @@
+import Scanner, { BarCodeScanningResult } from '../../components/Scanner';
 import { Text, View } from 'react-native';
 
 import { AntDesign } from '@expo/vector-icons';
 import BackButton from '../components/BackButton';
-import { BarCodeScannedCallback } from 'expo-barcode-scanner';
-import { BarCodeScanningResult } from 'expo-camera';
 import React from 'react';
-import Scanner from '../../components/Scanner';
-import { decode } from 'js-base64';
 import i18n from '../../i18n';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 

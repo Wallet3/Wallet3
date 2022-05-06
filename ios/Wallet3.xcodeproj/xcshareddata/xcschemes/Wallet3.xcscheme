@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
    LastUpgradeVersion = "1130"
-   version = "1.7">
+   version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES">
@@ -10,16 +10,7 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Run Script"
-               scriptText = "# Type a script or drag a script file from your workspace to insert its path.&#10;# https://medium.com/ios-os-x-development/xcode-automatic-bundle-versioning-1179b08a9b37&#10;&#10;formatDate=$(date &quot;+%Y%m%d%H%M%S&quot;)&#10;buildNumber=&quot;${formatDate}&quot;&#10;/usr/libexec/PlistBuddy -c &quot;Set :CFBundleVersion ${buildNumber}&quot; &quot;${PROJECT_DIR}/${INFOPLIST_FILE}&quot;&#10;">
-               <EnvironmentBuildable>
-                  <BuildableReference
-                     BuildableIdentifier = "primary"
-                     BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-                     BuildableName = "mobile.app"
-                     BlueprintName = "Wallet3"
-                     ReferencedContainer = "container:Wallet3.xcodeproj">
-                  </BuildableReference>
-               </EnvironmentBuildable>
+               scriptText = "# Type a script or drag a script file from your workspace to insert its path.&#10;# https://medium.com/ios-os-x-development/xcode-automatic-bundle-versioning-1179b08a9b37&#10;&#10;formatDate=$(date &quot;+%Y%m%d%H%M%S&quot;)&#10;buildNumber=&quot;${formatDate}&quot;&#10;/usr/libexec/PlistBuddy -c &quot;Set :CFBundleVersion ${buildNumber}&quot; &quot;${PROJECT_DIR}/${INFOPLIST_FILE}&quot;&#10;/usr/libexec/PlistBuddy -c &quot;Set :CFBundleVersion ${buildNumber}&quot; &quot;${SRCROOT}/&lt;YOUR WATCHKIT APP FOLDER&gt;/Info.plist&quot;&#10;/usr/libexec/PlistBuddy -c &quot;Set :CFBundleVersion ${buildNumber}&quot; &quot;${SRCROOT}/&lt;YOUR WATCHKIT EXTENSION FOLDER&gt;/Info.plist&quot;&#10;">
             </ActionContent>
          </ExecutionAction>
       </PreActions>
@@ -33,7 +24,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "mobile.app"
+               BuildableName = "Wallet3.app"
                BlueprintName = "Wallet3"
                ReferencedContainer = "container:Wallet3.xcodeproj">
             </BuildableReference>
@@ -73,7 +64,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "mobile.app"
+            BuildableName = "Wallet3.app"
             BlueprintName = "Wallet3"
             ReferencedContainer = "container:Wallet3.xcodeproj">
          </BuildableReference>
@@ -90,7 +81,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "mobile.app"
+            BuildableName = "Wallet3.app"
             BlueprintName = "Wallet3"
             ReferencedContainer = "container:Wallet3.xcodeproj">
          </BuildableReference>

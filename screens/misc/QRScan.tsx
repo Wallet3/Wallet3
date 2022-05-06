@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
+import Scanner, { BarCodeScanningResult } from '../../components/Scanner';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { AntDesign } from '@expo/vector-icons';
 import Authentication from '../../viewmodels/Authentication';
-import { BarCodeScanningResult } from 'expo-camera';
 import LinkHub from '../../viewmodels/hubs/LinkHub';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import Scanner from '../../components/Scanner';
 import { StatusBar } from 'expo-status-bar';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
