@@ -58,7 +58,7 @@
     "linq": "^4.0.0",
     "lottie-react-native": "5.0.1",
     "mobx": "^6.5.0",
-    "mobx-react-lite": "^3.3.0",
+    "mobx-react-lite": "^3.4.0",
     "numeral": "^2.0.6",
     "process": "^0.11.0",
     "pubsub-js": "^1.9.4",
