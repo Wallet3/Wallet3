@@ -170,10 +170,10 @@ export const WebTabs = ({
       setTabWidth(TabWidth);
     };
 
-    Dimensions.addEventListener('change', handler);
+    const event = Dimensions.addEventListener('change', handler);
 
     return () => {
-      Dimensions.removeEventListener('change', handler);
+      event.remove();
     };
   }, []);
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 
+import { BarCodeScanner } from 'expo-barcode-scanner';
 import Button from './Button';
 import { Camera } from 'expo-camera';
 import { StatusBar } from 'expo-status-bar';
@@ -27,7 +28,8 @@ export default ({ onBarCodeScanned, style }: Props) => {
 
   useEffect(() => {
     (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
+      let { status } = await Camera.requestCameraPermissionsAsync();
+      status = (await BarCodeScanner.requestPermissionsAsync()).status;
       setHasPermission(status === 'granted');
     })();
   }, []);
@@ -54,7 +56,8 @@ export default ({ onBarCodeScanned, style }: Props) => {
     );
   }
 
-  return <Camera onBarCodeScanned={onBarCodeScanned} style={style} />;
+  // return <Camera onBarCodeScanned={onBarCodeScanned} style={style} />;
+  return <BarCodeScanner onBarCodeScanned={onBarCodeScanned} style={style} />; // for iOS
 };
 
 const styles = StyleSheet.create({

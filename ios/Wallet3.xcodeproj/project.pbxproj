@@ -323,6 +323,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.co.chainbow.wallet3.mobile;
 				PRODUCT_NAME = Wallet3;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -350,6 +351,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.co.chainbow.wallet3.mobile;
 				PRODUCT_NAME = Wallet3;
 				SWIFT_VERSION = 5.0;

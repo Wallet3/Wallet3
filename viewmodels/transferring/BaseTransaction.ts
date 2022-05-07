@@ -3,7 +3,6 @@ import { Gwei_1, MAX_GWEI_PRICE } from '../../common/Constants';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import {
   estimateGas,
-  eth_call,
   eth_call_return,
   getCode,
   getGasPrice,
