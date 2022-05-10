@@ -31,7 +31,7 @@ PODS:
     - ExpoModulesCore
   - EXManifests (0.3.0):
     - EXJSONUtils
-  - Expo (45.0.1):
+  - Expo (45.0.2):
     - ExpoModulesCore
   - ExpoClipboard (3.0.1):
     - ExpoModulesCore
@@ -43,7 +43,7 @@ PODS:
     - ExpoModulesCore
   - ExpoLocalization (13.0.0):
     - ExpoModulesCore
-  - ExpoModulesCore (0.9.1):
+  - ExpoModulesCore (0.9.2):
     - React-Core
     - ReactCommon/turbomodule/core
   - ExpoRandom (12.2.0):
@@ -402,7 +402,7 @@ PODS:
     - React-jsi (= 0.68.1)
     - React-logger (= 0.68.1)
     - React-perflogger (= 0.68.1)
-  - RNCAsyncStorage (1.17.3):
+  - RNCAsyncStorage (1.17.4):
     - React-Core
   - RNDeviceInfo (8.7.1):
     - React-Core
@@ -739,13 +739,13 @@ SPEC CHECKSUMS:
   EXJSONUtils: 2a74b8f40f1523cc3f92af99c91aa78201737a77
   EXLocalAuthentication: 7f37b242eae73f9acf111d39bdee3f1379e68902
   EXManifests: 0c6134b7b6f3236a93a778c3f44ba1cfb3f9fa3d
-  Expo: a3583452183bed29dbd6ed6c8d5d8e73cbfbe76f
+  Expo: 27c7466cea6c8be416d8e50a0c0faa48cf8b4d1a
   ExpoClipboard: e2dda22be0524595a5eeead51665f60729829123
   ExpoCrypto: d0d0f3e20875dc450b4ec88f0fb608da5c2c6c17
   ExpoHaptics: ad58ec96a25e57579c14a47c7d71f0de0de8656a
   ExpoKeepAwake: c0c494b442ecd8122974c13b93ccfb57bd408e88
   ExpoLocalization: 8f619bb6eec64575cd5220bfabbd7b4e2d6f33f8
-  ExpoModulesCore: 5597629698cc026bd3dff1ef182fe2cc67c31084
+  ExpoModulesCore: e4278a668e8c13c0269ed8b8a4200989deea2973
   ExpoRandom: 14df0976aa363a71a730ceb7655250f3047c0e42
   ExpoWebBrowser: 818c519c3519cdd79780228039938fbd8236c885
   EXScreenCapture: cbee2204f313038a1819d31ad99a31e15f8e0f59
@@ -796,7 +796,7 @@ SPEC CHECKSUMS:
   React-RCTVibration: 9e344c840176b0af9c84d5019eb4fed8b3c105a1
   React-runtimeexecutor: 7285b499d0339104b2813a1f58ad1ada4adbd6c0
   ReactCommon: bf2888a826ceedf54b99ad1b6182d1bc4a8a3984
-  RNCAsyncStorage: 005c0e2f09575360f142d0d1f1f15e4ec575b1af
+  RNCAsyncStorage: 9367a646dc24e3ab7b6874d79bc1bfd0832dce58
   RNDeviceInfo: aad3c663b25752a52bf8fce93f2354001dd185aa
   RNFastImage: 1f2cab428712a4baaf78d6169eaec7f622556dd7
   RNGestureHandler: bf572f552ea324acd5b5464b8d30755b2d8c1de6
