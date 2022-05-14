@@ -37,11 +37,12 @@
 				<string>celowallet</string>
 				<string>bitpie</string>
 				<string>abt</string>
+				<string>wc</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>20220510154244</string>
+	<string>20220514172053</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
