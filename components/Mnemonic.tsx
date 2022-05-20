@@ -31,10 +31,10 @@ export default observer((props: Props) => {
   useEffect(() => {
     const updateState = (state: AppStateStatus) => setIsActive(state === 'active');
 
-    AppState.addEventListener('change', updateState);
+    const event = AppState.addEventListener('change', updateState);
 
     return () => {
-      AppState.removeEventListener('change', updateState);
+      event.remove();
     };
   }, []);
 

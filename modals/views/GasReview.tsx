@@ -9,7 +9,7 @@ import { BaseTransaction } from '../../viewmodels/transferring/BaseTransaction';
 import Fire from '../../assets/icons/app/fire.svg';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
-import { Tokenlist } from '.';
+import Tokenlist from './Tokenlist';
 import TxException from '../components/TxException';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';

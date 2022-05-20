@@ -83,7 +83,16 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
         <View style={{ flex: 1 }} />
 
         {item.l2 ? (
-          <View style={{ borderRadius: 5, backgroundColor: 'deepskyblue', padding: 2, paddingHorizontal: 6 }}>
+          <View
+            style={{
+              borderRadius: 5,
+              backgroundColor: 'deepskyblue',
+              padding: 2,
+              paddingHorizontal: 6,
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+          >
             <Text style={{ fontSize: 12, color: 'white', fontWeight: '500' }}>L2</Text>
           </View>
         ) : undefined}
