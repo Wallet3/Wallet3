@@ -386,35 +386,37 @@ export const Browser = observer(
               ))}
             </View>
 
-            <View
-              style={{
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                padding: 8,
-                borderBottomWidth: 1,
-                borderBottomColor: borderColor,
-              }}
-            >
-              {PopularDApps.concat(uri ? Bookmarks.flatFavs.slice(0, 24 - PopularDApps.length) : []).map((item, i) => (
-                <TouchableOpacity
-                  style={{ margin: 8 }}
-                  key={`${item.url}-${i}`}
-                  onPress={(e) => {
-                    e.preventDefault();
-                    goTo(item.url);
-                  }}
-                >
-                  <NullableImage
-                    uri={item.icon}
-                    imageBackgroundColor={backgroundColor}
-                    imageRadius={3}
-                    size={smallIconSize}
-                    text={item.title}
-                    fontSize={12}
-                  />
-                </TouchableOpacity>
-              ))}
-            </View>
+            {webUrl && !disableExtraFuncs ? (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  padding: 8,
+                  borderBottomWidth: 1,
+                  borderBottomColor: borderColor,
+                }}
+              >
+                {PopularDApps.concat(uri ? Bookmarks.flatFavs.slice(0, 24 - PopularDApps.length) : []).map((item, i) => (
+                  <TouchableOpacity
+                    style={{ margin: 8 }}
+                    key={`${item.url}-${i}`}
+                    onPress={(e) => {
+                      e.preventDefault();
+                      goTo(item.url);
+                    }}
+                  >
+                    <NullableImage
+                      uri={item.icon}
+                      imageBackgroundColor={backgroundColor}
+                      imageRadius={3}
+                      size={smallIconSize}
+                      text={item.title}
+                      fontSize={12}
+                    />
+                  </TouchableOpacity>
+                ))}
+              </View>
+            ) : undefined}
 
             {disableExtraFuncs ? undefined : (
               <View style={{ flexDirection: 'row', paddingHorizontal: 0 }}>
@@ -548,7 +550,7 @@ export const Browser = observer(
                       color: foregroundColor,
                     }}
                   >
-                    {section.title}
+                    {t(`browser-sections-${section.title.toLowerCase()}`)}
                   </Text>
                 )}
                 renderItem={(p) =>
