@@ -48,7 +48,7 @@ PODS:
     - ReactCommon/turbomodule/core
   - ExpoRandom (12.2.0):
     - ExpoModulesCore
-  - ExpoWebBrowser (10.2.0):
+  - ExpoWebBrowser (10.2.1):
     - ExpoModulesCore
   - EXScreenCapture (4.2.0):
     - ExpoModulesCore
@@ -747,7 +747,7 @@ SPEC CHECKSUMS:
   ExpoLocalization: 8f619bb6eec64575cd5220bfabbd7b4e2d6f33f8
   ExpoModulesCore: e4278a668e8c13c0269ed8b8a4200989deea2973
   ExpoRandom: 14df0976aa363a71a730ceb7655250f3047c0e42
-  ExpoWebBrowser: 818c519c3519cdd79780228039938fbd8236c885
+  ExpoWebBrowser: 4b5f9633e5f169dc948587cb6d26d2d1d1406187
   EXScreenCapture: cbee2204f313038a1819d31ad99a31e15f8e0f59
   EXSecureStore: aaae919d83aec2faf031e99398807edac0313285
   EXSplashScreen: 34f460788db8d682883871708dddbfac72095bb7
