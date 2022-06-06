@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import LINQ from 'linq';
 import { PageMetadata } from '../../screens/browser/Web3View';
 import PhishingConfig from 'eth-phishing-detect/src/config.json';
+import PopularApps from '../../configs/urls/popular.json';
 import RiskyHosts from '../../configs/urls/risky.json';
 import SecureHosts from '../../configs/urls/verified.json';
 
@@ -20,6 +21,7 @@ const Priorities = new Map<string, number>([
   ['Innovations', 6],
   ['Tools', 7],
   ['Education', 8],
+  ['Dev', 9],
   ['Others', 999999],
 ]);
 
@@ -30,12 +32,17 @@ export interface Bookmark {
 }
 
 class Bookmarks {
-  favs: { title: string; data: Bookmark[] }[] = [];
+  _favs: { title: string; data: Bookmark[] }[] = [];
+
   history: string[] = [];
   recentSites: PageMetadata[] = [];
 
   get flatFavs() {
-    return this.favs.flatMap((g) => g.data);
+    return this._favs.flatMap((g) => g.data);
+  }
+
+  get favs() {
+    return [{ title: 'popular-dapps', data: PopularApps }, ...this._favs];
   }
 
   static findCategory(url: string) {
@@ -71,7 +78,7 @@ class Bookmarks {
     await AsyncStorage.setItem(`bookmarks_v2`, JSON.stringify(favs));
 
     runInAction(() => {
-      this.favs = favs;
+      this._favs = favs;
     });
 
     return true;
@@ -80,7 +87,8 @@ class Bookmarks {
   constructor() {
     makeObservable(this, {
       history: observable,
-      favs: observable,
+      _favs: observable,
+      favs: computed,
       flatFavs: computed,
       remove: action,
       add: action,
@@ -97,7 +105,7 @@ class Bookmarks {
         v
           ? undefined
           : AsyncStorage.getItem(`bookmarks_v2`)
-              .then((v) => runInAction(() => (this.favs = JSON.parse(v || '[]'))))
+              .then((v) => runInAction(() => (this._favs = JSON.parse(v || '[]'))))
               .catch(() => {})
       )
       .catch(() => {});
@@ -116,16 +124,16 @@ class Bookmarks {
 
     const category = Bookmarks.findCategory(bookmark.url);
 
-    const group = this.favs.find((g) => g.title === category);
+    const group = this._favs.find((g) => g.title === category);
     if (group) {
       group.data.push(bookmark);
     } else {
-      this.favs = LINQ.from([...this.favs, { title: category, data: [bookmark] }])
+      this._favs = LINQ.from([...this._favs, { title: category, data: [bookmark] }])
         .orderBy((i) => Priorities.get(i.title))
         .toArray();
     }
 
-    AsyncStorage.setItem(`bookmarks_v2`, JSON.stringify(this.favs));
+    AsyncStorage.setItem(`bookmarks_v2`, JSON.stringify(this._favs));
   }
 
   remove(url: string) {
@@ -136,15 +144,15 @@ class Bookmarks {
     group.data.splice(index, 1);
 
     if (group.data.length === 0) {
-      const groupIndex = this.favs.findIndex((g) => g.title === group.title);
-      this.favs.splice(groupIndex, 1);
+      const groupIndex = this._favs.findIndex((g) => g.title === group.title);
+      this._favs.splice(groupIndex, 1);
     }
 
-    AsyncStorage.setItem(`bookmarks_v2`, JSON.stringify(this.favs));
+    AsyncStorage.setItem(`bookmarks_v2`, JSON.stringify(this._favs));
   }
 
   has(url: string) {
-    return this.favs.find((g) => g.data.find((i) => i.url === url));
+    return this._favs.find((g) => g.data.find((i) => i.url === url));
   }
 
   submitHistory(url: string) {
@@ -186,7 +194,7 @@ class Bookmarks {
   }
 
   reset() {
-    this.favs = [];
+    this._favs = [];
     this.history = [];
     this.recentSites = [];
   }
