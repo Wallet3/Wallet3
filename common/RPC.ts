@@ -243,7 +243,10 @@ export async function getGasPrice(chainId: number) {
 
       if (resp.error) continue;
 
-      return Number.parseInt(resp.result);
+      const wei = Number.parseInt(resp.result);
+      const minGwei = Networks.find(chainId)?.minWei || 0;
+
+      return Math.max(wei, minGwei);
     } catch (error) {
       markRPCFailed(chainId, url);
     }

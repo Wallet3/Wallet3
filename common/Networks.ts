@@ -20,6 +20,8 @@ import {
   zkSyncPopularTokens,
 } from './tokens';
 
+import { Gwei_1 } from './Constants';
+
 export interface INetwork {
   comm_id: string;
   symbol: string;
@@ -40,6 +42,7 @@ export interface INetwork {
   github_dir?: string;
   isUserAdded?: boolean;
   feeTokens?: IToken[];
+  minWei?: number;
 }
 
 export const PublicNetworks: INetwork[] = [
@@ -119,6 +122,7 @@ export const PublicNetworks: INetwork[] = [
     explorer: 'https://bscscan.com',
     etherscanApi: 'https://api.bscscan.com/api',
     github_dir: 'smartchain',
+    minWei: 5 * Gwei_1,
   },
   {
     symbol: 'ETH',
