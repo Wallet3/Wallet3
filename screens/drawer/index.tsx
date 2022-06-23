@@ -10,11 +10,13 @@ import Avatar from '../../components/Avatar';
 import { DrawerActions } from '@react-navigation/core';
 import { INetwork } from '../../common/Networks';
 import MessageKeys from '../../common/MessageKeys';
+import MetamaskDAppsHub from '../../viewmodels/walletconnect/MetamaskDAppsHub';
 import Networks from '../../viewmodels/Networks';
 import PubSub from 'pubsub-js';
 import { ReactiveScreen } from '../../utils/device';
 import { SafeViewContainer } from '../../components';
 import Theme from '../../viewmodels/settings/Theme';
+import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectV1ClientHub';
 import i18n from '../../i18n';
 import icons from '../../assets/icons/crypto';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
@@ -38,6 +40,9 @@ const Drawer = observer((props: DrawerProps) => {
 
   const { index } = navigation.getState();
 
+  const { connectedCount } = WalletConnectV1ClientHub;
+  const { dapps } = MetamaskDAppsHub;
+
   const homeHighlight = index === 0 ? current.color : foregroundColor;
   const contactsHighlight = index === 1 ? current.color : foregroundColor;
   const settingsHighlight = index === 2 ? current.color : foregroundColor;
@@ -58,10 +63,10 @@ const Drawer = observer((props: DrawerProps) => {
       else setScreenHeight(height - (left + right) - 16);
     };
 
-    Dimensions.addEventListener('change', updateScreenHeight);
+    const event = Dimensions.addEventListener('change', updateScreenHeight);
 
     return () => {
-      Dimensions.removeEventListener('change', updateScreenHeight);
+      event.remove();
     };
   }, []);
 
@@ -135,12 +140,14 @@ const Drawer = observer((props: DrawerProps) => {
           icon={() => <Feather name="users" size={20} style={{ width: 21, paddingStart: 1 }} color={contactsHighlight} />}
         />
 
-        <DrawerItem
-          label={t('home-drawer-dapps')}
-          onPress={() => navigateTo('DApps')}
-          labelStyle={{ ...styles.drawerLabel, color: dappsHighlight }}
-          icon={() => <Feather name="layers" size={20} style={{ width: 21, paddingStart: 1 }} color={dappsHighlight} />}
-        />
+        {connectedCount > 0 || dapps.length > 0 ? (
+          <DrawerItem
+            label={t('home-drawer-dapps')}
+            onPress={() => navigateTo('DApps')}
+            labelStyle={{ ...styles.drawerLabel, color: dappsHighlight }}
+            icon={() => <Feather name="layers" size={20} style={{ width: 21, paddingStart: 1 }} color={dappsHighlight} />}
+          />
+        ) : undefined}
 
         <DrawerItem
           label={t('home-drawer-settings')}
