@@ -6,6 +6,7 @@ import { post } from '../utils/fetch';
 
 const cache = new Map<number, string[]>();
 const failedRPCs = new Map<number, Set<string>>();
+const MinWei = new Map(Networks.all.map((i) => [i.chainId, i.minWei || 0]));
 
 export function getRPCUrls(chainId: number | string): string[] {
   if (cache.has(Number(chainId))) return cache.get(Number(chainId)) || [];
@@ -244,7 +245,7 @@ export async function getGasPrice(chainId: number) {
       if (resp.error) continue;
 
       const wei = Number.parseInt(resp.result);
-      const minGwei = Networks.find(chainId)?.minWei || 0;
+      const minGwei = MinWei.get(chainId) || 0;
 
       return Math.max(wei, minGwei);
     } catch (error) {
