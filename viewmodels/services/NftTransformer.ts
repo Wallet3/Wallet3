@@ -1,5 +1,6 @@
 import { BounceResponse, Nfts1155, Nfts721 } from '../../common/apis/Bounce.types';
 import { Nft, NftsByOwner } from '../../common/apis/Rarible.types';
+import { NftsByOwnerV2, RaribleItem } from '../../common/apis/Rarible.v2.types';
 
 import { NFTMetadata } from '../transferring/NonFungibleTokenTransferring';
 import { OpenseaAssetsResponse } from '../../common/apis/Opensea.types';
@@ -10,6 +11,7 @@ const convertProtocol = (items: (string | undefined)[]) => {
     .filter((i) => i) as string[];
 };
 
+// deprecated
 export function convertRaribleNftToNft(item: Nft) {
   return {
     id: item.id,
@@ -29,6 +31,7 @@ export function convertRaribleNftToNft(item: Nft) {
   };
 }
 
+// deprecated
 export function convertRaribleResultToNfts(result?: NftsByOwner): NFTMetadata[] | undefined {
   if (!result) return;
 
@@ -68,6 +71,33 @@ export function convertBounceToNfts(result?: BounceResponse) {
     });
 
     return erc1155.concat(erc721).filter((i) => i.images.some((img) => img?.startsWith('http')));
+  } catch (error) {}
+}
+
+function convertRaribleV2NftToNft(item: RaribleItem): NFTMetadata {
+  const images = item.meta.content.map((i) => i.url);
+  const types = item.meta.content.map((i) => i.mimeType);
+
+  return {
+    contract: item.contract.split(':')[1] || item.contract,
+    id: item.id,
+    tokenId: item.tokenId,
+    title: item.meta.name,
+    images,
+    types,
+    previews: images,
+    previewTypes: types,
+    attributes: item.meta.attributes,
+  };
+}
+
+export function convertRaribleV2ResultToNfts(result: NftsByOwnerV2 | undefined, chain: string): NFTMetadata[] | undefined {
+  if (!result) return;
+
+  chain = chain.toUpperCase();
+
+  try {
+    return result.items.filter((i) => i.blockchain === chain).map(convertRaribleV2NftToNft);
   } catch (error) {}
 }
 

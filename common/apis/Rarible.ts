@@ -1,5 +1,7 @@
 import { Nft, NftsByOwner } from './Rarible.types';
 
+import { NftsByOwnerV2 } from './Rarible.v2.types';
+
 export async function getNftsByOwner(
   owner: string,
   options: { size?: number; continuation?: string; chain?: string | 'ethereum' | 'polygon' } = {
@@ -26,5 +28,14 @@ export async function getNftById(contract: string, tokenId: string, chain: 'ethe
   try {
     const resp = await fetch(uri);
     return (await resp.json()) as Nft;
+  } catch {}
+}
+
+export async function getNftsByOwnerV2(owner: string) {
+  const uri = `https://api.rarible.org/v0.1/items/byOwner?owner=ETHEREUM:${owner}`;
+
+  try {
+    const resp = await fetch(uri);
+    return (await resp.json()) as NftsByOwnerV2;
   } catch {}
 }
