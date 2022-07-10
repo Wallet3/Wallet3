@@ -9,6 +9,7 @@ import { BaseTransaction } from '../../viewmodels/transferring/BaseTransaction';
 import Fire from '../../assets/icons/app/fire.svg';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
+import Themes from '../../screens/settings/Themes';
 import { TokenTransferring } from '../../viewmodels/transferring/TokenTransferring';
 import Tokenlist from './Tokenlist';
 import TxException from '../components/TxException';
@@ -25,15 +26,38 @@ interface Props {
 
 export default observer(({ vm, onBack, themeColor }: Props) => {
   const { t } = i18n;
+  const { borderColor, isLightMode } = Theme;
 
   return (
     <SafeViewContainer style={styles.container}>
       <View style={styles.navBar}>
         <BackButton onPress={onBack} color={themeColor} />
-        <Text style={styles.navTitle}>{t('modal-review-title')}</Text>
+        <Text style={styles.navTitle}>{t('modal-review-message')}</Text>
       </View>
 
-      <TextInput style={{ flex: 1 }} />
+      <TextInput
+        multiline={true}
+        placeholder={'Hello World'}
+        defaultValue={vm.userTxData}
+        onChangeText={(txt) => vm.setUserTxData(txt)}
+        autoCapitalize="none"
+        autoCorrect={false}
+        autoFocus
+        keyboardType="default"
+        style={{
+          textAlignVertical: 'top',
+          borderWidth: 1,
+          backgroundColor: isLightMode ? '#f9f9f9a0' : undefined,
+          borderColor,
+          borderRadius: 10,
+          padding: 8,
+          paddingVertical: 24,
+          fontSize: 16,
+          flex: 1,
+          marginBottom: 16,
+          marginTop: 8,
+        }}
+      />
 
       <Button
         title="OK"

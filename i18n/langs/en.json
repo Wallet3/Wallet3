@@ -135,6 +135,8 @@
   "modal-networks-switch": "Switch current network",
   "modal-contacts-recent": "Recent contacts",
   "modal-review-title": "Tx Review",
+  "modal-review-message": "Tx Message",
+  "modal-review-edit-tx-message": "Edit tx message",
   "modal-review-send": "Send",
   "modal-review-to": "To",
   "modal-review-amount": "Amount",

@@ -190,7 +190,9 @@ const ReviewView = observer(
         {txDataEditable ? (
           <View style={{ flexDirection: 'row', justifyContent: 'flex-end', padding: 12, paddingHorizontal: 16 }}>
             <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={onEditDataPress}>
-              <Text style={{ fontWeight: '500', color: secondaryTextColor, fontSize: 12.5 }}>Edit tx data</Text>
+              <Text style={{ fontWeight: '500', color: secondaryTextColor, fontSize: 12.5 }}>
+                {t('modal-review-edit-tx-message')}
+              </Text>
               <MaterialIcons name="keyboard-arrow-right" size={15} color={secondaryTextColor} style={{ marginBottom: -1 }} />
             </TouchableOpacity>
           </View>
