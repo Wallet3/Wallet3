@@ -102,6 +102,7 @@ export default observer(({ vm, onClose, erc681 }: Props) => {
             onSend={onSendClick}
             disableBack={erc681}
             biometricType={Authentication.biometricType}
+            txDataEditable
           />
 
           <Passpad themeColor={vm.network.color} onCodeEntered={sendTx} onCancel={() => swiper.current?.scrollTo(2)} />

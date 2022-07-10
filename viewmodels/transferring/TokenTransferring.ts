@@ -8,10 +8,12 @@ import { ERC20Token } from '../../models/ERC20';
 import { Gwei_1 } from '../../common/Constants';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
+import { NativeToken } from '../../models/NativeToken';
 
 export class TokenTransferring extends BaseTransaction {
   token: IToken;
   amount = '0';
+  userTxData = '0x';
 
   get allTokens() {
     return [this.account.tokens.tokens[0], ...this.account.tokens.allTokens];
@@ -65,8 +67,18 @@ export class TokenTransferring extends BaseTransaction {
     );
   }
 
+  get encodedUserTxData() {
+    return utils.isBytesLike(this.userTxData)
+      ? this.userTxData.startsWith('0x')
+        ? this.userTxData
+        : `0x${this.userTxData}`
+      : `0x${Buffer.from(this.userTxData, 'utf8').toString('utf-8')}`;
+  }
+
   get txRequest(): providers.TransactionRequest {
-    const data = this.isNativeToken ? '0x' : (this.token as ERC20Token).encodeTransferData(this.toAddress, this.amountWei);
+    const data = this.isNativeToken
+      ? this.encodedUserTxData
+      : (this.token as ERC20Token).encodeTransferData(this.toAddress, this.amountWei);
 
     const tx: providers.TransactionRequest = {
       chainId: this.network.chainId,
@@ -109,6 +121,7 @@ export class TokenTransferring extends BaseTransaction {
     makeObservable(this, {
       token: observable,
       amount: observable,
+      userTxData: observable,
       isValidParams: computed,
       amountWei: computed,
       isValidAmount: computed,
@@ -116,6 +129,7 @@ export class TokenTransferring extends BaseTransaction {
 
       setAmount: action,
       setToken: action,
+      setUserTxData: action,
     });
 
     if (autoSetToken || (autoSetToken === undefined && !defaultToken)) this.loadDefaultToken();
@@ -139,7 +153,9 @@ export class TokenTransferring extends BaseTransaction {
     if (!this.toAddress) return;
 
     runInAction(() => (this.isEstimatingGas = true));
-    const { gas, errorMessage } = await (this.token as ERC20Token).estimateGas(this.toAddress, this.amountWei);
+    const { gas, errorMessage } = this.isNativeToken
+      ? await (this.token as NativeToken).estimateGas(this.toAddress, this.encodedUserTxData)
+      : await (this.token as ERC20Token).estimateGas(this.toAddress, this.amountWei);
 
     runInAction(() => {
       this.isEstimatingGas = false;
@@ -178,5 +194,9 @@ export class TokenTransferring extends BaseTransaction {
       },
       pin
     );
+  }
+
+  setUserTxData(data: string) {
+    this.userTxData = data;
   }
 }

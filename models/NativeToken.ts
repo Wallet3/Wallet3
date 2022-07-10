@@ -50,12 +50,12 @@ export class NativeToken implements IToken {
     });
   }
 
-  async estimateGas(to: string) {
+  async estimateGas(to: string, data = '0x') {
     return await estimateGas(this.chainId, {
       from: this.owner,
       to,
       value: '0x0',
-      data: '0x',
+      data,
     });
   }
 }

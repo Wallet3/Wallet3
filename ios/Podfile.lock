@@ -60,7 +60,7 @@ PODS:
   - EXSQLite (10.2.0):
     - ExpoModulesCore
   - EXStructuredHeaders (2.2.1)
-  - EXUpdates (0.13.2):
+  - EXUpdates (0.13.3):
     - ASN1Decoder (~> 1.8)
     - EASClient
     - EXManifests
@@ -335,7 +335,7 @@ PODS:
     - React-Core
   - react-native-view-shot (3.3.0):
     - React-Core
-  - react-native-webview (11.22.4):
+  - react-native-webview (11.22.5):
     - React-Core
   - React-perflogger (0.68.2)
   - React-RCTActionSheet (0.68.2):
@@ -416,7 +416,7 @@ PODS:
     - React-Core
   - RNOS (1.2.6):
     - React
-  - RNReanimated (2.8.0):
+  - RNReanimated (2.9.1):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -443,7 +443,7 @@ PODS:
     - React-RCTText
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.13.1):
+  - RNScreens (3.15.0):
     - React-Core
     - React-RCTImage
   - RNSharedElement (0.8.4):
@@ -753,7 +753,7 @@ SPEC CHECKSUMS:
   EXSplashScreen: 34f460788db8d682883871708dddbfac72095bb7
   EXSQLite: 2b9accd925438293f9f39e0a57a08cca13bdffb2
   EXStructuredHeaders: 5d86829469399370a9fc7cb1e4391b09de87681d
-  EXUpdates: 08d69031f9ed1e918d50f041fa505fe67d6b4809
+  EXUpdates: 084edfaac900e6bc77ab4027eaf7437a4236b8c3
   EXUpdatesInterface: 0b101ace1dbfa0f64260a5df31c71d03c66cca54
   FBLazyVector: a7a655862f6b09625d11c772296b01cd5164b648
   FBReactNativeSpec: 81ce99032d5b586fddd6a38d450f8595f7e04be4
@@ -783,7 +783,7 @@ SPEC CHECKSUMS:
   react-native-safe-area-context: 6c12e3859b6f27b25de4fee8201cfb858432d8de
   react-native-video: a4c2635d0802f983594b7057e1bce8f442f0ad28
   react-native-view-shot: da768466e1cd371de50a3a5c722d1e95456b5b2c
-  react-native-webview: a1ed211d50a5047a4fe54e07140991e277cd66e6
+  react-native-webview: 28557a39f4c1f3f8faa69dae22858335ba63e7f9
   React-perflogger: a18b4f0bd933b8b24ecf9f3c54f9bf65180f3fe6
   React-RCTActionSheet: 547fe42fdb4b6089598d79f8e1d855d7c23e2162
   React-RCTAnimation: bc9440a1c37b06ae9ebbb532d244f607805c6034
@@ -802,8 +802,8 @@ SPEC CHECKSUMS:
   RNGestureHandler: bad495418bcbd3ab47017a38d93d290ebd406f50
   RNImageColors: fd9777591fc765780e035f4bec7a42edabc86eb4
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
-  RNReanimated: 64573e25e078ae6bec03b891586d50b9ec284393
-  RNScreens: 40a2cb40a02a609938137a1e0acfbf8fc9eebf19
+  RNReanimated: 5c8c17e26787fd8984cd5accdc70fef2ca70aafd
+  RNScreens: 4a1af06327774490d97342c00aee0c2bafb497b7
   RNSharedElement: eb7d506733952d58634f34c82ec17e82f557e377
   RNSVG: 302bfc9905bd8122f08966dc2ce2d07b7b52b9f8
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
