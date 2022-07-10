@@ -238,7 +238,16 @@ export default observer((props: Props) => {
       />
 
       {type === 0 && <GasReview onBack={() => swiper.current?.scrollTo(0)} vm={vm} themeColor={vm.network.color} />}
-      {type === 1 && <UserTxData onBack={() => swiper.current?.scrollTo(0)} vm={vm} themeColor={vm.network.color} />}
+      {type === 1 && (
+        <UserTxData
+          vm={vm}
+          themeColor={vm.network.color}
+          onBack={() => {
+            swiper.current?.scrollTo(0);
+            vm.estimateGas();
+          }}
+        />
+      )}
     </Swiper>
   );
 });

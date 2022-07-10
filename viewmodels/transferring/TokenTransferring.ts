@@ -72,7 +72,7 @@ export class TokenTransferring extends BaseTransaction {
       ? this.userTxData.startsWith('0x')
         ? this.userTxData
         : `0x${this.userTxData}`
-      : `0x${Buffer.from(this.userTxData, 'utf8').toString('utf-8')}`;
+      : `0x${Buffer.from(this.userTxData, 'utf8').toString('hex')}`;
   }
 
   get txRequest(): providers.TransactionRequest {
