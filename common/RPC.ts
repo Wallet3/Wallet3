@@ -2,10 +2,12 @@ import { BigNumber, utils } from 'ethers';
 
 import Networks from '../viewmodels/Networks';
 import Providers from '../configs/providers.json';
+import { PublicNetworks } from './Networks';
 import { post } from '../utils/fetch';
 
 const cache = new Map<number, string[]>();
 const failedRPCs = new Map<number, Set<string>>();
+const MinWei = new Map(PublicNetworks.map((i) => [i.chainId, i.minWei || 0]));
 
 export function getRPCUrls(chainId: number | string): string[] {
   if (cache.has(Number(chainId))) return cache.get(Number(chainId)) || [];
@@ -243,7 +245,10 @@ export async function getGasPrice(chainId: number) {
 
       if (resp.error) continue;
 
-      return Number.parseInt(resp.result);
+      const wei = Number.parseInt(resp.result);
+      const minGwei = MinWei.get(chainId) || 0;
+
+      return Math.max(wei, minGwei);
     } catch (error) {
       markRPCFailed(chainId, url);
     }

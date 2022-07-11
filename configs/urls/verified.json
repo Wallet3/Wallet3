@@ -118,6 +118,7 @@
     "superrare.com",
     "studio.manifold.xyz",
     "www.sound.xyz",
+    "archipelago.art",
     "daidai.io",
     "anifty.jp",
     "ethernity.io",
@@ -147,6 +148,7 @@
     "defi.instadapp.io",
     "clarity.so",
     "etherscan.io",
+    "www.ankr.com",
     "gnosis-safe.io",
     "chainlist.org",
     "lu.ma",
@@ -156,6 +158,7 @@
     "snapshot.org",
     "app.epns.io",
     "debank.com",
+    "ultrasound.money",
     "chainlist.defillama.com",
     "fees.wtf",
     "wallet3.io",
@@ -170,7 +173,9 @@
     "polygonscan.com",
     "blockexplorer.boba.network",
     "optimistic.etherscan.io",
-    "arbiscan.io"
+    "arbiscan.io",
+    "www.bueno.art",
+    "nft.bueno.art"
   ],
   "Bridges": [
     "gateway.optimism.io",

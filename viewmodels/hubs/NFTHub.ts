@@ -26,8 +26,9 @@ class NFTHub {
         });
 
         let { metadata } = nft || {};
+        const hasImages = metadata?.images?.some((i) => i?.startsWith('https'));
 
-        if (!nft) {
+        if (!nft || !hasImages) {
           const raribleNft = await getNftById(item.contract, item.tokenId, network.network.toLowerCase() as any);
 
           if (!raribleNft) return;
