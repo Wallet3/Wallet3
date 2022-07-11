@@ -196,7 +196,7 @@ const ReviewView = observer(
         >
           {vm.insufficientFee ? <InsufficientFee /> : undefined}
 
-          {txDataEditable ? (
+          {txDataEditable && !vm.insufficientFee ? (
             <TouchableOpacity
               style={{ flexDirection: 'row', alignItems: 'center', padding: 12, paddingHorizontal: 16 }}
               onPress={onEditDataPress}

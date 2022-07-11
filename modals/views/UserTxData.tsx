@@ -42,7 +42,6 @@ export default observer(({ vm, onBack, themeColor }: Props) => {
         onChangeText={(txt) => vm.setUserTxData(txt)}
         autoCapitalize="none"
         autoCorrect={false}
-        autoFocus
         keyboardType="default"
         style={{
           textAlignVertical: 'top',

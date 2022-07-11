@@ -439,6 +439,10 @@ const SendFundsModal = () => {
       disableScrollIfPossible
       modalStyle={styles.modalStyle}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+      onClosed={() => {
+        setIsERC681(false);
+        setVM(undefined);
+      }}
     >
       {vm ? <Send vm={vm} onClose={clear} erc681={isERC681} /> : undefined}
     </Modalize>
