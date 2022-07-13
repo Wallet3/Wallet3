@@ -254,7 +254,11 @@ export default observer((props: Web3ViewProps) => {
           pullToRefreshEnabled
           allowsInlineMediaPlayback
           allowsBackForwardNavigationGestures
-          injectedJavaScriptBeforeContentLoaded={`${MetamaskMobileProvider}\ntrue;`}
+          // injectedJavaScriptBeforeContentLoaded={`${MetamaskMobileProvider}\ntrue;`}
+          onLoadStart={() => {
+            const webview = (webViewRef as any).current as WebView;
+            webview.injectJavaScript(`${MetamaskMobileProvider}\ntrue;`);
+          }}
           style={{ backgroundColor }}
           decelerationRate={1}
           allowsLinkPreview
