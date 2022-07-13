@@ -1,7 +1,7 @@
 import { Etherscan, Opensea, Polygon, Rarible } from '../../assets/3rd';
 import { EvilIcons, Ionicons } from '@expo/vector-icons';
 import { NFTMetadata, NFTTransferring } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
-import { Platform, Share, Text, TouchableOpacity, View } from 'react-native';
+import { Platform, ScrollView, Share, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 
 import Avatar from '../../components/Avatar';
@@ -16,7 +16,6 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/Networks';
 import { Portal } from 'react-native-portalize';
 import { ReactiveScreen } from '../../utils/device';
-import { ScrollView } from 'react-native-gesture-handler';
 import SendNFT from '../../modals/SendNFT';
 import { StatusBar } from 'expo-status-bar';
 import Theme from '../../viewmodels/settings/Theme';

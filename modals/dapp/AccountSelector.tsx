@@ -1,6 +1,6 @@
 import { Button, SafeViewContainer } from '../../components';
 import { FlatList, StyleProp, Text, View, ViewStyle } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native';
 
 import React, { useState } from 'react';
 

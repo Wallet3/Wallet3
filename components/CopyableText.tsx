@@ -2,7 +2,7 @@ import * as Animatable from 'react-native-animatable';
 
 import React, { useRef } from 'react';
 import { StyleProp, TextStyle, ViewStyle } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
 import { setString } from 'expo-clipboard';

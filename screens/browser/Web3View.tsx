@@ -12,6 +12,7 @@ import AccountSelector from '../../modals/dapp/AccountSelector';
 import App from '../../viewmodels/App';
 import Avatar from '../../components/Avatar';
 import DeviceInfo from 'react-native-device-info';
+import GetIconsFunction from './scripts/GetIconsFunction';
 import GetPageMetadata from './scripts/Metadata';
 import HookWalletConnect from './scripts/InjectWalletConnectObserver';
 import { INetwork } from '../../common/Networks';
@@ -31,6 +32,7 @@ import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
+import modalStyles from '../../modals/styles';
 
 export interface PageMetadata {
   icon: string;
@@ -68,14 +70,13 @@ export default observer((props: Web3ViewProps) => {
   const [hub] = useState(new InpageDAppController());
   const [appName] = useState(`Wallet3/${DeviceInfo.getVersion() || '0.0.0'}`);
   const [ua] = useState(
-    // Platform.OS === 'ios' ? 
-    DeviceInfo.isTablet()
-      ? `Mozilla/5.0 (iPad; CPU OS 15_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/98.0.4758.85 Mobile/15E148 Safari/604.1 ${appName}`
-      : `Mozilla/5.0 (iPhone; CPU iPhone OS 15_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/98.0.4758.85 Mobile/15E148 Safari/604.1 ${appName}`
-    // : 
-    // DeviceInfo.isTablet()
-    //   ? `Mozilla/5.0 (Linux; Android 11; tablet) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.210 Mobile Safari/537.36 ${appName}`
-    //   : `Mozilla/5.0 (Linux; Android 11; Pixel 4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.210 Mobile Safari/537.36 ${appName}`
+    Platform.OS === 'ios'
+      ? DeviceInfo.isTablet()
+        ? `Mozilla/5.0 (iPad; CPU OS 15_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/98.0.4758.85 Mobile/15E148 Safari/604.1 ${appName}`
+        : `Mozilla/5.0 (iPhone; CPU iPhone OS 15_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/98.0.4758.85 Mobile/15E148 Safari/604.1 ${appName}`
+      : DeviceInfo.isTablet()
+      ? `Mozilla/5.0 (Linux; Android 11; tablet) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.210 Mobile Safari/537.36 ${appName}`
+      : `Mozilla/5.0 (Linux; Android 11; Pixel 4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.210 Mobile Safari/537.36 ${appName}`
   );
 
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
@@ -247,7 +248,7 @@ export default observer((props: Web3ViewProps) => {
           userAgent={ua}
           allowsFullscreenVideo={false}
           forceDarkOn={mode === 'dark'}
-          injectedJavaScript={`${GetPageMetadata}\ntrue;\n${HookWalletConnect}\ntrue;`}
+          injectedJavaScript={`${GetIconsFunction}\ntrue;${GetPageMetadata}\ntrue;\n${HookWalletConnect}\ntrue;`}
           onMessage={onMessage}
           mediaPlaybackRequiresUserAction
           pullToRefreshEnabled
@@ -386,7 +387,7 @@ export default observer((props: Web3ViewProps) => {
           modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
+          <SafeAreaProvider style={{ ...modalStyles.safeArea, backgroundColor }}>
             <AccountSelector
               single
               accounts={App.allAccounts}

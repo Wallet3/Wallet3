@@ -1,6 +1,6 @@
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
-import { Switch, Text, View } from 'react-native';
+import { ScrollView, Switch, Text, View } from 'react-native';
 
 import { Account } from '../../viewmodels/account/Account';
 import AccountIndicator from '../components/AccountIndicator';
@@ -9,7 +9,6 @@ import FaceID from '../../assets/icons/app/FaceID-white.svg';
 import { ParsedMessage } from '../../utils/siwe_plain';
 import RejectApproveButtons from '../components/RejectApproveButtons';
 import { SafeViewContainer } from '../../components';
-import { ScrollView } from 'react-native-gesture-handler';
 import SignInWithEthereum from './SignInWithEthereum';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';

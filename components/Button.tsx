@@ -1,7 +1,6 @@
 import * as Animatable from 'react-native-animatable';
 
-import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
 
 import { BreathAnimation } from '../utils/animations';
 import { Ionicons } from '@expo/vector-icons';

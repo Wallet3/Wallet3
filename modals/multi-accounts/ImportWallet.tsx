@@ -2,7 +2,7 @@ import { Button, Loader, SafeViewContainer } from '../../components';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useEffect, useRef, useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native';
 
 import { borderColor, secondaryFontColor } from '../../constants/styles';
 

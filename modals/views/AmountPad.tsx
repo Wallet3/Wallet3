@@ -2,7 +2,7 @@ import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { Button, Coin, Numpad, SafeViewContainer } from '../../components';
 import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native';
 
 import { numericFontFamily, secondaryFontColor } from '../../constants/styles';
 

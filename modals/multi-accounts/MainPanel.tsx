@@ -1,7 +1,7 @@
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
 import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { FlatList, ListRenderItemInfo, NativeSyntheticEvent, StyleSheet, Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native';
 
 import React, { useEffect, useRef } from 'react';
 import { SafeViewContainer, Separator } from '../../components';

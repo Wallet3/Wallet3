@@ -1,6 +1,6 @@
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
 import { NativeSyntheticEvent, Text, View, Platform } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native';
 
 import { Account } from '../../viewmodels/account/Account';
 import App from '../../viewmodels/App';

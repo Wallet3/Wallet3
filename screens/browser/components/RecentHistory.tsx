@@ -1,10 +1,9 @@
 import * as Animatable from 'react-native-animatable';
 
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
-import { NativeSyntheticEvent, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, NativeSyntheticEvent, Text, TouchableOpacity, View } from 'react-native';
 
 import Bookmarks from '../../../viewmodels/customs/Bookmarks';
-import { FlatList } from 'react-native-gesture-handler';
 import { NullableImage } from '../../../components';
 import React from 'react';
 import Theme from '../../../viewmodels/settings/Theme';

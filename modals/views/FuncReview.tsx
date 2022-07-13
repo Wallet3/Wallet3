@@ -1,10 +1,9 @@
 import { Button, SafeViewContainer } from '../../components';
-import { Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
 import { DecodedFunc } from '../../viewmodels/hubs/EtherscanHub';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { ScrollView } from 'react-native-gesture-handler';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';

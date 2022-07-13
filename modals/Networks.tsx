@@ -1,6 +1,5 @@
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
-import { FlatList, ListRenderItemInfo, NativeSyntheticEvent, Text, View, Platform } from 'react-native';
-import { TouchableOpacity} from 'react-native-gesture-handler'
+import { FlatList, ListRenderItemInfo, NativeSyntheticEvent, Text, View, Platform, TouchableOpacity } from 'react-native';
 import { NetworkIcons, generateNetworkIcon } from '../assets/icons/networks/color';
 import { SafeViewContainer, Separator } from '../components';
 import { useEffect, useRef, useState } from 'react';
@@ -76,7 +75,10 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
             })}
         </View>
 
-        <Text style={{ fontSize: 16, marginStart: 12, fontWeight: '500', color: item.color, maxWidth: '70%' }} numberOfLines={1}>
+        <Text
+          style={{ fontSize: 16, marginStart: 12, fontWeight: '500', color: item.color, maxWidth: '70%' }}
+          numberOfLines={1}
+        >
           {item.network}
         </Text>
 

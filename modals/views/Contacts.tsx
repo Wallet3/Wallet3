@@ -1,8 +1,8 @@
 import Contacts, { IContact } from '../../viewmodels/customs/Contacts';
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
-import { ListRenderItemInfo, NativeSyntheticEvent, Text, TouchableHighlight, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { FlatList, ListRenderItemInfo, NativeSyntheticEvent, Text, TouchableHighlight, View } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeViewContainer, Skeleton, TextBox } from '../../components';
@@ -11,7 +11,6 @@ import { borderColor, fontColor, secondaryFontColor } from '../../constants/styl
 import Avatar from '../../components/Avatar';
 import { BaseTransaction } from '../../viewmodels/transferring/BaseTransaction';
 import Button from '../../components/Button';
-import { FlatList } from 'react-native-gesture-handler';
 import Image from 'react-native-fast-image';
 import MiniScanner from './MiniScanner';
 import Networks from '../../viewmodels/Networks';

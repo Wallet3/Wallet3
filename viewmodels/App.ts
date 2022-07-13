@@ -36,9 +36,10 @@ export class AppVM {
   }
 
   get allAccounts() {
-    return LINQ.from(this.wallets.map((wallet) => wallet.accounts).flat())
+    const accounts = LINQ.from(this.wallets.map((wallet) => wallet.accounts).flat())
       .distinct((a) => a.address)
       .toArray();
+    return accounts;
   }
 
   constructor() {

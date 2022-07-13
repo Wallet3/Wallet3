@@ -1,6 +1,6 @@
 import { Coin, SafeViewContainer } from '../../components';
 import { FlatList, ListRenderItemInfo, Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native';
 
 import BackButton from '../components/BackButton';
 import { Feather } from '@expo/vector-icons';

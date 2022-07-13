@@ -1,6 +1,6 @@
 import { Button, SafeViewContainer } from '../../components';
-import { StyleSheet, Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
 import { Account } from '../../viewmodels/account/Account';
 import Avatar from '../../components/Avatar';
@@ -10,7 +10,6 @@ import Image from 'react-native-fast-image';
 import { MetamaskDApp } from '../../viewmodels/walletconnect/MetamaskDApp';
 import Networks from '../../viewmodels/Networks';
 import React from 'react';
-import { ScrollView } from 'react-native-gesture-handler';
 import { WalletConnect_v1 } from '../../viewmodels/walletconnect/WalletConnect_v1';
 import dayjs from 'dayjs';
 import { formatAddress } from '../../utils/formatter';

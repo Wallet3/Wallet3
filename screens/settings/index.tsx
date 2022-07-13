@@ -1,6 +1,6 @@
 import { Button, SafeViewContainer } from '../../components';
 import { Entypo, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { SafeAreaView, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { fontColor, secondaryFontColor } from '../../constants/styles';
 
 import App from '../../viewmodels/App';
@@ -16,7 +16,6 @@ import Networks from '../../viewmodels/Networks';
 import { Portal } from 'react-native-portalize';
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { ScrollView } from 'react-native-gesture-handler';
 import Theme from '../../viewmodels/settings/Theme';
 import UI from '../../viewmodels/settings/UI';
 import { styles as appStyles } from '../../constants/styles';
