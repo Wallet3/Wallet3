@@ -139,6 +139,10 @@ android {
     ndkVersion rootProject.ext.ndkVersion
 
     compileSdkVersion rootProject.ext.compileSdkVersion
+    
+    java {
+        toolchain.languageVersion.set(JavaLanguageVersion.of(11))
+    }
 
     defaultConfig {
         applicationId 'jp.co.chainbow.wallet3.mobile'
