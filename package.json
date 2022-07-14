@@ -5,6 +5,9 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "eject": "expo eject",
+    "bundle": "npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle",
+    "buildApk": "cd ./android && ./gradlew assembleRelease && cd ..",
+    "buildAab": "cd ./android && ./gradlew bundleRelease && cd ..",
     "postinstall": "node_modules/.bin/rn-nodeify --install crypto,buffer,react-native-randombytes,vm,stream,http,https,os,url,net,process --hack"
   },
   "dependencies": {
