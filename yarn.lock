@@ -3351,12 +3351,12 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-native@~0.68.1":
-  version "0.68.1"
-  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.68.1.tgz#56eda448c13fa24f90fd57fa9c7299819e44fb54"
-  integrity sha512-S+r6VamWqVutlQ3q/vhTn4b0F/DdZj8R6AIDdgwV9xN9Ln1kRdQd7o3mo7FnfdddVdzEkWMUVlK2sbkFOJFAiQ==
+"@types/react-native@~0.68.2":
+  version "0.68.2"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.68.2.tgz#dc435b9a7ba8733fe8d4a6f1c511a7c6c6f85041"
+  integrity sha512-6h4SjpX0rwjO9E+R+J+OFebeJpIxrMWJpMsDceyhqnk1C3Nlg0J6QWvatzSRFK+nRvQi1rgtauG7ABzZTm22tw==
   dependencies:
-    "@types/react" "*"
+    "@types/react" "^17"
 
 "@types/react@*":
   version "17.0.29"
@@ -3367,7 +3367,7 @@
     "@types/scheduler" "*"
     csstype "^3.0.2"
 
-"@types/react@~17.0.47":
+"@types/react@^17", "@types/react@~17.0.47":
   version "17.0.47"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.47.tgz#4ee71aaf4c5a9e290e03aa4d0d313c5d666b3b78"
   integrity sha512-mk0BL8zBinf2ozNr3qPnlu1oyVTYq+4V7WA76RgxUAtf0Em/Wbid38KN6n4abEkvO4xMTBWmnP1FtQzgkEiJoA==
@@ -9261,10 +9261,10 @@ react-native-web@0.18.6:
     postcss-value-parser "^4.2.0"
     styleq "^0.1.2"
 
-react-native-webview@11.22.5:
-  version "11.22.5"
-  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-11.22.5.tgz#8f661bf6945f1ac7173e06e642712a5c6eaf802e"
-  integrity sha512-UtFvzJEdlRB3fdXnU14CjHVr11urKc/GqRGEQGWttBNNT5bjcrmEQ98OAq/xIOcKuZZWpJlXjQibJmgpM7b1zQ==
+react-native-webview@11.22.7:
+  version "11.22.7"
+  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-11.22.7.tgz#bf0d1755473af6e1af8486e862668fc7530149b4"
+  integrity sha512-IYMElB4fFS6S8LbhivAQfAlW95HorqCK4T3mFKmWsV24iPVTfYoaiA1TNzkRnjw2mMgXDk/QnMeH9IbjBVs1Ag==
   dependencies:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
@@ -9359,10 +9359,10 @@ readable-stream@^3.4.0, readable-stream@^3.5.0, readable-stream@^3.6.0:
     string_decoder "^1.1.1"
     util-deprecate "^1.0.1"
 
-readable-stream@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-4.0.0.tgz#da7105d03430a28ef4080785a43e6a45d4cdc4d1"
-  integrity sha512-Mf7ilWBP6AV3tF3MjtBrHMH3roso7wIrpgzCwt9ybvqiJQVWIEBMnp/W+S//yvYSsUUi2cJIwD7q7m57l0AqZw==
+readable-stream@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-4.1.0.tgz#280d0a29f559d3fb684a277254e02b6f61ae0631"
+  integrity sha512-sVisi3+P2lJ2t0BPbpK629j8wRW06yKGJUcaLAGXPAUhyUxVJm7VsCTit1PFgT4JHUDMrGNR+ZjSKpzGaRF3zw==
   dependencies:
     abort-controller "^3.0.0"
 

@@ -31,11 +31,17 @@ export async function getNftById(contract: string, tokenId: string, chain: 'ethe
   } catch {}
 }
 
-export async function getNftsByOwnerV2(owner: string) {
+export async function getNftsByOwnerV2(owner: string, chain: string = 'ethereum') {
   const uri = `https://api.rarible.org/v0.1/items/byOwner?owner=ETHEREUM:${owner}`;
 
   try {
     const resp = await fetch(uri);
-    return (await resp.json()) as NftsByOwnerV2;
+    const result = (await resp.json()) as NftsByOwnerV2;
+    const blockchain = chain.toUpperCase();
+    const items = result.items.filter((item) => item.blockchain === blockchain);
+    return {
+      total: items.length,
+      items: items,
+    } as NftsByOwnerV2;
   } catch {}
 }
