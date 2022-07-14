@@ -1,4 +1,5 @@
 import * as SplashScreen from 'expo-splash-screen';
+import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
 
 import AppViewModel, { AppVM } from './viewmodels/App';
 import AuthViewModel, { Authentication } from './viewmodels/Authentication';
@@ -73,17 +74,41 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
               }}
             >
               <Screen name="Root" component={Root} options={{ headerShown: false }} />
-              <Screen name="Languages" component={Languages} options={{ title: t('settings-languages'), headerStyle: { backgroundColor }  }} />
-              <Screen name="Currencies" component={Currencies} options={{ title: t('settings-currencies'), headerStyle: { backgroundColor }  }} />
+              <Screen
+                name="Languages"
+                component={Languages}
+                options={{ title: t('settings-languages'), headerStyle: { backgroundColor } }}
+              />
+              <Screen
+                name="Currencies"
+                component={Currencies}
+                options={{ title: t('settings-currencies'), headerStyle: { backgroundColor } }}
+              />
               <Screen
                 name="Themes"
                 component={Themes}
                 options={{ title: t('settings-themes'), headerStyle: { backgroundColor } }}
               />
-              <Screen name="ChangePasscode" component={ChangePasscode} options={{ title: t('settings-security-passcode'), headerStyle: { backgroundColor } }} />
-              <Screen name="Backup" component={Backup} options={{ title: t('settings-security-backup'), headerStyle: { backgroundColor } }} />
-              <Screen name="VerifySecret" component={VerifySecret} options={{ title: t('settings-security-backup-verify'), headerStyle: { backgroundColor } }} />
-              <Screen name="AddToken" component={AddToken} options={{ title: t('home-add-token-title'), headerStyle: { backgroundColor } }} />
+              <Screen
+                name="ChangePasscode"
+                component={ChangePasscode}
+                options={{ title: t('settings-security-passcode'), headerStyle: { backgroundColor } }}
+              />
+              <Screen
+                name="Backup"
+                component={Backup}
+                options={{ title: t('settings-security-backup'), headerStyle: { backgroundColor } }}
+              />
+              <Screen
+                name="VerifySecret"
+                component={VerifySecret}
+                options={{ title: t('settings-security-backup-verify'), headerStyle: { backgroundColor } }}
+              />
+              <Screen
+                name="AddToken"
+                component={AddToken}
+                options={{ title: t('home-add-token-title'), headerStyle: { backgroundColor } }}
+              />
               <Screen name="About" component={About} options={{ title: t('about-title'), headerStyle: { backgroundColor } }} />
               <Screen
                 name="Profile"
@@ -107,7 +132,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
                   return {
                     animation: 'slide_from_bottom',
                     headerTintColor: '#ffffff',
-                    headerStyle: { backgroundColor:'#000000' },
+                    headerStyle: { backgroundColor: '#000000' },
                     title: t('qrscan-title'),
                     headerLeft: () => (
                       <TouchableOpacity onPress={() => navigation.pop()}>
@@ -157,4 +182,11 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
   );
 });
 
-export default () => <App app={AppViewModel} appAuth={AuthViewModel} />;
+const WalletApp = () => {
+  return (
+    // your code to render your layout
+    <App app={AppViewModel} appAuth={AuthViewModel} />
+  );
+};
+
+export default gestureHandlerRootHOC(WalletApp);
