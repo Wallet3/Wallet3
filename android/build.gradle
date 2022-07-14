@@ -49,6 +49,18 @@ allprojects {
             url(new File(["node", "--print", "require.resolve('jsc-android/package.json')"].execute(null, rootDir).text.trim(), "../dist"))
         }
 
+        maven {
+          // Android JSC is installed from npm
+          url("$rootDir/../node_modules/jsc-android/dist")
+        }
+        
+        configurations.all {
+            resolutionStrategy {
+                // use 0.9.0 to fix crash on Android 11
+                force "com.facebook.soloader:soloader:0.9.0+"
+            }
+        }
+        
         google()
         mavenCentral {
             // We don't want to fetch react-native from Maven Central as there are
