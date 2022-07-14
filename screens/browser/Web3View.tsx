@@ -241,6 +241,7 @@ export default observer((props: Web3ViewProps) => {
         <WebView
           {...props}
           ref={webViewRef}
+          nestedScrollEnabled
           automaticallyAdjustContentInsets={false}
           contentInsetAdjustmentBehavior={'never'}
           contentInset={{ bottom: expanded ? 37 + (safeAreaBottom === 0 ? 8 : 0) : 0 }}
@@ -262,7 +263,6 @@ export default observer((props: Web3ViewProps) => {
           style={{ backgroundColor }}
           decelerationRate={1}
           allowsLinkPreview
-          nestedScrollEnabled
         />
       </ViewShot>
 
