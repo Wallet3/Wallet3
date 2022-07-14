@@ -5,7 +5,7 @@ import { FlatList, NativeSyntheticEvent, Text, TouchableOpacity, View } from 're
 
 import Bookmarks from '../../../viewmodels/customs/Bookmarks';
 import { NullableImage } from '../../../components';
-import React from 'react';
+import React, { useState } from 'react';
 import Theme from '../../../viewmodels/settings/Theme';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -23,6 +23,7 @@ export default observer(({ onItemPress, tabCount, onTabsPress, disableContextMen
   const { t } = i18n;
   const { recentSites } = Bookmarks;
   const actions = [{ title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' }];
+  const [menuOpened, setMenuOpened] = useState(false);
 
   return (
     <Animatable.View animation={'fadeInUp'}>
@@ -87,12 +88,22 @@ export default observer(({ onItemPress, tabCount, onTabsPress, disableContextMen
               <ContextMenu
                 key={item.origin}
                 actions={disableContextMenu ? [] : actions}
+                onCancel={() => {
+                  setMenuOpened(false);
+                }}
                 onPress={onActionPress}
                 previewBackgroundColor={backgroundColor}
                 style={{ marginHorizontal: 4 }}
               >
                 <TouchableOpacity
-                  onPress={() => onItemPress?.(item.origin)}
+                  onLongPress={() => {
+                    setMenuOpened(true);
+                  }}
+                  onPress={() => {
+                    if (!menuOpened) {
+                      onItemPress?.(item.origin);
+                    }
+                  }}
                   key={`tab-${index}`}
                   style={{
                     padding: 8,

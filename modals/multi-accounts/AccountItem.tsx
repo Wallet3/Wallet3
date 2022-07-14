@@ -6,7 +6,7 @@ import { Account } from '../../viewmodels/account/Account';
 import App from '../../viewmodels/App';
 import Avatar from '../../components/Avatar';
 import { Feather } from '@expo/vector-icons';
-import React from 'react';
+import React, { useState } from 'react';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { secondaryFontColor } from '../../constants/styles';
@@ -29,10 +29,9 @@ export default observer(({ account, themeColor, onPress, onEdit, onRemove, textC
 
   const { currentAccount } = App;
   const { t } = i18n;
+  const [menuOpened, setMenuOpened] = useState(false);
 
   const onActionPress = (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => {
-    if (Platform.OS !== 'ios') return;
-
     const { index } = e.nativeEvent;
 
     switch (index) {
@@ -46,19 +45,31 @@ export default observer(({ account, themeColor, onPress, onEdit, onRemove, textC
   };
 
   const actions =
-    Platform.OS === 'ios'
-      ? App.allAccounts.length > 1
-        ? [
-            { title: t('button-edit'), systemIcon: 'square.and.pencil' },
-            { title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' },
-          ]
-        : [{ title: t('button-edit'), systemIcon: 'square.and.pencil' }]
-      : [];
+    App.allAccounts.length > 1
+      ? [
+          { title: t('button-edit'), systemIcon: 'square.and.pencil' },
+          { title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' },
+        ]
+      : [{ title: t('button-edit'), systemIcon: 'square.and.pencil' }];
 
   return (
-    <ContextMenu onPress={onActionPress} actions={actions} previewBackgroundColor={previewBackgroundColor}>
+    <ContextMenu
+      onCancel={() => {
+        setMenuOpened(false);
+      }}
+      onPress={onActionPress}
+      actions={actions}
+      previewBackgroundColor={previewBackgroundColor}
+    >
       <TouchableOpacity
-        onPress={() => onPress?.(account)}
+        onLongPress={() => {
+          setMenuOpened(true);
+        }}
+        onPress={() => {
+          if (!menuOpened) {
+            onPress?.(account);
+          }
+        }}
         style={{ flexDirection: 'row', paddingVertical: 8, alignItems: 'center', paddingHorizontal: 16 }}
       >
         <Avatar
