@@ -262,6 +262,7 @@ export default observer((props: Web3ViewProps) => {
           style={{ backgroundColor }}
           decelerationRate={1}
           allowsLinkPreview
+          nestedScrollEnabled
         />
       </ViewShot>
 
