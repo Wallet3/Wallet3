@@ -150,8 +150,8 @@ android {
         applicationId 'jp.co.chainbow.wallet3.mobile'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 18
-        versionName "2.2.0"
+        versionCode 20
+        versionName "2.3.0"
 
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 
