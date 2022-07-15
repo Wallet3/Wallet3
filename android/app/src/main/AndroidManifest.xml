@@ -32,6 +32,21 @@
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="wallet3"/>
         <data android:scheme="jp.co.chainbow.wallet3.mobile"/>
+
+        <data android:scheme="ledgerlive"/>
+        <data android:scheme="dharma"/>
+        <data android:scheme="huobiwallet"/>
+        <data android:scheme="imtokenv2"/>
+        <data android:scheme="tpoutside"/>
+        <data android:scheme="pillarwallet"/>
+        <data android:scheme="celowallet"/>
+        <data android:scheme="bitpie"/>
+        <data android:scheme="abt"/>
+        <data android:scheme="ethereum"/>
+        <data android:scheme="0x"/>
+        <data android:scheme="wc"/>
+        <data android:scheme="wallet3sync"/>
+
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>
