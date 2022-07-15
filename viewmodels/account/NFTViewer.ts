@@ -47,7 +47,7 @@ export class NFTViewer {
         //     await getNftsByOwner(this.owner, { chain: current.network.toLowerCase(), size: 500 })
         //   )
         // );
-        result = convertRaribleV2ResultToNfts(await getNftsByOwnerV2(this.owner), current.network);
+        result = convertRaribleV2ResultToNfts(await getNftsByOwnerV2(this.owner, current.network), current.network);
         break;
       case 56:
         result = convertBounceToNfts(await getBounceNfts(this.owner));
