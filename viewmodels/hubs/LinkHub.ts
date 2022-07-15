@@ -28,11 +28,11 @@ class LinkHub {
   private handledWCUrls = new Set<string>();
 
   start() {
-    Linking.getInitialURL().then((url) => this.handleURL(url!));
+    Linking.getInitialURL().then((url) => this.handleURL(url!, { launch: true }));
     Linking.addEventListener('url', ({ url }) => this.handleURL(url));
   }
 
-  handleURL = (uri: string, extra?: { fromMobile?: boolean; hostname?: string }): boolean => {
+  handleURL = (uri: string, extra?: { fromMobile?: boolean; hostname?: string; launch?: boolean }): boolean => {
     if (!uri) return false;
     if (this.handledWCUrls.has(uri)) return false;
 
@@ -50,7 +50,9 @@ class LinkHub {
 
       if (Date.now() - this.lastHandled < 3000) return false;
 
-      showMessage({ message: i18n.t('msg-invalid-qr-code'), type: 'warning' });
+      if(!extra || !extra.launch){
+        showMessage({ message: i18n.t('msg-invalid-qr-code'), type: 'warning' });
+      }
       this.lastHandled = Date.now();
       return false;
     }
