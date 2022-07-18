@@ -135,6 +135,8 @@
   "modal-networks-switch": "切换网络",
   "modal-contacts-recent": "最近联系人",
   "modal-review-title": "复审交易",
+  "modal-review-message": "交易消息",
+  "modal-review-edit-tx-message": "编辑消息",
   "modal-review-send": "发送",
   "modal-review-to": "收款方",
   "modal-review-amount": "数量",
