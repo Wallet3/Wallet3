@@ -37,7 +37,7 @@ const Drawer = observer((props: DrawerProps) => {
   const { currentAccount } = appVM;
   const { current } = Networks;
   const [screenHeight, setScreenHeight] = useState(contentHeight);
-  const { borderColor, foregroundColor, textColor, secondaryTextColor } = Theme;
+  const { borderColor, foregroundColor, textColor, secondaryTextColor, backgroundColor } = Theme;
 
   const { index } = navigation.getState();
 
@@ -91,7 +91,7 @@ const Drawer = observer((props: DrawerProps) => {
           borderBottomColor: borderColor,
         }}
       >
-        <TouchableOpacity onPress={() => navigation.navigate('Profile')} style={{}}>
+        <TouchableOpacity onPress={() => navigation.navigate('Profile')} style={{ position: 'relative' }}>
           <Avatar
             size={50}
             uri={currentAccount?.avatar}
@@ -101,7 +101,25 @@ const Drawer = observer((props: DrawerProps) => {
             emojiMarginStart={2}
           />
 
-          <FastImage source={{ uri: '' }} style={{ width: 12, height: 12 }} />
+          {currentAccount?.poap.primaryBadge || (currentAccount?.poap.badges.length || 0) > 0 ? (
+            <FastImage
+              source={{
+                uri:
+                  currentAccount?.poap.primaryBadge?.metadata.image_url || currentAccount?.poap.badges[0].metadata.image_url!,
+              }}
+              style={{
+                width: 18,
+                height: 18,
+                position: 'absolute',
+                right: -1,
+                bottom: -1,
+                borderRadius: 20,
+                borderWidth: 1,
+                borderColor: backgroundColor,
+                backgroundColor,
+              }}
+            />
+          ) : undefined}
         </TouchableOpacity>
 
         <TouchableOpacity

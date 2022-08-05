@@ -165,8 +165,10 @@ export default observer(() => {
           })}
       </View>
 
-      <Text style={styles.subtitle}>{t('profile-more-records')}</Text>
-      <View style={styles.contentWrapper}></View>
+      <Text style={styles.subtitle}>Badges</Text>
+
+      {/* <Text style={styles.subtitle}>{t('profile-more-records')}</Text>
+      <View style={styles.contentWrapper}></View> */}
 
       <StatusBar style="light" />
 
