@@ -31,7 +31,7 @@ PODS:
     - ExpoModulesCore
   - EXManifests (0.3.0):
     - EXJSONUtils
-  - Expo (45.0.6):
+  - Expo (45.0.8):
     - ExpoModulesCore
   - ExpoClipboard (3.0.1):
     - ExpoModulesCore
@@ -739,7 +739,7 @@ SPEC CHECKSUMS:
   EXJSONUtils: 2a74b8f40f1523cc3f92af99c91aa78201737a77
   EXLocalAuthentication: 7f37b242eae73f9acf111d39bdee3f1379e68902
   EXManifests: 0c6134b7b6f3236a93a778c3f44ba1cfb3f9fa3d
-  Expo: 3df4af520db4f37f9821ba732ce9ac0dc67bb7b8
+  Expo: 1133eaf0e12dc265ac82a256f3815401b7570f96
   ExpoClipboard: e2dda22be0524595a5eeead51665f60729829123
   ExpoCrypto: d0d0f3e20875dc450b4ec88f0fb608da5c2c6c17
   ExpoHaptics: ad58ec96a25e57579c14a47c7d71f0de0de8656a

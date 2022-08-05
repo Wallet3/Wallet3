@@ -8,6 +8,7 @@ import { borderColor, fontColor, secondaryFontColor } from '../../constants/styl
 
 import Avatar from '../../components/Avatar';
 import { DrawerActions } from '@react-navigation/core';
+import FastImage from 'react-native-fast-image';
 import { INetwork } from '../../common/Networks';
 import MessageKeys from '../../common/MessageKeys';
 import MetamaskDAppsHub from '../../viewmodels/walletconnect/MetamaskDAppsHub';
@@ -90,7 +91,7 @@ const Drawer = observer((props: DrawerProps) => {
           borderBottomColor: borderColor,
         }}
       >
-        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Profile')} style={{}}>
           <Avatar
             size={50}
             uri={currentAccount?.avatar}
@@ -99,6 +100,8 @@ const Drawer = observer((props: DrawerProps) => {
             emojiSize={23}
             emojiMarginStart={2}
           />
+
+          <FastImage source={{ uri: '' }} style={{ width: 12, height: 12 }} />
         </TouchableOpacity>
 
         <TouchableOpacity

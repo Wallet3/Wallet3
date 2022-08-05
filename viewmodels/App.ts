@@ -123,6 +123,7 @@ export class AppVM {
 
     target.tokens.refreshOverview();
     target.nfts.refresh();
+    target.poap.refresh();
     this.currentAccount = target;
 
     clearTimeout(this.refreshTimer);

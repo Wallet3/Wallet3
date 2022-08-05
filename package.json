@@ -31,7 +31,7 @@
     "ethereumjs-util": "^7.1.5",
     "ethers": "^5.6.9",
     "events": "^3.3.0",
-    "expo": "^45.0.6",
+    "expo": "^45.0.8",
     "expo-asset": "~8.5.0",
     "expo-barcode-scanner": "^11.3.0",
     "expo-blur": "~11.1.0",

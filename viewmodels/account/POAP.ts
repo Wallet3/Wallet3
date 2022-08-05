@@ -1,10 +1,11 @@
 import { BigNumber, ethers } from 'ethers';
+import { eth_call, getRPCUrls } from '../../common/RPC';
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import POAPABI from '../../abis/POAP.json';
 import axios from 'axios';
 
-export const EthereumAddress = '0x22C1f6050E56d2876009903609a2cC3fEf83B415';
+const POAPAddress = '0x22C1f6050E56d2876009903609a2cC3fEf83B415';
 
 export interface POAPBadge {
   tokenId: BigNumber;
@@ -28,25 +29,17 @@ export class POAP {
 
   badges: POAPBadge[] = [];
 
-  constructor({
-    provider,
-    contractAddress,
-    owner,
-  }: {
-    provider: ethers.providers.BaseProvider;
-    contractAddress: string;
-    owner: string;
-  }) {
+  constructor(owner: string) {
     this.owner = owner;
-    this.contract = new ethers.Contract(contractAddress, POAPABI, provider);
-
+    this.contract = new ethers.Contract(POAPAddress, POAPABI);
     makeObservable(this, { badges: observable });
   }
 
   async getBalance() {
     try {
-      const amount: BigNumber = await this.contract.balanceOf(this.owner);
-      return amount.toNumber();
+      const data = this.contract.interface.encodeFunctionData('balanceOf', [this.owner]);
+      const resp = await eth_call(1, { from: this.owner, to: POAPAddress, data });
+      return BigNumber.from(resp).toNumber();
     } catch (error) {
       return 0;
     }
@@ -55,16 +48,20 @@ export class POAP {
   async getTokenDetails(address: string, count: number) {
     const details = await Promise.all(
       new Array(count).fill(0).map(async (_, index) => {
-        return (await this.contract.tokenDetailsOfOwnerByIndex(address, index)) as {
-          tokenId: BigNumber;
-          eventId: BigNumber;
-        };
+        const data = this.contract.interface.encodeFunctionData('tokenDetailsOfOwnerByIndex', [address, index]);
+        const resp: string = await eth_call(1, { from: address, to: POAPAddress, data });
+        const [tokenId, eventId] = this.contract.interface.decodeFunctionResult('tokenDetailsOfOwnerByIndex', resp);
+
+        return { tokenId, eventId } as { tokenId: BigNumber; eventId: BigNumber };
       })
     );
 
     return await Promise.all(
       details.map(async (basic) => {
-        const tokenURI = await this.contract.tokenURI(basic.tokenId);
+        const data = this.contract.interface.encodeFunctionData('tokenURI', [basic.tokenId]);
+        const resp: string = await eth_call(1, { from: address, to: POAPAddress, data });
+        const [tokenURI] = this.contract.interface.decodeFunctionResult('tokenURI', resp);
+
         const metadata = (await axios.get(tokenURI)).data as {
           description: string;
           external_url: string;
@@ -80,11 +77,14 @@ export class POAP {
   }
 
   async refresh() {
+    runInAction(() => (this.badges = []));
     const count = await this.getBalance();
     if (count === 0) return [];
 
     const badges = await this.getTokenDetails(this.owner, count);
-    console.log(badges);
     runInAction(() => (this.badges = badges));
+
+    console.log(badges);
+    return badges;
   }
 }
