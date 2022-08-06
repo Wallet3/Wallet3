@@ -37,6 +37,7 @@ export default observer(() => {
 
   useEffect(() => {
     ens?.fetchMoreInfo();
+    poap.refresh();
     return () => {};
   }, []);
 

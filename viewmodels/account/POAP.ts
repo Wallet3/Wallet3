@@ -90,6 +90,8 @@ export class POAP {
   }
 
   async refresh() {
+    if (this.badges.length > 0) return;
+
     runInAction(() => (this.badges = []));
 
     const [count, xdaiCount] = await Promise.all([this.getBalance(1), this.getBalance(100)]);
@@ -111,7 +113,6 @@ export class POAP {
 
     if (!this.primaryBadge) this.setPrimaryBadge(badges[0]);
 
-    console.log(badges.length);
     return badges;
   }
 
