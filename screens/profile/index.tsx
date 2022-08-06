@@ -184,14 +184,29 @@ export default observer(() => {
               alignItems: 'center',
               justifyContent: 'center',
               marginBottom: 5,
+              position: 'relative',
             }}
-            onPress={() => {
-              // setSelectedIndex(index);
-              // setSelectedColor(item);
-            }}
+            onPress={() => {}}
           >
-            {/* {selectedIndex === index ? <Ionicons name="checkmark" size={24} color={'#fff'} /> : null} */}
             <FastImage source={{ uri: item.metadata.image_url }} style={{ width: 48, height: 48 }} />
+            <View
+              style={{
+                width: 18,
+                height: 18,
+                backgroundColor: 'dodgerblue',
+                position: 'absolute',
+                borderColor: 'white',
+                right: -1,
+                bottom: -1,
+                borderRadius: 12,
+                borderWidth: 1,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <Ionicons name="checkmark" size={16} color={'white'} />
+            </View>
           </TouchableOpacity>
         )}
       />

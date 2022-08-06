@@ -90,7 +90,12 @@ export class POAP {
     if (count === 0) return [];
 
     const badges = await this.getTokenDetails(this.owner, count);
+
+    if (badges.length === 0) return [];
+
     runInAction(() => (this.badges = badges));
+
+    if (!this.primaryBadge) this.setPrimaryBadge(badges[0]);
 
     console.log(badges);
     return badges;
