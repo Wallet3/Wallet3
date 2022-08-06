@@ -123,7 +123,7 @@ export class AppVM {
 
     target.tokens.refreshOverview();
     target.nfts.refresh();
-    target.poap.refresh();
+    target.poap.checkDefaultBadge();
     this.currentAccount = target;
 
     clearTimeout(this.refreshTimer);
