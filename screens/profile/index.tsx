@@ -6,6 +6,8 @@ import { secondaryFontColor, thirdFontColor } from '../../constants/styles';
 import App from '../../viewmodels/App';
 import CachedImage from 'react-native-fast-image';
 import CopyableText from '../../components/CopyableText';
+import FastImage from 'react-native-fast-image';
+import { FlatGrid } from 'react-native-super-grid';
 import { InappBrowserModal } from '../Modalize';
 import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/Networks';
@@ -25,7 +27,7 @@ export default observer(() => {
   const headerHeight = useHeaderHeight();
 
   const { currentAccount } = App;
-  const { ens } = currentAccount || {};
+  const { ens, poap } = currentAccount || {};
 
   const { t } = i18n;
   const { current } = Networks;
@@ -166,6 +168,33 @@ export default observer(() => {
       </View>
 
       <Text style={styles.subtitle}>Badges</Text>
+      <FlatGrid
+        itemDimension={52}
+        data={poap?.badges || []}
+        bounces={false}
+        spacing={0}
+        contentContainerStyle={{ padding: 0 }}
+        style={{ padding: 0, paddingStart: 2, marginTop: 10 }}
+        renderItem={({ item, index }) => (
+          <TouchableOpacity
+            key={`${item}-${index}`}
+            style={{
+              width: 52,
+              height: 52,
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: 5,
+            }}
+            onPress={() => {
+              // setSelectedIndex(index);
+              // setSelectedColor(item);
+            }}
+          >
+            {/* {selectedIndex === index ? <Ionicons name="checkmark" size={24} color={'#fff'} /> : null} */}
+            <FastImage source={{ uri: item.metadata.image_url }} style={{ width: 48, height: 48 }} />
+          </TouchableOpacity>
+        )}
+      />
 
       {/* <Text style={styles.subtitle}>{t('profile-more-records')}</Text>
       <View style={styles.contentWrapper}></View> */}
