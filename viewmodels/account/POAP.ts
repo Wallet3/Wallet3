@@ -37,7 +37,7 @@ export class POAP {
 
     makeObservable(this, { badges: observable, primaryBadge: observable, setPrimaryBadge: action });
 
-    AsyncStorage.getItem('primaryBadge').then((primaryBadge) => {
+    AsyncStorage.getItem(`${owner}-primaryBadge`).then((primaryBadge) => {
       if (!primaryBadge) return;
       runInAction(() => (this.primaryBadge = JSON.parse(primaryBadge)));
     });
@@ -86,10 +86,18 @@ export class POAP {
 
   async refresh() {
     runInAction(() => (this.badges = []));
-    const count = await this.getBalance();
-    if (count === 0) return [];
+    const [count, xdaiCount] = await Promise.all([this.getBalance(1), this.getBalance(100)]);
+    if (count === 0 && xdaiCount === 0) return [];
 
-    const badges = await this.getTokenDetails(this.owner, count);
+    const badges: POAPBadge[] = [];
+
+    if (count > 0) {
+      badges.push(...(await this.getTokenDetails(this.owner, count, 1)));
+    }
+
+    if (xdaiCount > 0) {
+      badges.push(...(await this.getTokenDetails(this.owner, xdaiCount, 100)));
+    }
 
     if (badges.length === 0) return [];
 
@@ -97,12 +105,12 @@ export class POAP {
 
     if (!this.primaryBadge) this.setPrimaryBadge(badges[0]);
 
-    console.log(badges);
+    console.log(badges.length);
     return badges;
   }
 
   setPrimaryBadge(badge: POAPBadge) {
     this.primaryBadge = badge;
-    AsyncStorage.setItem('primaryBadge', JSON.stringify(badge));
+    AsyncStorage.setItem(`${this.owner}-primaryBadge`, JSON.stringify(badge));
   }
 }

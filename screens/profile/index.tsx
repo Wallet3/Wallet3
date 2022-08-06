@@ -27,7 +27,10 @@ export default observer(() => {
   const headerHeight = useHeaderHeight();
 
   const { currentAccount } = App;
-  const { ens, poap } = currentAccount || {};
+  if (!currentAccount) return null;
+
+  const { ens, poap } = currentAccount;
+  const { primaryBadge } = poap;
 
   const { t } = i18n;
   const { current } = Networks;
@@ -172,9 +175,9 @@ export default observer(() => {
         itemDimension={52}
         data={poap?.badges || []}
         bounces={false}
-        spacing={0}
-        contentContainerStyle={{ padding: 0 }}
-        style={{ padding: 0, paddingStart: 2, marginTop: 10 }}
+        spacing={5}
+        contentContainerStyle={{ paddingBottom: 16 }}
+        style={{ padding: 0, paddingStart: 2, marginTop: 10, marginHorizontal: -16 }}
         renderItem={({ item, index }) => (
           <TouchableOpacity
             key={`${item}-${index}`}
@@ -186,27 +189,32 @@ export default observer(() => {
               marginBottom: 5,
               position: 'relative',
             }}
-            onPress={() => {}}
+            onPress={() => {
+              poap?.setPrimaryBadge(item);
+            }}
           >
             <FastImage source={{ uri: item.metadata.image_url }} style={{ width: 48, height: 48 }} />
-            <View
-              style={{
-                width: 18,
-                height: 18,
-                backgroundColor: 'dodgerblue',
-                position: 'absolute',
-                borderColor: 'white',
-                right: -1,
-                bottom: -1,
-                borderRadius: 12,
-                borderWidth: 1,
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <Ionicons name="checkmark" size={16} color={'white'} />
-            </View>
+
+            {item.tokenId === primaryBadge?.tokenId ? (
+              <View
+                style={{
+                  width: 18,
+                  height: 18,
+                  backgroundColor: 'dodgerblue',
+                  position: 'absolute',
+                  borderColor: 'white',
+                  right: -1,
+                  bottom: -1,
+                  borderRadius: 12,
+                  borderWidth: 1,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <Ionicons name="checkmark" size={16} color={'white'} />
+              </View>
+            ) : undefined}
           </TouchableOpacity>
         )}
       />
