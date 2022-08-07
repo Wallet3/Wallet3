@@ -28,7 +28,7 @@ export class POAP {
   readonly contract: ethers.Contract;
   readonly owner: string;
 
-  badges: POAPBadge[] = [];
+  badges: (POAPBadge | null)[] = [];
   primaryBadge: POAPBadge | null = null;
 
   constructor(owner: string) {
@@ -97,7 +97,7 @@ export class POAP {
     const [count, xdaiCount] = await Promise.all([this.getBalance(1), this.getBalance(100)]);
     if (count === 0 && xdaiCount === 0) return [];
 
-    const badges: POAPBadge[] = [];
+    const badges: (POAPBadge | null)[] = [];
 
     if (count > 0) {
       badges.push(...(await this.getTokenDetails(this.owner, count, 1)));
@@ -109,14 +109,14 @@ export class POAP {
 
     if (badges.length === 0) return [];
 
-    runInAction(() => (this.badges = badges));
+    runInAction(() => (this.badges = badges.concat(null)));
 
     if (!this.primaryBadge) this.setPrimaryBadge(badges[0]);
 
     return badges;
   }
 
-  setPrimaryBadge(badge: POAPBadge) {
+  setPrimaryBadge(badge: POAPBadge | null) {
     this.primaryBadge = badge;
     AsyncStorage.setItem(`${this.owner}-primaryBadge`, JSON.stringify(badge));
   }

@@ -171,7 +171,7 @@ export default observer(() => {
           })}
       </View>
 
-      <Text style={styles.subtitle}>Badges</Text>
+      {poap.badges.length > 0 ? <Text style={styles.subtitle}>Badges</Text> : undefined}
       <FlatGrid
         itemDimension={52}
         data={poap?.badges || []}
@@ -194,9 +194,26 @@ export default observer(() => {
               poap?.setPrimaryBadge(item);
             }}
           >
-            <FastImage source={{ uri: item.metadata.image_url }} style={{ width: 48, height: 48 }} />
+            {item ? (
+              <FastImage source={{ uri: item.metadata.image_url }} style={{ width: 48, height: 48 }} />
+            ) : (
+              <View
+                style={{
+                  width: 48,
+                  height: 48,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderWidth: 1,
+                  borderColor: 'grey',
+                  borderRadius: 50,
+                }}
+              >
+                <Text style={{ fontSize: 10, color: 'grey', marginStart: 2 }}>None</Text>
+              </View>
+            )}
 
-            {item.tokenId === primaryBadge?.tokenId ? (
+            {item?.tokenId === primaryBadge?.tokenId ? (
               <View
                 style={{
                   width: 18,

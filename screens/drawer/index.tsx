@@ -101,11 +101,10 @@ const Drawer = observer((props: DrawerProps) => {
             emojiMarginStart={2}
           />
 
-          {currentAccount?.poap.primaryBadge || (currentAccount?.poap.badges.length || 0) > 0 ? (
+          {currentAccount?.poap.primaryBadge ? (
             <FastImage
               source={{
-                uri:
-                  currentAccount?.poap.primaryBadge?.metadata.image_url || currentAccount?.poap.badges[0].metadata.image_url!,
+                uri: currentAccount?.poap.primaryBadge?.metadata.image_url,
               }}
               style={{
                 width: 18,
