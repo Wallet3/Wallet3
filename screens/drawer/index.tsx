@@ -107,11 +107,11 @@ const Drawer = observer((props: DrawerProps) => {
                 uri: currentAccount?.poap.primaryBadge?.metadata.image_url,
               }}
               style={{
-                width: 18,
-                height: 18,
+                width: 16,
+                height: 16,
                 position: 'absolute',
-                right: -1,
-                bottom: -1,
+                right: 0,
+                bottom: 0,
                 borderRadius: 20,
                 borderWidth: 1,
                 borderColor: backgroundColor,
