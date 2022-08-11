@@ -125,6 +125,7 @@
   "profile-accounts": "ソーシャルアカウント",
   "profile-addresses": "アドレス",
   "profile-more-records": "他のレコード",
+  "profile-badges": "バッジ",
   "profile-my-qrcode": "",
   "modal-multi-accounts-title": "アカウント",
   "modal-multi-accounts-remove-account-desc": "このアカウントを削除してよいのですか？\n{{addr}}",

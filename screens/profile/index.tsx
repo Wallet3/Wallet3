@@ -11,6 +11,7 @@ import { FlatGrid } from 'react-native-super-grid';
 import { InappBrowserModal } from '../Modalize';
 import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/Networks';
+import { POAPBadge } from '../../viewmodels/account/POAP';
 import { Portal } from 'react-native-portalize';
 import { Skeleton } from '../../components';
 import { StatusBar } from 'expo-status-bar';
@@ -171,7 +172,7 @@ export default observer(() => {
           })}
       </View>
 
-      {poap.badges.length > 0 ? <Text style={styles.subtitle}>Badges</Text> : undefined}
+      {poap.badges.length > 0 ? <Text style={styles.subtitle}>{t('profile-badges')}</Text> : undefined}
       <FlatGrid
         itemDimension={52}
         data={poap?.badges || []}
@@ -213,7 +214,8 @@ export default observer(() => {
               </View>
             )}
 
-            {item?.tokenId === primaryBadge?.tokenId ? (
+            {(item === null && primaryBadge === null) ||
+            (item as POAPBadge)?.tokenId === (primaryBadge as POAPBadge)?.tokenId ? (
               <View
                 style={{
                   width: 18,

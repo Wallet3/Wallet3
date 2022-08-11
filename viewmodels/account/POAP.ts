@@ -9,8 +9,8 @@ import axios from 'axios';
 const POAPAddress = '0x22C1f6050E56d2876009903609a2cC3fEf83B415';
 
 export interface POAPBadge {
-  tokenId: BigNumber;
-  eventId: BigNumber;
+  tokenId: string;
+  eventId: string;
 
   tokenURI: string;
   metadata: {
@@ -28,8 +28,8 @@ export class POAP {
   readonly contract: ethers.Contract;
   readonly owner: string;
 
-  badges: (POAPBadge | null)[] = [];
-  primaryBadge: POAPBadge | null = null;
+  badges: (POAPBadge | '')[] = [];
+  primaryBadge: POAPBadge | '' | null = null;
 
   constructor(owner: string) {
     this.owner = owner;
@@ -60,7 +60,7 @@ export class POAP {
         const resp: string = await eth_call(chainId, { from: owner, to: POAPAddress, data });
         const [tokenId, eventId] = this.contract.interface.decodeFunctionResult('tokenDetailsOfOwnerByIndex', resp);
 
-        return { tokenId, eventId } as { tokenId: BigNumber; eventId: BigNumber };
+        return { tokenId: tokenId.toString(), eventId: eventId.toString() } as { tokenId: string; eventId: string };
       })
     );
 
@@ -97,7 +97,7 @@ export class POAP {
     const [count, xdaiCount] = await Promise.all([this.getBalance(1), this.getBalance(100)]);
     if (count === 0 && xdaiCount === 0) return [];
 
-    const badges: (POAPBadge | null)[] = [];
+    const badges: (POAPBadge | '')[] = [];
 
     if (count > 0) {
       badges.push(...(await this.getTokenDetails(this.owner, count, 1)));
@@ -109,14 +109,14 @@ export class POAP {
 
     if (badges.length === 0) return [];
 
-    runInAction(() => (this.badges = badges.concat(null)));
+    runInAction(() => (this.badges = badges.concat('')));
 
-    if (!this.primaryBadge) this.setPrimaryBadge(badges[0]);
+    if (this.primaryBadge === null) this.setPrimaryBadge(badges[0]);
 
     return badges;
   }
 
-  setPrimaryBadge(badge: POAPBadge | null) {
+  setPrimaryBadge(badge: POAPBadge | '') {
     this.primaryBadge = badge;
     AsyncStorage.setItem(`${this.owner}-primaryBadge`, JSON.stringify(badge));
   }
