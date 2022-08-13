@@ -181,7 +181,7 @@
   "modal-dapp-not-supported-network": "非対応 ネットワーク",
   "modal-dapp-add-new-network-title": "EVM ネットワーク追加",
   "modal-dapp-add-new-network-network": "ネットワーク",
-  "modal-dapp-add-new-network-chainid": "ネットワーク ID",
+  "modal-dapp-add-new-network-chainid": "チェーン ID",
   "modal-dapp-add-new-network-currency": "貨幣記号",
   "modal-dapp-add-new-network-color": "テーマカラー",
   "modal-dapp-add-new-network-explorer": "Explorer",
