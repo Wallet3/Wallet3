@@ -125,6 +125,7 @@
   "profile-accounts": "社交账号",
   "profile-addresses": "地址",
   "profile-more-records": "其它",
+  "profile-badges": "徽章",
   "profile-my-qrcode": "我的二维码",
   "modal-multi-accounts-title": "账户",
   "modal-multi-accounts-remove-account-desc": "确定删除该账户？\n{{addr}}",

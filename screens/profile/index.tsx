@@ -6,9 +6,12 @@ import { secondaryFontColor, thirdFontColor } from '../../constants/styles';
 import App from '../../viewmodels/App';
 import CachedImage from 'react-native-fast-image';
 import CopyableText from '../../components/CopyableText';
+import FastImage from 'react-native-fast-image';
+import { FlatGrid } from 'react-native-super-grid';
 import { InappBrowserModal } from '../Modalize';
 import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/Networks';
+import { POAPBadge } from '../../viewmodels/account/POAP';
 import { Portal } from 'react-native-portalize';
 import { Skeleton } from '../../components';
 import { StatusBar } from 'expo-status-bar';
@@ -25,13 +28,17 @@ export default observer(() => {
   const headerHeight = useHeaderHeight();
 
   const { currentAccount } = App;
-  const { ens } = currentAccount || {};
+  if (!currentAccount) return null;
+
+  const { ens, poap } = currentAccount;
+  const { primaryBadge } = poap;
 
   const { t } = i18n;
   const { current } = Networks;
 
   useEffect(() => {
     ens?.fetchMoreInfo();
+    poap.refresh();
     return () => {};
   }, []);
 
@@ -165,8 +172,75 @@ export default observer(() => {
           })}
       </View>
 
-      <Text style={styles.subtitle}>{t('profile-more-records')}</Text>
-      <View style={styles.contentWrapper}></View>
+      {poap.badges.length > 0 ? <Text style={styles.subtitle}>{t('profile-badges')}</Text> : undefined}
+      <FlatGrid
+        itemDimension={52}
+        data={poap?.badges || []}
+        bounces={false}
+        spacing={5}
+        contentContainerStyle={{ paddingBottom: 16 }}
+        style={{ padding: 0, paddingStart: 2, marginTop: 10, marginHorizontal: -16 }}
+        renderItem={({ item, index }) => (
+          <TouchableOpacity
+            key={`${item}-${index}`}
+            style={{
+              width: 52,
+              height: 52,
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: 5,
+              position: 'relative',
+            }}
+            onPress={() => {
+              poap?.setPrimaryBadge(item);
+            }}
+          >
+            {item ? (
+              <FastImage source={{ uri: item.metadata.image_url }} style={{ width: 48, height: 48 }} />
+            ) : (
+              <View
+                style={{
+                  width: 48,
+                  height: 48,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderWidth: 1,
+                  borderColor: 'grey',
+                  borderRadius: 50,
+                }}
+              >
+                <Text style={{ fontSize: 10, color: 'grey', marginStart: 2 }}>None</Text>
+              </View>
+            )}
+
+            {(item === null && primaryBadge === null) ||
+            (item as POAPBadge)?.tokenId === (primaryBadge as POAPBadge)?.tokenId ? (
+              <View
+                style={{
+                  width: 18,
+                  height: 18,
+                  backgroundColor: 'dodgerblue',
+                  position: 'absolute',
+                  borderColor: 'white',
+                  right: -1,
+                  bottom: -1,
+                  borderRadius: 12,
+                  borderWidth: 1,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <Ionicons name="checkmark" size={16} color={'white'} />
+              </View>
+            ) : undefined}
+          </TouchableOpacity>
+        )}
+      />
+
+      {/* <Text style={styles.subtitle}>{t('profile-more-records')}</Text>
+      <View style={styles.contentWrapper}></View> */}
 
       <StatusBar style="light" />
 

@@ -8,6 +8,7 @@ import { borderColor, fontColor, secondaryFontColor } from '../../constants/styl
 
 import Avatar from '../../components/Avatar';
 import { DrawerActions } from '@react-navigation/core';
+import FastImage from 'react-native-fast-image';
 import { INetwork } from '../../common/Networks';
 import MessageKeys from '../../common/MessageKeys';
 import MetamaskDAppsHub from '../../viewmodels/walletconnect/MetamaskDAppsHub';
@@ -36,7 +37,7 @@ const Drawer = observer((props: DrawerProps) => {
   const { currentAccount } = appVM;
   const { current } = Networks;
   const [screenHeight, setScreenHeight] = useState(contentHeight);
-  const { borderColor, foregroundColor, textColor, secondaryTextColor } = Theme;
+  const { borderColor, foregroundColor, textColor, secondaryTextColor, backgroundColor } = Theme;
 
   const { index } = navigation.getState();
 
@@ -90,7 +91,7 @@ const Drawer = observer((props: DrawerProps) => {
           borderBottomColor: borderColor,
         }}
       >
-        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Profile')} style={{ position: 'relative' }}>
           <Avatar
             size={50}
             uri={currentAccount?.avatar}
@@ -99,6 +100,25 @@ const Drawer = observer((props: DrawerProps) => {
             emojiSize={23}
             emojiMarginStart={2}
           />
+
+          {currentAccount?.poap.primaryBadge ? (
+            <FastImage
+              source={{
+                uri: currentAccount?.poap.primaryBadge?.metadata.image_url,
+              }}
+              style={{
+                width: 16,
+                height: 16,
+                position: 'absolute',
+                right: 0,
+                bottom: 0,
+                borderRadius: 20,
+                borderWidth: 1,
+                borderColor: backgroundColor,
+                backgroundColor,
+              }}
+            />
+          ) : undefined}
         </TouchableOpacity>
 
         <TouchableOpacity

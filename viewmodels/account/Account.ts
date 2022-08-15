@@ -1,4 +1,3 @@
-import { EthereumAddress, POAP } from './POAP';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { genColor, genEmoji } from '../../utils/emoji';
 
@@ -8,6 +7,7 @@ import CurrencyViewmodel from '../settings/Currency';
 import { ENSViewer } from './ENSViewer';
 import { NFTViewer } from './NFTViewer';
 import Networks from '../Networks';
+import { POAP } from './POAP';
 import { formatAddress } from '../../utils/formatter';
 import { getAvatar } from '../../common/ENS';
 
@@ -18,6 +18,7 @@ export class Account {
   tokens: AccountTokens;
   ens: ENSViewer;
   nfts: NFTViewer;
+  poap: POAP;
   emojiAvatar = '';
   emojiColor = '';
   nickname = '';
@@ -59,7 +60,7 @@ export class Account {
     // address = '0x23d09ed7a3f46270271f5b2e00bfb4aecf361160';
     // address = '0xf0e0F53bF0564C82A8046bfB58E009076aafaAa3'; // japanese artist
     // address = '0xC0c648e8a51Fa89141b2ff297C8cD3270ab93576'; // BSC nfts
-    // address = '0x1B1cDE3174a2e4b864764A592b6fD5170Ff50FE7'; //ETH and Polygon NFT
+    // address = '0x5164cF3b0C8C0FDfE4BCc9Cf4F1e8f7E39461A59';
 
     this.address = address;
     this.index = index;
@@ -67,6 +68,7 @@ export class Account {
     this.tokens = new AccountTokens(this.address);
     this.ens = new ENSViewer(this.address);
     this.nfts = new NFTViewer(this.address);
+    this.poap = new POAP(this.address);
 
     makeObservable(this, {
       tokens: observable,
