@@ -34,6 +34,7 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
   const [editNetwork, setEditNetwork] = useState<INetwork>();
   const swiper = useRef<Swiper>(null);
   const flatList = useRef<FlatList>(null);
+  const [menuOpened, setMenuOpened] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setNets(Networks.all), 25);
@@ -54,7 +55,14 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
     return (
       <TouchableOpacity
         style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 9, paddingHorizontal: 16 }}
-        onPress={() => onNetworkPress?.(item)}
+        onPress={() => {
+          if (!menuOpened) {
+            onNetworkPress?.(item);
+          }
+        }}
+        onLongPress={() => {
+          setMenuOpened(true);
+        }}
       >
         <Feather
           name="check"
@@ -129,6 +137,9 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
     return (
       <ContextMenu
         onPress={onActionPress}
+        onCancel={() => {
+          setMenuOpened(false);
+        }}
         actions={item.isUserAdded ? editableActions : viewActions}
         previewBackgroundColor={backgroundColor}
       >
@@ -157,7 +168,7 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
             ref={flatList}
             keyExtractor={(i) => `${i.chainId}`}
             data={nets}
-            renderItem={useContextMenu && Platform.OS === 'ios' ? renderContextMenuItem : renderItem}
+            renderItem={useContextMenu ? renderContextMenuItem : renderItem}
             contentContainerStyle={{ paddingBottom: 36 }}
             style={{ marginHorizontal: -16, marginTop: -4, marginBottom: -36 }}
             onScrollToIndexFailed={({}) => {}}
