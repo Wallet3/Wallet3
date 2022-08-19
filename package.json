@@ -78,7 +78,7 @@
     "react-native-gesture-handler": "~2.5.0",
     "react-native-image-colors": "^1.5.1",
     "react-native-material-ripple": "^0.9.1",
-    "react-native-modalize": "^2.0.13",
+    "react-native-modalize": "^2.1.1",
     "react-native-os": "^1.0.1",
     "react-native-portalize": "^1.0.7",
     "react-native-progress": "^5.0.0",

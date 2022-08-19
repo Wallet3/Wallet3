@@ -1,4 +1,4 @@
-import { getAvatar, getText } from '../../common/ENS';
+import { getEnsAvatar, getText } from '../../common/ENS';
 import { makeAutoObservable, runInAction } from 'mobx';
 
 import Networks from '../Networks';
@@ -34,7 +34,7 @@ export class ENSViewer {
 
     runInAction(() => (this.name = ens));
 
-    getAvatar(ens, this.owner).then((v) => {
+    getEnsAvatar(ens, this.owner).then((v) => {
       runInAction(() => (this.avatar = v?.url || ''));
     });
   }
