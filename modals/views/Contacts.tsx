@@ -115,7 +115,7 @@ export default observer(({ onNext, vm }: Props) => {
       <SafeViewContainer style={styles.container}>
         <TextBox
           title={`${t('modal-review-to')}:`}
-          placeholder="0xabc..., .eth"
+          placeholder="0x..., .eth, .crypto, .nft"
           defaultValue={vm.to}
           value={addr}
           textColor={textColor}

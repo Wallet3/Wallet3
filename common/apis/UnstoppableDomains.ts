@@ -1,5 +1,4 @@
 import { alchemyApiKeys } from '../../configs/secret';
-import axios from 'axios';
 
 export async function getRecords(domain: string) {
   const key = alchemyApiKeys[Date.now() % alchemyApiKeys.length];
