@@ -9,7 +9,7 @@ import { NFTViewer } from './NFTViewer';
 import Networks from '../Networks';
 import { POAP } from './POAP';
 import { formatAddress } from '../../utils/formatter';
-import { getAvatar } from '../../common/ENS';
+import { getEnsAvatar } from '../../common/ENS';
 
 export class Account {
   readonly address: string;

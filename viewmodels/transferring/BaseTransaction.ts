@@ -1,6 +1,7 @@
 import { BigNumber, ethers, providers, utils } from 'ethers';
 import { Gwei_1, MAX_GWEI_PRICE } from '../../common/Constants';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { clearPendingENSRequests, isENSDomains, resolveENS } from '../services/ENSResolver';
 import {
   estimateGas,
   eth_call_return,
@@ -10,6 +11,7 @@ import {
   getNextBlockBaseFee,
   getTransactionCount,
 } from '../../common/RPC';
+import { isUnstoppableDomains, resolveDomain } from '../services/UnstoppableDomains';
 
 import { Account } from '../account/Account';
 import App from '../App';
@@ -19,9 +21,8 @@ import { ERC20Token } from '../../models/ERC20';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
 import { NativeToken } from '../../models/NativeToken';
-import Networks from '../Networks';
 import { Wallet } from '../Wallet';
-import { getAvatar } from '../../common/ENS';
+import { getEnsAvatar } from '../../common/ENS';
 import { showMessage } from 'react-native-flash-message';
 import { startLayoutAnimation } from '../../utils/animations';
 
@@ -112,7 +113,7 @@ export class BaseTransaction {
 
   get isEns() {
     const lower = this.to.toLowerCase();
-    return lower.endsWith('.eth') || lower.endsWith('.xyz');
+    return lower.endsWith('.eth') || lower.endsWith('.xyz') || lower.endsWith('.crypto') || lower.endsWith('.nft');
   }
 
   get hasZWSP() {
@@ -184,8 +185,6 @@ export class BaseTransaction {
     this.checkToAddress();
   }
 
-  private _ensProvider?: providers.WebSocketProvider;
-
   async setTo(to?: string, avatar?: string) {
     if (to === undefined || to === null) return;
 
@@ -197,8 +196,7 @@ export class BaseTransaction {
     this.to = to;
     this.toAddress = '';
     this.txException = '';
-    this._ensProvider?.destroy();
-    this._ensProvider = undefined;
+    clearPendingENSRequests();
 
     if (!to) return;
 
@@ -215,23 +213,23 @@ export class BaseTransaction {
       return;
     }
 
-    if (!to.endsWith('.eth') && !to.endsWith('.xyz')) return;
-    this._ensProvider = Networks.MainnetWsProvider;
-
     this.isResolvingAddress = true;
-    const address = (await this._ensProvider.resolveName(to)) || '';
+    const address = isENSDomains(to) ? await resolveENS(to) : isUnstoppableDomains(to) ? await resolveDomain(to) : '';
 
-    if (!this._ensProvider) return;
-    this._ensProvider?.destroy();
+    runInAction(() => (this.isResolvingAddress = false));
+
+    if (!utils.isAddress(address)) return;
 
     runInAction(() => this.setToAddress(address));
 
     if (avatar) return;
 
-    const img = await getAvatar(to, address);
-    if (!img?.url) return;
+    if (isENSDomains(to)) {
+      const img = await getEnsAvatar(to, address);
+      if (!img?.url) return;
 
-    runInAction(() => (this.avatar = img.url));
+      runInAction(() => (this.avatar = img.url));
+    }
   }
 
   setNonce(nonce: string | number) {

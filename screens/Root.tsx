@@ -68,7 +68,7 @@ const RootTab = observer(() => {
       })}
     >
       {currentAccount?.nfts.nfts.length ?? 0 > 0 ? (
-        <Screen name="NFTs" component={NFTList} options={{ tabBarLabel: 'NFTs', headerShown: false }} />
+        <Screen name="NFTs" component={NFTList} options={{ tabBarLabel: 'Arts', headerShown: false }} />
       ) : undefined}
 
       <Screen

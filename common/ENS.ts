@@ -47,7 +47,7 @@ function ipfsUrlToHttps(url: string) {
   return url.toLowerCase().startsWith('ipfs://') ? `https://gateway.ipfs.io/${url.substring(7)}` : url;
 }
 
-export async function getAvatar(name: string, owner: string) {
+export async function getEnsAvatar(name: string, owner: string) {
   try {
     let nodehash = utils.namehash(name);
 

@@ -17,3 +17,5 @@ export const etherscanApiKeys: { [chainId: number]: string[] } = {
   1284: [], // Moonbeam
   128: [],
 };
+
+export const alchemyApiKeys: string[] = [];

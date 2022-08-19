@@ -3,7 +3,7 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 import App from '../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Networks from '../Networks';
-import { getAvatar } from '../../common/ENS';
+import { getEnsAvatar } from '../../common/ENS';
 
 export interface IContact {
   address: string;
@@ -60,7 +60,7 @@ class Contacts {
     }
 
     if (ens) {
-      getAvatar(ens, address).then((v) => {
+      getEnsAvatar(ens, address).then((v) => {
         if (!v?.url) return;
 
         const target = this.contacts.find((c) => c.address === address);
