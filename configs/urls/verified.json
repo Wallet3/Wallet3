@@ -144,11 +144,11 @@
     "meta-all-stars.io",
     "play.decentraland.org"
   ],
+  "Utilities": ["unstoppabledomains.com", "ud.me", "app.ens.domains", "fees.wtf"],
   "Tools": [
     "zapper.fi",
     "tornadocash.eth.link",
     "nova.tornadocash.eth.link",
-    "app.ens.domains",
     "defi.instadapp.io",
     "clarity.so",
     "etherscan.io",
@@ -164,7 +164,6 @@
     "debank.com",
     "ultrasound.money",
     "chainlist.defillama.com",
-    "fees.wtf",
     "wallet3.io",
     "moonriver.moonscan.io",
     "moonbeam.moonscan.io",
