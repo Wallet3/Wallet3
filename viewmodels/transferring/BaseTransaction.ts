@@ -113,7 +113,7 @@ export class BaseTransaction {
 
   get isEns() {
     const lower = this.to.toLowerCase();
-    return lower.endsWith('.eth') || lower.endsWith('.xyz') || lower.endsWith('.crypto') || lower.endsWith('.nft');
+    return isENSDomains(lower) || isUnstoppableDomains(lower);
   }
 
   get hasZWSP() {
