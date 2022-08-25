@@ -1,4 +1,4 @@
-import { BigNumber, utils } from 'ethers';
+import { BigNumber, ethers, utils } from 'ethers';
 
 import Networks from '../viewmodels/Networks';
 import Providers from '../configs/providers.json';
@@ -353,4 +353,16 @@ export async function getCode(chainId: number, contract: string) {
   }
 
   return undefined;
+}
+
+export function getProviderByChainId(chainId: number) {
+  const urls = getRPCUrls(chainId);
+
+  for (let url of urls) {
+    try {
+      return url.startsWith('http')
+        ? new ethers.providers.JsonRpcProvider(url, chainId)
+        : new ethers.providers.WebSocketProvider(url, chainId);
+    } catch (error) {}
+  }
 }

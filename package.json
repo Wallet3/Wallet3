@@ -26,6 +26,7 @@
     "crypto-es": "^1.2.7",
     "d3-shape": "^3.1.0",
     "dayjs": "^1.11.5",
+    "delay": "^5.0.0",
     "eth-phishing-detect": "^1.2.0",
     "eth-url-parser": "^1.0.4",
     "ethereumjs-util": "^7.1.5",
