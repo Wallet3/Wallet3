@@ -140,6 +140,11 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
+    java {
+        toolchain.languageVersion.set(JavaLanguageVersion.of(11))
+    }
+
+
     defaultConfig {
         applicationId 'jp.co.chainbow.wallet3.mobile'
         minSdkVersion rootProject.ext.minSdkVersion
@@ -236,6 +241,10 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+
+        }
+
     }
     buildTypes {
         debug {
