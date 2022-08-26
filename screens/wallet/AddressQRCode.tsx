@@ -17,7 +17,7 @@ import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { openInappBrowser } from '../../modals/InappBrowser';
-import { setString } from 'expo-clipboard';
+import { setStringAsync } from 'expo-clipboard';
 
 export default observer(({ account }: { account?: Account }) => {
   const { t } = i18n;
@@ -111,7 +111,7 @@ export default observer(({ account }: { account?: Account }) => {
               style={{ flexDirection: 'row', alignItems: 'center', margin: -16, padding: 16 }}
               onPress={() => openInappBrowser(`${current.explorer}/address/${address}`, 'wallet')}
               onLongPress={() => {
-                setString(`${current.explorer}/address/${address}`);
+                setStringAsync(`${current.explorer}/address/${address}`);
                 explorerView.current?.flash?.();
               }}
             >

@@ -15,7 +15,7 @@ import UI from '../../viewmodels/settings/UI';
 import WhiteLogos from '../../assets/icons/networks/white';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import { setString } from 'expo-clipboard';
+import { setStringAsync } from 'expo-clipboard';
 import { themeColor } from '../../constants/styles';
 
 interface Props {
@@ -128,7 +128,7 @@ export default observer(
           style={{ flexDirection: 'row', alignItems: 'center' }}
           onPress={onQRCodePress}
           onLongPress={() => {
-            setString(prefixedAddress);
+            setStringAsync(prefixedAddress);
             addrTextView.current?.flash?.();
           }}
         >
