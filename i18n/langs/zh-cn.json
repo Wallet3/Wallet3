@@ -40,6 +40,7 @@
   "home-history-item-type-approve": "授权",
   "home-history-item-to": "目标方",
   "home-tab-wallet": "钱包",
+  "home-tab-swap": "Swap",
   "nft-button-transfer": "转送",
   "nft-button-view-on-website": "在网页上查看",
   "nft-txt-ownership": "所属权",
@@ -263,5 +264,6 @@
   "button-view": "查看",
   "button-remove": "移除",
   "button-close-all": "全部关闭",
-  "button-share": "分享"
+  "button-share": "分享",
+  "slippage": "滑点"
 }
