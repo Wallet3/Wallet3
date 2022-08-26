@@ -40,6 +40,7 @@
   "home-history-item-type-approve": "Approve",
   "home-history-item-to": "To",
   "home-tab-wallet": "Wallet",
+  "home-tab-swap": "Swap",
   "nft-button-transfer": "Transfer",
   "nft-button-view-on-website": "View on Website",
   "nft-txt-ownership": "Ownership",
@@ -267,5 +268,6 @@
   "button-view": "View",
   "button-remove": "Remove",
   "button-close-all": "Close All",
-  "button-share": "Share"
+  "button-share": "Share",
+  "slippage": "Slippage"
 }
