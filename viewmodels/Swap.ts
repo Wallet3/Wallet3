@@ -1,3 +1,4 @@
+import '@ethersproject/shims';
 import { BigNumber, providers, utils } from 'ethers';
 import { makeAutoObservable, reaction, runInAction } from 'mobx';
 
@@ -107,18 +108,14 @@ export class SwapVM {
     this.forAmount = '';
   }
 
-  selectFrom(token?: ISwapToken, check = true) {
-    if (this.for?.address === token?.address && check) {
-      this.interchange();
+  selectFrom(token?: ISwapToken) {
+    if (!token) {
+      this.max = BigNumber.from(0);
       return;
     }
 
     this.fromAmount = '';
     this.from = token;
-    if (!token) {
-      this.max = BigNumber.from(0);
-      return;
-    }
 
     const erc20 = new ERC20Token({
       contract: token.address,
@@ -130,17 +127,18 @@ export class SwapVM {
       runInAction(() => (this.max = balance));
     });
 
-    erc20.allowance(this.account!, this.currentExecutor.getContractAddress(this.currentChainId)).then((allowance) => {
-      runInAction(() => (this.from!.allowance = allowance));
-    });
+    console.log(this.account!, this.currentExecutor.getContractAddress(this.currentChainId));
+
+    erc20
+      .allowance(this.account!, this.currentExecutor.getContractAddress(this.currentChainId))
+      .then((allowance) => {
+        runInAction(() => (this.from!.allowance = allowance));
+      })
+      .catch(console.error);
   }
 
-  selectFor(token?: ISwapToken, check = true) {
-    if (this.from?.address === token?.address && check) {
-      this.interchange();
-      return;
-    }
-
+  selectFor(token?: ISwapToken) {
+    if (!token) return;
     this.forAmount = '';
     this.for = token;
     this.setFromAmount(this.fromAmount);
@@ -153,8 +151,8 @@ export class SwapVM {
     const forToken = this.for;
     const fromToken = this.from;
 
-    this.selectFrom(forToken, false);
-    this.selectFor(fromToken, false);
+    this.selectFrom(forToken);
+    this.selectFor(fromToken);
   }
 
   setSlippage(value: number) {
@@ -289,8 +287,8 @@ export class SwapVM {
     });
 
     runInAction(() => {
-      this.selectFrom(this.from, false);
-      this.selectFor(this.for, false);
+      this.selectFrom(this.from);
+      this.selectFor(this.for);
     });
   }
 }

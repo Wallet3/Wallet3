@@ -203,17 +203,17 @@ export default observer(({ navigation }: DrawerScreenProps<SwapStack, 'Swap'>) =
           </div>
         </div> */}
 
-      {!Swap.approved ? (
+      {!Swap.approved && (
         <Button
           title={t('tx-type-approve')}
           disabled={!Swap.fromAmount || Swap.approving || Swap.fromList.length === 0}
           onPress={() => Swap.approve()}
         />
-      ) : undefined}
+      )}
 
-      {Swap.approved ? (
+      {Swap.approved && (
         <Button title={t('home-tab-swap')} disabled={!Swap.isValid || Swap.swapping} onPress={() => Swap.swap()} />
-      ) : undefined}
+      )}
     </View>
   );
 });

@@ -1,5 +1,6 @@
+import '@ethersproject/shims';
 import { BigNumber, ethers, utils } from 'ethers';
-
+import { StaticJsonRpcProvider, Web3Provider } from '@ethersproject/providers';
 import Networks from '../viewmodels/Networks';
 import Providers from '../configs/providers.json';
 import { PublicNetworks } from './Networks';
@@ -360,9 +361,7 @@ export function getProviderByChainId(chainId: number) {
 
   for (let url of urls) {
     try {
-      return url.startsWith('http')
-        ? new ethers.providers.JsonRpcProvider(url, chainId)
-        : new ethers.providers.WebSocketProvider(url, chainId);
+      return new StaticJsonRpcProvider(url);
     } catch (error) {}
   }
 }
