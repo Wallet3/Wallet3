@@ -8,7 +8,7 @@ import { DEFAULT_DERIVATION_PATH } from '../common/Constants';
 import Key from '../models/Key';
 import { langToWordlist } from '../utils/mnemonic';
 import { makeAutoObservable } from 'mobx';
-import { setString } from 'expo-clipboard';
+import { setStringAsync } from 'expo-clipboard';
 import { xpubkeyFromHDNode } from '../utils/bip32';
 
 export class MnemonicOnce {
@@ -39,7 +39,7 @@ export class MnemonicOnce {
     }
 
     const success = this.secret ? true : false;
-    if (success) setString(''); // write empty string to clipboard, if the user pasted a mnemonic
+    if (success) setStringAsync(''); // write empty string to clipboard, if the user pasted a mnemonic
 
     return success;
   }

@@ -1,6 +1,6 @@
-import { Dimensions, Platform, Text, TouchableOpacity, View } from 'react-native';
 import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { Feather, Ionicons } from '@expo/vector-icons';
+import { Platform, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 
 import App from '../viewmodels/App';
@@ -68,7 +68,7 @@ const RootTab = observer(() => {
       })}
     >
       {currentAccount?.nfts.nfts.length ?? 0 > 0 ? (
-        <Screen name="NFTs" component={NFTList} options={{ tabBarLabel: 'Arts', headerShown: false }} />
+        <Screen name="NFTs" component={NFTList} options={{ tabBarLabel: t('home-tab-arts'), headerShown: false }} />
       ) : undefined}
 
       <Screen

@@ -5,7 +5,7 @@ import { StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
-import { setString } from 'expo-clipboard';
+import { setStringAsync } from 'expo-clipboard';
 
 interface Props {
   copyText: string;
@@ -21,7 +21,7 @@ export default ({ copyText, txtStyle, iconStyle, iconSize, iconColor, title, txt
   const txtView = useRef<Animatable.Text>(null);
 
   const writeAddressToClipboard = () => {
-    setString(copyText || '');
+    setStringAsync(copyText || '');
     txtView.current?.flash?.();
   };
 
