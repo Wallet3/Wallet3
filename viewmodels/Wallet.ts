@@ -12,6 +12,7 @@ import MetamaskDAppsHub from './walletconnect/MetamaskDAppsHub';
 import { ReadableInfo } from '../models/Transaction';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import TxHub from './hubs/TxHub';
+import { showMessage } from 'react-native-flash-message';
 
 type SignTxRequest = {
   accountIndex: number;
@@ -165,6 +166,13 @@ export class Wallet {
   async signMessage(request: SignMessageRequest) {
     try {
       if (utils.isBytes(request.msg) && !request.standardMode) {
+        try {
+          utils.parseTransaction(request.msg);
+          // never sign a transactions via eth_sign !!!
+          showMessage({ message: 'DANGEROUS: Wallet 3 rejects signing this data.', type: 'danger' });
+          return undefined;
+        } catch (error) {}
+
         const privateKey = await this.unlockPrivateKey(request);
         if (!privateKey) return undefined;
 

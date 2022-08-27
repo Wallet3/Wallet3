@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { Platform, Text, TouchableOpacity, View } from 'react-native';
@@ -26,7 +28,7 @@ import { observer } from 'mobx-react-lite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const DrawerRoot = createDrawerNavigator();
-const TabNavigation = createBottomTabNavigator();
+const TabNavigation = createBottomTabNavigator<any>();
 
 type RootStackParamList = {
   Home: undefined;

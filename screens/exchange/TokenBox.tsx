@@ -1,17 +1,36 @@
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 
+import { Coin } from '../../components';
 import React from 'react';
+import { observer } from 'mobx-react-lite';
 
 interface Props {
   busy?: boolean;
+  showMaxBalance?: boolean;
+  maxBalance?: string;
+  onMaxBalancePress?: () => void;
+  tokenAddress: string;
+  tokenSymbol: string;
+  chainId: number;
 }
 
-export default (props: Props) => {
+export default observer((props: Props) => {
   return (
-    <View>
-      <TouchableOpacity style={{ flexDirection: 'row' }}>
-        <Text>Max: 0</Text>
-      </TouchableOpacity>
+    <View style={{}}>
+      {props.showMaxBalance ? (
+        <TouchableOpacity style={{ flexDirection: 'row' }} onPress={props.onMaxBalancePress}>
+          <Text>Max: {props.maxBalance}</Text>
+        </TouchableOpacity>
+      ) : undefined}
+
+      <View style={{ flexDirection: 'row' }}>
+        <TextInput style={{}} />
+
+        <View>
+          <Coin address={props.tokenAddress} symbol={props.tokenSymbol} chainId={props.chainId} />
+          <Text>{props.tokenSymbol}</Text>
+        </View>
+      </View>
     </View>
   );
-};
+});
