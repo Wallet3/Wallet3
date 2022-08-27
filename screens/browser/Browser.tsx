@@ -116,7 +116,7 @@ export const Browser = observer(
         setSmallIconSize(SmallIconSize);
       };
 
-      Dimensions.addEventListener('change', handler);
+      const changeListener = Dimensions.addEventListener('change', handler);
 
       PubSub.subscribe(MessageKeys.CodeScan_https, (msg, { data }) => {
         if (globalState?.activePageId !== pageId) return;
@@ -126,7 +126,7 @@ export const Browser = observer(
       });
 
       return () => {
-        Dimensions.removeEventListener('change', handler);
+        changeListener.remove();
         PubSub.unsubscribe(MessageKeys.CodeScan_https);
 
         onInputting = undefined;
@@ -173,9 +173,9 @@ export const Browser = observer(
     };
 
     const goTo = (url: string) => {
-      url = url.toLowerCase();
+      const lower = url.toLowerCase();
       url =
-        url.startsWith('https:') || url.startsWith('http:')
+        lower.startsWith('https:') || lower.startsWith('http:')
           ? url
           : isURL(url)
           ? `https://${url}`
