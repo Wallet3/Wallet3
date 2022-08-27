@@ -138,6 +138,7 @@ export class SwapVM {
   }
 
   selectFor(token?: ISwapToken) {
+    console.log('[selectFor token]',token)
     if (!token) return;
     this.forAmount = '';
     this.for = token;
