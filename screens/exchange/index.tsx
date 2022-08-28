@@ -1,18 +1,22 @@
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Modalize, useModalize } from 'react-native-modalize';
 import React, { useEffect, useState } from 'react';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import AccountSelector from '../../modals/dapp/AccountSelector';
 import App from '../../viewmodels/App';
 import Avatar from '../../components/Avatar';
 import { Button } from '../../components';
 import Collapsible from 'react-native-collapsible';
+import { NetworksMenu } from '../../modals';
+import { Portal } from 'react-native-portalize';
 import { TextInput } from 'react-native-gesture-handler';
 import Theme from '../../viewmodels/settings/Theme';
 import TokenBox from './TokenBox';
 import { generateNetworkIcon } from '../../assets/icons/networks/white';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default observer(() => {
   const { backgroundColor, borderColor, shadow, mode, foregroundColor, textColor, secondaryTextColor, tintColor } = Theme;
@@ -20,12 +24,15 @@ export default observer(() => {
   const { currentAccount } = App;
   const { t } = i18n;
 
+  const { ref: networksRef, open: openNetworksModal, close: closeNetworksModal } = useModalize();
+  const { ref: accountsRef, open: openAccountsModal, close: closeAccountsModal } = useModalize();
   const [advanced, setAdvanced] = useState(false);
 
   return (
     <View style={{ flex: 1, backgroundColor, paddingTop: top * 1.5, paddingHorizontal: 16 }}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 8, marginBottom: 10 }}>
         <TouchableOpacity
+          onPress={() => openNetworksModal()}
           style={{
             borderRadius: 6,
             padding: 3,
@@ -41,16 +48,11 @@ export default observer(() => {
         </TouchableOpacity>
 
         <TouchableOpacity
+          onPress={() => openAccountsModal()}
           style={{
             paddingHorizontal: 6,
             flexDirection: 'row',
             alignItems: 'center',
-            // marginVertical: -12,
-            // paddingVertical: 12,
-          }}
-          onPress={() => {
-            // PubSub.publish(MessageKeys.openMyAddressQRCode);
-            // props.close?.();
           }}
         >
           <Avatar
@@ -98,7 +100,7 @@ export default observer(() => {
           <View style={{ ...styles.slippage, marginEnd: 0 }}>
             <TextInput
               placeholder="5"
-              style={{ minWidth: 25, textAlign: 'center', paddingEnd: 4 }}
+              style={{ minWidth: 25, textAlign: 'center', paddingEnd: 4, maxWidth: 64 }}
               keyboardType="number-pad"
             />
             <Text style={{ color: secondaryTextColor }}>%</Text>
@@ -107,7 +109,37 @@ export default observer(() => {
         </View>
       </Collapsible>
 
-      <Button title="Exchange" />
+      <Button title="Approve" />
+
+      <Portal>
+        <Modalize ref={networksRef} adjustToContentHeight disableScrollIfPossible>
+          <NetworksMenu
+            title={t('modal-dapp-switch-network', { app: 'Exchange' })}
+            // selectedNetwork={appNetwork}
+            // onNetworkPress={(network) => updateDAppNetworkConfig(network)}
+          />
+        </Modalize>
+
+        <Modalize
+          ref={accountsRef}
+          adjustToContentHeight
+          disableScrollIfPossible
+          modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
+          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+        >
+          <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
+            <AccountSelector
+              single
+              accounts={App.allAccounts}
+              selectedAccounts={[currentAccount?.address || '']}
+              style={{ padding: 16, height: 430 }}
+              expanded
+              // themeColor={appNetwork?.color}
+              onDone={([account]) => {}}
+            />
+          </SafeAreaProvider>
+        </Modalize>
+      </Portal>
     </View>
   );
 });
