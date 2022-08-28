@@ -67,7 +67,7 @@ const RootTab = observer(() => {
             Exchange: 'refresh-ccw',
           };
 
-          return <Feather name={icons[route.name]} size={23} color={focused ? current.color : 'gray'} />;
+          return <Feather name={icons[route.name]} size={22} color={focused ? current.color : 'gray'} />;
         },
       })}
     >

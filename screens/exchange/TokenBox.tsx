@@ -32,7 +32,7 @@ export default observer((props: Props) => {
         </TouchableOpacity>
       ) : undefined}
 
-      <View style={{ flexDirection: 'row' }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 4 }}>
         <TextInput style={{ flex: 1, fontSize: 22 }} keyboardType="decimal-pad" placeholder="0.00" />
 
         <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginStart: 12 }}>

@@ -2,7 +2,7 @@ import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Modalize, useModalize } from 'react-native-modalize';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import AccountSelector from '../../modals/dapp/AccountSelector';
 import App from '../../viewmodels/App';
@@ -29,7 +29,11 @@ export default observer(() => {
   const [advanced, setAdvanced] = useState(false);
 
   return (
-    <View style={{ flex: 1, backgroundColor, paddingTop: top * 1.5, paddingHorizontal: 16 }}>
+    <ScrollView
+      style={{ flex: 1, backgroundColor, paddingTop: top * 1.25, paddingHorizontal: 16 }}
+      keyboardShouldPersistTaps="handled"
+      scrollEnabled={false}
+    >
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 8, marginBottom: 10 }}>
         <TouchableOpacity
           onPress={() => openNetworksModal()}
@@ -140,7 +144,7 @@ export default observer(() => {
           </SafeAreaProvider>
         </Modalize>
       </Portal>
-    </View>
+    </ScrollView>
   );
 });
 
