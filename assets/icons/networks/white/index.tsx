@@ -1,11 +1,16 @@
+import { StyleProp, Text, View, ViewStyle } from 'react-native';
+
 import Arbitrum from './arbitrum.svg';
 import Aurora from './aurora.svg';
 import Avalanche from './avalanche.svg';
 import BSC from './bnb.svg';
 import Boba from './boba.svg';
 import Celo from './celo.svg';
+import { Coin } from '../../../../components';
 import Cronos from './cronos.svg';
+import { Entypo } from '@expo/vector-icons';
 import Ethereum from './ethereum.svg';
+import Evmos from './evmos.svg';
 import Fantom from './fantom.svg';
 import Findora from './findora.svg';
 import Fuse from './fuse.svg';
@@ -22,7 +27,9 @@ import React from 'react';
 import Ronin from './ronin.svg';
 import Shiden from './shiden.svg';
 import XDai from './xdai.svg';
+import ZKSync from './zksync.svg';
 import ZkSync from './zksync.svg';
+import coins from '../../crypto';
 import styles from '../styles';
 
 export default {
@@ -51,3 +58,104 @@ export default {
   122: <Fuse width={32} height={32} style={styles.fuse} />,
   336: <Shiden width={40} height={40} style={styles.shiden} />,
 };
+
+export const EVMIcon = ({
+  color,
+  size,
+  style,
+  hideEVMTitle,
+}: {
+  title?: string;
+  color: string;
+  size?: number;
+  style?: any;
+  hideEVMTitle?: boolean;
+}) => {
+  return (
+    <View style={{ ...style, position: 'relative', justifyContent: 'center', alignItems: 'center', paddingBottom: 1 }}>
+      <Entypo name="network" size={size ?? 30} color={color} />
+      {hideEVMTitle ? undefined : <Text style={{ fontSize: 5, fontWeight: '500', color }}>{'EVM'}</Text>}
+    </View>
+  );
+};
+
+export function generateNetworkIcon(props: {
+  chainId: number;
+  color?: string;
+  width: number;
+  height?: number;
+  style?: StyleProp<ViewStyle>;
+  hideEVMTitle?: boolean;
+  symbol?: string;
+}) {
+  const { chainId, width, height, style, color, hideEVMTitle, symbol } = props;
+
+  switch (chainId) {
+    case 1:
+      return <Ethereum key={chainId} width={width} height={height ?? width} style={style} />;
+    case 42161:
+      return <Arbitrum key={chainId} width={width} height={height ?? width} style={style} />;
+    case 10:
+      return <Optimism key={chainId} width={width} height={height ?? width} style={style} />;
+    case 137:
+      return <Polygon key={chainId} width={width} height={height ?? width} style={style} />;
+    case 100:
+      return <XDai key={chainId} width={width} height={height ?? width} style={style} />;
+    case 288:
+      return <Boba key={chainId} width={width} height={height ?? width} style={style} />;
+    case 43114:
+      return <Avalanche key={chainId} width={width} height={height ?? width} style={style} />;
+    case 56:
+      return <BSC key={chainId} width={width} height={height ?? width} style={style} />;
+    case 42220:
+      return <Celo key={chainId} width={width} height={height ?? width} style={style} />;
+    case 250:
+      return <Fantom key={chainId} width={width} height={height ?? width} style={style} />;
+    case 128:
+      return <Heco key={chainId} width={width} height={height ?? width} style={style} />;
+    case 66:
+      return <OKEx key={chainId} width={width} height={height ?? width} style={style} />;
+    case 1313161554:
+      return <Aurora key={chainId} width={width} height={height ?? width} style={style} />;
+    case 1666600000:
+    case 1666600001:
+    case 1666600002:
+    case 1666600003:
+      return <Harmony key={chainId} width={width} height={height ?? width} style={style} />;
+    case 25:
+      return <Cronos key={chainId} width={width} height={height ?? width} style={style} />;
+    case 1284:
+      return <Moonbeam key={chainId} width={width} height={height ?? width} style={style} />;
+    case 1285:
+      return <Moonriver key={chainId} width={width} height={height ?? width} style={style} />;
+    case 2020:
+      return <Ronin key={chainId} width={width} height={height ?? width} style={style} />;
+    case 280:
+      return <ZKSync key={chainId} width={width} height={height ?? width} style={style} />;
+    case 8217:
+      return <Klaytn key={chainId} width={width} height={height ?? width} style={style} />;
+    case 2152:
+      return <Findora key={chainId} width={width} height={height ?? width} style={style} />;
+    case 1088:
+      return (
+        <Metis
+          key={chainId}
+          width={width + (style ? 0 : 9)}
+          height={(height ?? width) + (style ? 0 : 9)}
+          style={{ ...(style || ({ margin: -9, marginEnd: -3 } as any)) }}
+        />
+      );
+    case 122:
+      return <Fuse key={chainId} width={width} height={height ?? width} style={style} />;
+    case 336:
+      return <Shiden key={chainId} width={width} height={height ?? width} style={style} />;
+    case 9001:
+      return <Evmos key={chainId} width={width} height={height ?? width} style={style} />;
+    default:
+      return coins[symbol?.toLowerCase() || ''] ? (
+        <Coin symbol={symbol} size={height ?? width} address="" chainId={chainId} style={style as any} />
+      ) : (
+        <EVMIcon key={chainId} size={width} color={color!} style={style} hideEVMTitle={hideEVMTitle} />
+      );
+  }
+}

@@ -64,7 +64,7 @@ const RootTab = observer(() => {
             Wallet: 'credit-card',
             Explore: 'compass',
             NFTs: 'star',
-            Exchange: 'repeat',
+            Exchange: 'refresh-ccw',
           };
 
           return <Feather name={icons[route.name]} size={size} color={focused ? current.color : 'gray'} />;
