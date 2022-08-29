@@ -21,6 +21,7 @@ import SettingScreen from './settings';
 import SinglePageBrowserScreen from './browser/Browser';
 import Theme from '../viewmodels/settings/Theme';
 import WalletScreen from './wallet';
+import SwapScreen from './swap';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import i18n from '../i18n';
@@ -146,6 +147,14 @@ const RootTab = observer(() => {
               </TouchableOpacity>
             </View>
           ),
+        }}
+      />
+
+      <Screen
+        name="Swap"
+        component={SwapScreen}
+        options={{
+          tabBarLabel: t('home-tab-swap'),
         }}
       />
 

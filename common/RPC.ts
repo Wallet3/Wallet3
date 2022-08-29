@@ -1,5 +1,6 @@
-import { BigNumber, utils } from 'ethers';
-
+import '@ethersproject/shims';
+import { BigNumber, ethers, utils } from 'ethers';
+import { StaticJsonRpcProvider, Web3Provider } from '@ethersproject/providers';
 import Networks from '../viewmodels/Networks';
 import Providers from '../configs/providers.json';
 import { PublicNetworks } from './Networks';
@@ -353,4 +354,14 @@ export async function getCode(chainId: number, contract: string) {
   }
 
   return undefined;
+}
+
+export function getProviderByChainId(chainId: number) {
+  const urls = getRPCUrls(chainId);
+
+  for (let url of urls) {
+    try {
+      return new StaticJsonRpcProvider(url);
+    } catch (error) {}
+  }
 }
