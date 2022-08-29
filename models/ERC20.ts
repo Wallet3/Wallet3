@@ -38,7 +38,7 @@ export class ERC20Token {
     contract: string;
     owner: string;
     chainId: number;
-
+    provider?: ethers.providers.BaseProvider;
     name?: string;
     symbol?: string;
     decimals?: number;
@@ -48,7 +48,7 @@ export class ERC20Token {
     order?: number;
   }) {
     this.address = props.contract;
-    this.erc20 = new ethers.Contract(this.address, ERC20ABI);
+    this.erc20 = new ethers.Contract(this.address, ERC20ABI, props.provider);
     this.chainId = props.chainId;
 
     this.symbol = props.symbol || '';

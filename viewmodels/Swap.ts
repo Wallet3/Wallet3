@@ -10,6 +10,7 @@ import Networks from './Networks';
 import delay from 'delay';
 import TxHub from './hubs/TxHub';
 import { showMessage } from 'react-native-flash-message';
+import { getProviderByChainId } from '../common/RPC';
 
 interface ISwapToken extends IToken {
   allowance?: BigNumber;
@@ -108,7 +109,12 @@ export class SwapVM {
     this.forAmount = '';
   }
 
-  selectFrom(token?: ISwapToken) {
+  selectFrom(token?: ISwapToken, check = true) {
+    if (this.for?.address === token?.address && check) {
+      this.interchange();
+      return;
+    }
+
     if (!token) {
       this.max = BigNumber.from(0);
       return;
@@ -121,26 +127,32 @@ export class SwapVM {
       contract: token.address,
       owner: this.account!,
       chainId: Networks.current.chainId,
+      provider: getProviderByChainId(Networks.current.chainId),
     });
 
     erc20.getBalance().then((balance) => {
       runInAction(() => (this.max = balance));
     });
 
-    console.log(this.account!, this.currentExecutor.getContractAddress(this.currentChainId));
+    console.log('selectFrom', this.account!, this.currentExecutor.getContractAddress(this.currentChainId));
 
     erc20
       .allowance(this.account!, this.currentExecutor.getContractAddress(this.currentChainId))
       .then((allowance) => {
+        console.log('allowance', allowance);
         runInAction(() => (this.from!.allowance = allowance));
       })
       .catch(console.error);
   }
 
-  selectFor(token?: ISwapToken) {
-    console.log('[selectFor token]',token)
-    if (!token) return;
+  selectFor(token?: ISwapToken, check = true) {
+    if (this.from?.address === token?.address && check) {
+      this.interchange();
+      return;
+    }
+
     this.forAmount = '';
+
     this.for = token;
     this.setFromAmount(this.fromAmount);
   }
@@ -152,8 +164,8 @@ export class SwapVM {
     const forToken = this.for;
     const fromToken = this.from;
 
-    this.selectFrom(forToken);
-    this.selectFor(fromToken);
+    this.selectFrom(forToken, false);
+    this.selectFor(fromToken, false);
   }
 
   setSlippage(value: number) {
@@ -161,7 +173,8 @@ export class SwapVM {
   }
 
   async setFromAmount(value: string) {
-    if (!this.from || !this.for) return;
+    if (!this.from || !this.for || !value) return;
+    console.log('setFromAmount', value);
 
     this.fromAmount = value;
     const amount = utils.parseUnits(value, this.from.decimals);

@@ -19,6 +19,7 @@ import Theme from '../../viewmodels/settings/Theme';
 import Swap from '../../viewmodels/Swap';
 import TokenBox from './TokenBox';
 import { utils } from 'ethers';
+import Networks from '../../viewmodels/Networks';
 
 export default observer(() => {
   const { backgroundColor, borderColor, shadow, mode, foregroundColor, textColor, secondaryTextColor, tintColor } = Theme;
@@ -29,6 +30,8 @@ export default observer(() => {
   const { ref: networksRef, open: openNetworksModal, close: closeNetworksModal } = useModalize();
   const { ref: accountsRef, open: openAccountsModal, close: closeAccountsModal } = useModalize();
   const [advanced, setAdvanced] = useState(false);
+  console.log('Swap.fromList', Swap.fromList);
+  console.log('Swap.forList', Swap.forList);
 
   return (
     <ScrollView
@@ -48,8 +51,14 @@ export default observer(() => {
             alignItems: 'center',
           }}
         >
-          {generateNetworkIcon({ chainId: 1, hideEVMTitle: true, height: 14, width: 12, color: '#fff' })}
-          <Text style={{ color: 'white', fontSize: 12, marginStart: 5 }}>Ethereum</Text>
+          {generateNetworkIcon({
+            chainId: Networks.current.chainId,
+            hideEVMTitle: true,
+            height: 14,
+            width: 12,
+            color: '#fff',
+          })}
+          <Text style={{ color: 'white', fontSize: 12, marginStart: 5 }}>{Networks.current.network}</Text>
           <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 3 }} color={'#fff'} size={10} />
         </TouchableOpacity>
 
@@ -78,7 +87,7 @@ export default observer(() => {
           onTokenSelected={(t) => Swap.selectFrom(t)}
           onChangeText={(t) => Swap.setFromAmount(t)}
           token={Swap.from}
-          chainId={1}
+          chainId={Networks.current.chainId}
           showTitle
           title={`Max: ${utils.formatUnits(Swap.max, Swap.from?.decimals || 0)}`}
           titleTouchable
@@ -107,7 +116,7 @@ export default observer(() => {
           tokens={Swap.forList}
           onTokenSelected={(t) => Swap.selectFor(t)}
           token={Swap.for}
-          chainId={1}
+          chainId={Networks.current.chainId}
           showTitle
           title="To (estimated)"
         />
@@ -156,8 +165,11 @@ export default observer(() => {
         <Modalize ref={networksRef} adjustToContentHeight disableScrollIfPossible>
           <NetworksMenu
             title={t('modal-dapp-switch-network', { app: 'Exchange' })}
-            // selectedNetwork={appNetwork}
-            // onNetworkPress={(network) => updateDAppNetworkConfig(network)}
+            selectedNetwork={Networks.current}
+            onNetworkPress={(network) => {
+              closeNetworksModal();
+              Networks.switch(network);
+            }}
           />
         </Modalize>
 
