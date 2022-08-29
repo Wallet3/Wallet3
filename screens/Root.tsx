@@ -1,32 +1,31 @@
 // @ts-nocheck
 
-import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { Feather, Ionicons } from '@expo/vector-icons';
-import { Platform, Text, TouchableOpacity, View } from 'react-native';
+import { DrawerActions, useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
+import { Platform, Text, TouchableOpacity, View } from 'react-native';
 
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { DrawerNavigationHelpers } from '@react-navigation/drawer/lib/typescript/src/types';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { observer } from 'mobx-react-lite';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import MessageKeys from '../common/MessageKeys';
+import i18n from '../i18n';
+import { ReactiveScreen } from '../utils/device';
 import App from '../viewmodels/App';
+import Networks from '../viewmodels/Networks';
+import Theme from '../viewmodels/settings/Theme';
+import SinglePageBrowserScreen from './browser/Browser';
 import BrowserScreen from './browser/MultiTabIndex';
 import ContactsScreen from './contacts';
 import DAppsScreen from './dapps';
 import Drawer from './drawer';
-import { DrawerNavigationHelpers } from '@react-navigation/drawer/lib/typescript/src/types';
 import ExchangeScreen from './exchange';
-import MessageKeys from '../common/MessageKeys';
 import NFTList from './nfts/List';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import Networks from '../viewmodels/Networks';
-import { ReactiveScreen } from '../utils/device';
 import SettingScreen from './settings';
-import SinglePageBrowserScreen from './browser/Browser';
-import Theme from '../viewmodels/settings/Theme';
 import WalletScreen from './wallet';
-import SwapScreen from './swap';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import i18n from '../i18n';
-import { observer } from 'mobx-react-lite';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const DrawerRoot = createDrawerNavigator();
 const TabNavigation = createBottomTabNavigator<any>();
@@ -147,14 +146,6 @@ const RootTab = observer(() => {
               </TouchableOpacity>
             </View>
           ),
-        }}
-      />
-
-      <Screen
-        name="Swap"
-        component={SwapScreen}
-        options={{
-          tabBarLabel: t('home-tab-swap'),
         }}
       />
 
