@@ -207,7 +207,7 @@ export class RawTransactionRequest extends BaseTransaction {
       this.setPriorityPrice(Number(param.priorityPrice) / Gwei_1);
     }
 
-    if (param.nonce) runInAction(() => this.setNonce(param.nonce));
+    if (param.nonce) runInAction(() => this.setNonce(param.nonce!));
   }
 
   setERC20ApproveAmount(amount: string) {

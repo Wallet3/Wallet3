@@ -358,6 +358,7 @@ export class BaseTransaction {
     runInAction(() => (this.isEstimatingGas = true));
 
     const { gas, errorMessage } = await estimateGas(this.network.chainId, args);
+    console.log('errorMessage: ', errorMessage);
 
     runInAction(() => {
       this.isEstimatingGas = false;

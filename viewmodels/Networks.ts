@@ -99,7 +99,9 @@ class Networks {
 
     AsyncStorage.getItem('network').then((chainId) => {
       const chain = Number(chainId || 1);
-      runInAction(() => (this.current = this.all.find((n) => n.chainId === chain) || PublicNetworks[0]));
+      runInAction(() => {
+        this.current = this.all.find((n) => n.chainId === chain) || PublicNetworks[0];
+      });
     });
   }
 

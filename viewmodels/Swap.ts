@@ -1,6 +1,6 @@
 import '@ethersproject/shims';
 import { BigNumber, providers, utils } from 'ethers';
-import { makeAutoObservable, reaction, runInAction } from 'mobx';
+import { computed, makeAutoObservable, reaction, runInAction } from 'mobx';
 
 import { IToken } from '../common/tokens';
 import { ERC20Token } from '../models/ERC20';
@@ -11,6 +11,7 @@ import delay from 'delay';
 import TxHub from './hubs/TxHub';
 import { showMessage } from 'react-native-flash-message';
 import { getProviderByChainId } from '../common/RPC';
+import { RawTransactionRequest } from './transferring/RawTransactionRequest';
 
 interface ISwapToken extends IToken {
   allowance?: BigNumber;
@@ -46,11 +47,14 @@ export class SwapVM {
   }
 
   get fromList(): ISwapToken[] {
-    return this.currentExecutor.fromTokens(this.currentChainId).filter((t) => t.address !== this.from?.address);
+    console.log('Swap.from', this.from);
+    console.log('Swap.fromList', this.currentExecutor.fromTokens(this.currentChainId));
+
+    return this.currentExecutor.fromTokens(this.currentChainId);
   }
 
   get forList(): ISwapToken[] {
-    return this.currentExecutor.forTokens(this.currentChainId).filter((t) => t.address !== this.for?.address);
+    return this.currentExecutor.forTokens(this.currentChainId);
   }
 
   get isValid() {
@@ -69,7 +73,7 @@ export class SwapVM {
     }
   }
 
-  get account() {
+  get accountAddress() {
     return App.currentAccount?.address!;
   }
 
@@ -125,7 +129,7 @@ export class SwapVM {
 
     const erc20 = new ERC20Token({
       contract: token.address,
-      owner: this.account!,
+      owner: this.accountAddress!,
       chainId: Networks.current.chainId,
       provider: getProviderByChainId(Networks.current.chainId),
     });
@@ -134,15 +138,10 @@ export class SwapVM {
       runInAction(() => (this.max = balance));
     });
 
-    console.log('selectFrom', this.account!, this.currentExecutor.getContractAddress(this.currentChainId));
-
-    erc20
-      .allowance(this.account!, this.currentExecutor.getContractAddress(this.currentChainId))
-      .then((allowance) => {
-        console.log('allowance', allowance);
-        runInAction(() => (this.from!.allowance = allowance));
-      })
-      .catch(console.error);
+    erc20.allowance(this.accountAddress!, this.currentExecutor.getContractAddress(this.currentChainId)).then((allowance) => {
+      console.log('allowance', allowance);
+      runInAction(() => (this.from!.allowance = allowance));
+    });
   }
 
   selectFor(token?: ISwapToken, check = true) {
@@ -173,20 +172,24 @@ export class SwapVM {
   }
 
   async setFromAmount(value: string) {
-    if (!this.from || !this.for || !value) return;
+    if (!this.from || !this.for) return;
     console.log('setFromAmount', value);
 
     this.fromAmount = value;
-    const amount = utils.parseUnits(value, this.from.decimals);
+    if (value) {
+      const amount = utils.parseUnits(value, this.from.decimals);
 
-    const forAmount = await this.currentExecutor.getAmountOut(this.currentChainId, this.from, this.for, amount);
-    runInAction(() => (this.forAmount = utils.formatUnits(forAmount!, this.for?.decimals)));
+      const forAmount = await this.currentExecutor.getAmountOut(this.currentChainId, this.from, this.for, amount);
+      runInAction(() => (this.forAmount = utils.formatUnits(forAmount!, this.for?.decimals)));
+    } else {
+      this.forAmount = '';
+    }
   }
 
   private async awaitTx({ provider, nonce, chainId }: { chainId: number; nonce: number; provider: providers.BaseProvider }) {
     await delay(1000);
 
-    const tx = TxHub.pendingTxs.find((tx) => tx.from === this.account && tx.nonce === nonce);
+    const tx = TxHub.pendingTxs.find((tx) => tx.from === this.accountAddress && tx.nonce === nonce);
 
     while (tx) {
       await delay(3000);
@@ -202,16 +205,15 @@ export class SwapVM {
     return tx ? true : false;
   }
 
-  async approve() {
-    const provider = Networks.current;
+  approveTx() {
     const chainId = this.currentChainId;
     const token = this.from!;
 
-    runInAction(() => this.isApproving.set(chainId, true));
+    // runInAction(() => this.isApproving.set(chainId, true));
 
     const erc20 = new ERC20Token({
       contract: token.address,
-      owner: this.account!,
+      owner: this.accountAddress!,
       chainId: Networks.current.chainId,
     });
     const data = erc20.encodeApproveData(
@@ -219,26 +221,55 @@ export class SwapVM {
       '115792089237316195423570985008687907853269984665640564039457584007913129639935'
     );
 
-    const { wallet, accountIndex } = App.findWallet(this.account)!;
+    return new RawTransactionRequest({
+      param: {
+        from: this.accountAddress,
+        to: this.currentExecutor.getContractAddress(chainId),
+        value: '0',
+        data,
+      },
+      network: Networks.current,
+      account: App.currentAccount!,
+    });
+  }
+
+  async approve(pin?: string) {
+    const chainId = this.currentChainId;
+    const token = this.from!;
+
+    // runInAction(() => this.isApproving.set(chainId, true));
+
+    const erc20 = new ERC20Token({
+      contract: token.address,
+      owner: this.accountAddress!,
+      chainId: Networks.current.chainId,
+    });
+    const data = erc20.encodeApproveData(
+      this.currentExecutor.getContractAddress(this.currentChainId),
+      '115792089237316195423570985008687907853269984665640564039457584007913129639935'
+    );
+
+    const { wallet, accountIndex } = App.findWallet(this.accountAddress)!;
 
     const tx: providers.TransactionRequest = {
       chainId,
-      from: this.account,
+      from: this.accountAddress,
       to: this.from!.address,
-      value: '0',
+      value: 0,
       data,
     };
 
-    if (!tx) return { success: false, error: 'No transaction' };
+    if (!tx) return false;
 
     const { txHex, error } = await wallet.signTx({
       accountIndex,
       tx,
+      pin,
     });
 
     if (!txHex || error) {
       if (error) showMessage({ message: error, type: 'warning' });
-      return { success: false, error };
+      return false;
     }
 
     await wallet.sendTx({
@@ -249,14 +280,39 @@ export class SwapVM {
       },
     });
 
-    const allowance = await erc20.allowance(this.account, this.currentExecutor.getContractAddress(this.currentChainId));
+    const allowance = await erc20.allowance(this.accountAddress, this.currentExecutor.getContractAddress(this.currentChainId));
 
     runInAction(() => {
       token.allowance = allowance;
     });
+
+    return true;
   }
 
-  async swap() {
+  swapTx() {
+    const chainId = this.currentChainId;
+
+    const amountIn = utils.parseUnits(this.fromAmount || '0', this.from!.decimals || 0);
+    const minOut = utils
+      .parseUnits(this.forAmount || '0', this.for!.decimals || 0)
+      .mul(this.slippage * 10)
+      .div(1000);
+
+    const data = this.currentExecutor.encodeSwapData(chainId, this.from!, this.for!, amountIn, minOut)!;
+
+    return new RawTransactionRequest({
+      param: {
+        from: this.accountAddress,
+        to: this.currentExecutor.getContractAddress(chainId),
+        value: '0',
+        data,
+      },
+      network: Networks.current,
+      account: App.currentAccount!,
+    });
+  }
+
+  async swap(pin?: string) {
     const provider = Networks.current;
     const chainId = this.currentChainId;
 
@@ -270,33 +326,34 @@ export class SwapVM {
 
     const data = this.currentExecutor.encodeSwapData(chainId, this.from!, this.for!, amountIn, minOut);
 
-    const { wallet, accountIndex } = App.findWallet(this.account)!;
+    const { wallet, accountIndex } = App.findWallet(this.accountAddress)!;
 
     const tx: providers.TransactionRequest = {
       chainId,
-      from: this.account,
+      from: this.accountAddress,
       to: this.currentExecutor.getContractAddress(chainId),
       value: '0',
       data,
     };
 
-    if (!tx) return { success: false, error: 'No transaction' };
+    if (!tx) return false;
 
     const { txHex, error } = await wallet.signTx({
       accountIndex,
       tx,
+      pin,
     });
 
     if (!txHex || error) {
       if (error) showMessage({ message: error, type: 'warning' });
-      return { success: false, error };
+      return false;
     }
 
     await wallet.sendTx({
       tx,
       txHex,
       readableInfo: {
-        type: 'transfer',
+        type: 'dapp-interaction',
       },
     });
 
@@ -304,6 +361,8 @@ export class SwapVM {
       this.selectFrom(this.from);
       this.selectFor(this.for);
     });
+
+    return true;
   }
 }
 

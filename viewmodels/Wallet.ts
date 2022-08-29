@@ -156,7 +156,8 @@ export class Wallet {
 
   async signTx({ accountIndex, tx, pin }: SignTxRequest) {
     try {
-      const txHex = await (await this.openWallet({ accountIndex, pin }))?.signTransaction(tx);
+      const wallet = await this.openWallet({ accountIndex, pin });
+      const txHex = await wallet?.signTransaction(tx);
       return { txHex };
     } catch (error: any) {
       return { error: error.message };

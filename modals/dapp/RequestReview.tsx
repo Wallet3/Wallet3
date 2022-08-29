@@ -30,7 +30,7 @@ import styles from '../styles';
 
 interface Props {
   vm: RawTransactionRequest;
-  app: { name: string; icon: string; verified?: boolean };
+  app?: { name: string; icon: string; verified?: boolean };
   onReject?: () => void;
   onApprove?: () => Promise<void>;
   onGasPress?: () => void;
@@ -49,6 +49,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, onDecodedFuncP
   const reviewItemStyle = { ...styles.reviewItem, borderColor };
   const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
   const reviewItemValueStyle = { ...styles.reviewItemValue, color: textColor };
+  console.log('TxReview: ', vm.txException, vm.isValidParams, vm.type);
 
   return (
     <SafeViewContainer>
@@ -57,15 +58,17 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, onDecodedFuncP
       </View>
 
       <View style={reviewItemsContainer}>
-        <View style={reviewItemStyle}>
-          <Text style={styles.reviewItemTitle}>DApp</Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Image source={{ uri: app.icon }} style={{ width: 19, height: 19, marginEnd: 5, borderRadius: 3 }} />
-            <Text style={{ ...reviewItemValueStyle, maxWidth: 180 }} numberOfLines={1}>
-              {app.name}
-            </Text>
+        {app && (
+          <View style={reviewItemStyle}>
+            <Text style={styles.reviewItemTitle}>DApp</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Image source={{ uri: app.icon }} style={{ width: 19, height: 19, marginEnd: 5, borderRadius: 3 }} />
+              <Text style={{ ...reviewItemValueStyle, maxWidth: 180 }} numberOfLines={1}>
+                {app.name}
+              </Text>
+            </View>
           </View>
-        </View>
+        )}
 
         <View style={{ ...reviewItemStyle }}>
           <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-type')}</Text>
@@ -138,7 +141,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, onDecodedFuncP
           <View style={{ ...reviewItemStyle }}>
             <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-max-approve')}</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              {vm.maxUint256Amount && !app.verified ? (
+              {vm.maxUint256Amount && !app?.verified ? (
                 <Ionicons name="warning" color="crimson" size={15} style={{ marginEnd: 4 }} />
               ) : undefined}
 

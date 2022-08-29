@@ -1,5 +1,5 @@
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Modalize, useModalize } from 'react-native-modalize';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -20,6 +20,14 @@ import Swap from '../../viewmodels/Swap';
 import TokenBox from './TokenBox';
 import { utils } from 'ethers';
 import Networks from '../../viewmodels/Networks';
+import Swiper from 'react-native-swiper';
+import { ContactsPad, SendAmount, ReviewPad, Passpad } from '../../modals/views';
+import Success from '../../modals/views/Success';
+import Authentication from '../../viewmodels/Authentication';
+import modalStyles from '../../modals/styles';
+import { styles } from '../../constants/styles';
+import TxRequest from '../../modals/compositions/TxRequest';
+import { RawTransactionRequest } from '../../viewmodels/transferring/RawTransactionRequest';
 
 export default observer(() => {
   const { backgroundColor, borderColor, shadow, mode, foregroundColor, textColor, secondaryTextColor, tintColor } = Theme;
@@ -29,9 +37,14 @@ export default observer(() => {
 
   const { ref: networksRef, open: openNetworksModal, close: closeNetworksModal } = useModalize();
   const { ref: accountsRef, open: openAccountsModal, close: closeAccountsModal } = useModalize();
+  const { ref: swapApproveRef, open: openSwapApproveModal, close: closeSwapApproveModal } = useModalize();
+  const { ref: swapRef, open: openSwapModal, close: closeSwapModal } = useModalize();
   const [advanced, setAdvanced] = useState(false);
-  console.log('Swap.fromList', Swap.fromList);
-  console.log('Swap.forList', Swap.forList);
+
+  const [approved, setApproved] = useState(false);
+  const [swapped, setSwapped] = useState(false);
+  const swiper = useRef<Swiper>(null);
+  const [active] = useState({ index: 0 });
 
   return (
     <ScrollView
@@ -79,7 +92,6 @@ export default observer(() => {
           />
         </TouchableOpacity>
       </View>
-
       {Swap.from && (
         <TokenBox
           value={Swap.fromAmount}
@@ -97,7 +109,6 @@ export default observer(() => {
           }}
         />
       )}
-
       <View style={{ alignItems: 'center', justifyContent: 'center', zIndex: 8 }}>
         <TouchableOpacity
           onPress={(_) => {
@@ -109,7 +120,6 @@ export default observer(() => {
           <Ionicons name="arrow-down-outline" size={16} color={secondaryTextColor} />
         </TouchableOpacity>
       </View>
-
       {Swap.for && (
         <TokenBox
           value={Swap.forAmount}
@@ -121,7 +131,6 @@ export default observer(() => {
           title="To (estimated)"
         />
       )}
-
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 8, alignItems: 'center' }}>
         <Text style={{ color: secondaryTextColor, fontSize: 12, marginStart: 6 }}>1 ETH ≈ 10,000 USDC</Text>
 
@@ -129,25 +138,24 @@ export default observer(() => {
           <Ionicons name="settings-outline" size={19} color={foregroundColor} />
         </TouchableOpacity>
       </View>
-
       <Collapsible collapsed={!advanced} style={{ paddingBottom: 32 }}>
         <Text style={{ color: textColor }}>Slippage tolerance:</Text>
         <View style={{ flexDirection: 'row', marginTop: 12 }}>
-          <TouchableOpacity onPress={() => Swap.setSlippage(0.5)} style={{ ...styles.slippage }}>
+          <TouchableOpacity onPress={() => Swap.setSlippage(0.5)} style={{ ...innerStyles.slippage }}>
             <Text style={{ color: secondaryTextColor }}>0.5 %</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => Swap.setSlippage(1)} style={{ ...styles.slippage }}>
+          <TouchableOpacity onPress={() => Swap.setSlippage(1)} style={{ ...innerStyles.slippage }}>
             <Text style={{ color: secondaryTextColor }}>1 %</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => Swap.setSlippage(2)} style={{ ...styles.slippage }}>
+          <TouchableOpacity onPress={() => Swap.setSlippage(2)} style={{ ...innerStyles.slippage }}>
             <Text style={{ color: secondaryTextColor }}>2 %</Text>
           </TouchableOpacity>
 
           <View style={{ flex: 1 }} />
 
-          <View style={{ ...styles.slippage, marginEnd: 0 }}>
+          <View style={{ ...innerStyles.slippage, marginEnd: 0 }}>
             <TextInput
               placeholder="5"
               style={{ minWidth: 25, textAlign: 'center', paddingEnd: 4, maxWidth: 64 }}
@@ -159,7 +167,23 @@ export default observer(() => {
         </View>
       </Collapsible>
 
-      <Button title="Approve" />
+      {!Swap.approved && (
+        <Button
+          style={{ backgroundColor: Networks.current.color }}
+          title={t('tx-type-approve')}
+          disabled={!Swap.fromAmount || Swap.approving || Swap.fromList.length === 0}
+          onPress={openSwapApproveModal}
+        />
+      )}
+
+      {Swap.approved && (
+        <Button
+          style={{ backgroundColor: Networks.current.color }}
+          title={t('home-tab-exchange')}
+          disabled={!Swap.isValid || Swap.swapping}
+          onPress={openSwapModal}
+        />
+      )}
 
       <Portal>
         <Modalize ref={networksRef} adjustToContentHeight disableScrollIfPossible>
@@ -187,9 +211,57 @@ export default observer(() => {
               selectedAccounts={[currentAccount?.address || '']}
               style={{ padding: 16, height: 430 }}
               expanded
-              // themeColor={appNetwork?.color}
+              themeColor={Networks.current.color}
               onDone={([account]) => {}}
             />
+          </SafeAreaProvider>
+        </Modalize>
+
+        <Modalize
+          key="SwapApprove"
+          ref={swapApproveRef}
+          adjustToContentHeight
+          disableScrollIfPossible
+          modalStyle={styles.modalStyle}
+          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+          onClosed={() => {}}
+        >
+          <SafeAreaProvider style={{ ...modalStyles.safeArea, backgroundColor }}>
+            {approved ? (
+              <Success />
+            ) : (
+              <TxRequest
+                vm={Swap.approveTx()}
+                themeColor={Networks.current.color}
+                bioType={Authentication.biometricType}
+                onApprove={Swap.approve}
+                onReject={closeSwapApproveModal}
+              />
+            )}
+          </SafeAreaProvider>
+        </Modalize>
+
+        <Modalize
+          key="Swap"
+          ref={swapRef}
+          adjustToContentHeight
+          disableScrollIfPossible
+          modalStyle={styles.modalStyle}
+          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+          onClosed={() => {}}
+        >
+          <SafeAreaProvider style={{ ...modalStyles.safeArea, backgroundColor }}>
+            {swapped ? (
+              <Success />
+            ) : (
+              <TxRequest
+                vm={Swap.swapTx()}
+                themeColor={Networks.current.color}
+                bioType={Authentication.biometricType}
+                onApprove={Swap.swap}
+                onReject={closeSwapModal}
+              />
+            )}
           </SafeAreaProvider>
         </Modalize>
       </Portal>
@@ -197,7 +269,7 @@ export default observer(() => {
   );
 });
 
-const styles = StyleSheet.create({
+const innerStyles = StyleSheet.create({
   slippage: {
     padding: 5,
     paddingHorizontal: 12,
