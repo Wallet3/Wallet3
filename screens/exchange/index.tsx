@@ -1,6 +1,6 @@
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import React, { useRef, useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Keyboard, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Modalize, useModalize } from 'react-native-modalize';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -37,13 +37,14 @@ export default observer(() => {
 
   const { ref: networksRef, open: openNetworksModal, close: closeNetworksModal } = useModalize();
   const { ref: accountsRef, open: openAccountsModal, close: closeAccountsModal } = useModalize();
-  const { ref: swapApproveRef, open: openSwapApproveModal, close: closeSwapApproveModal } = useModalize();
   const { ref: swapRef, open: openSwapModal, close: closeSwapModal } = useModalize();
   const [advanced, setAdvanced] = useState(false);
 
   const [approved, setApproved] = useState(false);
   const [swapped, setSwapped] = useState(false);
-  const swiper = useRef<Swiper>(null);
+
+  const [process, setProcess] = useState('');
+
   const [active] = useState({ index: 0 });
 
   return (
@@ -172,7 +173,11 @@ export default observer(() => {
           style={{ backgroundColor: Networks.current.color }}
           title={t('tx-type-approve')}
           disabled={!Swap.fromAmount || Swap.approving || Swap.fromList.length === 0}
-          onPress={openSwapApproveModal}
+          onPress={() => {
+            openSwapModal();
+            setProcess('approve');
+            Keyboard.dismiss();
+          }}
         />
       )}
 
@@ -181,7 +186,11 @@ export default observer(() => {
           style={{ backgroundColor: Networks.current.color }}
           title={t('home-tab-exchange')}
           disabled={!Swap.isValid || Swap.swapping}
-          onPress={openSwapModal}
+          onPress={() => {
+            openSwapModal();
+            setProcess('swap');
+            Keyboard.dismiss();
+          }}
         />
       )}
 
@@ -219,30 +228,6 @@ export default observer(() => {
 
         <Modalize
           key="SwapApprove"
-          ref={swapApproveRef}
-          adjustToContentHeight
-          disableScrollIfPossible
-          modalStyle={styles.modalStyle}
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-          onClosed={() => {}}
-        >
-          <SafeAreaProvider style={{ ...modalStyles.safeArea, backgroundColor }}>
-            {approved ? (
-              <Success />
-            ) : (
-              <TxRequest
-                vm={Swap.approveTx()}
-                themeColor={Networks.current.color}
-                bioType={Authentication.biometricType}
-                onApprove={Swap.approve}
-                onReject={closeSwapApproveModal}
-              />
-            )}
-          </SafeAreaProvider>
-        </Modalize>
-
-        <Modalize
-          key="Swap"
           ref={swapRef}
           adjustToContentHeight
           disableScrollIfPossible
@@ -250,19 +235,47 @@ export default observer(() => {
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
           onClosed={() => {}}
         >
-          <SafeAreaProvider style={{ ...modalStyles.safeArea, backgroundColor }}>
-            {swapped ? (
-              <Success />
-            ) : (
-              <TxRequest
-                vm={Swap.swapTx()}
-                themeColor={Networks.current.color}
-                bioType={Authentication.biometricType}
-                onApprove={Swap.swap}
-                onReject={closeSwapModal}
-              />
-            )}
-          </SafeAreaProvider>
+          {process === 'approve' && (
+            <SafeAreaProvider style={{ ...modalStyles.safeArea, backgroundColor }}>
+              {approved ? (
+                <Success />
+              ) : (
+                <TxRequest
+                  vm={Swap.approveTx}
+                  themeColor={Networks.current.color}
+                  bioType={Authentication.biometricType}
+                  onApprove={async (pin) => {
+                    const approved = await Swap.approve(pin);
+                    setApproved(approved);
+                    if (approved) setTimeout(() => closeSwapModal(), 1750);
+                    return approved;
+                  }}
+                  onReject={closeSwapModal}
+                />
+              )}
+            </SafeAreaProvider>
+          )}
+
+          {process === 'swap' && (
+            <SafeAreaProvider style={{ ...modalStyles.safeArea, backgroundColor }}>
+              {swapped ? (
+                <Success />
+              ) : (
+                <TxRequest
+                  vm={Swap.swapTx}
+                  themeColor={Networks.current.color}
+                  bioType={Authentication.biometricType}
+                  onApprove={async (pin) => {
+                    const swapped = await Swap.swap(pin);
+                    setSwapped(swapped);
+                    if (swapped) setTimeout(() => closeSwapModal(), 1750);
+                    return swapped;
+                  }}
+                  onReject={closeSwapModal}
+                />
+              )}
+            </SafeAreaProvider>
+          )}
         </Modalize>
       </Portal>
     </ScrollView>

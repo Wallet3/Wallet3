@@ -1,6 +1,6 @@
 import { BigNumber, BigNumberish, ethers, utils } from 'ethers';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
-import { estimateGas, eth_call } from '../common/RPC';
+import { estimateGas, eth_call, getProviderByChainId } from '../common/RPC';
 
 import ERC20ABI from '../abis/ERC20.json';
 
@@ -38,7 +38,6 @@ export class ERC20Token {
     contract: string;
     owner: string;
     chainId: number;
-    provider?: ethers.providers.BaseProvider;
     name?: string;
     symbol?: string;
     decimals?: number;
@@ -48,8 +47,8 @@ export class ERC20Token {
     order?: number;
   }) {
     this.address = props.contract;
-    this.erc20 = new ethers.Contract(this.address, ERC20ABI, props.provider);
     this.chainId = props.chainId;
+    this.erc20 = new ethers.Contract(this.address, ERC20ABI, getProviderByChainId(this.chainId));
 
     this.symbol = props.symbol || '';
     this.name = props.name || '';

@@ -80,7 +80,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
 
               <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
                 {vm.network.eip1559 ? <Fire width={8} height={8} style={{ marginEnd: 3 }} /> : undefined}
-                {vm.network.eip1559 ? (
+                {vm.network.eip1559 && vm.nextBlockBaseFee ? (
                   <AnimateNumber
                     style={styles.gasGweiLabel}
                     value={vm.nextBlockBaseFee}

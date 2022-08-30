@@ -18,8 +18,8 @@ interface ISwapToken extends IToken {
 }
 
 export class SwapVM {
-  from?: ISwapToken;
-  for?: ISwapToken;
+  from: ISwapToken = this.currentExecutor.fromTokens(this.currentChainId)[0];
+  for: ISwapToken = this.currentExecutor.forTokens(this.currentChainId)[1];
 
   max = BigNumber.from(0);
   fromAmount = '';
@@ -47,9 +47,6 @@ export class SwapVM {
   }
 
   get fromList(): ISwapToken[] {
-    console.log('Swap.from', this.from);
-    console.log('Swap.fromList', this.currentExecutor.fromTokens(this.currentChainId));
-
     return this.currentExecutor.fromTokens(this.currentChainId);
   }
 
@@ -79,7 +76,7 @@ export class SwapVM {
 
   get approved() {
     try {
-      return this.from?.allowance?.gte(utils.parseUnits(this.fromAmount || '0', this.from?.decimals || 0));
+      return this.from.allowance?.gte(utils.parseUnits(this.fromAmount || '0', this.from.decimals || 0));
     } catch (error) {
       return false;
     }
@@ -107,8 +104,8 @@ export class SwapVM {
   }
 
   clean() {
-    this.from = undefined;
-    this.for = undefined;
+    this.from = this.currentExecutor.fromTokens(this.currentChainId)[0];
+    this.for = this.currentExecutor.forTokens(this.currentChainId)[1];
     this.fromAmount = '';
     this.forAmount = '';
   }
@@ -129,22 +126,20 @@ export class SwapVM {
 
     const erc20 = new ERC20Token({
       contract: token.address,
-      owner: this.accountAddress!,
+      owner: this.accountAddress,
       chainId: Networks.current.chainId,
-      provider: getProviderByChainId(Networks.current.chainId),
     });
 
     erc20.getBalance().then((balance) => {
       runInAction(() => (this.max = balance));
     });
 
-    erc20.allowance(this.accountAddress!, this.currentExecutor.getContractAddress(this.currentChainId)).then((allowance) => {
-      console.log('allowance', allowance);
-      runInAction(() => (this.from!.allowance = allowance));
+    erc20.allowance(this.accountAddress, this.currentExecutor.getContractAddress(this.currentChainId)).then((allowance) => {
+      runInAction(() => (this.from.allowance = allowance));
     });
   }
 
-  selectFor(token?: ISwapToken, check = true) {
+  selectFor(token: ISwapToken, check = true) {
     if (this.from?.address === token?.address && check) {
       this.interchange();
       return;
@@ -186,31 +181,8 @@ export class SwapVM {
     }
   }
 
-  private async awaitTx({ provider, nonce, chainId }: { chainId: number; nonce: number; provider: providers.BaseProvider }) {
-    await delay(1000);
-
-    const tx = TxHub.pendingTxs.find((tx) => tx.from === this.accountAddress && tx.nonce === nonce);
-
-    while (tx) {
-      await delay(3000);
-      const receipt = await provider.getTransactionReceipt(tx.hash);
-      if (receipt) break;
-    }
-
-    runInAction(() => {
-      this.isApproving.set(chainId, false);
-      this.isSwapping.set(chainId, false);
-    });
-
-    return tx ? true : false;
-  }
-
-  approveTx() {
-    const chainId = this.currentChainId;
-    const token = this.from!;
-
-    // runInAction(() => this.isApproving.set(chainId, true));
-
+  get approveTx() {
+    const token = this.from;
     const erc20 = new ERC20Token({
       contract: token.address,
       owner: this.accountAddress!,
@@ -224,8 +196,9 @@ export class SwapVM {
     return new RawTransactionRequest({
       param: {
         from: this.accountAddress,
-        to: this.currentExecutor.getContractAddress(chainId),
-        value: '0',
+        to: token.address,
+        value: BigNumber.from(0).toString(),
+        gas: BigNumber.from(150_000).toString(),
         data,
       },
       network: Networks.current,
@@ -234,36 +207,12 @@ export class SwapVM {
   }
 
   async approve(pin?: string) {
-    const chainId = this.currentChainId;
-    const token = this.from!;
-
-    // runInAction(() => this.isApproving.set(chainId, true));
-
-    const erc20 = new ERC20Token({
-      contract: token.address,
-      owner: this.accountAddress!,
-      chainId: Networks.current.chainId,
-    });
-    const data = erc20.encodeApproveData(
-      this.currentExecutor.getContractAddress(this.currentChainId),
-      '115792089237316195423570985008687907853269984665640564039457584007913129639935'
-    );
-
+    const rawTR = this.approveTx;
     const { wallet, accountIndex } = App.findWallet(this.accountAddress)!;
-
-    const tx: providers.TransactionRequest = {
-      chainId,
-      from: this.accountAddress,
-      to: this.from!.address,
-      value: 0,
-      data,
-    };
-
-    if (!tx) return false;
 
     const { txHex, error } = await wallet.signTx({
       accountIndex,
-      tx,
+      tx: rawTR.txRequest!,
       pin,
     });
 
@@ -273,38 +222,42 @@ export class SwapVM {
     }
 
     await wallet.sendTx({
-      tx,
+      tx: rawTR.txRequest!,
       txHex,
       readableInfo: {
-        type: 'transfer',
+        type: 'dapp-interaction',
+        symbol: rawTR.erc20?.symbol,
+        amount: Number(rawTR.tokenAmount).toString(),
+        decodedFunc: rawTR.decodedFunc?.fullFunc,
       },
     });
 
-    const allowance = await erc20.allowance(this.accountAddress, this.currentExecutor.getContractAddress(this.currentChainId));
+    const allowance = await rawTR.erc20!.allowance(
+      this.accountAddress,
+      this.currentExecutor.getContractAddress(this.currentChainId)
+    );
 
     runInAction(() => {
-      token.allowance = allowance;
+      this.from.allowance = allowance;
     });
 
     return true;
   }
 
-  swapTx() {
-    const chainId = this.currentChainId;
-
+  get swapTx() {
     const amountIn = utils.parseUnits(this.fromAmount || '0', this.from!.decimals || 0);
     const minOut = utils
       .parseUnits(this.forAmount || '0', this.for!.decimals || 0)
       .mul(this.slippage * 10)
       .div(1000);
 
-    const data = this.currentExecutor.encodeSwapData(chainId, this.from!, this.for!, amountIn, minOut)!;
+    const data = this.currentExecutor.encodeSwapData(this.currentChainId, this.from, this.for, amountIn, minOut)!;
 
     return new RawTransactionRequest({
       param: {
         from: this.accountAddress,
-        to: this.currentExecutor.getContractAddress(chainId),
-        value: '0',
+        to: this.currentExecutor.getContractAddress(this.currentChainId),
+        value: BigNumber.from(0).toString(),
         data,
       },
       network: Networks.current,
@@ -313,34 +266,14 @@ export class SwapVM {
   }
 
   async swap(pin?: string) {
-    const provider = Networks.current;
-    const chainId = this.currentChainId;
-
-    runInAction(() => this.isSwapping.set(chainId, true));
-
-    const amountIn = utils.parseUnits(this.fromAmount || '0', this.from!.decimals || 0);
-    const minOut = utils
-      .parseUnits(this.forAmount || '0', this.for!.decimals || 0)
-      .mul(this.slippage * 10)
-      .div(1000);
-
-    const data = this.currentExecutor.encodeSwapData(chainId, this.from!, this.for!, amountIn, minOut);
+    const rawTR = this.swapTx;
 
     const { wallet, accountIndex } = App.findWallet(this.accountAddress)!;
-
-    const tx: providers.TransactionRequest = {
-      chainId,
-      from: this.accountAddress,
-      to: this.currentExecutor.getContractAddress(chainId),
-      value: '0',
-      data,
-    };
-
-    if (!tx) return false;
+    console.log('swap', rawTR.txRequest);
 
     const { txHex, error } = await wallet.signTx({
       accountIndex,
-      tx,
+      tx: rawTR.txRequest!,
       pin,
     });
 
@@ -350,10 +283,11 @@ export class SwapVM {
     }
 
     await wallet.sendTx({
-      tx,
+      tx: rawTR.txRequest!,
       txHex,
       readableInfo: {
         type: 'dapp-interaction',
+        decodedFunc: rawTR.decodedFunc?.fullFunc,
       },
     });
 
