@@ -227,13 +227,17 @@ export default observer(() => {
         </Modalize>
 
         <Modalize
-          key="SwapApprove"
+          key="Swap"
           ref={swapRef}
           adjustToContentHeight
           disableScrollIfPossible
           modalStyle={styles.modalStyle}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-          onClosed={() => {}}
+          onClosed={() => {
+            setProcess('');
+            setApproved(false);
+            setSwapped(false);
+          }}
         >
           {process === 'approve' && (
             <SafeAreaProvider style={{ ...modalStyles.safeArea, backgroundColor }}>

@@ -193,7 +193,7 @@ export class SwapVM {
       '115792089237316195423570985008687907853269984665640564039457584007913129639935'
     );
 
-    return new RawTransactionRequest({
+    const rawTR = new RawTransactionRequest({
       param: {
         from: this.accountAddress,
         to: token.address,
@@ -204,6 +204,7 @@ export class SwapVM {
       network: Networks.current,
       account: App.currentAccount!,
     });
+    return rawTR;
   }
 
   async approve(pin?: string) {
@@ -253,7 +254,7 @@ export class SwapVM {
 
     const data = this.currentExecutor.encodeSwapData(this.currentChainId, this.from, this.for, amountIn, minOut)!;
 
-    return new RawTransactionRequest({
+    const rawTR = new RawTransactionRequest({
       param: {
         from: this.accountAddress,
         to: this.currentExecutor.getContractAddress(this.currentChainId),
@@ -263,6 +264,7 @@ export class SwapVM {
       network: Networks.current,
       account: App.currentAccount!,
     });
+    return rawTR;
   }
 
   async swap(pin?: string) {
