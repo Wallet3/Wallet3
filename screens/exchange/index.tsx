@@ -13,7 +13,8 @@ import { NetworksMenu } from '../../modals';
 import { Portal } from 'react-native-portalize';
 import { TextInput } from 'react-native-gesture-handler';
 import Theme from '../../viewmodels/settings/Theme';
-import TokenBox from './TokenBox';
+import TokenBox from './components/TokenBox';
+import TokenSelector from './components/TokenSelector';
 import { generateNetworkIcon } from '../../assets/icons/networks/white';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -26,6 +27,9 @@ export default observer(() => {
 
   const { ref: networksRef, open: openNetworksModal, close: closeNetworksModal } = useModalize();
   const { ref: accountsRef, open: openAccountsModal, close: closeAccountsModal } = useModalize();
+  const { ref: fromSelectorRef, open: openFromModal } = useModalize();
+  const { ref: toSelectorRef, open: openToModal } = useModalize();
+
   const [advanced, setAdvanced] = useState(false);
 
   return (
@@ -68,7 +72,16 @@ export default observer(() => {
           />
         </TouchableOpacity>
       </View>
-      <TokenBox tokenAddress="" tokenSymbol="ETH" chainId={1} showTitle title="Max: 2.40" titleTouchable />
+      <TokenBox
+        tokenAddress=""
+        tokenSymbol="ETH"
+        chainId={1}
+        showTitle
+        title="Max: 2.40"
+        titleTouchable
+        onTitlePress={() => alert('abc')}
+        onTokenPress={() => openFromModal()}
+      />
       <View style={{ alignItems: 'center', justifyContent: 'center', zIndex: 8 }}>
         <TouchableOpacity style={{ padding: 8, borderRadius: 180, borderWidth: 0, borderColor, backgroundColor }}>
           <Ionicons name="arrow-down-outline" size={16} color={secondaryTextColor} />
@@ -141,6 +154,18 @@ export default observer(() => {
               // themeColor={appNetwork?.color}
               onDone={([account]) => {}}
             />
+          </SafeAreaProvider>
+        </Modalize>
+
+        <Modalize
+          ref={fromSelectorRef}
+          adjustToContentHeight
+          disableScrollIfPossible
+          modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
+          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+        >
+          <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
+            <TokenSelector tokens={currentAccount!.tokens.tokens} />
           </SafeAreaProvider>
         </Modalize>
       </Portal>

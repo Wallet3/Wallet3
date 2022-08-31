@@ -1,22 +1,23 @@
-import { Coin, TextBox } from '../../components';
+import { Coin, Separator, TextBox } from '../../../components';
 import { FlatList, ListRenderItemInfo, Text, TouchableOpacity, View } from 'react-native';
 
-import { IToken } from '../../common/tokens';
+import { IToken } from '../../../common/tokens';
 import React from 'react';
-import Theme from '../../viewmodels/settings/Theme';
+import Theme from '../../../viewmodels/settings/Theme';
 import { observer } from 'mobx-react-lite';
 
 interface Props {
   tokens: IToken[];
+  onTokenSelected?: (token: IToken) => void;
 }
 
 export default observer((props: Props) => {
-  const { textColor } = Theme;
+  const { textColor, borderColor, secondaryTextColor } = Theme;
 
   const renderItem = ({ item }: ListRenderItemInfo<IToken>) => {
     return (
       <TouchableOpacity
-        // onPress={() => props.onTokenSelected?.(item)}
+        onPress={() => props.onTokenSelected?.(item)}
         style={{
           flexDirection: 'row',
           alignItems: 'center',
@@ -42,10 +43,11 @@ export default observer((props: Props) => {
   };
 
   return (
-    <View>
-      <View style={{ borderBottomWidth: 1, paddingBottom: 12 }}>
-        <TextBox onChangeText={(t) => {}} />
-      </View>
+    <View style={{ padding: 16 }}>
+      <TextBox style={{ marginBottom: 16 }} onChangeText={(t) => {}} />
+
+      <Text style={{ marginBottom: 8, color: secondaryTextColor }}>Tokens</Text>
+      <Separator />
 
       <FlatList data={props.tokens} renderItem={renderItem} />
     </View>

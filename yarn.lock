@@ -9300,10 +9300,10 @@ react-native-draggable-flatlist@^3.1.2:
   resolved "https://registry.yarnpkg.com/react-native-draggable-flatlist/-/react-native-draggable-flatlist-3.1.2.tgz#b66538007f645ccd851c729d4b8a8f7e07666d3f"
   integrity sha512-cqBR+lZktTqHY/J7V0aq+TZNkuqeILxwZ5bBXKndokwH4qvZl7ifijM7LlfWhfhU1/pzjketTsX7P2zyojfAaQ==
 
-react-native-fast-image@^8.5.11:
-  version "8.5.11"
-  resolved "https://registry.yarnpkg.com/react-native-fast-image/-/react-native-fast-image-8.5.11.tgz#e3dc969d0e4e8df026646bf18194465aa55cbc2b"
-  integrity sha512-cNW4bIJg3nvKaheG8vGMfqCt5LMWX9MS5+wMudgKIHbGO51spRr4sgnlhVgwHLcZ5aeNOVJ8CPRxDIWKRq/0QA==
+react-native-fast-image@^8.6.0:
+  version "8.6.0"
+  resolved "https://registry.yarnpkg.com/react-native-fast-image/-/react-native-fast-image-8.6.0.tgz#0141fa428839511f5ae8c66ad0a7587d13346162"
+  integrity sha512-NJe6ReNPbFZ3X3/mYGACqOhtzGIkuzENfryYs91lv2fScAq9OYte9UVwtFftUl3HfB+IvVgmfLBEXyCeqlcmLw==
 
 react-native-flash-message@^0.3.1:
   version "0.3.1"

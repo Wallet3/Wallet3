@@ -1,3 +1,5 @@
+import * as Linking from 'expo-linking';
+
 import { isURL } from './url';
 import { utils } from 'ethers';
 
@@ -32,7 +34,12 @@ export class ParsedMessage {
   constructor(msg: string) {
     const components = msg?.split('\n').filter((i) => i);
 
-    this.domain = components[0]?.endsWith(DOMAIN) ? components[0].split(' ')[0] : '';
+    const url = components[0].split(' ')[0]?.toLowerCase();
+
+    this.domain = components[0]?.endsWith(DOMAIN)
+      ? Linking.parse(url?.startsWith('https://') ? url : `https://${url}`)?.hostname || ''
+      : '';
+
     if (!isURL(this.domain)) throw new Error('Invalid domain');
 
     this.address = utils.isAddress(components[1]) ? components[1] : '';

@@ -1,9 +1,9 @@
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-import { Coin } from '../../components';
+import { Coin } from '../../../components';
 import React from 'react';
-import Theme from '../../viewmodels/settings/Theme';
+import Theme from '../../../viewmodels/settings/Theme';
 import { observer } from 'mobx-react-lite';
 
 interface Props {
@@ -12,6 +12,7 @@ interface Props {
   title?: string;
   titleTouchable?: boolean;
   onTitlePress?: () => void;
+  onTokenPress?: () => void;
   tokenAddress: string;
   tokenSymbol: string;
   chainId: number;
@@ -35,7 +36,7 @@ export default observer((props: Props) => {
       <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 4 }}>
         <TextInput style={{ flex: 1, fontSize: 22 }} keyboardType="decimal-pad" placeholder="0.00" />
 
-        <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginStart: 12 }}>
+        <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginStart: 12 }} onPress={props.onTokenPress}>
           <Coin address={props.tokenAddress} symbol={props.tokenSymbol} chainId={props.chainId} size={25} />
           <Text style={{ fontSize: 20, marginStart: 10, fontWeight: '500', color: textColor }}>{props.tokenSymbol}</Text>
           <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 4 }} color={textColor} size={16} />
