@@ -260,6 +260,7 @@ export class SwapVM {
         to: this.currentExecutor.getContractAddress(this.currentChainId),
         value: BigNumber.from(0).toString(),
         data,
+        gas: '900000',
       },
       network: Networks.current,
       account: App.currentAccount!,
