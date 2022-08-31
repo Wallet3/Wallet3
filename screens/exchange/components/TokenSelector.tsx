@@ -34,7 +34,7 @@ export default observer((props: Props) => {
           style={{ marginEnd: 12 }}
           iconUrl={item.iconUrl}
         />
-        <Text style={{ fontSize: 19, fontWeight: '500', color: textColor, textTransform: 'uppercase' }} numberOfLines={1}>
+        <Text style={{ fontSize: 19, color: textColor, textTransform: 'uppercase' }} numberOfLines={1}>
           {item.symbol}
         </Text>
         <View style={{ flex: 1 }} />
@@ -43,13 +43,18 @@ export default observer((props: Props) => {
   };
 
   return (
-    <View style={{ padding: 16 }}>
+    <View style={{ padding: 16, paddingBottom: 0 }}>
       <TextBox style={{ marginBottom: 16 }} onChangeText={(t) => {}} />
 
-      <Text style={{ marginBottom: 8, color: secondaryTextColor }}>Tokens</Text>
+      <Text style={{ marginBottom: 4, color: secondaryTextColor, paddingHorizontal: 8 }}>Tokens</Text>
       <Separator />
 
-      <FlatList data={props.tokens} renderItem={renderItem} />
+      <FlatList
+        data={props.tokens}
+        renderItem={renderItem}
+        contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 24 }}
+        style={{ marginHorizontal: -16 }}
+      />
     </View>
   );
 });

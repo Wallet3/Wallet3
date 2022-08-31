@@ -333,7 +333,7 @@ PODS:
     - react-native-video/Video (= 5.2.0)
   - react-native-video/Video (5.2.0):
     - React-Core
-  - react-native-view-shot (3.3.0):
+  - react-native-view-shot (3.4.0):
     - React-Core
   - react-native-webview (11.23.0):
     - React-Core
@@ -448,7 +448,7 @@ PODS:
     - React-RCTImage
   - RNSharedElement (0.8.4):
     - React-Core
-  - RNSVG (12.4.4):
+  - RNSVG (13.1.0):
     - React-Core
   - SDWebImage (5.11.1):
     - SDWebImage/Core (= 5.11.1)
@@ -782,7 +782,7 @@ SPEC CHECKSUMS:
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: b456e1c40ec86f5593d58b275bd0e9603169daca
   react-native-video: a4c2635d0802f983594b7057e1bce8f442f0ad28
-  react-native-view-shot: da768466e1cd371de50a3a5c722d1e95456b5b2c
+  react-native-view-shot: a60a98a18c72bcaaaf2138f9aab960ae9b0d96c7
   react-native-webview: e771bc375f789ebfa02a26939a57dbc6fa897336
   React-perflogger: a18b4f0bd933b8b24ecf9f3c54f9bf65180f3fe6
   React-RCTActionSheet: 547fe42fdb4b6089598d79f8e1d855d7c23e2162
@@ -805,7 +805,7 @@ SPEC CHECKSUMS:
   RNReanimated: 5bdcbcc3a72aedeee7bb099604262403aa75a1e5
   RNScreens: 0df01424e9e0ed7827200d6ed1087ddd06c493f9
   RNSharedElement: eb7d506733952d58634f34c82ec17e82f557e377
-  RNSVG: ecd661f380a07ba690c9c5929c475a44f432d674
+  RNSVG: 1153e8eeb34c788841016c517dba9f57f20b762f
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   TcpSockets: 4ef55305239923b343ed0a378b1fac188b1373b0

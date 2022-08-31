@@ -9,6 +9,7 @@ import App from '../../viewmodels/App';
 import Avatar from '../../components/Avatar';
 import { Button } from '../../components';
 import Collapsible from 'react-native-collapsible';
+import CurveExchange from '../../viewmodels/defi/CurveExchange';
 import { NetworksMenu } from '../../modals';
 import { Portal } from 'react-native-portalize';
 import { TextInput } from 'react-native-gesture-handler';
@@ -87,7 +88,14 @@ export default observer(() => {
           <Ionicons name="arrow-down-outline" size={16} color={secondaryTextColor} />
         </TouchableOpacity>
       </View>
-      <TokenBox tokenAddress="" tokenSymbol="USDC" chainId={1} showTitle title="To (estimated)" />
+      <TokenBox
+        tokenAddress=""
+        tokenSymbol="USDC"
+        chainId={1}
+        showTitle
+        title="To (estimated)"
+        onTokenPress={() => openToModal()}
+      />
 
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 8, alignItems: 'center' }}>
         <Text style={{ color: secondaryTextColor, fontSize: 12, marginStart: 6 }}>1 ETH ≈ 10,000 USDC</Text>
@@ -165,7 +173,19 @@ export default observer(() => {
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
           <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
-            <TokenSelector tokens={currentAccount!.tokens.tokens} />
+            <TokenSelector tokens={CurveExchange.tokens} />
+          </SafeAreaProvider>
+        </Modalize>
+
+        <Modalize
+          ref={toSelectorRef}
+          adjustToContentHeight
+          disableScrollIfPossible
+          modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
+          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+        >
+          <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
+            <TokenSelector tokens={CurveExchange.tokens} />
           </SafeAreaProvider>
         </Modalize>
       </Portal>
