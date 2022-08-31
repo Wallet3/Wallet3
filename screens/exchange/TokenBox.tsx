@@ -16,7 +16,7 @@ interface Props {
   onTitlePress?: () => void;
   onTokenSelected: (toekn: IToken) => void;
   onChangeText?: ((text: string) => void) | undefined;
-  token: IToken;
+  token?: IToken;
   tokens: IToken[];
   chainId: number;
   value: string;
@@ -66,7 +66,7 @@ export default observer((props: Props) => {
             visible={visible}
             anchor={
               <TouchableOpacity onPress={showMenu}>
-                <TokenLabel address={props.token.address} symbol={props.token.symbol} showArrow />
+                {props.token && <TokenLabel address={props.token.address} symbol={props.token.symbol} showArrow />}
               </TouchableOpacity>
             }
             onRequestClose={hideMenu}

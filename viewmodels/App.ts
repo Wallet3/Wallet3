@@ -1,27 +1,25 @@
 import { action, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
 
-import { Account } from './account/Account';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import LINQ from 'linq';
+import { showMessage } from 'react-native-flash-message';
+import MessageKeys from '../common/MessageKeys';
+import i18n from '../i18n';
+import Database from '../models/Database';
+import Key from '../models/Key';
+import { Account } from './account/Account';
 import Authentication from './Authentication';
 import Bookmarks from './customs/Bookmarks';
-import Coingecko from '../common/apis/Coingecko';
 import Contacts from './customs/Contacts';
-import Database from '../models/Database';
-import GasPrice from './misc/GasPrice';
-import { InpageDAppController } from '../screens/browser/controller/InpageDAppController';
-import Key from '../models/Key';
-import LINQ from 'linq';
 import LinkHub from './hubs/LinkHub';
-import MessageKeys from '../common/MessageKeys';
-import MetamaskDAppsHub from './walletconnect/MetamaskDAppsHub';
+import TxHub from './hubs/TxHub';
+import GasPrice from './misc/GasPrice';
 import Networks from './Networks';
 import Theme from './settings/Theme';
-import TxHub from './hubs/TxHub';
 import UI from './settings/UI';
 import { Wallet } from './Wallet';
+import MetamaskDAppsHub from './walletconnect/MetamaskDAppsHub';
 import WalletConnectV1ClientHub from './walletconnect/WalletConnectV1ClientHub';
-import i18n from '../i18n';
-import { showMessage } from 'react-native-flash-message';
 
 export class AppVM {
   private lastRefreshedTime = 0;

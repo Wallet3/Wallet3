@@ -97,8 +97,7 @@ export class SwapVM {
   }
 
   init() {
-    this.forAmount = '';
-    this.fromAmount = '';
+    this.clean();
     this.selectFrom(this.fromList[0]);
     this.selectFor(this.forList[1]);
   }
@@ -168,7 +167,6 @@ export class SwapVM {
 
   async setFromAmount(value: string) {
     if (!this.from || !this.for) return;
-    console.log('setFromAmount', value);
 
     this.fromAmount = value;
     if (value) {
@@ -272,7 +270,6 @@ export class SwapVM {
     const rawTR = this.swapTx;
 
     const { wallet, accountIndex } = App.findWallet(this.accountAddress)!;
-    console.log('swap', rawTR.txRequest);
 
     const { txHex, error } = await wallet.signTx({
       accountIndex,
