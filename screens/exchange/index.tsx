@@ -1,21 +1,21 @@
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Keyboard, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Modalize, useModalize } from 'react-native-modalize';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import AccountSelector from '../../modals/dapp/AccountSelector';
 import App from '../../viewmodels/App';
 import Avatar from '../../components/Avatar';
 import { Button } from '../../components';
 import Collapsible from 'react-native-collapsible';
-import CurveExchange from '../../viewmodels/defi/CurveExchange';
 import { NetworksMenu } from '../../modals';
 import { Portal } from 'react-native-portalize';
 import { TextInput } from 'react-native-gesture-handler';
 import Theme from '../../viewmodels/settings/Theme';
 import TokenBox from './components/TokenBox';
 import TokenSelector from './components/TokenSelector';
+import VM from '../../viewmodels/defi/CurveExchange';
 import { generateNetworkIcon } from '../../assets/icons/networks/white';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -41,23 +41,35 @@ export default observer(() => {
     >
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 8, marginBottom: 10 }}>
         <TouchableOpacity
-          onPress={() => openNetworksModal()}
+          onPress={() => {
+            Keyboard.dismiss();
+            openNetworksModal();
+          }}
           style={{
             borderRadius: 6,
             padding: 3,
             paddingHorizontal: 6,
-            backgroundColor: tintColor,
+            backgroundColor: VM.userSelectedNetwork.color,
             flexDirection: 'row',
             alignItems: 'center',
           }}
         >
-          {generateNetworkIcon({ chainId: 1, hideEVMTitle: true, height: 14, width: 12, color: '#fff' })}
-          <Text style={{ color: 'white', fontSize: 12, marginStart: 5 }}>Ethereum</Text>
+          {generateNetworkIcon({
+            chainId: VM.userSelectedNetwork.chainId,
+            hideEVMTitle: true,
+            height: 14,
+            width: 12,
+            color: '#fff',
+          })}
+          <Text style={{ color: 'white', fontSize: 12, marginStart: 5 }}>{VM.userSelectedNetwork.network}</Text>
           <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 3 }} color={'#fff'} size={10} />
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => openAccountsModal()}
+          onPress={() => {
+            Keyboard.dismiss();
+            openAccountsModal();
+          }}
           style={{
             paddingHorizontal: 6,
             flexDirection: 'row',
@@ -134,14 +146,18 @@ export default observer(() => {
         </View>
       </Collapsible>
 
-      <Button title="Approve" />
+      <Button title="Approve" themeColor={VM.userSelectedNetwork.color} />
 
       <Portal>
         <Modalize ref={networksRef} adjustToContentHeight disableScrollIfPossible>
           <NetworksMenu
             title={t('modal-dapp-switch-network', { app: 'Exchange' })}
-            // selectedNetwork={appNetwork}
-            // onNetworkPress={(network) => updateDAppNetworkConfig(network)}
+            networks={VM.networks}
+            selectedNetwork={VM.userSelectedNetwork}
+            onNetworkPress={(network) => {
+              VM.switchNetwork(network);
+              closeNetworksModal();
+            }}
           />
         </Modalize>
 
@@ -173,7 +189,7 @@ export default observer(() => {
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
           <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
-            <TokenSelector tokens={CurveExchange.tokens} />
+            <TokenSelector tokens={VM.tokens} />
           </SafeAreaProvider>
         </Modalize>
 
@@ -185,7 +201,7 @@ export default observer(() => {
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
           <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
-            <TokenSelector tokens={CurveExchange.tokens} />
+            <TokenSelector tokens={VM.tokens} />
           </SafeAreaProvider>
         </Modalize>
       </Portal>
