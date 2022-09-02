@@ -79,7 +79,7 @@ const RootTab = observer(() => {
         name="Exchange"
         component={ExchangeScreen}
         options={{
-          tabBarLabel: t('home-tab-exchange'),
+          tabBarLabel: t('home-tab-swap'),
           headerShown: false,
         }}
       />

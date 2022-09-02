@@ -167,7 +167,7 @@ export default observer(() => {
       {Swap.approved && (
         <Button
           style={{ backgroundColor: Networks.current.color }}
-          title={t('home-tab-exchange')}
+          title={t('home-tab-swap')}
           disabled={!Swap.isValid || Swap.swapping}
           onPress={() => {
             openSwapModal();
