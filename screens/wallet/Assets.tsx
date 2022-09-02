@@ -61,7 +61,9 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
               ...(activeTab === 0 ? { ...styles.headerLabelActive, color: themeColor } : {}),
               paddingStart: 0,
             }}
-            onPress={() => swipeTo(0)}
+            onPress={() => {
+              swipeTo(0);
+            }}
           >
             {t('home-tabs-assets')}
           </Text>
@@ -72,7 +74,9 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
                 ...(activeTab === 1 ? { ...styles.headerLabelActive, color: themeColor } : {}),
                 paddingHorizontal: 0,
               }}
-              onPress={() => swipeTo(2)}
+              onPress={() => {
+                swipeTo(1);
+              }}
             >
               {TxHub.pendingCount > 0 ? `${t('home-tabs-history')} (${TxHub.pendingCount}` : t('home-tabs-history')}
             </Text>
@@ -118,7 +122,9 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
         showsButtons={false}
         containerStyle={{ marginHorizontal: -16, paddingHorizontal: 0 }}
         style={{}}
-        onIndexChanged={(i) => setActiveTab(i)}
+        onIndexChanged={(i) => {
+          setActiveTab(i);
+        }}
       >
         <ERC20Tokens
           tokens={tokens}
