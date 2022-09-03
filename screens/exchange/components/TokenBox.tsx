@@ -16,13 +16,14 @@ interface Props {
   tokenAddress: string;
   tokenSymbol: string;
   chainId: number;
+  onTextInputChanged?: (text: string) => void;
 }
 
 export default observer((props: Props) => {
   const { borderColor, textColor, secondaryTextColor } = Theme;
 
   return (
-    <View style={{ borderWidth: 1, borderRadius: 10, borderColor, padding: 8, paddingHorizontal: 16 }}>
+    <View style={{ borderWidth: 1, borderRadius: 10, borderColor, padding: 8, paddingHorizontal: 16, paddingBottom: 6 }}>
       {props.showTitle ? (
         <TouchableOpacity
           style={{ flexDirection: 'row', paddingBottom: 6 }}
@@ -37,7 +38,7 @@ export default observer((props: Props) => {
         <TextInput style={{ flex: 1, fontSize: 22 }} keyboardType="decimal-pad" placeholder="0.00" />
 
         <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginStart: 12 }} onPress={props.onTokenPress}>
-          <Coin address={props.tokenAddress} symbol={props.tokenSymbol} chainId={props.chainId} size={25} />
+          <Coin forceRefresh address={props.tokenAddress} symbol={props.tokenSymbol} chainId={props.chainId} size={25} />
           <Text style={{ fontSize: 20, marginStart: 10, fontWeight: '500', color: textColor }}>{props.tokenSymbol}</Text>
           <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 4 }} color={textColor} size={16} />
         </TouchableOpacity>

@@ -34,10 +34,13 @@ export default observer((props: Props) => {
           style={{ marginEnd: 12 }}
           iconUrl={item.iconUrl}
         />
-        <Text style={{ fontSize: 19, color: textColor, textTransform: 'uppercase' }} numberOfLines={1}>
+        <Text style={{ fontSize: 19, color: textColor }} numberOfLines={1}>
           {item.symbol}
         </Text>
+
         <View style={{ flex: 1 }} />
+
+        <Text style={{ fontSize: 19, color: secondaryTextColor }}>{item.amount}</Text>
       </TouchableOpacity>
     );
   };
@@ -53,7 +56,7 @@ export default observer((props: Props) => {
         data={props.tokens}
         renderItem={renderItem}
         contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 24 }}
-        style={{ marginHorizontal: -16 }}
+        style={{ marginHorizontal: -16, height: 420 }}
       />
     </View>
   );

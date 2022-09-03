@@ -11,6 +11,7 @@ import { Button } from '../../components';
 import Collapsible from 'react-native-collapsible';
 import { NetworksMenu } from '../../modals';
 import { Portal } from 'react-native-portalize';
+import { ReactiveScreen } from '../../utils/device';
 import { TextInput } from 'react-native-gesture-handler';
 import Theme from '../../viewmodels/settings/Theme';
 import TokenBox from './components/TokenBox';
@@ -32,6 +33,10 @@ export default observer(() => {
   const { ref: toSelectorRef, open: openToModal } = useModalize();
 
   const [advanced, setAdvanced] = useState(false);
+
+  useEffect(() => {
+    VM.init();
+  }, []);
 
   return (
     <ScrollView
@@ -86,11 +91,11 @@ export default observer(() => {
         </TouchableOpacity>
       </View>
       <TokenBox
-        tokenAddress=""
-        tokenSymbol="ETH"
-        chainId={1}
+        tokenAddress={VM.swapFrom?.address || ''}
+        tokenSymbol={VM.swapFrom?.symbol || ''}
+        chainId={VM.userSelectedNetwork.chainId}
         showTitle
-        title="Max: 2.40"
+        title={`Balance: ${VM.swapFrom?.amount}`}
         titleTouchable
         onTitlePress={() => alert('abc')}
         onTokenPress={() => openFromModal()}
@@ -101,9 +106,9 @@ export default observer(() => {
         </TouchableOpacity>
       </View>
       <TokenBox
-        tokenAddress=""
-        tokenSymbol="USDC"
-        chainId={1}
+        tokenAddress={VM.swapTo?.address || ''}
+        tokenSymbol={VM.swapTo?.symbol || ''}
+        chainId={VM.userSelectedNetwork.chainId}
         showTitle
         title="To (estimated)"
         onTokenPress={() => openToModal()}
@@ -148,6 +153,12 @@ export default observer(() => {
 
       <Button title="Approve" themeColor={VM.userSelectedNetwork.color} />
 
+      <View style={{ flex: 1, minHeight: 250 }} />
+
+      <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+        <Text style={{ color: secondaryTextColor }}>Powered by</Text>
+      </View>
+
       <Portal>
         <Modalize ref={networksRef} adjustToContentHeight disableScrollIfPossible>
           <NetworksMenu
@@ -175,7 +186,7 @@ export default observer(() => {
               selectedAccounts={[currentAccount?.address || '']}
               style={{ padding: 16, height: 430 }}
               expanded
-              // themeColor={appNetwork?.color}
+              themeColor={VM.userSelectedNetwork.color}
               onDone={([account]) => {}}
             />
           </SafeAreaProvider>
@@ -188,7 +199,7 @@ export default observer(() => {
           modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
+          <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6, height: '100%' }}>
             <TokenSelector tokens={VM.tokens} />
           </SafeAreaProvider>
         </Modalize>

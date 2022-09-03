@@ -150,4 +150,8 @@ export class ERC20Token {
   encodeApproveData(spender: string, amount: BigNumberish) {
     return this.interface.encodeFunctionData('approve', [spender, amount]);
   }
+
+  setOwner(owner: string) {
+    this.owner = owner;
+  }
 }
