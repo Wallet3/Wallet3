@@ -1,4 +1,10 @@
 import {
+  AVAX_DAI_e,
+  AVAX_USDC,
+  AVAX_USDC_e,
+  AVAX_USDt,
+  AVAX_WETH_e,
+  AVAX_YUSD,
   CRV,
   CVX,
   DAI,
@@ -18,6 +24,8 @@ import {
   sETH,
   sUSD,
   stETH,
+  xDAI_USDC,
+  xDAI_USDT,
 } from '../../common/tokens';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
@@ -39,7 +47,7 @@ const SupportedChains: { [key: number]: { router: string; defaultTokens: IToken[
 
   100: {
     router: '',
-    defaultTokens: [],
+    defaultTokens: [xDAI_USDC, xDAI_USDT],
   },
 
   137: {
@@ -49,7 +57,7 @@ const SupportedChains: { [key: number]: { router: string; defaultTokens: IToken[
 
   43114: {
     router: '',
-    defaultTokens: [],
+    defaultTokens: [AVAX_WETH_e, AVAX_USDC, AVAX_USDt, AVAX_YUSD, AVAX_DAI_e, AVAX_USDC_e],
   },
 };
 
@@ -80,6 +88,8 @@ export class CurveExchange {
       account: observable,
       switchNetwork: action,
       switchAccount: action,
+      switchSwapFrom: action,
+      switchSwapTo: action,
     });
   }
 
@@ -107,12 +117,12 @@ export class CurveExchange {
     curve.init('JsonRpc', { url: getRPCUrls(network.chainId)[0] }, { chainId: network.chainId });
 
     const saved: IToken[] = JSON.parse((await AsyncStorage.getItem(Keys.userCustomizedTokens(network.chainId))) || '[]');
-    const tokens = [
-      new NativeToken({ owner: this.account.address, chainId: network.chainId, symbol: network.symbol }),
-      ...(saved.length > 0 ? saved : SupportedChains[network.chainId].defaultTokens).map(
-        (t) => new ERC20Token({ owner: this.account.address, contract: t.address, symbol: t.symbol, chainId: network.chainId })
-      ),
-    ];
+    const nativeToken = new NativeToken({ owner: this.account.address, chainId: network.chainId, symbol: network.symbol });
+    const userTokens = (saved.length > 0 ? saved : SupportedChains[network.chainId].defaultTokens).map(
+      (t) => new ERC20Token({ owner: this.account.address, contract: t.address, symbol: t.symbol, chainId: network.chainId })
+    );
+
+    const tokens = network.chainId === 1 ? [nativeToken, ...userTokens] : userTokens;
 
     const swapFromAddress = await AsyncStorage.getItem(Keys.userSelectedFromToken(network.chainId));
     const swapToAddress = await AsyncStorage.getItem(Keys.userSelectedToToken(network.chainId));
@@ -125,6 +135,16 @@ export class CurveExchange {
 
       this.swapFrom.getBalance();
     });
+  }
+
+  switchSwapFrom(token: ERC20Token | NativeToken) {
+    this.swapFrom = token;
+    AsyncStorage.setItem(Keys.userSelectedFromToken(this.userSelectedNetwork.chainId), token.address);
+  }
+
+  switchSwapTo(token: ERC20Token | NativeToken) {
+    this.swapTo = token;
+    AsyncStorage.setItem(Keys.userSelectedToToken(this.userSelectedNetwork.chainId), token.address);
   }
 
   calcExchangeRate() {

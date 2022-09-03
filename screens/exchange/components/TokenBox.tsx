@@ -38,7 +38,9 @@ export default observer((props: Props) => {
         <TextInput style={{ flex: 1, fontSize: 22 }} keyboardType="decimal-pad" placeholder="0.00" />
 
         <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginStart: 12 }} onPress={props.onTokenPress}>
-          <Coin forceRefresh address={props.tokenAddress} symbol={props.tokenSymbol} chainId={props.chainId} size={25} />
+          {props.tokenAddress === undefined ? undefined : (
+            <Coin address={props.tokenAddress} symbol={props.tokenSymbol} chainId={props.chainId} size={25} forceRefresh />
+          )}
           <Text style={{ fontSize: 20, marginStart: 10, fontWeight: '500', color: textColor }}>{props.tokenSymbol}</Text>
           <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 4 }} color={textColor} size={16} />
         </TouchableOpacity>

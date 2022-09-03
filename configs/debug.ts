@@ -10,5 +10,6 @@ LogBox.ignoreLogs([
   'source.uri should not be an empty string',
   'check out new Gestures system',
   'Could not find image file',
-  'react-native-view-shot: NativeModules.RNViewShot is undefined.'
+  'react-native-view-shot: NativeModules.RNViewShot is undefined.',
+  'Require cycle:'
 ]);

@@ -20,11 +20,17 @@ interface CoinProps extends FastImageProps {
 
 export default observer((props: CoinProps) => {
   const [network] = useState(Networks.find(props.chainId));
-  const [logoUrl] = useState(
-    `https://github.com/trustwallet/assets/raw/master/blockchains/${
-      (network?.github_dir || network?.network)?.toLowerCase() ?? 'ethereum'
-    }/assets/${props.address}/logo.png`
-  );
+  const [logoUrl] = props.forceRefresh
+    ? [
+        `https://github.com/trustwallet/assets/raw/master/blockchains/${
+          (network?.github_dir || network?.network)?.toLowerCase() ?? 'ethereum'
+        }/assets/${props.address}/logo.png`,
+      ]
+    : useState(
+        `https://github.com/trustwallet/assets/raw/master/blockchains/${
+          (network?.github_dir || network?.network)?.toLowerCase() ?? 'ethereum'
+        }/assets/${props.address}/logo.png`
+      );
 
   let symbol = props.symbol?.toLowerCase() ?? '';
   symbol = symbol.endsWith('.e') ? symbol.substring(0, symbol.length - 2) : symbol; // Avax
@@ -56,8 +62,8 @@ export default observer((props: CoinProps) => {
       {...props}
       source={source}
       defaultSource={icons['_coin']}
-      onError={() => setFailedSource(icons['_coin'])}
       style={style}
+      onError={() => setFailedSource(icons['_coin'])}
     />
   );
 });

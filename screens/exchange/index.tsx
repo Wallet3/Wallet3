@@ -29,8 +29,8 @@ export default observer(() => {
 
   const { ref: networksRef, open: openNetworksModal, close: closeNetworksModal } = useModalize();
   const { ref: accountsRef, open: openAccountsModal, close: closeAccountsModal } = useModalize();
-  const { ref: fromSelectorRef, open: openFromModal } = useModalize();
-  const { ref: toSelectorRef, open: openToModal } = useModalize();
+  const { ref: fromSelectorRef, open: openFromModal, close: closeFromTokens } = useModalize();
+  const { ref: toSelectorRef, open: openToModal, close: closeToTokens } = useModalize();
 
   const [advanced, setAdvanced] = useState(false);
 
@@ -91,7 +91,7 @@ export default observer(() => {
         </TouchableOpacity>
       </View>
       <TokenBox
-        tokenAddress={VM.swapFrom?.address || ''}
+        tokenAddress={VM.swapFrom?.address!}
         tokenSymbol={VM.swapFrom?.symbol || ''}
         chainId={VM.userSelectedNetwork.chainId}
         showTitle
@@ -106,7 +106,7 @@ export default observer(() => {
         </TouchableOpacity>
       </View>
       <TokenBox
-        tokenAddress={VM.swapTo?.address || ''}
+        tokenAddress={VM.swapTo?.address!}
         tokenSymbol={VM.swapTo?.symbol || ''}
         chainId={VM.userSelectedNetwork.chainId}
         showTitle
@@ -123,7 +123,7 @@ export default observer(() => {
       </View>
 
       <Collapsible collapsed={!advanced} style={{ paddingBottom: 32 }}>
-        <Text style={{ color: textColor }}>Slippage tolerance:</Text>
+        <Text style={{ color: textColor, marginStart: 6 }}>Slippage tolerance:</Text>
         <View style={{ flexDirection: 'row', marginTop: 12 }}>
           <TouchableOpacity style={{ ...styles.slippage }}>
             <Text style={{ color: secondaryTextColor }}>0.5 %</Text>
@@ -200,7 +200,13 @@ export default observer(() => {
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
           <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6, height: '100%' }}>
-            <TokenSelector tokens={VM.tokens} />
+            <TokenSelector
+              tokens={VM.tokens}
+              onTokenSelected={(t) => {
+                VM.switchSwapFrom(t as any);
+                closeFromTokens();
+              }}
+            />
           </SafeAreaProvider>
         </Modalize>
 
@@ -212,7 +218,13 @@ export default observer(() => {
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
           <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
-            <TokenSelector tokens={VM.tokens} />
+            <TokenSelector
+              tokens={VM.tokens}
+              onTokenSelected={(t) => {
+                VM.switchSwapTo(t as any);
+                closeToTokens();
+              }}
+            />
           </SafeAreaProvider>
         </Modalize>
       </Portal>
