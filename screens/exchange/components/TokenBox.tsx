@@ -1,8 +1,8 @@
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import React, { useRef, useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { Coin } from '../../../components';
-import React from 'react';
 import Theme from '../../../viewmodels/settings/Theme';
 import { observer } from 'mobx-react-lite';
 
@@ -11,23 +11,32 @@ interface Props {
   showTitle?: boolean;
   title?: string;
   titleTouchable?: boolean;
-  onTitlePress?: () => void;
+  onTitlePress?: () => string;
   onTokenPress?: () => void;
   tokenAddress: string;
   tokenSymbol: string;
   chainId: number;
+  editable?: boolean;
+  textValue?: string;
   onTextInputChanged?: (text: string) => void;
 }
 
 export default observer((props: Props) => {
   const { borderColor, textColor, secondaryTextColor } = Theme;
+  const [textInputValue, setTextInputValue] = useState('');
+  const textRef = useRef<TextInput>(null);
+
+  const onTitlePress = () => {
+    const amount = props.onTitlePress?.() || '';
+    setTextInputValue(amount);
+  };
 
   return (
-    <View style={{ borderWidth: 1, borderRadius: 10, borderColor, padding: 8, paddingHorizontal: 16, paddingBottom: 6 }}>
+    <View style={{ borderWidth: 1, borderRadius: 10, borderColor, padding: 8, paddingHorizontal: 16, paddingBottom: 7 }}>
       {props.showTitle ? (
         <TouchableOpacity
           style={{ flexDirection: 'row', paddingBottom: 6 }}
-          onPress={props.onTitlePress}
+          onPress={onTitlePress}
           disabled={!props.titleTouchable}
         >
           <Text style={{ fontSize: 12, color: secondaryTextColor }}>{props?.title}</Text>
@@ -35,7 +44,18 @@ export default observer((props: Props) => {
       ) : undefined}
 
       <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 4 }}>
-        <TextInput style={{ flex: 1, fontSize: 22 }} keyboardType="decimal-pad" placeholder="0.00" />
+        <TextInput
+          ref={textRef}
+          editable={props.editable}
+          style={{ flex: 1, fontSize: 22, color: textColor }}
+          keyboardType="decimal-pad"
+          placeholder="0.00"
+          value={props.textValue ?? textInputValue}
+          onChangeText={(t) => {
+            setTextInputValue(t);
+            props?.onTextInputChanged?.(t);
+          }}
+        />
 
         <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginStart: 12 }} onPress={props.onTokenPress}>
           {props.tokenAddress === undefined ? undefined : (

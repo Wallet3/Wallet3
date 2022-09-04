@@ -4,10 +4,12 @@ import { FlatList, ListRenderItemInfo, Text, TouchableOpacity, View } from 'reac
 import { IToken } from '../../../common/tokens';
 import React from 'react';
 import Theme from '../../../viewmodels/settings/Theme';
+import { formatCurrency } from '../../../utils/formatter';
 import { observer } from 'mobx-react-lite';
 
 interface Props {
   tokens: IToken[];
+  selectedToken?: IToken;
   onTokenSelected?: (token: IToken) => void;
 }
 
@@ -24,6 +26,7 @@ export default observer((props: Props) => {
           margin: 0,
           padding: 8,
           paddingVertical: 12,
+          opacity: props.selectedToken?.address === item.address ? 0.25 : 1,
         }}
       >
         <Coin
@@ -40,7 +43,7 @@ export default observer((props: Props) => {
 
         <View style={{ flex: 1 }} />
 
-        <Text style={{ fontSize: 19, color: secondaryTextColor }}>{item.amount}</Text>
+        <Text style={{ fontSize: 19, color: secondaryTextColor }}>{formatCurrency(item.amount || 0, '')}</Text>
       </TouchableOpacity>
     );
   };
@@ -50,7 +53,7 @@ export default observer((props: Props) => {
       <TextBox style={{ marginBottom: 16 }} onChangeText={(t) => {}} />
 
       <Text style={{ marginBottom: 4, color: secondaryTextColor, paddingHorizontal: 8 }}>Tokens</Text>
-      <Separator />
+      <Separator style={{ borderColor }} />
 
       <FlatList
         data={props.tokens}

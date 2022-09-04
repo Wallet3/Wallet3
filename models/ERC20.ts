@@ -14,6 +14,7 @@ export class ERC20Token {
   readonly erc20: ethers.Contract;
   readonly chainId: number;
   private call_balanceOfOwner = '';
+  private allowanceMap = new Map<string, BigNumber>();
 
   name = '';
   symbol = '';
@@ -88,8 +89,15 @@ export class ERC20Token {
     return balance;
   }
 
-  allowance(owner: string, spender: string): Promise<BigNumber> {
-    return this.erc20.allowance(owner, spender);
+  async allowance(owner: string, spender: string): Promise<BigNumber> {
+    const cache = this.allowanceMap.get(`${owner}-${spender}`);
+    if (cache) return cache;
+
+    const data = this.erc20.interface.encodeFunctionData('allowance', [owner, spender]);
+    const approved = BigNumber.from((await eth_call(this.chainId, { to: this.address, data })) || '0');
+
+    this.allowanceMap.set(`${owner}-${spender}`, approved);
+    return approved;
   }
 
   async getName(): Promise<string> {
@@ -125,14 +133,6 @@ export class ERC20Token {
 
     runInAction(() => (this.symbol = symbol));
     return symbol;
-  }
-
-  get filters() {
-    return this.erc20.filters;
-  }
-
-  on(filter: string | ethers.EventFilter, listener: ethers.providers.Listener) {
-    this.erc20.on(filter, listener);
   }
 
   async estimateGas(to: string, amt: BigNumberish = BigNumber.from(0)) {

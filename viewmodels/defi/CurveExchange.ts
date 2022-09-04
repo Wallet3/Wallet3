@@ -45,14 +45,14 @@ const SupportedChains: { [key: number]: { router: string; defaultTokens: IToken[
     defaultTokens: [DAI, USDC, USDT, sUSD, CRV, CVX, sETH, stETH, renBTC, WBTC, MIM, FRAX, YFI, STG],
   },
 
-  100: {
-    router: '',
-    defaultTokens: [xDAI_USDC, xDAI_USDT],
-  },
-
   137: {
     router: '',
     defaultTokens: [MATIC_DAI, MATIC_USDC, MATIC_USDT],
+  },
+
+  100: {
+    router: '',
+    defaultTokens: [xDAI_USDC, xDAI_USDT],
   },
 
   43114: {
@@ -70,6 +70,8 @@ const Keys = {
 };
 
 export class CurveExchange {
+  private calcExchangeRateTimer?: NodeJS.Timer;
+
   networks = Object.getOwnPropertyNames(SupportedChains).map((id) => Networks.find(id)!);
   userSelectedNetwork = Networks.Ethereum;
   account = App.currentAccount!;
@@ -77,6 +79,16 @@ export class CurveExchange {
   tokens: (NativeToken | ERC20Token)[] = [];
   swapFrom: (NativeToken | ERC20Token) | null = null;
   swapTo: (NativeToken | ERC20Token) | null = null;
+  swapFromAmount = '';
+  swapToAmount: string | null = null;
+  calculating = false;
+  checkingApproval = false;
+  exchangeRate = 0;
+  needApproval = true;
+
+  protected get chain() {
+    return SupportedChains[this.userSelectedNetwork.chainId];
+  }
 
   constructor() {
     makeObservable(this, {
@@ -86,10 +98,18 @@ export class CurveExchange {
       swapFrom: observable,
       swapTo: observable,
       account: observable,
+      swapFromAmount: observable,
+      swapToAmount: observable,
+      exchangeRate: observable,
+      calculating: observable,
+      checkingApproval: observable,
+      needApproval: observable,
+
       switchNetwork: action,
       switchAccount: action,
       switchSwapFrom: action,
       switchSwapTo: action,
+      setSwapAmount: action,
     });
   }
 
@@ -118,7 +138,7 @@ export class CurveExchange {
 
     const saved: IToken[] = JSON.parse((await AsyncStorage.getItem(Keys.userCustomizedTokens(network.chainId))) || '[]');
     const nativeToken = new NativeToken({ owner: this.account.address, chainId: network.chainId, symbol: network.symbol });
-    const userTokens = (saved.length > 0 ? saved : SupportedChains[network.chainId].defaultTokens).map(
+    const userTokens = (saved.length > 0 ? saved : this.chain.defaultTokens).map(
       (t) => new ERC20Token({ owner: this.account.address, contract: t.address, symbol: t.symbol, chainId: network.chainId })
     );
 
@@ -130,40 +150,89 @@ export class CurveExchange {
     runInAction(() => {
       this.tokens = tokens;
 
-      this.swapFrom = tokens.find((t) => t.address === swapFromAddress) || tokens[0];
-      this.swapTo = tokens.find((t) => t.address === swapToAddress) || tokens[1];
+      this.switchSwapFrom(tokens.find((t) => t.address === swapFromAddress) || tokens[0], false);
+      this.switchSwapTo(tokens.find((t) => t.address === swapToAddress) || tokens[1], false);
 
-      this.swapFrom.getBalance();
+      this.swapFrom?.getBalance();
     });
   }
 
-  switchSwapFrom(token: ERC20Token | NativeToken) {
+  switchSwapFrom(token: ERC20Token | NativeToken, checkToken = true) {
+    if (checkToken && token.address === this.swapTo?.address) {
+      this.switchSwapTo(this.swapFrom!, false);
+    }
+
     this.swapFrom = token;
+    this.swapFrom.getBalance();
+    this.exchangeRate = 0;
+    this.checkingApproval = true;
+
+    if (token.address) {
+      (token as ERC20Token).allowance(this.account.address, this.chain.router);
+    } else {
+      this.checkingApproval = false;
+      this.needApproval = false;
+    }
+
+    this.setSwapAmount(this.swapFromAmount);
     AsyncStorage.setItem(Keys.userSelectedFromToken(this.userSelectedNetwork.chainId), token.address);
   }
 
-  switchSwapTo(token: ERC20Token | NativeToken) {
+  switchSwapTo(token: ERC20Token | NativeToken, checkToken = true) {
+    if (checkToken && token.address === this.swapFrom?.address) {
+      this.switchSwapFrom(this.swapTo!, false);
+    }
+
     this.swapTo = token;
+    this.exchangeRate = 0;
+
+    this.setSwapAmount(this.swapFromAmount);
     AsyncStorage.setItem(Keys.userSelectedToToken(this.userSelectedNetwork.chainId), token.address);
   }
 
-  calcExchangeRate() {
-    // curve.init('JsonRpc', { url: getRPCUrls(1)[0] }, { chainId: 1 }).then(async () => {
-    //   const r = await curve.router.getBestRouteAndOutput(
-    //     '0x6B175474E89094C44Da98b954EedeAC495271d0F',
-    //     '0xD533a949740bb3306d119CC777fa900bA034cd52',
-    //     '1000'
-    //   );
-    //   console.log(r);
-    //   await curve.init('JsonRpc', { url: getRPCUrls(137)[0] }, { chainId: 137 });
-    //   console.log(
-    //     await curve.router.getBestRouteAndOutput(
-    //       '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
-    //       '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
-    //       '2'
-    //     )
-    //   );
-    // });
+  setSwapAmount(amount: string) {
+    this.swapFromAmount = amount;
+    this.exchangeRate = 0;
+    clearTimeout(this.calcExchangeRateTimer);
+
+    if (!amount) {
+      this.swapToAmount = '';
+      return;
+    }
+
+    this.calculating = true;
+    this.calcExchangeRateTimer = setTimeout(() => this.calcExchangeRate(), 500);
+  }
+
+  async calcExchangeRate() {
+    runInAction(() => (this.calculating = true));
+
+    if (this.swapFrom?.address) {
+      const approved = await (this.swapFrom as ERC20Token)?.allowance(this.account.address, this.chain.router);
+      runInAction(() => (this.needApproval = approved.lt(this.swapFromAmount)));
+    }
+
+    try {
+      const { route, output } = await curve.router.getBestRouteAndOutput(
+        this.swapFrom!.address || ETH.address,
+        this.swapTo!.address || ETH.address,
+        this.swapFromAmount
+      );
+      console.log(route, output);
+
+      runInAction(() => {
+        this.swapToAmount = output;
+        this.exchangeRate = Number(output) / Number(this.swapFromAmount);
+      });
+    } catch (e) {
+      runInAction(() => {
+        this.swapToAmount = '';
+        this.exchangeRate = 0;
+        console.log(e);
+      });
+    }
+
+    runInAction(() => (this.calculating = false));
   }
 }
 
