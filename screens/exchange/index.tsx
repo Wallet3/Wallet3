@@ -98,7 +98,7 @@ export default observer(() => {
         token={Swap.from}
         chainId={Networks.current.chainId}
         showTitle
-        title={`Max: ${utils.formatUnits(Swap.max, Swap.from?.decimals || 0)}`}
+        title={`${t('max')}: ${utils.formatUnits(Swap.max, Swap.from?.decimals || 0)}`}
         titleTouchable
         onTitlePress={() => {
           const value = utils.formatUnits(Swap.max, Swap.from?.decimals);
@@ -123,7 +123,7 @@ export default observer(() => {
         token={Swap.for}
         chainId={Networks.current.chainId}
         showTitle
-        title="To (estimated)"
+        title={t('To (estimated)')}
       />
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 8, alignItems: 'center' }}>
         <Text style={{ color: secondaryTextColor, fontSize: 12, marginStart: 6 }}>
@@ -135,18 +135,18 @@ export default observer(() => {
         </TouchableOpacity>
       </View>
       <Collapsible collapsed={!advanced} style={{ paddingBottom: 32 }}>
-        <Text style={{ color: textColor }}>Slippage tolerance:</Text>
+        <Text style={{ color: textColor }}>{t('slippage-tolerance')}:</Text>
         <View style={{ flexDirection: 'row', marginTop: 12 }}>
           <TouchableOpacity onPress={() => Swap.setSlippage(0.5)} style={{ ...innerStyles.slippage }}>
-            <Text style={{ color: secondaryTextColor }}>0.5 %</Text>
+            <Text style={{ color: Swap.slippage === 0.5 ? Networks.current.color : secondaryTextColor }}>0.5 %</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => Swap.setSlippage(1)} style={{ ...innerStyles.slippage }}>
-            <Text style={{ color: secondaryTextColor }}>1 %</Text>
+            <Text style={{ color: Swap.slippage === 1 ? Networks.current.color : secondaryTextColor }}>1 %</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => Swap.setSlippage(2)} style={{ ...innerStyles.slippage }}>
-            <Text style={{ color: secondaryTextColor }}>2 %</Text>
+            <Text style={{ color: Swap.slippage === 2 ? Networks.current.color : secondaryTextColor }}>2 %</Text>
           </TouchableOpacity>
         </View>
       </Collapsible>
@@ -155,7 +155,12 @@ export default observer(() => {
         <Button
           style={{ backgroundColor: Networks.current.color }}
           title={t('tx-type-approve')}
-          disabled={!Swap.fromAmount || Swap.approving || Swap.fromList.length === 0}
+          disabled={
+            !Swap.fromAmount ||
+            Swap.approving ||
+            Swap.fromList.length === 0 ||
+            currentAccount?.nativeToken.balance.lt(Swap.approveTx.gasLimit)
+          }
           onPress={() => {
             openSwapModal();
             setProcess('approve');

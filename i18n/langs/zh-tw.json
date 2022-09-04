@@ -1,4 +1,5 @@
 {
+  "max": "最大",
   "land-welcome-import-wallet": "導入錢包",
   "land-welcome-create-wallet": "創建錢包",
   "land-welcome-i-agree-to": "我已閱讀並同意",
@@ -265,5 +266,7 @@
   "button-remove": "移除",
   "button-close-all": "全部關閉",
   "button-share": "分享",
-  "slippage": "滑点"
+  "slippage": "滑点",
+  "slippage-tolerance": "滑点容忍度",
+  "To (estimated)": "至（估計）"
 }

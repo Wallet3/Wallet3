@@ -1,4 +1,5 @@
 {
+  "max": "上限",
   "land-welcome-import-wallet": "ウォレットのインポート",
   "land-welcome-create-wallet": "ウォレットの新規作成",
   "land-welcome-i-agree-to": "確認しました",
@@ -266,5 +267,7 @@
   "button-remove": "削除",
   "button-close-all": "全て閉じる",
   "button-share": "共有",
-  "slippage": "Slippage"
+  "slippage": "スリッページ",
+  "slippage-tolerance": "スリッページ許容量",
+  "To (estimated)": "まで（推定）"
 }

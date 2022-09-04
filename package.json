@@ -6,7 +6,7 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "postinstall": "node_modules/.bin/rn-nodeify --install crypto,buffer,react-native-randombytes,vm,stream,http,https,os,url,net,process --hack",
-    "clean": "rm -rf node_modules .expo ios/Pods ios/Podfile.lock && yarn"
+    "clean": "rm -rf node_modules .expo ios/Pods ios/Podfile.lock android/.gradle android/build android/app/build && yarn"
   },
   "dependencies": {
     "@ethersproject/shims": "^5.7.0",

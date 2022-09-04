@@ -49,7 +49,6 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, onDecodedFuncP
   const reviewItemStyle = { ...styles.reviewItem, borderColor };
   const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
   const reviewItemValueStyle = { ...styles.reviewItemValue, color: textColor };
-  console.log('TxReview: ', vm.txException, vm.isValidParams, vm.type);
 
   return (
     <SafeViewContainer>

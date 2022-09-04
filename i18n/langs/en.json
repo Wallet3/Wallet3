@@ -1,4 +1,5 @@
 {
+  "max": "Max",
   "land-welcome-import-wallet": "Import a wallet",
   "land-welcome-create-wallet": "Create a wallet",
   "land-welcome-i-agree-to": "I have read and agree to the",
@@ -270,5 +271,7 @@
   "button-remove": "Remove",
   "button-close-all": "Close All",
   "button-share": "Share",
-  "slippage": "Slippage"
+  "slippage": "Slippage",
+  "slippage-tolerance": "Slippage tolerance",
+  "To (estimated)": "To (estimated)"
 }
