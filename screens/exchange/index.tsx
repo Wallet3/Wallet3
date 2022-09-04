@@ -171,7 +171,12 @@ export default observer(() => {
       </Collapsible>
 
       {VM.needApproval ? (
-        <Button title="Approve" themeColor={VM.userSelectedNetwork.color} disabled={VM.checkingApproval} />
+        <Button
+          title="Approve"
+          themeColor={VM.userSelectedNetwork.color}
+          disabled={!VM.swapFromAmount || VM.checkingApproval}
+          onPress={() => VM.approve()}
+        />
       ) : (
         <Button
           title="Swap"

@@ -28,14 +28,17 @@ import {
   xDAI_USDT,
 } from '../../common/tokens';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { providers, utils } from 'ethers';
 
 import { Account } from '../account/Account';
 import App from '../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ERC20Token } from '../../models/ERC20';
 import { INetwork } from '../../common/Networks';
+import MessageKeys from '../../common/MessageKeys';
 import { NativeToken } from '../../models/NativeToken';
 import Networks from '../Networks';
+import { ReadableInfo } from '../../models/Transaction';
 import curve from '@curvefi/api';
 import { getRPCUrls } from '../../common/RPC';
 
@@ -46,17 +49,17 @@ const SupportedChains: { [key: number]: { router: string; defaultTokens: IToken[
   },
 
   137: {
-    router: '',
+    router: '0xF52e46bEE287aAef56Fb2F8af961d9f1406cF476',
     defaultTokens: [MATIC_DAI, MATIC_USDC, MATIC_USDT],
   },
 
   100: {
-    router: '',
+    router: '0xcF897d9C8F9174F08f30084220683948B105D1B1',
     defaultTokens: [xDAI_USDC, xDAI_USDT],
   },
 
   43114: {
-    router: '',
+    router: '0xFE90eb3FbCddacD248fAFEFb9eAa24F5eF095778',
     defaultTokens: [AVAX_WETH_e, AVAX_USDC, AVAX_USDt, AVAX_YUSD, AVAX_DAI_e, AVAX_USDC_e],
   },
 };
@@ -139,7 +142,14 @@ export class CurveExchange {
     const saved: IToken[] = JSON.parse((await AsyncStorage.getItem(Keys.userCustomizedTokens(network.chainId))) || '[]');
     const nativeToken = new NativeToken({ owner: this.account.address, chainId: network.chainId, symbol: network.symbol });
     const userTokens = (saved.length > 0 ? saved : this.chain.defaultTokens).map(
-      (t) => new ERC20Token({ owner: this.account.address, contract: t.address, symbol: t.symbol, chainId: network.chainId })
+      (t) =>
+        new ERC20Token({
+          owner: this.account.address,
+          contract: t.address,
+          symbol: t.symbol,
+          chainId: network.chainId,
+          decimals: t.decimals,
+        })
     );
 
     const tokens = network.chainId === 1 ? [nativeToken, ...userTokens] : userTokens;
@@ -195,6 +205,13 @@ export class CurveExchange {
   }
 
   setSwapAmount(amount: string) {
+    if (!Number(amount)) {
+      this.swapFromAmount = '';
+      this.swapToAmount = '';
+      this.exchangeRate = 0;
+      return;
+    }
+
     this.swapFromAmount = amount;
     this.exchangeRate = 0;
     clearTimeout(this.calcExchangeRateTimer);
@@ -225,7 +242,6 @@ export class CurveExchange {
         this.swapTo!.address || ETH.address,
         this.swapFromAmount
       );
-      console.log(route, output);
 
       runInAction(() => {
         this.swapToAmount = output;
@@ -235,12 +251,41 @@ export class CurveExchange {
       runInAction(() => {
         this.swapToAmount = '';
         this.exchangeRate = 0;
-        console.log(e);
       });
     }
 
     runInAction(() => (this.calculating = false));
   }
+
+  approve() {
+    let data = '0x';
+
+    try {
+      data = (this.swapFrom as ERC20Token).encodeApproveData(
+        this.chain.router,
+        utils.parseUnits(this.swapFromAmount, this.swapFrom!.decimals)
+      );
+    } catch (error) {
+      return;
+    }
+
+    const approve = (opts: { pin: string; tx: providers.TransactionRequest; readableInfo: ReadableInfo }) => {
+      App.sendTxFromAccount(this.account.address, opts);
+    };
+
+    const reject = () => {};
+
+    PubSub.publish(MessageKeys.openInpageDAppSendTransaction, {
+      approve,
+      reject,
+      param: { from: this.account.address, to: this.swapFrom!.address, data },
+      chainId: this.userSelectedNetwork.chainId,
+      account: this.account.address,
+      app: { name: 'Wallet 3 Swap', icon: 'https://wallet3.io/favicon.ico', verified: true },
+    });
+  }
+
+  swap() {}
 }
 
 export default new CurveExchange();
