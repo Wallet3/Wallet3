@@ -1,68 +1,21 @@
-import {
-  AVAX_DAI_e,
-  AVAX_USDC,
-  AVAX_USDC_e,
-  AVAX_USDt,
-  AVAX_WETH_e,
-  AVAX_YUSD,
-  CRV,
-  CVX,
-  DAI,
-  ETH,
-  FRAX,
-  IToken,
-  MATIC_DAI,
-  MATIC_USDC,
-  MATIC_USDT,
-  MIM,
-  STG,
-  USDC,
-  USDT,
-  WBTC,
-  YFI,
-  renBTC,
-  sETH,
-  sUSD,
-  stETH,
-  xDAI_USDC,
-  xDAI_USDT,
-} from '../../common/tokens';
+import { ETH, IToken } from '../../../common/tokens';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
-import { providers, utils } from 'ethers';
+import { ethers, providers, utils } from 'ethers';
 
-import { Account } from '../account/Account';
-import App from '../App';
+import { Account } from '../../account/Account';
+import App from '../../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ERC20Token } from '../../models/ERC20';
-import { INetwork } from '../../common/Networks';
-import MessageKeys from '../../common/MessageKeys';
-import { NativeToken } from '../../models/NativeToken';
-import Networks from '../Networks';
-import { ReadableInfo } from '../../models/Transaction';
+import CurveRouterABI from '../../../abis/CurveRouter.json';
+import { ERC20Token } from '../../../models/ERC20';
+import { INetwork } from '../../../common/Networks';
+import { IRouteStep } from '@curvefi/api/lib/interfaces';
+import MessageKeys from '../../../common/MessageKeys';
+import { NativeToken } from '../../../models/NativeToken';
+import Networks from '../../Networks';
+import { ReadableInfo } from '../../../models/Transaction';
+import { SupportedChains } from './CurveSupportedChains';
 import curve from '@curvefi/api';
-import { getRPCUrls } from '../../common/RPC';
-
-const SupportedChains: { [key: number]: { router: string; defaultTokens: IToken[] } } = {
-  1: {
-    router: '0x81C46fECa27B31F3ADC2b91eE4be9717d1cd3DD7',
-    defaultTokens: [DAI, USDC, USDT, sUSD, CRV, CVX, sETH, stETH, renBTC, WBTC, MIM, FRAX, YFI, STG],
-  },
-
-  137: {
-    router: '0xF52e46bEE287aAef56Fb2F8af961d9f1406cF476',
-    defaultTokens: [MATIC_DAI, MATIC_USDC, MATIC_USDT],
-  },
-
-  100: {
-    router: '0xcF897d9C8F9174F08f30084220683948B105D1B1',
-    defaultTokens: [xDAI_USDC, xDAI_USDT],
-  },
-
-  43114: {
-    router: '0xFE90eb3FbCddacD248fAFEFb9eAa24F5eF095778',
-    defaultTokens: [AVAX_WETH_e, AVAX_USDC, AVAX_USDt, AVAX_YUSD, AVAX_DAI_e, AVAX_USDC_e],
-  },
-};
+import { getRPCUrls } from '../../../common/RPC';
 
 const Keys = {
   userSelectedNetwork: 'exchange-userSelectedNetwork',
@@ -74,6 +27,7 @@ const Keys = {
 
 export class CurveExchange {
   private calcExchangeRateTimer?: NodeJS.Timer;
+  private swapRoute?: IRouteStep[];
 
   networks = Object.getOwnPropertyNames(SupportedChains).map((id) => Networks.find(id)!);
   userSelectedNetwork = Networks.Ethereum;
@@ -222,6 +176,7 @@ export class CurveExchange {
     }
 
     this.calculating = true;
+    this.swapRoute = undefined;
     this.calcExchangeRateTimer = setTimeout(() => this.calcExchangeRate(), 500);
   }
 
@@ -242,6 +197,8 @@ export class CurveExchange {
         this.swapTo!.address || ETH.address,
         this.swapFromAmount
       );
+
+      this.swapRoute = route;
 
       runInAction(() => {
         this.swapToAmount = output;
@@ -285,7 +242,9 @@ export class CurveExchange {
     });
   }
 
-  swap() {}
+  swap() {
+    const routerContract = new ethers.Contract(this.chain.router, CurveRouterABI);
+  }
 }
 
 export default new CurveExchange();

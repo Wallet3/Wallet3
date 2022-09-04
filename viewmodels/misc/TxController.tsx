@@ -22,30 +22,16 @@ export class TxController {
 
   speedUp(extra?: { data?: string; to?: string; title?: string; value: BigNumberish }) {
     const approve = async ({ pin, tx }: { pin?: string; tx: providers.TransactionRequest; readableInfo: any }) => {
-      const { wallet, accountIndex } = App.findWallet(utils.getAddress(this.tx.from)) || {};
-      if (!wallet) {
-        showMessage({ message: i18n.t('msg-account-not-found'), type: 'warning' });
-        return false;
-      }
-
-      const { txHex, error } = await wallet.signTx({
-        tx,
+      const { error } = await App.sendTxFromAccount(utils.getAddress(this.tx.from), {
         pin,
-        accountIndex: accountIndex!,
-      });
-
-      if (!txHex || error) {
-        if (error) showMessage({ type: 'warning', message: error?.message || error });
-        return false;
-      }
-
-      const broadcastTx = {
-        txHex,
         tx,
         readableInfo: { ...(this.tx.readableInfo || {}), cancelTx: extra ? true : false },
-      };
+      });
 
-      wallet.sendTx(broadcastTx);
+      if (error) {
+        showMessage({ type: 'warning', message: error.message });
+        return false;
+      }
 
       return true;
     };

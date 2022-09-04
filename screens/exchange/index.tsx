@@ -17,7 +17,7 @@ import { TextInput } from 'react-native-gesture-handler';
 import Theme from '../../viewmodels/settings/Theme';
 import TokenBox from './components/TokenBox';
 import TokenSelector from './components/TokenSelector';
-import VM from '../../viewmodels/defi/CurveExchange';
+import VM from '../../viewmodels/defi/exchange/Curve';
 import { formatCurrency } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/white';
 import i18n from '../../i18n';
@@ -97,7 +97,7 @@ export default observer(() => {
         tokenSymbol={VM.swapFrom?.symbol || ''}
         chainId={VM.userSelectedNetwork.chainId}
         showTitle
-        title={`Balance: ${VM.swapFrom?.amount}`}
+        title={`Balance: ${formatCurrency(VM.swapFrom?.amount || 0, '')}`}
         titleTouchable
         onTokenPress={() => openFromModal()}
         onTextInputChanged={(t) => VM.setSwapAmount(t)}
@@ -175,13 +175,19 @@ export default observer(() => {
           title="Approve"
           themeColor={VM.userSelectedNetwork.color}
           disabled={!VM.swapFromAmount || VM.checkingApproval}
-          onPress={() => VM.approve()}
+          onPress={() => {
+            Keyboard.dismiss();
+            VM.approve();
+          }}
         />
       ) : (
         <Button
           title="Swap"
           themeColor={VM.userSelectedNetwork.color}
           disabled={!VM.exchangeRate || VM.checkingApproval || VM.calculating}
+          onPress={() => {
+            Keyboard.dismiss();
+          }}
         />
       )}
 
