@@ -107,7 +107,10 @@ export default observer(() => {
         }}
       />
       <View style={{ alignItems: 'center', justifyContent: 'center', zIndex: 8 }}>
-        <TouchableOpacity style={{ padding: 8, borderRadius: 180, borderWidth: 0, borderColor, backgroundColor }}>
+        <TouchableOpacity
+          style={{ padding: 8, borderRadius: 180, borderWidth: 0, borderColor, backgroundColor }}
+          onPress={() => VM.switchSwapTo(VM.swapFrom!)}
+        >
           <Ionicons name="arrow-down-outline" size={16} color={secondaryTextColor} />
         </TouchableOpacity>
       </View>
@@ -167,7 +170,15 @@ export default observer(() => {
         </View>
       </Collapsible>
 
-      <Button title="Approve" themeColor={VM.userSelectedNetwork.color} />
+      {VM.needApproval ? (
+        <Button title="Approve" themeColor={VM.userSelectedNetwork.color} disabled={VM.checkingApproval} />
+      ) : (
+        <Button
+          title="Swap"
+          themeColor={VM.userSelectedNetwork.color}
+          disabled={!VM.exchangeRate || VM.checkingApproval || VM.calculating}
+        />
+      )}
 
       <View style={{ flex: 1, minHeight: ReactiveScreen.height * 0.39 }} />
 

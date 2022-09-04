@@ -158,6 +158,7 @@ export class CurveExchange {
   }
 
   switchSwapFrom(token: ERC20Token | NativeToken, checkToken = true) {
+    if (!token) return;
     if (checkToken && token.address === this.swapTo?.address) {
       this.switchSwapTo(this.swapFrom!, false);
     }
@@ -168,7 +169,9 @@ export class CurveExchange {
     this.checkingApproval = true;
 
     if (token.address) {
-      (token as ERC20Token).allowance(this.account.address, this.chain.router);
+      (token as ERC20Token).allowance(this.account.address, this.chain.router).then(() => {
+        runInAction(() => (this.checkingApproval = false));
+      });
     } else {
       this.checkingApproval = false;
       this.needApproval = false;
@@ -179,6 +182,7 @@ export class CurveExchange {
   }
 
   switchSwapTo(token: ERC20Token | NativeToken, checkToken = true) {
+    if (!token) return;
     if (checkToken && token.address === this.swapFrom?.address) {
       this.switchSwapFrom(this.swapTo!, false);
     }
@@ -209,7 +213,10 @@ export class CurveExchange {
 
     if (this.swapFrom?.address) {
       const approved = await (this.swapFrom as ERC20Token)?.allowance(this.account.address, this.chain.router);
-      runInAction(() => (this.needApproval = approved.lt(this.swapFromAmount)));
+      runInAction(() => {
+        this.needApproval = approved.lt(this.swapFromAmount);
+        this.checkingApproval = false;
+      });
     }
 
     try {
