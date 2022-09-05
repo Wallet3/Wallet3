@@ -75,6 +75,10 @@ export class CurveExchange {
     return (this.swapRoute?.length || 0) > 0;
   }
 
+  get isPending() {
+    return TxHub.pendingTxs.filter((t) => this.pendingTxs.includes(t.hash)).some((tx) => tx.from === this.account.address);
+  }
+
   constructor() {
     makeObservable(this, {
       userSelectedNetwork: observable,
@@ -94,6 +98,7 @@ export class CurveExchange {
       swapRoute: observable,
 
       hasRoutes: computed,
+      isPending: computed,
 
       switchNetwork: action,
       switchAccount: action,
@@ -205,22 +210,25 @@ export class CurveExchange {
     AsyncStorage.setItem(Keys.userSelectedToToken(this.userSelectedNetwork.chainId), token.address);
   }
 
-  async setSwapAmount(amount: string) {
-    if (!Number(amount)) {
+  private clearSwapAmount() {
+    runInAction(() => {
       this.swapFromAmount = '';
       this.swapToAmount = '';
       this.exchangeRate = 0;
-      return;
-    }
+    });
+  }
 
+  async setSwapAmount(amount: string) {
+    clearTimeout(this.calcExchangeRateTimer);
     this.swapFromAmount = amount;
     this.exchangeRate = 0;
-    clearTimeout(this.calcExchangeRateTimer);
 
     if (!amount) {
       this.swapToAmount = '';
       return;
     }
+
+    if (!Number(amount)) return;
 
     this.calculating = true;
     this.swapRoute = null;
@@ -229,12 +237,12 @@ export class CurveExchange {
       await this.curveNetwork;
       this.curveNetwork = undefined;
     }
-    
+
     this.calcExchangeRateTimer = setTimeout(() => this.calcExchangeRate(), 500);
   }
 
   setSlippage(amount: number) {
-    amount = Math.min(Math.max(0, amount), 99) || 0.5;
+    amount = Math.min(Math.max(0, amount), 99) || 0;
     this.slippage = amount;
 
     AsyncStorage.setItem(Keys.userSlippage(this.userSelectedNetwork.chainId), `${amount}`);
@@ -351,7 +359,7 @@ export class CurveExchange {
       if (result) {
         runInAction(() => {
           this.enqueueTx(txHash!);
-          this.setSwapAmount('');
+          this.clearSwapAmount();
         });
       }
 
@@ -367,7 +375,7 @@ export class CurveExchange {
         from: this.account.address,
         to: this.chain.router,
         data,
-        value: this.swapFrom?.address ? '0x0' : utils.parseEther(this.swapFromAmount).toString(),
+        value: this.swapFrom?.address ? '0x0' : utils.parseEther(this.swapFromAmount).toHexString(),
       },
       chainId: this.userSelectedNetwork.chainId,
       account: this.account.address,

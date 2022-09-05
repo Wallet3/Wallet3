@@ -68,7 +68,7 @@ export default observer(() => {
             openNetworksModal();
           }}
           style={{
-            borderRadius: 6,
+            borderRadius: 5,
             padding: 4,
             paddingHorizontal: 6,
             backgroundColor: VM.userSelectedNetwork.color,
@@ -162,7 +162,7 @@ export default observer(() => {
           <Text style={{ color: secondaryTextColor, fontSize: 12, marginStart: 6, fontWeight: '500' }}>
             {`1 ${VM.swapFrom?.symbol} ≈ ${formatCurrency(VM.exchangeRate, '')} ${VM.swapTo?.symbol}`}
           </Text>
-        ) : VM.swapFromAmount && !VM.calculating && !VM.hasRoutes ? (
+        ) : Number(VM.swapFromAmount) && !VM.calculating && !VM.hasRoutes ? (
           <Text style={{ color: 'crimson', fontSize: 12, marginStart: 6, fontWeight: '500' }}>{t('exchange-no-routes')}</Text>
         ) : (
           <View />
@@ -225,7 +225,7 @@ export default observer(() => {
         <Button
           title={t('button-approve')}
           themeColor={VM.userSelectedNetwork.color}
-          disabled={!VM.swapFromAmount || VM.checkingApproval || !VM.isValidFromAmount || !VM.hasRoutes}
+          disabled={!VM.swapFromAmount || VM.checkingApproval || !VM.isValidFromAmount || !VM.hasRoutes || VM.isPending}
           onPress={() => {
             Keyboard.dismiss();
             VM.approve();
@@ -235,7 +235,9 @@ export default observer(() => {
         <Button
           title={t('button-swap')}
           themeColor={VM.userSelectedNetwork.color}
-          disabled={!VM.exchangeRate || VM.checkingApproval || VM.calculating || !VM.isValidFromAmount || !VM.hasRoutes}
+          disabled={
+            !VM.exchangeRate || VM.checkingApproval || VM.calculating || !VM.isValidFromAmount || !VM.hasRoutes || VM.isPending
+          }
           onPress={() => {
             Keyboard.dismiss();
             VM.swap();
