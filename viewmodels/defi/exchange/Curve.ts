@@ -25,12 +25,13 @@ const Keys = {
   userSelectedFromToken: (chainId: number) => `${chainId}-exchange-from`,
   userSelectedToToken: (chainId: number) => `${chainId}-exchange-to`,
   userSlippage: (chainId: number) => `${chainId}-exchange-slippage`,
-  userCustomizedTokens: (chainId: number, account: string) => `${chainId}-${account}-exchange-tokens`,
+  userCustomizedTokens: (chainId: number) => `${chainId}-exchange-tokens`,
 };
 
 export class CurveExchange {
   private calcExchangeRateTimer?: NodeJS.Timer;
   private watchPendingTxTimer?: NodeJS.Timer;
+  private curveNetwork?: Promise<void>;
   swapRoute: IRouteStep[] | null = null;
 
   networks = Object.getOwnPropertyNames(SupportedChains).map((id) => Networks.find(id)!);
@@ -123,33 +124,37 @@ export class CurveExchange {
       typeof account === 'string' ? (App.findAccount(account) as Account) : (account as Account) || App.currentAccount;
 
     AsyncStorage.setItem(Keys.userSelectedAccount, this.account.address);
-    this.tokens.forEach((t) => t.setOwner(this.account.address));
+
+    this.tokens.forEach((t) => {
+      t.setOwner(this.account.address);
+      t.getBalance();
+    });
   }
 
   async switchNetwork(network: INetwork) {
     this.userSelectedNetwork = network;
 
     AsyncStorage.setItem(Keys.userSelectedNetwork, `${network.chainId}`);
-    curve.init('JsonRpc', { url: getRPCUrls(network.chainId)[0] }, { chainId: network.chainId });
+    this.curveNetwork = curve.init('JsonRpc', { url: getRPCUrls(network.chainId)[0] }, { chainId: network.chainId });
 
     const saved = (
-      JSON.parse(
-        (await AsyncStorage.getItem(Keys.userCustomizedTokens(network.chainId, this.account.address))) || '[]'
-      ) as IToken[]
+      JSON.parse((await AsyncStorage.getItem(Keys.userCustomizedTokens(network.chainId))) || '[]') as IToken[]
     ).filter((t) => t.address);
 
     const nativeToken = new NativeToken({ owner: this.account.address, chainId: network.chainId, symbol: network.symbol });
 
-    const userTokens = (saved.length > 0 ? saved : this.chain.defaultTokens).map(
-      (t) =>
-        new ERC20Token({
-          chainId: network.chainId,
-          owner: this.account.address,
-          contract: t.address,
-          symbol: t.symbol,
-          decimals: t.decimals,
-        })
-    );
+    const userTokens = (saved.length > 0 ? saved : this.chain.defaultTokens).map((t) => {
+      const erc20 = new ERC20Token({
+        chainId: network.chainId,
+        owner: this.account.address,
+        contract: t.address,
+        symbol: t.symbol,
+        decimals: t.decimals,
+      });
+
+      erc20.getBalance();
+      return erc20;
+    });
 
     const tokens = network.chainId === 1 ? [nativeToken, ...userTokens] : userTokens;
 
@@ -158,11 +163,10 @@ export class CurveExchange {
 
     runInAction(() => {
       this.tokens = tokens;
+      this.swapRoute = null;
 
       this.switchSwapFrom(tokens.find((t) => t.address === swapFromAddress) || tokens[0], false);
       this.switchSwapTo(tokens.find((t) => t.address === swapToAddress) || tokens[1], false);
-
-      this.swapFrom?.getBalance();
     });
   }
 
@@ -201,7 +205,7 @@ export class CurveExchange {
     AsyncStorage.setItem(Keys.userSelectedToToken(this.userSelectedNetwork.chainId), token.address);
   }
 
-  setSwapAmount(amount: string) {
+  async setSwapAmount(amount: string) {
     if (!Number(amount)) {
       this.swapFromAmount = '';
       this.swapToAmount = '';
@@ -220,6 +224,12 @@ export class CurveExchange {
 
     this.calculating = true;
     this.swapRoute = null;
+
+    if (this.curveNetwork) {
+      await this.curveNetwork;
+      this.curveNetwork = undefined;
+    }
+    
     this.calcExchangeRateTimer = setTimeout(() => this.calcExchangeRate(), 500);
   }
 
@@ -376,6 +386,8 @@ export class CurveExchange {
 
     if (pendingTxs.length < this.pendingTxs.length) {
       this.checkApproval(true);
+      this.swapFrom?.getBalance();
+      this.swapTo?.getBalance();
     }
 
     runInAction(() => (this.pendingTxs = pendingTxs));
@@ -400,7 +412,7 @@ export class CurveExchange {
         })
     );
 
-    AsyncStorage.setItem(Keys.userCustomizedTokens(this.userSelectedNetwork.chainId, this.account.address), data);
+    AsyncStorage.setItem(Keys.userCustomizedTokens(this.userSelectedNetwork.chainId), data);
   }
 }
 

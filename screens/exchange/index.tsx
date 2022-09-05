@@ -128,6 +128,7 @@ export default observer(() => {
         showTitle
         title={`${t('exchange-balance')}: ${formatCurrency(VM.swapFrom?.amount || 0, '')}`}
         titleTouchable
+        textValue={VM.swapFromAmount}
         onTokenPress={() => openFromModal()}
         onTextInputChanged={(t) => VM.setSwapAmount(t)}
         onTitlePress={() => {
@@ -161,7 +162,7 @@ export default observer(() => {
           <Text style={{ color: secondaryTextColor, fontSize: 12, marginStart: 6, fontWeight: '500' }}>
             {`1 ${VM.swapFrom?.symbol} ≈ ${formatCurrency(VM.exchangeRate, '')} ${VM.swapTo?.symbol}`}
           </Text>
-        ) : VM.swapFromAmount && !VM.hasRoutes ? (
+        ) : VM.swapFromAmount && !VM.calculating && !VM.hasRoutes ? (
           <Text style={{ color: 'crimson', fontSize: 12, marginStart: 6, fontWeight: '500' }}>{t('exchange-no-routes')}</Text>
         ) : (
           <View />
