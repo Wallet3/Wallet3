@@ -293,6 +293,8 @@ export default observer(() => {
             <TokenSelector
               tokens={VM.tokens}
               selectedToken={VM.swapFrom as IToken}
+              chainId={userSelectedNetwork.chainId}
+              themeColor={userSelectedNetwork.color}
               onTokenSelected={(t) => {
                 VM.switchSwapFrom(t as any);
                 closeFromTokens();
@@ -311,6 +313,8 @@ export default observer(() => {
           <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
             <TokenSelector
               tokens={VM.tokens}
+              chainId={userSelectedNetwork.chainId}
+              themeColor={userSelectedNetwork.color}
               selectedToken={VM.swapTo as IToken}
               onTokenSelected={(t) => {
                 VM.switchSwapTo(t as any);

@@ -1,6 +1,6 @@
 import FastImage, { FastImageProps } from 'react-native-fast-image';
 import { Image, ImageSourcePropType, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Networks from '../viewmodels/Networks';
 import SvgImage from 'react-native-remote-svg';
@@ -51,24 +51,21 @@ export default observer((props: CoinProps) => {
     borderRadius: props.iconUrl ? size / 2 : 0,
   };
 
+  useEffect(() => {
+    setFailedSource(undefined);
+  }, [props.address]);
+
   return failedSource ? (
     // @ts-ignore
-    <Image {...props} source={icons['_coin']} style={style} onLoad={() => setFailedSource(undefined)} />
+    <Image {...props} source={icons['_coin']} style={style} />
   ) : source.uri ? (
-    <FastImage
-      {...props}
-      source={source}
-      onLoad={() => setFailedSource(undefined)}
-      onError={() => setFailedSource(icons['_coin'])}
-      style={style}
-    />
+    <FastImage {...props} source={source} onError={() => setFailedSource(icons['_coin'])} style={style} />
   ) : (
     // @ts-ignore
     <Image
       {...props}
       source={source}
       defaultSource={icons['_coin']}
-      onLoad={() => setFailedSource(undefined)}
       style={style}
       onError={() => setFailedSource(icons['_coin'])}
     />
