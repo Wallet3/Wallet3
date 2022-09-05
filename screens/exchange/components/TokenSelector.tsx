@@ -1,6 +1,6 @@
 import { Button, Coin, Separator, TextBox } from '../../../components';
 import { FlatList, ListRenderItemInfo, Text, TouchableOpacity, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { ERC20Token } from '../../../models/ERC20';
 import { IToken } from '../../../common/tokens';
@@ -16,12 +16,14 @@ interface Props {
   chainId: number;
   themeColor?: string;
   onTokenSelected?: (token: IToken) => void;
+  onAddTokenRequested?: (token: ERC20Token) => void;
 }
 
 export default observer((props: Props) => {
   const { textColor, borderColor, secondaryTextColor, isLightMode, foregroundColor, tintColor, backgroundColor } = Theme;
   const [filterTxt, setFilterTxt] = useState('');
   const [userToken, setUserToken] = useState<ERC20Token>();
+  const flatList = useRef<FlatList>(null);
 
   const handleInput = async (txt: string) => {
     if (!utils.isAddress(txt)) {
@@ -34,13 +36,14 @@ export default observer((props: Props) => {
     const token = new ERC20Token({ contract: utils.getAddress(txt), chainId: props.chainId, owner: txt });
 
     try {
-      await Promise.all([token.getDecimals(), token.getSymbol(), token.getBalance()]);
+      await Promise.all([token.getDecimals(), token.getSymbol()]);
     } catch (error) {
+      setUserToken(undefined);
       return;
     }
 
-    setUserToken(token);
     startLayoutAnimation();
+    setUserToken(token);
   };
 
   const renderItem = ({ item }: ListRenderItemInfo<IToken>) => {
@@ -102,7 +105,17 @@ export default observer((props: Props) => {
           <Text style={{ marginStart: 12, fontSize: 19 }}>{userToken.symbol}</Text>
           <View style={{ flex: 1 }} />
 
-          <TouchableOpacity style={{ paddingHorizontal: 6, paddingVertical: 4 }}>
+          <TouchableOpacity
+            style={{ paddingHorizontal: 6, paddingVertical: 4 }}
+            onPress={() => {
+              props.onAddTokenRequested?.(userToken);
+              setUserToken(undefined);
+
+              try {
+                flatList.current?.scrollToEnd({ animated: true });
+              } catch (error) {}
+            }}
+          >
             <Text style={{ fontSize: 20, color: props.themeColor, fontWeight: '500', textTransform: 'uppercase' }}>Add</Text>
           </TouchableOpacity>
         </View>
@@ -112,6 +125,7 @@ export default observer((props: Props) => {
       <Separator style={{ borderColor }} />
 
       <FlatList
+        ref={flatList}
         data={filterTxt ? props.tokens.filter((t) => t.symbol.toLowerCase().includes(filterTxt.toLowerCase())) : props.tokens}
         renderItem={renderItem}
         contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 24, paddingTop: 4 }}

@@ -31,7 +31,7 @@ import {
 export const SupportedChains: { [key: number]: { router: string; defaultTokens: IToken[] } } = {
   1: {
     router: '0x81C46fECa27B31F3ADC2b91eE4be9717d1cd3DD7',
-    defaultTokens: [DAI, USDC, USDT, sUSD, CRV, CVX, sETH, stETH, renBTC, WBTC, MIM, FRAX, YFI, STG],
+    defaultTokens: [DAI, USDC, USDT, sUSD, CRV, CVX, sETH, stETH, renBTC, WBTC, MIM, FRAX],
   },
 
   137: {

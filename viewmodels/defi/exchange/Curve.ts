@@ -21,10 +21,11 @@ import { getRPCUrls } from '../../../common/RPC';
 const Keys = {
   userSelectedNetwork: 'exchange-userSelectedNetwork',
   userSelectedAccount: 'exchange-userSelectedAccount',
-  userCustomizedTokens: (chainId: number) => `${chainId}-exchange-userTokens`,
+
   userSelectedFromToken: (chainId: number) => `${chainId}-exchange-from`,
   userSelectedToToken: (chainId: number) => `${chainId}-exchange-to`,
   userSlippage: (chainId: number) => `${chainId}-exchange-slippage`,
+  userCustomizedTokens: (chainId: number, account: string) => `${chainId}-${account}-exchange-tokens`,
 };
 
 export class CurveExchange {
@@ -93,6 +94,7 @@ export class CurveExchange {
       setSwapAmount: action,
       setSlippage: action,
       enqueueTx: action,
+      addToken: action,
     });
   }
 
@@ -103,8 +105,8 @@ export class CurveExchange {
       App.findAccount((await AsyncStorage.getItem(Keys.userSelectedAccount)) as string) || App.currentAccount;
 
     runInAction(() => {
-      this.switchNetwork(Networks.find(chainId)!);
       this.switchAccount(defaultAccount!);
+      this.switchNetwork(Networks.find(chainId)!);
       this.slippage = slippage;
     });
   }
@@ -123,15 +125,21 @@ export class CurveExchange {
     AsyncStorage.setItem(Keys.userSelectedNetwork, `${network.chainId}`);
     curve.init('JsonRpc', { url: getRPCUrls(network.chainId)[0] }, { chainId: network.chainId });
 
-    const saved: IToken[] = JSON.parse((await AsyncStorage.getItem(Keys.userCustomizedTokens(network.chainId))) || '[]');
+    const saved = (
+      JSON.parse(
+        (await AsyncStorage.getItem(Keys.userCustomizedTokens(network.chainId, this.account.address))) || '[]'
+      ) as IToken[]
+    ).filter((t) => t.address);
+
     const nativeToken = new NativeToken({ owner: this.account.address, chainId: network.chainId, symbol: network.symbol });
+
     const userTokens = (saved.length > 0 ? saved : this.chain.defaultTokens).map(
       (t) =>
         new ERC20Token({
+          chainId: network.chainId,
           owner: this.account.address,
           contract: t.address,
           symbol: t.symbol,
-          chainId: network.chainId,
           decimals: t.decimals,
         })
     );
@@ -359,7 +367,7 @@ export class CurveExchange {
     this.watchPendingTxTimer = setTimeout(() => this.watchPendingTxs(), 1000);
   }
 
-  watchPendingTxs() {
+  private watchPendingTxs() {
     const pendingTxs = this.pendingTxs.filter((tx) => TxHub.pendingTxs.find((t) => t.hash === tx));
 
     if (pendingTxs.length < this.pendingTxs.length) {
@@ -370,6 +378,25 @@ export class CurveExchange {
 
     if (pendingTxs.length === 0) return;
     this.watchPendingTxTimer = setTimeout(() => this.watchPendingTxs(), 1000);
+  }
+
+  addToken(token: ERC20Token) {
+    if (token.chainId !== this.userSelectedNetwork.chainId) return;
+    if (this.tokens.find((t) => t.address === token.address)) return;
+
+    token.setOwner(this.account.address);
+    token.getBalance();
+    this.tokens.push(token);
+
+    const data = JSON.stringify(
+      this.tokens
+        .filter((t) => t.address)
+        .map((t) => {
+          return { address: t.address, decimals: t.decimals, symbol: t.symbol };
+        })
+    );
+
+    AsyncStorage.setItem(Keys.userCustomizedTokens(this.userSelectedNetwork.chainId, this.account.address), data);
   }
 }
 

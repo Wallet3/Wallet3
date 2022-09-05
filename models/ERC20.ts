@@ -48,8 +48,9 @@ export class ERC20Token {
     shown?: boolean;
     order?: number;
   }) {
+    this.erc20 = new ethers.Contract(props.contract, ERC20ABI);
+
     this.address = props.contract;
-    this.erc20 = new ethers.Contract(this.address, ERC20ABI);
     this.chainId = props.chainId;
 
     this.symbol = props.symbol || '';
@@ -57,11 +58,10 @@ export class ERC20Token {
     this.decimals = props.decimals || -1;
     this.price = props.price || 0;
     this.iconUrl = props.iconUrl;
-    this.owner = props.owner || '';
     this.shown = props.shown;
     this.order = props.order;
 
-    this.call_balanceOfOwner = this.erc20.interface.encodeFunctionData('balanceOf', [this.owner]);
+    this.setOwner(props.owner);
 
     makeObservable(this, {
       name: observable,
@@ -155,5 +155,6 @@ export class ERC20Token {
 
   setOwner(owner: string) {
     this.owner = owner;
+    if (owner) this.call_balanceOfOwner = this.erc20.interface.encodeFunctionData('balanceOf', [owner]);
   }
 }

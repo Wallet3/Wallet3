@@ -295,6 +295,7 @@ export default observer(() => {
               selectedToken={VM.swapFrom as IToken}
               chainId={userSelectedNetwork.chainId}
               themeColor={userSelectedNetwork.color}
+              onAddTokenRequested={(t) => VM.addToken(t)}
               onTokenSelected={(t) => {
                 VM.switchSwapFrom(t as any);
                 closeFromTokens();
@@ -316,6 +317,7 @@ export default observer(() => {
               chainId={userSelectedNetwork.chainId}
               themeColor={userSelectedNetwork.color}
               selectedToken={VM.swapTo as IToken}
+              onAddTokenRequested={(t) => VM.addToken(t)}
               onTokenSelected={(t) => {
                 VM.switchSwapTo(t as any);
                 closeToTokens();
