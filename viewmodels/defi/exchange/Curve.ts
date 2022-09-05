@@ -14,6 +14,7 @@ import { NativeToken } from '../../../models/NativeToken';
 import Networks from '../../Networks';
 import { ReadableInfo } from '../../../models/Transaction';
 import { SupportedChains } from './CurveSupportedChains';
+import TxHub from '../../hubs/TxHub';
 import curve from '@curvefi/api';
 import { getRPCUrls } from '../../../common/RPC';
 
@@ -23,10 +24,12 @@ const Keys = {
   userCustomizedTokens: (chainId: number) => `${chainId}-exchange-userTokens`,
   userSelectedFromToken: (chainId: number) => `${chainId}-exchange-from`,
   userSelectedToToken: (chainId: number) => `${chainId}-exchange-to`,
+  userSlippage: (chainId: number) => `${chainId}-exchange-slippage`,
 };
 
 export class CurveExchange {
   private calcExchangeRateTimer?: NodeJS.Timer;
+  private watchPendingTxTimer?: NodeJS.Timer;
   private swapRoute?: IRouteStep[];
 
   networks = Object.getOwnPropertyNames(SupportedChains).map((id) => Networks.find(id)!);
@@ -42,9 +45,28 @@ export class CurveExchange {
   checkingApproval = false;
   exchangeRate = 0;
   needApproval = true;
+  slippage = 0.5;
+
+  pendingTxs: string[] = [];
 
   protected get chain() {
     return SupportedChains[this.userSelectedNetwork.chainId];
+  }
+
+  get isValidFromAmount() {
+    try {
+      return utils.parseUnits(this.swapFromAmount, this.swapFrom?.decimals || 18).gt(0);
+    } catch (error) {
+      return false;
+    }
+  }
+
+  get isValidOutputAmount() {
+    try {
+      return utils.parseUnits(this.swapToAmount || '0', this.swapTo?.decimals).gt(0);
+    } catch (error) {
+      return false;
+    }
   }
 
   constructor() {
@@ -61,30 +83,38 @@ export class CurveExchange {
       calculating: observable,
       checkingApproval: observable,
       needApproval: observable,
+      slippage: observable,
+      pendingTxs: observable,
 
       switchNetwork: action,
       switchAccount: action,
       switchSwapFrom: action,
       switchSwapTo: action,
       setSwapAmount: action,
+      setSlippage: action,
+      enqueueTx: action,
     });
   }
 
   async init() {
     const chainId = Number((await AsyncStorage.getItem(Keys.userSelectedNetwork)) || 1);
+    const slippage = Number((await AsyncStorage.getItem(Keys.userSlippage(chainId))) || 0.5);
     const defaultAccount =
       App.findAccount((await AsyncStorage.getItem(Keys.userSelectedAccount)) as string) || App.currentAccount;
 
     runInAction(() => {
       this.switchNetwork(Networks.find(chainId)!);
       this.switchAccount(defaultAccount!);
+      this.slippage = slippage;
     });
   }
 
-  async switchAccount(account: Account) {
-    this.account = account;
-    AsyncStorage.setItem(Keys.userSelectedAccount, account.address);
-    this.tokens.forEach((t) => t.setOwner(account.address));
+  async switchAccount(account: Account | string) {
+    this.account =
+      typeof account === 'string' ? (App.findAccount(account) as Account) : (account as Account) || App.currentAccount;
+
+    AsyncStorage.setItem(Keys.userSelectedAccount, this.account.address);
+    this.tokens.forEach((t) => t.setOwner(this.account.address));
   }
 
   async switchNetwork(network: INetwork) {
@@ -133,9 +163,7 @@ export class CurveExchange {
     this.checkingApproval = true;
 
     if (token.address) {
-      (token as ERC20Token).allowance(this.account.address, this.chain.router).then(() => {
-        runInAction(() => (this.checkingApproval = false));
-      });
+      this.checkApproval(true);
     } else {
       this.checkingApproval = false;
       this.needApproval = false;
@@ -166,6 +194,8 @@ export class CurveExchange {
       return;
     }
 
+    if (Number(amount) === Number(this.swapFromAmount)) return;
+
     this.swapFromAmount = amount;
     this.exchangeRate = 0;
     clearTimeout(this.calcExchangeRateTimer);
@@ -180,16 +210,17 @@ export class CurveExchange {
     this.calcExchangeRateTimer = setTimeout(() => this.calcExchangeRate(), 500);
   }
 
+  setSlippage(amount: number) {
+    amount = Math.min(Math.max(0, amount), 99) || 0.5;
+    this.slippage = amount;
+
+    AsyncStorage.setItem(Keys.userSlippage(this.userSelectedNetwork.chainId), `${amount}`);
+  }
+
   async calcExchangeRate() {
     runInAction(() => (this.calculating = true));
 
-    if (this.swapFrom?.address) {
-      const approved = await (this.swapFrom as ERC20Token)?.allowance(this.account.address, this.chain.router);
-      runInAction(() => {
-        this.needApproval = approved.lt(this.swapFromAmount);
-        this.checkingApproval = false;
-      });
-    }
+    this.checkApproval();
 
     try {
       const { route, output } = await curve.router.getBestRouteAndOutput(
@@ -214,6 +245,16 @@ export class CurveExchange {
     runInAction(() => (this.calculating = false));
   }
 
+  private async checkApproval(force = false) {
+    const approved = await (this.swapFrom as ERC20Token)?.allowance?.(this.account.address, this.chain.router, force);
+    if (!approved) return;
+
+    runInAction(() => {
+      this.needApproval = approved.lt(utils.parseUnits(this.swapFromAmount || '0', this.swapFrom?.decimals));
+      this.checkingApproval = false;
+    });
+  }
+
   approve() {
     let data = '0x';
 
@@ -226,8 +267,16 @@ export class CurveExchange {
       return;
     }
 
-    const approve = (opts: { pin: string; tx: providers.TransactionRequest; readableInfo: ReadableInfo }) => {
-      App.sendTxFromAccount(this.account.address, opts);
+    const approve = async (opts: { pin: string; tx: providers.TransactionRequest; readableInfo: ReadableInfo }) => {
+      const { txHash } = await App.sendTxFromAccount(this.account.address, opts);
+
+      if (txHash) {
+        runInAction(() => {
+          this.enqueueTx(txHash);
+        });
+      }
+
+      return txHash ? true : false;
     };
 
     const reject = () => {};
@@ -243,7 +292,84 @@ export class CurveExchange {
   }
 
   swap() {
-    const routerContract = new ethers.Contract(this.chain.router, CurveRouterABI);
+    if (!this.swapRoute || this.swapRoute.length === 0 || !this.isValidFromAmount) return;
+
+    let route = [this.swapFrom!.address || ETH.address];
+    let swapParams: any[] = [];
+    let factorySwapAddrs: string[] = [];
+
+    for (let routeStep of this.swapRoute) {
+      route.push(routeStep.poolAddress, routeStep.outputCoinAddress);
+      swapParams.push([routeStep.i, routeStep.j, routeStep.swapType]);
+      factorySwapAddrs.push(routeStep.swapAddress);
+    }
+
+    route = route.concat(new Array(9 - route.length).fill(ethers.constants.AddressZero));
+    swapParams = swapParams.concat(new Array(4 - swapParams.length).fill([0, 0, 0]));
+    factorySwapAddrs = factorySwapAddrs.concat(new Array(4 - factorySwapAddrs.length).fill(ethers.constants.AddressZero));
+
+    if (route.length > 9) return;
+
+    const curve = new ethers.Contract(this.chain.router, CurveRouterABI);
+    const data = curve.interface.encodeFunctionData('exchange_multiple(address[9],uint256[3][4],uint256,uint256,address[4])', [
+      route,
+      swapParams,
+      utils.parseUnits(this.swapFromAmount, this.swapFrom?.decimals),
+      utils
+        .parseUnits(this.swapToAmount!, this.swapTo?.decimals)
+        .mul(Number.parseInt((10000 - Number(this.slippage.toFixed(2)) * 100) as any))
+        .div(10000),
+      factorySwapAddrs,
+    ]);
+
+    const approve = async (opts: { pin: string; tx: providers.TransactionRequest; readableInfo: ReadableInfo }) => {
+      const { txHash } = await App.sendTxFromAccount(this.account.address, opts);
+      const result = txHash ? true : false;
+
+      if (result) {
+        runInAction(() => {
+          this.enqueueTx(txHash!);
+          this.setSwapAmount('');
+        });
+      }
+
+      return result;
+    };
+
+    const reject = () => {};
+
+    PubSub.publish(MessageKeys.openInpageDAppSendTransaction, {
+      approve,
+      reject,
+      param: {
+        from: this.account.address,
+        to: this.chain.router,
+        data,
+        value: this.swapFrom?.address ? '0x0' : utils.parseEther(this.swapFromAmount).toString(),
+      },
+      chainId: this.userSelectedNetwork.chainId,
+      account: this.account.address,
+      app: { name: 'Wallet 3 Swap', icon: 'https://wallet3.io/favicon.ico', verified: true },
+    });
+  }
+
+  enqueueTx(hash: string) {
+    this.pendingTxs.push(hash);
+    clearTimeout(this.watchPendingTxTimer);
+    this.watchPendingTxTimer = setTimeout(() => this.watchPendingTxs(), 1000);
+  }
+
+  watchPendingTxs() {
+    const pendingTxs = this.pendingTxs.filter((tx) => TxHub.pendingTxs.find((t) => t.hash === tx));
+
+    if (pendingTxs.length < this.pendingTxs.length) {
+      this.checkApproval(true);
+    }
+
+    runInAction(() => (this.pendingTxs = pendingTxs));
+
+    if (pendingTxs.length === 0) return;
+    this.watchPendingTxTimer = setTimeout(() => this.watchPendingTxs(), 1000);
   }
 }
 

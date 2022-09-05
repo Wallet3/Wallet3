@@ -16,6 +16,7 @@ import Theme from '../../viewmodels/settings/Theme';
 import TxHub from '../../viewmodels/hubs/TxHub';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { rotate } from '../../common/Animation';
 import { useNavigation } from '@react-navigation/core';
 
 interface Props {
@@ -27,15 +28,6 @@ interface Props {
   onTokenPress?: (token: IToken) => void;
   onTxPress?: (tx: Transaction) => void;
 }
-
-const rotate = {
-  from: {
-    transform: [{ rotate: '0deg' }],
-  },
-  to: {
-    transform: [{ rotate: '360deg' }],
-  },
-};
 
 export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, onTokenPress, onTxPress, network }: Props) => {
   const { t } = i18n;

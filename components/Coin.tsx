@@ -53,15 +53,22 @@ export default observer((props: CoinProps) => {
 
   return failedSource ? (
     // @ts-ignore
-    <Image {...props} source={icons['_coin']} style={style} />
+    <Image {...props} source={icons['_coin']} style={style} onLoad={() => setFailedSource(undefined)} />
   ) : source.uri ? (
-    <FastImage {...props} source={source} onError={() => setFailedSource(icons['_coin'])} style={style} />
+    <FastImage
+      {...props}
+      source={source}
+      onLoad={() => setFailedSource(undefined)}
+      onError={() => setFailedSource(icons['_coin'])}
+      style={style}
+    />
   ) : (
     // @ts-ignore
     <Image
       {...props}
       source={source}
       defaultSource={icons['_coin']}
+      onLoad={() => setFailedSource(undefined)}
       style={style}
       onError={() => setFailedSource(icons['_coin'])}
     />

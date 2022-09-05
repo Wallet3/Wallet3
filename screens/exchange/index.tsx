@@ -1,3 +1,5 @@
+import * as Animatable from 'react-native-animatable';
+
 import { Button, Skeleton } from '../../components';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Keyboard, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -22,11 +24,13 @@ import { formatCurrency } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/white';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { rotate } from '../../common/Animation';
 
 export default observer(() => {
-  const { backgroundColor, borderColor, shadow, mode, foregroundColor, textColor, secondaryTextColor, tintColor } = Theme;
+  const { backgroundColor, borderColor, foregroundColor, textColor, secondaryTextColor } = Theme;
   const { top } = useSafeAreaInsets();
-  const { currentAccount } = App;
+  const { userSelectedNetwork } = VM;
+
   const { t } = i18n;
 
   const { ref: networksRef, open: openNetworksModal, close: closeNetworksModal } = useModalize();
@@ -40,13 +44,24 @@ export default observer(() => {
     VM.init();
   }, []);
 
+  const getColor = (slippage: number, defaultColor = borderColor) =>
+    slippage === VM.slippage ? userSelectedNetwork.color : defaultColor;
+
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor, paddingTop: top * 1.25, paddingHorizontal: 16 }}
       keyboardShouldPersistTaps="handled"
       scrollEnabled={false}
     >
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 8, marginBottom: 16 }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginVertical: 8,
+          marginBottom: 16,
+        }}
+      >
         <TouchableOpacity
           onPress={() => {
             Keyboard.dismiss();
@@ -54,7 +69,7 @@ export default observer(() => {
           }}
           style={{
             borderRadius: 6,
-            padding: 3,
+            padding: 4,
             paddingHorizontal: 6,
             backgroundColor: VM.userSelectedNetwork.color,
             flexDirection: 'row',
@@ -72,25 +87,39 @@ export default observer(() => {
           <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 3 }} color={'#fff'} size={10} />
         </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={() => {
-            Keyboard.dismiss();
-            openAccountsModal();
-          }}
-          style={{
-            paddingHorizontal: 6,
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}
-        >
-          <Avatar
-            size={22}
-            backgroundColor={currentAccount?.emojiColor}
-            emoji={currentAccount?.emojiAvatar}
-            uri={currentAccount?.avatar}
-            emojiSize={9}
-          />
-        </TouchableOpacity>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          {VM.pendingTxs.length > 0 ? (
+            <View style={{ marginEnd: 16, flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={{ fontSize: 12, color: userSelectedNetwork.color, marginEnd: 8, fontWeight: '500' }}>
+                {VM.pendingTxs.length}
+              </Text>
+
+              <Animatable.View animation={rotate} iterationCount="infinite" easing="linear" duration={2000}>
+                <Ionicons name="sync" size={14} color={userSelectedNetwork.color} />
+              </Animatable.View>
+            </View>
+          ) : undefined}
+
+          <TouchableOpacity
+            onPress={() => {
+              Keyboard.dismiss();
+              openAccountsModal();
+            }}
+            style={{
+              paddingHorizontal: 6,
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+          >
+            <Avatar
+              size={26}
+              backgroundColor={VM.account?.emojiColor}
+              emoji={VM.account?.emojiAvatar}
+              uri={VM.account?.avatar}
+              emojiSize={9}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
       <TokenBox
         tokenAddress={VM.swapFrom?.address!}
@@ -144,28 +173,47 @@ export default observer(() => {
       <Collapsible collapsed={!advanced} style={{ paddingBottom: 24 }}>
         <Text style={{ color: textColor, marginStart: 6 }}>Slippage tolerance:</Text>
         <View style={{ flexDirection: 'row', marginTop: 12 }}>
-          <TouchableOpacity style={{ ...styles.slippage, borderColor }}>
-            <Text style={{ color: secondaryTextColor }}>0.5 %</Text>
+          <TouchableOpacity style={{ ...styles.slippage, borderColor: getColor(0.5) }} onPress={() => VM.setSlippage(0.5)}>
+            <Text style={{ color: getColor(0.5, secondaryTextColor) }}>0.5 %</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={{ ...styles.slippage, borderColor }}>
-            <Text style={{ color: secondaryTextColor }}>1 %</Text>
+          <TouchableOpacity style={{ ...styles.slippage, borderColor: getColor(1) }} onPress={() => VM.setSlippage(1)}>
+            <Text style={{ color: getColor(1, secondaryTextColor) }}>1 %</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={{ ...styles.slippage, borderColor }}>
-            <Text style={{ color: secondaryTextColor }}>2 %</Text>
+          <TouchableOpacity style={{ ...styles.slippage, borderColor: getColor(2) }} onPress={() => VM.setSlippage(2)}>
+            <Text style={{ color: getColor(2, secondaryTextColor) }}>2 %</Text>
           </TouchableOpacity>
 
           <View style={{ flex: 1 }} />
 
-          <View style={{ ...styles.slippage, marginEnd: 0, borderColor }}>
+          <View
+            style={{
+              ...styles.slippage,
+              marginEnd: 0,
+              borderColor: VM.slippage > 2 ? userSelectedNetwork.color : borderColor,
+            }}
+          >
             <TextInput
               placeholder="5"
-              style={{ minWidth: 25, textAlign: 'center', paddingEnd: 4, maxWidth: 64, color: textColor }}
+              style={{
+                minWidth: 25,
+                textAlign: 'center',
+                paddingEnd: 4,
+                maxWidth: 64,
+                color: VM.slippage > 2 ? userSelectedNetwork.color : textColor,
+              }}
               keyboardType="number-pad"
+              value={`${VM.slippage}`}
+              onChangeText={(txt) => VM.setSlippage(Number(txt))}
             />
-            <Text style={{ color: secondaryTextColor }}>%</Text>
-            <Ionicons name="pencil" color={secondaryTextColor} size={12} style={{ marginStart: 8 }} />
+            <Text style={{ color: VM.slippage > 2 ? userSelectedNetwork.color : secondaryTextColor }}>%</Text>
+            <Ionicons
+              name="pencil"
+              color={VM.slippage > 2 ? userSelectedNetwork.color : secondaryTextColor}
+              size={12}
+              style={{ marginStart: 8 }}
+            />
           </View>
         </View>
       </Collapsible>
@@ -174,7 +222,7 @@ export default observer(() => {
         <Button
           title="Approve"
           themeColor={VM.userSelectedNetwork.color}
-          disabled={!VM.swapFromAmount || VM.checkingApproval}
+          disabled={!VM.swapFromAmount || VM.checkingApproval || !VM.isValidFromAmount}
           onPress={() => {
             Keyboard.dismiss();
             VM.approve();
@@ -184,9 +232,10 @@ export default observer(() => {
         <Button
           title="Swap"
           themeColor={VM.userSelectedNetwork.color}
-          disabled={!VM.exchangeRate || VM.checkingApproval || VM.calculating}
+          disabled={!VM.exchangeRate || VM.checkingApproval || VM.calculating || !VM.isValidFromAmount}
           onPress={() => {
             Keyboard.dismiss();
+            VM.swap();
           }}
         />
       )}
@@ -221,11 +270,14 @@ export default observer(() => {
             <AccountSelector
               single
               accounts={App.allAccounts}
-              selectedAccounts={[currentAccount?.address || '']}
+              selectedAccounts={[VM.account?.address || '']}
               style={{ padding: 16, height: 430 }}
               expanded
               themeColor={VM.userSelectedNetwork.color}
-              onDone={([account]) => {}}
+              onDone={([account]) => {
+                closeAccountsModal();
+                VM.switchAccount(account);
+              }}
             />
           </SafeAreaProvider>
         </Modalize>

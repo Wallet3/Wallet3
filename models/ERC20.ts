@@ -89,9 +89,11 @@ export class ERC20Token {
     return balance;
   }
 
-  async allowance(owner: string, spender: string): Promise<BigNumber> {
-    const cache = this.allowanceMap.get(`${owner}-${spender}`);
-    if (cache) return cache;
+  async allowance(owner: string, spender: string, force = false): Promise<BigNumber> {
+    if (!force) {
+      const cache = this.allowanceMap.get(`${owner}-${spender}`);
+      if (cache) return cache;
+    }
 
     const data = this.erc20.interface.encodeFunctionData('allowance', [owner, spender]);
     const approved = BigNumber.from((await eth_call(this.chainId, { to: this.address, data })) || '0');
