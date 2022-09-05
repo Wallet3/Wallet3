@@ -161,6 +161,8 @@ export default observer(() => {
           <Text style={{ color: secondaryTextColor, fontSize: 12, marginStart: 6, fontWeight: '500' }}>
             {`1 ${VM.swapFrom?.symbol} ≈ ${formatCurrency(VM.exchangeRate, '')} ${VM.swapTo?.symbol}`}
           </Text>
+        ) : VM.swapFromAmount && !VM.hasRoutes ? (
+          <Text style={{ color: 'crimson', fontSize: 12, marginStart: 6, fontWeight: '500' }}>No swap routes.</Text>
         ) : (
           <View />
         )}
@@ -222,7 +224,7 @@ export default observer(() => {
         <Button
           title="Approve"
           themeColor={VM.userSelectedNetwork.color}
-          disabled={!VM.swapFromAmount || VM.checkingApproval || !VM.isValidFromAmount}
+          disabled={!VM.swapFromAmount || VM.checkingApproval || !VM.isValidFromAmount || !VM.hasRoutes}
           onPress={() => {
             Keyboard.dismiss();
             VM.approve();
@@ -232,7 +234,7 @@ export default observer(() => {
         <Button
           title="Swap"
           themeColor={VM.userSelectedNetwork.color}
-          disabled={!VM.exchangeRate || VM.checkingApproval || VM.calculating || !VM.isValidFromAmount}
+          disabled={!VM.exchangeRate || VM.checkingApproval || VM.calculating || !VM.isValidFromAmount || !VM.hasRoutes}
           onPress={() => {
             Keyboard.dismiss();
             VM.swap();

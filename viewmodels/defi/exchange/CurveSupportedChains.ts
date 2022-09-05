@@ -24,6 +24,7 @@ import {
   sETH,
   sUSD,
   stETH,
+  wxDAI,
   xDAI_USDC,
   xDAI_USDT,
 } from '../../../common/tokens';
@@ -41,7 +42,7 @@ export const SupportedChains: { [key: number]: { router: string; defaultTokens: 
 
   100: {
     router: '0xcF897d9C8F9174F08f30084220683948B105D1B1',
-    defaultTokens: [xDAI_USDC, xDAI_USDT],
+    defaultTokens: [wxDAI, xDAI_USDC, xDAI_USDT],
   },
 
   43114: {

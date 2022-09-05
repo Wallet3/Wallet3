@@ -31,7 +31,7 @@ const Keys = {
 export class CurveExchange {
   private calcExchangeRateTimer?: NodeJS.Timer;
   private watchPendingTxTimer?: NodeJS.Timer;
-  private swapRoute?: IRouteStep[];
+  swapRoute: IRouteStep[] | null = null;
 
   networks = Object.getOwnPropertyNames(SupportedChains).map((id) => Networks.find(id)!);
   userSelectedNetwork = Networks.Ethereum;
@@ -70,6 +70,10 @@ export class CurveExchange {
     }
   }
 
+  get hasRoutes() {
+    return (this.swapRoute?.length || 0) > 0;
+  }
+
   constructor() {
     makeObservable(this, {
       userSelectedNetwork: observable,
@@ -86,6 +90,9 @@ export class CurveExchange {
       needApproval: observable,
       slippage: observable,
       pendingTxs: observable,
+      swapRoute: observable,
+
+      hasRoutes: computed,
 
       switchNetwork: action,
       switchAccount: action,
@@ -202,8 +209,6 @@ export class CurveExchange {
       return;
     }
 
-    if (Number(amount) === Number(this.swapFromAmount)) return;
-
     this.swapFromAmount = amount;
     this.exchangeRate = 0;
     clearTimeout(this.calcExchangeRateTimer);
@@ -214,7 +219,7 @@ export class CurveExchange {
     }
 
     this.calculating = true;
-    this.swapRoute = undefined;
+    this.swapRoute = null;
     this.calcExchangeRateTimer = setTimeout(() => this.calcExchangeRate(), 500);
   }
 
@@ -237,9 +242,8 @@ export class CurveExchange {
         this.swapFromAmount
       );
 
-      this.swapRoute = route;
-
       runInAction(() => {
+        this.swapRoute = route;
         this.swapToAmount = output;
         this.exchangeRate = Number(output) / Number(this.swapFromAmount);
       });
