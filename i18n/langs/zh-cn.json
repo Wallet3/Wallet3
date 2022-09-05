@@ -40,7 +40,7 @@
   "home-history-item-type-approve": "授权",
   "home-history-item-to": "目标方",
   "home-tab-wallet": "钱包",
-  "home-tab-exchange": "交易",
+  "home-tab-exchange": "兑换",
   "home-tab-arts": "收藏",
   "nft-button-transfer": "转送",
   "nft-button-view-on-website": "在网页上查看",
@@ -67,6 +67,13 @@
   "browser-sections-education": "教育",
   "browser-sections-others": "其它",
   "browser-favorites": "收藏",
+  "exchange-balance": "余额",
+  "exchange-to": "转换为 (预估)",
+  "exchange-slippage-tolerance": "最大滑点",
+  "exchange-no-routes": "无兑换路由",
+  "exchange-add-token-placeholder": "代币符号或地址",
+  "exchange-tokens": "代币",
+  "exchange-add-token-button": "追加",
   "qrscan-title": "扫描二维码",
   "qrscan-go-to-settings": "跳转到设置",
   "qrscan-no-permission": "无摄像头访问权限",
@@ -265,5 +272,7 @@
   "button-view": "查看",
   "button-remove": "移除",
   "button-close-all": "全部关闭",
-  "button-share": "分享"
+  "button-share": "分享",
+  "button-approve": "授权",
+  "button-swap": "兑换"
 }

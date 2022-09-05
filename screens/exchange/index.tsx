@@ -126,7 +126,7 @@ export default observer(() => {
         tokenSymbol={VM.swapFrom?.symbol || ''}
         chainId={VM.userSelectedNetwork.chainId}
         showTitle
-        title={`Balance: ${formatCurrency(VM.swapFrom?.amount || 0, '')}`}
+        title={`${t('exchange-balance')}: ${formatCurrency(VM.swapFrom?.amount || 0, '')}`}
         titleTouchable
         onTokenPress={() => openFromModal()}
         onTextInputChanged={(t) => VM.setSwapAmount(t)}
@@ -148,7 +148,7 @@ export default observer(() => {
         tokenSymbol={VM.swapTo?.symbol || ''}
         chainId={VM.userSelectedNetwork.chainId}
         showTitle
-        title="To (estimated)"
+        title={t('exchange-to')}
         editable={false}
         textValue={VM.swapToAmount!}
         onTokenPress={() => openToModal()}
@@ -162,7 +162,7 @@ export default observer(() => {
             {`1 ${VM.swapFrom?.symbol} ≈ ${formatCurrency(VM.exchangeRate, '')} ${VM.swapTo?.symbol}`}
           </Text>
         ) : VM.swapFromAmount && !VM.hasRoutes ? (
-          <Text style={{ color: 'crimson', fontSize: 12, marginStart: 6, fontWeight: '500' }}>No swap routes.</Text>
+          <Text style={{ color: 'crimson', fontSize: 12, marginStart: 6, fontWeight: '500' }}>{t('exchange-no-routes')}</Text>
         ) : (
           <View />
         )}
@@ -173,7 +173,7 @@ export default observer(() => {
       </View>
 
       <Collapsible collapsed={!advanced} style={{ paddingBottom: 24 }}>
-        <Text style={{ color: textColor, marginStart: 6 }}>Slippage tolerance:</Text>
+        <Text style={{ color: textColor, marginStart: 6 }}>{t('exchange-slippage-tolerance')}:</Text>
         <View style={{ flexDirection: 'row', marginTop: 12 }}>
           <TouchableOpacity style={{ ...styles.slippage, borderColor: getColor(0.5) }} onPress={() => VM.setSlippage(0.5)}>
             <Text style={{ color: getColor(0.5, secondaryTextColor) }}>0.5 %</Text>
@@ -222,7 +222,7 @@ export default observer(() => {
 
       {VM.needApproval ? (
         <Button
-          title="Approve"
+          title={t('button-approve')}
           themeColor={VM.userSelectedNetwork.color}
           disabled={!VM.swapFromAmount || VM.checkingApproval || !VM.isValidFromAmount || !VM.hasRoutes}
           onPress={() => {
@@ -232,7 +232,7 @@ export default observer(() => {
         />
       ) : (
         <Button
-          title="Swap"
+          title={t('button-swap')}
           themeColor={VM.userSelectedNetwork.color}
           disabled={!VM.exchangeRate || VM.checkingApproval || VM.calculating || !VM.isValidFromAmount || !VM.hasRoutes}
           onPress={() => {

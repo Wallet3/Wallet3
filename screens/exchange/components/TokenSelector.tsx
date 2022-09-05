@@ -6,6 +6,7 @@ import { ERC20Token } from '../../../models/ERC20';
 import { IToken } from '../../../common/tokens';
 import Theme from '../../../viewmodels/settings/Theme';
 import { formatCurrency } from '../../../utils/formatter';
+import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
 import { startLayoutAnimation } from '../../../utils/animations';
 import { utils } from 'ethers';
@@ -24,6 +25,7 @@ export default observer((props: Props) => {
   const [filterTxt, setFilterTxt] = useState('');
   const [userToken, setUserToken] = useState<ERC20Token>();
   const flatList = useRef<FlatList>(null);
+  const { t } = i18n;
 
   const handleInput = async (txt: string) => {
     if (!utils.isAddress(txt)) {
@@ -85,7 +87,7 @@ export default observer((props: Props) => {
       <TextBox
         iconColor={isLightMode ? `${foregroundColor}80` : tintColor}
         style={{ marginBottom: 16 }}
-        placeholder={'Coin symbol or address'}
+        placeholder={t('exchange-add-token-placeholder')}
         onChangeText={(t) => handleInput(t)}
       />
 
@@ -116,12 +118,14 @@ export default observer((props: Props) => {
               } catch (error) {}
             }}
           >
-            <Text style={{ fontSize: 20, color: props.themeColor, fontWeight: '500', textTransform: 'uppercase' }}>Add</Text>
+            <Text style={{ fontSize: 20, color: props.themeColor, fontWeight: '500', textTransform: 'uppercase' }}>
+              {t('exchange-add-token-button')}
+            </Text>
           </TouchableOpacity>
         </View>
       ) : undefined}
 
-      <Text style={{ marginBottom: 4, color: secondaryTextColor, paddingHorizontal: 8 }}>Tokens</Text>
+      <Text style={{ marginBottom: 4, color: secondaryTextColor, paddingHorizontal: 8 }}>{t('exchange-tokens')}</Text>
       <Separator style={{ borderColor }} />
 
       <FlatList
