@@ -129,8 +129,11 @@ export default observer(() => {
         title={`${t('exchange-balance')}: ${formatCurrency(VM.swapFrom?.amount || 0, '')}`}
         titleTouchable
         textValue={VM.swapFromAmount}
-        onTokenPress={() => openFromModal()}
         onTextInputChanged={(t) => VM.setSwapAmount(t)}
+        onTokenPress={() => {
+          Keyboard.dismiss();
+          openFromModal();
+        }}
         onTitlePress={() => {
           VM.setSwapAmount(VM.swapFrom?.amount!);
           return VM.swapFrom?.amount!;
@@ -152,7 +155,10 @@ export default observer(() => {
         title={t('exchange-to')}
         editable={false}
         textValue={VM.swapToAmount!}
-        onTokenPress={() => openToModal()}
+        onTokenPress={() => {
+          Keyboard.dismiss();
+          openToModal();
+        }}
       />
 
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 8, alignItems: 'center' }}>

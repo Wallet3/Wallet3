@@ -10,6 +10,10 @@ import {
   DAI,
   ETH,
   FRAX,
+  FTM_DAI,
+  FTM_ETH,
+  FTM_USDC,
+  FTM_WBTC,
   IToken,
   MATIC_DAI,
   MATIC_USDC,
@@ -48,5 +52,10 @@ export const SupportedChains: { [key: number]: { router: string; defaultTokens: 
   43114: {
     router: '0xFE90eb3FbCddacD248fAFEFb9eAa24F5eF095778',
     defaultTokens: [AVAX_WETH_e, AVAX_USDC, AVAX_USDt, AVAX_YUSD, AVAX_DAI_e, AVAX_USDC_e],
+  },
+
+  250: {
+    router: '0x7661a508a0c4c2d305f355F7850D87b69431e897',
+    defaultTokens: [FTM_ETH, FTM_DAI, FTM_USDC, FTM_WBTC],
   },
 };

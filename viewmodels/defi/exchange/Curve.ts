@@ -57,7 +57,8 @@ export class CurveExchange {
 
   get isValidFromAmount() {
     try {
-      return utils.parseUnits(this.swapFromAmount, this.swapFrom?.decimals || 18).gt(0);
+      const amount = utils.parseUnits(this.swapFromAmount, this.swapFrom?.decimals || 18);
+      return amount.gt(0) && amount.lte(this.swapFrom?.balance!);
     } catch (error) {
       return false;
     }
@@ -76,7 +77,9 @@ export class CurveExchange {
   }
 
   get isPending() {
-    return TxHub.pendingTxs.filter((t) => this.pendingTxs.includes(t.hash)).some((tx) => tx.from === this.account.address);
+    return TxHub.pendingTxs
+      .filter((t) => this.pendingTxs.includes(t.hash))
+      .some((tx) => tx.from === this.account.address && tx.chainId === this.userSelectedNetwork.chainId);
   }
 
   constructor() {
@@ -161,7 +164,7 @@ export class CurveExchange {
       return erc20;
     });
 
-    const tokens = network.chainId === 1 ? [nativeToken, ...userTokens] : userTokens;
+    const tokens = [1].includes(network.chainId) ? [nativeToken, ...userTokens] : userTokens;
 
     const swapFromAddress = await AsyncStorage.getItem(Keys.userSelectedFromToken(network.chainId));
     const swapToAddress = await AsyncStorage.getItem(Keys.userSelectedToToken(network.chainId));
