@@ -18,6 +18,10 @@ import {
   MATIC_DAI,
   MATIC_USDC,
   MATIC_USDT,
+  MATIC_WBTC,
+  MATIC_WETH,
+  MATIC_WMATIC,
+  MATIC_stMatic,
   MIM,
   STG,
   USDC,
@@ -41,7 +45,7 @@ export const SupportedChains: { [key: number]: { router: string; defaultTokens: 
 
   137: {
     router: '0xF52e46bEE287aAef56Fb2F8af961d9f1406cF476',
-    defaultTokens: [MATIC_DAI, MATIC_USDC, MATIC_USDT],
+    defaultTokens: [MATIC_WETH, MATIC_DAI, MATIC_USDC, MATIC_USDT, MATIC_WBTC],
   },
 
   100: {

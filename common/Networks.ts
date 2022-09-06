@@ -62,7 +62,7 @@ export const PublicNetworks: INetwork[] = [
   {
     symbol: 'ETH',
     comm_id: 'arb',
-    network: 'Arbitrum One',
+    network: 'Arbitrum',
     chainId: 42161,
     color: '#28a0f0',
     order: 3,

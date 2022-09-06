@@ -46,10 +46,28 @@ const MATIC_SUSHI = {
   symbol: 'SUSHI',
 };
 
-const MATIC_WETH = {
+export const MATIC_WETH = {
   address: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
   decimals: 18,
   symbol: 'WETH',
+};
+
+export const MATIC_stMatic = {
+  address: '0x3A58a54C066FdC0f2D55FC9C89F0415C92eBf3C4',
+  decimals: 18,
+  symbol: 'stMATIC',
+};
+
+export const MATIC_WMATIC = {
+  address: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
+  decimals: 18,
+  symbol: 'WMATIC',
+};
+
+export const MATIC_WBTC = {
+  address: '0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6',
+  decimals: 8,
+  symbol: 'WBTC',
 };
 
 export const PolygonPopularTokens = [
