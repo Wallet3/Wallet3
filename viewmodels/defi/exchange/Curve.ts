@@ -116,7 +116,7 @@ export class CurveExchange {
 
   async init() {
     const chainId = Number((await AsyncStorage.getItem(Keys.userSelectedNetwork)) || 1);
-    const slippage = Number((await AsyncStorage.getItem(Keys.userSlippage(chainId))) || 0.5);
+    const slippage = Number(await AsyncStorage.getItem(Keys.userSlippage(chainId))) || 0.5;
     const defaultAccount =
       App.findAccount((await AsyncStorage.getItem(Keys.userSelectedAccount)) as string) || App.currentAccount;
 
