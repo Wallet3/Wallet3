@@ -276,6 +276,9 @@ export class CurveExchange {
     }
 
     runInAction(() => (this.calculating = false));
+
+    if (!Number(this.swapFromAmount)) return;
+    this.calcExchangeRateTimer = setTimeout(() => this.calcExchangeRate(), 45 * 10000);
   }
 
   private async checkApproval(force = false) {
