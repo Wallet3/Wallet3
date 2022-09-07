@@ -11,6 +11,7 @@ import {
   AVAX_YUSD,
   CRV,
   CVX,
+  DAI,
   FRAX,
   FTM_DAI,
   FTM_ETH,
@@ -27,6 +28,7 @@ import {
   OP_USDC,
   OP_USDT,
   USDC,
+  USDT,
   WBTC,
   renBTC,
   sETH,
@@ -41,7 +43,7 @@ export const SupportedChains: { chainId: number; router: string; defaultTokens: 
   {
     chainId: 1,
     router: '0x81C46fECa27B31F3ADC2b91eE4be9717d1cd3DD7',
-    defaultTokens: [OP_DAI, USDC, OP_USDT, sUSD, CRV, CVX, sETH, stETH, renBTC, WBTC, MIM, FRAX],
+    defaultTokens: [DAI, USDC, USDT, sUSD, CRV, CVX, sETH, stETH, renBTC, WBTC, MIM, FRAX],
   },
 
   {

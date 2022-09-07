@@ -90,7 +90,7 @@ PODS:
   - libwebp/mux (1.2.3):
     - libwebp/demux
   - libwebp/webp (1.2.3)
-  - lottie-ios (3.4.1)
+  - lottie-ios (3.4.3)
   - lottie-react-native (5.1.4):
     - lottie-ios (~> 3.4.0)
     - React-Core
@@ -404,7 +404,7 @@ PODS:
     - React-perflogger (= 0.68.2)
   - RNCAsyncStorage (1.17.10):
     - React-Core
-  - RNDeviceInfo (9.0.2):
+  - RNDeviceInfo (10.0.2):
     - React-Core
   - RNFastImage (8.6.1):
     - React-Core
@@ -762,7 +762,7 @@ SPEC CHECKSUMS:
   hermes-engine: 84e3af1ea01dd7351ac5d8689cbbea1f9903ffc3
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   libwebp: 60305b2e989864154bd9be3d772730f08fc6a59c
-  lottie-ios: 016449b5d8be0c3dcbcfa0a9988469999cd04c5d
+  lottie-ios: 9ae750cdc7820fecbd3c2f0cfc493038208fcdc4
   lottie-react-native: b702fab740cdb952a8e2354713d3beda63ff97b0
   RCT-Folly: 4d8508a426467c48885f1151029bc15fa5d7b3b8
   RCTRequired: 3e917ea5377751094f38145fdece525aa90545a0
@@ -797,7 +797,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: b960b687d2dfef0d3761fbb187e01812ebab8b23
   ReactCommon: 095366164a276d91ea704ce53cb03825c487a3f2
   RNCAsyncStorage: 0c357f3156fcb16c8589ede67cc036330b6698ca
-  RNDeviceInfo: 1e3f62b9ec32f7754fac60bd06b8f8a27124e7f0
+  RNDeviceInfo: 0a7c1d2532aa7691f9b9925a27e43af006db4dae
   RNFastImage: 3207b9eb17c2425d574ca40db35185db6e324f4e
   RNGestureHandler: 920eb17f5b1e15dae6e5ed1904045f8f90e0b11e
   RNImageColors: fd9777591fc765780e035f4bec7a42edabc86eb4
