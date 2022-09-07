@@ -1,5 +1,4 @@
 import {
-  ARBI_DAI,
   ARBI_USDC,
   ARBI_USDT,
   ARBI_WBTC,
@@ -12,8 +11,6 @@ import {
   AVAX_YUSD,
   CRV,
   CVX,
-  DAI,
-  ETH,
   FRAX,
   FTM_DAI,
   FTM_ETH,
@@ -25,14 +22,12 @@ import {
   MATIC_USDT,
   MATIC_WBTC,
   MATIC_WETH,
-  MATIC_WMATIC,
-  MATIC_stMatic,
   MIM,
-  STG,
+  OP_DAI,
+  OP_USDC,
+  OP_USDT,
   USDC,
-  USDT,
   WBTC,
-  YFI,
   renBTC,
   sETH,
   sUSD,
@@ -46,7 +41,13 @@ export const SupportedChains: { chainId: number; router: string; defaultTokens: 
   {
     chainId: 1,
     router: '0x81C46fECa27B31F3ADC2b91eE4be9717d1cd3DD7',
-    defaultTokens: [DAI, USDC, USDT, sUSD, CRV, CVX, sETH, stETH, renBTC, WBTC, MIM, FRAX],
+    defaultTokens: [OP_DAI, USDC, OP_USDT, sUSD, CRV, CVX, sETH, stETH, renBTC, WBTC, MIM, FRAX],
+  },
+
+  {
+    chainId: 10,
+    router: '0x89287c32c2CAC1C76227F6d300B2DBbab6b75C08',
+    defaultTokens: [OP_USDC, OP_DAI, OP_USDT],
   },
 
   {
