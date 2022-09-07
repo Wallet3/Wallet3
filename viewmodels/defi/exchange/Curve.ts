@@ -34,7 +34,7 @@ export class CurveExchange {
   private curveNetwork?: Promise<void>;
   swapRoute: IRouteStep[] | null = null;
 
-  networks = Object.getOwnPropertyNames(SupportedChains).map((id) => Networks.find(id)!);
+  networks = SupportedChains.map(({ chainId }) => Networks.find(chainId)!);
   userSelectedNetwork = Networks.Ethereum;
   account = App.currentAccount!;
 
@@ -52,7 +52,7 @@ export class CurveExchange {
   pendingTxs: string[] = [];
 
   protected get chain() {
-    return SupportedChains[this.userSelectedNetwork.chainId];
+    return SupportedChains.find(({ chainId }) => this.userSelectedNetwork.chainId === chainId)!;
   }
 
   get isValidFromAmount() {
@@ -164,7 +164,7 @@ export class CurveExchange {
       return erc20;
     });
 
-    const tokens = [1].includes(network.chainId) ? [nativeToken, ...userTokens] : userTokens;
+    const tokens = [1, 42161].includes(network.chainId) ? [nativeToken, ...userTokens] : userTokens;
 
     const swapFromAddress = await AsyncStorage.getItem(Keys.userSelectedFromToken(network.chainId));
     const swapToAddress = await AsyncStorage.getItem(Keys.userSelectedToToken(network.chainId));
@@ -353,7 +353,7 @@ export class CurveExchange {
       utils.parseUnits(this.swapFromAmount, this.swapFrom?.decimals),
       utils
         .parseUnits(this.swapToAmount!, this.swapTo?.decimals)
-        .mul(Number.parseInt((10000 - Number(this.slippage.toFixed(2)) * 100) as any))
+        .mul(Number.parseInt((10000 - Number((this.slippage || 0.5).toFixed(2)) * 100) as any))
         .div(10000),
       factorySwapAddrs,
     ]);
