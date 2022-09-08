@@ -172,6 +172,7 @@ export default observer(() => {
           })}
       </View>
 
+      {poap.loading ? <Skeleton style={{ height: 24, marginTop: 24 }} /> : undefined}
       {poap.badges.length > 0 ? <Text style={styles.subtitle}>{t('profile-badges')}</Text> : undefined}
       <FlatGrid
         itemDimension={52}

@@ -1,6 +1,6 @@
 import FastImage, { FastImageProps } from 'react-native-fast-image';
 import { Image, ImageSourcePropType, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Networks from '../viewmodels/Networks';
 import SvgImage from 'react-native-remote-svg';
@@ -20,11 +20,17 @@ interface CoinProps extends FastImageProps {
 
 export default observer((props: CoinProps) => {
   const [network] = useState(Networks.find(props.chainId));
-  const [logoUrl] = useState(
-    `https://github.com/trustwallet/assets/raw/master/blockchains/${
-      (network?.github_dir || network?.network)?.toLowerCase() ?? 'ethereum'
-    }/assets/${props.address}/logo.png`
-  );
+  const [logoUrl] = props.forceRefresh
+    ? [
+        `https://github.com/trustwallet/assets/raw/master/blockchains/${
+          (network?.github_dir || network?.network)?.toLowerCase() ?? 'ethereum'
+        }/assets/${props.address}/logo.png`,
+      ]
+    : useState(
+        `https://github.com/trustwallet/assets/raw/master/blockchains/${
+          (network?.github_dir || network?.network)?.toLowerCase() ?? 'ethereum'
+        }/assets/${props.address}/logo.png`
+      );
 
   let symbol = props.symbol?.toLowerCase() ?? '';
   symbol = symbol.endsWith('.e') ? symbol.substring(0, symbol.length - 2) : symbol; // Avax
@@ -45,6 +51,10 @@ export default observer((props: CoinProps) => {
     borderRadius: props.iconUrl ? size / 2 : 0,
   };
 
+  useEffect(() => {
+    setFailedSource(undefined);
+  }, [props.address]);
+
   return failedSource ? (
     // @ts-ignore
     <Image {...props} source={icons['_coin']} style={style} />
@@ -56,8 +66,8 @@ export default observer((props: CoinProps) => {
       {...props}
       source={source}
       defaultSource={icons['_coin']}
-      onError={() => setFailedSource(icons['_coin'])}
       style={style}
+      onError={() => setFailedSource(icons['_coin'])}
     />
   );
 });

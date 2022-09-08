@@ -63,7 +63,13 @@ export class RawTransactionRequest extends BaseTransaction {
 
   get value() {
     try {
-      return Number(utils.formatUnits(this.valueWei, 18)).toLocaleString(undefined, {
+      if (this.valueWei.add(this.txFeeWei).gt(this.nativeToken.balance)) {
+        return Number(utils.formatEther(this.nativeToken.balance.sub(this.txFeeWei))).toLocaleString(undefined, {
+          maximumFractionDigits: 6,
+        });
+      }
+
+      return Number(utils.formatEther(this.valueWei)).toLocaleString(undefined, {
         maximumFractionDigits: 6,
       });
     } catch (error) {
@@ -245,12 +251,18 @@ export class RawTransactionRequest extends BaseTransaction {
 
   get txRequest(): providers.TransactionRequest | undefined {
     try {
+      let valueEther = BigNumber.from(this.param.value || 0);
+
+      if (valueEther.gt(0) && valueEther.eq(this.nativeToken.balance)) {
+        valueEther = BigNumber.from(this.nativeToken.balance!).sub(this.txFeeWei);
+      }
+
       const tx: providers.TransactionRequest = {
         chainId: this.network.chainId,
         from: this.param.from || this.account.address,
         to: this.param.to,
         data: this.param.data || '0x',
-        value: BigNumber.from(this.param.value || '0x0'),
+        value: valueEther,
 
         nonce: this.nonce,
         gasLimit: this.gasLimit,

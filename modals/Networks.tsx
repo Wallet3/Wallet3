@@ -27,7 +27,7 @@ interface Props {
   onEditing?: (editing: boolean) => void;
 }
 
-export default observer(({ title, onNetworkPress, selectedNetwork, useContextMenu, onEditing }: Props) => {
+export default observer(({ title, onNetworkPress, selectedNetwork, useContextMenu, onEditing, networks }: Props) => {
   const { t } = i18n;
   const { backgroundColor, secondaryTextColor, borderColor } = Theme;
   const [nets, setNets] = useState<INetwork[]>();
@@ -37,7 +37,7 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
   const [menuOpened, setMenuOpened] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setNets(Networks.all), 25);
+    const timer = setTimeout(() => setNets(networks ?? Networks.all), 25);
     const reset = () => {
       swiper.current?.scrollTo(0);
       onEditing?.(false);

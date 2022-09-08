@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import * as SplashScreen from 'expo-splash-screen';
 import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
 

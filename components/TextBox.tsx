@@ -31,11 +31,17 @@ export default ({
   onScanRequest,
 }: Props) => {
   const addrRef = useRef<TextInput>(null);
+  const [innerValue, setInnerValue] = useState<string>();
+
+  const onInnerChangeText = (txt: string) => {
+    setInnerValue(txt);
+    onChangeText?.(txt);
+  };
 
   const readClipboard = async () => {
     const txt = await getStringAsync();
     if (!txt) return;
-    onChangeText(txt);
+    onInnerChangeText(txt);
   };
 
   return (
@@ -59,14 +65,14 @@ export default ({
       <TextInput
         ref={addrRef}
         style={{ fontSize: 20, flex: 1, color: textColor ?? fontColor }}
-        value={value}
+        value={value ?? innerValue}
         placeholder={placeholder}
         defaultValue={defaultValue}
         autoCapitalize="none"
         keyboardType="web-search"
         placeholderTextColor="#dfdfdf50"
         autoCorrect={false}
-        onChangeText={(t) => onChangeText(t)}
+        onChangeText={(t) => onInnerChangeText(t)}
       />
 
       {onScanRequest && (

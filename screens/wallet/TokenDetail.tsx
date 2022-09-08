@@ -111,7 +111,7 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
         </Text>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={{ ...styles.subValue, marginEnd: 8, color: foregroundColor }}>
-            {`${numeral(token?.amount ?? 0).format('0,0.000000')} ${token?.symbol}`}
+            {`${formatCurrency(token?.amount || 0, '', '0.0000')} ${token?.symbol}`}
           </Text>
           <Coin
             chainId={network.chainId}

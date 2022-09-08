@@ -160,10 +160,16 @@ export const DSD = {
   symbol: 'DSD',
 };
 
-export const UST = {
-  address: '0xa47c8bf37f92aBed4A126BDA807A7b7498661acD',
+export const MIM = {
+  address: '0x99D8a9C45b2ecA8864373A26D1459e3Dff1e17F3',
   decimals: 18,
-  symbol: 'UST',
+  symbol: 'MIM',
+};
+
+export const FRAX = {
+  address: '0x853d955aCEf822Db058eb8505911ED77F175b99e',
+  decimals: 18,
+  symbol: 'FRAX',
 };
 
 export const BAC = {
@@ -182,6 +188,18 @@ export const CRV = {
   address: '0xD533a949740bb3306d119CC777fa900bA034cd52',
   decimals: 18,
   symbol: 'CRV',
+};
+
+export const CVX = {
+  address: '0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B',
+  decimals: 18,
+  symbol: 'CVX',
+};
+
+export const STG = {
+  address: '0xAf5191B0De278C7286d6C7CC6ab6BB8A73bA2Cd6',
+  decimals: 18,
+  symbol: 'STG',
 };
 
 export const LINK = {

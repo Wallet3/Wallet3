@@ -30,12 +30,13 @@ export class POAP {
 
   badges: (POAPBadge | '')[] = [];
   primaryBadge: POAPBadge | '' | null = null;
+  loading = false;
 
   constructor(owner: string) {
     this.owner = owner;
     this.contract = new ethers.Contract(POAPAddress, POAPABI);
 
-    makeObservable(this, { badges: observable, primaryBadge: observable, setPrimaryBadge: action });
+    makeObservable(this, { badges: observable, loading: observable, primaryBadge: observable, setPrimaryBadge: action });
 
     AsyncStorage.getItem(`${owner}-primaryBadge`).then((primaryBadge) => {
       if (!primaryBadge) return;
@@ -92,28 +93,35 @@ export class POAP {
   async refresh() {
     if (this.badges.length > 0) return;
 
-    runInAction(() => (this.badges = []));
+    runInAction(() => {
+      this.badges = [];
+      this.loading = true;
+    });
 
-    const [count, xdaiCount] = await Promise.all([this.getBalance(1), this.getBalance(100)]);
-    if (count === 0 && xdaiCount === 0) return [];
+    try {
+      const [count, xdaiCount] = await Promise.all([this.getBalance(1), this.getBalance(100)]);
+      if (count === 0 && xdaiCount === 0) return [];
 
-    const badges: (POAPBadge | '')[] = [];
+      const badges: (POAPBadge | '')[] = [];
 
-    if (count > 0) {
-      badges.push(...(await this.getTokenDetails(this.owner, count, 1)));
+      if (count > 0) {
+        badges.push(...(await this.getTokenDetails(this.owner, count, 1)));
+      }
+
+      if (xdaiCount > 0) {
+        badges.push(...(await this.getTokenDetails(this.owner, xdaiCount, 100)));
+      }
+
+      if (badges.length === 0) return [];
+
+      runInAction(() => (this.badges = badges.concat('')));
+
+      if (this.primaryBadge === null) this.setPrimaryBadge(badges[0]);
+
+      return badges;
+    } finally {
+      runInAction(() => (this.loading = false));
     }
-
-    if (xdaiCount > 0) {
-      badges.push(...(await this.getTokenDetails(this.owner, xdaiCount, 100)));
-    }
-
-    if (badges.length === 0) return [];
-
-    runInAction(() => (this.badges = badges.concat('')));
-
-    if (this.primaryBadge === null) this.setPrimaryBadge(badges[0]);
-
-    return badges;
   }
 
   setPrimaryBadge(badge: POAPBadge | '') {

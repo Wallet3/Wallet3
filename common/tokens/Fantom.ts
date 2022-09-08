@@ -16,10 +16,16 @@ const FTM_AAVE = {
   symbol: 'AAVE',
 };
 
-const FTM_ETH = {
-  address: '0x658b0c7613e890EE50B8C4BC6A3f41ef411208aD',
+export const FTM_ETH = {
+  address: '0x74b23882a30290451A17c44f4F05243b6b58C76d',
   decimals: 18,
-  symbol: 'FETH',
+  symbol: 'ETH',
+};
+
+export const FTM_WBTC = {
+  address: '0x321162Cd933E2Be498Cd2267a90534A804051b11',
+  decimals: 8,
+  symbol: 'BTC',
 };
 
 const FTM_LINK = {
