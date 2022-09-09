@@ -14,6 +14,7 @@ export class ERC20Token {
   readonly erc20: ethers.Contract;
   readonly chainId: number;
   private call_balanceOfOwner = '';
+  private allowanceMap = new Map<string, BigNumber>();
 
   name = '';
   symbol = '';
@@ -46,6 +47,8 @@ export class ERC20Token {
     shown?: boolean;
     order?: number;
   }) {
+    this.erc20 = new ethers.Contract(props.contract, ERC20ABI);
+
     this.address = props.contract;
     this.chainId = props.chainId;
     this.erc20 = new ethers.Contract(this.address, ERC20ABI, getProviderByChainId(this.chainId));
@@ -55,11 +58,10 @@ export class ERC20Token {
     this.decimals = props.decimals || -1;
     this.price = props.price || 0;
     this.iconUrl = props.iconUrl;
-    this.owner = props.owner || '';
     this.shown = props.shown;
     this.order = props.order;
 
-    this.call_balanceOfOwner = this.erc20.interface.encodeFunctionData('balanceOf', [this.owner]);
+    this.setOwner(props.owner);
 
     makeObservable(this, {
       name: observable,
@@ -87,8 +89,17 @@ export class ERC20Token {
     return balance;
   }
 
-  allowance(owner: string, spender: string): Promise<BigNumber> {
-    return this.erc20.allowance(owner, spender);
+  async allowance(owner: string, spender: string, force = false): Promise<BigNumber> {
+    if (!force) {
+      const cache = this.allowanceMap.get(`${owner}-${spender}`);
+      if (cache) return cache;
+    }
+
+    const data = this.erc20.interface.encodeFunctionData('allowance', [owner, spender]);
+    const approved = BigNumber.from((await eth_call(this.chainId, { to: this.address, data })) || '0');
+
+    this.allowanceMap.set(`${owner}-${spender}`, approved);
+    return approved;
   }
 
   async getName(): Promise<string> {
@@ -126,14 +137,6 @@ export class ERC20Token {
     return symbol;
   }
 
-  get filters() {
-    return this.erc20.filters;
-  }
-
-  on(filter: string | ethers.EventFilter, listener: ethers.providers.Listener) {
-    this.erc20.on(filter, listener);
-  }
-
   async estimateGas(to: string, amt: BigNumberish = BigNumber.from(0)) {
     return await estimateGas(this.chainId, {
       from: this.owner,
@@ -148,5 +151,10 @@ export class ERC20Token {
 
   encodeApproveData(spender: string, amount: BigNumberish) {
     return this.interface.encodeFunctionData('approve', [spender, amount]);
+  }
+
+  setOwner(owner: string) {
+    this.owner = owner;
+    if (owner) this.call_balanceOfOwner = this.erc20.interface.encodeFunctionData('balanceOf', [owner]);
   }
 }

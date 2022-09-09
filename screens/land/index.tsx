@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useRef } from 'react';
 

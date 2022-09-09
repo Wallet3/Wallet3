@@ -1,5 +1,4 @@
 {
-  "max": "上限",
   "land-welcome-import-wallet": "ウォレットのインポート",
   "land-welcome-create-wallet": "ウォレットの新規作成",
   "land-welcome-i-agree-to": "確認しました",
@@ -41,7 +40,7 @@
   "home-history-item-type-approve": "承認",
   "home-history-item-to": "受領者",
   "home-tab-wallet": "ウォレット",
-  "home-tab-swap": "スワップ",
+  "home-tab-exchange": "スワップ",
   "home-tab-arts": "アート",
   "nft-button-transfer": "転送",
   "nft-button-view-on-website": "Web で見る",
@@ -68,6 +67,13 @@
   "browser-sections-education": "教育",
   "browser-sections-others": "その他",
   "browser-favorites": "お気に入り",
+  "exchange-balance": "残高",
+  "exchange-to": "へ（推定）",
+  "exchange-slippage-tolerance": "スリッページの許容範囲",
+  "exchange-no-routes": "ルートなし",
+  "exchange-add-token-placeholder": "コインシンボルまたはアドレス",
+  "exchange-tokens": "トークン",
+  "exchange-add-token-button": "追加",
   "qrscan-title": "QRコード スキャン",
   "qrscan-go-to-settings": "設定へ",
   "qrscan-no-permission": "カメラにアクセスできない",
@@ -267,7 +273,6 @@
   "button-remove": "削除",
   "button-close-all": "全て閉じる",
   "button-share": "共有",
-  "slippage": "スリッページ",
-  "slippage-tolerance": "スリッページ許容量",
-  "To (estimated)": "まで（推定）"
+  "button-approve": "許可する",
+  "button-swap": "スワップ"
 }

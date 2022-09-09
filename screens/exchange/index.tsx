@@ -1,48 +1,51 @@
+import * as Animatable from 'react-native-animatable';
+
+import { Button, Skeleton } from '../../components';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import React, { useState } from 'react';
 import { Keyboard, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Modalize, useModalize } from 'react-native-modalize';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { utils } from 'ethers';
-import { observer } from 'mobx-react-lite';
-import Collapsible from 'react-native-collapsible';
-import { Portal } from 'react-native-portalize';
-import { generateNetworkIcon } from '../../assets/icons/networks/white';
-import Coingecko from '../../common/apis/Coingecko';
-import { Button } from '../../components';
-import Avatar from '../../components/Avatar';
-import { styles } from '../../constants/styles';
-import i18n from '../../i18n';
-import { NetworksMenu } from '../../modals';
-import TxRequest from '../../modals/compositions/TxRequest';
 import AccountSelector from '../../modals/dapp/AccountSelector';
-import modalStyles from '../../modals/styles';
-import Success from '../../modals/views/Success';
 import App from '../../viewmodels/App';
-import Authentication from '../../viewmodels/Authentication';
-import Networks from '../../viewmodels/Networks';
+import Avatar from '../../components/Avatar';
+import Collapsible from 'react-native-collapsible';
+import { IToken } from '../../common/tokens';
+import { NetworksMenu } from '../../modals';
+import { Portal } from 'react-native-portalize';
+import { ReactiveScreen } from '../../utils/device';
+import { TextInput } from 'react-native-gesture-handler';
 import Theme from '../../viewmodels/settings/Theme';
-import Swap from '../../viewmodels/Swap';
-import TokenBox from './TokenBox';
+import TokenBox from './components/TokenBox';
+import TokenSelector from './components/TokenSelector';
+import VM from '../../viewmodels/defi/exchange/Curve';
+import { formatCurrency } from '../../utils/formatter';
+import { generateNetworkIcon } from '../../assets/icons/networks/white';
+import i18n from '../../i18n';
+import { observer } from 'mobx-react-lite';
+import { rotate } from '../../common/Animation';
 
 export default observer(() => {
-  const { backgroundColor, borderColor, shadow, mode, foregroundColor, textColor, secondaryTextColor, tintColor } = Theme;
+  const { backgroundColor, borderColor, foregroundColor, textColor, secondaryTextColor } = Theme;
   const { top } = useSafeAreaInsets();
-  const { currentAccount } = App;
+  const { userSelectedNetwork } = VM;
+
   const { t } = i18n;
 
   const { ref: networksRef, open: openNetworksModal, close: closeNetworksModal } = useModalize();
   const { ref: accountsRef, open: openAccountsModal, close: closeAccountsModal } = useModalize();
-  const { ref: swapRef, open: openSwapModal, close: closeSwapModal } = useModalize();
+  const { ref: fromSelectorRef, open: openFromModal, close: closeFromTokens } = useModalize();
+  const { ref: toSelectorRef, open: openToModal, close: closeToTokens } = useModalize();
+
   const [advanced, setAdvanced] = useState(false);
 
-  const [approved, setApproved] = useState(false);
-  const [swapped, setSwapped] = useState(false);
+  useEffect(() => {
+    VM.init();
+  }, []);
 
-  const [process, setProcess] = useState('');
-
-  const [active] = useState({ index: 0 });
+  const getColor = (slippage: number, defaultColor = borderColor) =>
+    slippage === VM.slippage ? userSelectedNetwork.color : defaultColor;
 
   return (
     <ScrollView
@@ -50,146 +53,219 @@ export default observer(() => {
       keyboardShouldPersistTaps="handled"
       scrollEnabled={false}
     >
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 8, marginBottom: 10 }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginVertical: 8,
+          marginBottom: 16,
+        }}
+      >
         <TouchableOpacity
-          onPress={() => openNetworksModal()}
+          onPress={() => {
+            Keyboard.dismiss();
+            openNetworksModal();
+          }}
           style={{
-            borderRadius: 6,
-            padding: 3,
+            borderRadius: 5,
+            padding: 4,
             paddingHorizontal: 6,
-            backgroundColor: tintColor,
+            backgroundColor: VM.userSelectedNetwork.color,
             flexDirection: 'row',
             alignItems: 'center',
           }}
         >
           {generateNetworkIcon({
-            chainId: Networks.current.chainId,
+            chainId: VM.userSelectedNetwork.chainId,
             hideEVMTitle: true,
             height: 14,
             width: 12,
             color: '#fff',
           })}
-          <Text style={{ color: 'white', fontSize: 12, marginStart: 5 }}>{Networks.current.network}</Text>
+          <Text style={{ color: 'white', fontSize: 12, marginStart: 5 }}>{VM.userSelectedNetwork.network}</Text>
           <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 3 }} color={'#fff'} size={10} />
         </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={() => openAccountsModal()}
-          style={{
-            paddingHorizontal: 6,
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}
-        >
-          <Avatar
-            size={22}
-            backgroundColor={currentAccount?.emojiColor}
-            emoji={currentAccount?.emojiAvatar}
-            uri={currentAccount?.avatar}
-            emojiSize={9}
-          />
-        </TouchableOpacity>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          {VM.pendingTxs.length > 0 ? (
+            <View style={{ marginEnd: 16, flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={{ fontSize: 12, color: userSelectedNetwork.color, marginEnd: 8, fontWeight: '500' }}>
+                {VM.pendingTxs.length}
+              </Text>
+
+              <Animatable.View animation={rotate} iterationCount="infinite" easing="linear" duration={2000}>
+                <Ionicons name="sync" size={14} color={userSelectedNetwork.color} />
+              </Animatable.View>
+            </View>
+          ) : undefined}
+
+          <TouchableOpacity
+            onPress={() => {
+              Keyboard.dismiss();
+              openAccountsModal();
+            }}
+            style={{
+              paddingHorizontal: 6,
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+          >
+            <Avatar
+              size={26}
+              backgroundColor={VM.account?.emojiColor}
+              emoji={VM.account?.emojiAvatar}
+              uri={VM.account?.avatar}
+              emojiSize={9}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
       <TokenBox
-        value={Swap.fromAmount}
-        tokens={Swap.fromList}
-        onTokenSelected={(t) => Swap.selectFrom(t)}
-        onChangeText={(t) => Swap.setFromAmount(t)}
-        token={Swap.from}
-        chainId={Networks.current.chainId}
+        tokenAddress={VM.swapFrom?.address!}
+        tokenSymbol={VM.swapFrom?.symbol || ''}
+        chainId={VM.userSelectedNetwork.chainId}
         showTitle
-        title={`${t('max')}: ${utils.formatUnits(Swap.max, Swap.from?.decimals || 0)}`}
+        title={`${t('exchange-balance')}: ${formatCurrency(VM.swapFrom?.amount || 0, '')}`}
         titleTouchable
+        textValue={VM.swapFromAmount}
+        onTextInputChanged={(t) => VM.setSwapAmount(t)}
+        onTokenPress={() => {
+          Keyboard.dismiss();
+          openFromModal();
+        }}
         onTitlePress={() => {
-          const value = utils.formatUnits(Swap.max, Swap.from?.decimals);
-          Swap.setFromAmount(value);
+          VM.setSwapAmount(VM.swapFrom?.amount!);
+          return VM.swapFrom?.amount!;
         }}
       />
       <View style={{ alignItems: 'center', justifyContent: 'center', zIndex: 8 }}>
         <TouchableOpacity
-          onPress={(_) => {
-            Swap.interchange();
-            Swap.fromAmount = '';
-          }}
           style={{ padding: 8, borderRadius: 180, borderWidth: 0, borderColor, backgroundColor }}
+          onPress={() => VM.switchSwapTo(VM.swapFrom!)}
         >
           <Ionicons name="arrow-down-outline" size={16} color={secondaryTextColor} />
         </TouchableOpacity>
       </View>
       <TokenBox
-        value={Swap.forAmount}
-        tokens={Swap.forList}
-        onTokenSelected={(t) => Swap.selectFor(t)}
-        token={Swap.for}
-        chainId={Networks.current.chainId}
+        tokenAddress={VM.swapTo?.address!}
+        tokenSymbol={VM.swapTo?.symbol || ''}
+        chainId={VM.userSelectedNetwork.chainId}
         showTitle
-        title={t('To (estimated)')}
+        title={t('exchange-to')}
+        editable={false}
+        textValue={VM.swapToAmount!}
+        onTokenPress={() => {
+          Keyboard.dismiss();
+          openToModal();
+        }}
       />
+
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 8, alignItems: 'center' }}>
-        <Text style={{ color: secondaryTextColor, fontSize: 12, marginStart: 6 }}>
-          {`1 ${Networks.current.symbol} ≈ ${Coingecko[Networks.current.symbol.toLowerCase()]} USDC`}
-        </Text>
+        {VM.calculating ? (
+          <Skeleton style={{ height: 14 }} />
+        ) : VM.swapFromAmount && VM.exchangeRate ? (
+          <Text style={{ color: secondaryTextColor, fontSize: 12, marginStart: 6, fontWeight: '500' }}>
+            {`1 ${VM.swapFrom?.symbol} ≈ ${formatCurrency(VM.exchangeRate, '')} ${VM.swapTo?.symbol}`}
+          </Text>
+        ) : Number(VM.swapFromAmount) && !VM.calculating && !VM.hasRoutes ? (
+          <Text style={{ color: 'crimson', fontSize: 12, marginStart: 6, fontWeight: '500' }}>{t('exchange-no-routes')}</Text>
+        ) : (
+          <View />
+        )}
 
         <TouchableOpacity style={{ padding: 6 }} onPress={() => setAdvanced(!advanced)}>
           <Ionicons name="settings-outline" size={19} color={foregroundColor} />
         </TouchableOpacity>
       </View>
-      <Collapsible collapsed={!advanced} style={{ paddingBottom: 32 }}>
-        <Text style={{ color: textColor }}>{t('slippage-tolerance')}:</Text>
+
+      <Collapsible collapsed={!advanced} style={{ paddingBottom: 24 }}>
+        <Text style={{ color: textColor, marginStart: 6 }}>{t('exchange-slippage-tolerance')}:</Text>
         <View style={{ flexDirection: 'row', marginTop: 12 }}>
-          <TouchableOpacity onPress={() => Swap.setSlippage(0.5)} style={{ ...innerStyles.slippage }}>
-            <Text style={{ color: Swap.slippage === 0.5 ? Networks.current.color : secondaryTextColor }}>0.5 %</Text>
+          <TouchableOpacity style={{ ...styles.slippage, borderColor: getColor(0.5) }} onPress={() => VM.setSlippage(0.5)}>
+            <Text style={{ color: getColor(0.5, secondaryTextColor) }}>0.5 %</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => Swap.setSlippage(1)} style={{ ...innerStyles.slippage }}>
-            <Text style={{ color: Swap.slippage === 1 ? Networks.current.color : secondaryTextColor }}>1 %</Text>
+          <TouchableOpacity style={{ ...styles.slippage, borderColor: getColor(1) }} onPress={() => VM.setSlippage(1)}>
+            <Text style={{ color: getColor(1, secondaryTextColor) }}>1 %</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => Swap.setSlippage(2)} style={{ ...innerStyles.slippage }}>
-            <Text style={{ color: Swap.slippage === 2 ? Networks.current.color : secondaryTextColor }}>2 %</Text>
+          <TouchableOpacity style={{ ...styles.slippage, borderColor: getColor(2) }} onPress={() => VM.setSlippage(2)}>
+            <Text style={{ color: getColor(2, secondaryTextColor) }}>2 %</Text>
           </TouchableOpacity>
+
+          <View style={{ flex: 1 }} />
+
+          <View
+            style={{
+              ...styles.slippage,
+              marginEnd: 0,
+              borderColor: VM.slippage > 2 ? userSelectedNetwork.color : borderColor,
+            }}
+          >
+            <TextInput
+              placeholder="5"
+              style={{
+                minWidth: 25,
+                textAlign: 'center',
+                paddingEnd: 4,
+                maxWidth: 64,
+                color: VM.slippage > 2 ? userSelectedNetwork.color : textColor,
+              }}
+              keyboardType="number-pad"
+              value={`${VM.slippage}`}
+              onChangeText={(txt) => VM.setSlippage(Number(txt))}
+            />
+            <Text style={{ color: VM.slippage > 2 ? userSelectedNetwork.color : secondaryTextColor }}>%</Text>
+            <Ionicons
+              name="pencil"
+              color={VM.slippage > 2 ? userSelectedNetwork.color : secondaryTextColor}
+              size={12}
+              style={{ marginStart: 8 }}
+            />
+          </View>
         </View>
       </Collapsible>
 
-      {!Swap.approved && (
+      {VM.needApproval ? (
         <Button
-          style={{ backgroundColor: Networks.current.color }}
-          title={t('tx-type-approve')}
+          title={t('button-approve')}
+          themeColor={VM.userSelectedNetwork.color}
+          disabled={!VM.swapFromAmount || VM.checkingApproval || !VM.isValidFromAmount || !VM.hasRoutes || VM.isPending}
+          onPress={() => {
+            Keyboard.dismiss();
+            VM.approve();
+          }}
+        />
+      ) : (
+        <Button
+          title={t('button-swap')}
+          themeColor={VM.userSelectedNetwork.color}
           disabled={
-            !Swap.fromAmount ||
-            Swap.approving ||
-            Swap.fromList.length === 0 ||
-            currentAccount?.nativeToken.balance.lt(Swap.approveTx.gasLimit)
+            !VM.exchangeRate || VM.checkingApproval || VM.calculating || !VM.isValidFromAmount || !VM.hasRoutes || VM.isPending
           }
           onPress={() => {
-            openSwapModal();
-            setProcess('approve');
             Keyboard.dismiss();
+            VM.swap();
           }}
         />
       )}
 
-      {Swap.approved && (
-        <Button
-          style={{ backgroundColor: Networks.current.color }}
-          title={t('home-tab-swap')}
-          disabled={!Swap.isValid || Swap.swapping}
-          onPress={() => {
-            openSwapModal();
-            setProcess('swap');
-            Keyboard.dismiss();
-          }}
-        />
-      )}
+      <View style={{ flex: 1, minHeight: ReactiveScreen.height * 0.39 }} />
+
+      <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'none' }}>
+        <Text style={{ color: secondaryTextColor, fontSize: 10 }}>Powered by</Text>
+      </View>
 
       <Portal>
         <Modalize ref={networksRef} adjustToContentHeight disableScrollIfPossible>
           <NetworksMenu
             title={t('modal-dapp-switch-network', { app: 'Exchange' })}
-            selectedNetwork={Networks.current}
+            networks={VM.networks}
+            selectedNetwork={VM.userSelectedNetwork}
             onNetworkPress={(network) => {
+              VM.switchNetwork(network);
               closeNetworksModal();
-              Networks.switch(network);
             }}
           />
         </Modalize>
@@ -205,79 +281,67 @@ export default observer(() => {
             <AccountSelector
               single
               accounts={App.allAccounts}
-              selectedAccounts={[currentAccount?.address || '']}
+              selectedAccounts={[VM.account?.address || '']}
               style={{ padding: 16, height: 430 }}
               expanded
-              themeColor={Networks.current.color}
+              themeColor={VM.userSelectedNetwork.color}
               onDone={([account]) => {
-                App.switchAccount(account);
                 closeAccountsModal();
+                VM.switchAccount(account);
               }}
             />
           </SafeAreaProvider>
         </Modalize>
 
         <Modalize
-          key="Swap"
-          ref={swapRef}
+          ref={fromSelectorRef}
           adjustToContentHeight
           disableScrollIfPossible
-          modalStyle={styles.modalStyle}
+          modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-          onClosed={() => {
-            setProcess('');
-            setApproved(false);
-            setSwapped(false);
-          }}
         >
-          {process === 'approve' && (
-            <SafeAreaProvider style={{ ...modalStyles.safeArea, backgroundColor }}>
-              {approved ? (
-                <Success />
-              ) : (
-                <TxRequest
-                  vm={Swap.approveTx}
-                  themeColor={Networks.current.color}
-                  bioType={Authentication.biometricType}
-                  onApprove={async (pin) => {
-                    const approved = await Swap.approve(pin);
-                    setApproved(approved);
-                    if (approved) setTimeout(() => closeSwapModal(), 1750);
-                    return approved;
-                  }}
-                  onReject={closeSwapModal}
-                />
-              )}
-            </SafeAreaProvider>
-          )}
+          <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6, height: '100%' }}>
+            <TokenSelector
+              tokens={VM.tokens}
+              selectedToken={VM.swapFrom as IToken}
+              chainId={userSelectedNetwork.chainId}
+              themeColor={userSelectedNetwork.color}
+              onAddTokenRequested={(t) => VM.addToken(t)}
+              onTokenSelected={(t) => {
+                VM.switchSwapFrom(t as any);
+                closeFromTokens();
+              }}
+            />
+          </SafeAreaProvider>
+        </Modalize>
 
-          {process === 'swap' && (
-            <SafeAreaProvider style={{ ...modalStyles.safeArea, backgroundColor }}>
-              {swapped ? (
-                <Success />
-              ) : (
-                <TxRequest
-                  vm={Swap.swapTx}
-                  themeColor={Networks.current.color}
-                  bioType={Authentication.biometricType}
-                  onApprove={async (pin) => {
-                    const swapped = await Swap.swap(pin);
-                    setSwapped(swapped);
-                    if (swapped) setTimeout(() => closeSwapModal(), 1750);
-                    return swapped;
-                  }}
-                  onReject={closeSwapModal}
-                />
-              )}
-            </SafeAreaProvider>
-          )}
+        <Modalize
+          ref={toSelectorRef}
+          adjustToContentHeight
+          disableScrollIfPossible
+          modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
+          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+        >
+          <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
+            <TokenSelector
+              tokens={VM.tokens}
+              chainId={userSelectedNetwork.chainId}
+              themeColor={userSelectedNetwork.color}
+              selectedToken={VM.swapTo as IToken}
+              onAddTokenRequested={(t) => VM.addToken(t)}
+              onTokenSelected={(t) => {
+                VM.switchSwapTo(t as any);
+                closeToTokens();
+              }}
+            />
+          </SafeAreaProvider>
         </Modalize>
       </Portal>
     </ScrollView>
   );
 });
 
-const innerStyles = StyleSheet.create({
+const styles = StyleSheet.create({
   slippage: {
     padding: 5,
     paddingHorizontal: 12,

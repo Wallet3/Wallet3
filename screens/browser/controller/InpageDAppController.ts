@@ -333,32 +333,17 @@ export class InpageDAppController extends EventEmitter {
         tx: providers.TransactionRequest;
         readableInfo: ReadableInfo;
       }) => {
-        const { wallet, accountIndex } = App.findWallet(dapp.lastUsedAccount) || {};
-        if (!wallet) {
-          showMessage({ message: i18n.t('msg-account-not-found'), type: 'warning' });
-          return resolve({ error: { code: Code_InvalidParams, message: 'Invalid account' } });
-        }
-
-        const { txHex, error } = await wallet.signTx({
+        const { txHash, error } = await App.sendTxFromAccount(dapp.lastUsedAccount, {
           tx,
           pin,
-          accountIndex: accountIndex!,
+          readableInfo: { ...(readableInfo || {}), dapp: pageMetadata?.title ?? '', icon: pageMetadata?.icon },
         });
 
-        if (!txHex || error) {
-          if (error) showMessage({ type: 'warning', message: error.message });
-          return false;
-        }
+        txHash ? resolve(txHash) : resolve({ error });
 
-        const broadcastTx = {
-          txHex,
-          tx,
-          readableInfo: { ...(readableInfo || {}), dapp: pageMetadata?.title ?? '', icon: pageMetadata?.icon },
-        };
+        if (error) showMessage({ type: 'warning', message: error.message });
 
-        wallet.sendTx(broadcastTx).then((hash) => resolve(hash));
-
-        return true;
+        return txHash ? true : false;
       };
 
       const reject = () => resolve({ error: { code: Code_UserRejected, message: 'The request was rejected by the user' } });

@@ -5,7 +5,7 @@ import { estimateGas, getBalance } from '../common/RPC';
 import { IToken } from '../common/tokens';
 
 export class NativeToken implements IToken {
-  readonly owner: string;
+  owner: string;
   readonly decimals = 18;
   readonly address = '';
 
@@ -57,5 +57,9 @@ export class NativeToken implements IToken {
       value: '0x0',
       data,
     });
+  }
+
+  setOwner(owner: string) {
+    this.owner = owner;
   }
 }
