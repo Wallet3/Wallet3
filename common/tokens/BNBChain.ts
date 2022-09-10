@@ -40,4 +40,16 @@ const BSC_BUSD = {
   symbol: 'BUSD',
 };
 
-export const BscPopularTokens = [BSC_ETH, BSC_DAI, BSC_USDC, BSC_BUSD, CAKE, XVS, ALPACA];
+const BSC_USDT = {
+  address: '0x55d398326f99059fF775485246999027B3197955',
+  decimals: 18,
+  symbol: 'USDT',
+};
+
+const BSC_MATIC = {
+  address: '0xCC42724C6683B7E57334c4E856f4c9965ED682bD',
+  decimals: 18,
+  symbol: 'MATIC',
+};
+
+export const BscPopularTokens = [BSC_ETH, BSC_DAI, BSC_USDC, BSC_USDT, BSC_BUSD, CAKE, XVS, ALPACA, BSC_MATIC];

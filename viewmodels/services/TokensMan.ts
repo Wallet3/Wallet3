@@ -29,11 +29,13 @@ export default class TokensMan {
     const popTokens = Networks.find(chainId)?.defaultTokens ?? [];
     const customized: UserToken[] = JSON.parse((await AsyncStorage.getItem(`${chainId}-${account}`)) || '[]');
 
-    const tokens: UserToken[] = customized.length === 0 ? popTokens : customized;
+    const tokens: UserToken[] = [...customized, ...popTokens];
     return LINQ.from(tokens)
-      .orderBy((t) => t.order || 0)
+      .where((t) => (t.address ? true : false))
       .select((t) => new ERC20Token({ ...t, owner: account, chainId, contract: utils.getAddress(t.address) }))
       .distinct((t) => t.address)
+      .orderBy((t) => t.order)
+      .thenByDescending((t) => t.shown || false)
       .toArray();
   }
 }
