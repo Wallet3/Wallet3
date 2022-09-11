@@ -404,7 +404,7 @@ PODS:
     - React-perflogger (= 0.68.2)
   - RNCAsyncStorage (1.17.10):
     - React-Core
-  - RNDeviceInfo (10.0.2):
+  - RNDeviceInfo (10.1.1):
     - React-Core
   - RNFastImage (8.6.1):
     - React-Core
@@ -797,7 +797,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: b960b687d2dfef0d3761fbb187e01812ebab8b23
   ReactCommon: 095366164a276d91ea704ce53cb03825c487a3f2
   RNCAsyncStorage: 0c357f3156fcb16c8589ede67cc036330b6698ca
-  RNDeviceInfo: 0a7c1d2532aa7691f9b9925a27e43af006db4dae
+  RNDeviceInfo: 89bc4fe36cf4c8955965609b140d29a335d5350d
   RNFastImage: 3207b9eb17c2425d574ca40db35185db6e324f4e
   RNGestureHandler: 920eb17f5b1e15dae6e5ed1904045f8f90e0b11e
   RNImageColors: fd9777591fc765780e035f4bec7a42edabc86eb4

@@ -16,6 +16,7 @@ import Findora from './findora.svg';
 import Fuse from './fuse.svg';
 import Harmony from './harmony-one.svg';
 import Heco from './heco.svg';
+import Kava from './kava.svg';
 import Klaytn from './klaytn.svg';
 import Metis from './metis.svg';
 import Moonbeam from './moonbeam.svg';
@@ -28,7 +29,6 @@ import Ronin from './ronin.svg';
 import Shiden from './shiden.svg';
 import XDai from './xdai.svg';
 import ZKSync from './zksync.svg';
-import ZkSync from './zksync.svg';
 import coins from '../../crypto';
 import styles from '../styles';
 
@@ -49,7 +49,7 @@ export default {
   25: <Cronos width={49} height={49} style={styles.cronos} />,
   1666600000: <Harmony width={52} height={52} style={styles.harmony} />,
   2020: <Ronin width={42} height={42} style={styles.ronin} />,
-  280: <ZkSync width={49} height={49} style={styles.zkSync} />,
+  280: <ZKSync width={49} height={49} style={styles.zkSync} />,
   1088: <Metis width={64} height={64} style={styles.metis} />,
   8217: <Klaytn width={37} height={37} style={styles.klaytn} />,
   2152: <Findora width={42} height={42} style={styles.findora} />,
@@ -57,6 +57,7 @@ export default {
   1285: <Moonriver width={42} height={42} style={styles.moonriver} />,
   122: <Fuse width={32} height={32} style={styles.fuse} />,
   336: <Shiden width={40} height={40} style={styles.shiden} />,
+  2222: <Kava width={40} height={30} style={styles.kava} />,
 };
 
 export const EVMIcon = ({
@@ -151,6 +152,8 @@ export function generateNetworkIcon(props: {
       return <Shiden key={chainId} width={width} height={height ?? width} style={style} />;
     case 9001:
       return <Evmos key={chainId} width={width} height={height ?? width} style={style} />;
+    case 2222:
+      return <Kava key={chainId} width={width} height={height ?? width} style={style} />;
     default:
       return coins[symbol?.toLowerCase() || ''] ? (
         <Coin symbol={symbol} size={height ?? width} address="" chainId={chainId} style={style as any} />

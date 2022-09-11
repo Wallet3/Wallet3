@@ -1980,15 +1980,15 @@
     "@babel/helper-validator-identifier" "^7.18.6"
     to-fast-properties "^2.0.0"
 
-"@curvefi/api@^2.8.8":
-  version "2.8.8"
-  resolved "https://registry.yarnpkg.com/@curvefi/api/-/api-2.8.8.tgz#29fef995415f09606f4328087795cb8183d2f945"
-  integrity sha512-jt8+FHYMPaGUiXmIo/6hWh65Rd+2UXzu8Iju5uUk7IjcHAyWafoxKw4lc9uRNm4hZE07P1ekjbA/BolZT2JQCQ==
+"@curvefi/api@^2.9.0":
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/@curvefi/api/-/api-2.9.0.tgz#3d313978120ffb40a033fd3f67848a0fc636693c"
+  integrity sha512-WM4oCuY6dhkNtohLNoMgJ2UXzrnaw6+I0zIsBu+U8j1ySfdqDExlDWMkBMFn6RRuPkmSSNuHG9poBp36MeZ8WQ==
   dependencies:
     "@ethersproject/networks" "^5.5.0"
     axios "^0.21.1"
     bignumber.js "^9.0.1"
-    ethcall "^4.2.5"
+    ethcall "^4.8.2"
     ethers "^5.4.6"
     memoizee "^0.4.15"
 
@@ -5848,7 +5848,7 @@ eth-url-parser@^1.0.4:
     bignumber.js "^7.2.1"
     qs "^6.5.2"
 
-ethcall@^4.2.5:
+ethcall@^4.8.2:
   version "4.8.2"
   resolved "https://registry.yarnpkg.com/ethcall/-/ethcall-4.8.2.tgz#0506a0d171f45d5d95e3caafb1cd15c0447b0159"
   integrity sha512-/tJ+zl/GaNAdDxZhms54hvGTmFAUbST+hy/A0YmMHxxEwecK5FFFZWyOjeGs2YaocAi8Lmuz0R7mR9Tur7566w==
@@ -9539,10 +9539,10 @@ react-native-crypto@^2.2.0:
     public-encrypt "^4.0.0"
     randomfill "^1.0.3"
 
-react-native-device-info@^10.0.2:
-  version "10.0.2"
-  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-10.0.2.tgz#17cd96df277cca5a22fb80409527c181a08d4ed1"
-  integrity sha512-6XY8EctYqNEX6EHDoHxz3yONOYxCHKrgEdStP7HZDYzFXb1JB5BFt7UbXDWrmihXUZDv06sBsjN26+Tp0EajXw==
+react-native-device-info@^10.1.1:
+  version "10.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-10.1.1.tgz#ef9795638e4e1427b8e92b37e1ff85dda5a2192f"
+  integrity sha512-yvFzqDXGgDx+9sU098iF4dKBge1z3sDULmemL3na32pz41uQhvqSCMdRa6WlH7WFM8RFBSPq5IMnn9EBKtiAFg==
 
 react-native-draggable-flatlist@^3.1.2:
   version "3.1.2"
@@ -9678,10 +9678,10 @@ react-native-shared-element@0.8.4:
   resolved "https://registry.yarnpkg.com/react-native-shared-element/-/react-native-shared-element-0.8.4.tgz#dd97b992e53633a57ea728327f7c02bad3c5af14"
   integrity sha512-agRuD5AB4daw4QLo7KCTBqCtmIjbQkqpwsT/aYrxDu/McvTCdDuXVttaVMrqeyAgdDkU1egp41FdiExS1L/hJw==
 
-react-native-super-grid@^4.5.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/react-native-super-grid/-/react-native-super-grid-4.5.0.tgz#f5ac10e884e44923fa8439fab0a5a26c429c17ed"
-  integrity sha512-UcGD9Bi+J4VUrhWtL6wp3F+Igegx2mSRo98iOXUN7k+EgvRhjL6oVWeYLGX2N/HLFLOl7A6vRXT7e8TLqGoN4Q==
+react-native-super-grid@^4.5.1:
+  version "4.5.1"
+  resolved "https://registry.yarnpkg.com/react-native-super-grid/-/react-native-super-grid-4.5.1.tgz#2afa48638cc0f9f0cd5254902706ee20edb664b1"
+  integrity sha512-sIDfdTMhgSDAEn86BPHv8lpuf+iYmgxRi8dYefirV2/nWoIZP9UeJdOMO7Vn9ButtVqGAfkiGD16zS7iykvf8w==
   dependencies:
     prop-types "^15.6.0"
 
@@ -11043,10 +11043,10 @@ typeorm@^0.3.9:
     xml2js "^0.4.23"
     yargs "^17.3.1"
 
-typescript@~4.8.2:
-  version "4.8.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.8.2.tgz#e3b33d5ccfb5914e4eeab6699cf208adee3fd790"
-  integrity sha512-C0I1UsrrDHo2fYI5oaCGbSejwX4ch+9Y5jTQELvovfmFkK3HHSZJB8MSJcWLmCUBzQBchCrZ9rMRV6GuNrvGtw==
+typescript@~4.8.3:
+  version "4.8.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.8.3.tgz#d59344522c4bc464a65a730ac695007fdb66dd88"
+  integrity sha512-goMHfm00nWPa8UvR/CPSvykqf6dVV8x/dp0c5mFTMTIu0u0FlGWRioyy7Nn0PGAdHxpJZnuO/ut+PpQ8UiHAig==
 
 ua-parser-js@^0.7.18:
   version "0.7.28"

@@ -149,6 +149,16 @@ export const PublicNetworks: INetwork[] = [
     github_dir: 'xdai',
   },
   {
+    symbol: 'KAVA',
+    chainId: 2222,
+    comm_id: 'kava',
+    network: 'Kava',
+    color: '#FF433E',
+    defaultTokens: [],
+    explorer: 'https://explorer.kava.io',
+    etherscanApi: 'https://explorer.kava.io/api',
+  },
+  {
     symbol: 'CELO',
     comm_id: 'celo',
     chainId: 42220,
