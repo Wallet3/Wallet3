@@ -32,7 +32,7 @@ export default class TokensMan {
     const tokens: UserToken[] = [...customized, ...popTokens];
     return LINQ.from(tokens)
       .where((t) => (t.address ? true : false))
-      .select((t) => new ERC20Token({ ...t, owner: account, chainId, contract: utils.getAddress(t.address) }))
+      .select((t) => new ERC20Token({ ...t, owner: account, chainId, contract: t.address }))
       .distinct((t) => t.address)
       .orderBy((t) => t.order)
       .thenByDescending((t) => t.shown || false)

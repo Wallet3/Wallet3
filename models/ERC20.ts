@@ -48,9 +48,9 @@ export class ERC20Token {
     shown?: boolean;
     order?: number;
   }) {
-    this.erc20 = new ethers.Contract(props.contract, ERC20ABI);
+    this.address = utils.getAddress(props.contract);
+    this.erc20 = new ethers.Contract(this.address, ERC20ABI);
 
-    this.address = props.contract;
     this.chainId = props.chainId;
 
     this.symbol = props.symbol || '';
