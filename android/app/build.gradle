@@ -150,8 +150,8 @@ android {
         applicationId 'jp.co.chainbow.wallet3.mobile'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 23
-        versionName "2.5.0"
+        versionCode 24
+        versionName "2.6.1"
 
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 
@@ -353,6 +353,10 @@ dependencies {
     } else {
         implementation 'org.webkit:android-jsc:+'
     }
+
+    // Fixes "e: java.lang.AssertionError: No such enum entry LIBRARY_GROUP_PREFIX in org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl@b254b575"
+    // According to the https://stackoverflow.com/a/67736351
+    implementation 'androidx.annotation:annotation:1.2.0'
 }
 
 if (isNewArchitectureEnabled()) {
