@@ -9,6 +9,7 @@ import CurveRouterABI from '../../../abis/CurveRouter.json';
 import { ERC20Token } from '../../../models/ERC20';
 import { INetwork } from '../../../common/Networks';
 import { IRouteStep } from '@curvefi/api/lib/interfaces';
+import LINQ from 'linq';
 import MessageKeys from '../../../common/MessageKeys';
 import { NativeToken } from '../../../models/NativeToken';
 import Networks from '../../Networks';
@@ -151,18 +152,21 @@ export class CurveExchange {
 
     const nativeToken = new NativeToken({ owner: this.account.address, chainId: network.chainId, symbol: network.symbol });
 
-    const userTokens = (saved.length > 0 ? saved : this.chain.defaultTokens).map((t) => {
-      const erc20 = new ERC20Token({
-        chainId: network.chainId,
-        owner: this.account.address,
-        contract: t.address,
-        symbol: t.symbol,
-        decimals: t.decimals,
-      });
+    const userTokens = LINQ.from([...saved, ...this.chain.defaultTokens])
+      .select((t) => {
+        const erc20 = new ERC20Token({
+          chainId: network.chainId,
+          owner: this.account.address,
+          contract: t.address,
+          symbol: t.symbol,
+          decimals: t.decimals,
+        });
 
-      erc20.getBalance();
-      return erc20;
-    });
+        erc20.getBalance();
+        return erc20;
+      })
+      .distinct((t) => t.address)
+      .toArray();
 
     const tokens = [1, 42161].includes(network.chainId) ? [nativeToken, ...userTokens] : userTokens;
 

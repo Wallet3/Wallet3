@@ -256,6 +256,7 @@ export default observer((props: Web3ViewProps) => {
           allowsInlineMediaPlayback
           allowsBackForwardNavigationGestures
           // injectedJavaScriptBeforeContentLoaded={`${MetamaskMobileProvider}\ntrue;`}
+          onContentProcessDidTerminate={() => ((webViewRef as any)?.current as WebView)?.reload()}
           onLoadStart={() => {
             const webview = (webViewRef as any).current as WebView;
             webview.injectJavaScript(`${MetamaskMobileProvider}\ntrue;`);

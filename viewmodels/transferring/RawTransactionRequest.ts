@@ -255,6 +255,7 @@ export class RawTransactionRequest extends BaseTransaction {
 
       if (valueEther.gt(0) && valueEther.eq(this.nativeToken.balance)) {
         valueEther = BigNumber.from(this.nativeToken.balance!).sub(this.txFeeWei);
+        valueEther = valueEther.lt(0) ? BigNumber.from(0) : valueEther;
       }
 
       const tx: providers.TransactionRequest = {

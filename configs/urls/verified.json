@@ -146,7 +146,15 @@
     "meta-all-stars.io",
     "play.decentraland.org"
   ],
-  "Utilities": ["unstoppabledomains.com", "ud.me", "app.ens.domains", "fees.wtf", "app.coinshift.xyz", "coinshift.xyz"],
+  "Utilities": [
+    "unstoppabledomains.com",
+    "ud.me",
+    "app.ens.domains",
+    "fees.wtf",
+    "app.coinshift.xyz",
+    "coinshift.xyz",
+    "app.space.id"
+  ],
   "Tools": [
     "zapper.fi",
     "tornadocash.eth.link",

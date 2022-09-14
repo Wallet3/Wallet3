@@ -78,7 +78,7 @@ const Tx = observer(
                 {(cancelTx ? `${t('tip-cancel-action')} ` : '') + `${methodName}`}
               </Text>
               {method === 'contract-interaction' ? undefined : (
-                <Text style={{ fontSize: 16, color: textColor }} numberOfLines={1}>
+                <Text style={{ fontSize: 16, color: textColor, maxWidth: '80%' }} numberOfLines={1}>
                   {`${amount > 0 ? amount : ''} ${nft || tokenSymbol}`.trim()}
                 </Text>
               )}
