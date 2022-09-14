@@ -12,6 +12,9 @@ const nativeTokens = [
   '0x471EcE3750Da237f93B8E339c536989b8978a438',
   '0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000', // Celo native
   '0x4200000000000000000000000000000000000006', // Boba network
+  '0x0000000000000000000000000000000000000000',
+  '0x000000000000000000000000000000000000dEaD',
+  '0xdeaDDeADDEaDdeaDdEAddEADDEAdDeadDEADDEaD',
 ];
 
 const DAY = 24 * 60 * 60 * 1000;
@@ -22,13 +25,20 @@ const CacheKeys = {
   chain_balance: (chainId: number, address: string) => `Debank_chainBalance_${chainId}_${address.toLowerCase()}`,
 };
 
+const MemoryCache: { [key: string]: any } = {};
+
 export const DebankSupportedChains = new Map<number, string>();
 
 export function clearBalanceCache(address: string, chainId: number) {
+  MemoryCache[CacheKeys.chain_balance(chainId, address)] = undefined;
   return AsyncStorage.removeItem(CacheKeys.chain_balance(chainId, address));
 }
 
 export async function getBalance(address: string, chainId: number, debankId: chain) {
+  if (MemoryCache[CacheKeys.chain_balance(chainId, address)]) {
+    return MemoryCache[CacheKeys.chain_balance(chainId, address)] as ChainBalance;
+  }
+
   let debankChainBalance: ChainBalance | undefined;
 
   do {
@@ -50,16 +60,23 @@ export async function getBalance(address: string, chainId: number, debankId: cha
       );
 
       const data = (await resp.json()) as ChainBalance;
-      debankChainBalance = data;
+      if (Number.isNaN(data?.usd_value)) break;
 
+      debankChainBalance = data;
       await AsyncStorage.setItem(CacheKeys.chain_balance(chainId, address), JSON.stringify({ timestamp: Date.now(), data }));
     } catch (error) {}
   } while (false);
+
+  MemoryCache[CacheKeys.chain_balance(chainId, address)] = debankChainBalance;
 
   return debankChainBalance;
 }
 
 export async function getTokens(address: string, chainId: number, debankId: chain, is_all = false) {
+  if (MemoryCache[CacheKeys.user_tokens(chainId, address)]) {
+    return MemoryCache[CacheKeys.user_tokens(chainId, address)] as IToken[];
+  }
+
   let debankTokens: ITokenBalance[] | undefined;
 
   do {
@@ -88,7 +105,7 @@ export async function getTokens(address: string, chainId: number, debankId: chai
     } catch (error) {}
   } while (false);
 
-  return debankTokens
+  const result = debankTokens
     ? debankTokens
         .filter((t) => utils.isAddress(t.id))
         .map<IToken>((t) => {
@@ -103,6 +120,10 @@ export async function getTokens(address: string, chainId: number, debankId: chai
         })
         .filter((t) => nativeTokens.indexOf(t.address) === -1)
     : [];
+
+  MemoryCache[CacheKeys.user_tokens(chainId, address)] = result.length > 0 ? result : undefined;
+
+  return result;
 }
 
 export async function fetchChainsOverview(address: string) {
