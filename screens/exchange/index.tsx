@@ -1,11 +1,11 @@
 import * as Animatable from 'react-native-animatable';
 
-import { Button, Skeleton } from '../../components';
+import { Button, SafeViewContainer, Skeleton } from '../../components';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Keyboard, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Modalize, useModalize } from 'react-native-modalize';
 import React, { useEffect, useState } from 'react';
-import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import AccountSelector from '../../modals/dapp/AccountSelector';
 import App from '../../viewmodels/App';
@@ -25,6 +25,7 @@ import { generateNetworkIcon } from '../../assets/icons/networks/white';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { rotate } from '../../common/Animation';
+import modalStyles from '../../modals/styles';
 
 export default observer(() => {
   const { backgroundColor, borderColor, foregroundColor, textColor, secondaryTextColor } = Theme;
@@ -270,14 +271,8 @@ export default observer(() => {
           />
         </Modalize>
 
-        <Modalize
-          ref={accountsRef}
-          adjustToContentHeight
-          disableScrollIfPossible
-          modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-        >
-          <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
+        <Modalize ref={accountsRef} adjustToContentHeight disableScrollIfPossible>
+          <SafeAreaProvider style={{ ...modalStyles.safeArea, backgroundColor }}>
             <AccountSelector
               single
               accounts={App.allAccounts}
@@ -300,7 +295,7 @@ export default observer(() => {
           modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6, height: '100%' }}>
+          <SafeAreaView style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6, height: '100%' }}>
             <TokenSelector
               tokens={VM.tokens}
               selectedToken={VM.swapFrom as IToken}
@@ -312,7 +307,7 @@ export default observer(() => {
                 closeFromTokens();
               }}
             />
-          </SafeAreaProvider>
+          </SafeAreaView>
         </Modalize>
 
         <Modalize
@@ -322,7 +317,7 @@ export default observer(() => {
           modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
+          <SafeAreaView style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
             <TokenSelector
               tokens={VM.tokens}
               chainId={userSelectedNetwork.chainId}
@@ -334,7 +329,7 @@ export default observer(() => {
                 closeToTokens();
               }}
             />
-          </SafeAreaProvider>
+          </SafeAreaView>
         </Modalize>
       </Portal>
     </ScrollView>

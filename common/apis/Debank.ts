@@ -124,8 +124,6 @@ export async function getTokens(address: string, chainId: number, debankId: chai
   return result;
 }
 
-export const DebankSupportedChains = new Map<number, string>();
-
 export async function fetchChainsOverview(address: string) {
   let debankOverview: ITotalBalance | undefined;
 
