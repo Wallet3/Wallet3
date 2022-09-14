@@ -131,7 +131,7 @@ class TxHub {
     if (confirmedTxs.length === 0 && abandonedTxs.length === 0) return;
 
     for (let tx of confirmedTxs) {
-      await clearBalanceCache(tx.from, tx.chainId);
+      if (Number(tx.value) > 0 || tx.data?.startsWith?.('0xa9059cbb')) await clearBalanceCache(tx.from, tx.chainId);
     }
 
     runInAction(() => {

@@ -39,7 +39,7 @@ export async function getBalance(address: string, chainId: number, debankId: cha
         const { timestamp, data } = JSON.parse(cacheJson) as { timestamp: number; data: ChainBalance };
         if (!Number.isNaN(data?.usd_value)) debankChainBalance = data;
 
-        if (timestamp + 1 * 60 * 60 * 1000 > Date.now()) break;
+        if (timestamp + 1 * DAY > Date.now()) break;
       }
     } catch (error) {}
 
@@ -69,7 +69,7 @@ export async function getTokens(address: string, chainId: number, debankId: chai
       if (cacheJson) {
         const { timestamp, data } = JSON.parse(cacheJson) as { timestamp: number; data: ITokenBalance[] };
         if (Array.isArray(data)) debankTokens = data;
-        if (timestamp + 2 * DAY > Date.now()) break;
+        if (timestamp + 3 * DAY > Date.now()) break;
       }
     } catch (error) {}
 
@@ -119,7 +119,7 @@ export async function fetchChainsOverview(address: string) {
         };
 
         debankOverview = data;
-        if (timestamp + 7 * DAY > Date.now()) break;
+        if (timestamp + 15 * DAY > Date.now()) break;
       } catch (error) {}
     }
 

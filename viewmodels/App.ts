@@ -187,7 +187,7 @@ export class AppVM {
     clearTimeout(this.refreshTimer);
     await this.currentAccount?.tokens.refreshTokensBalance();
 
-    this.refreshTimer = setTimeout(() => this.refreshAccount(), 10 * 1000);
+    this.refreshTimer = setTimeout(() => this.refreshAccount(), 12 * 1000);
   }
 
   async init() {
