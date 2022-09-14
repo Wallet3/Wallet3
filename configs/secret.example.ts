@@ -19,3 +19,5 @@ export const etherscanApiKeys: { [chainId: number]: string[] } = {
 };
 
 export const alchemyApiKeys: string[] = [];
+
+export const DeBankApiKey = '';

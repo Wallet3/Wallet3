@@ -328,10 +328,10 @@ PODS:
     - RCTTypeSafety
     - React-Core
     - ReactCommon/turbomodule/core
-  - react-native-video (5.2.0):
+  - react-native-video (5.2.1):
     - React-Core
-    - react-native-video/Video (= 5.2.0)
-  - react-native-video/Video (5.2.0):
+    - react-native-video/Video (= 5.2.1)
+  - react-native-video/Video (5.2.1):
     - React-Core
   - react-native-view-shot (3.4.0):
     - React-Core
@@ -404,7 +404,7 @@ PODS:
     - React-perflogger (= 0.68.2)
   - RNCAsyncStorage (1.17.10):
     - React-Core
-  - RNDeviceInfo (10.1.1):
+  - RNDeviceInfo (10.1.2):
     - React-Core
   - RNFastImage (8.6.1):
     - React-Core
@@ -781,7 +781,7 @@ SPEC CHECKSUMS:
   react-native-context-menu-view: c72d4120597f5cf3917dcb348cf819f215ed9207
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: b456e1c40ec86f5593d58b275bd0e9603169daca
-  react-native-video: a4c2635d0802f983594b7057e1bce8f442f0ad28
+  react-native-video: c26780b224543c62d5e1b2a7244a5cd1b50e8253
   react-native-view-shot: a60a98a18c72bcaaaf2138f9aab960ae9b0d96c7
   react-native-webview: d33e2db8925d090871ffeb232dfa50cb3a727581
   React-perflogger: a18b4f0bd933b8b24ecf9f3c54f9bf65180f3fe6
@@ -797,7 +797,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: b960b687d2dfef0d3761fbb187e01812ebab8b23
   ReactCommon: 095366164a276d91ea704ce53cb03825c487a3f2
   RNCAsyncStorage: 0c357f3156fcb16c8589ede67cc036330b6698ca
-  RNDeviceInfo: 89bc4fe36cf4c8955965609b140d29a335d5350d
+  RNDeviceInfo: 4a2d995e05823cf364e8791bfa450d8f2f461c42
   RNFastImage: 3207b9eb17c2425d574ca40db35185db6e324f4e
   RNGestureHandler: 920eb17f5b1e15dae6e5ed1904045f8f90e0b11e
   RNImageColors: fd9777591fc765780e035f4bec7a42edabc86eb4

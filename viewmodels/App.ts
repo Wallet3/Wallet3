@@ -21,6 +21,7 @@ import TxHub from './hubs/TxHub';
 import UI from './settings/UI';
 import { Wallet } from './Wallet';
 import WalletConnectV1ClientHub from './walletconnect/WalletConnectV1ClientHub';
+import { fetchChainsOverview } from '../common/apis/Debank';
 import i18n from '../i18n';
 import { showMessage } from 'react-native-flash-message';
 
@@ -197,6 +198,7 @@ export class AppVM {
 
     const wallets = await Promise.all((await Database.keys.find()).map((key) => new Wallet(key).init()));
     const lastUsedAccount = (await AsyncStorage.getItem('lastUsedAccount')) ?? '';
+    if (utils.isAddress(lastUsedAccount)) fetchChainsOverview(lastUsedAccount);
 
     Authentication.once('appAuthorized', () => {
       WalletConnectV1ClientHub.init();

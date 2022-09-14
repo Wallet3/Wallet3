@@ -249,6 +249,7 @@ export default observer((props: Web3ViewProps) => {
           allowsInlineMediaPlayback
           allowsBackForwardNavigationGestures
           injectedJavaScriptBeforeContentLoaded={`${MetamaskMobileProvider}\ntrue;`}
+          onContentProcessDidTerminate={() => ((webViewRef as any)?.current as WebView)?.reload()}
           style={{ backgroundColor }}
           decelerationRate={1}
           allowsLinkPreview
