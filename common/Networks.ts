@@ -212,6 +212,16 @@ export const PublicNetworks: INetwork[] = [
     etherscanApi: 'https://evm.evmos.org/api',
   },
   {
+    symbol: 'KAVA',
+    chainId: 2222,
+    comm_id: 'kava',
+    network: 'Kava',
+    color: '#FF433E',
+    defaultTokens: [],
+    explorer: 'https://explorer.kava.io',
+    etherscanApi: 'https://explorer.kava.io/api',
+  },
+  {
     symbol: 'MOVR',
     comm_id: 'movr',
     chainId: 1285,

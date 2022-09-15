@@ -5,6 +5,7 @@ import { getTransactionReceipt, sendTransaction } from '../../common/RPC';
 
 import Database from '../../models/Database';
 import LINQ from 'linq';
+import { clearBalanceCache } from '../../common/apis/Debank';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 import { showMessage } from 'react-native-flash-message';
@@ -128,6 +129,10 @@ class TxHub {
     if (this.pendingTxs.length > 0) this.watchTimer = setTimeout(() => this.watchPendingTxs(), 1000 * 3);
 
     if (confirmedTxs.length === 0 && abandonedTxs.length === 0) return;
+
+    for (let tx of confirmedTxs) {
+      if (Number(tx.value) > 0 || tx.data?.startsWith?.('0xa9059cbb')) await clearBalanceCache(tx.from, tx.chainId);
+    }
 
     runInAction(() => {
       const newTxs = this.txs.filter((tx) => !abandonedTxs.find((t) => t.hash === tx.hash));

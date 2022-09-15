@@ -172,7 +172,7 @@ export class AccountTokens {
     if (!utils.isAddress(address)) return;
 
     const token = new ERC20Token({
-      contract: utils.getAddress(address),
+      contract: address,
       owner: this.owner,
       chainId: Networks.current.chainId,
     });

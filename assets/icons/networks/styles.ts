@@ -168,4 +168,11 @@ export default StyleSheet.create({
     alignSelf: 'flex-end',
     opacity: 0.5,
   },
+
+  kava: {
+    marginTop: -32,
+    marginEnd: -5,
+    alignSelf: 'flex-end',
+    opacity: 0.5,
+  },
 });

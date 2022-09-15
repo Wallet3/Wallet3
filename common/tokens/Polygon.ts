@@ -47,7 +47,7 @@ const MATIC_SUSHI = {
 };
 
 export const MATIC_WETH = {
-  address: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+  address: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
   decimals: 18,
   symbol: 'WETH',
 };

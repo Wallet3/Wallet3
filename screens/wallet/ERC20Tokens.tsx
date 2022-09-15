@@ -71,6 +71,10 @@ export default observer(
       <FlatList
         data={tokens}
         keyExtractor={(i) => i.address}
+        renderItem={renderItem}
+        style={{ paddingHorizontal: 16 }}
+        contentContainerStyle={{ paddingBottom: 5 }}
+        ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: separatorColor, marginStart: 56 }} />}
         refreshControl={
           <RefreshControl
             refreshing={manuallyLoading}
@@ -81,9 +85,6 @@ export default observer(
             }}
           />
         }
-        renderItem={renderItem}
-        style={{ paddingHorizontal: 16 }}
-        ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: separatorColor, marginStart: 56 }} />}
       />
     ) : (
       <View style={{ flex: 1, padding: 16, paddingVertical: 12 }}>

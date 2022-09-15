@@ -1,26 +1,27 @@
 import { action, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
 import { providers, utils } from 'ethers';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import LINQ from 'linq';
-import { showMessage } from 'react-native-flash-message';
-import MessageKeys from '../common/MessageKeys';
-import i18n from '../i18n';
-import Database from '../models/Database';
-import Key from '../models/Key';
 import { Account } from './account/Account';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Authentication from './Authentication';
 import Bookmarks from './customs/Bookmarks';
 import Contacts from './customs/Contacts';
-import LinkHub from './hubs/LinkHub';
-import TxHub from './hubs/TxHub';
+import Database from '../models/Database';
 import GasPrice from './misc/GasPrice';
+import Key from '../models/Key';
+import LINQ from 'linq';
+import LinkHub from './hubs/LinkHub';
+import MessageKeys from '../common/MessageKeys';
+import MetamaskDAppsHub from './walletconnect/MetamaskDAppsHub';
 import Networks from './Networks';
 import Theme from './settings/Theme';
+import TxHub from './hubs/TxHub';
 import UI from './settings/UI';
 import { Wallet } from './Wallet';
-import MetamaskDAppsHub from './walletconnect/MetamaskDAppsHub';
 import WalletConnectV1ClientHub from './walletconnect/WalletConnectV1ClientHub';
+import { fetchChainsOverview } from '../common/apis/Debank';
+import i18n from '../i18n';
+import { showMessage } from 'react-native-flash-message';
 
 export class AppVM {
   private lastRefreshedTime = 0;
@@ -184,7 +185,7 @@ export class AppVM {
     clearTimeout(this.refreshTimer);
     await this.currentAccount?.tokens.refreshTokensBalance();
 
-    this.refreshTimer = setTimeout(() => this.refreshAccount(), 10 * 1000);
+    this.refreshTimer = setTimeout(() => this.refreshAccount(), 12 * 1000);
   }
 
   async init() {
@@ -195,6 +196,7 @@ export class AppVM {
 
     const wallets = await Promise.all((await Database.keys.find()).map((key) => new Wallet(key).init()));
     const lastUsedAccount = (await AsyncStorage.getItem('lastUsedAccount')) ?? '';
+    if (utils.isAddress(lastUsedAccount)) fetchChainsOverview(lastUsedAccount);
 
     Authentication.once('appAuthorized', () => {
       WalletConnectV1ClientHub.init();

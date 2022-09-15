@@ -35,7 +35,7 @@ export default observer((props: Props) => {
 
     setFilterTxt('');
 
-    const token = new ERC20Token({ contract: utils.getAddress(txt), chainId: props.chainId, owner: txt });
+    const token = new ERC20Token({ contract: txt, chainId: props.chainId, owner: txt });
 
     try {
       await Promise.all([token.getDecimals(), token.getSymbol()]);
