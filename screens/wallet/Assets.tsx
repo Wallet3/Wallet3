@@ -64,7 +64,7 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
                 ...(activeTab === 1 ? { ...styles.headerLabelActive, color: themeColor } : {}),
                 paddingHorizontal: 0,
               }}
-              onPress={() => swipeTo(2)}
+              onPress={() => swipeTo(1)}
             >
               {TxHub.pendingCount > 0 ? `${t('home-tabs-history')} (${TxHub.pendingCount}` : t('home-tabs-history')}
             </Text>
