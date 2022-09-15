@@ -2587,7 +2587,7 @@
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.185.tgz#c9843f5a40703a8f5edfd53358a58ae729816908"
   integrity sha512-evMDG1bC4rgQg4ku9tKpuMh5iBNEwNa3tf9zRHdP1qlv+1WUg44xat4IxCE14gIpZRGUUWAx2VhItCZc25NfMA==
 
-"@types/node@*", "@types/node@^18.7.16":
+"@types/node@*":
   version "18.7.16"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.7.16.tgz#0eb3cce1e37c79619943d2fd903919fc30850601"
   integrity sha512-EQHhixfu+mkqHMZl1R2Ovuvn47PUw18azMJOTwSZr9/fhzHNGXAJ0ma0dayRVchprpCj0Kc1K1xKoWaATWF1qg==
@@ -2606,6 +2606,11 @@
   version "17.0.45"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.45.tgz#2c0fafd78705e7a18b7906b5201a522719dc5190"
   integrity sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==
+
+"@types/node@^18.7.18":
+  version "18.7.18"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.7.18.tgz#633184f55c322e4fb08612307c274ee6d5ed3154"
+  integrity sha512-m+6nTEOadJZuTPkKR/SYK3A2d7FZrgElol9UP1Kae90VVU4a6mxnPuLiIW1m4Cq4gZ/nWb9GrdVXJCoCazDAbg==
 
 "@types/numeral@^2.0.2":
   version "2.0.2"
@@ -2668,7 +2673,7 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-native@~0.68.3":
+"@types/react-native@~0.68.5":
   version "0.68.5"
   resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.68.5.tgz#cb652bdcc28572192e432cb4d55bbb122d69c69f"
   integrity sha512-TmcTHV8LTLbJNtDkWNVCCTniLW4NWhmM6UgyT+TS8pQSUn6LTzdeNUrLs4hjkCHjbgLFwqtLEKSSZLGseoPwiA==
@@ -8346,10 +8351,10 @@ react-native-crypto@^2.2.0:
     public-encrypt "^4.0.0"
     randomfill "^1.0.3"
 
-react-native-device-info@^10.1.1:
-  version "10.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-10.1.1.tgz#ef9795638e4e1427b8e92b37e1ff85dda5a2192f"
-  integrity sha512-yvFzqDXGgDx+9sU098iF4dKBge1z3sDULmemL3na32pz41uQhvqSCMdRa6WlH7WFM8RFBSPq5IMnn9EBKtiAFg==
+react-native-device-info@^10.1.2:
+  version "10.1.2"
+  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-10.1.2.tgz#45edf04fcb8e7cee7308e7a77511752ce41b84ef"
+  integrity sha512-ap1pU1mZzQoq7fpFt9IqK7vhtxtu+KWEnbq/gIHtsyiTKi4SbBs48z07cINBf7wR2s1y1LsKP6gCJm2rzz6ehg==
 
 react-native-draggable-flatlist@^3.1.2:
   version "3.1.2"
@@ -8484,10 +8489,10 @@ react-native-shared-element@0.8.4:
   resolved "https://registry.yarnpkg.com/react-native-shared-element/-/react-native-shared-element-0.8.4.tgz#dd97b992e53633a57ea728327f7c02bad3c5af14"
   integrity sha512-agRuD5AB4daw4QLo7KCTBqCtmIjbQkqpwsT/aYrxDu/McvTCdDuXVttaVMrqeyAgdDkU1egp41FdiExS1L/hJw==
 
-react-native-super-grid@^4.5.1:
-  version "4.5.1"
-  resolved "https://registry.yarnpkg.com/react-native-super-grid/-/react-native-super-grid-4.5.1.tgz#2afa48638cc0f9f0cd5254902706ee20edb664b1"
-  integrity sha512-sIDfdTMhgSDAEn86BPHv8lpuf+iYmgxRi8dYefirV2/nWoIZP9UeJdOMO7Vn9ButtVqGAfkiGD16zS7iykvf8w==
+react-native-super-grid@^4.6.1:
+  version "4.6.1"
+  resolved "https://registry.yarnpkg.com/react-native-super-grid/-/react-native-super-grid-4.6.1.tgz#620a59e98375dd5138d3e6618991d09e93cbe318"
+  integrity sha512-YEKN//TT3DZlbz+1m6YqnclYS+T/Qn2ELrZ0fjoXzB2U/AQoBflvtw0VsJkcPkf3RGWLbD1GKbKN6Hz9fPCVfg==
   dependencies:
     prop-types "^15.6.0"
 
