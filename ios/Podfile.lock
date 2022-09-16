@@ -448,7 +448,7 @@ PODS:
     - React-RCTImage
   - RNSharedElement (0.8.4):
     - React-Core
-  - RNSVG (13.1.0):
+  - RNSVG (13.2.0):
     - React-Core
   - SDWebImage (5.11.1):
     - SDWebImage/Core (= 5.11.1)
@@ -805,7 +805,7 @@ SPEC CHECKSUMS:
   RNReanimated: 5bdcbcc3a72aedeee7bb099604262403aa75a1e5
   RNScreens: 0df01424e9e0ed7827200d6ed1087ddd06c493f9
   RNSharedElement: eb7d506733952d58634f34c82ec17e82f557e377
-  RNSVG: 1153e8eeb34c788841016c517dba9f57f20b762f
+  RNSVG: 07037623c36f12e41312730622d5f6b3656227ca
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   TcpSockets: 4ef55305239923b343ed0a378b1fac188b1373b0

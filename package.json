@@ -8,7 +8,7 @@
     "postinstall": "node_modules/.bin/rn-nodeify --install crypto,buffer,react-native-randombytes,vm,stream,http,https,os,url,net,process --hack"
   },
   "dependencies": {
-    "@curvefi/api": "^2.9.0",
+    "@curvefi/api": "^2.10.0",
     "@ethersproject/shims": "^5.7.0",
     "@expo/vector-icons": "^13.0.0",
     "@metamask/eth-sig-util": "^4.0.1",
@@ -92,7 +92,7 @@
     "react-native-screens": "~3.17.0",
     "react-native-shared-element": "0.8.4",
     "react-native-super-grid": "^4.6.1",
-    "react-native-svg": "13.1.0",
+    "react-native-svg": "13.2.0",
     "react-native-svg-charts": "^5.4.0",
     "react-native-swiper": "^1.6.0",
     "react-native-tcp": "^4.0.0",
@@ -109,8 +109,8 @@
     "vm-browserify": "1.1.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.19.0",
-    "@babel/plugin-proposal-decorators": "^7.19.0",
+    "@babel/core": "^7.19.1",
+    "@babel/plugin-proposal-decorators": "^7.19.1",
     "@babel/plugin-proposal-numeric-separator": "^7.18.6",
     "@babel/preset-typescript": "^7.18.6",
     "@types/i18n-js": "^3.8.3",
