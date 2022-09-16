@@ -39,6 +39,8 @@ export async function getBalance(address: string, chainId: number, debankId: cha
     return MemoryCache[CacheKeys.chain_balance(chainId, address)] as ChainBalance;
   }
 
+  if (DebankSupportedChains.size > 0 && !DebankSupportedChains.get(chainId)) return { usd_value: 0 };
+
   let debankChainBalance: ChainBalance | undefined;
 
   do {
@@ -76,6 +78,8 @@ export async function getTokens(address: string, chainId: number, debankId: chai
   if (MemoryCache[CacheKeys.user_tokens(chainId, address)]) {
     return MemoryCache[CacheKeys.user_tokens(chainId, address)] as IToken[];
   }
+
+  if (DebankSupportedChains.size > 0 && !DebankSupportedChains.get(chainId)) return [];
 
   let debankTokens: ITokenBalance[] | undefined;
 
