@@ -196,7 +196,7 @@ export class RawTransactionRequest extends BaseTransaction {
         this.valueWei = BigNumber.from(param.value || 0);
 
         if (param.data?.length < 10) break;
-
+        
         isRawTx = true;
 
         this.decodingFunc = true;

@@ -45,6 +45,7 @@ export default observer(({ tokens, style, inOut }: Props) => {
             borderWidth: 2,
             borderColor: backgroundColor,
             borderRadius: 15,
+            overflow: 'hidden',
           }}
         >
           <Coin {...t} size={27} />

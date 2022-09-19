@@ -21,6 +21,7 @@ interface Props extends FastImageProps {
   paused?: boolean;
   backgroundColor?: string;
   borderRadius?: number;
+  loadingIconSize?: number;
   onColorParsed?: (colors: ImageColorsResult) => void;
 }
 
@@ -82,7 +83,7 @@ export default (props: Props) => {
             backgroundColor: 'transparent',
           }}
         >
-          <Feather name="hexagon" size={64} color="#55555555" />
+          <Feather name="hexagon" size={props.loadingIconSize ?? 64} color="#55555555" />
         </Animatable.View>
       )}
     </View>

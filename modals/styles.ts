@@ -67,6 +67,7 @@ export default StyleSheet.create({
     borderColor,
     paddingVertical: 15,
     paddingHorizontal: 16,
+    overflow: 'hidden',
   },
 
   reviewItemTitle: {

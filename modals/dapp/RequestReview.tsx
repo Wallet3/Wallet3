@@ -227,6 +227,10 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, onDecodedFuncP
                   />
                 ) : undefined}
 
+                {(vm.preExecResult?.send_nft_list?.length || 0) > 0 ? (
+                  <HorizontalNftList nfts={vm.preExecResult?.send_nft_list!} style={styles.horizontalTokenList} inOut="in" />
+                ) : undefined}
+
                 {((vm.preExecResult?.send_token_list?.length || 0) > 0 ||
                   (vm.preExecResult?.send_nft_list?.length || 0) > 0) &&
                 ((vm.preExecResult?.receive_token_list?.length || 0) > 0 ||
@@ -248,7 +252,11 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, onDecodedFuncP
                 ) : undefined}
 
                 {(vm.preExecResult?.receive_nft_list?.length || 0) > 0 ? (
-                  <HorizontalNftList nfts={vm.preExecResult?.receive_nft_list!} inOut="out" />
+                  <HorizontalNftList
+                    nfts={vm.preExecResult?.receive_nft_list!}
+                    style={styles.horizontalTokenList}
+                    inOut="out"
+                  />
                 ) : undefined}
 
                 <MaterialIcons
