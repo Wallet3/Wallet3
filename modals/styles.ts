@@ -98,4 +98,8 @@ export default StyleSheet.create({
   gasItemText: {
     marginStart: 6,
   },
+
+  horizontalTokenList: {
+    marginVertical: -4.5,
+  },
 });

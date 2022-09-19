@@ -12,6 +12,8 @@ import { DecodedFunc } from '../../viewmodels/hubs/EtherscanHub';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';
 import FuncReview from '../views/FuncReview';
 import GasReview from '../views/GasReview';
+import HorizontalNftList from '../components/HorizontalNftList';
+import HorizontalTokenList from '../components/HorizontalTokenList';
 import Image from 'react-native-fast-image';
 import InsufficientFee from '../components/InsufficientFee';
 import MultiSourceImage from '../../components/MultiSourceImage';
@@ -26,6 +28,7 @@ import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { openBrowserAsync } from 'expo-web-browser';
+import { secondaryFontColor } from '../../constants/styles';
 import styles from '../styles';
 
 interface Props {
@@ -42,7 +45,7 @@ interface Props {
 const TxReview = observer(({ vm, onReject, onApprove, onGasPress, onDecodedFuncPress, app, account, bioType }: Props) => {
   const { network } = vm;
   const { t } = i18n;
-  const { textColor, borderColor, secondaryTextColor } = Theme;
+  const { textColor, borderColor, secondaryTextColor, tintColor, foregroundColor } = Theme;
 
   const [busy, setBusy] = useState(false);
 
@@ -166,7 +169,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, onDecodedFuncP
                   {vm.tokenSymbol}
                 </Text>
               ) : (
-                <Skeleton style={{ width: 52, height: 19, marginStart: 4 }} />
+                <Skeleton style={{ width: 52, height: 17, marginStart: 4 }} />
               )}
             </View>
           </View>
@@ -209,18 +212,72 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, onDecodedFuncP
         </View>
 
         {vm.type === 'Contract Interaction' ? (
-          <View style={{ ...reviewItemStyle }}>
-            <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-value')}</Text>
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={{ ...reviewItemValueStyle, maxWidth: 150, marginEnd: 4 }} numberOfLines={1}>
-                {vm.value}
-              </Text>
+          (vm.preExecResult?.receive_nft_list?.length || 0) > 0 ||
+          (vm.preExecResult?.send_nft_list?.length || 0) > 0 ||
+          (vm.preExecResult?.send_token_list?.length || 0) > 0 ||
+          (vm.preExecResult?.receive_token_list?.length || 0) > 0 ? (
+            <View style={{ ...reviewItemStyle, alignItems: 'center' }}>
+              <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-value')}</Text>
+              <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
+                {(vm.preExecResult?.send_token_list?.length || 0) > 0 ? (
+                  <HorizontalTokenList
+                    tokens={vm.preExecResult!.send_token_list!}
+                    style={styles.horizontalTokenList}
+                    inOut="in"
+                  />
+                ) : undefined}
 
-              <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>
-                {vm.network.symbol}
-              </Text>
+                {((vm.preExecResult?.send_token_list?.length || 0) > 0 ||
+                  (vm.preExecResult?.send_nft_list?.length || 0) > 0) &&
+                ((vm.preExecResult?.receive_token_list?.length || 0) > 0 ||
+                  (vm.preExecResult?.receive_nft_list?.length || 0) > 0) ? (
+                  <Ionicons
+                    name="arrow-forward"
+                    size={16}
+                    style={{ marginTop: 3, marginHorizontal: 6 }}
+                    color={secondaryFontColor}
+                  />
+                ) : undefined}
+
+                {(vm.preExecResult?.receive_token_list?.length || 0) > 0 ? (
+                  <HorizontalTokenList
+                    tokens={vm.preExecResult!.receive_token_list!}
+                    style={styles.horizontalTokenList}
+                    inOut="out"
+                  />
+                ) : undefined}
+
+                {(vm.preExecResult?.receive_nft_list?.length || 0) > 0 ? (
+                  <HorizontalNftList nfts={vm.preExecResult?.receive_nft_list!} inOut="out" />
+                ) : undefined}
+
+                <MaterialIcons
+                  name="keyboard-arrow-right"
+                  size={15}
+                  color={secondaryTextColor}
+                  style={{ marginStart: 2, marginEnd: -3, marginBottom: -1 }}
+                />
+              </TouchableOpacity>
             </View>
-          </View>
+          ) : (
+            <View style={{ ...reviewItemStyle }}>
+              <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-value')}</Text>
+
+              {vm.preExecuting ? (
+                <Skeleton style={{ width: 108, height: 17 }} />
+              ) : (
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={{ ...reviewItemValueStyle, maxWidth: 150, marginEnd: 4 }} numberOfLines={1}>
+                    {vm.value}
+                  </Text>
+
+                  <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>
+                    {vm.network.symbol}
+                  </Text>
+                </View>
+              )}
+            </View>
+          )
         ) : undefined}
 
         <View style={{ ...reviewItemStyle, borderBottomWidth: 0 }}>
@@ -293,7 +350,7 @@ const TxReview = observer(({ vm, onReject, onApprove, onGasPress, onDecodedFuncP
         onReject={onReject}
         themeColor={network?.color}
         rejectTitle={t('button-reject')}
-        approveTitle={t(bioType === 'faceid' ? 'modal-review-button-confirm' : 'button-send')}
+        approveTitle={t('modal-review-button-confirm')}
         disabledApprove={!vm.isValidParams || busy}
         swipeConfirm={bioType === 'faceid'}
         approveIcon={
