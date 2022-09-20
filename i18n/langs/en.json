@@ -149,6 +149,7 @@
   "modal-review-message": "Tx Message",
   "modal-review-edit-tx-message": "Edit Tx Message",
   "modal-review-send": "Send",
+  "modal-review-receive": "Receive",
   "modal-review-to": "To",
   "modal-review-amount": "Amount",
   "modal-review-network": "Network",

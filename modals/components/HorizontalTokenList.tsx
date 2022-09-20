@@ -22,8 +22,8 @@ export default observer(({ tokens, style, inOut }: Props) => {
           numberOfLines={1}
           style={{
             marginEnd: 5,
-            fontSize: 17,
-            fontWeight: '600',
+            fontSize: 16,
+            fontWeight: '500',
             color: inOut === 'in' ? thirdTextColor : tintColor,
             maxWidth: 81,
           }}
@@ -36,8 +36,8 @@ export default observer(({ tokens, style, inOut }: Props) => {
         <View
           key={t.address || t.symbol}
           style={{
-            width: 30,
-            height: 30,
+            width: 27,
+            height: 27,
             justifyContent: 'center',
             alignItems: 'center',
             zIndex: -index,
@@ -48,7 +48,7 @@ export default observer(({ tokens, style, inOut }: Props) => {
             overflow: 'hidden',
           }}
         >
-          <Coin {...t} size={27} />
+          <Coin {...t} size={25} />
         </View>
       ))}
     </View>

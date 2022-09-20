@@ -387,7 +387,7 @@ const mock = {
       amount: 1,
       chain: 'eth',
       collection: null,
-      content: 'https://storage.kumaleon.com/0x8270fc3b2d23de703b265b2abe008883954fea8e/1207.png',
+      content: 'https://static.debank.com/image/eth_nft/local_url/aeee5dc9285c12b282aaf30839e61c6c/11972a026a9727482c793134e0f863dc',
       content_type: 'image_url',
       contract_id: '0x8270fc3b2d23de703b265b2abe008883954fea8e',
       description: '',

@@ -149,6 +149,7 @@
   "modal-review-message": "交易消息",
   "modal-review-edit-tx-message": "编辑消息",
   "modal-review-send": "发送",
+  "modal-review-receive": "接收",
   "modal-review-to": "收款方",
   "modal-review-amount": "数量",
   "modal-review-network": "网络",

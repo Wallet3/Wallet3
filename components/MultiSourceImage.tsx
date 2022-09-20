@@ -29,6 +29,7 @@ export default (props: Props) => {
   const { uriSources, onColorParsed, sourceTypes, controls, paused, backgroundColor, borderRadius } = props;
   const [index, setIndex] = useState(uriSources.findIndex((i) => i));
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [trySvg, setTrySvg] = useState(false);
 
   const parseColor = async (url: string) => {
     if (!url) return;
@@ -53,13 +54,16 @@ export default (props: Props) => {
         />
       ) : uriSources[index]?.endsWith('.svg') ||
         sourceTypes[index]?.endsWith('svg+xml') ||
-        sourceTypes[index]?.endsWith('svg') ? (
+        sourceTypes[index]?.endsWith('svg') ||
+        trySvg ? (
         <SvgImage source={{ uri: uriSources[index] }} style={props.style} onLoadEnd={() => setImageLoaded(true)} />
       ) : (
         <FastImage
           {...props}
           source={{ uri: uriSources[index] }}
-          onError={() => setIndex((pre) => Math.min(uriSources.length - 1, pre + 1))}
+          onError={() => {
+            index === uriSources.length - 1 ? setTrySvg(true) : setIndex((pre) => Math.min(uriSources.length - 1, pre + 1));
+          }}
           style={props.style}
           onLoad={() => {
             parseColor(uriSources[index]!);

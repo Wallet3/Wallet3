@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default observer(({ nfts, style, inOut }: Props) => {
-  const { backgroundColor, tintColor, thirdTextColor } = Theme;
+  const { backgroundColor, tintColor, thirdTextColor, borderColor } = Theme;
   const [amount] = useState(LINQ.from(nfts).sum((t) => t.amount));
 
   return (
@@ -23,8 +23,8 @@ export default observer(({ nfts, style, inOut }: Props) => {
           numberOfLines={1}
           style={{
             marginEnd: 5,
-            fontSize: 17,
-            fontWeight: '600',
+            fontSize: 16,
+            fontWeight: '500',
             color: inOut === 'in' ? thirdTextColor : tintColor,
             maxWidth: 81,
           }}
@@ -37,12 +37,12 @@ export default observer(({ nfts, style, inOut }: Props) => {
         <View
           key={`${i}_${t.content}_${t.amount}`}
           style={{
-            width: 30,
-            height: 30,
+            width: 27,
+            height: 27,
             justifyContent: 'center',
             alignItems: 'center',
             zIndex: -i,
-            marginStart: i === 0 ? 0 : -12,
+            marginStart: i === 0 ? 0 : -10,
             borderWidth: 2,
             borderColor: backgroundColor,
             borderRadius: 5,
@@ -52,7 +52,7 @@ export default observer(({ nfts, style, inOut }: Props) => {
           <MultiSourceImage
             sourceTypes={[]}
             uriSources={[t.content]}
-            style={{ width: 27, height: 27, borderRadius: 5 }}
+            style={{ width: 25, height: 25, borderRadius: 5, backgroundColor: borderColor }}
             loadingIconSize={10}
           />
         </View>

@@ -20,7 +20,7 @@ interface Props {
 }
 
 export default observer(({ themeColor, onBack, preview }: Props) => {
-  const { borderColor, thirdTextColor, isLightMode } = Theme;
+  const { borderColor, thirdTextColor, isLightMode, foregroundColor } = Theme;
 
   const txtStyle = { color: thirdTextColor };
   const itemValueStyle: any = { ...txtStyle, fontSize: 16, fontWeight: '500', marginHorizontal: 8, marginStart: 12 };
@@ -33,7 +33,6 @@ export default observer(({ themeColor, onBack, preview }: Props) => {
     borderColor,
     paddingBottom: 6,
   };
-  const tableHeaderTxtStyle: any = { ...txtStyle, fontSize: 12, fontWeight: '600' };
 
   const { t } = i18n;
 
@@ -67,7 +66,7 @@ export default observer(({ themeColor, onBack, preview }: Props) => {
           backgroundColor: isLightMode ? '#f9f9f9a0' : undefined,
         }}
       >
-        <Text style={{ ...txtStyle, marginBottom: 8 }}>Send:</Text>
+        <Text style={{ ...txtStyle, marginBottom: 8 }}>{t('modal-review-send')}:</Text>
 
         {preview?.send_token_list?.map((t) => (
           <View key={`${t.address}_${t.symbol}`} style={itemContainer}>
@@ -89,7 +88,7 @@ export default observer(({ themeColor, onBack, preview }: Props) => {
           </View>
         ))}
 
-        <Text style={{ ...txtStyle, marginVertical: 8 }}>Receive:</Text>
+        <Text style={{ ...txtStyle, marginVertical: 8 }}>{t('modal-review-receive')}:</Text>
 
         {preview?.receive_token_list?.map((t) => (
           <View key={`${t.address}_${t.symbol}`} style={itemContainer}>
@@ -103,7 +102,7 @@ export default observer(({ themeColor, onBack, preview }: Props) => {
             <MultiSourceImage
               sourceTypes={[]}
               uriSources={[nft.content]}
-              style={{ width: 25, height: 25, borderRadius: 5 }}
+              style={{ width: 25, height: 25, borderRadius: 5, backgroundColor: borderColor }}
               loadingIconSize={10}
             />
 
