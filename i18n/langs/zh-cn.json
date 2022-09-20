@@ -157,6 +157,7 @@
   "modal-review-button-slide-to-send": "滑动确认",
   "modal-review-button-confirm": "确认",
   "modal-func-review-title": "解析合约调用",
+  "modal-balance-change-preview-title": "余额变动预览",
   "modal-func-review-function": "函数",
   "modal-func-review-method-id": "方法 ID",
   "modal-func-review-inputs": "函数输入",

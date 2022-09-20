@@ -171,14 +171,17 @@ export class CurveExchange {
     const tokens = [1, 42161].includes(network.chainId) ? [nativeToken, ...userTokens] : userTokens;
 
     const swapFromAddress = await AsyncStorage.getItem(Keys.userSelectedFromToken(network.chainId));
+    const fromToken = tokens.find((t) => t.address === swapFromAddress) || tokens[0];
+
     const swapToAddress = await AsyncStorage.getItem(Keys.userSelectedToToken(network.chainId));
+    const toToken = tokens.find((t) => t.address === swapToAddress) || tokens.find((t) => t.address !== fromToken.address)!;
 
     runInAction(() => {
       this.tokens = tokens;
       this.swapRoute = null;
 
-      this.switchSwapFrom(tokens.find((t) => t.address === swapFromAddress) || tokens[0], false);
-      this.switchSwapTo(tokens.find((t) => t.address === swapToAddress) || tokens[1], false);
+      this.switchSwapFrom(fromToken, false);
+      this.switchSwapTo(toToken, false);
     });
   }
 

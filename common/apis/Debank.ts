@@ -323,8 +323,8 @@ export interface PreExecResult {
   success: boolean;
   send_token_list?: TokenList[];
   receive_token_list?: TokenList[];
-  send_nft_list?: any[];
-  receive_nft_list?: any[];
+  send_nft_list?: NftList[];
+  receive_nft_list?: NftList[];
 }
 
 const mock = {

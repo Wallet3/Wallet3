@@ -164,6 +164,7 @@
   "modal-gas-review-fast": "Fast",
   "modal-gas-review-standard": "Slow",
   "modal-func-review-title": "Decoded Function Call",
+  "modal-balance-change-preview-title": "Balance Change Preview",
   "modal-func-review-function": "Function",
   "modal-func-review-method-id": "Method ID",
   "modal-func-review-inputs": "Input Data",

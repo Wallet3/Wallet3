@@ -157,6 +157,7 @@
   "modal-review-button-slide-to-send": "滑動確認",
   "modal-review-button-confirm": "確認",
   "modal-func-review-title": "解析合約調用",
+  "modal-balance-change-preview-title": "余額變動預覽",
   "modal-func-review-function": "函數",
   "modal-func-review-method-id": "方法 ID",
   "modal-func-review-inputs": "函數輸入",
