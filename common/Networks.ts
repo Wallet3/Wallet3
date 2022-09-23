@@ -23,7 +23,7 @@ import {
 import { Gwei_1 } from './Constants';
 
 export interface INetwork {
-  comm_id: string;
+  comm_id?: string;
   symbol: string;
   network: string;
   chainId: number;
@@ -254,6 +254,16 @@ export const PublicNetworks: INetwork[] = [
     explorer: 'https://snowtrace.io',
     etherscanApi: 'https://api.snowtrace.io/api',
     github_dir: 'avalanchec',
+  },
+  {
+    symbol: 'DOGE',
+    chainId: 2000,
+    network: 'DOGE CHAIN',
+    color: '#d9bd62',
+    defaultTokens: [],
+    explorer: 'https://explorer.dogechain.dog',
+    etherscanApi: 'https://explorer.dogechain.dog/api',
+    github_dir: 'doge',
   },
   {
     symbol: 'ASTR',

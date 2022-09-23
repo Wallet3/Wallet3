@@ -16,6 +16,7 @@ interface CoinProps extends FastImageProps {
   forceRefresh?: boolean;
   size?: number;
   source?: ImageSourcePropType;
+  borderRadius?: number;
 }
 
 export default observer((props: CoinProps) => {
@@ -48,7 +49,7 @@ export default observer((props: CoinProps) => {
     width: size,
     height: size,
     ...((props.style as any) || {}),
-    borderRadius: props.iconUrl ? size / 2 : 0,
+    borderRadius: props.iconUrl ? size / 2 : props.borderRadius || 0,
   };
 
   useEffect(() => {

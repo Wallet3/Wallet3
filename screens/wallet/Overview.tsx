@@ -76,7 +76,7 @@ export default observer(
             justifyContent: 'space-between',
           }}
         >
-          <View style={{ flexDirection: 'row', alignItems: 'center', maxWidth: '36%' }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', maxWidth: '42%' }}>
             <TouchableOpacity
               style={{ flexDirection: 'row', alignItems: 'center', marginEnd: 8 }}
               onPress={() => PubSub.publish(MessageKeys.openNetworksMenu)}
@@ -107,8 +107,9 @@ export default observer(
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <AnimateNumber
                   value={gasPrice || 0}
-                  style={{ ...styles.text, color: textColor, marginEnd: 4 }}
+                  style={{ ...styles.text, color: textColor, marginEnd: 4, maxWidth: 128 }}
                   numberOfLines={1}
+                  ellipsizeMode={'middle'}
                   formatter={(v) => `${v.toFixed(2)} Gwei`}
                 />
                 <MaterialIcons name="local-gas-station" size={17} color={textColor} />

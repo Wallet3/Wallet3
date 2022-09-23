@@ -67,6 +67,7 @@ export default StyleSheet.create({
     borderColor,
     paddingVertical: 15,
     paddingHorizontal: 16,
+    overflow: 'hidden',
   },
 
   reviewItemTitle: {
@@ -97,5 +98,9 @@ export default StyleSheet.create({
 
   gasItemText: {
     marginStart: 6,
+  },
+
+  horizontalTokenList: {
+    marginVertical: -4.5,
   },
 });

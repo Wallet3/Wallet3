@@ -4,13 +4,13 @@ export const wxDAI = {
   symbol: 'WXDAI',
 };
 
-const xDAI_AAVE = {
+export const xDAI_AAVE = {
   address: '0xDF613aF6B44a31299E48131e9347F034347E2F00',
   decimals: 18,
   symbol: 'AAVE',
 };
 
-const xDAI_UNI = {
+export const xDAI_UNI = {
   address: '0x4537e328Bf7e4eFA29D05CAeA260D7fE26af9D74',
   decimals: 18,
   symbol: 'UNI',
@@ -28,7 +28,7 @@ export const xDAI_USDT = {
   symbol: 'USDT',
 };
 
-const xDAI_HNY = {
+export const xDAI_HNY = {
   address: '0x71850b7E9Ee3f13Ab46d67167341E4bDc905Eef9',
   decimals: 18,
   symbol: 'HNY',

@@ -1,6 +1,7 @@
 import { Approve_ERC1155, Approve_ERC20, Approve_ERC721, Methods, RequestType, Transfer_ERC20 } from './RequestTypes';
 import { BigNumber, constants, providers, utils } from 'ethers';
 import EtherscanHub, { DecodedFunc } from '../hubs/EtherscanHub';
+import { PreExecResult, preExecTx } from '../../common/apis/Debank';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
 import { Account } from '../account/Account';
@@ -13,6 +14,7 @@ import { INetwork } from '../../common/Networks';
 import { WCCallRequest_eth_sendTransaction } from '../../models/WCSession_v1';
 import numeral from 'numeral';
 import { showMessage } from 'react-native-flash-message';
+import { sleep } from '../../utils/async';
 
 export interface SpeedupAbleSendParams extends WCCallRequest_eth_sendTransaction {
   speedUp?: boolean;
@@ -30,6 +32,8 @@ export function parseRequestType(data = ''): { type: RequestType; methodFunc: st
   return { type: data ? Methods.get(methodFunc) ?? 'Contract Interaction' : 'Transfer', methodFunc };
 }
 
+const PreExecChains = new Set([1, 10, 42161, 137, 56]);
+
 export class RawTransactionRequest extends BaseTransaction {
   private param: WCCallRequest_eth_sendTransaction;
 
@@ -44,6 +48,8 @@ export class RawTransactionRequest extends BaseTransaction {
   tokenAddress = '';
   decodedFunc: DecodedFunc | null = null;
   decodingFunc = false;
+  preExecResult: PreExecResult | null = null;
+  preExecuting = true;
 
   get tokenAmount() {
     try {
@@ -96,6 +102,8 @@ export class RawTransactionRequest extends BaseTransaction {
       tokenSymbol: observable,
       tokenAddress: observable,
       decodedFunc: observable,
+      preExecResult: observable,
+      preExecuting: observable,
       isValidParams: computed,
       setERC20ApproveAmount: action,
       exceedERC20Balance: computed,
@@ -111,6 +119,7 @@ export class RawTransactionRequest extends BaseTransaction {
     this.type = type;
     let erc20: ERC20Token | undefined;
     let erc721: ERC721Token | undefined;
+    let isRawTx = false;
 
     switch (methodFunc) {
       case Transfer_ERC20:
@@ -190,6 +199,8 @@ export class RawTransactionRequest extends BaseTransaction {
 
         if (param.data?.length < 10) break;
 
+        isRawTx = true;
+
         this.decodingFunc = true;
         const decodedFunc = await EtherscanHub.decodeCall(this.network, param.to, param.data);
 
@@ -214,6 +225,34 @@ export class RawTransactionRequest extends BaseTransaction {
     }
 
     if (param.nonce) runInAction(() => this.setNonce(param.nonce));
+
+    if (!isRawTx) {
+      runInAction(() => (this.preExecuting = false));
+      return;
+    }
+
+    if (!PreExecChains.has(this.network.chainId)) return;
+
+    while (this.initializing) {
+      await sleep(500);
+    }
+
+    runInAction(() => (this.preExecuting = true));
+
+    const preExecResult = await preExecTx({
+      chainId: this.network.chainId,
+      from: param.from,
+      to: param.to,
+      value: param.value,
+      data: param.data,
+      nonce: utils.hexValue(this.nonce),
+      gas: utils.hexValue(this.gasLimit),
+    });
+
+    runInAction(() => {
+      this.preExecResult = preExecResult;
+      this.preExecuting = false;
+    });
   }
 
   setERC20ApproveAmount(amount: string) {

@@ -10,7 +10,7 @@ export const FTM_DAI = {
   symbol: 'DAI',
 };
 
-const FTM_AAVE = {
+export const FTM_AAVE = {
   address: '0x6a07A792ab2965C72a5B8088d3a069A7aC3a993B',
   decimals: 18,
   symbol: 'AAVE',
@@ -28,19 +28,19 @@ export const FTM_WBTC = {
   symbol: 'BTC',
 };
 
-const FTM_LINK = {
+export const FTM_LINK = {
   address: '0xb3654dc3D10Ea7645f8319668E8F54d2574FBdC8',
   decimals: 18,
   symbol: 'LINK',
 };
 
-const FTM_CRV = {
+export const FTM_CRV = {
   address: '0x1E4F97b9f9F913c46F1632781732927B9019C68b',
   decimals: 18,
   symbol: 'CRV',
 };
 
-const FTM_stkFTM = {
+export const FTM_stkFTM = {
   address: '0x69c744D3444202d35a2783929a0F930f2FBB05ad',
   decimals: 18,
   symbol: 'SFTM',
