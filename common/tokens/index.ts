@@ -15,6 +15,7 @@ export * from './Metis';
 export * from './Optimism';
 export * from './Harmony';
 export * from './Moonriver';
+export * from './PartnerTokens';
 
 import { BigNumberish } from '@ethersproject/bignumber';
 
