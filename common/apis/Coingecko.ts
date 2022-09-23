@@ -1,6 +1,7 @@
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import { CoinDetails } from './Coingecko.d';
+import Networks from '../../viewmodels/Networks';
 
 interface Price {
   usd: number;
@@ -26,7 +27,7 @@ interface CoinMarket {
 const host = 'https://api.coingecko.com';
 
 export async function getPrice(
-  ids = 'ethereum,matic-network,fantom,okexchain,huobi-token,binancecoin,avalanche-2,celo,crypto-com-chain,harmony,moonriver,moonbeam,wrapped-bitcoin,findora,klay-token,ronin',
+  ids = 'ethereum,matic-network,fantom,okexchain,huobi-token,binancecoin,avalanche-2,celo,crypto-com-chain,harmony,moonriver,moonbeam,wrapped-bitcoin,findora,klay-token,ronin,astar,dogechain,shiden,kava,evmos,fuse-network-token',
   currencies = 'usd'
 ) {
   try {
@@ -71,6 +72,12 @@ class Coingecko {
   klay = 0;
   fra = 0;
   ron = 0;
+  doge = 0;
+  astr = 0;
+  sdn = 0;
+  kava = 0;
+  evmos = 0;
+  fuse = 0;
 
   lastRefreshedTimestamp = 0;
 
@@ -144,6 +151,12 @@ class Coingecko {
         this.klay = data['klay-token']?.usd || 0;
         this.fra = data['findora']?.usd || 0;
         this.ron = data['ronin']?.usd || 0;
+        this.doge = data['dogechain']?.usd || 0;
+        this.astr = data['astar']?.usd || 0;
+        this.sdn = data['shiden']?.usd || 0;
+        this.kava = data['kava']?.usd || 0;
+        this.evmos = data['evmos']?.usd || 0;
+        this.fuse = data['fuse-network-token']?.usd || 0;
       });
     } catch {}
   }
@@ -151,11 +164,12 @@ class Coingecko {
   async getCoinDetails(symbol: string, address: string, network: string) {
     await this.init();
 
-    const ids = this.coinSymbolToIds.get(symbol.toLowerCase()) || [];
+    const lowerSymbol = symbol.toLowerCase();
+    const ids = this.coinSymbolToIds.get(lowerSymbol) || [];
     address = address.toLowerCase();
     network = network.toLowerCase();
 
-    let coin = this.coinDetails.get(address || symbol.toLowerCase());
+    let coin = this.coinDetails.get(address || lowerSymbol);
     if (coin) return coin;
 
     try {
@@ -166,17 +180,23 @@ class Coingecko {
         if (ids.length === 1) {
           if (address && coin.platforms?.[id]?.toLowerCase() === address) return coin;
           if (!address) return coin;
+          if (address && Networks.all.find((n) => n.symbol.toLowerCase() === lowerSymbol)) return coin;
         }
 
         const platforms = Object.getOwnPropertyNames(coin.platforms).filter((k) => k);
 
-        if (platforms.length === 0 && !address && coin.name.toLowerCase() === network) return coin;
+        if (
+          platforms.length === 0 &&
+          !address &&
+          (coin.name.toLowerCase() === network || coin.name.toLowerCase() === lowerSymbol)
+        )
+          return coin;
         if (platforms.length === 0) continue;
 
         const found = platforms.find((platform) => coin!.platforms?.[platform]?.toLowerCase() === address);
         if (found) return coin;
 
-        const nativeToken = platforms.find((_) => coin!.platforms?.[id]?.toLowerCase() === symbol.toLowerCase());
+        const nativeToken = platforms.find((_) => coin!.platforms?.[id]?.toLowerCase() === lowerSymbol);
         if (nativeToken) return coin;
 
         if (!address && coin.name.toLowerCase() === network) return coin;
@@ -186,7 +206,7 @@ class Coingecko {
     } catch (error) {
     } finally {
       if (!coin) return;
-      this.coinDetails.set(address || symbol.toLowerCase(), coin);
+      this.coinDetails.set(address || lowerSymbol, coin);
     }
   }
 

@@ -1,4 +1,4 @@
-import { Connection, Repository, createConnection } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 
 import Chain from './Chain';
 import EtherscanContract from './EtherscanContract';
@@ -9,7 +9,7 @@ import Transaction from './Transaction';
 import WCSession_v1 from './WCSession_v1';
 
 class Database {
-  private _connection!: Connection;
+  private _dataSource!: DataSource;
 
   keys!: Repository<Key>;
   txs!: Repository<Transaction>;
@@ -20,9 +20,9 @@ class Database {
   nfts!: Repository<NFT>;
 
   async init() {
-    if (this._connection) return;
+    if (this._dataSource) return;
 
-    this._connection = await createConnection({
+    this._dataSource = new DataSource({
       type: 'expo',
       database: __DEV__ ? 'dev5' : 'appdata',
       driver: require('expo-sqlite'),
@@ -30,13 +30,15 @@ class Database {
       entities: [Key, Transaction, WCSession_v1, InpageDApp, Chain, EtherscanContract, NFT],
     });
 
-    this.keys = this._connection.getRepository(Key);
-    this.txs = this._connection.getRepository(Transaction);
-    this.wcV1Sessions = this._connection.getRepository(WCSession_v1);
-    this.inpageDApps = this._connection.getRepository(InpageDApp);
-    this.chains = this._connection.getRepository(Chain);
-    this.etherscan_contracts = this._connection.getRepository(EtherscanContract);
-    this.nfts = this._connection.getRepository(NFT);
+    await this._dataSource.initialize();
+
+    this.keys = this._dataSource.getRepository(Key);
+    this.txs = this._dataSource.getRepository(Transaction);
+    this.wcV1Sessions = this._dataSource.getRepository(WCSession_v1);
+    this.inpageDApps = this._dataSource.getRepository(InpageDApp);
+    this.chains = this._dataSource.getRepository(Chain);
+    this.etherscan_contracts = this._dataSource.getRepository(EtherscanContract);
+    this.nfts = this._dataSource.getRepository(NFT);
   }
 
   async reset() {

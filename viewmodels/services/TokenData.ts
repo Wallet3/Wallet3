@@ -4,6 +4,7 @@ import Coingecko from '../../common/apis/Coingecko';
 import { INetwork } from '../../common/Networks';
 import Langs from '../settings/Langs';
 import { Links } from '../../common/apis/Coingecko.d';
+import TokenVerifier from './TokenVerifier';
 import { UserToken } from './TokensMan';
 import axios from 'axios';
 import { startSpringLayoutAnimation } from '../../utils/animations';
@@ -22,6 +23,7 @@ export class TokenData implements ITokenData {
   readonly symbol: string;
   readonly network: INetwork;
   readonly infoUrl: string;
+  readonly isVerified: boolean;
 
   coinId?: string;
   description: string = '';
@@ -39,6 +41,8 @@ export class TokenData implements ITokenData {
     this.symbol = token.symbol;
     this.address = token.address;
     this.network = network;
+    this.isVerified = this.address === '' ? true : TokenVerifier.isVerified(this.address);
+
     this.infoUrl = `https://github.com/trustwallet/assets/raw/master/blockchains/${
       (network.github_dir || network.network)?.toLowerCase() ?? 'ethereum'
     }/assets/${token.address}/info.json`;

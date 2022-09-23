@@ -3,7 +3,7 @@ import * as shape from 'd3-shape';
 
 import { Button, Coin, Skeleton } from '../../components';
 import { Defs, LinearGradient, Stop } from 'react-native-svg';
-import { EvilIcons, Ionicons } from '@expo/vector-icons';
+import { EvilIcons, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { formatAddress, formatCurrency } from '../../utils/formatter';
@@ -39,7 +39,7 @@ const Gradient = () => (
 export default observer(({ token, themeColor, onSendPress, network }: Props) => {
   const [vm, setVM] = useState<TokenData>();
   const { t } = i18n;
-  const { backgroundColor, thirdTextColor, foregroundColor } = Theme;
+  const { backgroundColor, thirdTextColor, foregroundColor, borderColor } = Theme;
 
   useEffect(() => {
     setVM(token ? new TokenData({ token: token!, network }) : undefined);
@@ -57,9 +57,18 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
         />
 
         <View style={{ marginStart: 16 }}>
-          <Text style={{ fontWeight: '500', fontSize: 19, color: foregroundColor }} numberOfLines={1}>
-            {token?.symbol}
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={{ fontWeight: '500', fontSize: 19, color: foregroundColor }} numberOfLines={1}>
+              {token?.symbol}
+            </Text>
+
+            <MaterialIcons
+              name="verified"
+              size={17}
+              color={vm?.isVerified ? 'dodgerblue' : borderColor}
+              style={{ marginStart: 6, marginEnd: 4 }}
+            />
+          </View>
           {vm?.loading ? (
             <Skeleton style={{ height: 14, marginTop: 2 }} />
           ) : (

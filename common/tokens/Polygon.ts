@@ -4,13 +4,13 @@ export const MATIC_DAI = {
   symbol: 'DAI',
 };
 
-const MATIC_AAVE = {
+export const MATIC_AAVE = {
   address: '0xD6DF932A45C0f255f85145f286eA0b292B21C90B',
   decimals: 18,
   symbol: 'AAVE',
 };
 
-const MATIC_UNI = {
+export const MATIC_UNI = {
   address: '0xb33EaAd8d922B1083446DC23f610c2567fB5180f',
   decimals: 18,
   symbol: 'UNI',
@@ -28,19 +28,19 @@ export const MATIC_USDT = {
   symbol: 'USDT',
 };
 
-const MATIC_CRV = {
+export const MATIC_CRV = {
   address: '0x172370d5Cd63279eFa6d502DAB29171933a610AF',
   decimals: 18,
   symbol: 'CRV',
 };
 
-const MATIC_COMP = {
+export const MATIC_COMP = {
   address: '0x8505b9d2254A7Ae468c0E9dd10Ccea3A837aef5c',
   decimals: 18,
   symbol: 'COMP',
 };
 
-const MATIC_SUSHI = {
+export const MATIC_SUSHI = {
   address: '0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a',
   decimals: 18,
   symbol: 'SUSHI',

@@ -1,4 +1,4 @@
-import { ETH, IToken } from '../../../common/tokens';
+import { HARMONY_ETH, IToken } from '../../../common/tokens';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { ethers, providers, utils } from 'ethers';
 
@@ -171,14 +171,17 @@ export class CurveExchange {
     const tokens = [1, 42161].includes(network.chainId) ? [nativeToken, ...userTokens] : userTokens;
 
     const swapFromAddress = await AsyncStorage.getItem(Keys.userSelectedFromToken(network.chainId));
+    const fromToken = tokens.find((t) => t.address === swapFromAddress) || tokens[0];
+
     const swapToAddress = await AsyncStorage.getItem(Keys.userSelectedToToken(network.chainId));
+    const toToken = tokens.find((t) => t.address === swapToAddress) || tokens.find((t) => t.address !== fromToken.address)!;
 
     runInAction(() => {
       this.tokens = tokens;
       this.swapRoute = null;
 
-      this.switchSwapFrom(tokens.find((t) => t.address === swapFromAddress) || tokens[0], false);
-      this.switchSwapTo(tokens.find((t) => t.address === swapToAddress) || tokens[1], false);
+      this.switchSwapFrom(fromToken, false);
+      this.switchSwapTo(toToken, false);
     });
   }
 
@@ -262,8 +265,8 @@ export class CurveExchange {
 
     try {
       const { route, output } = await curve.router.getBestRouteAndOutput(
-        this.swapFrom!.address || ETH.address,
-        this.swapTo!.address || ETH.address,
+        this.swapFrom!.address || HARMONY_ETH.address,
+        this.swapTo!.address || HARMONY_ETH.address,
         this.swapFromAmount
       );
 
@@ -334,7 +337,7 @@ export class CurveExchange {
   swap() {
     if (!this.swapRoute || this.swapRoute.length === 0 || !this.isValidFromAmount) return;
 
-    let route = [this.swapFrom!.address || ETH.address];
+    let route = [this.swapFrom!.address || HARMONY_ETH.address];
     let swapParams: any[] = [];
     let factorySwapAddrs: string[] = [];
 

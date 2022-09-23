@@ -306,4 +306,4 @@ export const DeFiTokens = [CRV, UNI, SUSHI, YFI, COMP, SNX, MKR, AAVE, RPL, LDO,
 
 import { PartnerTokens } from './PartnerTokens';
 
-export const EthereumPopularTokens = [DAI, USDC, USDT, UNI, SUSHI, COMP, MKR, CRV, LINK, AAVE, LDO, SHIB, ...PartnerTokens];
+export const EthereumPopularTokens = [DAI, USDC, USDT, BUSD, TUSD, UNI, CRV, LINK, AAVE, WBTC, LDO, SHIB, ...PartnerTokens];
