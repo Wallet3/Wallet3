@@ -40,7 +40,7 @@ export function clearBalanceCache(address: string, chainId: number) {
   return AsyncStorage.removeItem(CacheKeys.chain_balance(chainId, address));
 }
 
-export async function getBalance(address: string, chainId: number, debankId: chain) {
+export async function getBalance(address: string, chainId: number, debankId?: chain) {
   if (MemoryCache.has(CacheKeys.chain_balance(chainId, address))) {
     return MemoryCache.get(CacheKeys.chain_balance(chainId, address)) as ChainBalance;
   }
@@ -80,7 +80,7 @@ export async function getBalance(address: string, chainId: number, debankId: cha
   return debankChainBalance;
 }
 
-export async function getTokens(address: string, chainId: number, debankId: chain, is_all = false) {
+export async function getTokens(address: string, chainId: number, debankId?: chain, is_all = false) {
   if (MemoryCache.has(CacheKeys.user_tokens(chainId, address))) {
     return MemoryCache.get(CacheKeys.user_tokens(chainId, address)) as IToken[];
   }

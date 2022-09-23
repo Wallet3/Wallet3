@@ -32,6 +32,8 @@ export function parseRequestType(data = ''): { type: RequestType; methodFunc: st
   return { type: data ? Methods.get(methodFunc) ?? 'Contract Interaction' : 'Transfer', methodFunc };
 }
 
+const PreExecChains = new Set([1, 10, 42161, 137, 56]);
+
 export class RawTransactionRequest extends BaseTransaction {
   private param: WCCallRequest_eth_sendTransaction;
 
@@ -196,7 +198,7 @@ export class RawTransactionRequest extends BaseTransaction {
         this.valueWei = BigNumber.from(param.value || 0);
 
         if (param.data?.length < 10) break;
-        
+
         isRawTx = true;
 
         this.decodingFunc = true;
@@ -228,6 +230,8 @@ export class RawTransactionRequest extends BaseTransaction {
       runInAction(() => (this.preExecuting = false));
       return;
     }
+
+    if (!PreExecChains.has(this.network.chainId)) return;
 
     while (this.initializing) {
       await sleep(500);

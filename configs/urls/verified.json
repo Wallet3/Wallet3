@@ -120,6 +120,7 @@
     "nft.gamestop.com",
     "sudoswap.xyz",
     "rarible.com",
+    "kumaleon.com",
     "stratosnft.io",
     "www.genie.xyz",
     "www.gem.xyz",
@@ -139,15 +140,16 @@
   "Innovations": ["app.union.finance"],
   "Games": [
     "axieinfinity.com",
-    "www.sandbox.game",
     "game.defikingdoms.com",
     "app.pooltogether.com",
+    "immortal.game",
     "otherside.xyz",
     "dagen.life",
     "polymarket.com",
     "meta-all-stars.io",
     "play.decentraland.org"
   ],
+  "Metaverse": ["www.sandbox.game"],
   "Utilities": [
     "unstoppabledomains.com",
     "ud.me",

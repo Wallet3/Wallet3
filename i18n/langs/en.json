@@ -211,6 +211,7 @@
   "modal-token-details-more": "More",
   "modal-token-details-contract-address": "Contract address",
   "modal-token-details-homepage": "Homepage",
+  "modal-token-details-verified": "Verified",
   "modal-tx-details-network": "Network",
   "modal-tx-details-tx-hash": "Tx Hash",
   "modal-tx-details-from": "From",

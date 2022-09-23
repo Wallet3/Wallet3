@@ -1,7 +1,6 @@
 import { Button, Coin, SafeViewContainer } from '../../components';
 import { Text, View } from 'react-native';
 
-import { DecodedFunc } from '../../viewmodels/hubs/EtherscanHub';
 import { Ionicons } from '@expo/vector-icons';
 import MultiSourceImage from '../../components/MultiSourceImage';
 import { PreExecResult } from '../../common/apis/Debank';
