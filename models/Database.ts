@@ -1,4 +1,4 @@
-import { DataSource, Repository } from 'typeorm';
+import { createConnection, Connection, Repository } from 'typeorm';
 
 import Chain from './Chain';
 import EtherscanContract from './EtherscanContract';
@@ -9,7 +9,7 @@ import Transaction from './Transaction';
 import WCSession_v1 from './WCSession_v1';
 
 class Database {
-  private _dataSource!: DataSource;
+  private _dataSource!: Connection;
 
   keys!: Repository<Key>;
   txs!: Repository<Transaction>;
@@ -22,15 +22,13 @@ class Database {
   async init() {
     if (this._dataSource) return;
 
-    this._dataSource = new DataSource({
+    this._dataSource = await createConnection({
       type: 'expo',
       database: __DEV__ ? 'dev5' : 'appdata',
       driver: require('expo-sqlite'),
       synchronize: true,
       entities: [Key, Transaction, WCSession_v1, InpageDApp, Chain, EtherscanContract, NFT],
     });
-
-    await this._dataSource.initialize();
 
     this.keys = this._dataSource.getRepository(Key);
     this.txs = this._dataSource.getRepository(Transaction);
