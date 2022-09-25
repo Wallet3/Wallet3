@@ -226,12 +226,10 @@ export class RawTransactionRequest extends BaseTransaction {
 
     if (param.nonce) runInAction(() => this.setNonce(param.nonce));
 
-    if (!isRawTx) {
+    if (!isRawTx || !PreExecChains.has(this.network.chainId)) {
       runInAction(() => (this.preExecuting = false));
       return;
     }
-
-    if (!PreExecChains.has(this.network.chainId)) return;
 
     while (this.initializing) {
       await sleep(500);
