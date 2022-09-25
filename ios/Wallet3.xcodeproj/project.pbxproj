@@ -334,6 +334,8 @@
 					"FB_SONARKIT_ENABLED=1",
 				);
 				INFOPLIST_FILE = Wallet3/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Wallet 3";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 3.0.0;
@@ -361,7 +363,10 @@
 				CODE_SIGN_ENTITLEMENTS = Wallet3/Wallet3.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Z3N6SZF439;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Wallet3/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Wallet 3";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 3.0.0;

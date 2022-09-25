@@ -76,7 +76,7 @@ export default observer(
             justifyContent: 'space-between',
           }}
         >
-          <View style={{ flexDirection: 'row', alignItems: 'center', maxWidth: '42%' }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', maxWidth: 180 }}>
             <TouchableOpacity
               style={{ flexDirection: 'row', alignItems: 'center', marginEnd: 8 }}
               onPress={() => PubSub.publish(MessageKeys.openNetworksMenu)}
