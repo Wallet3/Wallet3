@@ -50,10 +50,10 @@ const RootTab = observer(() => {
   const tabBarStyle = bottom === 0 ? { ...baseTarBarStyle, height: 57 } : baseTarBarStyle;
 
   useEffect(() => {
-    PubSub.subscribe(MessageKeys.openExplorer, () => navigation.navigate('Explore'));
+    PubSub.subscribe(MessageKeys.openBrowser, () => navigation.navigate('Browser'));
 
     return () => {
-      PubSub.unsubscribe(MessageKeys.openExplorer);
+      PubSub.unsubscribe(MessageKeys.openBrowser);
     };
   }, []);
 
@@ -70,7 +70,7 @@ const RootTab = observer(() => {
         tabBarIcon: ({ focused, size }) => {
           const icons = {
             Wallet: 'credit-card',
-            Explore: 'compass',
+            Browser: 'compass',
             NFTs: 'star',
             Exchange: 'refresh-ccw',
           };
@@ -158,7 +158,7 @@ const RootTab = observer(() => {
       />
 
       <Screen
-        name="Explore"
+        name="Browser"
         component={Platform.OS === 'android' ? SinglePageBrowserScreen : BrowserScreen}
         options={{
           tabBarLabel: 'Web3',

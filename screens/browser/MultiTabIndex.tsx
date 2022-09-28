@@ -195,7 +195,12 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
 
     ReactiveScreen.on('change', handler);
 
+    PubSub.subscribe(MessageKeys.openUrl, (_, { data }) => {
+      PubSub.publish(MessageKeys.openUrlInPageId(state.activePageId), { data });
+    });
+
     return () => {
+      PubSub.unsubscribe(MessageKeys.openUrl);
       ReactiveScreen.off('change', handler);
     };
   }, []);

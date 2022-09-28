@@ -118,15 +118,14 @@ export const Browser = observer(
 
       const changeListener = Dimensions.addEventListener('change', handler);
 
-      PubSub.subscribe(MessageKeys.openUrl, (msg, { data }) => {
+      const subToken = PubSub.subscribe(MessageKeys.openUrlInPageId(pageId), (msg, { data }) => {
         addrRef?.current?.blur();
         setTimeout(() => goTo(data), 100);
       });
 
       return () => {
         changeListener.remove();
-        PubSub.unsubscribe(MessageKeys.openUrl);
-
+        PubSub.unsubscribe(subToken);
         onInputting = undefined;
       };
     }, []);

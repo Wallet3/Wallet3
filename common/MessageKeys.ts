@@ -19,5 +19,6 @@ export default {
   openBackupSecretTip: 'openBackupSecretTip',
   userSecretsNotVerified: 'userSecretsNotVerified',
   openUrl: 'openUrl',
-  openExplorer: 'openExplorer',
+  openUrlInPageId: (pageId: number) => `openUrl_page${pageId}`,
+  openBrowser: 'openBrowser',
 };

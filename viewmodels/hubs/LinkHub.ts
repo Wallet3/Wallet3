@@ -41,7 +41,7 @@ class LinkHub {
 
     if (!scheme) {
       if (isURL(uri)) {
-        PubSub.publish(MessageKeys.openExplorer);
+        PubSub.publish(MessageKeys.openBrowser);
 
         setTimeout(() => {
           PubSub.publish(MessageKeys.openUrl, {
@@ -67,13 +67,19 @@ class LinkHub {
       }
     }
 
+    if (scheme === 'https' && uri.startsWith('https://')) {
+      PubSub.publish(MessageKeys.openBrowser);
+      setTimeout(() => PubSub.publish(MessageKeys.openUrl, { data: uri }), 200);
+      return true;
+    }
+
     if (appSchemes.includes(scheme)) {
       try {
         const { queryParams, hostname } = Linking.parse(uri);
         if (!queryParams || Object.getOwnPropertyNames(queryParams).length === 0) return false; // ignore empty query params
 
         if (scheme.startsWith('wallet3') && hostname === 'open' && queryParams.url) {
-          PubSub.publish(MessageKeys.openExplorer);
+          PubSub.publish(MessageKeys.openBrowser);
           setTimeout(() => PubSub.publish(MessageKeys.openUrl, { data: queryParams.url }), 200);
           return true;
         }
