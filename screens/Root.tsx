@@ -49,6 +49,14 @@ const RootTab = observer(() => {
   const baseTarBarStyle = { backgroundColor, borderTopColor: systemBorderColor };
   const tabBarStyle = bottom === 0 ? { ...baseTarBarStyle, height: 57 } : baseTarBarStyle;
 
+  useEffect(() => {
+    PubSub.subscribe(MessageKeys.openExplorer, () => navigation.navigate('Explore'));
+
+    return () => {
+      PubSub.unsubscribe(MessageKeys.openExplorer);
+    };
+  }, []);
+
   return (
     <Navigator
       initialRouteName="Wallet"

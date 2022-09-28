@@ -73,7 +73,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
   const swiper = useRef<FlatList>(null);
   const [activePageIndex, setActivePageIndex] = useState(0);
   const [persistentKeyboard, setPersistentKeyboard] = useState<'always' | 'never'>('never');
-  const [counts, forceUpdate] = useState(1);
+  const [_, forceUpdate] = useState(1);
   const [state] = useState(new StateViewModel());
   const { backgroundColor } = Theme;
 

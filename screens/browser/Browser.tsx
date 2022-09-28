@@ -118,16 +118,14 @@ export const Browser = observer(
 
       const changeListener = Dimensions.addEventListener('change', handler);
 
-      PubSub.subscribe(MessageKeys.CodeScan_https, (msg, { data }) => {
-        if (globalState?.activePageId !== pageId) return;
-
-        addrRef.current?.blur();
-        setTimeout(() => goTo(data), 1000);
+      PubSub.subscribe(MessageKeys.openUrl, (msg, { data }) => {
+        addrRef?.current?.blur();
+        setTimeout(() => goTo(data), 100);
       });
 
       return () => {
         changeListener.remove();
-        PubSub.unsubscribe(MessageKeys.CodeScan_https);
+        PubSub.unsubscribe(MessageKeys.openUrl);
 
         onInputting = undefined;
       };
@@ -242,7 +240,7 @@ export const Browser = observer(
           new Set(
             history
               .concat(SecureUrls.filter((u) => !history.find((hurl) => hurl.includes(u) || u.includes(hurl))))
-              .filter((url) => url.includes(addr) || addr.includes(url))
+              .filter((url) => url.includes(addr)) // || addr.includes(url)
               .slice(0, 5)
           )
         )
