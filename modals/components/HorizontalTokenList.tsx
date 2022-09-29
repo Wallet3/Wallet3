@@ -10,9 +10,10 @@ interface Props {
   tokens: { chainId: number; address: string; symbol: string; amount: number }[];
   style?: StyleProp<ViewStyle>;
   inOut: 'in' | 'out';
+  themeColor?: string;
 }
 
-export default observer(({ tokens, style, inOut }: Props) => {
+export default observer(({ tokens, style, inOut, themeColor }: Props) => {
   const { backgroundColor, tintColor, thirdTextColor } = Theme;
 
   return (
@@ -24,7 +25,7 @@ export default observer(({ tokens, style, inOut }: Props) => {
             marginEnd: 5,
             fontSize: 16,
             fontWeight: '500',
-            color: inOut === 'in' ? thirdTextColor : tintColor,
+            color: inOut === 'in' ? thirdTextColor : themeColor || tintColor,
             maxWidth: 81,
           }}
         >

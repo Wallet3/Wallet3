@@ -10,9 +10,10 @@ interface Props {
   nfts: { amount: number; content: string; content_type: string }[];
   style?: StyleProp<ViewStyle>;
   inOut: 'in' | 'out';
+  themeColor?: string;
 }
 
-export default observer(({ nfts, style, inOut }: Props) => {
+export default observer(({ nfts, style, inOut, themeColor }: Props) => {
   const { backgroundColor, tintColor, thirdTextColor, borderColor } = Theme;
   const [amount] = useState(LINQ.from(nfts).sum((t) => t.amount));
 
@@ -25,7 +26,7 @@ export default observer(({ nfts, style, inOut }: Props) => {
             marginEnd: 5,
             fontSize: 16,
             fontWeight: '500',
-            color: inOut === 'in' ? thirdTextColor : tintColor,
+            color: inOut === 'in' ? thirdTextColor : themeColor || tintColor,
             maxWidth: 81,
           }}
         >

@@ -36,9 +36,9 @@ class LinkHub {
     if (!uri) return false;
     if (this.handledWalletConnectUrls.has(uri)) return false;
 
-    uri = uri.toLowerCase();
+    const uriLower = uri.toLowerCase();
 
-    const scheme = supportedSchemes.find((schema) => uri.startsWith(schema)) || (uri.endsWith('.eth') ? '0x' : undefined);
+    const scheme = supportedSchemes.find((schema) => uriLower.startsWith(schema)) || (uriLower.endsWith('.eth') ? '0x' : undefined);
 
     if (!scheme) {
       if (isURL(uri)) {
@@ -46,7 +46,7 @@ class LinkHub {
 
         setTimeout(() => {
           PubSub.publish(MessageKeys.openUrl, {
-            data: uri.startsWith('https:') || uri.startsWith('http:') ? uri : `https://${uri}`,
+            data: uriLower.startsWith('https:') || uriLower.startsWith('http:') ? uri : `https://${uri}`,
             extra,
           });
         }, 200);
@@ -68,7 +68,7 @@ class LinkHub {
       }
     }
 
-    if (uri.startsWith('https://') || uri.startsWith('http://')) {
+    if (uriLower.startsWith('https://') || uriLower.startsWith('http://')) {
       PubSub.publish(MessageKeys.openBrowser);
       setTimeout(() => PubSub.publish(MessageKeys.openUrl, { data: uri }), 200);
       return true;
