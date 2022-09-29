@@ -234,11 +234,17 @@ const TxReview = observer(
                       tokens={vm.preExecResult!.send_token_list!}
                       style={styles.horizontalTokenList}
                       inOut="in"
+                      themeColor={vm.network.color}
                     />
                   ) : undefined}
 
                   {(vm.preExecResult?.send_nft_list?.length || 0) > 0 ? (
-                    <HorizontalNftList nfts={vm.preExecResult?.send_nft_list!} style={styles.horizontalTokenList} inOut="in" />
+                    <HorizontalNftList
+                      nfts={vm.preExecResult?.send_nft_list!}
+                      style={styles.horizontalTokenList}
+                      inOut="in"
+                      themeColor={vm.network.color}
+                    />
                   ) : undefined}
 
                   {((vm.preExecResult?.send_token_list?.length || 0) > 0 ||
@@ -258,6 +264,7 @@ const TxReview = observer(
                       tokens={vm.preExecResult!.receive_token_list!}
                       style={styles.horizontalTokenList}
                       inOut="out"
+                      themeColor={vm.network.color}
                     />
                   ) : undefined}
 
@@ -266,6 +273,7 @@ const TxReview = observer(
                       nfts={vm.preExecResult?.receive_nft_list!}
                       style={styles.horizontalTokenList}
                       inOut="out"
+                      themeColor={vm.network.color}
                     />
                   ) : undefined}
 

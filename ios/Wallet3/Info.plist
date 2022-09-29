@@ -38,11 +38,12 @@
 				<string>bitpie</string>
 				<string>abt</string>
 				<string>wc</string>
+				<string>https</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>20220924161032</string>
+	<string>20220929185521</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>

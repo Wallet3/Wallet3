@@ -15,8 +15,10 @@ export default {
   drawerSwipeEnabled: 'drawer-swipeEnabled',
   wc_request: 'wc_request',
   CodeScan_wc: 'CodeScan-wc:',
-  CodeScan_https: 'CodeScan-https:',
   CodeScan_wallet3sync: 'CodeScan-wallet3sync:',
   openBackupSecretTip: 'openBackupSecretTip',
   userSecretsNotVerified: 'userSecretsNotVerified',
+  openUrl: 'openUrl',
+  openUrlInPageId: (pageId: number) => `openUrl_page${pageId}`,
+  openBrowser: 'openBrowser',
 };

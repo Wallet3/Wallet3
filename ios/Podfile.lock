@@ -21,7 +21,7 @@ PODS:
     - ExpoModulesCore
   - EXFileSystem (14.0.0):
     - ExpoModulesCore
-  - EXFont (10.2.0):
+  - EXFont (10.2.1):
     - ExpoModulesCore
   - EXImageLoader (3.2.0):
     - ExpoModulesCore
@@ -60,7 +60,7 @@ PODS:
   - EXSQLite (10.3.0):
     - ExpoModulesCore
   - EXStructuredHeaders (2.2.1)
-  - EXUpdates (0.14.5):
+  - EXUpdates (0.14.6):
     - ASN1Decoder (~> 1.8)
     - EASClient
     - EXManifests
@@ -318,11 +318,11 @@ PODS:
   - React-jsinspector (0.68.2)
   - React-logger (0.68.2):
     - glog
-  - react-native-context-menu-view (1.5.2):
+  - react-native-context-menu-view (1.6.0):
     - React
   - react-native-randombytes (3.6.1):
     - React-Core
-  - react-native-safe-area-context (4.3.4):
+  - react-native-safe-area-context (4.4.1):
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
@@ -410,7 +410,7 @@ PODS:
     - React-Core
     - SDWebImage (~> 5.11.1)
     - SDWebImageWebPCoder (~> 0.8.4)
-  - RNGestureHandler (2.6.1):
+  - RNGestureHandler (2.6.2):
     - React-Core
   - RNImageColors (1.5.1):
     - React-Core
@@ -734,7 +734,7 @@ SPEC CHECKSUMS:
   EXConstants: 7c44785d41d8e959d527d23d29444277a4d1ee73
   EXErrorRecovery: 3ce46e5d42e53c0371ff048a7f0cbc959968ef4a
   EXFileSystem: 2aa2d9289f84bca9532b9ccbd81504fa31eb1ded
-  EXFont: a5d80bd9b3452b2d5abbce2487da89b0150e6487
+  EXFont: 06df627203afcb8a3b3152ec06eb2f11f46f0cff
   EXImageLoader: b88e053d760f85a82405b1db2de4abf11978fc9f
   EXJSONUtils: 2a74b8f40f1523cc3f92af99c91aa78201737a77
   EXLocalAuthentication: a714f4e7370c4efba4ed4345a55110f22ac3d85f
@@ -753,7 +753,7 @@ SPEC CHECKSUMS:
   EXSplashScreen: 799bece80089219b2c989c1082d70f3b00995cda
   EXSQLite: 82a4ca937f19d3cbbb6dba9e11d8e963175527c9
   EXStructuredHeaders: 5d86829469399370a9fc7cb1e4391b09de87681d
-  EXUpdates: 664f999db423f90f3fb3d91edcda9bc28cb5a5b4
+  EXUpdates: 8afd5cff44d3936e08be0e1688f0ed118134433f
   EXUpdatesInterface: 2bbc11815dfa2ec3fc02e5534c7592c6b42b5327
   FBLazyVector: a7a655862f6b09625d11c772296b01cd5164b648
   FBReactNativeSpec: 81ce99032d5b586fddd6a38d450f8595f7e04be4
@@ -778,9 +778,9 @@ SPEC CHECKSUMS:
   React-jsiexecutor: b7b553412f2ec768fe6c8f27cd6bafdb9d8719e6
   React-jsinspector: c5989c77cb89ae6a69561095a61cce56a44ae8e8
   React-logger: a0833912d93b36b791b7a521672d8ee89107aff1
-  react-native-context-menu-view: c72d4120597f5cf3917dcb348cf819f215ed9207
+  react-native-context-menu-view: d3b3e77985d5b05674a70f8e7eafe404dfa5bbcc
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
-  react-native-safe-area-context: dfe5aa13bee37a0c7e8059d14f72ffc076d120e9
+  react-native-safe-area-context: 99b24a0c5acd0d5dcac2b1a7f18c49ea317be99a
   react-native-video: c26780b224543c62d5e1b2a7244a5cd1b50e8253
   react-native-view-shot: a60a98a18c72bcaaaf2138f9aab960ae9b0d96c7
   react-native-webview: d33e2db8925d090871ffeb232dfa50cb3a727581
@@ -799,7 +799,7 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: 0c357f3156fcb16c8589ede67cc036330b6698ca
   RNDeviceInfo: 8b83e99e290deaf1bab71673cc636776ef647b6f
   RNFastImage: 3207b9eb17c2425d574ca40db35185db6e324f4e
-  RNGestureHandler: 28ad20bf02257791f7f137b31beef34b9549f54b
+  RNGestureHandler: 4defbd70b2faf3d6761b82fa7880285241762cb0
   RNImageColors: fd9777591fc765780e035f4bec7a42edabc86eb4
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
   RNReanimated: 5bdcbcc3a72aedeee7bb099604262403aa75a1e5

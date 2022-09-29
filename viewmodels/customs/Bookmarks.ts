@@ -156,6 +156,7 @@ class Bookmarks {
   }
 
   submitHistory(url: string) {
+    url = url.endsWith('/') ? url.substring(0, url.length - 1) : url;
     this.history = [url, ...this.history.filter((i) => !i.includes(url) || !url.includes(i))];
     AsyncStorage.setItem(`history-urls`, JSON.stringify(this.history.slice(0, 100)));
   }
@@ -180,7 +181,7 @@ class Bookmarks {
 
     this.recentSites.unshift(metadata);
 
-    if (this.recentSites.length > 15) this.recentSites.pop();
+    if (this.recentSites.length > 18) this.recentSites.pop();
 
     AsyncStorage.setItem('recent-sites', JSON.stringify(this.recentSites));
   }

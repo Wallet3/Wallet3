@@ -49,6 +49,14 @@ const RootTab = observer(() => {
   const baseTarBarStyle = { backgroundColor, borderTopColor: systemBorderColor };
   const tabBarStyle = bottom === 0 ? { ...baseTarBarStyle, height: 57 } : baseTarBarStyle;
 
+  useEffect(() => {
+    PubSub.subscribe(MessageKeys.openBrowser, () => navigation.navigate('Browser'));
+
+    return () => {
+      PubSub.unsubscribe(MessageKeys.openBrowser);
+    };
+  }, []);
+
   return (
     <Navigator
       initialRouteName="Wallet"
@@ -62,7 +70,7 @@ const RootTab = observer(() => {
         tabBarIcon: ({ focused, size }) => {
           const icons = {
             Wallet: 'credit-card',
-            Explore: 'compass',
+            Browser: 'compass',
             NFTs: 'star',
             Exchange: 'refresh-ccw',
           };
@@ -150,7 +158,7 @@ const RootTab = observer(() => {
       />
 
       <Screen
-        name="Explore"
+        name="Browser"
         component={Platform.OS === 'android' ? SinglePageBrowserScreen : BrowserScreen}
         options={{
           tabBarLabel: 'Web3',
