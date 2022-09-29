@@ -9689,10 +9689,10 @@ react-native-collapsible@^1.6.0:
   resolved "https://registry.yarnpkg.com/react-native-collapsible/-/react-native-collapsible-1.6.0.tgz#ca261ffff16914f872059bb0972e3a78c4b37f9c"
   integrity sha512-beZjdgbT9Y/Pg591Xy5XkKG20HffJiVad4n9bfcUF/f783A+tvOVXnqvbS58Lkaym93mi4jcDPMuW9Vc1t6rqg==
 
-react-native-context-menu-view@^1.5.2:
-  version "1.5.2"
-  resolved "https://registry.yarnpkg.com/react-native-context-menu-view/-/react-native-context-menu-view-1.5.2.tgz#944d407b1c5562ceeca66fbd602be3946e9e2ff1"
-  integrity sha512-0oGSmi2qLTVIloL3a+1oSMEr9xkpr2SgXznYbFfDuRahlYt8asFKNj1o8k71vpao8GEusXE4khYHZdLMF+SE2g==
+react-native-context-menu-view@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/react-native-context-menu-view/-/react-native-context-menu-view-1.6.0.tgz#f850351a7b5697d8ba75df198bd671536a54cf33"
+  integrity sha512-K3oSzBjzC5wetbOYiyMqZyLAMhAu7WBHghBl0utb2PL+66G/dI4vGgCvOFeHBxSv2IJQ4C7KBFCJQaXW8sakVQ==
 
 react-native-crypto@^2.2.0:
   version "2.2.0"
@@ -9824,10 +9824,10 @@ react-native-remote-svg@^2.0.10:
   resolved "https://registry.yarnpkg.com/react-native-remote-svg/-/react-native-remote-svg-2.0.10.tgz#9e8cb2ea7e178f93fd293557f8c6c5deaec92794"
   integrity sha512-6s+IpcX8xBe5SI/5J/IbgqtnMBZTUU+qGKAz1klEtlwC+3EiGTvVZX9e0QgJ3DQ7Jf2CN1YQ4pDBkEH1WA5Q+A==
 
-react-native-safe-area-context@4.3.4:
-  version "4.3.4"
-  resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-4.3.4.tgz#79060fcc02ef38d6fd7afdf87b2301b06bd99fe9"
-  integrity sha512-4dFZPDHRigZ+uw8HCmMLyC/IT1BG0B9QLvuwsBQAMDCRSrxISIYza9VIbsIn2FGvZiQ1gOoXBHDmy9WFihQsTg==
+react-native-safe-area-context@4.4.1:
+  version "4.4.1"
+  resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-4.4.1.tgz#239c60b8a9a80eac70a38a822b04c0f1d15ffc01"
+  integrity sha512-N9XTjiuD73ZpVlejHrUWIFZc+6Z14co1K/p1IFMkImU7+avD69F3y+lhkqA2hN/+vljdZrBSiOwXPkuo43nFQA==
 
 react-native-safe-modules@^1.0.3:
   version "1.0.3"

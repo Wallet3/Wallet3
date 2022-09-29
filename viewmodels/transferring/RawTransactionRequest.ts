@@ -217,11 +217,11 @@ export class RawTransactionRequest extends BaseTransaction {
     }
 
     if (param.gasPrice && param.speedUp) {
-      this.setMaxGasPrice(Number(param.gasPrice) / Gwei_1);
+      runInAction(() => this.setMaxGasPrice(Number(param.gasPrice) / Gwei_1));
     }
 
     if (param.priorityPrice && param.speedUp) {
-      this.setPriorityPrice(Number(param.priorityPrice) / Gwei_1);
+      runInAction(() => this.setPriorityPrice(Number(param.priorityPrice) / Gwei_1));
     }
 
     if (param.nonce) runInAction(() => this.setNonce(param.nonce));
@@ -275,6 +275,7 @@ export class RawTransactionRequest extends BaseTransaction {
   get isValidParams() {
     return (
       !this.initializing &&
+      !this.preExecuting &&
       (utils.isAddress(this.param.to) || this.param.to === '') && // Empty address is allowed - it means contract deploying
       this.nonce >= 0 &&
       this.isValidGas &&
