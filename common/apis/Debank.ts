@@ -190,8 +190,6 @@ export async function preExecTx(tx: {
   try {
     const data: PreExecTx = await post(`${host}/v1/wallet/pre_exec_tx`, { tx }, { AccessKey: DeBankApiKey });
 
-    console.log(data);
-
     const fixToken = (t: any) => {
       return {
         ...t,
@@ -206,7 +204,7 @@ export async function preExecTx(tx: {
       receive_nft_list: data.balance_change.receive_nft_list,
       send_nft_list: data.balance_change.send_nft_list,
       receive_token_list: data.balance_change.receive_token_list.map(fixToken),
-      send_token_list: data.balance_change.send_token_list.map(fixToken),
+      send_token_list: data.balance_change.send_token_list.filter((t) => t.amount > 0).map(fixToken),
     };
 
     MemoryCache.set(CacheKeys.pre_exec_tx(tx), result);
@@ -385,7 +383,8 @@ const mock = {
       amount: 1,
       chain: 'eth',
       collection: null,
-      content: 'https://static.debank.com/image/eth_nft/local_url/aeee5dc9285c12b282aaf30839e61c6c/11972a026a9727482c793134e0f863dc',
+      content:
+        'https://static.debank.com/image/eth_nft/local_url/aeee5dc9285c12b282aaf30839e61c6c/11972a026a9727482c793134e0f863dc',
       content_type: 'image_url',
       contract_id: '0x8270fc3b2d23de703b265b2abe008883954fea8e',
       description: '',

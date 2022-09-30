@@ -73,7 +73,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
   const swiper = useRef<FlatList>(null);
   const [activePageIndex, setActivePageIndex] = useState(0);
   const [persistentKeyboard, setPersistentKeyboard] = useState<'always' | 'never'>('never');
-  const [counts, forceUpdate] = useState(1);
+  const [_, forceUpdate] = useState(1);
   const [state] = useState(new StateViewModel());
   const { backgroundColor } = Theme;
 
@@ -188,7 +188,12 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
 
     ReactiveScreen.on('change', handler);
 
+    PubSub.subscribe(MessageKeys.openUrl, (_, { data }) => {
+      PubSub.publish(MessageKeys.openUrlInPageId(state.activePageId), { data });
+    });
+
     return () => {
+      PubSub.unsubscribe(MessageKeys.openUrl);
       ReactiveScreen.off('change', handler);
     };
   }, []);

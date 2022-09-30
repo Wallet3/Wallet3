@@ -70,7 +70,7 @@ export default observer(({ themeColor, onBack, preview }: Props) => {
         {preview?.send_token_list?.map((t) => (
           <View key={`${t.address}_${t.symbol}`} style={itemContainer}>
             <Coin address={t.address} symbol={t.symbol} chainId={t.chainId} size={25} />
-            <Text style={itemValueStyle} numberOfLines={1}>{`-${formatCurrency(t.amount, '')} ${t.symbol}`}</Text>
+            <Text style={itemValueStyle} numberOfLines={1}>{`-${formatCurrency(t.amount, '', '0.0000')} ${t.symbol}`}</Text>
           </View>
         ))}
 
@@ -92,7 +92,7 @@ export default observer(({ themeColor, onBack, preview }: Props) => {
         {preview?.receive_token_list?.map((t) => (
           <View key={`${t.address}_${t.symbol}`} style={itemContainer}>
             <Coin address={t.address} symbol={t.symbol} chainId={t.chainId} size={25} />
-            <Text style={itemValueStyle} numberOfLines={1}>{`+${formatCurrency(t.amount, '')} ${t.symbol}`}</Text>
+            <Text style={itemValueStyle} numberOfLines={1}>{`+${formatCurrency(t.amount, '', '0.0000')} ${t.symbol}`}</Text>
           </View>
         ))}
 

@@ -25,7 +25,7 @@ const supportedSchemes = ['ethereum', '0x', 'wc:', 'wallet3sync:'].concat(appSch
 
 class LinkHub {
   private lastHandled = 0;
-  private handledWCUrls = new Set<string>();
+  private handledWalletConnectUrls = new Set<string>();
 
   start() {
     Linking.getInitialURL().then((url) => this.handleURL(url!, { launch: true }));
@@ -34,17 +34,22 @@ class LinkHub {
 
   handleURL = (uri: string, extra?: { fromMobile?: boolean; hostname?: string; launch?: boolean }): boolean => {
     if (!uri) return false;
-    if (this.handledWCUrls.has(uri)) return false;
+    if (this.handledWalletConnectUrls.has(uri)) return false;
 
-    const scheme =
-      supportedSchemes.find((schema) => uri.toLowerCase().startsWith(schema)) || (uri.endsWith('.eth') ? '0x' : undefined);
+    const uriLower = uri.toLowerCase();
+
+    const scheme = supportedSchemes.find((schema) => uriLower.startsWith(schema)) || (uriLower.endsWith('.eth') ? '0x' : undefined);
 
     if (!scheme) {
       if (isURL(uri)) {
-        PubSub.publish(MessageKeys.CodeScan_https, {
-          data: uri.startsWith('https:') || uri.startsWith('http:') ? uri : `https://${uri}`,
-          extra,
-        });
+        PubSub.publish(MessageKeys.openBrowser);
+
+        setTimeout(() => {
+          PubSub.publish(MessageKeys.openUrl, {
+            data: uriLower.startsWith('https:') || uriLower.startsWith('http:') ? uri : `https://${uri}`,
+            extra,
+          });
+        }, 200);
         return true;
       }
 
@@ -65,19 +70,31 @@ class LinkHub {
       }
     }
 
+    if (uriLower.startsWith('https://') || uriLower.startsWith('http://')) {
+      PubSub.publish(MessageKeys.openBrowser);
+      setTimeout(() => PubSub.publish(MessageKeys.openUrl, { data: uri }), 200);
+      return true;
+    }
+
     if (appSchemes.includes(scheme)) {
       try {
-        const { queryParams } = Linking.parse(uri);
-        if (Object.getOwnPropertyNames(queryParams).length === 0) return false; // ignore empty query params
+        const { queryParams, hostname } = Linking.parse(uri);
+        if (!queryParams || Object.getOwnPropertyNames(queryParams).length === 0) return false; // ignore empty query params
 
-        this.handledWCUrls.add(uri);
+        if (scheme.startsWith('wallet3') && hostname === 'open' && queryParams.url) {
+          PubSub.publish(MessageKeys.openBrowser);
+          setTimeout(() => PubSub.publish(MessageKeys.openUrl, { data: queryParams.url }), 200);
+          return true;
+        }
+
+        this.handledWalletConnectUrls.add(uri);
 
         const data = queryParams.key ? `${queryParams.uri}&key=${queryParams.key}` : `${queryParams.uri}`;
 
         PubSub.publish(MessageKeys.CodeScan_wc, { data, extra });
       } catch (error) {}
     } else {
-      if (scheme === 'wc:') this.handledWCUrls.add(uri);
+      if (scheme === 'wc:') this.handledWalletConnectUrls.add(uri);
       PubSub.publish(`CodeScan-${scheme}`, { data: uri.replace('Ethereum', 'ethereum'), extra });
     }
 
