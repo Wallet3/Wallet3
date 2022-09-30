@@ -189,6 +189,8 @@ export class WalletConnect_v1 extends EventEmitter {
       return;
     }
 
+    console.log('wc', request);
+
     switch (request.method as string) {
       case 'wallet_addEthereumChain':
         const [addChainParams] = (request.params as AddEthereumChainParameter[]) || [];
@@ -237,9 +239,15 @@ export class WalletConnect_v1 extends EventEmitter {
     }
 
     if (
-      !['eth_sendTransaction', 'eth_signTransaction', 'eth_sign', 'personal_sign', 'eth_signTypedData'].some(
-        (method) => request.method === method
-      )
+      ![
+        'eth_sendTransaction',
+        'eth_signTransaction',
+        'eth_sign',
+        'personal_sign',
+        'eth_signTypedData',
+        'eth_signTypedData_v3',
+        'eth_signTypedData_v4',
+      ].some((method) => request.method === method)
     ) {
       this.rejectRequest(request.id, 'Method not supported');
       return;

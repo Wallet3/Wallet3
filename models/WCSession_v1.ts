@@ -37,7 +37,14 @@ export interface WCSessionRequestRequest {
 export interface WCCallRequestRequest {
   id: number;
   jsonrpc: '2.0';
-  method: 'eth_sendTransaction' | 'eth_signTransaction' | 'eth_sign' | 'personal_sign' | 'eth_signTypedData';
+  method:
+    | 'eth_sendTransaction'
+    | 'eth_signTransaction'
+    | 'eth_sign'
+    | 'personal_sign'
+    | 'eth_signTypedData'
+    | 'eth_signTypedData_v3'
+    | 'eth_signTypedData_v4';
   params: any;
 }
 

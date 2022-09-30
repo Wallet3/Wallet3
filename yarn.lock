@@ -2056,15 +2056,15 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@curvefi/api@^2.11.0":
-  version "2.11.0"
-  resolved "https://registry.yarnpkg.com/@curvefi/api/-/api-2.11.0.tgz#18670ebe849cff3f79714dc5fe2f14fbe8b24fea"
-  integrity sha512-yZXEgAmWajbGw1Cqfuv9dvk7X9GDNqWaa6rWXJOSF5/zOdQxJmeE+elYY/P8anZxRT/sJ56V9i/ef5TaQG2ssQ==
+"@curvefi/api@^2.12.0":
+  version "2.12.0"
+  resolved "https://registry.yarnpkg.com/@curvefi/api/-/api-2.12.0.tgz#f0595413b782d513b05dbb777d6cbc949f5f6abd"
+  integrity sha512-MhBN8e/1CTS9KgOPLNFS5Yd8Zj2e4xeh6YUrwFcHdUZ76S58qqkg9YMZ0VJeuhkZnw3mPa6y5LtoWZEUq3YmUA==
   dependencies:
     "@ethersproject/networks" "^5.5.0"
     axios "^0.21.1"
     bignumber.js "^9.0.1"
-    ethcall "^4.8.2"
+    ethcall "^4.8.4"
     ethers "^5.4.6"
     memoizee "^0.4.15"
 
@@ -3659,12 +3659,7 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.17.60.tgz#35f3d6213daed95da7f0f73e75bcc6980e90597b"
   integrity sha512-F0KIgDJfy2nA3zMLmWGKxcH2ZVEtCZXHHdOQs2gSaQ27+lNeEfGxzkIw90aXswATX7AZ33tahPbzy6KAfUreVw==
 
-"@types/node@^17.0.33":
-  version "17.0.45"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.45.tgz#2c0fafd78705e7a18b7906b5201a522719dc5190"
-  integrity sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==
-
-"@types/node@^18.7.23":
+"@types/node@^18.6.3", "@types/node@^18.7.23":
   version "18.7.23"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.7.23.tgz#75c580983846181ebe5f4abc40fe9dfb2d65665f"
   integrity sha512-DWNcCHolDq0ZKGizjx2DZjR/PqsYwAcYUJmfMWqtVU2MBMG5Mo+xFZrhGId5r/O5HOuMPyQEcM6KUBp5lBZZBg==
@@ -5978,16 +5973,16 @@ eth-url-parser@^1.0.4:
     bignumber.js "^7.2.1"
     qs "^6.5.2"
 
-ethcall@^4.8.2:
-  version "4.8.2"
-  resolved "https://registry.yarnpkg.com/ethcall/-/ethcall-4.8.2.tgz#0506a0d171f45d5d95e3caafb1cd15c0447b0159"
-  integrity sha512-/tJ+zl/GaNAdDxZhms54hvGTmFAUbST+hy/A0YmMHxxEwecK5FFFZWyOjeGs2YaocAi8Lmuz0R7mR9Tur7566w==
+ethcall@^4.8.4:
+  version "4.8.4"
+  resolved "https://registry.yarnpkg.com/ethcall/-/ethcall-4.8.4.tgz#e92813861c09a925eee427aa5b06637f5ce448da"
+  integrity sha512-imz91GoIWqBPG862DxOwq8F2CLo64HsQa+F16eTr9aCb1fxsIubknmM9Y6hGl4s6VBPV60jwA2DC3iEpyfv4Xw==
   dependencies:
     "@ethersproject/abi" "^5.0.0"
     "@ethersproject/bytes" "^5.0.0"
     "@ethersproject/contracts" "^5.0.0"
     "@ethersproject/providers" "^5.0.0"
-    "@types/node" "^17.0.33"
+    "@types/node" "^18.6.3"
     abi-coder "^4.0.0"
 
 ethereum-cryptography@^0.1.3:
