@@ -2056,10 +2056,10 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@curvefi/api@^2.12.0":
-  version "2.12.0"
-  resolved "https://registry.yarnpkg.com/@curvefi/api/-/api-2.12.0.tgz#f0595413b782d513b05dbb777d6cbc949f5f6abd"
-  integrity sha512-MhBN8e/1CTS9KgOPLNFS5Yd8Zj2e4xeh6YUrwFcHdUZ76S58qqkg9YMZ0VJeuhkZnw3mPa6y5LtoWZEUq3YmUA==
+"@curvefi/api@^2.12.1":
+  version "2.12.1"
+  resolved "https://registry.yarnpkg.com/@curvefi/api/-/api-2.12.1.tgz#5b42f7806cfd91dd0b2f70b82dc0184e5e0f3f1a"
+  integrity sha512-YY7fSQkfE0kDz1JLcXPg0GUs0SgeEMal7tlYbpt3T0LK5yqPdHl1cDXPsOtdJFlcMKQB0myQMguDyjHXR4lAtA==
   dependencies:
     "@ethersproject/networks" "^5.5.0"
     axios "^0.21.1"
@@ -3730,10 +3730,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-native@~0.68.5":
-  version "0.68.5"
-  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.68.5.tgz#cb652bdcc28572192e432cb4d55bbb122d69c69f"
-  integrity sha512-TmcTHV8LTLbJNtDkWNVCCTniLW4NWhmM6UgyT+TS8pQSUn6LTzdeNUrLs4hjkCHjbgLFwqtLEKSSZLGseoPwiA==
+"@types/react-native@~0.68.7":
+  version "0.68.7"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.68.7.tgz#24f7d56cd405831e131da3b5b323d02a53256b19"
+  integrity sha512-icGr0/iTPLsvIrUoLvu5uluDFBMZEir+DbwgrHnvazO3fJv1C/kpZZLGplQ3noYyDLjuBynwOUgoaZpGyFI4Iw==
   dependencies:
     "@types/react" "^17"
 
@@ -3755,10 +3755,10 @@
     "@types/scheduler" "*"
     csstype "^3.0.2"
 
-"@types/react@~17.0.48":
-  version "17.0.48"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.48.tgz#a4532a8b91d7b27b8768b6fc0c3bccb760d15a6c"
-  integrity sha512-zJ6IYlJ8cYYxiJfUaZOQee4lh99mFihBoqkOSEGV+dFi9leROW6+PgstzQ+w3gWTnUfskALtQPGHK6dYmPj+2A==
+"@types/react@~17.0.50":
+  version "17.0.50"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.50.tgz#39abb4f7098f546cfcd6b51207c90c4295ee81fc"
+  integrity sha512-ZCBHzpDb5skMnc1zFXAXnL3l1FAdi+xZvwxK+PkglMmBrwjpp9nKaWuEvrGnSifCJmBFGxZOOFuwC6KH/s0NuA==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
