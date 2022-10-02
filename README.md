@@ -6,8 +6,10 @@ Available on the App Store
 
 ## Development Setup
 
-1. Install Nodejs(16), yarn.
+Firstly, switch to ios branch.
+
+1. Install nodejs(v16+), yarn.
 2. Install dependencies with `yarn install`.
-3. Copy `configs/providers.example.json` to `configs/providers.json`, `secret.example.ts` to `secret.ts`.
+3. Copy `configs/providers.example.json` to `configs/providers.json`, `configs/secret.example.ts` to `configs/secret.ts`.
 4. Fill valid provider urls in `configs/providers.json`.
 5. Launch with `yarn ios`
