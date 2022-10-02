@@ -1,33 +1,22 @@
 import * as Animatable from 'react-native-animatable';
 import * as Linking from 'expo-linking';
 
-import Bookmarks, { Bookmark, SecureUrls, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
+import Bookmarks, { SecureUrls, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
 import { BreathAnimation, startLayoutAnimation } from '../../utils/animations';
-import {
-  Dimensions,
-  ListRenderItemInfo,
-  Share,
-  StyleProp,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native';
-import { EvilIcons, Ionicons } from '@expo/vector-icons';
-import { FlatGrid, SectionGrid } from 'react-native-super-grid';
+import { Dimensions, Share, StyleProp, Text, TextInput, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { NullableImage, SafeViewContainer } from '../../components';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Web3View, { PageMetadata } from './Web3View';
 import { WebView, WebViewNavigation } from 'react-native-webview';
-import { renderBookmarkItem, renderUserBookmarkItem } from './components/BookmarkItem';
 import { secureColor, thirdFontColor } from '../../constants/styles';
 
 import AnimatedLottieView from 'lottie-react-native';
 import { Bar } from 'react-native-progress';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import Collapsible from 'react-native-collapsible';
+import { Ionicons } from '@expo/vector-icons';
+import LINQ from 'linq';
 import MessageKeys from '../../common/MessageKeys';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
@@ -36,12 +25,14 @@ import { Portal } from 'react-native-portalize';
 import { ReactiveScreen } from '../../utils/device';
 import RecentHistory from './components/RecentHistory';
 import { ScrollView } from 'react-native-gesture-handler';
+import { SectionGrid } from 'react-native-super-grid';
 import { StatusBar } from 'expo-status-bar';
 import Theme from '../../viewmodels/settings/Theme';
 import ViewShot from 'react-native-view-shot';
 import i18n from '../../i18n';
 import { isURL } from '../../utils/url';
 import { observer } from 'mobx-react-lite';
+import { renderUserBookmarkItem } from './components/BookmarkItem';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 const calcIconSize = () => {
@@ -233,28 +224,13 @@ export const Browser = observer(
       setHostname(hn.startsWith('www.') ? hn.substring(4) : hn);
     };
 
-    const renderItem = (p: ListRenderItemInfo<Bookmark>) =>
-      renderBookmarkItem({
-        ...p,
-        imageBackgroundColor: backgroundColor,
-        iconSize: largeIconSize,
-        onPress: (item) => {
-          goTo(item.url);
-          closeFavs();
-        },
-      });
-
     useEffect(() => {
-      setSuggests(
-        Array.from(
-          new Set(
-            history
-              .concat(SecureUrls.filter((u) => !history.find((hurl) => hurl.includes(u) || u.includes(hurl))))
-              .filter((url) => url.includes(addr)) // || addr.includes(url)
-              .slice(0, 5)
-          )
-        )
-      );
+      if (!addr) {
+        setSuggests([]);
+        return;
+      }
+
+      setSuggests(Array.from(new Set(LINQ.from(history.concat(SecureUrls)).where((url) => url.includes(addr)))).slice(0, 5));
     }, [addr]);
 
     useEffect(() => {
@@ -399,7 +375,7 @@ export const Browser = observer(
             </View>
 
             <TouchableOpacity
-              style={{ padding: 6, marginStart: 8 }}
+              style={{ padding: 6, paddingStart: 10, marginStart: 4 }}
               disabled={loadingProgress < 1 || !pageMetadata}
               onPress={() =>
                 Bookmarks.has(webUrl) ? Bookmarks.remove(webUrl) : Bookmarks.add({ ...pageMetadata!, url: webUrl })
@@ -413,11 +389,11 @@ export const Browser = observer(
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={{ padding: 4, paddingStart: 8, paddingTop: 4.5 }}
+              style={{ padding: 4, paddingHorizontal: 6, paddingTop: 4.5 }}
               onPress={() => Share.share({ url: webUrl, title: pageMetadata?.title })}
               disabled={loadingProgress < 1 || !webUrl}
             >
-              <Ionicons name={'share-outline'} size={18} color={loadingProgress < 1 ? 'lightgrey' : foregroundColor} />
+              <Ionicons name={'share-outline'} size={19} color={loadingProgress < 1 ? 'lightgrey' : foregroundColor} />
             </TouchableOpacity>
           </View>
 

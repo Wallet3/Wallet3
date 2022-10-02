@@ -5,10 +5,9 @@ import { borderColor, fontColor, secondaryFontColor } from '../../constants/styl
 import Enumerable from 'linq';
 import { Ionicons } from '@expo/vector-icons';
 import { observer } from 'mobx-react-lite';
-import { startLayoutAnimation } from '../../utils/animations';
 
 export const StaticSecretWords = observer(
-  ({ words, onWordPress, color }: { color: string; words: string[]; onWordPress: (word: string, index: number) => void }) => (
+  ({ words, onWordPress, color }: { color?: string; words: string[]; onWordPress: (word: string, index: number) => void }) => (
     <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
       {words.map((word, index) => (
         <TouchableHighlight
@@ -90,7 +89,7 @@ export const SortWords = ({
 }: {
   words: string[];
   onVerified: (success: boolean) => void;
-  color: string;
+  color?: string;
 }) => {
   const [sorted, setSorted] = useState<string[]>([]);
   const [shuffled, setShuffled] = useState<string[]>([]);
