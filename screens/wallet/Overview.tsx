@@ -5,7 +5,8 @@ import React, { useRef } from 'react';
 import { StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { formatAddress, formatCurrency } from '../../utils/formatter';
 
-import AnimateNumber from 'react-native-animate-number';
+// import AnimateNumber from 'react-native-animate-number';
+import AnimatedNumber from '../../components/AnimatedNumber';
 import ColorLogos from '../../assets/icons/networks/color';
 import { INetwork } from '../../common/Networks';
 import Image from 'react-native-fast-image';
@@ -105,7 +106,7 @@ export default observer(
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             {gasIndicator ? (
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <AnimateNumber
+                <AnimatedNumber
                   value={gasPrice || 0}
                   style={{ ...styles.text, color: textColor, marginEnd: 4, maxWidth: 128 }}
                   numberOfLines={1}
@@ -156,7 +157,7 @@ export default observer(
             {hideBalance ? (
               <Text style={{ ...styles.headline, color: textColor, position: 'relative', bottom: 0 }}>******</Text>
             ) : (
-              <AnimateNumber
+              <AnimatedNumber
                 value={balance || 0}
                 style={{ ...styles.headline, color: textColor, position: 'relative', bottom: 0 }}
                 numberOfLines={1}
