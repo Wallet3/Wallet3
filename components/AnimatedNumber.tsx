@@ -23,7 +23,7 @@ interface IProps extends TextProps {
   initialValue?: number;
 }
 
-export default class AnimateNumber extends Component<IProps, any> {
+export default class AnimatedNumber extends Component<IProps, any> {
   static defaultProps = {
     interval: 14,
     timing: 'linear',
@@ -72,8 +72,8 @@ export default class AnimateNumber extends Component<IProps, any> {
   dirty = false;
 
   constructor(props: IProps) {
-    for (let defProp of Object.getOwnPropertyNames(AnimateNumber.defaultProps)) {
-      props[defProp] = props[defProp] || AnimateNumber.defaultProps[defProp];
+    for (let defProp of Object.getOwnPropertyNames(AnimatedNumber.defaultProps)) {
+      props[defProp] = props[defProp] || AnimatedNumber.defaultProps[defProp];
     }
 
     super(props);
@@ -160,6 +160,6 @@ export default class AnimateNumber extends Component<IProps, any> {
   }
 
   getTimingFunction(interval: number, progress: number) {
-    return AnimateNumber.TimingFunctions['linear'](interval, progress);
+    return AnimatedNumber.TimingFunctions['linear'](interval, progress);
   }
 }
