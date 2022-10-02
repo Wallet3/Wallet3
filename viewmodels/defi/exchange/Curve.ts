@@ -29,7 +29,7 @@ const Keys = {
   userCustomizedTokens: (chainId: number) => `${chainId}-exchange-tokens`,
 };
 
-const app = { name: 'Curve Swap', icon: 'https://curve.fi/apple-touch-icon.png', verified: true };
+const app = { name: 'Curve Exchange', icon: 'https://curve.fi/apple-touch-icon.png', verified: true };
 
 export class CurveExchange {
   private calcExchangeRateTimer?: NodeJS.Timer;

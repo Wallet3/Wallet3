@@ -189,8 +189,6 @@ export class WalletConnect_v1 extends EventEmitter {
       return;
     }
 
-    console.log('wc', request);
-
     switch (request.method as string) {
       case 'wallet_addEthereumChain':
         const [addChainParams] = (request.params as AddEthereumChainParameter[]) || [];

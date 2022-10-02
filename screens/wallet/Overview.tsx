@@ -81,7 +81,7 @@ export default observer(
               style={{ flexDirection: 'row', alignItems: 'center', marginEnd: 8 }}
               onPress={() => PubSub.publish(MessageKeys.openNetworksMenu)}
             >
-              <Text style={{ ...styles.text, fontSize: 16, color: textColor }} numberOfLines={1}>
+              <Text style={{ ...styles.text, fontSize: 16, color: textColor, maxWidth: 160 }} numberOfLines={1}>
                 {network?.network}
               </Text>
               <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 2 }} color={textColor} size={12} />
