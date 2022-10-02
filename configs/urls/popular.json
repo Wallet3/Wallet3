@@ -2,7 +2,6 @@
   { "url": "https://dagen.life", "icon": "https://dagen.life/logo.png", "title": "dagen" },
   { "url": "https://app.uniswap.org", "icon": "https://app.uniswap.org/favicon.png", "title": "Uniswap" },
   { "url": "https://curve.exchange", "icon": "https://curve.fi/apple-touch-icon.png", "title": "Curve" },
-  { "url": "https://app.compound.finance", "icon": "https://compound.finance/images/compound-512.png", "title": "Compound" },
   {
     "url": "https://zapper.fi",
     "icon": "https://zapper.fi/logo192.png",
@@ -13,7 +12,11 @@
     "icon": "https://storage.googleapis.com/opensea-static/Logomark/Logomark-Blue.png",
     "title": "Opensea"
   },
-  { "url": "https://foundation.app", "icon": "https://foundation.app/apple-touch-icon.png", "title": "Foundation" },
+  {
+    "url": "https://foundation.app",
+    "icon": "https://pbs.twimg.com/profile_images/1526963356799668224/C64XFkk4_400x400.jpg",
+    "title": "Foundation"
+  },
   { "url": "https://mirror.xyz", "icon": "https://mirror.xyz/icon/apple-touch-icon.png", "title": "Mirror" },
   {
     "url": "https://oasis.app",
@@ -25,5 +28,5 @@
     "icon": "https://stargate.finance/favicons/favicon-196x196.png",
     "title": "Stargate"
   },
-  { "url": "https://quixotic.io", "icon": "https://quixotic.io/opt_favicon.png", "title": "quixotic" }
+  { "url": "https://qx.app", "icon": "https://qx.app/opt_favicon.png", "title": "Quix" }
 ]

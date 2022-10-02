@@ -3,7 +3,7 @@ import { Entypo, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import React, { useRef } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-import AnimateNumber from 'react-native-animate-number';
+import AnimatedNumber from '../../components/AnimatedNumber';
 import BackButton from '../components/BackButton';
 import { BaseTransaction } from '../../viewmodels/transferring/BaseTransaction';
 import Fire from '../../assets/icons/app/fire.svg';
@@ -80,8 +80,8 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
 
               <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
                 {vm.network.eip1559 ? <Fire width={8} height={8} style={{ marginEnd: 3 }} /> : undefined}
-                {vm.network.eip1559 && vm.nextBlockBaseFee ? (
-                  <AnimateNumber
+                {vm.network.eip1559 ? (
+                  <AnimatedNumber
                     style={styles.gasGweiLabel}
                     value={vm.nextBlockBaseFee}
                     formatter={(val) => `${val.toFixed(6)} Gwei`}

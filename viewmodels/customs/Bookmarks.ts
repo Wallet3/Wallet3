@@ -202,16 +202,18 @@ class Bookmarks {
 }
 
 export default new Bookmarks();
-export const SecureUrls = Object.getOwnPropertyNames(SecureHosts).flatMap((category) => SecureHosts[category]);
+export const SecureUrls = Object.getOwnPropertyNames(SecureHosts)
+  .flatMap((category) => SecureHosts[category])
+  .map((i) => `https://${i}`);
 
-const SecureSet = new Set(SecureUrls);
-const RiskySet = new Set(PhishingConfig.blacklist.concat(RiskyHosts));
+const SecureUrlsSet = new Set(SecureUrls);
+const RiskyUrlsSet = new Set(PhishingConfig.blacklist.concat(RiskyHosts));
 
 export function isSecureSite(url: string) {
   if (!url.startsWith('https://')) return false;
 
   try {
-    return SecureSet.has(Linking.parse(url).hostname || '');
+    return SecureUrlsSet.has(`https://${Linking.parse(url).hostname || ''}`);
   } catch (error) {}
 
   return false;
@@ -221,7 +223,7 @@ export function isRiskySite(url: string) {
   if (!url) return false;
 
   try {
-    return RiskySet.has(Linking.parse(url).hostname || '');
+    return RiskyUrlsSet.has(Linking.parse(url).hostname || '');
   } catch (error) {}
 
   return false;

@@ -5,7 +5,7 @@ import React, { useRef, useState } from 'react';
 
 import { Account } from '../../viewmodels/account/Account';
 import AccountIndicator from '../components/AccountIndicator';
-import AnimateNumber from 'react-native-animate-number';
+import AnimatedNumber from '../../components/AnimatedNumber';
 import BalanceChangePreview from '../views/BalanceChangePreview';
 import { BioType } from '../../viewmodels/Authentication';
 import Currency from '../../viewmodels/settings/Currency';
@@ -347,7 +347,7 @@ const TxReview = observer(
               {`(${Currency.tokenToUSD(vm.estimatedRealFee, vm.feeTokenSymbol).toFixed(2)} USD)`}
             </Text>
 
-            <AnimateNumber
+            <AnimatedNumber
               style={{ ...reviewItemValueStyle, marginStart: 2, marginEnd: 5 }}
               numberOfLines={1}
               timing="linear"

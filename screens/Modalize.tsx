@@ -72,6 +72,8 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
           case 'eth_sign':
           case 'personal_sign':
           case 'eth_signTypedData':
+          case 'eth_signTypedData_v3':
+          case 'eth_signTypedData_v4':
             setCallRequest(request);
             setType('sign');
             break;

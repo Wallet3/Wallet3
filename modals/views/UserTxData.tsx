@@ -1,21 +1,12 @@
-import { Button, Coin, SafeViewContainer } from '../../components';
-import { Entypo, FontAwesome5, Ionicons } from '@expo/vector-icons';
-import React, { useRef } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Button, SafeViewContainer } from '../../components';
+import { Text, TextInput, View } from 'react-native';
 
-import AnimateNumber from 'react-native-animate-number';
 import BackButton from '../components/BackButton';
-import { BaseTransaction } from '../../viewmodels/transferring/BaseTransaction';
-import Fire from '../../assets/icons/app/fire.svg';
-import Swiper from 'react-native-swiper';
+import React from 'react';
 import Theme from '../../viewmodels/settings/Theme';
-import Themes from '../../screens/settings/Themes';
 import { TokenTransferring } from '../../viewmodels/transferring/TokenTransferring';
-import Tokenlist from './Tokenlist';
-import TxException from '../components/TxException';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import { secondaryFontColor } from '../../constants/styles';
 import styles from '../styles';
 
 interface Props {

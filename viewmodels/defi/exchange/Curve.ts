@@ -1,4 +1,4 @@
-import { HARMONY_ETH, IToken } from '../../../common/tokens';
+import { ETH, IToken } from '../../../common/tokens';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { ethers, providers, utils } from 'ethers';
 
@@ -28,6 +28,8 @@ const Keys = {
   userSlippage: (chainId: number) => `${chainId}-exchange-slippage`,
   userCustomizedTokens: (chainId: number) => `${chainId}-exchange-tokens`,
 };
+
+const app = { name: 'Curve Exchange', icon: 'https://curve.fi/apple-touch-icon.png', verified: true };
 
 export class CurveExchange {
   private calcExchangeRateTimer?: NodeJS.Timer;
@@ -265,8 +267,8 @@ export class CurveExchange {
 
     try {
       const { route, output } = await curve.router.getBestRouteAndOutput(
-        this.swapFrom!.address || HARMONY_ETH.address,
-        this.swapTo!.address || HARMONY_ETH.address,
+        this.swapFrom!.address || ETH.address,
+        this.swapTo!.address || ETH.address,
         this.swapFromAmount
       );
 
@@ -330,14 +332,14 @@ export class CurveExchange {
       param: { from: this.account.address, to: this.swapFrom!.address, data },
       chainId: this.userSelectedNetwork.chainId,
       account: this.account.address,
-      app: { name: 'Wallet 3 Swap', icon: 'https://wallet3.io/favicon.ico', verified: true },
+      app,
     });
   }
 
   swap() {
     if (!this.swapRoute || this.swapRoute.length === 0 || !this.isValidFromAmount) return;
 
-    let route = [this.swapFrom!.address || HARMONY_ETH.address];
+    let route = [this.swapFrom!.address || ETH.address];
     let swapParams: any[] = [];
     let factorySwapAddrs: string[] = [];
 
@@ -392,7 +394,7 @@ export class CurveExchange {
       },
       chainId: this.userSelectedNetwork.chainId,
       account: this.account.address,
-      app: { name: 'Wallet 3 Swap', icon: 'https://wallet3.io/favicon.ico', verified: true },
+      app,
     });
   }
 
