@@ -3,7 +3,7 @@ import { Button, Coin, SafeViewContainer } from '../../components';
 import React, { useRef } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
-import AnimateNumber from 'react-native-animate-number';
+import AnimatedNumber from '../../components/AnimatedNumber';
 import BackButton from '../components/BackButton';
 import { BioType } from '../../viewmodels/Authentication';
 import Currency from '../../viewmodels/settings/Currency';
@@ -175,11 +175,10 @@ const NFTReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, b
             {`(${Currency.tokenToUSD(vm.estimatedRealFee, vm.feeTokenSymbol).toFixed(2)} USD)`}
           </Text>
 
-          <AnimateNumber
+          <AnimatedNumber
             style={{ ...reviewItemValueStyle, marginStart: 2, marginEnd: 5 }}
             numberOfLines={1}
             value={vm.txFee}
-            duration={1500}
             formatter={(val) => val.toFixed(5)}
           />
 

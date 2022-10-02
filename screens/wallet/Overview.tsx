@@ -5,7 +5,6 @@ import React, { useRef } from 'react';
 import { StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { formatAddress, formatCurrency } from '../../utils/formatter';
 
-// import AnimateNumber from 'react-native-animate-number';
 import AnimatedNumber from '../../components/AnimatedNumber';
 import ColorLogos from '../../assets/icons/networks/color';
 import { INetwork } from '../../common/Networks';

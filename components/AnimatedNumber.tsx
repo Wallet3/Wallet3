@@ -72,12 +72,15 @@ export default class AnimateNumber extends Component<IProps, any> {
   dirty = false;
 
   constructor(props: IProps) {
-    const ps = { ...AnimateNumber.defaultProps, ...(props || {}) };
-    super(ps);
-    // default values of state and non-state variables
+    for (let defProp of Object.getOwnPropertyNames(AnimateNumber.defaultProps)) {
+      props[defProp] = props[defProp] || AnimateNumber.defaultProps[defProp];
+    }
+
+    super(props);
+
     this.state = {
-      value: ps.initialValue || 0,
-      displayValue: ps.formatter(ps.initialValue || 0),
+      value: props.initialValue || 0,
+      displayValue: props.formatter(props.initialValue || 0),
     };
 
     this.dirty = false;
@@ -97,7 +100,7 @@ export default class AnimateNumber extends Component<IProps, any> {
     );
   }
 
-  componentWillUpdate(nextProps, nextState) {
+  UNSAFE_componentWillUpdate(nextProps, nextState) {
     // check if start an animation
     if (this.props.value !== nextProps.value) {
       this.startFrom = this.props.value;

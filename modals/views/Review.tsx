@@ -3,7 +3,7 @@ import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-ic
 import React, { useRef, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
-import AnimateNumber from 'react-native-animate-number';
+import AnimateNumber from '../../components/AnimatedNumber';
 import BackButton from '../components/BackButton';
 import { BioType } from '../../viewmodels/Authentication';
 import Currency from '../../viewmodels/settings/Currency';
@@ -177,7 +177,6 @@ const ReviewView = observer(
               style={{ ...reviewItemValueStyle, marginStart: 2, marginEnd: 5 }}
               numberOfLines={1}
               value={vm.txFee}
-              duration={1500}
               formatter={(val) => val.toFixed(5)}
             />
 
