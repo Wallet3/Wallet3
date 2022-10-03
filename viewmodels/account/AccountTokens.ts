@@ -3,15 +3,20 @@ import * as Debank from '../../common/apis/Debank';
 import TokensMan, { UserToken } from '../services/TokensMan';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ERC20Token } from '../../models/ERC20';
-import LINQ from 'linq';
 import { NativeToken } from '../../models/NativeToken';
 import Networks from '../Networks';
-import { sha256 } from '../../utils/cipher';
+import { clearBalanceCache } from '../../common/apis/Debank';
 import { utils } from 'ethers';
+
+const Keys = {
+  tokensDigest: (chainId: number, owner: string) => `${chainId}_${owner}_tokens_digest`,
+};
 
 export class AccountTokens {
   private lastRefreshTime = 0;
+  private preDigest = '';
 
   owner: string;
 
@@ -46,6 +51,8 @@ export class AccountTokens {
       TokensMan.loadUserTokens(current.chainId, this.owner),
     ]);
 
+    this.preDigest = (await AsyncStorage.getItem(Keys.tokensDigest(current.chainId, this.owner))) || '';
+
     const shownTokens = userTokens.filter((t) => t.shown);
     const favTokens = [native, ...shownTokens];
 
@@ -58,8 +65,8 @@ export class AccountTokens {
     });
 
     const [userBalance, debankTokens] = await Promise.all([
-      Debank.getBalance(this.owner, current.comm_id),
-      Debank.getTokens(this.owner, Networks.current.comm_id),
+      Debank.getBalance(this.owner, current.chainId, current.comm_id),
+      Debank.getTokens(this.owner, current.chainId, current.comm_id),
     ]);
 
     const suggested = debankTokens
@@ -101,16 +108,21 @@ export class AccountTokens {
   }
 
   async refreshTokensBalance() {
-    const [balance, _] = await Promise.all([
-      Debank.getBalance(this.owner, Networks.current.comm_id),
-      this.tokens.map((t) => (t as ERC20Token).getBalance?.(false)),
-    ]);
+    const { current } = Networks;
+
+    await Promise.all(this.tokens.map((t) => (t as ERC20Token).getBalance?.(false)));
+
+    const balance = await Debank.getBalance(this.owner, current.chainId, current.comm_id);
 
     if (!balance) return;
 
-    const tokensSnapshotHash = await sha256(
-      this.tokens.reduce((prev, curr) => `${prev}_${curr.symbol}:${curr.balance?.toString()}`, '')
-    );
+    const curDigest = this.tokens.reduce((prev, curr) => `${prev}_${curr.symbol}:${curr.balance?.toString()}`, '');
+
+    if (this.preDigest !== curDigest) {
+      clearBalanceCache(this.owner, this.nativeToken.chainId);
+      await AsyncStorage.setItem(Keys.tokensDigest(this.nativeToken.chainId, this.owner), curDigest);
+      this.preDigest = curDigest;
+    }
 
     runInAction(() => (this.balanceUSD = balance.usd_value));
   }

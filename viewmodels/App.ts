@@ -5,11 +5,9 @@ import { Account } from './account/Account';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Authentication from './Authentication';
 import Bookmarks from './customs/Bookmarks';
-import Coingecko from '../common/apis/Coingecko';
 import Contacts from './customs/Contacts';
 import Database from '../models/Database';
 import GasPrice from './misc/GasPrice';
-import { InpageDAppController } from '../screens/browser/controller/InpageDAppController';
 import Key from '../models/Key';
 import LINQ from 'linq';
 import LinkHub from './hubs/LinkHub';
@@ -162,6 +160,16 @@ export class AppVM {
     AsyncStorage.setItem('lastUsedAccount', target.address);
   }
 
+  async refreshAccount() {
+    if (Date.now() - this.lastRefreshedTime < 1000 * 5) return;
+    this.lastRefreshedTime = Date.now();
+
+    clearTimeout(this.refreshTimer);
+    await this.currentAccount?.tokens.refreshTokensBalance();
+
+    this.refreshTimer = setTimeout(() => this.refreshAccount(), 12 * 1000);
+  }
+
   async removeAccount(account: Account) {
     if (this.allAccounts.length === 1) return;
 
@@ -179,16 +187,6 @@ export class AppVM {
       runInAction(() => this.wallets.splice(this.wallets.indexOf(wallet), 1));
       await wallet.delete();
     }
-  }
-
-  async refreshAccount() {
-    if (Date.now() - this.lastRefreshedTime < 1000 * 5) return;
-    this.lastRefreshedTime = Date.now();
-
-    clearTimeout(this.refreshTimer);
-    await this.currentAccount?.tokens.refreshTokensBalance();
-
-    this.refreshTimer = setTimeout(() => this.refreshAccount(), 12 * 1000);
   }
 
   async init() {
