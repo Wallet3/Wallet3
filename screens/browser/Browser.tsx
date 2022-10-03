@@ -300,11 +300,8 @@ export const Browser = observer(
           position: 'relative',
         }}
       >
-        <Animated.View
-          style={{ position: 'relative', paddingTop: 4, paddingBottom: isFocus ? 0 : 8 }}
-          entering={FadeInUp.duration(1000).springify()}
-        >
-          <View
+        <Animated.View style={{ position: 'relative', paddingTop: 4, paddingBottom: isFocus ? 0 : 8 }}>
+          <Animated.View
             style={{
               flexDirection: 'row',
               marginHorizontal: 6,
@@ -399,7 +396,7 @@ export const Browser = observer(
             >
               <Ionicons name={'share-outline'} size={19} color={loadingProgress < 1 ? 'lightgrey' : foregroundColor} />
             </TouchableOpacity>
-          </View>
+          </Animated.View>
 
           <Collapsible collapsed={!isFocus} style={{ borderWidth: 0, padding: 0, margin: 0 }} enablePointerEvents>
             <View style={{ marginTop: 8, paddingBottom: 4, borderBottomWidth: 1, borderBottomColor: borderColor }}>
