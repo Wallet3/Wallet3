@@ -1,7 +1,12 @@
 import { getEnsAvatar, getText } from '../../common/ENS';
 import { makeAutoObservable, runInAction } from 'mobx';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Networks from '../Networks';
+
+const Keys = {
+  ensAvatar: (owner: string) => `ens-avatar-${owner}`,
+};
 
 export class ENSViewer {
   readonly owner: string;
@@ -27,6 +32,11 @@ export class ENSViewer {
     if (this.name) return;
     const { MainnetWsProvider } = Networks;
 
+    const cache = await AsyncStorage.getItem(Keys.ensAvatar(this.owner));
+    if (cache) {
+      runInAction(() => (this.avatar = cache));
+    }
+
     const ens = await MainnetWsProvider.lookupAddress(this.owner);
     if (!ens) return;
 
@@ -36,6 +46,7 @@ export class ENSViewer {
 
     getEnsAvatar(ens, this.owner).then((v) => {
       runInAction(() => (this.avatar = v?.url || ''));
+      AsyncStorage.setItem(Keys.ensAvatar(this.owner), v?.url || '');
     });
   }
 

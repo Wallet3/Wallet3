@@ -1,7 +1,7 @@
 import * as Animatable from 'react-native-animatable';
 import * as Linking from 'expo-linking';
 
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import Bookmarks, { SecureUrls, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
 import { BreathAnimation, startLayoutAnimation } from '../../utils/animations';
 import { Dimensions, Share, StyleProp, Text, TextInput, TouchableOpacity, View, ViewStyle } from 'react-native';
@@ -300,7 +300,10 @@ export const Browser = observer(
           position: 'relative',
         }}
       >
-        <View style={{ position: 'relative', paddingTop: 4, paddingBottom: isFocus ? 0 : 8 }}>
+        <Animated.View
+          style={{ position: 'relative', paddingTop: 4, paddingBottom: isFocus ? 0 : 8 }}
+          entering={FadeInUp.duration(1000).springify()}
+        >
           <View
             style={{
               flexDirection: 'row',
@@ -484,7 +487,7 @@ export const Browser = observer(
               style={{ position: 'absolute', bottom: 0 }}
             />
           ) : undefined}
-        </View>
+        </Animated.View>
 
         {uri ? (
           <Web3View
