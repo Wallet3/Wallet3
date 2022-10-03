@@ -1,6 +1,7 @@
 import * as Animatable from 'react-native-animatable';
 import * as Linking from 'expo-linking';
 
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import Bookmarks, { SecureUrls, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
 import { BreathAnimation, startLayoutAnimation } from '../../utils/animations';
 import { Dimensions, Share, StyleProp, Text, TextInput, TouchableOpacity, View, ViewStyle } from 'react-native';
@@ -290,7 +291,7 @@ export const Browser = observer(
     );
 
     return (
-      <View
+      <Animated.View
         style={{
           backgroundColor: backgroundColor,
           flex: 1,
@@ -523,7 +524,7 @@ export const Browser = observer(
             }}
           />
         ) : (
-          <View style={{ flex: 1 }}>
+          <Animated.View style={{ flex: 1 }} entering={FadeInDown.duration(1000).springify()}>
             {favs.length === 0 && !disableExtraFuncs && (
               <View
                 style={{
@@ -554,7 +555,7 @@ export const Browser = observer(
             {disableExtraFuncs ? undefined : (
               <SectionBookmarks bounces={favs.length >= 5 && Bookmarks.flatFavs.length > 20 ? true : false} />
             )}
-          </View>
+          </Animated.View>
         )}
 
         {!webUrl && recentSites.length > 0 ? (
@@ -598,7 +599,7 @@ export const Browser = observer(
         </Portal>
 
         <StatusBar style={statusBarStyle} />
-      </View>
+      </Animated.View>
     );
   }
 );
