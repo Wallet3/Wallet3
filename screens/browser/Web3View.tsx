@@ -1,6 +1,7 @@
 import * as Animatable from 'react-native-animatable';
 import * as Linking from 'expo-linking';
 
+import Animated, { FadeOutDown } from 'react-native-reanimated';
 import { Entypo, Feather, Ionicons } from '@expo/vector-icons';
 import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
@@ -230,7 +231,7 @@ export default observer((props: Web3ViewProps) => {
   const { ref: accountsRef, open: openAccountsModal, close: closeAccountsModal } = useModalize();
 
   return (
-    <View style={{ flex: 1, position: 'relative' }}>
+    <Animated.View style={{ flex: 1, position: 'relative' }} exiting={FadeOutDown.duration(1000).springify()}>
       <ViewShot ref={viewShotRef} style={{ flex: 1 }} options={{ result: 'data-uri', quality: 0.1, format: 'jpg' }}>
         <WebView
           {...props}
@@ -395,7 +396,7 @@ export default observer((props: Web3ViewProps) => {
           </SafeAreaProvider>
         </Modalize>
       </Portal>
-    </View>
+    </Animated.View>
   );
 });
 

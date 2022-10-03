@@ -28,5 +28,6 @@
     "icon": "https://stargate.finance/favicons/favicon-196x196.png",
     "title": "Stargate"
   },
-  { "url": "https://qx.app", "icon": "https://qx.app/opt_favicon.png", "title": "Quix" }
+  { "url": "https://qx.app", "icon": "https://qx.app/opt_favicon.png", "title": "Quix" },
+  { "url": "https://app.mail3.me", "icon": "https://mail3.me/icons/icon-192x192.png", "title": "Mail3" }
 ]

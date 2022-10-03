@@ -1,7 +1,7 @@
 import * as Animatable from 'react-native-animatable';
 import * as Linking from 'expo-linking';
 
-import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import Bookmarks, { SecureUrls, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
 import { BreathAnimation, startLayoutAnimation } from '../../utils/animations';
 import { Dimensions, Share, StyleProp, Text, TextInput, TouchableOpacity, View, ViewStyle } from 'react-native';

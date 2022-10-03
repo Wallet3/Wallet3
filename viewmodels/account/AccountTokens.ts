@@ -112,10 +112,6 @@ export class AccountTokens {
 
     await Promise.all(this.tokens.map((t) => (t as ERC20Token).getBalance?.(false)));
 
-    const balance = await Debank.getBalance(this.owner, current.chainId, current.comm_id);
-
-    if (!balance) return;
-
     const curDigest = this.tokens.reduce((prev, curr) => `${prev}_${curr.symbol}:${curr.balance?.toString()}`, '');
 
     if (this.preDigest !== curDigest) {
@@ -123,6 +119,9 @@ export class AccountTokens {
       await AsyncStorage.setItem(Keys.tokensDigest(this.nativeToken.chainId, this.owner), curDigest);
       this.preDigest = curDigest;
     }
+
+    const balance = await Debank.getBalance(this.owner, current.chainId, current.comm_id);
+    if (!balance) return;
 
     runInAction(() => (this.balanceUSD = balance.usd_value));
   }
