@@ -6,6 +6,7 @@ import App from '../viewmodels/App';
 import Authentication from '../viewmodels/Authentication';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Sign from './compositions/Sign';
+import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import Success from './views/Success';
 import Theme from '../viewmodels/settings/Theme';
 import { WCCallRequestRequest } from '../models/WCSession_v1';
@@ -46,6 +47,8 @@ export default observer(({ request, client, close }: Props) => {
           setType('plaintext');
           break;
         case 'eth_signTypedData':
+        case 'eth_signTypedData_v3':
+        case 'eth_signTypedData_v4':
           setTypedData(JSON.parse(params[1]));
           setType('typedData');
           break;
@@ -73,7 +76,7 @@ export default observer(({ request, client, close }: Props) => {
     }
 
     const signed = typedData
-      ? await wallet.signTypedData({ typedData, pin, accountIndex })
+      ? await wallet.signTypedData({ typedData, pin, accountIndex, version: SignTypedDataVersion.V4 })
       : await wallet.signMessage({ msg: msg!, pin, accountIndex, standardMode });
 
     if (signed) {

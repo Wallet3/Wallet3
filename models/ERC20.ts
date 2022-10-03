@@ -79,6 +79,8 @@ export class ERC20Token {
     this.loading = setLoading;
 
     let result: string = (await eth_call(this.chainId, { to: this.address, data: this.call_balanceOfOwner })) || '0';
+    result = result === '0x' ? '0x0' : result;
+
     const balance = BigNumber.from(result.substring(0, 66));
 
     runInAction(() => {
@@ -96,7 +98,11 @@ export class ERC20Token {
     }
 
     const data = this.erc20.interface.encodeFunctionData('allowance', [owner, spender]);
-    const approved = BigNumber.from((await eth_call(this.chainId, { to: this.address, data })) || '0');
+
+    let result = await eth_call(this.chainId, { to: this.address, data });
+    result === '0x' ? '0x0' : result;
+
+    const approved = BigNumber.from(result || '0');
 
     this.allowanceMap.set(`${owner}-${spender}`, approved);
     return approved;

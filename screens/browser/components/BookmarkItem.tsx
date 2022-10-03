@@ -17,7 +17,7 @@ interface Props extends ListRenderItemInfo<Bookmark> {
   imageBackgroundColor: string;
 }
 
-export const renderBookmarkItem = ({ item, onPress, iconSize, imageBackgroundColor }: Props) => {
+export const renderBuiltInBookmarkItem = ({ item, onPress, iconSize, imageBackgroundColor }: Props) => {
   return (
     <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }} onPress={() => onPress?.(item)}>
       <NullableImage

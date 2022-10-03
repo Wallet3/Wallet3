@@ -1,6 +1,6 @@
 {
   "Education": ["app.banklessacademy.com", "myfirstnft.info", "speedrunethereum.com"],
-  "Dev": ["web3q.io"],
+  "Dev": ["web3q.io", "zksync.io"],
   "DeFi": [
     "app.uniswap.org",
     "curve.fi",
@@ -159,6 +159,7 @@
     "fees.wtf",
     "app.coinshift.xyz",
     "coinshift.xyz",
+    "rss3.io",
     "app.space.id"
   ],
   "Tools": [

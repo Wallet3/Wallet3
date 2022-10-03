@@ -1,23 +1,23 @@
 import * as Animatable from 'react-native-animatable';
 import * as Linking from 'expo-linking';
 
-import Bookmarks, { Bookmark, SecureUrls, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
+import Animated, { FadeInDown } from 'react-native-reanimated';
+import Bookmarks, { SecureUrls, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
 import { BreathAnimation, startLayoutAnimation } from '../../utils/animations';
-import { Dimensions, ListRenderItemInfo, Share, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { EvilIcons, Ionicons } from '@expo/vector-icons';
-import { FlatGrid, SectionGrid } from 'react-native-super-grid';
+import { Dimensions, Share, StyleProp, Text, TextInput, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { NullableImage, SafeViewContainer } from '../../components';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Web3View, { PageMetadata } from './Web3View';
 import { WebView, WebViewNavigation } from 'react-native-webview';
-import { renderBookmarkItem, renderUserBookmarkItem } from './components/BookmarkItem';
 import { secureColor, thirdFontColor } from '../../constants/styles';
 
 import AnimatedLottieView from 'lottie-react-native';
 import { Bar } from 'react-native-progress';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import Collapsible from 'react-native-collapsible';
+import { Ionicons } from '@expo/vector-icons';
+import LINQ from 'linq';
 import MessageKeys from '../../common/MessageKeys';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/Networks';
@@ -25,12 +25,15 @@ import PopularDApps from '../../configs/urls/popular.json';
 import { Portal } from 'react-native-portalize';
 import { ReactiveScreen } from '../../utils/device';
 import RecentHistory from './components/RecentHistory';
+import { ScrollView } from 'react-native-gesture-handler';
+import { SectionGrid } from 'react-native-super-grid';
 import { StatusBar } from 'expo-status-bar';
 import Theme from '../../viewmodels/settings/Theme';
 import ViewShot from 'react-native-view-shot';
 import i18n from '../../i18n';
 import { isURL } from '../../utils/url';
 import { observer } from 'mobx-react-lite';
+import { renderUserBookmarkItem } from './components/BookmarkItem';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 const calcIconSize = () => {
@@ -222,28 +225,13 @@ export const Browser = observer(
       setHostname(hn.startsWith('www.') ? hn.substring(4) : hn);
     };
 
-    const renderItem = (p: ListRenderItemInfo<Bookmark>) =>
-      renderBookmarkItem({
-        ...p,
-        imageBackgroundColor: backgroundColor,
-        iconSize: largeIconSize,
-        onPress: (item) => {
-          goTo(item.url);
-          closeFavs();
-        },
-      });
-
     useEffect(() => {
-      setSuggests(
-        Array.from(
-          new Set(
-            history
-              .concat(SecureUrls.filter((u) => !history.find((hurl) => hurl.includes(u) || u.includes(hurl))))
-              .filter((url) => url.includes(addr)) // || addr.includes(url)
-              .slice(0, 5)
-          )
-        )
-      );
+      if (!addr) {
+        setSuggests([]);
+        return;
+      }
+
+      setSuggests(Array.from(new Set(LINQ.from(history.concat(SecureUrls)).where((url) => url.includes(addr)))).slice(0, 5));
     }, [addr]);
 
     useEffect(() => {
@@ -251,8 +239,59 @@ export const Browser = observer(
       goTo(initUrl);
     }, [initUrl]);
 
+    const SectionBookmarks = ({
+      bounces,
+      style,
+      itemContainerStyle,
+    }: {
+      bounces?: boolean;
+      style?: StyleProp<ViewStyle>;
+      itemContainerStyle?: StyleProp<ViewStyle>;
+    }) => (
+      <SectionGrid
+        sections={favs}
+        style={{ marginTop: 0, padding: 0, height: '100%', ...(style || ({} as any)) }}
+        itemDimension={LargeIconSize + 8}
+        bounces={bounces}
+        data={favs}
+        itemContainerStyle={{ padding: 0, margin: 0, marginBottom: 8, ...(itemContainerStyle || ({} as any)) }}
+        spacing={8}
+        keyExtractor={(v, index) => `${v.url}-${index}`}
+        renderSectionHeader={({ section }) => (
+          <Text
+            style={{
+              fontSize: 12,
+              paddingHorizontal: 15,
+              fontWeight: '400',
+              textShadowColor: '#fff',
+              textShadowOffset: { width: 0, height: 0 },
+              textShadowRadius: 3,
+              color: foregroundColor,
+            }}
+          >
+            {t(`browser-sections-${section.title.toLowerCase()}`)}
+          </Text>
+        )}
+        renderItem={(p) =>
+          renderUserBookmarkItem({
+            ...p,
+            iconSize: LargeIconSize,
+            imageBackgroundColor: backgroundColor,
+            onPress: (item) => {
+              goTo(item.url);
+              closeFavs();
+            },
+            onRemove: (item) => {
+              startLayoutAnimation();
+              Bookmarks.remove(item.url);
+            },
+          })
+        }
+      />
+    );
+
     return (
-      <View
+      <Animated.View
         style={{
           backgroundColor: backgroundColor,
           flex: 1,
@@ -337,7 +376,7 @@ export const Browser = observer(
             </View>
 
             <TouchableOpacity
-              style={{ padding: 6, marginStart: 8 }}
+              style={{ padding: 6, paddingStart: 10, marginStart: 4 }}
               disabled={loadingProgress < 1 || !pageMetadata}
               onPress={() =>
                 Bookmarks.has(webUrl) ? Bookmarks.remove(webUrl) : Bookmarks.add({ ...pageMetadata!, url: webUrl })
@@ -350,11 +389,13 @@ export const Browser = observer(
               />
             </TouchableOpacity>
 
-            {singlePage ? undefined : onNewTab ? (
-              <TouchableOpacity style={{ padding: 4 }} onPress={onNewTab} disabled={loadingProgress < 1 || !pageMetadata}>
-                <Ionicons name={'add-outline'} size={23} color={loadingProgress < 1 ? 'lightgrey' : foregroundColor} />
-              </TouchableOpacity>
-            ) : undefined}
+            <TouchableOpacity
+              style={{ padding: 4, paddingHorizontal: 6, paddingTop: 4.5 }}
+              onPress={() => Share.share({ url: webUrl, title: pageMetadata?.title })}
+              disabled={loadingProgress < 1 || !webUrl}
+            >
+              <Ionicons name={'share-outline'} size={19} color={loadingProgress < 1 ? 'lightgrey' : foregroundColor} />
+            </TouchableOpacity>
           </View>
 
           <Collapsible collapsed={!isFocus} style={{ borderWidth: 0, padding: 0, margin: 0 }} enablePointerEvents>
@@ -428,20 +469,6 @@ export const Browser = observer(
                 >
                   <Ionicons name="md-scan-outline" size={21} color={textColor} />
                 </TouchableOpacity>
-
-                {webUrl ? (
-                  <TouchableOpacity
-                    onPress={() => Share.share({ url: webUrl, title: pageMetadata?.title })}
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      paddingVertical: 8,
-                      paddingHorizontal: 8,
-                    }}
-                  >
-                    <EvilIcons name="share-apple" size={28.7} color={textColor} />
-                  </TouchableOpacity>
-                ) : undefined}
               </View>
             )}
           </Collapsible>
@@ -497,7 +524,7 @@ export const Browser = observer(
             }}
           />
         ) : (
-          <View style={{ flex: 1 }}>
+          <Animated.View style={{ flex: 1 }} entering={FadeInDown.duration(1000).springify()}>
             {favs.length === 0 && !disableExtraFuncs && (
               <View
                 style={{
@@ -526,48 +553,9 @@ export const Browser = observer(
             )}
 
             {disableExtraFuncs ? undefined : (
-              <SectionGrid
-                sections={favs}
-                style={{ marginTop: 0, padding: 0, height: '100%' }}
-                itemDimension={LargeIconSize + 8}
-                bounces={favs.length >= 5 && Bookmarks.flatFavs.length > 20 ? true : false}
-                data={favs}
-                itemContainerStyle={{ padding: 0, margin: 0, marginBottom: 8 }}
-                spacing={8}
-                keyExtractor={(v, index) => `${v.url}-${index}`}
-                renderSectionHeader={({ section }) => (
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      paddingHorizontal: 15,
-                      fontWeight: '400',
-                      textShadowColor: '#fff',
-                      textShadowOffset: { width: 0, height: 0 },
-                      textShadowRadius: 3,
-                      color: foregroundColor,
-                    }}
-                  >
-                    {t(`browser-sections-${section.title.toLowerCase()}`)}
-                  </Text>
-                )}
-                renderItem={(p) =>
-                  renderUserBookmarkItem({
-                    ...p,
-                    iconSize: LargeIconSize,
-                    imageBackgroundColor: backgroundColor,
-                    onPress: (item) => {
-                      goTo(item.url);
-                      closeFavs();
-                    },
-                    onRemove: (item) => {
-                      startLayoutAnimation();
-                      Bookmarks.remove(item.url);
-                    },
-                  })
-                }
-              />
+              <SectionBookmarks bounces={favs.length >= 5 && Bookmarks.flatFavs.length > 20 ? true : false} />
             )}
-          </View>
+          </Animated.View>
         )}
 
         {!webUrl && recentSites.length > 0 ? (
@@ -584,20 +572,19 @@ export const Browser = observer(
           >
             <SafeAreaProvider style={{ height: 439, padding: 0, borderTopEndRadius: 7, borderTopStartRadius: 7 }}>
               <SafeViewContainer
-                style={{ height: 439, backgroundColor, flex: 1, padding: 0, borderTopEndRadius: 6, borderTopStartRadius: 6 }}
+                style={{
+                  height: 439,
+                  backgroundColor,
+                  flex: 1,
+                  padding: 0,
+                  borderTopEndRadius: 6,
+                  borderTopStartRadius: 6,
+                  paddingTop: 0,
+                }}
               >
-                <Text style={{ marginHorizontal: 12, color: textColor }}>{t('browser-favorites')}</Text>
-                <FlatGrid
-                  style={{ marginTop: 2, padding: 0, flex: 1 }}
-                  contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: 8, paddingTop: 2 }}
-                  itemDimension={LargeIconSize + 8}
-                  bounces={Bookmarks.flatFavs.length > 28}
-                  renderItem={renderItem}
-                  itemContainerStyle={{ padding: 0, margin: 0, marginBottom: 12 }}
-                  spacing={8}
-                  keyExtractor={(v, index) => `${v.url}-${index}`}
-                  data={Bookmarks.flatFavs}
-                />
+                <ScrollView horizontal scrollEnabled={false}>
+                  <SectionBookmarks bounces={favs.length >= 3} style={{ paddingTop: 12 }} />
+                </ScrollView>
 
                 <RecentHistory
                   disableContextMenu
@@ -612,7 +599,7 @@ export const Browser = observer(
         </Portal>
 
         <StatusBar style={statusBarStyle} />
-      </View>
+      </Animated.View>
     );
   }
 );

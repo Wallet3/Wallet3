@@ -184,6 +184,7 @@ export class InpageDAppController extends EventEmitter {
       default:
         const dapp = this.getDApp(hostname!);
         if (dapp) result = await rawCall(dapp.lastUsedChainId, { method, params });
+        if (result === undefined && method === 'eth_estimateGas') result = '0x0';
         break;
     }
 

@@ -7,6 +7,7 @@ import { ERC20Token } from '../../models/ERC20';
 import LINQ from 'linq';
 import { NativeToken } from '../../models/NativeToken';
 import Networks from '../Networks';
+import { sha256 } from '../../utils/cipher';
 import { utils } from 'ethers';
 
 export class AccountTokens {
@@ -14,7 +15,7 @@ export class AccountTokens {
 
   owner: string;
 
-  tokens: UserToken[] = [];
+  tokens: UserToken[] = []; // favorite tokens
   allTokens: UserToken[] = [];
   nativeToken!: NativeToken;
   loadingTokens = false;
@@ -106,6 +107,11 @@ export class AccountTokens {
     ]);
 
     if (!balance) return;
+
+    const tokensSnapshotHash = await sha256(
+      this.tokens.reduce((prev, curr) => `${prev}_${curr.symbol}:${curr.balance?.toString()}`, '')
+    );
+
     runInAction(() => (this.balanceUSD = balance.usd_value));
   }
 
