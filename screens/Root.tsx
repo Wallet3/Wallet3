@@ -159,7 +159,7 @@ const RootTab = observer(() => {
 
       <Screen
         name="Browser"
-        component={Platform.OS === 'android' ? SinglePageBrowserScreen : BrowserScreen}
+        component={BrowserScreen}
         options={{
           tabBarLabel: 'Web3',
           headerShown: false,
