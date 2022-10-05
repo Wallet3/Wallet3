@@ -413,7 +413,7 @@ PODS:
     - React-Core
     - SDWebImage (~> 5.11.1)
     - SDWebImageWebPCoder (~> 0.8.4)
-  - RNGestureHandler (2.6.2):
+  - RNGestureHandler (2.7.0):
     - React-Core
   - RNImageColors (1.5.1):
     - React-Core
@@ -446,7 +446,7 @@ PODS:
     - React-RCTText
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.17.0):
+  - RNScreens (3.18.0):
     - React-Core
     - React-RCTImage
   - RNSharedElement (0.8.4):
@@ -806,11 +806,11 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: 0c357f3156fcb16c8589ede67cc036330b6698ca
   RNDeviceInfo: 8b83e99e290deaf1bab71673cc636776ef647b6f
   RNFastImage: 3207b9eb17c2425d574ca40db35185db6e324f4e
-  RNGestureHandler: 4defbd70b2faf3d6761b82fa7880285241762cb0
+  RNGestureHandler: 7673697e7c0e9391adefae4faa087442bc04af33
   RNImageColors: fd9777591fc765780e035f4bec7a42edabc86eb4
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
   RNReanimated: 7faa787e8d4493fbc95fab2ad331fa7625828cfa
-  RNScreens: 0df01424e9e0ed7827200d6ed1087ddd06c493f9
+  RNScreens: f3230dd008a7d0ce5c0a8bc78ff12cf2315bda24
   RNSharedElement: eb7d506733952d58634f34c82ec17e82f557e377
   RNSVG: 07037623c36f12e41312730622d5f6b3656227ca
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
