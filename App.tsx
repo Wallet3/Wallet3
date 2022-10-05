@@ -7,7 +7,7 @@ import AppViewModel, { AppVM } from './viewmodels/App';
 import AuthViewModel, { Authentication } from './viewmodels/Authentication';
 import Modals, { LockScreen } from './screens/Modalize';
 import { Platform, UIManager, TouchableOpacity } from 'react-native';
-
+import { enableLayoutAnimations } from "react-native-reanimated";
 import { About } from './screens/settings/About';
 import AddToken from './screens/tokens/AddToken';
 import Backup from './screens/settings/Backup';
@@ -53,6 +53,10 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
 
   if (!loaded) {
     return null;
+  }
+
+  if (Platform.OS === 'android') {
+    enableLayoutAnimations(false);
   }
 
   return (
