@@ -391,7 +391,7 @@ export const Browser = observer(
 
             <TouchableOpacity
               style={{ padding: 4, paddingHorizontal: 6, paddingTop: 4.5 }}
-              onPress={() => Share.share({ url: webUrl, title: pageMetadata?.title })}
+              onPress={() => Share.share({ message: `${pageMetadata?.title ?? ""} ${webUrl}`, url: webUrl, title: pageMetadata?.title })}
               disabled={loadingProgress < 1 || !webUrl}
             >
               <Ionicons name={'share-outline'} size={19} color={loadingProgress < 1 ? 'lightgrey' : foregroundColor} />
