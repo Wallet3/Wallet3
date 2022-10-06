@@ -1,11 +1,10 @@
-import { alchemyApiKeys } from '../../configs/secret';
+import { UnstoppableDomainApiKey } from '../../configs/secret';
 
 export async function getRecords(domain: string) {
-  const key = alchemyApiKeys[Date.now() % alchemyApiKeys.length];
 
   try {
-    const resp = await fetch(`https://unstoppabledomains.g.alchemy.com/domains/${domain}`, {
-      headers: { Authorization: `Bearer ${key}` },
+    const resp = await fetch(`https://resolve.unstoppabledomains.com/domains/${domain}`, {
+      headers: { Authorization: `Bearer ${UnstoppableDomainApiKey}` },
     });
 
     return (await resp.json()) as UnstoppableJson;
