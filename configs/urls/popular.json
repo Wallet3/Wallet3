@@ -1,5 +1,6 @@
 [
   { "url": "https://dagen.life", "icon": "https://dagen.life/logo.png", "title": "dagen" },
+  { "url": "https://app.mail3.me", "icon": "https://mail3.me/icons/icon-192x192.png", "title": "Mail3" },
   { "url": "https://app.uniswap.org", "icon": "https://app.uniswap.org/favicon.png", "title": "Uniswap" },
   { "url": "https://curve.exchange", "icon": "https://curve.fi/apple-touch-icon.png", "title": "Curve" },
   {
@@ -28,6 +29,5 @@
     "icon": "https://stargate.finance/favicons/favicon-196x196.png",
     "title": "Stargate"
   },
-  { "url": "https://qx.app", "icon": "https://qx.app/opt_favicon.png", "title": "Quix" },
-  { "url": "https://app.mail3.me", "icon": "https://mail3.me/icons/icon-192x192.png", "title": "Mail3" }
+  { "url": "https://qx.app", "icon": "https://qx.app/opt_favicon.png", "title": "Quix" }
 ]

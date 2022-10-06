@@ -1,5 +1,6 @@
 import * as Debank from '../../common/apis/Debank';
 
+import { BigNumber, utils } from 'ethers';
 import TokensMan, { UserToken } from '../services/TokensMan';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
@@ -8,7 +9,6 @@ import { ERC20Token } from '../../models/ERC20';
 import { NativeToken } from '../../models/NativeToken';
 import Networks from '../Networks';
 import { clearBalanceCache } from '../../common/apis/Debank';
-import { utils } from 'ethers';
 
 const Keys = {
   tokensDigest: (chainId: number, owner: string) => `${chainId}_${owner}_tokens_digest`,
@@ -111,6 +111,8 @@ export class AccountTokens {
     const { current } = Networks;
 
     await Promise.all(this.tokens.map((t) => (t as ERC20Token).getBalance?.(false)));
+
+    if (this.tokens.every((t) => (t.balance as BigNumber)?.eq?.(0))) return;
 
     const curDigest = this.tokens.reduce((prev, curr) => `${prev}_${curr.symbol}:${curr.balance?.toString()}`, '');
 
