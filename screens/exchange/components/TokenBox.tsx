@@ -2,6 +2,8 @@ import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import React, { useRef, useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 
+import { trimString } from '../../../utils/formatter'
+
 import { Coin } from '../../../components';
 import Theme from '../../../viewmodels/settings/Theme';
 import { observer } from 'mobx-react-lite';
@@ -50,7 +52,7 @@ export default observer((props: Props) => {
           style={{ flex: 1, fontSize: 22, color: textColor }}
           keyboardType="decimal-pad"
           placeholder="0.00"
-          value={props.textValue ?? textInputValue}
+          value={props.textValue ? trimString(props.textValue, 20) : textInputValue }
           onChangeText={(t) => {
             setTextInputValue(t);
             props?.onTextInputChanged?.(t);

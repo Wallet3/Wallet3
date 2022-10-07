@@ -16,3 +16,9 @@ export function formatCurrency(value: number | string, symbol = '$', fraction = 
     return '0';
   }
 }
+
+export function trimString(string: string, length: number) {
+  return string.length > length ? 
+         string.substring(0, length-3) + '...' :
+         string;
+};
