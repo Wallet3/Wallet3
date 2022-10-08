@@ -231,7 +231,10 @@ export default observer((props: Web3ViewProps) => {
   const { ref: accountsRef, open: openAccountsModal, close: closeAccountsModal } = useModalize();
 
   return (
-    <Animated.View style={{ flex: 1, position: 'relative' }} exiting={FadeOutDown.duration(1000).springify()}>
+    <Animated.View
+      style={{ flex: 1, position: 'relative' }}
+      exiting={tabCount === 1 || !dapp ? FadeOutDown.duration(1000).springify() : undefined}
+    >
       <ViewShot ref={viewShotRef} style={{ flex: 1 }} options={{ result: 'data-uri', quality: 0.1, format: 'jpg' }}>
         <WebView
           {...props}

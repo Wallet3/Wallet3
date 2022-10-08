@@ -213,7 +213,8 @@ export function isSecureSite(url: string) {
   if (!url.startsWith('https://')) return false;
 
   try {
-    return SecureUrlsSet.has(`https://${Linking.parse(url).hostname || ''}`);
+    const { hostname } = Linking.parse(url);
+    return SecureUrlsSet.has(`https://${hostname || ''}`);
   } catch (error) {}
 
   return false;
