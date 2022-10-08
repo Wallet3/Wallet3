@@ -10,7 +10,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Web3View, { PageMetadata } from './Web3View';
 import { WebView, WebViewNavigation } from 'react-native-webview';
-import { secureColor, thirdFontColor } from '../../constants/styles';
+import { secureColor, thirdFontColor, warningColor } from '../../constants/styles';
 
 import AnimatedLottieView from 'lottie-react-native';
 import { Bar } from 'react-native-progress';
@@ -149,7 +149,7 @@ export const Browser = observer(
         ? setWebRiskLevel('risky')
         : webUrl.startsWith('https://')
         ? setWebRiskLevel('tls')
-        : setWebRiskLevel('insecure');
+        : setWebRiskLevel('risky');
     }, [webUrl]);
 
     const refresh = () => {
@@ -341,12 +341,12 @@ export const Browser = observer(
                         ? secureColor
                         : '#66db0d'
                       : webRiskLevel === 'risky'
-                      ? 'red'
+                      ? warningColor
                       : textColor,
                 }}
               />
 
-              {isFocus ? undefined : webUrl.startsWith('https') ? (
+              {isFocus || !webUrl ? undefined : (
                 <TouchableOpacity style={{ position: 'absolute', left: 0, paddingStart: 8 }}>
                   {webRiskLevel === 'verified' ? (
                     <Ionicons
@@ -356,12 +356,12 @@ export const Browser = observer(
                       style={{ marginTop: 2 }}
                     />
                   ) : webRiskLevel === 'risky' ? (
-                    <Ionicons name="md-shield" color="red" size={12} style={{ marginTop: 2 }} />
+                    <Ionicons name="warning" color={warningColor} size={12} style={{ marginTop: 2 }} />
                   ) : webRiskLevel === 'tls' ? (
                     <Ionicons name="lock-closed" color={foregroundColor} size={12} />
                   ) : undefined}
                 </TouchableOpacity>
-              ) : undefined}
+              )}
               {isFocus ? undefined : (
                 <TouchableOpacity
                   style={{ padding: 8, paddingHorizontal: 9, position: 'absolute', right: 0 }}
