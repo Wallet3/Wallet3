@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Scanner, { BarCodeScanningResult } from '../../components/Scanner';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -20,15 +20,26 @@ export default observer(({ navigation, route }: NativeStackScreenProps<{}, never
     const handled = LinkHub.handleURL(data);
     setScanned(handled || false);
 
-    if (handled) navigation.pop();
+    if (handled) {
+      setScanned(true);
+      setTimeout(() => navigation.pop(), 200);
+    }
   };
+
+  useEffect(() => {
+    return () => setScanned(true);
+  }, []);
 
   return (
     <View style={styles.container}>
-      <Scanner
-        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        style={{ flex: 1, width: '100%', height: '100%', position: 'absolute' }}
-      />
+      {!scanned ? (
+        <Scanner
+          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+          style={{ flex: 1, width: '100%', height: '100%', position: 'absolute' }}
+        />
+      ) : (
+        <View style={{ flex: 1, width: '100%', height: '100%', backgroundColor: '#000' }} />
+      )}
 
       <View
         style={{

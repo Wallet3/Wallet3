@@ -149,7 +149,7 @@ export const Browser = observer(
         ? setWebRiskLevel('risky')
         : webUrl.startsWith('https://')
         ? setWebRiskLevel('tls')
-        : setWebRiskLevel('risky');
+        : setWebRiskLevel('insecure');
     }, [webUrl]);
 
     const refresh = () => {
@@ -355,7 +355,7 @@ export const Browser = observer(
                       size={12}
                       style={{ marginTop: 2 }}
                     />
-                  ) : webRiskLevel === 'risky' ? (
+                  ) : webRiskLevel === 'risky' || webRiskLevel === 'insecure' ? (
                     <Ionicons name="warning" color={warningColor} size={12} style={{ marginTop: 2 }} />
                   ) : webRiskLevel === 'tls' ? (
                     <Ionicons name="lock-closed" color={foregroundColor} size={12} />
