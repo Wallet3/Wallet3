@@ -159,6 +159,16 @@ export class AppVM {
     AsyncStorage.setItem('lastUsedAccount', target.address);
   }
 
+  async refreshAccount() {
+    if (Date.now() - this.lastRefreshedTime < 1000 * 5) return;
+    this.lastRefreshedTime = Date.now();
+
+    clearTimeout(this.refreshTimer);
+    await this.currentAccount?.tokens.refreshTokensBalance();
+
+    this.refreshTimer = setTimeout(() => this.refreshAccount(), 12 * 1000);
+  }
+
   async removeAccount(account: Account) {
     if (this.allAccounts.length === 1) return;
 
@@ -176,16 +186,6 @@ export class AppVM {
       runInAction(() => this.wallets.splice(this.wallets.indexOf(wallet), 1));
       await wallet.delete();
     }
-  }
-
-  async refreshAccount() {
-    if (Date.now() - this.lastRefreshedTime < 1000 * 5) return;
-    this.lastRefreshedTime = Date.now();
-
-    clearTimeout(this.refreshTimer);
-    await this.currentAccount?.tokens.refreshTokensBalance();
-
-    this.refreshTimer = setTimeout(() => this.refreshAccount(), 12 * 1000);
   }
 
   async init() {

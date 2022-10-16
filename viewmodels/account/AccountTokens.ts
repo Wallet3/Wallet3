@@ -1,19 +1,26 @@
 import * as Debank from '../../common/apis/Debank';
 
+import { BigNumber, utils } from 'ethers';
 import TokensMan, { UserToken } from '../services/TokensMan';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ERC20Token } from '../../models/ERC20';
 import { NativeToken } from '../../models/NativeToken';
 import Networks from '../Networks';
-import { utils } from 'ethers';
+import { clearBalanceCache } from '../../common/apis/Debank';
+
+const Keys = {
+  tokensDigest: (chainId: number, owner: string) => `${chainId}_${owner}_tokens_digest`,
+};
 
 export class AccountTokens {
   private lastRefreshTime = 0;
+  private preDigest = '';
 
   owner: string;
 
-  tokens: UserToken[] = [];
+  tokens: UserToken[] = []; // favorite tokens
   allTokens: UserToken[] = [];
   nativeToken!: NativeToken;
   loadingTokens = false;
@@ -43,6 +50,8 @@ export class AccountTokens {
       this.refreshNativeToken(),
       TokensMan.loadUserTokens(current.chainId, this.owner),
     ]);
+
+    this.preDigest = (await AsyncStorage.getItem(Keys.tokensDigest(current.chainId, this.owner))) || '';
 
     const shownTokens = userTokens.filter((t) => t.shown);
     const favTokens = [native, ...shownTokens];
@@ -101,12 +110,21 @@ export class AccountTokens {
   async refreshTokensBalance() {
     const { current } = Networks;
 
-    const [balance, _] = await Promise.all([
-      Debank.getBalance(this.owner, current.chainId, current.comm_id),
-      this.tokens.map((t) => (t as ERC20Token).getBalance?.(false)),
-    ]);
+    await Promise.all(this.tokens.map((t) => (t as ERC20Token).getBalance?.(false)));
 
+    if (this.tokens.every((t) => (t.balance as BigNumber)?.eq?.(0))) return;
+
+    const curDigest = this.tokens.reduce((prev, curr) => `${prev}_${curr.symbol}:${curr.balance?.toString()}`, '');
+
+    if (this.preDigest !== curDigest) {
+      clearBalanceCache(this.owner, this.nativeToken.chainId);
+      await AsyncStorage.setItem(Keys.tokensDigest(this.nativeToken.chainId, this.owner), curDigest);
+      this.preDigest = curDigest;
+    }
+
+    const balance = await Debank.getBalance(this.owner, current.chainId, current.comm_id);
     if (!balance) return;
+
     runInAction(() => (this.balanceUSD = balance.usd_value));
   }
 

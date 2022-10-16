@@ -167,18 +167,20 @@ export class Wallet {
   async signMessage(request: SignMessageRequest) {
     try {
       if (utils.isBytes(request.msg) && !request.standardMode) {
-        try {
-          utils.parseTransaction(request.msg);
-          // never sign a transactions via eth_sign !!!
-          showMessage({ message: 'DANGEROUS: Wallet 3 rejects signing this data.', type: 'danger' });
-          return undefined;
-        } catch (error) {}
+        showMessage({ message: 'DANGEROUS: Wallet 3 rejects signing this data.', type: 'danger' });
+        return undefined;
+        // try {
+        //   utils.parseTransaction(request.msg);
+        //   // never sign a transactions via eth_sign !!!
+        //   showMessage({ message: 'DANGEROUS: Wallet 3 rejects signing this data.', type: 'danger' });
+        //   return undefined;
+        // } catch (error) {}
 
-        const privateKey = await this.unlockPrivateKey(request);
-        if (!privateKey) return undefined;
+        // const privateKey = await this.unlockPrivateKey(request);
+        // if (!privateKey) return undefined;
 
-        const signed = new utils.SigningKey(privateKey).signDigest(request.msg); // eth_sign(legacy)
-        return utils.joinSignature(signed);
+        // const signed = new utils.SigningKey(privateKey).signDigest(request.msg); // eth_sign(legacy)
+        // return utils.joinSignature(signed);
       } else {
         return (await this.openWallet(request))?.signMessage(
           typeof request.msg === 'string' && utils.isBytesLike(request.msg) ? utils.arrayify(request.msg) : request.msg

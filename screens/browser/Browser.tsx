@@ -1,6 +1,7 @@
 import * as Animatable from 'react-native-animatable';
 import * as Linking from 'expo-linking';
 
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import Bookmarks, { SecureUrls, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
 import { BreathAnimation, startLayoutAnimation } from '../../utils/animations';
 import { Dimensions, Share, StyleProp, Text, TextInput, TouchableOpacity, View, ViewStyle } from 'react-native';
@@ -9,7 +10,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Web3View, { PageMetadata } from './Web3View';
 import { WebView, WebViewNavigation } from 'react-native-webview';
-import { secureColor, thirdFontColor } from '../../constants/styles';
+import { secureColor, thirdFontColor, warningColor } from '../../constants/styles';
 
 import AnimatedLottieView from 'lottie-react-native';
 import { Bar } from 'react-native-progress';
@@ -290,7 +291,7 @@ export const Browser = observer(
     );
 
     return (
-      <View
+      <Animated.View
         style={{
           backgroundColor: backgroundColor,
           flex: 1,
@@ -299,8 +300,8 @@ export const Browser = observer(
           position: 'relative',
         }}
       >
-        <View style={{ position: 'relative', paddingTop: 4, paddingBottom: isFocus ? 0 : 8 }}>
-          <View
+        <Animated.View style={{ position: 'relative', paddingTop: 4, paddingBottom: isFocus ? 0 : 8 }}>
+          <Animated.View
             style={{
               flexDirection: 'row',
               marginHorizontal: 6,
@@ -340,12 +341,12 @@ export const Browser = observer(
                         ? secureColor
                         : '#66db0d'
                       : webRiskLevel === 'risky'
-                      ? 'red'
+                      ? warningColor
                       : textColor,
                 }}
               />
 
-              {isFocus ? undefined : webUrl.startsWith('https') ? (
+              {isFocus || !webUrl ? undefined : (
                 <TouchableOpacity style={{ position: 'absolute', left: 0, paddingStart: 8 }}>
                   {webRiskLevel === 'verified' ? (
                     <Ionicons
@@ -354,13 +355,13 @@ export const Browser = observer(
                       size={12}
                       style={{ marginTop: 2 }}
                     />
-                  ) : webRiskLevel === 'risky' ? (
-                    <Ionicons name="md-shield" color="red" size={12} style={{ marginTop: 2 }} />
+                  ) : webRiskLevel === 'risky' || webRiskLevel === 'insecure' ? (
+                    <Ionicons name="warning" color={warningColor} size={12} style={{ marginTop: 2 }} />
                   ) : webRiskLevel === 'tls' ? (
                     <Ionicons name="lock-closed" color={foregroundColor} size={12} />
                   ) : undefined}
                 </TouchableOpacity>
-              ) : undefined}
+              )}
               {isFocus ? undefined : (
                 <TouchableOpacity
                   style={{ padding: 8, paddingHorizontal: 9, position: 'absolute', right: 0 }}
@@ -395,7 +396,7 @@ export const Browser = observer(
             >
               <Ionicons name={'share-outline'} size={19} color={loadingProgress < 1 ? 'lightgrey' : foregroundColor} />
             </TouchableOpacity>
-          </View>
+          </Animated.View>
 
           <Collapsible collapsed={!isFocus} style={{ borderWidth: 0, padding: 0, margin: 0 }} enablePointerEvents>
             <View style={{ marginTop: 8, paddingBottom: 4, borderBottomWidth: 1, borderBottomColor: borderColor }}>
@@ -483,7 +484,7 @@ export const Browser = observer(
               style={{ position: 'absolute', bottom: 0 }}
             />
           ) : undefined}
-        </View>
+        </Animated.View>
 
         {uri ? (
           <Web3View
@@ -523,7 +524,7 @@ export const Browser = observer(
             }}
           />
         ) : (
-          <View style={{ flex: 1 }}>
+          <Animated.View style={{ flex: 1 }} entering={FadeInDown.duration(1000).springify()}>
             {favs.length === 0 && !disableExtraFuncs && (
               <View
                 style={{
@@ -554,7 +555,7 @@ export const Browser = observer(
             {disableExtraFuncs ? undefined : (
               <SectionBookmarks bounces={favs.length >= 5 && Bookmarks.flatFavs.length > 20 ? true : false} />
             )}
-          </View>
+          </Animated.View>
         )}
 
         {!webUrl && recentSites.length > 0 ? (
@@ -598,7 +599,7 @@ export const Browser = observer(
         </Portal>
 
         <StatusBar style={statusBarStyle} />
-      </View>
+      </Animated.View>
     );
   }
 );

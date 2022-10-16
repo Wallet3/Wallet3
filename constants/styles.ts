@@ -6,6 +6,7 @@ export const thirdFontColor = '#75869c';
 export const borderColor = '#efefef';
 export const themeColor = '#6186ff';
 export const secureColor = '#76B947';
+export const warningColor = 'crimson';
 
 export const numericFontFamily = 'Avenir Next';
 
