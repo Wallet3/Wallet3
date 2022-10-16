@@ -1,7 +1,7 @@
 import * as Animatable from 'react-native-animatable';
 import * as Linking from 'expo-linking';
 
-import Animated, { FadeOutDown } from 'react-native-reanimated';
+import Animated, { ComplexAnimationBuilder, FadeOutDown } from 'react-native-reanimated';
 import { Entypo, Feather, Ionicons } from '@expo/vector-icons';
 import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
@@ -87,11 +87,13 @@ export default observer((props: Web3ViewProps) => {
   const [appAccount, setAppAccount] = useState<Account>();
   const [dapp, setDApp] = useState<ConnectedBrowserDApp | undefined>();
   const [webUrl, setWebUrl] = useState('');
+  const [exitingTransition, setExitingTransition] = useState<ComplexAnimationBuilder>();
 
-  const { mode, foregroundColor, isLightMode, backgroundColor, borderColor, systemBorderColor } = Theme;
+  const { mode, foregroundColor, isLightMode, backgroundColor, systemBorderColor } = Theme;
 
   const updateDAppState = (dapp?: ConnectedBrowserDApp) => {
     setDApp(dapp);
+    setExitingTransition(dapp ? undefined : FadeOutDown.duration(1000).springify());
 
     const network = Networks.find(dapp?.lastUsedChainId ?? -1);
     setAppNetwork(network);
@@ -231,10 +233,7 @@ export default observer((props: Web3ViewProps) => {
   const { ref: accountsRef, open: openAccountsModal, close: closeAccountsModal } = useModalize();
 
   return (
-    <Animated.View
-      style={{ flex: 1, position: 'relative' }}
-      exiting={!dapp ? FadeOutDown.duration(1000).springify() : undefined}
-    >
+    <Animated.View style={{ flex: 1, position: 'relative' }} exiting={exitingTransition}>
       <ViewShot ref={viewShotRef} style={{ flex: 1 }} options={{ result: 'data-uri', quality: 0.1, format: 'jpg' }}>
         <WebView
           {...props}

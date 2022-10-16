@@ -18,7 +18,6 @@ export default observer(({ navigation, route }: NativeStackScreenProps<{}, never
 
   const handleBarCodeScanned = ({ data }: BarCodeScanningResult) => {
     const handled = LinkHub.handleURL(data);
-    setScanned(handled || false);
 
     if (handled) {
       setScanned(true);

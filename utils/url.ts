@@ -9,5 +9,5 @@ const pattern = new RegExp(
 );
 
 export function isURL(str: string) {
-  return pattern.test(str);
+  return str?.includes('.') && pattern.test(str);
 }

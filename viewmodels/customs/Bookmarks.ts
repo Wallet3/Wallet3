@@ -55,35 +55,6 @@ class Bookmarks {
     return 'Others';
   }
 
-  async upgrade() {
-    const v = await AsyncStorage.getItem(`bookmarks`);
-    const items = JSON.parse(v || '[]') as Bookmark[];
-    if (!v || items.length === 0) return false;
-
-    const groups = LINQ.from(items)
-      .groupBy((item) => Bookmarks.findCategory(item.url))
-      .orderBy((i) => Priorities.get(i.key()))
-      .toArray();
-
-    const favs: { title: string; data: Bookmark[] }[] = [];
-
-    for (let group of groups) {
-      favs.push({
-        title: group.key(),
-        data: group.toArray(),
-      });
-    }
-
-    await AsyncStorage.removeItem('bookmarks');
-    await AsyncStorage.setItem(`bookmarks_v2`, JSON.stringify(favs));
-
-    runInAction(() => {
-      this._favs = favs;
-    });
-
-    return true;
-  }
-
   constructor() {
     makeObservable(this, {
       history: observable,
@@ -100,14 +71,8 @@ class Bookmarks {
       removeRecentSite: action,
     });
 
-    this.upgrade()
-      .then((v) =>
-        v
-          ? undefined
-          : AsyncStorage.getItem(`bookmarks_v2`)
-              .then((v) => runInAction(() => (this._favs = JSON.parse(v || '[]'))))
-              .catch(() => {})
-      )
+    AsyncStorage.getItem(`bookmarks_v2`)
+      .then((v) => runInAction(() => (this._favs = JSON.parse(v || '[]'))))
       .catch(() => {});
 
     AsyncStorage.getItem(`history-urls`)
