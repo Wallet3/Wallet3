@@ -36,7 +36,7 @@ const MemoryCache = new Map<string, any>();
 export const DebankSupportedChains = new Map<number, string>();
 
 export function clearBalanceCache(address: string, chainId: number) {
-  MemoryCache.set(CacheKeys.chain_balance(chainId, address), undefined);
+  MemoryCache.delete(CacheKeys.chain_balance(chainId, address));
   return AsyncStorage.removeItem(CacheKeys.chain_balance(chainId, address));
 }
 
@@ -56,6 +56,9 @@ export async function getBalance(address: string, chainId: number, debankId?: ch
       if (cacheJson) {
         const { timestamp, data } = JSON.parse(cacheJson) as { timestamp: number; data: ChainBalance };
         if (!Number.isNaN(data?.usd_value)) debankChainBalance = data;
+
+        if (timestamp + 1 * DAY > Date.now()) break;
+        if (data) MemoryCache.set(CacheKeys.chain_balance(chainId, address), data);
       }
     } catch (error) {}
 
@@ -69,13 +72,12 @@ export async function getBalance(address: string, chainId: number, debankId?: ch
       if (Number.isNaN(data?.usd_value)) break;
 
       debankChainBalance = data;
+      MemoryCache.set(CacheKeys.chain_balance(chainId, address), debankChainBalance);
       await AsyncStorage.setItem(CacheKeys.chain_balance(chainId, address), JSON.stringify({ timestamp: Date.now(), data }));
     } catch (error) {}
   } while (false);
 
-  MemoryCache[CacheKeys.chain_balance(chainId, address)] = debankChainBalance;
-
-  return debankChainBalance;
+  return MemoryCache.get(CacheKeys.chain_balance(chainId, address)) || debankChainBalance;
 }
 
 export async function getTokens(address: string, chainId: number, debankId?: chain, is_all = false) {
