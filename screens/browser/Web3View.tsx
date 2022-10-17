@@ -1,9 +1,9 @@
 import * as Animatable from 'react-native-animatable';
 import * as Linking from 'expo-linking';
 
-import Animated, { FadeOutDown } from 'react-native-reanimated';
+import Animated, { ComplexAnimationBuilder, FadeOutDown } from 'react-native-reanimated';
 import { Entypo, Feather, Ionicons } from '@expo/vector-icons';
-import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { WebView, WebViewMessageEvent, WebViewNavigation, WebViewProps } from 'react-native-webview';
@@ -13,7 +13,6 @@ import AccountSelector from '../../modals/dapp/AccountSelector';
 import App from '../../viewmodels/App';
 import Avatar from '../../components/Avatar';
 import DeviceInfo from 'react-native-device-info';
-import GetIconsFunction from './scripts/GetIconsFunction';
 import GetPageMetadata from './scripts/Metadata';
 import HookWalletConnect from './scripts/InjectWalletConnectObserver';
 import { INetwork } from '../../common/Networks';
@@ -33,7 +32,6 @@ import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
-import modalStyles from '../../modals/styles';
 
 export interface PageMetadata {
   icon: string;
@@ -71,13 +69,9 @@ export default observer((props: Web3ViewProps) => {
   const [hub] = useState(new InpageDAppController());
   const [appName] = useState(`Wallet3/${DeviceInfo.getVersion() || '0.0.0'}`);
   const [ua] = useState(
-    Platform.OS === 'ios'
-      ? DeviceInfo.isTablet()
-        ? `Mozilla/5.0 (iPad; CPU OS 15_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/98.0.4758.85 Mobile/15E148 Safari/604.1 ${appName}`
-        : `Mozilla/5.0 (iPhone; CPU iPhone OS 15_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/98.0.4758.85 Mobile/15E148 Safari/604.1 ${appName}`
-      : DeviceInfo.isTablet()
-      ? `Mozilla/5.0 (Linux; Android 11; tablet) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.210 Mobile Safari/537.36 ${appName}`
-      : `Mozilla/5.0 (Linux; Android 11; Pixel 4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.210 Mobile Safari/537.36 ${appName}`
+    DeviceInfo.isTablet()
+      ? `Mozilla/5.0 (iPad; CPU OS 15_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/98.0.4758.85 Mobile/15E148 Safari/604.1 ${appName}`
+      : `Mozilla/5.0 (iPhone; CPU iPhone OS 15_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/98.0.4758.85 Mobile/15E148 Safari/604.1 ${appName}`
   );
 
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
@@ -93,11 +87,13 @@ export default observer((props: Web3ViewProps) => {
   const [appAccount, setAppAccount] = useState<Account>();
   const [dapp, setDApp] = useState<ConnectedBrowserDApp | undefined>();
   const [webUrl, setWebUrl] = useState('');
+  const [exitingTransition, setExitingTransition] = useState<ComplexAnimationBuilder>();
 
-  const { mode, foregroundColor, isLightMode, backgroundColor, borderColor, systemBorderColor } = Theme;
+  const { mode, foregroundColor, isLightMode, backgroundColor, systemBorderColor } = Theme;
 
   const updateDAppState = (dapp?: ConnectedBrowserDApp) => {
     setDApp(dapp);
+    setExitingTransition(dapp ? undefined : FadeOutDown.duration(1000).springify());
 
     const network = Networks.find(dapp?.lastUsedChainId ?? -1);
     setAppNetwork(network);
@@ -237,12 +233,11 @@ export default observer((props: Web3ViewProps) => {
   const { ref: accountsRef, open: openAccountsModal, close: closeAccountsModal } = useModalize();
 
   return (
-    <Animated.View style={{ flex: 1, position: 'relative' }} exiting={FadeOutDown.duration(1000).springify()}>
+    <Animated.View style={{ flex: 1, position: 'relative' }} exiting={exitingTransition}>
       <ViewShot ref={viewShotRef} style={{ flex: 1 }} options={{ result: 'data-uri', quality: 0.1, format: 'jpg' }}>
         <WebView
           {...props}
           ref={webViewRef}
-          nestedScrollEnabled
           automaticallyAdjustContentInsets={false}
           contentInsetAdjustmentBehavior={'never'}
           contentInset={{ bottom: expanded ? 37 + (safeAreaBottom === 0 ? 8 : 0) : 0 }}
@@ -250,18 +245,14 @@ export default observer((props: Web3ViewProps) => {
           userAgent={ua}
           allowsFullscreenVideo={false}
           forceDarkOn={mode === 'dark'}
-          injectedJavaScript={`${GetIconsFunction}\ntrue;${GetPageMetadata}\ntrue;\n${HookWalletConnect}\ntrue;`}
+          injectedJavaScript={`${GetPageMetadata}\ntrue;\n${HookWalletConnect}\ntrue;`}
           onMessage={onMessage}
           mediaPlaybackRequiresUserAction
           pullToRefreshEnabled
           allowsInlineMediaPlayback
           allowsBackForwardNavigationGestures
-          // injectedJavaScriptBeforeContentLoaded={`${MetamaskMobileProvider}\ntrue;`}
+          injectedJavaScriptBeforeContentLoaded={`${MetamaskMobileProvider}\ntrue;`}
           onContentProcessDidTerminate={() => ((webViewRef as any)?.current as WebView)?.reload()}
-          onLoadStart={() => {
-            const webview = (webViewRef as any).current as WebView;
-            webview.injectJavaScript(`${MetamaskMobileProvider}\ntrue;`);
-          }}
           style={{ backgroundColor }}
           decelerationRate={1}
           allowsLinkPreview
@@ -394,16 +385,23 @@ export default observer((props: Web3ViewProps) => {
           modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <SafeAreaProvider style={{ ...modalStyles.safeArea, backgroundColor }}>
-            <AccountSelector
-              single
-              accounts={App.allAccounts}
-              selectedAccounts={appAccount ? [appAccount.address] : []}
-              style={{ padding: 16, height: 430 }}
-              expanded
-              themeColor={appNetwork?.color}
-              onDone={([account]) => updateDAppAccountConfig(account)}
-            />
+          <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
+            <ScrollView
+              scrollEnabled={false}
+              horizontal
+              style={{ width: '100%', flex: 1 }}
+              contentContainerStyle={{ flexGrow: 1 }}
+            >
+              <AccountSelector
+                single
+                accounts={App.allAccounts}
+                selectedAccounts={appAccount ? [appAccount.address] : []}
+                style={{ padding: 16, height: 430 }}
+                expanded
+                themeColor={appNetwork?.color}
+                onDone={([account]) => updateDAppAccountConfig(account)}
+              />
+            </ScrollView>
           </SafeAreaProvider>
         </Modalize>
       </Portal>

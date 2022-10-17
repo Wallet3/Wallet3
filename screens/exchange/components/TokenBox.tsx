@@ -1,6 +1,6 @@
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import React, { useRef, useState } from 'react';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Platform, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { trimString } from '../../../utils/formatter'
 
@@ -52,7 +52,7 @@ export default observer((props: Props) => {
           style={{ flex: 1, fontSize: 22, color: textColor }}
           keyboardType="decimal-pad"
           placeholder="0.00"
-          value={props.textValue ? trimString(props.textValue, 20) : textInputValue }
+          value={props.textValue ? (Platform.OS === 'android') ? trimString(props.textValue, 15) : props.textValue : textInputValue }
           onChangeText={(t) => {
             setTextInputValue(t);
             props?.onTextInputChanged?.(t);

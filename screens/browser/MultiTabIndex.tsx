@@ -1,4 +1,4 @@
-import { Animated, FlatList, Keyboard, NativeScrollEvent, NativeSyntheticEvent, View } from 'react-native';
+import { Animated, FlatList, Keyboard, NativeScrollEvent, NativeSyntheticEvent, ScrollView, View } from 'react-native';
 import { BottomTabScreenProps, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import React, { useEffect, useRef, useState } from 'react';
 import { action, makeObservable, observable } from 'mobx';
@@ -293,20 +293,27 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
           modalStyle={{ padding: 0, margin: 0 }}
         >
-          <WebTabs
-            globalState={state}
-            activeIndex={activePageIndex}
-            onRemovePage={removePageId}
-            onRemoveAll={removeAllTabs}
-            onNewTab={() => {
-              newTab(true);
-              closeTabsModal();
-            }}
-            onJumpToPage={(index) => {
-              swiper.current?.scrollToIndex({ index, animated: true });
-              closeTabsModal();
-            }}
-          />
+          <ScrollView
+            scrollEnabled={false}
+            horizontal
+            style={{ width: '100%', flex: 1 }}
+            contentContainerStyle={{ flexGrow: 1 }}
+          >
+            <WebTabs
+              globalState={state}
+              activeIndex={activePageIndex}
+              onRemovePage={removePageId}
+              onRemoveAll={removeAllTabs}
+              onNewTab={() => {
+                newTab(true);
+                closeTabsModal();
+              }}
+              onJumpToPage={(index) => {
+                swiper.current?.scrollToIndex({ index, animated: true });
+                closeTabsModal();
+              }}
+            />
+          </ScrollView>
         </Modalize>
       </Portal>
     </View>

@@ -3,7 +3,6 @@ import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import Button from './Button';
-import { Camera } from 'expo-camera';
 import { StatusBar } from 'expo-status-bar';
 import i18n from '../i18n';
 import { openSettings } from 'expo-linking';
@@ -28,8 +27,7 @@ export default ({ onBarCodeScanned, style }: Props) => {
 
   useEffect(() => {
     (async () => {
-      let { status } = await Camera.requestCameraPermissionsAsync();
-      status = (await BarCodeScanner.requestPermissionsAsync()).status;
+      const { status } = await BarCodeScanner.requestPermissionsAsync();
       setHasPermission(status === 'granted');
     })();
   }, []);
