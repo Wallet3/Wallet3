@@ -14,6 +14,7 @@ import App from '../../viewmodels/App';
 import Avatar from '../../components/Avatar';
 import DeviceInfo from 'react-native-device-info';
 import GetPageMetadata from './scripts/Metadata';
+import GetIconsFunction from './scripts/GetIconsFunction';
 import HookWalletConnect from './scripts/InjectWalletConnectObserver';
 import { INetwork } from '../../common/Networks';
 import { InpageDAppController } from './controller/InpageDAppController';
@@ -69,9 +70,14 @@ export default observer((props: Web3ViewProps) => {
   const [hub] = useState(new InpageDAppController());
   const [appName] = useState(`Wallet3/${DeviceInfo.getVersion() || '0.0.0'}`);
   const [ua] = useState(
-    DeviceInfo.isTablet()
-      ? `Mozilla/5.0 (iPad; CPU OS 15_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/98.0.4758.85 Mobile/15E148 Safari/604.1 ${appName}`
-      : `Mozilla/5.0 (iPhone; CPU iPhone OS 15_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/98.0.4758.85 Mobile/15E148 Safari/604.1 ${appName}`
+    Platform.OS === 'ios'
+      ? DeviceInfo.isTablet()
+        ? `Mozilla/5.0 (iPad; CPU OS 15_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/98.0.4758.85 Mobile/15E148 Safari/604.1 ${appName}`
+        : `Mozilla/5.0 (iPhone; CPU iPhone OS 15_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/98.0.4758.85 Mobile/15E148 Safari/604.1 ${appName}`
+      : DeviceInfo.isTablet()
+      ? `Mozilla/5.0 (Linux; Android 11; tablet) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.210 Mobile Safari/537.36 ${appName}`
+      : `Mozilla/5.0 (Linux; Android 11; Pixel 4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.210 Mobile Safari/537.36 ${appName}`
+
   );
 
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
@@ -238,6 +244,7 @@ export default observer((props: Web3ViewProps) => {
         <WebView
           {...props}
           ref={webViewRef}
+          nestedScrollEnabled
           automaticallyAdjustContentInsets={false}
           contentInsetAdjustmentBehavior={'never'}
           contentInset={{ bottom: expanded ? 37 + (safeAreaBottom === 0 ? 8 : 0) : 0 }}
@@ -245,13 +252,17 @@ export default observer((props: Web3ViewProps) => {
           userAgent={ua}
           allowsFullscreenVideo={false}
           forceDarkOn={mode === 'dark'}
-          injectedJavaScript={`${GetPageMetadata}\ntrue;\n${HookWalletConnect}\ntrue;`}
+          injectedJavaScript={`${GetIconsFunction}\ntrue;${GetPageMetadata}\ntrue;\n${HookWalletConnect}\ntrue;`}
+          onLoadStart= {() => {
+            const webview = (webViewRef as any).current as WebView;
+            webview.injectJavaScript(`${MetamaskMobileProvider}\ntrue;`);
+          }}
           onMessage={onMessage}
           mediaPlaybackRequiresUserAction
           pullToRefreshEnabled
           allowsInlineMediaPlayback
           allowsBackForwardNavigationGestures
-          injectedJavaScriptBeforeContentLoaded={`${MetamaskMobileProvider}\ntrue;`}
+          // injectedJavaScriptBeforeContentLoaded={`${MetamaskMobileProvider}\ntrue;`}
           onContentProcessDidTerminate={() => ((webViewRef as any)?.current as WebView)?.reload()}
           style={{ backgroundColor }}
           decelerationRate={1}
