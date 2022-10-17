@@ -33,6 +33,7 @@ import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
+import modalStyles from '../../modals/styles';
 
 export interface PageMetadata {
   icon: string;
@@ -396,7 +397,7 @@ export default observer((props: Web3ViewProps) => {
           modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
+          <SafeAreaProvider style={{ ...modalStyles.safeArea, backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
             <ScrollView
               scrollEnabled={false}
               horizontal
