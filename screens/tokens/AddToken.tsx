@@ -30,7 +30,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
   }, [addr]);
 
   const itemStyle = { ...styles.item, borderBottomColor: borderColor };
-  const itemTextStyle = { ...styles.itemText, color: textColor };
+  const itemTextStyle = { ...styles.itemText, color: textColor, maxWidth: '50%' };
 
   return (
     <ScrollView style={{ flex: 1 }} scrollEnabled={false} contentContainerStyle={{ flex: 1 }}>
