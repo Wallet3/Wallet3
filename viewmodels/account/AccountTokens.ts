@@ -114,7 +114,10 @@ export class AccountTokens {
 
     if (this.tokens.every((t) => (t.balance as BigNumber)?.eq?.(0))) return;
 
-    const curDigest = this.tokens.reduce((prev, curr) => `${prev}_${curr.symbol}:${curr.balance?.toString()}`, '');
+    const curDigest = this.tokens
+      .filter((t) => (t.balance as BigNumber)?.gt(0))
+      .sort((t1, t2) => (t1.symbol > t2.symbol ? 1 : -1))
+      .reduce((prev, curr) => `${prev}_${curr.symbol}:${curr.balance?.toString()}`, '');
 
     if (this.preDigest !== curDigest) {
       clearBalanceCache(this.owner, this.nativeToken.chainId);
