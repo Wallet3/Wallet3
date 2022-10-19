@@ -2102,10 +2102,10 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@curvefi/api@^2.15.1":
-  version "2.15.1"
-  resolved "https://registry.yarnpkg.com/@curvefi/api/-/api-2.15.1.tgz#be783dd2d11701361c2ca64316c168c8c7f8367f"
-  integrity sha512-tM7htnYLDq5YDCrIpruM2eoqe/4SEHWfQlGxikgtziDScb7Tu470TDSU6xwuX3JT+2CFkWLdQrR5p6RT3ucmjw==
+"@curvefi/api@^2.16.0":
+  version "2.16.0"
+  resolved "https://registry.yarnpkg.com/@curvefi/api/-/api-2.16.0.tgz#5d541402b4edc698980067f965088a6e4e64e67b"
+  integrity sha512-rQIDPNc33k3B/MuqTibAYq1bLzuDbcFGuC97x9BYFSuWFPfOWQsK1phbwK8ZPbe5YRVsHZmH0q+6mSOg41Ghqw==
   dependencies:
     "@ethersproject/networks" "^5.5.0"
     axios "^0.21.1"
@@ -2345,10 +2345,10 @@
     bech32 "1.1.4"
     ws "7.4.6"
 
-"@ethersproject/providers@5.7.1":
-  version "5.7.1"
-  resolved "https://registry.yarnpkg.com/@ethersproject/providers/-/providers-5.7.1.tgz#b0799b616d5579cd1067a8ebf1fc1ec74c1e122c"
-  integrity sha512-vZveG/DLyo+wk4Ga1yx6jSEHrLPgmTt+dFv0dv8URpVCRf0jVhalps1jq/emN/oXnMRsC7cQgAF32DcXLL7BPQ==
+"@ethersproject/providers@5.7.2":
+  version "5.7.2"
+  resolved "https://registry.yarnpkg.com/@ethersproject/providers/-/providers-5.7.2.tgz#f8b1a4f275d7ce58cf0a2eec222269a08beb18cb"
+  integrity sha512-g34EWZ1WWAVgr4aptGlVBF8mhl3VWjv+8hoAnzStu8Ah22VHBsuGzP17eb6xDVRzw895G4W7vvx60lFFur/1Rg==
   dependencies:
     "@ethersproject/abstract-provider" "^5.7.0"
     "@ethersproject/abstract-signer" "^5.7.0"
@@ -3596,10 +3596,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.17.60.tgz#35f3d6213daed95da7f0f73e75bcc6980e90597b"
   integrity sha512-F0KIgDJfy2nA3zMLmWGKxcH2ZVEtCZXHHdOQs2gSaQ27+lNeEfGxzkIw90aXswATX7AZ33tahPbzy6KAfUreVw==
 
-"@types/node@^18.11.0":
-  version "18.11.0"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.0.tgz#f38c7139247a1d619f6cc6f27b072606af7c289d"
-  integrity sha512-IOXCvVRToe7e0ny7HpT/X9Rb2RYtElG1a+VshjwT00HxrM2dWBApHQoqsI6WiY7Q03vdf2bCrIGzVrkF/5t10w==
+"@types/node@^18.11.2":
+  version "18.11.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.2.tgz#c59b7641832531264fda3f1ba610362dc9a7dfc8"
+  integrity sha512-BWN3M23gLO2jVG8g/XHIRFWiiV4/GckeFIqbU/C4V3xpoBBWSMk4OZomouN0wCkfQFPqgZikyLr7DOYDysIkkw==
 
 "@types/node@^18.6.3":
   version "18.7.23"
@@ -3672,10 +3672,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-native@~0.70.5":
-  version "0.70.5"
-  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.70.5.tgz#f963d6921deb901dc2be8b96d9179a77b5406a23"
-  integrity sha512-Z+NdP5EB1qGSHPSOcsrXqxXrxlFyp/GBllajUIEQ0+XVSFd1l/B+nmHBvACiZvDwRVE/l2hL2pBWeOUPi2C1JA==
+"@types/react-native@~0.70.6":
+  version "0.70.6"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.70.6.tgz#0d1bc3014111f64f13e0df643aec2ab03f021fdb"
+  integrity sha512-ynQ2jj0km9d7dbnyKqVdQ6Nti7VQ8SLTA/KKkkS5+FnvGyvij2AOo1/xnkBR/jnSNXuzrvGVzw2n0VWfppmfKw==
   dependencies:
     "@types/react" "*"
 
@@ -6016,10 +6016,10 @@ ethers@^5.4.6:
     "@ethersproject/web" "5.7.0"
     "@ethersproject/wordlists" "5.7.0"
 
-ethers@^5.7.1:
-  version "5.7.1"
-  resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.7.1.tgz#48c83a44900b5f006eb2f65d3ba6277047fd4f33"
-  integrity sha512-5krze4dRLITX7FpU8J4WscXqADiKmyeNlylmmDLbS95DaZpBhDe2YSwRQwKXWNyXcox7a3gBgm/MkGXV1O1S/Q==
+ethers@^5.7.2:
+  version "5.7.2"
+  resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.7.2.tgz#3a7deeabbb8c030d4126b24f84e525466145872e"
+  integrity sha512-wswUsmWo1aOK8rR7DIKiWSw9DbLWe6x98Jrn8wcTflTVvaXhAMaB5zGAXy0GYQEQp9iO1iSHWVyARQm11zUtyg==
   dependencies:
     "@ethersproject/abi" "5.7.0"
     "@ethersproject/abstract-provider" "5.7.0"
@@ -6039,7 +6039,7 @@ ethers@^5.7.1:
     "@ethersproject/networks" "5.7.1"
     "@ethersproject/pbkdf2" "5.7.0"
     "@ethersproject/properties" "5.7.0"
-    "@ethersproject/providers" "5.7.1"
+    "@ethersproject/providers" "5.7.2"
     "@ethersproject/random" "5.7.0"
     "@ethersproject/rlp" "5.7.0"
     "@ethersproject/sha2" "5.7.0"
@@ -6126,6 +6126,13 @@ expand-brackets@^2.1.4:
     regex-not "^1.0.0"
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
+
+expo-apple-authentication@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/expo-apple-authentication/-/expo-apple-authentication-4.3.0.tgz#ea065276af10e40e2f44341f53a33970b7d0bb4c"
+  integrity sha512-7Z55u3dPX+MO5lFkaFMYFbJDEPloV13s5WzH3R/FqHBBggyDOeTDBIgroxYF4Ea8krehWq3U03lhqlIGcobKdQ==
+  dependencies:
+    "@expo/config-plugins" "~5.0.0"
 
 expo-application@~4.2.2:
   version "4.2.2"

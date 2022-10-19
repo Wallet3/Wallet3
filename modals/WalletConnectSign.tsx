@@ -106,7 +106,7 @@ export default observer(({ request, client, close }: Props) => {
           account={client.activeAccount!}
           metadata={{
             icon: client.appMeta?.icons?.[0] || '',
-            origin: client.origin,
+            origin: client.origin || client.appMeta?.url || '',
             title: client.appMeta?.name || client.appMeta?.url || '',
           }}
         />
