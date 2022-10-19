@@ -163,6 +163,8 @@ export async function eth_call_return(
         id: Date.now(),
       });
 
+      if (resp.error) continue;
+
       return resp;
     } catch (error) {
       console.log(error);
