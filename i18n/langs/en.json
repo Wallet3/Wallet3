@@ -261,6 +261,7 @@
   "msg-failed-to-import-wallet": "Failed to import this wallet",
   "msg-asset-can-not-added": "This asset can't be added to current network, please check the contract address and current network is correct.",
   "msg-no-hd-wallet": "No wallet can generate a new account",
+  "msg-wait-a-moment": "Please wait a moment",
   "misc-show-full-address": "Show full address",
   "button-next": "Next",
   "button-save": "Save",

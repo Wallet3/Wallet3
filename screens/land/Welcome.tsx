@@ -1,4 +1,11 @@
-import { Button, SafeViewContainer } from '../../components';
+import Animated, { FadeIn, FadeInDown, FadeOut, FadeOutUp } from 'react-native-reanimated';
+import {
+  AppleAuthenticationButton,
+  AppleAuthenticationButtonStyle,
+  AppleAuthenticationButtonType,
+} from 'expo-apple-authentication';
+import { Button, Loader, SafeViewContainer } from '../../components';
+import { Platform, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 import { Text, View } from 'react-native-animatable';
 import { secondaryFontColor, themeColor, thirdFontColor } from '../../constants/styles';
@@ -7,9 +14,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { LandScreenStack } from '../navigations';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
-import { TouchableOpacity } from 'react-native';
 import i18n from '../../i18n';
 import { openBrowserAsync } from 'expo-web-browser';
+import { startLayoutAnimation } from '../../utils/animations';
 
 export default ({ navigation }: NativeStackScreenProps<LandScreenStack, 'Welcome'>) => {
   const { t } = i18n;
@@ -30,8 +37,11 @@ export default ({ navigation }: NativeStackScreenProps<LandScreenStack, 'Welcome
         <View animation="fadeInUp" style={{ flexDirection: 'row', alignItems: 'center', paddingStart: 2 }}>
           <TouchableOpacity
             activeOpacity={0.5}
-            style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 12 }}
-            onPress={() => setRead(!read)}
+            style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 12, paddingBottom: 16 }}
+            onPress={() => {
+              startLayoutAnimation();
+              setRead(!read);
+            }}
           >
             <Ionicons name="checkbox" color={read ? themeColor : 'lightgrey'} />
             <Text style={{ color: thirdFontColor, marginStart: 8, marginEnd: 4 }}>{t('land-welcome-i-agree-to')}</Text>
@@ -57,13 +67,28 @@ export default ({ navigation }: NativeStackScreenProps<LandScreenStack, 'Welcome
         <View animation="fadeInUp" delay={500}>
           <Button
             title={t('land-welcome-create-wallet')}
-            onPress={() => navigation.navigate('CreateWallet')}
+            onPress={() => navigation.navigate('SignInWithWeb2')}
             txtStyle={{ textTransform: 'none' }}
             disabled={!read}
           />
         </View>
+
+        {read && Platform.OS === 'ios' ? (
+          <Animated.View entering={FadeInDown.springify()} exiting={FadeOut.delay(0)}>
+            <AppleAuthenticationButton
+              buttonStyle={AppleAuthenticationButtonStyle.BLACK}
+              buttonType={AppleAuthenticationButtonType.CONTINUE}
+              cornerRadius={7}
+              style={{ width: '100%', height: 42, marginTop: 12 }}
+              onPress={() => {}}
+            />
+          </Animated.View>
+        ) : undefined}
       </View>
+      
       <StatusBar style="dark" />
+
+      <Loader loading={false} message={t('msg-wait-a-moment')} />
     </SafeViewContainer>
   );
 };
