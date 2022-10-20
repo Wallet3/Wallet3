@@ -25,8 +25,7 @@ export default observer(({ metadata, siwe, account, rawMsg, themeColor }: Props)
   const swiper = useRef<Swiper>(null);
   const { backgroundColor, foregroundColor, borderColor, secondaryTextColor, thirdTextColor } = Theme;
   const { t } = i18n;
-
-  const consistent = metadata ? siwe.domain === metadata.origin : true;
+  const { isConsistent } = siwe;
 
   return (
     <Swiper
@@ -39,7 +38,7 @@ export default observer(({ metadata, siwe, account, rawMsg, themeColor }: Props)
     >
       <View style={{ width: '100%', height: '100%' }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          {consistent ? (
+          {isConsistent ? (
             <View />
           ) : (
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -67,7 +66,7 @@ export default observer(({ metadata, siwe, account, rawMsg, themeColor }: Props)
             imageBackgroundColor={backgroundColor}
           />
 
-          {consistent ? (
+          {isConsistent ? (
             <View style={{ alignItems: 'center' }}>
               <Text style={{ fontSize: 16, fontWeight: '500', color: foregroundColor, textAlign: 'center' }} numberOfLines={2}>
                 {t('modal-siwe-request-msg', { domain: siwe.domain })}
@@ -104,10 +103,10 @@ export default observer(({ metadata, siwe, account, rawMsg, themeColor }: Props)
             marginBottom: 12,
           }}
         >
-          <Text style={{ color: consistent ? secondaryTextColor : 'crimson', marginEnd: 3 }}>
+          <Text style={{ color: isConsistent ? secondaryTextColor : 'crimson', marginEnd: 3 }}>
             {t('modal-siwe-see-details')}
           </Text>
-          <Ionicons name="chevron-forward" size={10} color={consistent ? secondaryTextColor : 'crimson'} />
+          <Ionicons name="chevron-forward" size={10} color={isConsistent ? secondaryTextColor : 'crimson'} />
         </TouchableOpacity>
       </View>
 
@@ -119,8 +118,8 @@ export default observer(({ metadata, siwe, account, rawMsg, themeColor }: Props)
             justifyContent: 'flex-start',
           }}
         >
-          <FontAwesome5 name="ethereum" size={24} color={consistent ? themeColor : 'crimson'} />
-          <Text style={{ fontSize: 21, color: consistent ? themeColor : 'crimson', fontWeight: '500', marginStart: 8 }}>
+          <FontAwesome5 name="ethereum" size={24} color={isConsistent ? themeColor : 'crimson'} />
+          <Text style={{ fontSize: 21, color: isConsistent ? themeColor : 'crimson', fontWeight: '500', marginStart: 8 }}>
             {t('modal-siwe-title')}
           </Text>
         </View>
