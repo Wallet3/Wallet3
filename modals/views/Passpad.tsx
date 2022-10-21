@@ -4,16 +4,18 @@ import * as Haptics from 'expo-haptics';
 import { Button, SafeViewContainer } from '../../components';
 import Numpad, { DefaultNumpadHandler } from '../../components/Numpad';
 import React, { useEffect, useRef, useState } from 'react';
-import { SafeAreaView, StyleProp, View, ViewStyle } from 'react-native';
+import { StyleProp, Text, View, ViewStyle } from 'react-native';
 import { renderEmptyCircle, renderFilledCircle } from '../../components/PasscodeCircle';
 
 import { BioType } from '../../viewmodels/Authentication';
+import { Ionicons } from '@expo/vector-icons';
 import { ReactiveScreen } from '../../utils/device';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
+import { warningColor } from '../../constants/styles';
 
 interface Props {
   themeColor?: string;
@@ -88,11 +90,12 @@ interface FullPasspadProps {
   height?: number;
   borderRadius?: number;
   bioType?: BioType;
+  appAvailable: boolean;
 }
 
 export const FullPasspad = observer(
-  ({ themeColor, height, onCodeEntered, bioType, onBioAuth, borderRadius }: FullPasspadProps) => {
-    const { backgroundColor } = Theme;
+  ({ themeColor, height, onCodeEntered, bioType, onBioAuth, borderRadius, appAvailable }: FullPasspadProps) => {
+    const { backgroundColor, textColor } = Theme;
     const { height: fullScreenHeight, width } = ReactiveScreen;
 
     return (
@@ -106,14 +109,24 @@ export const FullPasspad = observer(
           borderTopRightRadius: borderRadius,
         }}
       >
-        <Passpad
-          themeColor={themeColor}
-          disableCancel
-          onCodeEntered={onCodeEntered}
-          style={{ marginBottom: 4, width, height: height || fullScreenHeight }}
-          onBioAuth={onBioAuth}
-          bioType={bioType}
-        />
+        {appAvailable && false ? (
+          <Passpad
+            themeColor={themeColor}
+            disableCancel
+            onCodeEntered={onCodeEntered}
+            style={{ marginBottom: 4, width, height: height || fullScreenHeight }}
+            onBioAuth={onBioAuth}
+            bioType={bioType}
+          />
+        ) : (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Ionicons name="lock-closed" size={57} color={warningColor} />
+            <Text style={{ fontSize: 17, fontWeight: '500', marginVertical: 16, color: warningColor }}>
+              Wallet 3 is locked
+            </Text>
+            <Text style={{ fontSize: 10, marginTop: 48, color: textColor, opacity: 0.5 }}>Remaining 5 hours to unlock</Text>
+          </View>
+        )}
       </SafeAreaProvider>
     );
   }

@@ -13,25 +13,29 @@ import { secondaryFontColor, themeColor, thirdFontColor } from '../../constants/
 import { Ionicons } from '@expo/vector-icons';
 import { LandScreenStack } from '../navigations';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import SignInWithApple from '../../viewmodels/authentication/SignInWithApple';
 import { StatusBar } from 'expo-status-bar';
 import i18n from '../../i18n';
+import { observer } from 'mobx-react-lite';
 import { openBrowserAsync } from 'expo-web-browser';
 import { startLayoutAnimation } from '../../utils/animations';
 
-export default ({ navigation }: NativeStackScreenProps<LandScreenStack, 'Welcome'>) => {
+export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack, 'Welcome'>) => {
   const { t } = i18n;
   const [read, setRead] = useState(false);
 
   return (
     <SafeViewContainer style={{ flex: 1, backgroundColor: '#fff', alignItems: 'center' }}>
-      <View style={{ flex: 1 }} />
-      <Text animation="fadeInUp" style={{ fontFamily: 'Questrial', fontWeight: '600', fontSize: 42, color: '#6186ff' }}>
-        Wallet 3
-      </Text>
-      <Text animation="fadeInUp" delay={500} style={{ color: secondaryFontColor, fontSize: 12, fontWeight: '500' }}>
-        A Secure Wallet for Web3
-      </Text>
-      <View style={{ flex: 1 }} />
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text animation="fadeInUp" style={{ fontFamily: 'Questrial', fontWeight: '600', fontSize: 42, color: '#6186ff' }}>
+          Wallet 3
+        </Text>
+        <Text animation="fadeInUp" delay={500} style={{ color: secondaryFontColor, fontSize: 12, fontWeight: '500' }}>
+          A Secure Wallet for Web3
+        </Text>
+      </View>
+
+      {/* <View style={{ flex: 1 }} /> */}
 
       <View style={{ width: '100%' }}>
         <View animation="fadeInUp" style={{ flexDirection: 'row', alignItems: 'center', paddingStart: 2 }}>
@@ -67,28 +71,28 @@ export default ({ navigation }: NativeStackScreenProps<LandScreenStack, 'Welcome
         <View animation="fadeInUp" delay={500}>
           <Button
             title={t('land-welcome-create-wallet')}
-            onPress={() => navigation.navigate('SignInWithWeb2')}
+            onPress={() => navigation.navigate('CreateWallet')}
             txtStyle={{ textTransform: 'none' }}
             disabled={!read}
           />
         </View>
 
-        {read && Platform.OS === 'ios' ? (
-          <Animated.View entering={FadeInDown.springify()} exiting={FadeOut.delay(0)}>
+        {read && Platform.OS === 'ios' && SignInWithApple.isAvailable ? (
+          <Animated.View entering={FadeInDown.springify()} exiting={FadeOut.delay(0)} style={{ marginTop: 12 }}>
             <AppleAuthenticationButton
               buttonStyle={AppleAuthenticationButtonStyle.BLACK}
               buttonType={AppleAuthenticationButtonType.CONTINUE}
               cornerRadius={7}
-              style={{ width: '100%', height: 42, marginTop: 12 }}
+              style={{ width: '100%', height: 42 }}
               onPress={() => {}}
             />
           </Animated.View>
         ) : undefined}
       </View>
-      
+
       <StatusBar style="dark" />
 
       <Loader loading={false} message={t('msg-wait-a-moment')} />
     </SafeViewContainer>
   );
-};
+});

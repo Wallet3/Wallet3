@@ -573,6 +573,7 @@ export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Aut
         themeColor={Theme.isLightMode ? Theme.foregroundColor : `${Theme.foregroundColor}80`}
         bioType={appAuth.biometricType}
         onBioAuth={bioAuth}
+        appAvailable={appAuth.appAvailable}
         onCodeEntered={async (code) => {
           const success = await appAuth.authorize(code);
           if (success) closeLockScreen();
