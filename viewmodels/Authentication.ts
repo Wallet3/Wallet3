@@ -24,7 +24,7 @@ const keys = {
   userSecretsVerified: 'userSecretsVerified',
   masterKey: 'masterKey',
   pin: 'pin',
-  lockAppTo: 'lockAppTo',
+  appUnlockTime: 'appUnlockTime',
 };
 
 export type BioType = 'faceid' | 'fingerprint' | 'iris';
@@ -40,10 +40,10 @@ export class Authentication extends EventEmitter {
   userSecretsVerified = false;
 
   failedAttempts = 0;
-  lockAppTo = 0;
+  appUnlockTime = 0;
 
   get appAvailable() {
-    return Date.now() > this.lockAppTo;
+    return Date.now() > this.appUnlockTime;
   }
 
   get biometricType(): BioType | undefined {
@@ -71,7 +71,7 @@ export class Authentication extends EventEmitter {
       appAuthorized: observable,
       userSecretsVerified: observable,
       failedAttempts: observable,
-      lockAppTo: observable,
+      appUnlockTime: observable,
       appAvailable: computed,
       setBiometrics: action,
       reset: action,
@@ -102,7 +102,7 @@ export class Authentication extends EventEmitter {
         AsyncStorage.getItem(keys.enableBiometrics),
         SecureStore.getItemAsync(keys.masterKey),
         AsyncStorage.getItem(keys.userSecretsVerified),
-        AsyncStorage.getItem(keys.lockAppTo),
+        AsyncStorage.getItem(keys.appUnlockTime),
       ]);
 
     if (!masterKey) {
@@ -114,7 +114,7 @@ export class Authentication extends EventEmitter {
       this.supportedTypes = supportedTypes;
       this.biometricEnabled = enableBiometrics === 'true';
       this.userSecretsVerified = userSecretsVerified === 'true';
-      this.lockAppTo = Number(lockAppDuration) || 0;
+      this.appUnlockTime = Number(lockAppDuration) || 0;
     });
   }
 
@@ -144,7 +144,18 @@ export class Authentication extends EventEmitter {
   }
 
   async verifyPin(pin: string) {
-    return (await sha256(`${pin}_${pinEncryptKey}`)) === (await SecureStore.getItemAsync(keys.pin));
+    const success = (await sha256(`${pin}_${pinEncryptKey}`)) === (await SecureStore.getItemAsync(keys.pin));
+
+    runInAction(() => {
+      this.failedAttempts = success ? 0 : this.failedAttempts + 1;
+      if (this.failedAttempts <= (__DEV__ ? 3 : 10)) return;
+
+      this.failedAttempts = 0;
+      this.appUnlockTime = Date.now() + (__DEV__ ? toMilliseconds({ seconds: 120 }) : toMilliseconds({ hours: 3 }));
+      AsyncStorage.setItem(keys.appUnlockTime, this.appUnlockTime.toString());
+    });
+
+    return success;
   }
 
   async authorize(pin?: string) {
@@ -158,14 +169,6 @@ export class Authentication extends EventEmitter {
         if (!this.userSecretsVerified) PubSub.publish(MessageKeys.userSecretsNotVerified);
       }
     }
-
-    runInAction(() => {
-      this.failedAttempts = success ? 0 : this.failedAttempts + 1;
-      if (this.failedAttempts < 10) return;
-
-      this.lockAppTo = Date.now() + toMilliseconds({ hours: 10 });
-      AsyncStorage.setItem(keys.lockAppTo, this.lockAppTo.toString());
-    });
 
     return success;
   }

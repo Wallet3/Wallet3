@@ -13,7 +13,9 @@ import { ReactiveScreen } from '../../utils/device';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
+import numeral from 'numeral';
 import { observer } from 'mobx-react-lite';
+import { parseMilliseconds } from '../../utils/time';
 import styles from '../styles';
 import { warningColor } from '../../constants/styles';
 
@@ -91,12 +93,40 @@ interface FullPasspadProps {
   borderRadius?: number;
   bioType?: BioType;
   appAvailable: boolean;
+  unlockTimestamp?: number;
 }
 
 export const FullPasspad = observer(
-  ({ themeColor, height, onCodeEntered, bioType, onBioAuth, borderRadius, appAvailable }: FullPasspadProps) => {
+  ({
+    themeColor,
+    height,
+    onCodeEntered,
+    bioType,
+    onBioAuth,
+    borderRadius,
+    appAvailable,
+    unlockTimestamp,
+  }: FullPasspadProps) => {
     const { backgroundColor, textColor } = Theme;
     const { height: fullScreenHeight, width } = ReactiveScreen;
+    const { days, hours, minutes, seconds } = parseMilliseconds(Math.max(0, (unlockTimestamp || 0) - Date.now()));
+
+    const [_, forceUpdate] = useState<any>();
+
+    useEffect(() => {
+      let timer: NodeJS.Timer;
+
+      const refresh = () => {
+        forceUpdate(Date.now());
+        timer = setTimeout(() => refresh(), 10 * 1000);
+      };
+
+      refresh();
+
+      return () => {
+        clearInterval(timer);
+      };
+    }, []);
 
     return (
       <SafeAreaProvider
@@ -109,7 +139,7 @@ export const FullPasspad = observer(
           borderTopRightRadius: borderRadius,
         }}
       >
-        {appAvailable && false ? (
+        {appAvailable || (days === 0 && hours === 0 && minutes === 0 && seconds === 0) ? (
           <Passpad
             themeColor={themeColor}
             disableCancel
@@ -121,10 +151,10 @@ export const FullPasspad = observer(
         ) : (
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <Ionicons name="lock-closed" size={57} color={warningColor} />
-            <Text style={{ fontSize: 17, fontWeight: '500', marginVertical: 16, color: warningColor }}>
-              Wallet 3 is locked
+            <Text style={{ fontSize: 19, fontWeight: '600', marginVertical: 16, color: warningColor }}>Wallet is locked</Text>
+            <Text style={{ fontSize: 10, marginTop: 48, color: textColor, opacity: 0.5 }}>
+              Remaining {numeral(hours).format('00,')}:{numeral(minutes || 1).format('00,')} to unlock
             </Text>
-            <Text style={{ fontSize: 10, marginTop: 48, color: textColor, opacity: 0.5 }}>Remaining 5 hours to unlock</Text>
           </View>
         )}
       </SafeAreaProvider>

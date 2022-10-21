@@ -160,7 +160,9 @@ export class AppVM {
   }
 
   async refreshAccount() {
+    if (!Authentication.appAvailable) return;
     if (Date.now() - this.lastRefreshedTime < 1000 * 5) return;
+
     this.lastRefreshedTime = Date.now();
 
     clearTimeout(this.refreshTimer);

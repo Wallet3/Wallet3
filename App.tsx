@@ -147,9 +147,10 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
 
       {Modals({ app, appAuth })}
 
-      <LockScreen app={app} appAuth={appAuth} />
       <FlashMessage position="top" />
       <StatusBar style={statusBarStyle} />
+      
+      <LockScreen app={app} appAuth={appAuth} />
     </NavigationContainer>
   );
 });

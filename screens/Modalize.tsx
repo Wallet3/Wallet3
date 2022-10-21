@@ -544,10 +544,14 @@ export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Aut
 
   useEffect(() => {
     const dispose = autorun(() => {
-      if (!app.hasWallet || appAuth.appAuthorized) return;
+      if (!app.hasWallet || (appAuth.appAuthorized && appAuth.appAvailable)) return;
 
       openLockScreen();
-      bioAuth();
+
+      if (appAuth.appAvailable) {
+        bioAuth();
+      }
+
       Keyboard.dismiss();
     });
 
@@ -574,6 +578,7 @@ export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Aut
         bioType={appAuth.biometricType}
         onBioAuth={bioAuth}
         appAvailable={appAuth.appAvailable}
+        unlockTimestamp={appAuth.appUnlockTime}
         onCodeEntered={async (code) => {
           const success = await appAuth.authorize(code);
           if (success) closeLockScreen();
