@@ -94,27 +94,21 @@ export class Authentication extends EventEmitter {
   }
 
   async init() {
-    const [supported, enrolled, supportedTypes, enableBiometrics, masterKey, userSecretsVerified, lockAppDuration] =
-      await Promise.all([
-        hasHardwareAsync(),
-        isEnrolledAsync(),
-        supportedAuthenticationTypesAsync(),
-        AsyncStorage.getItem(keys.enableBiometrics),
-        SecureStore.getItemAsync(keys.masterKey),
-        AsyncStorage.getItem(keys.userSecretsVerified),
-        AsyncStorage.getItem(keys.appUnlockTime),
-      ]);
-
-    if (!masterKey) {
-      SecureStore.setItemAsync(keys.masterKey, Buffer.from(Random.getRandomBytes(16)).toString('hex'));
-    }
+    const [supported, enrolled, supportedTypes, enableBiometrics, userSecretsVerified, appUnlockTime] = await Promise.all([
+      hasHardwareAsync(),
+      isEnrolledAsync(),
+      supportedAuthenticationTypesAsync(),
+      AsyncStorage.getItem(keys.enableBiometrics),
+      AsyncStorage.getItem(keys.userSecretsVerified),
+      AsyncStorage.getItem(keys.appUnlockTime),
+    ]);
 
     runInAction(() => {
       this.biometricSupported = supported && enrolled;
       this.supportedTypes = supportedTypes;
       this.biometricEnabled = enableBiometrics === 'true';
       this.userSecretsVerified = userSecretsVerified === 'true';
-      this.appUnlockTime = Number(lockAppDuration) || 0;
+      this.appUnlockTime = Number(appUnlockTime) || 0;
     });
   }
 
@@ -127,7 +121,14 @@ export class Authentication extends EventEmitter {
   }
 
   private async getMasterKey() {
-    return `${await SecureStore.getItemAsync(keys.masterKey)}_${appEncryptKey}`;
+    let masterKey = await SecureStore.getItemAsync(keys.masterKey);
+
+    if (!masterKey) {
+      masterKey = Buffer.from(Random.getRandomBytes(16)).toString('hex');
+      await SecureStore.setItemAsync(keys.masterKey, masterKey);
+    }
+
+    return `${masterKey}_${appEncryptKey}`;
   }
 
   async setBiometrics(enabled: boolean) {
@@ -191,7 +192,7 @@ export class Authentication extends EventEmitter {
     this.appAuthorized = false;
     this.userSecretsVerified = false;
     this.biometricEnabled = false;
-    return SecureStore.setItemAsync(keys.masterKey, Buffer.from(Random.getRandomBytes(16)).toString('hex'));
+    return SecureStore.deleteItemAsync(keys.masterKey);
   }
 }
 

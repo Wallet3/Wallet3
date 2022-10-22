@@ -8,7 +8,7 @@ import { StyleProp, Text, View, ViewStyle } from 'react-native';
 import { renderEmptyCircle, renderFilledCircle } from '../../components/PasscodeCircle';
 
 import { BioType } from '../../viewmodels/Authentication';
-import { Ionicons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import { ReactiveScreen } from '../../utils/device';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Theme from '../../viewmodels/settings/Theme';
@@ -96,68 +96,63 @@ interface FullPasspadProps {
   unlockTimestamp?: number;
 }
 
-export const FullPasspad = observer(
-  ({
-    themeColor,
-    height,
-    onCodeEntered,
-    bioType,
-    onBioAuth,
-    borderRadius,
-    appAvailable,
-    unlockTimestamp,
-  }: FullPasspadProps) => {
-    const { backgroundColor, textColor } = Theme;
-    const { height: fullScreenHeight, width } = ReactiveScreen;
-    const { days, hours, minutes, seconds } = parseMilliseconds(Math.max(0, (unlockTimestamp || 0) - Date.now()));
+export const FullPasspad = observer((props: FullPasspadProps) => {
+  const { themeColor, height, onCodeEntered, bioType, onBioAuth, borderRadius, appAvailable, unlockTimestamp } = props;
+  const { t } = i18n;
+  const { backgroundColor, textColor } = Theme;
+  const { height: fullScreenHeight, width } = ReactiveScreen;
+  const { days, hours, minutes, seconds } = parseMilliseconds(Math.max(0, (unlockTimestamp || 0) - Date.now()));
 
-    const [_, forceUpdate] = useState<any>();
+  const [_, forceUpdate] = useState<any>();
 
-    useEffect(() => {
-      let timer: NodeJS.Timer;
+  useEffect(() => {
+    let timer: NodeJS.Timer;
 
-      const refresh = () => {
-        forceUpdate(Date.now());
-        timer = setTimeout(() => refresh(), 10 * 1000);
-      };
+    const refresh = () => {
+      forceUpdate(Date.now());
+      timer = setTimeout(() => refresh(), 10 * 1000);
+    };
 
-      refresh();
+    refresh();
 
-      return () => {
-        clearInterval(timer);
-      };
-    }, []);
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
 
-    return (
-      <SafeAreaProvider
-        style={{
-          flex: 1,
-          height: height || fullScreenHeight,
-          width,
-          backgroundColor,
-          borderTopLeftRadius: borderRadius,
-          borderTopRightRadius: borderRadius,
-        }}
-      >
-        {appAvailable || (days === 0 && hours === 0 && minutes === 0 && seconds === 0) ? (
-          <Passpad
-            themeColor={themeColor}
-            disableCancel
-            onCodeEntered={onCodeEntered}
-            style={{ marginBottom: 4, width, height: height || fullScreenHeight }}
-            onBioAuth={onBioAuth}
-            bioType={bioType}
-          />
-        ) : (
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Ionicons name="lock-closed" size={57} color={warningColor} />
-            <Text style={{ fontSize: 19, fontWeight: '600', marginVertical: 16, color: warningColor }}>Wallet is locked</Text>
-            <Text style={{ fontSize: 10, marginTop: 48, color: textColor, opacity: 0.5 }}>
-              Remaining {numeral(hours).format('00,')}:{numeral(minutes || 1).format('00,')} to unlock
-            </Text>
-          </View>
-        )}
-      </SafeAreaProvider>
-    );
-  }
-);
+  return (
+    <SafeAreaProvider
+      style={{
+        flex: 1,
+        height: height || fullScreenHeight,
+        width,
+        backgroundColor,
+        borderTopLeftRadius: borderRadius,
+        borderTopRightRadius: borderRadius,
+      }}
+    >
+      {appAvailable || (days === 0 && hours === 0 && minutes === 0 && seconds === 0) ? (
+        <Passpad
+          themeColor={themeColor}
+          disableCancel
+          onCodeEntered={onCodeEntered}
+          style={{ marginBottom: 4, width, height: height || fullScreenHeight }}
+          onBioAuth={onBioAuth}
+          bioType={bioType}
+        />
+      ) : (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <MaterialIcons name="lock" color={warningColor} size={64} />
+          <Text style={{ fontSize: 19, fontWeight: '500', marginVertical: 20, color: warningColor }}>
+            {t('lock-screen-wallet-is-locked')}
+          </Text>
+          <Text style={{ fontSize: 10, marginTop: 36, color: textColor, opacity: 0.5 }}>
+            {t('lock-screen-remaining-time', {
+              time: `${numeral(hours).format('00,')}:${numeral(minutes || 1).format('00,')}`,
+            })}
+          </Text>
+        </View>
+      )}
+    </SafeAreaProvider>
+  );
+});

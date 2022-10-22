@@ -83,6 +83,8 @@
   "qrscan-tip-desktop-backup-qrcode": "Wallet 3 桌面版同步碼",
   "qrscan-tip-eth-address": "ENS, ETH 地址",
   "qrscan-tip-above-types": "請掃描上述任一類型的二維碼",
+  "lock-screen-wallet-is-locked": "錢包已經鎖定",
+  "lock-screen-remaining-time": "剩余 {{time}} 解鎖",
   "contacts-no-more-info": "沒有更多信息",
   "contacts-detail-name": "姓名",
   "contacts-detail-telephone": "電話號碼",

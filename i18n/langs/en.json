@@ -83,6 +83,8 @@
   "qrscan-tip-desktop-backup-qrcode": "Wallet 3 Desktop Backup QRCode",
   "qrscan-tip-eth-address": "ENS, ETH Address",
   "qrscan-tip-above-types": "Please scan for one of the above types of QRCode.",
+  "lock-screen-wallet-is-locked": "Wallet is locked",
+  "lock-screen-remaining-time": "Remaining {{time}} to unlock",
   "contacts-no-more-info": "No more info",
   "contacts-detail-name": "Name",
   "contacts-detail-telephone": "Telephone",
