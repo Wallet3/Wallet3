@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import { Account } from '../../viewmodels/account/Account';
-import { BioType } from '../../viewmodels/Authentication';
+import { BioType } from '../../viewmodels/auth/Authentication';
 import { PageMetadata } from '../../screens/browser/Web3View';
 import { Passpad } from '../views';
 import SignPlainText from '../dapp/SignPlainText';

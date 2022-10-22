@@ -2,7 +2,7 @@ import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context
 import { NativeSyntheticEvent, Text, TouchableOpacity, View } from 'react-native';
 
 import { Account } from '../../viewmodels/account/Account';
-import App from '../../viewmodels/App';
+import App from '../../viewmodels/core/App';
 import Avatar from '../../components/Avatar';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';

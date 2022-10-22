@@ -1,6 +1,6 @@
 import * as Linking from 'expo-linking';
 
-import Authentication from '../Authentication';
+import Authentication from '../auth/Authentication';
 import MessageKeys from '../../common/MessageKeys';
 import i18n from '../../i18n';
 import { isURL } from '../../utils/url';

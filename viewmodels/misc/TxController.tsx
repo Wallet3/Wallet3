@@ -1,9 +1,9 @@
 import { BigNumber, BigNumberish, providers, utils } from 'ethers';
 
-import App from '../App';
+import App from '../core/App';
 import { InpageDAppTxRequest } from '../../screens/browser/controller/InpageDAppController';
 import MessageKeys from '../../common/MessageKeys';
-import Networks from '../Networks';
+import Networks from '../core/Networks';
 import { SpeedupAbleSendParams } from '../transferring/RawTransactionRequest';
 import Transaction from '../../models/Transaction';
 import i18n from '../../i18n';

@@ -2,14 +2,14 @@ import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
 
-import App from '../../viewmodels/App';
+import App from '../../viewmodels/core/App';
 import { BlurView } from 'expo-blur';
 import { INetwork } from '../../common/Networks';
 import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
 import { Ionicons } from '@expo/vector-icons';
 import MultiSourceImage from '../../components/MultiSourceImage';
 import { NFTMetadata } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
-import Networks from '../../viewmodels/Networks';
+import Networks from '../../viewmodels/core/Networks';
 import { Nft } from '../../common/apis/Rarible.types';
 import { ReactiveScreen } from '../../utils/device';
 import { SharedElement } from 'react-navigation-shared-element';

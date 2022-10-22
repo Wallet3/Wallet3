@@ -1,15 +1,15 @@
 import * as Random from 'expo-random';
 import * as ethers from 'ethers';
 
-import { decrypt, encrypt, sha256 } from '../utils/cipher';
+import { decrypt, encrypt, sha256 } from '../../utils/cipher';
 
 import Authentication from './Authentication';
-import { DEFAULT_DERIVATION_PATH } from '../common/Constants';
-import Key from '../models/Key';
-import { langToWordlist } from '../utils/mnemonic';
+import { DEFAULT_DERIVATION_PATH } from '../../common/Constants';
+import Key from '../../models/Key';
+import { langToWordlist } from '../../utils/mnemonic';
 import { makeAutoObservable } from 'mobx';
 import { setStringAsync } from 'expo-clipboard';
-import { xpubkeyFromHDNode } from '../utils/bip32';
+import { xpubkeyFromHDNode } from '../../utils/bip32';
 
 export class MnemonicOnce {
   secret = '';

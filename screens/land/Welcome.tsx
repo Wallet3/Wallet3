@@ -13,7 +13,7 @@ import { secondaryFontColor, themeColor, thirdFontColor } from '../../constants/
 import { Ionicons } from '@expo/vector-icons';
 import { LandScreenStack } from '../navigations';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import SignInWithApple from '../../viewmodels/authentication/SignInWithApple';
+import SignInWithApple from '../../viewmodels/auth/SignInWithApple';
 import { StatusBar } from 'expo-status-bar';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';

@@ -1,7 +1,7 @@
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import { CoinDetails } from './Coingecko.d';
-import Networks from '../../viewmodels/Networks';
+import Networks from '../../viewmodels/core/Networks';
 
 interface Price {
   usd: number;

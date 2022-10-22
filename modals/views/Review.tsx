@@ -5,13 +5,13 @@ import { Text, TouchableOpacity, View } from 'react-native';
 
 import AnimatedNumber from '../../components/AnimatedNumber';
 import BackButton from '../components/BackButton';
-import { BioType } from '../../viewmodels/Authentication';
+import { BioType } from '../../viewmodels/auth/Authentication';
 import Currency from '../../viewmodels/settings/Currency';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';
 import GasReview from './GasReview';
 import Image from 'react-native-fast-image';
 import InsufficientFee from '../components/InsufficientFee';
-import Networks from '../../viewmodels/Networks';
+import Networks from '../../viewmodels/core/Networks';
 import { ReactiveScreen } from '../../utils/device';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';

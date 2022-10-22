@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 
 import { Account } from '../../viewmodels/account/Account';
-import App from '../../viewmodels/App';
+import App from '../../viewmodels/core/App';
 import { Confirm } from '../views/Confirm';
 import EditAccount from './EditAccount';
 import ImportWallet from './ImportWallet';

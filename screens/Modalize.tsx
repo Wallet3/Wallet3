@@ -19,8 +19,8 @@ import {
 import { ERC681, ERC681Transferring } from '../viewmodels/transferring/ERC681Transferring';
 import React, { useEffect, useState } from 'react';
 
-import { AppVM } from '../viewmodels/App';
-import { Authentication } from '../viewmodels/Authentication';
+import { AppVM } from '../viewmodels/core/App';
+import { Authentication } from '../viewmodels/auth/Authentication';
 import BackupSecretTip from '../modals/BackupSecretTip';
 import { FullPasspad } from '../modals/views/Passpad';
 import InappBrowser from '../modals/InappBrowser';
@@ -33,7 +33,7 @@ import { Keyboard } from 'react-native';
 import Loading from '../modals/views/Loading';
 import MessageKeys from '../common/MessageKeys';
 import { Modalize } from 'react-native-modalize';
-import Networks from '../viewmodels/Networks';
+import Networks from '../viewmodels/core/Networks';
 import { ReactiveScreen } from '../utils/device';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Theme from '../viewmodels/settings/Theme';

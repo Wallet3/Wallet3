@@ -7,7 +7,7 @@ import { action, makeObservable, observable, runInAction } from 'mobx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ERC20Token } from '../../models/ERC20';
 import { NativeToken } from '../../models/NativeToken';
-import Networks from '../Networks';
+import Networks from '../core/Networks';
 import { clearBalanceCache } from '../../common/apis/Debank';
 
 const Keys = {

@@ -3,7 +3,7 @@ import { Button, SafeViewContainer } from '../../components';
 import React, { useEffect, useState } from 'react';
 
 import { INetwork } from '../../common/Networks';
-import Networks from '../../viewmodels/Networks';
+import Networks from '../../viewmodels/core/Networks';
 import Theme from '../../viewmodels/settings/Theme';
 import TxException from '../components/TxException';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';

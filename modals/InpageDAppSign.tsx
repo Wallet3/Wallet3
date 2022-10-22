@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
-import Authentication from '../viewmodels/Authentication';
+import Authentication from '../viewmodels/auth/Authentication';
 import { InpageDAppSignRequest } from '../screens/browser/controller/InpageDAppController';
-import Networks from '../viewmodels/Networks';
+import Networks from '../viewmodels/core/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Sign from './compositions/Sign';
 import Success from './views/Success';

@@ -10,14 +10,14 @@ import {
   supportedAuthenticationTypesAsync,
 } from 'expo-local-authentication';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
-import { appEncryptKey, pinEncryptKey } from '../configs/secret';
-import { decrypt, encrypt, sha256 } from '../utils/cipher';
+import { appEncryptKey, pinEncryptKey } from '../../configs/secret';
+import { decrypt, encrypt, sha256 } from '../../utils/cipher';
 
 import { AppState } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import EventEmitter from 'events';
-import MessageKeys from '../common/MessageKeys';
-import { toMilliseconds } from '../utils/time';
+import MessageKeys from '../../common/MessageKeys';
+import { toMilliseconds } from '../../utils/time';
 
 const keys = {
   enableBiometrics: 'enableBiometrics',

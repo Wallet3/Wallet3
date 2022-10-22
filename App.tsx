@@ -2,8 +2,8 @@
 
 import * as SplashScreen from 'expo-splash-screen';
 
-import AppViewModel, { AppVM } from './viewmodels/App';
-import AuthViewModel, { Authentication } from './viewmodels/Authentication';
+import AppViewModel, { AppVM } from './viewmodels/core/App';
+import AuthViewModel, { Authentication } from './viewmodels/auth/Authentication';
 import Modals, { LockScreen } from './screens/Modalize';
 import { TouchableOpacity, UIManager } from 'react-native';
 

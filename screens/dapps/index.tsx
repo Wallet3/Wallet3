@@ -7,7 +7,7 @@ import { borderColor, secondaryFontColor } from '../../constants/styles';
 
 import { Account } from '../../viewmodels/account/Account';
 import AccountSelector from '../../modals/dapp/AccountSelector';
-import App from '../../viewmodels/App';
+import App from '../../viewmodels/core/App';
 import DAppInfo from './DAppInfo';
 import { DrawerActions } from '@react-navigation/native';
 import { DrawerScreenProps } from '@react-navigation/drawer';
@@ -16,7 +16,7 @@ import { MetamaskDApp } from '../../viewmodels/walletconnect/MetamaskDApp';
 import MetamaskDAppsHub from '../../viewmodels/walletconnect/MetamaskDAppsHub';
 import { Modalize } from 'react-native-modalize';
 import NetworkSelector from '../../modals/dapp/NetworkSelector';
-import Networks from '../../viewmodels/Networks';
+import Networks from '../../viewmodels/core/Networks';
 import { NullableImage } from '../../components';
 import { Portal } from 'react-native-portalize';
 import Swiper from 'react-native-swiper';

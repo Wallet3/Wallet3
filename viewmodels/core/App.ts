@@ -1,26 +1,26 @@
 import { action, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
 import { providers, utils } from 'ethers';
 
-import { Account } from './account/Account';
+import { Account } from '../account/Account';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Authentication from './Authentication';
-import Bookmarks from './customs/Bookmarks';
-import Contacts from './customs/Contacts';
-import Database from '../models/Database';
-import GasPrice from './misc/GasPrice';
-import Key from '../models/Key';
+import Authentication from '../auth/Authentication';
+import Bookmarks from '../customs/Bookmarks';
+import Contacts from '../customs/Contacts';
+import Database from '../../models/Database';
+import GasPrice from '../misc/GasPrice';
+import Key from '../../models/Key';
 import LINQ from 'linq';
-import LinkHub from './hubs/LinkHub';
-import MessageKeys from '../common/MessageKeys';
-import MetamaskDAppsHub from './walletconnect/MetamaskDAppsHub';
+import LinkHub from '../hubs/LinkHub';
+import MessageKeys from '../../common/MessageKeys';
+import MetamaskDAppsHub from '../walletconnect/MetamaskDAppsHub';
 import Networks from './Networks';
-import Theme from './settings/Theme';
-import TxHub from './hubs/TxHub';
-import UI from './settings/UI';
+import Theme from '../settings/Theme';
+import TxHub from '../hubs/TxHub';
+import UI from '../settings/UI';
 import { Wallet } from './Wallet';
-import WalletConnectV1ClientHub from './walletconnect/WalletConnectV1ClientHub';
-import { fetchChainsOverview } from '../common/apis/Debank';
-import i18n from '../i18n';
+import WalletConnectV1ClientHub from '../walletconnect/WalletConnectV1ClientHub';
+import { fetchChainsOverview } from '../../common/apis/Debank';
+import i18n from '../../i18n';
 import { showMessage } from 'react-native-flash-message';
 
 export class AppVM {

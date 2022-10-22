@@ -20,7 +20,7 @@ import { Ionicons } from '@expo/vector-icons';
 import LINQ from 'linq';
 import MessageKeys from '../../common/MessageKeys';
 import { Modalize } from 'react-native-modalize';
-import Networks from '../../viewmodels/Networks';
+import Networks from '../../viewmodels/core/Networks';
 import PopularDApps from '../../configs/urls/popular.json';
 import { Portal } from 'react-native-portalize';
 import { ReactiveScreen } from '../../utils/device';

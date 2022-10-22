@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { borderColor, fontColor } from '../../constants/styles';
 
-import App from '../../viewmodels/App';
+import App from '../../viewmodels/core/App';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStack } from '../navigations';
 import Theme from '../../viewmodels/settings/Theme';

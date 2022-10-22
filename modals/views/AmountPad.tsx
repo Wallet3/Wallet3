@@ -11,7 +11,7 @@ import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
 import { MaterialIcons } from '@expo/vector-icons';
 import MessageKeys from '../../common/MessageKeys';
-import Networks from '../../viewmodels/Networks';
+import Networks from '../../viewmodels/core/Networks';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import numeral from 'numeral';

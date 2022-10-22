@@ -2,8 +2,8 @@ import * as ExpoLinking from 'expo-linking';
 
 import React, { useEffect, useState } from 'react';
 
-import App from '../viewmodels/App';
-import Authentication from '../viewmodels/Authentication';
+import App from '../viewmodels/core/App';
+import Authentication from '../viewmodels/auth/Authentication';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Sign from './compositions/Sign';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';

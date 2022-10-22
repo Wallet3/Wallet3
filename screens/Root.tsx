@@ -5,7 +5,7 @@ import { Feather, Ionicons } from '@expo/vector-icons';
 import { Platform, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 
-import App from '../viewmodels/App';
+import App from '../viewmodels/core/App';
 import BrowserScreen from './browser/MultiTabIndex';
 import ContactsScreen from './contacts';
 import DAppsScreen from './dapps';
@@ -15,7 +15,7 @@ import ExchangeScreen from './exchange';
 import MessageKeys from '../common/MessageKeys';
 import NFTList from './nfts/List';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import Networks from '../viewmodels/Networks';
+import Networks from '../viewmodels/core/Networks';
 import { ReactiveScreen } from '../utils/device';
 import SettingScreen from './settings';
 import SinglePageBrowserScreen from './browser/Browser';

@@ -7,7 +7,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { StyleProp, Text, View, ViewStyle } from 'react-native';
 import { renderEmptyCircle, renderFilledCircle } from '../../components/PasscodeCircle';
 
-import { BioType } from '../../viewmodels/Authentication';
+import { BioType } from '../../viewmodels/auth/Authentication';
 import { MaterialIcons } from '@expo/vector-icons';
 import { ReactiveScreen } from '../../utils/device';
 import { SafeAreaProvider } from 'react-native-safe-area-context';

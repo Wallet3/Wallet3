@@ -3,15 +3,15 @@ import * as ethSignUtil from '@metamask/eth-sig-util';
 import { Wallet as EthersWallet, providers, utils } from 'ethers';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
-import { Account } from './account/Account';
+import { Account } from '../account/Account';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Authentication from './Authentication';
-import Key from '../models/Key';
+import Authentication from '../auth/Authentication';
+import Key from '../../models/Key';
 import LINQ from 'linq';
-import MetamaskDAppsHub from './walletconnect/MetamaskDAppsHub';
-import { ReadableInfo } from '../models/Transaction';
+import MetamaskDAppsHub from '../walletconnect/MetamaskDAppsHub';
+import { ReadableInfo } from '../../models/Transaction';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
-import TxHub from './hubs/TxHub';
+import TxHub from '../hubs/TxHub';
 import { showMessage } from 'react-native-flash-message';
 
 type SignTxRequest = {

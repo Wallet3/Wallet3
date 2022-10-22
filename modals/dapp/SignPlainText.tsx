@@ -4,7 +4,7 @@ import { Switch, Text, View } from 'react-native';
 
 import { Account } from '../../viewmodels/account/Account';
 import AccountIndicator from '../components/AccountIndicator';
-import { BioType } from '../../viewmodels/Authentication';
+import { BioType } from '../../viewmodels/auth/Authentication';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';
 import { ParsedMessage } from '../../utils/siwe_plain';
 import RejectApproveButtons from '../components/RejectApproveButtons';

@@ -1,8 +1,8 @@
 import { ContactsPad, Passpad } from './views';
 import React, { useEffect, useRef, useState } from 'react';
 
-import App from '../viewmodels/App';
-import Authentication from '../viewmodels/Authentication';
+import App from '../viewmodels/core/App';
+import Authentication from '../viewmodels/auth/Authentication';
 import Contacts from '../viewmodels/customs/Contacts';
 import NFTReview from './views/NFTReview';
 import { NFTTransferring } from '../viewmodels/transferring/NonFungibleTokenTransferring';

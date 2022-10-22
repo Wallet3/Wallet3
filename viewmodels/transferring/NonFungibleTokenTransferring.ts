@@ -3,7 +3,7 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 import { estimateGas, eth_call } from '../../common/RPC';
 
 import { Account } from '../account/Account';
-import App from '../App';
+import App from '../core/App';
 import { BaseTransaction } from './BaseTransaction';
 import { ERC1155Token } from '../../models/ERC1155';
 import { ERC721Token } from '../../models/ERC721';
