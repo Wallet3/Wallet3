@@ -31,6 +31,8 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
   }, [mnemonic]);
 
   useEffect(() => {
+    MnemonicOnce.clean();
+
     PubSub.subscribe(MessageKeys.CodeScan_wallet3sync, (_, { data }: { data: string }) => {
       const encoded = data.substring(12);
       const decoded = decode(encoded).replaceAll(',', ' ').trim();

@@ -15,6 +15,7 @@ interface Props {
   iconColor?: string;
   textColor?: string;
   onScanRequest?: () => void;
+  secureTextEntry?: boolean;
 }
 
 export default ({
@@ -27,6 +28,7 @@ export default ({
   iconColor,
   textColor,
   onScanRequest,
+  secureTextEntry,
 }: Props) => {
   const addrRef = useRef<TextInput>(null);
   const [innerValue, setInnerValue] = useState<string>();
@@ -70,6 +72,7 @@ export default ({
         keyboardType="web-search"
         placeholderTextColor="#dfdfdf50"
         autoCorrect={false}
+        secureTextEntry={secureTextEntry}
         onChangeText={(t) => onInnerChangeText(t)}
       />
 

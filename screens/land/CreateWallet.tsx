@@ -15,6 +15,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
   const { t } = i18n;
 
   useEffect(() => {
+    MnemonicOnce.clean();
     MnemonicOnce.generate();
   }, []);
 

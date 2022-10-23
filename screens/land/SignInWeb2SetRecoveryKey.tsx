@@ -1,5 +1,5 @@
 import { Button, SafeViewContainer, TextBox } from '../../components';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 import { secondaryFontColor, themeColor } from '../../constants/styles';
 
@@ -7,12 +7,15 @@ import { LandScreenStack } from '../navigations';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import MnemonicOnce from '../../viewmodels/auth/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import SignInWithApple from '../../viewmodels/auth/SignInWithApple';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { showMessage } from 'react-native-flash-message';
 import styles from './styles';
 
 export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack, 'SetRecoveryKey'>) => {
   const { t } = i18n;
+  const [key, setKey] = useState('');
 
   useEffect(() => {
     MnemonicOnce.generate();
@@ -25,17 +28,21 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
       </View>
 
       <View style={{ marginVertical: 24 }}>
-        <Text style={{ marginBottom: 8 }}>Please input your recovery key to continue:</Text>
-        <TextBox onChangeText={(t) => {}} />
+        <Text style={{ marginBottom: 8 }}>Please paste your recovery key to continue:</Text>
+        <TextBox onChangeText={(t) => setKey(t)} secureTextEntry />
       </View>
 
       <View style={{ flex: 1 }} />
 
       <Button
-        title={t('land-create-backup-now')}
-        disabled={true}
+        title={t('button-next')}
+        disabled={key.length !== 64}
         txtStyle={{ textTransform: 'none' }}
-        onPress={() => navigation.navigate('Backup')}
+        onPress={async () => {
+          (await SignInWithApple.recover(key))
+            ? navigation.navigate('SetupPasscode')
+            : showMessage({ type: 'warning', message: t('msg-invalid-recovery-key') });
+        }}
       />
     </SafeViewContainer>
   );

@@ -60,8 +60,6 @@ class SignInWithApple extends SignInWithWeb2 {
       const isRegistered = await super.isUserRegistered();
       if (!isRegistered) super.generate();
 
-      console.log(super.recoveryKeyExists);
-      
       return isRegistered
         ? super.recoveryKeyExists
           ? SignInType.recover_key_exists
