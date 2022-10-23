@@ -1,4 +1,4 @@
-import { Button, SafeViewContainer } from '../../components';
+import { Button, SafeViewContainer, TextBox } from '../../components';
 import React, { useEffect } from 'react';
 import { Text, View } from 'react-native';
 import { secondaryFontColor, themeColor } from '../../constants/styles';
@@ -24,19 +24,16 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
         <MaterialCommunityIcons name="shield-key" size={64} color={'#61D800'} />
       </View>
 
-      <View style={{ marginVertical: 16 }}>
-        <Text style={{ fontSize: 16, fontWeight: '500', color: themeColor, marginBottom: 8 }}>
-          {t('land-create-security-tips')}
-        </Text>
-        <Text style={{ marginStart: 16, marginBottom: 8, color: secondaryFontColor }}>{t('land-create-security-tips-1')}</Text>
-        <Text style={{ marginStart: 16, color: secondaryFontColor }}>{t('land-create-security-tips-2')}</Text>
+      <View style={{ marginVertical: 24 }}>
+        <Text style={{ marginBottom: 8 }}>Please input your recovery key to continue:</Text>
+        <TextBox onChangeText={(t) => {}} />
       </View>
 
       <View style={{ flex: 1 }} />
 
       <Button
         title={t('land-create-backup-now')}
-        disabled={MnemonicOnce.secretWords.length < 12}
+        disabled={true}
         txtStyle={{ textTransform: 'none' }}
         onPress={() => navigation.navigate('Backup')}
       />

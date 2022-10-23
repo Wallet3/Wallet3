@@ -49,12 +49,17 @@ export class Wallet {
 
   lastRefreshedTime = 0;
 
-  get isHDWallet() {
-    return this.key.bip32Xpubkey.startsWith('xpub');
-  }
+  readonly isHDWallet: boolean;
+  readonly signInFrom: 'apple' | 'google' | undefined;
+  readonly signInUser: string | undefined;
 
   constructor(key: Key) {
     this.key = key;
+
+    const components = key.bip32Xpubkey.split(':');
+    this.isHDWallet = components[components.length - 1].startsWith('xpub');
+    this.signInFrom = components.length > 1 ? (components[0] as any) : undefined;
+    this.signInUser = components.length > 1 ? components[1] : undefined;
 
     makeObservable(this, {
       accounts: observable,

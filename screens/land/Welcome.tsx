@@ -92,10 +92,20 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
                   return;
                 }
 
-                setTimeout(
-                  () => navigation.navigate(result === SignInType.newUser ? 'ViewRecoveryKey' : 'SetRecoveryKey'),
-                  100
-                );
+                let to: any = '';
+                switch (result) {
+                  case SignInType.newUser:
+                    to = 'ViewRecoveryKey';
+                    break;
+                  case SignInType.recover_key_exists:
+                    to = 'SetupPasscode';
+                    break;
+                  case SignInType.recover_key_not_exists:
+                    to = 'SetRecoveryKey';
+                    break;
+                }
+
+                navigation.navigate(to);
               }}
             />
           </Animated.View>
