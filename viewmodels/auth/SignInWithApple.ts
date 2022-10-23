@@ -1,10 +1,13 @@
 import * as AppleAuthentication from 'expo-apple-authentication';
 
-import { makeObservable, observable, runInAction } from 'mobx';
+import { SignInType, SignInWithWeb2 } from './SignInWithWeb2';
+import { makeObservable, runInAction } from 'mobx';
 
-import { SignInWithWeb2 } from './SignInWithWeb2';
+import { AppleAuthenticationCredential } from 'expo-apple-authentication';
 
 class SignInWithApple extends SignInWithWeb2 {
+  credentials: AppleAuthenticationCredential | undefined;
+
   constructor() {
     super();
 
@@ -18,25 +21,50 @@ class SignInWithApple extends SignInWithWeb2 {
       .catch(() => {});
   }
 
-  async signIn() {
+  async signIn(): Promise<SignInType | undefined> {
     runInAction(() => (this.loading = true));
 
     try {
-      const credential = await AppleAuthentication.signInAsync({
+      if (this.credentials) {
+        return await this.handleCredentials(this.credentials);
+      }
+
+      this.credentials = await AppleAuthentication.signInAsync({
         requestedScopes: [
           AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
           AppleAuthentication.AppleAuthenticationScope.EMAIL,
         ],
       });
+
+      console.log(this.credentials!);
+      return this.handleCredentials(this.credentials!);
     } catch (e) {
       if ((e as any).code === 'ERR_CANCELED') {
         // handle that the user canceled the sign-in flow
       } else {
         // handle other errors
       }
+    } finally {
+      runInAction(() => (this.loading = false));
     }
 
-    runInAction(() => (this.loading = false));
+    return;
+  }
+
+  private async handleCredentials(credentials: AppleAuthenticationCredential): Promise<SignInType> {
+    const { email, user } = credentials;
+
+    super.setUser(user);
+
+    if (!email) {
+      const isRegistered = await super.isUserRegistered();
+      if (!isRegistered) super.generate();
+
+      return isRegistered ? SignInType.recovery : SignInType.newUser;
+    }
+
+    await super.generate();
+    return SignInType.newUser;
   }
 }
 

@@ -1,12 +1,9 @@
 import * as Random from 'expo-random';
 import * as ethers from 'ethers';
 
-import { decrypt, encrypt, sha256 } from '../../utils/cipher';
-
 import Authentication from './Authentication';
 import { DEFAULT_DERIVATION_PATH } from '../../common/Constants';
 import Key from '../../models/Key';
-import { langToWordlist } from '../../utils/mnemonic';
 import { makeAutoObservable } from 'mobx';
 import { setStringAsync } from 'expo-clipboard';
 import { xpubkeyFromHDNode } from '../../utils/bip32';
@@ -15,6 +12,7 @@ export class MnemonicOnce {
   secret = '';
   derivationPath = DEFAULT_DERIVATION_PATH;
   derivationIndex = 0;
+  xpubPrefix = '';
 
   get secretWords() {
     return this.secret.split(/\s/);
@@ -27,6 +25,7 @@ export class MnemonicOnce {
   async generate(length: 12 | 24 = 12) {
     const entropy = Random.getRandomBytes(length === 12 ? 16 : 32);
     this.secret = ethers.utils.entropyToMnemonic(entropy);
+    return this.secret;
   }
 
   setSecret(secret: string) {
@@ -42,6 +41,10 @@ export class MnemonicOnce {
     if (success) setStringAsync(''); // write empty string to clipboard, if the user pasted a mnemonic
 
     return success;
+  }
+
+  setXpubPrefix(prefix = '') {
+    this.xpubPrefix = prefix;
   }
 
   async setDerivationPath(fullPath: string) {
@@ -75,7 +78,7 @@ export class MnemonicOnce {
     key.id = Date.now();
     key.secret = await Authentication.encrypt(this.secret);
     key.bip32Xprivkey = await Authentication.encrypt(bip32.extendedKey);
-    key.bip32Xpubkey = bip32XPubkey;
+    key.bip32Xpubkey = this.xpubPrefix + bip32XPubkey;
     key.basePath = this.derivationPath;
     key.basePathIndex = this.derivationIndex;
 
@@ -95,6 +98,7 @@ export class MnemonicOnce {
 
   clean() {
     this.secret = '';
+    this.xpubPrefix = '';
   }
 }
 

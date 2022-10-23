@@ -419,8 +419,6 @@ PODS:
     - React-Core
   - RNImageColors (1.5.1):
     - React-Core
-  - RNKeychain (8.1.1):
-    - React-Core
   - RNOS (1.2.6):
     - React
   - RNReanimated (2.11.0):
@@ -550,7 +548,6 @@ DEPENDENCIES:
   - RNFastImage (from `../node_modules/react-native-fast-image`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNImageColors (from `../node_modules/react-native-image-colors`)
-  - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNOS (from `../node_modules/react-native-os`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -721,8 +718,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-gesture-handler"
   RNImageColors:
     :path: "../node_modules/react-native-image-colors"
-  RNKeychain:
-    :path: "../node_modules/react-native-keychain"
   RNOS:
     :path: "../node_modules/react-native-os"
   RNReanimated:
@@ -819,7 +814,6 @@ SPEC CHECKSUMS:
   RNFastImage: 3207b9eb17c2425d574ca40db35185db6e324f4e
   RNGestureHandler: 62232ba8f562f7dea5ba1b3383494eb5bf97a4d3
   RNImageColors: fd9777591fc765780e035f4bec7a42edabc86eb4
-  RNKeychain: ff836453cba46938e0e9e4c22e43d43fa2c90333
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
   RNReanimated: 37eafe27e1bb20e236a79827646dc7297f44e93c
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d

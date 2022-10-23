@@ -9,7 +9,8 @@ export type LandScreenStack = {
   Home: undefined;
   QRScan: undefined;
   Root: undefined;
-  SignInWithWeb2: undefined;
+  ViewRecoveryKey: undefined;
+  SetRecoveryKey: undefined;
 };
 
 export type RootStack = {

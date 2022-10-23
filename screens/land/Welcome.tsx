@@ -13,6 +13,7 @@ import { secondaryFontColor, themeColor, thirdFontColor } from '../../constants/
 import { Ionicons } from '@expo/vector-icons';
 import { LandScreenStack } from '../navigations';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { SignInType } from '../../viewmodels/auth/SignInWithWeb2';
 import SignInWithApple from '../../viewmodels/auth/SignInWithApple';
 import { StatusBar } from 'expo-status-bar';
 import i18n from '../../i18n';
@@ -84,7 +85,18 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
               buttonType={AppleAuthenticationButtonType.CONTINUE}
               cornerRadius={7}
               style={{ width: '100%', height: 42 }}
-              onPress={() => {}}
+              onPress={async () => {
+                const result = await SignInWithApple.signIn();
+
+                if (result === undefined) {
+                  return;
+                }
+
+                setTimeout(
+                  () => navigation.navigate(result === SignInType.newUser ? 'ViewRecoveryKey' : 'SetRecoveryKey'),
+                  100
+                );
+              }}
             />
           </Animated.View>
         ) : undefined}
@@ -92,7 +104,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
 
       <StatusBar style="dark" />
 
-      <Loader loading={false} message={t('msg-wait-a-moment')} />
+      <Loader loading={SignInWithApple.loading} message={t('msg-wait-a-moment')} />
     </SafeViewContainer>
   );
 });
