@@ -13,6 +13,7 @@ import { Modalize } from 'react-native-modalize';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/core/Networks';
 import { Portal } from 'react-native-portalize';
+import SignInWithApple from '../../viewmodels/auth/SignInWithApple';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -34,7 +35,8 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
 
   const verify = async (passcode?: string) => {
     const { wallet } = App.findWallet(App.currentAccount?.address || '') || {};
-    const secret = await wallet?.getSecret(passcode);
+    const secret =
+      wallet?.signInFrom === undefined ? await SignInWithApple.getRecoverKey() : await wallet?.getSecret(passcode);
     const success = secret ? true : false;
 
     setAuthorized(success);
@@ -44,7 +46,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
         close();
         MnemonicOnce.setSecret(secret!);
 
-        if (wallet?.isHDWallet) {
+        if (wallet?.isHDWallet && wallet.signInFrom === undefined) {
           setWords(MnemonicOnce.secretWords);
         } else {
           setPrivKey(secret!);
@@ -123,7 +125,13 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
           modalStyle={styles.modalStyle}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <FullPasspad themeColor={themeColor} height={420} borderRadius={6} onCodeEntered={(code) => verify(code)} />
+          <FullPasspad
+            appAvailable={true}
+            themeColor={themeColor}
+            height={420}
+            borderRadius={6}
+            onCodeEntered={(code) => verify(code)}
+          />
         </Modalize>
       </Portal>
     </SafeViewContainer>

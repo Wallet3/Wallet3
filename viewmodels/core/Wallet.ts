@@ -68,9 +68,14 @@ export class Wallet {
     });
   }
 
+  protected parseXpubkey(mixedKey: string) {
+    const components = mixedKey.split(':');
+    return components[components.length - 1];
+  }
+
   isSameKey(key: Key) {
     return (
-      this.key.bip32Xpubkey === key.bip32Xpubkey &&
+      this.parseXpubkey(this.key.bip32Xpubkey) === this.parseXpubkey(key.bip32Xpubkey) &&
       this.key.basePath === key.basePath &&
       this.key.basePathIndex === key.basePathIndex
     );
@@ -82,7 +87,7 @@ export class Wallet {
     const accounts: Account[] = [];
 
     if (this.isHDWallet) {
-      const bip32 = utils.HDNode.fromExtendedKey(this.key.bip32Xpubkey);
+      const bip32 = utils.HDNode.fromExtendedKey(this.parseXpubkey(this.key.bip32Xpubkey));
 
       for (let i = this.key.basePathIndex; i < this.key.basePathIndex + count; i++) {
         if (this.removedIndexes.includes(i)) continue;
@@ -102,7 +107,7 @@ export class Wallet {
   newAccount() {
     if (!this.isHDWallet) return;
 
-    const bip32 = utils.HDNode.fromExtendedKey(this.key.bip32Xpubkey);
+    const bip32 = utils.HDNode.fromExtendedKey(this.parseXpubkey(this.key.bip32Xpubkey));
     const index =
       Math.max(
         this.accounts[this.accounts.length - 1].index,

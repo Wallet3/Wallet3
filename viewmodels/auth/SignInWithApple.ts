@@ -37,7 +37,7 @@ class SignInWithApple extends SignInWithWeb2 {
       });
 
       console.log(this.credentials!);
-      return this.handleCredentials(this.credentials!);
+      return await this.handleCredentials(this.credentials!);
     } catch (e) {
       if ((e as any).code === 'ERR_CANCELED') {
         // handle that the user canceled the sign-in flow
@@ -57,8 +57,8 @@ class SignInWithApple extends SignInWithWeb2 {
     await super.setUser(user);
 
     if (!email) {
-      const isRegistered = await super.isUserRegistered();
-      if (!isRegistered) super.generate();
+      const isRegistered = await super.checkUserRegistered();
+      if (!isRegistered) await super.generate();
 
       return isRegistered
         ? super.recoveryKeyExists

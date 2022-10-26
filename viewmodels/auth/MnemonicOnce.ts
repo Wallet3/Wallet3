@@ -12,7 +12,7 @@ export class MnemonicOnce {
   secret = '';
   derivationPath = DEFAULT_DERIVATION_PATH;
   derivationIndex = 0;
-  xpubPrefix = '';
+  userPrefix = '';
 
   get secretWords() {
     return this.secret.split(/\s/);
@@ -43,8 +43,8 @@ export class MnemonicOnce {
     return success;
   }
 
-  setXpubPrefix(prefix = '') {
-    this.xpubPrefix = prefix;
+  setUserPrefix(prefix = '') {
+    this.userPrefix = prefix;
   }
 
   async setDerivationPath(fullPath: string) {
@@ -78,7 +78,7 @@ export class MnemonicOnce {
     key.id = Date.now();
     key.secret = await Authentication.encrypt(this.secret);
     key.bip32Xprivkey = await Authentication.encrypt(bip32.extendedKey);
-    key.bip32Xpubkey = this.xpubPrefix + bip32XPubkey;
+    key.bip32Xpubkey = this.userPrefix + bip32XPubkey;
     key.basePath = this.derivationPath;
     key.basePathIndex = this.derivationIndex;
 
@@ -98,7 +98,9 @@ export class MnemonicOnce {
 
   clean() {
     this.secret = '';
-    this.xpubPrefix = '';
+    this.userPrefix = '';
+    this.derivationPath = DEFAULT_DERIVATION_PATH;
+    this.derivationIndex = 0;
   }
 }
 
