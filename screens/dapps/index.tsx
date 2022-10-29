@@ -1,4 +1,4 @@
-import { Feather, FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Feather, FontAwesome, FontAwesome5, Ionicons, MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { Metamask as MetamaskLogo, WalletConnect as WalletConnectLogo } from '../../assets/3rd';
 import React, { useRef, useState } from 'react';
@@ -223,8 +223,8 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
       key="metamask"
       style={{ padding: 12, flexDirection: 'row', alignItems: 'center', height: headerHeight, justifyContent: 'center' }}
     >
-      <MetamaskLogo width={12.5} height={12.5} />
-      <Text style={{ color: '#f5841f', fontWeight: '500', marginStart: 8, fontSize: 18 }}>{`Metamask`}</Text>
+      <FontAwesome5 name="compass" color={'deepskyblue'} size={19} />
+      <Text style={{ color: 'deepskyblue', fontWeight: '500', marginStart: 8, fontSize: 18 }}>{`Web3`}</Text>
     </View>,
   ];
 
@@ -269,10 +269,20 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
       <Swiper ref={swiper} showsPagination={false} showsButtons={false} loop={false} onIndexChanged={scrollToIndex}>
         <View style={{ width: '100%', height: '100%' }}>
           {dapps.length > 0 && (
-            <View style={{ flexDirection: 'row', position: 'absolute', right: 16, top: '45%', alignItems: 'center' }}>
-              <MetamaskLogo width={17} style={{ marginTop: -3, marginEnd: 5, opacity: 0.8 }} />
-              <Ionicons name="arrow-forward" size={18} color="orange" style={{ opacity: 0.6 }} />
-            </View>
+            <TouchableOpacity
+              onPress={() => swiper.current?.scrollTo(1)}
+              style={{
+                flexDirection: 'row',
+                position: 'absolute',
+                right: 16,
+                bottom: '5%',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <FontAwesome5 name="compass" size={24} color="deepskyblue" />
+              <Ionicons name="arrow-forward" size={20} color="deepskyblue" style={{ opacity: 0.6, marginStart: 8 }} />
+            </TouchableOpacity>
           )}
 
           {connectedCount > 0 ? (

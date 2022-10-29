@@ -40,6 +40,11 @@ type SignTypedDataRequest = {
   version?: SignTypedDataVersion;
 };
 
+export function parseXpubkey(mixedKey: string) {
+  const components = mixedKey.split(':');
+  return components[components.length - 1];
+}
+
 export class Wallet {
   private key: Key;
   private refreshTimer!: NodeJS.Timer;
@@ -52,6 +57,10 @@ export class Wallet {
   readonly isHDWallet: boolean;
   readonly signInFrom: 'apple' | 'google' | undefined;
   readonly signInUser: string | undefined;
+
+  get web2SignedIn() {
+    return this.signInFrom !== undefined;
+  }
 
   constructor(key: Key) {
     this.key = key;
@@ -68,14 +77,9 @@ export class Wallet {
     });
   }
 
-  protected parseXpubkey(mixedKey: string) {
-    const components = mixedKey.split(':');
-    return components[components.length - 1];
-  }
-
   isSameKey(key: Key) {
     return (
-      this.parseXpubkey(this.key.bip32Xpubkey) === this.parseXpubkey(key.bip32Xpubkey) &&
+      parseXpubkey(this.key.bip32Xpubkey) === parseXpubkey(key.bip32Xpubkey) &&
       this.key.basePath === key.basePath &&
       this.key.basePathIndex === key.basePathIndex
     );
@@ -87,7 +91,7 @@ export class Wallet {
     const accounts: Account[] = [];
 
     if (this.isHDWallet) {
-      const bip32 = utils.HDNode.fromExtendedKey(this.parseXpubkey(this.key.bip32Xpubkey));
+      const bip32 = utils.HDNode.fromExtendedKey(parseXpubkey(this.key.bip32Xpubkey));
 
       for (let i = this.key.basePathIndex; i < this.key.basePathIndex + count; i++) {
         if (this.removedIndexes.includes(i)) continue;
@@ -107,7 +111,7 @@ export class Wallet {
   newAccount() {
     if (!this.isHDWallet) return;
 
-    const bip32 = utils.HDNode.fromExtendedKey(this.parseXpubkey(this.key.bip32Xpubkey));
+    const bip32 = utils.HDNode.fromExtendedKey(parseXpubkey(this.key.bip32Xpubkey));
     const index =
       Math.max(
         this.accounts[this.accounts.length - 1].index,

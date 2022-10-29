@@ -1,3 +1,4 @@
+import { Wallet, parseXpubkey } from './Wallet';
 import { action, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
 import { providers, utils } from 'ethers';
 
@@ -17,7 +18,6 @@ import Networks from './Networks';
 import Theme from '../settings/Theme';
 import TxHub from '../hubs/TxHub';
 import UI from '../settings/UI';
-import { Wallet } from './Wallet';
 import WalletConnectV1ClientHub from '../walletconnect/WalletConnectV1ClientHub';
 import { fetchChainsOverview } from '../../common/apis/Debank';
 import i18n from '../../i18n';
@@ -67,8 +67,8 @@ export class AppVM {
 
   async addWallet(key: Key) {
     if (this.wallets.find((w) => w.isSameKey(key))) return;
-    if (this.allAccounts.find((a) => a.address === key.bip32Xpubkey)) {
-      this.switchAccount(key.bip32Xpubkey);
+    if (this.allAccounts.find((a) => a.address === parseXpubkey(key.bip32Xpubkey))) {
+      this.switchAccount(parseXpubkey(key.bip32Xpubkey));
       return;
     }
 

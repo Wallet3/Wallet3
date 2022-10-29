@@ -174,6 +174,7 @@ export class AccountTokens {
     }
 
     token.shown = true;
+    (token as ERC20Token).setOwner?.(this.owner);
     (token as ERC20Token).getBalance?.();
 
     if (targetChainId === Networks.current.chainId) {

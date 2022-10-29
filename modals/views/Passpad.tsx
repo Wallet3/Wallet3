@@ -1,6 +1,7 @@
 import * as Animatable from 'react-native-animatable';
 import * as Haptics from 'expo-haptics';
 
+import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 import { Button, SafeViewContainer } from '../../components';
 import Numpad, { DefaultNumpadHandler } from '../../components/Numpad';
 import React, { useEffect, useRef, useState } from 'react';
@@ -27,9 +28,10 @@ interface Props {
   style?: StyleProp<ViewStyle>;
   bioType?: BioType;
   onBioAuth?: () => void;
+  failedAttempts?: number;
 }
 
-const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style, bioType, onBioAuth }: Props) => {
+const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style, bioType, onBioAuth, failedAttempts }: Props) => {
   const { t } = i18n;
   const passcodeLength = 6;
   const [passcode, setPasscode] = useState('');
@@ -65,6 +67,22 @@ const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style, bi
           .map((_, index) => renderEmptyCircle(index, isLightMode ? foregroundColor : themeColor))}
       </Animatable.View>
 
+      {(failedAttempts || 0) >= 2 ? (
+        <Animated.View
+          entering={FadeIn.delay(0)}
+          style={{
+            marginTop: 16,
+            padding: 4,
+            paddingHorizontal: 12,
+            borderRadius: 100,
+            backgroundColor: warningColor,
+            alignSelf: 'center',
+          }}
+        >
+          <Text style={{ color: '#fff', fontSize: 12 }}>{t('lock-screen-failed-attempts', { attempts: failedAttempts })}</Text>
+        </Animated.View>
+      ) : undefined}
+
       <View style={{ flex: 1 }} />
 
       <Numpad
@@ -94,10 +112,22 @@ interface FullPasspadProps {
   bioType?: BioType;
   appAvailable: boolean;
   unlockTimestamp?: number;
+  failedAttempts?: number;
 }
 
 export const FullPasspad = observer((props: FullPasspadProps) => {
-  const { themeColor, height, onCodeEntered, bioType, onBioAuth, borderRadius, appAvailable, unlockTimestamp } = props;
+  const {
+    themeColor,
+    height,
+    onCodeEntered,
+    bioType,
+    onBioAuth,
+    borderRadius,
+    appAvailable,
+    unlockTimestamp,
+    failedAttempts,
+  } = props;
+
   const { t } = i18n;
   const { backgroundColor, textColor } = Theme;
   const { height: fullScreenHeight, width } = ReactiveScreen;
@@ -139,6 +169,7 @@ export const FullPasspad = observer((props: FullPasspadProps) => {
           style={{ marginBottom: 4, width, height: height || fullScreenHeight }}
           onBioAuth={onBioAuth}
           bioType={bioType}
+          failedAttempts={failedAttempts}
         />
       ) : (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

@@ -579,6 +579,7 @@ export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Aut
         onBioAuth={bioAuth}
         appAvailable={appAuth.appAvailable}
         unlockTimestamp={appAuth.appUnlockTime}
+        failedAttempts={appAuth.failedAttempts}
         onCodeEntered={async (code) => {
           const success = await appAuth.authorize(code);
           if (success) closeLockScreen();

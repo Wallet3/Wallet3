@@ -53,9 +53,9 @@ export abstract class SignInWithWeb2 {
     });
   }
 
-  async getRecoverKey() {
-    if (!(await Authentication.authorize())) return;
-    return (await SecureStore.getItemAsync(Keys.recovery(this.mini_uid))) || '';
+  async getRecoverKey(web2UID: string, pin?: string) {
+    if (!(await Authentication.authorize(pin))) return '';
+    return (await SecureStore.getItemAsync(Keys.recovery(web2UID))) || '';
   }
 
   protected async setUser(user: string) {
@@ -65,8 +65,6 @@ export abstract class SignInWithWeb2 {
 
     const recoveryKey = (await SecureStore.getItemAsync(Keys.recovery(this.mini_uid))) || '';
     await runInAction(async () => (this.recoveryKey = recoveryKey));
-
-    console.log('real key', recoveryKey);
   }
 
   protected async generate() {

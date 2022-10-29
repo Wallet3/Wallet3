@@ -10,7 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@curvefi/api": "^2.16.3",
+    "@curvefi/api": "^2.17.0",
     "@ethersproject/shims": "^5.7.0",
     "@expo/vector-icons": "^13.0.0",
     "@metamask/eth-sig-util": "^4.0.1",
@@ -21,7 +21,7 @@
     "@react-navigation/elements": "^1.3.6",
     "@react-navigation/native": "^6.0.13",
     "@react-navigation/native-stack": "^6.9.1",
-    "@react-navigation/stack": "^6.3.2",
+    "@react-navigation/stack": "^6.3.3",
     "@tradle/react-native-http": "^2.0.0",
     "@unstoppabledomains/resolution": "^8.3.3",
     "@walletconnect/client": "^1.8.0",
