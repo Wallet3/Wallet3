@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 import { borderColor, secondaryFontColor, themeColor } from '../../constants/styles';
 
+import Authentication from '../../viewmodels/auth/Authentication';
 import CopyableText from '../../components/CopyableText';
 import { LandScreenStack } from '../navigations';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -57,7 +58,10 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
         disabled={countdown > 0}
         title={countdown > 0 ? `(${countdown}) ${t('land-sign-in-web2-i-have-saved')}` : t('land-sign-in-web2-i-have-saved')}
         txtStyle={{ textTransform: 'none' }}
-        onPress={() => navigation.navigate('SetupPasscode')}
+        onPress={() => {
+          Authentication.setUserSecretsVerified(true);
+          navigation.navigate('SetupPasscode');
+        }}
       />
     </SafeViewContainer>
   );
