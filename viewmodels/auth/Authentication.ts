@@ -88,7 +88,12 @@ export class Authentication extends EventEmitter {
 
       if (nextState === 'active') {
         if (Date.now() - this.lastBackgroundTimestamp < 1000 * 60 * 2) return;
-        runInAction(() => (this.appAuthorized = false));
+        if (!this.appAuthorized) return;
+
+        runInAction(() => {
+          this.appAuthorized = false;
+          this.failedAttempts = 0;
+        });
       }
     });
   }

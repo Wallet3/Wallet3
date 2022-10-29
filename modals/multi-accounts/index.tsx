@@ -13,6 +13,7 @@ import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import rootStyles from '../styles';
+import { startLayoutAnimation } from '../../utils/animations';
 
 export default observer(({ close }: { close?: Function }) => {
   const { t } = i18n;
@@ -32,6 +33,7 @@ export default observer(({ close }: { close?: Function }) => {
     swiper.current?.scrollBy(-1);
 
     setTimeout(() => {
+      startLayoutAnimation();
       App.removeAccount(account);
       setAccount(undefined);
     }, 300);
