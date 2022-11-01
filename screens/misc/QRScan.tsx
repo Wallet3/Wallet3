@@ -3,7 +3,7 @@ import Scanner, { BarCodeScanningResult } from '../../components/Scanner';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { AntDesign } from '@expo/vector-icons';
-import Authentication from '../../viewmodels/Authentication';
+import Authentication from '../../viewmodels/auth/Authentication';
 import LinkHub from '../../viewmodels/hubs/LinkHub';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';

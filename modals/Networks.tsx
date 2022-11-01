@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import EditNetwork from './views/EditNetwork';
 import { Feather } from '@expo/vector-icons';
 import { INetwork } from '../common/Networks';
-import Networks from '../viewmodels/Networks';
+import Networks from '../viewmodels/core/Networks';
 import React from 'react';
 import { ReactiveScreen } from '../utils/device';
 import { SafeAreaProvider } from 'react-native-safe-area-context';

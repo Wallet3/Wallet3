@@ -3,8 +3,8 @@
 import * as SplashScreen from 'expo-splash-screen';
 import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
 
-import AppViewModel, { AppVM } from './viewmodels/App';
-import AuthViewModel, { Authentication } from './viewmodels/Authentication';
+import AppViewModel, { AppVM } from './viewmodels/core/App';
+import AuthViewModel, { Authentication } from './viewmodels/auth/Authentication';
 import Modals, { LockScreen } from './screens/Modalize';
 import { Platform, UIManager, TouchableOpacity } from 'react-native';
 import { enableLayoutAnimations } from "react-native-reanimated";
@@ -181,9 +181,10 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
 
       {Modals({ app, appAuth })}
 
-      <LockScreen app={app} appAuth={appAuth} />
       <FlashMessage position="top" />
       <StatusBar style={statusBarStyle} />
+      
+      <LockScreen app={app} appAuth={appAuth} />
     </NavigationContainer>
   );
 });

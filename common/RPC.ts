@@ -1,6 +1,6 @@
 import { BigNumber, utils } from 'ethers';
 
-import Networks from '../viewmodels/Networks';
+import Networks from '../viewmodels/core/Networks';
 import Providers from '../configs/providers.json';
 import { PublicNetworks } from './Networks';
 import { post } from '../utils/fetch';
@@ -162,6 +162,8 @@ export async function eth_call_return(
         params: [args, 'latest'],
         id: Date.now(),
       });
+
+      if (resp.error) continue;
 
       return resp;
     } catch (error) {

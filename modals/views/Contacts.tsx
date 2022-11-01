@@ -13,7 +13,7 @@ import { BaseTransaction } from '../../viewmodels/transferring/BaseTransaction';
 import Button from '../../components/Button';
 import Image from 'react-native-fast-image';
 import MiniScanner from './MiniScanner';
-import Networks from '../../viewmodels/Networks';
+import Networks from '../../viewmodels/core/Networks';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
 import { formatAddress } from '../../utils/formatter';

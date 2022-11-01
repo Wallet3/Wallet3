@@ -5,7 +5,7 @@ import { fontColor, secondaryFontColor, themeColor } from '../../constants/style
 
 import { LandScreenStack } from '../navigations';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import MnemonicOnce from '../../viewmodels/MnemonicOnce';
+import MnemonicOnce from '../../viewmodels/auth/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -15,6 +15,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
   const { t } = i18n;
 
   useEffect(() => {
+    MnemonicOnce.clean();
     MnemonicOnce.generate();
   }, []);
 

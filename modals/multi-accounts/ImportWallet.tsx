@@ -6,9 +6,9 @@ import { TouchableOpacity } from 'react-native';
 
 import { borderColor, secondaryFontColor } from '../../constants/styles';
 
-import App from '../../viewmodels/App';
-import { MnemonicOnce } from '../../viewmodels/MnemonicOnce';
-import Networks from '../../viewmodels/Networks';
+import App from '../../viewmodels/core/App';
+import { MnemonicOnce } from '../../viewmodels/auth/MnemonicOnce';
+import Networks from '../../viewmodels/core/Networks';
 import RejectApproveButtons from '../components/RejectApproveButtons';
 import SecretScan from './SecretScan';
 import Swiper from 'react-native-swiper';

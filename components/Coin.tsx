@@ -2,7 +2,7 @@ import FastImage, { FastImageProps } from 'react-native-fast-image';
 import { Image, ImageSourcePropType, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 
-import Networks from '../viewmodels/Networks';
+import Networks from '../viewmodels/core/Networks';
 import SvgImage from 'react-native-remote-svg';
 import icons from '../assets/icons/crypto';
 import { observer } from 'mobx-react-lite';

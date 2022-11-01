@@ -1,4 +1,11 @@
-import { Button, SafeViewContainer } from '../../components';
+import Animated, { FadeIn, FadeInDown, FadeOut, FadeOutUp } from 'react-native-reanimated';
+import {
+  AppleAuthenticationButton,
+  AppleAuthenticationButtonStyle,
+  AppleAuthenticationButtonType,
+} from 'expo-apple-authentication';
+import { Button, Loader, SafeViewContainer } from '../../components';
+import { Platform, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 import { Text, View } from 'react-native-animatable';
 import { secondaryFontColor, themeColor, thirdFontColor } from '../../constants/styles';
@@ -6,32 +13,40 @@ import { secondaryFontColor, themeColor, thirdFontColor } from '../../constants/
 import { Ionicons } from '@expo/vector-icons';
 import { LandScreenStack } from '../navigations';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { SignInType } from '../../viewmodels/auth/SignInWithWeb2';
+import SignInWithApple from '../../viewmodels/auth/SignInWithApple';
 import { StatusBar } from 'expo-status-bar';
-import { TouchableOpacity } from 'react-native';
 import i18n from '../../i18n';
+import { observer } from 'mobx-react-lite';
 import { openBrowserAsync } from 'expo-web-browser';
+import { startLayoutAnimation } from '../../utils/animations';
 
-export default ({ navigation }: NativeStackScreenProps<LandScreenStack, 'Welcome'>) => {
+export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack, 'Welcome'>) => {
   const { t } = i18n;
   const [read, setRead] = useState(false);
 
   return (
     <SafeViewContainer style={{ flex: 1, backgroundColor: '#fff', alignItems: 'center' }}>
-      <View style={{ flex: 1 }} />
-      <Text animation="fadeInUp" style={{ fontFamily: 'Questrial', fontWeight: '600', fontSize: 42, color: '#6186ff' }}>
-        Wallet 3
-      </Text>
-      <Text animation="fadeInUp" delay={500} style={{ color: secondaryFontColor, fontSize: 12, fontWeight: '500' }}>
-        A Secure Wallet for Web3
-      </Text>
-      <View style={{ flex: 1 }} />
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text animation="fadeInUp" style={{ fontFamily: 'Questrial', fontWeight: '600', fontSize: 42, color: '#6186ff' }}>
+          Wallet 3
+        </Text>
+        <Text animation="fadeInUp" delay={500} style={{ color: secondaryFontColor, fontSize: 12, fontWeight: '500' }}>
+          A Secure Wallet for Web3
+        </Text>
+      </View>
+
+      {/* <View style={{ flex: 1 }} /> */}
 
       <View style={{ width: '100%' }}>
         <View animation="fadeInUp" style={{ flexDirection: 'row', alignItems: 'center', paddingStart: 2 }}>
           <TouchableOpacity
             activeOpacity={0.5}
-            style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 12 }}
-            onPress={() => setRead(!read)}
+            style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 12, paddingBottom: 16 }}
+            onPress={() => {
+              startLayoutAnimation();
+              setRead(!read);
+            }}
           >
             <Ionicons name="checkbox" color={read ? themeColor : 'lightgrey'} />
             <Text style={{ color: thirdFontColor, marginStart: 8, marginEnd: 4 }}>{t('land-welcome-i-agree-to')}</Text>
@@ -62,8 +77,44 @@ export default ({ navigation }: NativeStackScreenProps<LandScreenStack, 'Welcome
             disabled={!read}
           />
         </View>
+
+        {read && Platform.OS === 'ios' && SignInWithApple.isAvailable ? (
+          <Animated.View entering={FadeInDown.springify()} exiting={FadeOut.delay(0)} style={{ marginTop: 12 }}>
+            <AppleAuthenticationButton
+              buttonStyle={AppleAuthenticationButtonStyle.BLACK}
+              buttonType={AppleAuthenticationButtonType.CONTINUE}
+              cornerRadius={7}
+              style={{ width: '100%', height: 42 }}
+              onPress={async () => {
+                const result = await SignInWithApple.signIn();
+
+                if (result === undefined) {
+                  return;
+                }
+
+                let to: any = '';
+                switch (result) {
+                  case SignInType.newUser:
+                    to = 'ViewRecoveryKey';
+                    break;
+                  case SignInType.recover_key_exists:
+                    to = 'SetupPasscode';
+                    break;
+                  case SignInType.recover_key_not_exists:
+                    to = 'SetRecoveryKey';
+                    break;
+                }
+
+                navigation.navigate(to);
+              }}
+            />
+          </Animated.View>
+        ) : undefined}
       </View>
+
       <StatusBar style="dark" />
+
+      <Loader loading={SignInWithApple.loading} message={t('msg-wait-a-moment')} />
     </SafeViewContainer>
   );
-};
+});

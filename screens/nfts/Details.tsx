@@ -13,7 +13,7 @@ import LINQ from 'linq';
 import { Modalize } from 'react-native-modalize';
 import MultiSourceImage from '../../components/MultiSourceImage';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import Networks from '../../viewmodels/Networks';
+import Networks from '../../viewmodels/core/Networks';
 import { Portal } from 'react-native-portalize';
 import { ReactiveScreen } from '../../utils/device';
 import SendNFT from '../../modals/SendNFT';

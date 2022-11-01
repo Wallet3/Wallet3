@@ -83,6 +83,8 @@
   "qrscan-tip-desktop-backup-qrcode": "Wallet 3 デスクトップ版 QRコード",
   "qrscan-tip-eth-address": "ENS, ETH アドレス",
   "qrscan-tip-above-types": "上記のいずれかのQRコードをスキャンしてください",
+  "lock-screen-wallet-is-locked": "ロックされました",
+  "lock-screen-remaining-time": "アンロックまで {{time}} 時間",
   "contacts-no-more-info": "情報なし",
   "contacts-detail-name": "氏名",
   "contacts-detail-telephone": "電話番号",

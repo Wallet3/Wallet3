@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import AccountSelector from '../../modals/dapp/AccountSelector';
-import App from '../../viewmodels/App';
+import App from '../../viewmodels/core/App';
 import Avatar from '../../components/Avatar';
 import Collapsible from 'react-native-collapsible';
 import { IToken } from '../../common/tokens';

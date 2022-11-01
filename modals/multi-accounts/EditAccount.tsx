@@ -9,7 +9,7 @@ import { Account } from '../../viewmodels/account/Account';
 import Avatar from '../../components/Avatar';
 import { FlatGrid } from 'react-native-super-grid';
 import { Ionicons } from '@expo/vector-icons';
-import Networks from '../../viewmodels/Networks';
+import Networks from '../../viewmodels/core/Networks';
 import { ReactiveScreen } from '../../utils/device';
 import Theme from '../../viewmodels/settings/Theme';
 import { observer } from 'mobx-react-lite';

@@ -10,7 +10,7 @@ import { BlankPNG } from '../../common/Constants';
 import CachedImage from 'react-native-fast-image';
 import CopyableText from '../../components/CopyableText';
 import { Ionicons } from '@expo/vector-icons';
-import Networks from '../../viewmodels/Networks';
+import Networks from '../../viewmodels/core/Networks';
 import QRCode from 'react-native-qrcode-svg';
 import Theme from '../../viewmodels/settings/Theme';
 import { formatAddress } from '../../utils/formatter';

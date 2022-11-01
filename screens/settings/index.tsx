@@ -3,8 +3,8 @@ import { Entypo, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { SafeAreaView, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { fontColor, secondaryFontColor } from '../../constants/styles';
 
-import App from '../../viewmodels/App';
-import Authentication from '../../viewmodels/Authentication';
+import App from '../../viewmodels/core/App';
+import Authentication from '../../viewmodels/auth/Authentication';
 import { Confirm } from '../../modals/views/Confirm';
 import CurrencyViewmodel from '../../viewmodels/settings/Currency';
 import { DrawerScreenProps } from '@react-navigation/drawer';
@@ -12,7 +12,7 @@ import { FullPasspad } from '../../modals/views/Passpad';
 import { InappBrowserModal } from '../Modalize';
 import Langs from '../../viewmodels/settings/Langs';
 import { Modalize } from 'react-native-modalize';
-import Networks from '../../viewmodels/Networks';
+import Networks from '../../viewmodels/core/Networks';
 import { Portal } from 'react-native-portalize';
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -200,6 +200,8 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
             themeColor={Networks.current.color}
             height={420}
             borderRadius={6}
+            appAvailable={true}
+            failedAttempts={Authentication.failedAttempts}
             onCodeEntered={async (code) => {
               const success = await Authentication.verifyPin(code);
               if (!success) return false;

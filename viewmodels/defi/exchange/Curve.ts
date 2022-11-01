@@ -3,7 +3,7 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 import { ethers, providers, utils } from 'ethers';
 
 import { Account } from '../../account/Account';
-import App from '../../App';
+import App from '../../core/App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CurveRouterABI from '../../../abis/CurveRouter.json';
 import { ERC20Token } from '../../../models/ERC20';
@@ -12,7 +12,7 @@ import { IRouteStep } from '@curvefi/api/lib/interfaces';
 import LINQ from 'linq';
 import MessageKeys from '../../../common/MessageKeys';
 import { NativeToken } from '../../../models/NativeToken';
-import Networks from '../../Networks';
+import Networks from '../../core/Networks';
 import { ReadableInfo } from '../../../models/Transaction';
 import { SupportedChains } from './CurveSupportedChains';
 import TxHub from '../../hubs/TxHub';

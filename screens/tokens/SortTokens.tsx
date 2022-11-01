@@ -4,9 +4,9 @@ import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { fontColor, secondaryFontColor } from '../../constants/styles';
 
-import App from '../../viewmodels/App';
+import App from '../../viewmodels/core/App';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import Networks from '../../viewmodels/Networks';
+import Networks from '../../viewmodels/core/Networks';
 import { RootStack } from '../navigations';
 import Theme from '../../viewmodels/settings/Theme';
 import { UserToken } from '../../viewmodels/services/TokensMan';

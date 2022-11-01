@@ -1,7 +1,7 @@
 import { BigNumber, providers, utils } from 'ethers';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
-import App from '../App';
+import App from '../core/App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BaseTransaction } from './BaseTransaction';
 import { ERC20Token } from '../../models/ERC20';

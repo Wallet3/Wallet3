@@ -3,7 +3,7 @@ import { Coin, NullableImage } from '../../components';
 import { FlatList, ListRenderItemInfo, Text, TouchableOpacity, View } from 'react-native';
 
 import { Ionicons } from '@expo/vector-icons';
-import Networks from '../../viewmodels/Networks';
+import Networks from '../../viewmodels/core/Networks';
 import React from 'react';
 import Theme from '../../viewmodels/settings/Theme';
 import Transaction from '../../models/Transaction';

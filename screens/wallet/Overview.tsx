@@ -171,7 +171,7 @@ export default observer(
         <View
           style={{
             height: separatorWidth ?? 1,
-            backgroundColor: separatorColor ?? '#ffffff25',
+            backgroundColor: separatorColor ?? '#ffffff3a',
             marginTop: 2,
             marginHorizontal: -12,
           }}
@@ -186,7 +186,8 @@ export default observer(
             <Ionicons name="md-arrow-up-circle-outline" size={18} color={textColor} />
             <Text style={{ ...styles.buttonText, color: textColor }}>{t('button-send')}</Text>
           </Ripple>
-          <View style={{ width: separatorWidth ?? 1, backgroundColor: separatorColor ?? '#ffffff25' }}></View>
+
+          <View style={{ width: separatorWidth ?? 1, backgroundColor: separatorColor ?? '#ffffff3a' }}></View>
 
           <Ripple
             style={styles.button}

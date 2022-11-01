@@ -2,11 +2,11 @@ import { Button, SafeViewContainer } from '../components';
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 
-import App from '../viewmodels/App';
-import Authentication from '../viewmodels/Authentication';
+import App from '../viewmodels/core/App';
+import Authentication from '../viewmodels/auth/Authentication';
 import { InpageDAppTxRequest } from '../screens/browser/controller/InpageDAppController';
 import { Ionicons } from '@expo/vector-icons';
-import Networks from '../viewmodels/Networks';
+import Networks from '../viewmodels/core/Networks';
 import { RawTransactionRequest } from '../viewmodels/transferring/RawTransactionRequest';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Success from './views/Success';

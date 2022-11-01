@@ -4,7 +4,7 @@ import { getNftsByOwner, getNftsByOwnerV2 } from '../../common/apis/Rarible';
 
 import NFTHub from '../hubs/NFTHub';
 import { NFTMetadata } from '../transferring/NonFungibleTokenTransferring';
-import Networks from '../Networks';
+import Networks from '../core/Networks';
 import { getBounceNfts } from '../../common/apis/Bounce';
 import { startLayoutAnimation } from '../../utils/animations';
 

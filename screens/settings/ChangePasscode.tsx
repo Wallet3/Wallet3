@@ -1,4 +1,4 @@
-import Authentication from '../../viewmodels/Authentication';
+import Authentication from '../../viewmodels/auth/Authentication';
 import ConfirmPasscode from '../components/ConfirmPasscode';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';

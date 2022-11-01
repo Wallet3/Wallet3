@@ -4,7 +4,7 @@ import { ScrollView, Switch, Text, View } from 'react-native';
 
 import { Account } from '../../viewmodels/account/Account';
 import AccountIndicator from '../components/AccountIndicator';
-import { BioType } from '../../viewmodels/Authentication';
+import { BioType } from '../../viewmodels/auth/Authentication';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';
 import { ParsedMessage } from '../../utils/siwe_plain';
 import RejectApproveButtons from '../components/RejectApproveButtons';
@@ -54,7 +54,7 @@ export default observer(({ msg, themeColor, onReject, onSign, account, bioType, 
     }
 
     try {
-      setSiwe(new ParsedMessage(msg));
+      setSiwe(new ParsedMessage(msg, metadata?.origin!));
     } catch (error) {
       console.log(error);
     }
@@ -105,7 +105,7 @@ export default observer(({ msg, themeColor, onReject, onSign, account, bioType, 
       <RejectApproveButtons
         disabledApprove={busy}
         onReject={onReject}
-        themeColor={siwe && metadata ? (siwe.domain === metadata.origin ? themeColor : 'crimson') : themeColor}
+        themeColor={siwe && metadata ? (siwe.isConsistent ? themeColor : 'crimson') : themeColor}
         swipeConfirm={bioType === 'faceid'}
         rejectTitle={t('button-reject')}
         approveTitle={t(siwe ? 'button-sign-in' : 'button-sign')}

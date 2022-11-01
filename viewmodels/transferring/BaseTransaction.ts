@@ -14,14 +14,14 @@ import {
 import { isUnstoppableDomains, resolveDomain } from '../services/UnstoppableDomains';
 
 import { Account } from '../account/Account';
-import App from '../App';
+import App from '../core/App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Coingecko from '../../common/apis/Coingecko';
 import { ERC20Token } from '../../models/ERC20';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
 import { NativeToken } from '../../models/NativeToken';
-import { Wallet } from '../Wallet';
+import { Wallet } from '../core/Wallet';
 import { getEnsAvatar } from '../../common/ENS';
 import { showMessage } from 'react-native-flash-message';
 import { startLayoutAnimation } from '../../utils/animations';

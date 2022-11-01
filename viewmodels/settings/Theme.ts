@@ -1,7 +1,7 @@
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Networks from '../Networks';
+import Networks from '../core/Networks';
 
 const LightTheme = {
   backgroundColor: '#ffffff',

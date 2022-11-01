@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 
 import AnimatedLottieView from 'lottie-react-native';
-import Authentication from '../../viewmodels/Authentication';
-import MnemonicOnce from '../../viewmodels/MnemonicOnce';
+import Authentication from '../../viewmodels/auth/Authentication';
+import MnemonicOnce from '../../viewmodels/auth/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import Networks from '../../viewmodels/Networks';
+import Networks from '../../viewmodels/core/Networks';
 import { SortWords } from '../components/SecretWords';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
