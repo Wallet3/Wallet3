@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 import { secondaryFontColor, themeColor } from '../../constants/styles';
 
+import Authentication from '../../viewmodels/auth/Authentication';
 import { LandScreenStack } from '../navigations';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import MnemonicOnce from '../../viewmodels/auth/MnemonicOnce';
@@ -39,9 +40,12 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
         disabled={key.length !== 64}
         txtStyle={{ textTransform: 'none' }}
         onPress={async () => {
-          (await SignInWithApple.recover(key))
-            ? navigation.navigate('SetupPasscode')
-            : showMessage({ type: 'warning', message: t('msg-invalid-recovery-key') });
+          if (await SignInWithApple.recover(key)) {
+            Authentication.setUserSecretsVerified(true);
+            navigation.navigate('SetupPasscode');
+          } else {
+            showMessage({ type: 'warning', message: t('msg-invalid-recovery-key') });
+          }
         }}
       />
     </SafeViewContainer>

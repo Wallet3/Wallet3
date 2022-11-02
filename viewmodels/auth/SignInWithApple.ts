@@ -14,10 +14,7 @@ class SignInWithApple extends SignInWithWeb2 {
     makeObservable(this, {});
 
     AppleAuthentication.isAvailableAsync()
-      .then((v) => {
-        runInAction(() => (this.isAvailable = v));
-        console.log('sign in with apple', v);
-      })
+      .then((v) => runInAction(() => (this.isAvailable = v)))
       .catch(() => {});
   }
 
@@ -58,13 +55,12 @@ class SignInWithApple extends SignInWithWeb2 {
 
     if (!email) {
       const isRegistered = await super.checkUserRegistered();
-      if (!isRegistered) await super.generate();
+      if (!isRegistered) {
+        await super.generate();
+        return SignInType.newUser;
+      }
 
-      return isRegistered
-        ? super.recoveryKeyExists
-          ? SignInType.recover_key_exists
-          : SignInType.recover_key_not_exists
-        : SignInType.newUser;
+      return super.recoveryKeyExists ? SignInType.recover_key_exists : SignInType.recover_key_not_exists;
     }
 
     await super.generate();

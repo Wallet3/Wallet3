@@ -9,6 +9,7 @@ import { decrypt, encrypt } from '../../utils/cipher';
 import Authentication from './Authentication';
 import MnemonicOnce from './MnemonicOnce';
 import { Platform } from 'react-native';
+import { SignInWeb2Store } from './SignInWeb2Store';
 import { hashMessage } from 'ethers/lib/utils';
 
 const XpubPrefixes = {
@@ -33,6 +34,8 @@ export interface ISignInWithWeb2 {
 }
 
 export abstract class SignInWithWeb2 {
+  private store!: SignInWeb2Store;
+
   isAvailable = false;
   loading = false;
 
@@ -59,9 +62,21 @@ export abstract class SignInWithWeb2 {
   }
 
   protected async setUser(user: string) {
+    if (!this.store) {
+      this.store = new SignInWeb2Store();
+      this.store.init();
+    }
+
     this.uid = utils.keccak256(utils.keccak256(Buffer.from(user, 'utf-8')));
     this.mini_uid = utils.keccak256(Buffer.from(user, 'utf-8')).substring(0, 10);
     MnemonicOnce.setUserPrefix(Keys.xpubPrefix(XpubPrefixes[Platform.OS] || '', this.mini_uid));
+
+    if (__DEV__) {
+      await Promise.all([
+        SecureStore.deleteItemAsync(Keys.recovery(this.mini_uid)),
+        SecureStore.deleteItemAsync(Keys.secret(this.mini_uid)),
+      ]);
+    }
 
     const recoveryKey = (await SecureStore.getItemAsync(Keys.recovery(this.mini_uid))) || '';
     await runInAction(async () => (this.recoveryKey = recoveryKey));
@@ -86,11 +101,13 @@ export abstract class SignInWithWeb2 {
     const wallet = new Wallet(bip32.derivePath(SIGN_WEB2_SUB_PATH).privateKey);
     const signature = await wallet.signMessage(this.uid + encryptedSecret);
     console.log('signed:', wallet.address, signature);
+
+    await this.sync();
   }
 
   async recover(key: string) {
-    const encryptedSecret = await SecureStore.getItemAsync(Keys.secret(this.mini_uid));
-    // TODO: get encrypted string from blockchain
+    const encryptedSecret =
+      (await SecureStore.getItemAsync(Keys.secret(this.mini_uid))) || (await this.store.get(this.uid))?.secret;
 
     try {
       const success = MnemonicOnce.setSecret(decrypt(encryptedSecret!, key));
@@ -98,6 +115,7 @@ export abstract class SignInWithWeb2 {
 
       await SecureStore.setItemAsync(Keys.recovery(this.mini_uid), key);
       await SecureStore.setItemAsync(Keys.secret(this.mini_uid), encryptedSecret!);
+      return true;
     } catch (error) {
       console.log(error);
     }
@@ -106,16 +124,37 @@ export abstract class SignInWithWeb2 {
   }
 
   protected async checkUserRegistered() {
-    const [recoveryKey, encryptedSecret] = await Promise.all([
+    let [recoveryKey, encryptedSecret] = await Promise.all([
       SecureStore.getItemAsync(Keys.recovery(this.mini_uid)),
       SecureStore.getItemAsync(Keys.secret(this.mini_uid)),
     ]);
 
-    if (recoveryKey && encryptedSecret) {
-      MnemonicOnce.setSecret(decrypt(encryptedSecret, recoveryKey));
-      return true;
+    const cloud = await this.store.get(this.uid);
+    if (cloud) encryptedSecret = cloud?.secret;
+
+    if (recoveryKey && encryptedSecret && !cloud) {
+      await this.sync();
     }
 
-    return false;
+    if (!encryptedSecret) return false;
+
+    if (recoveryKey) {
+      await runInAction(async () => (this.recoveryKey = recoveryKey!));
+
+      try {
+        if (MnemonicOnce.setSecret(decrypt(encryptedSecret, recoveryKey))) {
+          await SecureStore.setItemAsync(Keys.secret(this.mini_uid), encryptedSecret);
+        }
+      } catch (error) {}
+    }
+
+    return true;
+  }
+
+  async sync() {
+    const secret = await SecureStore.getItemAsync(Keys.secret(this.mini_uid));
+    if (!secret) return;
+
+    await this.store.set({ uid: this.uid, secret });
   }
 }
