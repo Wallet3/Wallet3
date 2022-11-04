@@ -1,6 +1,6 @@
 import * as Secrets from '../../configs/secret';
 
-import { Firestore, addDoc, collection, doc, getDoc, getDocs, getFirestore, query, setDoc, where } from 'firebase/firestore';
+import { Firestore, deleteDoc, doc, getDoc, getFirestore, setDoc } from 'firebase/firestore';
 
 import { Platform } from 'react-native';
 import { initializeApp } from 'firebase/app';
@@ -52,5 +52,12 @@ export class SignInWeb2Store {
     if (snap.exists()) {
       return snap.data() as User;
     }
+  }
+
+  async delete(uid: string) {
+    if (!this.db) return;
+
+    const ref = doc(this.db, Keys.users, uid);
+    await deleteDoc(ref);
   }
 }

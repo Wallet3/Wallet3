@@ -1,3 +1,5 @@
+import * as Secrets from '../../configs/secret';
+
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 
 import { SignInWithWeb2 } from './SignInWithWeb2';
@@ -7,7 +9,9 @@ class SignInWithGoogle extends SignInWithWeb2 {
   constructor() {
     super();
 
-    GoogleSignin.configure({ webClientId: '173096245737-01309pse2iuspvn9cqqu0jhft0vlv99n.apps.googleusercontent.com', });
+    if (Secrets.GoogleSignInConfigs) {
+      GoogleSignin.configure(Secrets.GoogleSignInConfigs);
+    }
 
     GoogleSignin.hasPlayServices()
       .then((v) => runInAction(() => (this.isAvailable = v)))

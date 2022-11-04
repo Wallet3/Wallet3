@@ -33,7 +33,7 @@ class SignInWithApple extends SignInWithWeb2 {
         ],
       });
 
-      console.log(this.credentials!);
+      if (!this.credentials) return;
       return await this.handleCredentials(this.credentials!);
     } catch (e) {
       if ((e as any).code === 'ERR_CANCELED') {

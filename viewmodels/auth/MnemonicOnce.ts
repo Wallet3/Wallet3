@@ -62,6 +62,7 @@ export class MnemonicOnce {
 
       return await this.savePrivKey();
     } catch (error) {
+      console.error(error);
       return undefined;
     } finally {
       this.clean();

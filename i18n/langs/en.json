@@ -22,6 +22,7 @@
   "land-sign-in-web2-tips-2": "Once the recovery key gets lost, it cannot be retrieved, and you would lose all your funds. Please save it in a password manager, eg. 1Password, LastPass and so on.",
   "land-sign-in-web2-tips-3": "Tap the key below to copy it, and save the key in a password manager.",
   "land-sign-in-web2-i-have-saved": "I have saved it",
+  "land-recovery-reset": "This will erase your private key forever, and can't be recovered.",
   "home-tabs-assets": "Assets",
   "home-tabs-nfts": "Arts",
   "home-tabs-history": "History",
@@ -291,5 +292,6 @@
   "button-close-all": "Close All",
   "button-share": "Share",
   "button-approve": "Approve",
-  "button-swap": "Swap"
+  "button-swap": "Swap",
+  "button-reset": "Reset"
 }

@@ -72,10 +72,7 @@ export abstract class SignInWithWeb2 {
     MnemonicOnce.setUserPrefix(Keys.xpubPrefix(XpubPrefixes[Platform.OS] || '', this.mini_uid));
 
     if (__DEV__) {
-      await Promise.all([
-        SecureStore.deleteItemAsync(Keys.recovery(this.mini_uid)),
-        SecureStore.deleteItemAsync(Keys.secret(this.mini_uid)),
-      ]);
+      this.reset();
     }
 
     const recoveryKey = (await SecureStore.getItemAsync(Keys.recovery(this.mini_uid))) || '';
@@ -129,8 +126,11 @@ export abstract class SignInWithWeb2 {
       SecureStore.getItemAsync(Keys.secret(this.mini_uid)),
     ]);
 
-    const cloud = await this.store.get(this.uid);
-    if (cloud) encryptedSecret = cloud?.secret;
+    let cloud: any;
+    if (!encryptedSecret) {
+      cloud = await this.store.get(this.uid);
+      encryptedSecret = cloud?.secret;
+    }
 
     if (recoveryKey && encryptedSecret && !cloud) {
       await this.sync();
@@ -145,7 +145,10 @@ export abstract class SignInWithWeb2 {
         if (MnemonicOnce.setSecret(decrypt(encryptedSecret, recoveryKey))) {
           await SecureStore.setItemAsync(Keys.secret(this.mini_uid), encryptedSecret);
         }
-      } catch (error) {}
+      } catch (error) {
+        console.log('decrypt error', error);
+        this.recoveryKey = '';
+      }
     }
 
     return true;
@@ -156,5 +159,13 @@ export abstract class SignInWithWeb2 {
     if (!secret) return;
 
     await this.store.set({ uid: this.uid, secret });
+  }
+
+  async reset() {
+    await Promise.all([
+      SecureStore.deleteItemAsync(Keys.recovery(this.mini_uid)),
+      SecureStore.deleteItemAsync(Keys.secret(this.mini_uid)),
+      this.store.delete(this.uid),
+    ]);
   }
 }

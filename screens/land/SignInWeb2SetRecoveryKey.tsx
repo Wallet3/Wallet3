@@ -1,13 +1,17 @@
 import { Button, SafeViewContainer, TextBox } from '../../components';
+import { Modalize, useModalize } from 'react-native-modalize';
 import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
-import { secondaryFontColor, themeColor } from '../../constants/styles';
+import { secondaryFontColor, themeColor, warningColor } from '../../constants/styles';
 
 import Authentication from '../../viewmodels/auth/Authentication';
+import { Confirm } from '../../modals/views/Confirm';
 import { LandScreenStack } from '../navigations';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import MnemonicOnce from '../../viewmodels/auth/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { Portal } from 'react-native-portalize';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import SignInWithApple from '../../viewmodels/auth/SignInWithApple';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -17,6 +21,7 @@ import styles from './styles';
 export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack, 'SetRecoveryKey'>) => {
   const { t } = i18n;
   const [key, setKey] = useState('');
+  const { ref: resetRef, open: openReset } = useModalize();
 
   useEffect(() => {
     MnemonicOnce.generate();
@@ -36,6 +41,16 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
       <View style={{ flex: 1 }} />
 
       <Button
+        title={t('button-reset')}
+        style={{ marginBottom: 12 }}
+        reverse
+        themeColor={warningColor}
+        onPress={() => {
+          openReset();
+        }}
+      />
+
+      <Button
         title={t('button-next')}
         disabled={key.length !== 64}
         txtStyle={{ textTransform: 'none' }}
@@ -48,6 +63,26 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
           }
         }}
       />
+
+      <Portal>
+        <Modalize
+          ref={resetRef}
+          adjustToContentHeight
+          disableScrollIfPossible
+          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+          modalStyle={{ padding: 0, margin: 0 }}
+        >
+          <SafeAreaProvider style={{ height: 270, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
+            <Confirm
+              onSwipeConfirm={() => {}}
+              confirmButtonTitle={t('settings-reset-modal-button-confirm')}
+              desc={t('land-recovery-reset')}
+              themeColor="crimson"
+              style={{ flex: 1 }}
+            />
+          </SafeAreaProvider>
+        </Modalize>
+      </Portal>
     </SafeViewContainer>
   );
 });
