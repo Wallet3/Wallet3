@@ -10,11 +10,13 @@ import React, { useState } from 'react';
 import { Text, View } from 'react-native-animatable';
 import { secondaryFontColor, themeColor, thirdFontColor } from '../../constants/styles';
 
+import { G } from '../../assets/3rd';
 import { Ionicons } from '@expo/vector-icons';
 import { LandScreenStack } from '../navigations';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SignInType } from '../../viewmodels/auth/SignInWithWeb2';
 import SignInWithApple from '../../viewmodels/auth/SignInWithApple';
+import SignInWithGoogle from '../../viewmodels/auth/SignInWithGoogle';
 import { StatusBar } from 'expo-status-bar';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -110,6 +112,19 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
             />
           </Animated.View>
         ) : undefined}
+
+        <Animated.View entering={FadeInDown.springify()} exiting={FadeOut.delay(0)} style={{ marginTop: 12 }}>
+          <Button
+            reverse
+            icon={() => <G width={12} />}
+            themeColor="#4285F4"
+            title="Continue with Google"
+            txtStyle={{ textTransform: 'none' }}
+            onPress={async () => {
+              SignInWithGoogle.signIn();
+            }}
+          />
+        </Animated.View>
       </View>
 
       <StatusBar style="dark" />

@@ -6,7 +6,7 @@ import { makeObservable, runInAction } from 'mobx';
 import { AppleAuthenticationCredential } from 'expo-apple-authentication';
 
 class SignInWithApple extends SignInWithWeb2 {
-  credentials: AppleAuthenticationCredential | undefined;
+  private credentials: AppleAuthenticationCredential | undefined;
 
   constructor() {
     super();

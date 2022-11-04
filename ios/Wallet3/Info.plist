@@ -41,11 +41,12 @@
 				<string>abt</string>
 				<string>wc</string>
 				<string>https</string>
+				<string>com.googleusercontent.apps.173096245737-tegcvuv6qenpbplau6cipnjec00158sd</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>20221102100324</string>
+	<string>20221104083450</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
