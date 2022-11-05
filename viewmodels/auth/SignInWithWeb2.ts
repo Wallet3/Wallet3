@@ -1,16 +1,14 @@
 import * as Random from 'expo-random';
 import * as SecureStore from 'expo-secure-store';
 
-import { DEFAULT_DERIVATION_PATH, SIGN_WEB2_SUB_PATH } from '../../common/Constants';
-import { Wallet, utils } from 'ethers';
-import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { computed, makeObservable, observable, runInAction } from 'mobx';
 import { decrypt, encrypt } from '../../utils/cipher';
 
 import Authentication from './Authentication';
 import MnemonicOnce from './MnemonicOnce';
 import { Platform } from 'react-native';
 import { SignInWeb2Store } from './SignInWeb2Store';
-import { hashMessage } from 'ethers/lib/utils';
+import { utils } from 'ethers';
 
 const XpubPrefixes = {
   ios: 'apple',
@@ -19,7 +17,7 @@ const XpubPrefixes = {
 
 const Keys = {
   recovery: (uid: string) => `${uid}_web2_recovery_key`,
-  secret: (uid: string) => `${uid}_web2_secret`,
+  // secret: (uid: string) => `${uid}_web2_secret`,
   xpubPrefix: (platform: string, uid: string) => `${platform}:${uid}:`,
 };
 
@@ -90,7 +88,7 @@ export abstract class SignInWithWeb2 {
 
     await Promise.all([
       SecureStore.setItemAsync(Keys.recovery(this.mini_uid), this.recoveryKey),
-      SecureStore.setItemAsync(Keys.secret(this.mini_uid), encryptedSecret),
+      // SecureStore.setItemAsync(Keys.secret(this.mini_uid), encryptedSecret),
     ]);
 
     // const root = utils.HDNode.fromMnemonic(plainSecret);
@@ -102,21 +100,22 @@ export abstract class SignInWithWeb2 {
     // const wallet = new Wallet(bip32.derivePath(SIGN_WEB2_SUB_PATH).privateKey);
     // const signature = await wallet.signMessage(this.uid + encryptedSecret);
 
-    await this.sync();
+    await this.sync(encryptedSecret);
   }
 
   async recover(key: string) {
     if (!this.uid) return false;
 
     const encryptedSecret =
-      (await SecureStore.getItemAsync(Keys.secret(this.mini_uid))) || (await this.store.get(this.uid))?.secret;
+      // (await SecureStore.getItemAsync(Keys.secret(this.mini_uid))) ||
+      (await this.store.get(this.uid))?.secret;
 
     try {
       const success = MnemonicOnce.setSecret(decrypt(encryptedSecret!, key));
       if (!success) return false;
 
       await SecureStore.setItemAsync(Keys.recovery(this.mini_uid), key);
-      await SecureStore.setItemAsync(Keys.secret(this.mini_uid), encryptedSecret!);
+      // await SecureStore.setItemAsync(Keys.secret(this.mini_uid), encryptedSecret!);
       return true;
     } catch (error) {
       console.log(error);
@@ -126,28 +125,25 @@ export abstract class SignInWithWeb2 {
   }
 
   protected async checkUserRegistered() {
-    let [recoveryKey, encryptedSecret] = await Promise.all([
+    let [recoveryKey] = await Promise.all([
       SecureStore.getItemAsync(Keys.recovery(this.mini_uid)),
-      SecureStore.getItemAsync(Keys.secret(this.mini_uid)),
+      // SecureStore.getItemAsync(Keys.secret(this.mini_uid)),
     ]);
 
-    let cloud: any;
-    if (!encryptedSecret) {
-      cloud = await this.store.get(this.uid);
-      encryptedSecret = cloud?.secret;
-    }
+    const cloud = await this.store.get(this.uid);
+    const encryptedSecret = cloud?.secret;
 
     if (!encryptedSecret) return false;
 
-    if (recoveryKey && encryptedSecret && !cloud) {
-      await this.sync();
-    }
+    // if (recoveryKey && encryptedSecret && !cloud) {
+    //   await this.sync();
+    // }
 
     if (recoveryKey) {
       try {
         if (MnemonicOnce.setSecret(decrypt(encryptedSecret, recoveryKey))) {
           await runInAction(async () => (this.recoveryKey = recoveryKey!));
-          await SecureStore.setItemAsync(Keys.secret(this.mini_uid), encryptedSecret);
+          // await SecureStore.setItemAsync(Keys.secret(this.mini_uid), encryptedSecret);
         } else {
           this.recoveryKey = '';
         }
@@ -160,8 +156,8 @@ export abstract class SignInWithWeb2 {
     return true;
   }
 
-  async sync() {
-    const secret = await SecureStore.getItemAsync(Keys.secret(this.mini_uid));
+  private async sync(secret: string) {
+    // const secret = await SecureStore.getItemAsync(Keys.secret(this.mini_uid));
     if (!secret) return;
 
     await this.store.set({ uid: this.uid, secret, platform: this.platform });
@@ -170,7 +166,7 @@ export abstract class SignInWithWeb2 {
   async reset() {
     await Promise.all([
       SecureStore.deleteItemAsync(Keys.recovery(this.mini_uid)),
-      SecureStore.deleteItemAsync(Keys.secret(this.mini_uid)),
+      // SecureStore.deleteItemAsync(Keys.secret(this.mini_uid)),
       this.store.delete(this.uid),
     ]);
   }
