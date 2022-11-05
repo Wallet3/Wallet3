@@ -30,11 +30,11 @@ export class SignInWeb2Store {
     return true;
   }
 
-  async set(user: { uid: string; secret: string }) {
+  async set(user: { uid: string; secret: string; platform: string }) {
     if (!this.db) return false;
 
     try {
-      await setDoc(doc(this.db, Keys.users, user.uid), { ...user, platform: Platform.OS });
+      await setDoc(doc(this.db, Keys.users, user.uid), user);
       return true;
     } catch (e) {
       console.error('Error adding document: ', e);

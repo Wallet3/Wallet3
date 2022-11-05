@@ -10,12 +10,19 @@ class SignInWithApple extends SignInWithWeb2 {
 
   constructor() {
     super();
-
     makeObservable(this, {});
+  }
+
+  init() {
+    if (this.isAvailable) return;
 
     AppleAuthentication.isAvailableAsync()
       .then((v) => runInAction(() => (this.isAvailable = v)))
       .catch(() => {});
+  }
+
+  get platform(): string {
+    return 'apple';
   }
 
   async signIn(): Promise<SignInType | undefined> {

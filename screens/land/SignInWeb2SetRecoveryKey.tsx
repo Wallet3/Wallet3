@@ -1,31 +1,31 @@
 import { Button, SafeViewContainer, TextBox } from '../../components';
 import { Modalize, useModalize } from 'react-native-modalize';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Text, View } from 'react-native';
-import { secondaryFontColor, themeColor, warningColor } from '../../constants/styles';
 
 import Authentication from '../../viewmodels/auth/Authentication';
 import { Confirm } from '../../modals/views/Confirm';
 import { LandScreenStack } from '../navigations';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import MnemonicOnce from '../../viewmodels/auth/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Portal } from 'react-native-portalize';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import SignInWithApple from '../../viewmodels/auth/SignInWithApple';
+import SignInWithGoogle from '../../viewmodels/auth/SignInWithGoogle';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { showMessage } from 'react-native-flash-message';
 import styles from './styles';
+import { warningColor } from '../../constants/styles';
 
-export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack, 'SetRecoveryKey'>) => {
+export default observer(({ navigation, route }: NativeStackScreenProps<LandScreenStack, 'SetRecoveryKey'>) => {
   const { t } = i18n;
   const [key, setKey] = useState('');
   const { ref: resetRef, open: openReset } = useModalize();
 
-  useEffect(() => {
-    MnemonicOnce.generate();
-  }, []);
+  const platform = route.params as 'apple' | 'google' | undefined;
+
+  console.log('platform', platform);
 
   return (
     <SafeViewContainer style={{ ...styles.rootContainer }} paddingHeader includeTopPadding>
@@ -55,7 +55,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
         disabled={key.length !== 64}
         txtStyle={{ textTransform: 'none' }}
         onPress={async () => {
-          if (await SignInWithApple.recover(key)) {
+          if (platform === 'apple' ? await SignInWithApple.recover(key) : await SignInWithGoogle.recover(key)) {
             Authentication.setUserSecretsVerified(true);
             navigation.navigate('SetupPasscode');
           } else {
@@ -74,11 +74,14 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
         >
           <SafeAreaProvider style={{ height: 270, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
             <Confirm
-              onSwipeConfirm={() => {}}
               confirmButtonTitle={t('settings-reset-modal-button-confirm')}
               desc={t('land-recovery-reset')}
               themeColor="crimson"
               style={{ flex: 1 }}
+              onSwipeConfirm={() => {
+                platform === 'apple' ? SignInWithApple.reset() : SignInWithGoogle.reset();
+                navigation.pop();
+              }}
             />
           </SafeAreaProvider>
         </Modalize>

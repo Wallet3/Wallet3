@@ -6,7 +6,7 @@ import {
 } from 'expo-apple-authentication';
 import { Button, Loader, SafeViewContainer } from '../../components';
 import { Platform, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native-animatable';
 import { secondaryFontColor, themeColor, thirdFontColor } from '../../constants/styles';
 
@@ -26,6 +26,35 @@ import { startLayoutAnimation } from '../../utils/animations';
 export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack, 'Welcome'>) => {
   const { t } = i18n;
   const [read, setRead] = useState(false);
+
+  const jumpTo = (signInPlatform: 'apple' | 'google', signInResult?: SignInType) => {
+    if (!signInResult) {
+      return;
+    }
+
+    let to: any = '';
+    switch (signInResult) {
+      case SignInType.newUser:
+        to = 'ViewRecoveryKey';
+        break;
+      case SignInType.recover_key_exists:
+        to = 'SetupPasscode';
+        break;
+      case SignInType.recover_key_not_exists:
+        to = 'SetRecoveryKey';
+        break;
+    }
+
+    navigation.navigate(to, signInPlatform);
+  };
+
+  useEffect(() => {
+    if (Platform.OS === 'ios') {
+      SignInWithApple.init();
+    }
+
+    SignInWithGoogle.init();
+  }, []);
 
   return (
     <SafeViewContainer style={{ flex: 1, backgroundColor: '#fff', alignItems: 'center' }}>
@@ -87,44 +116,23 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
               buttonType={AppleAuthenticationButtonType.CONTINUE}
               cornerRadius={7}
               style={{ width: '100%', height: 42 }}
-              onPress={async () => {
-                const result = await SignInWithApple.signIn();
-
-                if (result === undefined) {
-                  return;
-                }
-
-                let to: any = '';
-                switch (result) {
-                  case SignInType.newUser:
-                    to = 'ViewRecoveryKey';
-                    break;
-                  case SignInType.recover_key_exists:
-                    to = 'SetupPasscode';
-                    break;
-                  case SignInType.recover_key_not_exists:
-                    to = 'SetRecoveryKey';
-                    break;
-                }
-
-                navigation.navigate(to);
-              }}
+              onPress={async () => jumpTo('apple', await SignInWithApple.signIn())}
             />
           </Animated.View>
         ) : undefined}
 
-        <Animated.View entering={FadeInDown.springify()} exiting={FadeOut.delay(0)} style={{ marginTop: 12 }}>
-          <Button
-            reverse
-            icon={() => <G width={12} />}
-            themeColor="#4285F4"
-            title="Continue with Google"
-            txtStyle={{ textTransform: 'none' }}
-            onPress={async () => {
-              SignInWithGoogle.signIn();
-            }}
-          />
-        </Animated.View>
+        {read && SignInWithGoogle.isAvailable ? (
+          <Animated.View entering={FadeInDown.delay(150).springify()} exiting={FadeOut.delay(100)} style={{ marginTop: 12 }}>
+            <Button
+              reverse
+              icon={() => <G width={12} />}
+              themeColor="#4285F4"
+              title="Continue with Google"
+              txtStyle={{ textTransform: 'none' }}
+              onPress={async () => jumpTo('google', await SignInWithGoogle.signIn())}
+            />
+          </Animated.View>
+        ) : undefined}
       </View>
 
       <StatusBar style="dark" />

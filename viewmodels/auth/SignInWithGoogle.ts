@@ -1,13 +1,19 @@
 import * as Secrets from '../../configs/secret';
 
-import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
-
-import { SignInWithWeb2 } from './SignInWithWeb2';
-import { runInAction } from 'mobx';
+import { GoogleSignin, User, statusCodes } from '@react-native-google-signin/google-signin';
+import { SignInType, SignInWithWeb2 } from './SignInWithWeb2';
+import { makeObservable, runInAction } from 'mobx';
 
 class SignInWithGoogle extends SignInWithWeb2 {
+  private userInfo!: User;
+
   constructor() {
     super();
+    makeObservable(this, {});
+  }
+
+  init() {
+    if (this.isAvailable) return;
 
     if (Secrets.GoogleSignInConfigs) {
       GoogleSignin.configure(Secrets.GoogleSignInConfigs);
@@ -18,9 +24,20 @@ class SignInWithGoogle extends SignInWithWeb2 {
       .catch(() => {});
   }
 
-  async signIn() {
+  get platform(): string {
+    return 'google';
+  }
+
+  async signIn(): Promise<SignInType | undefined> {
+    runInAction(() => (this.loading = true));
+
     try {
-      const userInfo = await GoogleSignin.signIn();
+      if (this.userInfo) {
+        return await this.handlerUserInfo(this.userInfo);
+      }
+
+      this.userInfo = await GoogleSignin.signIn();
+      return await this.handlerUserInfo(this.userInfo);
     } catch (error: any) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // user cancelled the login flow
@@ -31,7 +48,21 @@ class SignInWithGoogle extends SignInWithWeb2 {
       } else {
         // some other error happened
       }
+    } finally {
+      runInAction(() => (this.loading = false));
     }
+  }
+
+  private async handlerUserInfo(userInfo: User): Promise<SignInType> {
+    await super.setUser(userInfo.user.email);
+
+    const isRegistered = await super.checkUserRegistered();
+    if (!isRegistered) {
+      await super.generate();
+      return SignInType.newUser;
+    }
+
+    return super.recoveryKeyExists ? SignInType.recover_key_exists : SignInType.recover_key_not_exists;
   }
 }
 

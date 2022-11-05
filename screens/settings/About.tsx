@@ -1,5 +1,5 @@
 import { Feather, Ionicons } from '@expo/vector-icons';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { Rarible } from '../../assets/3rd';
 import React from 'react';
@@ -73,6 +73,26 @@ export function About() {
           <Rarible width={36} height={36} />
           <Text style={{ fontSize: 24, fontWeight: '600', marginStart: 10, color: foregroundColor }}>Rarible</Text>
         </View>
+      </View>
+
+      <Text style={{ marginTop: 24, marginBottom: 4, fontWeight: '500', fontSize: 19, color: textColor }}>
+        {t('about-support')}
+      </Text>
+
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <TouchableOpacity
+          style={{ paddingVertical: 8, marginEnd: 12 }}
+          onPress={() => Linking.openURL('https://twitter.com/wallet3_io')}
+        >
+          <Ionicons name="logo-twitter" size={24} color="#00acee" />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={{ paddingVertical: 8, paddingHorizontal: 12 }}
+          onPress={() => Linking.openURL('mailto:support@chainbow.io')}
+        >
+          <Ionicons name="mail" size={24} color="tomato" />
+        </TouchableOpacity>
       </View>
 
       <Text style={{ marginTop: 24, color: textColor, fontSize: 12 }}>

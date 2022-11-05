@@ -56,6 +56,10 @@ export abstract class SignInWithWeb2 {
     });
   }
 
+  abstract init(): void;
+  abstract signIn(): Promise<SignInType | undefined>;
+  abstract get platform(): string;
+
   async getRecoverKey(web2UID: string, pin?: string) {
     if (!(await Authentication.authorize(pin))) return '';
     return (await SecureStore.getItemAsync(Keys.recovery(web2UID))) || '';
@@ -72,7 +76,7 @@ export abstract class SignInWithWeb2 {
     MnemonicOnce.setUserPrefix(Keys.xpubPrefix(XpubPrefixes[Platform.OS] || '', this.mini_uid));
 
     if (__DEV__) {
-      this.reset();
+      await SecureStore.deleteItemAsync(Keys.recovery(this.mini_uid));
     }
 
     const recoveryKey = (await SecureStore.getItemAsync(Keys.recovery(this.mini_uid))) || '';
@@ -89,20 +93,21 @@ export abstract class SignInWithWeb2 {
       SecureStore.setItemAsync(Keys.secret(this.mini_uid), encryptedSecret),
     ]);
 
-    const root = utils.HDNode.fromMnemonic(plainSecret);
-    const bip32 = root.derivePath(DEFAULT_DERIVATION_PATH);
+    // const root = utils.HDNode.fromMnemonic(plainSecret);
+    // const bip32 = root.derivePath(DEFAULT_DERIVATION_PATH);
 
-    console.log('meta:', this.uid, encryptedSecret);
-    console.log('keccak256 hash', hashMessage(this.uid + encryptedSecret));
+    // console.log('meta:', this.uid, encryptedSecret);
+    // console.log('keccak256 hash', hashMessage(this.uid + encryptedSecret));
 
-    const wallet = new Wallet(bip32.derivePath(SIGN_WEB2_SUB_PATH).privateKey);
-    const signature = await wallet.signMessage(this.uid + encryptedSecret);
-    console.log('signed:', wallet.address, signature);
+    // const wallet = new Wallet(bip32.derivePath(SIGN_WEB2_SUB_PATH).privateKey);
+    // const signature = await wallet.signMessage(this.uid + encryptedSecret);
 
     await this.sync();
   }
 
   async recover(key: string) {
+    if (!this.uid) return false;
+
     const encryptedSecret =
       (await SecureStore.getItemAsync(Keys.secret(this.mini_uid))) || (await this.store.get(this.uid))?.secret;
 
@@ -132,18 +137,19 @@ export abstract class SignInWithWeb2 {
       encryptedSecret = cloud?.secret;
     }
 
+    if (!encryptedSecret) return false;
+
     if (recoveryKey && encryptedSecret && !cloud) {
       await this.sync();
     }
 
-    if (!encryptedSecret) return false;
-
     if (recoveryKey) {
-      await runInAction(async () => (this.recoveryKey = recoveryKey!));
-
       try {
         if (MnemonicOnce.setSecret(decrypt(encryptedSecret, recoveryKey))) {
+          await runInAction(async () => (this.recoveryKey = recoveryKey!));
           await SecureStore.setItemAsync(Keys.secret(this.mini_uid), encryptedSecret);
+        } else {
+          this.recoveryKey = '';
         }
       } catch (error) {
         console.log('decrypt error', error);
@@ -158,7 +164,7 @@ export abstract class SignInWithWeb2 {
     const secret = await SecureStore.getItemAsync(Keys.secret(this.mini_uid));
     if (!secret) return;
 
-    await this.store.set({ uid: this.uid, secret });
+    await this.store.set({ uid: this.uid, secret, platform: this.platform });
   }
 
   async reset() {
