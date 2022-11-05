@@ -37,9 +37,9 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
       const encoded = data.substring(12);
       const decoded = decode(encoded).replaceAll(',', ' ').trim();
 
-      if (!ethers.utils.isValidMnemonic(decoded)) return;
-      MnemonicOnce.setSecret(decoded);
-      navigation.navigate('SetupPasscode');
+      if (MnemonicOnce.setSecret(decoded)) {
+        setTimeout(() => navigation.navigate('SetupPasscode'), 1000);
+      }
     });
 
     return () => {
