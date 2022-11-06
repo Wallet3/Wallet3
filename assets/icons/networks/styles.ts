@@ -177,7 +177,7 @@ export default StyleSheet.create({
   },
 
   nova: {
-    marginTop: -32,
+    marginTop: -36,
     marginEnd: -1,
     alignSelf: 'flex-end',
     opacity: 0.5,

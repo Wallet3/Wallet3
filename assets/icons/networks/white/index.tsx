@@ -59,7 +59,7 @@ export default {
   122: <Fuse width={32} height={32} style={styles.fuse} />,
   336: <Shiden width={40} height={40} style={styles.shiden} />,
   2222: <Kava width={40} height={30} style={styles.kava} />,
-  42170: <Nova width={40} height={40} style={styles.nova} />,
+  42170: <Nova width={45} height={45} style={styles.nova} />,
 };
 
 export const EVMIcon = ({

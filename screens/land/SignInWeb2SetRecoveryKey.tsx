@@ -45,9 +45,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<LandScree
         style={{ marginBottom: 12 }}
         reverse
         themeColor={warningColor}
-        onPress={() => {
-          openReset();
-        }}
+        onPress={() => openReset()}
       />
 
       <Button

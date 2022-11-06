@@ -17,6 +17,12 @@
   "land-passcode-enter-again": "もう一度入力してください",
   "land-passcode-enable-biometric": "生体認証の利用許可",
   "land-passcode-encrypting": "データを暗号化しています...",
+  "land-sign-in-web2-recovery-key": "リカバリーキー",
+  "land-sign-in-web2-tips-1": "リカバリーキーはランダムに生成されたコードで、ウォレットの復元に役立てることができます。",
+  "land-sign-in-web2-tips-2": "リカバリーキーを紛失してしまうと、リカバリーキーを取り出すことができなくなり、すべての資金を失うことになります。",
+  "land-sign-in-web2-tips-3": "リカバリーキーをパスワードマネージャー（1Password、LastPassなど）に保存してください。",
+  "land-sign-in-web2-i-have-saved": "保存しました",
+  "land-recovery-reset": "ウォレットの復元することはできません",
   "home-tabs-assets": "資産",
   "home-tabs-nfts": "Arts",
   "home-tabs-history": "取引履歴",
@@ -85,6 +91,7 @@
   "qrscan-tip-above-types": "上記のいずれかのQRコードをスキャンしてください",
   "lock-screen-wallet-is-locked": "ロックされました",
   "lock-screen-remaining-time": "アンロックまで {{time}} 時間",
+  "lock-screen-failed-attempts": "{{attempts}} 回の試行錯誤",
   "contacts-no-more-info": "情報なし",
   "contacts-detail-name": "氏名",
   "contacts-detail-telephone": "電話番号",
@@ -278,5 +285,6 @@
   "button-close-all": "全て閉じる",
   "button-share": "共有",
   "button-approve": "許可する",
-  "button-swap": "スワップ"
+  "button-swap": "スワップ",
+  "button-reset": "リセット"
 }
