@@ -44,6 +44,7 @@ export interface INetwork {
   isUserAdded?: boolean;
   feeTokens?: IToken[];
   minWei?: number;
+  browserBarIconSize?: number;
 }
 
 export const PublicNetworks: INetwork[] = [
@@ -236,6 +237,7 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: [],
     explorer: 'https://explorer.kava.io',
     etherscanApi: 'https://explorer.kava.io/api',
+    browserBarIconSize: 18,
   },
   {
     symbol: 'MOVR',
