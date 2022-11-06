@@ -5,6 +5,7 @@ import MessageKeys from '../../common/MessageKeys';
 import i18n from '../../i18n';
 import { isURL } from '../../utils/url';
 import { showMessage } from 'react-native-flash-message';
+import { utils } from 'ethers';
 
 const appSchemes = [
   'wallet3:',
@@ -38,7 +39,8 @@ class LinkHub {
 
     const uriLower = uri.toLowerCase();
 
-    const scheme = supportedSchemes.find((schema) => uriLower.startsWith(schema)) || (uriLower.endsWith('.eth') ? '0x' : undefined);
+    const scheme =
+      supportedSchemes.find((schema) => uriLower.startsWith(schema)) || (uriLower.endsWith('.eth') ? '0x' : undefined);
 
     if (!scheme) {
       if (isURL(uri)) {
@@ -62,6 +64,9 @@ class LinkHub {
 
     if (!Authentication.appAuthorized) {
       if (scheme === 'wallet3sync:') {
+      } else if (uri.length === 64 && utils.isBytesLike(uri)) {
+        PubSub.publish(MessageKeys.CodeScan_64Length, { data: uri });
+        return true;
       } else {
         showMessage({ message: i18n.t('tip-app-not-authorized'), type: 'warning' });
         return false;

@@ -1,12 +1,13 @@
 import { Button, SafeViewContainer, TextBox } from '../../components';
 import { Modalize, useModalize } from 'react-native-modalize';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 
 import Authentication from '../../viewmodels/auth/Authentication';
 import { Confirm } from '../../modals/views/Confirm';
 import { LandScreenStack } from '../navigations';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import MessageKeys from '../../common/MessageKeys';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Portal } from 'react-native-portalize';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -25,7 +26,15 @@ export default observer(({ navigation, route }: NativeStackScreenProps<LandScree
 
   const platform = route.params as 'apple' | 'google' | undefined;
 
-  console.log('platform', platform);
+  useEffect(() => {
+    PubSub.subscribe(MessageKeys.CodeScan_64Length, (_, { data }) => {
+      setKey(data);
+    });
+
+    return () => {
+      PubSub.unsubscribe(MessageKeys.CodeScan_64Length);
+    };
+  }, []);
 
   return (
     <SafeViewContainer style={{ ...styles.rootContainer }} paddingHeader includeTopPadding>
@@ -34,8 +43,13 @@ export default observer(({ navigation, route }: NativeStackScreenProps<LandScree
       </View>
 
       <View style={{ marginVertical: 24 }}>
-        <Text style={{ marginBottom: 8 }}>Please paste your recovery key to continue:</Text>
-        <TextBox onChangeText={(t) => setKey(t)} secureTextEntry />
+        <Text style={{ marginBottom: 8 }}>{t('land-sign-in-set-recovery-key')}</Text>
+        <TextBox
+          value={key}
+          onChangeText={(t) => setKey(t)}
+          secureTextEntry
+          onScanRequest={() => navigation.navigate('QRScan')}
+        />
       </View>
 
       <View style={{ flex: 1 }} />

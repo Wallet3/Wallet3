@@ -22,6 +22,7 @@
   "land-sign-in-web2-tips-2": "如果【恢复密钥】丢失，您将会永久丢失您的钱包以及该钱包中的所有加密资产",
   "land-sign-in-web2-tips-3": "请将【恢复密钥】妥善保存到密码管理器中，如 1Password, LastPass 等",
   "land-sign-in-web2-i-have-saved": "我已妥善保存",
+  "land-sign-in-set-recovery-key": "请输入钱包的恢复密钥",
   "land-recovery-reset": "该钱包将永久丢失，且无法恢复",
   "home-tabs-assets": "资产",
   "home-tabs-nfts": "Arts",
