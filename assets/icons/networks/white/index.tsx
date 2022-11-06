@@ -21,6 +21,7 @@ import Klaytn from './klaytn.svg';
 import Metis from './metis.svg';
 import Moonbeam from './moonbeam.svg';
 import Moonriver from './moonriver.svg';
+import Nova from './nova.svg';
 import OKEx from './okex.svg';
 import Optimism from './optimism.svg';
 import Polygon from './polygon.svg';
@@ -58,6 +59,7 @@ export default {
   122: <Fuse width={32} height={32} style={styles.fuse} />,
   336: <Shiden width={40} height={40} style={styles.shiden} />,
   2222: <Kava width={40} height={30} style={styles.kava} />,
+  42170: <Nova width={40} height={40} style={styles.nova} />,
 };
 
 export const EVMIcon = ({

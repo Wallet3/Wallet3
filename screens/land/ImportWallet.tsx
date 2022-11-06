@@ -1,5 +1,3 @@
-import * as ethers from 'ethers';
-
 import React, { useEffect } from 'react';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScrollView, Text, TextInput, View } from 'react-native';
@@ -38,7 +36,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
       const decoded = decode(encoded).replaceAll(',', ' ').trim();
 
       if (MnemonicOnce.setSecret(decoded)) {
-        setTimeout(() => navigation.navigate('SetupPasscode'), 1000);
+        setTimeout(() => navigation.navigate('SetupPasscode', 'ImportWallet' as any), 1000);
       }
     });
 

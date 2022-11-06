@@ -12,6 +12,7 @@ import {
   IToken,
   MetisPopularTokens,
   MoonriverDefaultToken,
+  NovaPopularTokens,
   OpPopularTokens,
   PolygonPopularTokens,
   RoninPopularTokens,
@@ -62,7 +63,7 @@ export const PublicNetworks: INetwork[] = [
   {
     symbol: 'ETH',
     comm_id: 'arb',
-    network: 'Arbitrum',
+    network: 'Arbitrum One',
     chainId: 42161,
     color: '#28a0f0',
     order: 3,
@@ -170,6 +171,15 @@ export const PublicNetworks: INetwork[] = [
     l2: true,
     explorer: 'https://andromeda-explorer.metis.io',
     etherscanApi: 'https://andromeda-explorer.metis.io/api',
+  },
+  {
+    symbol: 'ETH',
+    network: 'Arbitrum Nova',
+    chainId: 42170,
+    color: '#EF8220',
+    defaultTokens: NovaPopularTokens,
+    explorer: 'https://nova.arbiscan.io',
+    etherscanApi: 'https://api-nova.arbiscan.io/api',
   },
   {
     symbol: 'AVAX',

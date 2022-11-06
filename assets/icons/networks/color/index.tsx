@@ -23,6 +23,7 @@ import Metis from './metis.svg';
 import Moonbeam from './moonbeam.svg';
 import Moonriver from './moonriver.svg';
 import Mumbai from './mumbai.svg';
+import Nova from './nova.svg';
 import OKEx from './okex.svg';
 import Optimism from './optimism.svg';
 import Polygon from './polygon.svg';
@@ -109,6 +110,7 @@ const FUSE = generateNetworkIcon({ chainId: 122, width: 27, height: 32 });
 const SHIDEN = generateNetworkIcon({ chainId: 336, width: 22, height: 32 });
 const EVMOS = generateNetworkIcon({ chainId: 9001, width: 29, height: 32 });
 const KAVA = generateNetworkIcon({ chainId: 2222, width: 19, height: 25 });
+const NOVA = generateNetworkIcon({ chainId: 42170, width: 27, height: 27 });
 
 export const NetworkIcons = {
   1: ETH,
@@ -138,6 +140,7 @@ export const NetworkIcons = {
   336: SHIDEN,
   9001: EVMOS,
   2222: KAVA,
+  42170: NOVA,
 };
 
 export function generateNetworkIcon(props: {
@@ -216,6 +219,8 @@ export function generateNetworkIcon(props: {
       return <Evmos key={chainId} width={width} height={height ?? width} style={style} />;
     case 2222:
       return <Kava key={chainId} width={width} height={height ?? width} style={style} />;
+    case 42170:
+      return <Nova key={chainId} width={width} height={height ?? width} style={style} />;
     default:
       return coins[symbol?.toLowerCase() || ''] ? (
         <Coin symbol={symbol} size={height ?? width} address="" chainId={chainId} style={style as any} />

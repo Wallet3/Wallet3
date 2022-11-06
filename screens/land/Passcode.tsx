@@ -14,7 +14,7 @@ import { showMessage } from 'react-native-flash-message';
 import styles from './styles';
 import { themeColor } from '../../constants/styles';
 
-export default observer(({}: NativeStackScreenProps<LandScreenStack, 'Backup'>) => {
+export default observer(({ route }: NativeStackScreenProps<LandScreenStack, 'Backup'>) => {
   const { t } = i18n;
   const [busy, setBusy] = useState(false);
 
@@ -29,6 +29,10 @@ export default observer(({}: NativeStackScreenProps<LandScreenStack, 'Backup'>) 
       AppVM.init();
     } else {
       showMessage({ message: 'msg-failed-to-import-wallet', type: 'warning' });
+    }
+
+    if (route?.params === 'ImportWallet') {
+      Authentication.setUserSecretsVerified(true);
     }
 
     setBusy(false);
