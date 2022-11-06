@@ -13,6 +13,7 @@ import { Modalize } from 'react-native-modalize';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/core/Networks';
 import { Portal } from 'react-native-portalize';
+import QRCode from 'react-native-qrcode-svg';
 import SignInWithApple from '../../viewmodels/auth/SignInWithApple';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
@@ -28,6 +29,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
   const [words, setWords] = useState<string[]>([]);
   const [privKey, setPrivKey] = useState<string>();
   const [recoveryKey, setRecoveryKey] = useState<string>();
+  const [recoveryKeyPlatform, setRecoveryKeyPlatform] = useState<string>();
   const { textColor } = Theme;
 
   usePreventScreenCapture();
@@ -39,6 +41,8 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
     const secret = await (wallet?.web2SignedIn
       ? SignInWithApple.getRecoverKey(wallet.signInUser!, passcode)
       : wallet?.getSecret(passcode));
+    setRecoveryKeyPlatform(wallet?.signInFrom);
+
     const success = secret ? true : false;
 
     setAuthorized(success);
@@ -93,8 +97,10 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
           {words.length > 0 && <Mnemonic phrase={words} color={textColor} />}
 
           {recoveryKey && (
-            <Text style={{ marginVertical: 8, color: themeColor, fontSize: 16, fontWeight: '500' }}>
-              {t('land-sign-in-web2-recovery-key')}
+            <Text
+              style={{ marginVertical: 8, color: themeColor, fontSize: 16, fontWeight: '500', textTransform: 'capitalize' }}
+            >
+              {`${t('land-sign-in-web2-recovery-key')} ${recoveryKeyPlatform ? `(${recoveryKeyPlatform})` : ''}`}
             </Text>
           )}
 
@@ -106,6 +112,20 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
                 iconColor={thirdFontColor}
                 txtStyle={{ color: thirdFontColor }}
                 iconStyle={{ marginStart: 6 }}
+              />
+            </View>
+          )}
+
+          {(privKey || recoveryKey) && (
+            <View style={{ margin: 36, alignItems: 'center' }}>
+              <QRCode
+                value={privKey || recoveryKey}
+                size={180}
+                backgroundColor="transparent"
+                enableLinearGradient
+                logoBorderRadius={7}
+                logoSize={29}
+                linearGradient={['rgb(134, 65, 244)', 'rgb(66, 194, 244)']}
               />
             </View>
           )}

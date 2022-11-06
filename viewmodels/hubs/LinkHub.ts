@@ -37,6 +37,11 @@ class LinkHub {
     if (!uri) return false;
     if (this.handledWalletConnectUrls.has(uri)) return false;
 
+    if (uri.length === 64 && (utils.isBytesLike(uri) || utils.isBytesLike(`0x${uri}`))) {
+      PubSub.publish(MessageKeys.CodeScan_64Length, { data: uri });
+      return true;
+    }
+
     const uriLower = uri.toLowerCase();
 
     const scheme =
@@ -64,9 +69,6 @@ class LinkHub {
 
     if (!Authentication.appAuthorized) {
       if (scheme === 'wallet3sync:') {
-      } else if (uri.length === 64 && utils.isBytesLike(uri)) {
-        PubSub.publish(MessageKeys.CodeScan_64Length, { data: uri });
-        return true;
       } else {
         showMessage({ message: i18n.t('tip-app-not-authorized'), type: 'warning' });
         return false;
