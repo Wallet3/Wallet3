@@ -139,7 +139,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
 
       <StatusBar style="dark" />
 
-      <Loader loading={SignInWithApple.loading} message={t('msg-wait-a-moment')} />
+      <Loader loading={SignInWithApple.loading || SignInWithGoogle.loading} message={t('msg-wait-a-moment')} />
     </SafeViewContainer>
   );
 });

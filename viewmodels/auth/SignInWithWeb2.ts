@@ -6,14 +6,8 @@ import { decrypt, encrypt } from '../../utils/cipher';
 
 import Authentication from './Authentication';
 import MnemonicOnce from './MnemonicOnce';
-import { Platform } from 'react-native';
 import { SignInWeb2Store } from './SignInWeb2Store';
 import { utils } from 'ethers';
-
-const XpubPrefixes = {
-  ios: 'apple',
-  android: 'google',
-};
 
 const Keys = {
   recovery: (uid: string) => `${uid}_web2_recovery_key`,
@@ -71,7 +65,7 @@ export abstract class SignInWithWeb2 {
 
     this.uid = utils.keccak256(utils.keccak256(Buffer.from(user, 'utf-8')));
     this.mini_uid = utils.keccak256(Buffer.from(user, 'utf-8')).substring(0, 10);
-    MnemonicOnce.setUserPrefix(Keys.xpubPrefix(XpubPrefixes[Platform.OS] || '', this.mini_uid));
+    MnemonicOnce.setUserPrefix(Keys.xpubPrefix(this.platform, this.mini_uid));
 
     if (__DEV__) {
       await SecureStore.deleteItemAsync(Keys.recovery(this.mini_uid));

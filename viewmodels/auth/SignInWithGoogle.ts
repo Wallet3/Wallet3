@@ -5,8 +5,6 @@ import { SignInType, SignInWithWeb2 } from './SignInWithWeb2';
 import { makeObservable, runInAction } from 'mobx';
 
 class SignInWithGoogle extends SignInWithWeb2 {
-  private userInfo!: User;
-
   constructor() {
     super();
     makeObservable(this, {});
@@ -32,12 +30,8 @@ class SignInWithGoogle extends SignInWithWeb2 {
     runInAction(() => (this.loading = true));
 
     try {
-      if (this.userInfo) {
-        return await this.handlerUserInfo(this.userInfo);
-      }
-
-      this.userInfo = await GoogleSignin.signIn();
-      return await this.handlerUserInfo(this.userInfo);
+      const userInfo = await GoogleSignin.signIn();
+      return await this.handlerUserInfo(userInfo);
     } catch (error: any) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // user cancelled the login flow

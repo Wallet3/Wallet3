@@ -6,8 +6,6 @@ import { makeObservable, runInAction } from 'mobx';
 import { AppleAuthenticationCredential } from 'expo-apple-authentication';
 
 class SignInWithApple extends SignInWithWeb2 {
-  private credentials: AppleAuthenticationCredential | undefined;
-
   constructor() {
     super();
     makeObservable(this, {});
@@ -29,19 +27,15 @@ class SignInWithApple extends SignInWithWeb2 {
     runInAction(() => (this.loading = true));
 
     try {
-      if (this.credentials) {
-        return await this.handleCredentials(this.credentials);
-      }
-
-      this.credentials = await AppleAuthentication.signInAsync({
+      const credentials = await AppleAuthentication.signInAsync({
         requestedScopes: [
           AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
           AppleAuthentication.AppleAuthenticationScope.EMAIL,
         ],
       });
 
-      if (!this.credentials) return;
-      return await this.handleCredentials(this.credentials!);
+      if (!credentials) return;
+      return await this.handleCredentials(credentials);
     } catch (e) {
       if ((e as any).code === 'ERR_CANCELED') {
         // handle that the user canceled the sign-in flow

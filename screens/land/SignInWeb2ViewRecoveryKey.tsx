@@ -20,8 +20,6 @@ export default observer(({ navigation, route }: NativeStackScreenProps<LandScree
   const [countdown, setCountdown] = useState(10);
   const platform = route.params as 'apple' | 'google' | undefined;
 
-  console.log('platform', platform);
-
   useEffect(() => {
     let timer: NodeJS.Timer;
 
