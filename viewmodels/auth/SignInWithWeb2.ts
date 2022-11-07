@@ -21,9 +21,10 @@ const Keys = {
 };
 
 export enum SignInType {
-  newUser = 1,
+  new_user = 1,
   recover_key_exists,
   recover_key_not_exists,
+  failed,
 }
 
 export interface ISignInWithWeb2 {
@@ -62,7 +63,7 @@ export abstract class SignInWithWeb2 {
     return (await SecureStore.getItemAsync(Keys.recovery(web2UID))) || '';
   }
 
-  protected async setUser(user: string) {
+  private async setUser(user: string) {
     if (!this.store) {
       this.store = new SignInWeb2Store();
       this.store.init();
@@ -96,7 +97,12 @@ export abstract class SignInWithWeb2 {
     // const wallet = new Wallet(bip32.derivePath(SIGN_WEB2_SUB_PATH).privateKey);
     // const signature = await wallet.signMessage(this.uid + encryptedSecret);
 
-    await this.store.set({ uid: this.uid, secret: encryptedSecret, platform: this.platform });
+    if (!(await this.store.set({ uid: this.uid, secret: encryptedSecret, platform: this.platform }))) {
+      MnemonicOnce.clean();
+      return false;
+    }
+
+    return true;
   }
 
   async recover(key: string) {
@@ -117,7 +123,7 @@ export abstract class SignInWithWeb2 {
     return false;
   }
 
-  protected async checkUserRegistered() {
+  private async checkUserRegistered() {
     const cloud = await this.store.get(this.uid);
     const encryptedSecret = cloud?.secret;
 
@@ -138,6 +144,17 @@ export abstract class SignInWithWeb2 {
     }
 
     return true;
+  }
+
+  async autoRegister(user: string) {
+    await this.setUser(user);
+
+    const isRegistered = await this.checkUserRegistered();
+    if (!isRegistered) {
+      return (await this.generate()) ? SignInType.new_user : SignInType.failed;
+    }
+
+    return this.recoveryKeyExists ? SignInType.recover_key_exists : SignInType.recover_key_not_exists;
   }
 
   async reset() {

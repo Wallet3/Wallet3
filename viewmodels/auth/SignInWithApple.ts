@@ -56,22 +56,8 @@ class SignInWithApple extends SignInWithWeb2 {
   }
 
   private async handleCredentials(credentials: AppleAuthenticationCredential): Promise<SignInType> {
-    const { email, user } = credentials;
-
-    await super.setUser(user);
-
-    if (!email) {
-      const isRegistered = await super.checkUserRegistered();
-      if (!isRegistered) {
-        await super.generate();
-        return SignInType.newUser;
-      }
-
-      return super.recoveryKeyExists ? SignInType.recover_key_exists : SignInType.recover_key_not_exists;
-    }
-
-    await super.generate();
-    return SignInType.newUser;
+    const { user } = credentials;
+    return await super.autoRegister(user);
   }
 }
 

@@ -54,15 +54,7 @@ class SignInWithGoogle extends SignInWithWeb2 {
   }
 
   private async handlerUserInfo(userInfo: User): Promise<SignInType> {
-    await super.setUser(userInfo.user.email);
-
-    const isRegistered = await super.checkUserRegistered();
-    if (!isRegistered) {
-      await super.generate();
-      return SignInType.newUser;
-    }
-
-    return super.recoveryKeyExists ? SignInType.recover_key_exists : SignInType.recover_key_not_exists;
+    return await super.autoRegister(userInfo.user.id);
   }
 }
 

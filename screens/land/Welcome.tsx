@@ -1,4 +1,4 @@
-import Animated, { FadeIn, FadeInDown, FadeOut, FadeOutUp } from 'react-native-reanimated';
+import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 import {
   AppleAuthenticationButton,
   AppleAuthenticationButtonStyle,
@@ -21,6 +21,7 @@ import { StatusBar } from 'expo-status-bar';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { openBrowserAsync } from 'expo-web-browser';
+import { showMessage } from 'react-native-flash-message';
 import { startLayoutAnimation } from '../../utils/animations';
 
 export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack, 'Welcome'>) => {
@@ -34,7 +35,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
 
     let to: any = '';
     switch (signInResult) {
-      case SignInType.newUser:
+      case SignInType.new_user:
         to = 'ViewRecoveryKey';
         break;
       case SignInType.recover_key_exists:
@@ -43,6 +44,9 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
       case SignInType.recover_key_not_exists:
         to = 'SetRecoveryKey';
         break;
+      case SignInType.failed:
+        showMessage({ message: t('msg-sign-in-web2-failed') });
+        return;
     }
 
     navigation.navigate(to, signInPlatform);
@@ -66,8 +70,6 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
           A Secure Wallet for Web3
         </Text>
       </View>
-
-      {/* <View style={{ flex: 1 }} /> */}
 
       <View style={{ width: '100%' }}>
         <View animation="fadeInUp" style={{ flexDirection: 'row', alignItems: 'center', paddingStart: 2 }}>
@@ -127,7 +129,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
               reverse
               icon={() => <G width={12} />}
               themeColor="#4285F4"
-              title="Continue with Google"
+              title={t('land-sign-in-continue-with-google')}
               txtStyle={{ textTransform: 'none' }}
               onPress={async () => jumpTo('google', await SignInWithGoogle.signIn())}
             />

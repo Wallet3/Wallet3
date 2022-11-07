@@ -2202,10 +2202,10 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@curvefi/api@^2.19.1":
-  version "2.19.1"
-  resolved "https://registry.yarnpkg.com/@curvefi/api/-/api-2.19.1.tgz#dbfdd8ef562fda2c236d090cd4a478509d254832"
-  integrity sha512-sZSenbKzhIlu6+iGeWPDp/3ZdGEIxDsqHAyX9KU2I4sUHN1WB01pUmQnXyrvrkZYa70v39dkbgyUNOTQON30SA==
+"@curvefi/api@^2.19.2":
+  version "2.19.2"
+  resolved "https://registry.yarnpkg.com/@curvefi/api/-/api-2.19.2.tgz#b39d0e696a982cb243529f32cba45a2aebcb580b"
+  integrity sha512-0USGjrEROcBawYEfXbAF7N5JOl1iPljtU19OlN6k4NUbPq2c4MFvQmqc0/lk3kHZrm/bs/pGMdFmEtpWPv+pnw==
   dependencies:
     "@ethersproject/networks" "^5.5.0"
     axios "^0.21.1"
@@ -9665,10 +9665,10 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.npmjs.org/lines-and-columns/-/lines-and-columns-1.1.6.tgz"
   integrity sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=
 
-linq@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.npmjs.org/linq/-/linq-4.0.0.tgz"
-  integrity sha512-oO6Or6ndtSWBrTpy876umEgUxDIrV7Vu/1L2CGNGchp7FOtCxoMBNtCaVxtkkZm6iJlv/KGjmvlj8C5fZI9Snw==
+linq@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/linq/-/linq-4.0.1.tgz#86e308203b075a758ece8f741a99589236255b6f"
+  integrity sha512-Apjyhhtra/JMcJZT+RQUGU8lO5jhfKNAKA/A8TFnL39u4JyvTAAvwe8J090St4BVFEldI2/Lh/5RdUFNALTI3g==
 
 load-bmfont@^1.3.1:
   version "1.4.1"
