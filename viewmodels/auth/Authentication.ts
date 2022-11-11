@@ -154,7 +154,7 @@ export class Authentication extends EventEmitter {
 
     runInAction(() => {
       this.failedAttempts = success ? 0 : this.failedAttempts + 1;
-      if (this.failedAttempts <= (__DEV__ ? 3 : 10)) return;
+      if (this.failedAttempts <= (__DEV__ ? 3 : 6)) return;
 
       this.failedAttempts = 0;
       this.appUnlockTime = Date.now() + (__DEV__ ? toMilliseconds({ seconds: 120 }) : toMilliseconds({ hours: 3 }));

@@ -41,7 +41,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
     const secret = await (wallet?.web2SignedIn
       ? SignInWithApple.getRecoverKey(wallet.signInUser!, passcode)
       : wallet?.getSecret(passcode));
-    setRecoveryKeyPlatform(wallet?.signInFrom);
+    setRecoveryKeyPlatform(wallet?.signInPlatform);
 
     const success = secret ? true : false;
 

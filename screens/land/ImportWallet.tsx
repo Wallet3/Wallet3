@@ -110,7 +110,11 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
           txtStyle={{ textTransform: 'none' }}
         />
 
-        <Button title={t('button-next')} disabled={!verified} onPress={() => navigation.navigate('SetupPasscode')} />
+        <Button
+          title={t('button-next')}
+          disabled={!verified}
+          onPress={() => navigation.navigate('SetupPasscode', 'ImportWallet' as any)}
+        />
       </ScrollView>
     </SafeAreaView>
   );

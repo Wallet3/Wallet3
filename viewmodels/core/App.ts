@@ -214,7 +214,7 @@ export class AppVM {
 
     PubSub.subscribe(MessageKeys.userSecretsNotVerified, () => {
       if ((this.currentAccount?.balance || 0) === 0) return;
-      if (this.currentWallet?.signInFrom) return;
+      if (this.currentWallet?.signInPlatform) return;
       setTimeout(() => PubSub.publish(MessageKeys.openBackupSecretTip), 1000);
     });
 

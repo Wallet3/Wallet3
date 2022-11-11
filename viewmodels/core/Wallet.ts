@@ -55,11 +55,11 @@ export class Wallet {
   lastRefreshedTime = 0;
 
   readonly isHDWallet: boolean;
-  readonly signInFrom: 'apple' | 'google' | undefined;
+  readonly signInPlatform: 'apple' | 'google' | undefined;
   readonly signInUser: string | undefined;
 
   get web2SignedIn() {
-    return this.signInFrom !== undefined;
+    return this.signInPlatform !== undefined;
   }
 
   constructor(key: Key) {
@@ -67,7 +67,7 @@ export class Wallet {
 
     const components = key.bip32Xpubkey.split(':');
     this.isHDWallet = components[components.length - 1].startsWith('xpub');
-    this.signInFrom = components.length > 1 ? (components[0] as any) : undefined;
+    this.signInPlatform = components.length > 1 ? (components[0] as any) : undefined;
     this.signInUser = components.length > 1 ? components[1] : undefined;
 
     makeObservable(this, {
@@ -97,10 +97,10 @@ export class Wallet {
         if (this.removedIndexes.includes(i)) continue;
 
         const accountNode = bip32.derivePath(`${i}`);
-        accounts.push(new Account(accountNode.address, i));
+        accounts.push(new Account(accountNode.address, i, { signInPlatform: this.signInPlatform }));
       }
     } else {
-      accounts.push(new Account(this.key.bip32Xpubkey, 0));
+      accounts.push(new Account(this.key.bip32Xpubkey, 0, { signInPlatform: '' }));
     }
 
     runInAction(() => (this.accounts = accounts));
@@ -119,7 +119,7 @@ export class Wallet {
       ) + 1;
 
     const node = bip32.derivePath(`${index}`);
-    const account = new Account(node.address, index);
+    const account = new Account(node.address, index, { signInPlatform: this.signInPlatform });
     this.accounts.push(account);
 
     AsyncStorage.setItem(`${this.key.id}-address-count`, `${index + 1}`);
