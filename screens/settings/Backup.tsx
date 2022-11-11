@@ -96,13 +96,15 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
 
           {words.length > 0 && <Mnemonic phrase={words} color={textColor} />}
 
-          {recoveryKey && (
+          {recoveryKey || privKey ? (
             <Text
               style={{ marginVertical: 8, color: themeColor, fontSize: 16, fontWeight: '500', textTransform: 'capitalize' }}
             >
-              {`${t('land-sign-in-web2-recovery-key')} ${recoveryKeyPlatform ? `(${recoveryKeyPlatform})` : ''}`}
+              {`${t(recoveryKey ? 'land-sign-in-web2-recovery-key' : 'settings-security-backup-private-key')} ${
+                recoveryKeyPlatform ? `(${recoveryKeyPlatform})` : ''
+              }`}
             </Text>
-          )}
+          ) : undefined}
 
           {(privKey || recoveryKey) && (
             <View style={{ borderColor, borderWidth: 1, borderRadius: 7, padding: 12, paddingEnd: 24 }}>

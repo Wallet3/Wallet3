@@ -127,6 +127,7 @@
   "settings-security-backup": "备份",
   "settings-security-backup-verify": "验证",
   "settings-security-backup-button-verify": "验证",
+  "settings-security-backup-private-key": "私钥",
   "settings-security-reset": "重置",
   "settings-legal": "其它",
   "settings-legal-privacy": "隐私政策",

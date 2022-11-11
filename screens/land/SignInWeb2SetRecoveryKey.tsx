@@ -69,7 +69,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<LandScree
         onPress={async () => {
           if (platform === 'apple' ? await SignInWithApple.recover(key) : await SignInWithGoogle.recover(key)) {
             Authentication.setUserSecretsVerified(true);
-            navigation.navigate('SetupPasscode');
+            navigation.navigate('SetupPasscode', 'ImportWallet' as any);
           } else {
             showMessage({ type: 'warning', message: t('msg-invalid-recovery-key') });
           }

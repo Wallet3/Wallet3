@@ -127,6 +127,7 @@
   "settings-security-backup": "Backup",
   "settings-security-backup-verify": "Verify",
   "settings-security-backup-button-verify": "Verify",
+  "settings-security-backup-private-key": "Private key",
   "settings-security-reset": "Reset App",
   "settings-legal": "Legal",
   "settings-legal-privacy": "Privacy Policy",
