@@ -8,15 +8,17 @@ import CopyableText from '../../components/CopyableText';
 import { LandScreenStack } from '../navigations';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import QRCode from 'react-native-qrcode-svg';
 import SignInWithApple from '../../viewmodels/auth/SignInWithApple';
+import SignInWithGoogle from '../../viewmodels/auth/SignInWithGoogle';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
 
-export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack, 'ViewRecoveryKey'>) => {
+export default observer(({ navigation, route }: NativeStackScreenProps<LandScreenStack, 'ViewRecoveryKey'>) => {
   const { t } = i18n;
-
   const [countdown, setCountdown] = useState(10);
+  const platform = route.params as 'apple' | 'google' | undefined;
 
   useEffect(() => {
     let timer: NodeJS.Timer;
@@ -49,7 +51,24 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
       </View>
 
       <View style={{ borderColor, borderWidth: 1, borderRadius: 7, padding: 12, paddingEnd: 24 }}>
-        <CopyableText txtLines={1} copyText={SignInWithApple.recoveryKey} iconColor={'black'} iconStyle={{ marginStart: 6 }} />
+        <CopyableText
+          txtLines={1}
+          copyText={(platform === 'apple' ? SignInWithApple : SignInWithGoogle).recoveryKey}
+          iconColor={'black'}
+          iconStyle={{ marginStart: 6 }}
+        />
+      </View>
+
+      <View style={{ marginVertical: 24, alignItems: 'center', justifyContent: 'center' }}>
+        <QRCode
+          value={(platform === 'apple' ? SignInWithApple : SignInWithGoogle).recoveryKey}
+          size={180}
+          backgroundColor="transparent"
+          enableLinearGradient
+          logoBorderRadius={7}
+          logoSize={29}
+          linearGradient={['rgb(134, 65, 244)', 'rgb(66, 194, 244)']}
+        />
       </View>
 
       <View style={{ flex: 1 }} />

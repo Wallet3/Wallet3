@@ -1,5 +1,3 @@
-import * as ethers from 'ethers';
-
 import React, { useEffect } from 'react';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScrollView, Text, TextInput, View } from 'react-native';
@@ -37,9 +35,9 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
       const encoded = data.substring(12);
       const decoded = decode(encoded).replaceAll(',', ' ').trim();
 
-      if (!ethers.utils.isValidMnemonic(decoded)) return;
-      MnemonicOnce.setSecret(decoded);
-      navigation.navigate('SetupPasscode');
+      if (MnemonicOnce.setSecret(decoded)) {
+        setTimeout(() => navigation.navigate('SetupPasscode', 'ImportWallet' as any), 1000);
+      }
     });
 
     return () => {
@@ -112,7 +110,11 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
           txtStyle={{ textTransform: 'none' }}
         />
 
-        <Button title={t('button-next')} disabled={!verified} onPress={() => navigation.navigate('SetupPasscode')} />
+        <Button
+          title={t('button-next')}
+          disabled={!verified}
+          onPress={() => navigation.navigate('SetupPasscode', 'ImportWallet' as any)}
+        />
       </ScrollView>
     </SafeAreaView>
   );

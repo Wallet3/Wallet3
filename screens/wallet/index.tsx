@@ -91,6 +91,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         onDAppsPress={() => navigation.navigate('DApps')}
         gasPrice={GasPrice.currentGwei}
         onQRCodePress={() => openAddressQR()}
+        signInPlatform={currentAccount?.signInPlatform}
       />
 
       <Assets

@@ -175,4 +175,11 @@ export default StyleSheet.create({
     alignSelf: 'flex-end',
     opacity: 0.5,
   },
+
+  nova: {
+    marginTop: -36,
+    marginEnd: -1,
+    alignSelf: 'flex-end',
+    opacity: 0.5,
+  },
 });

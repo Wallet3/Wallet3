@@ -42,6 +42,10 @@ export class AppVM {
     return accounts;
   }
 
+  get currentWallet() {
+    return this.wallets.find((w) => w.accounts.find((a) => a.address === this.currentAccount?.address));
+  }
+
   constructor() {
     makeObservable(this, {
       initialized: observable,
@@ -50,6 +54,7 @@ export class AppVM {
       reset: action,
       switchAccount: action,
       currentAccount: observable,
+      currentWallet: computed,
       newAccount: action,
       removeAccount: action,
       allAccounts: computed,
@@ -210,6 +215,7 @@ export class AppVM {
 
     PubSub.subscribe(MessageKeys.userSecretsNotVerified, () => {
       if ((this.currentAccount?.balance || 0) === 0) return;
+      if (this.currentWallet?.signInPlatform) return;
       setTimeout(() => PubSub.publish(MessageKeys.openBackupSecretTip), 1000);
     });
 

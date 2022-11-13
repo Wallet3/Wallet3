@@ -38,6 +38,7 @@ interface Props {
   onQRCodePress?: () => void;
   mode?: 'light' | 'dark';
   gasPrice?: number;
+  signInPlatform?: string;
 }
 
 export default observer(
@@ -60,6 +61,7 @@ export default observer(
     mode,
     gasPrice,
     onQRCodePress,
+    signInPlatform,
   }: Props) => {
     const { t } = i18n;
     const { hideBalance, gasIndicator } = UI;
@@ -137,12 +139,11 @@ export default observer(
             {formatAddress(prefixedAddress, 7 + (network?.addrPrefix?.length ?? 0), 5)}
           </Animatable.Text>
 
-          <MaterialCommunityIcons
-            name="qrcode"
-            size={12}
-            color={textColor}
-            style={{ margin: -7, padding: 7, paddingHorizontal: 12 }}
-          />
+          {signInPlatform ? (
+            <Ionicons name={`logo-${signInPlatform}` as any} size={11} color={textColor} style={{ marginStart: 5 }} />
+          ) : undefined}
+
+          <MaterialCommunityIcons name="qrcode" size={12} color={textColor} style={{ paddingHorizontal: 6 }} />
         </TouchableOpacity>
 
         <View style={{ height: 36, backgroundColor: 'transparent' }} />

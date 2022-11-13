@@ -77,3 +77,5 @@ dist/
 # @end expo-cli
 android/app/release
 configs/.android
+
+GoogleService-Info.plist

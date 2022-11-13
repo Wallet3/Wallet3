@@ -361,8 +361,8 @@ export default observer((props: Web3ViewProps) => {
                 >
                   {generateNetworkIcon({
                     ...appNetwork,
-                    width: 23,
-                    height: 23,
+                    width: appNetwork.browserBarIconSize ?? 23,
+                    height: appNetwork.browserBarIconSize ?? 23,
                     hideEVMTitle: true,
                   })}
 

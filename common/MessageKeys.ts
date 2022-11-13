@@ -16,6 +16,7 @@ export default {
   wc_request: 'wc_request',
   CodeScan_wc: 'CodeScan-wc:',
   CodeScan_wallet3sync: 'CodeScan-wallet3sync:',
+  CodeScan_64Length: 'CodeScan-64Length',
   openBackupSecretTip: 'openBackupSecretTip',
   userSecretsNotVerified: 'userSecretsNotVerified',
   openUrl: 'openUrl',
