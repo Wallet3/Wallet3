@@ -1,4 +1,4 @@
-import Networks from '../Networks';
+import Networks from '../core/Networks';
 import { providers } from 'ethers/lib/ethers';
 
 let _ensProvider: providers.WebSocketProvider | undefined;

@@ -10,7 +10,7 @@ import { WebView, WebViewMessageEvent, WebViewNavigation, WebViewProps } from 'r
 
 import { Account } from '../../viewmodels/account/Account';
 import AccountSelector from '../../modals/dapp/AccountSelector';
-import App from '../../viewmodels/App';
+import App from '../../viewmodels/core/App';
 import Avatar from '../../components/Avatar';
 import DeviceInfo from 'react-native-device-info';
 import GetPageMetadata from './scripts/Metadata';
@@ -21,7 +21,7 @@ import { JS_POST_MESSAGE_TO_PROVIDER } from './scripts/Utils';
 import LinkHub from '../../viewmodels/hubs/LinkHub';
 import MetamaskMobileProvider from './scripts/Metamask-mobile-provider';
 import { Modalize } from 'react-native-modalize';
-import Networks from '../../viewmodels/Networks';
+import Networks from '../../viewmodels/core/Networks';
 import { NetworksMenu } from '../../modals';
 import { Portal } from 'react-native-portalize';
 import Theme from '../../viewmodels/settings/Theme';
@@ -349,7 +349,8 @@ export default observer((props: Web3ViewProps) => {
                 >
                   {generateNetworkIcon({
                     ...appNetwork,
-                    width: 23,
+                    width: appNetwork.browserBarIconSize ?? 23,
+                    height: appNetwork.browserBarIconSize ?? 23,
                     hideEVMTitle: true,
                   })}
 

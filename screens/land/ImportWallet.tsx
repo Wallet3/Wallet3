@@ -1,15 +1,13 @@
-import * as ethers from 'ethers';
-
 import React, { useEffect } from 'react';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScrollView, Text, TextInput, View } from 'react-native';
 import { borderColor, secondaryFontColor, themeColor } from '../../constants/styles';
 
-import Authentication from '../../viewmodels/Authentication';
+import Authentication from '../../viewmodels/auth/Authentication';
 import { Button } from '../../components';
 import { LandScreenStack } from '../navigations';
 import MessageKeys from '../../common/MessageKeys';
-import MnemonicOnce from '../../viewmodels/MnemonicOnce';
+import MnemonicOnce from '../../viewmodels/auth/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { decode } from 'js-base64';
 import i18n from '../../i18n';
@@ -31,13 +29,15 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
   }, [mnemonic]);
 
   useEffect(() => {
+    MnemonicOnce.clean();
+
     PubSub.subscribe(MessageKeys.CodeScan_wallet3sync, (_, { data }: { data: string }) => {
       const encoded = data.substring(12);
       const decoded = decode(encoded).replaceAll(',', ' ').trim();
 
-      if (!ethers.utils.isValidMnemonic(decoded)) return;
-      MnemonicOnce.setSecret(decoded);
-      navigation.navigate('SetupPasscode');
+      if (MnemonicOnce.setSecret(decoded)) {
+        setTimeout(() => navigation.navigate('SetupPasscode', 'ImportWallet' as any), 1000);
+      }
     });
 
     return () => {
@@ -110,7 +110,11 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
           txtStyle={{ textTransform: 'none' }}
         />
 
-        <Button title={t('button-next')} disabled={!verified} onPress={() => navigation.navigate('SetupPasscode')} />
+        <Button
+          title={t('button-next')}
+          disabled={!verified}
+          onPress={() => navigation.navigate('SetupPasscode', 'ImportWallet' as any)}
+        />
       </ScrollView>
     </SafeAreaView>
   );

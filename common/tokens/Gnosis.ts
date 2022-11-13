@@ -20,6 +20,7 @@ export const xDAI_USDC = {
   address: '0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83',
   decimals: 6,
   symbol: 'USDC',
+  shown: true,
 };
 
 export const xDAI_USDT = {

@@ -1,9 +1,9 @@
-import '@ethersproject/shims';
-import { BigNumber, ethers, utils } from 'ethers';
-import { StaticJsonRpcProvider, Web3Provider } from '@ethersproject/providers';
-import Networks from '../viewmodels/Networks';
+import { BigNumber, utils } from 'ethers';
+
+import Networks from '../viewmodels/core/Networks';
 import Providers from '../configs/providers.json';
 import { PublicNetworks } from './Networks';
+import { StaticJsonRpcProvider } from '@ethersproject/providers';
 import { post } from '../utils/fetch';
 
 const cache = new Map<number, string[]>();
@@ -163,6 +163,8 @@ export async function eth_call_return(
         params: [args, 'latest'],
         id: Date.now(),
       });
+
+      if (resp.error) continue;
 
       return resp;
     } catch (error) {

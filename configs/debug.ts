@@ -9,5 +9,6 @@ LogBox.ignoreLogs([
   'source.uri should not be an empty string',
   'check out new Gestures system',
   'Could not find image file',
-  'Require cycle:'
+  'Require cycle:',
+  'This may lead to deadlocks',
 ]);

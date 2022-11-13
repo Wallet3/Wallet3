@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import AddressQRCode from './AddressQRCode';
-import App from '../../viewmodels/App';
+import App from '../../viewmodels/core/App';
 import Assets from './Assets';
 import CurrencyViewmodel from '../../viewmodels/settings/Currency';
 import { DrawerScreenProps } from '@react-navigation/drawer';
@@ -10,7 +10,7 @@ import { IToken } from '../../common/tokens';
 import { InappBrowserModal } from '../Modalize';
 import MessageKeys from '../../common/MessageKeys';
 import { Modalize } from 'react-native-modalize';
-import Networks from '../../viewmodels/Networks';
+import Networks from '../../viewmodels/core/Networks';
 import Overview from './Overview';
 import { Portal } from 'react-native-portalize';
 import Theme from '../../viewmodels/settings/Theme';
@@ -91,6 +91,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         onDAppsPress={() => navigation.navigate('DApps')}
         gasPrice={GasPrice.currentGwei}
         onQRCodePress={() => openAddressQR()}
+        signInPlatform={currentAccount?.signInPlatform}
       />
 
       <Assets

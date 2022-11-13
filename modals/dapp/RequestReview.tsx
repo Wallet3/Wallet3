@@ -7,7 +7,7 @@ import { Account } from '../../viewmodels/account/Account';
 import AccountIndicator from '../components/AccountIndicator';
 import AnimatedNumber from '../../components/AnimatedNumber';
 import BalanceChangePreview from '../views/BalanceChangePreview';
-import { BioType } from '../../viewmodels/Authentication';
+import { BioType } from '../../viewmodels/auth/Authentication';
 import Currency from '../../viewmodels/settings/Currency';
 import { DecodedFunc } from '../../viewmodels/hubs/EtherscanHub';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';

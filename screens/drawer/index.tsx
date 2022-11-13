@@ -1,4 +1,4 @@
-import App, { AppVM } from '../../viewmodels/App';
+import App, { AppVM } from '../../viewmodels/core/App';
 import { Arbitrum, EVMIcon, Ethereum, NetworkIcons, Optimism, Polygon } from '../../assets/icons/networks/color';
 import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
@@ -12,7 +12,7 @@ import FastImage from 'react-native-fast-image';
 import { INetwork } from '../../common/Networks';
 import MessageKeys from '../../common/MessageKeys';
 import MetamaskDAppsHub from '../../viewmodels/walletconnect/MetamaskDAppsHub';
-import Networks from '../../viewmodels/Networks';
+import Networks from '../../viewmodels/core/Networks';
 import PubSub from 'pubsub-js';
 import { ReactiveScreen } from '../../utils/device';
 import { SafeViewContainer } from '../../components';

@@ -1,4 +1,4 @@
-import Networks, { AddEthereumChainParameter } from '../Networks';
+import Networks, { AddEthereumChainParameter } from '../core/Networks';
 import WCSession_v1, {
   IRawWcSession,
   WCCallRequestRequest,
@@ -7,7 +7,7 @@ import WCSession_v1, {
 } from '../../models/WCSession_v1';
 import { action, makeObservable, observable } from 'mobx';
 
-import App from '../App';
+import App from '../core/App';
 import { EventEmitter } from 'events';
 import { InpageDAppAddEthereumChain } from '../../screens/browser/controller/InpageDAppController';
 import MessageKeys from '../../common/MessageKeys';

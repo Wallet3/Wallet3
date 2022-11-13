@@ -1,10 +1,10 @@
 import * as Linking from 'expo-linking';
 
-import Networks, { AddEthereumChainParameter } from '../../../viewmodels/Networks';
+import Networks, { AddEthereumChainParameter } from '../../../viewmodels/core/Networks';
 import { providers, utils } from 'ethers';
 
 import { Account } from '../../../viewmodels/account/Account';
-import App from '../../../viewmodels/App';
+import App from '../../../viewmodels/core/App';
 import DeviceInfo from 'react-native-device-info';
 import { ERC20Token } from '../../../models/ERC20';
 import EventEmitter from 'events';

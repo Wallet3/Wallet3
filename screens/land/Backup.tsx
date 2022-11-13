@@ -2,9 +2,9 @@ import { Button, SafeViewContainer } from '../../components';
 import React, { useState } from 'react';
 import { SafeAreaView, Text, View } from 'react-native';
 
-import Authentication from '../../viewmodels/Authentication';
+import Authentication from '../../viewmodels/auth/Authentication';
 import { LandScreenStack } from '../navigations';
-import MnemonicOnce from '../../viewmodels/MnemonicOnce';
+import MnemonicOnce from '../../viewmodels/auth/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SortWords } from '../components/SecretWords';
 import Theme from '../../viewmodels/settings/Theme';

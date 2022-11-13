@@ -2,7 +2,7 @@
   { "url": "https://dagen.life", "icon": "https://dagen.life/logo.png", "title": "dagen" },
   { "url": "https://app.mail3.me", "icon": "https://mail3.me/icons/icon-192x192.png", "title": "Mail3" },
   { "url": "https://app.uniswap.org", "icon": "https://app.uniswap.org/favicon.png", "title": "Uniswap" },
-  { "url": "https://curve.exchange", "icon": "https://curve.fi/apple-touch-icon.png", "title": "Curve" },
+  { "url": "https://curve.fi", "icon": "https://curve.fi/apple-touch-icon.png", "title": "Curve" },
   {
     "url": "https://zapper.fi",
     "icon": "https://zapper.fi/logo192.png",
@@ -14,9 +14,9 @@
     "title": "Opensea"
   },
   {
-    "url": "https://foundation.app",
-    "icon": "https://pbs.twimg.com/profile_images/1526963356799668224/C64XFkk4_400x400.jpg",
-    "title": "Foundation"
+    "url": "https://revoke.cash",
+    "icon": "https://revoke.cash/assets/images/apple-touch-icon.png",
+    "title": "RevokeCash"
   },
   { "url": "https://mirror.xyz", "icon": "https://mirror.xyz/icon/apple-touch-icon.png", "title": "Mirror" },
   {

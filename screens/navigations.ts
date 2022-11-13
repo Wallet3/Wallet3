@@ -9,6 +9,8 @@ export type LandScreenStack = {
   Home: undefined;
   QRScan: undefined;
   Root: undefined;
+  ViewRecoveryKey: undefined;
+  SetRecoveryKey: undefined;
 };
 
 export type RootStack = {

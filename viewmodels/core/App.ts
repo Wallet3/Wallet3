@@ -1,26 +1,26 @@
+import { Wallet, parseXpubkey } from './Wallet';
 import { action, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
 import { providers, utils } from 'ethers';
 
-import { Account } from './account/Account';
+import { Account } from '../account/Account';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Authentication from './Authentication';
-import Bookmarks from './customs/Bookmarks';
-import Contacts from './customs/Contacts';
-import Database from '../models/Database';
-import GasPrice from './misc/GasPrice';
-import Key from '../models/Key';
+import Authentication from '../auth/Authentication';
+import Bookmarks from '../customs/Bookmarks';
+import Contacts from '../customs/Contacts';
+import Database from '../../models/Database';
+import GasPrice from '../misc/GasPrice';
+import Key from '../../models/Key';
 import LINQ from 'linq';
-import LinkHub from './hubs/LinkHub';
-import MessageKeys from '../common/MessageKeys';
-import MetamaskDAppsHub from './walletconnect/MetamaskDAppsHub';
+import LinkHub from '../hubs/LinkHub';
+import MessageKeys from '../../common/MessageKeys';
+import MetamaskDAppsHub from '../walletconnect/MetamaskDAppsHub';
 import Networks from './Networks';
-import Theme from './settings/Theme';
-import TxHub from './hubs/TxHub';
-import UI from './settings/UI';
-import { Wallet } from './Wallet';
-import WalletConnectV1ClientHub from './walletconnect/WalletConnectV1ClientHub';
-import { fetchChainsOverview } from '../common/apis/Debank';
-import i18n from '../i18n';
+import Theme from '../settings/Theme';
+import TxHub from '../hubs/TxHub';
+import UI from '../settings/UI';
+import WalletConnectV1ClientHub from '../walletconnect/WalletConnectV1ClientHub';
+import { fetchChainsOverview } from '../../common/apis/Debank';
+import i18n from '../../i18n';
 import { showMessage } from 'react-native-flash-message';
 
 export class AppVM {
@@ -41,6 +41,10 @@ export class AppVM {
       .toArray();
   }
 
+  get currentWallet() {
+    return this.wallets.find((w) => w.accounts.find((a) => a.address === this.currentAccount?.address));
+  }
+
   constructor() {
     makeObservable(this, {
       initialized: observable,
@@ -49,6 +53,7 @@ export class AppVM {
       reset: action,
       switchAccount: action,
       currentAccount: observable,
+      currentWallet: computed,
       newAccount: action,
       removeAccount: action,
       allAccounts: computed,
@@ -67,8 +72,8 @@ export class AppVM {
 
   async addWallet(key: Key) {
     if (this.wallets.find((w) => w.isSameKey(key))) return;
-    if (this.allAccounts.find((a) => a.address === key.bip32Xpubkey)) {
-      this.switchAccount(key.bip32Xpubkey);
+    if (this.allAccounts.find((a) => a.address === parseXpubkey(key.bip32Xpubkey))) {
+      this.switchAccount(parseXpubkey(key.bip32Xpubkey));
       return;
     }
 
@@ -160,7 +165,9 @@ export class AppVM {
   }
 
   async refreshAccount() {
+    if (!Authentication.appAvailable) return;
     if (Date.now() - this.lastRefreshedTime < 1000 * 5) return;
+
     this.lastRefreshedTime = Date.now();
 
     clearTimeout(this.refreshTimer);
@@ -207,6 +214,7 @@ export class AppVM {
 
     PubSub.subscribe(MessageKeys.userSecretsNotVerified, () => {
       if ((this.currentAccount?.balance || 0) === 0) return;
+      if (this.currentWallet?.signInPlatform) return;
       setTimeout(() => PubSub.publish(MessageKeys.openBackupSecretTip), 1000);
     });
 

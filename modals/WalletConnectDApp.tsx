@@ -4,13 +4,13 @@ import { SafeAreaView, Text, View } from 'react-native';
 
 import { Account } from '../viewmodels/account/Account';
 import AccountSelector from './dapp/AccountSelector';
-import App from '../viewmodels/App';
+import App from '../viewmodels/core/App';
 import DAppConnectView from './dapp/DAppConnectView';
 import { INetwork } from '../common/Networks';
 import { Ionicons } from '@expo/vector-icons';
 import Loading from './views/Loading';
 import NetworkSelector from './dapp/NetworkSelector';
-import Networks from '../viewmodels/Networks';
+import Networks from '../viewmodels/core/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
 import Theme from '../viewmodels/settings/Theme';

@@ -87,7 +87,7 @@ export default observer(({ themeColor, onBack, preview }: Props) => {
           </View>
         ))}
 
-        <Text style={{ ...txtStyle, marginVertical: 8 }}>{t('modal-review-receive')}:</Text>
+        <Text style={{ ...txtStyle, marginVertical: 8 }}>{`${t('modal-review-receive')} (Est.)`}:</Text>
 
         {preview?.receive_token_list?.map((t) => (
           <View key={`${t.address}_${t.symbol}`} style={itemContainer}>

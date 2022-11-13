@@ -31,7 +31,13 @@ export class ParsedMessage {
   notBefore: string | null | undefined;
   requestId: string | null | undefined;
 
-  constructor(msg: string) {
+  readonly origin: string | undefined;
+
+  readonly isConsistent: boolean;
+
+  constructor(msg: string, originHost: string) {
+    this.origin = originHost;
+
     const components = msg?.split('\n').filter((i) => i);
 
     const url = components[0].split(' ')[0]?.toLowerCase();
@@ -39,6 +45,9 @@ export class ParsedMessage {
     this.domain = components[0]?.endsWith(DOMAIN)
       ? Linking.parse(url?.startsWith('https://') ? url : `https://${url}`)?.hostname || ''
       : '';
+
+    this.isConsistent =
+      this.domain?.toLowerCase().replace('https://', '') === this.origin?.toLowerCase().replace('https://', '');
 
     if (!isURL(this.domain)) throw new Error('Invalid domain');
 

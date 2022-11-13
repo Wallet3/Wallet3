@@ -3,7 +3,7 @@ import { getGasPrice, getMaxPriorityFee, getNextBlockBaseFee } from '../../commo
 
 import { Gwei_1 } from '../../common/Constants';
 import LINQ from 'linq';
-import Networks from '../Networks';
+import Networks from '../core/Networks';
 
 class GasPrice {
   private timer?: NodeJS.Timeout;

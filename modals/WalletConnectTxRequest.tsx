@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import Authentication from '../viewmodels/Authentication';
+import Authentication from '../viewmodels/auth/Authentication';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Success from './views/Success';
 import Theme from '../viewmodels/settings/Theme';

@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 
-import { BioType } from '../../viewmodels/Authentication';
+import { BioType } from '../../viewmodels/auth/Authentication';
 import { Passpad } from '../views';
 import { RawTransactionRequest } from '../../viewmodels/transferring/RawTransactionRequest';
 import RequestReview from '../dapp/RequestReview';

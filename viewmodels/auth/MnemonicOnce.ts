@@ -1,20 +1,18 @@
 import * as Random from 'expo-random';
 import * as ethers from 'ethers';
 
-import { decrypt, encrypt, sha256 } from '../utils/cipher';
-
 import Authentication from './Authentication';
-import { DEFAULT_DERIVATION_PATH } from '../common/Constants';
-import Key from '../models/Key';
-import { langToWordlist } from '../utils/mnemonic';
+import { DEFAULT_DERIVATION_PATH } from '../../common/Constants';
+import Key from '../../models/Key';
 import { makeAutoObservable } from 'mobx';
 import { setStringAsync } from 'expo-clipboard';
-import { xpubkeyFromHDNode } from '../utils/bip32';
+import { xpubkeyFromHDNode } from '../../utils/bip32';
 
 export class MnemonicOnce {
   secret = '';
   derivationPath = DEFAULT_DERIVATION_PATH;
   derivationIndex = 0;
+  userPrefix = '';
 
   get secretWords() {
     return this.secret.split(/\s/);
@@ -27,6 +25,7 @@ export class MnemonicOnce {
   async generate(length: 12 | 24 = 12) {
     const entropy = Random.getRandomBytes(length === 12 ? 16 : 32);
     this.secret = ethers.utils.entropyToMnemonic(entropy);
+    return this.secret;
   }
 
   setSecret(secret: string) {
@@ -44,6 +43,10 @@ export class MnemonicOnce {
     return success;
   }
 
+  setUserPrefix(prefix = '') {
+    this.userPrefix = prefix;
+  }
+
   async setDerivationPath(fullPath: string) {
     if (!fullPath.startsWith('m/')) return;
     const lastSlash = fullPath.lastIndexOf('/');
@@ -59,6 +62,7 @@ export class MnemonicOnce {
 
       return await this.savePrivKey();
     } catch (error) {
+      console.error(error);
       return undefined;
     } finally {
       this.clean();
@@ -75,7 +79,7 @@ export class MnemonicOnce {
     key.id = Date.now();
     key.secret = await Authentication.encrypt(this.secret);
     key.bip32Xprivkey = await Authentication.encrypt(bip32.extendedKey);
-    key.bip32Xpubkey = bip32XPubkey;
+    key.bip32Xpubkey = this.userPrefix + bip32XPubkey;
     key.basePath = this.derivationPath;
     key.basePathIndex = this.derivationIndex;
 
@@ -95,6 +99,9 @@ export class MnemonicOnce {
 
   clean() {
     this.secret = '';
+    this.userPrefix = '';
+    this.derivationPath = DEFAULT_DERIVATION_PATH;
+    this.derivationIndex = 0;
   }
 }
 

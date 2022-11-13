@@ -1,10 +1,13 @@
 import * as Linking from 'expo-linking';
 
-import Authentication from '../Authentication';
+import { decode, isValid as isBase64 } from 'js-base64';
+
+import Authentication from '../auth/Authentication';
 import MessageKeys from '../../common/MessageKeys';
 import i18n from '../../i18n';
 import { isURL } from '../../utils/url';
 import { showMessage } from 'react-native-flash-message';
+import { utils } from 'ethers';
 
 const appSchemes = [
   'wallet3:',
@@ -36,9 +39,23 @@ class LinkHub {
     if (!uri) return false;
     if (this.handledWalletConnectUrls.has(uri)) return false;
 
+    if (uri.length === 64 && (utils.isBytesLike(uri) || utils.isBytesLike(`0x${uri}`))) {
+      PubSub.publish(MessageKeys.CodeScan_64Length, { data: uri });
+      return true;
+    }
+
+    if (isBase64(uri) && uri.length > 82) {
+      const decoded64 = decode(uri);
+      if (decoded64.length === 64 && (utils.isBytesLike(decoded64) || utils.isBytesLike(`0x${decoded64}`))) {
+        PubSub.publish(MessageKeys.CodeScan_64Length, { data: decoded64 });
+        return true;
+      }
+    }
+
     const uriLower = uri.toLowerCase();
 
-    const scheme = supportedSchemes.find((schema) => uriLower.startsWith(schema)) || (uriLower.endsWith('.eth') ? '0x' : undefined);
+    const scheme =
+      supportedSchemes.find((schema) => uriLower.startsWith(schema)) || (uriLower.endsWith('.eth') ? '0x' : undefined);
 
     if (!scheme) {
       if (isURL(uri)) {

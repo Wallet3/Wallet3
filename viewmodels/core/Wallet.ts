@@ -3,15 +3,15 @@ import * as ethSignUtil from '@metamask/eth-sig-util';
 import { Wallet as EthersWallet, providers, utils } from 'ethers';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
-import { Account } from './account/Account';
+import { Account } from '../account/Account';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Authentication from './Authentication';
-import Key from '../models/Key';
+import Authentication from '../auth/Authentication';
+import Key from '../../models/Key';
 import LINQ from 'linq';
-import MetamaskDAppsHub from './walletconnect/MetamaskDAppsHub';
-import { ReadableInfo } from '../models/Transaction';
+import MetamaskDAppsHub from '../walletconnect/MetamaskDAppsHub';
+import { ReadableInfo } from '../../models/Transaction';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
-import TxHub from './hubs/TxHub';
+import TxHub from '../hubs/TxHub';
 import { showMessage } from 'react-native-flash-message';
 
 type SignTxRequest = {
@@ -40,6 +40,11 @@ type SignTypedDataRequest = {
   version?: SignTypedDataVersion;
 };
 
+export function parseXpubkey(mixedKey: string) {
+  const components = mixedKey.split(':');
+  return components[components.length - 1];
+}
+
 export class Wallet {
   private key: Key;
   private refreshTimer!: NodeJS.Timer;
@@ -49,12 +54,21 @@ export class Wallet {
 
   lastRefreshedTime = 0;
 
-  get isHDWallet() {
-    return this.key.bip32Xpubkey.startsWith('xpub');
+  readonly isHDWallet: boolean;
+  readonly signInPlatform: 'apple' | 'google' | undefined;
+  readonly signInUser: string | undefined;
+
+  get web2SignedIn() {
+    return this.signInPlatform !== undefined;
   }
 
   constructor(key: Key) {
     this.key = key;
+
+    const components = key.bip32Xpubkey.split(':');
+    this.isHDWallet = components[components.length - 1].startsWith('xpub');
+    this.signInPlatform = components.length > 1 ? (components[0] as any) : undefined;
+    this.signInUser = components.length > 1 ? components[1] : undefined;
 
     makeObservable(this, {
       accounts: observable,
@@ -65,7 +79,7 @@ export class Wallet {
 
   isSameKey(key: Key) {
     return (
-      this.key.bip32Xpubkey === key.bip32Xpubkey &&
+      parseXpubkey(this.key.bip32Xpubkey) === parseXpubkey(key.bip32Xpubkey) &&
       this.key.basePath === key.basePath &&
       this.key.basePathIndex === key.basePathIndex
     );
@@ -77,16 +91,16 @@ export class Wallet {
     const accounts: Account[] = [];
 
     if (this.isHDWallet) {
-      const bip32 = utils.HDNode.fromExtendedKey(this.key.bip32Xpubkey);
+      const bip32 = utils.HDNode.fromExtendedKey(parseXpubkey(this.key.bip32Xpubkey));
 
       for (let i = this.key.basePathIndex; i < this.key.basePathIndex + count; i++) {
         if (this.removedIndexes.includes(i)) continue;
 
         const accountNode = bip32.derivePath(`${i}`);
-        accounts.push(new Account(accountNode.address, i));
+        accounts.push(new Account(accountNode.address, i, { signInPlatform: this.signInPlatform }));
       }
     } else {
-      accounts.push(new Account(this.key.bip32Xpubkey, 0));
+      accounts.push(new Account(this.key.bip32Xpubkey, 0, { signInPlatform: '' }));
     }
 
     runInAction(() => (this.accounts = accounts));
@@ -97,7 +111,7 @@ export class Wallet {
   newAccount() {
     if (!this.isHDWallet) return;
 
-    const bip32 = utils.HDNode.fromExtendedKey(this.key.bip32Xpubkey);
+    const bip32 = utils.HDNode.fromExtendedKey(parseXpubkey(this.key.bip32Xpubkey));
     const index =
       Math.max(
         this.accounts[this.accounts.length - 1].index,
@@ -105,7 +119,7 @@ export class Wallet {
       ) + 1;
 
     const node = bip32.derivePath(`${index}`);
-    const account = new Account(node.address, index);
+    const account = new Account(node.address, index, { signInPlatform: this.signInPlatform });
     this.accounts.push(account);
 
     AsyncStorage.setItem(`${this.key.id}-address-count`, `${index + 1}`);
@@ -169,18 +183,6 @@ export class Wallet {
       if (utils.isBytes(request.msg) && !request.standardMode) {
         showMessage({ message: 'DANGEROUS: Wallet 3 rejects signing this data.', type: 'danger' });
         return undefined;
-        // try {
-        //   utils.parseTransaction(request.msg);
-        //   // never sign a transactions via eth_sign !!!
-        //   showMessage({ message: 'DANGEROUS: Wallet 3 rejects signing this data.', type: 'danger' });
-        //   return undefined;
-        // } catch (error) {}
-
-        // const privateKey = await this.unlockPrivateKey(request);
-        // if (!privateKey) return undefined;
-
-        // const signed = new utils.SigningKey(privateKey).signDigest(request.msg); // eth_sign(legacy)
-        // return utils.joinSignature(signed);
       } else {
         return (await this.openWallet(request))?.signMessage(
           typeof request.msg === 'string' && utils.isBytesLike(request.msg) ? utils.arrayify(request.msg) : request.msg

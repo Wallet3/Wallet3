@@ -1,19 +1,24 @@
 import * as Animatable from 'react-native-animatable';
 import * as Haptics from 'expo-haptics';
 
+import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 import { Button, SafeViewContainer } from '../../components';
 import Numpad, { DefaultNumpadHandler } from '../../components/Numpad';
 import React, { useEffect, useRef, useState } from 'react';
-import { SafeAreaView, StyleProp, View, ViewStyle } from 'react-native';
+import { StyleProp, Text, View, ViewStyle } from 'react-native';
 import { renderEmptyCircle, renderFilledCircle } from '../../components/PasscodeCircle';
 
-import { BioType } from '../../viewmodels/Authentication';
+import { BioType } from '../../viewmodels/auth/Authentication';
+import { MaterialIcons } from '@expo/vector-icons';
 import { ReactiveScreen } from '../../utils/device';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
+import numeral from 'numeral';
 import { observer } from 'mobx-react-lite';
+import { parseMilliseconds } from '../../utils/time';
 import styles from '../styles';
+import { warningColor } from '../../constants/styles';
 
 interface Props {
   themeColor?: string;
@@ -23,9 +28,10 @@ interface Props {
   style?: StyleProp<ViewStyle>;
   bioType?: BioType;
   onBioAuth?: () => void;
+  failedAttempts?: number;
 }
 
-const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style, bioType, onBioAuth }: Props) => {
+const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style, bioType, onBioAuth, failedAttempts }: Props) => {
   const { t } = i18n;
   const passcodeLength = 6;
   const [passcode, setPasscode] = useState('');
@@ -61,6 +67,22 @@ const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style, bi
           .map((_, index) => renderEmptyCircle(index, isLightMode ? foregroundColor : themeColor))}
       </Animatable.View>
 
+      {(failedAttempts || 0) >= 2 ? (
+        <Animated.View
+          entering={FadeIn.delay(0)}
+          style={{
+            marginTop: 16,
+            padding: 4,
+            paddingHorizontal: 12,
+            borderRadius: 100,
+            backgroundColor: warningColor,
+            alignSelf: 'center',
+          }}
+        >
+          <Text style={{ color: '#fff', fontSize: 12 }}>{t('lock-screen-failed-attempts', { attempts: failedAttempts })}</Text>
+        </Animated.View>
+      ) : undefined}
+
       <View style={{ flex: 1 }} />
 
       <Numpad
@@ -88,24 +110,58 @@ interface FullPasspadProps {
   height?: number;
   borderRadius?: number;
   bioType?: BioType;
+  appAvailable: boolean;
+  unlockTimestamp?: number;
+  failedAttempts?: number;
 }
 
-export const FullPasspad = observer(
-  ({ themeColor, height, onCodeEntered, bioType, onBioAuth, borderRadius }: FullPasspadProps) => {
-    const { backgroundColor } = Theme;
-    const { height: fullScreenHeight, width } = ReactiveScreen;
+export const FullPasspad = observer((props: FullPasspadProps) => {
+  const {
+    themeColor,
+    height,
+    onCodeEntered,
+    bioType,
+    onBioAuth,
+    borderRadius,
+    appAvailable,
+    unlockTimestamp,
+    failedAttempts,
+  } = props;
 
-    return (
-      <SafeAreaProvider
-        style={{
-          flex: 1,
-          height: height || fullScreenHeight,
-          width,
-          backgroundColor,
-          borderTopLeftRadius: borderRadius,
-          borderTopRightRadius: borderRadius,
-        }}
-      >
+  const { t } = i18n;
+  const { backgroundColor, textColor } = Theme;
+  const { height: fullScreenHeight, width } = ReactiveScreen;
+  const { days, hours, minutes, seconds } = parseMilliseconds(Math.max(0, (unlockTimestamp || 0) - Date.now()));
+
+  const [_, forceUpdate] = useState<any>();
+
+  useEffect(() => {
+    let timer: NodeJS.Timer;
+
+    const refresh = () => {
+      forceUpdate(Date.now());
+      timer = setTimeout(() => refresh(), 10 * 1000);
+    };
+
+    refresh();
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
+
+  return (
+    <SafeAreaProvider
+      style={{
+        flex: 1,
+        height: height || fullScreenHeight,
+        width,
+        backgroundColor,
+        borderTopLeftRadius: borderRadius,
+        borderTopRightRadius: borderRadius,
+      }}
+    >
+      {appAvailable || (days === 0 && hours === 0 && minutes === 0 && seconds === 0) ? (
         <Passpad
           themeColor={themeColor}
           disableCancel
@@ -113,8 +169,21 @@ export const FullPasspad = observer(
           style={{ marginBottom: 4, width, height: height || fullScreenHeight }}
           onBioAuth={onBioAuth}
           bioType={bioType}
+          failedAttempts={failedAttempts}
         />
-      </SafeAreaProvider>
-    );
-  }
-);
+      ) : (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <MaterialIcons name="lock" color={warningColor} size={64} />
+          <Text style={{ fontSize: 19, fontWeight: '500', marginVertical: 20, color: warningColor }}>
+            {t('lock-screen-wallet-is-locked')}
+          </Text>
+          <Text style={{ fontSize: 10, marginTop: 36, color: textColor, opacity: 0.5 }}>
+            {t('lock-screen-remaining-time', {
+              time: `${numeral(hours).format('00,')}:${numeral(minutes || 1).format('00,')}`,
+            })}
+          </Text>
+        </View>
+      )}
+    </SafeAreaProvider>
+  );
+});

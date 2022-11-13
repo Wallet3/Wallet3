@@ -3,14 +3,14 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect } from 'react';
 import { secondaryFontColor, thirdFontColor } from '../../constants/styles';
 
-import App from '../../viewmodels/App';
+import App from '../../viewmodels/core/App';
 import CachedImage from 'react-native-fast-image';
 import CopyableText from '../../components/CopyableText';
 import FastImage from 'react-native-fast-image';
 import { FlatGrid } from 'react-native-super-grid';
 import { InappBrowserModal } from '../Modalize';
 import { Ionicons } from '@expo/vector-icons';
-import Networks from '../../viewmodels/Networks';
+import Networks from '../../viewmodels/core/Networks';
 import { POAPBadge } from '../../viewmodels/account/POAP';
 import { Portal } from 'react-native-portalize';
 import { Skeleton } from '../../components';

@@ -7,7 +7,7 @@ import { Entypo } from '@expo/vector-icons';
 import { INetwork } from '../../common/Networks';
 import Image from 'react-native-fast-image';
 import { MetamaskDApp } from '../../viewmodels/walletconnect/MetamaskDApp';
-import Networks from '../../viewmodels/Networks';
+import Networks from '../../viewmodels/core/Networks';
 import React from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { WalletConnect_v1 } from '../../viewmodels/walletconnect/WalletConnect_v1';

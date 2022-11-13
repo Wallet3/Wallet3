@@ -1,4 +1,5 @@
 import * as Crypto from 'expo-crypto';
+import * as Random from 'expo-random';
 
 import CryptoES from 'crypto-es';
 
@@ -41,7 +42,10 @@ const JsonFormatter = {
 };
 
 export function encrypt(input: string, key: string) {
-  return CryptoES.AES.encrypt(input, key, { format: JsonFormatter }).toString();
+  return CryptoES.AES.encrypt(input, key, {
+    format: JsonFormatter,
+    iv: CryptoES.enc.Hex.parse(Buffer.from(Random.getRandomBytes(16)).toString('hex')),
+  }).toString();
 }
 
 export function decrypt(encrypted: string, key: string): string {

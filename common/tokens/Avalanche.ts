@@ -13,6 +13,7 @@ export const AVAX_USDC_e = {
 export const AVAX_USDC = {
   address: '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
   decimals: 6,
+  shown: true,
   symbol: 'USDC',
 };
 

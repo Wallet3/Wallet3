@@ -1,11 +1,11 @@
 import { Loader, SafeViewContainer } from '../../components';
 import React, { useState } from 'react';
 
-import AppVM from '../../viewmodels/App';
-import Authentication from '../../viewmodels/Authentication';
+import AppVM from '../../viewmodels/core/App';
+import Authentication from '../../viewmodels/auth/Authentication';
 import ConfirmPasscode from '../components/ConfirmPasscode';
 import { LandScreenStack } from '../navigations';
-import MnemonicOnce from '../../viewmodels/MnemonicOnce';
+import MnemonicOnce from '../../viewmodels/auth/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native';
 import i18n from '../../i18n';
@@ -14,7 +14,7 @@ import { showMessage } from 'react-native-flash-message';
 import styles from './styles';
 import { themeColor } from '../../constants/styles';
 
-export default observer(({}: NativeStackScreenProps<LandScreenStack, 'Backup'>) => {
+export default observer(({ route }: NativeStackScreenProps<LandScreenStack, 'Backup'>) => {
   const { t } = i18n;
   const [busy, setBusy] = useState(false);
 
@@ -29,6 +29,10 @@ export default observer(({}: NativeStackScreenProps<LandScreenStack, 'Backup'>) 
       AppVM.init();
     } else {
       showMessage({ message: 'msg-failed-to-import-wallet', type: 'warning' });
+    }
+
+    if (route?.params === 'ImportWallet') {
+      Authentication.setUserSecretsVerified(true);
     }
 
     setBusy(false);

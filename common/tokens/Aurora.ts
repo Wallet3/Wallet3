@@ -2,6 +2,7 @@ export const Aurora_DAI = {
   address: '0xe3520349F477A5F6EB06107066048508498A291b',
   decimals: 18,
   symbol: 'DAI',
+  shown: true,
 };
 
 export const Aurora_BUSD = {
@@ -14,12 +15,14 @@ export const Aurora_USDT = {
   address: '0x4988a896b1227218e4A686fdE5EabdcAbd91571f',
   decimals: 18,
   symbol: 'USDT',
+  shown: true,
 };
 
 export const Aurora_USDC = {
   address: '0xB12BFcA5A55806AaF64E99521918A4bf0fC40802',
   decimals: 6,
   symbol: 'USDC',
+  shown: true,
 };
 
 export const Aurora_AURORA = {

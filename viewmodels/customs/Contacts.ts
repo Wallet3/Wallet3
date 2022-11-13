@@ -1,8 +1,8 @@
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
-import App from '../App';
+import App from '../core/App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Networks from '../Networks';
+import Networks from '../core/Networks';
 import { getEnsAvatar } from '../../common/ENS';
 
 export interface IContact {
