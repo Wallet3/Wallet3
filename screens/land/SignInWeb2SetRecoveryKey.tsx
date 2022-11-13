@@ -64,7 +64,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<LandScree
 
       <Button
         title={t('button-next')}
-        disabled={key.length !== 64}
+        disabled={key.length < 64}
         txtStyle={{ textTransform: 'none' }}
         onPress={async () => {
           if (platform === 'apple' ? await SignInWithApple.recover(key) : await SignInWithGoogle.recover(key)) {

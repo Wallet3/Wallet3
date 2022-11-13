@@ -1,5 +1,7 @@
 import * as Linking from 'expo-linking';
 
+import { decode, isValid as isBase64 } from 'js-base64';
+
 import Authentication from '../auth/Authentication';
 import MessageKeys from '../../common/MessageKeys';
 import i18n from '../../i18n';
@@ -40,6 +42,14 @@ class LinkHub {
     if (uri.length === 64 && (utils.isBytesLike(uri) || utils.isBytesLike(`0x${uri}`))) {
       PubSub.publish(MessageKeys.CodeScan_64Length, { data: uri });
       return true;
+    }
+
+    if (isBase64(uri) && uri.length > 82) {
+      const decoded64 = decode(uri);
+      if (decoded64.length === 64 && (utils.isBytesLike(decoded64) || utils.isBytesLike(`0x${decoded64}`))) {
+        PubSub.publish(MessageKeys.CodeScan_64Length, { data: decoded64 });
+        return true;
+      }
     }
 
     const uriLower = uri.toLowerCase();

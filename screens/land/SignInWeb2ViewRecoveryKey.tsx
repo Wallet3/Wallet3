@@ -35,6 +35,8 @@ export default observer(({ navigation, route }: NativeStackScreenProps<LandScree
     };
   }, []);
 
+  const recoveryKey = (platform === 'apple' ? SignInWithApple : SignInWithGoogle).encodedRecoveryKey;
+
   return (
     <SafeViewContainer style={{ ...styles.rootContainer }} paddingHeader includeTopPadding>
       <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: -12, marginBottom: -8 }}>
@@ -51,17 +53,12 @@ export default observer(({ navigation, route }: NativeStackScreenProps<LandScree
       </View>
 
       <View style={{ borderColor, borderWidth: 1, borderRadius: 7, padding: 12, paddingEnd: 24 }}>
-        <CopyableText
-          txtLines={1}
-          copyText={(platform === 'apple' ? SignInWithApple : SignInWithGoogle).recoveryKey}
-          iconColor={'black'}
-          iconStyle={{ marginStart: 6 }}
-        />
+        <CopyableText txtLines={1} copyText={recoveryKey} iconColor={'black'} iconStyle={{ marginStart: 6 }} />
       </View>
 
       <View style={{ marginVertical: 24, alignItems: 'center', justifyContent: 'center' }}>
         <QRCode
-          value={(platform === 'apple' ? SignInWithApple : SignInWithGoogle).recoveryKey}
+          value={recoveryKey}
           size={180}
           backgroundColor="transparent"
           enableLinearGradient

@@ -38,10 +38,11 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
 
   const verify = async (passcode?: string) => {
     const { wallet } = App.findWallet(App.currentAccount?.address || '') || {};
-    const secret = await (wallet?.web2SignedIn
-      ? SignInWithApple.getRecoverKey(wallet.signInUser!, passcode)
-      : wallet?.getSecret(passcode));
     setRecoveryKeyPlatform(wallet?.signInPlatform);
+
+    const secret = await (wallet?.web2SignedIn
+      ? SignInWithApple.getEncodedRecoverKey(wallet.signInUser!, passcode)
+      : wallet?.getSecret(passcode));
 
     const success = secret ? true : false;
 
