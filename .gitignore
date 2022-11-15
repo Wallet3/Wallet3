@@ -79,3 +79,4 @@ android/app/release
 configs/.android
 
 GoogleService-Info.plist
+google-services.json

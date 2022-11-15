@@ -28,8 +28,16 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
   const { t } = i18n;
   const [read, setRead] = useState(false);
 
-  const jumpTo = (signInPlatform: 'apple' | 'google', signInResult?: SignInType) => {
+  const jumpTo = async (signInPlatform: 'apple' | 'google') => {
+    let signInResult: SignInType
+    if(signInPlatform==='apple'){
+      signInResult = await SignInWithApple.signIn()
+    }else{
+      signInResult = await SignInWithGoogle.signIn()
+    }
+    console.log(signInResult)
     if (!signInResult) {
+      showMessage({ message: t('msg-sign-in-web2-failed') });
       return;
     }
 
@@ -49,6 +57,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
         return;
     }
 
+    console.log(to, signInPlatform)
     navigation.navigate(to, signInPlatform);
   };
 
@@ -118,7 +127,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
               buttonType={AppleAuthenticationButtonType.CONTINUE}
               cornerRadius={7}
               style={{ width: '100%', height: 42 }}
-              onPress={async () => jumpTo('apple', await SignInWithApple.signIn())}
+              onPress={() => jumpTo('apple')}
             />
           </Animated.View>
         ) : undefined}
@@ -131,7 +140,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
               themeColor="#4285F4"
               title={t('land-sign-in-continue-with-google')}
               txtStyle={{ textTransform: 'none' }}
-              onPress={async () => jumpTo('google', await SignInWithGoogle.signIn())}
+              onPress={() => jumpTo('google')}
             />
           </Animated.View>
         ) : undefined}

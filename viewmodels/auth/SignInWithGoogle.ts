@@ -42,6 +42,7 @@ class SignInWithGoogle extends SignInWithWeb2 {
       } else {
         // some other error happened
       }
+      console.log(error)
     } finally {
       runInAction(() => (this.loading = false));
     }
