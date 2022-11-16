@@ -270,6 +270,8 @@
   "msg-failed-to-import-wallet": "導入錢包失敗，請檢查派生路徑是否正確",
   "msg-asset-can-not-added": "無法添加該資產到當前網絡。請檢查資產地址和當前網絡是否匹配",
   "msg-no-hd-wallet": "沒有錢包可以生成新賬戶，請導入助記詞錢包後嘗試生成新賬戶",
+  "msg-wait-a-moment": "请稍等",
+  "msg-sign-in-web2-failed": "登錄失敗，請檢查您的網絡是否可以連接",
   "misc-show-full-address": "顯示完整地址",
   "button-next": "繼續",
   "button-save": "保存",
