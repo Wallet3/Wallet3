@@ -30,7 +30,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "jp.co.chainbow.wallet3.mobile",
-      "googleServicesFile": "./android/app/google-services.json"
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"

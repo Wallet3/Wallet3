@@ -35,7 +35,6 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
     }else{
       signInResult = await SignInWithGoogle.signIn()
     }
-    console.log(signInResult)
     if (!signInResult) {
       showMessage({ message: t('msg-sign-in-web2-failed') });
       return;
@@ -56,8 +55,6 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
         showMessage({ message: t('msg-sign-in-web2-failed') });
         return;
     }
-
-    console.log(to, signInPlatform)
     navigation.navigate(to, signInPlatform);
   };
 
