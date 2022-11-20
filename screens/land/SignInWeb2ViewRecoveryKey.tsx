@@ -74,10 +74,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<LandScree
         disabled={countdown > 0}
         title={countdown > 0 ? `(${countdown}) ${t('land-sign-in-web2-i-have-saved')}` : t('land-sign-in-web2-i-have-saved')}
         txtStyle={{ textTransform: 'none' }}
-        onPress={() => {
-          Authentication.setUserSecretsVerified(true);
-          navigation.navigate('SetupPasscode');
-        }}
+        onPress={() => navigation.navigate('SetupPasscode', 'ImportWallet' as any)}
       />
     </SafeViewContainer>
   );

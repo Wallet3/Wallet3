@@ -39,7 +39,7 @@ PODS:
     - ExpoModulesCore
   - EXManifests (0.4.0):
     - EXJSONUtils
-  - Expo (47.0.3):
+  - Expo (47.0.6):
     - ExpoModulesCore
   - ExpoAdapterGoogleSignIn (8.2.1):
     - ExpoModulesCore
@@ -55,7 +55,7 @@ PODS:
     - ExpoModulesCore
   - ExpoLocalization (14.0.0):
     - ExpoModulesCore
-  - ExpoModulesCore (1.0.2):
+  - ExpoModulesCore (1.0.3):
     - React-Core
     - ReactCommon/turbomodule/core
   - ExpoRandom (13.0.0):
@@ -66,13 +66,13 @@ PODS:
     - ExpoModulesCore
   - EXSecureStore (12.0.0):
     - ExpoModulesCore
-  - EXSplashScreen (0.17.4):
+  - EXSplashScreen (0.17.5):
     - ExpoModulesCore
     - React-Core
   - EXSQLite (11.0.0):
     - ExpoModulesCore
   - EXStructuredHeaders (3.0.1)
-  - EXUpdates (0.15.4):
+  - EXUpdates (0.15.5):
     - ASN1Decoder (~> 1.8)
     - EASClient
     - EXManifests
@@ -340,7 +340,7 @@ PODS:
   - React-jsinspector (0.70.5)
   - React-logger (0.70.5):
     - glog
-  - react-native-context-menu-view (1.6.0):
+  - react-native-context-menu-view (1.7.0):
     - React
   - react-native-randombytes (3.6.1):
     - React-Core
@@ -442,7 +442,7 @@ PODS:
     - React-Core
   - RNOS (1.2.6):
     - React
-  - RNReanimated (2.12.0):
+  - RNReanimated (2.13.0):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -474,7 +474,7 @@ PODS:
     - React-RCTImage
   - RNSharedElement (0.8.4):
     - React-Core
-  - RNSVG (13.5.0):
+  - RNSVG (13.6.0):
     - React-Core
   - SDWebImage (5.11.1):
     - SDWebImage/Core (= 5.11.1)
@@ -783,22 +783,22 @@ SPEC CHECKSUMS:
   EXJSONUtils: 09aef2c1fba1a116ca8c73a2c8299aac00d96b43
   EXLocalAuthentication: 78cc5a00b13745b41d16d189ab332b61a01299f9
   EXManifests: 347f49430b63444579aa013f0ad057d16b8d1cc8
-  Expo: 8e4f1d149b58d5df10d302e0b5c489f9fc6623fc
+  Expo: a581e979539bae3e49cd02d9dee2432947383d3b
   ExpoAdapterGoogleSignIn: c1740208e5c85db43daf7ed429fbe8f6c5889d34
   ExpoClipboard: 334921ae215b4be261e393e6fdd9050025008a20
   ExpoCrypto: 51e7662c7f5bfeab25b7909b8a5d545ec15d4877
   ExpoHaptics: 5a56d30a87ea213dd00b09566dc4b441a4dff97f
   ExpoKeepAwake: 69b59d0a8d2b24de9f82759c39b3821fec030318
   ExpoLocalization: e202d1e2a4950df17ac8d0889d65a1ffd7532d7e
-  ExpoModulesCore: 20decc110ca3987e1728dee2ce4b3f79e147edda
+  ExpoModulesCore: b5d21c8880afda6fb6ee95469f9ac2ec9b98e995
   ExpoRandom: 58b7e0a5fe1adf1cb6dc1cbe503a6fe9524f36ce
   ExpoWebBrowser: 073e50f16669d498fb49063b9b7fe780b24f7fda
   EXScreenCapture: d9f1ec31042dfef109290d06c2b4789b7444d16d
   EXSecureStore: daec0117c922a67c658cb229152a9e252e5c1750
-  EXSplashScreen: 4b57f8416a057411cb3c97db9fc9a615f8c1d5d9
+  EXSplashScreen: 3e989924f61a8dd07ee4ea584c6ba14be9b51949
   EXSQLite: 13c91c389b3c6241ddcf5c47eaa43289721193fe
   EXStructuredHeaders: fb774e45eac2e5d62ba40b28176bfbfba61b843e
-  EXUpdates: d0c361e15f668d22dd33633717a8d24991ea4925
+  EXUpdates: 50a48752f5597482b9dc9be7fb5053eaa1878584
   EXUpdatesInterface: bffd1ead18f0bab04fa784ca159c115607b8a23c
   FBLazyVector: affa4ba1bfdaac110a789192f4d452b053a86624
   FBReactNativeSpec: fe8b5f1429cfe83a8d72dc8ed61dc7704cac8745
@@ -827,7 +827,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 31564fa6912459921568e8b0e49024285a4d584b
   React-jsinspector: badd81696361249893a80477983e697aab3c1a34
   React-logger: fdda34dd285bdb0232e059b19d9606fa0ec3bb9c
-  react-native-context-menu-view: d3b3e77985d5b05674a70f8e7eafe404dfa5bbcc
+  react-native-context-menu-view: 359317c934f56dc68cd6021438106a9610a90b20
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: 99b24a0c5acd0d5dcac2b1a7f18c49ea317be99a
   react-native-video: c26780b224543c62d5e1b2a7244a5cd1b50e8253
@@ -852,10 +852,10 @@ SPEC CHECKSUMS:
   RNGoogleSignin: 3db2d849581299f425f5b61b90cb482a9e68c7af
   RNImageColors: fd9777591fc765780e035f4bec7a42edabc86eb4
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
-  RNReanimated: 2a91e85fcd343f8af3c58d3425b99fdd285590a5
+  RNReanimated: ce445c233a6ff5600223484a88ad5704945d972a
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
   RNSharedElement: eb7d506733952d58634f34c82ec17e82f557e377
-  RNSVG: 38ca962c970dbce1ca38991a5aebf26d163f9efb
+  RNSVG: 3a79c0c4992213e4f06c08e62730c5e7b9e4dc17
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   TcpSockets: 4ef55305239923b343ed0a378b1fac188b1373b0

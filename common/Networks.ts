@@ -29,7 +29,6 @@ export interface INetwork {
   network: string;
   chainId: number;
   color: string;
-  test?: boolean;
   l2?: boolean;
   eip1559?: boolean;
   order?: number;
@@ -45,6 +44,7 @@ export interface INetwork {
   feeTokens?: IToken[];
   minWei?: number;
   browserBarIconSize?: number;
+  testnet?: boolean;
 }
 
 export const PublicNetworks: INetwork[] = [
@@ -368,9 +368,20 @@ export const Testnets: INetwork[] = [
     chainId: 5,
     color: '#6186ff',
     eip1559: true,
-    test: true,
+    testnet: true,
     defaultTokens: [],
     explorer: 'https://goerli.etherscan.io',
+  },
+  {
+    comm_id: '',
+    symbol: 'ETH',
+    network: 'Sepolia',
+    chainId: 11155111,
+    color: '#6186ff',
+    eip1559: true,
+    testnet: true,
+    defaultTokens: [],
+    explorer: 'https://sepolia.etherscan.io',
   },
   {
     comm_id: '',
@@ -378,7 +389,7 @@ export const Testnets: INetwork[] = [
     network: 'zkSync 2.0 Testnet Goerli',
     chainId: 280,
     color: '#8C8DFC',
-    test: true,
+    testnet: true,
     defaultTokens: zkSyncPopularTokens,
     explorer: 'https://zksync2-testnet.zkscan.io',
     feeTokens: zkSyncFeeTokens,
