@@ -49,7 +49,8 @@ export default observer(({ navigation, route }: NativeStackScreenProps<LandScree
         </Text>
         <Text style={{ marginStart: 16, marginBottom: 8, color: secondaryFontColor }}>{t('land-sign-in-web2-tips-1')}</Text>
         <Text style={{ marginStart: 16, marginBottom: 8, color: secondaryFontColor }}>{t('land-sign-in-web2-tips-2')}</Text>
-        <Text style={{ marginStart: 16, color: secondaryFontColor }}>{t('land-sign-in-web2-tips-3')}</Text>
+        <Text style={{ marginStart: 16, marginBottom: 8, color: secondaryFontColor }}>{t('land-sign-in-web2-tips-3')}</Text>
+        <Text style={{ marginStart: 16, color: secondaryFontColor }}>{t('land-sign-in-web2-tips-4')}</Text>
       </View>
 
       <View style={{ borderColor, borderWidth: 1, borderRadius: 7, padding: 12, paddingEnd: 24 }}>
