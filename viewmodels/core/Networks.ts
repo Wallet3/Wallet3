@@ -51,7 +51,7 @@ class Networks {
   }
 
   get all() {
-    return (__DEV__ ? AllNetworks : PublicNetworks).concat(this.userChains);
+    return AllNetworks.concat(this.userChains);
   }
 
   constructor() {

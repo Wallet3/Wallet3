@@ -75,8 +75,7 @@ web-build/
 dist/
 
 # @end expo-cli
-android/app/release
-configs/.android
 
 GoogleService-Info.plist
+configs/.android
 google-services.json

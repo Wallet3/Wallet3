@@ -92,7 +92,7 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
 
         <View style={{ flex: 1 }} />
 
-        {item.l2 ? (
+        {item.l2 || item.testnet ? (
           <View
             style={{
               borderRadius: 5,
@@ -103,7 +103,9 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
               alignItems: 'center',
             }}
           >
-            <Text style={{ fontSize: 12, color: 'white', fontWeight: '500' }}>L2</Text>
+            <Text style={{ fontSize: 12, color: 'white', fontWeight: '500' }}>
+              {item.l2 ? 'L2' : item.testnet ? 'Testnet' : ''}
+            </Text>
           </View>
         ) : undefined}
       </TouchableOpacity>

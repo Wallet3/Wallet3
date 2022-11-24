@@ -21,6 +21,7 @@
   "land-sign-in-web2-tips-1": "The recovery key is a randomly generated code that you can use to help recover your wallet.",
   "land-sign-in-web2-tips-2": "Once the recovery key lost, the wallet would never be retrieved, and you would lose all your funds.",
   "land-sign-in-web2-tips-3": "Please save the recovery key into a password manager (1Password, LastPass and so on).",
+  "land-sign-in-web2-tips-4": "Chainbow will not be liable if you lose your recovery key.",
   "land-sign-in-web2-i-have-saved": "I have saved it",
   "land-sign-in-set-recovery-key": "Please enter your recovery key to continue",
   "land-sign-in-continue-with-google": "Continue with Google",

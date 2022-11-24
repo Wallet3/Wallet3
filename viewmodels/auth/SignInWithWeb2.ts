@@ -2,6 +2,7 @@ import * as Random from 'expo-random';
 import * as SecureStore from 'expo-secure-store';
 
 import { computed, makeObservable, observable, runInAction } from 'mobx';
+import { decode, encode, isValid as isBase64 } from 'js-base64';
 import { decrypt, encrypt } from '../../utils/cipher';
 
 import Authentication from './Authentication';
@@ -39,6 +40,10 @@ export abstract class SignInWithWeb2 {
     return this.recoveryKey.length === 64;
   }
 
+  get encodedRecoveryKey() {
+    return encode(this.recoveryKey);
+  }
+
   constructor() {
     makeObservable(this, {
       isAvailable: observable,
@@ -52,9 +57,9 @@ export abstract class SignInWithWeb2 {
   abstract signIn(): Promise<SignInType | undefined>;
   abstract get platform(): string;
 
-  async getRecoverKey(web2UID: string, pin?: string) {
+  async getEncodedRecoverKey(web2UID: string, pin?: string) {
     if (!(await Authentication.authorize(pin))) return '';
-    return (await SecureStore.getItemAsync(Keys.recovery(web2UID))) || '';
+    return encode((await SecureStore.getItemAsync(Keys.recovery(web2UID))) || '');
   }
 
   private async setUser(user: string) {
@@ -101,6 +106,9 @@ export abstract class SignInWithWeb2 {
 
   async recover(key: string) {
     if (!this.uid) return false;
+    if (key.length > 82 && isBase64(key)) {
+      key = decode(key);
+    }
 
     const encryptedSecret = (await this.store.get(this.uid))?.secret;
 

@@ -21,6 +21,7 @@
   "land-sign-in-web2-tips-1": "リカバリーキーはランダムに生成されたコードで、ウォレットの復元に役立てることができます。",
   "land-sign-in-web2-tips-2": "リカバリーキーを紛失してしまうと、リカバリーキーを取り出すことができなくなり、すべての資金を失うことになります。",
   "land-sign-in-web2-tips-3": "リカバリーキーをパスワードマネージャー（1Password、LastPassなど）に保存してください。",
+  "land-sign-in-web2-tips-4": "リカバリーキーを紛失した場合、Chainbowは一切の責任を負いません。",
   "land-sign-in-web2-i-have-saved": "保存しました",
   "land-sign-in-set-recovery-key": "続行するにはリカバリーキーを入力してください",
   "land-sign-in-continue-with-google": "Googleアカウントで登録",
