@@ -2236,10 +2236,10 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@curvefi/api@^2.21.6":
-  version "2.21.6"
-  resolved "https://registry.yarnpkg.com/@curvefi/api/-/api-2.21.6.tgz#a9a6fc0d6c8a00a0751b713180f1ebdf7cea2176"
-  integrity sha512-Fo3bEfOSpW9nwIq5rR/JrlzYQX0F3USO53LyrlHrb9KLRJRBKWlSgnBHok8Btf7sdo8IZweU976zfzr3NeYaQQ==
+"@curvefi/api@^2.22.0":
+  version "2.22.0"
+  resolved "https://registry.yarnpkg.com/@curvefi/api/-/api-2.22.0.tgz#b9800a331916e9d79f4bec3e8b5280458e72eb72"
+  integrity sha512-tDhBk5Dc5XFzANun/54gNX1OQ25lGgcRRi7diJpPIq6o6z/JMZ3iuGFEGivcD4KtXbCnhlmBvW5ELBpxTIE/cg==
   dependencies:
     "@ethersproject/networks" "^5.5.0"
     axios "^0.21.1"
@@ -4615,10 +4615,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-native@~0.70.6":
-  version "0.70.6"
-  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.70.6.tgz#0d1bc3014111f64f13e0df643aec2ab03f021fdb"
-  integrity sha512-ynQ2jj0km9d7dbnyKqVdQ6Nti7VQ8SLTA/KKkkS5+FnvGyvij2AOo1/xnkBR/jnSNXuzrvGVzw2n0VWfppmfKw==
+"@types/react-native@~0.70.7":
+  version "0.70.7"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.70.7.tgz#1708e5f746bbce2ea4e0bd5a2627560667804d46"
+  integrity sha512-hBzeUWwk8sfj3vDfwEXb4hbjWjl0jb5CvWlu2gLrOUJyFHVzJ+x6Y9ilO2eVtJW7l5QmmNLILE1PkVfKRkqYuQ==
   dependencies:
     "@types/react" "*"
 
@@ -7319,10 +7319,10 @@ expo-asset@~8.6.2:
     path-browserify "^1.0.0"
     url-parse "^1.5.9"
 
-expo-barcode-scanner@~12.0.0:
-  version "12.0.0"
-  resolved "https://registry.yarnpkg.com/expo-barcode-scanner/-/expo-barcode-scanner-12.0.0.tgz#2642e92a82ffffecbd3ca6c5678906dba3d49010"
-  integrity sha512-llBYv4QSjvoGHvpLS9b0Y+FySFXt2KAZhw4yZ0kIrw/XIKE1pmObxPAxIBLdW/MAhPxbyhJvJqEoQA4e8U8Wyw==
+expo-barcode-scanner@~12.1.0:
+  version "12.1.0"
+  resolved "https://registry.yarnpkg.com/expo-barcode-scanner/-/expo-barcode-scanner-12.1.0.tgz#3758b20e82bf1e30ad420df4106c8e868ed7b139"
+  integrity sha512-R+SlrtS7zEomY48Vjc+XJVHp+qz/u4TKG3CQeFobtQlBXPJvK94055yUg9PxOAwIIrOp3093FSOZiu/OGuoxiA==
   dependencies:
     expo-image-loader "~4.0.0"
 
@@ -7331,10 +7331,10 @@ expo-blur@~12.0.1:
   resolved "https://registry.yarnpkg.com/expo-blur/-/expo-blur-12.0.1.tgz#7aa4186620359acfa976dda84360070b634ffe3d"
   integrity sha512-7oF/xRIFJukM4/qL6ejZ4Z/4YcVExvBPsBrz7rGYz6PtgAkWwYFR62+ExZOzTEG4hgoPPmlnt1ncimsk/MYUgQ==
 
-expo-camera@~13.0.0:
-  version "13.0.0"
-  resolved "https://registry.yarnpkg.com/expo-camera/-/expo-camera-13.0.0.tgz#eedde5b35f5948617068f09412d6d3dd26fe71c4"
-  integrity sha512-3OVETNVtvlQojQSfghto9nn/Y/90DA0xOyEeJqNz9N8CX8klnclyXbBSeXtDN6aFz1lQH8D/fKePbFKNxoPsyg==
+expo-camera@~13.1.0:
+  version "13.1.0"
+  resolved "https://registry.yarnpkg.com/expo-camera/-/expo-camera-13.1.0.tgz#e706a8efc78d1891d848ff729730d9d75468d36d"
+  integrity sha512-YD1Gd5nyhk3ekXgVTsTLrhd0Nlug51NI7hjBKq2BOP+X5YyrcZLVarZAXXdc5vgeW73VBYIne1rpX9Q0qJdlrw==
   dependencies:
     "@koale/useworker" "^4.0.2"
     invariant "^2.2.4"
@@ -7529,10 +7529,10 @@ expo-web-browser@~12.0.0:
   dependencies:
     compare-urls "^2.0.0"
 
-expo@^47.0.7:
-  version "47.0.7"
-  resolved "https://registry.yarnpkg.com/expo/-/expo-47.0.7.tgz#4fe95529c6b1e6d8026a164847ce1048f6dc5ccd"
-  integrity sha512-uHTxvPdD4K7W277tXVAdFmgjSZ0Hg+0g5bnez0jXyXQINa+0CTtGmulgFehBOrbrUZBqwosN0K8TsrxADwcXZQ==
+expo@^47.0.8:
+  version "47.0.8"
+  resolved "https://registry.yarnpkg.com/expo/-/expo-47.0.8.tgz#80390fd63f8305103445069c647011915f7c32dd"
+  integrity sha512-PGNCIvrnYwHH4TDFsVocq/xhWZ5DW8N3bLkZJPZZgX6VgjtVLNsbZ+0lm1inLCZHP+6xSpSKRccjGHO/QQoMBQ==
   dependencies:
     "@babel/runtime" "^7.14.0"
     "@expo/cli" "0.4.10"
@@ -11770,10 +11770,10 @@ react-native-web@0.18.10:
     postcss-value-parser "^4.2.0"
     styleq "^0.1.2"
 
-react-native-webview@11.23.1:
-  version "11.23.1"
-  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-11.23.1.tgz#6a4bf2620e491dd4fecf4e6dc079005117fae12c"
-  integrity sha512-bmqsdg4RYOUYD37R9XTrQALm7eD62KbLNPRfgvpLGd1SjaurvAjjsLrLN4mt6yOtKOMKeZvlcAl3x6De6cCQsA==
+react-native-webview@11.25.0:
+  version "11.25.0"
+  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-11.25.0.tgz#fd2e0265224192d7381443cec732af56d6ca4d69"
+  integrity sha512-yq3con7vDQUQKAyl9a7pJaR3A1/cI0K2AeRhGugXfWQfdsne18pddJwQuOsc63khecipeCbB8pthCqw0UlsgVw==
   dependencies:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"

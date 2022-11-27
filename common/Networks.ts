@@ -385,6 +385,18 @@ export const Testnets: INetwork[] = [
   },
   {
     comm_id: '',
+    symbol: 'MATIC',
+    network: 'Mumbai',
+    chainId: 80001,
+    color: '#8247E5',
+    eip1559: true,
+    defaultTokens: [],
+    blockTimeMs: 3 * 1000,
+    explorer: 'https://mumbai.polygonscan.com',
+    etherscanApi: 'https://mumbai.polygonscan.com/api',
+  },
+  {
+    comm_id: '',
     symbol: 'ETH',
     network: 'zkSync 2.0 Testnet Goerli',
     chainId: 280,
