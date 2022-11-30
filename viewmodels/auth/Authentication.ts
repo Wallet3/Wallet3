@@ -188,9 +188,9 @@ export class Authentication extends EventEmitter {
     return decrypt(data, await this.getMasterKey());
   }
 
-  setUserSecretsVerified(verified: boolean) {
+  async setUserSecretsVerified(verified: boolean) {
     this.userSecretsVerified = verified;
-    AsyncStorage.setItem(keys.userSecretsVerified, verified.toString());
+    await AsyncStorage.setItem(keys.userSecretsVerified, verified.toString());
   }
 
   reset() {

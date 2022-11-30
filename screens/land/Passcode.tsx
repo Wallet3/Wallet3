@@ -25,14 +25,14 @@ export default observer(({ route }: NativeStackScreenProps<LandScreenStack, 'Bac
 
     await Authentication.authorize(passcode);
 
+    if (route?.params === 'ImportWallet') {
+      await Authentication.setUserSecretsVerified(true);
+    }
+
     if (await MnemonicOnce.save()) {
       AppVM.init();
     } else {
       showMessage({ message: 'msg-failed-to-import-wallet', type: 'warning' });
-    }
-
-    if (route?.params === 'ImportWallet') {
-      Authentication.setUserSecretsVerified(true);
     }
 
     setBusy(false);

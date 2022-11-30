@@ -9,6 +9,7 @@ import {
   AVAX_USDt,
   AVAX_WETH_e,
   AVAX_YUSD,
+  CELO_USD,
   CRV,
   CVX,
   DAI,
@@ -77,4 +78,10 @@ export const SupportedChains: { chainId: number; router: string; defaultTokens: 
     router: '0x7661a508a0c4c2d305f355F7850D87b69431e897',
     defaultTokens: [FTM_ETH, FTM_DAI, FTM_USDC, FTM_WBTC],
   },
+
+  // {
+  //   chainId: 42220,
+  //   router: '0xec9cEBE650E181079576C1b6d0d2e092B1EdfF13',
+  //   defaultTokens: [CELO_USD],
+  // },
 ];

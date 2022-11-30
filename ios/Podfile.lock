@@ -340,7 +340,7 @@ PODS:
   - React-jsinspector (0.70.6)
   - React-logger (0.70.6):
     - glog
-  - react-native-context-menu-view (1.7.0):
+  - react-native-context-menu-view (1.8.0):
     - React
   - react-native-randombytes (3.6.1):
     - React-Core
@@ -827,7 +827,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: b4a65947391c658450151275aa406f2b8263178f
   React-jsinspector: 60769e5a0a6d4b32294a2456077f59d0266f9a8b
   React-logger: 1623c216abaa88974afce404dc8f479406bbc3a0
-  react-native-context-menu-view: 359317c934f56dc68cd6021438106a9610a90b20
+  react-native-context-menu-view: b65e4d004d7a8fba336277d6281c57540074bf79
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: 99b24a0c5acd0d5dcac2b1a7f18c49ea317be99a
   react-native-video: c26780b224543c62d5e1b2a7244a5cd1b50e8253
