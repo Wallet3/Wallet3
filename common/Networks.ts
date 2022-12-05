@@ -45,6 +45,7 @@ export interface INetwork {
   minWei?: number;
   browserBarIconSize?: number;
   testnet?: boolean;
+  pinned?: boolean;
 }
 
 export const PublicNetworks: INetwork[] = [
@@ -392,6 +393,7 @@ export const Testnets: INetwork[] = [
     eip1559: true,
     defaultTokens: [],
     blockTimeMs: 3 * 1000,
+    testnet: true,
     explorer: 'https://mumbai.polygonscan.com',
     etherscanApi: 'https://mumbai.polygonscan.com/api',
   },
@@ -402,7 +404,7 @@ export const Testnets: INetwork[] = [
     chainId: 280,
     color: '#8C8DFC',
     testnet: true,
-    defaultTokens: zkSyncPopularTokens,
+    defaultTokens: [],
     explorer: 'https://zksync2-testnet.zkscan.io',
     feeTokens: zkSyncFeeTokens,
   },

@@ -2305,10 +2305,10 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@curvefi/api@^2.22.0":
-  version "2.22.0"
-  resolved "https://registry.yarnpkg.com/@curvefi/api/-/api-2.22.0.tgz#b9800a331916e9d79f4bec3e8b5280458e72eb72"
-  integrity sha512-tDhBk5Dc5XFzANun/54gNX1OQ25lGgcRRi7diJpPIq6o6z/JMZ3iuGFEGivcD4KtXbCnhlmBvW5ELBpxTIE/cg==
+"@curvefi/api@^2.23.0":
+  version "2.23.0"
+  resolved "https://registry.yarnpkg.com/@curvefi/api/-/api-2.23.0.tgz#ee2bb716f6cd33bb82a4e133b1c9e0f21cf34cb7"
+  integrity sha512-uPHYHpQAwKyvoBE6022Vv626EC2+ffQAi0zuATLGHbGin12N4fJ47Qfs3UtVrqtjORI3oJYIrZ6m5MTZ9WIhUA==
   dependencies:
     "@ethersproject/networks" "^5.5.0"
     axios "^0.21.1"
@@ -4202,10 +4202,10 @@
     prompts "^2.4.0"
     semver "^6.3.0"
 
-"@react-native-google-signin/google-signin@^8.2.1":
-  version "8.2.1"
-  resolved "https://registry.yarnpkg.com/@react-native-google-signin/google-signin/-/google-signin-8.2.1.tgz#a37362e630302da9ff820895ab8cf32acedd66dc"
-  integrity sha512-wtSjKXKxxwntE7A98b4ry6rbTDidxF6taAZISLnJ9WYffFvgyreliKjg3e9IDuTBLCDpDYKUOqK9I/h4hMFnjg==
+"@react-native-google-signin/google-signin@^9.0.0":
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/@react-native-google-signin/google-signin/-/google-signin-9.0.0.tgz#f6f7810f74594520ae3f8e97c69e4eb7e546d126"
+  integrity sha512-mty1OjwoiFkzcdZdL4ew6cykIcjneIBfwL6YbiObbI67vLDKwOzOcQCIXvW7d8EZRivEOc6P44W5OSCrZ9yekg==
 
 "@react-native/assets@1.0.0":
   version "1.0.0"
@@ -4603,10 +4603,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.17.60.tgz#35f3d6213daed95da7f0f73e75bcc6980e90597b"
   integrity sha512-F0KIgDJfy2nA3zMLmWGKxcH2ZVEtCZXHHdOQs2gSaQ27+lNeEfGxzkIw90aXswATX7AZ33tahPbzy6KAfUreVw==
 
-"@types/node@^18.11.9":
-  version "18.11.9"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.9.tgz#02d013de7058cea16d36168ef2fc653464cfbad4"
-  integrity sha512-CRpX21/kGdzjOpFsZSkcrXMGIBWMGNIHXXBVFSH+ggkftxg+XYP20TESbh+zFvFj3EQOl5byk0HTRn1IL6hbqg==
+"@types/node@^18.11.10":
+  version "18.11.10"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.10.tgz#4c64759f3c2343b7e6c4b9caf761c7a3a05cee34"
+  integrity sha512-juG3RWMBOqcOuXC643OAdSA525V44cVgGV6dUDuiFtss+8Fk5x1hI93Rsld43VeJVIeqlP9I7Fn9/qaVqoEAuQ==
 
 "@types/node@^18.6.3":
   version "18.7.23"
@@ -13281,10 +13281,10 @@ typedarray-to-buffer@3.1.5, typedarray-to-buffer@^3.1.5:
   dependencies:
     is-typedarray "^1.0.0"
 
-typeorm@^0.3.10:
-  version "0.3.10"
-  resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.3.10.tgz#aa2857fd4b078c912ca693b7eee01b6535704458"
-  integrity sha512-VMKiM84EpJQ+Mz9xDIPqnfplWhyUy1d8ccaKdMY9obifxJOTFnv8GYVyPsGwG8Lk7Nb8MlttHyHWENGAhBA3WA==
+typeorm@^0.3.11:
+  version "0.3.11"
+  resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.3.11.tgz#09b6ab0b0574bf33c1faf7344bab6c363cf28921"
+  integrity sha512-pzdOyWbVuz/z8Ww6gqvBW4nylsM0KLdUCDExr2gR20/x1khGSVxQkjNV/3YqliG90jrWzrknYbYscpk8yxFJVg==
   dependencies:
     "@sqltools/formatter" "^1.2.2"
     app-root-path "^3.0.0"

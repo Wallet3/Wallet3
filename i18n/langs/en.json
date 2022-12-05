@@ -294,6 +294,8 @@
   "button-confirm": "Confirm",
   "button-edit": "Edit",
   "button-view": "View",
+  "button-pin": "Pin",
+  "button-unpin": "Unpin",
   "button-remove": "Remove",
   "button-close-all": "Close All",
   "button-share": "Share",

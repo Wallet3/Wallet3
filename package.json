@@ -10,13 +10,13 @@
     "test": "jest"
   },
   "dependencies": {
-    "@curvefi/api": "^2.22.0",
+    "@curvefi/api": "^2.23.0",
     "@ethersproject/shims": "^5.7.0",
     "@expo/vector-icons": "^13.0.0",
     "@metamask/eth-sig-util": "^4.0.1",
     "@metamask/mobile-provider": "^2.1.0",
     "@react-native-async-storage/async-storage": "~1.17.11",
-    "@react-native-google-signin/google-signin": "^8.2.1",
+    "@react-native-google-signin/google-signin": "^9.0.0",
     "@react-navigation/bottom-tabs": "^6.4.3",
     "@react-navigation/drawer": "^6.5.3",
     "@react-navigation/elements": "^1.3.9",
@@ -109,7 +109,7 @@
     "readable-stream": "^4.2.0",
     "rn-swipe-button": "^1.3.8",
     "stream-browserify": "^3.0.0",
-    "typeorm": "^0.3.10",
+    "typeorm": "^0.3.11",
     "url": "^0.11.0",
     "vm-browserify": "1.1.2"
   },
@@ -119,7 +119,7 @@
     "@babel/plugin-proposal-numeric-separator": "^7.18.6",
     "@babel/preset-typescript": "^7.18.6",
     "@types/i18n-js": "^3.8.3",
-    "@types/node": "^18.11.9",
+    "@types/node": "^18.11.10",
     "@types/numeral": "^2.0.2",
     "@types/pubsub-js": "^1.8.3",
     "@types/react": "17.0.52",
