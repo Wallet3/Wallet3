@@ -88,7 +88,7 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
           <View
             style={{
               borderRadius: 5,
-              backgroundColor: 'deepskyblue',
+              backgroundColor: item.l2 ? item.color : 'deepskyblue',
               padding: 2,
               paddingHorizontal: 6,
               flexDirection: 'row',
@@ -101,7 +101,7 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
           </View>
         ) : undefined}
 
-        {item.pinned ? <Entypo name="pin" color={item.color} style={{ marginStart: 12 }} /> : undefined}
+        {item.pinned ? <Entypo name="pin" color={item.color} style={{ marginStart: 12, marginTop: 1 }} /> : undefined}
       </TouchableOpacity>
     );
   };

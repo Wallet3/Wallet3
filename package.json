@@ -26,6 +26,7 @@
     "@tradle/react-native-http": "^2.0.0",
     "@unstoppabledomains/resolution": "^8.3.3",
     "@walletconnect/client": "^1.8.0",
+    "alchemy-sdk": "^2.2.3",
     "assert": "^2.0.0",
     "axios": "^0.27.2",
     "buffer": "^6.0.3",

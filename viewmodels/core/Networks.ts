@@ -171,7 +171,7 @@ class Networks {
 
     if (isCurrent) this.switch(this.Ethereum);
 
-    await userChain?.remove();
+    await Promise.all([userChain?.remove(), this.unpin(chain)]);
   }
 
   reset() {

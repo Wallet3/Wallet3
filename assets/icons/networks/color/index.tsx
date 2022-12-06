@@ -5,6 +5,7 @@ import Aurora from './aurora.svg';
 import Avalanche from './avalanche.svg';
 import Boba from './boba.svg';
 import Bsc from './bnb.svg';
+import Canto from './canto.svg';
 import Celo from './celo.svg';
 import { Coin } from '../../../../components';
 import Cronos from './cronos.svg';
@@ -111,6 +112,7 @@ const SHIDEN = generateNetworkIcon({ chainId: 336, width: 22, height: 32 });
 const EVMOS = generateNetworkIcon({ chainId: 9001, width: 29, height: 32 });
 const KAVA = generateNetworkIcon({ chainId: 2222, width: 19, height: 25 });
 const NOVA = generateNetworkIcon({ chainId: 42170, width: 27, height: 27 });
+const CANTO = generateNetworkIcon({ chainId: 7700, width: 27, height: 27 });
 
 export const NetworkIcons = {
   1: ETH,
@@ -142,6 +144,7 @@ export const NetworkIcons = {
   9001: EVMOS,
   2222: KAVA,
   42170: NOVA,
+  7700: CANTO,
 };
 
 export function generateNetworkIcon(props: {
@@ -223,6 +226,8 @@ export function generateNetworkIcon(props: {
       return <Kava key={chainId} width={width} height={height ?? width} style={style} />;
     case 42170:
       return <Nova key={chainId} width={width} height={height ?? width} style={style} />;
+    case 7700:
+      return <Canto key={chainId} width={width} height={height ?? width} style={style} />;
     default:
       return coins[symbol?.toLowerCase() || ''] ? (
         <Coin symbol={symbol} size={height ?? width} address="" chainId={chainId} style={style as any} />

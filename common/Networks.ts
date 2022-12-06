@@ -175,6 +175,15 @@ export const PublicNetworks: INetwork[] = [
     etherscanApi: 'https://andromeda-explorer.metis.io/api',
   },
   {
+    symbol: 'CANTO',
+    chainId: 7700,
+    network: 'CANTO',
+    color: '#06FC99',
+    defaultTokens: [],
+    explorer: 'https://evm.explorer.canto.io',
+    etherscanApi: 'https://evm.explorer.canto.io/api',
+  },
+  {
     symbol: 'ETH',
     network: 'Arbitrum Nova',
     chainId: 42170,
