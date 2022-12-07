@@ -14,6 +14,7 @@ import App from '../../viewmodels/core/App';
 import Avatar from '../../components/Avatar';
 import DeviceInfo from 'react-native-device-info';
 import GetPageMetadata from './scripts/Metadata';
+import HookRainbowKit from './scripts/InjectRainbowKitObserver';
 import HookWalletConnect from './scripts/InjectWalletConnectObserver';
 import { INetwork } from '../../common/Networks';
 import { InpageDAppController } from './controller/InpageDAppController';
@@ -245,7 +246,7 @@ export default observer((props: Web3ViewProps) => {
           userAgent={ua}
           allowsFullscreenVideo={false}
           forceDarkOn={mode === 'dark'}
-          injectedJavaScript={`${GetPageMetadata}\ntrue;\n${HookWalletConnect}\ntrue;`}
+          injectedJavaScript={`${GetPageMetadata}\ntrue;\n${HookWalletConnect}\n${HookRainbowKit}\ntrue;`}
           onMessage={onMessage}
           mediaPlaybackRequiresUserAction
           pullToRefreshEnabled
