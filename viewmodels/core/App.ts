@@ -3,6 +3,7 @@ import { action, computed, makeObservable, observable, reaction, runInAction } f
 import { providers, utils } from 'ethers';
 
 import { Account } from '../account/Account';
+import AppStoreReview from '../services/AppStoreReview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Authentication from '../auth/Authentication';
 import Bookmarks from '../customs/Bookmarks';
@@ -199,7 +200,9 @@ export class AppVM {
     await Promise.all([Database.init(), Authentication.init()]);
     await Promise.all([Networks.init()]);
 
-    TxHub.init();
+    TxHub.init().then(() => {
+      AppStoreReview.check();
+    });
 
     const wallets = await Promise.all((await Database.keys.find()).map((key) => new Wallet(key).init()));
     const lastUsedAccount = (await AsyncStorage.getItem('lastUsedAccount')) ?? '';
