@@ -45,6 +45,7 @@ export interface INetwork {
   minWei?: number;
   browserBarIconSize?: number;
   testnet?: boolean;
+  pinned?: boolean;
 }
 
 export const PublicNetworks: INetwork[] = [
@@ -172,6 +173,15 @@ export const PublicNetworks: INetwork[] = [
     l2: true,
     explorer: 'https://andromeda-explorer.metis.io',
     etherscanApi: 'https://andromeda-explorer.metis.io/api',
+  },
+  {
+    symbol: 'CANTO',
+    chainId: 7700,
+    network: 'CANTO',
+    color: '#06FC99',
+    defaultTokens: [],
+    explorer: 'https://evm.explorer.canto.io',
+    etherscanApi: 'https://evm.explorer.canto.io/api',
   },
   {
     symbol: 'ETH',
@@ -385,12 +395,25 @@ export const Testnets: INetwork[] = [
   },
   {
     comm_id: '',
+    symbol: 'MATIC',
+    network: 'Mumbai',
+    chainId: 80001,
+    color: '#8247E5',
+    eip1559: true,
+    defaultTokens: [],
+    blockTimeMs: 3 * 1000,
+    testnet: true,
+    explorer: 'https://mumbai.polygonscan.com',
+    etherscanApi: 'https://mumbai.polygonscan.com/api',
+  },
+  {
+    comm_id: '',
     symbol: 'ETH',
     network: 'zkSync 2.0 Testnet Goerli',
     chainId: 280,
     color: '#8C8DFC',
     testnet: true,
-    defaultTokens: zkSyncPopularTokens,
+    defaultTokens: [],
     explorer: 'https://zksync2-testnet.zkscan.io',
     feeTokens: zkSyncFeeTokens,
   },

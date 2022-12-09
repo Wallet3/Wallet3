@@ -26,6 +26,7 @@ const DAY = 24 * 60 * 60 * 1000;
 const CacheKeys = {
   overview: 'Debank_overview',
   user_tokens: (chainId: number, address: string) => `Debank_tokens_${chainId}_${address.toLowerCase()}`,
+  user_nfts: (chainId: number, address: string) => `Debank_nfts_${chainId}_${address.toLowerCase()}`,
   chain_balance: (chainId: number, address: string) => `Debank_chainBalance_${chainId}_${address.toLowerCase()}`,
   pre_exec_tx: ({ chainId, to, from, data }: { chainId: number; from: string; to: string; data: string }) =>
     `${chainId}_${from}_${to}_${data}`,
@@ -174,6 +175,39 @@ export async function fetchChainsOverview(address: string) {
   }
 
   return debankOverview;
+}
+
+export async function getNfts(address: string, chainId: number) {
+  if (DebankSupportedChains.size > 0 && !DebankSupportedChains.get(chainId)) return [];
+
+  const comm_id = DebankSupportedChains.get(chainId);
+  let nfts: DebankNFT[] = [];
+
+  do {
+    try {
+      const cacheJson = await AsyncStorage.getItem(CacheKeys.user_nfts(chainId, address));
+      if (cacheJson) {
+        const { timestamp, data } = JSON.parse(cacheJson) as { timestamp: number; data: DebankNFT[] };
+        if (Array.isArray(data)) nfts = data;
+        if (timestamp + 1 * DAY > Date.now()) break;
+      }
+    } catch (error) {}
+
+    try {
+      const resp = await fetch(
+        `https://pro-openapi.debank.com/v1/user/nft_list?id=${address}&chain_id=${comm_id}&is_all=true`.toLowerCase(),
+        { headers: { accept: 'application/json', AccessKey: DeBankApiKey } }
+      );
+
+      const data = (await resp.json()) as DebankNFT[];
+      if (!Array.isArray(data)) break;
+
+      nfts = data;
+      await AsyncStorage.setItem(CacheKeys.user_nfts(chainId, address), JSON.stringify({ timestamp: Date.now(), data }));
+    } catch (error) {}
+  } while (false);
+
+  return nfts;
 }
 
 export async function preExecTx(tx: {
@@ -325,181 +359,48 @@ export interface PreExecResult {
   receive_nft_list?: NftList[];
 }
 
-const mock = {
-  receive_token_list: [
-    {
-      chainId: 1,
-      amount: 101.37034039854382,
-      chain: 'eth',
-      decimals: 18,
-      display_symbol: null,
-      id: '0xc18360217d8f7ab5e7c516566761ea12ce7f9d72',
-      address: '0xc18360217d8f7ab5e7c516566761ea12ce7f9d72',
-      is_core: true,
-      is_verified: true,
-      is_wallet: true,
-      logo_url:
-        'https://static.debank.com/image/eth_token/logo_url/0xc18360217d8f7ab5e7c516566761ea12ce7f9d72/034d454d78d7be7f9675066fdb63e114.png',
-      name: 'Ethereum Name Service',
-      optimized_symbol: 'ENS',
-      price: 12.834153415017676,
-      protocol_id: '',
-      symbol: 'ENS',
-      time_at: 1635800117,
-      usd_value: 1301.0025004074755,
-    },
-    { chainId: 1, symbol: 'CRV', address: '0x6B175474E89094C44Da98b954EedeAC495271d0F', amount: 500 },
-    { chainId: 1, symbol: 'MKR', address: '0x6B175474E89094C44Da98b954EedeAC495271d1F', amount: 500 },
-    { chainId: 1, symbol: 'UNI', address: '0x6B175474E89094C44Da98b954EedeAC495271d2F', amount: 500 },
-    { chainId: 1, symbol: 'SNX', address: '0x6B175474E89094C44Da98b954EedeAC495221d0F', amount: 500 },
-    { chainId: 1, symbol: 'TUSD', address: '0x6Bc75474E89094C44Da98b954EedeAC495271d0F', amount: 500 },
-    { chainId: 1, symbol: 'LINK', address: '0x6Bc75479E89094C44Da98b954EedeAC495271d0F', amount: 500 },
-  ],
-  send_token_list: [
-    {
-      chainId: 1,
-      amount: 1,
-      chain: 'eth',
-      decimals: 18,
-      display_symbol: null,
-      id: '',
-      address: '',
-      is_core: true,
-      is_verified: true,
-      is_wallet: true,
-      logo_url: 'https://static.debank.com/image/token/logo_url/eth/935ae4e4d1d12d59a99717a24f2540b5.png',
-      name: 'ETH',
-      optimized_symbol: 'ETH',
-      price: 1303.42,
-      protocol_id: '',
-      symbol: 'ETH',
-      time_at: 1483200000,
-      usd_value: 1303.42,
-    },
-    { chainId: 1, symbol: 'DAI', address: '0x6B175474E89094C44Da98b954EedeAC495271d0F', amount: 500 },
-    { chainId: 1, symbol: 'USDC', address: '0x6B175474E89094C44Da98b954EedeAC495271d0c', amount: 500 },
-    { chainId: 1, symbol: 'USDT', address: '0x6B175474E89094C44Da98b954EedeAC495271d0b', amount: 500 },
-  ],
-  send_nft_list: [
-    {
-      amount: 1,
-      chain: 'eth',
-      collection: null,
-      content:
-        'https://static.debank.com/image/eth_nft/local_url/aeee5dc9285c12b282aaf30839e61c6c/11972a026a9727482c793134e0f863dc',
-      content_type: 'image_url',
-      contract_id: '0x8270fc3b2d23de703b265b2abe008883954fea8e',
-      description: '',
-      detail_url: 'https://opensea.io/assets/0x8270fc3b2d23de703b265b2abe008883954fea8e/1207',
-      id: 'ef900de9342d82b8cc30b2d765a20d1b',
-      inner_id: '1207',
-      name: 'KUMALEON EGG #1207',
-      total_supply: 1,
-    },
-    {
-      amount: 1,
-      chain: 'eth',
-      collection: null,
-      content:
-        'https://i.seadn.io/gae/XVLhukxRl3LOWQiXXU1IxgWa7sYHoOE4RYZAyf2GRcQi-NSVagMp6dBw4kuhXxQveslLwsEvXMmE4C17PMUqPoxHVOn8uU9OsFXi?w=500&auto=format',
-      content_type: 'image_url',
-      contract_id: '0x8270fc3b2d23de703b265b2abe008883954fea8e',
-      description: '',
-      detail_url: 'https://opensea.io/assets/0x8270fc3b2d23de703b265b2abe008883954fea8e/1207',
-      id: 'ef900de9342d82b8cc30b2d765a20d1b',
-      inner_id: '1207',
-      name: 'KUMALEON EGG #1207',
-      total_supply: 1,
-    },
-    {
-      amount: 1,
-      chain: 'eth',
-      collection: null,
-      content:
-        'https://i.seadn.io/gae/WxvXgSfdXI3TaV5uPXYJy17_OYvhqY0mg4-zM2hfB6ny8vYVisOI1OeS-bb9jOQ1eZhkrSnx7A_sCX3bdt9TxoI5UTpV1c3i4gCu?w=500&auto=format',
-      content_type: 'image_url',
-      contract_id: '0x8270fc3b2d23de703b265b2abe008883954fea8e',
-      description: '',
-      detail_url: 'https://opensea.io/assets/0x8270fc3b2d23de703b265b2abe008883954fea8e/1207',
-      id: 'ef900de9342d82b8cc30b2d765a20d1b',
-      inner_id: '1207',
-      name: 'KUMALEON EGG #1207',
-      total_supply: 1,
-    },
-    {
-      amount: 1,
-      chain: 'eth',
-      collection: null,
-      content: 'https://img.seadn.io/files/c2157ada835b6d0c548beacfaed99c42.png?fit=max',
-      content_type: 'image_url',
-      contract_id: '0x8270fc3b2d23de703b265b2abe008883954fea8e',
-      description: '',
-      detail_url: 'https://opensea.io/assets/0x8270fc3b2d23de703b265b2abe008883954fea8e/1207',
-      id: 'ef900de9342d82b8cc30b2d765a20d1b',
-      inner_id: '1207',
-      name: 'KUMALEON EGG #1207',
-      total_supply: 1,
-    },
-  ],
-  receive_nft_list: [
-    {
-      amount: 1,
-      chain: 'eth',
-      collection: null,
-      content: 'https://storage.kumaleon.com/0x8270fc3b2d23de703b265b2abe008883954fea8e/1207.png',
-      content_type: 'image_url',
-      contract_id: '0x8270fc3b2d23de703b265b2abe008883954fea8e',
-      description: '',
-      detail_url: 'https://opensea.io/assets/0x8270fc3b2d23de703b265b2abe008883954fea8e/1207',
-      id: 'ef900de9342d82b8cc30b2d765a20d1b',
-      inner_id: '1207',
-      name: 'KUMALEON EGG #1207',
-      total_supply: 1,
-    },
-    {
-      amount: 1,
-      chain: 'eth',
-      collection: null,
-      content:
-        'https://i.seadn.io/gae/XVLhukxRl3LOWQiXXU1IxgWa7sYHoOE4RYZAyf2GRcQi-NSVagMp6dBw4kuhXxQveslLwsEvXMmE4C17PMUqPoxHVOn8uU9OsFXi?w=500&auto=format',
-      content_type: 'image_url',
-      contract_id: '0x8270fc3b2d23de703b265b2abe008883954fea8e',
-      description: '',
-      detail_url: 'https://opensea.io/assets/0x8270fc3b2d23de703b265b2abe008883954fea8e/1207',
-      id: 'ef900de9342d82b8cc30b2d765a20d1b',
-      inner_id: '1207',
-      name: 'KUMALEON EGG #1207',
-      total_supply: 1,
-    },
-    {
-      amount: 1,
-      chain: 'eth',
-      collection: null,
-      content:
-        'https://i.seadn.io/gae/WxvXgSfdXI3TaV5uPXYJy17_OYvhqY0mg4-zM2hfB6ny8vYVisOI1OeS-bb9jOQ1eZhkrSnx7A_sCX3bdt9TxoI5UTpV1c3i4gCu?w=500&auto=format',
-      content_type: 'image_url',
-      contract_id: '0x8270fc3b2d23de703b265b2abe008883954fea8e',
-      description: '',
-      detail_url: 'https://opensea.io/assets/0x8270fc3b2d23de703b265b2abe008883954fea8e/1207',
-      id: 'ef900de9342d82b8cc30b2d765a20d1b',
-      inner_id: '1207',
-      name: 'KUMALEON EGG #1207',
-      total_supply: 1,
-    },
-    {
-      amount: 1,
-      chain: 'eth',
-      collection: null,
-      content: 'https://img.seadn.io/files/c2157ada835b6d0c548beacfaed99c42.png?fit=max',
-      content_type: 'image_url',
-      contract_id: '0x8270fc3b2d23de703b265b2abe008883954fea8e',
-      description: '',
-      detail_url: 'https://opensea.io/assets/0x8270fc3b2d23de703b265b2abe008883954fea8e/1207',
-      id: 'ef900de9342d82b8cc30b2d765a20d1b',
-      inner_id: '1207',
-      name: 'KUMALEON EGG #1207',
-      total_supply: 1,
-    },
-  ],
-  success: true,
-};
+interface NFTAttribute {
+  trait_type: string;
+  value: string;
+}
+
+interface NFTPayToken {
+  id: string;
+  chain: string;
+  name: string;
+  symbol: string;
+  display_symbol?: any;
+  optimized_symbol: string;
+  decimals: number;
+  logo_url: string;
+  protocol_id: string;
+  price: number;
+  is_verified: boolean;
+  is_core: boolean;
+  is_wallet: boolean;
+  time_at: number;
+  amount: number;
+  date_at: string;
+}
+
+export interface DebankNFT {
+  id: string;
+  contract_id: string;
+  inner_id: string;
+  chain: string;
+  name: string;
+  description: string;
+  content_type: string;
+  content: string;
+  thumbnail_url: string;
+  total_supply: number;
+  detail_url: string;
+  attributes: NFTAttribute[];
+  collection_id: string;
+  pay_token: NFTPayToken;
+  contract_name: string;
+  is_erc1155: boolean;
+  amount: number;
+  usd_price: number;
+  is_erc721?: boolean;
+}

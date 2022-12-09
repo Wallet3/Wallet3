@@ -5,6 +5,7 @@ import Aurora from './aurora.svg';
 import Avalanche from './avalanche.svg';
 import BSC from './bnb.svg';
 import Boba from './boba.svg';
+import Canto from './canto.svg';
 import Celo from './celo.svg';
 import { Coin } from '../../../../components';
 import Cronos from './cronos.svg';
@@ -60,6 +61,7 @@ export default {
   336: <Shiden width={40} height={40} style={styles.shiden} />,
   2222: <Kava width={40} height={30} style={styles.kava} />,
   42170: <Nova width={45} height={45} style={styles.nova} />,
+  7700: <Canto width={45} height={45} style={styles.canto} />,
 };
 
 export const EVMIcon = ({

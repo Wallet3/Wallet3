@@ -5,6 +5,7 @@ import Aurora from './aurora.svg';
 import Avalanche from './avalanche.svg';
 import Boba from './boba.svg';
 import Bsc from './bnb.svg';
+import Canto from './canto.svg';
 import Celo from './celo.svg';
 import { Coin } from '../../../../components';
 import Cronos from './cronos.svg';
@@ -111,6 +112,7 @@ const SHIDEN = generateNetworkIcon({ chainId: 336, width: 22, height: 32 });
 const EVMOS = generateNetworkIcon({ chainId: 9001, width: 29, height: 32 });
 const KAVA = generateNetworkIcon({ chainId: 2222, width: 19, height: 25 });
 const NOVA = generateNetworkIcon({ chainId: 42170, width: 27, height: 27 });
+const CANTO = generateNetworkIcon({ chainId: 7700, width: 27, height: 27 });
 
 export const NetworkIcons = {
   1: ETH,
@@ -123,6 +125,7 @@ export const NetworkIcons = {
   128: HECO,
   66: OKX,
   137: POLY,
+  80001: POLY,
   100: xDAI,
   288: BOBA,
   1313161554: AURORA,
@@ -141,6 +144,7 @@ export const NetworkIcons = {
   9001: EVMOS,
   2222: KAVA,
   42170: NOVA,
+  7700: CANTO,
 };
 
 export function generateNetworkIcon(props: {
@@ -162,6 +166,7 @@ export function generateNetworkIcon(props: {
     case 10:
       return <Optimism key={chainId} width={width} height={height ?? width} style={style} />;
     case 137:
+    case 80001:
       return <Polygon key={chainId} width={width} height={height ?? width} style={style} />;
     case 100:
       return <XDai key={chainId} width={width} height={height ?? width} style={style} />;
@@ -221,6 +226,8 @@ export function generateNetworkIcon(props: {
       return <Kava key={chainId} width={width} height={height ?? width} style={style} />;
     case 42170:
       return <Nova key={chainId} width={width} height={height ?? width} style={style} />;
+    case 7700:
+      return <Canto key={chainId} width={width} height={height ?? width} style={style} />;
     default:
       return coins[symbol?.toLowerCase() || ''] ? (
         <Coin symbol={symbol} size={height ?? width} address="" chainId={chainId} style={style as any} />
@@ -236,6 +243,7 @@ export default {
   10: <Optimism width={47} height={47} style={{ ...styles.optimism, marginTop: -44, marginEnd: -2, opacity: 1 }} />,
   100: <XDai width={45} height={45} style={{ ...styles.xdai, marginTop: -43, marginEnd: -1, opacity: 1 }} />,
   137: <Polygon width={40} height={40} style={{ ...styles.polygon, marginTop: -36, marginEnd: -2, opacity: 1 }} />,
+  80001: <Polygon width={40} height={40} style={{ ...styles.polygon, marginTop: -36, marginEnd: -2, opacity: 1 }} />,
   43114: <Avalanche width={43} height={43} style={{ ...styles.avalanche, marginTop: -42, marginEnd: -2, opacity: 1 }} />,
   250: <Fantom width={45} height={45} style={{ ...styles.fantom, marginTop: -43, marginEnd: -2, opacity: 1 }} />,
   42220: <Celo width={42} height={42} style={{ ...styles.celo, marginTop: -43, marginEnd: -2, opacity: 1 }} />,

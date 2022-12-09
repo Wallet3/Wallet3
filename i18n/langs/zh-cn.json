@@ -288,6 +288,8 @@
   "button-request": "收款",
   "button-edit": "编辑",
   "button-view": "查看",
+  "button-pin": "置顶",
+  "button-unpin": "取消固定",
   "button-remove": "移除",
   "button-close-all": "全部关闭",
   "button-share": "分享",
