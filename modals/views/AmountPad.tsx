@@ -123,7 +123,7 @@ export default observer((props: SubViewProps) => {
             symbol={props.token?.symbol}
             style={{ width: 22, height: 22 }}
             forceRefresh
-            iconUrl={props.token?.iconUrl}
+            iconUrl={props.token?.logoURI}
             address={props.token.address}
             chainId={props.network.chainId}
           />

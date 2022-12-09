@@ -1,8 +1,6 @@
 [
   { "url": "https://dagen.life", "icon": "https://dagen.life/logo.png", "title": "dagen" },
   { "url": "https://app.mail3.me", "icon": "https://mail3.me/icons/icon-192x192.png", "title": "Mail3" },
-  { "url": "https://app.uniswap.org", "icon": "https://app.uniswap.org/favicon.png", "title": "Uniswap" },
-  { "url": "https://curve.fi", "icon": "https://curve.fi/apple-touch-icon.png", "title": "Curve" },
   {
     "url": "https://zapper.fi",
     "icon": "https://zapper.fi/logo192.png",

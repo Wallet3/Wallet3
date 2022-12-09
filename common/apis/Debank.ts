@@ -126,7 +126,7 @@ export async function getTokens(address: string, chainId: number, debankId?: cha
             symbol: (t.optimized_symbol?.length ?? 10) <= 4 ? t.optimized_symbol ?? t.symbol : t.symbol,
             price: t.price,
             amount: `${t.amount}`,
-            iconUrl: t.logo_url,
+            logoURI: t.logo_url,
           };
         })
         .filter((t) => nativeTokens.indexOf(t.address) === -1)

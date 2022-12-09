@@ -1,11 +1,11 @@
 import * as Animatable from 'react-native-animatable';
 
-import { Button, SafeViewContainer, Skeleton } from '../../components';
+import { Button, Skeleton } from '../../components';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Keyboard, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Modalize, useModalize } from 'react-native-modalize';
 import React, { useEffect, useState } from 'react';
-import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import AccountSelector from '../../modals/dapp/AccountSelector';
 import App from '../../viewmodels/core/App';
@@ -13,19 +13,19 @@ import Avatar from '../../components/Avatar';
 import Collapsible from 'react-native-collapsible';
 import { IToken } from '../../common/tokens';
 import { NetworksMenu } from '../../modals';
+import { OneInch } from '../../assets/3rd';
 import { Portal } from 'react-native-portalize';
 import { ReactiveScreen } from '../../utils/device';
 import { TextInput } from 'react-native-gesture-handler';
 import Theme from '../../viewmodels/settings/Theme';
 import TokenBox from './components/TokenBox';
 import TokenSelector from './components/TokenSelector';
-import VM from '../../viewmodels/defi/exchange/Curve';
+import VM from '../../viewmodels/defi/exchange/1inch';
 import { formatCurrency } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/white';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { rotate } from '../../common/Animation';
-import modalStyles from '../../modals/styles';
 
 export default observer(() => {
   const { backgroundColor, borderColor, foregroundColor, textColor, secondaryTextColor } = Theme;
@@ -166,11 +166,16 @@ export default observer(() => {
         {VM.calculating ? (
           <Skeleton style={{ height: 14 }} />
         ) : VM.swapFromAmount && VM.exchangeRate ? (
-          <Text style={{ color: secondaryTextColor, fontSize: 12, marginStart: 6, fontWeight: '500' }}>
+          <Text style={{ color: secondaryTextColor, fontSize: 12, marginStart: 6, fontWeight: '500' }} numberOfLines={1}>
             {`1 ${VM.swapFrom?.symbol} ≈ ${formatCurrency(VM.exchangeRate, '')} ${VM.swapTo?.symbol}`}
           </Text>
         ) : Number(VM.swapFromAmount) && !VM.calculating && !VM.hasRoutes ? (
-          <Text style={{ color: 'crimson', fontSize: 12, marginStart: 6, fontWeight: '500' }}>{t('exchange-no-routes')}</Text>
+          <Text
+            style={{ color: 'crimson', fontSize: 12, marginStart: 6, fontWeight: '500', textTransform: 'capitalize' }}
+            numberOfLines={1}
+          >
+            {VM.errorMsg || t('exchange-no-routes')}
+          </Text>
         ) : (
           <View />
         )}
@@ -252,10 +257,11 @@ export default observer(() => {
         />
       )}
 
-      <View style={{ flex: 1, minHeight: ReactiveScreen.height * 0.39 }} />
+      <View style={{ flex: 1, minHeight: ReactiveScreen.height * 0.33 }} />
 
-      <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'none' }}>
-        <Text style={{ color: secondaryTextColor, fontSize: 10 }}>Powered by</Text>
+      <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ color: secondaryTextColor, fontSize: 10, marginEnd: -16 }}>Powered by</Text>
+        <OneInch height={36} />
       </View>
 
       <Portal>
@@ -271,8 +277,14 @@ export default observer(() => {
           />
         </Modalize>
 
-        <Modalize ref={accountsRef} adjustToContentHeight disableScrollIfPossible>
-          <SafeAreaProvider style={{ ...modalStyles.safeArea, backgroundColor }}>
+        <Modalize
+          ref={accountsRef}
+          adjustToContentHeight
+          disableScrollIfPossible
+          modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
+          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+        >
+          <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
             <AccountSelector
               single
               accounts={App.allAccounts}
@@ -295,19 +307,26 @@ export default observer(() => {
           modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <SafeAreaView style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6, height: '100%' }}>
-            <TokenSelector
-              tokens={VM.tokens}
-              selectedToken={VM.swapFrom as IToken}
-              chainId={userSelectedNetwork.chainId}
-              themeColor={userSelectedNetwork.color}
-              onAddTokenRequested={(t) => VM.addToken(t)}
-              onTokenSelected={(t) => {
-                VM.switchSwapFrom(t as any);
-                closeFromTokens();
-              }}
-            />
-          </SafeAreaView>
+          <ScrollView
+            horizontal
+            scrollEnabled={false}
+            style={{ width: ReactiveScreen.width, flex: 1, backgroundColor: 'red' }}
+            contentContainerStyle={{ flexGrow: 1 }}
+          >
+            <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6, height: '100%' }}>
+              <TokenSelector
+                tokens={VM.tokens}
+                selectedToken={VM.swapFrom as IToken}
+                chainId={userSelectedNetwork.chainId}
+                themeColor={userSelectedNetwork.color}
+                onAddTokenRequested={(t) => VM.addToken(t)}
+                onTokenSelected={(t) => {
+                  VM.switchSwapFrom(t as any);
+                  closeFromTokens();
+                }}
+              />
+            </SafeAreaProvider>
+          </ScrollView>
         </Modalize>
 
         <Modalize
@@ -317,19 +336,26 @@ export default observer(() => {
           modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <SafeAreaView style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
-            <TokenSelector
-              tokens={VM.tokens}
-              chainId={userSelectedNetwork.chainId}
-              themeColor={userSelectedNetwork.color}
-              selectedToken={VM.swapTo as IToken}
-              onAddTokenRequested={(t) => VM.addToken(t)}
-              onTokenSelected={(t) => {
-                VM.switchSwapTo(t as any);
-                closeToTokens();
-              }}
-            />
-          </SafeAreaView>
+          <ScrollView
+            horizontal
+            scrollEnabled={false}
+            style={{ width: ReactiveScreen.width, flex: 1, backgroundColor: 'red' }}
+            contentContainerStyle={{ flexGrow: 1 }}
+          >
+            <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
+              <TokenSelector
+                tokens={VM.tokens}
+                chainId={userSelectedNetwork.chainId}
+                themeColor={userSelectedNetwork.color}
+                selectedToken={VM.swapTo as IToken}
+                onAddTokenRequested={(t) => VM.addToken(t)}
+                onTokenSelected={(t) => {
+                  VM.switchSwapTo(t as any);
+                  closeToTokens();
+                }}
+              />
+            </SafeAreaProvider>
+          </ScrollView>
         </Modalize>
       </Portal>
     </ScrollView>

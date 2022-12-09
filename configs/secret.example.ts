@@ -35,3 +35,6 @@ export const FirebaseConfig = {
 export const GoogleSignInConfigs = {
   webClientId: '',
 };
+
+export const swapFeePercent = 0;
+export const swapFeeReferrer = '';

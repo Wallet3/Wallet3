@@ -46,7 +46,7 @@ const DraggableToken = observer(
         address={item.address}
         symbol={item.symbol}
         style={{ width: 36, height: 36, marginEnd: 16 }}
-        iconUrl={item.iconUrl}
+        iconUrl={item.logoURI}
       />
       <Text style={{ fontSize: 18, color: textColor }}>{item.symbol}</Text>
       <View style={{ flex: 1 }} />

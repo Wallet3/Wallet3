@@ -26,7 +26,7 @@ export interface IToken {
   symbol: string;
   price?: number;
   balance?: BigNumberish;
-  iconUrl?: string;
+  logoURI?: string;
   name?: string;
   amount?: string;
   shown?: boolean;

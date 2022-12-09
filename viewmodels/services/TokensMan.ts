@@ -16,7 +16,7 @@ export default class TokensMan {
         address: t.address,
         decimals: t.decimals,
         symbol: t.symbol,
-        iconUrl: t.iconUrl,
+        logoURI: t.logoURI,
         order: i + 1,
         shown: t.shown,
       };

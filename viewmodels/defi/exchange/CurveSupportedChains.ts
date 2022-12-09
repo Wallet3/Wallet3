@@ -10,6 +10,8 @@ import {
   AVAX_WETH_e,
   AVAX_YUSD,
   CELO_USD,
+  CELO_USDC,
+  CELO_USDT,
   CRV,
   CVX,
   DAI,
@@ -43,45 +45,45 @@ import {
 export const SupportedChains: { chainId: number; router: string; defaultTokens: IToken[] }[] = [
   {
     chainId: 1,
-    router: '0x81C46fECa27B31F3ADC2b91eE4be9717d1cd3DD7',
-    defaultTokens: [DAI, USDC, USDT, sUSD, CRV, CVX, sETH, stETH, renBTC, WBTC, MIM, FRAX],
+    router: '0x55B916Ce078eA594c10a874ba67eCc3d62e29822',
+    defaultTokens: [DAI, USDC, USDT, sUSD, CRV, sETH, stETH, WBTC, MIM, FRAX],
   },
 
   {
     chainId: 10,
-    router: '0x89287c32c2CAC1C76227F6d300B2DBbab6b75C08',
+    router: '0x9CF512116Fb29eC1dD3798E6eA9A7cd9D18bBeD1',
     defaultTokens: [OP_USDC, OP_DAI, OP_USDT],
   },
 
   {
     chainId: 42161,
-    router: '0xd78FC1F568411Aa87a8D7C4CDe638cde6E597a46',
-    defaultTokens: [ARBI_USDC, ARBI_USDT, ARBI_renBTC, ARBI_WBTC],
+    router: '0x3CcD107D72bc855D591df92D3b7C7E4E75F0957C',
+    defaultTokens: [ARBI_USDC, ARBI_USDT, ARBI_WBTC],
   },
 
   {
     chainId: 137,
-    router: '0xF52e46bEE287aAef56Fb2F8af961d9f1406cF476',
+    router: '0xa522deb6F17853F3a97a65d0972a50bDC3B1AFFF',
     defaultTokens: [MATIC_WETH, MATIC_DAI, MATIC_USDC, MATIC_USDT, MATIC_WBTC],
   },
 
-  { chainId: 100, router: '0xcF897d9C8F9174F08f30084220683948B105D1B1', defaultTokens: [wxDAI, xDAI_USDC, xDAI_USDT] },
+  { chainId: 100, router: '0xE6358f6a45B502477e83CC1CDa759f540E4459ee', defaultTokens: [wxDAI, xDAI_USDC, xDAI_USDT] },
 
   {
     chainId: 43114,
-    router: '0xFE90eb3FbCddacD248fAFEFb9eAa24F5eF095778',
+    router: '0x890f4e345B1dAED0367A877a1612f86A1f86985f',
     defaultTokens: [AVAX_WETH_e, AVAX_USDC, AVAX_USDt, AVAX_YUSD, AVAX_DAI_e, AVAX_USDC_e],
   },
 
   {
     chainId: 250,
-    router: '0x7661a508a0c4c2d305f355F7850D87b69431e897',
+    router: '0x16243caB3aC4d8eE8df7660a525F7F7539962468',
     defaultTokens: [FTM_ETH, FTM_DAI, FTM_USDC, FTM_WBTC],
   },
 
-  // {
-  //   chainId: 42220,
-  //   router: '0xec9cEBE650E181079576C1b6d0d2e092B1EdfF13',
-  //   defaultTokens: [CELO_USD],
-  // },
+  {
+    chainId: 42220,
+    router: '0xec9cEBE650E181079576C1b6d0d2e092B1EdfF13',
+    defaultTokens: [CELO_USD, CELO_USDC, CELO_USDT],
+  },
 ];
