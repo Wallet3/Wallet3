@@ -13,13 +13,14 @@ import Avatar from '../../components/Avatar';
 import Collapsible from 'react-native-collapsible';
 import { IToken } from '../../common/tokens';
 import { NetworksMenu } from '../../modals';
+import { OneInch } from '../../assets/3rd';
 import { Portal } from 'react-native-portalize';
 import { ReactiveScreen } from '../../utils/device';
 import { TextInput } from 'react-native-gesture-handler';
 import Theme from '../../viewmodels/settings/Theme';
 import TokenBox from './components/TokenBox';
 import TokenSelector from './components/TokenSelector';
-import VM from '../../viewmodels/defi/exchange/Curve';
+import VM from '../../viewmodels/defi/exchange/1inch';
 import { formatCurrency } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/white';
 import i18n from '../../i18n';
@@ -251,10 +252,11 @@ export default observer(() => {
         />
       )}
 
-      <View style={{ flex: 1, minHeight: ReactiveScreen.height * 0.39 }} />
+      <View style={{ flex: 1, minHeight: ReactiveScreen.height * 0.33 }} />
 
-      <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'none' }}>
-        <Text style={{ color: secondaryTextColor, fontSize: 10 }}>Powered by</Text>
+      <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ color: secondaryTextColor, fontSize: 10, marginEnd: -16 }}>Powered by</Text>
+        <OneInch height={36} />
       </View>
 
       <Portal>
