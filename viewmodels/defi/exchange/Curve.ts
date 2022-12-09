@@ -272,8 +272,6 @@ export class CurveExchange {
         this.swapFromAmount
       );
 
-      // console.log(route, output, this.swapFrom?.address || ETH.address, this.swapTo?.address || ETH.address);
-
       runInAction(() => {
         this.swapRoute = route;
         this.swapToAmount = output;

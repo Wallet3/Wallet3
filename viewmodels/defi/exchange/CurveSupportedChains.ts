@@ -46,7 +46,7 @@ export const SupportedChains: { chainId: number; router: string; defaultTokens: 
   {
     chainId: 1,
     router: '0x55B916Ce078eA594c10a874ba67eCc3d62e29822',
-    defaultTokens: [DAI, USDC, USDT, sUSD, CRV, CVX, sETH, stETH, renBTC, WBTC, MIM, FRAX],
+    defaultTokens: [DAI, USDC, USDT, sUSD, CRV, sETH, stETH, WBTC, MIM, FRAX],
   },
 
   {
@@ -58,7 +58,7 @@ export const SupportedChains: { chainId: number; router: string; defaultTokens: 
   {
     chainId: 42161,
     router: '0x3CcD107D72bc855D591df92D3b7C7E4E75F0957C',
-    defaultTokens: [ARBI_USDC, ARBI_USDT, ARBI_renBTC, ARBI_WBTC],
+    defaultTokens: [ARBI_USDC, ARBI_USDT, ARBI_WBTC],
   },
 
   {

@@ -1,6 +1,7 @@
 import * as StoreReview from 'expo-store-review';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Authentication from '../auth/Authentication';
 import TxHub from '../hubs/TxHub';
 import { sleep } from '../../utils/async';
 
@@ -9,17 +10,28 @@ const Keys = {
 };
 
 class AppStoreReview {
+  constructor() {
+    if (__DEV__) {
+      AsyncStorage.removeItem(Keys.userRated);
+    }
+  }
+
   async check() {
+    if (TxHub.txs.length === 0) return;
+
     const rated = await AsyncStorage.getItem(Keys.userRated);
     if (rated) return;
 
     if (!(await StoreReview.isAvailableAsync())) return;
-    if (TxHub.txs.length === 0) return;
 
-    await sleep(2000);
-    
-    await StoreReview.requestReview();
-    await AsyncStorage.setItem(Keys.userRated, 'true');
+    do {
+      await sleep(5000);
+    } while (!Authentication.appAuthorized);
+
+    try {
+      await StoreReview.requestReview();
+      await AsyncStorage.setItem(Keys.userRated, 'true');
+    } catch (e) {}
   }
 }
 
