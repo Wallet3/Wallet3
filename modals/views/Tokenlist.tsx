@@ -39,7 +39,7 @@ export default observer((props: Props) => {
           chainId={props.network.chainId}
           symbol={item.symbol}
           style={{ width: 25, height: 25, marginEnd: 12 }}
-          iconUrl={item.iconUrl}
+          iconUrl={item.logoURI}
         />
         <Text style={{ fontSize: 19, color: textColor, textTransform: 'uppercase' }} numberOfLines={1}>
           {item.symbol}

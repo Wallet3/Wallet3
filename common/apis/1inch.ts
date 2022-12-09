@@ -1,3 +1,5 @@
+import { utils } from 'ethers';
+
 const apiBaseUrl = 'https://api.1inch.io/v5.0';
 
 function apiRequestUrl(chainId: number, methodName: string, queryParams: any = {}) {
@@ -74,6 +76,7 @@ interface TokensResponse extends InchResponseBase {
       address: string;
       decimals: number;
       logoURI: string;
+      tags: string[];
     };
   };
 }
@@ -113,8 +116,12 @@ export async function fetchTokens(chainId: number) {
     const { tokens } = (await resp.json()) as TokensResponse;
 
     return Object.getOwnPropertyNames(tokens)
-      .filter((t) => t !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
-      .map((addr) => tokens[addr]);
+      .filter((t) => t.length === 42 && t !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
+      .map((addr) => {
+        const t: any = tokens[addr];
+        delete t.tags;
+        return tokens[addr];
+      });
   } catch (error) {}
 
   return [];

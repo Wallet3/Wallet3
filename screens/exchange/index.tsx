@@ -166,11 +166,16 @@ export default observer(() => {
         {VM.calculating ? (
           <Skeleton style={{ height: 14 }} />
         ) : VM.swapFromAmount && VM.exchangeRate ? (
-          <Text style={{ color: secondaryTextColor, fontSize: 12, marginStart: 6, fontWeight: '500' }}>
+          <Text style={{ color: secondaryTextColor, fontSize: 12, marginStart: 6, fontWeight: '500' }} numberOfLines={1}>
             {`1 ${VM.swapFrom?.symbol} ≈ ${formatCurrency(VM.exchangeRate, '')} ${VM.swapTo?.symbol}`}
           </Text>
         ) : Number(VM.swapFromAmount) && !VM.calculating && !VM.hasRoutes ? (
-          <Text style={{ color: 'crimson', fontSize: 12, marginStart: 6, fontWeight: '500' }}>{t('exchange-no-routes')}</Text>
+          <Text
+            style={{ color: 'crimson', fontSize: 12, marginStart: 6, fontWeight: '500', textTransform: 'capitalize' }}
+            numberOfLines={1}
+          >
+            {VM.errorMsg || t('exchange-no-routes')}
+          </Text>
         ) : (
           <View />
         )}
@@ -302,19 +307,26 @@ export default observer(() => {
           modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6, height: '100%' }}>
-            <TokenSelector
-              tokens={VM.tokens}
-              selectedToken={VM.swapFrom as IToken}
-              chainId={userSelectedNetwork.chainId}
-              themeColor={userSelectedNetwork.color}
-              onAddTokenRequested={(t) => VM.addToken(t)}
-              onTokenSelected={(t) => {
-                VM.switchSwapFrom(t as any);
-                closeFromTokens();
-              }}
-            />
-          </SafeAreaProvider>
+          <ScrollView
+            horizontal
+            scrollEnabled={false}
+            style={{ width: ReactiveScreen.width, flex: 1, backgroundColor: 'red' }}
+            contentContainerStyle={{ flexGrow: 1 }}
+          >
+            <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6, height: '100%' }}>
+              <TokenSelector
+                tokens={VM.tokens}
+                selectedToken={VM.swapFrom as IToken}
+                chainId={userSelectedNetwork.chainId}
+                themeColor={userSelectedNetwork.color}
+                onAddTokenRequested={(t) => VM.addToken(t)}
+                onTokenSelected={(t) => {
+                  VM.switchSwapFrom(t as any);
+                  closeFromTokens();
+                }}
+              />
+            </SafeAreaProvider>
+          </ScrollView>
         </Modalize>
 
         <Modalize
@@ -324,19 +336,26 @@ export default observer(() => {
           modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
-            <TokenSelector
-              tokens={VM.tokens}
-              chainId={userSelectedNetwork.chainId}
-              themeColor={userSelectedNetwork.color}
-              selectedToken={VM.swapTo as IToken}
-              onAddTokenRequested={(t) => VM.addToken(t)}
-              onTokenSelected={(t) => {
-                VM.switchSwapTo(t as any);
-                closeToTokens();
-              }}
-            />
-          </SafeAreaProvider>
+          <ScrollView
+            horizontal
+            scrollEnabled={false}
+            style={{ width: ReactiveScreen.width, flex: 1, backgroundColor: 'red' }}
+            contentContainerStyle={{ flexGrow: 1 }}
+          >
+            <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
+              <TokenSelector
+                tokens={VM.tokens}
+                chainId={userSelectedNetwork.chainId}
+                themeColor={userSelectedNetwork.color}
+                selectedToken={VM.swapTo as IToken}
+                onAddTokenRequested={(t) => VM.addToken(t)}
+                onTokenSelected={(t) => {
+                  VM.switchSwapTo(t as any);
+                  closeToTokens();
+                }}
+              />
+            </SafeAreaProvider>
+          </ScrollView>
         </Modalize>
       </Portal>
     </ScrollView>

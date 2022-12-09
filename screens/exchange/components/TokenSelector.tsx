@@ -68,7 +68,7 @@ export default observer((props: Props) => {
           symbol={item.symbol}
           size={29}
           style={{ marginEnd: 12, opacity }}
-          iconUrl={item.iconUrl}
+          iconUrl={item.logoURI}
           forceRefresh
         />
         <Text style={{ fontSize: 19, color: textColor, opacity }} numberOfLines={1}>

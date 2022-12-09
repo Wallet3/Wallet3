@@ -87,7 +87,7 @@ const ReviewView = observer(
                 chainId={vm.network.chainId}
                 symbol={vm.token!.symbol}
                 forceRefresh
-                iconUrl={vm.token?.iconUrl}
+                iconUrl={vm.token?.logoURI}
               />
 
               <Text style={{ ...reviewItemValueStyle, marginStart: 8 }}>{vm.token.symbol}</Text>

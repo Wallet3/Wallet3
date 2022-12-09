@@ -53,7 +53,7 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
           address={token?.address || ''}
           symbol={token?.symbol}
           size={39}
-          iconUrl={token?.iconUrl}
+          iconUrl={token?.logoURI}
         />
 
         <View style={{ marginStart: 16 }}>
@@ -126,7 +126,7 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
             chainId={network.chainId}
             address={token?.address || ''}
             symbol={token?.symbol}
-            iconUrl={token?.iconUrl}
+            iconUrl={token?.logoURI}
             size={19}
           />
         </View>

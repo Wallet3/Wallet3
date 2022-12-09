@@ -25,7 +25,7 @@ const Keys = {
   userSelectedFromToken: (chainId: number) => `${chainId}-1inch-from-token`,
   userSelectedToToken: (chainId: number) => `${chainId}-1inch-to-token`,
   userSlippage: (chainId: number) => `${chainId}-1inch-slippage`,
-  userCustomizedTokens: (chainId: number) => `${chainId}-1inch-tokens`,
+  userCustomizedTokens: (chainId: number) => `${chainId}-1inch-tokens-v2`,
 };
 
 const app = { name: '1inch Exchange', icon: 'https://1inch.io/img/favicon/apple-touch-icon.png', verified: true };
@@ -35,6 +35,7 @@ export class OneInch {
   private watchPendingTxTimer?: NodeJS.Timer;
 
   swapResponse: SwapResponse | null = null;
+  errorMsg = '';
 
   networks = SupportedChains.map(({ chainId }) => Networks.find(chainId)!);
   userSelectedNetwork = Networks.Ethereum;
@@ -101,6 +102,7 @@ export class OneInch {
       slippage: observable,
       pendingTxs: observable,
       swapResponse: observable,
+      errorMsg: observable,
 
       hasRoutes: computed,
       isPending: computed,
@@ -135,9 +137,9 @@ export class OneInch {
 
     AsyncStorage.setItem(Keys.userSelectedAccount, this.account.address);
 
-    this.tokens.forEach((t) => {
+    this.tokens.forEach((t, i) => {
       t.setOwner(this.account.address);
-      t.getBalance();
+      i < 10 ? t.getBalance() : null;
     });
   }
 
@@ -146,20 +148,21 @@ export class OneInch {
 
     AsyncStorage.setItem(Keys.userSelectedNetwork, `${network.chainId}`);
 
-    const saved = (
+    let saved = (
       JSON.parse((await AsyncStorage.getItem(Keys.userCustomizedTokens(network.chainId))) || '[]') as IToken[]
     ).filter((t) => t.address);
 
-    let networkTokens: IToken[] = [];
     if (saved.length === 0) {
-      networkTokens = await fetchTokens(network.chainId);
-      // AsyncStorage.setItem(Keys.userCustomizedTokens(network.chainId), JSON.stringify(networkTokens));
+      const networkTokens = await fetchTokens(network.chainId);
+      saved = networkTokens;
+      console.log(networkTokens);
+      await AsyncStorage.setItem(Keys.userCustomizedTokens(network.chainId), JSON.stringify(networkTokens));
     }
 
     const nativeToken = new NativeToken({ owner: this.account.address, chainId: network.chainId, symbol: network.symbol });
 
     const userTokens = LINQ.from(saved)
-      .select((t) => {
+      .select((t, i) => {
         const erc20 = new ERC20Token({
           chainId: network.chainId,
           owner: this.account.address,
@@ -168,7 +171,7 @@ export class OneInch {
           decimals: t.decimals,
         });
 
-        erc20.getBalance();
+        i < 10 ? erc20.getBalance() : null;
         return erc20;
       })
       .distinct((t) => t.address)
@@ -185,6 +188,7 @@ export class OneInch {
     runInAction(() => {
       this.tokens = tokens;
       this.swapResponse = null;
+      this.errorMsg = '';
 
       this.switchSwapFrom(fromToken, false);
       this.switchSwapTo(toToken, false);
@@ -275,8 +279,11 @@ export class OneInch {
         slippage: this.slippage,
       }))!;
 
+      console.log(output);
+
       if (output.error) {
         runInAction(() => {
+          this.errorMsg = output?.description || '';
           this.swapResponse = null;
           this.swapToAmount = '';
           this.exchangeRate = 0;
@@ -295,9 +302,9 @@ export class OneInch {
         this.swapToAmount = '';
         this.exchangeRate = 0;
       });
+    } finally {
+      runInAction(() => (this.calculating = false));
     }
-
-    runInAction(() => (this.calculating = false));
 
     if (!Number(this.swapFromAmount)) return;
     this.calcExchangeRateTimer = setTimeout(() => this.calcExchangeRate(), 45 * 10000);
