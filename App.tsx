@@ -28,7 +28,6 @@ import Theme from './viewmodels/settings/Theme';
 import Themes from './screens/settings/Themes';
 import Tokens from './screens/tokens/SortTokens';
 import VerifySecret from './screens/settings/VerifySecret';
-// import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import i18n from './i18n';
 import { observer } from 'mobx-react-lite';
@@ -149,7 +148,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
 
       <FlashMessage position="top" />
       <StatusBar style={statusBarStyle} />
-      
+
       <LockScreen app={app} appAuth={appAuth} />
     </NavigationContainer>
   );

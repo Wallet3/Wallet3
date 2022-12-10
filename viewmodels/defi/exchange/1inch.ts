@@ -30,6 +30,20 @@ const Keys = {
 
 const app = { name: '1inch Exchange', icon: 'https://1inch.io/img/favicon/apple-touch-icon.png', verified: true };
 const V5Router = '0x1111111254EEB25477B68fb85Ed929f73A960582';
+const DEV_PROTOCOLS = [
+  {
+    fromTokenAddress: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063',
+    name: 'POLYGON_SUSHISWAP',
+    part: 80,
+    toTokenAddress: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+  },
+  {
+    fromTokenAddress: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+    name: 'POLYGON_SUSHISWAP',
+    part: 20,
+    toTokenAddress: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063',
+  },
+];
 
 export class OneInch {
   private calcExchangeRateTimer?: NodeJS.Timer;
@@ -39,9 +53,12 @@ export class OneInch {
   routes: SwapProtocol[] = [];
   errorMsg = '';
 
-  networks = SupportedChains.map((chainId) => Networks.find(chainId)!);
   userSelectedNetwork = Networks.Ethereum;
   account = App.currentAccount!;
+
+  networks = SupportedChains.map((chainId) => {
+    return { ...Networks.find(chainId)!, pinned: false };
+  });
 
   tokens: (NativeToken | ERC20Token)[] = [];
   swapFrom: (NativeToken | ERC20Token) | null = null;
@@ -144,6 +161,9 @@ export class OneInch {
 
   async switchNetwork(network: INetwork) {
     this.userSelectedNetwork = network;
+    this.tokens = [];
+    this.swapFrom = null;
+    this.swapTo = null;
 
     AsyncStorage.setItem(Keys.userSelectedNetwork, `${network.chainId}`);
 
@@ -293,6 +313,11 @@ export class OneInch {
         quote(this.userSelectedNetwork.chainId, params),
       ]);
 
+      // quoteOutput?.protocols?.every((p) => {
+      //   p.fromTokenAddress = utils.getAddress(p.fromTokenAddress);
+      //   p.toTokenAddress = utils.getAddress(p.toTokenAddress);
+      // });
+
       runInAction(() => {
         this.errorMsg = swapOutput?.description || '';
         this.swapResponse = swapOutput || null;
@@ -437,7 +462,7 @@ export class OneInch {
 
     token.setOwner(this.account.address);
     token.getBalance();
-    this.tokens.push(token);
+    this.tokens.unshift(token);
 
     const data = JSON.stringify(
       this.tokens
