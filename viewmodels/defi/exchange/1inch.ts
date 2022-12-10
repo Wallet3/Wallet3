@@ -72,6 +72,7 @@ export class OneInch {
   slippage = 0.5;
 
   pendingTxs: string[] = [];
+  tokenSymbols = new Map<string, string>();
 
   get isValidFromAmount() {
     try {
@@ -181,6 +182,8 @@ export class OneInch {
     const all = LINQ.from(
       userTokens.concat(
         allTokens.map((t) => {
+          this.tokenSymbols.set(t.address, t.symbol);
+
           return new ERC20Token({
             chainId: network.chainId,
             owner: this.account.address,
@@ -313,15 +316,17 @@ export class OneInch {
         quote(this.userSelectedNetwork.chainId, params),
       ]);
 
-      // quoteOutput?.protocols?.every((p) => {
-      //   p.fromTokenAddress = utils.getAddress(p.fromTokenAddress);
-      //   p.toTokenAddress = utils.getAddress(p.toTokenAddress);
-      // });
+      quoteOutput?.protocols?.flat(99)?.every((p) => {
+        p.fromTokenAddress = utils.getAddress(p.fromTokenAddress);
+        p.toTokenAddress = utils.getAddress(p.toTokenAddress);
+      });
+
+      console.log(quoteOutput?.protocols.flat(99));
 
       runInAction(() => {
         this.errorMsg = swapOutput?.description || '';
         this.swapResponse = swapOutput || null;
-        this.routes = quoteOutput?.protocols?.flat(12) || [];
+        this.routes = quoteOutput?.protocols?.flat(99) || [];
         this.swapToAmount = utils.formatUnits(quoteOutput?.toTokenAmount || '0', this.swapTo?.decimals || 18);
         this.exchangeRate = Number(this.swapToAmount || 0) / Number(this.swapFromAmount);
       });

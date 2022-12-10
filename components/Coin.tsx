@@ -26,12 +26,12 @@ export default observer((props: CoinProps) => {
     ? [
         `https://github.com/trustwallet/assets/raw/master/blockchains/${
           (network?.github_dir || network?.network)?.toLowerCase() ?? 'ethereum'
-        }/assets/${props.address.length === 42 ? utils.getAddress(props.address) : props.address}/logo.png`,
+        }/assets/${props.address}/logo.png`,
       ]
     : useState(
         `https://github.com/trustwallet/assets/raw/master/blockchains/${
           (network?.github_dir || network?.network)?.toLowerCase() ?? 'ethereum'
-        }/assets/${props.address.length === 42 ? utils.getAddress(props.address) : props.address}/logo.png`
+        }/assets/${props.address}/logo.png`
       );
 
   let symbol = props.symbol?.toLowerCase() || (props.address ? '' : network?.symbol.toLowerCase() || 'eth');

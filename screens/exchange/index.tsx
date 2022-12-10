@@ -34,6 +34,7 @@ export default observer(() => {
   const { backgroundColor, borderColor, foregroundColor, textColor, secondaryTextColor } = Theme;
   const { bottom, top } = useSafeAreaInsets();
   const { userSelectedNetwork } = VM;
+  const { chainId } = userSelectedNetwork;
 
   const { t } = i18n;
 
@@ -59,13 +60,18 @@ export default observer(() => {
       style={{ flexDirection: 'row', alignItems: 'center', width: '100%', paddingVertical: 8, paddingHorizontal: 4 }}
     >
       <Text style={{ marginEnd: 16, color: secondaryTextColor, width: 19 }} numberOfLines={1}>{`${i + 1}.`}</Text>
-      <Coin address={route.fromTokenAddress} chainId={userSelectedNetwork.chainId} size={18} />
+      <Coin
+        address={route.fromTokenAddress}
+        chainId={chainId}
+        size={18}
+        symbol={VM.tokenSymbols.get(route.fromTokenAddress)}
+      />
       <View style={{ flex: 1 }} />
       <Ionicons name="arrow-forward" color={secondaryTextColor} />
       <View style={{ flex: 1 }} />
       <View style={{ width: '45%', alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }}>
-        {generateDexLogo(route.name, { height: 20, aspectRatio: 1 }) || (
-          <Text numberOfLines={1} style={{ color: userSelectedNetwork.color }}>
+        {generateDexLogo(route.name, { height: 20, width: 20 }) || (
+          <Text numberOfLines={1} style={{ color: userSelectedNetwork.color, maxWidth: '80%' }}>
             {`${route.name}`}
           </Text>
         )}
@@ -75,7 +81,7 @@ export default observer(() => {
       <View style={{ flex: 1 }} />
       <Ionicons name="arrow-forward" color={secondaryTextColor} />
       <View style={{ flex: 1 }} />
-      <Coin address={route.toTokenAddress} chainId={userSelectedNetwork.chainId} size={18} />
+      <Coin address={route.toTokenAddress} chainId={chainId} size={18} symbol={VM.tokenSymbols.get(route.fromTokenAddress)} />
     </Animated.View>
   );
 
@@ -109,7 +115,7 @@ export default observer(() => {
           }}
         >
           {generateNetworkIcon({
-            chainId: VM.userSelectedNetwork.chainId,
+            chainId: chainId,
             hideEVMTitle: true,
             height: 14,
             width: 12,
@@ -156,7 +162,7 @@ export default observer(() => {
       <TokenBox
         tokenAddress={VM.swapFrom?.address!}
         tokenSymbol={VM.swapFrom?.symbol || ''}
-        chainId={VM.userSelectedNetwork.chainId}
+        chainId={chainId}
         showTitle
         title={`${t('exchange-balance')}: ${formatCurrency(VM.swapFrom?.amount || 0, '')}`}
         titleTouchable
@@ -182,7 +188,7 @@ export default observer(() => {
       <TokenBox
         tokenAddress={VM.swapTo?.address!}
         tokenSymbol={VM.swapTo?.symbol || ''}
-        chainId={VM.userSelectedNetwork.chainId}
+        chainId={chainId}
         showTitle
         title={t('exchange-to')}
         editable={false}
@@ -376,7 +382,7 @@ export default observer(() => {
               <TokenSelector
                 tokens={VM.tokens}
                 selectedToken={VM.swapFrom as IToken}
-                chainId={userSelectedNetwork.chainId}
+                chainId={chainId}
                 themeColor={userSelectedNetwork.color}
                 onAddTokenRequested={(t) => VM.addToken(t)}
                 onTokenSelected={(t) => {
@@ -404,7 +410,7 @@ export default observer(() => {
             <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
               <TokenSelector
                 tokens={VM.tokens}
-                chainId={userSelectedNetwork.chainId}
+                chainId={chainId}
                 themeColor={userSelectedNetwork.color}
                 selectedToken={VM.swapTo as IToken}
                 onAddTokenRequested={(t) => VM.addToken(t)}
