@@ -29,6 +29,7 @@ import { generateNetworkIcon } from '../../assets/icons/networks/white';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { rotate } from '../../common/Animation';
+import modalStyles from '../../modals/styles';
 
 export default observer(() => {
   const { backgroundColor, borderColor, foregroundColor, textColor, secondaryTextColor } = Theme;
@@ -342,14 +343,8 @@ export default observer(() => {
           />
         </Modalize>
 
-        <Modalize
-          ref={accountsRef}
-          adjustToContentHeight
-          disableScrollIfPossible
-          modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-        >
-          <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
+        <Modalize ref={accountsRef} adjustToContentHeight disableScrollIfPossible>
+          <SafeAreaProvider style={{ ...modalStyles.safeArea, backgroundColor }}>
             <AccountSelector
               single
               accounts={App.allAccounts}
@@ -378,7 +373,7 @@ export default observer(() => {
             style={{ width: ReactiveScreen.width, flex: 1, backgroundColor: 'red' }}
             contentContainerStyle={{ flexGrow: 1 }}
           >
-            <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6, height: '100%' }}>
+            <SafeAreaProvider style={{ ...modalStyles.safeArea, backgroundColor }}>
               <TokenSelector
                 tokens={VM.tokens}
                 selectedToken={VM.swapFrom as IToken}
@@ -407,7 +402,7 @@ export default observer(() => {
             style={{ width: ReactiveScreen.width, flex: 1, backgroundColor: 'red' }}
             contentContainerStyle={{ flexGrow: 1 }}
           >
-            <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
+            <SafeAreaProvider style={{ ...modalStyles.safeArea, backgroundColor }}>
               <TokenSelector
                 tokens={VM.tokens}
                 chainId={chainId}
