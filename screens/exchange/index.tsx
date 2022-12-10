@@ -1,8 +1,9 @@
 import * as Animatable from 'react-native-animatable';
 
-import { Button, Skeleton } from '../../components';
+import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
+import { Button, Coin, Skeleton } from '../../components';
+import { FlatList, Keyboard, ListRenderItemInfo, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { Keyboard, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Modalize, useModalize } from 'react-native-modalize';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -16,12 +17,14 @@ import { NetworksMenu } from '../../modals';
 import { OneInch } from '../../assets/3rd';
 import { Portal } from 'react-native-portalize';
 import { ReactiveScreen } from '../../utils/device';
+import { SwapProtocol } from '../../common/apis/1inch';
 import { TextInput } from 'react-native-gesture-handler';
 import Theme from '../../viewmodels/settings/Theme';
 import TokenBox from './components/TokenBox';
 import TokenSelector from './components/TokenSelector';
 import VM from '../../viewmodels/defi/exchange/1inch';
 import { formatCurrency } from '../../utils/formatter';
+import { generateDexLogo } from '../../assets/dexs';
 import { generateNetworkIcon } from '../../assets/icons/networks/white';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -29,8 +32,9 @@ import { rotate } from '../../common/Animation';
 
 export default observer(() => {
   const { backgroundColor, borderColor, foregroundColor, textColor, secondaryTextColor } = Theme;
-  const { top } = useSafeAreaInsets();
+  const { bottom, top } = useSafeAreaInsets();
   const { userSelectedNetwork } = VM;
+  const { chainId } = userSelectedNetwork;
 
   const { t } = i18n;
 
@@ -47,6 +51,39 @@ export default observer(() => {
 
   const getColor = (slippage: number, defaultColor = borderColor) =>
     slippage === VM.slippage ? userSelectedNetwork.color : defaultColor;
+
+  const renderRoute = ({ item: route, index: i }: ListRenderItemInfo<SwapProtocol>) => (
+    <Animated.View
+      entering={FadeInDown.delay((i + 1) * 20).springify()}
+      exiting={FadeOut.delay(0)}
+      key={`${route.fromTokenAddress}-${route.toTokenAddress}-${route.name}-${route.part}-${i}`}
+      style={{ flexDirection: 'row', alignItems: 'center', width: '100%', paddingVertical: 8, paddingHorizontal: 4 }}
+    >
+      <Text style={{ marginEnd: 16, color: secondaryTextColor, width: 19 }} numberOfLines={1}>{`${i + 1}.`}</Text>
+      <Coin
+        address={route.fromTokenAddress}
+        chainId={chainId}
+        size={18}
+        symbol={VM.tokenSymbols.get(route.fromTokenAddress)}
+      />
+      <View style={{ flex: 1 }} />
+      <Ionicons name="arrow-forward" color={secondaryTextColor} />
+      <View style={{ flex: 1 }} />
+      <View style={{ width: '45%', alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }}>
+        {generateDexLogo(route.name, { height: 20, width: 20 }) || (
+          <Text numberOfLines={1} style={{ color: userSelectedNetwork.color, maxWidth: '80%' }}>
+            {`${route.name}`}
+          </Text>
+        )}
+
+        <Text style={{ marginStart: 8, color: userSelectedNetwork.color }}>{`[${route.part}%]`}</Text>
+      </View>
+      <View style={{ flex: 1 }} />
+      <Ionicons name="arrow-forward" color={secondaryTextColor} />
+      <View style={{ flex: 1 }} />
+      <Coin address={route.toTokenAddress} chainId={chainId} size={18} symbol={VM.tokenSymbols.get(route.toTokenAddress)} />
+    </Animated.View>
+  );
 
   return (
     <ScrollView
@@ -78,7 +115,7 @@ export default observer(() => {
           }}
         >
           {generateNetworkIcon({
-            chainId: VM.userSelectedNetwork.chainId,
+            chainId: chainId,
             hideEVMTitle: true,
             height: 14,
             width: 12,
@@ -125,7 +162,7 @@ export default observer(() => {
       <TokenBox
         tokenAddress={VM.swapFrom?.address!}
         tokenSymbol={VM.swapFrom?.symbol || ''}
-        chainId={VM.userSelectedNetwork.chainId}
+        chainId={chainId}
         showTitle
         title={`${t('exchange-balance')}: ${formatCurrency(VM.swapFrom?.amount || 0, '')}`}
         titleTouchable
@@ -151,7 +188,7 @@ export default observer(() => {
       <TokenBox
         tokenAddress={VM.swapTo?.address!}
         tokenSymbol={VM.swapTo?.symbol || ''}
-        chainId={VM.userSelectedNetwork.chainId}
+        chainId={chainId}
         showTitle
         title={t('exchange-to')}
         editable={false}
@@ -257,11 +294,39 @@ export default observer(() => {
         />
       )}
 
-      <View style={{ flex: 1, minHeight: ReactiveScreen.height * 0.33 }} />
+      <View
+        style={{
+          height: ReactiveScreen.height - (top + bottom + 57) - 385,
+          width: '100%',
+          marginVertical: 16,
+          marginBottom: 8,
+          marginHorizontal: -16,
+        }}
+      >
+        {VM.hasRoutes ? (
+          <Animated.Text
+            entering={FadeInDown.springify()}
+            exiting={FadeOut.delay(0)}
+            style={{ fontSize: 12, marginBottom: 4, marginStart: 16 }}
+          >
+            Routes:
+          </Animated.Text>
+        ) : undefined}
+
+        <ScrollView horizontal scrollEnabled={false} style={{ width: ReactiveScreen.width }}>
+          <FlatList
+            data={VM.routes}
+            renderItem={renderRoute}
+            style={{ width: ReactiveScreen.width }}
+            contentContainerStyle={{ paddingHorizontal: 16 }}
+            bounces={false}
+          />
+        </ScrollView>
+      </View>
 
       <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={{ color: secondaryTextColor, fontSize: 10, marginEnd: -16 }}>Powered by</Text>
-        <OneInch height={36} />
+        <Text style={{ color: secondaryTextColor, fontSize: 10, marginEnd: -25 }}>Powered by</Text>
+        <OneInch height={29} />
       </View>
 
       <Portal>
@@ -317,7 +382,7 @@ export default observer(() => {
               <TokenSelector
                 tokens={VM.tokens}
                 selectedToken={VM.swapFrom as IToken}
-                chainId={userSelectedNetwork.chainId}
+                chainId={chainId}
                 themeColor={userSelectedNetwork.color}
                 onAddTokenRequested={(t) => VM.addToken(t)}
                 onTokenSelected={(t) => {
@@ -345,7 +410,7 @@ export default observer(() => {
             <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
               <TokenSelector
                 tokens={VM.tokens}
-                chainId={userSelectedNetwork.chainId}
+                chainId={chainId}
                 themeColor={userSelectedNetwork.color}
                 selectedToken={VM.swapTo as IToken}
                 onAddTokenRequested={(t) => VM.addToken(t)}

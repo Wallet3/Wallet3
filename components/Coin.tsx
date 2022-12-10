@@ -6,6 +6,7 @@ import Networks from '../viewmodels/core/Networks';
 import SvgImage from 'react-native-remote-svg';
 import icons from '../assets/icons/crypto';
 import { observer } from 'mobx-react-lite';
+import { utils } from 'ethers';
 
 // @ts-ignore
 interface CoinProps extends FastImageProps {
@@ -33,7 +34,7 @@ export default observer((props: CoinProps) => {
         }/assets/${props.address}/logo.png`
       );
 
-  let symbol = props.symbol?.toLowerCase() ?? '';
+  let symbol = props.symbol?.toLowerCase() || (props.address ? '' : network?.symbol.toLowerCase() || 'eth');
   symbol = symbol.endsWith('.e') ? symbol.substring(0, symbol.length - 2) : symbol; // Avax
 
   const [source] = props.forceRefresh

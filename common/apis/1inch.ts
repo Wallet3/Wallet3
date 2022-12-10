@@ -116,7 +116,7 @@ export async function fetchTokens(chainId: number) {
     const { tokens } = (await resp.json()) as TokensResponse;
 
     return Object.getOwnPropertyNames(tokens)
-      .filter((t) => t.length === 42 && t !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
+      .filter((t) => utils.isAddress(t) && t !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
       .map((addr) => {
         const t: any = tokens[addr];
         delete t.tags;

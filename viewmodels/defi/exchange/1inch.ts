@@ -1,7 +1,7 @@
+import { BigNumber, providers, utils } from 'ethers';
 import { ETH, IToken } from '../../../common/tokens';
 import { SwapProtocol, SwapResponse, fetchTokens, quote, swap } from '../../../common/apis/1inch';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
-import { ethers, providers, utils } from 'ethers';
 import { swapFeePercent, swapFeeReferrer } from '../../../configs/secret';
 
 import { Account } from '../../account/Account';
@@ -15,8 +15,8 @@ import { NativeToken } from '../../../models/NativeToken';
 import Networks from '../../core/Networks';
 import { ReadableInfo } from '../../../models/Transaction';
 import { SupportedChains } from './1inchSupportedChains';
+import TokensMan from '../../services/TokensMan';
 import TxHub from '../../hubs/TxHub';
-import { getRPCUrls } from '../../../common/RPC';
 
 const Keys = {
   userSelectedNetwork: 'exchange-userSelectedNetwork',
@@ -25,21 +25,40 @@ const Keys = {
   userSelectedFromToken: (chainId: number) => `${chainId}-1inch-from-token`,
   userSelectedToToken: (chainId: number) => `${chainId}-1inch-to-token`,
   userSlippage: (chainId: number) => `${chainId}-1inch-slippage`,
-  userCustomizedTokens: (chainId: number) => `${chainId}-1inch-tokens-v2`,
+  networkTokens: (chainId: number) => `${chainId}-1inch-tokens-v2`,
 };
 
 const app = { name: '1inch Exchange', icon: 'https://1inch.io/img/favicon/apple-touch-icon.png', verified: true };
+const V5Router = '0x1111111254EEB25477B68fb85Ed929f73A960582';
+const DEV_PROTOCOLS = [
+  {
+    fromTokenAddress: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063',
+    name: 'POLYGON_SUSHISWAP',
+    part: 80,
+    toTokenAddress: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+  },
+  {
+    fromTokenAddress: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+    name: 'POLYGON_SUSHISWAP',
+    part: 20,
+    toTokenAddress: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063',
+  },
+];
 
 export class OneInch {
   private calcExchangeRateTimer?: NodeJS.Timer;
   private watchPendingTxTimer?: NodeJS.Timer;
 
   swapResponse: SwapResponse | null = null;
+  routes: SwapProtocol[] = [];
   errorMsg = '';
 
-  networks = SupportedChains.map(({ chainId }) => Networks.find(chainId)!);
   userSelectedNetwork = Networks.Ethereum;
   account = App.currentAccount!;
+
+  networks = SupportedChains.map((chainId) => {
+    return { ...Networks.find(chainId)!, pinned: false };
+  });
 
   tokens: (NativeToken | ERC20Token)[] = [];
   swapFrom: (NativeToken | ERC20Token) | null = null;
@@ -53,10 +72,7 @@ export class OneInch {
   slippage = 0.5;
 
   pendingTxs: string[] = [];
-
-  protected get chain() {
-    return SupportedChains.find(({ chainId }) => this.userSelectedNetwork.chainId === chainId)!;
-  }
+  tokenSymbols = new Map<string, string>();
 
   get isValidFromAmount() {
     try {
@@ -76,7 +92,7 @@ export class OneInch {
   }
 
   get hasRoutes() {
-    return this.swapResponse ? true : false;
+    return this.routes.length > 0;
   }
 
   get isPending() {
@@ -103,6 +119,7 @@ export class OneInch {
       pendingTxs: observable,
       swapResponse: observable,
       errorMsg: observable,
+      routes: observable,
 
       hasRoutes: computed,
       isPending: computed,
@@ -145,39 +162,45 @@ export class OneInch {
 
   async switchNetwork(network: INetwork) {
     this.userSelectedNetwork = network;
+    this.tokens = [];
+    this.swapFrom = null;
+    this.swapTo = null;
 
     AsyncStorage.setItem(Keys.userSelectedNetwork, `${network.chainId}`);
 
-    let saved = (
-      JSON.parse((await AsyncStorage.getItem(Keys.userCustomizedTokens(network.chainId))) || '[]') as IToken[]
-    ).filter((t) => t.address);
+    let allTokens = JSON.parse((await AsyncStorage.getItem(Keys.networkTokens(network.chainId))) || '[]') as IToken[];
+    const userTokens = await TokensMan.loadUserTokens(this.userSelectedNetwork.chainId, this.account.address);
 
-    if (saved.length === 0) {
+    if (allTokens.length === 0) {
       const networkTokens = await fetchTokens(network.chainId);
-      saved = networkTokens;
-      console.log(networkTokens);
-      await AsyncStorage.setItem(Keys.userCustomizedTokens(network.chainId), JSON.stringify(networkTokens));
+      allTokens = networkTokens;
+      await AsyncStorage.setItem(Keys.networkTokens(network.chainId), JSON.stringify(networkTokens));
     }
 
     const nativeToken = new NativeToken({ owner: this.account.address, chainId: network.chainId, symbol: network.symbol });
+    this.tokenSymbols.set(ETH.address, nativeToken.symbol);
 
-    const userTokens = LINQ.from(saved)
-      .select((t, i) => {
-        const erc20 = new ERC20Token({
-          chainId: network.chainId,
-          owner: this.account.address,
-          contract: t.address,
-          symbol: t.symbol,
-          decimals: t.decimals,
-        });
+    const all = LINQ.from(
+      userTokens.concat(
+        allTokens.map((t) => {
+          this.tokenSymbols.set(t.address, t.symbol);
 
-        i < 10 ? erc20.getBalance() : null;
-        return erc20;
-      })
+          return new ERC20Token({
+            chainId: network.chainId,
+            owner: this.account.address,
+            contract: t.address,
+            symbol: t.symbol,
+            decimals: t.decimals,
+          });
+        })
+      )
+    )
       .distinct((t) => t.address)
       .toArray();
 
-    const tokens = [nativeToken, ...userTokens];
+    const tokens = [nativeToken, ...all];
+
+    tokens.slice(0, 10).every((t) => t.getBalance());
 
     const swapFromAddress = await AsyncStorage.getItem(Keys.userSelectedFromToken(network.chainId));
     const fromToken = tokens.find((t) => t.address === swapFromAddress) || tokens[0];
@@ -189,6 +212,7 @@ export class OneInch {
       this.tokens = tokens;
       this.swapResponse = null;
       this.errorMsg = '';
+      this.routes = [];
 
       this.switchSwapFrom(fromToken, false);
       this.switchSwapTo(toToken, false);
@@ -250,52 +274,61 @@ export class OneInch {
 
     if (!Number(amount)) return;
 
+    if (!this.swapFrom?.address && this.swapFrom?.balance.eq(utils.parseEther(amount))) {
+      this.swapFromAmount = `${Number(amount) * 0.95}`;
+    }
+
     this.calculating = true;
     this.swapResponse = null;
+    this.routes = [];
 
     this.calcExchangeRateTimer = setTimeout(() => this.calcExchangeRate(), 500);
   }
 
   setSlippage(amount: number) {
-    amount = Math.min(Math.max(0, amount), 99) || 0;
+    amount = Math.min(Math.max(0, amount), 50) || 0;
     this.slippage = amount;
+    this.swapResponse = null;
 
     AsyncStorage.setItem(Keys.userSlippage(this.userSelectedNetwork.chainId), `${amount}`);
+  }
+
+  protected get requestParams() {
+    const fromAmount = utils.parseUnits(this.swapFromAmount, this.swapFrom?.decimals || 18);
+
+    return {
+      fromTokenAddress: this.swapFrom?.address || ETH.address,
+      toTokenAddress: this.swapTo?.address || ETH.address,
+      amount: fromAmount.toString(),
+      fee: swapFeePercent,
+      referrerAddress: swapFeeReferrer,
+      fromAddress: this.account.address,
+      slippage: this.slippage,
+    };
   }
 
   async calcExchangeRate() {
     runInAction(() => (this.calculating = true));
 
-    this.checkApproval();
-
     try {
-      const output = (await swap(this.userSelectedNetwork.chainId, {
-        fromTokenAddress: this.swapFrom?.address || ETH.address,
-        toTokenAddress: this.swapTo?.address || ETH.address,
-        amount: this.swapFromAmount,
-        fee: swapFeePercent,
-        referrerAddress: swapFeeReferrer,
-        fromAddress: this.account.address,
-        slippage: this.slippage,
-      }))!;
+      const params = this.requestParams;
+      const [swapOutput, quoteOutput] = await Promise.all([
+        this.swapFrom?.balance.gte(params.amount) ? swap(this.userSelectedNetwork.chainId, params) : null,
+        quote(this.userSelectedNetwork.chainId, params),
+      ]);
 
-      console.log(output);
-
-      if (output.error) {
-        runInAction(() => {
-          this.errorMsg = output?.description || '';
-          this.swapResponse = null;
-          this.swapToAmount = '';
-          this.exchangeRate = 0;
-        });
-
-        return;
-      }
+      const routes = quoteOutput?.protocols?.flat(99) || [];
+      routes.every((p) => {
+        p.fromTokenAddress = utils.getAddress(p.fromTokenAddress);
+        p.toTokenAddress = utils.getAddress(p.toTokenAddress);
+      });
 
       runInAction(() => {
-        this.swapResponse = output;
-        this.swapToAmount = output.toTokenAmount;
-        this.exchangeRate = Number(output.toTokenAmount) / Number(this.swapFromAmount);
+        this.routes = routes;
+        this.swapResponse = swapOutput || null;
+        this.errorMsg = swapOutput?.description || '';
+        this.swapToAmount = utils.formatUnits(quoteOutput?.toTokenAmount || '0', this.swapTo?.decimals || 18);
+        this.exchangeRate = Number(this.swapToAmount || 0) / Number(this.swapFromAmount);
       });
     } catch (e) {
       runInAction(() => {
@@ -304,6 +337,7 @@ export class OneInch {
       });
     } finally {
       runInAction(() => (this.calculating = false));
+      setTimeout(() => this.checkApproval(true), 10);
     }
 
     if (!Number(this.swapFromAmount)) return;
@@ -311,9 +345,7 @@ export class OneInch {
   }
 
   private async checkApproval(force = false) {
-    if (!this.swapResponse) return;
-
-    const approved = await (this.swapFrom as ERC20Token)?.allowance?.(this.account.address, this.swapResponse.tx.to, force);
+    const approved = await (this.swapFrom as ERC20Token)?.allowance?.(this.account.address, V5Router, force);
     if (!approved) return;
 
     runInAction(() => {
@@ -323,13 +355,11 @@ export class OneInch {
   }
 
   approve() {
-    if (!this.swapResponse) return;
-
     let data = '0x';
 
     try {
       data = (this.swapFrom as ERC20Token).encodeApproveData(
-        this.swapResponse.tx.to,
+        V5Router,
         utils.parseUnits(this.swapFromAmount, this.swapFrom!.decimals)
       );
     } catch (error) {
@@ -360,8 +390,24 @@ export class OneInch {
     });
   }
 
-  swap() {
-    if (!this.swapResponse || !this.isValidFromAmount) return;
+  async swap() {
+    if (!this.isValidFromAmount) return;
+
+    let swapResponse = this.swapResponse;
+
+    if (!swapResponse || !swapResponse.tx) {
+      swapResponse = (await swap(this.userSelectedNetwork.chainId, this.requestParams)) || null;
+
+      if (!swapResponse || !swapResponse.tx || swapResponse?.error) {
+        runInAction(() => (this.errorMsg = swapResponse?.description || 'Service is not available'));
+        return;
+      }
+
+      runInAction(() => {
+        this.swapResponse = swapResponse;
+        this.swapToAmount = utils.formatUnits(swapResponse?.toTokenAmount || '0', this.swapTo?.decimals || 18);
+      });
+    }
 
     const approve = async (opts: { pin: string; tx: providers.TransactionRequest; readableInfo: ReadableInfo }) => {
       const { txHash } = await App.sendTxFromAccount(this.account.address, opts);
@@ -384,9 +430,9 @@ export class OneInch {
       reject,
       param: {
         from: this.account.address,
-        to: this.swapResponse.tx.to,
-        data: this.swapResponse.tx.data,
-        value: this.swapResponse.tx.value,
+        to: swapResponse!.tx.to,
+        data: swapResponse!.tx.data,
+        value: swapResponse!.tx.value,
       },
       chainId: this.userSelectedNetwork.chainId,
       account: this.account.address,
@@ -421,7 +467,7 @@ export class OneInch {
 
     token.setOwner(this.account.address);
     token.getBalance();
-    this.tokens.push(token);
+    this.tokens.unshift(token);
 
     const data = JSON.stringify(
       this.tokens
@@ -431,7 +477,7 @@ export class OneInch {
         })
     );
 
-    AsyncStorage.setItem(Keys.userCustomizedTokens(this.userSelectedNetwork.chainId), data);
+    AsyncStorage.setItem(Keys.networkTokens(this.userSelectedNetwork.chainId), data);
   }
 }
 
