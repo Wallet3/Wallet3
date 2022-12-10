@@ -1,31 +1,15 @@
-export const SupportedChains: { chainId: number }[] = [
-  {
-    chainId: 1,
-  },
+import { ChainIds } from '../../../common/Networks';
 
-  {
-    chainId: 10,
-  },
-
-  {
-    chainId: 42161,
-  },
-
-  {
-    chainId: 137,
-  },
-
-  { chainId: 100 },
-
-  {
-    chainId: 43114,
-  },
-
-  {
-    chainId: 250,
-  },
-
-  {
-    chainId: 42220,
-  },
+export const SupportedChains: number[] = [
+  ChainIds.Ethereum,
+  ChainIds.Arbitrum,
+  ChainIds.Optimism,
+  ChainIds.Polygon,
+  ChainIds.BNBChain,
+  ChainIds.GnosisChain,
+  ChainIds.Aurora,
+  ChainIds.Fantom,
+  ChainIds.Celo,
+  ChainIds.Kava,
+  ChainIds.Klaytn,
 ];

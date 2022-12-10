@@ -257,7 +257,7 @@ export default observer(() => {
         />
       )}
 
-      <View style={{ flex: 1, minHeight: ReactiveScreen.height * 0.33 }} />
+      <ScrollView style={{ flex: 1, height: ReactiveScreen.height - 445, width: '100%' }} />
 
       <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
         <Text style={{ color: secondaryTextColor, fontSize: 10, marginEnd: -16 }}>Powered by</Text>

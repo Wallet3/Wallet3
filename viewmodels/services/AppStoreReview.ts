@@ -17,7 +17,7 @@ class AppStoreReview {
   }
 
   async check() {
-    if (TxHub.txs.length === 0) return;
+    if (TxHub.txs.length < 20) return;
 
     const rated = await AsyncStorage.getItem(Keys.userRated);
     if (rated) return;

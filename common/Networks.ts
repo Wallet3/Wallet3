@@ -48,6 +48,21 @@ export interface INetwork {
   pinned?: boolean;
 }
 
+export const ChainIds = {
+  Ethereum: 1,
+  Arbitrum: 42161,
+  Optimism: 10,
+  Polygon: 137,
+  BNBChain: 56,
+  Aurora: 1313161554,
+  Avalance: 43114,
+  Celo: 42220,
+  GnosisChain: 100,
+  Fantom: 250,
+  Kava: 2222,
+  Klaytn: 8217,
+};
+
 export const PublicNetworks: INetwork[] = [
   {
     symbol: 'ETH',
