@@ -178,6 +178,7 @@ export class OneInch {
     }
 
     const nativeToken = new NativeToken({ owner: this.account.address, chainId: network.chainId, symbol: network.symbol });
+    this.tokenSymbols.set(ETH.address, nativeToken.symbol);
 
     const all = LINQ.from(
       userTokens.concat(
@@ -316,17 +317,16 @@ export class OneInch {
         quote(this.userSelectedNetwork.chainId, params),
       ]);
 
-      quoteOutput?.protocols?.flat(99)?.every((p) => {
+      const routes = quoteOutput?.protocols?.flat(99) || [];
+      routes.every((p) => {
         p.fromTokenAddress = utils.getAddress(p.fromTokenAddress);
         p.toTokenAddress = utils.getAddress(p.toTokenAddress);
       });
 
-      console.log(quoteOutput?.protocols.flat(99));
-
       runInAction(() => {
-        this.errorMsg = swapOutput?.description || '';
+        this.routes = routes;
         this.swapResponse = swapOutput || null;
-        this.routes = quoteOutput?.protocols?.flat(99) || [];
+        this.errorMsg = swapOutput?.description || '';
         this.swapToAmount = utils.formatUnits(quoteOutput?.toTokenAmount || '0', this.swapTo?.decimals || 18);
         this.exchangeRate = Number(this.swapToAmount || 0) / Number(this.swapFromAmount);
       });

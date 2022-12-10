@@ -81,7 +81,7 @@ export default observer(() => {
       <View style={{ flex: 1 }} />
       <Ionicons name="arrow-forward" color={secondaryTextColor} />
       <View style={{ flex: 1 }} />
-      <Coin address={route.toTokenAddress} chainId={chainId} size={18} symbol={VM.tokenSymbols.get(route.fromTokenAddress)} />
+      <Coin address={route.toTokenAddress} chainId={chainId} size={18} symbol={VM.tokenSymbols.get(route.toTokenAddress)} />
     </Animated.View>
   );
 

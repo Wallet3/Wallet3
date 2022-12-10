@@ -34,6 +34,7 @@ const woofi = require('./woofi.png');
 const protofi = require('./protofi.png');
 const klayswap = require('./klayswap.png');
 const pangea = require('./pangea.png');
+const camelot = require('./camelot.png');
 
 const keywords = [
   { key: 'psm', img: psm },
@@ -68,11 +69,14 @@ const keywords = [
   { key: 'klayswap', img: klayswap },
   { key: 'pangea', img: pangea },
   { key: 'kokonut', img: kokonut },
+  { key: 'camelot', img: camelot },
 ];
 
 export function generateDexLogo(protocol: string, style: StyleProp<ImageStyle>) {
   const lower = protocol.toLowerCase();
   const tuple = keywords.find(({ key }) => lower.includes(key));
+
+  if (__DEV__ && !tuple) return;
 
   return <FastImage source={tuple?.img || one_inch} style={style} />;
 }
