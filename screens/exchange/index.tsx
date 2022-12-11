@@ -208,8 +208,15 @@ export default observer(() => {
           </Text>
         ) : Number(VM.swapFromAmount) && !VM.calculating && !VM.hasRoutes ? (
           <Text
-            style={{ color: 'crimson', fontSize: 12, marginStart: 6, fontWeight: '500', textTransform: 'capitalize' }}
             numberOfLines={1}
+            style={{
+              color: 'crimson',
+              fontSize: 12,
+              marginStart: 6,
+              fontWeight: '500',
+              maxWidth: '80%',
+              textTransform: 'capitalize',
+            }}
           >
             {VM.errorMsg || t('exchange-no-routes')}
           </Text>
@@ -296,7 +303,7 @@ export default observer(() => {
 
       <View
         style={{
-          height: ReactiveScreen.height - (top + bottom + 57) - 385,
+          height: ReactiveScreen.height - (top + bottom + 57) - 382,
           width: '100%',
           marginVertical: 16,
           marginBottom: 8,
@@ -324,7 +331,7 @@ export default observer(() => {
         </ScrollView>
       </View>
 
-      <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginEnd: '-7%' }}>
         <Text style={{ color: secondaryTextColor, fontSize: 10, marginEnd: -25 }}>Powered by</Text>
         <OneInch height={29} />
       </View>

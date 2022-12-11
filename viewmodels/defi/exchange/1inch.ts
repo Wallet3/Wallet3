@@ -294,17 +294,18 @@ export class OneInch {
   }
 
   protected get requestParams() {
-    const fromAmount = utils.parseUnits(this.swapFromAmount, this.swapFrom?.decimals || 18);
-
-    return {
-      fromTokenAddress: this.swapFrom?.address || ETH.address,
-      toTokenAddress: this.swapTo?.address || ETH.address,
-      amount: fromAmount.toString(),
-      fee: swapFeePercent,
-      referrerAddress: swapFeeReferrer,
-      fromAddress: this.account.address,
-      slippage: this.slippage,
-    };
+    try {
+      const fromAmount = utils.parseUnits(this.swapFromAmount, this.swapFrom?.decimals || 18);
+      return {
+        fromTokenAddress: this.swapFrom?.address || ETH.address,
+        toTokenAddress: this.swapTo?.address || ETH.address,
+        amount: fromAmount.toString(),
+        fee: swapFeePercent,
+        referrerAddress: swapFeeReferrer,
+        fromAddress: this.account.address,
+        slippage: this.slippage,
+      };
+    } catch (error) {}
   }
 
   async calcExchangeRate() {
@@ -312,6 +313,11 @@ export class OneInch {
 
     try {
       const params = this.requestParams;
+      if (!params) {
+        this.errorMsg = 'Invalid amount';
+        return;
+      }
+
       const [swapOutput, quoteOutput] = await Promise.all([
         this.swapFrom?.balance.gte(params.amount) ? swap(this.userSelectedNetwork.chainId, params) : null,
         quote(this.userSelectedNetwork.chainId, params),
@@ -347,6 +353,7 @@ export class OneInch {
   private async checkApproval(force = false) {
     const approved = await (this.swapFrom as ERC20Token)?.allowance?.(this.account.address, V5Router, force);
     if (!approved) return;
+    if (!this.isValidFromAmount) return;
 
     runInAction(() => {
       this.needApproval = approved.lt(utils.parseUnits(this.swapFromAmount || '0', this.swapFrom?.decimals));
@@ -392,11 +399,13 @@ export class OneInch {
 
   async swap() {
     if (!this.isValidFromAmount) return;
+    let requestParams = this.requestParams;
+    if (!requestParams) return;
 
     let swapResponse = this.swapResponse;
 
     if (!swapResponse || !swapResponse.tx) {
-      swapResponse = (await swap(this.userSelectedNetwork.chainId, this.requestParams)) || null;
+      swapResponse = (await swap(this.userSelectedNetwork.chainId, requestParams)) || null;
 
       if (!swapResponse || !swapResponse.tx || swapResponse?.error) {
         runInAction(() => (this.errorMsg = swapResponse?.description || 'Service is not available'));

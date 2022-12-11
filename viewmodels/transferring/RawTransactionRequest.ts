@@ -217,7 +217,7 @@ export class RawTransactionRequest extends BaseTransaction {
         from: this.account.address,
         to: param.to,
         data: param.data,
-        value: BigNumber.from(param.value || '0').toHexString(),
+        value: !Number(param.value) ? '0x0' : BigNumber.from(param.value).toHexString(),
       });
     }
 
