@@ -430,9 +430,10 @@ export class OneInch {
       reject,
       param: {
         from: this.account.address,
-        to: swapResponse!.tx.to,
-        data: swapResponse!.tx.data,
-        value: swapResponse!.tx.value,
+        to: swapResponse.tx.to,
+        data: swapResponse.tx.data,
+        value: swapResponse.tx.value,
+        gas: swapResponse.tx.gas,
       },
       chainId: this.userSelectedNetwork.chainId,
       account: this.account.address,

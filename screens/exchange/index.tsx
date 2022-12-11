@@ -76,7 +76,7 @@ export default observer(() => {
           </Text>
         )}
 
-        <Text style={{ marginStart: 8, color: userSelectedNetwork.color }}>{`[${route.part}%]`}</Text>
+        <Text style={{ marginStart: 8, color: userSelectedNetwork.color, fontSize: 12 }}>{`[${route.part}%]`}</Text>
       </View>
       <View style={{ flex: 1 }} />
       <Ionicons name="arrow-forward" color={secondaryTextColor} />
@@ -309,7 +309,7 @@ export default observer(() => {
             exiting={FadeOut.delay(0)}
             style={{ fontSize: 12, marginBottom: 4, marginStart: 16 }}
           >
-            Routes:
+            {t('exchange-routes')}:
           </Animated.Text>
         ) : undefined}
 
@@ -375,10 +375,18 @@ export default observer(() => {
           <ScrollView
             horizontal
             scrollEnabled={false}
-            style={{ width: ReactiveScreen.width, flex: 1, backgroundColor: 'red' }}
+            style={{ width: ReactiveScreen.width, flex: 1 }}
             contentContainerStyle={{ flexGrow: 1 }}
           >
-            <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6, height: '100%' }}>
+            <SafeAreaProvider
+              style={{
+                backgroundColor,
+                borderTopStartRadius: 6,
+                borderTopEndRadius: 6,
+                height: '100%',
+                width: ReactiveScreen.width,
+              }}
+            >
               <TokenSelector
                 tokens={VM.tokens}
                 selectedToken={VM.swapFrom as IToken}
@@ -404,10 +412,12 @@ export default observer(() => {
           <ScrollView
             horizontal
             scrollEnabled={false}
-            style={{ width: ReactiveScreen.width, flex: 1, backgroundColor: 'red' }}
+            style={{ width: ReactiveScreen.width, flex: 1 }}
             contentContainerStyle={{ flexGrow: 1 }}
           >
-            <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
+            <SafeAreaProvider
+              style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6, width: ReactiveScreen.width }}
+            >
               <TokenSelector
                 tokens={VM.tokens}
                 chainId={chainId}

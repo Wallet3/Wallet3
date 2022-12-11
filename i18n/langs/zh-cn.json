@@ -83,6 +83,7 @@
   "exchange-add-token-placeholder": "代币符号或地址",
   "exchange-tokens": "代币",
   "exchange-add-token-button": "追加",
+  "exchange-routes": "路由",
   "qrscan-title": "扫描二维码",
   "qrscan-go-to-settings": "跳转到设置",
   "qrscan-no-permission": "无摄像头访问权限",

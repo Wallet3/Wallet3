@@ -1,20 +1,19 @@
-import { Button, Loader, SafeViewContainer } from '../../components';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Loader, SafeViewContainer } from '../../components';
 import React, { useEffect, useRef, useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { borderColor, secondaryFontColor } from '../../constants/styles';
 
 import App from '../../viewmodels/core/App';
+import Authentication from '../../viewmodels/auth/Authentication';
+import { Ionicons } from '@expo/vector-icons';
 import { MnemonicOnce } from '../../viewmodels/auth/MnemonicOnce';
 import Networks from '../../viewmodels/core/Networks';
 import RejectApproveButtons from '../components/RejectApproveButtons';
 import SecretScan from './SecretScan';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
-import { decode } from 'js-base64';
 import i18n from '../../i18n';
+import { secondaryFontColor } from '../../constants/styles';
 import { showMessage } from 'react-native-flash-message';
-import { useNavigation } from '@react-navigation/native';
 
 export default ({ onDone, onCancel }: { onDone?: () => void; onCancel?: () => void }) => {
   const { t } = i18n;
@@ -40,6 +39,7 @@ export default ({ onDone, onCancel }: { onDone?: () => void; onCancel?: () => vo
 
       if (key) {
         await App.addWallet(key);
+        await Authentication.setUserSecretsVerified(true);
         onDone?.();
       } else {
         showMessage({ message: 'msg-failed-to-import-wallet', type: 'warning' });
