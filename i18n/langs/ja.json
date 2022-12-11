@@ -83,6 +83,7 @@
   "exchange-add-token-placeholder": "コインシンボルまたはアドレス",
   "exchange-tokens": "トークン",
   "exchange-add-token-button": "追加",
+  "exchange-routes": "ルート",
   "qrscan-title": "QRコード スキャン",
   "qrscan-go-to-settings": "設定へ",
   "qrscan-no-permission": "カメラにアクセスできない",

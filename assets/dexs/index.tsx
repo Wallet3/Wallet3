@@ -35,6 +35,7 @@ const protofi = require('./protofi.png');
 const klayswap = require('./klayswap.png');
 const pangea = require('./pangea.png');
 const camelot = require('./camelot.png');
+const synapse = require('./synapse.png');
 
 const keywords = [
   { key: 'psm', img: psm },
@@ -70,6 +71,7 @@ const keywords = [
   { key: 'pangea', img: pangea },
   { key: 'kokonut', img: kokonut },
   { key: 'camelot', img: camelot },
+  { key: 'synapse', img: synapse },
 ];
 
 export function generateDexLogo(protocol: string, style: StyleProp<ImageStyle>) {

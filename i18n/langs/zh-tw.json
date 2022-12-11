@@ -83,6 +83,7 @@
   "exchange-add-token-placeholder": "代幣符號或地址",
   "exchange-tokens": "代幣",
   "exchange-add-token-button": "追加",
+  "exchange-routes": "路由",
   "qrscan-title": "掃描二維碼",
   "qrscan-go-to-settings": "跳轉到設置",
   "qrscan-no-permission": "無攝像頭訪問權限",

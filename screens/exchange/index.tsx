@@ -77,7 +77,7 @@ export default observer(() => {
           </Text>
         )}
 
-        <Text style={{ marginStart: 8, color: userSelectedNetwork.color }}>{`[${route.part}%]`}</Text>
+        <Text style={{ marginStart: 8, color: userSelectedNetwork.color, fontSize: 12 }}>{`[${route.part}%]`}</Text>
       </View>
       <View style={{ flex: 1 }} />
       <Ionicons name="arrow-forward" color={secondaryTextColor} />
@@ -209,8 +209,15 @@ export default observer(() => {
           </Text>
         ) : Number(VM.swapFromAmount) && !VM.calculating && !VM.hasRoutes ? (
           <Text
-            style={{ color: 'crimson', fontSize: 12, marginStart: 6, fontWeight: '500', textTransform: 'capitalize' }}
             numberOfLines={1}
+            style={{
+              color: 'crimson',
+              fontSize: 12,
+              marginStart: 6,
+              fontWeight: '500',
+              maxWidth: '80%',
+              textTransform: 'capitalize',
+            }}
           >
             {VM.errorMsg || t('exchange-no-routes')}
           </Text>
@@ -297,7 +304,7 @@ export default observer(() => {
 
       <View
         style={{
-          height: ReactiveScreen.height - (top + bottom + 57) - 385,
+          height: ReactiveScreen.height - (top + bottom + 57) - 382,
           width: '100%',
           marginVertical: 16,
           marginBottom: 8,
@@ -310,7 +317,7 @@ export default observer(() => {
             exiting={FadeOut.delay(0)}
             style={{ fontSize: 12, marginBottom: 4, marginStart: 16 }}
           >
-            Routes:
+            {t('exchange-routes')}:
           </Animated.Text>
         ) : undefined}
 
@@ -325,7 +332,7 @@ export default observer(() => {
         </ScrollView>
       </View>
 
-      <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginEnd: '-7%' }}>
         <Text style={{ color: secondaryTextColor, fontSize: 10, marginEnd: -25 }}>Powered by</Text>
         <OneInch height={29} />
       </View>
@@ -370,7 +377,7 @@ export default observer(() => {
           <ScrollView
             horizontal
             scrollEnabled={false}
-            style={{ width: ReactiveScreen.width, flex: 1, backgroundColor: 'red' }}
+            style={{ width: ReactiveScreen.width, flex: 1 }}
             contentContainerStyle={{ flexGrow: 1 }}
           >
             <SafeAreaProvider style={{ ...modalStyles.safeArea, backgroundColor }}>
@@ -399,7 +406,7 @@ export default observer(() => {
           <ScrollView
             horizontal
             scrollEnabled={false}
-            style={{ width: ReactiveScreen.width, flex: 1, backgroundColor: 'red' }}
+            style={{ width: ReactiveScreen.width, flex: 1 }}
             contentContainerStyle={{ flexGrow: 1 }}
           >
             <SafeAreaProvider style={{ ...modalStyles.safeArea, backgroundColor }}>

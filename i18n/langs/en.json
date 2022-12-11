@@ -83,6 +83,7 @@
   "exchange-add-token-placeholder": "Coin symbol or address",
   "exchange-tokens": "Tokens",
   "exchange-add-token-button": "ADD",
+  "exchange-routes": "Routes",
   "qrscan-title": "Scan",
   "qrscan-go-to-settings": "Go To Settings",
   "qrscan-no-permission": "No access to camera",

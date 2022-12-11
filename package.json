@@ -14,7 +14,6 @@
     "test": "jest"
   },
   "dependencies": {
-    "@curvefi/api": "^2.24.0",
     "@ethersproject/shims": "^5.7.0",
     "@expo/vector-icons": "^13.0.0",
     "@metamask/eth-sig-util": "^4.0.1",
