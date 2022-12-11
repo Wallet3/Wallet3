@@ -432,16 +432,6 @@ export const Testnets: INetwork[] = [
     explorer: 'https://zksync2-testnet.zkscan.io',
     feeTokens: zkSyncFeeTokens,
   },
-  {
-    comm_id: '',
-    symbol: 'MATIC',
-    network: 'Mumbai Testnet',
-    chainId: 80001,
-    color: '#8247E5',
-    test: true,
-    defaultTokens: [],
-    explorer: 'https://polygonscan.com/',
-  },
 ];
 
 export const AllNetworks: INetwork[] = [...PublicNetworks, ...Testnets];

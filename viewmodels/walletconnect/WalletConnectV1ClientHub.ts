@@ -35,7 +35,10 @@ class WalletConnectV1ClientHub extends EventEmitter {
         await sessionStore.save(); // Don't remove this code until v1.5
         return c;
       })
-    );
+    ).catch(e=>{
+      console.log(e)
+      return []
+    });
 
     runInAction(() => {
       this.clients = cs;
