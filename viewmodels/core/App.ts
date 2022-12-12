@@ -9,6 +9,7 @@ import Authentication from '../auth/Authentication';
 import Bookmarks from '../customs/Bookmarks';
 import Contacts from '../customs/Contacts';
 import Database from '../../models/Database';
+import FirebaseAnalytics from '@react-native-firebase/analytics';
 import GasPrice from '../misc/GasPrice';
 import Key from '../../models/Key';
 import LINQ from 'linq';
@@ -16,6 +17,7 @@ import LinkHub from '../hubs/LinkHub';
 import MessageKeys from '../../common/MessageKeys';
 import MetamaskDAppsHub from '../walletconnect/MetamaskDAppsHub';
 import Networks from './Networks';
+import { ReactNativeFirebase } from '@react-native-firebase/app';
 import Theme from '../settings/Theme';
 import TxHub from '../hubs/TxHub';
 import UI from '../settings/UI';
@@ -27,6 +29,8 @@ import { showMessage } from 'react-native-flash-message';
 export class AppVM {
   private lastRefreshedTime = 0;
   private refreshTimer!: NodeJS.Timer;
+
+  firebaseApp!: ReactNativeFirebase.FirebaseApp;
 
   initialized = false;
   wallets: Wallet[] = [];
@@ -241,6 +245,8 @@ export class AppVM {
     Bookmarks.reset();
     Theme.reset();
     UI.reset();
+
+    if (!__DEV__) setTimeout(() => FirebaseAnalytics().logEvent('reset'), 5);
 
     await Promise.all([
       Database.reset(),

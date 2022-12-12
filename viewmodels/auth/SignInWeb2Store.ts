@@ -1,12 +1,10 @@
-import * as Secrets from '../../configs/secret';
-
-import { Firestore, deleteDoc, doc, getDoc, getFirestore, setDoc } from 'firebase/firestore';
-
+import FirebaseAnalytics from '@react-native-firebase/analytics';
 import { Platform } from 'react-native';
-import { initializeApp } from 'firebase/app';
+import firestore from '@react-native-firebase/firestore';
 
 const Keys = {
   users: 'users',
+  store: 'Web2Store',
 };
 
 interface User {
@@ -15,26 +13,9 @@ interface User {
 }
 
 export class SignInWeb2Store {
-  db!: Firestore;
-
-  async init() {
-    if (!Secrets.FirebaseConfig) {
-      return false;
-    }
-
-    if (this.db) return true;
-
-    const app = initializeApp(Secrets.FirebaseConfig, 'Web2Store');
-    this.db = getFirestore(app);
-
-    return true;
-  }
-
   async set(user: { uid: string; secret: string; platform: string }) {
-    if (!this.db) return false;
-
     try {
-      await setDoc(doc(this.db, Keys.users, user.uid), user);
+      await firestore().collection(Keys.users).doc(user.uid).set(user);
       return true;
     } catch (e) {
       console.error('Error adding document: ', e);
@@ -44,20 +25,19 @@ export class SignInWeb2Store {
   }
 
   async get(uid: string) {
-    if (!this.db) return;
-
-    const ref = doc(this.db, Keys.users, uid);
-    const snap = await getDoc(ref);
-
-    if (snap.exists()) {
-      return snap.data() as User;
-    }
+    const doc = await firestore().collection(Keys.users).doc(uid).get();
+    if (doc.exists) return doc.data() as User;
   }
 
   async delete(uid: string) {
-    if (!this.db) return;
-
-    const ref = doc(this.db, Keys.users, uid);
-    await deleteDoc(ref);
+    try {
+      await firestore().collection(Keys.users).doc(uid).delete();
+      FirebaseAnalytics().logEvent('delete_sign_with_web2_secret', {
+        platform: Platform.OS,
+        uid,
+        timestamp: new Date().toISOString(),
+        timezone: `${-(new Date().getTimezoneOffset() / 60)}`,
+      });
+    } catch (error) {}
   }
 }
