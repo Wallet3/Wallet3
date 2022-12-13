@@ -22,16 +22,6 @@ export const alchemyApiKeys: string[] = [];
 
 export const DeBankApiKey = '';
 
-export const FirebaseConfig = {
-  apiKey: '',
-  authDomain: '',
-  projectId: '',
-  storageBucket: '',
-  messagingSenderId: '',
-  appId: '',
-  measurementId: '',
-};
-
 export const GoogleSignInConfigs = {
   webClientId: '',
 };

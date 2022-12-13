@@ -25,7 +25,7 @@ import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 type RootStackParamList = {
   Home: undefined;
   Settings: undefined;
-  DApps: undefined;
+  ConnectedDapps: undefined;
 };
 
 export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, 'Home'>) => {
@@ -88,7 +88,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         disabled={currentAccount?.tokens.loadingTokens}
         onSendPress={() => PubSub.publish(MessageKeys.openSendFundsModal)}
         onRequestPress={() => PubSub.publish(MessageKeys.openRequestFundsModal)}
-        onDAppsPress={() => navigation.navigate('DApps')}
+        onDAppsPress={() => navigation.navigate('ConnectedDapps')}
         gasPrice={GasPrice.currentGwei}
         onQRCodePress={() => openAddressQR()}
         signInPlatform={currentAccount?.signInPlatform}

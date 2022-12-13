@@ -29,6 +29,7 @@ import Theme from './viewmodels/settings/Theme';
 import Themes from './screens/settings/Themes';
 import Tokens from './screens/tokens/SortTokens';
 import VerifySecret from './screens/settings/VerifySecret';
+import analytics from '@react-native-firebase/analytics';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import i18n from './i18n';
 import { observer } from 'mobx-react-lite';
@@ -45,6 +46,8 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
   const { Navigator, Screen } = StackRoot;
   const { t } = i18n;
   const { backgroundColor, foregroundColor, statusBarStyle } = Theme;
+  const routeNameRef = React.useRef();
+  const navigationRef = React.useRef();
 
   const [loaded] = useFonts({
     Questrial: require('./assets/fonts/Questrial.ttf'),
@@ -59,7 +62,23 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
   }
 
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      ref={navigationRef}
+      onReady={() => (routeNameRef.current = navigationRef.current.getCurrentRoute()?.name)}
+      onStateChange={async () => {
+        const previousRouteName = routeNameRef.current;
+        const currentRouteName = navigationRef.current.getCurrentRoute()?.name;
+
+        if (previousRouteName && previousRouteName !== currentRouteName) {
+          await analytics().logScreenView({
+            screen_name: currentRouteName,
+            screen_class: currentRouteName,
+          });
+        }
+
+        routeNameRef.current = currentRouteName;
+      }}
+    >
       <Host style={{ backgroundColor: backgroundColor }}>
         {app.initialized ? (
           app.hasWallet ? (
