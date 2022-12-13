@@ -172,9 +172,8 @@ export class OneInch {
     const userTokens = await TokensMan.loadUserTokens(this.userSelectedNetwork.chainId, this.account.address);
 
     if (allTokens.length === 0) {
-      const networkTokens = await fetchTokens(network.chainId);
-      allTokens = networkTokens;
-      await AsyncStorage.setItem(Keys.networkTokens(network.chainId), JSON.stringify(networkTokens));
+      allTokens = await fetchTokens(network.chainId);
+      await AsyncStorage.setItem(Keys.networkTokens(network.chainId), JSON.stringify(allTokens));
     }
 
     const nativeToken = new NativeToken({ owner: this.account.address, chainId: network.chainId, symbol: network.symbol });
@@ -183,15 +182,16 @@ export class OneInch {
     const all = LINQ.from(
       userTokens.concat(
         allTokens.map((t) => {
-          this.tokenSymbols.set(t.address, t.symbol);
-
-          return new ERC20Token({
+          const erc20 = new ERC20Token({
             chainId: network.chainId,
             owner: this.account.address,
             contract: t.address,
             symbol: t.symbol,
             decimals: t.decimals,
           });
+
+          this.tokenSymbols.set(erc20.address, t.symbol);
+          return erc20;
         })
       )
     )
@@ -324,7 +324,7 @@ export class OneInch {
       ]);
 
       const routes = quoteOutput?.protocols?.flat(99) || [];
-      routes.every((p) => {
+      routes.forEach((p) => {
         p.fromTokenAddress = utils.getAddress(p.fromTokenAddress);
         p.toTokenAddress = utils.getAddress(p.toTokenAddress);
       });

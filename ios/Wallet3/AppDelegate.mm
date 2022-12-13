@@ -32,7 +32,6 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [FIRApp configure];
   RCTAppSetupPrepareApp(application);
 
   RCTBridge *bridge = [self.reactDelegate createBridgeWithDelegate:self launchOptions:launchOptions];
@@ -55,6 +54,7 @@
   [self.window makeKeyAndVisible];
   
   [super application:application didFinishLaunchingWithOptions:launchOptions];
+  [FIRApp configure];
   
   return YES;
 }

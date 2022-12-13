@@ -24,6 +24,7 @@ import UI from '../settings/UI';
 import WalletConnectV1ClientHub from '../walletconnect/WalletConnectV1ClientHub';
 import { fetchChainsOverview } from '../../common/apis/Debank';
 import i18n from '../../i18n';
+import { logAppReset } from '../services/Analytics';
 import { showMessage } from 'react-native-flash-message';
 
 export class AppVM {
@@ -246,7 +247,7 @@ export class AppVM {
     Theme.reset();
     UI.reset();
 
-    if (!__DEV__) setTimeout(() => FirebaseAnalytics().logEvent('reset'), 5);
+    logAppReset();
 
     await Promise.all([
       Database.reset(),

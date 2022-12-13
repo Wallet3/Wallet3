@@ -18,7 +18,6 @@ import App from '../core/App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Coingecko from '../../common/apis/Coingecko';
 import { ERC20Token } from '../../models/ERC20';
-import FirebaseAnalytics from '@react-native-firebase/analytics';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
 import { NativeToken } from '../../models/NativeToken';
@@ -404,11 +403,6 @@ export class BaseTransaction {
       txHex,
       readableInfo,
     });
-
-    setTimeout(
-      () => FirebaseAnalytics().logEvent('sendTx', { type: (tx.data?.length || 2) > 2 ? 'Contract Interaction' : 'Plain' }),
-      5
-    );
 
     return { success: true, txHex, tx: utils.parseTransaction(txHex) };
   }

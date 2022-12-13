@@ -27,6 +27,5 @@
     "icon": "https://stargate.finance/favicons/favicon-196x196.png",
     "title": "Stargate"
   },
-  { "url": "https://qx.app", "icon": "https://qx.app/opt_favicon.png", "title": "Quix" },
-  { "url": "https://bidex.pro", "icon": "https://bidex.pro/favicon.ico", "title": "Bidex" }
+  { "url": "https://qx.app", "icon": "https://qx.app/opt_favicon.png", "title": "Quix" }
 ]

@@ -1,6 +1,5 @@
-import FirebaseAnalytics from '@react-native-firebase/analytics';
-import { Platform } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
+import { logDeleteWeb2Secret } from '../services/Analytics';
 
 const Keys = {
   users: 'users',
@@ -32,12 +31,7 @@ export class SignInWeb2Store {
   async delete(uid: string) {
     try {
       await firestore().collection(Keys.users).doc(uid).delete();
-      FirebaseAnalytics().logEvent('delete_sign_with_web2_secret', {
-        platform: Platform.OS,
-        uid,
-        timestamp: new Date().toISOString(),
-        timezone: `${-(new Date().getTimezoneOffset() / 60)}`,
-      });
+      logDeleteWeb2Secret(uid);
     } catch (error) {}
   }
 }
