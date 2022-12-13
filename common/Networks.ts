@@ -55,7 +55,7 @@ export const ChainIds = {
   Polygon: 137,
   BNBChain: 56,
   Aurora: 1313161554,
-  Avalance: 43114,
+  Avalanche: 43114,
   Celo: 42220,
   GnosisChain: 100,
   Fantom: 250,
