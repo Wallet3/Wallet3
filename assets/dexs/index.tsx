@@ -23,6 +23,7 @@ const biswap = require('./biswap.png');
 const wombat = require('./wombat.png');
 const rose = require('./rose.jpg');
 const kokonut = require('./kokonut.jpg');
+const pangolin = require('./pangolin.jpeg');
 const auroraswap = require('./auroraswap.png');
 const wannaswap = require('./wannaswap.png');
 const nearpad = require('./nearpad.png');
@@ -36,6 +37,7 @@ const klayswap = require('./klayswap.png');
 const pangea = require('./pangea.png');
 const camelot = require('./camelot.png');
 const synapse = require('./synapse.png');
+const traderjoe = require('./traderjoe.png');
 
 const keywords = [
   { key: 'psm', img: psm },
@@ -72,6 +74,8 @@ const keywords = [
   { key: 'kokonut', img: kokonut },
   { key: 'camelot', img: camelot },
   { key: 'synapse', img: synapse },
+  { key: 'traderjoe', img: traderjoe },
+  { key: 'pangolin', img: pangolin },
 ];
 
 export function generateDexLogo(protocol: string, style: StyleProp<ImageStyle>) {

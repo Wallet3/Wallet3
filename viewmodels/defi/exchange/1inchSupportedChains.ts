@@ -7,6 +7,7 @@ export const SupportedChains: number[] = [
   ChainIds.Polygon,
   ChainIds.BNBChain,
   ChainIds.GnosisChain,
+  ChainIds.Avalanche,
   ChainIds.Aurora,
   ChainIds.Fantom,
   ChainIds.Celo,
