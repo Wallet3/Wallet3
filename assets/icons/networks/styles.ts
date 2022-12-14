@@ -182,4 +182,11 @@ export default StyleSheet.create({
     alignSelf: 'flex-end',
     opacity: 0.5,
   },
+
+  canto: {
+    marginTop: -42,
+    marginEnd: -1,
+    alignSelf: 'flex-end',
+    opacity: 0.75,
+  },
 });

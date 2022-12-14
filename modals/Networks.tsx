@@ -1,11 +1,11 @@
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
+import { Entypo, Feather, MaterialCommunityIcons, Octicons } from '@expo/vector-icons';
 import { FlatList, ListRenderItemInfo, NativeSyntheticEvent, Text, TouchableOpacity, View } from 'react-native';
 import { NetworkIcons, generateNetworkIcon } from '../assets/icons/networks/color';
 import { SafeViewContainer, Separator } from '../components';
 import { useEffect, useRef, useState } from 'react';
 
 import EditNetwork from './views/EditNetwork';
-import { Feather } from '@expo/vector-icons';
 import { INetwork } from '../common/Networks';
 import Networks from '../viewmodels/core/Networks';
 import React from 'react';
@@ -84,35 +84,38 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
 
         <View style={{ flex: 1 }} />
 
-        {item.l2 ? (
+        {item.l2 || item.testnet ? (
           <View
             style={{
               borderRadius: 5,
-              backgroundColor: 'deepskyblue',
+              backgroundColor: item.l2 ? item.color : 'deepskyblue',
               padding: 2,
               paddingHorizontal: 6,
               flexDirection: 'row',
               alignItems: 'center',
             }}
           >
-            <Text style={{ fontSize: 12, color: 'white', fontWeight: '500' }}>L2</Text>
+            <Text style={{ fontSize: 12, color: 'white', fontWeight: '500' }}>
+              {item.l2 ? 'L2' : item.testnet ? 'Testnet' : ''}
+            </Text>
           </View>
         ) : undefined}
+
+        {item.pinned ? <Entypo name="pin" color={item.color} style={{ marginStart: 12, marginTop: 1 }} /> : undefined}
       </TouchableOpacity>
     );
   };
 
   const renderContextMenuItem = (props: ListRenderItemInfo<INetwork>) => {
     const { item } = props;
-    const editableActions = [
+    const actions = [
       { title: t('button-edit'), systemIcon: 'square.and.pencil' },
-      { title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' },
+      item.pinned ? { title: t('button-unpin'), systemIcon: 'pin.slash' } : { title: t('button-pin'), systemIcon: 'pin' },
     ];
-
-    const viewActions = [{ title: `${t('button-edit')} RPC URLs`, systemIcon: 'square.and.pencil' }];
 
     const onActionPress = (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => {
       const { index } = e.nativeEvent;
+
       switch (index) {
         case 0:
           setEditNetwork(item);
@@ -120,6 +123,11 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
           onEditing?.(true);
           break;
         case 1:
+          startLayoutAnimation();
+          item.pinned ? Networks.unpin(item) : Networks.pin(item);
+          setTimeout(() => setNets(Networks.all));
+          break;
+        case 2:
           startLayoutAnimation();
           Networks.remove(item.chainId).then(() => setNets(Networks.all));
           break;
@@ -129,8 +137,10 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
     return (
       <ContextMenu
         onPress={onActionPress}
-        actions={item.isUserAdded ? editableActions : viewActions}
         previewBackgroundColor={backgroundColor}
+        actions={actions.concat(
+          item.isUserAdded ? [{ title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' } as any] : []
+        )}
       >
         {renderItem(props)}
       </ContextMenu>

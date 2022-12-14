@@ -1,8 +1,6 @@
 [
   { "url": "https://dagen.life", "icon": "https://dagen.life/logo.png", "title": "dagen" },
   { "url": "https://app.mail3.me", "icon": "https://mail3.me/icons/icon-192x192.png", "title": "Mail3" },
-  { "url": "https://app.uniswap.org", "icon": "https://app.uniswap.org/favicon.png", "title": "Uniswap" },
-  { "url": "https://curve.fi", "icon": "https://curve.fi/apple-touch-icon.png", "title": "Curve" },
   {
     "url": "https://zapper.fi",
     "icon": "https://zapper.fi/logo192.png",
@@ -20,9 +18,9 @@
   },
   { "url": "https://mirror.xyz", "icon": "https://mirror.xyz/icon/apple-touch-icon.png", "title": "Mirror" },
   {
-    "url": "https://oasis.app",
-    "icon": "https://github.com/trustwallet/assets/raw/master/blockchains/ethereum/assets/0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2/logo.png",
-    "title": "MakerDAO"
+    "url": "https://app.aave.com",
+    "icon": "https://aave.com/favicon64.png",
+    "title": "Aave"
   },
   {
     "url": "https://stargate.finance/transfer",

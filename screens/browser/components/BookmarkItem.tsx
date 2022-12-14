@@ -1,8 +1,7 @@
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
-import { Image, ListRenderItemInfo, NativeSyntheticEvent, Share, Text, TouchableOpacity } from 'react-native';
+import { ListRenderItemInfo, NativeSyntheticEvent, Share, Text, TouchableOpacity, View } from 'react-native';
 
 import { Bookmark } from '../../../viewmodels/customs/Bookmarks';
-import CachedImage from 'react-native-fast-image';
 import { NullableImage } from '../../../components';
 import React from 'react';
 import i18n from '../../../i18n';
@@ -70,6 +69,23 @@ export const renderUserBookmarkItem = (props: UserBookmarkProps) => {
           imageBackgroundColor={imageBackgroundColor}
         />
       </ContextMenu>
+
+      {item.ad ? (
+        <View
+          style={{
+            backgroundColor: 'crimson',
+            borderRadius: 4,
+            position: 'absolute',
+            end: 0,
+            bottom: 12,
+            padding: 4,
+            paddingStart: 5,
+            paddingVertical: 1,
+          }}
+        >
+          <Text style={{ color: '#fff', fontSize: 8, fontWeight: '600' }}>AD</Text>
+        </View>
+      ) : undefined}
 
       <Text numberOfLines={1} style={{ maxWidth: iconSize, marginTop: 4, fontSize: 9, color: thirdFontColor }}>
         {item.title}

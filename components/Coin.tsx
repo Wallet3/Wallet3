@@ -1,9 +1,8 @@
 import FastImage, { FastImageProps } from 'react-native-fast-image';
-import { Image, ImageSourcePropType, View } from 'react-native';
+import { Image, ImageSourcePropType } from 'react-native';
 import React, { useEffect, useState } from 'react';
 
 import Networks from '../viewmodels/core/Networks';
-import SvgImage from 'react-native-remote-svg';
 import icons from '../assets/icons/crypto';
 import { observer } from 'mobx-react-lite';
 
@@ -23,17 +22,17 @@ export default observer((props: CoinProps) => {
   const [network] = useState(Networks.find(props.chainId));
   const [logoUrl] = props.forceRefresh
     ? [
-        `https://github.com/trustwallet/assets/raw/master/blockchains/${
+        `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${
           (network?.github_dir || network?.network)?.toLowerCase() ?? 'ethereum'
         }/assets/${props.address}/logo.png`,
       ]
     : useState(
-        `https://github.com/trustwallet/assets/raw/master/blockchains/${
+        `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${
           (network?.github_dir || network?.network)?.toLowerCase() ?? 'ethereum'
         }/assets/${props.address}/logo.png`
       );
 
-  let symbol = props.symbol?.toLowerCase() ?? '';
+  let symbol = props.symbol?.toLowerCase() || (props.address ? '' : network?.symbol.toLowerCase() || 'eth');
   symbol = symbol.endsWith('.e') ? symbol.substring(0, symbol.length - 2) : symbol; // Avax
 
   const [source] = props.forceRefresh

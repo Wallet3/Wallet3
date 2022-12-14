@@ -29,6 +29,7 @@ export interface Bookmark {
   url: string;
   icon: string;
   title: string;
+  ad?: boolean;
 }
 
 class Bookmarks {

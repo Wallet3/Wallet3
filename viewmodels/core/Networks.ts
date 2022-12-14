@@ -17,6 +17,11 @@ const ChainColors = {
   61: '#3ab83a',
 };
 
+const Keys = {
+  currentNetwork: 'network',
+  pinnedChains: 'networks_pinned_chains',
+};
+
 export interface AddEthereumChainParameter {
   chainId: string; // A 0x-prefixed hexadecimal string
   chainName: string;
@@ -33,6 +38,7 @@ export interface AddEthereumChainParameter {
 class Networks {
   current: INetwork = PublicNetworks[0];
   userChains: INetwork[] = [];
+  pinnedChains: number[] = [];
 
   get Ethereum() {
     return PublicNetworks[0];
@@ -50,8 +56,15 @@ class Networks {
     return PublicNetworks[3];
   }
 
-  get all() {
-    return (__DEV__ ? AllNetworks : PublicNetworks).concat(this.userChains);
+  get _all() {
+    return AllNetworks.concat(this.userChains);
+  }
+
+  get all(): INetwork[] {
+    return this.pinnedChains
+      .map((chainId) => this.find(chainId)!)
+      .filter((i) => i)
+      .concat(this._all.filter((network) => !this.pinnedChains.includes(network.chainId)));
   }
 
   constructor() {
@@ -61,6 +74,8 @@ class Networks {
       reset: action,
       remove: action,
       userChains: observable,
+      pinnedChains: observable,
+      _all: computed,
       all: computed,
     });
   }
@@ -78,10 +93,9 @@ class Networks {
       pn.rpcUrls = sc.rpcUrls;
     }
 
-    const userChains = chains.filter((c) => !userEditedSystemChains.find((sc) => sc.id === c.id));
-
-    runInAction(() => {
-      this.userChains = userChains.map<INetwork>((c) => {
+    const userChains = chains
+      .filter((c) => !userEditedSystemChains.find((sc) => sc.id === c.id))
+      .map<INetwork>((c) => {
         return {
           chainId: Number(c.id),
           color: c.customize?.color || '#7B68EE',
@@ -95,13 +109,22 @@ class Networks {
           isUserAdded: true,
         };
       });
+
+    await runInAction(async () => (this.userChains = userChains));
+
+    AsyncStorage.getItem(Keys.currentNetwork).then((chainId) => {
+      const chain = Number(chainId || 1);
+      runInAction(() => (this.current = this._all.find((n) => n.chainId === chain) || PublicNetworks[0]));
     });
 
-    AsyncStorage.getItem('network').then((chainId) => {
-      const chain = Number(chainId || 1);
-      runInAction(() => {
-        this.current = this.all.find((n) => n.chainId === chain) || PublicNetworks[0];
-      });
+    AsyncStorage.getItem(Keys.pinnedChains).then((values) => {
+      const pinned = JSON.parse(values || '[]');
+      runInAction(() => (this.pinnedChains = pinned));
+
+      for (let id of pinned) {
+        let n = this.find(id);
+        if (n) n.pinned = true;
+      }
     });
   }
 
@@ -109,15 +132,29 @@ class Networks {
     if (this.current.chainId === network.chainId) return;
 
     this.current = network;
-    AsyncStorage.setItem('network', JSON.stringify(network.chainId));
+    AsyncStorage.setItem(Keys.currentNetwork, JSON.stringify(network.chainId));
+  }
+
+  async pin(network: INetwork) {
+    network.pinned = true;
+    if (this.pinnedChains.includes(network.chainId)) return;
+    this.pinnedChains.unshift(network.chainId);
+    await AsyncStorage.setItem(Keys.pinnedChains, JSON.stringify(this.pinnedChains));
+  }
+
+  async unpin(network: INetwork) {
+    network.pinned = false;
+    if (!this.pinnedChains.includes(network.chainId)) return;
+    this.pinnedChains = this.pinnedChains.filter((i) => i !== network.chainId);
+    await AsyncStorage.setItem(Keys.pinnedChains, JSON.stringify(this.pinnedChains));
   }
 
   has(chainId: number | string) {
-    return this.all.some((n) => n.chainId === Number(chainId));
+    return this._all.some((n) => n.chainId === Number(chainId));
   }
 
   find(chainId: number | string) {
-    return this.all.find((n) => n.chainId === Number(chainId));
+    return this._all.find((n) => n.chainId === Number(chainId));
   }
 
   async remove(chainId: number) {
@@ -134,7 +171,7 @@ class Networks {
 
     if (isCurrent) this.switch(this.Ethereum);
 
-    await userChain?.remove();
+    await Promise.all([userChain?.remove(), this.unpin(chain)]);
   }
 
   reset() {

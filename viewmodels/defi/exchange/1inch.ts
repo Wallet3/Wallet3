@@ -1,45 +1,50 @@
+import { BigNumber, providers, utils } from 'ethers';
 import { ETH, IToken } from '../../../common/tokens';
+import { SwapProtocol, SwapResponse, fetchTokens, quote, swap } from '../../../common/apis/1inch';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
-import { ethers, providers, utils } from 'ethers';
+import { swapFeePercent, swapFeeReferrer } from '../../../configs/secret';
 
 import { Account } from '../../account/Account';
 import App from '../../core/App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import CurveRouterABI from '../../../abis/CurveRouter.json';
 import { ERC20Token } from '../../../models/ERC20';
 import { INetwork } from '../../../common/Networks';
-import { IRouteStep } from '@curvefi/api/lib/interfaces';
 import LINQ from 'linq';
 import MessageKeys from '../../../common/MessageKeys';
 import { NativeToken } from '../../../models/NativeToken';
 import Networks from '../../core/Networks';
 import { ReadableInfo } from '../../../models/Transaction';
-import { SupportedChains } from './CurveSupportedChains';
+import { SupportedChains } from './1inchSupportedChains';
+import TokensMan from '../../services/TokensMan';
 import TxHub from '../../hubs/TxHub';
-import curve from '@curvefi/api';
-import { getRPCUrls } from '../../../common/RPC';
 
 const Keys = {
   userSelectedNetwork: 'exchange-userSelectedNetwork',
   userSelectedAccount: 'exchange-userSelectedAccount',
 
-  userSelectedFromToken: (chainId: number) => `${chainId}-exchange-from`,
-  userSelectedToToken: (chainId: number) => `${chainId}-exchange-to`,
-  userSlippage: (chainId: number) => `${chainId}-exchange-slippage`,
-  userCustomizedTokens: (chainId: number) => `${chainId}-exchange-tokens`,
+  userSelectedFromToken: (chainId: number) => `${chainId}-1inch-from-token`,
+  userSelectedToToken: (chainId: number) => `${chainId}-1inch-to-token`,
+  userSlippage: (chainId: number) => `${chainId}-1inch-slippage`,
+  networkTokens: (chainId: number) => `${chainId}-1inch-tokens-v2`,
 };
 
-const app = { name: 'Curve Exchange', icon: 'https://curve.fi/apple-touch-icon.png', verified: true };
+const app = { name: '1inch Exchange', icon: 'https://1inch.io/img/favicon/apple-touch-icon.png', verified: true };
+const V5Router = '0x1111111254EEB25477B68fb85Ed929f73A960582';
 
-export class CurveExchange {
+export class OneInch {
   private calcExchangeRateTimer?: NodeJS.Timer;
   private watchPendingTxTimer?: NodeJS.Timer;
-  private curveNetwork?: Promise<void>;
-  swapRoute: IRouteStep[] | null = null;
 
-  networks = SupportedChains.map(({ chainId }) => Networks.find(chainId)!);
+  swapResponse: SwapResponse | null = null;
+  routes: SwapProtocol[] = [];
+  errorMsg = '';
+
   userSelectedNetwork = Networks.Ethereum;
   account = App.currentAccount!;
+
+  networks = SupportedChains.map((chainId) => {
+    return { ...Networks.find(chainId)!, pinned: false };
+  });
 
   tokens: (NativeToken | ERC20Token)[] = [];
   swapFrom: (NativeToken | ERC20Token) | null = null;
@@ -53,10 +58,7 @@ export class CurveExchange {
   slippage = 0.5;
 
   pendingTxs: string[] = [];
-
-  protected get chain() {
-    return SupportedChains.find(({ chainId }) => this.userSelectedNetwork.chainId === chainId)!;
-  }
+  tokenSymbols = new Map<string, string>();
 
   get isValidFromAmount() {
     try {
@@ -76,7 +78,7 @@ export class CurveExchange {
   }
 
   get hasRoutes() {
-    return (this.swapRoute?.length || 0) > 0;
+    return this.routes.length > 0;
   }
 
   get isPending() {
@@ -101,7 +103,9 @@ export class CurveExchange {
       needApproval: observable,
       slippage: observable,
       pendingTxs: observable,
-      swapRoute: observable,
+      swapResponse: observable,
+      errorMsg: observable,
+      routes: observable,
 
       hasRoutes: computed,
       isPending: computed,
@@ -136,41 +140,53 @@ export class CurveExchange {
 
     AsyncStorage.setItem(Keys.userSelectedAccount, this.account.address);
 
-    this.tokens.forEach((t) => {
+    this.tokens.forEach((t, i) => {
       t.setOwner(this.account.address);
-      t.getBalance();
+      i < 10 ? t.getBalance() : null;
     });
   }
 
   async switchNetwork(network: INetwork) {
     this.userSelectedNetwork = network;
+    this.tokens = [];
+    this.swapFrom = null;
+    this.swapTo = null;
 
     AsyncStorage.setItem(Keys.userSelectedNetwork, `${network.chainId}`);
-    this.curveNetwork = curve.init('JsonRpc', { url: getRPCUrls(network.chainId)[0] }, { chainId: network.chainId });
 
-    const saved = (
-      JSON.parse((await AsyncStorage.getItem(Keys.userCustomizedTokens(network.chainId))) || '[]') as IToken[]
-    ).filter((t) => t.address);
+    let allTokens = JSON.parse((await AsyncStorage.getItem(Keys.networkTokens(network.chainId))) || '[]') as IToken[];
+    const userTokens = await TokensMan.loadUserTokens(this.userSelectedNetwork.chainId, this.account.address);
+
+    if (allTokens.length === 0) {
+      allTokens = await fetchTokens(network.chainId);
+      await AsyncStorage.setItem(Keys.networkTokens(network.chainId), JSON.stringify(allTokens));
+    }
 
     const nativeToken = new NativeToken({ owner: this.account.address, chainId: network.chainId, symbol: network.symbol });
+    this.tokenSymbols.set(ETH.address, nativeToken.symbol);
 
-    const userTokens = LINQ.from([...saved, ...this.chain.defaultTokens])
-      .select((t) => {
-        const erc20 = new ERC20Token({
-          chainId: network.chainId,
-          owner: this.account.address,
-          contract: t.address,
-          symbol: t.symbol,
-          decimals: t.decimals,
-        });
+    const all = LINQ.from(
+      userTokens.concat(
+        allTokens.map((t) => {
+          const erc20 = new ERC20Token({
+            chainId: network.chainId,
+            owner: this.account.address,
+            contract: t.address,
+            symbol: t.symbol,
+            decimals: t.decimals,
+          });
 
-        erc20.getBalance();
-        return erc20;
-      })
+          this.tokenSymbols.set(erc20.address, t.symbol);
+          return erc20;
+        })
+      )
+    )
       .distinct((t) => t.address)
       .toArray();
 
-    const tokens = [1, 42161].includes(network.chainId) ? [nativeToken, ...userTokens] : userTokens;
+    const tokens = [nativeToken, ...all];
+
+    tokens.slice(0, 10).every((t) => t.getBalance());
 
     const swapFromAddress = await AsyncStorage.getItem(Keys.userSelectedFromToken(network.chainId));
     const fromToken = tokens.find((t) => t.address === swapFromAddress) || tokens[0];
@@ -180,7 +196,9 @@ export class CurveExchange {
 
     runInAction(() => {
       this.tokens = tokens;
-      this.swapRoute = null;
+      this.swapResponse = null;
+      this.errorMsg = '';
+      this.routes = [];
 
       this.switchSwapFrom(fromToken, false);
       this.switchSwapTo(toToken, false);
@@ -242,57 +260,86 @@ export class CurveExchange {
 
     if (!Number(amount)) return;
 
-    this.calculating = true;
-    this.swapRoute = null;
-
-    if (this.curveNetwork) {
-      await this.curveNetwork;
-      this.curveNetwork = undefined;
+    if (!this.swapFrom?.address && this.swapFrom?.balance.eq(utils.parseEther(amount))) {
+      this.swapFromAmount = `${Number(amount) * 0.95}`;
     }
+
+    this.calculating = true;
+    this.swapResponse = null;
+    this.routes = [];
 
     this.calcExchangeRateTimer = setTimeout(() => this.calcExchangeRate(), 500);
   }
 
   setSlippage(amount: number) {
-    amount = Math.min(Math.max(0, amount), 99) || 0;
+    amount = Math.min(Math.max(0, amount), 50) || 0;
     this.slippage = amount;
+    this.swapResponse = null;
 
     AsyncStorage.setItem(Keys.userSlippage(this.userSelectedNetwork.chainId), `${amount}`);
+  }
+
+  protected get requestParams() {
+    try {
+      const fromAmount = utils.parseUnits(this.swapFromAmount, this.swapFrom?.decimals || 18);
+      return {
+        fromTokenAddress: this.swapFrom?.address || ETH.address,
+        toTokenAddress: this.swapTo?.address || ETH.address,
+        amount: fromAmount.toString(),
+        fee: swapFeePercent,
+        referrerAddress: swapFeeReferrer,
+        fromAddress: this.account.address,
+        slippage: this.slippage,
+      };
+    } catch (error) {}
   }
 
   async calcExchangeRate() {
     runInAction(() => (this.calculating = true));
 
-    this.checkApproval();
-
     try {
-      const { route, output } = await curve.router.getBestRouteAndOutput(
-        this.swapFrom!.address || ETH.address,
-        this.swapTo!.address || ETH.address,
-        this.swapFromAmount
-      );
+      const params = this.requestParams;
+      if (!params) {
+        this.errorMsg = 'Invalid amount';
+        return;
+      }
+
+      const [swapOutput, quoteOutput] = await Promise.all([
+        this.swapFrom?.balance.gte(params.amount) ? swap(this.userSelectedNetwork.chainId, params) : null,
+        quote(this.userSelectedNetwork.chainId, params),
+      ]);
+
+      const routes = quoteOutput?.protocols?.flat(99) || [];
+      routes.forEach((p) => {
+        p.fromTokenAddress = utils.getAddress(p.fromTokenAddress);
+        p.toTokenAddress = utils.getAddress(p.toTokenAddress);
+      });
 
       runInAction(() => {
-        this.swapRoute = route;
-        this.swapToAmount = output;
-        this.exchangeRate = Number(output) / Number(this.swapFromAmount);
+        this.routes = routes;
+        this.swapResponse = swapOutput || null;
+        this.errorMsg = swapOutput?.description || '';
+        this.swapToAmount = utils.formatUnits(quoteOutput?.toTokenAmount || '0', this.swapTo?.decimals || 18);
+        this.exchangeRate = Number(this.swapToAmount || 0) / Number(this.swapFromAmount);
       });
     } catch (e) {
       runInAction(() => {
         this.swapToAmount = '';
         this.exchangeRate = 0;
       });
+    } finally {
+      runInAction(() => (this.calculating = false));
+      setTimeout(() => this.checkApproval(true), 10);
     }
-
-    runInAction(() => (this.calculating = false));
 
     if (!Number(this.swapFromAmount)) return;
     this.calcExchangeRateTimer = setTimeout(() => this.calcExchangeRate(), 45 * 10000);
   }
 
   private async checkApproval(force = false) {
-    const approved = await (this.swapFrom as ERC20Token)?.allowance?.(this.account.address, this.chain.router, force);
+    const approved = await (this.swapFrom as ERC20Token)?.allowance?.(this.account.address, V5Router, force);
     if (!approved) return;
+    if (!this.isValidFromAmount) return;
 
     runInAction(() => {
       this.needApproval = approved.lt(utils.parseUnits(this.swapFromAmount || '0', this.swapFrom?.decimals));
@@ -305,7 +352,7 @@ export class CurveExchange {
 
     try {
       data = (this.swapFrom as ERC20Token).encodeApproveData(
-        this.chain.router,
+        V5Router,
         utils.parseUnits(this.swapFromAmount, this.swapFrom!.decimals)
       );
     } catch (error) {
@@ -336,36 +383,26 @@ export class CurveExchange {
     });
   }
 
-  swap() {
-    if (!this.swapRoute || this.swapRoute.length === 0 || !this.isValidFromAmount) return;
+  async swap() {
+    if (!this.isValidFromAmount) return;
+    let requestParams = this.requestParams;
+    if (!requestParams) return;
 
-    let route = [this.swapFrom!.address || ETH.address];
-    let swapParams: any[] = [];
-    let factorySwapAddrs: string[] = [];
+    let swapResponse = this.swapResponse;
 
-    for (let routeStep of this.swapRoute) {
-      route.push(routeStep.poolAddress, routeStep.outputCoinAddress);
-      swapParams.push([routeStep.i, routeStep.j, routeStep.swapType]);
-      factorySwapAddrs.push(routeStep.swapAddress);
+    if (!swapResponse || !swapResponse.tx) {
+      swapResponse = (await swap(this.userSelectedNetwork.chainId, requestParams)) || null;
+
+      if (!swapResponse || !swapResponse.tx || swapResponse?.error) {
+        runInAction(() => (this.errorMsg = swapResponse?.description || 'Service is not available'));
+        return;
+      }
+
+      runInAction(() => {
+        this.swapResponse = swapResponse;
+        this.swapToAmount = utils.formatUnits(swapResponse?.toTokenAmount || '0', this.swapTo?.decimals || 18);
+      });
     }
-
-    route = route.concat(new Array(9 - route.length).fill(ethers.constants.AddressZero));
-    swapParams = swapParams.concat(new Array(4 - swapParams.length).fill([0, 0, 0]));
-    factorySwapAddrs = factorySwapAddrs.concat(new Array(4 - factorySwapAddrs.length).fill(ethers.constants.AddressZero));
-
-    if (route.length > 9) return;
-
-    const curve = new ethers.Contract(this.chain.router, CurveRouterABI);
-    const data = curve.interface.encodeFunctionData('exchange_multiple(address[9],uint256[3][4],uint256,uint256,address[4])', [
-      route,
-      swapParams,
-      utils.parseUnits(this.swapFromAmount, this.swapFrom?.decimals),
-      utils
-        .parseUnits(this.swapToAmount!, this.swapTo?.decimals)
-        .mul(Number.parseInt((10000 - Number((this.slippage || 0.5).toFixed(2)) * 100) as any))
-        .div(10000),
-      factorySwapAddrs,
-    ]);
 
     const approve = async (opts: { pin: string; tx: providers.TransactionRequest; readableInfo: ReadableInfo }) => {
       const { txHash } = await App.sendTxFromAccount(this.account.address, opts);
@@ -388,9 +425,10 @@ export class CurveExchange {
       reject,
       param: {
         from: this.account.address,
-        to: this.chain.router,
-        data,
-        value: this.swapFrom?.address ? '0x0' : utils.parseEther(this.swapFromAmount).toHexString(),
+        to: swapResponse.tx.to,
+        data: swapResponse.tx.data,
+        value: swapResponse.tx.value,
+        gas: swapResponse.tx.gas,
       },
       chainId: this.userSelectedNetwork.chainId,
       account: this.account.address,
@@ -425,7 +463,7 @@ export class CurveExchange {
 
     token.setOwner(this.account.address);
     token.getBalance();
-    this.tokens.push(token);
+    this.tokens.unshift(token);
 
     const data = JSON.stringify(
       this.tokens
@@ -435,8 +473,8 @@ export class CurveExchange {
         })
     );
 
-    AsyncStorage.setItem(Keys.userCustomizedTokens(this.userSelectedNetwork.chainId), data);
+    AsyncStorage.setItem(Keys.networkTokens(this.userSelectedNetwork.chainId), data);
   }
 }
 
-export default new CurveExchange();
+export default new OneInch();

@@ -3,11 +3,13 @@ import { action, computed, makeObservable, observable, reaction, runInAction } f
 import { providers, utils } from 'ethers';
 
 import { Account } from '../account/Account';
+import AppStoreReview from '../services/AppStoreReview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Authentication from '../auth/Authentication';
 import Bookmarks from '../customs/Bookmarks';
 import Contacts from '../customs/Contacts';
 import Database from '../../models/Database';
+import FirebaseAnalytics from '@react-native-firebase/analytics';
 import GasPrice from '../misc/GasPrice';
 import Key from '../../models/Key';
 import LINQ from 'linq';
@@ -15,17 +17,21 @@ import LinkHub from '../hubs/LinkHub';
 import MessageKeys from '../../common/MessageKeys';
 import MetamaskDAppsHub from '../walletconnect/MetamaskDAppsHub';
 import Networks from './Networks';
+import { ReactNativeFirebase } from '@react-native-firebase/app';
 import Theme from '../settings/Theme';
 import TxHub from '../hubs/TxHub';
 import UI from '../settings/UI';
 import WalletConnectV1ClientHub from '../walletconnect/WalletConnectV1ClientHub';
 import { fetchChainsOverview } from '../../common/apis/Debank';
 import i18n from '../../i18n';
+import { logAppReset } from '../services/Analytics';
 import { showMessage } from 'react-native-flash-message';
 
 export class AppVM {
   private lastRefreshedTime = 0;
   private refreshTimer!: NodeJS.Timer;
+
+  firebaseApp!: ReactNativeFirebase.FirebaseApp;
 
   initialized = false;
   wallets: Wallet[] = [];
@@ -199,7 +205,9 @@ export class AppVM {
     await Promise.all([Database.init(), Authentication.init()]);
     await Promise.all([Networks.init()]);
 
-    TxHub.init();
+    TxHub.init().then(() => {
+      AppStoreReview.check();
+    });
 
     const wallets = await Promise.all((await Database.keys.find()).map((key) => new Wallet(key).init()));
     const lastUsedAccount = (await AsyncStorage.getItem('lastUsedAccount')) ?? '';
@@ -238,6 +246,8 @@ export class AppVM {
     Bookmarks.reset();
     Theme.reset();
     UI.reset();
+
+    logAppReset();
 
     await Promise.all([
       Database.reset(),

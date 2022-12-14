@@ -163,7 +163,7 @@ const Drawer = observer((props: DrawerProps) => {
         {connectedCount > 0 || dapps.length > 0 ? (
           <DrawerItem
             label={t('home-drawer-dapps')}
-            onPress={() => navigateTo('DApps')}
+            onPress={() => navigateTo('ConnectedDapps')}
             labelStyle={{ ...styles.drawerLabel, color: dappsHighlight }}
             icon={() => <Feather name="layers" size={20} style={{ width: 21, paddingStart: 1 }} color={dappsHighlight} />}
           />

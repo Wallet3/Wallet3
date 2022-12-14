@@ -12,28 +12,29 @@ import MetamaskDAppsHub from '../walletconnect/MetamaskDAppsHub';
 import { ReadableInfo } from '../../models/Transaction';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import TxHub from '../hubs/TxHub';
+import { logSendTx } from '../services/Analytics';
 import { showMessage } from 'react-native-flash-message';
 
-type SignTxRequest = {
+export type SignTxRequest = {
   accountIndex: number;
   tx: providers.TransactionRequest;
   pin?: string;
 };
 
-type SendTxRequest = {
+export type SendTxRequest = {
   tx: providers.TransactionRequest;
   txHex: string;
   readableInfo: ReadableInfo;
 };
 
-type SignMessageRequest = {
+export type SignMessageRequest = {
   accountIndex: number;
   msg: string | Uint8Array;
   standardMode?: boolean;
   pin?: string;
 };
 
-type SignTypedDataRequest = {
+export type SignTypedDataRequest = {
   accountIndex: number;
   typedData: any;
   pin?: string;
@@ -212,6 +213,8 @@ export class Wallet {
       txHex: request.txHex,
       tx: { ...request.tx, readableInfo: request.readableInfo },
     });
+
+    logSendTx(request);
 
     return hash;
   }

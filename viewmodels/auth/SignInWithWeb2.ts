@@ -65,7 +65,6 @@ export abstract class SignInWithWeb2 {
   private async setUser(user: string) {
     if (!this.store) {
       this.store = new SignInWeb2Store();
-      this.store.init();
     }
 
     this.uid = utils.keccak256(utils.keccak256(Buffer.from(user, 'utf-8')));

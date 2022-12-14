@@ -49,7 +49,8 @@ export default observer(({ navigation, route }: NativeStackScreenProps<LandScree
         </Text>
         <Text style={{ marginStart: 16, marginBottom: 8, color: secondaryFontColor }}>{t('land-sign-in-web2-tips-1')}</Text>
         <Text style={{ marginStart: 16, marginBottom: 8, color: secondaryFontColor }}>{t('land-sign-in-web2-tips-2')}</Text>
-        <Text style={{ marginStart: 16, color: secondaryFontColor }}>{t('land-sign-in-web2-tips-3')}</Text>
+        <Text style={{ marginStart: 16, marginBottom: 8, color: secondaryFontColor }}>{t('land-sign-in-web2-tips-3')}</Text>
+        <Text style={{ marginStart: 16, color: secondaryFontColor }}>{t('land-sign-in-web2-tips-4')}</Text>
       </View>
 
       <View style={{ borderColor, borderWidth: 1, borderRadius: 7, padding: 12, paddingEnd: 24 }}>
@@ -74,10 +75,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<LandScree
         disabled={countdown > 0}
         title={countdown > 0 ? `(${countdown}) ${t('land-sign-in-web2-i-have-saved')}` : t('land-sign-in-web2-i-have-saved')}
         txtStyle={{ textTransform: 'none' }}
-        onPress={() => {
-          Authentication.setUserSecretsVerified(true);
-          navigation.navigate('SetupPasscode');
-        }}
+        onPress={() => navigation.navigate('SetupPasscode', 'ImportWallet' as any)}
       />
     </SafeViewContainer>
   );

@@ -22,6 +22,7 @@ import { parseSignParams } from '../../../utils/sign';
 import { rawCall } from '../../../common/RPC';
 import { showMessage } from 'react-native-flash-message';
 import { sleep } from '../../../utils/async';
+import { truncate } from 'fs';
 
 const NOTIFICATION_NAMES = {
   accountsChanged: 'metamask_accountsChanged',
@@ -423,6 +424,8 @@ export class InpageDAppController extends EventEmitter {
       const approve = async () => {
         const chainId = Number(dapp?.lastUsedChainId || Networks.current.chainId);
 
+        let decimals = 18;
+
         try {
           const testToken = new ERC20Token({
             contract: asset.options.address,
@@ -430,7 +433,9 @@ export class InpageDAppController extends EventEmitter {
             owner: dapp?.lastUsedAccount || App.currentAccount!.address,
           });
 
-          const [n, s] = await Promise.all([testToken.getName(), testToken.getSymbol()]);
+          const [n, s, d] = await Promise.all([testToken.getName(), testToken.getSymbol(), testToken.getDecimals()]);
+
+          decimals = d;
 
           if (!n && !s) {
             showMessage({ message: i18n.t('msg-asset-can-not-added'), type: 'warning' });
@@ -444,16 +449,17 @@ export class InpageDAppController extends EventEmitter {
 
         const account = App.allAccounts.find((a) => a.address === dapp?.lastUsedAccount) ?? App.currentAccount;
 
-        account?.tokens.addToken(
-          {
-            address: utils.getAddress(asset.options.address),
-            decimals: asset.options.decimals,
-            symbol: asset.options.symbol,
-            iconUrl: Array.isArray(asset.options.image) ? asset.options.image[0] : asset.options.image,
-            shown: true,
-          },
-          chainId
-        );
+        const newAsset = new ERC20Token({
+          contract: asset.options.address,
+          decimals: decimals || asset.options.decimals,
+          symbol: asset.options.symbol,
+          iconUrl: Array.isArray(asset.options.image) ? asset.options.image[0] : asset.options.image,
+          shown: true,
+          chainId,
+          owner: dapp?.lastUsedAccount || App.currentAccount!.address,
+        });
+
+        account?.tokens.addToken(newAsset, chainId);
 
         showMessage({
           message: account ? i18n.t('msg-token-added', { name: asset.options.symbol }) : i18n.t('msg-account-not-found'),

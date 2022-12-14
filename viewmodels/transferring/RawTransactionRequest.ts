@@ -32,7 +32,7 @@ export function parseRequestType(data = ''): { type: RequestType; methodFunc: st
   return { type: data ? Methods.get(methodFunc) ?? 'Contract Interaction' : 'Transfer', methodFunc };
 }
 
-const PreExecChains = new Set([1, 10, 42161, 137, 56]);
+const PreExecChains = new Set([1, 10, 42161]);
 
 export class RawTransactionRequest extends BaseTransaction {
   private param: WCCallRequest_eth_sendTransaction;
@@ -213,7 +213,12 @@ export class RawTransactionRequest extends BaseTransaction {
     if (param.gas || param.gasLimit) {
       runInAction(() => this.setGasLimit(param.gas || param.gasLimit || 0));
     } else {
-      this.estimateGas({ from: this.account.address, to: param.to, data: param.data, value: param.value });
+      this.estimateGas({
+        from: this.account.address,
+        to: param.to,
+        data: param.data,
+        value: !Number(param.value) ? '0x0' : BigNumber.from(param.value).toHexString(),
+      });
     }
 
     if (param.gasPrice && param.speedUp) {

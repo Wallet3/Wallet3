@@ -22,16 +22,9 @@ export const alchemyApiKeys: string[] = [];
 
 export const DeBankApiKey = '';
 
-export const FirebaseConfig = {
-  apiKey: '',
-  authDomain: '',
-  projectId: '',
-  storageBucket: '',
-  messagingSenderId: '',
-  appId: '',
-  measurementId: '',
-};
-
 export const GoogleSignInConfigs = {
   webClientId: '',
 };
+
+export const swapFeePercent = 0;
+export const swapFeeReferrer = '';

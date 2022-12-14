@@ -29,7 +29,6 @@ export interface INetwork {
   network: string;
   chainId: number;
   color: string;
-  test?: boolean;
   l2?: boolean;
   eip1559?: boolean;
   order?: number;
@@ -45,7 +44,24 @@ export interface INetwork {
   feeTokens?: IToken[];
   minWei?: number;
   browserBarIconSize?: number;
+  testnet?: boolean;
+  pinned?: boolean;
 }
+
+export const ChainIds = {
+  Ethereum: 1,
+  Arbitrum: 42161,
+  Optimism: 10,
+  Polygon: 137,
+  BNBChain: 56,
+  Aurora: 1313161554,
+  Avalanche: 43114,
+  Celo: 42220,
+  GnosisChain: 100,
+  Fantom: 250,
+  Kava: 2222,
+  Klaytn: 8217,
+};
 
 export const PublicNetworks: INetwork[] = [
   {
@@ -172,6 +188,15 @@ export const PublicNetworks: INetwork[] = [
     l2: true,
     explorer: 'https://andromeda-explorer.metis.io',
     etherscanApi: 'https://andromeda-explorer.metis.io/api',
+  },
+  {
+    symbol: 'CANTO',
+    chainId: 7700,
+    network: 'CANTO',
+    color: '#06FC99',
+    defaultTokens: [],
+    explorer: 'https://evm.explorer.canto.io',
+    etherscanApi: 'https://evm.explorer.canto.io/api',
   },
   {
     symbol: 'ETH',
@@ -368,9 +393,33 @@ export const Testnets: INetwork[] = [
     chainId: 5,
     color: '#6186ff',
     eip1559: true,
-    test: true,
+    testnet: true,
     defaultTokens: [],
     explorer: 'https://goerli.etherscan.io',
+  },
+  {
+    comm_id: '',
+    symbol: 'ETH',
+    network: 'Sepolia',
+    chainId: 11155111,
+    color: '#6186ff',
+    eip1559: true,
+    testnet: true,
+    defaultTokens: [],
+    explorer: 'https://sepolia.etherscan.io',
+  },
+  {
+    comm_id: '',
+    symbol: 'MATIC',
+    network: 'Mumbai',
+    chainId: 80001,
+    color: '#8247E5',
+    eip1559: true,
+    defaultTokens: [],
+    blockTimeMs: 3 * 1000,
+    testnet: true,
+    explorer: 'https://mumbai.polygonscan.com',
+    etherscanApi: 'https://mumbai.polygonscan.com/api',
   },
   {
     comm_id: '',
@@ -378,8 +427,8 @@ export const Testnets: INetwork[] = [
     network: 'zkSync 2.0 Testnet Goerli',
     chainId: 280,
     color: '#8C8DFC',
-    test: true,
-    defaultTokens: zkSyncPopularTokens,
+    testnet: true,
+    defaultTokens: [],
     explorer: 'https://zksync2-testnet.zkscan.io',
     feeTokens: zkSyncFeeTokens,
   },

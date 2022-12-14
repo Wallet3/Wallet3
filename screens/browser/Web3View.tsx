@@ -1,7 +1,7 @@
 import * as Animatable from 'react-native-animatable';
 import * as Linking from 'expo-linking';
 
-import Animated, { ComplexAnimationBuilder, FadeOutDown } from 'react-native-reanimated';
+import Animated, { ComplexAnimationBuilder, FadeInDown, FadeOut, FadeOutDown } from 'react-native-reanimated';
 import { Entypo, Feather, Ionicons } from '@expo/vector-icons';
 import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
@@ -14,6 +14,7 @@ import App from '../../viewmodels/core/App';
 import Avatar from '../../components/Avatar';
 import DeviceInfo from 'react-native-device-info';
 import GetPageMetadata from './scripts/Metadata';
+import HookRainbowKit from './scripts/InjectRainbowKitObserver';
 import HookWalletConnect from './scripts/InjectWalletConnectObserver';
 import { INetwork } from '../../common/Networks';
 import { InpageDAppController } from './controller/InpageDAppController';
@@ -245,7 +246,7 @@ export default observer((props: Web3ViewProps) => {
           userAgent={ua}
           allowsFullscreenVideo={false}
           forceDarkOn={mode === 'dark'}
-          injectedJavaScript={`${GetPageMetadata}\ntrue;\n${HookWalletConnect}\ntrue;`}
+          injectedJavaScript={`${GetPageMetadata}\ntrue;\n${HookWalletConnect}\n${HookRainbowKit}\ntrue;`}
           onMessage={onMessage}
           mediaPlaybackRequiresUserAction
           pullToRefreshEnabled
@@ -324,7 +325,7 @@ export default observer((props: Web3ViewProps) => {
 
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
             {appAccount && (
-              <Animatable.View animation={'fadeInUp'}>
+              <Animated.View entering={FadeInDown.delay(0)} exiting={FadeOut.delay(0)}>
                 <TouchableOpacity style={{ paddingHorizontal: 8, marginBottom: -0.5 }} onPress={() => openAccountsModal()}>
                   <Avatar
                     size={25}
@@ -334,7 +335,7 @@ export default observer((props: Web3ViewProps) => {
                     backgroundColor={appAccount?.emojiColor}
                   />
                 </TouchableOpacity>
-              </Animatable.View>
+              </Animated.View>
             )}
 
             {dapp && appNetwork ? (
