@@ -38,6 +38,8 @@ const pangea = require('./pangea.png');
 const camelot = require('./camelot.png');
 const synapse = require('./synapse.png');
 const traderjoe = require('./traderjoe.png');
+const bancor = require('./bancor.png');
+const defiswap = require('./defiswap.png');
 
 const keywords = [
   { key: 'psm', img: psm },
@@ -76,6 +78,8 @@ const keywords = [
   { key: 'synapse', img: synapse },
   { key: 'traderjoe', img: traderjoe },
   { key: 'pangolin', img: pangolin },
+  { key: 'bancor', img: bancor },
+  { key: 'defiswap', img: defiswap },
 ];
 
 export function generateDexLogo(protocol: string, style: StyleProp<ImageStyle>) {

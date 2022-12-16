@@ -261,7 +261,7 @@ export class OneInch {
     if (!Number(amount)) return;
 
     if (!this.swapFrom?.address && this.swapFrom?.balance.eq(utils.parseEther(amount))) {
-      this.swapFromAmount = `${Number(amount) * 0.95}`;
+      this.swapFromAmount = `${Math.max(Number(amount) * 0.9, Number(amount) - 0.1)}`;
     }
 
     this.calculating = true;
@@ -306,10 +306,10 @@ export class OneInch {
 
       const [swapOutput, quoteOutput] = await Promise.all([
         this.swapFrom?.balance.gte(params.amount) ? swap(this.userSelectedNetwork.chainId, params) : null,
-        quote(this.userSelectedNetwork.chainId, params),
+        this.swapFrom?.balance.lt(params.amount) ? quote(this.userSelectedNetwork.chainId, params) : null,
       ]);
 
-      const routes = quoteOutput?.protocols?.flat(99) || [];
+      const routes = (swapOutput || quoteOutput)?.protocols?.flat?.(99) || [];
       routes.forEach((p) => {
         p.fromTokenAddress = utils.getAddress(p.fromTokenAddress);
         p.toTokenAddress = utils.getAddress(p.toTokenAddress);
@@ -319,7 +319,7 @@ export class OneInch {
         this.routes = routes;
         this.swapResponse = swapOutput || null;
         this.errorMsg = swapOutput?.description || '';
-        this.swapToAmount = utils.formatUnits(quoteOutput?.toTokenAmount || '0', this.swapTo?.decimals || 18);
+        this.swapToAmount = utils.formatUnits((swapOutput || quoteOutput)?.toTokenAmount || '0', this.swapTo?.decimals || 18);
         this.exchangeRate = Number(this.swapToAmount || 0) / Number(this.swapFromAmount);
       });
     } catch (e) {

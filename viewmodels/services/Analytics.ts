@@ -28,13 +28,14 @@ export function logSendTx(request: SendTxRequest) {
     type,
     chainId: request.tx.chainId,
     to: type === 'ci' ? request.tx.to : undefined,
+    platform: Platform.OS
   });
 }
 
 export function logAppReset() {
   if (__DEV__) return;
 
-  analytics().logEvent('app_reset');
+  analytics().logEvent('wallet_reset');
 }
 
 export function logDeleteWeb2Secret(uid: string) {
@@ -45,5 +46,13 @@ export function logDeleteWeb2Secret(uid: string) {
     platform: Platform.OS,
     timestamp: new Date().toISOString(),
     timezone: `${-(new Date().getTimezoneOffset() / 60)}`,
+  });
+}
+
+export function logCreateWallet() {
+  if (__DEV__) return;
+
+  analytics().logEvent('create_new_wallet', {
+    platform: Platform.OS,
   });
 }
