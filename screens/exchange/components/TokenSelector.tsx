@@ -29,7 +29,7 @@ export default observer((props: Props) => {
 
   const handleInput = async (txt: string) => {
     if (!utils.isAddress(txt)) {
-      setFilterTxt(txt);
+      setFilterTxt(txt.toLowerCase());
       return;
     }
 
@@ -130,7 +130,7 @@ export default observer((props: Props) => {
 
       <FlatList
         ref={flatList}
-        data={filterTxt ? props.tokens.filter((t) => t.symbol.toLowerCase().includes(filterTxt.toLowerCase())) : props.tokens}
+        data={filterTxt ? props.tokens.filter((t) => t.symbol.toLowerCase().includes(filterTxt)) : props.tokens}
         renderItem={renderItem}
         contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 24, paddingTop: 4 }}
         style={{ marginHorizontal: -16, height: 420 }}

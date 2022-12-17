@@ -1,3 +1,4 @@
+import Networks from '../core/Networks';
 import { Platform } from 'react-native';
 import { SendTxRequest } from '../core/Wallet';
 import analytics from '@react-native-firebase/analytics';
@@ -19,16 +20,17 @@ const TxTypes = new Map([
   [Approve_ERC1155, 'ap_1155'],
 ]);
 
-export function logSendTx(request: SendTxRequest) {
+export function logSendTx(request: SendTxRequest & { hash?: string }) {
   if (__DEV__) return;
+  if (Networks.find(request.tx.chainId || 0)?.testnet) return;
 
   const type = TxTypes.get(request.tx.data?.toString().substring(0, 10) || '0x') || 'ci';
 
   analytics().logEvent('send_tx', {
     type,
     chainId: request.tx.chainId,
-    to: type === 'ci' ? request.tx.to : undefined,
-    platform: Platform.OS
+    platform: Platform.OS,
+    hash: request.hash,
   });
 }
 

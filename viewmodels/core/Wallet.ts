@@ -213,7 +213,7 @@ export class Wallet {
       tx: { ...request.tx, readableInfo: request.readableInfo },
     });
 
-    logSendTx(request);
+    logSendTx({ ...request, hash });
 
     return hash;
   }

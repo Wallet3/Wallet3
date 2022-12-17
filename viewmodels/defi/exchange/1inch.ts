@@ -260,7 +260,7 @@ export class OneInch {
 
     if (!Number(amount)) return;
 
-    if (!this.swapFrom?.address && this.swapFrom?.balance.eq(utils.parseEther(amount))) {
+    if (!this.swapFrom?.address && this.isValidFromAmount && this.swapFrom?.balance.eq(utils.parseEther(amount))) {
       this.swapFromAmount = `${Math.max(Number(amount) * 0.9, Number(amount) - 0.1)}`;
     }
 
@@ -304,9 +304,12 @@ export class OneInch {
         return;
       }
 
+      await this.checkApproval();
+      const { chainId } = this.userSelectedNetwork;
+
       const [swapOutput, quoteOutput] = await Promise.all([
-        this.swapFrom?.balance.gte(params.amount) ? swap(this.userSelectedNetwork.chainId, params) : null,
-        this.swapFrom?.balance.lt(params.amount) ? quote(this.userSelectedNetwork.chainId, params) : null,
+        this.swapFrom?.balance.gte(params.amount) && !this.needApproval ? swap(chainId, params) : null,
+        this.swapFrom?.balance.lt(params.amount) || this.needApproval ? quote(chainId, params) : null,
       ]);
 
       const routes = (swapOutput || quoteOutput)?.protocols?.flat?.(99) || [];
@@ -329,7 +332,6 @@ export class OneInch {
       });
     } finally {
       runInAction(() => (this.calculating = false));
-      setTimeout(() => this.checkApproval(true), 10);
     }
 
     if (!Number(this.swapFromAmount)) return;
@@ -341,7 +343,7 @@ export class OneInch {
     if (!approved) return;
     if (!this.isValidFromAmount) return;
 
-    runInAction(() => {
+    await runInAction(async () => {
       this.needApproval = approved.lt(utils.parseUnits(this.swapFromAmount || '0', this.swapFrom?.decimals));
       this.checkingApproval = false;
     });
