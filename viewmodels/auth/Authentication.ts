@@ -17,6 +17,7 @@ import { AppState } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import EventEmitter from 'events';
 import MessageKeys from '../../common/MessageKeys';
+import { logWalletLocked } from '../services/Analytics';
 import { toMilliseconds } from '../../utils/time';
 
 const keys = {
@@ -159,6 +160,7 @@ export class Authentication extends EventEmitter {
       this.failedAttempts = 0;
       this.appUnlockTime = Date.now() + (__DEV__ ? toMilliseconds({ seconds: 120 }) : toMilliseconds({ hours: 3 }));
       AsyncStorage.setItem(keys.appUnlockTime, this.appUnlockTime.toString());
+      logWalletLocked();
     });
 
     return success;

@@ -1,6 +1,7 @@
 import * as Linking from 'expo-linking';
 
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { logAddBookmark, logRemoveBookmark } from '../services/Analytics';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LINQ from 'linq';
@@ -100,6 +101,7 @@ class Bookmarks {
     }
 
     AsyncStorage.setItem(`bookmarks_v2`, JSON.stringify(this._favs));
+    logAddBookmark();
   }
 
   remove(url: string) {
@@ -115,6 +117,7 @@ class Bookmarks {
     }
 
     AsyncStorage.setItem(`bookmarks_v2`, JSON.stringify(this._favs));
+    logRemoveBookmark();
   }
 
   has(url: string) {

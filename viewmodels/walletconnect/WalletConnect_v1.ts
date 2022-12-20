@@ -14,6 +14,7 @@ import MessageKeys from '../../common/MessageKeys';
 import PubSub from 'pubsub-js';
 import WalletConnectClient from '@walletconnect/client';
 import i18n from '../../i18n';
+import { logWalletConnectRequest } from '../services/Analytics';
 import { showMessage } from 'react-native-flash-message';
 
 const clientMeta = {
@@ -189,9 +190,12 @@ export class WalletConnect_v1 extends EventEmitter {
       return;
     }
 
+    logWalletConnectRequest({ chainId: this.activeNetwork.chainId, method: request.method });
+
     switch (request.method as string) {
       case 'wallet_addEthereumChain':
         const [addChainParams] = (request.params as AddEthereumChainParameter[]) || [];
+
         if (!addChainParams) {
           this.rejectRequest(request.id, 'Invalid parameters');
           return;
@@ -231,7 +235,7 @@ export class WalletConnect_v1 extends EventEmitter {
           return;
         }
 
-        this.setLastUsedChain(Number(addChainParams.chainId), true, 'inpage');
+        this.setLastUsedChain(Number(switchChainParams.chainId), true, 'inpage');
         this.approveRequest(request.id, null);
         return;
     }
