@@ -9,7 +9,7 @@ import { isURL } from '../../utils/url';
 import { showMessage } from 'react-native-flash-message';
 import { utils } from 'ethers';
 
-const appSchemes = [
+export const SupportedWCSchemes = [
   'wallet3:',
   'ledgerlive:',
   'dharma:',
@@ -24,7 +24,7 @@ const appSchemes = [
 
 const urls = ['https:'];
 
-const supportedSchemes = ['ethereum', '0x', 'wc:', 'wallet3sync:'].concat(appSchemes).concat(urls);
+const supportedSchemes = ['ethereum', '0x', 'wc:', 'wallet3sync:'].concat(SupportedWCSchemes).concat(urls);
 
 class LinkHub {
   private lastHandled = 0;
@@ -93,7 +93,7 @@ class LinkHub {
       return true;
     }
 
-    if (appSchemes.includes(scheme)) {
+    if (SupportedWCSchemes.includes(scheme)) {
       try {
         const { queryParams, hostname } = Linking.parse(uri);
         if (!queryParams || Object.getOwnPropertyNames(queryParams).length === 0) return false; // ignore empty query params

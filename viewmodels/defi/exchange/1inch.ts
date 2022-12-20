@@ -260,8 +260,8 @@ export class OneInch {
 
     if (!Number(amount)) return;
 
-    if (!this.swapFrom?.address && this.swapFrom?.balance.eq(utils.parseEther(amount))) {
-      this.swapFromAmount = `${Number(amount) * 0.95}`;
+    if (!this.swapFrom?.address && this.isValidFromAmount && this.swapFrom?.balance.eq(utils.parseEther(amount))) {
+      this.swapFromAmount = `${Math.max(Number(amount) * 0.9, Number(amount) - 0.1)}`;
     }
 
     this.calculating = true;
@@ -304,13 +304,15 @@ export class OneInch {
         return;
       }
 
-      console.log(params, this.userSelectedNetwork)
+      await this.checkApproval();
+      const { chainId } = this.userSelectedNetwork;
+
       const [swapOutput, quoteOutput] = await Promise.all([
-        this.swapFrom?.balance.gte(params.amount) ? swap(this.userSelectedNetwork.chainId, params) : null,
-        quote(this.userSelectedNetwork.chainId, params),
+        this.swapFrom?.balance.gte(params.amount) && !this.needApproval ? swap(chainId, params) : null,
+        this.swapFrom?.balance.lt(params.amount) || this.needApproval ? quote(chainId, params) : null,
       ]);
 
-      const routes = quoteOutput?.protocols?.flat(99) || [];
+      const routes = (swapOutput || quoteOutput)?.protocols?.flat?.(99) || [];
       routes.forEach((p) => {
         p.fromTokenAddress = utils.getAddress(p.fromTokenAddress);
         p.toTokenAddress = utils.getAddress(p.toTokenAddress);
@@ -320,7 +322,7 @@ export class OneInch {
         this.routes = routes;
         this.swapResponse = swapOutput || null;
         this.errorMsg = swapOutput?.description || '';
-        this.swapToAmount = utils.formatUnits(quoteOutput?.toTokenAmount || '0', this.swapTo?.decimals || 18);
+        this.swapToAmount = utils.formatUnits((swapOutput || quoteOutput)?.toTokenAmount || '0', this.swapTo?.decimals || 18);
         this.exchangeRate = Number(this.swapToAmount || 0) / Number(this.swapFromAmount);
       });
     } catch (e) {
@@ -330,11 +332,10 @@ export class OneInch {
       });
     } finally {
       runInAction(() => (this.calculating = false));
-      setTimeout(() => this.checkApproval(true), 10);
     }
 
     if (!Number(this.swapFromAmount)) return;
-    this.calcExchangeRateTimer = setTimeout(() => this.calcExchangeRate(), 45 * 10000);
+    this.calcExchangeRateTimer = setTimeout(() => this.calcExchangeRate(), 10 * 10000);
   }
 
   private async checkApproval(force = false) {
@@ -342,7 +343,7 @@ export class OneInch {
     if (!approved) return;
     if (!this.isValidFromAmount) return;
 
-    runInAction(() => {
+    await runInAction(async () => {
       this.needApproval = approved.lt(utils.parseUnits(this.swapFromAmount || '0', this.swapFrom?.decimals));
       this.checkingApproval = false;
     });

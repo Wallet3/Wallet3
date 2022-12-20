@@ -5,9 +5,9 @@ import { getTransactionReceipt, sendTransaction } from '../../common/RPC';
 
 import Database from '../../models/Database';
 import LINQ from 'linq';
-
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
+import { logTxConfirmed } from '../services/Analytics';
 import { showMessage } from 'react-native-flash-message';
 import { startLayoutAnimation } from '../../utils/animations';
 
@@ -42,7 +42,7 @@ class TxHub {
       this.repository.find({ where: { blockHash: IsNull() } }),
     ]);
 
-    runInAction(() => (this.txs = minedTxs));
+    await runInAction(async () => (this.txs = minedTxs));
 
     const abandonedTxs = unconfirmedTxs.filter((un) =>
       minedTxs.find((t) => t.from.toLowerCase() === un.from.toLowerCase() && t.chainId === un.chainId && t.nonce >= un.nonce)
@@ -114,6 +114,7 @@ class TxHub {
 
       try {
         await tx.save();
+        logTxConfirmed(tx);
       } catch (error) {}
 
       confirmedTxs.push(tx);

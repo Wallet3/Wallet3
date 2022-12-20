@@ -8,6 +8,7 @@ import LinkHub from '../../viewmodels/hubs/LinkHub';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import i18n from '../../i18n';
+import { logQRScanned } from '../../viewmodels/services/Analytics';
 import { observer } from 'mobx-react-lite';
 
 export default observer(({ navigation, route }: NativeStackScreenProps<{}, never>) => {
@@ -22,6 +23,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<{}, never
     if (handled) {
       setScanned(true);
       setTimeout(() => navigation.pop(), 200);
+      logQRScanned(data);
     }
   };
 

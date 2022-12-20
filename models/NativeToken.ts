@@ -62,4 +62,8 @@ export class NativeToken implements IToken {
   setOwner(owner: string) {
     this.owner = owner;
   }
+
+  async allowance(owner: string, spender: string, force = false): Promise<BigNumber> {
+    return BigNumber.from('115792089237316195423570985008687907853269984665640564039457584007913129639936');
+  }
 }

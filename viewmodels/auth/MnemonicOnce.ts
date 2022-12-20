@@ -4,6 +4,7 @@ import * as ethers from 'ethers';
 import Authentication from './Authentication';
 import { DEFAULT_DERIVATION_PATH } from '../../common/Constants';
 import Key from '../../models/Key';
+import { logCreateWallet } from '../services/Analytics';
 import { makeAutoObservable } from 'mobx';
 import { setStringAsync } from 'expo-clipboard';
 import { xpubkeyFromHDNode } from '../../utils/bip32';
@@ -66,6 +67,7 @@ export class MnemonicOnce {
       return undefined;
     } finally {
       this.clean();
+      logCreateWallet();
     }
   }
 

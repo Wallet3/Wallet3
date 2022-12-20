@@ -66,6 +66,8 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
       ref={navigationRef}
       onReady={() => (routeNameRef.current = navigationRef.current.getCurrentRoute()?.name)}
       onStateChange={async () => {
+        if (__DEV__) return;
+
         const previousRouteName = routeNameRef.current;
         const currentRouteName = navigationRef.current.getCurrentRoute()?.name;
 
