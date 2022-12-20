@@ -1,7 +1,10 @@
 import Networks from '../core/Networks';
 import { Platform } from 'react-native';
 import { SendTxRequest } from '../core/Wallet';
+import { SupportedWCSchemes } from '../hubs/LinkHub';
+import Transaction from '../../models/Transaction';
 import analytics from '@react-native-firebase/analytics';
+import { utils } from 'ethers';
 
 const Transfer_ERC20 = '0xa9059cbb';
 const Transfer_ERC1155 = '0xf242432a';
@@ -20,41 +23,90 @@ const TxTypes = new Map([
   [Approve_ERC1155, 'ap_1155'],
 ]);
 
-export function logSendTx(request: SendTxRequest & { hash?: string }) {
-  if (__DEV__) return;
+export function logSendTx(request: SendTxRequest) {
   if (Networks.find(request.tx.chainId || 0)?.testnet) return;
 
   const type = TxTypes.get(request.tx.data?.toString().substring(0, 10) || '0x') || 'ci';
 
-  analytics().logEvent('send_tx', {
+  log('send_tx', {
     type,
     chainId: request.tx.chainId,
-    platform: Platform.OS,
-    hash: request.hash,
+    to: type === 'ci' ? request.tx.to : undefined,
   });
 }
 
-export function logAppReset() {
-  if (__DEV__) return;
+export function logTxConfirmed(tx: Transaction) {
+  log('tx_confirmed', { hash: tx.hash, status: tx.status, chainId: tx.chainId });
+}
 
-  analytics().logEvent('wallet_reset');
+export function logAppReset() {
+  log('wallet_reset');
+}
+
+export function logSignWithWeb2() {
+  log('sign_web2');
 }
 
 export function logDeleteWeb2Secret(uid: string) {
-  if (__DEV__) return;
-
-  analytics().logEvent('delete_web2_secret', {
+  log('delete_web2_secret', {
     uid,
-    platform: Platform.OS,
     timestamp: new Date().toISOString(),
     timezone: `${-(new Date().getTimezoneOffset() / 60)}`,
   });
 }
 
 export function logCreateWallet() {
+  log('create_new_wallet');
+}
+
+export function logAddToken(args: { chainId: number; token: string }) {
+  log('add_token', { ...args });
+}
+
+export function logWalletLocked() {
+  log('wallet_locked');
+}
+
+export function logAppReview() {
+  log('store_review');
+}
+
+export function logAddBookmark() {
+  log('bookmark_added');
+}
+
+export function logRemoveBookmark() {
+  log('bookmark_removed');
+}
+
+export function logQRScanned(data: string) {
+  let type = '';
+
+  if (utils.isAddress(data)) {
+    type = 'address';
+  } else if (data.startsWith('http')) {
+    type = 'url';
+  } else if (data.startsWith('wc:') || SupportedWCSchemes.find((s) => data.startsWith(s))) {
+    type = 'walletconnect';
+  }
+
+  log('qr_scanned', { type });
+}
+
+export function logEthSign(type?: string) {
+  log('eth_sign', { type });
+}
+
+export function logWalletConnectRequest(args: { chainId: number; method: string }) {
+  log('wc_request', args);
+}
+
+export function logInpageRequest(args: { chainId: number; method: string } | any) {
+  log('inpage_request', args);
+}
+
+function log(name: string, args: any = {}) {
   if (__DEV__) return;
 
-  analytics().logEvent('create_new_wallet', {
-    platform: Platform.OS,
-  });
+  analytics().logEvent(name, { ...args, platform: Platform.OS });
 }

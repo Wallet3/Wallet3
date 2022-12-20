@@ -6,9 +6,11 @@ import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ERC20Token } from '../../models/ERC20';
+import { IToken } from '../../common/tokens';
 import { NativeToken } from '../../models/NativeToken';
 import Networks from '../core/Networks';
 import { clearBalanceCache } from '../../common/apis/Debank';
+import { logAddToken } from '../services/Analytics';
 
 const Keys = {
   tokensDigest: (chainId: number, owner: string) => `${chainId}_${owner}_tokens_digest`,
@@ -154,13 +156,14 @@ export class AccountTokens {
 
   async addToken(token: UserToken, targetChainId = Networks.current.chainId) {
     if (!token.address) return;
+    const lower = token.address.toLowerCase();
 
     const currentChainId = Networks.current.chainId;
 
-    const tokens =
+    const tokens: IToken[] =
       targetChainId === currentChainId ? this.allTokens : await TokensMan.loadUserTokens(targetChainId, this.owner);
 
-    const found = tokens.find((t) => t.address.toLowerCase() === token.address.toLowerCase());
+    const found = tokens.find((t) => t.address.toLowerCase() === lower);
 
     if (found) {
       if (targetChainId === currentChainId) {
@@ -188,6 +191,8 @@ export class AccountTokens {
       token,
       ...(await TokensMan.loadUserTokens(targetChainId, this.owner)),
     ]);
+
+    logAddToken({ chainId: targetChainId, token: token.address });
   }
 
   async fetchToken(address: string) {

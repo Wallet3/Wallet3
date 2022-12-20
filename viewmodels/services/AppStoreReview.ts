@@ -3,6 +3,7 @@ import * as StoreReview from 'expo-store-review';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Authentication from '../auth/Authentication';
 import TxHub from '../hubs/TxHub';
+import { logAppReview } from './Analytics';
 import { sleep } from '../../utils/async';
 
 const Keys = {
@@ -17,11 +18,11 @@ class AppStoreReview {
   }
 
   async check() {
-    if (TxHub.txs.length < 20) return;
-    if (TxHub.txs.slice(0, 5).some((t) => !t.status)) return;
+    if (TxHub.txs.length < (__DEV__ ? 3 : 20)) return;
+    if (!TxHub.txs.slice(0, 5).every((t) => t.status)) return;
 
-    const rated = await AsyncStorage.getItem(Keys.userRated);
-    if (rated) return;
+    const rated = Number(await AsyncStorage.getItem(Keys.userRated)) || 0;
+    if (Date.now() < rated + 365 * 24 * 60 * 60 * 1000) return; // inform users to submit a review per year
 
     if (!(await StoreReview.isAvailableAsync())) return;
 
@@ -31,7 +32,8 @@ class AppStoreReview {
 
     try {
       await StoreReview.requestReview();
-      await AsyncStorage.setItem(Keys.userRated, 'true');
+      await AsyncStorage.setItem(Keys.userRated, `${Date.now()}`);
+      logAppReview();
     } catch (e) {}
   }
 }

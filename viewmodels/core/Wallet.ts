@@ -2,6 +2,7 @@ import * as ethSignUtil from '@metamask/eth-sig-util';
 
 import { Wallet as EthersWallet, providers, utils } from 'ethers';
 import { action, makeObservable, observable, runInAction } from 'mobx';
+import { logEthSign, logSendTx } from '../services/Analytics';
 
 import { Account } from '../account/Account';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -12,7 +13,6 @@ import MetamaskDAppsHub from '../walletconnect/MetamaskDAppsHub';
 import { ReadableInfo } from '../../models/Transaction';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import TxHub from '../hubs/TxHub';
-import { logSendTx } from '../services/Analytics';
 import { showMessage } from 'react-native-flash-message';
 
 export type SignTxRequest = {
@@ -184,6 +184,7 @@ export class Wallet {
         showMessage({ message: 'DANGEROUS: Wallet 3 rejects signing this data.', type: 'danger' });
         return undefined;
       } else {
+        logEthSign('plain');
         return (await this.openWallet(request))?.signMessage(
           typeof request.msg === 'string' && utils.isBytesLike(request.msg) ? utils.arrayify(request.msg) : request.msg
         );
@@ -198,6 +199,7 @@ export class Wallet {
       const key = await this.unlockPrivateKey(request);
       if (!key) return undefined;
 
+      logEthSign('typed_data');
       return ethSignUtil.signTypedData({
         privateKey: Buffer.from(utils.arrayify(key)),
         version: request.version ?? SignTypedDataVersion.V4,
@@ -213,7 +215,7 @@ export class Wallet {
       tx: { ...request.tx, readableInfo: request.readableInfo },
     });
 
-    logSendTx({ ...request, hash });
+    logSendTx(request);
 
     return hash;
   }

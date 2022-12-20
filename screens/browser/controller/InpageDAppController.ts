@@ -18,6 +18,7 @@ import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import { WCCallRequest_eth_sendTransaction } from '../../../models/WCSession_v1';
 import i18n from '../../../i18n';
 import { isSecureSite } from '../../../viewmodels/customs/Bookmarks';
+import { logInpageRequest } from '../../../viewmodels/services/Analytics';
 import { parseSignParams } from '../../../utils/sign';
 import { rawCall } from '../../../common/RPC';
 import { showMessage } from 'react-native-flash-message';
@@ -120,6 +121,8 @@ export class InpageDAppController extends EventEmitter {
     const { method, params, id, jsonrpc } = payload;
     let result: any = null;
 
+    const logEvent = () => logInpageRequest({ chainId: Number(this.getDApp(hostname!)?.lastUsedChainId) || 0, method });
+
     switch (method) {
       case 'metamask_getProviderState':
         const initDApp = this.getDApp(hostname!);
@@ -164,11 +167,15 @@ export class InpageDAppController extends EventEmitter {
         await this.awaitModalFinished();
         result = await this.sign(hostname!, params, method);
         await this.awaitModalFinished();
+
+        logEvent();
         break;
       case 'eth_sendTransaction':
         await this.awaitModalFinished();
         result = await this.eth_sendTransaction(hostname!, payload);
         await this.awaitModalFinished();
+
+        logEvent();
         break;
       case 'wallet_addEthereumChain':
         result = await this.wallet_addEthereumChain(hostname!, params);
@@ -376,10 +383,10 @@ export class InpageDAppController extends EventEmitter {
       return { error: { code: Code_InvalidParams, message: 'Invalid request' } };
     }
 
+    const dapp = this.getDApp(origin);
+
     if (Networks.has(chain.chainId)) {
       setTimeout(() => this.wallet_switchEthereumChain(origin, [{ chainId: chain.chainId }]), 200);
-
-      const dapp = this.getDApp(origin);
 
       if (Number(dapp?.lastUsedChainId) !== Networks.current.chainId) {
         showMessage({ message: i18n.t('msg-chain-already-exists', { name: chain.chainName || chain.chainId }), type: 'info' });
@@ -387,6 +394,8 @@ export class InpageDAppController extends EventEmitter {
 
       return null;
     }
+
+    logInpageRequest({ chainId: Number(chain.chainId) || 0, method: 'addEthereumChain' });
 
     return new Promise((resolve) => {
       const approve = async () => {
@@ -419,6 +428,8 @@ export class InpageDAppController extends EventEmitter {
       return { error: { code: Code_InvalidParams, message: 'Invalid request' } };
 
     const dapp = this.getDApp(origin);
+
+    logInpageRequest({ chainId: Number(dapp?.lastUsedChainId) || 0, method: 'addAsset', asset: asset.options.address });
 
     return new Promise((resolve) => {
       const approve = async () => {

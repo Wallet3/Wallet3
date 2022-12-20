@@ -8,6 +8,7 @@ import { decrypt, encrypt } from '../../utils/cipher';
 import Authentication from './Authentication';
 import MnemonicOnce from './MnemonicOnce';
 import { SignInWeb2Store } from './SignInWeb2Store';
+import { logSignWithWeb2 } from '../services/Analytics';
 import { utils } from 'ethers';
 
 const Keys = {
@@ -100,6 +101,7 @@ export abstract class SignInWithWeb2 {
       return false;
     }
 
+    logSignWithWeb2();
     return true;
   }
 

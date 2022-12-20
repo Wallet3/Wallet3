@@ -335,7 +335,7 @@ export class OneInch {
     }
 
     if (!Number(this.swapFromAmount)) return;
-    this.calcExchangeRateTimer = setTimeout(() => this.calcExchangeRate(), 45 * 10000);
+    this.calcExchangeRateTimer = setTimeout(() => this.calcExchangeRate(), 10 * 10000);
   }
 
   private async checkApproval(force = false) {
