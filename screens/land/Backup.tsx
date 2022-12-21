@@ -9,6 +9,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SortWords } from '../components/SecretWords';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
+import { logBackup } from '../../viewmodels/services/Analytics';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
 
@@ -26,7 +27,9 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
         color={textColor}
         onVerified={(v) => {
           setVerified(v);
-          if (v) Authentication.setUserSecretsVerified(true);
+          if (!v) return;
+          Authentication.setUserSecretsVerified(true);
+          logBackup();
         }}
       />
 

@@ -121,8 +121,6 @@ export class InpageDAppController extends EventEmitter {
     const { method, params, id, jsonrpc } = payload;
     let result: any = null;
 
-    const logEvent = () => logInpageRequest({ chainId: Number(this.getDApp(hostname!)?.lastUsedChainId) || 0, method });
-
     switch (method) {
       case 'metamask_getProviderState':
         const initDApp = this.getDApp(hostname!);
@@ -167,15 +165,11 @@ export class InpageDAppController extends EventEmitter {
         await this.awaitModalFinished();
         result = await this.sign(hostname!, params, method);
         await this.awaitModalFinished();
-
-        logEvent();
         break;
       case 'eth_sendTransaction':
         await this.awaitModalFinished();
         result = await this.eth_sendTransaction(hostname!, payload);
         await this.awaitModalFinished();
-
-        logEvent();
         break;
       case 'wallet_addEthereumChain':
         result = await this.wallet_addEthereumChain(hostname!, params);

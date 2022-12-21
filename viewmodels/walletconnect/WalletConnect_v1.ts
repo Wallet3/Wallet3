@@ -14,7 +14,6 @@ import MessageKeys from '../../common/MessageKeys';
 import PubSub from 'pubsub-js';
 import WalletConnectClient from '@walletconnect/client';
 import i18n from '../../i18n';
-import { logWalletConnectRequest } from '../services/Analytics';
 import { showMessage } from 'react-native-flash-message';
 
 const clientMeta = {
@@ -189,8 +188,6 @@ export class WalletConnect_v1 extends EventEmitter {
       showMessage({ message: i18n.t('msg-account-not-found'), type: 'warning' });
       return;
     }
-
-    logWalletConnectRequest({ chainId: this.activeNetwork.chainId, method: request.method });
 
     switch (request.method as string) {
       case 'wallet_addEthereumChain':

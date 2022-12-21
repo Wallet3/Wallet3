@@ -10,6 +10,7 @@ import Networks from '../../viewmodels/core/Networks';
 import { SortWords } from '../components/SecretWords';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
+import { logBackup } from '../../viewmodels/services/Analytics';
 import { observer } from 'mobx-react-lite';
 
 export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
@@ -50,7 +51,9 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
             words={MnemonicOnce.secretWords}
             onVerified={(v) => {
               setVerified(v);
-              if (v) Authentication.setUserSecretsVerified(true);
+              if (!v) return;
+              Authentication.setUserSecretsVerified(true);
+              logBackup();
             }}
           />
         </View>

@@ -56,7 +56,7 @@ export function logDeleteWeb2Secret(uid: string) {
 }
 
 export function logCreateWallet() {
-  log('create_new_wallet');
+  log('new_wallet');
 }
 
 export function logAddToken(args: { chainId: number; token: string }) {
@@ -105,8 +105,12 @@ export function logInpageRequest(args: { chainId: number; method: string } | any
   log('inpage_request', args);
 }
 
+export function logBackup() {
+  log('backup_secret');
+}
+
 function log(name: string, args: any = {}) {
   if (__DEV__) return;
 
-  analytics().logEvent(name, { ...args, platform: Platform.OS });
+  analytics().logEvent(name, { ...args, os: Platform.OS });
 }
