@@ -3,6 +3,7 @@ import * as Localization from 'expo-localization';
 import en from './langs/en.json';
 import i18n from 'i18n-js';
 import ja from './langs/ja.json';
+import tr from './langs/tr.json';
 import zh_cn from './langs/zh-cn.json';
 import zh_tw from './langs/zh-tw.json';
 
@@ -10,6 +11,7 @@ import zh_tw from './langs/zh-tw.json';
 i18n.translations = {
   en,
   ja,
+  tr,
   'zh-tw': zh_tw,
   'zh-cn': zh_cn,
 };

@@ -28,9 +28,9 @@ import Theme from './viewmodels/settings/Theme';
 import Themes from './screens/settings/Themes';
 import Tokens from './screens/tokens/SortTokens';
 import VerifySecret from './screens/settings/VerifySecret';
-import analytics from '@react-native-firebase/analytics';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import i18n from './i18n';
+import { logScreenView } from './viewmodels/services/Analytics';
 import { observer } from 'mobx-react-lite';
 import { useFonts } from 'expo-font';
 
@@ -59,7 +59,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
   return (
     <NavigationContainer
       ref={navigationRef}
-      onReady={() => (routeNameRef.current = navigationRef.current.getCurrentRoute()?.name)}
+      onReady={() => (routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name)}
       onStateChange={async () => {
         if (__DEV__) return;
 
@@ -67,10 +67,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
         const currentRouteName = navigationRef.current.getCurrentRoute()?.name;
 
         if (previousRouteName && previousRouteName !== currentRouteName) {
-          await analytics().logScreenView({
-            screen_name: currentRouteName,
-            screen_class: currentRouteName,
-          });
+          await logScreenView(currentRouteName);
         }
 
         routeNameRef.current = currentRouteName;
