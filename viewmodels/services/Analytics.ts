@@ -4,6 +4,7 @@ import { SendTxRequest } from '../core/Wallet';
 import { SupportedWCSchemes } from '../hubs/LinkHub';
 import Transaction from '../../models/Transaction';
 import analytics from '@react-native-firebase/analytics';
+import { isDomain } from './DomainResolver';
 import { utils } from 'ethers';
 
 const Transfer_ERC20 = '0xa9059cbb';
@@ -36,7 +37,7 @@ export function logSendTx(request: SendTxRequest) {
 }
 
 export function logTxConfirmed(tx: Transaction) {
-  log('tx_confirmed', { hash: tx.hash, status: tx.status, chainId: tx.chainId });
+  log('tx_confirmed', { hash: tx.hash, status: tx.status ? 'ok' : 'failed', chainId: tx.chainId });
 }
 
 export function logAppReset() {
@@ -56,7 +57,7 @@ export function logDeleteWeb2Secret(uid: string) {
 }
 
 export function logCreateWallet() {
-  log('create_new_wallet');
+  log('new_wallet');
 }
 
 export function logAddToken(args: { chainId: number; token: string }) {
@@ -84,6 +85,9 @@ export function logQRScanned(data: string) {
 
   if (utils.isAddress(data)) {
     type = 'address';
+  } else if (isDomain(data)) {
+    const c = data.split('.');
+    type = `.${c[c.length - 1]}`;
   } else if (data.startsWith('http')) {
     type = 'url';
   } else if (data.startsWith('wc:') || SupportedWCSchemes.find((s) => data.startsWith(s))) {
@@ -105,8 +109,21 @@ export function logInpageRequest(args: { chainId: number; method: string } | any
   log('inpage_request', args);
 }
 
+export function logBackup() {
+  log('backup_secret');
+}
+
 function log(name: string, args: any = {}) {
   if (__DEV__) return;
 
-  analytics().logEvent(name, { ...args, platform: Platform.OS });
+  analytics().logEvent(name, { ...args, os: Platform.OS });
+}
+
+export function logScreenView(name: string) {
+  if (__DEV__) return;
+
+  return analytics().logScreenView({
+    screen_name: name,
+    screen_class: name,
+  });
 }

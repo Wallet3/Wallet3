@@ -1,7 +1,7 @@
-import { BigNumber, ethers, providers, utils } from 'ethers';
+import { BigNumber, providers, utils } from 'ethers';
 import { Gwei_1, MAX_GWEI_PRICE } from '../../common/Constants';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
-import { clearPendingENSRequests, isENSDomains, resolveENS } from '../services/ENSResolver';
+import { clearPendingENSRequests, isENSDomain } from '../services/ENSResolver';
 import {
   estimateGas,
   eth_call_return,
@@ -11,7 +11,7 @@ import {
   getNextBlockBaseFee,
   getTransactionCount,
 } from '../../common/RPC';
-import { isUnstoppableDomains, resolveDomain } from '../services/UnstoppableDomains';
+import { isDomain, resolveDomain } from '../services/DomainResolver';
 
 import { Account } from '../account/Account';
 import App from '../core/App';
@@ -112,8 +112,7 @@ export class BaseTransaction {
   }
 
   get isEns() {
-    const lower = this.to.toLowerCase();
-    return isENSDomains(lower) || isUnstoppableDomains(lower);
+    return isDomain(this.to);
   }
 
   get hasZWSP() {
@@ -214,7 +213,7 @@ export class BaseTransaction {
     }
 
     this.isResolvingAddress = true;
-    const address = isENSDomains(to) ? await resolveENS(to) : isUnstoppableDomains(to) ? await resolveDomain(to) : '';
+    const address = await resolveDomain(to);
 
     runInAction(() => (this.isResolvingAddress = false));
 
@@ -224,7 +223,7 @@ export class BaseTransaction {
 
     if (avatar) return;
 
-    if (isENSDomains(to)) {
+    if (isENSDomain(to)) {
       const img = await getEnsAvatar(to, address);
       if (!img?.url) return;
 

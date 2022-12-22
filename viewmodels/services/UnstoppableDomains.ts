@@ -4,7 +4,7 @@ import { utils } from 'ethers';
 const suffixes = ['.crypto', '.nft', '.x', '.wallet', '.bitcoin', '.dao', '.888', '.zil', '.blockchain'];
 const sdk = new UnstoppableDomains();
 
-export async function resolveDomain(domain: string) {
+export async function resolveUnstoppableDomain(domain: string) {
   try {
     const addr = (await sdk.addr(domain, 'ETH')) || '';
     return utils.isAddress(addr) ? utils.getAddress(addr) : '';
@@ -13,7 +13,7 @@ export async function resolveDomain(domain: string) {
   }
 }
 
-export function isUnstoppableDomains(domain: string) {
+export function isUnstoppableDomain(domain: string) {
   const lower = domain.toLowerCase();
   return suffixes.some((item) => lower.endsWith(item));
 }
