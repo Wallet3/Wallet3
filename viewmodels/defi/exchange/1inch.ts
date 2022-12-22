@@ -144,6 +144,8 @@ export class OneInch {
       t.setOwner(this.account.address);
       i < 10 ? t.getBalance() : null;
     });
+
+    this.swapFrom?.getBalance();
   }
 
   async switchNetwork(network: INetwork) {
@@ -268,7 +270,7 @@ export class OneInch {
     this.swapResponse = null;
     this.routes = [];
 
-    this.calcExchangeRateTimer = setTimeout(() => this.calcExchangeRate(), 500);
+    this.calcExchangeRateTimer = setTimeout(() => this.calcExchangeRate(), 1000);
   }
 
   setSlippage(amount: number) {
@@ -321,7 +323,7 @@ export class OneInch {
       runInAction(() => {
         this.routes = routes;
         this.swapResponse = swapOutput || null;
-        this.errorMsg = swapOutput?.description || '';
+        this.errorMsg = (swapOutput || quoteOutput)?.description || '';
         this.swapToAmount = utils.formatUnits((swapOutput || quoteOutput)?.toTokenAmount || '0', this.swapTo?.decimals || 18);
         this.exchangeRate = Number(this.swapToAmount || 0) / Number(this.swapFromAmount);
       });

@@ -1,10 +1,11 @@
 import * as Linking from 'expo-linking';
 
-import { decode, isValid as isBase64 } from 'js-base64';
+import { decode as decodeBase64, isValid as isBase64 } from 'js-base64';
 
 import Authentication from '../auth/Authentication';
 import MessageKeys from '../../common/MessageKeys';
 import i18n from '../../i18n';
+import { isDomain } from '../services/DomainResolver';
 import { isURL } from '../../utils/url';
 import { showMessage } from 'react-native-flash-message';
 import { utils } from 'ethers';
@@ -45,7 +46,7 @@ class LinkHub {
     }
 
     if (isBase64(uri) && uri.length > 82) {
-      const decoded64 = decode(uri);
+      const decoded64 = decodeBase64(uri);
       if (decoded64.length === 64 && (utils.isBytesLike(decoded64) || utils.isBytesLike(`0x${decoded64}`))) {
         PubSub.publish(MessageKeys.CodeScan_64Length, { data: decoded64 });
         return true;
@@ -54,8 +55,7 @@ class LinkHub {
 
     const uriLower = uri.toLowerCase();
 
-    const scheme =
-      supportedSchemes.find((schema) => uriLower.startsWith(schema)) || (uriLower.endsWith('.eth') ? '0x' : undefined);
+    const scheme = supportedSchemes.find((schema) => uriLower.startsWith(schema)) || (isDomain(uriLower) ? '0x' : undefined);
 
     if (!scheme) {
       if (isURL(uri)) {

@@ -46,7 +46,9 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>20221220110007</string>
+	<string>20221221203153</string>
+	<key>FirebaseAutomaticScreenReportingEnabled</key>
+	<false/>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>

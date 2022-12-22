@@ -33,14 +33,10 @@ export default observer(({ navigation, route }: NativeStackScreenProps<{}, never
 
   return (
     <View style={styles.container}>
-      {!scanned ? (
-        <Scanner
-          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-          style={{ flex: 1, width: '100%', height: '100%', position: 'absolute' }}
-        />
-      ) : (
-        <View style={{ flex: 1, width: '100%', height: '100%', backgroundColor: '#000' }} />
-      )}
+      <Scanner
+        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+        style={{ flex: 1, width: '100%', height: '100%', position: 'absolute' }}
+      />
 
       <View
         style={{

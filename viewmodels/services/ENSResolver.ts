@@ -23,6 +23,7 @@ export function clearPendingENSRequests() {
   _ensProvider = undefined;
 }
 
-export function isENSDomains(ens: string) {
-  return ens.endsWith('.eth') || ens.endsWith('.xyz');
+export function isENSDomain(ens: string) {
+  const lower = ens.toLowerCase();
+  return lower.endsWith('.eth') || lower.endsWith('.xyz');
 }

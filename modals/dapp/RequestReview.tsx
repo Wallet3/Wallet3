@@ -1,6 +1,6 @@
 import { ActivityIndicator, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { AntDesign, Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { Coin, SafeViewContainer, Skeleton } from '../../components';
-import { Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import React, { useRef, useState } from 'react';
 
 import { Account } from '../../viewmodels/account/Account';
@@ -191,12 +191,7 @@ const TxReview = observer(
                   {vm.erc721?.metadata?.title || vm.erc721?.tokenId}
                 </Text>
 
-                <MultiSourceImage
-                  uriSources={vm.erc721?.metadata?.images || []}
-                  style={{ width: 20, height: 20 }}
-                  borderRadius={3}
-                  sourceTypes={vm.erc721?.metadata?.types || []}
-                />
+                <AntDesign name="star" size={19} color={network.color} />
               </View>
             </View>
           ) : undefined}

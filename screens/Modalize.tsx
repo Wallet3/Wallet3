@@ -42,6 +42,7 @@ import { WCCallRequestRequest } from '../models/WCSession_v1';
 import { WalletConnect_v1 } from '../viewmodels/walletconnect/WalletConnect_v1';
 import { autorun } from 'mobx';
 import i18n from '../i18n';
+import { isDomain } from '../viewmodels/services/DomainResolver';
 import { observer } from 'mobx-react-lite';
 import { parse } from 'eth-url-parser';
 import { showMessage } from 'react-native-flash-message';
@@ -409,7 +410,7 @@ const SendFundsModal = () => {
     });
 
     PubSub.subscribe(`CodeScan-0x`, (_, { data }) => {
-      if (!utils.isAddress(data) && !data.endsWith('.eth')) {
+      if (!utils.isAddress(data) && !isDomain(data)) {
         showMessage({ message: i18n.t('msg-invalid-address'), type: 'warning' });
         return;
       }
