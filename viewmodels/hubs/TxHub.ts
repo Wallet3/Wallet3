@@ -114,7 +114,6 @@ class TxHub {
 
       try {
         await tx.save();
-        logTxConfirmed(tx);
       } catch (error) {}
 
       confirmedTxs.push(tx);
@@ -130,6 +129,8 @@ class TxHub {
     if (this.pendingTxs.length > 0) this.watchTimer = setTimeout(() => this.watchPendingTxs(), 1000 * 3);
 
     if (confirmedTxs.length === 0 && abandonedTxs.length === 0) return;
+
+    confirmedTxs.map((tx) => logTxConfirmed(tx));
 
     runInAction(() => {
       const newTxs = this.txs.filter((tx) => !abandonedTxs.find((t) => t.hash === tx.hash));

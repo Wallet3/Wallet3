@@ -459,7 +459,7 @@ export const Browser = observer(
             {disableExtraFuncs ? undefined : (
               <View style={{ flexDirection: 'row', paddingHorizontal: 0 }}>
                 <TouchableOpacity
-                  onPress={() => navigation?.navigate('QRScan', { tip: t('qrscan-tip-3') })}
+                  onPress={() => PubSub.publish(MessageKeys.openGlobalQRScanner, t('qrscan-tip-3'))}
                   style={{
                     justifyContent: 'center',
                     paddingHorizontal: 16,

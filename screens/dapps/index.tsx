@@ -12,6 +12,7 @@ import DAppInfo from './DAppInfo';
 import { DrawerActions } from '@react-navigation/native';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import Image from 'react-native-fast-image';
+import MessageKeys from '../../common/MessageKeys';
 import { MetamaskDApp } from '../../viewmodels/walletconnect/MetamaskDApp';
 import MetamaskDAppsHub from '../../viewmodels/walletconnect/MetamaskDAppsHub';
 import { Modalize } from 'react-native-modalize';
@@ -296,7 +297,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
             />
           ) : (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: -32 }}>
-              <TouchableOpacity style={{ padding: 12 }} onPress={() => navigation.getParent()?.navigate('QRScan')}>
+              <TouchableOpacity style={{ padding: 12 }} onPress={() => PubSub.publish(MessageKeys.openGlobalQRScanner)}>
                 <MaterialCommunityIcons name="qrcode-scan" size={32} color={secondaryTextColor} />
               </TouchableOpacity>
               <Text style={{ color: secondaryFontColor, marginTop: 24 }}>{t('connectedapps-noapps')}</Text>
