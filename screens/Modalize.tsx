@@ -555,6 +555,7 @@ export const FullScreenQRScanner = observer(() => {
     PubSub.subscribe(MessageKeys.openGlobalQRScanner, (_, data) => {
       setTip(data);
       setTimeout(() => open(), 10);
+      logScreenView('QRScan');
     });
 
     return () => {

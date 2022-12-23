@@ -20,7 +20,6 @@ import Languages from './screens/settings/Languages';
 import NFTDetails from './screens/nfts/Details';
 import { NavigationContainer } from '@react-navigation/native';
 import ProfileScreen from './screens/profile';
-import QRScan from './screens/misc/QRScan';
 import React from 'react';
 import Root from './screens/Root';
 import { StatusBar } from 'expo-status-bar';
