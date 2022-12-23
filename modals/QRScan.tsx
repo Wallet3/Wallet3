@@ -62,7 +62,7 @@ export default observer(({ tip, done }: { tip?: string; done?: () => void }) => 
         </View>
       </View>
 
-      <TouchableOpacity style={{ padding: 8, position: 'absolute', top: top + 4, left: 6 }} onPress={done}>
+      <TouchableOpacity style={{ padding: 8, position: 'absolute', top, left: 4 }} onPress={done}>
         <AntDesign name="close" color="#fff" size={24} />
       </TouchableOpacity>
 
