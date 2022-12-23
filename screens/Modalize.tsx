@@ -43,6 +43,7 @@ import { WalletConnect_v1 } from '../viewmodels/walletconnect/WalletConnect_v1';
 import { autorun } from 'mobx';
 import i18n from '../i18n';
 import { isDomain } from '../viewmodels/services/DomainResolver';
+import { logScreenView } from '../viewmodels/services/Analytics';
 import { observer } from 'mobx-react-lite';
 import { parse } from 'eth-url-parser';
 import { showMessage } from 'react-native-flash-message';
@@ -268,7 +269,10 @@ const GlobalNetworksMenuModal = () => {
   const [editing, setEditing] = useState(false);
 
   useEffect(() => {
-    PubSub.subscribe(MessageKeys.openNetworksMenu, () => openNetworksModal());
+    PubSub.subscribe(MessageKeys.openNetworksMenu, () => {
+      openNetworksModal();
+      logScreenView('GlobalNetworksMenu');
+    });
 
     return () => {
       PubSub.unsubscribe(MessageKeys.openNetworksMenu);
@@ -302,7 +306,10 @@ const GlobalAccountsMenuModal = () => {
   const { ref, open, close } = useModalize();
 
   useEffect(() => {
-    PubSub.subscribe(MessageKeys.openAccountsMenu, () => open());
+    PubSub.subscribe(MessageKeys.openAccountsMenu, () => {
+      open();
+      logScreenView('GlobalAccountsMenu');
+    });
 
     return () => {
       PubSub.unsubscribe(MessageKeys.openAccountsMenu);
@@ -365,7 +372,10 @@ const RequestFundsModal = () => {
   const { ref: requestRef, open: openRequestModal, close } = useModalize();
 
   useEffect(() => {
-    PubSub.subscribe(MessageKeys.openRequestFundsModal, () => openRequestModal());
+    PubSub.subscribe(MessageKeys.openRequestFundsModal, () => {
+      openRequestModal();
+      logScreenView('RequestsFundsModal');
+    });
 
     return () => {
       PubSub.unsubscribe(MessageKeys.openRequestFundsModal);
@@ -396,6 +406,7 @@ const SendFundsModal = () => {
       const { token } = data || {};
       setVM(new TokenTransferring({ targetNetwork: Networks.current, defaultToken: token }));
       setTimeout(() => openSendModal(), 0);
+      logScreenView('SendFundsModal');
     });
 
     PubSub.subscribe(`CodeScan-ethereum`, (_, { data }) => {
@@ -404,6 +415,7 @@ const SendFundsModal = () => {
         setIsERC681(erc681.parameters?.amount || erc681.parameters?.value || erc681.function_name ? true : false);
         setVM(new ERC681Transferring({ defaultNetwork: Networks.current, erc681 }));
         setTimeout(() => openSendModal(), 0);
+        logScreenView('SendFundsModal_QR');
       } catch (error) {
         showMessage({ message: (error as any)?.toString?.(), type: 'warning' });
       }
@@ -418,6 +430,7 @@ const SendFundsModal = () => {
       setIsERC681(false);
       setVM(new TokenTransferring({ targetNetwork: Networks.current, to: data }));
       setTimeout(() => openSendModal(), 0);
+      logScreenView('SendFundsModal_QR');
     });
 
     return () => {

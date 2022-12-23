@@ -4148,10 +4148,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.17.60.tgz#35f3d6213daed95da7f0f73e75bcc6980e90597b"
   integrity sha512-F0KIgDJfy2nA3zMLmWGKxcH2ZVEtCZXHHdOQs2gSaQ27+lNeEfGxzkIw90aXswATX7AZ33tahPbzy6KAfUreVw==
 
-"@types/node@^18.11.11":
-  version "18.11.12"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.12.tgz#89e7f8aa8c88abf432f9bd594888144d7dba10aa"
-  integrity sha512-FgD3NtTAKvyMmD44T07zz2fEf+OKwutgBCEVM8GcvMGVGaDktiLNTDvPwC/LUe3PinMW+X6CuLOF2Ui1mAlSXg==
+"@types/node@^18.11.17":
+  version "18.11.17"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.17.tgz#5c009e1d9c38f4a2a9d45c0b0c493fe6cdb4bcb5"
+  integrity sha512-HJSUJmni4BeDHhfzn6nF0sVmd1SMezP7/4F0Lq+aXzmp2xm9O7WXrUtHW/CHlYVtZUbByEvWidHqRtcJXGF2Ng==
 
 "@types/numeral@^2.0.2":
   version "2.0.2"
@@ -10854,10 +10854,10 @@ react-native-collapsible@^1.6.0:
   resolved "https://registry.yarnpkg.com/react-native-collapsible/-/react-native-collapsible-1.6.0.tgz#ca261ffff16914f872059bb0972e3a78c4b37f9c"
   integrity sha512-beZjdgbT9Y/Pg591Xy5XkKG20HffJiVad4n9bfcUF/f783A+tvOVXnqvbS58Lkaym93mi4jcDPMuW9Vc1t6rqg==
 
-react-native-context-menu-view@^1.8.0:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/react-native-context-menu-view/-/react-native-context-menu-view-1.8.0.tgz#7dbefaa89feb9f8825727f7cc3c84ea3b333581d"
-  integrity sha512-Wp/WjcWUHFTtYkwPFxnHRKCO58kfwhkXT3QoyQtL80x6nD9gwOwZ3MXm0y03F2rB9a6ehl8UbqUhCBCPvt4tNw==
+react-native-context-menu-view@^1.9.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/react-native-context-menu-view/-/react-native-context-menu-view-1.9.0.tgz#b8cf18134501d1ab9ca717859e5987382993f909"
+  integrity sha512-Gzrw8/e4LhoEAqeGc8eNx0jhkwUfSLGd/K3tlk8AJD2Atw53Nb5sYM3/PKG4vFHFs2xRuOAkv+FRL2pMiJk4Sw==
 
 react-native-crypto@^2.2.0:
   version "2.2.0"
@@ -11010,10 +11010,10 @@ react-native-screens@~3.18.2:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
 
-react-native-shared-element@0.8.4:
-  version "0.8.4"
-  resolved "https://registry.yarnpkg.com/react-native-shared-element/-/react-native-shared-element-0.8.4.tgz#dd97b992e53633a57ea728327f7c02bad3c5af14"
-  integrity sha512-agRuD5AB4daw4QLo7KCTBqCtmIjbQkqpwsT/aYrxDu/McvTCdDuXVttaVMrqeyAgdDkU1egp41FdiExS1L/hJw==
+react-native-shared-element@0.8.6:
+  version "0.8.6"
+  resolved "https://registry.yarnpkg.com/react-native-shared-element/-/react-native-shared-element-0.8.6.tgz#1c9810a0add2b1df0e273ac43805233724da623f"
+  integrity sha512-87wkb46mMSDqexeGbfbDyZziuCSlpAZ5J+eVLhxsoK7hcuwSxuEPEGe958AAjO8jmdxSC6Dg3oMO/s1iE9uQlQ==
 
 react-native-super-grid@^5.0.0:
   version "5.0.0"

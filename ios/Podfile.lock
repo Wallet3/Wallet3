@@ -1116,7 +1116,7 @@ PODS:
   - React-jsinspector (0.70.5)
   - React-logger (0.70.5):
     - glog
-  - react-native-context-menu-view (1.8.0):
+  - react-native-context-menu-view (1.9.0):
     - React
   - react-native-randombytes (3.6.1):
     - React-Core
@@ -1260,7 +1260,7 @@ PODS:
   - RNScreens (3.18.2):
     - React-Core
     - React-RCTImage
-  - RNSharedElement (0.8.4):
+  - RNSharedElement (0.8.6):
     - React-Core
   - RNSVG (13.6.0):
     - React-Core
@@ -1664,7 +1664,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 31564fa6912459921568e8b0e49024285a4d584b
   React-jsinspector: badd81696361249893a80477983e697aab3c1a34
   React-logger: fdda34dd285bdb0232e059b19d9606fa0ec3bb9c
-  react-native-context-menu-view: b65e4d004d7a8fba336277d6281c57540074bf79
+  react-native-context-menu-view: 1797ce85b52d810301268330704272b8cdb7a6e7
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: 99b24a0c5acd0d5dcac2b1a7f18c49ea317be99a
   react-native-video: c26780b224543c62d5e1b2a7244a5cd1b50e8253
@@ -1694,7 +1694,7 @@ SPEC CHECKSUMS:
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
   RNReanimated: ce445c233a6ff5600223484a88ad5704945d972a
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
-  RNSharedElement: eb7d506733952d58634f34c82ec17e82f557e377
+  RNSharedElement: 9fb4099e60923f8130c14c70daf85586dc704b66
   RNSVG: 3a79c0c4992213e4f06c08e62730c5e7b9e4dc17
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
