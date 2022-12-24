@@ -11064,10 +11064,10 @@ react-native-screens@~3.18.2:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
 
-react-native-shared-element@0.8.6:
-  version "0.8.6"
-  resolved "https://registry.yarnpkg.com/react-native-shared-element/-/react-native-shared-element-0.8.6.tgz#1c9810a0add2b1df0e273ac43805233724da623f"
-  integrity sha512-87wkb46mMSDqexeGbfbDyZziuCSlpAZ5J+eVLhxsoK7hcuwSxuEPEGe958AAjO8jmdxSC6Dg3oMO/s1iE9uQlQ==
+react-native-shared-element@0.8.7:
+  version "0.8.7"
+  resolved "https://registry.yarnpkg.com/react-native-shared-element/-/react-native-shared-element-0.8.7.tgz#d46738078514053246b966535af0ca86811236f3"
+  integrity sha512-msBdt6bwupsgML+nCbvqg4RnQ/qkL+98zYSJ1eHoGQkZW+okjLgpZx8hRswalN50hxNZfDW8nT/HEhdGZE6imQ==
 
 react-native-super-grid@^5.0.0:
   version "5.0.0"
