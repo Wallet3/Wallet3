@@ -119,11 +119,11 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
             </View>
           )}
 
-          {(privKey || recoveryKey) && (
-            <View style={{ margin: 36, alignItems: 'center' }}>
+          {(privKey || recoveryKey || words.length > 0) && (
+            <View style={{ marginTop: 27, alignItems: 'center' }}>
               <QRCode
-                value={privKey || recoveryKey}
-                size={180}
+                value={privKey || recoveryKey || words.join(' ')}
+                size={150}
                 backgroundColor="transparent"
                 enableLinearGradient
                 logoBorderRadius={7}

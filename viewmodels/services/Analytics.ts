@@ -32,12 +32,15 @@ export function logSendTx(request: SendTxRequest) {
   log('send_tx', {
     type,
     chainId: request.tx.chainId,
-    to: type === 'ci' ? request.tx.to : undefined,
   });
 }
 
 export function logTxConfirmed(tx: Transaction) {
-  log('tx_confirmed', { hash: tx.hash, status: tx.status ? 'ok' : 'failed', chainId: tx.chainId });
+  if (tx.status) {
+    log('tx_confirmed', { chainId: tx.chainId });
+  } else {
+    log('tx_failed', { chainId: tx.chainId });
+  }
 }
 
 export function logAppReset() {
@@ -58,6 +61,10 @@ export function logDeleteWeb2Secret(uid: string) {
 
 export function logCreateWallet() {
   log('new_wallet');
+}
+
+export function logImportWallet() {
+  log('import_wallet');
 }
 
 export function logAddToken(args: { chainId: number; token: string }) {

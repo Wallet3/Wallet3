@@ -130,7 +130,7 @@ class TxHub {
 
     if (confirmedTxs.length === 0 && abandonedTxs.length === 0) return;
 
-    confirmedTxs.map((tx) => logTxConfirmed(tx));
+    confirmedTxs.forEach((tx) => logTxConfirmed(tx));
 
     runInAction(() => {
       const newTxs = this.txs.filter((tx) => !abandonedTxs.find((t) => t.hash === tx.hash));
@@ -142,13 +142,17 @@ class TxHub {
         .distinct((t) => t.hash)
         .toArray();
 
+      const toRemove = this.pendingTxs.filter(
+        (pt) => confirmedTxs.find((tx) => tx.hash === pt.hash) || abandonedTxs.find((tx) => tx.hash === pt.hash)
+      );
+
       this.pendingTxs = this.pendingTxs.filter(
         (pt) =>
-          ((pt.hash && !confirmedTxs.find((tx) => pt.hash === tx.hash)) || !abandonedTxs.find((tx) => tx.hash === pt.hash)) &&
+          !toRemove.find((tx) => tx.hash === pt.hash) &&
           pt.nonce >
             LINQ.from(this.txs)
               .where((t) => t.chainId === pt.chainId)
-              .take(3)
+              .take(10)
               .maxBy((i) => i.nonce).nonce
       );
 

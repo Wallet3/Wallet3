@@ -56,6 +56,8 @@ export async function getBalance(chainId: number, address: string): Promise<BigN
         id: Date.now(),
       });
 
+      if (result.error) continue;
+
       return BigNumber.from(result.result);
     } catch (error) {
       markRPCFailed(chainId, url);
@@ -258,6 +260,8 @@ export async function getTransactionReceipt(chainId: number, hash: string) {
   for (let url of urls) {
     try {
       const resp = await post(url, { jsonrpc: '2.0', method: 'eth_getTransactionReceipt', params: [hash], id: Date.now() });
+
+      if (resp.error) continue;
 
       if (!resp.result) {
         return null;

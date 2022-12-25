@@ -12,6 +12,7 @@ import SecretScan from './SecretScan';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
+import { logImportWallet } from '../../viewmodels/services/Analytics';
 import { secondaryFontColor } from '../../constants/styles';
 import { showMessage } from 'react-native-flash-message';
 
@@ -40,9 +41,10 @@ export default ({ onDone, onCancel }: { onDone?: () => void; onCancel?: () => vo
       if (key) {
         await App.addWallet(key);
         await Authentication.setUserSecretsVerified(true);
+        logImportWallet();
         onDone?.();
       } else {
-        showMessage({ message: 'msg-failed-to-import-wallet', type: 'warning' });
+        showMessage({ message: t('msg-failed-to-import-wallet'), type: 'warning' });
       }
 
       setBusy(false);

@@ -236,7 +236,7 @@ export async function preExecTx(tx: {
     };
 
     const result: PreExecResult = {
-      success: data.pre_exec.success,
+      success: data.pre_exec?.success ?? false,
       receive_nft_list: data.balance_change.receive_nft_list,
       send_nft_list: data.balance_change.send_nft_list,
       receive_token_list: data.balance_change.receive_token_list.map(fixToken),
