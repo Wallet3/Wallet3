@@ -307,6 +307,12 @@ export const SHIB = {
   symbol: 'SHIB',
 };
 
+export const JPYC = {
+  address: '0x431D5dfF03120AFA4bDf332c61A6e1766eF37BDB',
+  decimals: 18,
+  symbol: 'JPYC',
+};
+
 export const Stablecoins = [DAI, USDC, USDT, TUSD, BUSD, sUSD, PAX, USDN, GUSD, USDK, mUSD, RSV, LINKUSD, HUSD];
 export const AlgorithmStablecoins = [ESD, DSD];
 export const ETHTokens = [ETH, sETH, WETH, ETH_0];

@@ -4,6 +4,7 @@ import { SendTxRequest } from '../core/Wallet';
 import { SupportedWCSchemes } from '../hubs/LinkHub';
 import Transaction from '../../models/Transaction';
 import analytics from '@react-native-firebase/analytics';
+import { getReadableVersion } from 'react-native-device-info';
 import { isDomain } from './DomainResolver';
 import { utils } from 'ethers';
 
@@ -39,7 +40,7 @@ export function logTxConfirmed(tx: Transaction) {
   if (tx.status) {
     log('tx_confirmed', { chainId: tx.chainId });
   } else {
-    log('tx_failed', { chainId: tx.chainId });
+    log('tx_failed', { chainId: tx.chainId, hash: tx.hash });
   }
 }
 
@@ -120,10 +121,16 @@ export function logBackup() {
   log('backup_secret');
 }
 
+let version = '';
+
 function log(name: string, args: any = {}) {
   if (__DEV__) return;
 
-  analytics().logEvent(name, { ...args, os: Platform.OS });
+  if (!version) {
+    version = getReadableVersion();
+  }
+
+  analytics().logEvent(name, { ...args, os: Platform.OS, ver: version });
 }
 
 export function logScreenView(name: string) {
