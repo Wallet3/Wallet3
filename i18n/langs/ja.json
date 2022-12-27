@@ -9,6 +9,7 @@
   "land-create-security-tips": "セキュリティについて",
   "land-create-security-tips-1": "ニーモニックを紙とペンで他人に見られない場所で順番通りに記録してください",
   "land-create-security-tips-2": "ニーモニックを記録し忘れると、お客様の仮想通貨と資産を失う危険性が高まります。",
+  "land-create-security-tips-3": "リカバリーキーやプライベートキーが失われると、すべての資金を失うことになります。",
   "land-create-backup-now": "今すぐバックアップ",
   "land-create-backup-later": "後でバックアップ",
   "land-backup-title": "機密情報のバックアップ",

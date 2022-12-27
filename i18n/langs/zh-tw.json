@@ -9,6 +9,7 @@
   "land-create-security-tips": "安全提示",
   "land-create-security-tips-1": "助記詞組由一串英語單詞組成，請安全保存",
   "land-create-security-tips-2": "一旦助記詞丟失，錢包將無法恢復，並且您的所有資產也將永久丟失",
+  "land-create-security-tips-3": "一旦恢復密鑰或私鑰丟失，您將丟失所有資金",
   "land-create-backup-now": "現在備份",
   "land-create-backup-later": "稍後備份",
   "land-backup-title": "備份助記詞",

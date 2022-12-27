@@ -9,6 +9,7 @@
   "land-create-security-tips": "Güvenlik İpuçları",
   "land-create-security-tips-1": "Mnemonic İngilizce kelimelerden oluşur, lütfen bunu bir parola yöneticisi olarak kaydedin, ör. 1Password, EnPass vb.",
   "land-create-security-tips-2": "Mnemonic kaybedildiğinde geri alınamaz ve tüm fonlarınızı kaybedersiniz.",
+  "land-create-security-tips-3": "Geri yükleme anahtarı veya özel anahtar kaybedildiğinde, tüm fonlarınızı kaybedersiniz.",
   "land-create-backup-now": "Şimdi yedekle",
   "land-create-backup-later": "Daha sonra yedekle",
   "land-backup-title": "Gizlinizi yedekleyin",
