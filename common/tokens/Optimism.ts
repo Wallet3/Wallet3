@@ -35,4 +35,10 @@ export const OP_sETH = {
   symbol: 'sETH',
 };
 
-export const OpPopularTokens = [OP_OP, OP_DAI, OP_USDC, OP_USDT, OP_WBTC];
+export const OP_wstETH = {
+  address: '0x1F32b1c2345538c0c6f582fCB022739c4A194Ebb',
+  decimals: 18,
+  symbol: 'wstETH',
+};
+
+export const OpPopularTokens = [OP_OP, OP_DAI, OP_USDC, OP_USDT, OP_WBTC, OP_wstETH];

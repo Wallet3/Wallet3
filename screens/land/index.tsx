@@ -8,7 +8,6 @@ import CreateWallet from './CreateWallet';
 import ImportWallet from './ImportWallet';
 import { Ionicons } from '@expo/vector-icons';
 import { LandScreenStack } from '../navigations';
-import QRScan from '../misc/QRScan';
 import SetRecoveryKey from './SignInWeb2SetRecoveryKey';
 import SetupPasscode from './Passcode';
 import { TouchableOpacity } from 'react-native';
@@ -41,23 +40,6 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
       <Screen name="SetupPasscode" component={SetupPasscode} options={{ title: t('land-passcode-title') }} />
       <Screen name="ViewRecoveryKey" component={ViewRecoveryKey} options={{ title: t('land-sign-in-web2-recovery-key') }} />
       <Screen name="SetRecoveryKey" component={SetRecoveryKey} options={{ title: t('land-sign-in-web2-recovery-key') }} />
-
-      <Screen
-        name="QRScan"
-        component={QRScan}
-        options={({ navigation }) => {
-          return {
-            animation: 'slide_from_bottom',
-            headerTintColor: '#ffffff',
-            title: t('qrscan-title'),
-            headerLeft: () => (
-              <TouchableOpacity onPress={() => navigation.pop()}>
-                <Ionicons name="arrow-back-outline" size={20} color="#ffffff" />
-              </TouchableOpacity>
-            ),
-          };
-        }}
-      />
     </Navigator>
   );
 });

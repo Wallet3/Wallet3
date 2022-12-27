@@ -145,6 +145,12 @@ export const stETH = {
   symbol: 'stETH',
 };
 
+export const wstETH = {
+  address: '0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0',
+  decimals: 18,
+  symbols: 'wstETH',
+};
+
 export const ankrETH = {
   address: '0xE95A203B1a91a908F9B9CE46459d101078c2c3cb',
   decimals: 18,
@@ -301,6 +307,12 @@ export const SHIB = {
   symbol: 'SHIB',
 };
 
+export const JPYC = {
+  address: '0x431D5dfF03120AFA4bDf332c61A6e1766eF37BDB',
+  decimals: 18,
+  symbol: 'JPYC',
+};
+
 export const Stablecoins = [DAI, USDC, USDT, TUSD, BUSD, sUSD, PAX, USDN, GUSD, USDK, mUSD, RSV, LINKUSD, HUSD];
 export const AlgorithmStablecoins = [ESD, DSD];
 export const ETHTokens = [ETH, sETH, WETH, ETH_0];
@@ -309,4 +321,4 @@ export const DeFiTokens = [CRV, UNI, SUSHI, YFI, COMP, SNX, MKR, AAVE, RPL, LDO,
 
 import { PartnerTokens } from './PartnerTokens';
 
-export const EthereumPopularTokens = [DAI, USDC, USDT, BUSD, TUSD, UNI, CRV, AAVE, WBTC, LDO, SHIB, MKR, ...PartnerTokens];
+export const EthereumPopularTokens = [DAI, USDC, USDT, BUSD, stETH, UNI, CRV, AAVE, WBTC, LDO, SHIB, MKR, ...PartnerTokens];

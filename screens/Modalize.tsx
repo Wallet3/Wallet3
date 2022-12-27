@@ -3,6 +3,7 @@ import * as Linking from 'expo-linking';
 import {
   AccountsMenu,
   NetworksMenu,
+  QRScan,
   Request,
   Send,
   WalletConnectDApp,
@@ -542,6 +543,49 @@ export const InappBrowserModal = observer(({ pageKey }: { pageKey?: string }) =>
           />
         </SafeAreaProvider>
       ) : undefined}
+    </Modalize>
+  );
+});
+
+export const FullScreenQRScanner = observer(() => {
+  const { ref, open, close } = useModalize();
+  const [tip, setTip] = useState<string>();
+
+  useEffect(() => {
+    PubSub.subscribe(MessageKeys.openGlobalQRScanner, (_, data) => {
+      setTip(data);
+      setTimeout(() => open(), 10);
+      logScreenView('QRScan');
+    });
+
+    return () => {
+      PubSub.unsubscribe(MessageKeys.openGlobalQRScanner);
+    };
+  }, []);
+
+  return (
+    <Modalize
+      ref={ref}
+      useNativeDriver
+      modalHeight={ReactiveScreen.height}
+      closeOnOverlayTap={false}
+      withHandle={false}
+      disableScrollIfPossible
+      panGestureEnabled={false}
+      panGestureComponentEnabled={false}
+      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+      modalStyle={{
+        borderTopStartRadius: 0,
+        borderTopEndRadius: 0,
+        backgroundColor: '#000',
+        width: ReactiveScreen.width,
+        height: ReactiveScreen.height,
+        flexGrow: 1,
+      }}
+    >
+      <SafeAreaProvider>
+        <QRScan tip={tip} done={close} />
+      </SafeAreaProvider>
     </Modalize>
   );
 });

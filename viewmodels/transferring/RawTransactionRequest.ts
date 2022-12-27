@@ -70,7 +70,7 @@ export class RawTransactionRequest extends BaseTransaction {
   get value() {
     try {
       if (this.valueWei.add(this.txFeeWei).gt(this.nativeToken.balance)) {
-        return Number(utils.formatEther(this.nativeToken.balance.sub(this.txFeeWei))).toLocaleString(undefined, {
+        return Math.max(0, Number(utils.formatEther(this.nativeToken.balance.sub(this.txFeeWei)))).toLocaleString(undefined, {
           maximumFractionDigits: 6,
         });
       }

@@ -2,7 +2,7 @@ import * as Animatable from 'react-native-animatable';
 import * as Linking from 'expo-linking';
 
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import Bookmarks, { SecureUrls, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
+import Bookmarks, { HttpsSecureUrls, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
 import { BreathAnimation, startLayoutAnimation } from '../../utils/animations';
 import { Dimensions, Share, StyleProp, Text, TextInput, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { NullableImage, SafeViewContainer } from '../../components';
@@ -231,7 +231,9 @@ export const Browser = observer(
         return;
       }
 
-      setSuggests(Array.from(new Set(LINQ.from(history.concat(SecureUrls)).where((url) => url.includes(addr)))).slice(0, 5));
+      setSuggests(
+        Array.from(new Set(LINQ.from(history.concat(HttpsSecureUrls)).where((url) => url.includes(addr)))).slice(0, 5)
+      );
     }, [addr]);
 
     useEffect(() => {
@@ -459,7 +461,7 @@ export const Browser = observer(
             {disableExtraFuncs ? undefined : (
               <View style={{ flexDirection: 'row', paddingHorizontal: 0 }}>
                 <TouchableOpacity
-                  onPress={() => navigation?.navigate('QRScan', { tip: t('qrscan-tip-3') })}
+                  onPress={() => PubSub.publish(MessageKeys.openGlobalQRScanner, t('qrscan-tip-3'))}
                   style={{
                     justifyContent: 'center',
                     paddingHorizontal: 16,

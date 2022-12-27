@@ -48,7 +48,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<LandScree
           value={key}
           onChangeText={(t) => setKey(t)}
           secureTextEntry
-          onScanRequest={() => navigation.navigate('QRScan')}
+          onScanRequest={() => PubSub.publish(MessageKeys.openGlobalQRScanner)}
         />
       </View>
 

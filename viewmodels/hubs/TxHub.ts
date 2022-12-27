@@ -114,7 +114,6 @@ class TxHub {
 
       try {
         await tx.save();
-        logTxConfirmed(tx);
       } catch (error) {}
 
       confirmedTxs.push(tx);
@@ -131,6 +130,8 @@ class TxHub {
 
     if (confirmedTxs.length === 0 && abandonedTxs.length === 0) return;
 
+    confirmedTxs.forEach((tx) => logTxConfirmed(tx));
+
     runInAction(() => {
       const newTxs = this.txs.filter((tx) => !abandonedTxs.find((t) => t.hash === tx.hash));
       newTxs.unshift(...confirmedTxs.filter((t) => t.blockHash && !this.txs.find((t2) => t2.hash === t.hash)));
@@ -141,13 +142,17 @@ class TxHub {
         .distinct((t) => t.hash)
         .toArray();
 
+      const toRemove = this.pendingTxs.filter(
+        (pt) => confirmedTxs.find((tx) => tx.hash === pt.hash) || abandonedTxs.find((tx) => tx.hash === pt.hash)
+      );
+
       this.pendingTxs = this.pendingTxs.filter(
         (pt) =>
-          ((pt.hash && !confirmedTxs.find((tx) => pt.hash === tx.hash)) || !abandonedTxs.find((tx) => tx.hash === pt.hash)) &&
+          !toRemove.find((tx) => tx.hash === pt.hash) &&
           pt.nonce >
             LINQ.from(this.txs)
               .where((t) => t.chainId === pt.chainId)
-              .take(3)
+              .take(10)
               .maxBy((i) => i.nonce).nonce
       );
 
