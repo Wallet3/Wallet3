@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
 import Scanner, { BarCodeScanningResult } from '../components/Scanner';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { AntDesign } from '@expo/vector-icons';
 import Authentication from '../viewmodels/auth/Authentication';
 import LinkHub from '../viewmodels/hubs/LinkHub';
+import React from 'react';
 import { ReactiveScreen } from '../utils/device';
 import { StatusBar } from 'expo-status-bar';
 import i18n from '../i18n';

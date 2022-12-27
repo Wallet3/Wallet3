@@ -86,9 +86,10 @@ export class NFTTransferring extends BaseTransaction {
     const erc721Data = this.erc721.encodeOwnerOf(this.nft.tokenId);
     const erc1155Data = this.erc1155.encodeBalanceOf(this.account.address, this.nft.tokenId);
 
+    const from = this.account.address;
     const [erc721Owner, erc1155Balance] = await Promise.all([
-      eth_call<string>(this.network.chainId, { from: this.account.address, data: erc721Data, to: this.erc721.address }),
-      eth_call<string>(this.network.chainId, { from: this.account.address, data: erc1155Data, to: this.erc1155.address }),
+      eth_call<string>(this.network.chainId, { from, data: erc721Data, to: this.erc721.address }, true),
+      eth_call<string>(this.network.chainId, { from, data: erc1155Data, to: this.erc1155.address }, true),
     ]);
 
     if (

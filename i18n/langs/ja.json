@@ -90,6 +90,7 @@
   "qrscan-tip-1": "WalletConnect, ETH アドレス, レシートQRコード",
   "qrscan-tip-2": "ニーモニック, 秘密鍵, Wallet 3 QRコード",
   "qrscan-tip-3": "URL QRコード",
+  "qrscan-tip-4": "リカバリーキー",
   "qrscan-tip-desktop-backup-qrcode": "Wallet 3 デスクトップ版 QRコード",
   "qrscan-tip-eth-address": "ENS, ETH アドレス",
   "qrscan-tip-above-types": "上記のいずれかのQRコードをスキャンしてください",

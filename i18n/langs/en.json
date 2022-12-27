@@ -90,6 +90,7 @@
   "qrscan-tip-1": "WalletConnect, ETH Address, etc.",
   "qrscan-tip-2": "Mnemonic Words, Private Key, Desktop Backup QRCode",
   "qrscan-tip-3": "URL QRCode",
+  "qrscan-tip-4": "Recovery Key",
   "qrscan-tip-desktop-backup-qrcode": "Wallet 3 Desktop Backup QRCode",
   "qrscan-tip-eth-address": "ENS, ETH Address",
   "qrscan-tip-above-types": "Please scan for one of the above types of QRCode.",
