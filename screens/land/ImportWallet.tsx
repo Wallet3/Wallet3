@@ -104,7 +104,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
         <Button
           reverse
           title={t('land-import-button-sync')}
-          onPress={() => navigation.navigate('QRScan')}
+          onPress={() => PubSub.publish(MessageKeys.openGlobalQRScanner)}
           style={{ marginBottom: 12 }}
           themeColor={themeColor}
           txtStyle={{ textTransform: 'none' }}

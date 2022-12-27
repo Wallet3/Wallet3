@@ -48,10 +48,22 @@ class Bookmarks {
   }
 
   static findCategory(url: string) {
+    if (url.startsWith('http://')) return 'Others';
+
     try {
-      const hostname = url.startsWith('https://') ? Linking.parse(url).hostname : url;
-      const categories = Object.getOwnPropertyNames(SecureHosts);
-      return categories.find((c) => SecureHosts[c].includes(hostname)) || 'Others';
+      const hostname = url.startsWith('https://') ? Linking.parse(url).hostname! : url;
+      const domains = hostname.split('.');
+
+      let wildHostname = '';
+      if (domains.length > 2) {
+        wildHostname = `*.${hostname.substring(domains[0].length + 1)}`;
+      } else {
+        wildHostname = `*.${hostname}`;
+      }
+
+      return (
+        SiteCategories.find((c) => SecureHosts[c].includes(hostname) || SecureHosts[c].includes(wildHostname)) || 'Others'
+      );
     } catch (error) {}
 
     return 'Others';
@@ -171,9 +183,11 @@ class Bookmarks {
 }
 
 export default new Bookmarks();
-export const SecureUrls = Object.getOwnPropertyNames(SecureHosts)
-  .flatMap((category) => SecureHosts[category])
-  .map((i) => `https://${i}`);
+
+const SiteCategories = Object.getOwnPropertyNames(SecureHosts);
+
+const SecureUrls: string[] = Object.getOwnPropertyNames(SecureHosts).flatMap((category) => SecureHosts[category]);
+export const HttpsSecureUrls = SecureUrls.map((i) => `https://${i.replace('*.', '')}`);
 
 const SecureUrlsSet = new Set(SecureUrls);
 const RiskyUrlsSet = new Set(PhishingConfig.blacklist.concat(RiskyHosts));
@@ -183,7 +197,16 @@ export function isSecureSite(url: string) {
 
   try {
     const { hostname } = Linking.parse(url);
-    return SecureUrlsSet.has(`https://${hostname || ''}`);
+    if (!hostname) return false;
+
+    if (SecureUrlsSet.has(hostname)) return true;
+
+    const domains = hostname.split('.');
+    if (domains.length > 2) {
+      return SecureUrlsSet.has(`*.${hostname.substring(domains[0].length + 1)}`);
+    }
+
+    return SecureUrlsSet.has(`*.${hostname}`);
   } catch (error) {}
 
   return false;

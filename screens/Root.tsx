@@ -117,7 +117,7 @@ const RootTab = observer(() => {
               </View>
 
               <TouchableOpacity
-                onPress={() => navigation.getParent()?.navigate('QRScan')}
+                onPress={() => PubSub.publish(MessageKeys.openGlobalQRScanner)}
                 style={{
                   zIndex: 5,
                   flexDirection: 'row',
@@ -201,7 +201,11 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
       <Screen name="Home" component={RootTab} options={{ headerShown: false }} />
       <Screen name="Contacts" component={ContactsScreen} options={{ title: t('home-drawer-contacts') }} />
       <Screen name="Settings" component={SettingScreen} options={{ title: t('home-drawer-settings') }} />
-      <Screen name="ConnectedDapps" component={DAppsScreen} options={{ title: t('connectedapps-title'), headerShown: false }} />
+      <Screen
+        name="ConnectedDapps"
+        component={DAppsScreen}
+        options={{ title: t('connectedapps-title'), headerShown: false }}
+      />
     </Navigator>
   );
 });

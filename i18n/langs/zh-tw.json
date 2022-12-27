@@ -20,7 +20,7 @@
   "land-sign-in-web2-recovery-key": "恢復密鑰",
   "land-sign-in-web2-tips-1": "【恢復密鑰】是用於恢復錢包的唯一密鑰",
   "land-sign-in-web2-tips-2": "如果【恢復密鑰】丟失，您將會永久丟失您的錢包以及該錢包中的所有加密資產",
-  "land-sign-in-web2-tips-3": "請將【恢復密鑰】妥善保存到密碼管理器中，如 1Password, LastPass 等",
+  "land-sign-in-web2-tips-3": "請將【恢復密鑰】妥善保存到密碼管理器中，如 1Password, EnPass 等",
   "land-sign-in-web2-tips-4": "如果您丟失了 Recovery Key，Chainbow不承擔任何責任。",
   "land-sign-in-web2-i-have-saved": "我已妥善保存",
   "land-sign-in-set-recovery-key": "請輸入錢包的恢復密鑰",

@@ -4,6 +4,7 @@ import { SendTxRequest } from '../core/Wallet';
 import { SupportedWCSchemes } from '../hubs/LinkHub';
 import Transaction from '../../models/Transaction';
 import analytics from '@react-native-firebase/analytics';
+import { getReadableVersion } from 'react-native-device-info';
 import { isDomain } from './DomainResolver';
 import { utils } from 'ethers';
 
@@ -32,12 +33,15 @@ export function logSendTx(request: SendTxRequest) {
   log('send_tx', {
     type,
     chainId: request.tx.chainId,
-    to: type === 'ci' ? request.tx.to : undefined,
   });
 }
 
 export function logTxConfirmed(tx: Transaction) {
-  log('tx_confirmed', { hash: tx.hash, status: tx.status ? 'ok' : 'failed', chainId: tx.chainId });
+  if (tx.status) {
+    log('tx_confirmed', { chainId: tx.chainId });
+  } else {
+    log('tx_failed', { chainId: tx.chainId, hash: tx.hash });
+  }
 }
 
 export function logAppReset() {
@@ -58,6 +62,10 @@ export function logDeleteWeb2Secret(uid: string) {
 
 export function logCreateWallet() {
   log('new_wallet');
+}
+
+export function logImportWallet() {
+  log('import_wallet');
 }
 
 export function logAddToken(args: { chainId: number; token: string }) {
@@ -113,10 +121,16 @@ export function logBackup() {
   log('backup_secret');
 }
 
+let version = '';
+
 function log(name: string, args: any = {}) {
   if (__DEV__) return;
 
-  analytics().logEvent(name, { ...args, os: Platform.OS });
+  if (!version) {
+    version = getReadableVersion();
+  }
+
+  analytics().logEvent(name, { ...args, os: Platform.OS, ver: version });
 }
 
 export function logScreenView(name: string) {

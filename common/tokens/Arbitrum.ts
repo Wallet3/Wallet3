@@ -25,10 +25,10 @@ export const ARBI_WBTC = {
   symbol: 'WBTC',
 };
 
-export const ARBI_renBTC = {
-  address: '0xDBf31dF14B66535aF65AaC99C32e9eA844e14501',
-  decimals: 8,
-  symbol: 'renBTC',
+export const ARBI_wstETH = {
+  address: '0x5979D7b546E38E414F7E9822514be443A4800529',
+  decimals: 18,
+  symbol: 'wstETH',
 };
 
-export const ArbiPopularTokens = [ARBI_DAI, ARBI_USDC, ARBI_USDT, ARBI_WBTC];
+export const ArbiPopularTokens = [ARBI_DAI, ARBI_USDC, ARBI_USDT, ARBI_WBTC, ARBI_wstETH];

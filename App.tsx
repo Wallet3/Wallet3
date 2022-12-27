@@ -4,7 +4,7 @@ import * as SplashScreen from 'expo-splash-screen';
 
 import AppViewModel, { AppVM } from './viewmodels/core/App';
 import AuthViewModel, { Authentication } from './viewmodels/auth/Authentication';
-import Modals, { LockScreen } from './screens/Modalize';
+import Modals, { FullScreenQRScanner, LockScreen } from './screens/Modalize';
 import { TouchableOpacity, UIManager } from 'react-native';
 
 import { About } from './screens/settings/About';
@@ -20,7 +20,6 @@ import Languages from './screens/settings/Languages';
 import NFTDetails from './screens/nfts/Details';
 import { NavigationContainer } from '@react-navigation/native';
 import ProfileScreen from './screens/profile';
-import QRScan from './screens/misc/QRScan';
 import React from 'react';
 import Root from './screens/Root';
 import { StatusBar } from 'expo-status-bar';
@@ -116,22 +115,6 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
                 }}
               />
               <Screen
-                name="QRScan"
-                component={QRScan}
-                options={({ navigation }) => {
-                  return {
-                    animation: 'slide_from_bottom',
-                    headerTintColor: '#ffffff',
-                    title: t('qrscan-title'),
-                    headerLeft: () => (
-                      <TouchableOpacity onPress={() => navigation.pop()}>
-                        <Ionicons name="arrow-back-outline" size={20} color="#ffffff" />
-                      </TouchableOpacity>
-                    ),
-                  };
-                }}
-              />
-              <Screen
                 name="Tokens"
                 component={Tokens}
                 options={({ navigation }) => {
@@ -167,6 +150,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
       <FlashMessage position="top" />
       <StatusBar style={statusBarStyle} />
 
+      <FullScreenQRScanner />
       <LockScreen app={app} appAuth={appAuth} />
     </NavigationContainer>
   );
