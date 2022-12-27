@@ -1,16 +1,19 @@
 [
-  { "url": "https://dagen.life", "icon": "https://dagen.life/logo.png", "title": "dagen" },
+  {
+    "url": "https://dagen.life",
+    "icon": "https://dagen.life/logo.png",
+    "title": "dagen"
+  },
   {
     "url": "https://link3.to",
     "icon": "https://pbs.twimg.com/profile_images/1600681816045670400/cOCd209I_400x400.jpg",
     "title": "Link3"
   },
   {
-    "url": "https://key3.id",
-    "icon": "https://pbs.twimg.com/profile_images/1603375644607381506/gIPId01v_400x400.jpg",
-    "title": "KEY3.id"
+    "url": "https://app.mail3.me",
+    "icon": "https://mail3.me/icons/icon-192x192.png",
+    "title": "Mail3"
   },
-  { "url": "https://app.mail3.me", "icon": "https://mail3.me/icons/icon-192x192.png", "title": "Mail3" },
   {
     "url": "https://zapper.fi",
     "icon": "https://zapper.fi/logo192.png",
@@ -26,7 +29,11 @@
     "icon": "https://revoke.cash/assets/images/apple-touch-icon.png",
     "title": "RevokeCash"
   },
-  { "url": "https://mirror.xyz", "icon": "https://mirror.xyz/icon/apple-touch-icon.png", "title": "Mirror" },
+  {
+    "url": "https://mirror.xyz",
+    "icon": "https://mirror.xyz/icon/apple-touch-icon.png",
+    "title": "Mirror"
+  },
   {
     "url": "https://app.aave.com",
     "icon": "https://aave.com/favicon64.png",
@@ -36,5 +43,10 @@
     "url": "https://stargate.finance/transfer",
     "icon": "https://stargate.finance/favicons/favicon-196x196.png",
     "title": "Stargate"
+  },
+  {
+    "url": "https://bidex.pro",
+    "icon": "https://bidex.pro/static/image/logo.png",
+    "title": "Bidex"
   }
 ]

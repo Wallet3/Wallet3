@@ -583,7 +583,8 @@ export const FullScreenQRScanner = observer(() => {
         flexGrow: 1,
       }}
     >
-      <SafeAreaProvider>
+      <SafeAreaProvider style={{ width: ReactiveScreen.width,
+        height: ReactiveScreen.height }}>
         <QRScan tip={tip} done={close} />
       </SafeAreaProvider>
     </Modalize>
