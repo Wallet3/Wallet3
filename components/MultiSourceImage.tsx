@@ -4,6 +4,7 @@ import FastImage, { FastImageProps } from 'react-native-fast-image';
 import { ImageSourcePropType, View } from 'react-native';
 import React, { useState } from 'react';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BreathAnimation } from '../utils/animations';
 import { Feather } from '@expo/vector-icons';
 import ImageColors from 'react-native-image-colors';
@@ -11,6 +12,7 @@ import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/type
 import SvgImage from 'react-native-remote-svg';
 import Video from 'react-native-video';
 import { getMemorySize } from '../utils/device';
+import { md5 } from '../utils/cipher';
 
 // @ts-ignore
 interface Props extends FastImageProps {
@@ -36,10 +38,28 @@ export default (props: Props) => {
     if (!onColorParsed) return;
     if ((await getMemorySize()) < 3072) return;
 
+    const itemKey = `image-colors-${await md5(url)}`;
+    const cache = await AsyncStorage.getItem(itemKey);
+
+    if (typeof cache === 'string') {
+      if (cache === '') return;
+
+      onColorParsed(JSON.parse(cache));
+      return;
+    }
+
     try {
       const result = await ImageColors.getColors(url, { cache: true });
+      if (!result) {
+        AsyncStorage.setItem(itemKey, '');
+        return;
+      }
+
+      AsyncStorage.setItem(itemKey, JSON.stringify(result));
       onColorParsed(result);
-    } catch (error) {}
+    } catch (error) {
+      AsyncStorage.setItem(itemKey, '');
+    }
   };
 
   return (
