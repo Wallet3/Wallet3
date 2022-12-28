@@ -1,9 +1,7 @@
 import Contacts, { IContact } from '../../viewmodels/customs/Contacts';
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
-import { FlatList, ListRenderItemInfo, NativeSyntheticEvent, Text, TouchableHighlight, View } from 'react-native';
-import { TouchableOpacity } from 'react-native';
-
+import { ListRenderItemInfo, NativeSyntheticEvent, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeViewContainer, Skeleton, TextBox } from '../../components';
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
@@ -11,6 +9,8 @@ import { borderColor, fontColor, secondaryFontColor } from '../../constants/styl
 import Avatar from '../../components/Avatar';
 import { BaseTransaction } from '../../viewmodels/transferring/BaseTransaction';
 import Button from '../../components/Button';
+import { ERC681 } from '../../viewmodels/transferring/ERC681Transferring';
+import { FlatList } from 'react-native-gesture-handler';
 import Image from 'react-native-fast-image';
 import MiniScanner from './MiniScanner';
 import Networks from '../../viewmodels/core/Networks';
@@ -18,7 +18,9 @@ import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
+import { isDomain } from '../../viewmodels/services/DomainResolver';
 import { observer } from 'mobx-react-lite';
+import { parse as parseERC681 } from 'eth-url-parser';
 import { startLayoutAnimation } from '../../utils/animations';
 import styles from '../styles';
 import { utils } from 'ethers';
@@ -48,7 +50,7 @@ export default observer(({ onNext, vm }: Props) => {
   };
 
   const renderContact = ({ item }: ListRenderItemInfo<IContact>) => {
-    const actions = [{ title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' }];
+    const actions = [{ title: t('button-remove'), destructive: true, systemIcon: 'trash.slash', subtitletitle: '' }];
 
     const onActionPress = (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => {
       const { index } = e.nativeEvent;
@@ -163,10 +165,21 @@ export default observer(({ onNext, vm }: Props) => {
         enabled={scanEnabled}
         onBack={cancelScan}
         onBarCodeScanned={({ data }) => {
-          if (!utils.isAddress(data) && !data.endsWith('.eth') && !data.endsWith('.xyz')) return;
+          let addr = data;
 
-          setAddr(data);
-          vm.setTo(data);
+          if (data?.toLowerCase().startsWith('ethereum:')) {
+            try {
+              const erc681 = parseERC681(data) as ERC681;
+              addr = erc681.target_address;
+            } catch (error) {
+              return;
+            }
+          }
+
+          if (!utils.isAddress(addr) && !isDomain(addr)) return;
+
+          setAddr(addr);
+          vm.setTo(addr);
           cancelScan();
         }}
       />

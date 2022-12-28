@@ -602,7 +602,6 @@ PODS:
   - AppAuth/Core (1.6.0)
   - AppAuth/ExternalUserAgent (1.6.0):
     - AppAuth/Core
-  - ASN1Decoder (1.8.0)
   - boost (1.76.0)
   - BoringSSL-GRPC (0.0.24):
     - BoringSSL-GRPC/Implementation (= 0.0.24)
@@ -611,8 +610,6 @@ PODS:
     - BoringSSL-GRPC/Interface (= 0.0.24)
   - BoringSSL-GRPC/Interface (0.0.24)
   - DoubleConversion (1.1.6)
-  - EASClient (0.4.1):
-    - ExpoModulesCore
   - EXAppleAuthentication (5.0.1):
     - ExpoModulesCore
   - EXApplication (5.0.1):
@@ -637,11 +634,8 @@ PODS:
   - EXImageLoader (4.0.0):
     - ExpoModulesCore
     - React-Core
-  - EXJSONUtils (0.4.0)
   - EXLocalAuthentication (13.0.2):
     - ExpoModulesCore
-  - EXManifests (0.4.0):
-    - EXJSONUtils
   - Expo (47.0.9):
     - ExpoModulesCore
   - ExpoAdapterGoogleSignIn (9.0.2):
@@ -676,16 +670,6 @@ PODS:
     - React-Core
   - EXSQLite (11.0.0):
     - ExpoModulesCore
-  - EXStructuredHeaders (3.0.1)
-  - EXUpdates (0.15.6):
-    - ASN1Decoder (~> 1.8)
-    - EASClient
-    - EXManifests
-    - ExpoModulesCore
-    - EXStructuredHeaders
-    - EXUpdatesInterface
-    - React-Core
-  - EXUpdatesInterface (0.8.1)
   - FBLazyVector (0.70.6)
   - FBReactNativeSpec (0.70.6):
     - RCT-Folly (= 2021.07.22.00)
@@ -862,7 +846,7 @@ PODS:
     - AppAuth/Core (~> 1.6)
     - GTMSessionFetcher/Core (< 3.0, >= 1.5)
   - GTMSessionFetcher/Core (2.3.0)
-  - hermes-engine (0.70.5)
+  - hermes-engine (0.70.6)
   - leveldb-library (1.22.1)
   - libevent (2.1.12)
   - Libuv-gRPC (0.0.10):
@@ -1282,7 +1266,6 @@ PODS:
 DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
-  - EASClient (from `../node_modules/expo-eas-client/ios`)
   - EXAppleAuthentication (from `../node_modules/expo-apple-authentication/ios`)
   - EXApplication (from `../node_modules/expo-application/ios`)
   - EXBarCodeScanner (from `../node_modules/expo-barcode-scanner/ios`)
@@ -1293,9 +1276,7 @@ DEPENDENCIES:
   - EXFileSystem (from `../node_modules/expo-file-system/ios`)
   - EXFont (from `../node_modules/expo-font/ios`)
   - EXImageLoader (from `../node_modules/expo-image-loader/ios`)
-  - EXJSONUtils (from `../node_modules/expo-json-utils/ios`)
   - EXLocalAuthentication (from `../node_modules/expo-local-authentication/ios`)
-  - EXManifests (from `../node_modules/expo-manifests/ios`)
   - Expo (from `../node_modules/expo`)
   - "ExpoAdapterGoogleSignIn (from `../node_modules/@react-native-google-signin/google-signin/expo/ios`)"
   - ExpoClipboard (from `../node_modules/expo-clipboard/ios`)
@@ -1311,9 +1292,6 @@ DEPENDENCIES:
   - EXSecureStore (from `../node_modules/expo-secure-store/ios`)
   - EXSplashScreen (from `../node_modules/expo-splash-screen/ios`)
   - EXSQLite (from `../node_modules/expo-sqlite/ios`)
-  - EXStructuredHeaders (from `../node_modules/expo-structured-headers/ios`)
-  - EXUpdates (from `../node_modules/expo-updates/ios`)
-  - EXUpdatesInterface (from `../node_modules/expo-updates-interface/ios`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
   - Firebase
@@ -1379,7 +1357,6 @@ SPEC REPOS:
   trunk:
     - abseil
     - AppAuth
-    - ASN1Decoder
     - BoringSSL-GRPC
     - Firebase
     - FirebaseAnalytics
@@ -1411,8 +1388,6 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
-  EASClient:
-    :path: "../node_modules/expo-eas-client/ios"
   EXAppleAuthentication:
     :path: "../node_modules/expo-apple-authentication/ios"
   EXApplication:
@@ -1433,12 +1408,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-font/ios"
   EXImageLoader:
     :path: "../node_modules/expo-image-loader/ios"
-  EXJSONUtils:
-    :path: "../node_modules/expo-json-utils/ios"
   EXLocalAuthentication:
     :path: "../node_modules/expo-local-authentication/ios"
-  EXManifests:
-    :path: "../node_modules/expo-manifests/ios"
   Expo:
     :path: "../node_modules/expo"
   ExpoAdapterGoogleSignIn:
@@ -1469,12 +1440,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-splash-screen/ios"
   EXSQLite:
     :path: "../node_modules/expo-sqlite/ios"
-  EXStructuredHeaders:
-    :path: "../node_modules/expo-structured-headers/ios"
-  EXUpdates:
-    :path: "../node_modules/expo-updates/ios"
-  EXUpdatesInterface:
-    :path: "../node_modules/expo-updates-interface/ios"
   FBLazyVector:
     :path: "../node_modules/react-native/Libraries/FBLazyVector"
   FBReactNativeSpec:
@@ -1587,11 +1552,9 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   abseil: ebe5b5529fb05d93a8bdb7951607be08b7fa71bc
   AppAuth: 8fca6b5563a5baef2c04bee27538025e4ceb2add
-  ASN1Decoder: 6110fdeacfdb41559b1481457a1645be716610aa
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
-  EASClient: 19efe9e8ef9b3917c5f3dcb3ed82319de4d8c0bd
   EXAppleAuthentication: d93f7acd71fb3dcfa14eb6cb12ada053e06d4b66
   EXApplication: 034b1c40a8e9fe1bff76a1e511ee90dff64ad834
   EXBarCodeScanner: cb4deb49e59b6c7ed6bbf38d187802359908d2a8
@@ -1602,9 +1565,7 @@ SPEC CHECKSUMS:
   EXFileSystem: 60602b6eefa6873f97172c684b7537c9760b50d6
   EXFont: 319606bfe48c33b5b5063fb0994afdc496befe80
   EXImageLoader: 84b65e6bd9d3345d6fbb3ab936a546c54496a64d
-  EXJSONUtils: 09aef2c1fba1a116ca8c73a2c8299aac00d96b43
   EXLocalAuthentication: 78cc5a00b13745b41d16d189ab332b61a01299f9
-  EXManifests: 347f49430b63444579aa013f0ad057d16b8d1cc8
   Expo: 5523a4835730104a301caeac1e68dad095a9dfff
   ExpoAdapterGoogleSignIn: 98a113d9c0ed1ce7cf6259f0907d3f93209b0d7f
   ExpoClipboard: 334921ae215b4be261e393e6fdd9050025008a20
@@ -1620,9 +1581,6 @@ SPEC CHECKSUMS:
   EXSecureStore: daec0117c922a67c658cb229152a9e252e5c1750
   EXSplashScreen: 3e989924f61a8dd07ee4ea584c6ba14be9b51949
   EXSQLite: 13c91c389b3c6241ddcf5c47eaa43289721193fe
-  EXStructuredHeaders: fb774e45eac2e5d62ba40b28176bfbfba61b843e
-  EXUpdates: e687436502147e80ef13cf6eedd17e3039ef47d6
-  EXUpdatesInterface: bffd1ead18f0bab04fa784ca159c115607b8a23c
   FBLazyVector: 48289402952f4f7a4e235de70a9a590aa0b79ef4
   FBReactNativeSpec: dd1186fd05255e3457baa2f4ca65e94c2cd1e3ac
   Firebase: f92fc551ead69c94168d36c2b26188263860acd9
@@ -1640,7 +1598,7 @@ SPEC CHECKSUMS:
   gRPC-Core: 943e491cb0d45598b0b0eb9e910c88080369290b
   GTMAppAuth: 0ff230db599948a9ad7470ca667337803b3fc4dd
   GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
-  hermes-engine: 7fe5fc6ef707b7fdcb161b63898ec500e285653d
+  hermes-engine: 2af7b7a59128f250adfd86f15aa1d5a2ecd39995
   leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   Libuv-gRPC: 55e51798e14ef436ad9bc45d12d43b77b49df378

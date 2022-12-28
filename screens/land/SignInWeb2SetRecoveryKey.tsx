@@ -3,7 +3,6 @@ import { Modalize, useModalize } from 'react-native-modalize';
 import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 
-import Authentication from '../../viewmodels/auth/Authentication';
 import { Confirm } from '../../modals/views/Confirm';
 import { LandScreenStack } from '../navigations';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -48,7 +47,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<LandScree
           value={key}
           onChangeText={(t) => setKey(t)}
           secureTextEntry
-          onScanRequest={() => PubSub.publish(MessageKeys.openGlobalQRScanner)}
+          onScanRequest={() => PubSub.publish(MessageKeys.openGlobalQRScanner, t('qrscan-tip-3'))}
         />
       </View>
 

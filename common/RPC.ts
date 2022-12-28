@@ -130,9 +130,10 @@ export async function eth_call<T>(
     gasPrice?: string | number;
     value?: string | number;
     data: string;
-  }
+  },
+  fast = false
 ) {
-  const resp = await eth_call_return(chainId, args);
+  const resp = await eth_call_return(chainId, args, fast);
   return resp?.result as T;
 }
 
@@ -145,7 +146,8 @@ export async function eth_call_return(
     gasPrice?: string | number;
     value?: string | number;
     data: string;
-  }
+  },
+  fast = false
 ) {
   const urls = getRPCUrls(chainId);
 
@@ -158,11 +160,17 @@ export async function eth_call_return(
         id: Date.now(),
       });
 
-      if (resp.error) continue;
+      if (resp.error) {
+        console.log(resp.error, url);
+
+        if (fast) {
+          return resp;
+        } else continue;
+      }
 
       return resp;
     } catch (error) {
-      console.log(error);
+      console.log(error, url);
       markRPCFailed(chainId, url);
     }
   }

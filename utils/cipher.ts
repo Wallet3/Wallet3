@@ -7,6 +7,10 @@ export async function sha256(input: string): Promise<string> {
   return await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, input);
 }
 
+export async function md5(input: string) {
+  return await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.MD5, input);
+}
+
 const JsonFormatter = {
   stringify: function (cipherParams: CryptoES.lib.CipherParams) {
     // create json object with ciphertext
