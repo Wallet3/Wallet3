@@ -23,7 +23,6 @@ import { parseSignParams } from '../../../utils/sign';
 import { rawCall } from '../../../common/RPC';
 import { showMessage } from 'react-native-flash-message';
 import { sleep } from '../../../utils/async';
-import { truncate } from 'fs';
 
 const NOTIFICATION_NAMES = {
   accountsChanged: 'metamask_accountsChanged',

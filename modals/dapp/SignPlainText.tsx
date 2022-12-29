@@ -6,7 +6,7 @@ import { Account } from '../../viewmodels/account/Account';
 import AccountIndicator from '../components/AccountIndicator';
 import { BioType } from '../../viewmodels/auth/Authentication';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';
-import { ParsedMessage } from '../../utils/siwe_plain';
+import { ParsedMessage } from '../../eips/eip4361/siwe_plain';
 import RejectApproveButtons from '../components/RejectApproveButtons';
 import { SafeViewContainer } from '../../components';
 import { ScrollView } from 'react-native-gesture-handler';

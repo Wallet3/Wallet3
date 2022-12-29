@@ -3,6 +3,7 @@
   "Dev": ["web3q.io", "zksync.io", "llamanodes.com", "llamarpc.com"],
   "DeFi": [
     "*.uniswap.org",
+    "app.uniswap.org",
     "*.curve.fi",
     "curve.exchange",
     "oasis.app",

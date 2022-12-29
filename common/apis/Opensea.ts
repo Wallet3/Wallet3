@@ -6,7 +6,7 @@ import axios from 'axios';
 export async function getOpenseaNfts(owner: string, asset_contract_addresses: string[] = []) {
   try {
     // const contractAddrs = asset_contract_addresses.reduce((prev, cur) => `${prev}${cur}`);
-    const resp = await axios(`https://api.opensea.io/api/v1/assets?owner=${owner}&include_orders=false`, {
+    const resp = await axios(`https://api.opensea.io/api/v1/assets?owner=${owner}`, {
       headers: { 'X-API-KEY': OpenseaApiKey },
     });
 

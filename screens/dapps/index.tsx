@@ -310,7 +310,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
           renderItem={renderItem}
           style={{ width: '100%', height: '100%' }}
           contentContainerStyle={{ paddingBottom: 37 }}
-          keyExtractor={(i) => i.hostname}
+          keyExtractor={(app) => `${app.hostname}-${app.lastUsedChainId}`}
           bounces={dapps.length >= 12}
         />
       </Swiper>
