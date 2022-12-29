@@ -46,7 +46,7 @@ interface JsonRpcResponse {
 }
 
 interface Payload extends JsonRpcRequest {
-  pageMetadata?: { icon: string; title: string; desc?: string; origin: string };
+  pageMetadata?: PageMetadata;
 }
 
 interface WatchAssetParams {

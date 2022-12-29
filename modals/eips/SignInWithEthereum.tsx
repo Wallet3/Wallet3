@@ -15,7 +15,7 @@ import styles from '../styles';
 
 interface Props {
   rawMsg: string;
-  metadata?: { origin: string; icon: string; title: string };
+  metadata?: PageMetadata;
   siwe: ParsedMessage;
   account?: Account;
   themeColor?: string;

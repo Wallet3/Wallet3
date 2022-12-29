@@ -37,6 +37,7 @@ import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 export interface PageMetadata {
   icon: string;
   title: string;
+  name?: string;
   origin: string;
   hostname: string;
   desc?: string;

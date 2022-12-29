@@ -6,11 +6,12 @@ import { Account } from '../../viewmodels/account/Account';
 import AccountIndicator from '../components/AccountIndicator';
 import { BioType } from '../../viewmodels/auth/Authentication';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';
+import { PageMetadata } from '../../screens/browser/Web3View';
 import { ParsedMessage } from '../../eips/eip4361/siwe_plain';
 import RejectApproveButtons from '../components/RejectApproveButtons';
 import { SafeViewContainer } from '../../components';
 import { ScrollView } from 'react-native-gesture-handler';
-import SignInWithEthereum from './SignInWithEthereum';
+import SignInWithEthereum from '../eips/SignInWithEthereum';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -26,7 +27,7 @@ interface Props {
   account?: Account;
   bioType?: BioType;
   onStandardModeOn: (on: boolean) => void;
-  metadata?: { origin: string; icon: string; title: string };
+  metadata?: PageMetadata;
 }
 
 export default observer(({ msg, themeColor, onReject, onSign, account, bioType, onStandardModeOn, metadata }: Props) => {

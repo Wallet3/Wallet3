@@ -108,6 +108,8 @@ export default observer(({ request, client, close }: Props) => {
             icon: client.appMeta?.icons?.[0] || '',
             origin: client.origin || client.appMeta?.url || '',
             title: client.appMeta?.name || client.appMeta?.url || '',
+            hostname: client.appMeta?.url || '',
+            themeColor: '#fff',
           }}
         />
       )}

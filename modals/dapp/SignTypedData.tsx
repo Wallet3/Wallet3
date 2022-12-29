@@ -1,12 +1,15 @@
 import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+import eip2612, { EIP2612, EIP2612Mock } from '../../eips/eip2612';
 
 import { Account } from '../../viewmodels/account/Account';
 import AccountIndicator from '../components/AccountIndicator';
 import { BioType } from '../../viewmodels/auth/Authentication';
 import Collapsible from 'react-native-collapsible';
+import EIP2612Permit from '../eips/EIP2612Permit';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';
+import { PageMetadata } from '../../screens/browser/Web3View';
 import RejectApproveButtons from '../components/RejectApproveButtons';
 import { SafeViewContainer } from '../../components';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -24,6 +27,7 @@ interface Props {
   onSign: () => Promise<void>;
   account?: Account;
   bioType?: BioType;
+  metadata?: PageMetadata;
 }
 
 const parse = (obj: any) => {
@@ -110,10 +114,12 @@ const generateItem = ({ data }: { data: { key: string; value: any | any[] }[] })
   });
 };
 
-export default observer(({ themeColor, data, onReject, onSign, account, bioType }: Props) => {
+export default observer(({ themeColor, data, onReject, onSign, account, bioType, metadata }: Props) => {
   const { t } = i18n;
   const { borderColor, isLightMode, thirdTextColor } = Theme;
   const [busy, setBusy] = useState(false);
+  const [is2612] = useState<EIP2612>(eip2612.check(data) ? data : undefined);
+
   const authIcon = bioType
     ? bioType === 'faceid'
       ? () => <FaceID width={12.5} height={12.5} style={{ marginEnd: 2 }} />
@@ -126,6 +132,8 @@ export default observer(({ themeColor, data, onReject, onSign, account, bioType 
         style={{
           ...styles.modalTitleContainer,
           borderBottomColor: borderColor,
+          borderBottomWidth: is2612 ? 0 : 1,
+          paddingBottom: is2612 ? 0 : 5,
         }}
       >
         <Text style={{ ...styles.modalTitle, color: themeColor }}>{t('modal-message-signing-title')}</Text>
@@ -133,13 +141,26 @@ export default observer(({ themeColor, data, onReject, onSign, account, bioType 
         {account ? <AccountIndicator account={account} /> : undefined}
       </View>
 
-      <ScrollView
-        style={{ flex: 1, marginHorizontal: -16, paddingHorizontal: 16 }}
-        contentContainerStyle={{ paddingTop: 4 }}
-        bounces={false}
-      >
-        {data?.message ? generateItem({ data: parse(data.message)! }) : generateItem({ data: parse(data)! })}
-      </ScrollView>
+      {!is2612 && (
+        <ScrollView
+          style={{ flex: 1, marginHorizontal: -16, paddingHorizontal: 16 }}
+          contentContainerStyle={{ paddingTop: 4 }}
+          bounces={false}
+        >
+          {data?.message ? generateItem({ data: parse(data.message)! }) : generateItem({ data: parse(data)! })}
+        </ScrollView>
+      )}
+
+      {is2612 && <EIP2612Permit eip2612={is2612} metadata={metadata} />}
+
+      {is2612 && (
+        <View style={{ marginTop: 12, flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: 16 }}>
+          <MaterialCommunityIcons name="gas-station" size={16} color={'yellowgreen'} />
+          <Text style={{ color: 'yellowgreen', fontWeight: '600', marginStart: 5 }}>Gas Free</Text>
+        </View>
+      )}
+
+      <View style={{ flex: 1 }} />
 
       <RejectApproveButtons
         disabledApprove={busy}
