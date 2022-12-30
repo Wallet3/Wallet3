@@ -3,6 +3,7 @@ import { BigNumber, constants, utils } from 'ethers';
 import { Coin, Skeleton } from '../../components';
 import React, { useEffect, useState } from 'react';
 
+import AddressRiskIndicator from '../components/AddressRiskIndicator';
 import { EIP2612 } from '../../eips/eip2612';
 import { ERC20Token } from '../../models/ERC20';
 import Image from 'react-native-fast-image';
@@ -16,6 +17,7 @@ import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { openBrowserAsync } from 'expo-web-browser';
 import styles from '../styles';
+import { warningColor } from '../../constants/styles';
 
 interface Props {
   eip2612: EIP2612;
@@ -29,6 +31,7 @@ export default ({ eip2612, metadata }: Props) => {
   const [isUint256Max] = useState(BigNumber.from(eip2612.message.value).eq(constants.MaxUint256));
   const [decimals, setDecimals] = useState(-1);
   const [symbol, setSymbol] = useState('');
+  const [dangerous, setDangerous] = useState(false);
 
   const reviewItemStyle = { ...styles.reviewItem, borderColor };
   const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
@@ -110,14 +113,21 @@ export default ({ eip2612, metadata }: Props) => {
         <Text style={styles.reviewItemTitle}>{t('modal-dapp-approve-to')}</Text>
 
         <TouchableOpacity
-          style={{ flexDirection: 'row', alignItems: 'center' }}
+          style={{ flexDirection: 'row', alignItems: 'center', position: 'relative' }}
           onPress={() => openBrowserAsync(`${network?.explorer}/address/${eip2612.message.spender}`)}
         >
-          <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>
+          <Text style={{ ...reviewItemValueStyle, color: dangerous ? warningColor : textColor }} numberOfLines={1}>
             {formatAddress(eip2612.message.spender, 7, 5)}
           </Text>
 
-          <Ionicons name="search-outline" size={15} color={textColor} style={{ marginStart: 6 }} />
+          <Ionicons name="search-outline" size={15} color={dangerous ? warningColor : textColor} style={{ marginStart: 6 }} />
+
+          <AddressRiskIndicator
+            chainId={network.chainId}
+            address={eip2612.message.spender}
+            containerStyle={{ position: 'absolute', bottom: -11.5, right: 0 }}
+            onDangerous={() => setDangerous(true)}
+          />
         </TouchableOpacity>
       </View>
 

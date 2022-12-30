@@ -28,3 +28,12 @@ export const BreathAnimation = {
   0.5: { opacity: 0.25 },
   1: { opacity: 1 },
 };
+
+export const RotateAnimation = {
+  from: {
+    transform: [{ rotate: '0deg' }],
+  },
+  to: {
+    transform: [{ rotate: '360deg' }],
+  },
+};

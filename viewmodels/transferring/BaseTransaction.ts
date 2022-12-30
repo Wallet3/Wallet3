@@ -1,5 +1,5 @@
 import { BigNumber, providers, utils } from 'ethers';
-import { Gwei_1, MAX_GWEI_PRICE } from '../../common/Constants';
+import { EncodedERC1271ContractWalletCallData, Gwei_1, MAX_GWEI_PRICE } from '../../common/Constants';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { clearPendingENSRequests, isENSDomain } from '../services/ENSResolver';
 import {
@@ -305,10 +305,11 @@ export class BaseTransaction {
       return;
     }
 
-    const encodedERC1271Data =
-      '0x1626ba7e1c8aff950685c2ed4bc3174f3472287b56d9517b9c948127319a09a7a36deac800000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000041659b1bcd331201b0ff8b6ec0e6f12b96056c50807a51d504de2c950e8b79e04e34f5e0ceaf26a0b48aca9fc5431b0e942bb6166fd835d1bd581c8e1284da1dd11b00000000000000000000000000000000000000000000000000000000000000';
-
-    const result = await eth_call_return(this.network.chainId, { to: this.toAddress, data: encodedERC1271Data });
+    const result = await eth_call_return(
+      this.network.chainId,
+      { to: this.toAddress, data: EncodedERC1271ContractWalletCallData },
+      true
+    );
 
     const errorCode = Number(result?.error?.code);
     const isContractWallet = Boolean(result?.error?.data && Number.isInteger(errorCode) && errorCode !== -32000);

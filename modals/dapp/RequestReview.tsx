@@ -1,10 +1,12 @@
 import { ActivityIndicator, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { AntDesign, Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { Coin, SafeViewContainer, Skeleton } from '../../components';
 import React, { useRef, useState } from 'react';
+import { secondaryFontColor, warningColor } from '../../constants/styles';
 
 import { Account } from '../../viewmodels/account/Account';
 import AccountIndicator from '../components/AccountIndicator';
+import AddressRiskIndicator from '../components/AddressRiskIndicator';
 import AnimatedNumber from '../../components/AnimatedNumber';
 import BalanceChangePreview from '../views/BalanceChangePreview';
 import { BioType } from '../../viewmodels/auth/Authentication';
@@ -17,7 +19,6 @@ import HorizontalNftList from '../components/HorizontalNftList';
 import HorizontalTokenList from '../components/HorizontalTokenList';
 import Image from 'react-native-fast-image';
 import InsufficientFee from '../components/InsufficientFee';
-import MultiSourceImage from '../../components/MultiSourceImage';
 import { PreExecResult } from '../../common/apis/Debank';
 import { RawTransactionRequest } from '../../viewmodels/transferring/RawTransactionRequest';
 import { ReactiveScreen } from '../../utils/device';
@@ -30,7 +31,6 @@ import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { openBrowserAsync } from 'expo-web-browser';
-import { secondaryFontColor } from '../../constants/styles';
 import styles from '../styles';
 
 interface Props {
@@ -49,9 +49,10 @@ const TxReview = observer(
   ({ vm, onReject, onApprove, onGasPress, onDecodedFuncPress, app, account, bioType, onBalanceChangePreviewPress }: Props) => {
     const { network } = vm;
     const { t } = i18n;
-    const { textColor, borderColor, secondaryTextColor, tintColor, foregroundColor } = Theme;
+    const { textColor, borderColor, secondaryTextColor } = Theme;
 
     const [busy, setBusy] = useState(false);
+    const [dangerous, setDangerous] = useState(false);
 
     const reviewItemStyle = { ...styles.reviewItem, borderColor };
     const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
@@ -202,14 +203,30 @@ const TxReview = observer(
             </Text>
 
             <TouchableOpacity
-              style={{ flexDirection: 'row', alignItems: 'center' }}
+              style={{ flexDirection: 'row', alignItems: 'center', position: 'relative' }}
               onPress={() => openBrowserAsync(`${network.explorer}/address/${vm.toAddress}`)}
             >
-              <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>
+              <Text style={{ ...reviewItemValueStyle, color: dangerous ? warningColor : textColor }} numberOfLines={1}>
                 {vm.toAddress ? formatAddress(vm.to, 9, 5) : t('modal-dapp-request-deploy-contract')}
               </Text>
 
-              {vm.to ? <Ionicons name="search-outline" size={15} color={textColor} style={{ marginStart: 6 }} /> : undefined}
+              {vm.to ? (
+                <Ionicons
+                  name="search-outline"
+                  size={15}
+                  color={dangerous ? warningColor : textColor}
+                  style={{ marginStart: 6 }}
+                />
+              ) : undefined}
+
+              {vm.toAddress ? (
+                <AddressRiskIndicator
+                  chainId={network.chainId}
+                  address={vm.toAddress}
+                  containerStyle={{ position: 'absolute', bottom: -11.5, right: 0 }}
+                  onDangerous={() => setDangerous(true)}
+                />
+              ) : undefined}
             </TouchableOpacity>
           </View>
 
@@ -369,7 +386,7 @@ const TxReview = observer(
 
         <RejectApproveButtons
           onReject={onReject}
-          themeColor={network?.color}
+          themeColor={dangerous ? warningColor : network?.color}
           rejectTitle={t('button-reject')}
           approveTitle={t('modal-review-button-confirm')}
           disabledApprove={!vm.isValidParams || busy}

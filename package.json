@@ -70,6 +70,7 @@
     "lottie-react-native": "5.1.4",
     "mobx": "^6.7.0",
     "mobx-react-lite": "^3.4.0",
+    "node-html-parser": "^6.1.4",
     "numeral": "^2.0.6",
     "process": "^0.11.0",
     "pubsub-js": "^1.9.4",

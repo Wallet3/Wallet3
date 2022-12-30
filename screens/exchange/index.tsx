@@ -17,6 +17,7 @@ import { NetworksMenu } from '../../modals';
 import { OneInch } from '../../assets/3rd';
 import { Portal } from 'react-native-portalize';
 import { ReactiveScreen } from '../../utils/device';
+import { RotateAnimation } from '../../utils/animations';
 import { SwapProtocol } from '../../common/apis/1inch';
 import { TextInput } from 'react-native-gesture-handler';
 import Theme from '../../viewmodels/settings/Theme';
@@ -28,7 +29,6 @@ import { generateDexLogo } from '../../assets/dexs';
 import { generateNetworkIcon } from '../../assets/icons/networks/white';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import { rotate } from '../../common/Animation';
 
 export default observer(() => {
   const { backgroundColor, borderColor, foregroundColor, textColor, secondaryTextColor } = Theme;
@@ -132,7 +132,7 @@ export default observer(() => {
                 {VM.pendingTxs.length}
               </Text>
 
-              <Animatable.View animation={rotate} iterationCount="infinite" easing="linear" duration={2000}>
+              <Animatable.View animation={RotateAnimation} iterationCount="infinite" easing="linear" duration={2000}>
                 <Ionicons name="sync" size={14} color={userSelectedNetwork.color} />
               </Animatable.View>
             </View>

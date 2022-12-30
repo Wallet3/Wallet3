@@ -11,12 +11,12 @@ import HistoryList from './HistoryList';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
 import { RootNavigationProps } from '../navigations';
+import { RotateAnimation } from '../../utils/animations';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
 import TxHub from '../../viewmodels/hubs/TxHub';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import { rotate } from '../../common/Animation';
 import { useNavigation } from '@react-navigation/core';
 
 interface Props {
@@ -71,7 +71,7 @@ export default observer(({ tokens, themeColor, loadingTokens, onRefreshRequest, 
             {TxHub.pendingCount > 0 && (
               <Animatable.View
                 style={{ marginStart: 4 }}
-                animation={rotate}
+                animation={RotateAnimation}
                 iterationCount="infinite"
                 easing="linear"
                 duration={2000}
