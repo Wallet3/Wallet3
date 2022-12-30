@@ -153,7 +153,7 @@ export default observer(({ themeColor, data, onReject, onSign, account, bioType,
         </ScrollView>
       )}
 
-      {is2612 && <EIP2612Permit eip2612={is2612} metadata={metadata} onDangerous={() => setDangerous(true)} />}
+      {is2612 && <EIP2612Permit eip2612={is2612} metadata={metadata} onAddressChecked={setDangerous} />}
 
       <View style={{ flex: 1 }} />
 

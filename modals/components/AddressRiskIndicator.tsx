@@ -13,10 +13,10 @@ interface Props {
   address: string;
   chainId: number;
   containerStyle?: StyleProp<ViewStyle>;
-  onDangerous?: () => void;
+  onAddressChecked?: (dangerous: boolean) => void;
 }
 
-export default ({ chainId, address, containerStyle, onDangerous }: Props) => {
+export default ({ chainId, address, containerStyle, onAddressChecked }: Props) => {
   const [publicName, setPublicName] = useState('');
   const [dangerous, setDangerous] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -26,8 +26,7 @@ export default ({ chainId, address, containerStyle, onDangerous }: Props) => {
       setPublicName(publicName);
       setDangerous(dangerous);
       setLoading(false);
-
-      dangerous ? onDangerous?.() : undefined;
+      onAddressChecked?.(dangerous);
     });
   }, [chainId, address]);
 
@@ -45,9 +44,13 @@ export default ({ chainId, address, containerStyle, onDangerous }: Props) => {
       <Text style={{ fontSize: 9, color, fontWeight: '600' }} numberOfLines={1}>
         {publicName}
       </Text>
-      {!dangerous && publicName && <Ionicons name="checkmark-circle" color={color} size={9} style={{ marginStart: 4 }} />}
+      {!dangerous && <Ionicons name="checkmark-circle" color={color} size={9} style={{ marginStart: 4 }} />}
     </Animatable.View>
   );
 
-  return loading ? <Skeleton style={{ height: 9, width: 72, ...(containerStyle || ({} as any)) }} /> : <Indicator />;
+  return loading ? (
+    <Skeleton style={{ height: 9, width: 72, ...(containerStyle || ({} as any)) }} />
+  ) : publicName ? (
+    <Indicator />
+  ) : null;
 };

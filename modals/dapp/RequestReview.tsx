@@ -224,7 +224,7 @@ const TxReview = observer(
                   chainId={network.chainId}
                   address={vm.toAddress}
                   containerStyle={{ position: 'absolute', bottom: -11.5, right: 0 }}
-                  onDangerous={() => setDangerous(true)}
+                  onAddressChecked={setDangerous}
                 />
               ) : undefined}
             </TouchableOpacity>

@@ -67,7 +67,7 @@ const ReviewView = observer(
     return (
       <SafeViewContainer style={styles.container}>
         <View style={styles.navBar}>
-          {disableBack ? <View /> : <BackButton onPress={onBack} color={Networks.current.color} />}
+          {disableBack ? <View /> : <BackButton onPress={onBack} color={dangerous ? warningColor : Networks.current.color} />}
 
           <Text style={styles.navTitle}>{t('modal-review-title')}</Text>
         </View>
@@ -145,7 +145,7 @@ const ReviewView = observer(
                   address={vm.toAddress}
                   chainId={vm.network.chainId}
                   containerStyle={{ position: 'absolute', bottom: -11.5, right: 0 }}
-                  onDangerous={() => setDangerous(true)}
+                  onAddressChecked={setDangerous}
                 />
               )}
             </View>
