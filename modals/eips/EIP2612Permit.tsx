@@ -22,9 +22,10 @@ import { warningColor } from '../../constants/styles';
 interface Props {
   eip2612: EIP2612;
   metadata?: PageMetadata;
+  onDangerous?: () => void;
 }
 
-export default ({ eip2612, metadata }: Props) => {
+export default ({ eip2612, metadata, onDangerous }: Props) => {
   const { textColor, borderColor, secondaryTextColor, tintColor, foregroundColor } = Theme;
   const { t } = i18n;
   const [network] = useState(Networks.find(eip2612.domain.chainId)!);
@@ -126,7 +127,10 @@ export default ({ eip2612, metadata }: Props) => {
             chainId={network.chainId}
             address={eip2612.message.spender}
             containerStyle={{ position: 'absolute', bottom: -11.5, right: 0 }}
-            onDangerous={() => setDangerous(true)}
+            onDangerous={() => {
+              setDangerous(true);
+              onDangerous?.();
+            }}
           />
         </TouchableOpacity>
       </View>

@@ -1,7 +1,7 @@
 import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import eip2612, { EIP2612, EIP2612Mock } from '../../eips/eip2612';
+import eip2612, { EIP2612 } from '../../eips/eip2612';
 
 import { Account } from '../../viewmodels/account/Account';
 import AccountIndicator from '../components/AccountIndicator';
@@ -14,11 +14,10 @@ import RejectApproveButtons from '../components/RejectApproveButtons';
 import { SafeViewContainer } from '../../components';
 import { ScrollView } from 'react-native-gesture-handler';
 import Theme from '../../viewmodels/settings/Theme';
-import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
-import { utils } from 'ethers';
+import { warningColor } from '../../constants/styles';
 
 interface Props {
   themeColor: string;
@@ -116,15 +115,18 @@ const generateItem = ({ data }: { data: { key: string; value: any | any[] }[] })
 
 export default observer(({ themeColor, data, onReject, onSign, account, bioType, metadata }: Props) => {
   const { t } = i18n;
-  const { borderColor, isLightMode, thirdTextColor } = Theme;
+  const { borderColor } = Theme;
   const [busy, setBusy] = useState(false);
   const [is2612] = useState<EIP2612>(eip2612.check(data) ? data : undefined);
+  const [dangerous, setDangerous] = useState(false);
 
   const authIcon = bioType
     ? bioType === 'faceid'
       ? () => <FaceID width={12.5} height={12.5} style={{ marginEnd: 2 }} />
       : () => <MaterialCommunityIcons name="fingerprint" size={19} color="#fff" />
     : undefined;
+
+  const safeThemeColor = dangerous ? warningColor : themeColor;
 
   return (
     <SafeViewContainer style={{ flex: 1 }}>
@@ -136,7 +138,7 @@ export default observer(({ themeColor, data, onReject, onSign, account, bioType,
           paddingBottom: is2612 ? 0 : 5,
         }}
       >
-        <Text style={{ ...styles.modalTitle, color: themeColor }}>{t('modal-message-signing-title')}</Text>
+        <Text style={{ ...styles.modalTitle, color: safeThemeColor }}>{t('modal-message-signing-title')}</Text>
 
         {account ? <AccountIndicator account={account} /> : undefined}
       </View>
@@ -151,14 +153,14 @@ export default observer(({ themeColor, data, onReject, onSign, account, bioType,
         </ScrollView>
       )}
 
-      {is2612 && <EIP2612Permit eip2612={is2612} metadata={metadata} />}
+      {is2612 && <EIP2612Permit eip2612={is2612} metadata={metadata} onDangerous={() => setDangerous(true)} />}
 
       <View style={{ flex: 1 }} />
 
       <RejectApproveButtons
         disabledApprove={busy}
         onReject={onReject}
-        themeColor={themeColor}
+        themeColor={safeThemeColor}
         swipeConfirm={bioType === 'faceid'}
         rejectTitle={t('button-reject')}
         approveTitle={t('button-sign')}
