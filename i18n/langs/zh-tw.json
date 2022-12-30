@@ -207,6 +207,7 @@
   "modal-dapp-request-to": "目標地址",
   "modal-dapp-approve-to": "授予地址",
   "modal-dapp-request-deploy-contract": "部署合約",
+  "modal-dapp-request-sign-deadline": "有效期限",
   "modal-dapp-not-supported-network": "未支持的網絡",
   "modal-dapp-add-new-network-title": "添加 EVM 網絡",
   "modal-dapp-add-new-network-network": "網絡名稱",

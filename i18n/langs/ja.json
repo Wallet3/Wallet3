@@ -207,6 +207,7 @@
   "modal-dapp-request-to": "送信先",
   "modal-dapp-approve-to": "承認先",
   "modal-dapp-request-deploy-contract": "コントラクトをデプロイ",
+  "modal-dapp-request-sign-deadline": "有効期限",
   "modal-dapp-not-supported-network": "非対応 ネットワーク",
   "modal-dapp-add-new-network-title": "EVM ネットワーク追加",
   "modal-dapp-add-new-network-network": "ネットワーク",

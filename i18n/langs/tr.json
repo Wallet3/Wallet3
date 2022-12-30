@@ -209,6 +209,7 @@
   "modal-dapp-request-to": "Kime",
   "modal-dapp-approve-to": "Onayla",
   "modal-dapp-request-deploy-contract": "Sözleşme Yayımla",
+  "modal-dapp-request-sign-deadline": "Süresi Dolmuş",
   "modal-dapp-not-supported-network": "Desteklenmeyen Ağ",
   "modal-dapp-add-new-network-title": "EVM Ağı Ekle",
   "modal-dapp-add-new-network-network": "Ağ",

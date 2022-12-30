@@ -11,10 +11,10 @@ import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/core/Networks';
 import { PageMetadata } from '../../screens/browser/Web3View';
 import Theme from '../../viewmodels/settings/Theme';
+import dayjs from 'dayjs';
 import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
-import { observer } from 'mobx-react-lite';
 import { openBrowserAsync } from 'expo-web-browser';
 import styles from '../styles';
 import { warningColor } from '../../constants/styles';
@@ -26,7 +26,7 @@ interface Props {
 }
 
 export default ({ eip2612, metadata, onAddressChecked }: Props) => {
-  const { textColor, borderColor, secondaryTextColor, tintColor, foregroundColor } = Theme;
+  const { textColor, borderColor } = Theme;
   const { t } = i18n;
   const [network] = useState(Networks.find(eip2612.domain.chainId)!);
   const [isUint256Max] = useState(BigNumber.from(eip2612.message.value).eq(constants.MaxUint256));
@@ -133,6 +133,13 @@ export default ({ eip2612, metadata, onAddressChecked }: Props) => {
             }}
           />
         </TouchableOpacity>
+      </View>
+
+      <View style={reviewItemStyle}>
+        <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-sign-deadline')}</Text>
+        <Text style={reviewItemValueStyle} numberOfLines={1}>
+          {dayjs(Number(eip2612.message.deadline) * 1000).format('YYYY-MM-DD HH:mm:ss')}
+        </Text>
       </View>
 
       <View style={{ ...reviewItemStyle, borderBottomWidth: 0 }}>
