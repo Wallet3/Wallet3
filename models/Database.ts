@@ -5,6 +5,7 @@ import EtherscanContract from './EtherscanContract';
 import InpageDApp from './InpageDApp';
 import Key from './Key';
 import NFT from './NFT';
+import SourcifyMetadata from './SourcifyItem';
 import Transaction from './Transaction';
 import WCSession_v1 from './WCSession_v1';
 
@@ -17,6 +18,7 @@ class Database {
   inpageDApps!: Repository<InpageDApp>;
   chains!: Repository<Chain>;
   etherscan_contracts!: Repository<EtherscanContract>;
+  sourcify_metadata!: Repository<SourcifyMetadata>;
   nfts!: Repository<NFT>;
 
   async init() {
@@ -27,7 +29,7 @@ class Database {
       database: __DEV__ ? 'dev5' : 'appdata',
       driver: require('expo-sqlite'),
       synchronize: true,
-      entities: [Key, Transaction, WCSession_v1, InpageDApp, Chain, EtherscanContract, NFT],
+      entities: [Key, Transaction, WCSession_v1, InpageDApp, Chain, EtherscanContract, NFT, SourcifyMetadata],
     });
 
     await this._dataSource.initialize();
@@ -38,6 +40,7 @@ class Database {
     this.inpageDApps = this._dataSource.getRepository(InpageDApp);
     this.chains = this._dataSource.getRepository(Chain);
     this.etherscan_contracts = this._dataSource.getRepository(EtherscanContract);
+    this.sourcify_metadata = this._dataSource.getRepository(SourcifyMetadata);
     this.nfts = this._dataSource.getRepository(NFT);
   }
 

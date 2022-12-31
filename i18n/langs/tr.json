@@ -189,6 +189,7 @@
   "modal-func-review-input-name": "İsim",
   "modal-func-review-input-type": "Tip",
   "modal-func-review-input-value": "Değer",
+  "modal-func-review-verified-sourcify": "Bu sözleşme Sourcify'da doğrulanmıştır",
   "modal-message-signing-title": "Mesaj İmzalama",
   "modal-siwe-title": "Ethereum ile Oturum Aç",
   "modal-siwe-request-msg": "{{domain}}, Ethereum ile oturum açmanızı istiyor",

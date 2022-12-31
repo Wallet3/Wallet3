@@ -184,13 +184,14 @@ export class Wallet {
         showMessage({ message: 'DANGEROUS: Wallet 3 rejects signing this data.', type: 'danger' });
         return undefined;
       } else {
-        logEthSign('plain');
         return (await this.openWallet(request))?.signMessage(
           typeof request.msg === 'string' && utils.isBytesLike(request.msg) ? utils.arrayify(request.msg) : request.msg
         );
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      logEthSign('plain');
     }
   }
 
@@ -199,13 +200,15 @@ export class Wallet {
       const key = await this.unlockPrivateKey(request);
       if (!key) return undefined;
 
-      logEthSign('typed_data');
       return ethSignUtil.signTypedData({
         privateKey: Buffer.from(utils.arrayify(key)),
         version: request.version ?? SignTypedDataVersion.V4,
         data: request.typedData,
       });
-    } catch (error) {}
+    } catch (error) {
+    } finally {
+      logEthSign('typed_data');
+    }
   }
 
   async sendTx(request: SendTxRequest) {

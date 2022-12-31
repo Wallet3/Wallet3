@@ -298,22 +298,22 @@ const TxReview = observer(
                 </TouchableOpacity>
               </View>
             ) : (
-              <View style={{ ...reviewItemStyle }}>
+              <View style={{ ...reviewItemStyle, position: 'relative' }}>
                 <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-value')}</Text>
 
-                {vm.preExecuting ? (
-                  <Skeleton style={{ width: 108, height: 17 }} />
-                ) : (
-                  <View style={{ flexDirection: 'row' }}>
-                    <Text style={{ ...reviewItemValueStyle, maxWidth: 150, marginEnd: 4 }} numberOfLines={1}>
-                      {vm.value}
-                    </Text>
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={{ ...reviewItemValueStyle, maxWidth: 150, marginEnd: 4 }} numberOfLines={1}>
+                    {`- ${vm.value}`}
+                  </Text>
 
-                    <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>
-                      {vm.network.symbol}
-                    </Text>
-                  </View>
-                )}
+                  <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>
+                    {vm.network.symbol}
+                  </Text>
+
+                  {vm.preExecuting && (
+                    <Skeleton style={{ width: 72, height: 9, position: 'absolute', right: 0, bottom: -11.5 }} />
+                  )}
+                </View>
               </View>
             )
           ) : undefined}

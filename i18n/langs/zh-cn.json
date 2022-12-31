@@ -182,6 +182,7 @@
   "modal-func-review-input-name": "名称",
   "modal-func-review-input-type": "类型",
   "modal-func-review-input-value": "数据",
+  "modal-func-review-verified-sourcify": "该合约已通过 Sourcify 认证",
   "modal-gas-review-limit": "燃料上限",
   "modal-gas-review-max-price": "燃料价格上限",
   "modal-gas-review-priority-price": "优先费",

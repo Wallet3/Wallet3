@@ -179,7 +179,7 @@ export class BaseTransaction {
   }
 
   setToAddress(to: string) {
-    this.toAddress = to;
+    this.toAddress = utils.getAddress(to);
     this.isResolvingAddress = false;
     this.checkToAddress();
   }
@@ -200,7 +200,7 @@ export class BaseTransaction {
     if (!to) return;
 
     if (utils.isAddress(to)) {
-      this.setToAddress(utils.getAddress(to));
+      this.setToAddress(to);
       return;
     }
 
@@ -208,7 +208,7 @@ export class BaseTransaction {
       let addr = to.substring(this.network.addrPrefix.length);
       addr = addr.startsWith('0x') ? addr : `0x${addr}`;
 
-      utils.isAddress(addr) ? this.setToAddress(utils.getAddress(addr)) : undefined;
+      utils.isAddress(addr) ? this.setToAddress(addr) : undefined;
       return;
     }
 

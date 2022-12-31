@@ -6,27 +6,13 @@ import { INetwork } from '../../common/Networks';
 import LINQ from 'linq';
 import { getAbi } from '../../common/apis/Etherscan';
 
-interface IO {
-  name: string;
-  type: string;
-}
-
-export interface AbiItem {
-  constant: boolean;
-  inputs: IO[];
-  name: string;
-  outputs: IO[];
-  payable: boolean;
-  stateMutability: string;
-  type: string;
-}
-
 export interface DecodedFunc {
   func: string;
   fullFunc: string;
   methodID: string;
   inputs: ethers.utils.ParamType[];
   params: ethers.utils.Result;
+  comment?: string;
 }
 
 class EtherscanHub {
@@ -56,7 +42,7 @@ class EtherscanHub {
 
     for (let func of LINQ.from(contract.interface.functions)) {
       try {
-        const params = contract.interface.decodeFunctionData(func.key, calldata);
+        const params = contract.interface.decodeFunctionData(`${func.key}`, calldata);
         const fullFunc = `${func.value.name}(${func.value.inputs.map((i) => `${i.type} ${i.name}`).join(', ')})`;
 
         return { func: func.value.name, fullFunc, inputs: func.value.inputs, params, methodID: calldata.substring(0, 10) };

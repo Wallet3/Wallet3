@@ -182,6 +182,7 @@
   "modal-func-review-input-name": "名称",
   "modal-func-review-input-type": "タイプ",
   "modal-func-review-input-value": "データ",
+  "modal-func-review-verified-sourcify": "このコントラクトは Sourcify で検証されています",
   "modal-gas-review-limit": "ガスリミット",
   "modal-gas-review-max-price": "最大ガス価格",
   "modal-gas-review-priority-price": "優先価格",

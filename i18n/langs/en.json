@@ -189,6 +189,7 @@
   "modal-func-review-input-name": "Name",
   "modal-func-review-input-type": "Type",
   "modal-func-review-input-value": "Value",
+  "modal-func-review-verified-sourcify": "This contract has been verified on Sourcify.",
   "modal-message-signing-title": "Message Signing",
   "modal-siwe-title": "Sign-In with Ethereum",
   "modal-siwe-request-msg": "{{domain}} wants you to Sign-In with Ethereum",

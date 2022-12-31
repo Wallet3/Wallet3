@@ -11,6 +11,7 @@ import { ERC20Token } from '../../models/ERC20';
 import { ERC721Token } from '../../models/ERC721';
 import { Gwei_1 } from '../../common/Constants';
 import { INetwork } from '../../common/Networks';
+import Sourcify from '../hubs/Sourcify';
 import { WCCallRequest_eth_sendTransaction } from '../../models/WCSession_v1';
 import numeral from 'numeral';
 import { showMessage } from 'react-native-flash-message';
@@ -202,7 +203,9 @@ export class RawTransactionRequest extends BaseTransaction {
         isRawTx = true;
 
         this.decodingFunc = true;
-        const decodedFunc = await EtherscanHub.decodeCall(this.network, param.to, param.data);
+        let decodedFunc = await Sourcify.decodeCall(this.network, this.toAddress, param.data);
+        console.log('1', decodedFunc);
+        // if (!decodedFunc) decodedFunc = await EtherscanHub.decodeCall(this.network, this.toAddress, param.data);
 
         runInAction(() => {
           this.decodedFunc = decodedFunc;
@@ -231,7 +234,7 @@ export class RawTransactionRequest extends BaseTransaction {
 
     if (param.nonce) runInAction(() => this.setNonce(param.nonce));
 
-    if (!isRawTx || !PreExecChains.has(this.network.chainId)) {
+    if (!isRawTx || !PreExecChains.has(this.network.chainId) || __DEV__) {
       runInAction(() => (this.preExecuting = false));
       return;
     }
@@ -280,7 +283,6 @@ export class RawTransactionRequest extends BaseTransaction {
   get isValidParams() {
     return (
       !this.initializing &&
-      !this.preExecuting &&
       (utils.isAddress(this.param.to) || this.param.to === '') && // Empty address is allowed - it means contract deploying
       this.nonce >= 0 &&
       this.isValidGas &&
