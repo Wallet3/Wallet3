@@ -2,11 +2,16 @@ import { utils } from 'ethers';
 
 export async function getMetadata(chainId: number | string, contract: string) {
   const url = `https://repo.sourcify.dev/contracts/full_match/${chainId}/${utils.getAddress(contract)}/metadata.json`;
+  const timeoutController = new AbortController();
+  const timer = setTimeout(() => timeoutController.abort(), 3000);
 
   try {
-    const resp = await fetch(url);
+    const resp = await fetch(url, { signal: timeoutController.signal });
     return (await resp.json()) as ISourcifyMetadata;
-  } catch (error) {}
+  } catch (error) {
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 interface Compiler {

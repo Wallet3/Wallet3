@@ -203,9 +203,10 @@ export class RawTransactionRequest extends BaseTransaction {
         isRawTx = true;
 
         this.decodingFunc = true;
-        let decodedFunc = await Sourcify.decodeCall(this.network, this.toAddress, param.data);
-        console.log('1', decodedFunc);
-        // if (!decodedFunc) decodedFunc = await EtherscanHub.decodeCall(this.network, this.toAddress, param.data);
+
+        const decodedFunc =
+          (await Sourcify.decodeCall(this.network, this.toAddress, param.data)) ||
+          (await EtherscanHub.decodeCall(this.network, this.toAddress, param.data));
 
         runInAction(() => {
           this.decodedFunc = decodedFunc;

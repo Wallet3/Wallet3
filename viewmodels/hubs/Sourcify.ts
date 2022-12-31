@@ -19,7 +19,7 @@ class Sourcify {
 
     if (!metadata) {
       metadata = await getMetadata(network.chainId, contractAddress);
-      if (!metadata || !metadata.output || !metadata.output.abi) return null;
+      if (!metadata || !metadata.output || !Array.isArray(metadata.output.abi)) return null;
 
       const entity = new SourcifyMetadata();
       entity.contract = contractAddress;
