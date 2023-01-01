@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
 
-@Entity({ name: 'cloud_address_tags_v3' })
+@Entity({ name: 'cloud_address_tags' })
 export default class AddressTag extends BaseEntity {
   @PrimaryColumn()
   address!: string;
@@ -27,6 +27,6 @@ export default class AddressTag extends BaseEntity {
   lastUpdatedTimestamp!: number;
 
   get dangerous() {
-    return (this.warnings?.length ?? 0) > 0;
+    return (this.warnings?.length ?? 0) > 0 || (this.publicName?.includes('Fake_Phishing') ?? false);
   }
 }

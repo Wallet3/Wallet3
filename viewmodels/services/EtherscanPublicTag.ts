@@ -36,29 +36,27 @@ export async function fetchInfo(chainId: number, address: string) {
   }
 
   const root = await getHTML(chainId, address);
-
   if (!root) return;
 
-  const dangerous = root?.querySelectorAll('.u-label--danger').map((e) => e.innerText);
-  const warnings = (root?.querySelectorAll('.u-label--warning') || [])
+  const warnings = (root?.querySelectorAll('span.u-label--danger, span.u-label--warning') || [])
     .filter((i) => i.innerText.toUpperCase() !== 'OUT')
     .map((e) => e.innerText);
 
-  let alert = root?.querySelector('div.alert-warning')?.innerText;
+  let alert = root?.querySelector('div.alert-warning, div.alert-danger')?.innerText;
   alert = alert?.startsWith('×') ? alert.substring(1) : alert;
 
-  const isDangerous = dangerous.length > 0 || warnings.length > 0;
+  let [publicNameTag] = root?.querySelectorAll("span.u-label--secondary span[data-toggle='tooltip']");
+  if (!publicNameTag) [publicNameTag] = root?.querySelectorAll("span.u-label--secondary[data-toggle='tooltip']");
 
-  const [publicNameTag] = root?.querySelectorAll("span.u-label--secondary span[data-toggle='tooltip']") || [];
-  const publicName =
-    (publicNameTag?.innerHTML || dangerous[0] || warnings[0] || '').trim() || (isDangerous ? 'Be careful' : '');
+  const publicName = (publicNameTag?.innerText || warnings[0] || '').trim();
 
   const tag = new AddressTag();
   tag.address = address;
   tag.chainId = chainId;
   tag.alert = alert;
   tag.publicName = publicName;
-  tag.warnings = [...dangerous, ...warnings];
+  tag.warnings = warnings;
+  tag.lastUpdatedTimestamp = Date.now();
   await tag.save();
 
   cache.set(key, tag);

@@ -68,7 +68,7 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
 
             {vm?.dangerous ? (
               <Animatable.View animation={BreathAnimation} duration={1200} iterationCount="infinite" useNativeDriver>
-                <Ionicons name="warning" size={17} color={warningColor} />
+                <Ionicons name="warning" size={19} color={warningColor} />
               </Animatable.View>
             ) : (
               <MaterialIcons name="verified" size={17} color={vm?.verified ? 'dodgerblue' : borderColor} />
