@@ -22,8 +22,9 @@ async function getHTML(chainId: number, address: string) {
 }
 
 export async function fetchInfo(chainId: number, address: string) {
-  address = utils.getAddress(address);
+  if (!utils.isAddress(address)) return;
 
+  address = utils.getAddress(address);
   const key = `${chainId}-${address}`;
   if (cache.has(key)) return cache.get(key)!;
 

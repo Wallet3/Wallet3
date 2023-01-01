@@ -1,12 +1,13 @@
-import { makeObservable, observable, runInAction } from 'mobx';
+import { computed, makeObservable, observable, runInAction } from 'mobx';
 
+import AddressTag from '../../models/entities/AddressTag';
 import Coingecko from '../../common/apis/Coingecko';
 import { INetwork } from '../../common/Networks';
 import Langs from '../settings/Langs';
 import { Links } from '../../common/apis/Coingecko.d';
-import TokenVerifier from './TokenVerifier';
 import { UserToken } from './TokensMan';
 import axios from 'axios';
+import { fetchInfo } from './EtherscanPublicTag';
 import { startSpringLayoutAnimation } from '../../utils/animations';
 
 interface ITokenData {
@@ -24,7 +25,7 @@ export class TokenData implements ITokenData {
   readonly network: INetwork;
   readonly infoUrl: string;
 
-  isVerified = false;
+  tag: AddressTag | null = null;
   coinId?: string;
   description: string = '';
   firstDescription = '';
@@ -36,6 +37,14 @@ export class TokenData implements ITokenData {
   historyPrices: number[] = [];
   historyDays = 1;
   links?: Links;
+
+  get verified() {
+    return this.tag && this.tag?.publicName && !this.tag.dangerous;
+  }
+
+  get dangerous() {
+    return this.tag?.dangerous ?? false;
+  }
 
   constructor({ token, network }: { token: UserToken; network: INetwork }) {
     this.symbol = token.symbol;
@@ -53,7 +62,9 @@ export class TokenData implements ITokenData {
       loading: observable,
       historyPrices: observable,
       historyDays: observable,
-      isVerified: observable,
+      tag: observable,
+      verified: computed,
+      dangerous: computed,
     });
 
     this.init();
@@ -73,7 +84,11 @@ export class TokenData implements ITokenData {
       this.loading = true;
     });
 
-    TokenVerifier.checkVerified(this.network.chainId, this.address).then((v) => runInAction(() => (this.isVerified = v)));
+    if (this.address) {
+      fetchInfo(this.network.chainId, this.address).then((tag) => runInAction(() => (this.tag = tag || null)));
+    } else {
+      this.tag = { address: '', chainId: this.network.chainId, publicName: this.network.symbol } as any;
+    }
 
     const [result, info] = await Promise.all([
       Coingecko.getCoinDetails(this.symbol, this.address, this.network.network),
