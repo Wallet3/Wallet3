@@ -23,8 +23,8 @@ export class TokenData implements ITokenData {
   readonly symbol: string;
   readonly network: INetwork;
   readonly infoUrl: string;
-  readonly isVerified: boolean;
 
+  isVerified = false;
   coinId?: string;
   description: string = '';
   firstDescription = '';
@@ -41,7 +41,6 @@ export class TokenData implements ITokenData {
     this.symbol = token.symbol;
     this.address = token.address;
     this.network = network;
-    this.isVerified = this.address === '' ? true : TokenVerifier.isVerified(this.address);
 
     this.infoUrl = `https://github.com/trustwallet/assets/raw/master/blockchains/${
       (network.github_dir || network.network)?.toLowerCase() ?? 'ethereum'
@@ -54,6 +53,7 @@ export class TokenData implements ITokenData {
       loading: observable,
       historyPrices: observable,
       historyDays: observable,
+      isVerified: observable,
     });
 
     this.init();
@@ -72,6 +72,8 @@ export class TokenData implements ITokenData {
       this.description = '';
       this.loading = true;
     });
+
+    TokenVerifier.checkVerified(this.network.chainId, this.address).then((v) => runInAction(() => (this.isVerified = v)));
 
     const [result, info] = await Promise.all([
       Coingecko.getCoinDetails(this.symbol, this.address, this.network.network),

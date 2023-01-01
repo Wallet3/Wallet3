@@ -1,7 +1,7 @@
 import * as ethers from 'ethers';
 
 import Database from '../../models/Database';
-import EtherscanContract from '../../models/EtherscanContract';
+import EtherscanContract from '../../models/entities/EtherscanContract';
 import { INetwork } from '../../common/Networks';
 import LINQ from 'linq';
 import { getAbi } from '../../common/apis/Etherscan';

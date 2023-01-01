@@ -11,7 +11,7 @@ import Contacts from '../customs/Contacts';
 import Database from '../../models/Database';
 import FirebaseAnalytics from '@react-native-firebase/analytics';
 import GasPrice from '../misc/GasPrice';
-import Key from '../../models/Key';
+import Key from '../../models/entities/Key';
 import LINQ from 'linq';
 import LinkHub from '../hubs/LinkHub';
 import MessageKeys from '../../common/MessageKeys';

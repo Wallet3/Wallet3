@@ -1,7 +1,7 @@
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import Database from '../../models/Database';
-import InpageDApp from '../../models/InpageDApp';
+import InpageDApp from '../../models/entities/InpageDApp';
 import LINQ from 'linq';
 import { MetamaskDApp } from './MetamaskDApp';
 

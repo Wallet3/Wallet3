@@ -15,7 +15,7 @@ import Overview from './Overview';
 import { Portal } from 'react-native-portalize';
 import Theme from '../../viewmodels/settings/Theme';
 import TokenDetail from './TokenDetail';
-import Transaction from '../../models/Transaction';
+import Transaction from '../../models/entities/Transaction';
 import TxDetail from './TxDetail';
 import { View } from 'react-native';
 import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectV1ClientHub';

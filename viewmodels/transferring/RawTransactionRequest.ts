@@ -12,7 +12,7 @@ import { ERC721Token } from '../../models/ERC721';
 import { Gwei_1 } from '../../common/Constants';
 import { INetwork } from '../../common/Networks';
 import Sourcify from '../hubs/Sourcify';
-import { WCCallRequest_eth_sendTransaction } from '../../models/WCSession_v1';
+import { WCCallRequest_eth_sendTransaction } from '../../models/entities/WCSession_v1';
 import numeral from 'numeral';
 import { showMessage } from 'react-native-flash-message';
 import { sleep } from '../../utils/async';
@@ -204,9 +204,10 @@ export class RawTransactionRequest extends BaseTransaction {
 
         this.decodingFunc = true;
 
-        const decodedFunc =
-          (await Sourcify.decodeCall(this.network, this.toAddress, param.data)) ||
-          (await EtherscanHub.decodeCall(this.network, this.toAddress, param.data));
+        const decodedFunc = await Promise.race([
+          Sourcify.decodeCall(this.network, this.toAddress, param.data),
+          EtherscanHub.decodeCall(this.network, this.toAddress, param.data),
+        ]);
 
         runInAction(() => {
           this.decodedFunc = decodedFunc;

@@ -303,7 +303,7 @@ const TxReview = observer(
 
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={{ ...reviewItemValueStyle, maxWidth: 150, marginEnd: 4 }} numberOfLines={1}>
-                    {`- ${vm.value}`}
+                    {`${vm.valueWei.gt(0) ? '-' : ''}${vm.value}`}
                   </Text>
 
                   <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>

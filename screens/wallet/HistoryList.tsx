@@ -6,7 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/core/Networks';
 import React from 'react';
 import Theme from '../../viewmodels/settings/Theme';
-import Transaction from '../../models/Transaction';
+import Transaction from '../../models/entities/Transaction';
 import dayjs from 'dayjs';
 import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';

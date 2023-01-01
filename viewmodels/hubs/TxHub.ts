@@ -1,5 +1,5 @@
 import { IsNull, LessThanOrEqual, MoreThan, Not } from 'typeorm';
-import Transaction, { ITransaction } from '../../models/Transaction';
+import Transaction, { ITransaction } from '../../models/entities/Transaction';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { getTransactionReceipt, sendTransaction } from '../../common/RPC';
 

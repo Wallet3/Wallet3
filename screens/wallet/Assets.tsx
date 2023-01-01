@@ -3,7 +3,7 @@ import * as Animatable from 'react-native-animatable';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Transaction, { ITransaction } from '../../models/Transaction';
+import Transaction, { ITransaction } from '../../models/entities/Transaction';
 import { borderColor, secondaryFontColor } from '../../constants/styles';
 
 import ERC20Tokens from './ERC20Tokens';

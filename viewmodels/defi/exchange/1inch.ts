@@ -13,7 +13,7 @@ import LINQ from 'linq';
 import MessageKeys from '../../../common/MessageKeys';
 import { NativeToken } from '../../../models/NativeToken';
 import Networks from '../../core/Networks';
-import { ReadableInfo } from '../../../models/Transaction';
+import { ReadableInfo } from '../../../models/entities/Transaction';
 import { SupportedChains } from './1inchSupportedChains';
 import TokensMan from '../../services/TokensMan';
 import TxHub from '../../hubs/TxHub';

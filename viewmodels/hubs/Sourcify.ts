@@ -6,7 +6,7 @@ import Database from '../../models/Database';
 import { DecodedFunc } from './EtherscanHub';
 import { INetwork } from '../../common/Networks';
 import LINQ from 'linq';
-import SourcifyMetadata from '../../models/SourcifyItem';
+import SourcifyMetadata from '../../models/entities/SourcifyItem';
 
 class Sourcify {
   private get table() {

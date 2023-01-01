@@ -5,7 +5,7 @@ import { Button } from '../../components';
 import { Gwei_1 } from '../../common/Constants';
 import Networks from '../../viewmodels/core/Networks';
 import Theme from '../../viewmodels/settings/Theme';
-import Transaction from '../../models/Transaction';
+import Transaction from '../../models/entities/Transaction';
 import { TxController } from '../../viewmodels/misc/TxController';
 import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';

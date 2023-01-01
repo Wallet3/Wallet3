@@ -1,8 +1,8 @@
 import App from '../core/App';
 import EventEmitter from 'events';
-import InpageDApp from '../../models/InpageDApp';
+import InpageDApp from '../../models/entities/InpageDApp';
 import Networks from '../core/Networks';
-import { WCClientMeta } from '../../models/WCSession_v1';
+import { WCClientMeta } from '../../models/entities/WCSession_v1';
 
 export class MetamaskDApp extends EventEmitter {
   dapp: InpageDApp;

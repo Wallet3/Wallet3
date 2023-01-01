@@ -5,7 +5,7 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 import Database from '../../models/Database';
 import EventEmitter from 'events';
 import LINQ from 'linq';
-import WCSession_v1 from '../../models/WCSession_v1';
+import WCSession_v1 from '../../models/entities/WCSession_v1';
 import { WalletConnect_v1 } from './WalletConnect_v1';
 
 class WalletConnectV1ClientHub extends EventEmitter {

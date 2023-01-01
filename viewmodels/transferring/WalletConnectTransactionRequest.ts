@@ -1,5 +1,5 @@
 import { Methods, RequestType } from './RequestTypes';
-import { WCCallRequestRequest, WCCallRequest_eth_sendTransaction } from '../../models/WCSession_v1';
+import { WCCallRequestRequest, WCCallRequest_eth_sendTransaction } from '../../models/entities/WCSession_v1';
 
 import { RawTransactionRequest } from './RawTransactionRequest';
 import { WalletConnect_v1 } from '../walletconnect/WalletConnect_v1';

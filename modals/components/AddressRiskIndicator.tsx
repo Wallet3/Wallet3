@@ -22,8 +22,11 @@ export default ({ chainId, address, containerStyle, onAddressChecked }: Props) =
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchInfo(chainId, address).then(({ dangerous, publicName }) => {
-      setPublicName(publicName);
+    fetchInfo(chainId, address).then((item) => {
+      if (!item) return;
+
+      const { dangerous, publicName } = item;
+      setPublicName(publicName || '');
       setDangerous(dangerous);
       setLoading(false);
       onAddressChecked?.(dangerous);
