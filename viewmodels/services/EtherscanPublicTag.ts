@@ -31,7 +31,7 @@ export async function fetchAddressInfo(chainId: number, address: string) {
 
   let item = await Database.cloud_address_tags.findOne({ where: { address, chainId } });
 
-  if (item && Date.now() < item.lastUpdatedTimestamp + 15 * DAY) {
+  if (item && Date.now() < item?.lastUpdatedTimestamp + 15 * DAY) {
     cache.set(key, item);
     return item;
   }
@@ -51,7 +51,7 @@ export async function fetchAddressInfo(chainId: number, address: string) {
 
   const publicName = (publicNameTag?.innerText || warnings[0])?.trim?.();
 
-  if (item?.publicName === publicName && !item.dangerous && warnings.length === 0 && !alert) {
+  if (item && item.publicName === publicName && !item.dangerous && warnings.length === 0 && !alert) {
     item.lastUpdatedTimestamp = Date.now();
     item.save();
     cache.set(key, item);

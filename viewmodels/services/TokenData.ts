@@ -43,7 +43,7 @@ export class TokenData implements ITokenData {
   links?: Links;
 
   get verified() {
-    return BuiltInTokens.has(this.address) || (this.tag && this.tag?.publicName && !this.tag.dangerous);
+    return BuiltInTokens.has(this.address) || (this.tag && this.tag.publicName && !this.tag.dangerous);
   }
 
   get dangerous() {
