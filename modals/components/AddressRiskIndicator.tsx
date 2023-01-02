@@ -7,7 +7,7 @@ import { secureColor, warningColor } from '../../constants/styles';
 import { BreathAnimation } from '../../utils/animations';
 import { Ionicons } from '@expo/vector-icons';
 import { Skeleton } from '../../components';
-import { fetchInfo } from '../../viewmodels/services/EtherscanPublicTag';
+import { fetchAddressInfo } from '../../viewmodels/services/EtherscanPublicTag';
 
 interface Props {
   address: string;
@@ -26,7 +26,7 @@ export default ({ chainId, address, containerStyle, onAddressChecked, risky, lab
   useEffect(() => {
     if (label || !onAddressChecked) return;
 
-    fetchInfo(chainId, address).then((item) => {
+    fetchAddressInfo(chainId, address).then((item) => {
       if (!item) return;
 
       const { dangerous, publicName } = item;

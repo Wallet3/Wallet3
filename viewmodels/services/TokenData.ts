@@ -1,3 +1,5 @@
+import * as Tokens from '../../common/tokens';
+
 import { computed, makeObservable, observable, runInAction } from 'mobx';
 
 import AddressTag from '../../models/entities/AddressTag';
@@ -7,8 +9,10 @@ import Langs from '../settings/Langs';
 import { Links } from '../../common/apis/Coingecko.d';
 import { UserToken } from './TokensMan';
 import axios from 'axios';
-import { fetchInfo } from './EtherscanPublicTag';
+import { fetchAddressInfo } from './EtherscanPublicTag';
 import { startSpringLayoutAnimation } from '../../utils/animations';
+
+const BuiltInTokens = new Set(Object.getOwnPropertyNames(Tokens).map((name) => Tokens[name]?.address));
 
 interface ITokenData {
   description: string;
@@ -39,7 +43,7 @@ export class TokenData implements ITokenData {
   links?: Links;
 
   get verified() {
-    return this.tag && this.tag?.publicName && !this.tag.dangerous;
+    return BuiltInTokens.has(this.address) || (this.tag && this.tag?.publicName && !this.tag.dangerous);
   }
 
   get dangerous() {
@@ -85,7 +89,7 @@ export class TokenData implements ITokenData {
     });
 
     if (this.address) {
-      fetchInfo(this.network.chainId, this.address).then((tag) => runInAction(() => (this.tag = tag || null)));
+      fetchAddressInfo(this.network.chainId, this.address).then((tag) => runInAction(() => (this.tag = tag)));
     } else {
       this.tag = { address: '', chainId: this.network.chainId, publicName: this.network.symbol } as any;
     }

@@ -19,6 +19,7 @@ import Transaction from '../../models/entities/Transaction';
 import TxDetail from './TxDetail';
 import { View } from 'react-native';
 import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectV1ClientHub';
+import { logScreenView } from '../../viewmodels/services/Analytics';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
@@ -45,7 +46,8 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
 
   const onTxPress = (tx: Transaction) => {
     setSelectedTx(tx);
-    setTimeout(() => openTxDetail(), 0);
+    setTimeout(() => openTxDetail(), 10);
+    logScreenView('TxDetail');
   };
 
   useEffect(() => {

@@ -46,7 +46,7 @@ export default observer(({ vm, onClose }: Props) => {
     Contacts.saveContact({
       address: vm.toAddress,
       ens: vm.isEns ? vm.to : undefined,
-      name: selfAccount?.nickname,
+      name: selfAccount?.nickname || vm.toAddressTag?.publicName,
       emoji: selfAccount ? { icon: selfAccount.emojiAvatar, color: selfAccount.emojiColor } : undefined,
     });
 

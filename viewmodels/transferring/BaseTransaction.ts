@@ -23,7 +23,7 @@ import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
 import { NativeToken } from '../../models/NativeToken';
 import { Wallet } from '../core/Wallet';
-import { fetchInfo } from '../services/EtherscanPublicTag';
+import { fetchAddressInfo } from '../services/EtherscanPublicTag';
 import { getEnsAvatar } from '../../common/ENS';
 import { showMessage } from 'react-native-flash-message';
 import { startLayoutAnimation } from '../../utils/animations';
@@ -305,7 +305,7 @@ export class BaseTransaction {
   }
 
   protected async checkToAddress() {
-    fetchInfo(this.network.chainId, this.toAddress).then((tag) => runInAction(() => (this.toAddressTag = tag || null)));
+    fetchAddressInfo(this.network.chainId, this.toAddress).then((tag) => runInAction(() => (this.toAddressTag = tag)));
 
     const code = await getCode(this.network.chainId, this.toAddress);
     if (code === '0x') {
