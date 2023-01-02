@@ -155,7 +155,7 @@ export default observer(({ themeColor, data, onReject, onSign, account, bioType,
 
       {is2612 && <EIP2612Permit eip2612={is2612} metadata={metadata} onAddressChecked={setDangerous} />}
 
-      <View style={{ flex: 1 }} />
+      {is2612 && <View style={{ flex: 1 }} />}
 
       <RejectApproveButtons
         disabledApprove={busy}

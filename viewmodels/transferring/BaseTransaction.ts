@@ -252,12 +252,14 @@ export class BaseTransaction {
 
   setMaxGasPrice(gwei: string | number) {
     try {
+      gwei = (gwei === '.' ? '0' : gwei) || 0;
       this.maxGasPrice = Math.max(Math.min(Number(gwei), MAX_GWEI_PRICE), 0);
     } catch {}
   }
 
   setPriorityPrice(gwei: string | number) {
     try {
+      gwei = (gwei === '.' ? '0' : gwei) || 0;
       this.maxPriorityPrice = Math.max(Math.min(Number(gwei), MAX_GWEI_PRICE), 0);
     } catch (error) {}
   }

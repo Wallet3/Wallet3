@@ -57,7 +57,9 @@ export class RawTransactionRequest extends BaseTransaction {
       const value = Number(utils.formatUnits(this.tokenAmountWei, this.tokenDecimals)) || 0;
 
       return value < 1
-        ? utils.formatUnits(this.tokenAmountWei, this.tokenDecimals)
+        ? value === 0
+          ? '0'
+          : utils.formatUnits(this.tokenAmountWei, this.tokenDecimals)
         : numeral(value).format(Number.isInteger(value) ? '0,0' : '0,0.00');
     } catch (error) {
       return '0';
