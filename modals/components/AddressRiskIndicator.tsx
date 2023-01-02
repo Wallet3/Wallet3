@@ -12,16 +12,20 @@ import { fetchInfo } from '../../viewmodels/services/EtherscanPublicTag';
 interface Props {
   address: string;
   chainId: number;
+  label?: string;
+  risky?: boolean;
   containerStyle?: StyleProp<ViewStyle>;
   onAddressChecked?: (dangerous: boolean) => void;
 }
 
-export default ({ chainId, address, containerStyle, onAddressChecked }: Props) => {
-  const [publicName, setPublicName] = useState('');
-  const [dangerous, setDangerous] = useState(false);
-  const [loading, setLoading] = useState(true);
+export default ({ chainId, address, containerStyle, onAddressChecked, risky, label }: Props) => {
+  const [publicName, setPublicName] = useState(label ?? '');
+  const [dangerous, setDangerous] = useState(risky ?? false);
+  const [loading, setLoading] = useState(!label && onAddressChecked ? true : false);
 
   useEffect(() => {
+    if (label || !onAddressChecked) return;
+
     fetchInfo(chainId, address).then((item) => {
       if (!item) return;
 

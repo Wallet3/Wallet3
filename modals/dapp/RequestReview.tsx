@@ -52,7 +52,6 @@ const TxReview = observer(
     const { textColor, borderColor, secondaryTextColor } = Theme;
 
     const [busy, setBusy] = useState(false);
-    const [dangerous, setDangerous] = useState(false);
 
     const reviewItemStyle = { ...styles.reviewItem, borderColor };
     const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
@@ -206,7 +205,7 @@ const TxReview = observer(
               style={{ flexDirection: 'row', alignItems: 'center', position: 'relative' }}
               onPress={() => openBrowserAsync(`${network.explorer}/address/${vm.toAddress}`)}
             >
-              <Text style={{ ...reviewItemValueStyle, color: dangerous ? warningColor : textColor }} numberOfLines={1}>
+              <Text style={{ ...reviewItemValueStyle, color: vm.toAddressRisky ? warningColor : textColor }} numberOfLines={1}>
                 {vm.toAddress ? formatAddress(vm.to, 9, 5) : t('modal-dapp-request-deploy-contract')}
               </Text>
 
@@ -214,17 +213,18 @@ const TxReview = observer(
                 <Ionicons
                   name="search-outline"
                   size={15}
-                  color={dangerous ? warningColor : textColor}
+                  color={vm.toAddressTag?.dangerous ? warningColor : textColor}
                   style={{ marginStart: 6 }}
                 />
               ) : undefined}
 
-              {vm.toAddress ? (
+              {vm.toAddressTag ? (
                 <AddressRiskIndicator
                   chainId={network.chainId}
                   address={vm.toAddress}
+                  label={vm.toAddressTag?.publicName}
+                  risky={vm.toAddressTag?.dangerous}
                   containerStyle={{ position: 'absolute', bottom: -11.5, right: 0 }}
-                  onAddressChecked={setDangerous}
                 />
               ) : undefined}
             </TouchableOpacity>
@@ -386,7 +386,7 @@ const TxReview = observer(
 
         <RejectApproveButtons
           onReject={onReject}
-          themeColor={dangerous ? warningColor : network?.color}
+          themeColor={vm.toAddressRisky ? warningColor : network?.color}
           rejectTitle={t('button-reject')}
           approveTitle={t('modal-review-button-confirm')}
           disabledApprove={!vm.isValidParams || busy}

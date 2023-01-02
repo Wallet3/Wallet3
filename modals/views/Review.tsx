@@ -42,8 +42,7 @@ const ReviewView = observer(
   ({ vm, onBack, onGasPress, onSend, disableBack, biometricType, txDataEditable, onEditDataPress }: Props) => {
     const { t } = i18n;
     const [busy, setBusy] = React.useState(false);
-    const [dangerous, setDangerous] = useState(false);
-    const { borderColor, textColor, secondaryTextColor, tintColor } = Theme;
+    const { borderColor, textColor, secondaryTextColor } = Theme;
 
     const send = async () => {
       setBusy(true);
@@ -67,7 +66,11 @@ const ReviewView = observer(
     return (
       <SafeViewContainer style={styles.container}>
         <View style={styles.navBar}>
-          {disableBack ? <View /> : <BackButton onPress={onBack} color={dangerous ? warningColor : Networks.current.color} />}
+          {disableBack ? (
+            <View />
+          ) : (
+            <BackButton onPress={onBack} color={vm.transferToRisky ? warningColor : Networks.current.color} />
+          )}
 
           <Text style={styles.navTitle}>{t('modal-review-title')}</Text>
         </View>
@@ -129,23 +132,19 @@ const ReviewView = observer(
                 numberOfLines={1}
                 style={{
                   ...reviewItemValueStyle,
-                  color:
-                    dangerous || vm.hasZWSP || vm.isContractRecipient
-                      ? vm.isContractWallet
-                        ? 'dodgerblue'
-                        : warningColor
-                      : textColor,
+                  color: vm.transferToRisky ? warningColor : vm.isContractWallet ? 'dodgerblue' : textColor,
                 }}
               >
                 {utils.isAddress(vm.to) ? formatAddress(vm.toAddress, 8, 6) : formatAddress(vm.safeTo, 14, 6, '...')}
               </Text>
 
-              {!vm.hasZWSP && !vm.isContractRecipient && (
+              {!vm.hasZWSP && !vm.isContractRecipient && vm.toAddressTag && (
                 <AddressRiskIndicator
                   address={vm.toAddress}
                   chainId={vm.network.chainId}
+                  label={vm.toAddressTag?.publicName}
+                  risky={vm.toAddressTag?.dangerous}
                   containerStyle={{ position: 'absolute', bottom: -11.5, right: 0 }}
-                  onAddressChecked={setDangerous}
                 />
               )}
             </View>
@@ -236,9 +235,7 @@ const ReviewView = observer(
           onLongPress={onLongSendPress}
           onSwipeSuccess={onLongSendPress}
           icon={authIcon}
-          themeColor={
-            dangerous || vm.hasZWSP || (vm.isContractRecipient && !vm.isContractWallet) ? warningColor : vm.network.color
-          }
+          themeColor={vm.transferToRisky ? warningColor : vm.network.color}
         />
       </SafeViewContainer>
     );

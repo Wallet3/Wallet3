@@ -14,6 +14,7 @@ import {
 import { isDomain, resolveDomain } from '../services/DomainResolver';
 
 import { Account } from '../account/Account';
+import AddressTag from '../../models/entities/AddressTag';
 import App from '../core/App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Coingecko from '../../common/apis/Coingecko';
@@ -22,6 +23,7 @@ import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
 import { NativeToken } from '../../models/NativeToken';
 import { Wallet } from '../core/Wallet';
+import { fetchInfo } from '../services/EtherscanPublicTag';
 import { getEnsAvatar } from '../../common/ENS';
 import { showMessage } from 'react-native-flash-message';
 import { startLayoutAnimation } from '../../utils/animations';
@@ -36,6 +38,7 @@ export class BaseTransaction {
 
   to = '';
   toAddress = '';
+  toAddressTag: AddressTag | null = null;
   avatar?: string = '';
   isResolvingAddress = false;
   isContractRecipient = false;
@@ -60,6 +63,7 @@ export class BaseTransaction {
     makeObservable(this, {
       to: observable,
       toAddress: observable,
+      toAddressTag: observable,
       isValidAddress: computed,
       isResolvingAddress: observable,
       isContractRecipient: observable,
@@ -82,6 +86,7 @@ export class BaseTransaction {
       feeToken: observable,
       feeTokenSymbol: computed,
       insufficientFee: computed,
+      toAddressRisky: computed,
 
       setNonce: action,
       setGasLimit: action,
@@ -121,6 +126,10 @@ export class BaseTransaction {
 
   get nextBlockBaseFee() {
     return this.nextBlockBaseFeeWei / Gwei_1;
+  }
+
+  get toAddressRisky() {
+    return this.toAddressTag?.dangerous ?? false;
   }
 
   get txFeeWei() {
@@ -295,7 +304,9 @@ export class BaseTransaction {
     clearTimeout(this.timer as any);
   }
 
-  async checkToAddress() {
+  protected async checkToAddress() {
+    fetchInfo(this.network.chainId, this.toAddress).then((tag) => runInAction(() => (this.toAddressTag = tag || null)));
+
     const code = await getCode(this.network.chainId, this.toAddress);
     if (code === '0x') {
       runInAction(() => {
