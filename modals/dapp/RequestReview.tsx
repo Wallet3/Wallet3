@@ -390,7 +390,7 @@ const TxReview = observer(
           </TouchableOpacity>
         </View>
 
-        {vm.insufficientFee ? <InsufficientFee /> : undefined}
+        {vm.insufficientFee && !vm.loading ? <InsufficientFee /> : undefined}
 
         {vm.txException ? <TxException exception={vm.txException} /> : undefined}
 

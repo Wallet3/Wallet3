@@ -285,17 +285,18 @@ export class RawTransactionRequest extends BaseTransaction {
     }
   }
 
+  get insufficientFee() {
+    return this.valueWei.add(this.txFeeWei).gt(this.nativeToken.balance);
+  }
+
   get isValidParams() {
     return (
-      !this.initializing &&
-      (utils.isAddress(this.param.to) || this.param.to === '') && // Empty address is allowed - it means contract deploying
+      !this.loading &&
+      (utils.isAddress(this.param.to) || this.param.to === '' || this.param.to === undefined) && // Empty address is allowed - it means contract deploying
       this.nonce >= 0 &&
       this.isValidGas &&
-      this.nativeToken.balance.gte(this.valueWei) &&
-      !this.isEstimatingGas &&
       !this.txException &&
-      !this.insufficientFee &&
-      !this.nativeToken.loading
+      !this.insufficientFee
     );
   }
 

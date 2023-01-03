@@ -28,12 +28,9 @@ export class TxController {
         readableInfo: { ...(this.tx.readableInfo || {}), cancelTx: extra ? true : false },
       });
 
-      if (error) {
-        showMessage({ type: 'warning', message: error.message });
-        return false;
-      }
+      if (error && __DEV__) showMessage({ type: 'warning', message: error.message });
 
-      return true;
+      return error ? false : true;
     };
 
     const reject = () => {};

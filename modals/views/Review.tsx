@@ -209,7 +209,7 @@ const ReviewView = observer(
             alignItems: 'center',
           }}
         >
-          {vm.insufficientFee ? <InsufficientFee /> : undefined}
+          {vm.insufficientFee && !vm.loading ? <InsufficientFee /> : undefined}
 
           {txDataEditable && !vm.insufficientFee ? (
             <TouchableOpacity

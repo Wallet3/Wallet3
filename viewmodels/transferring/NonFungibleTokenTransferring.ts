@@ -42,13 +42,12 @@ export class NFTTransferring extends BaseTransaction {
 
   get isValidParams() {
     return (
-      !this.initializing &&
+      !this.loading &&
       this.nonce >= 0 &&
       this.isValidGas &&
       this.network &&
       this.nftStandard &&
       !this.insufficientFee &&
-      !this.isEstimatingGas &&
       !this.txException
     );
   }

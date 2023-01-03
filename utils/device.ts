@@ -26,6 +26,7 @@ class ReactScreen extends EventEmitter {
 
     const updateScreenDimensions = () => {
       const { height, width } = Dimensions.get('window');
+      if (this.height === height && this.width === width) return;
 
       runInAction(() => {
         this.height = height;

@@ -343,7 +343,7 @@ export class InpageDAppController extends EventEmitter {
 
         txHash ? resolve(txHash) : resolve({ error });
 
-        if (error) showMessage({ type: 'warning', message: error.message });
+        if (error && __DEV__) showMessage({ type: 'warning', message: error.message });
 
         return txHash ? true : false;
       };

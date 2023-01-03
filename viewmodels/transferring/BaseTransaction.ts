@@ -87,6 +87,7 @@ export class BaseTransaction {
       feeTokenSymbol: computed,
       insufficientFee: computed,
       toAddressRisky: computed,
+      loading: computed,
 
       setNonce: action,
       setGasLimit: action,
@@ -146,6 +147,10 @@ export class BaseTransaction {
 
   get insufficientFee() {
     return this.txFeeWei.gt(this.nativeToken.balance);
+  }
+
+  get loading() {
+    return this.initializing || this.nativeToken.loading || this.isEstimatingGas;
   }
 
   get estimatedRealFeeWei() {

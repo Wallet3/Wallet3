@@ -109,6 +109,8 @@ class TxHub {
         continue;
       }
 
+      confirmedTxs.push(tx);
+
       tx.gasUsed = Number.parseInt(receipt.gasUsed);
       tx.status = Number.parseInt(receipt.status) === 1;
       tx.transactionIndex = Number.parseInt(receipt.transactionIndex);
@@ -144,8 +146,6 @@ class TxHub {
       const minedTxs = this.txs.filter((tx) => !abandonedTxs.find((t) => t.hash === tx.hash));
       minedTxs.unshift(...confirmedTxs.filter((t) => t.blockHash && !this.txs.find((t2) => t2.hash === t.hash)));
 
-      startLayoutAnimation();
-
       this.txs = LINQ.from(minedTxs)
         .distinct((t) => t.hash)
         .toArray();
@@ -165,9 +165,10 @@ class TxHub {
               .toArray()[0]?.nonce ?? -1)
       );
 
-      this.pendingTxs = newPending;
-
       abandonedTxs.map((t) => t.remove());
+
+      startLayoutAnimation();
+      this.pendingTxs = newPending;
     });
   }
 
@@ -218,7 +219,7 @@ class TxHub {
     t.hash = tx.hash!;
     t.chainId = tx.chainId!;
     t.from = tx.from!;
-    t.to = tx.to!;
+    t.to = tx.to || 'Deploy Contract';
     t.data = tx.data as string;
     t.gas = tx.gasLimit as number;
     t.gasPrice = (tx.gasPrice || tx.maxFeePerGas) as number;

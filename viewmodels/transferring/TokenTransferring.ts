@@ -58,7 +58,7 @@ export class TokenTransferring extends BaseTransaction {
 
   get isValidParams() {
     return (
-      !this.initializing &&
+      !this.loading &&
       this.toAddress &&
       this.isValidAmount &&
       this.nonce >= 0 &&
@@ -66,7 +66,6 @@ export class TokenTransferring extends BaseTransaction {
       this.network &&
       !this.insufficientFee &&
       !this.token.loading &&
-      !this.isEstimatingGas &&
       !this.txException
     );
   }
