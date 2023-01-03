@@ -108,7 +108,7 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
 
   const renderContextMenuItem = (props: ListRenderItemInfo<INetwork>) => {
     const { item } = props;
-    const actions = [
+    const actions: any[] = [
       { title: t('button-edit'), systemIcon: 'square.and.pencil' },
       item.pinned ? { title: t('button-unpin'), systemIcon: 'pin.slash' } : { title: t('button-pin'), systemIcon: 'pin' },
     ];

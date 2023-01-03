@@ -6,14 +6,15 @@ import axios from 'axios';
 import { parse } from 'node-html-parser';
 import { utils } from 'ethers';
 
-const cache = new Map<string, AddressTag | null>();
+const TagsCache = new Map<string, AddressTag | null>();
+const AbandonCache = new Map<string, boolean>();
 
-async function getHTML(chainId: number, address: string) {
+async function getHTML(chainId: number, param: string, type: 'address' | 'tx') {
   const explorer = Networks.find(chainId)?.explorer;
   if (!explorer) return undefined;
 
   try {
-    const resp = await axios.get(`${explorer}/address/${address}`);
+    const resp = await axios.get(`${explorer}/${type}/${param}`);
     const root = parse(resp.data as string);
 
     return root;
@@ -27,16 +28,16 @@ export async function fetchAddressInfo(chainId: number, address: string) {
 
   address = utils.getAddress(address);
   const key = `${chainId}-${address}`;
-  if (cache.has(key)) return cache.get(key)!;
+  if (TagsCache.has(key)) return TagsCache.get(key)!;
 
   let item = await Database.cloud_address_tags.findOne({ where: { address, chainId } });
 
   if (item && Date.now() < item?.lastUpdatedTimestamp + 15 * DAY) {
-    cache.set(key, item);
+    TagsCache.set(key, item);
     return item;
   }
 
-  const root = await getHTML(chainId, address);
+  const root = await getHTML(chainId, address, 'address');
   if (!root) return item;
 
   const warnings = (root?.querySelectorAll('span.u-label--danger, span.u-label--warning') || [])
@@ -54,12 +55,12 @@ export async function fetchAddressInfo(chainId: number, address: string) {
   if (item && item.publicName === publicName && !item.dangerous && warnings.length === 0 && !alert) {
     item.lastUpdatedTimestamp = Date.now();
     item.save();
-    cache.set(key, item);
+    TagsCache.set(key, item);
     return item;
   }
 
   if (!publicName) {
-    cache.set(key, item);
+    TagsCache.set(key, item);
     return item;
   }
 
@@ -72,7 +73,30 @@ export async function fetchAddressInfo(chainId: number, address: string) {
   item.lastUpdatedTimestamp = Date.now();
   await item.save();
 
-  cache.set(key, item);
+  TagsCache.set(key, item);
 
   return item;
+}
+
+export async function isTransactionAbandoned(chainId: number, tx: string) {
+  const key = `${chainId}-${tx}`;
+  if (AbandonCache.has(key)) return AbandonCache.get(key);
+
+  const root = await getHTML(chainId, tx, 'tx');
+
+  const abandoned =
+    root?.querySelector('p.lead')?.innerText?.toLowerCase?.().includes?.('sorry, we are unable to locate') ?? false;
+  const hasTx = root?.querySelector('#spanTxHash');
+
+  if (abandoned) {
+    AbandonCache.set(key, true);
+    return true;
+  }
+
+  if (hasTx) {
+    AbandonCache.set(key, false);
+    return false;
+  }
+
+  return false;
 }

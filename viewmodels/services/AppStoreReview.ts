@@ -13,7 +13,7 @@ const Keys = {
 class AppStoreReview {
   constructor() {
     if (__DEV__) {
-      AsyncStorage.removeItem(Keys.userRated);
+      // AsyncStorage.removeItem(Keys.userRated);
     }
   }
 

@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   safeArea: {
-    height: 450,
+    height: 445,
     flex: 1,
     borderTopStartRadius: 6,
     borderTopEndRadius: 6,

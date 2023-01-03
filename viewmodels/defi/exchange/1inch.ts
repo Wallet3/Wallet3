@@ -444,13 +444,13 @@ export class OneInch {
     this.watchPendingTxTimer = setTimeout(() => this.watchPendingTxs(), 1000);
   }
 
-  private watchPendingTxs() {
+  private async watchPendingTxs() {
     const pendingTxs = this.pendingTxs.filter((tx) => TxHub.pendingTxs.find((t) => t.hash === tx));
 
     if (pendingTxs.length !== this.pendingTxs.length) {
-      this.checkApproval(true);
-      this.swapFrom?.getBalance();
-      this.swapTo?.getBalance();
+      await this.checkApproval(true);
+      await this.swapFrom?.getBalance();
+      await this.swapTo?.getBalance();
     }
 
     runInAction(() => (this.pendingTxs = pendingTxs));
