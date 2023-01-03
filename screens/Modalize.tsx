@@ -48,7 +48,7 @@ import { logScreenView } from '../viewmodels/services/Analytics';
 import { observer } from 'mobx-react-lite';
 import { parse } from 'eth-url-parser';
 import { showMessage } from 'react-native-flash-message';
-import { styles } from '../constants/styles';
+import styles from '../modals/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { utils } from 'ethers';
 
@@ -106,7 +106,7 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
       closeOnOverlayTap={false}
       withHandle={false}
       disableScrollIfPossible
-      modalStyle={styles.modalStyle}
+      modalStyle={styles.containerTopBorderRadius}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
       {type === 'sign' ? <WalletConnectSign client={client!} request={callRequest!} close={close} /> : undefined}
@@ -143,7 +143,7 @@ const WalletConnectV1 = () => {
       closeOnOverlayTap={false}
       withHandle={false}
       disableScrollIfPossible
-      modalStyle={styles.modalStyle}
+      modalStyle={styles.containerTopBorderRadius}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
       <WalletConnectDApp uri={connectUri} close={closeConnectDapp} extra={extra} />
@@ -195,7 +195,7 @@ const InpageDAppConnect = () => {
       closeOnOverlayTap={false}
       withHandle={false}
       disableScrollIfPossible
-      modalStyle={styles.modalStyle}
+      modalStyle={styles.containerTopBorderRadius}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
       <InpageConnectDApp {...info} close={close} approve={data?.approve} reject={data?.reject} />
@@ -255,7 +255,7 @@ const InpageDAppRequests = () => {
       closeOnOverlayTap={false}
       withHandle={false}
       disableScrollIfPossible
-      modalStyle={styles.modalStyle}
+      modalStyle={styles.containerTopBorderRadius}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
       {type === 'sign' ? <InpageDAppSign {...signRequest!} close={close} /> : undefined}
@@ -286,7 +286,7 @@ const GlobalNetworksMenuModal = () => {
       ref={networksRef}
       adjustToContentHeight
       disableScrollIfPossible
-      modalStyle={styles.modalStyle}
+      modalStyle={styles.containerTopBorderRadius}
       closeOnOverlayTap={!editing}
       panGestureEnabled={!editing}
       withHandle={!editing}
@@ -323,7 +323,7 @@ const GlobalAccountsMenuModal = () => {
       ref={ref}
       adjustToContentHeight
       disableScrollIfPossible
-      modalStyle={styles.modalStyle}
+      modalStyle={styles.containerTopBorderRadius}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
       <AccountsMenu close={close} />
@@ -351,7 +351,7 @@ const GlobalLoadingModal = () => {
       disableScrollIfPossible
       closeOnOverlayTap={false}
       withHandle={false}
-      modalStyle={styles.modalStyle}
+      modalStyle={styles.containerTopBorderRadius}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
       <SafeAreaProvider
@@ -389,7 +389,7 @@ const RequestFundsModal = () => {
       ref={requestRef}
       adjustToContentHeight
       disableScrollIfPossible
-      modalStyle={styles.modalStyle}
+      modalStyle={styles.containerTopBorderRadius}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
       <Request close={close} />
@@ -455,7 +455,7 @@ const SendFundsModal = () => {
       ref={sendRef}
       adjustToContentHeight
       disableScrollIfPossible
-      modalStyle={styles.modalStyle}
+      modalStyle={styles.containerTopBorderRadius}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
       onClosed={() => {
         setIsERC681(false);

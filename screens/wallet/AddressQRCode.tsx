@@ -15,6 +15,7 @@ import QRCode from 'react-native-qrcode-svg';
 import Theme from '../../viewmodels/settings/Theme';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
+import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 import { openInappBrowser } from '../../modals/InappBrowser';
 import { setStringAsync } from 'expo-clipboard';
@@ -37,7 +38,7 @@ export default observer(({ account }: { account?: Account }) => {
   const prefixedAddress = current?.addrPrefix ? `${current?.addrPrefix}${address?.substring(2)}` : address;
 
   return (
-    <View style={{ padding: 16, flex: 1, height: 430, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
+    <View style={{ padding: 16, flex: 1, height: 430, backgroundColor, ...modalStyle.containerTopBorderRadius }}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
         <View style={{ alignItems: 'center', marginTop: -16 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 12, maxWidth: '70%' }}>

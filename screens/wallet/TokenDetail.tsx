@@ -18,6 +18,7 @@ import Theme from '../../viewmodels/settings/Theme';
 import { TokenData } from '../../viewmodels/services/TokenData';
 import i18n from '../../i18n';
 import { isURL } from '../../utils/url';
+import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 import { openInappBrowser } from '../../modals/InappBrowser';
 
@@ -47,7 +48,7 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
   }, [token]);
 
   return (
-    <View style={{ padding: 16, backgroundColor, borderTopLeftRadius: 10, borderTopRightRadius: 10, paddingBottom: 24 }}>
+    <View style={{ padding: 16, backgroundColor, ...modalStyle.containerTopBorderRadius, paddingBottom: 24 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Coin
           chainId={network.chainId}

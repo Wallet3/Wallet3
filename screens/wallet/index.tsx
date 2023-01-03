@@ -20,6 +20,7 @@ import TxDetail from './TxDetail';
 import { View } from 'react-native';
 import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectV1ClientHub';
 import { logScreenView } from '../../viewmodels/services/Analytics';
+import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
@@ -111,7 +112,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
           adjustToContentHeight
           ref={tokenDetailModalize}
           snapPoint={500}
-          modalStyle={{ borderTopStartRadius: 16, borderTopEndRadius: 16 }}
+          modalStyle={modalStyle.containerTopBorderRadius}
         >
           <TokenDetail
             token={selectedToken}
@@ -128,16 +129,12 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
           ref={txDetailModalize}
           adjustToContentHeight
           snapPoint={500}
-          modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
+          modalStyle={modalStyle.containerTopBorderRadius}
         >
           <TxDetail tx={selectedTx} close={closeTxDetail} />
         </Modalize>
 
-        <Modalize
-          ref={addressQRModalize}
-          adjustToContentHeight
-          modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
-        >
+        <Modalize ref={addressQRModalize} adjustToContentHeight modalStyle={modalStyle.containerTopBorderRadius}>
           <AddressQRCode account={currentAccount || undefined} />
         </Modalize>
 

@@ -42,7 +42,7 @@ export default observer(({ account, themeColor, onPress, onEdit, onRemove, textC
     }
   };
 
-  const actions =
+  const actions: any[] =
     App.allAccounts.length > 1
       ? [
           { title: t('button-edit'), systemIcon: 'square.and.pencil' },

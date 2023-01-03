@@ -31,6 +31,7 @@ import WalletConnectLogo from '../../assets/3rd/walletconnect.svg';
 import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectV1ClientHub';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
+import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
@@ -371,7 +372,7 @@ export default observer((props: Web3ViewProps) => {
           ref={networksRef}
           adjustToContentHeight
           disableScrollIfPossible
-          modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
+          modalStyle={modalStyle.containerTopBorderRadius}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
           <NetworksMenu
@@ -385,10 +386,10 @@ export default observer((props: Web3ViewProps) => {
           ref={accountsRef}
           adjustToContentHeight
           disableScrollIfPossible
-          modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
+          modalStyle={modalStyle.containerTopBorderRadius}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
+          <SafeAreaProvider style={{ backgroundColor, ...modalStyle.containerTopBorderRadius }}>
             <ScrollView
               scrollEnabled={false}
               horizontal

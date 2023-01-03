@@ -28,6 +28,7 @@ import { formatCurrency } from '../../utils/formatter';
 import { generateDexLogo } from '../../assets/dexs';
 import { generateNetworkIcon } from '../../assets/icons/networks/white';
 import i18n from '../../i18n';
+import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 
 export default observer(() => {
@@ -353,10 +354,10 @@ export default observer(() => {
           ref={accountsRef}
           adjustToContentHeight
           disableScrollIfPossible
-          modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
+          modalStyle={modalStyle.containerTopBorderRadius}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <SafeAreaProvider style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6 }}>
+          <SafeAreaProvider style={{ backgroundColor, ...modalStyle.containerTopBorderRadius }}>
             <AccountSelector
               single
               accounts={App.allAccounts}
@@ -376,7 +377,7 @@ export default observer(() => {
           ref={fromSelectorRef}
           adjustToContentHeight
           disableScrollIfPossible
-          modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
+          modalStyle={modalStyle.containerTopBorderRadius}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
           <ScrollView
@@ -388,8 +389,7 @@ export default observer(() => {
             <SafeAreaProvider
               style={{
                 backgroundColor,
-                borderTopStartRadius: 6,
-                borderTopEndRadius: 6,
+                ...modalStyle.containerTopBorderRadius,
                 height: '100%',
                 width: ReactiveScreen.width,
               }}
@@ -413,7 +413,7 @@ export default observer(() => {
           ref={toSelectorRef}
           adjustToContentHeight
           disableScrollIfPossible
-          modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
+          modalStyle={modalStyle.containerTopBorderRadius}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
           <ScrollView
@@ -422,9 +422,7 @@ export default observer(() => {
             style={{ width: ReactiveScreen.width, flex: 1 }}
             contentContainerStyle={{ flexGrow: 1 }}
           >
-            <SafeAreaProvider
-              style={{ backgroundColor, borderTopStartRadius: 6, borderTopEndRadius: 6, width: ReactiveScreen.width }}
-            >
+            <SafeAreaProvider style={{ backgroundColor, ...modalStyle.containerTopBorderRadius, width: ReactiveScreen.width }}>
               <TokenSelector
                 tokens={VM.tokens}
                 chainId={chainId}

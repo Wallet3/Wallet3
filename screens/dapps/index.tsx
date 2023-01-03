@@ -25,9 +25,9 @@ import Theme from '../../viewmodels/settings/Theme';
 import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectV1ClientHub';
 import { WalletConnect_v1 } from '../../viewmodels/walletconnect/WalletConnect_v1';
 import i18n from '../../i18n';
+import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 import { startLayoutAnimation } from '../../utils/animations';
-import { styles } from '../../constants/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 interface Props {
@@ -69,7 +69,7 @@ const DApp = observer(({ client, allAccounts, close }: Props) => {
   };
 
   return (
-    <SafeAreaProvider style={{ flex: 1, height: 429, backgroundColor, borderRadius: 6 }}>
+    <SafeAreaProvider style={{ flex: 1, height: 429, backgroundColor, ...modalStyle.containerTopBorderRadius }}>
       <Swiper
         ref={swiper}
         showsPagination={false}
@@ -316,7 +316,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
       </Swiper>
 
       <Portal>
-        <Modalize adjustToContentHeight ref={ref} disableScrollIfPossible modalStyle={styles.modalStyle}>
+        <Modalize adjustToContentHeight ref={ref} disableScrollIfPossible modalStyle={modalStyle.containerTopBorderRadius}>
           {selectedClient ? <DApp client={selectedClient} allAccounts={App.allAccounts} close={close} /> : undefined}
         </Modalize>
       </Portal>

@@ -25,6 +25,7 @@ import { lightOrDark } from '../../utils/color';
 import { observer } from 'mobx-react-lite';
 import { openBrowserAsync } from 'expo-web-browser';
 import { openInappBrowser } from '../../modals/InappBrowser';
+import styles from '../../modals/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -308,7 +309,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
           onClosed={() => vm?.setTo('')}
           adjustToContentHeight
           disableScrollIfPossible
-          modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
+          modalStyle={styles.containerTopBorderRadius}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
           {vm ? <SendNFT vm={vm} onClose={closeSendModal} /> : undefined}

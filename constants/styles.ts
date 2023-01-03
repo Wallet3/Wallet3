@@ -9,10 +9,3 @@ export const secureColor = '#76B947';
 export const warningColor = '#DC143C';
 
 export const numericFontFamily = 'Avenir Next';
-
-export const styles = StyleSheet.create({
-  modalStyle: {
-    borderTopRightRadius: 7,
-    borderTopLeftRadius: 7,
-  },
-});

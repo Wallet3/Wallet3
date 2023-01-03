@@ -2,13 +2,19 @@ import { borderColor, fontColor, secondaryFontColor } from '../constants/styles'
 
 import { StyleSheet } from 'react-native';
 
+const containerTopBorderRadius = {
+  borderTopStartRadius: 16,
+  borderTopEndRadius: 16,
+};
+
 export default StyleSheet.create({
   safeArea: {
     height: 445,
     flex: 1,
-    borderTopStartRadius: 6,
-    borderTopEndRadius: 6,
+    ...containerTopBorderRadius,
   },
+
+  containerTopBorderRadius: containerTopBorderRadius,
 
   container: {
     padding: 16,

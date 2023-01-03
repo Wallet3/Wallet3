@@ -13,9 +13,9 @@ import { SafeViewContainer } from '../../components';
 import Theme from '../../viewmodels/settings/Theme';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
+import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 import { startLayoutAnimation } from '../../utils/animations';
-import { styles } from '../../constants/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 export default observer(() => {
@@ -89,10 +89,10 @@ export default observer(() => {
           withHandle={!editing}
           closeOnOverlayTap={!editing}
           disableScrollIfPossible
-          modalStyle={styles.modalStyle}
+          modalStyle={modalStyle.containerTopBorderRadius}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <SafeAreaProvider style={{ height: 430, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
+          <SafeAreaProvider style={{ height: 430, backgroundColor, ...modalStyle.containerTopBorderRadius }}>
             <ContactDetails
               contact={selectedContact}
               onEditing={setEditing}
@@ -109,10 +109,10 @@ export default observer(() => {
           ref={confirmModal}
           adjustToContentHeight
           disableScrollIfPossible
-          modalStyle={styles.modalStyle}
+          modalStyle={modalStyle.containerTopBorderRadius}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <SafeAreaProvider style={{ height: 270, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
+          <SafeAreaProvider style={{ height: 270, backgroundColor, ...modalStyle.containerTopBorderRadius }}>
             <Confirm
               confirmButtonTitle={t('button-confirm')}
               desc={t('contacts-remote-confirm-desc')}
