@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   safeArea: {
-    height: 439,
+    height: 450,
     flex: 1,
     borderTopStartRadius: 6,
     borderTopEndRadius: 6,
@@ -35,6 +35,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    paddingHorizontal: 2,
   },
 
   modalTitle: {

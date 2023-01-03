@@ -1,7 +1,7 @@
 import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import eip2612, { EIP2612 } from '../../eips/eip2612';
+import eip2612, { EIP2612, EIP2612Mock } from '../../eips/eip2612';
 
 import { Account } from '../../viewmodels/account/Account';
 import AccountIndicator from '../components/AccountIndicator';
@@ -135,7 +135,7 @@ export default observer(({ themeColor, data, onReject, onSign, account, bioType,
           ...styles.modalTitleContainer,
           borderBottomColor: borderColor,
           borderBottomWidth: is2612 ? 0 : 1,
-          paddingBottom: is2612 ? 0 : 5,
+          paddingBottom: is2612 ? 2 : 5,
         }}
       >
         <Text style={{ ...styles.modalTitle, color: safeThemeColor }}>{t('modal-message-signing-title')}</Text>

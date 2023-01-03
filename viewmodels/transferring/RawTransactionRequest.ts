@@ -200,7 +200,7 @@ export class RawTransactionRequest extends BaseTransaction {
         this.setTo(param.to);
         this.valueWei = BigNumber.from(param.value || 0);
 
-        if (param.data?.length < 10) break;
+        if ((param.data?.length ?? 2) < 10) break;
         if (!utils.isAddress(this.toAddress)) break;
 
         isRawTx = true;

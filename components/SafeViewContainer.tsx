@@ -15,6 +15,7 @@ interface Props {
 export default ({ children, style, paddingHeader, includeTopPadding }: Props) => {
   const { bottom, top } = useSafeAreaInsets();
   const isPortrait = ReactiveScreen.isPortrait;
+  ReactiveScreen.setSafeAreaBottom(bottom);
 
   return (
     <View

@@ -49,17 +49,29 @@ const TxReview = observer(
   ({ vm, onReject, onApprove, onGasPress, onDecodedFuncPress, app, account, bioType, onBalanceChangePreviewPress }: Props) => {
     const { network } = vm;
     const { t } = i18n;
-    const { textColor, borderColor, secondaryTextColor } = Theme;
+    const { textColor, borderColor, secondaryTextColor, thirdTextColor } = Theme;
 
     const [busy, setBusy] = useState(false);
 
     const reviewItemStyle = { ...styles.reviewItem, borderColor };
     const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
     const reviewItemValueStyle = { ...styles.reviewItemValue, color: textColor };
+    const safeThemeColor = vm.toAddressRisky ? warningColor : thirdTextColor;
 
     return (
       <SafeViewContainer>
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', paddingEnd: 4 }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingHorizontal: 2,
+          }}
+        >
+          <Text style={{ fontSize: 19, fontWeight: '500', color: safeThemeColor, opacity: 0.25 }}>
+            {/* {t('modal-review-title')} */}
+          </Text>
+
           <AccountIndicator account={account} />
         </View>
 
@@ -206,7 +218,7 @@ const TxReview = observer(
               onPress={() => openBrowserAsync(`${network.explorer}/address/${vm.toAddress}`)}
             >
               <Text style={{ ...reviewItemValueStyle, color: vm.toAddressRisky ? warningColor : textColor }} numberOfLines={1}>
-                {vm.toAddress ? formatAddress(vm.to, 9, 5) : t('modal-dapp-request-deploy-contract')}
+                {vm.toAddress ? formatAddress(vm.to, 7, 5) : t('modal-dapp-request-deploy-contract')}
               </Text>
 
               {vm.to ? (
