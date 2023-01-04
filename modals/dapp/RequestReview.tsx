@@ -339,7 +339,7 @@ const TxReview = observer(
                 {network?.network?.split(' ')?.[0]}
               </Text>
 
-              {vm.initializing ? <ActivityIndicator size="small" style={{ marginStart: 5 }} /> : undefined}
+              {vm.loading ? <ActivityIndicator size="small" style={{ marginStart: 5 }} /> : undefined}
             </View>
           </View>
         </View>

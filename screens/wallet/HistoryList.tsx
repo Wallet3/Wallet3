@@ -1,4 +1,11 @@
-import { Approve_ERC20, Transfer_ERC1155, Transfer_ERC20, Transfer_ERC721 } from '../../viewmodels/transferring/RequestTypes';
+import {
+  Approve_ERC20,
+  SafeTransferFrom_1155,
+  SafeTransferFrom_721,
+  SafeTransferFrom_WithData_721,
+  Transfer_ERC20,
+  Transfer_ERC721,
+} from '../../viewmodels/transferring/RequestTypes';
 import { Coin, NullableImage } from '../../components';
 import { FlatList, ListRenderItemInfo, Text, TouchableOpacity, View } from 'react-native';
 
@@ -25,7 +32,9 @@ interface Props {
 const Methods = new Map([
   [Transfer_ERC20, 'sent'],
   [Transfer_ERC721, 'sent'], // Transfer ERC-721
-  [Transfer_ERC1155, 'sent'], // Transfer ERC-1155
+  [SafeTransferFrom_721, 'sent'],
+  [SafeTransferFrom_1155, 'sent'], // Transfer ERC-1155
+  [SafeTransferFrom_WithData_721, 'sent'],
   [Approve_ERC20, 'approve'],
   ['0x', 'sent'],
 ]);

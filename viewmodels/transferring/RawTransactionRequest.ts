@@ -194,7 +194,6 @@ export class RawTransactionRequest extends BaseTransaction {
           ];
           this.type = approved ? 'Approve_ERC1155' : 'Revoke_ERC1155';
           this.setTo(operator);
-          console.log(this.type);
         } catch (error) {}
 
         break;
