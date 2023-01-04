@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
 
-import { NFTMetadata } from '../viewmodels/transferring/NonFungibleTokenTransferring';
+import { NFTMetadata } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
 
 @Entity({ name: 'nfts' })
 export default class NFT extends BaseEntity {

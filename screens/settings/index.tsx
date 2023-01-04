@@ -18,8 +18,8 @@ import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Theme from '../../viewmodels/settings/Theme';
 import UI from '../../viewmodels/settings/UI';
-import { styles as appStyles } from '../../constants/styles';
 import i18n from '../../i18n';
+import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 import { openInappBrowser } from '../../modals/InappBrowser';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
@@ -193,13 +193,13 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
           adjustToContentHeight
           panGestureEnabled={false}
           panGestureComponentEnabled={false}
-          modalStyle={appStyles.modalStyle}
+          modalStyle={modalStyle.containerTopBorderRadius}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
           <FullPasspad
             themeColor={Networks.current.color}
             height={420}
-            borderRadius={6}
+            borderRadius={modalStyle.containerTopBorderRadius.borderTopEndRadius}
             appAvailable={true}
             failedAttempts={Authentication.failedAttempts}
             onCodeEntered={async (code) => {
@@ -222,10 +222,10 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
           ref={resetRef}
           modalHeight={270}
           disableScrollIfPossible
-          modalStyle={appStyles.modalStyle}
+          modalStyle={modalStyle.containerTopBorderRadius}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <SafeAreaProvider style={{ height: 270, backgroundColor, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
+          <SafeAreaProvider style={{ height: 270, backgroundColor, ...modalStyle.containerTopBorderRadius }}>
             <Confirm
               onSwipeConfirm={() => App.reset()}
               confirmButtonTitle={t('settings-reset-modal-button-confirm')}

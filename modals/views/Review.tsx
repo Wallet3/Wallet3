@@ -3,6 +3,7 @@ import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-ic
 import React, { useRef, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
+import AddressRiskIndicator from '../components/AddressRiskIndicator';
 import AnimatedNumber from '../../components/AnimatedNumber';
 import BackButton from '../components/BackButton';
 import { BioType } from '../../viewmodels/auth/Authentication';
@@ -24,6 +25,7 @@ import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 import { utils } from 'ethers';
+import { warningColor } from '../../constants/styles';
 
 interface Props {
   onBack?: () => void;
@@ -40,7 +42,7 @@ const ReviewView = observer(
   ({ vm, onBack, onGasPress, onSend, disableBack, biometricType, txDataEditable, onEditDataPress }: Props) => {
     const { t } = i18n;
     const [busy, setBusy] = React.useState(false);
-    const { borderColor, textColor, secondaryTextColor, tintColor } = Theme;
+    const { borderColor, textColor, secondaryTextColor } = Theme;
 
     const send = async () => {
       setBusy(true);
@@ -64,7 +66,11 @@ const ReviewView = observer(
     return (
       <SafeViewContainer style={styles.container}>
         <View style={styles.navBar}>
-          {disableBack ? <View /> : <BackButton onPress={onBack} color={Networks.current.color} />}
+          {disableBack ? (
+            <View />
+          ) : (
+            <BackButton onPress={onBack} color={vm.transferToRisky ? warningColor : Networks.current.color} />
+          )}
 
           <Text style={styles.navTitle}>{t('modal-review-title')}</Text>
         </View>
@@ -97,7 +103,7 @@ const ReviewView = observer(
           <View style={reviewItemStyle}>
             <Text style={styles.reviewItemTitle}>{t('modal-review-to')}</Text>
 
-            <View style={{ flexDirection: 'row', maxWidth: '72%', alignItems: 'center' }}>
+            <View style={{ flexDirection: 'row', maxWidth: '72%', alignItems: 'center', position: 'relative' }}>
               {(vm.hasZWSP || vm.isContractRecipient) && (
                 <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', end: 0, bottom: -11.5 }}>
                   <Ionicons
@@ -126,11 +132,21 @@ const ReviewView = observer(
                 numberOfLines={1}
                 style={{
                   ...reviewItemValueStyle,
-                  color: vm.hasZWSP || vm.isContractRecipient ? (vm.isContractWallet ? 'dodgerblue' : 'crimson') : textColor,
+                  color: vm.transferToRisky ? warningColor : vm.isContractWallet ? 'dodgerblue' : textColor,
                 }}
               >
                 {utils.isAddress(vm.to) ? formatAddress(vm.toAddress, 8, 6) : formatAddress(vm.safeTo, 14, 6, '...')}
               </Text>
+
+              {!vm.hasZWSP && !vm.isContractRecipient && vm.toAddressTag && (
+                <AddressRiskIndicator
+                  address={vm.toAddress}
+                  chainId={vm.network.chainId}
+                  label={vm.toAddressTag?.publicName}
+                  risky={vm.toAddressTag?.dangerous}
+                  containerStyle={{ position: 'absolute', bottom: -11.5, right: 0 }}
+                />
+              )}
             </View>
           </View>
 
@@ -193,7 +209,7 @@ const ReviewView = observer(
             alignItems: 'center',
           }}
         >
-          {vm.insufficientFee ? <InsufficientFee /> : undefined}
+          {vm.insufficientFee && !vm.loading ? <InsufficientFee /> : undefined}
 
           {txDataEditable && !vm.insufficientFee ? (
             <TouchableOpacity
@@ -214,12 +230,12 @@ const ReviewView = observer(
 
         <Button
           title={sendTitle}
-          themeColor={vm.hasZWSP || (vm.isContractRecipient && !vm.isContractWallet) ? 'crimson' : vm.network.color}
           disabled={!vm.isValidParams || busy}
           onPress={onSendPress}
           onLongPress={onLongSendPress}
           onSwipeSuccess={onLongSendPress}
           icon={authIcon}
+          themeColor={vm.transferToRisky ? warningColor : vm.network.color}
         />
       </SafeViewContainer>
     );

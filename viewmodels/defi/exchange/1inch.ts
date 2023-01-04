@@ -13,7 +13,7 @@ import LINQ from 'linq';
 import MessageKeys from '../../../common/MessageKeys';
 import { NativeToken } from '../../../models/NativeToken';
 import Networks from '../../core/Networks';
-import { ReadableInfo } from '../../../models/Transaction';
+import { ReadableInfo } from '../../../models/entities/Transaction';
 import { SupportedChains } from './1inchSupportedChains';
 import TokensMan from '../../services/TokensMan';
 import TxHub from '../../hubs/TxHub';
@@ -140,10 +140,8 @@ export class OneInch {
 
     AsyncStorage.setItem(Keys.userSelectedAccount, this.account.address);
 
-    this.tokens.forEach((t, i) => {
-      t.setOwner(this.account.address);
-      i < 10 ? t.getBalance() : null;
-    });
+    this.tokens.forEach((t) => t.setOwner(this.account.address));
+    this.tokens.slice(0, 10).forEach((t) => t.getBalance());
 
     this.swapFrom?.getBalance();
   }
@@ -188,7 +186,7 @@ export class OneInch {
 
     const tokens = [nativeToken, ...all];
 
-    tokens.slice(0, 10).every((t) => t.getBalance());
+    tokens.slice(0, 10).forEach((t) => t.getBalance());
 
     const swapFromAddress = await AsyncStorage.getItem(Keys.userSelectedFromToken(network.chainId));
     const fromToken = tokens.find((t) => t.address === swapFromAddress) || tokens[0];
@@ -446,13 +444,13 @@ export class OneInch {
     this.watchPendingTxTimer = setTimeout(() => this.watchPendingTxs(), 1000);
   }
 
-  private watchPendingTxs() {
+  private async watchPendingTxs() {
     const pendingTxs = this.pendingTxs.filter((tx) => TxHub.pendingTxs.find((t) => t.hash === tx));
 
-    if (pendingTxs.length < this.pendingTxs.length) {
-      this.checkApproval(true);
-      this.swapFrom?.getBalance();
-      this.swapTo?.getBalance();
+    if (pendingTxs.length !== this.pendingTxs.length) {
+      await this.checkApproval(true);
+      await this.swapFrom?.getBalance();
+      await this.swapTo?.getBalance();
     }
 
     runInAction(() => (this.pendingTxs = pendingTxs));

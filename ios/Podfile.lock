@@ -636,7 +636,7 @@ PODS:
     - React-Core
   - EXLocalAuthentication (13.0.2):
     - ExpoModulesCore
-  - Expo (47.0.9):
+  - Expo (47.0.10):
     - ExpoModulesCore
   - ExpoAdapterGoogleSignIn (9.0.2):
     - ExpoModulesCore
@@ -652,7 +652,7 @@ PODS:
     - ExpoModulesCore
   - ExpoLocalization (14.0.0):
     - ExpoModulesCore
-  - ExpoModulesCore (1.0.4):
+  - ExpoModulesCore (1.1.0):
     - React-Core
     - ReactCommon/turbomodule/core
   - ExpoRandom (13.0.0):
@@ -1244,7 +1244,7 @@ PODS:
   - RNScreens (3.18.2):
     - React-Core
     - React-RCTImage
-  - RNSharedElement (0.8.7):
+  - RNSharedElement (0.8.8):
     - React-Core
   - RNSVG (13.6.0):
     - React-Core
@@ -1566,14 +1566,14 @@ SPEC CHECKSUMS:
   EXFont: 319606bfe48c33b5b5063fb0994afdc496befe80
   EXImageLoader: 84b65e6bd9d3345d6fbb3ab936a546c54496a64d
   EXLocalAuthentication: 78cc5a00b13745b41d16d189ab332b61a01299f9
-  Expo: 5523a4835730104a301caeac1e68dad095a9dfff
+  Expo: a694d89d2461fdfc6b977bf489bf7d341ed03bca
   ExpoAdapterGoogleSignIn: 98a113d9c0ed1ce7cf6259f0907d3f93209b0d7f
   ExpoClipboard: 334921ae215b4be261e393e6fdd9050025008a20
   ExpoCrypto: 51e7662c7f5bfeab25b7909b8a5d545ec15d4877
   ExpoHaptics: 5a56d30a87ea213dd00b09566dc4b441a4dff97f
   ExpoKeepAwake: 69b59d0a8d2b24de9f82759c39b3821fec030318
   ExpoLocalization: e202d1e2a4950df17ac8d0889d65a1ffd7532d7e
-  ExpoModulesCore: 8211c89bcc3ba86e2d02c54b1d31f1fa81acb6de
+  ExpoModulesCore: 089e1ac0f0edee4dd0af0eb4e3f7b44d72cc418d
   ExpoRandom: 58b7e0a5fe1adf1cb6dc1cbe503a6fe9524f36ce
   ExpoStoreReview: ff6d631f2949eb7e4b2d14146ef6af25a16d770d
   ExpoWebBrowser: 073e50f16669d498fb49063b9b7fe780b24f7fda
@@ -1652,7 +1652,7 @@ SPEC CHECKSUMS:
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
   RNReanimated: ce445c233a6ff5600223484a88ad5704945d972a
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
-  RNSharedElement: 14409838520c8b50850aa4d33e15d0b8afdf7052
+  RNSharedElement: 504fa28a235b12505b6daedbb452a9ec96809bd0
   RNSVG: 3a79c0c4992213e4f06c08e62730c5e7b9e4dc17
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d

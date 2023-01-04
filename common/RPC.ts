@@ -149,6 +149,7 @@ export async function eth_call_return(
   },
   fast = false
 ) {
+  let attempts = 0;
   const urls = getRPCUrls(chainId);
 
   for (let url of urls) {
@@ -165,7 +166,11 @@ export async function eth_call_return(
 
         if (fast) {
           return resp;
-        } else continue;
+        }
+
+        if (attempts++ > 3) return resp;
+
+        continue;
       }
 
       return resp;
@@ -237,6 +242,7 @@ export async function estimateGas(
 }
 
 export async function getGasPrice(chainId: number) {
+  let attempts = 0;
   const urls = getRPCUrls(chainId);
 
   for (let url of urls) {
@@ -248,7 +254,10 @@ export async function getGasPrice(chainId: number) {
         id: Date.now(),
       });
 
-      if (resp.error) continue;
+      if (resp.error) {
+        if (attempts++ > 3) return;
+        continue;
+      }
 
       const wei = Number.parseInt(resp.result);
       const minGwei = MinWei.get(chainId) || 0;

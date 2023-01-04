@@ -13,6 +13,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import SignInWithApple from '../../viewmodels/auth/SignInWithApple';
 import SignInWithGoogle from '../../viewmodels/auth/SignInWithGoogle';
 import i18n from '../../i18n';
+import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 import { showMessage } from 'react-native-flash-message';
 import styles from './styles';
@@ -82,7 +83,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<LandScree
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
           modalStyle={{ padding: 0, margin: 0 }}
         >
-          <SafeAreaProvider style={{ height: 270, borderTopEndRadius: 6, borderTopStartRadius: 6 }}>
+          <SafeAreaProvider style={{ height: 270, ...modalStyle.containerTopBorderRadius }}>
             <Confirm
               confirmButtonTitle={t('settings-reset-modal-button-confirm')}
               desc={t('land-recovery-reset')}

@@ -1,6 +1,6 @@
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import { StyleSheet, Text, TouchableHighlight, View } from 'react-native';
-import { borderColor, fontColor, styles } from '../constants/styles';
+import { borderColor, fontColor } from '../constants/styles';
 
 import { BioType } from '../viewmodels/auth/Authentication';
 import FaceID from '../assets/icons/app/FaceID.svg';

@@ -9,13 +9,13 @@ import DeviceInfo from 'react-native-device-info';
 import { ERC20Token } from '../../../models/ERC20';
 import EventEmitter from 'events';
 import { INetwork } from '../../../common/Networks';
-import InpageDApp from '../../../models/InpageDApp';
+import InpageDApp from '../../../models/entities/InpageDApp';
 import MessageKeys from '../../../common/MessageKeys';
 import MetamaskDAppsHub from '../../../viewmodels/walletconnect/MetamaskDAppsHub';
 import { PageMetadata } from '../Web3View';
-import { ReadableInfo } from '../../../models/Transaction';
+import { ReadableInfo } from '../../../models/entities/Transaction';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
-import { WCCallRequest_eth_sendTransaction } from '../../../models/WCSession_v1';
+import { WCCallRequest_eth_sendTransaction } from '../../../models/entities/WCSession_v1';
 import i18n from '../../../i18n';
 import { isSecureSite } from '../../../viewmodels/customs/Bookmarks';
 import { logInpageRequest } from '../../../viewmodels/services/Analytics';
@@ -23,7 +23,6 @@ import { parseSignParams } from '../../../utils/sign';
 import { rawCall } from '../../../common/RPC';
 import { showMessage } from 'react-native-flash-message';
 import { sleep } from '../../../utils/async';
-import { truncate } from 'fs';
 
 const NOTIFICATION_NAMES = {
   accountsChanged: 'metamask_accountsChanged',
@@ -47,7 +46,7 @@ interface JsonRpcResponse {
 }
 
 interface Payload extends JsonRpcRequest {
-  pageMetadata?: { icon: string; title: string; desc?: string; origin: string };
+  pageMetadata?: PageMetadata;
 }
 
 interface WatchAssetParams {
@@ -344,7 +343,7 @@ export class InpageDAppController extends EventEmitter {
 
         txHash ? resolve(txHash) : resolve({ error });
 
-        if (error) showMessage({ type: 'warning', message: error.message });
+        if (error && __DEV__) showMessage({ type: 'warning', message: error.message });
 
         return txHash ? true : false;
       };

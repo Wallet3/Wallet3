@@ -5,7 +5,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Success from './views/Success';
 import Theme from '../viewmodels/settings/Theme';
 import TxRequest from './compositions/TxRequest';
-import { WCCallRequestRequest } from '../models/WCSession_v1';
+import { WCCallRequestRequest } from '../models/entities/WCSession_v1';
 import { WalletConnectTransactionRequest } from '../viewmodels/transferring/WalletConnectTransactionRequest';
 import { WalletConnect_v1 } from '../viewmodels/walletconnect/WalletConnect_v1';
 import { observer } from 'mobx-react-lite';

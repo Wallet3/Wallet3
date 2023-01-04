@@ -1,10 +1,12 @@
 import { ActivityIndicator, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { AntDesign, Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { Coin, SafeViewContainer, Skeleton } from '../../components';
 import React, { useRef, useState } from 'react';
+import { secondaryFontColor, warningColor } from '../../constants/styles';
 
 import { Account } from '../../viewmodels/account/Account';
 import AccountIndicator from '../components/AccountIndicator';
+import AddressRiskIndicator from '../components/AddressRiskIndicator';
 import AnimatedNumber from '../../components/AnimatedNumber';
 import BalanceChangePreview from '../views/BalanceChangePreview';
 import { BioType } from '../../viewmodels/auth/Authentication';
@@ -17,7 +19,6 @@ import HorizontalNftList from '../components/HorizontalNftList';
 import HorizontalTokenList from '../components/HorizontalTokenList';
 import Image from 'react-native-fast-image';
 import InsufficientFee from '../components/InsufficientFee';
-import MultiSourceImage from '../../components/MultiSourceImage';
 import { PreExecResult } from '../../common/apis/Debank';
 import { RawTransactionRequest } from '../../viewmodels/transferring/RawTransactionRequest';
 import { ReactiveScreen } from '../../utils/device';
@@ -30,7 +31,6 @@ import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { openBrowserAsync } from 'expo-web-browser';
-import { secondaryFontColor } from '../../constants/styles';
 import styles from '../styles';
 
 interface Props {
@@ -49,17 +49,29 @@ const TxReview = observer(
   ({ vm, onReject, onApprove, onGasPress, onDecodedFuncPress, app, account, bioType, onBalanceChangePreviewPress }: Props) => {
     const { network } = vm;
     const { t } = i18n;
-    const { textColor, borderColor, secondaryTextColor, tintColor, foregroundColor } = Theme;
+    const { textColor, borderColor, secondaryTextColor, thirdTextColor } = Theme;
 
     const [busy, setBusy] = useState(false);
 
     const reviewItemStyle = { ...styles.reviewItem, borderColor };
     const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
     const reviewItemValueStyle = { ...styles.reviewItemValue, color: textColor };
+    const safeThemeColor = vm.toAddressRisky ? warningColor : thirdTextColor;
 
     return (
       <SafeViewContainer>
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', paddingEnd: 4 }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingHorizontal: 2,
+          }}
+        >
+          <Text style={{ fontSize: 19, fontWeight: '500', color: safeThemeColor, opacity: 0.25 }}>
+            {/* {t('modal-review-title')} */}
+          </Text>
+
           <AccountIndicator account={account} />
         </View>
 
@@ -202,14 +214,31 @@ const TxReview = observer(
             </Text>
 
             <TouchableOpacity
-              style={{ flexDirection: 'row', alignItems: 'center' }}
+              style={{ flexDirection: 'row', alignItems: 'center', position: 'relative' }}
               onPress={() => openBrowserAsync(`${network.explorer}/address/${vm.toAddress}`)}
             >
-              <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>
-                {vm.toAddress ? formatAddress(vm.to, 9, 5) : t('modal-dapp-request-deploy-contract')}
+              <Text style={{ ...reviewItemValueStyle, color: vm.toAddressRisky ? warningColor : textColor }} numberOfLines={1}>
+                {vm.toAddress ? formatAddress(vm.to, 7, 5) : t('modal-dapp-request-deploy-contract')}
               </Text>
 
-              {vm.to ? <Ionicons name="search-outline" size={15} color={textColor} style={{ marginStart: 6 }} /> : undefined}
+              {vm.to ? (
+                <Ionicons
+                  name="search-outline"
+                  size={15}
+                  color={vm.toAddressTag?.dangerous ? warningColor : textColor}
+                  style={{ marginStart: 6 }}
+                />
+              ) : undefined}
+
+              {vm.toAddressTag ? (
+                <AddressRiskIndicator
+                  chainId={network.chainId}
+                  address={vm.toAddress}
+                  label={vm.toAddressTag?.publicName}
+                  risky={vm.toAddressTag?.dangerous}
+                  containerStyle={{ position: 'absolute', bottom: -11.5, right: 0 }}
+                />
+              ) : undefined}
             </TouchableOpacity>
           </View>
 
@@ -281,22 +310,22 @@ const TxReview = observer(
                 </TouchableOpacity>
               </View>
             ) : (
-              <View style={{ ...reviewItemStyle }}>
+              <View style={{ ...reviewItemStyle, position: 'relative' }}>
                 <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-value')}</Text>
 
-                {vm.preExecuting ? (
-                  <Skeleton style={{ width: 108, height: 17 }} />
-                ) : (
-                  <View style={{ flexDirection: 'row' }}>
-                    <Text style={{ ...reviewItemValueStyle, maxWidth: 150, marginEnd: 4 }} numberOfLines={1}>
-                      {vm.value}
-                    </Text>
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={{ ...reviewItemValueStyle, maxWidth: 150, marginEnd: 4 }} numberOfLines={1}>
+                    {`${vm.valueWei.gt(0) ? '-' : ''}${vm.value}`}
+                  </Text>
 
-                    <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>
-                      {vm.network.symbol}
-                    </Text>
-                  </View>
-                )}
+                  <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>
+                    {vm.network.symbol}
+                  </Text>
+
+                  {vm.preExecuting && (
+                    <Skeleton style={{ width: 72, height: 9, position: 'absolute', right: 0, bottom: -11.5 }} />
+                  )}
+                </View>
               </View>
             )
           ) : undefined}
@@ -361,7 +390,7 @@ const TxReview = observer(
           </TouchableOpacity>
         </View>
 
-        {vm.insufficientFee ? <InsufficientFee /> : undefined}
+        {vm.insufficientFee && !vm.loading ? <InsufficientFee /> : undefined}
 
         {vm.txException ? <TxException exception={vm.txException} /> : undefined}
 
@@ -369,7 +398,7 @@ const TxReview = observer(
 
         <RejectApproveButtons
           onReject={onReject}
-          themeColor={network?.color}
+          themeColor={vm.toAddressRisky ? warningColor : network?.color}
           rejectTitle={t('button-reject')}
           approveTitle={t('modal-review-button-confirm')}
           disabledApprove={!vm.isValidParams || busy}

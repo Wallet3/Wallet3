@@ -1,7 +1,7 @@
 import { Button, Mnemonic, SafeViewContainer } from '../../components';
 import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
-import { borderColor, secondaryFontColor, styles, thirdFontColor } from '../../constants/styles';
+import { borderColor, secondaryFontColor, thirdFontColor } from '../../constants/styles';
 
 import App from '../../viewmodels/core/App';
 import Authentication from '../../viewmodels/auth/Authentication';
@@ -17,6 +17,7 @@ import QRCode from 'react-native-qrcode-svg';
 import SignInWithApple from '../../viewmodels/auth/SignInWithApple';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
+import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { usePreventScreenCapture } from 'expo-screen-capture';
@@ -158,14 +159,14 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
           withHandle={false}
           panGestureEnabled={false}
           panGestureComponentEnabled={false}
-          modalStyle={styles.modalStyle}
+          modalStyle={modalStyle.containerTopBorderRadius}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
           <FullPasspad
             appAvailable={true}
             themeColor={themeColor}
             height={420}
-            borderRadius={6}
+            borderRadius={modalStyle.containerTopBorderRadius.borderTopEndRadius}
             failedAttempts={Authentication.failedAttempts}
             onCodeEntered={(code) => verify(code)}
           />

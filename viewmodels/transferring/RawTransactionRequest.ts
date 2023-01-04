@@ -1,4 +1,4 @@
-import { Approve_ERC1155, Approve_ERC20, Approve_ERC721, Methods, RequestType, Transfer_ERC20 } from './RequestTypes';
+import { ApprovalForAll, Approve_ERC20, Approve_ERC721, Methods, RequestType, Transfer_ERC20 } from './RequestTypes';
 import { BigNumber, constants, providers, utils } from 'ethers';
 import EtherscanHub, { DecodedFunc } from '../hubs/EtherscanHub';
 import { PreExecResult, preExecTx } from '../../common/apis/Debank';
@@ -11,7 +11,8 @@ import { ERC20Token } from '../../models/ERC20';
 import { ERC721Token } from '../../models/ERC721';
 import { Gwei_1 } from '../../common/Constants';
 import { INetwork } from '../../common/Networks';
-import { WCCallRequest_eth_sendTransaction } from '../../models/WCSession_v1';
+import Sourcify from '../hubs/Sourcify';
+import { WCCallRequest_eth_sendTransaction } from '../../models/entities/WCSession_v1';
 import numeral from 'numeral';
 import { showMessage } from 'react-native-flash-message';
 import { sleep } from '../../utils/async';
@@ -56,7 +57,9 @@ export class RawTransactionRequest extends BaseTransaction {
       const value = Number(utils.formatUnits(this.tokenAmountWei, this.tokenDecimals)) || 0;
 
       return value < 1
-        ? utils.formatUnits(this.tokenAmountWei, this.tokenDecimals)
+        ? value === 0
+          ? '0'
+          : utils.formatUnits(this.tokenAmountWei, this.tokenDecimals)
         : numeral(value).format(Number.isInteger(value) ? '0,0' : '0,0.00');
     } catch (error) {
       return '0';
@@ -163,8 +166,6 @@ export class RawTransactionRequest extends BaseTransaction {
           if (isERC721) {
             this.erc721 = erc721;
             this.type = 'Approve_ERC721';
-
-            erc721?.fetchMetadata();
           } else {
             this.erc20 = erc20;
             this.tokenAmountWei = approveAmountOrTokenId;
@@ -178,7 +179,7 @@ export class RawTransactionRequest extends BaseTransaction {
 
         break;
 
-      case Approve_ERC1155:
+      case ApprovalForAll:
         const erc1155 = new ERC1155Token({
           chainId: this.network.chainId,
           contract: param.to,
@@ -187,8 +188,13 @@ export class RawTransactionRequest extends BaseTransaction {
         });
 
         try {
-          const [operator] = erc1155.interface.decodeFunctionData('setApprovalForAll', param.data) as [string, boolean];
+          const [operator, approved] = erc1155.interface.decodeFunctionData('setApprovalForAll', param.data) as [
+            string,
+            boolean
+          ];
+          this.type = approved ? 'Approve_ERC1155' : 'Revoke_ERC1155';
           this.setTo(operator);
+          console.log(this.type);
         } catch (error) {}
 
         break;
@@ -197,12 +203,17 @@ export class RawTransactionRequest extends BaseTransaction {
         this.setTo(param.to);
         this.valueWei = BigNumber.from(param.value || 0);
 
-        if (param.data?.length < 10) break;
+        if ((param.data?.length ?? 2) < 10) break;
+        if (!utils.isAddress(this.toAddress)) break;
 
         isRawTx = true;
 
         this.decodingFunc = true;
-        const decodedFunc = await EtherscanHub.decodeCall(this.network, param.to, param.data);
+
+        const decodedFunc = await Promise.race([
+          Sourcify.decodeCall(this.network, this.toAddress, param.data),
+          EtherscanHub.decodeCall(this.network, this.toAddress, param.data),
+        ]);
 
         runInAction(() => {
           this.decodedFunc = decodedFunc;
@@ -231,7 +242,7 @@ export class RawTransactionRequest extends BaseTransaction {
 
     if (param.nonce) runInAction(() => this.setNonce(param.nonce));
 
-    if (!isRawTx || !PreExecChains.has(this.network.chainId)) {
+    if (!isRawTx || !PreExecChains.has(this.network.chainId) || __DEV__) {
       runInAction(() => (this.preExecuting = false));
       return;
     }
@@ -277,18 +288,18 @@ export class RawTransactionRequest extends BaseTransaction {
     }
   }
 
+  get insufficientFee() {
+    return this.valueWei.add(this.txFeeWei).gt(this.nativeToken.balance);
+  }
+
   get isValidParams() {
     return (
-      !this.initializing &&
-      !this.preExecuting &&
-      (utils.isAddress(this.param.to) || this.param.to === '') && // Empty address is allowed - it means contract deploying
+      !this.loading &&
+      (utils.isAddress(this.param.to) || this.param.to === '' || this.param.to === undefined) && // Empty address is allowed - it means contract deploying
       this.nonce >= 0 &&
       this.isValidGas &&
-      this.nativeToken.balance.gte(this.valueWei) &&
-      !this.isEstimatingGas &&
       !this.txException &&
-      !this.insufficientFee &&
-      !this.nativeToken.loading
+      !this.insufficientFee
     );
   }
 

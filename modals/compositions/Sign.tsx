@@ -18,12 +18,12 @@ interface Props {
   typedData?: any;
   biometricType?: BioType;
   account?: Account;
-  metadata?: { origin: string; icon: string; title: string };
+  metadata?: PageMetadata;
 }
 
 export default ({ type, msg, themeColor, onReject, typedData, sign, biometricType, onSign, account, metadata }: Props) => {
   const swiper = useRef<Swiper>(null);
-  const [standardMode, setStandardMode] = useState<boolean>();
+  const [standardMode, setStandardMode] = useState(true);
 
   const onSignPress = async () => {
     if (!biometricType) {
@@ -53,8 +53,9 @@ export default ({ type, msg, themeColor, onReject, typedData, sign, biometricTyp
           onSign={onSignPress}
           account={account}
           bioType={biometricType}
-          onStandardModeOn={setStandardMode}
           metadata={metadata}
+          onStandardModeChanged={setStandardMode}
+          standardMode={standardMode}
         />
       ) : undefined}
 
@@ -66,6 +67,7 @@ export default ({ type, msg, themeColor, onReject, typedData, sign, biometricTyp
           themeColor={themeColor}
           account={account}
           bioType={biometricType}
+          metadata={metadata}
         />
       ) : undefined}
 

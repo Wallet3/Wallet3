@@ -3,6 +3,7 @@
   "Dev": ["web3q.io", "zksync.io", "llamanodes.com", "llamarpc.com"],
   "DeFi": [
     "*.uniswap.org",
+    "app.uniswap.org",
     "*.curve.fi",
     "curve.exchange",
     "oasis.app",
@@ -76,6 +77,7 @@
     "farm.rabbitfinance.io",
     "app.auroraswap.net",
     "*.stakedao.org",
+    "votemarket.stakedao.org",
     "app.drips.network",
     "anyswap.exchange",
     "www.airswap.io",

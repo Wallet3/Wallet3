@@ -1,3 +1,5 @@
+import { BigNumberish } from '@ethersproject/bignumber';
+
 export * from './Ethereum';
 export * from './Arbitrum';
 export * from './Aurora';
@@ -17,8 +19,6 @@ export * from './Harmony';
 export * from './Moonriver';
 export * from './PartnerTokens';
 export * from './Nova';
-
-import { BigNumberish } from '@ethersproject/bignumber';
 
 export interface IToken {
   address: string;

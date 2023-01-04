@@ -175,8 +175,8 @@ export const PublicNetworks: INetwork[] = [
     color: '#9ce012',
     l2: true,
     defaultTokens: BobaPopularTokens,
-    explorer: 'https://blockexplorer.boba.network',
-    etherscanApi: 'https://blockexplorer.boba.network/api',
+    explorer: 'https://bobascan.com',
+    etherscanApi: 'https://api.bobascan.com/api',
   },
   {
     symbol: 'Metis',

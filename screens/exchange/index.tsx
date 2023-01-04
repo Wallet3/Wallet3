@@ -17,6 +17,7 @@ import { NetworksMenu } from '../../modals';
 import { OneInch } from '../../assets/3rd';
 import { Portal } from 'react-native-portalize';
 import { ReactiveScreen } from '../../utils/device';
+import { RotateAnimation } from '../../utils/animations';
 import { SwapProtocol } from '../../common/apis/1inch';
 import { TextInput } from 'react-native-gesture-handler';
 import Theme from '../../viewmodels/settings/Theme';
@@ -27,6 +28,7 @@ import { formatCurrency } from '../../utils/formatter';
 import { generateDexLogo } from '../../assets/dexs';
 import { generateNetworkIcon } from '../../assets/icons/networks/white';
 import i18n from '../../i18n';
+import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 import { rotate } from '../../common/Animation';
 import modalStyles from '../../modals/styles';
@@ -133,7 +135,7 @@ export default observer(() => {
                 {VM.pendingTxs.length}
               </Text>
 
-              <Animatable.View animation={rotate} iterationCount="infinite" easing="linear" duration={2000}>
+              <Animatable.View animation={RotateAnimation} iterationCount="infinite" easing="linear" duration={2000}>
                 <Ionicons name="sync" size={14} color={userSelectedNetwork.color} />
               </Animatable.View>
             </View>
@@ -350,8 +352,14 @@ export default observer(() => {
           />
         </Modalize>
 
-        <Modalize ref={accountsRef} adjustToContentHeight disableScrollIfPossible>
-          <SafeAreaProvider style={{ ...modalStyles.safeArea, backgroundColor }}>
+        <Modalize
+          ref={accountsRef}
+          adjustToContentHeight
+          disableScrollIfPossible
+          modalStyle={modalStyle.containerTopBorderRadius}
+          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+        >
+          <SafeAreaProvider style={{ backgroundColor, ...modalStyle.containerTopBorderRadius, ...modalStyles.safeArea }}>
             <AccountSelector
               single
               accounts={App.allAccounts}
@@ -371,7 +379,7 @@ export default observer(() => {
           ref={fromSelectorRef}
           adjustToContentHeight
           disableScrollIfPossible
-          modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
+          modalStyle={modalStyle.containerTopBorderRadius}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
           <ScrollView
@@ -380,7 +388,15 @@ export default observer(() => {
             style={{ width: ReactiveScreen.width, flex: 1 }}
             contentContainerStyle={{ flexGrow: 1 }}
           >
-            <SafeAreaProvider style={{ ...modalStyles.safeArea, backgroundColor }}>
+            <SafeAreaProvider
+              style={{
+                backgroundColor,
+                ...modalStyle.containerTopBorderRadius,
+                //height: '100%',
+                width: ReactiveScreen.width,
+                ...modalStyles.safeArea
+              }}
+            >
               <TokenSelector
                 tokens={VM.tokens}
                 selectedToken={VM.swapFrom as IToken}
@@ -400,7 +416,7 @@ export default observer(() => {
           ref={toSelectorRef}
           adjustToContentHeight
           disableScrollIfPossible
-          modalStyle={{ borderTopStartRadius: 7, borderTopEndRadius: 7 }}
+          modalStyle={modalStyle.containerTopBorderRadius}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
           <ScrollView
@@ -409,7 +425,7 @@ export default observer(() => {
             style={{ width: ReactiveScreen.width, flex: 1 }}
             contentContainerStyle={{ flexGrow: 1 }}
           >
-            <SafeAreaProvider style={{ ...modalStyles.safeArea, backgroundColor }}>
+            <SafeAreaProvider style={{ backgroundColor, ...modalStyle.containerTopBorderRadius, width: ReactiveScreen.width, ...modalStyles.safeArea }}>
               <TokenSelector
                 tokens={VM.tokens}
                 chainId={chainId}

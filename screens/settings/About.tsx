@@ -1,7 +1,7 @@
+import { Cloudflare, Coingecko, OpenseaFull, Rarible } from '../../assets/3rd';
 import { Feather, Ionicons } from '@expo/vector-icons';
-import { Image, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { Rarible } from '../../assets/3rd';
 import React from 'react';
 import { SafeViewContainer } from '../../components';
 import Theme from '../../viewmodels/settings/Theme';
@@ -54,27 +54,19 @@ export function About() {
           <Text style={txtStyle}>{t('about-features-5')}</Text>
         </View>
 
-        <Text style={{ marginTop: 24, marginBottom: 4, fontWeight: '500', fontSize: 19, color: textColor }}>
-          {t('about-data-providers')}
-        </Text>
+        <Text style={{ marginTop: 24, fontWeight: '500', fontSize: 19, color: textColor }}>{t('about-data-providers')}</Text>
 
-        <View style={{ ...styles.item, height: 40, alignItems: 'center' }}>
-          <Image
-            source={require('../../assets/3rd/debank-logo.png')}
-            style={{ width: 190, resizeMode: 'contain', marginStart: -30 }}
-          />
-          <Image
-            source={require('../../assets/3rd/coingecko.png')}
-            style={{ width: 150, resizeMode: 'contain', marginEnd: 32, marginStart: 0 }}
-          />
-        </View>
-
-        <View style={{ ...styles.item, marginTop: 16 }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Rarible width={36} height={36} />
+        <View style={{ ...styles.item, alignItems: 'center', flexWrap: 'wrap', marginTop: 0 }}>
+          <Cloudflare width={180} height={33} style={{ marginEnd: 8, marginBottom: 36 }} />
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 16 }}>
+            <Rarible width={34} height={34} />
             <Text style={{ fontSize: 24, fontWeight: '600', marginStart: 10, color: foregroundColor }}>Rarible</Text>
           </View>
+          <OpenseaFull height={36} width={150} />
+          <Coingecko width={180} height={48} style={{ marginStart: 8 }} />
         </View>
+
+        <View style={{ ...styles.item, marginTop: 16 }}></View>
 
         <Text style={{ marginTop: 24, marginBottom: 4, fontWeight: '500', fontSize: 19, color: textColor }}>
           {t('about-support')}
