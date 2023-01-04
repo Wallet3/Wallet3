@@ -2,19 +2,21 @@ import { borderColor, fontColor, secondaryFontColor } from '../constants/styles'
 
 import { StyleSheet } from 'react-native';
 
-const containerTopBorderRadius = {
-  borderTopStartRadius: 16,
-  borderTopEndRadius: 16,
+const ModalBorderRadius = 7;
+
+const ContainerTopBorderRadius = {
+  borderTopStartRadius: ModalBorderRadius,
+  borderTopEndRadius: ModalBorderRadius,
 };
 
 export default StyleSheet.create({
   safeArea: {
     height: 445,
     flex: 1,
-    ...containerTopBorderRadius,
+    ...ContainerTopBorderRadius,
   },
 
-  containerTopBorderRadius: containerTopBorderRadius,
+  containerTopBorderRadius: ContainerTopBorderRadius,
 
   container: {
     padding: 16,
@@ -41,7 +43,6 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 2,
   },
 
   modalTitle: {

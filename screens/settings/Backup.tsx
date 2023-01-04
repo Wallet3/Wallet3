@@ -166,7 +166,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
             appAvailable={true}
             themeColor={themeColor}
             height={420}
-            borderRadius={6}
+            borderRadius={modalStyle.containerTopBorderRadius.borderTopEndRadius}
             failedAttempts={Authentication.failedAttempts}
             onCodeEntered={(code) => verify(code)}
           />

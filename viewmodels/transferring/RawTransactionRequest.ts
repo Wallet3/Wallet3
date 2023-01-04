@@ -1,4 +1,4 @@
-import { Approve_ERC1155, Approve_ERC20, Approve_ERC721, Methods, RequestType, Transfer_ERC20 } from './RequestTypes';
+import { ApprovalForAll, Approve_ERC20, Approve_ERC721, Methods, RequestType, Transfer_ERC20 } from './RequestTypes';
 import { BigNumber, constants, providers, utils } from 'ethers';
 import EtherscanHub, { DecodedFunc } from '../hubs/EtherscanHub';
 import { PreExecResult, preExecTx } from '../../common/apis/Debank';
@@ -166,8 +166,6 @@ export class RawTransactionRequest extends BaseTransaction {
           if (isERC721) {
             this.erc721 = erc721;
             this.type = 'Approve_ERC721';
-
-            erc721?.fetchMetadata();
           } else {
             this.erc20 = erc20;
             this.tokenAmountWei = approveAmountOrTokenId;
@@ -181,7 +179,7 @@ export class RawTransactionRequest extends BaseTransaction {
 
         break;
 
-      case Approve_ERC1155:
+      case ApprovalForAll:
         const erc1155 = new ERC1155Token({
           chainId: this.network.chainId,
           contract: param.to,
@@ -190,8 +188,13 @@ export class RawTransactionRequest extends BaseTransaction {
         });
 
         try {
-          const [operator] = erc1155.interface.decodeFunctionData('setApprovalForAll', param.data) as [string, boolean];
+          const [operator, approved] = erc1155.interface.decodeFunctionData('setApprovalForAll', param.data) as [
+            string,
+            boolean
+          ];
+          this.type = approved ? 'Approve_ERC1155' : 'Revoke_ERC1155';
           this.setTo(operator);
+          console.log(this.type);
         } catch (error) {}
 
         break;
