@@ -24,6 +24,7 @@ export const ApprovalForAll = '0xa22cb465';
 export const Methods = new Map<string, RequestType>([
   ['0x', 'Transfer'],
   [Transfer_ERC20, 'Transfer_ERC20'],
+  [Transfer_ERC721, 'Transfer_ERC721'],
   [SafeTransferFrom_ERC721, 'Transfer_ERC721'],
   [SafeTransferFrom_WithData_ERC721, 'Transfer_ERC721'],
   [SafeTransferFrom_ERC1155, 'Transfer_ERC1155'],

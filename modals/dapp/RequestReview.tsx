@@ -19,6 +19,7 @@ import HorizontalNftList from '../components/HorizontalNftList';
 import HorizontalTokenList from '../components/HorizontalTokenList';
 import Image from 'react-native-fast-image';
 import InsufficientFee from '../components/InsufficientFee';
+import MultiSourceImage from '../../components/MultiSourceImage';
 import { PreExecResult } from '../../common/apis/Debank';
 import { RawTransactionRequest } from '../../viewmodels/transferring/RawTransactionRequest';
 import { ReactiveScreen } from '../../utils/device';
@@ -153,7 +154,36 @@ const TxReview = observer(
             </View>
           ) : undefined}
 
-          {/* {vm.type === 'Transfer_ERC721' && } */}
+          {(vm.type === 'Transfer_ERC721' || vm.type === 'Transfer_ERC1155') && (
+            <View style={{ ...reviewItemStyle }}>
+              <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-amount')}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                {vm.tokenAmountWei.gt(0) ? (
+                  <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>
+                    {`${vm.tokenAmount} ${vm.nft?.metadata?.name || ''}`}
+                  </Text>
+                ) : undefined}
+
+                {vm.nft?.metadata?.image && (
+                  <MultiSourceImage
+                    uriSources={[vm.nft?.metadata?.image]}
+                    style={{ width: 20, height: 20, marginStart: 8 }}
+                    loadingIconSize={20}
+                    borderRadius={3}
+                    sourceTypes={[]}
+                  />
+                )}
+
+                {vm.tokenAmountWei.gt(0) && vm.valueWei.gt(0) ? (
+                  <Text style={{ ...reviewItemValueStyle, marginHorizontal: 6 }}>+</Text>
+                ) : undefined}
+
+                {vm.valueWei.gt(0) || vm.tokenAmountWei.eq(0) ? (
+                  <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>{`${vm.value} ${vm.network.symbol}`}</Text>
+                ) : undefined}
+              </View>
+            </View>
+          )}
 
           {vm.type === 'Approve_ERC20' ? (
             <View style={{ ...reviewItemStyle }}>
@@ -202,10 +232,20 @@ const TxReview = observer(
                   style={{ ...reviewItemValueStyle, marginEnd: 8, maxWidth: ReactiveScreen.width - 215 }}
                   numberOfLines={1}
                 >
-                  {vm.erc721?.metadata?.title || vm.erc721?.tokenId}
+                  {vm.erc721?.metadata?.name || `#${vm.erc721?.tokenId}`}
                 </Text>
 
-                <AntDesign name="star" size={19} color={network.color} />
+                {vm.erc721?.metadata?.image ? (
+                  <MultiSourceImage
+                    uriSources={[vm.erc721?.metadata?.image, vm.erc721.metadata.animation_url]}
+                    style={{ width: 20, height: 20 }}
+                    loadingIconSize={20}
+                    borderRadius={3}
+                    sourceTypes={[]}
+                  />
+                ) : (
+                  <AntDesign name="star" size={19} color={network.color} />
+                )}
               </View>
             </View>
           ) : undefined}

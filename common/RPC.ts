@@ -175,7 +175,7 @@ export async function eth_call_return(
 
       return resp;
     } catch (error) {
-      console.log(error, url);
+      console.error(error, url);
       markRPCFailed(chainId, url);
     }
   }
