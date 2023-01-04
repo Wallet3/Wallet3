@@ -269,6 +269,7 @@
   "tx-type-approve_erc1155": "Approval For All",
   "tx-type-revoke_erc1155": "Disapproval For All",
   "tx-type-transfer": "Transfer",
+  "tx-type-transfer_erc20": "Transfer",
   "tx-type-contract-interaction": "Contract Interaction",
   "tx-type-unknown": "Unknown",
   "msg-invalid-address": "Invalid address",

@@ -269,6 +269,7 @@
   "tx-type-approve_erc1155": "Tüm İçin Onay",
   "tx-type-revoke_erc1155": "Tüm İçin Onaylama",
   "tx-type-transfer": "Aktarım",
+  "tx-type-transfer_erc20": "Aktarım",
   "tx-type-contract-interaction": "Sözleşme Etkileşimi",
   "tx-type-unknown": "Bilinmeyen",
   "msg-invalid-address": "Geçersiz adres",

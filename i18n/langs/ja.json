@@ -265,6 +265,7 @@
   "tx-type-approve_erc1155": "すべてに承認",
   "tx-type-revoke_erc1155": "すべてに不承認",
   "tx-type-transfer": "送金",
+  "tx-type-transfer_erc20": "送金",
   "tx-type-contract-interaction": "コントラクト・インタラクション",
   "tx-type-unknown": "未知",
   "msg-invalid-address": "無効なアドレス",

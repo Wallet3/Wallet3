@@ -125,14 +125,14 @@ const TxReview = observer(
 
                 {vm.type !== 'Contract Interaction' && vm.type !== 'Transfer' && vm.valueWei.gt(0) && (
                   <Text style={{ fontSize: 9, color: vm.network.color, fontWeight: '600', marginStart: 3 }}>
-                    {`+ ${vm.value} ${vm.network.symbol}`}
+                    {`-${vm.value} ${vm.network.symbol}`}
                   </Text>
                 )}
               </View>
             </TouchableOpacity>
           </View>
 
-          {vm.type === 'Transfer' ? (
+          {vm.type === 'Transfer' || vm.type === 'Transfer_ERC20' ? (
             <View style={{ ...reviewItemStyle }}>
               <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-amount')}</Text>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -152,6 +152,8 @@ const TxReview = observer(
               </View>
             </View>
           ) : undefined}
+
+          {/* {vm.type === 'Transfer_ERC721' && } */}
 
           {vm.type === 'Approve_ERC20' ? (
             <View style={{ ...reviewItemStyle }}>

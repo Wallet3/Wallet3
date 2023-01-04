@@ -265,6 +265,7 @@
   "tx-type-approve_erc1155": "全部资产授权",
   "tx-type-revoke_erc1155": "撤消全部资产授权",
   "tx-type-transfer": "转账",
+  "tx-type-transfer_erc20": "转账",
   "tx-type-contract-interaction": "合约交互",
   "tx-type-unknown": "未知",
   "msg-invalid-address": "无效地址",
