@@ -56,7 +56,7 @@ export default observer(({ tip, done }: { tip?: string; done?: () => void }) => 
 
         <View>
           <Text style={styles.tip} numberOfLines={1}>
-            {Authentication.appAuthorized ? tip || t('qrscan-tip-1') : t('qrscan-tip-desktop-backup-qrcode')}
+            {Authentication.appAuthorized ? tip || t('qrscan-tip-1') : tip || t('qrscan-tip-desktop-backup-qrcode')}
           </Text>
           <Text style={{ ...styles.tip, fontSize: 9 }}>{t('qrscan-tip-above-types')}</Text>
         </View>

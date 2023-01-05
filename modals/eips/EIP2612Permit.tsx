@@ -78,7 +78,7 @@ export default ({ eip2612, metadata, onAddressChecked }: Props) => {
           {isUint256Max && <Ionicons name="warning" color="crimson" size={15} style={{ marginEnd: 4 }} />}
 
           {decimals < 0 ? (
-            <Skeleton style={{ width: 52, height: 17, marginStart: 4 }} />
+            <Skeleton style={{ width: 52, height: 17, marginHorizontal: 4 }} />
           ) : (
             <TextInput
               numberOfLines={1}
@@ -90,7 +90,7 @@ export default ({ eip2612, metadata, onAddressChecked }: Props) => {
               style={{
                 ...reviewItemValueStyle,
                 maxWidth: 120,
-                color: isUint256Max ? 'crimson' : textColor,
+                color: isUint256Max || dangerous ? 'crimson' : textColor,
                 marginEnd: 8,
                 minWidth: 52,
               }}
