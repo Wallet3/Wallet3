@@ -52,7 +52,11 @@ const NFTItem = ({
     <TouchableOpacity
       key={nft.id}
       activeOpacity={0.75}
-      style={{ marginBottom: 16, ...shadow }}
+      style={{ marginBottom: 16, ...shadow,
+        // android 
+        borderColor: "transparent",
+        elevation: 5,
+      }}
       onPress={() => navigation.push('NFTDetails', { item: nft, colorResult })}
     >
       <SharedElement id={`nft.${nft.id}.photo`}>

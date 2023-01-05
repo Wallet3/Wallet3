@@ -102,6 +102,9 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
             height: ReactiveScreen.width * 0.9,
             alignSelf: 'center',
             marginBottom: 16,
+            // android 
+            borderColor: "transparent",
+            elevation: 5,
           }}
         >
           <MultiSourceImage
