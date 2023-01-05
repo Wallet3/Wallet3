@@ -141,7 +141,7 @@ export class OneInch {
     AsyncStorage.setItem(Keys.userSelectedAccount, this.account.address);
 
     this.tokens.forEach((t) => t.setOwner(this.account.address));
-    this.tokens.slice(0, 10).forEach((t) => t.getBalance());
+    this.tokens.slice(0, 7).forEach((t) => t.getBalance());
 
     this.swapFrom?.getBalance();
   }
@@ -186,7 +186,7 @@ export class OneInch {
 
     const tokens = [nativeToken, ...all];
 
-    tokens.slice(0, 10).forEach((t) => t.getBalance());
+    tokens.slice(0, 7).forEach((t) => t.getBalance());
 
     const swapFromAddress = await AsyncStorage.getItem(Keys.userSelectedFromToken(network.chainId));
     const fromToken = tokens.find((t) => t.address === swapFromAddress) || tokens[0];

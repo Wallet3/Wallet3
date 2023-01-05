@@ -1,6 +1,6 @@
 {
   "Education": ["app.banklessacademy.com", "myfirstnft.info", "speedrunethereum.com"],
-  "Dev": ["web3q.io", "zksync.io", "llamanodes.com", "llamarpc.com"],
+  "Dev": ["*.scroll.io", "*.optimism.io", "*.arbitrum.io", "*.zksync.io", "llamanodes.com", "llamarpc.com", "web3q.io"],
   "DeFi": [
     "*.uniswap.org",
     "app.uniswap.org",
@@ -217,7 +217,7 @@
     "nft.bueno.art"
   ],
   "Bridges": [
-    "*.optimism.io",
+    "bridge.optimism.io",
     "bridge.arbitrum.io",
     "bridge.renproject.io",
     "stargate.finance",

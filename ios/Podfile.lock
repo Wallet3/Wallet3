@@ -636,7 +636,7 @@ PODS:
     - React-Core
   - EXLocalAuthentication (13.0.2):
     - ExpoModulesCore
-  - Expo (47.0.10):
+  - Expo (47.0.11):
     - ExpoModulesCore
   - ExpoAdapterGoogleSignIn (9.0.2):
     - ExpoModulesCore
@@ -1566,7 +1566,7 @@ SPEC CHECKSUMS:
   EXFont: 319606bfe48c33b5b5063fb0994afdc496befe80
   EXImageLoader: 84b65e6bd9d3345d6fbb3ab936a546c54496a64d
   EXLocalAuthentication: 78cc5a00b13745b41d16d189ab332b61a01299f9
-  Expo: a694d89d2461fdfc6b977bf489bf7d341ed03bca
+  Expo: dedd83acfd4d70cbec6ac2f1b4433462d95c70bc
   ExpoAdapterGoogleSignIn: 98a113d9c0ed1ce7cf6259f0907d3f93209b0d7f
   ExpoClipboard: 334921ae215b4be261e393e6fdd9050025008a20
   ExpoCrypto: 51e7662c7f5bfeab25b7909b8a5d545ec15d4877

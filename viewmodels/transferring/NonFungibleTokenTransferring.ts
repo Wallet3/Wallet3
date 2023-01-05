@@ -67,8 +67,8 @@ export class NFTTransferring extends BaseTransaction {
     super({ network: args.network, account: args.account || App.currentAccount! });
 
     this.nft = args.nft;
-    this.erc721 = new ERC721Token({ ...args.network, ...args.nft, owner: this.account.address });
-    this.erc1155 = new ERC1155Token({ ...args.network, ...args.nft, owner: this.account.address });
+    this.erc721 = new ERC721Token({ ...args.network, ...args.nft, owner: this.account.address, fetchMetadata: false });
+    this.erc1155 = new ERC1155Token({ ...args.network, ...args.nft, owner: this.account.address, fetchMetadata: false });
 
     makeObservable(this, {
       nftStandard: observable,

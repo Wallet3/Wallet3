@@ -107,7 +107,11 @@ export default (props: Props) => {
             backgroundColor: 'transparent',
           }}
         >
-          <Feather name="hexagon" size={props.loadingIconSize ?? 64} color="#55555555" />
+          <Feather
+            name="hexagon"
+            size={props.loadingIconSize || Number((props.style as any)?.width) || 64}
+            color="#55555555"
+          />
         </Animatable.View>
       )}
     </View>

@@ -432,6 +432,26 @@ export const Testnets: INetwork[] = [
     explorer: 'https://zksync2-testnet.zkscan.io',
     feeTokens: zkSyncFeeTokens,
   },
+  {
+    symbol: 'ETH',
+    network: 'Scroll L1 Testnet',
+    testnet: true,
+    chainId: 534351,
+    color: '#8C8DFC',
+    defaultTokens: [],
+    explorer: 'https://prealpha.scroll.io/l1scan',
+    eip1559: true,
+  },
+  {
+    symbol: 'ETH',
+    network: 'Scroll L2 Testnet',
+    testnet: true,
+    chainId: 534354,
+    color: '#8C8DFC',
+    defaultTokens: [],
+    explorer: 'https://prealpha.scroll.io/l2scan',
+    eip1559: true,
+  },
 ];
 
 export const AllNetworks: INetwork[] = [...PublicNetworks, ...Testnets];

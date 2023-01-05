@@ -1,4 +1,5 @@
-import { StyleProp, Text, ViewStyle } from 'react-native';
+import Animated, { FadeIn } from 'react-native-reanimated';
+import { StyleProp, ViewStyle } from 'react-native';
 
 import React from 'react';
 import i18n from '../../i18n';
@@ -10,7 +11,8 @@ interface Props {
 export default ({ style }: Props) => {
   const { t } = i18n;
   return (
-    <Text
+    <Animated.Text
+      entering={FadeIn.springify()}
       style={{
         color: 'crimson',
         textAlign: 'right',
@@ -22,6 +24,6 @@ export default ({ style }: Props) => {
       }}
     >
       {t('tip-insufficient-funds')}
-    </Text>
+    </Animated.Text>
   );
 };
