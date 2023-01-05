@@ -3,6 +3,7 @@ import { action, makeObservable, observable, runInAction } from 'mobx';
 import { eth_call, getRPCUrls } from '../../common/RPC';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { DAY } from '../../utils/time';
 import POAPABI from '../../abis/POAP.json';
 import axios from 'axios';
 
@@ -36,7 +37,7 @@ export class POAP {
     this.owner = owner;
     this.contract = new ethers.Contract(POAPAddress, POAPABI);
 
-    makeObservable(this, { badges: observable, loading: observable, primaryBadge: observable, setPrimaryBadge: action });
+    makeObservable(this, { badges: observable, loading: observable, primaryBadge: observable });
 
     AsyncStorage.getItem(`${owner}-primaryBadge`).then((primaryBadge) => {
       if (!primaryBadge) return;
@@ -55,34 +56,50 @@ export class POAP {
   }
 
   async getTokenDetails(owner: string, count: number, chainId = 1) {
-    const details = await Promise.all(
-      new Array(count).fill(0).map(async (_, index) => {
-        const data = this.contract.interface.encodeFunctionData('tokenDetailsOfOwnerByIndex', [owner, index]);
-        const resp: string = await eth_call(chainId, { from: owner, to: POAPAddress, data });
-        const [tokenId, eventId] = this.contract.interface.decodeFunctionResult('tokenDetailsOfOwnerByIndex', resp);
+    const details: { tokenId: string; eventId: string }[] = [];
 
-        return { tokenId: tokenId.toString(), eventId: eventId.toString() } as { tokenId: string; eventId: string };
-      })
-    );
+    for (let i = 0; i < count; i++) {
+      const data = this.contract.interface.encodeFunctionData('tokenDetailsOfOwnerByIndex', [owner, i]);
+      const resp: string = await eth_call(chainId, { from: owner, to: POAPAddress, data });
+      const [tokenId, eventId] = this.contract.interface.decodeFunctionResult('tokenDetailsOfOwnerByIndex', resp);
+      details.push({ tokenId: tokenId.toString(), eventId: eventId.toString() });
+    }
 
-    return await Promise.all(
-      details.map(async (basic) => {
-        const data = this.contract.interface.encodeFunctionData('tokenURI', [basic.tokenId]);
-        const resp: string = await eth_call(chainId, { from: owner, to: POAPAddress, data });
-        const [tokenURI] = this.contract.interface.decodeFunctionResult('tokenURI', resp);
+    const result: {
+      tokenId: string;
+      eventId: string;
+      tokenURI: string;
+      contract: string;
+      metadata: {
+        description: string;
+        external_url: string;
+        home_url: string;
+        image_url: string;
+        name: string;
+        year: number;
+        tags: string[];
+      };
+    }[] = [];
 
-        const metadata = (await axios.get(tokenURI)).data as {
-          description: string;
-          external_url: string;
-          home_url: string;
-          image_url: string;
-          name: string;
-          year: number;
-          tags: string[];
-        };
-        return { ...basic, tokenURI, metadata, contract: this.contract.address };
-      })
-    );
+    for (let basic of details) {
+      const data = this.contract.interface.encodeFunctionData('tokenURI', [basic.tokenId]);
+      const resp: string = await eth_call(chainId, { from: owner, to: POAPAddress, data });
+      const [tokenURI] = this.contract.interface.decodeFunctionResult('tokenURI', resp);
+
+      const metadata = (await axios.get(tokenURI)).data as {
+        description: string;
+        external_url: string;
+        home_url: string;
+        image_url: string;
+        name: string;
+        year: number;
+        tags: string[];
+      };
+
+      result.push({ ...basic, tokenURI, metadata, contract: this.contract.address });
+    }
+
+    return result;
   }
 
   async checkDefaultBadge() {
@@ -91,16 +108,23 @@ export class POAP {
   }
 
   async refresh() {
+    const key = `${this.owner}-poap-badges`;
+
     if (this.badges.length > 0) return;
 
-    runInAction(() => {
-      this.badges = [];
-      this.loading = true;
-    });
+    const cache = await AsyncStorage.getItem(key);
+    if (cache) {
+      const { badges, timestamp } = JSON.parse(cache);
+      runInAction(() => (this.badges = badges.concat('')));
+      if (Date.now() < timestamp + 2 * DAY) return;
+    }
+
+    const save = (badges: any[]) => AsyncStorage.setItem(key, JSON.stringify({ timestamp: Date.now(), badges }));
+    runInAction(() => (this.loading = true));
 
     try {
       const [count, xdaiCount] = await Promise.all([this.getBalance(1), this.getBalance(100)]);
-      if (count === 0 && xdaiCount === 0) return [];
+      if (count === 0 && xdaiCount === 0) return;
 
       const badges: (POAPBadge | '')[] = [];
 
@@ -112,20 +136,23 @@ export class POAP {
         badges.push(...(await this.getTokenDetails(this.owner, xdaiCount, 100)));
       }
 
-      if (badges.length === 0) return [];
+      if (badges.length === 0) {
+        save(badges);
+        return;
+      }
 
-      runInAction(() => (this.badges = badges.concat('')));
+      runInAction(() => (this.badges = badges.concat(''))); // attach an empty string to set 'none'
 
       if (this.primaryBadge === null) this.setPrimaryBadge(badges[0]);
 
-      return badges;
+      save(badges);
     } finally {
       runInAction(() => (this.loading = false));
     }
   }
 
   setPrimaryBadge(badge: POAPBadge | '') {
-    this.primaryBadge = badge;
+    runInAction(() => (this.primaryBadge = badge));
     AsyncStorage.setItem(`${this.owner}-primaryBadge`, JSON.stringify(badge));
   }
 }

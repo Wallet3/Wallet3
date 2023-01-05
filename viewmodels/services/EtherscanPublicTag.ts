@@ -32,7 +32,7 @@ export async function fetchAddressInfo(chainId: number, address: string) {
 
   let item = await Database.cloud_address_tags.findOne({ where: { address, chainId } });
 
-  if (item && Date.now() < item?.lastUpdatedTimestamp + 15 * DAY) {
+  if (item && Date.now() < item?.lastUpdatedTimestamp + 90 * DAY) {
     TagsCache.set(key, item);
     return item;
   }

@@ -157,17 +157,20 @@ const TxReview = observer(
           {(vm.type === 'Transfer_ERC721' || vm.type === 'Transfer_ERC1155') && (
             <View style={{ ...reviewItemStyle }}>
               <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-amount')}</Text>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginStart: 0 }}>
                 {vm.tokenAmountWei.gt(0) ? (
-                  <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>
+                  <Text style={{ ...reviewItemValueStyle, maxWidth: '80%' }} numberOfLines={1}>
                     {`${vm.tokenAmount} ${vm.nft?.metadata?.name || ''}`}
                   </Text>
                 ) : undefined}
 
+                {vm.nft?.loading && <Skeleton style={{ height: 17, width: 64, marginStart: 8 }} />}
+
                 {vm.nft?.metadata?.image && (
                   <MultiSourceImage
                     uriSources={[vm.nft?.metadata?.image]}
-                    style={{ width: 20, height: 20, marginStart: 8 }}
+                    style={{ width: 20, height: 20, borderWidth: 0.5, borderColor, borderRadius: 5 }}
+                    containerStyle={{ marginStart: 8 }}
                     loadingIconSize={20}
                     borderRadius={3}
                     sourceTypes={[]}

@@ -35,12 +35,9 @@ export class ERC721Token extends NonFungibleToken {
 
   async getMetadataURI() {
     try {
-      console.log('get 721 tokenuri');
       const [tokenURI] = (await this.call('tokenURI', [this.tokenId])) as [string];
       return tokenURI;
-    } catch (error) {
-      console.log(error)
-    }
+    } catch (error) {}
 
     return '';
   }

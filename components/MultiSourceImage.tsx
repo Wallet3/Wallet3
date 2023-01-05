@@ -1,7 +1,7 @@
 import * as Animatable from 'react-native-animatable';
 
 import FastImage, { FastImageProps } from 'react-native-fast-image';
-import { ImageSourcePropType, View } from 'react-native';
+import { ImageSourcePropType, StyleProp, View, ViewStyle } from 'react-native';
 import React, { useState } from 'react';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -25,10 +25,11 @@ interface Props extends FastImageProps {
   borderRadius?: number;
   loadingIconSize?: number;
   onColorParsed?: (colors: ImageColorsResult) => void;
+  containerStyle?: StyleProp<ViewStyle>;
 }
 
 export default (props: Props) => {
-  const { uriSources, onColorParsed, sourceTypes, controls, paused, backgroundColor, borderRadius } = props;
+  const { uriSources, onColorParsed, sourceTypes, controls, paused, backgroundColor, borderRadius, containerStyle } = props;
   const [index, setIndex] = useState(uriSources.findIndex((i) => i));
   const [imageLoaded, setImageLoaded] = useState(false);
   const [trySvg, setTrySvg] = useState(false);
@@ -63,7 +64,7 @@ export default (props: Props) => {
   };
 
   return (
-    <View style={{ backgroundColor, borderRadius, overflow: 'hidden' }}>
+    <View style={{ backgroundColor, borderRadius, overflow: 'hidden', ...(containerStyle || ({} as any)) }}>
       {uriSources[index]?.endsWith('mp4') || sourceTypes[index]?.endsWith('mp4') ? (
         <Video
           source={{ uri: uriSources[index] }}
@@ -73,6 +74,7 @@ export default (props: Props) => {
           onLoad={() => setImageLoaded(true)}
         />
       ) : uriSources[index]?.endsWith('.svg') ||
+        uriSources[index]?.startsWith('data:image/svg+xml;') ||
         sourceTypes[index]?.endsWith('svg+xml') ||
         sourceTypes[index]?.endsWith('svg') ||
         trySvg ? (

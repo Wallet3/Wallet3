@@ -162,7 +162,7 @@ export async function eth_call_return(
       });
 
       if (resp.error) {
-        console.log(resp.error, url);
+        console.log(resp.error, url, args);
 
         if (fast) {
           return resp;
