@@ -131,9 +131,10 @@ export async function eth_call<T>(
     gasPrice?: string | number;
     value?: string | number;
     data: string;
-  }
+  },
+  fast = false
 ) {
-  const resp = await eth_call_return(chainId, args);
+  const resp = await eth_call_return(chainId, args, fast);
   return resp?.result as T;
 }
 
@@ -146,8 +147,10 @@ export async function eth_call_return(
     gasPrice?: string | number;
     value?: string | number;
     data: string;
-  }
+  },
+  fast = false
 ) {
+  let attempts = 0;
   const urls = getRPCUrls(chainId);
 
   for (let url of urls) {
@@ -159,11 +162,21 @@ export async function eth_call_return(
         id: Date.now(),
       });
 
-      if (resp.error) continue;
+      if (resp.error) {
+        console.log(resp.error, url, args);
+
+        if (fast) {
+          return resp;
+        }
+
+        if (attempts++ > 3) return resp;
+
+        continue;
+      }
 
       return resp;
     } catch (error) {
-      console.log(error);
+      console.error(error, url);
       markRPCFailed(chainId, url);
     }
   }
@@ -230,6 +243,7 @@ export async function estimateGas(
 }
 
 export async function getGasPrice(chainId: number) {
+  let attempts = 0;
   const urls = getRPCUrls(chainId);
 
   for (let url of urls) {
@@ -241,7 +255,10 @@ export async function getGasPrice(chainId: number) {
         id: Date.now(),
       });
 
-      if (resp.error) continue;
+      if (resp.error) {
+        if (attempts++ > 3) return;
+        continue;
+      }
 
       const wei = Number.parseInt(resp.result);
       const minGwei = MinWei.get(chainId) || 0;

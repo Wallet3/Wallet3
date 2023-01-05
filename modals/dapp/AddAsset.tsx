@@ -26,7 +26,7 @@ export default ({ themeColor, approve, reject, asset, chainId }: Props) => {
 
   return (
     <SafeViewContainer style={styles.container}>
-      <View style={{ paddingBottom: 5, borderBottomWidth: 0, borderBottomColor: `${borderColor}a0` }}>
+      <View style={{ paddingBottom: 2 }}>
         <Text style={{ fontSize: 21, color: themeColor, fontWeight: '500' }}>{t('modal-dapp-add-asset-title')}</Text>
       </View>
 

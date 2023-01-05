@@ -1,5 +1,6 @@
+import { HOUR, MINUTE } from '../../utils/time';
 import { IsNull, LessThanOrEqual, MoreThan, Not } from 'typeorm';
-import Transaction, { ITransaction } from '../../models/Transaction';
+import Transaction, { ITransaction } from '../../models/entities/Transaction';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { getTransactionReceipt, sendTransaction } from '../../common/RPC';
 
@@ -7,6 +8,7 @@ import Database from '../../models/Database';
 import LINQ from 'linq';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
+import { isTransactionAbandoned } from '../services/EtherscanPublicTag';
 import { logTxConfirmed } from '../services/Analytics';
 import { showMessage } from 'react-native-flash-message';
 import { startLayoutAnimation } from '../../utils/animations';
@@ -88,6 +90,11 @@ class TxHub {
     const abandonedTxs: Transaction[] = [];
 
     for (let tx of this.pendingTxs) {
+      if (!tx.hash) {
+        abandonedTxs.push(tx);
+        continue;
+      }
+
       const receipt = await getTransactionReceipt(tx.chainId, tx.hash);
 
       if (this.txs.find((t) => t.from === tx.from && t.chainId === tx.chainId && t.nonce >= tx.nonce && t.blockHash)) {
@@ -96,8 +103,13 @@ class TxHub {
       }
 
       if (!receipt || receipt.status === null || !receipt.blockHash) {
+        if (Date.now() > tx.timestamp + (__DEV__ ? 3 : 60) * MINUTE && (await isTransactionAbandoned(tx.chainId, tx.hash))) {
+          abandonedTxs.push(tx);
+        }
         continue;
       }
+
+      confirmedTxs.push(tx);
 
       tx.gasUsed = Number.parseInt(receipt.gasUsed);
       tx.status = Number.parseInt(receipt.status) === 1;
@@ -116,8 +128,6 @@ class TxHub {
         await tx.save();
       } catch (error) {}
 
-      confirmedTxs.push(tx);
-
       const invalidTxs = await this.repository.find({
         where: { from: tx.from, chainId: tx.chainId, nonce: LessThanOrEqual(tx.nonce), blockNumber: IsNull() },
       });
@@ -133,12 +143,10 @@ class TxHub {
     confirmedTxs.forEach((tx) => logTxConfirmed(tx));
 
     runInAction(() => {
-      const newTxs = this.txs.filter((tx) => !abandonedTxs.find((t) => t.hash === tx.hash));
-      newTxs.unshift(...confirmedTxs.filter((t) => t.blockHash && !this.txs.find((t2) => t2.hash === t.hash)));
+      const minedTxs = this.txs.filter((tx) => !abandonedTxs.find((t) => t.hash === tx.hash));
+      minedTxs.unshift(...confirmedTxs.filter((t) => t.blockHash && !this.txs.find((t2) => t2.hash === t.hash)));
 
-      startLayoutAnimation();
-
-      this.txs = LINQ.from(newTxs)
+      this.txs = LINQ.from(minedTxs)
         .distinct((t) => t.hash)
         .toArray();
 
@@ -146,17 +154,21 @@ class TxHub {
         (pt) => confirmedTxs.find((tx) => tx.hash === pt.hash) || abandonedTxs.find((tx) => tx.hash === pt.hash)
       );
 
-      this.pendingTxs = this.pendingTxs.filter(
+      const newPending = this.pendingTxs.filter(
         (pt) =>
           !toRemove.find((tx) => tx.hash === pt.hash) &&
           pt.nonce >
-            LINQ.from(this.txs)
+            (LINQ.from(this.txs)
               .where((t) => t.chainId === pt.chainId)
               .take(10)
-              .maxBy((i) => i.nonce).nonce
+              .orderByDescending((i) => i.nonce)
+              .toArray()[0]?.nonce ?? -1)
       );
 
       abandonedTxs.map((t) => t.remove());
+
+      startLayoutAnimation();
+      this.pendingTxs = newPending;
     });
   }
 
@@ -207,7 +219,7 @@ class TxHub {
     t.hash = tx.hash!;
     t.chainId = tx.chainId!;
     t.from = tx.from!;
-    t.to = tx.to!;
+    t.to = tx.to || 'Deploy Contract';
     t.data = tx.data as string;
     t.gas = tx.gasLimit as number;
     t.gasPrice = (tx.gasPrice || tx.maxFeePerGas) as number;

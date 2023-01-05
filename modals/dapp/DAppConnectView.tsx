@@ -1,6 +1,7 @@
 import { Button, SafeViewContainer } from '../../components';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { secureColor, thirdFontColor } from '../../constants/styles';
 
 import { Account } from '../../viewmodels/account/Account';
 import Avatar from '../../components/Avatar';
@@ -11,7 +12,6 @@ import Theme from '../../viewmodels/settings/Theme';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import { thirdFontColor } from '../../constants/styles';
 
 interface Props {
   account?: Account;
@@ -121,7 +121,7 @@ export default observer(
         </Text>
 
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
-          {isVerified ? <Ionicons name="shield-checkmark" color="#76B947" size={14} /> : undefined}
+          {isVerified ? <Ionicons name="shield-checkmark" color={secureColor} size={14} /> : undefined}
           <Text style={{ ...viewStyles.txt, marginBottom: 0, marginStart: 6 }} numberOfLines={1}>
             {appUrl}
           </Text>

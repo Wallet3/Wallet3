@@ -8,6 +8,7 @@ import { ReactiveScreen } from '../../../utils/device';
 import { StateViewModel } from '../MultiTabIndex';
 import Theme from '../../../viewmodels/settings/Theme';
 import i18n from '../../../i18n';
+import modalStyle from '../../../modals/styles';
 import { observer } from 'mobx-react-lite';
 
 const calcTabWidth = () => {
@@ -185,8 +186,7 @@ export const WebTabs = observer(
           maxHeight: 600,
           minHeight: 439,
           backgroundColor,
-          borderTopEndRadius: 6,
-          borderTopStartRadius: 6,
+          ...modalStyle.containerTopBorderRadius,
           width: '100%',
         }}
       >
@@ -200,8 +200,7 @@ export const WebTabs = observer(
             paddingTop: 4,
             paddingEnd: 8,
             position: 'absolute',
-            borderTopRightRadius: 6,
-            borderTopLeftRadius: 6,
+            ...modalStyle.containerTopBorderRadius,
             backgroundColor: `${backgroundColor}e0`,
           }}
         >

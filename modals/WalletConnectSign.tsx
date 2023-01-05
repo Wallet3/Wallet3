@@ -9,7 +9,7 @@ import Sign from './compositions/Sign';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import Success from './views/Success';
 import Theme from '../viewmodels/settings/Theme';
-import { WCCallRequestRequest } from '../models/WCSession_v1';
+import { WCCallRequestRequest } from '../models/entities/WCSession_v1';
 import { WalletConnect_v1 } from '../viewmodels/walletconnect/WalletConnect_v1';
 import i18n from '../i18n';
 import { observer } from 'mobx-react-lite';
@@ -108,6 +108,8 @@ export default observer(({ request, client, close }: Props) => {
             icon: client.appMeta?.icons?.[0] || '',
             origin: client.origin || client.appMeta?.url || '',
             title: client.appMeta?.name || client.appMeta?.url || '',
+            hostname: client.appMeta?.url || '',
+            themeColor: '#fff',
           }}
         />
       )}

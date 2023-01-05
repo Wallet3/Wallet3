@@ -1,10 +1,12 @@
 import { ActivityIndicator, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { AntDesign, Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { Coin, SafeViewContainer, Skeleton } from '../../components';
 import React, { useRef, useState } from 'react';
+import { secondaryFontColor, warningColor } from '../../constants/styles';
 
 import { Account } from '../../viewmodels/account/Account';
 import AccountIndicator from '../components/AccountIndicator';
+import AddressRiskIndicator from '../components/AddressRiskIndicator';
 import AnimatedNumber from '../../components/AnimatedNumber';
 import BalanceChangePreview from '../views/BalanceChangePreview';
 import { BioType } from '../../viewmodels/auth/Authentication';
@@ -30,7 +32,6 @@ import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { openBrowserAsync } from 'expo-web-browser';
-import { secondaryFontColor } from '../../constants/styles';
 import styles from '../styles';
 
 interface Props {
@@ -49,17 +50,29 @@ const TxReview = observer(
   ({ vm, onReject, onApprove, onGasPress, onDecodedFuncPress, app, account, bioType, onBalanceChangePreviewPress }: Props) => {
     const { network } = vm;
     const { t } = i18n;
-    const { textColor, borderColor, secondaryTextColor, tintColor, foregroundColor } = Theme;
+    const { textColor, borderColor, secondaryTextColor, thirdTextColor } = Theme;
 
     const [busy, setBusy] = useState(false);
 
     const reviewItemStyle = { ...styles.reviewItem, borderColor };
     const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
     const reviewItemValueStyle = { ...styles.reviewItemValue, color: textColor };
+    const safeThemeColor = vm.toAddressRisky ? warningColor : thirdTextColor;
 
     return (
       <SafeViewContainer>
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', paddingEnd: 4 }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingHorizontal: 2,
+          }}
+        >
+          <Text style={{ fontSize: 19, fontWeight: '500', color: safeThemeColor, opacity: 0.25 }}>
+            {/* {t('modal-review-title')} */}
+          </Text>
+
           <AccountIndicator account={account} />
         </View>
 
@@ -113,14 +126,14 @@ const TxReview = observer(
 
                 {vm.type !== 'Contract Interaction' && vm.type !== 'Transfer' && vm.valueWei.gt(0) && (
                   <Text style={{ fontSize: 9, color: vm.network.color, fontWeight: '600', marginStart: 3 }}>
-                    {`+ ${vm.value} ${vm.network.symbol}`}
+                    {`-${vm.value} ${vm.network.symbol}`}
                   </Text>
                 )}
               </View>
             </TouchableOpacity>
           </View>
 
-          {vm.type === 'Transfer' ? (
+          {vm.type === 'Transfer' || vm.type === 'Transfer_ERC20' ? (
             <View style={{ ...reviewItemStyle }}>
               <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-amount')}</Text>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -140,6 +153,40 @@ const TxReview = observer(
               </View>
             </View>
           ) : undefined}
+
+          {(vm.type === 'Transfer_ERC721' || vm.type === 'Transfer_ERC1155') && (
+            <View style={{ ...reviewItemStyle }}>
+              <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-amount')}</Text>
+              <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginStart: 0 }}>
+                {vm.tokenAmountWei.gt(0) ? (
+                  <Text style={{ ...reviewItemValueStyle, maxWidth: '80%' }} numberOfLines={1}>
+                    {`${vm.tokenAmount} ${vm.nft?.metadata?.name || ''}`}
+                  </Text>
+                ) : undefined}
+
+                {vm.nft?.loading && <Skeleton style={{ height: 17, width: 64, marginStart: 8 }} />}
+
+                {vm.nft?.metadata?.image && (
+                  <MultiSourceImage
+                    uriSources={[vm.nft?.metadata?.image]}
+                    style={{ width: 20, height: 20, borderWidth: 0.5, borderColor, borderRadius: 5 }}
+                    containerStyle={{ marginStart: 8 }}
+                    loadingIconSize={20}
+                    borderRadius={3}
+                    sourceTypes={[]}
+                  />
+                )}
+
+                {vm.tokenAmountWei.gt(0) && vm.valueWei.gt(0) ? (
+                  <Text style={{ ...reviewItemValueStyle, marginHorizontal: 6 }}>+</Text>
+                ) : undefined}
+
+                {vm.valueWei.gt(0) || vm.tokenAmountWei.eq(0) ? (
+                  <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>{`${vm.value} ${vm.network.symbol}`}</Text>
+                ) : undefined}
+              </View>
+            </View>
+          )}
 
           {vm.type === 'Approve_ERC20' ? (
             <View style={{ ...reviewItemStyle }}>
@@ -188,10 +235,20 @@ const TxReview = observer(
                   style={{ ...reviewItemValueStyle, marginEnd: 8, maxWidth: ReactiveScreen.width - 215 }}
                   numberOfLines={1}
                 >
-                  {vm.erc721?.metadata?.title || vm.erc721?.tokenId}
+                  {vm.erc721?.metadata?.name || `#${vm.erc721?.tokenId}`}
                 </Text>
 
-                <AntDesign name="star" size={19} color={network.color} />
+                {vm.erc721?.metadata?.image ? (
+                  <MultiSourceImage
+                    uriSources={[vm.erc721?.metadata?.image, vm.erc721.metadata.animation_url]}
+                    style={{ width: 20, height: 20 }}
+                    loadingIconSize={20}
+                    borderRadius={3}
+                    sourceTypes={[]}
+                  />
+                ) : (
+                  <AntDesign name="star" size={19} color={network.color} />
+                )}
               </View>
             </View>
           ) : undefined}
@@ -202,14 +259,31 @@ const TxReview = observer(
             </Text>
 
             <TouchableOpacity
-              style={{ flexDirection: 'row', alignItems: 'center' }}
+              style={{ flexDirection: 'row', alignItems: 'center', position: 'relative' }}
               onPress={() => openBrowserAsync(`${network.explorer}/address/${vm.toAddress}`)}
             >
-              <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>
-                {vm.toAddress ? formatAddress(vm.to, 9, 5) : t('modal-dapp-request-deploy-contract')}
+              <Text style={{ ...reviewItemValueStyle, color: vm.toAddressRisky ? warningColor : textColor }} numberOfLines={1}>
+                {vm.toAddress ? formatAddress(vm.to, 7, 5) : t('modal-dapp-request-deploy-contract')}
               </Text>
 
-              {vm.to ? <Ionicons name="search-outline" size={15} color={textColor} style={{ marginStart: 6 }} /> : undefined}
+              {vm.to ? (
+                <Ionicons
+                  name="search-outline"
+                  size={15}
+                  color={vm.toAddressTag?.dangerous ? warningColor : textColor}
+                  style={{ marginStart: 6 }}
+                />
+              ) : undefined}
+
+              {vm.toAddressTag ? (
+                <AddressRiskIndicator
+                  chainId={network.chainId}
+                  address={vm.toAddress}
+                  label={vm.toAddressTag?.publicName}
+                  risky={vm.toAddressTag?.dangerous}
+                  containerStyle={{ position: 'absolute', bottom: -11.5, right: 0 }}
+                />
+              ) : undefined}
             </TouchableOpacity>
           </View>
 
@@ -281,22 +355,22 @@ const TxReview = observer(
                 </TouchableOpacity>
               </View>
             ) : (
-              <View style={{ ...reviewItemStyle }}>
+              <View style={{ ...reviewItemStyle, position: 'relative' }}>
                 <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-value')}</Text>
 
-                {vm.preExecuting ? (
-                  <Skeleton style={{ width: 108, height: 17 }} />
-                ) : (
-                  <View style={{ flexDirection: 'row' }}>
-                    <Text style={{ ...reviewItemValueStyle, maxWidth: 150, marginEnd: 4 }} numberOfLines={1}>
-                      {vm.value}
-                    </Text>
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={{ ...reviewItemValueStyle, maxWidth: 150, marginEnd: 4 }} numberOfLines={1}>
+                    {`${vm.valueWei.gt(0) ? '-' : ''}${vm.value}`}
+                  </Text>
 
-                    <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>
-                      {vm.network.symbol}
-                    </Text>
-                  </View>
-                )}
+                  <Text style={{ ...reviewItemValueStyle }} numberOfLines={1}>
+                    {vm.network.symbol}
+                  </Text>
+
+                  {vm.preExecuting && (
+                    <Skeleton style={{ width: 72, height: 9, position: 'absolute', right: 0, bottom: -11.5 }} />
+                  )}
+                </View>
               </View>
             )
           ) : undefined}
@@ -310,7 +384,7 @@ const TxReview = observer(
                 {network?.network?.split(' ')?.[0]}
               </Text>
 
-              {vm.initializing ? <ActivityIndicator size="small" style={{ marginStart: 5 }} /> : undefined}
+              {vm.loading ? <ActivityIndicator size="small" style={{ marginStart: 5 }} /> : undefined}
             </View>
           </View>
         </View>
@@ -361,7 +435,7 @@ const TxReview = observer(
           </TouchableOpacity>
         </View>
 
-        {vm.insufficientFee ? <InsufficientFee /> : undefined}
+        {vm.insufficientFee && !vm.loading ? <InsufficientFee /> : undefined}
 
         {vm.txException ? <TxException exception={vm.txException} /> : undefined}
 
@@ -369,7 +443,7 @@ const TxReview = observer(
 
         <RejectApproveButtons
           onReject={onReject}
-          themeColor={network?.color}
+          themeColor={vm.toAddressRisky ? warningColor : network?.color}
           rejectTitle={t('button-reject')}
           approveTitle={t('modal-review-button-confirm')}
           disabledApprove={!vm.isValidParams || busy}

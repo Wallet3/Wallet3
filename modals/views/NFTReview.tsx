@@ -79,6 +79,7 @@ const NFTReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, b
             <MultiSourceImage
               uriSources={vm.nft.images}
               style={{ width: 20, height: 20 }}
+              loadingIconSize={20}
               borderRadius={3}
               sourceTypes={vm.nft.types}
             />
@@ -188,7 +189,7 @@ const NFTReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, b
         </TouchableOpacity>
       </View>
 
-      {vm.insufficientFee ? <InsufficientFee /> : undefined}
+      {vm.insufficientFee && !vm.loading ? <InsufficientFee /> : undefined}
 
       {vm.txException ? <TxException exception={vm.txException} /> : undefined}
 

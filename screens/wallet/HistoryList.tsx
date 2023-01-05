@@ -1,4 +1,11 @@
-import { Approve_ERC20, Transfer_ERC1155, Transfer_ERC20, Transfer_ERC721 } from '../../viewmodels/transferring/RequestTypes';
+import {
+  Approve_ERC20,
+  SafeTransferFrom_ERC1155,
+  SafeTransferFrom_ERC721,
+  SafeTransferFrom_WithData_ERC721,
+  Transfer_ERC20,
+  Transfer_ERC721,
+} from '../../viewmodels/transferring/RequestTypes';
 import { Coin, NullableImage } from '../../components';
 import { FlatList, ListRenderItemInfo, Text, TouchableOpacity, View } from 'react-native';
 
@@ -6,7 +13,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/core/Networks';
 import React from 'react';
 import Theme from '../../viewmodels/settings/Theme';
-import Transaction from '../../models/Transaction';
+import Transaction from '../../models/entities/Transaction';
 import dayjs from 'dayjs';
 import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
@@ -25,7 +32,9 @@ interface Props {
 const Methods = new Map([
   [Transfer_ERC20, 'sent'],
   [Transfer_ERC721, 'sent'], // Transfer ERC-721
-  [Transfer_ERC1155, 'sent'], // Transfer ERC-1155
+  [SafeTransferFrom_ERC721, 'sent'],
+  [SafeTransferFrom_ERC1155, 'sent'], // Transfer ERC-1155
+  [SafeTransferFrom_WithData_ERC721, 'sent'],
   [Approve_ERC20, 'approve'],
   ['0x', 'sent'],
 ]);

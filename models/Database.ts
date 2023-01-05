@@ -1,12 +1,14 @@
 import { DataSource, Repository } from 'typeorm';
 
-import Chain from './Chain';
-import EtherscanContract from './EtherscanContract';
-import InpageDApp from './InpageDApp';
-import Key from './Key';
-import NFT from './NFT';
-import Transaction from './Transaction';
-import WCSession_v1 from './WCSession_v1';
+import AddressTag from './entities/AddressTag';
+import Chain from './entities/Chain';
+import EtherscanContract from './entities/EtherscanContract';
+import InpageDApp from './entities/InpageDApp';
+import Key from './entities/Key';
+import NFT from './entities/NFT';
+import SourcifyMetadata from './entities/SourcifyItem';
+import Transaction from './entities/Transaction';
+import WCSession_v1 from './entities/WCSession_v1';
 
 class Database {
   private _dataSource!: DataSource;
@@ -17,6 +19,8 @@ class Database {
   inpageDApps!: Repository<InpageDApp>;
   chains!: Repository<Chain>;
   etherscan_contracts!: Repository<EtherscanContract>;
+  sourcify_metadata!: Repository<SourcifyMetadata>;
+  cloud_address_tags!: Repository<AddressTag>;
   nfts!: Repository<NFT>;
 
   async init() {
@@ -27,7 +31,7 @@ class Database {
       database: __DEV__ ? 'dev5' : 'appdata',
       driver: require('expo-sqlite'),
       synchronize: true,
-      entities: [Key, Transaction, WCSession_v1, InpageDApp, Chain, EtherscanContract, NFT],
+      entities: [Key, Transaction, WCSession_v1, InpageDApp, Chain, EtherscanContract, NFT, SourcifyMetadata, AddressTag],
     });
 
     await this._dataSource.initialize();
@@ -38,6 +42,8 @@ class Database {
     this.inpageDApps = this._dataSource.getRepository(InpageDApp);
     this.chains = this._dataSource.getRepository(Chain);
     this.etherscan_contracts = this._dataSource.getRepository(EtherscanContract);
+    this.sourcify_metadata = this._dataSource.getRepository(SourcifyMetadata);
+    this.cloud_address_tags = this._dataSource.getRepository(AddressTag);
     this.nfts = this._dataSource.getRepository(NFT);
   }
 

@@ -1,5 +1,5 @@
 import { BigNumber, providers, utils } from 'ethers';
-import { Gwei_1, MAX_GWEI_PRICE } from '../../common/Constants';
+import { EncodedERC1271ContractWalletCallData, Gwei_1, MAX_GWEI_PRICE } from '../../common/Constants';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { clearPendingENSRequests, isENSDomain } from '../services/ENSResolver';
 import {
@@ -14,6 +14,7 @@ import {
 import { isDomain, resolveDomain } from '../services/DomainResolver';
 
 import { Account } from '../account/Account';
+import AddressTag from '../../models/entities/AddressTag';
 import App from '../core/App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Coingecko from '../../common/apis/Coingecko';
@@ -22,6 +23,7 @@ import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
 import { NativeToken } from '../../models/NativeToken';
 import { Wallet } from '../core/Wallet';
+import { fetchAddressInfo } from '../services/EtherscanPublicTag';
 import { getEnsAvatar } from '../../common/ENS';
 import { showMessage } from 'react-native-flash-message';
 import { startLayoutAnimation } from '../../utils/animations';
@@ -36,6 +38,7 @@ export class BaseTransaction {
 
   to = '';
   toAddress = '';
+  toAddressTag: AddressTag | null = null;
   avatar?: string = '';
   isResolvingAddress = false;
   isContractRecipient = false;
@@ -60,6 +63,7 @@ export class BaseTransaction {
     makeObservable(this, {
       to: observable,
       toAddress: observable,
+      toAddressTag: observable,
       isValidAddress: computed,
       isResolvingAddress: observable,
       isContractRecipient: observable,
@@ -82,6 +86,8 @@ export class BaseTransaction {
       feeToken: observable,
       feeTokenSymbol: computed,
       insufficientFee: computed,
+      toAddressRisky: computed,
+      loading: computed,
 
       setNonce: action,
       setGasLimit: action,
@@ -123,6 +129,10 @@ export class BaseTransaction {
     return this.nextBlockBaseFeeWei / Gwei_1;
   }
 
+  get toAddressRisky() {
+    return this.toAddressTag?.dangerous ?? false;
+  }
+
   get txFeeWei() {
     try {
       const maxGasPriceWei = BigNumber.from((this.maxGasPrice * Gwei_1).toFixed(0));
@@ -137,6 +147,10 @@ export class BaseTransaction {
 
   get insufficientFee() {
     return this.txFeeWei.gt(this.nativeToken.balance);
+  }
+
+  get loading() {
+    return this.initializing || this.nativeToken.loading || this.isEstimatingGas;
   }
 
   get estimatedRealFeeWei() {
@@ -179,7 +193,7 @@ export class BaseTransaction {
   }
 
   setToAddress(to: string) {
-    this.toAddress = to;
+    this.toAddress = utils.getAddress(to);
     this.isResolvingAddress = false;
     this.checkToAddress();
   }
@@ -200,7 +214,7 @@ export class BaseTransaction {
     if (!to) return;
 
     if (utils.isAddress(to)) {
-      this.setToAddress(utils.getAddress(to));
+      this.setToAddress(to);
       return;
     }
 
@@ -208,7 +222,7 @@ export class BaseTransaction {
       let addr = to.substring(this.network.addrPrefix.length);
       addr = addr.startsWith('0x') ? addr : `0x${addr}`;
 
-      utils.isAddress(addr) ? this.setToAddress(utils.getAddress(addr)) : undefined;
+      utils.isAddress(addr) ? this.setToAddress(addr) : undefined;
       return;
     }
 
@@ -243,12 +257,14 @@ export class BaseTransaction {
 
   setMaxGasPrice(gwei: string | number) {
     try {
+      gwei = (gwei === '.' ? '0' : gwei) || 0;
       this.maxGasPrice = Math.max(Math.min(Number(gwei), MAX_GWEI_PRICE), 0);
     } catch {}
   }
 
   setPriorityPrice(gwei: string | number) {
     try {
+      gwei = (gwei === '.' ? '0' : gwei) || 0;
       this.maxPriorityPrice = Math.max(Math.min(Number(gwei), MAX_GWEI_PRICE), 0);
     } catch (error) {}
   }
@@ -295,7 +311,9 @@ export class BaseTransaction {
     clearTimeout(this.timer as any);
   }
 
-  async checkToAddress() {
+  protected async checkToAddress() {
+    fetchAddressInfo(this.network.chainId, this.toAddress).then((tag) => runInAction(() => (this.toAddressTag = tag)));
+
     const code = await getCode(this.network.chainId, this.toAddress);
     if (code === '0x') {
       runInAction(() => {
@@ -305,10 +323,11 @@ export class BaseTransaction {
       return;
     }
 
-    const encodedERC1271Data =
-      '0x1626ba7e1c8aff950685c2ed4bc3174f3472287b56d9517b9c948127319a09a7a36deac800000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000041659b1bcd331201b0ff8b6ec0e6f12b96056c50807a51d504de2c950e8b79e04e34f5e0ceaf26a0b48aca9fc5431b0e942bb6166fd835d1bd581c8e1284da1dd11b00000000000000000000000000000000000000000000000000000000000000';
-
-    const result = await eth_call_return(this.network.chainId, { to: this.toAddress, data: encodedERC1271Data });
+    const result = await eth_call_return(
+      this.network.chainId,
+      { to: this.toAddress, data: EncodedERC1271ContractWalletCallData },
+      true
+    );
 
     const errorCode = Number(result?.error?.code);
     const isContractWallet = Boolean(result?.error?.data && Number.isInteger(errorCode) && errorCode !== -32000);

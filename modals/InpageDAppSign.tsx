@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Authentication from '../viewmodels/auth/Authentication';
 import { InpageDAppSignRequest } from '../screens/browser/controller/InpageDAppController';
 import Networks from '../viewmodels/core/Networks';
+import { ReactiveScreen } from '../utils/device';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Sign from './compositions/Sign';
 import Success from './views/Success';
@@ -32,7 +33,13 @@ export default observer(({ msg, type, chainId, typedData, approve, reject, close
   };
 
   return (
-    <SafeAreaProvider style={{ ...styles.safeArea, backgroundColor }}>
+    <SafeAreaProvider
+      style={{
+        ...styles.safeArea,
+        backgroundColor,
+        height: styles.safeArea.height + (typedData ? ReactiveScreen.safeAreaBottom : 0),
+      }}
+    >
       {verified ? (
         <Success />
       ) : (

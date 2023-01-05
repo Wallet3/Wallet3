@@ -175,8 +175,8 @@ export const PublicNetworks: INetwork[] = [
     color: '#9ce012',
     l2: true,
     defaultTokens: BobaPopularTokens,
-    explorer: 'https://blockexplorer.boba.network',
-    etherscanApi: 'https://blockexplorer.boba.network/api',
+    explorer: 'https://bobascan.com',
+    etherscanApi: 'https://api.bobascan.com/api',
   },
   {
     symbol: 'Metis',
@@ -431,6 +431,26 @@ export const Testnets: INetwork[] = [
     defaultTokens: [],
     explorer: 'https://zksync2-testnet.zkscan.io',
     feeTokens: zkSyncFeeTokens,
+  },
+  {
+    symbol: 'ETH',
+    network: 'Scroll L1 Testnet',
+    testnet: true,
+    chainId: 534351,
+    color: '#8C8DFC',
+    defaultTokens: [],
+    explorer: 'https://prealpha.scroll.io/l1scan',
+    eip1559: true,
+  },
+  {
+    symbol: 'ETH',
+    network: 'Scroll L2 Testnet',
+    testnet: true,
+    chainId: 534354,
+    color: '#8C8DFC',
+    defaultTokens: [],
+    explorer: 'https://prealpha.scroll.io/l2scan',
+    eip1559: true,
   },
 ];
 

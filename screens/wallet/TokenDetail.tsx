@@ -1,3 +1,4 @@
+import * as Animatable from 'react-native-animatable';
 import * as ExpoLinking from 'expo-linking';
 import * as shape from 'd3-shape';
 
@@ -7,7 +8,9 @@ import { EvilIcons, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { formatAddress, formatCurrency } from '../../utils/formatter';
+import { thirdFontColor, warningColor } from '../../constants/styles';
 
+import { BreathAnimation } from '../../utils/animations';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
 import { LineChart } from 'react-native-svg-charts';
@@ -15,10 +18,9 @@ import Theme from '../../viewmodels/settings/Theme';
 import { TokenData } from '../../viewmodels/services/TokenData';
 import i18n from '../../i18n';
 import { isURL } from '../../utils/url';
-import numeral from 'numeral';
+import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 import { openInappBrowser } from '../../modals/InappBrowser';
-import { thirdFontColor } from '../../constants/styles';
 
 interface Props {
   token?: IToken;
@@ -39,14 +41,14 @@ const Gradient = () => (
 export default observer(({ token, themeColor, onSendPress, network }: Props) => {
   const [vm, setVM] = useState<TokenData>();
   const { t } = i18n;
-  const { backgroundColor, thirdTextColor, foregroundColor, borderColor } = Theme;
+  const { backgroundColor, thirdTextColor, foregroundColor, borderColor, textColor } = Theme;
 
   useEffect(() => {
     setVM(token ? new TokenData({ token: token!, network }) : undefined);
   }, [token]);
 
   return (
-    <View style={{ padding: 16, backgroundColor, borderTopLeftRadius: 10, borderTopRightRadius: 10, paddingBottom: 24 }}>
+    <View style={{ padding: 16, backgroundColor, ...modalStyle.containerTopBorderRadius, paddingBottom: 24 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Coin
           chainId={network.chainId}
@@ -58,16 +60,20 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
 
         <View style={{ marginStart: 16 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ fontWeight: '500', fontSize: 19, color: foregroundColor }} numberOfLines={1}>
+            <Text
+              style={{ fontWeight: '500', fontSize: 19, color: vm?.dangerous ? warningColor : textColor, marginEnd: 6 }}
+              numberOfLines={1}
+            >
               {token?.symbol}
             </Text>
 
-            <MaterialIcons
-              name="verified"
-              size={17}
-              color={vm?.isVerified ? 'dodgerblue' : borderColor}
-              style={{ marginStart: 6, marginEnd: 4 }}
-            />
+            {vm?.dangerous ? (
+              <Animatable.View animation={BreathAnimation} duration={1200} iterationCount="infinite" useNativeDriver>
+                <Ionicons name="warning" size={19} color={warningColor} />
+              </Animatable.View>
+            ) : (
+              <MaterialIcons name="verified" size={17} color={vm?.verified ? 'dodgerblue' : borderColor} />
+            )}
           </View>
           {vm?.loading ? (
             <Skeleton style={{ height: 14, marginTop: 2 }} />

@@ -1,9 +1,10 @@
 import * as Animatable from 'react-native-animatable';
 
 import FastImage, { FastImageProps } from 'react-native-fast-image';
-import { ImageSourcePropType, View } from 'react-native';
+import { ImageSourcePropType, StyleProp, View, ViewStyle } from 'react-native';
 import React, { useState } from 'react';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BreathAnimation } from '../utils/animations';
 import { Feather } from '@expo/vector-icons';
 import ImageColors from 'react-native-image-colors';
@@ -11,6 +12,7 @@ import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/type
 import SvgImage from 'react-native-remote-svg';
 import Video from 'react-native-video';
 import { getMemorySize } from '../utils/device';
+import { md5 } from '../utils/cipher';
 
 // @ts-ignore
 interface Props extends FastImageProps {
@@ -23,10 +25,11 @@ interface Props extends FastImageProps {
   borderRadius?: number;
   loadingIconSize?: number;
   onColorParsed?: (colors: ImageColorsResult) => void;
+  containerStyle?: StyleProp<ViewStyle>;
 }
 
 export default (props: Props) => {
-  const { uriSources, onColorParsed, sourceTypes, controls, paused, backgroundColor, borderRadius } = props;
+  const { uriSources, onColorParsed, sourceTypes, controls, paused, backgroundColor, borderRadius, containerStyle } = props;
   const [index, setIndex] = useState(uriSources.findIndex((i) => i));
   const [imageLoaded, setImageLoaded] = useState(false);
   const [trySvg, setTrySvg] = useState(false);
@@ -36,14 +39,32 @@ export default (props: Props) => {
     if (!onColorParsed) return;
     if ((await getMemorySize()) < 3072) return;
 
+    const itemKey = `image-colors-${await md5(url)}`;
+    const cache = await AsyncStorage.getItem(itemKey);
+
+    if (typeof cache === 'string') {
+      if (cache === '') return;
+
+      onColorParsed(JSON.parse(cache));
+      return;
+    }
+
     try {
       const result = await ImageColors.getColors(url, { cache: true });
+      if (!result) {
+        AsyncStorage.setItem(itemKey, '');
+        return;
+      }
+
+      AsyncStorage.setItem(itemKey, JSON.stringify(result));
       onColorParsed(result);
-    } catch (error) {}
+    } catch (error) {
+      AsyncStorage.setItem(itemKey, '');
+    }
   };
 
   return (
-    <View style={{ backgroundColor, borderRadius, overflow: 'hidden' }}>
+    <View style={{ backgroundColor, borderRadius, overflow: 'hidden', ...(containerStyle || ({} as any)) }}>
       {uriSources[index]?.endsWith('mp4') || sourceTypes[index]?.endsWith('mp4') ? (
         <Video
           source={{ uri: uriSources[index] }}
@@ -53,6 +74,7 @@ export default (props: Props) => {
           onLoad={() => setImageLoaded(true)}
         />
       ) : uriSources[index]?.endsWith('.svg') ||
+        uriSources[index]?.startsWith('data:image/svg+xml;') ||
         sourceTypes[index]?.endsWith('svg+xml') ||
         sourceTypes[index]?.endsWith('svg') ||
         trySvg ? (
@@ -87,7 +109,11 @@ export default (props: Props) => {
             backgroundColor: 'transparent',
           }}
         >
-          <Feather name="hexagon" size={props.loadingIconSize ?? 64} color="#55555555" />
+          <Feather
+            name="hexagon"
+            size={props.loadingIconSize || Number((props.style as any)?.width) || 64}
+            color="#55555555"
+          />
         </Animatable.View>
       )}
     </View>

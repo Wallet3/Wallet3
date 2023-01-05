@@ -1,13 +1,18 @@
-import { makeObservable, observable, runInAction } from 'mobx';
+import * as Tokens from '../../common/tokens';
 
+import { computed, makeObservable, observable, runInAction } from 'mobx';
+
+import AddressTag from '../../models/entities/AddressTag';
 import Coingecko from '../../common/apis/Coingecko';
 import { INetwork } from '../../common/Networks';
 import Langs from '../settings/Langs';
 import { Links } from '../../common/apis/Coingecko.d';
-import TokenVerifier from './TokenVerifier';
 import { UserToken } from './TokensMan';
 import axios from 'axios';
+import { fetchAddressInfo } from './EtherscanPublicTag';
 import { startSpringLayoutAnimation } from '../../utils/animations';
+
+const BuiltInTokens = new Set(Object.getOwnPropertyNames(Tokens).map((name) => Tokens[name]?.address));
 
 interface ITokenData {
   description: string;
@@ -23,8 +28,8 @@ export class TokenData implements ITokenData {
   readonly symbol: string;
   readonly network: INetwork;
   readonly infoUrl: string;
-  readonly isVerified: boolean;
 
+  tag: AddressTag | null = null;
   coinId?: string;
   description: string = '';
   firstDescription = '';
@@ -37,11 +42,18 @@ export class TokenData implements ITokenData {
   historyDays = 1;
   links?: Links;
 
+  get verified() {
+    return BuiltInTokens.has(this.address) || (this.tag && this.tag.publicName && !this.tag.dangerous);
+  }
+
+  get dangerous() {
+    return this.tag?.dangerous ?? false;
+  }
+
   constructor({ token, network }: { token: UserToken; network: INetwork }) {
     this.symbol = token.symbol;
     this.address = token.address;
     this.network = network;
-    this.isVerified = this.address === '' ? true : TokenVerifier.isVerified(this.address);
 
     this.infoUrl = `https://github.com/trustwallet/assets/raw/master/blockchains/${
       (network.github_dir || network.network)?.toLowerCase() ?? 'ethereum'
@@ -54,6 +66,9 @@ export class TokenData implements ITokenData {
       loading: observable,
       historyPrices: observable,
       historyDays: observable,
+      tag: observable,
+      verified: computed,
+      dangerous: computed,
     });
 
     this.init();
@@ -72,6 +87,12 @@ export class TokenData implements ITokenData {
       this.description = '';
       this.loading = true;
     });
+
+    if (this.address) {
+      fetchAddressInfo(this.network.chainId, this.address).then((tag) => runInAction(() => (this.tag = tag)));
+    } else {
+      this.tag = { address: '', chainId: this.network.chainId, publicName: this.network.symbol } as any;
+    }
 
     const [result, info] = await Promise.all([
       Coingecko.getCoinDetails(this.symbol, this.address, this.network.network),

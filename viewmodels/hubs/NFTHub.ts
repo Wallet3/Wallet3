@@ -1,6 +1,6 @@
 import Database from '../../models/Database';
 import { INetwork } from '../../common/Networks';
-import NFT from '../../models/NFT';
+import NFT from '../../models/entities/NFT';
 import { NftsByOwner } from '../../common/apis/Rarible.types';
 import { convertRaribleNftToNft } from '../services/NftTransformer';
 import { getNftById } from '../../common/apis/Rarible';

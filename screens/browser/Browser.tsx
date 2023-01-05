@@ -32,6 +32,7 @@ import Theme from '../../viewmodels/settings/Theme';
 import ViewShot from 'react-native-view-shot';
 import i18n from '../../i18n';
 import { isURL } from '../../utils/url';
+import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 import { renderUserBookmarkItem } from './components/BookmarkItem';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
@@ -572,15 +573,14 @@ export const Browser = observer(
             modalStyle={{ padding: 0, margin: 0 }}
             scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
           >
-            <SafeAreaProvider style={{ height: 439, padding: 0, borderTopEndRadius: 7, borderTopStartRadius: 7 }}>
+            <SafeAreaProvider style={{ height: 439, padding: 0, ...modalStyle.containerTopBorderRadius }}>
               <SafeViewContainer
                 style={{
                   height: 439,
                   backgroundColor,
                   flex: 1,
                   padding: 0,
-                  borderTopEndRadius: 6,
-                  borderTopStartRadius: 6,
+                  ...modalStyle.containerTopBorderRadius,
                   paddingTop: 0,
                 }}
               >

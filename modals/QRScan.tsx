@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
 import Scanner, { BarCodeScanningResult } from '../components/Scanner';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { AntDesign } from '@expo/vector-icons';
 import Authentication from '../viewmodels/auth/Authentication';
 import LinkHub from '../viewmodels/hubs/LinkHub';
+import React from 'react';
 import { ReactiveScreen } from '../utils/device';
 import { StatusBar } from 'expo-status-bar';
 import i18n from '../i18n';
@@ -56,7 +56,7 @@ export default observer(({ tip, done }: { tip?: string; done?: () => void }) => 
 
         <View>
           <Text style={styles.tip} numberOfLines={1}>
-            {Authentication.appAuthorized ? tip || t('qrscan-tip-1') : t('qrscan-tip-desktop-backup-qrcode')}
+            {Authentication.appAuthorized ? tip || t('qrscan-tip-1') : tip || t('qrscan-tip-desktop-backup-qrcode')}
           </Text>
           <Text style={{ ...styles.tip, fontSize: 9 }}>{t('qrscan-tip-above-types')}</Text>
         </View>

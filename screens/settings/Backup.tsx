@@ -1,7 +1,7 @@
 import { Button, Mnemonic, SafeViewContainer } from '../../components';
 import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
-import { borderColor, secondaryFontColor, styles, thirdFontColor } from '../../constants/styles';
+import { borderColor, secondaryFontColor, thirdFontColor } from '../../constants/styles';
 
 import App from '../../viewmodels/core/App';
 import Authentication from '../../viewmodels/auth/Authentication';
@@ -17,6 +17,7 @@ import QRCode from 'react-native-qrcode-svg';
 import SignInWithApple from '../../viewmodels/auth/SignInWithApple';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
+import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { usePreventScreenCapture } from 'expo-screen-capture';
@@ -90,9 +91,11 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
               {t('land-create-security-tips')}
             </Text>
             <Text style={{ marginStart: 16, marginBottom: 8, color: secondaryFontColor }}>
-              {t('land-create-security-tips-1')}
+              {words.length > 0 ? t('land-create-security-tips-1') : t('land-create-security-tips-3')}
             </Text>
-            <Text style={{ marginStart: 16, color: secondaryFontColor }}>{t('land-create-security-tips-2')}</Text>
+            {words.length > 0 && (
+              <Text style={{ marginStart: 16, color: secondaryFontColor }}>{t('land-create-security-tips-2')}</Text>
+            )}
           </View>
 
           {words.length > 0 && <Mnemonic phrase={words} color={textColor} />}
@@ -120,10 +123,10 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
           )}
 
           {(privKey || recoveryKey || words.length > 0) && (
-            <View style={{ marginTop: 27, alignItems: 'center' }}>
+            <View style={{ marginTop: 24, alignItems: 'center' }}>
               <QRCode
                 value={privKey || recoveryKey || words.join(' ')}
-                size={150}
+                size={125}
                 backgroundColor="transparent"
                 enableLinearGradient
                 logoBorderRadius={7}
@@ -156,14 +159,14 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
           withHandle={false}
           panGestureEnabled={false}
           panGestureComponentEnabled={false}
-          modalStyle={styles.modalStyle}
+          modalStyle={modalStyle.containerTopBorderRadius}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
           <FullPasspad
             appAvailable={true}
             themeColor={themeColor}
             height={420}
-            borderRadius={6}
+            borderRadius={modalStyle.containerTopBorderRadius.borderTopEndRadius}
             failedAttempts={Authentication.failedAttempts}
             onCodeEntered={(code) => verify(code)}
           />

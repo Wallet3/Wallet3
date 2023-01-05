@@ -15,6 +15,10 @@ export class TokenTransferring extends BaseTransaction {
   amount = '0';
   userTxData = '0x';
 
+  get transferToRisky() {
+    return this.toAddressTag?.dangerous || this.hasZWSP || (this.isContractRecipient && !this.isContractWallet);
+  }
+
   get allTokens() {
     return [this.account.tokens.tokens[0], ...this.account.tokens.allTokens];
   }
@@ -54,7 +58,7 @@ export class TokenTransferring extends BaseTransaction {
 
   get isValidParams() {
     return (
-      !this.initializing &&
+      !this.loading &&
       this.toAddress &&
       this.isValidAmount &&
       this.nonce >= 0 &&
@@ -62,7 +66,6 @@ export class TokenTransferring extends BaseTransaction {
       this.network &&
       !this.insufficientFee &&
       !this.token.loading &&
-      !this.isEstimatingGas &&
       !this.txException
     );
   }
@@ -126,6 +129,7 @@ export class TokenTransferring extends BaseTransaction {
       amountWei: computed,
       isValidAmount: computed,
       allTokens: computed,
+      transferToRisky: computed,
 
       setAmount: action,
       setToken: action,

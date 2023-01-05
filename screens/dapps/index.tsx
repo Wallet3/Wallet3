@@ -1,6 +1,5 @@
 import { Feather, FontAwesome, FontAwesome5, Ionicons, MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
-import { Metamask as MetamaskLogo, WalletConnect as WalletConnectLogo } from '../../assets/3rd';
 import React, { useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { borderColor, secondaryFontColor } from '../../constants/styles';
@@ -11,7 +10,6 @@ import App from '../../viewmodels/core/App';
 import DAppInfo from './DAppInfo';
 import { DrawerActions } from '@react-navigation/native';
 import { DrawerScreenProps } from '@react-navigation/drawer';
-import Image from 'react-native-fast-image';
 import MessageKeys from '../../common/MessageKeys';
 import { MetamaskDApp } from '../../viewmodels/walletconnect/MetamaskDApp';
 import MetamaskDAppsHub from '../../viewmodels/walletconnect/MetamaskDAppsHub';
@@ -22,12 +20,13 @@ import { NullableImage } from '../../components';
 import { Portal } from 'react-native-portalize';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
+import { WalletConnect as WalletConnectLogo } from '../../assets/3rd';
 import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectV1ClientHub';
 import { WalletConnect_v1 } from '../../viewmodels/walletconnect/WalletConnect_v1';
 import i18n from '../../i18n';
+import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 import { startLayoutAnimation } from '../../utils/animations';
-import { styles } from '../../constants/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 interface Props {
@@ -69,7 +68,7 @@ const DApp = observer(({ client, allAccounts, close }: Props) => {
   };
 
   return (
-    <SafeAreaProvider style={{ flex: 1, height: 429, backgroundColor, borderRadius: 6 }}>
+    <SafeAreaProvider style={{ flex: 1, height: 429, backgroundColor, ...modalStyle.containerTopBorderRadius }}>
       <Swiper
         ref={swiper}
         showsPagination={false}
@@ -310,13 +309,13 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
           renderItem={renderItem}
           style={{ width: '100%', height: '100%' }}
           contentContainerStyle={{ paddingBottom: 37 }}
-          keyExtractor={(i) => i.hostname}
+          keyExtractor={(app) => `${app.hostname}-${app.lastUsedChainId}`}
           bounces={dapps.length >= 12}
         />
       </Swiper>
 
       <Portal>
-        <Modalize adjustToContentHeight ref={ref} disableScrollIfPossible modalStyle={styles.modalStyle}>
+        <Modalize adjustToContentHeight ref={ref} disableScrollIfPossible modalStyle={modalStyle.containerTopBorderRadius}>
           {selectedClient ? <DApp client={selectedClient} allAccounts={App.allAccounts} close={close} /> : undefined}
         </Modalize>
       </Portal>

@@ -1,13 +1,14 @@
 import { Button, SafeViewContainer } from '../../components';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Text, View } from 'react-native';
 
 import { DecodedFunc } from '../../viewmodels/hubs/EtherscanHub';
-import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { secureColor } from '../../constants/styles';
 import styles from '../styles';
 
 interface Props {
@@ -93,6 +94,20 @@ export default observer(({ onBack, decodedFunc, themeColor }: Props) => {
             </View>
           );
         })}
+
+        {decodedFunc?.comment && (
+          <View style={{ marginTop: 24 }}>
+            <Text style={txtStyle}>{t('nft-txt-description')}:</Text>
+            <Text style={{ ...txtStyle, marginTop: 2, marginBottom: 24 }}>{decodedFunc.comment}</Text>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={{ ...txtStyle, color: secureColor, fontWeight: '500' }}>
+                {t('modal-func-review-verified-sourcify')}
+              </Text>
+              <MaterialIcons name="verified" size={15} color={secureColor} style={{ marginHorizontal: 4 }} />
+            </View>
+          </View>
+        )}
       </ScrollView>
 
       <Button title="OK" txtStyle={{ textTransform: 'none' }} themeColor={themeColor} onPress={onBack} />

@@ -23,7 +23,7 @@ export default ({ themeColor, chain, approve, reject }: Props) => {
 
   return (
     <SafeViewContainer style={styles.container}>
-      <View style={{ paddingBottom: 5, borderBottomWidth: 0, borderBottomColor: `${borderColor}a0` }}>
+      <View style={{ paddingBottom: 2 }}>
         <Text style={{ fontSize: 21, color: themeColor, fontWeight: '500' }}>{t('modal-dapp-add-new-network-title')}</Text>
       </View>
 

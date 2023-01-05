@@ -4,7 +4,7 @@ import WCSession_v1, {
   WCCallRequestRequest,
   WCClientMeta,
   WCSessionRequestRequest,
-} from '../../models/WCSession_v1';
+} from '../../models/entities/WCSession_v1';
 import { action, makeObservable, observable } from 'mobx';
 
 import App from '../core/App';

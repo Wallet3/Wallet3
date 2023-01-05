@@ -5,11 +5,12 @@ import { Button } from '../../components';
 import { Gwei_1 } from '../../common/Constants';
 import Networks from '../../viewmodels/core/Networks';
 import Theme from '../../viewmodels/settings/Theme';
-import Transaction from '../../models/Transaction';
+import Transaction from '../../models/entities/Transaction';
 import { TxController } from '../../viewmodels/misc/TxController';
 import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
+import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 import { openInappBrowser } from '../../modals/InappBrowser';
 import { thirdFontColor } from '../../constants/styles';
@@ -36,8 +37,7 @@ export default observer(({ tx, close }: { tx?: Transaction; close?: Function }) 
         paddingTop: 16,
         paddingBottom: 32,
         backgroundColor,
-        borderTopStartRadius: 6,
-        borderTopEndRadius: 6,
+        ...modalStyle.containerTopBorderRadius,
       }}
     >
       <View style={styles.itemContainer}>

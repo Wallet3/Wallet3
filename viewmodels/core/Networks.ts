@@ -5,7 +5,7 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 import { callRPC, deleteRPCUrlCache, getNextBlockBaseFeeByRPC } from '../../common/RPC';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Chain from '../../models/Chain';
+import Chain from '../../models/entities/Chain';
 import Database from '../../models/Database';
 import { DebankSupportedChains } from '../../common/apis/Debank';
 import ImageColors from 'react-native-image-colors';

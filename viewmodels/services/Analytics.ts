@@ -2,7 +2,7 @@ import Networks from '../core/Networks';
 import { Platform } from 'react-native';
 import { SendTxRequest } from '../core/Wallet';
 import { SupportedWCSchemes } from '../hubs/LinkHub';
-import Transaction from '../../models/Transaction';
+import Transaction from '../../models/entities/Transaction';
 import analytics from '@react-native-firebase/analytics';
 import { getReadableVersion } from 'react-native-device-info';
 import { isDomain } from './DomainResolver';

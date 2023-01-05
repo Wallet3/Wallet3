@@ -48,6 +48,8 @@ export class NativeToken implements IToken {
       this.balance = balance;
       this.loading = false;
     });
+
+    return balance;
   }
 
   async estimateGas(to: string, data = '0x') {

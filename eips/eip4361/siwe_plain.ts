@@ -1,6 +1,6 @@
 import * as Linking from 'expo-linking';
 
-import { isURL } from './url';
+import { isURL } from '../../utils/url';
 import { utils } from 'ethers';
 
 const DOMAIN = 'wants you to sign in with your Ethereum account:';
@@ -49,7 +49,10 @@ export class ParsedMessage {
     this.isConsistent =
       this.domain?.toLowerCase().replace('https://', '') === this.origin?.toLowerCase().replace('https://', '');
 
-    if (!isURL(this.domain)) throw new Error('Invalid domain');
+    if (!isURL(this.domain)) {
+      console.log(this.domain)
+      throw new Error('Invalid domain');
+    }
 
     this.address = utils.isAddress(components[1]) ? components[1] : '';
     if (!this.address) throw new Error('Invalid address');
