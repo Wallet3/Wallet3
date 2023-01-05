@@ -164,10 +164,13 @@ const TxReview = observer(
                   </Text>
                 ) : undefined}
 
+                {vm.nft?.loading && <Skeleton style={{ height: 17, width: 64, marginStart: 8 }} />}
+
                 {vm.nft?.metadata?.image && (
                   <MultiSourceImage
                     uriSources={[vm.nft?.metadata?.image]}
-                    style={{ width: 20, height: 20, marginStart: 8 }}
+                    style={{ width: 20, height: 20 }}
+                    containerStyle={{ marginStart: 8 }}
                     loadingIconSize={20}
                     borderRadius={3}
                     sourceTypes={[]}

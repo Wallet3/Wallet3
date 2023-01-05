@@ -2,6 +2,7 @@ import { makeObservable, observable, runInAction } from 'mobx';
 
 import { NFTMetadata } from '../viewmodels/transferring/NonFungibleTokenTransferring';
 import { convertRaribleNftToNft } from '../viewmodels/services/NftTransformer';
+import { decode as decodeBase64 } from 'js-base64';
 import { eth_call } from '../common/RPC';
 import { ethers } from 'ethers';
 import { getNftById } from '../common/apis/Rarible';
@@ -23,6 +24,7 @@ export abstract class NonFungibleToken {
   readonly owner: string;
   readonly tokenId: string;
   contract!: ethers.Contract;
+  loading = false;
 
   get interface() {
     return this.contract.interface;
@@ -32,7 +34,6 @@ export abstract class NonFungibleToken {
     contract,
     tokenId,
     chainId,
-    fetchMetadata,
   }: {
     contract: string;
     tokenId: string;
@@ -44,22 +45,35 @@ export abstract class NonFungibleToken {
     this.owner = tokenId;
     this.tokenId = tokenId;
 
-    makeObservable(this, { metadata: observable });
+    makeObservable(this, { metadata: observable, loading: observable });
   }
 
   abstract getMetadataURI(): Promise<string>;
 
   async fetchMetadata() {
-    const tokenURI = await this.getMetadataURI();
-    if (!isURL(tokenURI)) return;
+    runInAction(() => (this.loading = true));
 
     try {
+      const tokenURI = await this.getMetadataURI();
+      const jsonType = `data:application/json;base64,`;
+
+      if (tokenURI.startsWith(jsonType)) {
+        const metadata = JSON.parse(decodeBase64(tokenURI.substring(jsonType.length)));
+        runInAction(() => (this.metadata = metadata));
+        return;
+      }
+
+      if (!isURL(tokenURI)) return;
+
       const resp = await fetch(tokenURI);
       const data = (await resp.json()) as NonFungibleTokenJsonMetadata;
       if (!data) return;
 
       runInAction(() => (this.metadata = data));
-    } catch (error) {}
+    } catch (error) {
+    } finally {
+      runInAction(() => (this.loading = false));
+    }
   }
 
   protected async call(func: string, params?: any[]) {
