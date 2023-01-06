@@ -248,7 +248,6 @@ const InpageDAppRequests = () => {
     <Modalize
       ref={ref}
       adjustToContentHeight
-      // openAnimationConfig={{ timing: { duration: 500 }, spring: {} }}
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
       tapGestureEnabled={false}

@@ -91,7 +91,6 @@ class Bookmarks {
         runInAction(() => {
           this._favs = JSON.parse(v || '[]');
           this._favUrls = new Map(this._favs.map((g) => g.data.map((item) => [item.url, g.title] as [string, string])).flat());
-          console.log(this._favUrls);
         })
       )
       .catch(() => {});
