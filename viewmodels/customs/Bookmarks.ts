@@ -34,6 +34,7 @@ export interface Bookmark {
 }
 
 class Bookmarks {
+  private _favUrls!: Map<string, string>; // url => category
   _favs: { title: string; data: Bookmark[] }[] = [];
 
   history: string[] = [];
@@ -86,7 +87,13 @@ class Bookmarks {
     });
 
     AsyncStorage.getItem(`bookmarks_v2`)
-      .then((v) => runInAction(() => (this._favs = JSON.parse(v || '[]'))))
+      .then((v) =>
+        runInAction(() => {
+          this._favs = JSON.parse(v || '[]');
+          this._favUrls = new Map(this._favs.map((g) => g.data.map((item) => [item.url, g.title] as [string, string])).flat());
+          console.log(this._favUrls);
+        })
+      )
       .catch(() => {});
 
     AsyncStorage.getItem(`history-urls`)
@@ -112,12 +119,14 @@ class Bookmarks {
         .toArray();
     }
 
+    this._favUrls.set(bookmark.url, category);
+
     AsyncStorage.setItem(`bookmarks_v2`, JSON.stringify(this._favs));
     logAddBookmark();
   }
 
   remove(url: string) {
-    const group = this.has(url);
+    const group = this._favs.find((g) => g.data.find((i) => i.url === url));
     if (!group) return;
 
     const index = group.data.findIndex((i) => i.url === url);
@@ -128,12 +137,14 @@ class Bookmarks {
       this._favs.splice(groupIndex, 1);
     }
 
+    this._favUrls.delete(url);
+
     AsyncStorage.setItem(`bookmarks_v2`, JSON.stringify(this._favs));
     logRemoveBookmark();
   }
 
   has(url: string) {
-    return this._favs.find((g) => g.data.find((i) => i.url === url));
+    return this._favUrls.get(url);
   }
 
   submitHistory(url: string) {

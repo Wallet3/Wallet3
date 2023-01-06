@@ -23,7 +23,7 @@ export default observer(({ onItemPress, tabCount, onTabsPress, disableContextMen
   const { backgroundColor, borderColor, systemBorderColor, foregroundColor, isLightMode, mode, tintColor } = Theme;
   const { t } = i18n;
   const { recentSites } = Bookmarks;
-  const actions = [{ title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' }];
+  const actions: any[] = [{ title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' }];
 
   return (
     <Animatable.View animation={'fadeInUp'}>

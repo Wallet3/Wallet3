@@ -191,7 +191,7 @@ export class InpageDAppController extends EventEmitter {
 
     return {
       name: 'metamask-provider',
-      data: { id, jsonrpc, error: undefined, result },
+      data: { id, jsonrpc, error: result?.error, result: result.error ? undefined : result },
     };
   }
 
