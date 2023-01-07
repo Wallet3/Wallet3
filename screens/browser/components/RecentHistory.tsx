@@ -2,11 +2,11 @@ import * as Animatable from 'react-native-animatable';
 
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
 import { NativeSyntheticEvent, Text, TouchableOpacity, View } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
 
 import Bookmarks from '../../../viewmodels/customs/Bookmarks';
+import { FlatList } from 'react-native-gesture-handler';
 import { NullableImage } from '../../../components';
-import React, { useState } from 'react';
+import React from 'react';
 import Theme from '../../../viewmodels/settings/Theme';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -23,8 +23,7 @@ export default observer(({ onItemPress, tabCount, onTabsPress, disableContextMen
   const { backgroundColor, borderColor, systemBorderColor, foregroundColor, isLightMode, mode, tintColor } = Theme;
   const { t } = i18n;
   const { recentSites } = Bookmarks;
-  const actions = [{ title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' }];
-  const [menuOpened, setMenuOpened] = useState(false);
+  const actions: any[] = [{ title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' }];
 
   return (
     <Animatable.View animation={'fadeInUp'}>
@@ -89,22 +88,12 @@ export default observer(({ onItemPress, tabCount, onTabsPress, disableContextMen
               <ContextMenu
                 key={item.origin}
                 actions={disableContextMenu ? [] : actions}
-                onCancel={() => {
-                  setMenuOpened(false);
-                }}
                 onPress={onActionPress}
                 previewBackgroundColor={backgroundColor}
                 style={{ marginHorizontal: 4 }}
               >
                 <TouchableOpacity
-                  onLongPress={() => {
-                    setMenuOpened(true);
-                  }}
-                  onPress={() => {
-                    if (!menuOpened) {
-                      onItemPress?.(item.origin);
-                    }
-                  }}
+                  onPress={() => onItemPress?.(item.origin)}
                   key={`tab-${index}`}
                   style={{
                     padding: 8,

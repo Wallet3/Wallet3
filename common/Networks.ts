@@ -132,16 +132,6 @@ export const PublicNetworks: INetwork[] = [
     minWei: 5 * Gwei_1,
   },
   {
-    symbol: 'ETH',
-    comm_id: 'aurora',
-    chainId: 1313161554,
-    network: 'Aurora',
-    color: '#70d44b',
-    defaultTokens: AuroraPopularTokens,
-    explorer: 'https://aurorascan.dev',
-    etherscanApi: 'https://api.aurorascan.dev/api',
-  },
-  {
     symbol: 'xDAI',
     comm_id: 'xdai',
     network: 'Gnosis Chain',
@@ -242,6 +232,16 @@ export const PublicNetworks: INetwork[] = [
     blockTimeMs: 10 * 1000,
     explorer: 'https://ftmscan.com',
     etherscanApi: 'https://api.ftmscan.com/api',
+  },
+  {
+    symbol: 'ETH',
+    comm_id: 'aurora',
+    chainId: 1313161554,
+    network: 'Aurora',
+    color: '#70d44b',
+    defaultTokens: AuroraPopularTokens,
+    explorer: 'https://aurorascan.dev',
+    etherscanApi: 'https://api.aurorascan.dev/api',
   },
   {
     symbol: 'EVMOS',

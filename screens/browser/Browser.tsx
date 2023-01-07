@@ -259,7 +259,7 @@ export const Browser = observer(
         data={favs}
         itemContainerStyle={{ padding: 0, margin: 0, marginBottom: 8, ...(itemContainerStyle || ({} as any)) }}
         spacing={8}
-        keyExtractor={(v, index) => `${v.url}-${index}`}
+        keyExtractor={(v, index) => `${v.url}-${Bookmarks.has(v.url) || 'ng'}-${index}`}
         renderSectionHeader={({ section }) => (
           <Text
             style={{

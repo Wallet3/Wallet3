@@ -62,7 +62,7 @@ export class Account {
     // address = '0xf0e0F53bF0564C82A8046bfB58E009076aafaAa3'; // japanese artist
     // address = '0xC0c648e8a51Fa89141b2ff297C8cD3270ab93576'; // BSC nfts
     // address = '0x5164cF3b0C8C0FDfE4BCc9Cf4F1e8f7E39461A59';
-    // address = '0xCF458738D9BcF51151Dc4D9D02ce5f4f84dC7974';
+    // address = '0x09528d637deb5857dc059dddE6316D465a8b3b69';
 
     this.address = address;
     this.index = index;

@@ -338,21 +338,21 @@ export default observer((props: Web3ViewProps) => {
           </View>
 
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
-            {appAccount && (
+            {dapp ? (
               <Animated.View entering={FadeInDown.delay(0)} exiting={FadeOut.delay(0)}>
                 <TouchableOpacity style={{ paddingHorizontal: 8, marginBottom: -0.5 }} onPress={() => openAccountsModal()}>
                   <Avatar
                     size={25}
                     uri={appAccount?.avatar}
-                    emoji={appAccount?.emojiAvatar}
+                    emoji={appAccount?.emojiAvatar ?? '❓'}
                     emojiSize={11}
-                    backgroundColor={appAccount?.emojiColor}
+                    backgroundColor={appAccount?.emojiColor ?? '#e0e0e0'}
                   />
                 </TouchableOpacity>
               </Animated.View>
-            )}
+            ) : undefined}
 
-            {dapp && appNetwork ? (
+            {dapp ? (
               <Animatable.View
                 ref={networkIndicator as any}
                 animation={'fadeInUp'}
@@ -363,9 +363,9 @@ export default observer((props: Web3ViewProps) => {
                   style={{ paddingStart: 16, paddingEnd: 10, position: 'relative' }}
                 >
                   {generateNetworkIcon({
-                    ...appNetwork,
-                    width: appNetwork.browserBarIconSize ?? 23,
-                    height: appNetwork.browserBarIconSize ?? 23,
+                    ...(appNetwork || { chainId: 0, color: '#ccc' }),
+                    width: appNetwork?.browserBarIconSize ?? 23,
+                    height: appNetwork?.browserBarIconSize ?? 23,
                     hideEVMTitle: true,
                   })}
 

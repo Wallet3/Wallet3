@@ -27,10 +27,10 @@ export async function fetchAddressInfo(chainId: number, address: string) {
   if (!utils.isAddress(address)) return null;
 
   address = utils.getAddress(address);
-  const key = `${chainId}-${address}`;
+  const key = `${chainId}:${address}`;
   if (TagsCache.has(key)) return TagsCache.get(key)!;
 
-  let item = await Database.cloud_address_tags.findOne({ where: { address, chainId } });
+  let item = await Database.cloud_address_tags.findOne({ where: { address: key } });
 
   if (item && Date.now() < item?.lastUpdatedTimestamp + 90 * DAY) {
     TagsCache.set(key, item);
@@ -65,7 +65,7 @@ export async function fetchAddressInfo(chainId: number, address: string) {
   }
 
   item = item || new AddressTag();
-  item.address = address;
+  item.address = key;
   item.chainId = chainId;
   item.alert = alert;
   item.publicName = publicName;

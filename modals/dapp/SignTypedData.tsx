@@ -136,7 +136,7 @@ export default observer(({ themeColor, data, onReject, onSign, account, bioType,
           borderBottomColor: borderColor,
           borderBottomWidth: is2612 ? 0 : 1,
           paddingBottom: is2612 ? 2 : 5,
-          paddingHorizontal: is2612 ? 2 : 0,
+          paddingHorizontal: is2612 ? 4 : 0,
         }}
       >
         <Text style={{ ...styles.modalTitle, color: safeThemeColor }}>{t('modal-message-signing-title')}</Text>
