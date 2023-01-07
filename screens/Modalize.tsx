@@ -265,7 +265,7 @@ const InpageDAppRequests = () => {
   );
 };
 
-const GlobalNetworksMenuModal = () => {
+const GlobalNetworksMenuModal = observer(() => {
   const { ref: networksRef, open: openNetworksModal, close: closeNetworksModal } = useModalize();
   const [editing, setEditing] = useState(false);
 
@@ -294,6 +294,7 @@ const GlobalNetworksMenuModal = () => {
       <NetworksMenu
         useContextMenu
         onEditing={setEditing}
+        selectedNetwork={Networks.current}
         onNetworkPress={(network) => {
           closeNetworksModal();
           Networks.switch(network);
@@ -301,7 +302,7 @@ const GlobalNetworksMenuModal = () => {
       />
     </Modalize>
   );
-};
+});
 
 const GlobalAccountsMenuModal = () => {
   const { ref, open, close } = useModalize();
