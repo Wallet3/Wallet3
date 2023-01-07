@@ -1,5 +1,7 @@
 import Validator, { AsyncCheckFunction, SyncCheckFunction } from 'fastest-validator';
 
+import { utils } from 'ethers';
+
 export interface EIP2612 {
   primaryType: 'Permit';
   domain: { name: string; version: string; chainId: string; verifyingContract: string };
@@ -13,7 +15,17 @@ const EIP2612Schema = {
     name: 'string',
     version: 'string',
     chainId: ['string', 'number'],
-    verifyingContract: 'string',
+    verifyingContract: {
+      type: 'string',
+      custom: (v: string, errors: any[]) => {
+        if (!utils.isAddress(v)) {
+          errors.push({ type: 'verifyingContract' });
+          return v;
+        }
+
+        return utils.getAddress(v);
+      },
+    },
   },
   message: {
     $$type: 'object',
@@ -28,8 +40,13 @@ const EIP2612Schema = {
 };
 
 class EIP2612Checker {
-  private v = new Validator();
   private checker!: SyncCheckFunction | AsyncCheckFunction;
+  private v = new Validator({
+    useNewCustomCheckerFunction: true,
+    messages: {
+      verifyingContract: 'The verifyingContract must be a valid address',
+    },
+  });
 
   check(obj: any) {
     if (!this.checker) {

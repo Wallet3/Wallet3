@@ -29,7 +29,7 @@
     "@unstoppabledomains/resolution": "^8.3.3",
     "@walletconnect/client": "^1.8.0",
     "assert": "^2.0.0",
-    "axios": "^0.27.2",
+    "axios": "^1.2.2",
     "buffer": "^6.0.3",
     "crypto-es": "^1.2.7",
     "d3-shape": "^3.2.0",
@@ -39,7 +39,7 @@
     "ethereumjs-util": "^7.1.5",
     "ethers": "^5.7.2",
     "events": "^3.3.0",
-    "expo": "^47.0.11",
+    "expo": "^47.0.12",
     "expo-apple-authentication": "~5.0.1",
     "expo-asset": "~8.7.0",
     "expo-barcode-scanner": "~12.1.0",
@@ -142,7 +142,7 @@
     "typescript": "~4.9.4"
   },
   "resolutions": {
-    "expo-modules-core": "^1.1.0"
+    "expo-modules-core": "^1.1.1"
   },
   "private": true,
   "name": "mobile",

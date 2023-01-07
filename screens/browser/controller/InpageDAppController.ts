@@ -118,7 +118,7 @@ export class InpageDAppController extends EventEmitter {
   async handle(origin: string, payload: Payload) {
     const { hostname } = Linking.parse(origin);
     const { method, params, id, jsonrpc } = payload;
-    let result: any = null;
+    let result: any | null = null;
 
     switch (method) {
       case 'metamask_getProviderState':
@@ -191,7 +191,7 @@ export class InpageDAppController extends EventEmitter {
 
     return {
       name: 'metamask-provider',
-      data: { id, jsonrpc, error: undefined, result },
+      data: { id, jsonrpc, error: result?.error, result: result?.error ? undefined : result },
     };
   }
 

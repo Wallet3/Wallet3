@@ -1,10 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DeBankApiKey } from '../../configs/secret';
 import { IToken } from '../tokens';
-import axios from 'axios';
 import { post } from '../../utils/fetch';
-import { sleep } from '../../utils/async';
-import { t } from 'i18n-js';
 import { utils } from 'ethers';
 
 const host = 'https://pro-openapi.debank.com';

@@ -14,7 +14,6 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
 import Theme from '../viewmodels/settings/Theme';
 import i18n from '../i18n';
-import { observer } from 'mobx-react-lite';
 import { startLayoutAnimation } from '../utils/animations';
 import styles from './styles';
 
@@ -27,7 +26,7 @@ interface Props {
   onEditing?: (editing: boolean) => void;
 }
 
-export default observer(({ title, onNetworkPress, selectedNetwork, useContextMenu, onEditing, networks }: Props) => {
+export default ({ title, onNetworkPress, selectedNetwork, useContextMenu, onEditing, networks }: Props) => {
   const { t } = i18n;
   const { backgroundColor, secondaryTextColor, borderColor } = Theme;
   const [nets, setNets] = useState<INetwork[]>();
@@ -60,7 +59,7 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
           name="check"
           color={item.color}
           size={15}
-          style={{ opacity: (selectedNetwork ?? Networks.current)?.network === item.network ? 1 : 0 }}
+          style={{ opacity: selectedNetwork?.chainId === item.chainId ? 1 : 0 }}
         />
 
         <View style={{ width: 32, alignItems: 'center', justifyContent: 'center', marginStart: 8 }}>
@@ -178,4 +177,4 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
       </Swiper>
     </SafeAreaProvider>
   );
-});
+};

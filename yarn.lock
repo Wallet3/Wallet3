@@ -4760,13 +4760,14 @@ available-typed-arrays@^1.0.5:
   resolved "https://registry.yarnpkg.com/available-typed-arrays/-/available-typed-arrays-1.0.5.tgz#92f95616501069d07d10edb2fc37d3e1c65123b7"
   integrity sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==
 
-axios@^0.27.2:
-  version "0.27.2"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-0.27.2.tgz#207658cc8621606e586c85db4b41a750e756d972"
-  integrity sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==
+axios@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.2.2.tgz#72681724c6e6a43a9fea860fc558127dbe32f9f1"
+  integrity sha512-bz/J4gS2S3I7mpN/YZfGFTqhXTYzRho8Ay38w2otuuDR322KzFIWm/4W2K6gIwvWaws5n+mnb7D1lN9uD+QH6Q==
   dependencies:
-    follow-redirects "^1.14.9"
+    follow-redirects "^1.15.0"
     form-data "^4.0.0"
+    proxy-from-env "^1.1.0"
 
 babel-core@^7.0.0-bridge.0:
   version "7.0.0-bridge.0"
@@ -6959,10 +6960,10 @@ expo-modules-autolinking@1.0.1:
     find-up "^5.0.0"
     fs-extra "^9.1.0"
 
-expo-modules-core@1.1.0, expo-modules-core@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/expo-modules-core/-/expo-modules-core-1.1.0.tgz#0a3b8f77cf74e2621a1c8096304f22a99dea0bbe"
-  integrity sha512-alNfgWyGECYUK3R0bIUc0OHXi5btqFWDMNDSrdeNSdxFKvlzrtQKdbLHJTphumh9KgAIpbEKrUYE2Vimg+Tr8w==
+expo-modules-core@1.1.1, expo-modules-core@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/expo-modules-core/-/expo-modules-core-1.1.1.tgz#06502379274bdcb356fcbe225c3c6bc4926e462c"
+  integrity sha512-+AcaYmaWphIfkBcccu65dyOhWnpOJ3+SQpoI4lI/Plg1nNjOLuBjmrdVvpiJOvkN+CqbNGsJ5Yll8LLk+C107Q==
   dependencies:
     compare-versions "^3.4.0"
     invariant "^2.2.4"
@@ -7021,10 +7022,10 @@ expo-web-browser@~12.0.0:
   dependencies:
     compare-urls "^2.0.0"
 
-expo@^47.0.11:
-  version "47.0.11"
-  resolved "https://registry.yarnpkg.com/expo/-/expo-47.0.11.tgz#4a907b5d6397056343781c46557505d5469b145b"
-  integrity sha512-GWkb/5PqnyDr9sNe5LnPM86xUZ7jxJWjCG5SXkgbk/9c97kyAJ56GdOO+Vesfca2LaLHIt8ym7dGlT+PIR/bDg==
+expo@^47.0.12:
+  version "47.0.12"
+  resolved "https://registry.yarnpkg.com/expo/-/expo-47.0.12.tgz#2a8b41217e1cb630f84ea3723031d07354289ae7"
+  integrity sha512-LqECuBpV6arTncksQzOGGQmxOdeQmzm15VqwIJ/c3SWoxiVh5hKf+taUv2oaLmfx2z04TSm1oo56pRSrsL5iIA==
   dependencies:
     "@babel/runtime" "^7.14.0"
     "@expo/cli" "0.4.11"
@@ -7040,7 +7041,7 @@ expo@^47.0.11:
     expo-font "~11.0.1"
     expo-keep-awake "~11.0.1"
     expo-modules-autolinking "1.0.1"
-    expo-modules-core "1.1.0"
+    expo-modules-core "1.1.1"
     fbemitter "^3.0.0"
     getenv "^1.0.0"
     invariant "^2.2.4"
@@ -7281,10 +7282,10 @@ flow-parser@^0.121.0:
   resolved "https://registry.npmjs.org/flow-parser/-/flow-parser-0.121.0.tgz"
   integrity sha512-1gIBiWJNR0tKUNv8gZuk7l9rVX06OuLzY9AoGio7y/JT4V1IZErEMEq2TJS+PFcw/y0RshZ1J/27VfK1UQzYVg==
 
-follow-redirects@^1.14.9:
-  version "1.14.9"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.9.tgz#dd4ea157de7bfaf9ea9b3fbd85aa16951f78d8d7"
-  integrity sha512-MQDfihBQYMcyy5dhRDJUHcw7lb2Pv/TuE6xP1vyraLukNDHKbDxDNaOE3NbCAdKQApno+GPRyo1YAp89yCjK4w==
+follow-redirects@^1.15.0:
+  version "1.15.2"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.2.tgz#b460864144ba63f2681096f274c4e57026da2c13"
+  integrity sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==
 
 fontfaceobserver@^2.1.0:
   version "2.1.0"
@@ -10679,6 +10680,11 @@ prop-types@^15.5.10, prop-types@^15.6.0, prop-types@^15.7.2:
     loose-envify "^1.4.0"
     object-assign "^4.1.1"
     react-is "^16.8.1"
+
+proxy-from-env@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/proxy-from-env/-/proxy-from-env-1.1.0.tgz#e102f16ca355424865755d2c9e8ea4f24d58c3e2"
+  integrity sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==
 
 public-encrypt@^4.0.0:
   version "4.0.3"

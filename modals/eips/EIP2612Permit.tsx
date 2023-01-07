@@ -75,8 +75,6 @@ export default ({ eip2612, metadata, onAddressChecked }: Props) => {
       <View style={{ ...reviewItemStyle }}>
         <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-max-approve')}</Text>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          {isUint256Max && <Ionicons name="warning" color="crimson" size={15} style={{ marginEnd: 4 }} />}
-
           {decimals < 0 ? (
             <Skeleton style={{ width: 52, height: 17, marginHorizontal: 4 }} />
           ) : (
