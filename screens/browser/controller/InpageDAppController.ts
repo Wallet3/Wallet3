@@ -362,7 +362,7 @@ export class InpageDAppController extends EventEmitter {
   }
 
   private async wallet_addEthereumChain(origin: string, params: AddEthereumChainParameter[]) {
-    if (!params || !params.length) return { error: { code: Code_InvalidParams, message: 'Invalid request' } };
+    if (!params?.length) return { error: { code: Code_InvalidParams, message: 'Invalid request' } };
 
     const chain = params[0];
 

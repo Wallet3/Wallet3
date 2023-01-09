@@ -214,7 +214,8 @@
     "optimistic.etherscan.io",
     "arbiscan.io",
     "www.bueno.art",
-    "nft.bueno.art"
+    "nft.bueno.art",
+    "metamask.github.io/test-dapp"
   ],
   "Bridges": [
     "bridge.optimism.io",

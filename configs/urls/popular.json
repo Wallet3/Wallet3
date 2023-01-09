@@ -52,6 +52,7 @@
   {
     "url": "https://bidex.pro",
     "icon": "https://bidex.pro/static/image/logo.png",
-    "title": "Bidex"
+    "title": "Bidex",
+    "langs": ["ja", "zh-cn"]
   }
 ]

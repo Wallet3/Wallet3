@@ -1,0 +1,18 @@
+{
+  "formatter": {
+    "enabled": true,
+    "lineWidth": 127
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "suspicious": {
+        "noExplicitAny": "warn"
+      },
+      "complexity": {
+        "useSimplifiedLogicExpression": "warn"
+      }
+    }
+  }
+}

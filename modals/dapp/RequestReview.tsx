@@ -169,7 +169,7 @@ const TxReview = observer(
                 {vm.nft?.metadata?.image && (
                   <MultiSourceImage
                     uriSources={[vm.nft?.metadata?.image]}
-                    style={{ width: 20, height: 20, borderWidth: 0.5, borderColor, borderRadius: 5 }}
+                    style={{ width: 20, height: 20, borderWidth: 0, borderColor, borderRadius: 5 }}
                     containerStyle={{ marginStart: 8 }}
                     loadingIconSize={20}
                     borderRadius={3}
