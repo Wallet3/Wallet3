@@ -29,6 +29,7 @@ import { showMessage } from 'react-native-flash-message';
 import { startLayoutAnimation } from '../../utils/animations';
 
 export class BaseTransaction {
+  private toAddressTypeCache = new Map<string, { isContractWallet: boolean; isContractRecipient: boolean }>();
   private timer?: NodeJS.Timer;
 
   readonly network: INetwork;
@@ -282,39 +283,48 @@ export class BaseTransaction {
     const wei = (await getGasPrice(chainId)) || Gwei_1;
     const basePrice = wei / Gwei_1;
 
-    let priPrice = 0;
+    let priorityPrice = 0;
 
     if (eip1559) {
       const priWei = (await getMaxPriorityFee(chainId)) || 0;
-      priPrice = priWei / Gwei_1;
+      priorityPrice = priWei / Gwei_1;
     }
 
     runInAction(() => {
       switch (speed) {
         case 'rapid':
-          this.setMaxGasPrice(basePrice + (this.network.eip1559 ? priPrice : 0) + 10);
-          if (eip1559) this.setPriorityPrice(priPrice + 3);
+          this.setMaxGasPrice(basePrice + (this.network.eip1559 ? priorityPrice : 0) + 10);
+          if (eip1559) this.setPriorityPrice(priorityPrice + 3);
           break;
         case 'fast':
-          this.setMaxGasPrice(basePrice);
-          if (eip1559) this.setPriorityPrice(priPrice + 1);
+          this.setMaxGasPrice(Math.max(basePrice, priorityPrice + 1.1));
+          if (eip1559) this.setPriorityPrice(priorityPrice + 1);
           break;
         case 'standard':
-          this.setMaxGasPrice(Math.max(basePrice - 3, 1));
-          if (eip1559) this.setPriorityPrice(priPrice);
+          this.setMaxGasPrice(Math.max(basePrice - 3, 0.1 + priorityPrice));
+          if (eip1559) this.setPriorityPrice(priorityPrice);
           break;
       }
     });
   }
 
   dispose() {
-    clearTimeout(this.timer as any);
+    clearTimeout(this.timer);
   }
 
   protected async checkToAddress() {
+    const key = `${this.network.chainId}-${this.toAddress}`;
     fetchAddressInfo(this.network.chainId, this.toAddress).then((tag) => runInAction(() => (this.toAddressTag = tag)));
 
+    const cache = this.toAddressTypeCache.get(key);
+    if (cache && typeof cache.isContractRecipient === 'boolean') {
+      this.isContractWallet = cache.isContractWallet;
+      this.isContractRecipient = cache.isContractRecipient;
+      return;
+    }
+
     const code = await getCode(this.network.chainId, this.toAddress);
+    const isContractRecipient = code !== '0x';
     if (code === '0x') {
       runInAction(() => {
         this.isContractRecipient = false;
@@ -334,7 +344,8 @@ export class BaseTransaction {
 
     runInAction(() => {
       this.isContractWallet = isContractWallet;
-      this.isContractRecipient = code !== '0x';
+      this.isContractRecipient = isContractRecipient;
+      this.toAddressTypeCache.set(key, { isContractWallet, isContractRecipient });
     });
   }
 

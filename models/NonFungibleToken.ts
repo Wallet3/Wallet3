@@ -23,6 +23,7 @@ export abstract class NonFungibleToken {
   readonly address: string;
   readonly owner: string;
   readonly tokenId: string;
+
   contract!: ethers.Contract;
   loading = false;
 
@@ -55,7 +56,7 @@ export abstract class NonFungibleToken {
 
     try {
       const tokenURI = await this.getMetadataURI();
-      const jsonType = `data:application/json;base64,`;
+      const jsonType = 'data:application/json;base64,';
 
       if (tokenURI.startsWith(jsonType)) {
         const metadata = JSON.parse(decodeBase64(tokenURI.substring(jsonType.length)));

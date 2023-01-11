@@ -23,7 +23,7 @@ import { ERC20Token } from '../../models/ERC20';
 import { ERC721Token } from '../../models/ERC721';
 import { Gwei_1 } from '../../common/Constants';
 import { INetwork } from '../../common/Networks';
-import LINQ from 'linq';
+import { NFTMetadata } from './NonFungibleTokenTransferring';
 import Sourcify from '../hubs/Sourcify';
 import { WCCallRequest_eth_sendTransaction } from '../../models/entities/WCSession_v1';
 import numeral from 'numeral';
@@ -54,6 +54,7 @@ export class RawTransactionRequest extends BaseTransaction {
   erc721?: ERC721Token;
   erc1155?: ERC1155Token;
   erc20?: ERC20Token;
+  nfts: NFTMetadata[] = [];
 
   type: RequestType = 'Unknown';
   valueWei = BigNumber.from(0);
@@ -129,6 +130,9 @@ export class RawTransactionRequest extends BaseTransaction {
       setERC20ApproveAmount: action,
       exceedERC20Balance: computed,
       parseRequest: action,
+
+      nft: computed,
+      nfts: observable,
     });
 
     this.parseRequest(param);
@@ -273,14 +277,14 @@ export class RawTransactionRequest extends BaseTransaction {
         break;
 
       case ApprovalForAll:
-        erc1155 = new ERC1155Token({ chainId, contract: param.to, owner, tokenId: '1' });
+        erc721 = new ERC721Token({ chainId, contract: param.to, owner, tokenId: '1' });
 
-        const [operator, approved] = erc1155.interface.decodeFunctionData('setApprovalForAll', param.data) as [
-          string,
-          boolean
-        ];
-        this.type = approved ? 'Approve_ERC1155' : 'Revoke_ERC1155';
+        const [operator, approved] = erc721.interface.decodeFunctionData('setApprovalForAll', param.data) as [string, boolean];
+        this.type = approved ? 'Approve_ForAll' : 'Revoke_ForAll';
         this.setTo(operator);
+        this.account.nfts
+          .fetch(this.network.chainId)
+          .then((v) => runInAction(() => (this.nfts = v.filter((i) => i.contract.toLowerCase() === param.to.toLowerCase()))));
 
         break;
 

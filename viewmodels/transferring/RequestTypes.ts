@@ -6,8 +6,8 @@ export type RequestType =
   | 'Contract Interaction'
   | 'Approve_ERC20'
   | 'Approve_ERC721'
-  | 'Approve_ERC1155'
-  | 'Revoke_ERC1155'
+  | 'Approve_ForAll'
+  | 'Revoke_ForAll'
   | 'Unknown';
 
 export const Transfer_ERC20 = '0xa9059cbb';
@@ -30,5 +30,5 @@ export const Methods = new Map<string, RequestType>([
   [SafeTransferFrom_ERC1155, 'Transfer_ERC1155'],
   [SafeBatchTransferFrom_ERC1155, 'Transfer_ERC1155'],
   [Approve_ERC20, 'Approve_ERC20'],
-  [ApprovalForAll, 'Approve_ERC1155'],
+  [ApprovalForAll, 'Approve_ForAll'],
 ]);

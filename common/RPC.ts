@@ -355,12 +355,16 @@ export async function getMaxPriorityFeeByRPC(url: string) {
 
 export async function getCode(chainId: number, contract: string) {
   const urls = getRPCUrls(chainId);
+  let attempts = 0;
 
   for (let url of urls) {
     try {
       const resp = await post(url, { jsonrpc: '2.0', method: 'eth_getCode', params: [contract, 'latest'], id: Date.now() });
 
-      if (resp.error) continue;
+      if (resp.error) {
+        if (attempts++ > 3) return resp;
+        continue;
+      }
 
       return resp.result as string;
     } catch (error) {
