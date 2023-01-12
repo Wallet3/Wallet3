@@ -285,7 +285,7 @@ export class RawTransactionRequest extends BaseTransaction {
         this.account.nfts
           .fetch(this.network.chainId)
           .then((v) =>
-            runInAction(() => (this.nfts = v.filter((i) => i.contract.toLowerCase() === param.to.toLowerCase())).slice(0, 20))
+            runInAction(() => (this.nfts = v.filter((i) => i.contract.toLowerCase() === param.to.toLowerCase())).slice(0, 12))
           );
 
         break;

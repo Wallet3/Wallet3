@@ -5,6 +5,7 @@ import { NftsByOwnerV2, RaribleItem } from '../../common/apis/Rarible.v2.types';
 import { AlchemyNFTs } from '../../common/apis/Alchemy.types.nfts';
 import { NFTMetadata } from '../transferring/NonFungibleTokenTransferring';
 import { OpenseaAssetsResponse } from '../../common/apis/Opensea.types';
+import { utils } from 'ethers';
 
 const convertProtocol = (items: (string | undefined)[]) => {
   return items
@@ -99,25 +100,28 @@ export function convertAlchemyToNfts(result?: AlchemyNFTs): NFTMetadata[] | unde
   if (!result) return;
 
   return result.ownedNfts
-    .filter((n) => n.spamInfo.isSpam.toLowerCase() === 'false')
-    .map((n) => {
-      const previews = convertProtocol([n.metadata.image, ...n.media.map((n) => n.thumbnail)]);
-      const images = convertProtocol([n.metadata.image, ...n.media.map((m) => m.raw), ...n.media.map((n) => n.thumbnail)]);
+    ?.map((n) => {
+      const previews = convertProtocol([n.metadata?.image, ...(n.media?.map((n) => n.thumbnail) || [])]);
+      const images = convertProtocol([
+        n.metadata?.image,
+        ...(n.media?.map((m) => m.raw) ?? []),
+        ...(n.media?.map((n) => n.thumbnail) ?? []),
+      ]);
 
       return {
-        contract: n.contract.address,
-        id: `${n.contract.address}:${n.id.tokenId}`,
-        tokenId: n.id.tokenId,
+        contract: n.contract?.address || '',
+        id: `${n.contract?.address || ''}:${n.id?.tokenId}`,
+        tokenId: n.id?.tokenId || '',
         images,
         types: [],
         description: n.description,
-        title: n.metadata.name || n.contractMetadata.openSea.collectionName,
+        title: n.metadata?.name || n.contractMetadata?.openSea.collectionName,
         previews,
         previewTypes: [],
-        attributes: n.metadata.attributes.map((a) => {
+        attributes: n.metadata?.attributes?.map((a) => {
           return { key: a.trait_type, value: a.value };
         }),
       };
     })
-    .filter((n) => n.previews.length > 0);
+    .filter((n) => utils.isAddress(n.contract) && n.tokenId && n.previews.length > 0);
 }

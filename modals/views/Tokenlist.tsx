@@ -41,7 +41,7 @@ export default observer((props: Props) => {
           style={{ width: 25, height: 25, marginEnd: 12 }}
           iconUrl={item.logoURI}
         />
-        <Text style={{ fontSize: 19, color: textColor, textTransform: 'uppercase' }} numberOfLines={1}>
+        <Text style={{ fontSize: 19, color: textColor }} numberOfLines={1}>
           {item.symbol}
         </Text>
         <View style={{ flex: 1 }} />

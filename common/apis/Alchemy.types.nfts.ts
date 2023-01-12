@@ -66,17 +66,17 @@ interface SpamInfo {
 }
 
 interface OwnedNft {
-  contract: Contract;
-  id: Id;
+  contract?: Contract;
+  id?: Id;
   balance: string;
   title: string;
   description: string;
   tokenUri: TokenUri;
-  media: Medium[];
-  metadata: Metadata;
+  media?: Medium[];
+  metadata?: Metadata;
   timeLastUpdated: Date;
-  contractMetadata: ContractMetadata;
-  spamInfo: SpamInfo;
+  contractMetadata?: ContractMetadata;
+  spamInfo?: SpamInfo;
   error: string;
 }
 
