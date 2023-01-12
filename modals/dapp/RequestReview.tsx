@@ -262,6 +262,7 @@ const TxReview = observer(
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
                 scrollEnabled={vm.nfts.length > 5}
                 contentContainerStyle={{
                   flexDirection: 'row-reverse',

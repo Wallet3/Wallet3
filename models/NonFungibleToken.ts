@@ -1,7 +1,6 @@
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import { NFTMetadata } from '../viewmodels/transferring/NonFungibleTokenTransferring';
-import { convertRaribleNftToNft } from '../viewmodels/services/NftTransformer';
 import { decode as decodeBase64 } from 'js-base64';
 import { eth_call } from '../common/RPC';
 import { ethers } from 'ethers';

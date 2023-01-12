@@ -66,7 +66,7 @@ export function About() {
           <Coingecko width={180} height={48} style={{ marginStart: 8 }} />
         </View>
 
-        <View style={{ ...styles.item, marginTop: 16 }}></View>
+        <View style={{ ...styles.item, marginTop: 16 }} />
 
         <Text style={{ marginTop: 24, marginBottom: 4, fontWeight: '500', fontSize: 19, color: textColor }}>
           {t('about-support')}

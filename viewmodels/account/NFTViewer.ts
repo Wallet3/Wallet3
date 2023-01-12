@@ -1,18 +1,13 @@
 import { action, makeObservable, observable, runInAction } from 'mobx';
-import {
-  convertBounceToNfts,
-  convertOpenseaAssetsToNft,
-  convertRaribleResultToNfts,
-  convertRaribleV2ResultToNfts,
-} from '../services/NftTransformer';
-import { getNftsByOwner, getNftsByOwnerV2 } from '../../common/apis/Rarible';
+import { convertAlchemyToNfts, convertBounceToNfts, convertOpenseaAssetsToNft } from '../services/NftTransformer';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LINQ from 'linq';
-import NFTHub from '../hubs/NFTHub';
 import { NFTMetadata } from '../transferring/NonFungibleTokenTransferring';
 import Networks from '../core/Networks';
+import { getAlchemyNFTs } from '../../common/apis/Alchemy';
 import { getBounceNfts } from '../../common/apis/Bounce';
+import { getNftsByOwnerV2 } from '../../common/apis/Rarible';
 import { getOpenseaNfts } from '../../common/apis/Opensea';
 import { startLayoutAnimation } from '../../utils/animations';
 
@@ -46,10 +41,6 @@ export class NFTViewer {
     runInAction(() => this.setNFTs(items));
   }
 
-  getNFTs(chainId: number) {
-    return this.cache.get(chainId);
-  }
-
   async fetch(chainId: number, force = false) {
     const cacheItems = this.cache.get(chainId);
 
@@ -68,13 +59,16 @@ export class NFTViewer {
       }
     }
 
-    const network = Networks.find(chainId)?.network;
+    // const network = Networks.find(chainId)?.network;
     switch (chainId) {
       case 1:
         result = convertOpenseaAssetsToNft(await getOpenseaNfts(this.owner));
         break;
+      case 10:
       case 137:
-        result = convertRaribleV2ResultToNfts(await getNftsByOwnerV2(this.owner, network), network!);
+      case 42161:
+        // result = convertRaribleV2ResultToNfts(await getNftsByOwnerV2(this.owner, network), network!);
+        result = convertAlchemyToNfts(await getAlchemyNFTs(this.owner, chainId));
         break;
       case 56:
         result = convertBounceToNfts(await getBounceNfts(this.owner));

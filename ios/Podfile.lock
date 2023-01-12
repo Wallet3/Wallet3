@@ -1214,7 +1214,7 @@ PODS:
     - React-Core
   - RNOS (1.2.6):
     - React
-  - RNReanimated (2.13.0):
+  - RNReanimated (2.14.0):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -1650,7 +1650,7 @@ SPEC CHECKSUMS:
   RNGoogleSignin: 22e468a9474dbcb8618d8847205ad4f0b2575d13
   RNImageColors: fd9777591fc765780e035f4bec7a42edabc86eb4
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
-  RNReanimated: ce445c233a6ff5600223484a88ad5704945d972a
+  RNReanimated: 641a9c02fe2f910371cb102aaac94d57cdf24e5d
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
   RNSharedElement: 504fa28a235b12505b6daedbb452a9ec96809bd0
   RNSVG: d787d64ca06b9158e763ad2638a8c4edce00782a
