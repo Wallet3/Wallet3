@@ -1,4 +1,5 @@
-import { ActivityIndicator, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { AntDesign, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { Coin, SafeViewContainer, Skeleton } from '../../components';
 import React, { useRef, useState } from 'react';
@@ -58,6 +59,8 @@ const TxReview = observer(
     const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
     const reviewItemValueStyle = { ...styles.reviewItemValue, color: textColor };
     const safeThemeColor = vm.toAddressRisky ? warningColor : thirdTextColor;
+
+    console.log(vm.nfts.length, vm.nft?.address);
 
     return (
       <SafeViewContainer>
@@ -169,7 +172,7 @@ const TxReview = observer(
                 {vm.nft?.metadata?.image && (
                   <MultiSourceImage
                     uriSources={[vm.nft?.metadata?.image]}
-                    style={{ width: 20, height: 20, borderWidth: 0.5, borderColor, borderRadius: 5 }}
+                    style={{ width: 20, height: 20, borderWidth: 0, borderColor, borderRadius: 5 }}
                     containerStyle={{ marginStart: 8 }}
                     loadingIconSize={20}
                     borderRadius={3}
@@ -250,6 +253,42 @@ const TxReview = observer(
                   <AntDesign name="star" size={19} color={network.color} />
                 )}
               </View>
+            </View>
+          ) : undefined}
+
+          {vm.type === 'Approve_ForAll' && vm.nfts.length > 0 ? (
+            <View style={{ ...reviewItemStyle }}>
+              <Text style={styles.reviewItemTitle}>NFTs</Text>
+
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
+                scrollEnabled={vm.nfts.length > 5}
+                contentContainerStyle={{
+                  flexDirection: 'row-reverse',
+                  padding: 0,
+                  flexGrow: 1,
+                  alignItems: 'center',
+                }}
+                style={{
+                  marginStart: 16,
+                  height: 32,
+                  marginVertical: -6,
+                }}
+              >
+                {vm.nfts.map((nft) => (
+                  <MultiSourceImage
+                    key={nft.id}
+                    uriSources={nft.images}
+                    sourceTypes={nft.types}
+                    style={{ width: 32, height: 32, borderColor, borderRadius: 5 }}
+                    containerStyle={{ marginStart: 8 }}
+                    loadingIconSize={20}
+                    borderRadius={3}
+                  />
+                ))}
+              </ScrollView>
             </View>
           ) : undefined}
 
@@ -439,6 +478,21 @@ const TxReview = observer(
 
         {vm.txException ? <TxException exception={vm.txException} /> : undefined}
 
+        {(vm.type === 'Approve_ERC20' || vm.type === 'Approve_ForAll') && !vm.txException && !vm.insufficientFee && (
+          <Animated.View
+            style={{ paddingHorizontal: 8, paddingVertical: 8, flexDirection: 'row' }}
+            entering={FadeInDown.delay(2500).springify()}
+          >
+            <Ionicons
+              name={vm.toAddressRisky ? 'warning' : 'information-circle'}
+              color={vm.toAddressRisky ? warningColor : thirdTextColor}
+              style={{ marginEnd: 4 }}
+            />
+            <Text style={{ fontSize: 10, fontWeight: '600', marginEnd: 2, color: thirdTextColor }}>
+              {t('tip-approval-funds')}
+            </Text>
+          </Animated.View>
+        )}
         <View style={{ flex: 1 }} />
 
         <RejectApproveButtons

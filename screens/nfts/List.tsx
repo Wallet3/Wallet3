@@ -63,10 +63,6 @@ const NFTItem = ({
           borderRadius={10}
           style={{ width: '100%', height: imageHeight }}
           paused
-          onColorParsed={(result) => {
-            setColorResult(result);
-            setNftBackgroundColor(result['background'] || result['dominant']);
-          }}
         />
       </SharedElement>
 

@@ -24,12 +24,22 @@ const suffixes = [
   '.wow',
 ];
 
-export async function resolveKey3Did(domain: string) {
+const ChainAddressMap = {
+  1: 60,
+  56: 9006,
+  137: 966,
+};
+
+export async function resolveKey3Did(domain: string, chainId: number) {
   try {
     const resp: Key3Response<AccountRecords> = await post(`${host}/account/records`, { account: domain });
     if (resp.errno) return '';
 
-    const addr = resp.data?.records.find((r) => r.key === 'address.60')?.value || '';
+    const addr =
+      resp.data?.records.find((r) => r.key === `address.${ChainAddressMap[chainId]}`)?.value ||
+      resp.data?.records.find((r) => r.key === 'address.60')?.value ||
+      '';
+
     return isAddress(addr) ? getAddress(addr) : '';
   } catch (error) {}
 

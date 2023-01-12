@@ -2,45 +2,16 @@ import { BounceResponse, Nfts1155, Nfts721 } from '../../common/apis/Bounce.type
 import { Nft, NftsByOwner } from '../../common/apis/Rarible.types';
 import { NftsByOwnerV2, RaribleItem } from '../../common/apis/Rarible.v2.types';
 
+import { AlchemyNFTs } from '../../common/apis/Alchemy.types.nfts';
 import { NFTMetadata } from '../transferring/NonFungibleTokenTransferring';
 import { OpenseaAssetsResponse } from '../../common/apis/Opensea.types';
+import { utils } from 'ethers';
 
 const convertProtocol = (items: (string | undefined)[]) => {
   return items
     .map((i) => (i?.startsWith('ipfs://') ? i.replace('ipfs://', 'https://ipfs.io/ipfs/') : i))
     .filter((i) => i) as string[];
 };
-
-// deprecated
-export function convertRaribleNftToNft(item: Nft) {
-  return {
-    id: item.id,
-    contract: item.contract,
-    tokenId: item.tokenId,
-    title: item.meta?.name,
-    description: item.meta?.description,
-    attributes: item.meta?.attributes,
-    previews: [item.meta?.image?.url?.BIG, item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.PREVIEW],
-    previewTypes: [
-      item.meta?.image?.meta?.BIG?.type,
-      item.meta?.image?.meta?.ORIGINAL?.type,
-      item.meta?.image?.meta?.PREVIEW?.type,
-    ],
-    images: [item.meta?.image?.url?.ORIGINAL, item.meta?.image?.url?.BIG, item.meta?.image?.url?.PREVIEW],
-    types: [item.meta?.image?.meta?.ORIGINAL?.type, item.meta?.image?.meta?.BIG?.type, item.meta?.image?.meta?.PREVIEW?.type],
-  };
-}
-
-// deprecated
-export function convertRaribleResultToNfts(result?: NftsByOwner): NFTMetadata[] | undefined {
-  if (!result) return;
-
-  try {
-    return result.items
-      .filter((i) => !i.deleted && (i.meta?.image?.url?.PREVIEW || i.meta?.image?.url?.ORIGINAL))
-      .map(convertRaribleNftToNft);
-  } catch (error) {}
-}
 
 export function convertBounceToNfts(result?: BounceResponse) {
   if (!result) return;
@@ -123,4 +94,34 @@ export function convertOpenseaAssetsToNft(result?: OpenseaAssetsResponse): NFTMe
       previews,
     };
   });
+}
+
+export function convertAlchemyToNfts(result?: AlchemyNFTs): NFTMetadata[] | undefined {
+  if (!result) return;
+
+  return result.ownedNfts
+    ?.map((n) => {
+      const previews = convertProtocol([n.metadata?.image, ...(n.media?.map((n) => n.thumbnail) || [])]);
+      const images = convertProtocol([
+        n.metadata?.image,
+        ...(n.media?.map((m) => m.raw) ?? []),
+        ...(n.media?.map((n) => n.thumbnail) ?? []),
+      ]);
+
+      return {
+        contract: n.contract?.address || '',
+        id: `${n.contract?.address || ''}:${n.id?.tokenId}`,
+        tokenId: n.id?.tokenId || '',
+        images,
+        types: [],
+        description: n.description,
+        title: n.metadata?.name || n.contractMetadata?.openSea.collectionName,
+        previews,
+        previewTypes: [],
+        attributes: n.metadata?.attributes?.map((a) => {
+          return { key: a.trait_type, value: a.value };
+        }),
+      };
+    })
+    .filter((n) => utils.isAddress(n.contract) && n.tokenId && n.previews.length > 0);
 }

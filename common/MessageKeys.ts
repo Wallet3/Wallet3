@@ -23,4 +23,8 @@ export default {
   openUrl: 'openUrl',
   openUrlInPageId: (pageId: number) => `openUrl_page${pageId}`,
   openBrowser: 'openBrowser',
+  codeScan: {
+    ethereum: 'CodeScan-ethereum',
+    address: 'CodeScan-0x',
+  },
 };

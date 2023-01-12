@@ -207,6 +207,7 @@ export class Wallet {
         data: request.typedData,
       });
     } catch (error) {
+      console.error(error);
     } finally {
       logEthSign('typed_data');
     }

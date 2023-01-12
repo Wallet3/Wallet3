@@ -1,7 +1,6 @@
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import { NFTMetadata } from '../viewmodels/transferring/NonFungibleTokenTransferring';
-import { convertRaribleNftToNft } from '../viewmodels/services/NftTransformer';
 import { decode as decodeBase64 } from 'js-base64';
 import { eth_call } from '../common/RPC';
 import { ethers } from 'ethers';
@@ -23,6 +22,7 @@ export abstract class NonFungibleToken {
   readonly address: string;
   readonly owner: string;
   readonly tokenId: string;
+
   contract!: ethers.Contract;
   loading = false;
 
@@ -55,7 +55,7 @@ export abstract class NonFungibleToken {
 
     try {
       const tokenURI = await this.getMetadataURI();
-      const jsonType = `data:application/json;base64,`;
+      const jsonType = 'data:application/json;base64,';
 
       if (tokenURI.startsWith(jsonType)) {
         const metadata = JSON.parse(decodeBase64(tokenURI.substring(jsonType.length)));

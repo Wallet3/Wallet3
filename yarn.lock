@@ -3781,19 +3781,19 @@
   resolved "https://registry.yarnpkg.com/@react-native/polyfills/-/polyfills-2.0.0.tgz#4c40b74655c83982c8cf47530ee7dc13d957b6aa"
   integrity sha512-K0aGNn1TjalKj+65D7ycc1//H9roAQ51GJVk5ZJQFb2teECGmzd86bYDC0aYdbRf7gtovescq4Zt6FR0tgXiHQ==
 
-"@react-navigation/bottom-tabs@^6.5.2":
-  version "6.5.2"
-  resolved "https://registry.yarnpkg.com/@react-navigation/bottom-tabs/-/bottom-tabs-6.5.2.tgz#15031640fcef8a8a167bd080f2c3d41835ec0bcf"
-  integrity sha512-iN3B1cgXdo64lqXdsTsCjN7n+5ILYKRexAu0VtW6EO8E6Z/0obK5JcCEropSiimRqVRs0kyuYj3F94Oth+hMrw==
+"@react-navigation/bottom-tabs@^6.5.3":
+  version "6.5.3"
+  resolved "https://registry.yarnpkg.com/@react-navigation/bottom-tabs/-/bottom-tabs-6.5.3.tgz#76bb793b42326544997d438c5202b59913d0d656"
+  integrity sha512-ZA2Ko9fNwNaaSNn7738KpEk8Doi+yjRfTg8Wb/WvduIaK/28qNLAYWBCUEVjBC55y/9zJOzwc4R8Av2J2MG/4g==
   dependencies:
-    "@react-navigation/elements" "^1.3.12"
+    "@react-navigation/elements" "^1.3.13"
     color "^4.2.3"
     warn-once "^0.1.0"
 
-"@react-navigation/core@^6.4.5":
-  version "6.4.5"
-  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-6.4.5.tgz#8254b25c476857d53a649af8e3fded0cbe6e1ded"
-  integrity sha512-wcde35HeOM5r2P25EwLQZyJ1yhXDGKuWpnKfsSI1xrgYIvWdYi3j/yGnwgNGDelCmtUt1Fyk2pmOv8sEku9KkA==
+"@react-navigation/core@^6.4.6":
+  version "6.4.6"
+  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-6.4.6.tgz#b0738667dec5927b01c4c496c2f4c73ef8a5e4dd"
+  integrity sha512-6zaAgUT5k4vhJlddUk2l52RZyMkMelHdrRv1cL57ALi2RZzERdgmbiMKhJerxFLn9S8E3PUe8vwxHzjHOZKG4w==
   dependencies:
     "@react-navigation/routers" "^6.1.6"
     escape-string-regexp "^4.0.0"
@@ -3802,34 +3802,34 @@
     react-is "^16.13.0"
     use-latest-callback "^0.1.5"
 
-"@react-navigation/drawer@^6.5.6":
-  version "6.5.6"
-  resolved "https://registry.yarnpkg.com/@react-navigation/drawer/-/drawer-6.5.6.tgz#ed35a44eb1a9c49e5899cdbcf610fc0c8a86cf37"
-  integrity sha512-VihTs6mNzYVs2bforp1nNKOYz4trLlJpitW+4zk2esjhTqzt22Gk716HOlhYHY9jTwkuomXqq2D+7Ze+2l8SMA==
+"@react-navigation/drawer@^6.5.7":
+  version "6.5.7"
+  resolved "https://registry.yarnpkg.com/@react-navigation/drawer/-/drawer-6.5.7.tgz#a687dd909d9f4ae92e07f3cc295986761d19e340"
+  integrity sha512-k8l+G05WrP+Il8USxEcaBtZ2Jv/JFn9dS8O1IlqIoddZITrFjsyDhk3zxeE3RWDcc9u0o7HgHfgKHPXxcT8QRQ==
   dependencies:
-    "@react-navigation/elements" "^1.3.12"
+    "@react-navigation/elements" "^1.3.13"
     color "^4.2.3"
     warn-once "^0.1.0"
 
-"@react-navigation/elements@^1.3.12":
-  version "1.3.12"
-  resolved "https://registry.yarnpkg.com/@react-navigation/elements/-/elements-1.3.12.tgz#14ac1189e0778039c178bd4a6f8da075094896b4"
-  integrity sha512-iVcLIYg/XJk1p6X1rSFhNhCjAJ3ORqNT2/bJqw7I/liujeJAoz1oZ5JDoEcZaA0wMDts1txxLuqAYJmhCgU2aA==
+"@react-navigation/elements@^1.3.13":
+  version "1.3.13"
+  resolved "https://registry.yarnpkg.com/@react-navigation/elements/-/elements-1.3.13.tgz#5105fa26df8d32810cd9f14d6ec5a3d2c2bb26d2"
+  integrity sha512-LqqK5s2ZfYHn2cQ376jC5V9dQztLH5ixkkJj9WR7JY2g4SghDd39WJhL3Jillw1Mu3F3b9sZwvAK+QkXhnDeAA==
 
-"@react-navigation/native-stack@^6.9.7":
-  version "6.9.7"
-  resolved "https://registry.yarnpkg.com/@react-navigation/native-stack/-/native-stack-6.9.7.tgz#9211fc8933825a41f19011b935133a6ed58b4ce1"
-  integrity sha512-YsBv4LldFErwQbqLCI/aWWDTpMf9SFS4IW3Qcefm+TZli9Ee7XpZMmFdotiZTz4KoYHbqhO1fuExjl2O7ZHrAQ==
+"@react-navigation/native-stack@^6.9.8":
+  version "6.9.8"
+  resolved "https://registry.yarnpkg.com/@react-navigation/native-stack/-/native-stack-6.9.8.tgz#c953a169918a4bdde56f7d2dc1073da4726b4cb7"
+  integrity sha512-74dje939lflsTXJQwCAdznbJ4B6V8sA5CSzuHwbiogL8B6EVXNa/qliXtB7DBAvzeyWDWT3u+gM2vOYJOeXYhA==
   dependencies:
-    "@react-navigation/elements" "^1.3.12"
+    "@react-navigation/elements" "^1.3.13"
     warn-once "^0.1.0"
 
-"@react-navigation/native@^6.1.1":
-  version "6.1.1"
-  resolved "https://registry.yarnpkg.com/@react-navigation/native/-/native-6.1.1.tgz#79d91db04fbad277f355a10405516df4f67cd308"
-  integrity sha512-iIozx9c66EjSFyzKrZPixnk6vBuivYXp0jmbKCJXNIa7MY+8OLx9CXj/+1py/l/OGlXDhI6jiUWWetOfOtMaBQ==
+"@react-navigation/native@^6.1.2":
+  version "6.1.2"
+  resolved "https://registry.yarnpkg.com/@react-navigation/native/-/native-6.1.2.tgz#6fffbf4787c233687fff8fe9ce7364ffce696d38"
+  integrity sha512-qLUe0asHofr5EhxKjvUBJ9DrPPmR4535IEwmW3oU4DRb3cLbNysjajJKHL8kcYtqPvn9Bx9QZG2x0PMb2vN23A==
   dependencies:
-    "@react-navigation/core" "^6.4.5"
+    "@react-navigation/core" "^6.4.6"
     escape-string-regexp "^4.0.0"
     fast-deep-equal "^3.1.3"
     nanoid "^3.1.23"
@@ -3841,12 +3841,12 @@
   dependencies:
     nanoid "^3.1.23"
 
-"@react-navigation/stack@^6.3.10":
-  version "6.3.10"
-  resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-6.3.10.tgz#8a17377c97d978baa5a87a67932463267cfa54cd"
-  integrity sha512-mghQpCbGBI9jpwYmhXDI5drGOxz6F9hLxQgLeu1IsTSA9767Edov7TDt5n/PTJqhpOru7/xoNMs4yhp9ykVhng==
+"@react-navigation/stack@^6.3.11":
+  version "6.3.11"
+  resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-6.3.11.tgz#5f5e93a34e4492d7baa3f29bddf822489724ec4e"
+  integrity sha512-GWOAyJfPEsjVwDWec1ERwWL5LvManJucCRUZetJqCBs4/mV7HXEt2x6l3SMitHxH1+K+9XuYXI+wBTbK1WDYOA==
   dependencies:
-    "@react-navigation/elements" "^1.3.12"
+    "@react-navigation/elements" "^1.3.13"
     color "^4.2.3"
     warn-once "^0.1.0"
 
@@ -4107,11 +4107,6 @@
   version "3.8.4"
   resolved "https://registry.yarnpkg.com/@types/i18n-js/-/i18n-js-3.8.4.tgz#d82acfe3b1fbfbb9ae7eff84360a6ae436ba14d7"
   integrity sha512-lXIJLglOZsa81DzqiiG99xF6qGJvwRGqzCQe1FB+/JhgVTyGGVa63DMopEQMJdpAlUUSdJsIhC7sw5xDfDjXWw==
-
-"@types/invariant@^2.2.35":
-  version "2.2.35"
-  resolved "https://registry.yarnpkg.com/@types/invariant/-/invariant-2.2.35.tgz#cd3ebf581a6557452735688d8daba6cf0bd5a3be"
-  integrity sha512-DxX1V9P8zdJPYQat1gHyY0xj3efl8gnMVjiM9iCY6y27lj+PoQWkgjt8jDqmovPqULkKVpKRg8J36iQiA+EtEg==
 
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0":
   version "2.0.3"
@@ -6949,10 +6944,10 @@ expo-localization@~14.0.0:
   dependencies:
     rtl-detect "^1.0.2"
 
-expo-modules-autolinking@1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/expo-modules-autolinking/-/expo-modules-autolinking-1.0.1.tgz#a82eaef2decd1d518458d64cb542c64fc23eacde"
-  integrity sha512-Ch0K/Vb2W7zSPlPKKFr6dwgwge6sSCpl7XPW8jrc7hUy+M72dvcfsBsaphvGNlKIZM6TtpCt0xbUlL48wI2y1A==
+expo-modules-autolinking@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/expo-modules-autolinking/-/expo-modules-autolinking-1.0.2.tgz#f072f342ab797e43b16ddcdef251fcd4db851e1a"
+  integrity sha512-skAUXERKw1gtSw8xsvft9DE0KVhBvw4dujAtgCZoG2l513fN7ds+B5+30ZVgZATMC+EjtlmjKXzhp5QS44DCFA==
   dependencies:
     chalk "^4.1.0"
     commander "^7.2.0"
@@ -7022,10 +7017,10 @@ expo-web-browser@~12.0.0:
   dependencies:
     compare-urls "^2.0.0"
 
-expo@^47.0.12:
-  version "47.0.12"
-  resolved "https://registry.yarnpkg.com/expo/-/expo-47.0.12.tgz#2a8b41217e1cb630f84ea3723031d07354289ae7"
-  integrity sha512-LqECuBpV6arTncksQzOGGQmxOdeQmzm15VqwIJ/c3SWoxiVh5hKf+taUv2oaLmfx2z04TSm1oo56pRSrsL5iIA==
+expo@^47.0.13:
+  version "47.0.13"
+  resolved "https://registry.yarnpkg.com/expo/-/expo-47.0.13.tgz#f53f82e7f9e209f8a8b25f2493f58439958368cb"
+  integrity sha512-9VjjGdViCJ9NfWbUE7brkwFBDvKuA35V345vMtHFYNKoGJjXib36yitmawreMDQFv0kMTqTnzc7T2191Pod7Ng==
   dependencies:
     "@babel/runtime" "^7.14.0"
     "@expo/cli" "0.4.11"
@@ -7040,7 +7035,7 @@ expo@^47.0.12:
     expo-file-system "~15.1.1"
     expo-font "~11.0.1"
     expo-keep-awake "~11.0.1"
-    expo-modules-autolinking "1.0.1"
+    expo-modules-autolinking "1.0.2"
     expo-modules-core "1.1.1"
     fbemitter "^3.0.0"
     getenv "^1.0.0"
@@ -8902,10 +8897,10 @@ jpeg-js@0.4.2:
   resolved "https://registry.yarnpkg.com/jpeg-js/-/jpeg-js-0.4.2.tgz#8b345b1ae4abde64c2da2fe67ea216a114ac279d"
   integrity sha512-+az2gi/hvex7eLTMTlbRLOhH6P6WFdk2ITI8HJsaH2VqYO0I594zXSYEP+tf4FW+8Cy68ScDXoAsQdyQanv3sw==
 
-js-base64@^3.7.3:
-  version "3.7.3"
-  resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-3.7.3.tgz#2e784bb0851636bf1e99ef12e4f3a8a8c9b7639f"
-  integrity sha512-PAr6Xg2jvd7MCR6Ld9Jg3BmTcjYsHEBx1VlwEwULb/qowPf5VD9kEMagj23Gm7JRnSvE/Da/57nChZjnvL8v6A==
+js-base64@^3.7.4:
+  version "3.7.4"
+  resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-3.7.4.tgz#af95b20f23efc8034afd2d1cc5b9d0adf7419037"
+  integrity sha512-wpM/wi20Tl+3ifTyi0RdDckS4YTD4Lf953mBRrpG8547T7hInHNPEj8+ck4gB8VDcGyeAWFK++Wb/fU1BeavKQ==
 
 js-sha3@0.8.0:
   version "0.8.0"
@@ -11024,14 +11019,14 @@ react-native-randombytes@^3.6.1:
     buffer "^4.9.1"
     sjcl "^1.0.3"
 
-react-native-reanimated@~2.13.0:
-  version "2.13.0"
-  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-2.13.0.tgz#d64c1386626822d4dc22094b4efe028ff2c49cc9"
-  integrity sha512-yUHyYVIegWWIza4+nVyS3CSmI/Mc8kLFVHw2c6gnSHaYhYA4LeEjH/jBkoMzHk9Xd0Ra3cwtjYKAMG8OTp6JVg==
+react-native-reanimated@~2.14.0:
+  version "2.14.0"
+  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-2.14.0.tgz#acc20d62ac4668afffb5bc749cf0a095e6c44239"
+  integrity sha512-WicflLAyXGveVLZCHLqxH4axkb1QoTLejsdb5WbjkMN0mEDHWQQly7BeKR7Ek0zzZnmcrChnNfMLGGW+X3uDkg==
   dependencies:
     "@babel/plugin-transform-object-assign" "^7.16.7"
     "@babel/preset-typescript" "^7.16.7"
-    "@types/invariant" "^2.2.35"
+    convert-source-map "^1.7.0"
     invariant "^2.2.4"
     lodash.isequal "^4.5.0"
     setimmediate "^1.0.5"
@@ -11094,10 +11089,10 @@ react-native-svg-transformer@^1.0.0:
     "@svgr/plugin-svgo" "^6.1.2"
     path-dirname "^1.0.2"
 
-react-native-svg@13.6.0:
-  version "13.6.0"
-  resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-13.6.0.tgz#46e95a44aabbd778db7c46d8a1047da376b28058"
-  integrity sha512-1wjHCMJ8siyZbDZ0MX5wM+Jr7YOkb6GADn4/Z+/u1UwJX8WfjarypxDF3UO1ugMHa+7qor39oY+URMcrgPpiww==
+react-native-svg@13.7.0:
+  version "13.7.0"
+  resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-13.7.0.tgz#be2ffb935e996762543dd7376bdc910722f7a43c"
+  integrity sha512-WR5CIURvee5cAfvMhmdoeOjh1SC8KdLq5u5eFsz4pbYzCtIFClGSkLnNgkMSDMVV5LV0qQa4jeIk75ieIBzaDA==
   dependencies:
     css-select "^5.1.0"
     css-tree "^1.1.3"
