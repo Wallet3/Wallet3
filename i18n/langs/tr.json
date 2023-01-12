@@ -263,6 +263,7 @@
   "tip-recipient-is-contract-wallet": "Alıcı bir sözleşme cüzdanıdır",
   "tip-backup-secret-key": "Gizli anahtarınızı yedeklemediniz. Lütfen gizli anahtarınızı yedekleyin ve güvenli bir yerde saklayın.",
   "tip-app-not-authorized": "Lütfen QR kodunu taramak için bir cüzdan içe aktarma/oluşturma işlemini tamamlayın",
+  "tip-approval-funds": "Yetkilendirme, bilginiz olmasa bile yetkilendirilmiş tarafın paranızı harcayabileceği anlamına gelir.",
   "tx-type-approve": "Onay",
   "tx-type-approve_erc20": "Onay",
   "tx-type-approve_erc721": "Onay",

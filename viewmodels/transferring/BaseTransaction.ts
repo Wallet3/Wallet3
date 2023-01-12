@@ -228,7 +228,7 @@ export class BaseTransaction {
     }
 
     this.isResolvingAddress = true;
-    const address = await resolveDomain(to);
+    const address = await resolveDomain(to, this.network.chainId);
 
     runInAction(() => (this.isResolvingAddress = false));
 

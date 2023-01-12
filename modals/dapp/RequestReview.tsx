@@ -1,4 +1,5 @@
 import { ActivityIndicator, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { AntDesign, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { Coin, SafeViewContainer, Skeleton } from '../../components';
 import React, { useRef, useState } from 'react';
@@ -477,6 +478,21 @@ const TxReview = observer(
 
         {vm.txException ? <TxException exception={vm.txException} /> : undefined}
 
+        {(vm.type === 'Approve_ERC20' || vm.type === 'Approve_ForAll') && !vm.txException && !vm.insufficientFee && (
+          <Animated.View
+            style={{ paddingHorizontal: 8, paddingVertical: 8, flexDirection: 'row' }}
+            entering={FadeInDown.delay(2500).springify()}
+          >
+            <Ionicons
+              name={vm.toAddressRisky ? 'warning' : 'information-circle'}
+              color={vm.toAddressRisky ? warningColor : thirdTextColor}
+              style={{ marginEnd: 4 }}
+            />
+            <Text style={{ fontSize: 10, fontWeight: '600', marginEnd: 2, color: thirdTextColor }}>
+              {t('tip-approval-funds')}
+            </Text>
+          </Animated.View>
+        )}
         <View style={{ flex: 1 }} />
 
         <RejectApproveButtons

@@ -263,6 +263,7 @@
   "tip-recipient-is-contract-wallet": "The recipient is a contract wallet",
   "tip-backup-secret-key": "You have not backed up your secret key. Please backup your secret key and keep it in a safe place.",
   "tip-app-not-authorized": "Please finish importing/creating a wallet to scan the QR code",
+  "tip-approval-funds": "Approval means even without your knowledge, the approved address can spend your tokens.",
   "tx-type-approve": "Approval",
   "tx-type-approve_erc20": "Approval",
   "tx-type-approve_erc721": "Approval",

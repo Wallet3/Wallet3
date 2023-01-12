@@ -259,6 +259,7 @@
   "tip-recipient-is-contract-wallet": "受信者はコントラクト ウォレット",
   "tip-backup-secret-key": "秘密鍵のバックアップが取っていない。送信する前に秘密鍵をバックアップしてください。",
   "tip-app-not-authorized": "QRコードを読み取るために、ウォレットのインポート/作成を完了してください",
+  "tip-approval-funds": "権限が与えられることは、あなたが知らないうちにも、権限を与えられた方があなたの資金を使用することができることを意味します。",
   "tx-type-approve": "承認",
   "tx-type-approve_erc20": "承認",
   "tx-type-approve_erc721": "承認",

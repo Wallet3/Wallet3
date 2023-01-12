@@ -259,6 +259,7 @@
   "tip-recipient-is-contract-wallet": "收款方是合约钱包",
   "tip-backup-secret-key": "您还未备份您的私钥，请先备份",
   "tip-app-not-authorized": "请先导入/创建钱包后，再扫描此类二维码",
+  "tip-approval-funds": "授权意味着即使在您不知情的情况下，被授权方也能花费您的资金。",
   "tx-type-approve": "授权",
   "tx-type-approve_erc20": "授权",
   "tx-type-approve_erc721": "授权",
