@@ -185,21 +185,21 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
           </View>
         ) : undefined}
 
-        {item.attributes && item.attributes.filter((a) => a.value).length > 0 ? (
+        {item.attributes && item.attributes.filter((a) => a?.value).length > 0 ? (
           <View style={{ padding: 16 }}>
             <Text style={{ color: detailColor, fontSize: 20, fontWeight: '600', marginBottom: 8 }}>
               {t('nft-txt-attributes')}
             </Text>
-            {LINQ.from(item.attributes.filter((a) => a.value)).select((attr, index) => {
+            {item.attributes?.map((attr, index) => {
               return (
                 <View
-                  key={`${attr.key}-${index}`}
+                  key={`${attr?.key}-${index}`}
                   style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 }}
                 >
                   <Text style={{ color: primaryColor, fontWeight: '500' }}>
-                    {attr.key[0]?.toUpperCase() + attr.key.slice(1)}
+                    {(attr?.key?.[0]?.toUpperCase() || '') + attr?.key?.slice(1)}
                   </Text>
-                  <Text style={{ color: primaryColor, fontWeight: '500', textTransform: 'capitalize' }}>{attr.value}</Text>
+                  <Text style={{ color: primaryColor, fontWeight: '500', textTransform: 'capitalize' }}>{attr?.value}</Text>
                 </View>
               );
             })}
