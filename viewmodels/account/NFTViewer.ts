@@ -1,17 +1,13 @@
 import { action, makeObservable, observable, runInAction } from 'mobx';
-import {
-  convertBounceToNfts,
-  convertOpenseaAssetsToNft,
-  convertRaribleResultToNfts,
-  convertRaribleV2ResultToNfts,
-} from '../services/NftTransformer';
-import { getNftsByOwner, getNftsByOwnerV2 } from '../../common/apis/Rarible';
+import { convertAlchemyToNfts, convertBounceToNfts, convertOpenseaAssetsToNft } from '../services/NftTransformer';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import NFTHub from '../hubs/NFTHub';
+import LINQ from 'linq';
 import { NFTMetadata } from '../transferring/NonFungibleTokenTransferring';
 import Networks from '../core/Networks';
+import { getAlchemyNFTs } from '../../common/apis/Alchemy';
 import { getBounceNfts } from '../../common/apis/Bounce';
+import { getNftsByOwnerV2 } from '../../common/apis/Rarible';
 import { getOpenseaNfts } from '../../common/apis/Opensea';
 import { startLayoutAnimation } from '../../utils/animations';
 
@@ -38,33 +34,41 @@ export class NFTViewer {
 
   async refresh(force = false) {
     const { current } = Networks;
-    const cacheItems = this.cache.get(current.chainId);
+    runInAction(() => this.setNFTs([]));
+
+    const items = await this.fetch(current.chainId, force);
+
+    runInAction(() => this.setNFTs(items));
+  }
+
+  async fetch(chainId: number, force = false) {
+    const cacheItems = this.cache.get(chainId);
 
     if (cacheItems && !force) {
-      runInAction(() => this.setNFTs(cacheItems));
-      return;
+      return cacheItems;
     }
-
-    runInAction(() => this.setNFTs([]));
 
     let result: NFTMetadata[] | undefined;
 
-    let cache = await AsyncStorage.getItem(Keys.nfts(current.chainId, this.owner));
+    let cache = await AsyncStorage.getItem(Keys.nfts(chainId, this.owner));
     if (cache) {
       const { timestamp, items } = JSON.parse(cache) as { timestamp: number; items: NFTMetadata[] };
       if (Date.now() < timestamp + 12 * 60 * 60 * 1000) {
-        this.cache.set(current.chainId, items);
-        runInAction(() => (this.nfts = items));
-        return;
+        this.cache.set(chainId, items);
+        return items;
       }
     }
 
-    switch (current.chainId) {
+    // const network = Networks.find(chainId)?.network;
+    switch (chainId) {
       case 1:
         result = convertOpenseaAssetsToNft(await getOpenseaNfts(this.owner));
         break;
+      case 10:
       case 137:
-        result = convertRaribleV2ResultToNfts(await getNftsByOwnerV2(this.owner, current.network), current.network);
+      case 42161:
+        // result = convertRaribleV2ResultToNfts(await getNftsByOwnerV2(this.owner, network), network!);
+        result = convertAlchemyToNfts(await getAlchemyNFTs(this.owner, chainId));
         break;
       case 56:
         result = convertBounceToNfts(await getBounceNfts(this.owner));
@@ -72,16 +76,17 @@ export class NFTViewer {
     }
 
     if (!result || result.length === 0) {
-      runInAction(() => this.setNFTs(cacheItems || []));
-      return;
+      return cacheItems || [];
     }
 
-    this.cache.set(current.chainId, result);
-    runInAction(() => (this.nfts = result!));
+    result = LINQ.from(result)
+      .distinct((n) => n.id)
+      .toArray();
 
-    await AsyncStorage.setItem(
-      Keys.nfts(current.chainId, this.owner),
-      JSON.stringify({ timestamp: Date.now(), items: result })
-    );
+    this.cache.set(chainId, result);
+
+    await AsyncStorage.setItem(Keys.nfts(chainId, this.owner), JSON.stringify({ timestamp: Date.now(), items: result }));
+
+    return result;
   }
 }

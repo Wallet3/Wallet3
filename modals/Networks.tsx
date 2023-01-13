@@ -169,7 +169,7 @@ export default ({ title, onNetworkPress, selectedNetwork, useContextMenu, onEdit
             renderItem={useContextMenu ? renderContextMenuItem : renderItem}
             contentContainerStyle={{ paddingBottom: 36 }}
             style={{ marginHorizontal: -16, marginTop: -4, marginBottom: -36 }}
-            onScrollToIndexFailed={({}) => {}}
+            onScrollToIndexFailed={() => {}}
           />
         </SafeViewContainer>
 

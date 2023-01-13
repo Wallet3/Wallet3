@@ -34,6 +34,7 @@ const V5Router = '0x1111111254EEB25477B68fb85Ed929f73A960582';
 export class OneInch {
   private calcExchangeRateTimer?: NodeJS.Timer;
   private watchPendingTxTimer?: NodeJS.Timer;
+  private watchFromTokenTimer?: NodeJS.Timer;
 
   swapResponse: SwapResponse | null = null;
   routes: SwapProtocol[] = [];
@@ -132,6 +133,8 @@ export class OneInch {
       this.switchNetwork(Networks.find(chainId)!);
       this.slippage = slippage;
     });
+
+    setTimeout(() => this.refreshFromAmount(), 30 * 1000);
   }
 
   async switchAccount(account: Account | string) {
@@ -392,10 +395,10 @@ export class OneInch {
 
     let swapResponse = this.swapResponse;
 
-    if (!swapResponse || !swapResponse.tx) {
+    if (!swapResponse?.tx) {
       swapResponse = (await swap(this.userSelectedNetwork.chainId, requestParams)) || null;
 
-      if (!swapResponse || !swapResponse.tx || swapResponse?.error) {
+      if (!swapResponse?.tx || swapResponse?.error) {
         runInAction(() => (this.errorMsg = swapResponse?.description || 'Service is not available'));
         return;
       }
@@ -457,6 +460,12 @@ export class OneInch {
 
     if (pendingTxs.length === 0) return;
     this.watchPendingTxTimer = setTimeout(() => this.watchPendingTxs(), 1000);
+  }
+
+  private async refreshFromAmount() {
+    clearTimeout(this.watchFromTokenTimer);
+    await this.swapFrom?.getBalance();
+    this.watchFromTokenTimer = setTimeout(() => this.refreshFromAmount(), 15 * 1000);
   }
 
   addToken(token: ERC20Token) {

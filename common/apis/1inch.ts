@@ -119,6 +119,7 @@ export async function fetchTokens(chainId: number) {
       .filter((t) => utils.isAddress(t) && t !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
       .map((addr) => {
         const t: any = tokens[addr];
+        // rome-ignore lint/performance/noDelete: <explanation>
         delete t.tags;
         return tokens[addr];
       });

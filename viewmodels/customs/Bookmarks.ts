@@ -5,6 +5,7 @@ import { logAddBookmark, logRemoveBookmark } from '../services/Analytics';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LINQ from 'linq';
+import Langs from '../settings/Langs';
 import { PageMetadata } from '../../screens/browser/Web3View';
 import PhishingConfig from 'eth-phishing-detect/src/config.json';
 import PopularApps from '../../configs/urls/popular.json';
@@ -33,6 +34,12 @@ export interface Bookmark {
   ad?: boolean;
 }
 
+const Keys = {
+  bookmarks: 'bookmarks_v2',
+  historyUrls: 'history-urls',
+  recentSites: 'recent-sites',
+};
+
 class Bookmarks {
   private _favUrls!: Map<string, string>; // url => category
   _favs: { title: string; data: Bookmark[] }[] = [];
@@ -45,7 +52,13 @@ class Bookmarks {
   }
 
   get favs() {
-    return [{ title: 'popular-dapps', data: PopularApps }, ...this._favs];
+    return [
+      {
+        title: 'popular-dapps',
+        data: PopularApps.filter((a) => (a.langs ? a.langs.includes(Langs.currentLang.value) : true)),
+      },
+      ...this._favs,
+    ];
   }
 
   static findCategory(url: string) {
@@ -86,20 +99,20 @@ class Bookmarks {
       removeRecentSite: action,
     });
 
-    AsyncStorage.getItem(`bookmarks_v2`)
+    AsyncStorage.getItem(Keys.bookmarks)
       .then((v) =>
         runInAction(() => {
           this._favs = JSON.parse(v || '[]');
-          this._favUrls = new Map(this._favs.map((g) => g.data.map((item) => [item.url, g.title] as [string, string])).flat());
+          this._favUrls = new Map(this._favs.flatMap((g) => g.data.map((item) => [item.url, g.title] as [string, string])));
         })
       )
       .catch(() => {});
 
-    AsyncStorage.getItem(`history-urls`)
+    AsyncStorage.getItem(Keys.historyUrls)
       .then((v) => runInAction(() => (this.history = JSON.parse(v || '[]'))))
       .catch(() => {});
 
-    AsyncStorage.getItem('recent-sites')
+    AsyncStorage.getItem(Keys.recentSites)
       .then((v) => runInAction(() => (this.recentSites = JSON.parse(v || '[]'))))
       .catch(() => {});
   }
@@ -120,7 +133,7 @@ class Bookmarks {
 
     this._favUrls.set(bookmark.url, category);
 
-    AsyncStorage.setItem(`bookmarks_v2`, JSON.stringify(this._favs));
+    AsyncStorage.setItem(Keys.bookmarks, JSON.stringify(this._favs));
     logAddBookmark();
   }
 
@@ -138,7 +151,7 @@ class Bookmarks {
 
     this._favUrls.delete(url);
 
-    AsyncStorage.setItem(`bookmarks_v2`, JSON.stringify(this._favs));
+    AsyncStorage.setItem(Keys.bookmarks, JSON.stringify(this._favs));
     logRemoveBookmark();
   }
 
@@ -149,7 +162,7 @@ class Bookmarks {
   submitHistory(url: string) {
     url = url.endsWith('/') ? url.substring(0, url.length - 1) : url;
     this.history = [url, ...this.history.filter((i) => !i.includes(url) || !url.includes(i))];
-    AsyncStorage.setItem(`history-urls`, JSON.stringify(this.history.slice(0, 100)));
+    AsyncStorage.setItem(Keys.historyUrls, JSON.stringify(this.history.slice(0, 100)));
   }
 
   addRecentSite(metadata: PageMetadata) {

@@ -411,7 +411,7 @@ const SendFundsModal = () => {
       logScreenView('SendFundsModal');
     });
 
-    PubSub.subscribe(`CodeScan-ethereum`, (_, { data }) => {
+    PubSub.subscribe(MessageKeys.codeScan.ethereum, (_, { data }) => {
       try {
         const erc681 = parse(data) as ERC681;
         setIsERC681(erc681.parameters?.amount || erc681.parameters?.value || erc681.function_name ? true : false);
@@ -423,7 +423,7 @@ const SendFundsModal = () => {
       }
     });
 
-    PubSub.subscribe(`CodeScan-0x`, (_, { data }) => {
+    PubSub.subscribe(MessageKeys.codeScan.address, (_, { data }) => {
       if (!utils.isAddress(data) && !isDomain(data)) {
         showMessage({ message: i18n.t('msg-invalid-address'), type: 'warning' });
         return;
@@ -437,8 +437,8 @@ const SendFundsModal = () => {
 
     return () => {
       PubSub.unsubscribe(MessageKeys.openSendFundsModal);
-      PubSub.unsubscribe(`CodeScan-ethereum`);
-      PubSub.unsubscribe(`CodeScan-0x`);
+      PubSub.unsubscribe(MessageKeys.codeScan.ethereum);
+      PubSub.unsubscribe(MessageKeys.codeScan.address);
     };
   }, []);
 

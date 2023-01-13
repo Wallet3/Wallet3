@@ -191,7 +191,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
 
         {!vm.isValidGas && <TxException exception={t('tip-invalid-gas-price')} />}
 
-        <View style={{ flex: 1 }}></View>
+        <View style={{ flex: 1 }} />
 
         <Button
           title="OK"

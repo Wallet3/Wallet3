@@ -9,7 +9,6 @@ import Authentication from '../auth/Authentication';
 import Bookmarks from '../customs/Bookmarks';
 import Contacts from '../customs/Contacts';
 import Database from '../../models/Database';
-import FirebaseAnalytics from '@react-native-firebase/analytics';
 import GasPrice from '../misc/GasPrice';
 import Key from '../../models/entities/Key';
 import LINQ from 'linq';
@@ -42,10 +41,9 @@ export class AppVM {
   }
 
   get allAccounts() {
-    const accounts = LINQ.from(this.wallets.map((wallet) => wallet.accounts).flat())
+    return LINQ.from(this.wallets.flatMap((wallet) => wallet.accounts))
       .distinct((a) => a.address)
       .toArray();
-    return accounts;
   }
 
   get currentWallet() {

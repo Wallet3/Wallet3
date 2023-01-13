@@ -118,7 +118,7 @@ export default observer((props: Web3ViewProps) => {
 
     const wcApp = WalletConnectV1ClientHub.find(hostname);
 
-    if (wcApp && wcApp.isMobileApp) {
+    if (wcApp?.isMobileApp) {
       updateDAppState({
         lastUsedChainId: wcApp.lastUsedChainId,
         lastUsedAccount: wcApp.lastUsedAccount,

@@ -16,7 +16,7 @@ export class ERC721Token extends NonFungibleToken {
     const call_ownerOf = this.encodeOwnerOf(tokenId);
 
     try {
-      const [owner] = this.contract.interface.decodeFunctionResult(
+      const [owner] = this.interface.decodeFunctionResult(
         'ownerOf',
         (await eth_call<string>(this.chainId, { to: this.address, data: call_ownerOf })) || ''
       ) as string[];

@@ -18,7 +18,12 @@ export const etherscanApiKeys: { [chainId: number]: string[] } = {
   128: [],
 };
 
-export const alchemyApiKeys: string[] = [];
+export const AlchemyApiKeys = {
+  1: [],
+  10: [],
+  42161: [],
+  137: [],
+};
 
 export const DeBankApiKey = '';
 
