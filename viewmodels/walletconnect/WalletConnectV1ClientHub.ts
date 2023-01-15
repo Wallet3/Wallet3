@@ -6,7 +6,9 @@ import Database from '../../models/Database';
 import EventEmitter from 'events';
 import LINQ from 'linq';
 import WCSession_v1 from '../../models/entities/WCSession_v1';
+import WCV2_Session from '../../models/entities/WCSession_v2';
 import { WalletConnect_v1 } from './WalletConnect_v1';
+import { WalletConnect_v2 } from './WalletConnect_v2';
 
 class WalletConnectV1ClientHub extends EventEmitter {
   clients: WalletConnect_v1[] = [];
@@ -48,35 +50,45 @@ class WalletConnectV1ClientHub extends EventEmitter {
     const linking = Linking.parse(uri);
     const [_, version] = linking.path?.split('@') ?? [];
 
-    if (version === '1') {
-      let client: WalletConnect_v1;
+    switch (version) {
+      case '1':
+        let client: WalletConnect_v1;
 
-      try {
-        client = new WalletConnect_v1(uri);
-      } catch (error) {
-        return;
-      }
+        try {
+          client = new WalletConnect_v1(uri);
+        } catch (error) {
+          return;
+        }
 
-      const store = new WCSession_v1();
-      store.id = Date.now();
-      client.setStore(store);
+        const store = new WCSession_v1();
+        store.id = Date.now();
+        client.setStore(store);
 
-      client.once('sessionApproved', () => {
-        runInAction(() => this.clients.push(client));
+        client.once('sessionApproved', () => {
+          runInAction(() => this.clients.push(client));
 
-        store.session = client.session;
-        store.lastUsedTimestamp = Date.now();
+          store.session = client.session;
+          store.lastUsedTimestamp = Date.now();
 
-        store.isMobile = extra?.fromMobile ?? false;
-        store.hostname = extra?.hostname ?? '';
+          store.isMobile = extra?.fromMobile ?? false;
+          store.hostname = extra?.hostname ?? '';
 
-        store.save();
+          store.save();
 
-        if (extra?.fromMobile) setTimeout(() => this.emit('mobileAppConnected', client), 100);
-      });
+          if (extra?.fromMobile) setTimeout(() => this.emit('mobileAppConnected', client), 100);
+        });
 
-      this.handleLifecycle(client);
-      return client;
+        this.handleLifecycle(client);
+        return client;
+      case '2':
+        let client_v2 = new WalletConnect_v2(uri);
+
+        const store_v2 = new WCV2_Session();
+        store_v2.id = Date.now();
+
+        client_v2.setStore(store_v2);
+
+        return client_v2;
     }
   }
 

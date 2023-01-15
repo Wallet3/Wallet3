@@ -9,6 +9,7 @@ import NFT from './entities/NFT';
 import SourcifyMetadata from './entities/SourcifyItem';
 import Transaction from './entities/Transaction';
 import WCSession_v1 from './entities/WCSession_v1';
+import WCV2_Session from './entities/WCSession_v2';
 
 class Database {
   private _dataSource!: DataSource;
@@ -16,6 +17,7 @@ class Database {
   keys!: Repository<Key>;
   txs!: Repository<Transaction>;
   wcV1Sessions!: Repository<WCSession_v1>;
+  wcV2Sessions!: Repository<WCV2_Session>;
   inpageDApps!: Repository<InpageDApp>;
   chains!: Repository<Chain>;
   etherscan_contracts!: Repository<EtherscanContract>;
@@ -31,7 +33,18 @@ class Database {
       database: __DEV__ ? 'dev5' : 'appdata',
       driver: require('expo-sqlite'),
       synchronize: true,
-      entities: [Key, Transaction, WCSession_v1, InpageDApp, Chain, EtherscanContract, NFT, SourcifyMetadata, AddressTag],
+      entities: [
+        Key,
+        Transaction,
+        WCSession_v1,
+        InpageDApp,
+        Chain,
+        EtherscanContract,
+        NFT,
+        SourcifyMetadata,
+        AddressTag,
+        WCV2_Session,
+      ],
     });
 
     await this._dataSource.initialize();
@@ -45,6 +58,7 @@ class Database {
     this.sourcify_metadata = this._dataSource.getRepository(SourcifyMetadata);
     this.cloud_address_tags = this._dataSource.getRepository(AddressTag);
     this.nfts = this._dataSource.getRepository(NFT);
+    this.wcV2Sessions = this._dataSource.getRepository(WCV2_Session);
   }
 
   async reset() {
@@ -52,6 +66,7 @@ class Database {
       this.keys.clear(),
       this.txs.clear(),
       this.wcV1Sessions.clear(),
+      this.wcV2Sessions.clear(),
       this.inpageDApps.clear(),
       this.chains.clear(),
     ]);

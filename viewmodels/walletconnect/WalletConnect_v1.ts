@@ -18,7 +18,7 @@ import { showMessage } from 'react-native-flash-message';
 
 const clientMeta = {
   name: 'Wallet 3',
-  description: 'A Secure Wallet for Web3 Era',
+  description: 'A Secure Wallet for Web3',
   icons: [],
   url: 'https://wallet3.io',
 };

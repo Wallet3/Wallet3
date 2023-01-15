@@ -122,14 +122,14 @@ const WalletConnectV1 = () => {
   const [extra, setExtra] = useState<any>();
 
   useEffect(() => {
-    PubSub.subscribe(MessageKeys.CodeScan_wc, (_, { data, extra }) => {
+    PubSub.subscribe(MessageKeys.codeScan.walletconnect, (_, { data, extra }) => {
       setConnectUri(data);
       setExtra(extra);
       openConnectDapp();
     });
 
     return () => {
-      PubSub.unsubscribe(MessageKeys.CodeScan_wc);
+      PubSub.unsubscribe(MessageKeys.codeScan.walletconnect);
     };
   }, []);
 

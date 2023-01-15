@@ -33,3 +33,5 @@ export const GoogleSignInConfigs = {
 
 export const swapFeePercent = 0;
 export const swapFeeReferrer = '';
+
+export const WalletConnect2ProjectID = '';

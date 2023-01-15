@@ -15,7 +15,7 @@ export default {
   openGlobalQRScanner: 'openGlobalQRScanner',
   drawerSwipeEnabled: 'drawer-swipeEnabled',
   wc_request: 'wc_request',
-  CodeScan_wc: 'CodeScan-wc:',
+  
   CodeScan_wallet3sync: 'CodeScan-wallet3sync:',
   CodeScan_64Length: 'CodeScan-64Length',
   openBackupSecretTip: 'openBackupSecretTip',
@@ -26,5 +26,6 @@ export default {
   codeScan: {
     ethereum: 'CodeScan-ethereum',
     address: 'CodeScan-0x',
+    walletconnect: 'CodeScan-wc:',
   },
 };

@@ -1,3 +1,5 @@
+import 'text-encoding-polyfill';
+
 import * as Random from 'expo-random';
 
 import { polyfillWebCrypto } from 'expo-standard-web-crypto';
