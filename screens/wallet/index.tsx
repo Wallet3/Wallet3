@@ -18,7 +18,7 @@ import TokenDetail from './TokenDetail';
 import Transaction from '../../models/entities/Transaction';
 import TxDetail from './TxDetail';
 import { View } from 'react-native';
-import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectV1ClientHub';
+import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectHub';
 import { logScreenView } from '../../viewmodels/services/Analytics';
 import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';

@@ -14,14 +14,15 @@ import Networks from '../viewmodels/core/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
 import Theme from '../viewmodels/settings/Theme';
-import WalletConnectV1ClientHub from '../viewmodels/walletconnect/WalletConnectV1ClientHub';
+import WalletConnectV1ClientHub from '../viewmodels/walletconnect/WalletConnectHub';
 import { WalletConnect_v1 } from '../viewmodels/walletconnect/WalletConnect_v1';
+import { WalletConnect_v2 } from '../viewmodels/walletconnect/WalletConnect_v2';
 import i18n from '../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from './styles';
 
 interface DAppProps {
-  client: WalletConnect_v1;
+  client: WalletConnect_v1 | WalletConnect_v2;
   onNetworksPress?: () => void;
   onAccountsPress?: () => void;
   close: Function;
@@ -72,7 +73,7 @@ const DApp = observer(({ client, onNetworksPress, onAccountsPress, close, onConn
 });
 
 interface ConnectDAppProps {
-  client: WalletConnect_v1;
+  client: WalletConnect_v1 | WalletConnect_v2;
   close: Function;
   extra?: { fromMobile?: boolean; hostname?: string };
 }
@@ -165,7 +166,7 @@ interface Props {
 export default observer(({ uri, close, extra }: Props) => {
   const [connecting, setConnecting] = useState(true);
   const [connectTimeout, setConnectTimeout] = useState(false);
-  const [client, setClient] = useState<WalletConnect_v1>();
+  const [client, setClient] = useState<WalletConnect_v1 | WalletConnect_v2>();
   const [errorMsg, setErrorMsg] = useState<string>();
 
   const { backgroundColor } = Theme;
@@ -174,27 +175,28 @@ export default observer(({ uri, close, extra }: Props) => {
   useEffect(() => {
     if (!uri) return;
     if (client) return;
-    
-    let wc_client = WalletConnectV1ClientHub.connect(uri, extra);
-    if (!wc_client) {
-      setErrorMsg(t('modal-dapp-connection-wc-failed'));
-      setConnectTimeout(true);
-      return;
-    }
 
-    const timeout = setTimeout(async () => {
-      setConnectTimeout(true);
-      setConnecting(false);
-      setClient(undefined);
-      await wc_client?.killSession();
-      wc_client?.dispose();
-      wc_client = undefined;
-    }, 15 * 1000);
+    WalletConnectV1ClientHub.connect(uri, extra).then((wc_client) => {
+      if (!wc_client) {
+        setErrorMsg(t('modal-dapp-connection-wc-failed'));
+        setConnectTimeout(true);
+        return;
+      }
 
-    wc_client?.once('sessionRequest', () => {
-      clearTimeout(timeout);
-      setConnecting(false);
-      setClient(wc_client!);
+      const timeout = setTimeout(async () => {
+        setConnectTimeout(true);
+        setConnecting(false);
+        setClient(undefined);
+        await wc_client?.killSession();
+        wc_client?.dispose();
+        wc_client = undefined;
+      }, 15 * 1000);
+
+      wc_client?.once('sessionRequest', () => {
+        clearTimeout(timeout);
+        setConnecting(false);
+        setClient(wc_client!);
+      });
     });
   }, [uri]);
 

@@ -2,16 +2,33 @@ import * as Linking from 'expo-linking';
 
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
+import { Core } from '@walletconnect/core';
 import Database from '../../models/Database';
 import EventEmitter from 'events';
 import LINQ from 'linq';
 import WCSession_v1 from '../../models/entities/WCSession_v1';
 import WCV2_Session from '../../models/entities/WCSession_v2';
+import { WalletConnect2ProjectID } from '../../configs/secret';
 import { WalletConnect_v1 } from './WalletConnect_v1';
 import { WalletConnect_v2 } from './WalletConnect_v2';
+import { Web3Wallet } from '@walletconnect/web3wallet';
+import { Web3Wallet as Web3WalletType } from '@walletconnect/web3wallet/dist/types/client';
+
+const walletMeta = {
+  name: 'Wallet 3',
+  description: 'A Secure Wallet for Web3',
+  icons: ['https://github.com/Wallet3/Wallet3/blob/main/assets/icon@128.rounded.png?raw=true'],
+  url: 'https://wallet3.io',
+};
+
+type Topic = string;
 
 class WalletConnectV1ClientHub extends EventEmitter {
+  private walletconnect2!: Web3WalletType;
+
   clients: WalletConnect_v1[] = [];
+  pendingV2Clients = new Map<Topic, WalletConnect_v2>();
+  v2Clients = new Map<Topic, WalletConnect_v2>();
 
   get connectedCount() {
     return this.clients.length;
@@ -44,9 +61,20 @@ class WalletConnectV1ClientHub extends EventEmitter {
       this.clients.forEach((client) => this.handleLifecycle(client));
       this.clients.filter((c) => c.lastUsedTimestamp < Date.now() - 1000 * 60 * 60 * 24 * 30).forEach((c) => c.killSession());
     });
+
+    this.walletconnect2 = await Web3Wallet.init({
+      core: new Core({ projectId: WalletConnect2ProjectID }),
+      metadata: walletMeta,
+    });
+
+    this.walletconnect2.on('session_proposal', (proposal) =>
+      this.pendingV2Clients.get(proposal?.params?.pairingTopic!)?.handleSessionProposal(proposal)
+    );
+
+    this.walletconnect2.on('session_request', (request) => this.v2Clients.get(request.topic)?.handleSessionRequest(request));
   }
 
-  connect(uri: string, extra?: { hostname?: string; fromMobile?: boolean }) {
+  async connect(uri: string, extra?: { hostname?: string; fromMobile?: boolean }) {
     const linking = Linking.parse(uri);
     const [_, version] = linking.path?.split('@') ?? [];
 
@@ -81,12 +109,14 @@ class WalletConnectV1ClientHub extends EventEmitter {
         this.handleLifecycle(client);
         return client;
       case '2':
-        let client_v2 = new WalletConnect_v2(uri);
+        const pairing = await this.walletconnect2.core.pairing.pair({ uri, activatePairing: true });
+        const client_v2 = new WalletConnect_v2(this.walletconnect2, pairing.topic);
 
-        const store_v2 = new WCV2_Session();
-        store_v2.id = Date.now();
-
-        client_v2.setStore(store_v2);
+        this.pendingV2Clients.set(pairing.topic, client_v2);
+        client_v2.once('sessionApproved', () => {
+          this.pendingV2Clients.delete(client_v2.pairingTopic);
+          this.v2Clients.set(client_v2.session.topic, client_v2);
+        });
 
         return client_v2;
     }

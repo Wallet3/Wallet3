@@ -28,7 +28,7 @@ import { Portal } from 'react-native-portalize';
 import Theme from '../../viewmodels/settings/Theme';
 import ViewShot from 'react-native-view-shot';
 import WalletConnectLogo from '../../assets/3rd/walletconnect.svg';
-import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectV1ClientHub';
+import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectHub';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import modalStyle from '../../modals/styles';

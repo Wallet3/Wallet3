@@ -20,10 +20,13 @@ interface SessionStruct {
   };
 }
 
-@Entity({ name: __DEV__ ? 'wcv2_session_dev' : 'wcv2_session' })
+@Entity({ name: __DEV__ ? 'wcv2_session_dev_v3' : 'wcv2_session' })
 export default class WCV2_Session extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
+
+  @Column({ type: 'text', nullable: true })
+  topic!: string;
 
   @Column({ type: 'simple-json' })
   session!: SessionStruct;

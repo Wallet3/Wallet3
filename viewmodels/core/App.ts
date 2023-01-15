@@ -20,7 +20,7 @@ import { ReactNativeFirebase } from '@react-native-firebase/app';
 import Theme from '../settings/Theme';
 import TxHub from '../hubs/TxHub';
 import UI from '../settings/UI';
-import WalletConnectV1ClientHub from '../walletconnect/WalletConnectV1ClientHub';
+import WalletConnectV1ClientHub from '../walletconnect/WalletConnectHub';
 import { fetchChainsOverview } from '../../common/apis/Debank';
 import i18n from '../../i18n';
 import { logAppReset } from '../services/Analytics';

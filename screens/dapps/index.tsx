@@ -21,7 +21,7 @@ import { Portal } from 'react-native-portalize';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
 import { WalletConnect as WalletConnectLogo } from '../../assets/3rd';
-import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectV1ClientHub';
+import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectHub';
 import { WalletConnect_v1 } from '../../viewmodels/walletconnect/WalletConnect_v1';
 import i18n from '../../i18n';
 import modalStyle from '../../modals/styles';

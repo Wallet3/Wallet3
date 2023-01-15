@@ -1,6 +1,6 @@
 import Networks, { AddEthereumChainParameter } from '../core/Networks';
 import { Web3Wallet, Web3WalletTypes } from '@walletconnect/web3wallet';
-import { action, makeObservable, observable } from 'mobx';
+import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import App from '../core/App';
 import { Core } from '@walletconnect/core';
@@ -18,38 +18,45 @@ import { showMessage } from 'react-native-flash-message';
 const clientMeta = {
   name: 'Wallet 3',
   description: 'A Secure Wallet for Web3',
-  icons: [],
+  icons: ['https://github.com/Wallet3/Wallet3/blob/main/assets/icon@128.rounded.png?raw=true'],
   url: 'https://wallet3.io',
 };
+
+const SupportedEvents = ['accountsChanged', 'chainChanged'];
+
+const SupportedMethods = [
+  'eth_sign',
+  'personalSign',
+  'personal_sign',
+  'eth_sendTransaction',
+  'eth_signTransaction',
+  'eth_signTypedData',
+  'eth_signTypedData_v4',
+  'wallet_switchEthereumChain',
+  'wallet_addEthereumChain',
+];
 
 function getNamespaces(accounts: string[], chains: number[]) {
   return {
     eip155: {
       chains: Networks.all.map((c) => `eip155:${c}`),
       accounts: accounts.flatMap((addr) => chains.map((c) => `eip155:${c}:${addr}`)),
-      methods: [
-        'eth_sign',
-        'personalSign',
-        'personal_sign',
-        'eth_sendTransaction',
-        'eth_signTransaction',
-        'eth_signTypedData',
-        'eth_signTypedData_v4',
-        'wallet_switchEthereumChain',
-        'wallet_addEthereumChain',
-      ],
-      events: ['accountsChanged', 'chainChanged'],
+      methods: SupportedMethods,
+      events: SupportedEvents,
       extensions: [],
     },
   };
 }
 
 export class WalletConnect_v2 extends EventEmitter {
-  private client!: Web3WalletType;
-  private sessionProposal?: Web3WalletTypes.SessionProposal;
-  store?: WCV2_Session;
+  readonly pairingTopic: string;
+  readonly version = 2;
 
-  readonly version = 1;
+  private readonly client: Web3WalletType;
+  private sessionProposal?: Web3WalletTypes.SessionProposal;
+
+  readonly store = new WCV2_Session();
+
   peerId = '';
   appMeta: WCClientMeta | null = null;
 
@@ -93,42 +100,18 @@ export class WalletConnect_v2 extends EventEmitter {
     return Networks.find(this.lastUsedChainId) || Networks.current;
   }
 
-  constructor(uri?: string) {
+  constructor(client: Web3WalletType, pairingTopic: string) {
     super();
+
+    this.client = client;
+    this.pairingTopic = pairingTopic;
 
     makeObservable(this, {
       appMeta: observable,
       setLastUsedAccount: action,
       setLastUsedChain: action,
     });
-
-    if (uri) this.connect(uri);
   }
-
-  async connect(uri: string) {
-    const core = new Core({
-      projectId: WalletConnect2ProjectID,
-    });
-
-    this.client = await Web3Wallet.init({ core, metadata: clientMeta });
-
-    this.client.on('session_proposal', this.handleSessionProposal);
-    this.client.on('session_request', this.handleSessionRequest);
-
-    await this.client.core.pairing.pair({ uri, activatePairing: true });
-
-    return this;
-  }
-
-  // connectSession(session: IRawWcSession) {
-  //   this.client = new WalletConnectClient({ session, clientMeta });
-  //   this.client.on('call_request', this.handleSessionRequest);
-  //   this.client.on('disconnect', () => this.emit('disconnect'));
-  //   this.appMeta = session.peerMeta;
-  //   this.peerId = session.peerId;
-
-  //   return this;
-  // }
 
   private updateSession({ chainId, accounts }: { chainId?: number; accounts?: string[] }) {
     if (!this.session) return;
@@ -142,8 +125,6 @@ export class WalletConnect_v2 extends EventEmitter {
   setLastUsedChain(chainId: number, persistent = false, from: 'user' | 'inpage' = 'user') {
     this.updateSession({ chainId });
 
-    if (!this.store) return;
-
     this.store.lastUsedChainId = `${chainId}`;
     if (persistent) this.store.save();
 
@@ -152,43 +133,29 @@ export class WalletConnect_v2 extends EventEmitter {
 
   setLastUsedAccount(account: string, persistent = false) {
     this.updateSession({ accounts: [account] });
-    if (!this.store) return;
-
     this.store.lastUsedAccount = account;
 
     if (persistent) this.store.save();
   }
 
-  setStore(store: WCV2_Session) {
-    this.store = store;
-
-    if (!store.lastUsedChainId) {
-      this.setLastUsedChain(Networks.current.chainId);
-    }
-
-    if (!store.lastUsedAccount) {
-      this.setLastUsedAccount(App.currentAccount!.address);
-    }
-
-    return this;
-  }
-
-  private handleSessionProposal = async (proposal: Web3WalletTypes.SessionProposal) => {
+  handleSessionProposal = async (proposal: Web3WalletTypes.SessionProposal) => {
     this.sessionProposal = proposal;
+    proposal.params.pairingTopic;
 
     console.log('session proposal');
     console.log(proposal, proposal.params.requiredNamespaces);
 
+    const { chains, methods } = proposal.params.requiredNamespaces['eip155'] || {};
     const [chain] = proposal.params.requiredNamespaces['eip155']?.chains;
-    const chainId = chain.split?.(':')?.[1];
+    const chainId = Number(chain.split?.(':')?.[1]);
 
-    this.appMeta = proposal.params.proposer.metadata;
     this.peerId = proposal.params.proposer.publicKey;
 
-    if (this.store) {
-      if (Number.isInteger(chainId)) this.store.lastUsedChainId = `${chainId}`;
-      this.store.lastUsedTimestamp = Date.now();
-    }
+    this.store.lastUsedChainId = `${chainId}`;
+    this.store.lastUsedAccount = App.currentAccount!.address;
+    this.store.lastUsedTimestamp = Date.now();
+
+    runInAction(() => (this.appMeta = proposal.params.proposer.metadata));
 
     this.emit('sessionRequest');
   };
@@ -201,10 +168,13 @@ export class WalletConnect_v2 extends EventEmitter {
 
     session.controller;
     session.topic;
-    console.log('approve', session);
-    this.store!.session = session;
-    this.store?.save();
-    // this.emit('sessionApproved', this.client.session);
+    console.log('approve', session.topic);
+
+    this.store.session = session;
+    this.store.topic = session.topic;
+    this.store.save();
+
+    this.emit('sessionApproved', this);
   };
 
   rejectSession = () => {
@@ -212,27 +182,33 @@ export class WalletConnect_v2 extends EventEmitter {
     this.client.rejectSession({ id: this.sessionProposal?.id, reason: getSdkError('USER_REJECTED_METHODS') });
   };
 
-  // rejectRequest = (id: number, message: string) => {
-  //   this.client.respondSessionRequest({ topic, response });
-  //   this.client.rejectRequest({ id, error: { message } });
-  // };
-
-  // approveRequest = (id: number, result: any) => {
-  //   this.client.approveRequest({ id, result });
-  // };
-
-  responseRequest = (topic: string, response: { id: number; error?: { code: number; message: string }; result?: any }) => {
-    this.client.respondSessionRequest({ topic, response: response as any });
+  rejectRequest = (id: number, message: string) => {
+    if (!this.session) return;
+    this.responseRequest(this.session?.topic, { id, error: { message, code: 4001 }, jsonrpc: '2.0' });
   };
 
-  private handleSessionRequest = async (sessionRequest: Web3WalletTypes.SessionRequest) => {
+  approveRequest = (id: number, result: any) => {
+    if (!this.session) return;
+    this.responseRequest(this.session.topic, { id, result, jsonrpc: '2.0' });
+  };
+
+  responseRequest = (
+    topic: string,
+    response: { id: number; error?: { code: number; message: string }; result?: any; jsonrpc: '2.0' }
+  ) => {
+    this.client.respondSessionRequest({ topic, response: response as any, id: response.id } as any);
+  };
+
+  handleSessionRequest = async (sessionRequest: Web3WalletTypes.SessionRequest) => {
     const { id, params, topic } = sessionRequest;
     const { chainId, request } = params;
 
-    console.log(sessionRequest);
+    request['id'] = id;
+
+    console.log('v2 request', topic, request);
 
     if (this.activeAccount?.address !== this.lastUsedAccount || !this.lastUsedAccount) {
-      this.responseRequest(topic, { error: { message: 'Not authorized', code: 4001 }, id });
+      this.rejectRequest(id, 'Not authorized');
       showMessage({ message: i18n.t('msg-account-not-found'), type: 'warning' });
       return;
     }
@@ -242,13 +218,13 @@ export class WalletConnect_v2 extends EventEmitter {
         const [addChainParams] = (request.params as AddEthereumChainParameter[]) || [];
 
         if (!addChainParams) {
-          this.responseRequest(topic, { id, error: { code: 4001, message: 'Invalid parameters' } });
+          this.rejectRequest(id, 'Invalid parameters');
           return;
         }
 
         if (Networks.has(addChainParams.chainId)) {
           this.setLastUsedChain(Number(addChainParams.chainId), true, 'inpage');
-          this.responseRequest(topic, { id, result: null });
+          this.approveRequest(id, null);
           return;
         }
 
@@ -256,16 +232,16 @@ export class WalletConnect_v2 extends EventEmitter {
           PubSub.publish(MessageKeys.openLoadingModal);
 
           if ((await Networks.add(addChainParams)) === false) {
-            this.responseRequest(topic, { error: { code: 4001, message: 'Client error occurs' }, id });
+            this.rejectRequest(id, 'Client error occurs');
             return;
           }
 
           showMessage({ message: i18n.t('msg-chain-added', { name: addChainParams.chainName }), type: 'success' });
           this.setLastUsedChain(Number(addChainParams.chainId), true, 'inpage');
-          this.responseRequest(topic, { id, result: null });
+          this.approveRequest(id, null);
         };
 
-        const reject = () => this.responseRequest(topic, { id, error: { code: 4001, message: 'User rejected' } });
+        const reject = () => this.rejectRequest(id, 'User Rejected');
 
         PubSub.publish(MessageKeys.openAddEthereumChain, {
           approve,
@@ -276,12 +252,12 @@ export class WalletConnect_v2 extends EventEmitter {
       case 'wallet_switchEthereumChain':
         const [switchChainParams] = (request.params as { chainId: string }[]) || [];
         if (!Networks.has(switchChainParams.chainId)) {
-          this.responseRequest(topic, { id, error: { code: 4001, message: 'Chain not supported' } });
+          this.rejectRequest(id, 'Chain not supported');
           return;
         }
 
         this.setLastUsedChain(Number(switchChainParams.chainId), true, 'inpage');
-        this.responseRequest(topic, { id, result: null });
+        this.approveRequest(id, null);
         return;
     }
 
@@ -296,7 +272,7 @@ export class WalletConnect_v2 extends EventEmitter {
         'eth_signTypedData_v4',
       ].some((method) => request.method === method)
     ) {
-      this.responseRequest(topic, { id, error: { message: 'Method not supported', code: 4001 } });
+      this.rejectRequest(id, 'Method not supported');
       return;
     }
 
