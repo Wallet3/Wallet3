@@ -110,11 +110,11 @@ class WalletConnectV1ClientHub extends EventEmitter {
         return client;
       case '2':
         const pairing = await this.walletconnect2.core.pairing.pair({ uri, activatePairing: true });
-        const client_v2 = new WalletConnect_v2(this.walletconnect2, pairing.topic);
+        const client_v2 = new WalletConnect_v2(this.walletconnect2);
 
         this.pendingV2Clients.set(pairing.topic, client_v2);
         client_v2.once('sessionApproved', () => {
-          this.pendingV2Clients.delete(client_v2.pairingTopic);
+          this.pendingV2Clients.delete(pairing.topic);
           this.v2Clients.set(client_v2.session.topic, client_v2);
         });
 

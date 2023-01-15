@@ -4,6 +4,7 @@ import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import App from '../core/App';
 import { Core } from '@walletconnect/core';
+import { ErrorResponse } from '@walletconnect/jsonrpc-types';
 import { EventEmitter } from 'events';
 import { InpageDAppAddEthereumChain } from '../../screens/browser/controller/InpageDAppController';
 import MessageKeys from '../../common/MessageKeys';
@@ -49,7 +50,6 @@ function getNamespaces(accounts: string[], chains: number[]) {
 }
 
 export class WalletConnect_v2 extends EventEmitter {
-  readonly pairingTopic: string;
   readonly version = 2;
 
   private readonly client: Web3WalletType;
@@ -100,11 +100,10 @@ export class WalletConnect_v2 extends EventEmitter {
     return Networks.find(this.lastUsedChainId) || Networks.current;
   }
 
-  constructor(client: Web3WalletType, pairingTopic: string) {
+  constructor(client: Web3WalletType) {
     super();
 
     this.client = client;
-    this.pairingTopic = pairingTopic;
 
     makeObservable(this, {
       appMeta: observable,
@@ -145,8 +144,24 @@ export class WalletConnect_v2 extends EventEmitter {
     console.log('session proposal');
     console.log(proposal, proposal.params.requiredNamespaces);
 
-    const { chains, methods } = proposal.params.requiredNamespaces['eip155'] || {};
-    const [chain] = proposal.params.requiredNamespaces['eip155']?.chains;
+    const eip155 = proposal.params.requiredNamespaces['eip155'];
+    if (!eip155?.chains?.length) {
+      this.rejectSession(getSdkError('INVALID_SESSION_SETTLE_REQUEST'));
+      return;
+    }
+
+    const { chains, methods } = eip155;
+    if (chains.some((c) => !Networks.find(c?.split(':')?.[1]))) {
+      this.rejectSession(getSdkError('UNSUPPORTED_CHAINS'));
+      return;
+    }
+
+    if (methods.some((m) => !SupportedMethods.includes(m))) {
+      this.rejectSession(getSdkError('UNSUPPORTED_METHODS'));
+      return;
+    }
+
+    const [chain] = chains;
     const chainId = Number(chain.split?.(':')?.[1]);
 
     this.peerId = proposal.params.proposer.publicKey;
@@ -177,9 +192,13 @@ export class WalletConnect_v2 extends EventEmitter {
     this.emit('sessionApproved', this);
   };
 
-  rejectSession = () => {
+  rejectSession = (reason?: ErrorResponse) => {
     if (!this.sessionProposal) return;
-    this.client.rejectSession({ id: this.sessionProposal?.id, reason: getSdkError('USER_REJECTED_METHODS') });
+
+    this.client.rejectSession({
+      id: this.sessionProposal?.id,
+      reason: reason ?? getSdkError('USER_REJECTED_METHODS'),
+    });
   };
 
   rejectRequest = (id: number, message: string) => {
