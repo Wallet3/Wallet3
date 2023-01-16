@@ -1,9 +1,7 @@
 import Networks, { AddEthereumChainParameter } from '../core/Networks';
-import { Web3Wallet, Web3WalletTypes } from '@walletconnect/web3wallet';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import App from '../core/App';
-import { Core } from '@walletconnect/core';
 import { ErrorResponse } from '@walletconnect/jsonrpc-types';
 import { EventEmitter } from 'events';
 import { InpageDAppAddEthereumChain } from '../../screens/browser/controller/InpageDAppController';
@@ -11,6 +9,7 @@ import MessageKeys from '../../common/MessageKeys';
 import { WCClientMeta } from '../../models/entities/WCSession_v1';
 import WCV2_Session from '../../models/entities/WCSession_v2';
 import { Web3Wallet as Web3WalletType } from '@walletconnect/web3wallet/dist/types/client';
+import { Web3WalletTypes } from '@walletconnect/web3wallet';
 import { getSdkError } from '@walletconnect/utils';
 import i18n from '../../i18n';
 import { showMessage } from 'react-native-flash-message';
@@ -127,6 +126,7 @@ export class WalletConnect_v2 extends EventEmitter {
 
   setLastUsedChain(chainId: number, persistent = false, from: 'user' | 'inpage' = 'user') {
     if (!chainId) return;
+    if (Number(this.store.lastUsedChainId) === chainId) return;
 
     const { chains } = (this.session?.requiredNamespaces?.['eip155'] || {}) as { chains: string[] };
 
@@ -139,8 +139,6 @@ export class WalletConnect_v2 extends EventEmitter {
 
       return;
     }
-
-    // this.updateSession({ chains });
 
     this.store.lastUsedChainId = `${chainId}`;
     if (persistent) this.store.save();
@@ -157,7 +155,6 @@ export class WalletConnect_v2 extends EventEmitter {
 
   handleSessionProposal = async (proposal: Web3WalletTypes.SessionProposal) => {
     this.sessionProposal = proposal;
-    proposal.params.pairingTopic;
 
     console.log('session proposal');
     console.log(proposal, proposal.params.requiredNamespaces);
@@ -169,8 +166,10 @@ export class WalletConnect_v2 extends EventEmitter {
     }
 
     const { chains, methods } = eip155;
-    if (chains.some((c) => !Networks.find(c?.split(':')?.[1]))) {
+    const notSupportedChain = chains.find((c) => !Networks.find(c?.split(':')?.[1]));
+    if (notSupportedChain) {
       this.rejectSession(getSdkError('UNSUPPORTED_CHAINS'));
+      showMessage({ type: 'info', message: `${notSupportedChain} is not supported yet.` });
       return;
     }
 
@@ -181,6 +180,10 @@ export class WalletConnect_v2 extends EventEmitter {
 
     const [chain] = chains;
     const chainId = Number(chain.split?.(':')?.[1]);
+    if (!chainId) {
+      this.rejectSession(getSdkError('UNSUPPORTED_CHAINS'));
+      return;
+    }
 
     this.peerId = proposal.params.proposer.publicKey;
 
@@ -239,7 +242,6 @@ export class WalletConnect_v2 extends EventEmitter {
     const { chainId, request } = params;
 
     request['id'] = id;
-    console.log('new request chainId', chainId);
 
     if (this.activeAccount?.address !== this.lastUsedAccount || !this.lastUsedAccount) {
       this.rejectRequest(id, 'Not authorized');
@@ -310,7 +312,8 @@ export class WalletConnect_v2 extends EventEmitter {
       return;
     }
 
-    PubSub.publish(MessageKeys.wc_request, { client: this, request, chainId: Number(chainId.split(':')[1]) });
+    this.setLastUsedChain(Number(chainId.split(':')[1]), true);
+    PubSub.publish(MessageKeys.wc_request, { client: this, request });
 
     this.emit('sessionUpdated');
   };

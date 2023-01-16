@@ -19,19 +19,18 @@ import styles from './styles';
 
 interface Props {
   request: WCCallRequestRequest;
-  chainId?: number;
   close: Function;
   client: WalletConnect_v1;
 }
 
-export default observer(({ request, client, close, chainId }: Props) => {
+export default observer(({ request, client, close }: Props) => {
   const [msg, setMsg] = useState<string | Uint8Array>();
   const [typedData, setTypedData] = useState();
   const [type, setType] = useState<'plaintext' | 'typedData'>();
   const [verified, setVerified] = useState(false);
   const { backgroundColor } = Theme;
 
-  const [themeColor, setThemeColor] = useState(client.activeNetwork.color);
+  const [themeColor] = useState(client.activeNetwork.color);
 
   useEffect(() => {
     const { params, method } = request;
@@ -58,13 +57,6 @@ export default observer(({ request, client, close, chainId }: Props) => {
       close();
     }
   }, [request]);
-
-  useEffect(() => {
-    if (!chainId) return;
-
-    client.setLastUsedChain(chainId);
-    setThemeColor(client.activeNetwork.color);
-  }, [chainId]);
 
   const reject = () => {
     client.rejectRequest(request.id, 'User rejected');

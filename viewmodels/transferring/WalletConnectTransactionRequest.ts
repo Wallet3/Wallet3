@@ -6,7 +6,6 @@ import { WalletConnect_v1 } from '../walletconnect/WalletConnect_v1';
 import { WalletConnect_v2 } from '../walletconnect/WalletConnect_v2';
 
 interface IConstructor {
-  chainId?: number;
   client: WalletConnect_v1 | WalletConnect_v2;
   request: WCCallRequestRequest;
 }
@@ -20,11 +19,11 @@ export function parseRequestType(data: string): { type: RequestType; methodFunc:
 export class WalletConnectTransactionRequest extends RawTransactionRequest {
   private client: WalletConnect_v1 | WalletConnect_v2;
 
-  constructor({ request, client, chainId }: IConstructor) {
+  constructor({ request, client }: IConstructor) {
     const [param, requestChainId] = request.params as [WCCallRequest_eth_sendTransaction, number?];
 
-    if (requestChainId || chainId) {
-      client.setLastUsedChain((requestChainId || chainId)!, true);
+    if (requestChainId) {
+      client.setLastUsedChain(requestChainId, true);
     }
 
     const account = client.activeAccount!;

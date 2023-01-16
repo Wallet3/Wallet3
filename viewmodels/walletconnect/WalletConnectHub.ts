@@ -3,6 +3,7 @@ import * as Linking from 'expo-linking';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
 import { Core } from '@walletconnect/core';
+import { DAY } from '../../utils/time';
 import Database from '../../models/Database';
 import EventEmitter from 'events';
 import LINQ from 'linq';
@@ -53,6 +54,8 @@ class WalletConnectHub extends EventEmitter {
   }
 
   async init() {
+    const lastUsedExpiry = Date.now() - 30 * DAY;
+
     // Restore sessions
     const [v1Sessions, v2Sessions] = await Promise.all([Database.wcV1Sessions.find(), Database.wcV2Sessions.find()]);
     const cs = await Promise.all(
@@ -64,7 +67,7 @@ class WalletConnectHub extends EventEmitter {
     runInAction(() => {
       this.clients = cs;
       this.clients.forEach((client) => this.handleLifecycle(client));
-      this.clients.filter((c) => c.lastUsedTimestamp < Date.now() - 1000 * 60 * 60 * 24 * 30).forEach((c) => c.killSession());
+      this.clients.filter((c) => c.lastUsedTimestamp < lastUsedExpiry).forEach((c) => c.killSession());
     });
 
     this.walletconnect2 = await Web3Wallet.init({
@@ -81,6 +84,7 @@ class WalletConnectHub extends EventEmitter {
 
       if (existClient) {
         existClient.handleSessionProposal(proposal);
+        PubSub.publish(MessageKeys.walletconnect2_pair_request, { client: existClient });
       } else {
         const client = new WalletConnect_v2(this.walletconnect2);
         client.handleSessionProposal(proposal);
@@ -92,11 +96,17 @@ class WalletConnectHub extends EventEmitter {
       }
     });
 
-    this.walletconnect2.on('session_request', (request) => this.v2Clients.get(request.topic)?.handleSessionRequest(request));
+    this.walletconnect2.on('session_request', (request) => {
+      this.v2Clients.get(request.topic)?.handleSessionRequest(request);
+    });
+
+    const v2Clients = v2Sessions.map((store) => new WalletConnect_v2(this.walletconnect2, store));
+    v2Clients.filter((c) => c.lastUsedTimestamp < lastUsedExpiry).forEach((c) => c.killSession);
 
     runInAction(() => {
-      for (let c of v2Sessions.map((store) => new WalletConnect_v2(this.walletconnect2, store))) {
+      for (let c of v2Clients.filter((c) => c.lastUsedTimestamp > lastUsedExpiry)) {
         this.v2Clients.set(c.session.topic, c);
+        this.handleV2Lifecycle(c);
       }
     });
   }
