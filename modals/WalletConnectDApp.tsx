@@ -14,7 +14,7 @@ import Networks from '../viewmodels/core/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
 import Theme from '../viewmodels/settings/Theme';
-import WalletConnectV1ClientHub from '../viewmodels/walletconnect/WalletConnectHub';
+import WalletConnectHub from '../viewmodels/walletconnect/WalletConnectHub';
 import { WalletConnect_v1 } from '../viewmodels/walletconnect/WalletConnect_v1';
 import { WalletConnect_v2 } from '../viewmodels/walletconnect/WalletConnect_v2';
 import i18n from '../i18n';
@@ -39,7 +39,8 @@ const DApp = observer(({ client, onNetworksPress, onAccountsPress, close, onConn
 
   const reject = async () => {
     close();
-    await client.killSession();
+    client.rejectSession();
+    client.killSession();
     client.dispose();
   };
 
@@ -176,7 +177,7 @@ export default observer(({ uri, close, extra }: Props) => {
     if (!uri) return;
     if (client) return;
 
-    WalletConnectV1ClientHub.connect(uri, extra).then((wc_client) => {
+    WalletConnectHub.connect(uri, extra).then((wc_client) => {
       if (!wc_client) {
         setErrorMsg(t('modal-dapp-connection-wc-failed'));
         setConnectTimeout(true);

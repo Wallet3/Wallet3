@@ -31,6 +31,10 @@ export class WalletConnect_v1 extends EventEmitter {
   peerId = '';
   appMeta: WCClientMeta | null = null;
 
+  get uniqueId() {
+    return `${this.session?.key}_${this.peerId}`;
+  }
+
   get session() {
     return this.client.session;
   }

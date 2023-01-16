@@ -10,18 +10,10 @@ import { InpageDAppAddEthereumChain } from '../../screens/browser/controller/Inp
 import MessageKeys from '../../common/MessageKeys';
 import { WCClientMeta } from '../../models/entities/WCSession_v1';
 import WCV2_Session from '../../models/entities/WCSession_v2';
-import { WalletConnect2ProjectID } from '../../configs/secret';
 import { Web3Wallet as Web3WalletType } from '@walletconnect/web3wallet/dist/types/client';
 import { getSdkError } from '@walletconnect/utils';
 import i18n from '../../i18n';
 import { showMessage } from 'react-native-flash-message';
-
-const clientMeta = {
-  name: 'Wallet 3',
-  description: 'A Secure Wallet for Web3',
-  icons: ['https://github.com/Wallet3/Wallet3/blob/main/assets/icon@128.rounded.png?raw=true'],
-  url: 'https://wallet3.io',
-};
 
 const SupportedEvents = ['accountsChanged', 'chainChanged'];
 
@@ -59,6 +51,10 @@ export class WalletConnect_v2 extends EventEmitter {
 
   peerId = '';
   appMeta: WCClientMeta | null = null;
+
+  get uniqueId() {
+    return this.session.topic;
+  }
 
   get session() {
     return this.store?.session;
@@ -122,7 +118,12 @@ export class WalletConnect_v2 extends EventEmitter {
   }
 
   setLastUsedChain(chainId: number, persistent = false, from: 'user' | 'inpage' = 'user') {
-    this.updateSession({ chainId });
+    // this.updateSession({ chainId });
+    this.client.emitSessionEvent({
+      topic: this.session.topic,
+      event: { name: 'chainChanged', data: [`0x${chainId.toString(16)}`] },
+      chainId: `eip155:${chainId}`,
+    });
 
     this.store.lastUsedChainId = `${chainId}`;
     if (persistent) this.store.save();
@@ -310,6 +311,7 @@ export class WalletConnect_v2 extends EventEmitter {
 
   killSession() {
     if (!this.session) return;
-    return this.client?.disconnectSession({ topic: this.session!.topic, reason: getSdkError('USER_DISCONNECTED') });
+    
+    return this.client?.disconnectSession({ topic: this.session.topic, reason: getSdkError('USER_DISCONNECTED') });
   }
 }

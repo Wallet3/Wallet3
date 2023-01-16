@@ -12,13 +12,13 @@ export class ERC721Token extends NonFungibleToken {
     if (props.fetchMetadata) this.fetchMetadata();
   }
 
-  async ownerOf(tokenId: string) {
+  async ownerOf(tokenId: string, fast = false) {
     const call_ownerOf = this.encodeOwnerOf(tokenId);
 
     try {
       const [owner] = this.interface.decodeFunctionResult(
         'ownerOf',
-        (await eth_call<string>(this.chainId, { to: this.address, data: call_ownerOf })) || ''
+        (await eth_call<string>(this.chainId, { to: this.address, data: call_ownerOf }, fast)) || ''
       ) as string[];
 
       return utils.isAddress(owner) ? utils.getAddress(owner) : undefined;

@@ -18,7 +18,7 @@ import TokenDetail from './TokenDetail';
 import Transaction from '../../models/entities/Transaction';
 import TxDetail from './TxDetail';
 import { View } from 'react-native';
-import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectHub';
+import WalletConnectHub from '../../viewmodels/walletconnect/WalletConnectHub';
 import { logScreenView } from '../../viewmodels/services/Analytics';
 import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
@@ -87,7 +87,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         chainId={current.chainId}
         avatar={currentAccount?.avatar}
         ens={currentAccount?.ens.name}
-        connectedApps={WalletConnectV1ClientHub.connectedCount}
+        connectedApps={WalletConnectHub.connectedCount}
         disabled={currentAccount?.tokens.loadingTokens}
         onSendPress={() => PubSub.publish(MessageKeys.openSendFundsModal)}
         onRequestPress={() => PubSub.publish(MessageKeys.openRequestFundsModal)}

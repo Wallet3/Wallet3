@@ -20,9 +20,10 @@ import { NullableImage } from '../../components';
 import { Portal } from 'react-native-portalize';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
+import WalletConnectHub from '../../viewmodels/walletconnect/WalletConnectHub';
 import { WalletConnect as WalletConnectLogo } from '../../assets/3rd';
-import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectHub';
 import { WalletConnect_v1 } from '../../viewmodels/walletconnect/WalletConnect_v1';
+import { WalletConnect_v2 } from '../../viewmodels/walletconnect/WalletConnect_v2';
 import i18n from '../../i18n';
 import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
@@ -30,7 +31,7 @@ import { startLayoutAnimation } from '../../utils/animations';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 interface Props {
-  client: WalletConnect_v1 | MetamaskDApp;
+  client: WalletConnect_v1 | MetamaskDApp | WalletConnect_v2;
   allAccounts: Account[];
   close: Function;
 }
@@ -112,8 +113,8 @@ const DAppItem = observer(
     secondaryTextColor,
     backgroundColor,
   }: {
-    item: WalletConnect_v1 | MetamaskDApp;
-    openApp: (item: WalletConnect_v1 | MetamaskDApp) => void;
+    item: WalletConnect_v1 | MetamaskDApp | WalletConnect_v2;
+    openApp: (item: WalletConnect_v1 | MetamaskDApp | WalletConnect_v2) => void;
     textColor: string;
     secondaryTextColor: string;
     backgroundColor: string;
@@ -187,18 +188,18 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
   const scroller = useRef<FlatList>(null);
   const { ref, open, close } = useModalize();
   const { secondaryTextColor, textColor, systemBorderColor, foregroundColor, backgroundColor } = Theme;
-  const [selectedClient, setSelectedClient] = useState<WalletConnect_v1 | MetamaskDApp>();
+  const [selectedClient, setSelectedClient] = useState<WalletConnect_v1 | WalletConnect_v2 | MetamaskDApp>();
   const { top } = useSafeAreaInsets();
 
-  const { sortedClients, connectedCount } = WalletConnectV1ClientHub;
+  const { sortedClients, connectedCount } = WalletConnectHub;
   const { dapps } = MetamaskDAppsHub;
 
-  const openApp = (client: WalletConnect_v1 | MetamaskDApp) => {
+  const openApp = (client: WalletConnect_v1 | MetamaskDApp | WalletConnect_v2) => {
     setSelectedClient(client);
     setTimeout(() => open(), 5);
   };
 
-  const renderItem = ({ item }: { item: WalletConnect_v1 | MetamaskDApp }) => (
+  const renderItem = ({ item }: { item: WalletConnect_v1 | WalletConnect_v2 | MetamaskDApp }) => (
     <DAppItem
       key={item['hostname'] || item['peerId']}
       textColor={textColor}
@@ -217,14 +218,14 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
       style={{ padding: 12, flexDirection: 'row', alignItems: 'center', height: headerHeight, justifyContent: 'center' }}
     >
       <WalletConnectLogo width={15} height={15} />
-      <Text style={{ color: '#3b99fc', fontWeight: '500', marginStart: 8, fontSize: 18 }}>{`WalletConnect`}</Text>
+      <Text style={{ color: '#3b99fc', fontWeight: '500', marginStart: 8, fontSize: 18 }}>WalletConnect</Text>
     </View>,
     <View
       key="metamask"
       style={{ padding: 12, flexDirection: 'row', alignItems: 'center', height: headerHeight, justifyContent: 'center' }}
     >
       <FontAwesome5 name="compass" color={'deepskyblue'} size={19} />
-      <Text style={{ color: 'deepskyblue', fontWeight: '500', marginStart: 8, fontSize: 18 }}>{`Web3`}</Text>
+      <Text style={{ color: 'deepskyblue', fontWeight: '500', marginStart: 8, fontSize: 18 }}>Web3</Text>
     </View>,
   ];
 
@@ -289,7 +290,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
             <FlatList
               data={sortedClients}
               renderItem={renderItem}
-              keyExtractor={(i) => i.peerId}
+              keyExtractor={(i) => i.uniqueId}
               style={{ flex: 1 }}
               bounces={connectedCount > 12}
               contentContainerStyle={{ paddingBottom: 37 }}
@@ -309,7 +310,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
           renderItem={renderItem}
           style={{ width: '100%', height: '100%' }}
           contentContainerStyle={{ paddingBottom: 37 }}
-          keyExtractor={(app) => `${app.hostname}-${app.lastUsedChainId}`}
+          keyExtractor={(app) => app.uniqueId}
           bounces={dapps.length >= 12}
         />
       </Swiper>

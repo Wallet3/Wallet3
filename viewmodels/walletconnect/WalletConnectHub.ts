@@ -7,7 +7,6 @@ import Database from '../../models/Database';
 import EventEmitter from 'events';
 import LINQ from 'linq';
 import WCSession_v1 from '../../models/entities/WCSession_v1';
-import WCV2_Session from '../../models/entities/WCSession_v2';
 import { WalletConnect2ProjectID } from '../../configs/secret';
 import { WalletConnect_v1 } from './WalletConnect_v1';
 import { WalletConnect_v2 } from './WalletConnect_v2';
@@ -17,13 +16,13 @@ import { Web3Wallet as Web3WalletType } from '@walletconnect/web3wallet/dist/typ
 const walletMeta = {
   name: 'Wallet 3',
   description: 'A Secure Wallet for Web3',
-  icons: ['https://github.com/Wallet3/Wallet3/blob/main/assets/icon@128.rounded.png?raw=true'],
+  icons: ['https://github.com/Wallet3/Wallet3/blob/ios-wc2/assets/icon@128.rounded.png?raw=true'],
   url: 'https://wallet3.io',
 };
 
 type Topic = string;
 
-class WalletConnectV1ClientHub extends EventEmitter {
+class WalletConnectHub extends EventEmitter {
   private walletconnect2!: Web3WalletType;
 
   clients: WalletConnect_v1[] = [];
@@ -31,18 +30,25 @@ class WalletConnectV1ClientHub extends EventEmitter {
   v2Clients = new Map<Topic, WalletConnect_v2>();
 
   get connectedCount() {
-    return this.clients.length;
+    return this.clients.length + this.v2Clients.size;
   }
 
   get sortedClients() {
-    return LINQ.from(this.clients)
+    return LINQ.from([...this.clients, ...this.v2Clients.values()])
+      .where((i) => (i ? true : false))
       .orderByDescending((i) => i.lastUsedTimestamp)
       .toArray();
   }
 
   constructor() {
     super();
-    makeObservable(this, { clients: observable, sortedClients: computed, connectedCount: computed, reset: action });
+    makeObservable(this, {
+      clients: observable,
+      v2Clients: observable,
+      sortedClients: computed,
+      connectedCount: computed,
+      reset: action,
+    });
   }
 
   async init() {
@@ -115,7 +121,7 @@ class WalletConnectV1ClientHub extends EventEmitter {
         this.pendingV2Clients.set(pairing.topic, client_v2);
         client_v2.once('sessionApproved', () => {
           this.pendingV2Clients.delete(pairing.topic);
-          this.v2Clients.set(client_v2.session.topic, client_v2);
+          runInAction(() => this.v2Clients.set(client_v2.session.topic, client_v2));
         });
 
         return client_v2;
@@ -152,4 +158,4 @@ class WalletConnectV1ClientHub extends EventEmitter {
   }
 }
 
-export default new WalletConnectV1ClientHub();
+export default new WalletConnectHub();

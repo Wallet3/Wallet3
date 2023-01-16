@@ -54,7 +54,11 @@
   [self.window makeKeyAndVisible];
   
   [super application:application didFinishLaunchingWithOptions:launchOptions];
+
+#ifdef DEBUG
+#else
   [FIRApp configure];
+#endif
   
   return YES;
 }

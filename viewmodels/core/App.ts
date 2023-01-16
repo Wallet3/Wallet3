@@ -20,7 +20,7 @@ import { ReactNativeFirebase } from '@react-native-firebase/app';
 import Theme from '../settings/Theme';
 import TxHub from '../hubs/TxHub';
 import UI from '../settings/UI';
-import WalletConnectV1ClientHub from '../walletconnect/WalletConnectHub';
+import WalletConnectHub from '../walletconnect/WalletConnectHub';
 import { fetchChainsOverview } from '../../common/apis/Debank';
 import i18n from '../../i18n';
 import { logAppReset } from '../services/Analytics';
@@ -213,7 +213,7 @@ export class AppVM {
     if (utils.isAddress(lastUsedAccount)) fetchChainsOverview(lastUsedAccount);
 
     Authentication.once('appAuthorized', () => {
-      WalletConnectV1ClientHub.init();
+      WalletConnectHub.init();
       MetamaskDAppsHub.init();
       LinkHub.start();
       Contacts.init();
@@ -252,7 +252,7 @@ export class AppVM {
       Database.reset(),
       AsyncStorage.clear(),
       Authentication.reset(),
-      WalletConnectV1ClientHub.reset(),
+      WalletConnectHub.reset(),
       MetamaskDAppsHub.reset(),
     ]);
   }
