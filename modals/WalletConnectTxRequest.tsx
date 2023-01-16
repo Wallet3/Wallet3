@@ -15,11 +15,12 @@ import styles from './styles';
 interface Props {
   client: WalletConnect_v1 | WalletConnect_v2;
   request: WCCallRequestRequest;
+  chainId?: number;
   close: Function;
 }
 
-export default observer(({ client, request, close }: Props) => {
-  const [vm] = useState(new WalletConnectTransactionRequest({ client, request }));
+export default observer(({ client, request, close, chainId }: Props) => {
+  const [vm] = useState(new WalletConnectTransactionRequest({ client, request, chainId }));
   const [verified, setVerified] = useState(false);
   const { backgroundColor } = Theme;
 

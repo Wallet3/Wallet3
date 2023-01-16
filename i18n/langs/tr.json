@@ -288,6 +288,7 @@
   "msg-no-hd-wallet": "Yeni bir hesap oluşturabilecek hiçbir cüzdan yok",
   "msg-wait-a-moment": "Lütfen biraz bekleyin",
   "msg-sign-in-web2-failed": "İmza başarısız, lütfen internet bağlantınızın doğru olduğunu kontrol edin",
+  "msg-the-app-does-not-support-chain": "Bu uygulama {{network}} desteklemiyor.",
   "misc-show-full-address": "Tam adresi göster",
   "button-next": "Sonraki",
   "button-save": "Kaydet",

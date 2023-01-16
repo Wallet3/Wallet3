@@ -281,6 +281,7 @@
   "msg-no-hd-wallet": "沒有錢包可以生成新賬戶，請導入助記詞錢包後嘗試生成新賬戶",
   "msg-wait-a-moment": "請稍等",
   "msg-sign-in-web2-failed": "登錄失敗，請檢查您的網絡是否可以連接",
+  "msg-the-app-does-not-support-chain": "該應用不支持 {{network}} 網絡",
   "misc-show-full-address": "顯示完整地址",
   "button-next": "繼續",
   "button-save": "保存",

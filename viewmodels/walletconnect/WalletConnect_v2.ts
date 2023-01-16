@@ -29,11 +29,11 @@ const SupportedMethods = [
   'wallet_addEthereumChain',
 ];
 
-function getNamespaces(accounts: string[], chains: number[]) {
+function getNamespaces(accounts: string[], eipChains: string[]) {
   return {
     eip155: {
-      chains: Networks.all.map((c) => `eip155:${c}`),
-      accounts: accounts.flatMap((addr) => chains.map((c) => `eip155:${c}:${addr}`)),
+      chains: Networks._all.map((c) => `eip155:${c}`),
+      accounts: accounts.flatMap((addr) => eipChains.map((c) => `${c}:${addr}`)),
       methods: SupportedMethods,
       events: SupportedEvents,
       extensions: [],
@@ -60,7 +60,7 @@ export class WalletConnect_v2 extends EventEmitter {
   }
 
   get session() {
-    return this.store?.session;
+    return this.store.session;
   }
 
   get lastUsedTimestamp() {
@@ -111,22 +111,36 @@ export class WalletConnect_v2 extends EventEmitter {
     });
   }
 
-  private updateSession({ chainId, accounts }: { chainId?: number; accounts?: string[] }) {
+  private updateSession({ chains, accounts }: { chains?: string[]; accounts?: string[] }) {
     if (!this.session) return;
 
-    this.client?.updateSession({
-      topic: this.session.topic,
-      namespaces: getNamespaces(accounts || [this.lastUsedAccount], [chainId ?? Number(this.lastUsedChainId)]),
-    });
+    this.client
+      ?.updateSession({
+        topic: this.session?.topic,
+        namespaces: getNamespaces(
+          accounts || [this.lastUsedAccount],
+          chains || this.session.requiredNamespaces['eip155'].chains
+        ),
+      })
+      .catch(() => {});
   }
 
   setLastUsedChain(chainId: number, persistent = false, from: 'user' | 'inpage' = 'user') {
-    // this.updateSession({ chainId });
-    this.client.emitSessionEvent({
-      topic: this.session.topic,
-      event: { name: 'chainChanged', data: [`0x${chainId.toString(16)}`] },
-      chainId: `eip155:${chainId}`,
-    });
+    if (!chainId) return;
+
+    const { chains } = (this.session?.requiredNamespaces?.['eip155'] || {}) as { chains: string[] };
+
+    if (!chains) return;
+    if (!chains?.find((c) => Number(c.split(':')[1]) === chainId)) {
+      showMessage({
+        type: 'info',
+        message: i18n.t('msg-the-app-does-not-support-chain', { network: Networks.find(chainId)?.network }),
+      });
+
+      return;
+    }
+
+    // this.updateSession({ chains });
 
     this.store.lastUsedChainId = `${chainId}`;
     if (persistent) this.store.save();
@@ -180,12 +194,12 @@ export class WalletConnect_v2 extends EventEmitter {
   };
 
   approveSession = async () => {
+    const { chains } = this.sessionProposal!.params.requiredNamespaces['eip155'];
+
     const session = await this.client.approveSession({
       id: this.sessionProposal!.id,
-      namespaces: getNamespaces([this.lastUsedAccount], [Number(this.lastUsedChainId)]),
+      namespaces: getNamespaces([this.lastUsedAccount], chains),
     });
-
-    console.log('approve', session.topic);
 
     this.store.session = session;
     this.store.topic = session.topic;
@@ -205,7 +219,7 @@ export class WalletConnect_v2 extends EventEmitter {
 
   rejectRequest = (id: number, message: string) => {
     if (!this.session) return;
-    this.responseRequest(this.session?.topic, { id, error: { message, code: 4001 }, jsonrpc: '2.0' });
+    this.responseRequest(this.session.topic, { id, error: { message, code: 4001 }, jsonrpc: '2.0' });
   };
 
   approveRequest = (id: number, result: any) => {
@@ -225,8 +239,7 @@ export class WalletConnect_v2 extends EventEmitter {
     const { chainId, request } = params;
 
     request['id'] = id;
-
-    console.log('v2 request', topic, request);
+    console.log('new request chainId', chainId);
 
     if (this.activeAccount?.address !== this.lastUsedAccount || !this.lastUsedAccount) {
       this.rejectRequest(id, 'Not authorized');
@@ -297,7 +310,7 @@ export class WalletConnect_v2 extends EventEmitter {
       return;
     }
 
-    PubSub.publish(MessageKeys.wc_request, { client: this, request });
+    PubSub.publish(MessageKeys.wc_request, { client: this, request, chainId: Number(chainId.split(':')[1]) });
 
     this.emit('sessionUpdated');
   };
@@ -317,11 +330,8 @@ export class WalletConnect_v2 extends EventEmitter {
 
     try {
       this.store.remove().catch();
-
       if (this.client?.getActiveSessions?.()?.[this.session.topic]) {
-        this.client
-          .disconnectSession({ topic: this.session.topic, reason: getSdkError('USER_DISCONNECTED') })
-          .catch(console.log);
+        this.client.disconnectSession({ topic: this.session.topic, reason: getSdkError('USER_DISCONNECTED') }).catch(() => {});
       }
     } catch (e) {
     } finally {

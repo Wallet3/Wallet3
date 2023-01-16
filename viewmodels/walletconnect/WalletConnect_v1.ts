@@ -113,6 +113,8 @@ export class WalletConnect_v1 extends EventEmitter {
   }
 
   setLastUsedChain(chainId: number, persistent = false, from: 'user' | 'inpage' = 'user') {
+    if (!chainId) return;
+
     this.updateSession({ chainId });
 
     if (!this.store) return;

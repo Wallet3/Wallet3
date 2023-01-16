@@ -58,11 +58,12 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
   const [type, setType] = useState<string>();
   const [client, setClient] = useState<WalletConnect_v1>();
   const [callRequest, setCallRequest] = useState<WCCallRequestRequest>();
+  const [chainId, setChainId] = useState<number>();
 
   useEffect(() => {
     PubSub.subscribe(
       MessageKeys.wc_request,
-      (_, { client, request }: { client: WalletConnect_v1; request: WCCallRequestRequest }) => {
+      (_, { client, request, chainId }: { client: WalletConnect_v1; request: WCCallRequestRequest; chainId?: number }) => {
         if (!appAuth.appAuthorized) {
           client.rejectRequest(request.id, 'Unauthorized');
           return;
@@ -71,6 +72,7 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
         setType(undefined);
         setCallRequest(undefined);
         setClient(client);
+        setChainId(chainId);
 
         switch (request.method) {
           case 'eth_sign':
@@ -110,9 +112,13 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
       modalStyle={styles.containerTopBorderRadius}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
-      {type === 'sign' ? <WalletConnectSign client={client!} request={callRequest!} close={close} /> : undefined}
+      {type === 'sign' ? (
+        <WalletConnectSign client={client!} request={callRequest!} close={close} chainId={chainId} />
+      ) : undefined}
 
-      {type === 'sendTx' ? <WalletConnectTxRequest client={client!} request={callRequest!} close={close} /> : undefined}
+      {type === 'sendTx' ? (
+        <WalletConnectTxRequest client={client!} request={callRequest!} close={close} chainId={chainId} />
+      ) : undefined}
     </Modalize>
   );
 };

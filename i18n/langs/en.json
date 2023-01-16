@@ -288,6 +288,7 @@
   "msg-no-hd-wallet": "No wallet can generate a new account",
   "msg-wait-a-moment": "Please wait a moment",
   "msg-sign-in-web2-failed": "Sign failed, please check your internet is connected",
+  "msg-the-app-does-not-support-chain": "This app doesn't support {{network}}.",
   "misc-show-full-address": "Show full address",
   "button-next": "Next",
   "button-save": "Save",
