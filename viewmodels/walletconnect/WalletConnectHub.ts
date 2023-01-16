@@ -6,6 +6,7 @@ import { Core } from '@walletconnect/core';
 import Database from '../../models/Database';
 import EventEmitter from 'events';
 import LINQ from 'linq';
+import MessageKeys from '../../common/MessageKeys';
 import WCSession_v1 from '../../models/entities/WCSession_v1';
 import { WalletConnect2ProjectID } from '../../configs/secret';
 import { WalletConnect_v1 } from './WalletConnect_v1';
@@ -53,13 +54,11 @@ class WalletConnectHub extends EventEmitter {
 
   async init() {
     // Restore sessions
-    const sessions = await Database.wcV1Sessions.find();
+    const [v1Sessions, v2Sessions] = await Promise.all([Database.wcV1Sessions.find(), Database.wcV2Sessions.find()]);
     const cs = await Promise.all(
-      sessions.map(async (sessionStore) => {
-        const c = new WalletConnect_v1().connectSession(sessionStore.session).setStore(sessionStore);
-        await sessionStore.save(); // Don't remove this code until v1.5
-        return c;
-      })
+      v1Sessions.map(async (sessionStore) =>
+        new WalletConnect_v1().connectSession(sessionStore.session).setStore(sessionStore)
+      )
     );
 
     runInAction(() => {
@@ -73,11 +72,33 @@ class WalletConnectHub extends EventEmitter {
       metadata: walletMeta,
     });
 
-    this.walletconnect2.on('session_proposal', (proposal) =>
-      this.pendingV2Clients.get(proposal?.params?.pairingTopic!)?.handleSessionProposal(proposal)
-    );
+    this.walletconnect2.on('session_proposal', (proposal) => {
+      console.log('new_proposal', proposal);
+
+      const existClient =
+        this.pendingV2Clients.get(proposal?.params?.pairingTopic || '') ||
+        this.v2Clients.get(proposal?.params?.pairingTopic || '');
+
+      if (existClient) {
+        existClient.handleSessionProposal(proposal);
+      } else {
+        const client = new WalletConnect_v2(this.walletconnect2);
+        client.handleSessionProposal(proposal);
+
+        this.handleV2Lifecycle(client, proposal.params.pairingTopic);
+        this.pendingV2Clients.set(proposal.params.pairingTopic!, client);
+
+        PubSub.publish(MessageKeys.walletconnect2_pair_request, { client });
+      }
+    });
 
     this.walletconnect2.on('session_request', (request) => this.v2Clients.get(request.topic)?.handleSessionRequest(request));
+
+    runInAction(() => {
+      for (let c of v2Sessions.map((store) => new WalletConnect_v2(this.walletconnect2, store))) {
+        this.v2Clients.set(c.session.topic, c);
+      }
+    });
   }
 
   async connect(uri: string, extra?: { hostname?: string; fromMobile?: boolean }) {
@@ -119,16 +140,13 @@ class WalletConnectHub extends EventEmitter {
         const client_v2 = new WalletConnect_v2(this.walletconnect2);
 
         this.pendingV2Clients.set(pairing.topic, client_v2);
-        client_v2.once('sessionApproved', () => {
-          this.pendingV2Clients.delete(pairing.topic);
-          runInAction(() => this.v2Clients.set(client_v2.session.topic, client_v2));
-        });
+        this.handleV2Lifecycle(client_v2, pairing.topic);
 
         return client_v2;
     }
   }
 
-  private handleLifecycle(client: WalletConnect_v1) {
+  private handleLifecycle = (client: WalletConnect_v1) => {
     client.on('sessionUpdated', () => {
       if (!client.store) return;
       client.store.lastUsedTimestamp = Date.now();
@@ -140,7 +158,18 @@ class WalletConnectHub extends EventEmitter {
       if (!this.clients.includes(client)) return;
       runInAction(() => (this.clients = this.clients.filter((c) => c !== client)));
     });
-  }
+  };
+
+  private handleV2Lifecycle = (client: WalletConnect_v2, pairingTopic?: string) => {
+    client.once('sessionApproved', () => {
+      this.pendingV2Clients.delete(pairingTopic || '');
+      runInAction(() => this.v2Clients.set(client.session.topic, client));
+    });
+
+    client.once('disconnect', () => {
+      runInAction(() => this.v2Clients.delete(client.session.topic));
+    });
+  };
 
   find(hostname: string) {
     return LINQ.from(this.clients.filter((c) => c.origin === hostname))

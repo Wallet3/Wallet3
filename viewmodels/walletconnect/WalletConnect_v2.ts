@@ -45,12 +45,15 @@ export class WalletConnect_v2 extends EventEmitter {
   readonly version = 2;
 
   private readonly client: Web3WalletType;
+  private _appMeta!: WCClientMeta;
   private sessionProposal?: Web3WalletTypes.SessionProposal;
 
-  readonly store = new WCV2_Session();
+  store: WCV2_Session;
 
   peerId = '';
-  appMeta: WCClientMeta | null = null;
+  get appMeta() {
+    return this.session?.peer?.metadata || this._appMeta;
+  }
 
   get uniqueId() {
     return this.session.topic;
@@ -96,13 +99,13 @@ export class WalletConnect_v2 extends EventEmitter {
     return Networks.find(this.lastUsedChainId) || Networks.current;
   }
 
-  constructor(client: Web3WalletType) {
+  constructor(client: Web3WalletType, store = new WCV2_Session()) {
     super();
 
     this.client = client;
+    this.store = store;
 
     makeObservable(this, {
-      appMeta: observable,
       setLastUsedAccount: action,
       setLastUsedChain: action,
     });
@@ -171,7 +174,7 @@ export class WalletConnect_v2 extends EventEmitter {
     this.store.lastUsedAccount = App.currentAccount!.address;
     this.store.lastUsedTimestamp = Date.now();
 
-    runInAction(() => (this.appMeta = proposal.params.proposer.metadata));
+    runInAction(() => (this._appMeta = proposal.params.proposer.metadata));
 
     this.emit('sessionRequest');
   };
@@ -182,8 +185,6 @@ export class WalletConnect_v2 extends EventEmitter {
       namespaces: getNamespaces([this.lastUsedAccount], [Number(this.lastUsedChainId)]),
     });
 
-    session.controller;
-    session.topic;
     console.log('approve', session.topic);
 
     this.store.session = session;
@@ -309,9 +310,22 @@ export class WalletConnect_v2 extends EventEmitter {
     (this.rejectSession as any) = undefined;
   }
 
-  killSession() {
+  async killSession() {
     if (!this.session) return;
-    
-    return this.client?.disconnectSession({ topic: this.session.topic, reason: getSdkError('USER_DISCONNECTED') });
+
+    this.emit('disconnect', this);
+
+    try {
+      this.store.remove().catch();
+
+      if (this.client?.getActiveSessions?.()?.[this.session.topic]) {
+        this.client
+          .disconnectSession({ topic: this.session.topic, reason: getSdkError('USER_DISCONNECTED') })
+          .catch(console.log);
+      }
+    } catch (e) {
+    } finally {
+      this.dispose();
+    }
   }
 }

@@ -41,6 +41,7 @@ import Theme from '../viewmodels/settings/Theme';
 import { TokenTransferring } from '../viewmodels/transferring/TokenTransferring';
 import { WCCallRequestRequest } from '../models/entities/WCSession_v1';
 import { WalletConnect_v1 } from '../viewmodels/walletconnect/WalletConnect_v1';
+import { WalletConnect_v2 } from '../viewmodels/walletconnect/WalletConnect_v2';
 import { autorun } from 'mobx';
 import i18n from '../i18n';
 import { isDomain } from '../viewmodels/services/DomainResolver';
@@ -116,15 +117,21 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
   );
 };
 
-const WalletConnectV1 = () => {
+const WalletConnect = () => {
   const { ref: connectDappRef, open: openConnectDapp, close: closeConnectDapp } = useModalize();
   const [connectUri, setConnectUri] = useState<string>();
   const [extra, setExtra] = useState<any>();
+  const [directClient, setDirectClient] = useState<WalletConnect_v2>();
 
   useEffect(() => {
     PubSub.subscribe(MessageKeys.codeScan.walletconnect, (_, { data, extra }) => {
       setConnectUri(data);
       setExtra(extra);
+      openConnectDapp();
+    });
+
+    PubSub.subscribe(MessageKeys.walletconnect2_pair_request, (_, { client }) => {
+      setDirectClient(client);
       openConnectDapp();
     });
 
@@ -146,7 +153,7 @@ const WalletConnectV1 = () => {
       modalStyle={styles.containerTopBorderRadius}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
-      <WalletConnectDApp uri={connectUri} close={closeConnectDapp} extra={extra} />
+      <WalletConnectDApp uri={connectUri} close={closeConnectDapp} extra={extra} directClient={directClient} />
     </Modalize>
   );
 };
@@ -656,7 +663,7 @@ export default (props: { app: AppVM; appAuth: Authentication }) => {
     <GlobalNetworksMenuModal key="networks-menu" />,
     <GlobalAccountsMenuModal key="accounts-menu" />,
     <GlobalLoadingModal key="loading-modal" />,
-    <WalletConnectV1 key="walletconnect" />,
+    <WalletConnect key="walletconnect" />,
     <WalletConnectRequests key="walletconnect-requests" {...props} />,
     <InpageDAppConnect key="inpage-dapp-connect" />,
     <InpageDAppRequests key="inpage-dapp-requests" />,

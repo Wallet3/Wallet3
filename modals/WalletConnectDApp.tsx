@@ -160,14 +160,15 @@ const TimeoutView = ({ close, msg }: { close: Function; msg?: string }) => {
 
 interface Props {
   uri?: string;
-  extra: { fromMobile?: boolean; hostname?: string };
+  directClient?: WalletConnect_v2;
+  extra?: { fromMobile?: boolean; hostname?: string };
   close: Function;
 }
 
-export default observer(({ uri, close, extra }: Props) => {
-  const [connecting, setConnecting] = useState(true);
+export default observer(({ uri, close, extra, directClient }: Props) => {
+  const [connecting, setConnecting] = useState(directClient ? false : true);
   const [connectTimeout, setConnectTimeout] = useState(false);
-  const [client, setClient] = useState<WalletConnect_v1 | WalletConnect_v2>();
+  const [client, setClient] = useState<WalletConnect_v1 | WalletConnect_v2 | undefined>(directClient);
   const [errorMsg, setErrorMsg] = useState<string>();
 
   const { backgroundColor } = Theme;
