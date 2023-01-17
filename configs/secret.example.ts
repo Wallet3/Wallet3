@@ -36,4 +36,4 @@ export const swapFeeReferrer = '';
 
 export const WalletConnect2ProjectID = '';
 
-export const MoralisApis = [];
+export const CenterNFTApis = [];

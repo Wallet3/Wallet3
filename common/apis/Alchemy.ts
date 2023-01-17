@@ -1,4 +1,5 @@
-import { AlchemyApiKeys } from '../../configs/secret';
+import { AlchemyApiKeys, CenterNFTApis } from '../../configs/secret';
+
 import { AlchemyNFTs } from './Alchemy.types.nfts';
 
 const Chains = {
@@ -16,6 +17,25 @@ export async function getAlchemyNFTs(owner: string, chainId: number) {
     const resp = await fetch(
       `${Chains[chainId]}/nft/v2/${key}/getNFTs?owner=${owner}&withMetadata=true&orderBy=transferTime&excludeFilters\[\]=SPAM`
     );
+    return (await resp.json()) as AlchemyNFTs;
+  } catch (error) {}
+}
+
+const CenterNetworks = {
+  43114: 'avalanche-mainnet',
+  42220: 'celo-mainnet',
+  250: 'fantom-mainnet',
+  1666600000: 'harmony-mainnet',
+};
+
+export async function getCenterNFTs(owner: string, chainId: number) {
+  if (!CenterNetworks[chainId]) return;
+
+  const api = CenterNFTApis[Date.now() % CenterNFTApis.length];
+  const url = `https://api.center.dev/experimental/alchemy/${CenterNetworks[chainId]}/nft/v2/${api}/getNFTs?owner=${owner}&withMetadata=true&tokenUriTimeoutInMs=0`;
+
+  try {
+    const resp = await fetch(url);
     return (await resp.json()) as AlchemyNFTs;
   } catch (error) {}
 }

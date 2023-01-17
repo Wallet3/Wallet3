@@ -236,7 +236,7 @@ export function isSecureSite(url: string) {
 }
 
 export function isRiskySite(url: string) {
-  if (!url || url.startsWith('http://')) return false;
+  if (!url) return false;
 
   try {
     return RiskyUrlsSet.has(Linking.parse(url).hostname || '');
