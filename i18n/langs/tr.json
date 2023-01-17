@@ -289,6 +289,7 @@
   "msg-wait-a-moment": "Lütfen biraz bekleyin",
   "msg-sign-in-web2-failed": "İmza başarısız, lütfen internet bağlantınızın doğru olduğunu kontrol edin",
   "msg-the-app-does-not-support-chain": "Bu uygulama {{network}} desteklemiyor.",
+  "msg-currently-ethereum-and-evm-networks-support": "Şu anda Wallet 3 Ethereum ve EVM ağlarını desteklemektedir",
   "misc-show-full-address": "Tam adresi göster",
   "button-next": "Sonraki",
   "button-save": "Kaydet",

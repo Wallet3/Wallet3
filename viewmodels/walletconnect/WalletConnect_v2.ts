@@ -1,4 +1,5 @@
 import Networks, { AddEthereumChainParameter } from '../core/Networks';
+import WCV2_Session, { SessionStruct } from '../../models/entities/WCSession_v2';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import App from '../core/App';
@@ -7,7 +8,6 @@ import { EventEmitter } from 'events';
 import { InpageDAppAddEthereumChain } from '../../screens/browser/controller/InpageDAppController';
 import MessageKeys from '../../common/MessageKeys';
 import { WCClientMeta } from '../../models/entities/WCSession_v1';
-import WCV2_Session from '../../models/entities/WCSession_v2';
 import { Web3Wallet as Web3WalletType } from '@walletconnect/web3wallet/dist/types/client';
 import { Web3WalletTypes } from '@walletconnect/web3wallet';
 import { getSdkError } from '@walletconnect/utils';
@@ -55,10 +55,10 @@ export class WalletConnect_v2 extends EventEmitter {
   }
 
   get uniqueId() {
-    return this.session.topic;
+    return this.session!.topic;
   }
 
-  get session() {
+  get session(): SessionStruct | undefined {
     return this.store.session;
   }
 
@@ -141,6 +141,7 @@ export class WalletConnect_v2 extends EventEmitter {
     }
 
     this.store.lastUsedChainId = `${chainId}`;
+    this.store.lastUsedTimestamp = Date.now();
     if (persistent) this.store.save();
 
     this.emit('lastUsedChainChanged', chainId, from);
@@ -156,33 +157,37 @@ export class WalletConnect_v2 extends EventEmitter {
   handleSessionProposal = async (proposal: Web3WalletTypes.SessionProposal) => {
     this.sessionProposal = proposal;
 
-    console.log('session proposal');
-    console.log(proposal, proposal.params.requiredNamespaces);
-
-    const eip155 = proposal.params.requiredNamespaces['eip155'];
+    const eip155 = proposal?.params?.requiredNamespaces?.['eip155'];
     if (!eip155?.chains?.length) {
       this.rejectSession(getSdkError('INVALID_SESSION_SETTLE_REQUEST'));
-      return;
+      showMessage({ type: 'info', message: i18n.t('msg-currently-ethereum-and-evm-networks-support') });
+      return false;
     }
 
     const { chains, methods } = eip155;
     const notSupportedChain = chains.find((c) => !Networks.find(c?.split(':')?.[1]));
     if (notSupportedChain) {
       this.rejectSession(getSdkError('UNSUPPORTED_CHAINS'));
-      showMessage({ type: 'info', message: `${notSupportedChain} is not supported yet.` });
-      return;
+      PubSub.publish(MessageKeys.walletconnect.notSupportedSessionProposal, this);
+      this.emit(MessageKeys.walletconnect.notSupportedSessionProposal);
+      showMessage({ type: 'info', message: i18n.t('msg-the-app-does-not-support-chain', { network: notSupportedChain }) });
+      return false;
     }
 
     if (methods.some((m) => !SupportedMethods.includes(m))) {
+      PubSub.publish(MessageKeys.walletconnect.notSupportedSessionProposal, this);
+      this.emit(MessageKeys.walletconnect.notSupportedSessionProposal);
       this.rejectSession(getSdkError('UNSUPPORTED_METHODS'));
-      return;
+      return false;
     }
 
     const [chain] = chains;
     const chainId = Number(chain.split?.(':')?.[1]);
     if (!chainId) {
+      PubSub.publish(MessageKeys.walletconnect.notSupportedSessionProposal, this);
+      this.emit(MessageKeys.walletconnect.notSupportedSessionProposal);
       this.rejectSession(getSdkError('UNSUPPORTED_CHAINS'));
-      return;
+      return false;
     }
 
     this.peerId = proposal.params.proposer.publicKey;
@@ -194,6 +199,7 @@ export class WalletConnect_v2 extends EventEmitter {
     runInAction(() => (this._appMeta = proposal.params.proposer.metadata));
 
     this.emit('sessionRequest');
+    return true;
   };
 
   approveSession = async () => {

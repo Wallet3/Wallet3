@@ -35,3 +35,5 @@ export const swapFeePercent = 0;
 export const swapFeeReferrer = '';
 
 export const WalletConnect2ProjectID = '';
+
+export const MoralisApis = [];

@@ -120,6 +120,7 @@ export class WalletConnect_v1 extends EventEmitter {
     if (!this.store) return;
 
     this.store.lastUsedChainId = `${chainId}`;
+    this.store.lastUsedTimestamp = Date.now();
     if (persistent) this.store.save();
 
     this.emit('lastUsedChainChanged', chainId, from);
@@ -130,6 +131,7 @@ export class WalletConnect_v1 extends EventEmitter {
     if (!this.store) return;
 
     this.store.lastUsedAccount = account;
+    this.store.lastUsedTimestamp = Date.now();
 
     if (persistent) this.store.save();
   }

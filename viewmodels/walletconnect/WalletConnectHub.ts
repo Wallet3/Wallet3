@@ -14,6 +14,7 @@ import { WalletConnect_v1 } from './WalletConnect_v1';
 import { WalletConnect_v2 } from './WalletConnect_v2';
 import { Web3Wallet } from '@walletconnect/web3wallet';
 import { Web3Wallet as Web3WalletType } from '@walletconnect/web3wallet/dist/types/client';
+import { sleep } from '../../utils/async';
 
 const walletMeta = {
   name: 'Wallet 3',
@@ -75,29 +76,34 @@ class WalletConnectHub extends EventEmitter {
       metadata: walletMeta,
     });
 
-    this.walletconnect2.on('session_proposal', (proposal) => {
-      console.log('new_proposal', proposal);
+    this.walletconnect2.on('session_proposal', async (proposal) => {
 
       const existClient =
         this.pendingV2Clients.get(proposal?.params?.pairingTopic || '') ||
         this.v2Clients.get(proposal?.params?.pairingTopic || '');
 
-      if (existClient) {
-        existClient.handleSessionProposal(proposal);
-        PubSub.publish(MessageKeys.walletconnect2_pair_request, { client: existClient });
-      } else {
-        const client = new WalletConnect_v2(this.walletconnect2);
-        client.handleSessionProposal(proposal);
-
-        this.handleV2Lifecycle(client, proposal.params.pairingTopic);
-        this.pendingV2Clients.set(proposal.params.pairingTopic!, client);
-
-        PubSub.publish(MessageKeys.walletconnect2_pair_request, { client });
+      if (existClient && (await existClient.handleSessionProposal(proposal))) {
+        PubSub.publish(MessageKeys.walletconnect.pairing_request, { client: existClient });
+        existClient.dispose();
+        return;
       }
+
+      const client = new WalletConnect_v2(this.walletconnect2);
+
+      this.handleV2Lifecycle(client, proposal.params.pairingTopic);
+      this.pendingV2Clients.set(proposal.params.pairingTopic!, client);
+
+      if (await client.handleSessionProposal(proposal)) {
+        PubSub.publish(MessageKeys.walletconnect.pairing_request, { client });
+        client.dispose();
+      }
+
+      this.cleanInactiveV2();
     });
 
-    this.walletconnect2.on('session_request', (request) => {
-      this.v2Clients.get(request.topic)?.handleSessionRequest(request);
+    this.walletconnect2.on('session_request', async (request) => {
+      await this.v2Clients.get(request.topic)?.handleSessionRequest(request);
+      this.cleanInactiveV2();
     });
 
     const v2Clients = v2Sessions.map((store) => new WalletConnect_v2(this.walletconnect2, store));
@@ -105,10 +111,12 @@ class WalletConnectHub extends EventEmitter {
 
     runInAction(() => {
       for (let c of v2Clients.filter((c) => c.lastUsedTimestamp > lastUsedExpiry)) {
-        this.v2Clients.set(c.session.topic, c);
+        this.v2Clients.set(c.session!.topic, c);
         this.handleV2Lifecycle(c);
       }
     });
+
+    this.cleanInactiveV2();
   }
 
   async connect(uri: string, extra?: { hostname?: string; fromMobile?: boolean }) {
@@ -146,6 +154,10 @@ class WalletConnectHub extends EventEmitter {
         this.handleLifecycle(client);
         return client;
       case '2':
+        while (!this.walletconnect2) {
+          await sleep(500);
+        }
+
         const pairing = await this.walletconnect2.core.pairing.pair({ uri, activatePairing: true });
         const client_v2 = new WalletConnect_v2(this.walletconnect2);
 
@@ -173,13 +185,28 @@ class WalletConnectHub extends EventEmitter {
   private handleV2Lifecycle = (client: WalletConnect_v2, pairingTopic?: string) => {
     client.once('sessionApproved', () => {
       this.pendingV2Clients.delete(pairingTopic || '');
-      runInAction(() => this.v2Clients.set(client.session.topic, client));
+      runInAction(() => this.v2Clients.set(client.session!.topic, client));
     });
 
     client.once('disconnect', () => {
-      runInAction(() => this.v2Clients.delete(client.session.topic));
+      runInAction(() => this.v2Clients.delete(client.session!.topic));
+    });
+
+    client.once(MessageKeys.walletconnect.notSupportedSessionProposal, () => {
+      this.pendingV2Clients.delete(pairingTopic || '');
+      runInAction(() => this.v2Clients.delete(client.session?.topic || ''));
     });
   };
+
+  private cleanInactiveV2() {
+    if (!this.walletconnect2) return;
+
+    for (let [_, client] of this.v2Clients) {
+      if (!this.walletconnect2.getActiveSessions()[client.session?.topic || '']) {
+        client.killSession();
+      }
+    }
+  }
 
   find(hostname: string) {
     return LINQ.from(this.clients.filter((c) => c.origin === hostname))

@@ -15,7 +15,11 @@ export default {
   openGlobalQRScanner: 'openGlobalQRScanner',
   drawerSwipeEnabled: 'drawer-swipeEnabled',
   wc_request: 'wc_request',
-  walletconnect2_pair_request: 'walletconnect2_pair_request',
+
+  walletconnect: {
+    notSupportedSessionProposal: 'walletconnect2_not_supported_session_proposal',
+    pairing_request: 'walletconnect2_pairing_request',
+  },
 
   CodeScan_wallet3sync: 'CodeScan-wallet3sync:',
   CodeScan_64Length: 'CodeScan-64Length',

@@ -2,7 +2,7 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 import { SessionTypes } from '@walletconnect/web3wallet/node_modules/@walletconnect/types';
 
-interface SessionStruct {
+export interface SessionStruct {
   topic: string;
 
   expiry: number;

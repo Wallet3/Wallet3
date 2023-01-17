@@ -37,6 +37,8 @@ const DApp = observer(({ client, onNetworksPress, onAccountsPress, close, onConn
 
   const app = client.appMeta!;
 
+  if (!app) return null;
+
   const reject = async () => {
     close();
     client.rejectSession();

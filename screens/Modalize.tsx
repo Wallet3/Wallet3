@@ -130,13 +130,22 @@ const WalletConnect = () => {
       openConnectDapp();
     });
 
-    PubSub.subscribe(MessageKeys.walletconnect2_pair_request, (_, { client }) => {
+    PubSub.subscribe(MessageKeys.walletconnect.pairing_request, (_, { client }) => {
       setDirectClient(client);
       openConnectDapp();
     });
 
+    PubSub.subscribe(MessageKeys.walletconnect.notSupportedSessionProposal, () => {
+      closeConnectDapp();
+      setConnectUri(undefined);
+      setExtra(undefined);
+      setDirectClient(undefined);
+    });
+
     return () => {
       PubSub.unsubscribe(MessageKeys.codeScan.walletconnect);
+      PubSub.unsubscribe(MessageKeys.walletconnect.notSupportedSessionProposal);
+      PubSub.unsubscribe(MessageKeys.walletconnect.pairing_request);
     };
   }, []);
 
@@ -407,6 +416,7 @@ const RequestFundsModal = () => {
 const SendFundsModal = () => {
   const [vm, setVM] = useState<TokenTransferring>();
   const [isERC681, setIsERC681] = useState(false);
+  const [interacting, setInteracting] = useState(false);
 
   const { ref: sendRef, open: openSendModal, close: closeSendModal } = useModalize();
 
@@ -462,6 +472,10 @@ const SendFundsModal = () => {
       ref={sendRef}
       adjustToContentHeight
       disableScrollIfPossible
+      closeOnOverlayTap={!interacting}
+      withHandle={!interacting}
+      panGestureEnabled={!interacting}
+      panGestureComponentEnabled={!interacting}
       modalStyle={styles.containerTopBorderRadius}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
       onClosed={() => {
@@ -469,7 +483,15 @@ const SendFundsModal = () => {
         setVM(undefined);
       }}
     >
-      {vm ? <Send vm={vm} onClose={clear} erc681={isERC681} /> : undefined}
+      {vm && (
+        <Send
+          vm={vm}
+          onClose={clear}
+          erc681={isERC681}
+          onInteractionStart={() => setInteracting(true)}
+          onInteractionEnd={() => setInteracting(false)}
+        />
+      )}
     </Modalize>
   );
 };
