@@ -160,6 +160,7 @@ export class WalletConnect_v2 extends EventEmitter {
     const eip155 = proposal?.params?.requiredNamespaces?.['eip155'];
     if (!eip155?.chains?.length) {
       this.rejectSession(getSdkError('INVALID_SESSION_SETTLE_REQUEST'));
+      PubSub.publish(MessageKeys.walletconnect.notSupportedSessionProposal, this);
       showMessage({ type: 'info', message: i18n.t('msg-currently-ethereum-and-evm-networks-support') });
       return false;
     }

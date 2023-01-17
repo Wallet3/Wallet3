@@ -99,7 +99,7 @@ export function logQRScanned(data: string) {
   } else if (data.startsWith('http')) {
     type = 'url';
   } else if (data.startsWith('wc:') || SupportedWCSchemes.find((s) => data.startsWith(s))) {
-    type = 'walletconnect';
+    type = data.includes('@2') ? 'wc_v2' : 'wc_v1';
   }
 
   log('qr_scanned', { type });
