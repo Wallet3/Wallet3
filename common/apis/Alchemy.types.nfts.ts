@@ -56,7 +56,7 @@ interface ContractMetadata {
   tokenType: string;
   contractDeployer: string;
   deployedBlockNumber: number;
-  openSea: OpenSea;
+  openSea?: OpenSea;
   totalSupply: string;
 }
 
@@ -71,7 +71,7 @@ interface OwnedNft {
   balance: string;
   title: string;
   description: string;
-  tokenUri: TokenUri;
+  tokenUri?: TokenUri;
   media?: Medium[];
   metadata?: Metadata;
   timeLastUpdated: Date;

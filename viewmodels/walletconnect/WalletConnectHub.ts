@@ -77,25 +77,16 @@ class WalletConnectHub extends EventEmitter {
     });
 
     this.walletconnect2.on('session_proposal', async (proposal) => {
-
-      const existClient =
-        this.pendingV2Clients.get(proposal?.params?.pairingTopic || '') ||
-        this.v2Clients.get(proposal?.params?.pairingTopic || '');
-
-      if (existClient && (await existClient.handleSessionProposal(proposal))) {
-        PubSub.publish(MessageKeys.walletconnect.pairing_request, { client: existClient });
-        existClient.dispose();
-        return;
-      }
-
-      const client = new WalletConnect_v2(this.walletconnect2);
+      const client = this.pendingV2Clients.get(proposal.params.pairingTopic!) || new WalletConnect_v2(this.walletconnect2);
 
       this.handleV2Lifecycle(client, proposal.params.pairingTopic);
       this.pendingV2Clients.set(proposal.params.pairingTopic!, client);
 
       if (await client.handleSessionProposal(proposal)) {
         PubSub.publish(MessageKeys.walletconnect.pairing_request, { client });
-        client.dispose();
+      } else {
+        client.killSession();
+        this.pendingV2Clients.delete(proposal.params.pairingTopic!);
       }
 
       this.cleanInactiveV2();

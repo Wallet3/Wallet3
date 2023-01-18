@@ -157,8 +157,10 @@ export class WalletConnect_v2 extends EventEmitter {
   handleSessionProposal = async (proposal: Web3WalletTypes.SessionProposal) => {
     this.sessionProposal = proposal;
 
+    const platforms = Object.getOwnPropertyNames(proposal?.params?.requiredNamespaces);
     const eip155 = proposal?.params?.requiredNamespaces?.['eip155'];
-    if (!eip155?.chains?.length) {
+
+    if (platforms.length > 1 || !eip155?.chains?.length) {
       this.rejectSession(getSdkError('INVALID_SESSION_SETTLE_REQUEST'));
       PubSub.publish(MessageKeys.walletconnect.notSupportedSessionProposal, this);
       showMessage({ type: 'info', message: i18n.t('msg-currently-ethereum-and-evm-networks-support') });
@@ -327,10 +329,6 @@ export class WalletConnect_v2 extends EventEmitter {
 
   dispose() {
     this.removeAllListeners();
-
-    (this.client as any) = undefined;
-    (this.approveSession as any) = undefined;
-    (this.rejectSession as any) = undefined;
   }
 
   async killSession() {
@@ -339,7 +337,7 @@ export class WalletConnect_v2 extends EventEmitter {
     this.emit('disconnect', this);
 
     try {
-      this.store.remove().catch();
+      if (this.store.hasId()) this.store.remove().catch();
       if (this.client?.getActiveSessions?.()?.[this.session.topic]) {
         this.client.disconnectSession({ topic: this.session.topic, reason: getSdkError('USER_DISCONNECTED') }).catch(() => {});
       }

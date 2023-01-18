@@ -100,7 +100,8 @@ export function convertAlchemyToNfts(result?: AlchemyNFTs): NFTMetadata[] | unde
   if (!result) return;
 
   return result.ownedNfts
-    ?.map((n) => {
+    ?.filter((n) => n)
+    .map((n) => {
       const previews = convertProtocol([n.metadata?.image, ...(n.media?.map?.((n) => n.thumbnail) || [])]);
       const images = convertProtocol([
         n.metadata?.image,
@@ -115,7 +116,7 @@ export function convertAlchemyToNfts(result?: AlchemyNFTs): NFTMetadata[] | unde
         images,
         types: [],
         description: n.description,
-        title: n.metadata?.name || n.contractMetadata?.openSea.collectionName,
+        title: n.metadata?.name || n.contractMetadata?.openSea?.collectionName,
         previews,
         previewTypes: [],
         attributes: n.metadata?.attributes?.map?.((a) => {
