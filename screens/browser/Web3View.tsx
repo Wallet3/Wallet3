@@ -110,8 +110,9 @@ export default observer((props: Web3ViewProps) => {
     if (dapp?.origin === hostname) return;
 
     const wcApp = WalletConnectHub.find(hostname);
+    console.log('web3 view find', wcApp?.uniqueId, wcApp?.isMobileApp, wcApp?.origin);
 
-    if (wcApp?.isMobileApp) {
+    if (wcApp?.isMobileApp || wcApp?.version === 2) {
       updateDAppState({
         lastUsedChainId: wcApp.lastUsedChainId,
         lastUsedAccount: wcApp.lastUsedAccount,
@@ -158,15 +159,13 @@ export default observer((props: Web3ViewProps) => {
 
     hub.on('dappConnected', (app) => updateDAppState(app));
 
-    WalletConnectHub.on('mobileAppConnected', () => {
-      updateGlobalState();
-    });
+    WalletConnectHub.on('mobileAppConnected', updateGlobalState);
 
     if (pageMetadata) ((webViewRef as any)?.current as WebView)?.injectJavaScript(`${GetPageMetadata}\ntrue;`);
 
     return () => {
       hub.removeAllListeners();
-      WalletConnectHub.removeAllListeners();
+      WalletConnectHub.off('mobileAppConnected', updateGlobalState);
     };
   }, [webUrl]);
 

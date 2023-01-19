@@ -1,3 +1,5 @@
+import * as Linking from 'expo-linking';
+
 import Networks, { AddEthereumChainParameter } from '../core/Networks';
 import WCV2_Session, { SessionStruct } from '../../models/entities/WCSession_v2';
 import { action, makeObservable, observable, runInAction } from 'mobx';
@@ -12,6 +14,7 @@ import { Web3Wallet as Web3WalletType } from '@walletconnect/web3wallet/dist/typ
 import { Web3WalletTypes } from '@walletconnect/web3wallet';
 import { getSdkError } from '@walletconnect/utils';
 import i18n from '../../i18n';
+import isURL from 'validator/lib/isURL';
 import { showMessage } from 'react-native-flash-message';
 
 const SupportedEvents = ['accountsChanged', 'chainChanged'];
@@ -215,6 +218,16 @@ export class WalletConnect_v2 extends EventEmitter {
 
     this.store.session = session;
     this.store.topic = session.topic;
+
+    if (!this.origin && isURL(session.peer?.metadata?.url)) {
+      const url = session.peer.metadata.url.startsWith('https://')
+        ? session.peer.metadata.url
+        : `https://${session.peer.metadata.url}`;
+
+      this.store.hostname = Linking.parse(url).hostname!;
+    }
+
+    console.log('save', this.origin);
     this.store.save();
 
     this.emit('sessionApproved', this);

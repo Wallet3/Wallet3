@@ -12,7 +12,8 @@ interface UrlPhishing {
 export async function isPhishing(url: string) {
   try {
     const resp = await fetch(`https://api.gopluslabs.io/api/v1/phishing_site?url=${url}`);
-    return ((await resp.json()) as UrlPhishing)?.result?.phishing_site === 1;
+    const data = (await resp.json()) as UrlPhishing;
+    return data?.result?.phishing_site === 1 && data.code === 1;
   } catch (error) {}
 
   return false;

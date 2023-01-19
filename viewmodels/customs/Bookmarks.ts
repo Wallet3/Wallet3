@@ -7,7 +7,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import LINQ from 'linq';
 import Langs from '../settings/Langs';
 import { PageMetadata } from '../../screens/browser/Web3View';
-import PhishingConfig from 'eth-phishing-detect/src/config.json';
 import PopularApps from '../../configs/urls/popular.json';
 import RiskyHosts from '../../configs/urls/risky.json';
 import SecureHosts from '../../configs/urls/verified.json';
@@ -213,7 +212,7 @@ const SecureUrls: string[] = Object.getOwnPropertyNames(SecureHosts).flatMap((ca
 export const HttpsSecureUrls = SecureUrls.map((i) => `https://${i.replace('*.', '')}`);
 
 const SecureUrlsSet = new Set(SecureUrls);
-const RiskyUrlsSet = new Set(PhishingConfig.blacklist.concat(RiskyHosts));
+const RiskyUrlsSet = new Set(RiskyHosts);
 
 export function isSecureSite(url: string) {
   if (!url.startsWith('https://')) return false;

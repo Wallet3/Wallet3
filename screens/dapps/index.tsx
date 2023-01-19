@@ -191,7 +191,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
   const [selectedClient, setSelectedClient] = useState<WalletConnect_v1 | WalletConnect_v2 | MetamaskDApp>();
   const { top } = useSafeAreaInsets();
 
-  const { sortedClients, connectedCount } = WalletConnectHub;
+  const { clients, connectedCount } = WalletConnectHub;
   const { dapps } = MetamaskDAppsHub;
 
   const openApp = (client: WalletConnect_v1 | MetamaskDApp | WalletConnect_v2) => {
@@ -288,7 +288,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
 
           {connectedCount > 0 ? (
             <FlatList
-              data={sortedClients}
+              data={clients}
               renderItem={renderItem}
               keyExtractor={(i) => i.uniqueId}
               style={{ flex: 1 }}

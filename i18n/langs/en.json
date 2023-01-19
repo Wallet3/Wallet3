@@ -288,7 +288,7 @@
   "msg-no-hd-wallet": "No wallet can generate a new account",
   "msg-wait-a-moment": "Please wait a moment",
   "msg-sign-in-web2-failed": "Sign failed, please check your internet is connected",
-  "msg-the-app-does-not-support-chain": "The {{network}} has not been supported yet.",
+  "msg-the-app-does-not-support-chain": "The {{network}} has not been supported by this app yet.",
   "msg-currently-ethereum-and-evm-networks-support": "Currently, Wallet 3 only supports Ethereum and EVM networks.",
   "misc-show-full-address": "Show full address",
   "button-next": "Next",

@@ -144,8 +144,6 @@ export const Browser = observer(
     }, [viewShot.current]);
 
     useEffect(() => {
-      console.log(webUrl);
-
       isSecureSite(webUrl)
         ? setWebRiskLevel('verified')
         : isRiskySite(webUrl).then((risky) =>

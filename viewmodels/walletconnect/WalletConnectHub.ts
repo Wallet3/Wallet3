@@ -25,19 +25,21 @@ const walletMeta = {
 
 type Topic = string;
 
+type Extra = { hostname?: string; fromMobile?: boolean };
+
 class WalletConnectHub extends EventEmitter {
   private walletconnect2!: Web3WalletType;
 
-  clients: WalletConnect_v1[] = [];
+  v1Clients: WalletConnect_v1[] = [];
   pendingV2Clients = new Map<Topic, WalletConnect_v2>();
   v2Clients = new Map<Topic, WalletConnect_v2>();
 
   get connectedCount() {
-    return this.clients.length + this.v2Clients.size;
+    return this.v1Clients.length + this.v2Clients.size;
   }
 
-  get sortedClients() {
-    return LINQ.from([...this.clients, ...this.v2Clients.values()])
+  get clients() {
+    return LINQ.from([...this.v1Clients, ...this.v2Clients.values()])
       .where((i) => (i ? true : false))
       .orderByDescending((i) => i.lastUsedTimestamp)
       .toArray();
@@ -46,9 +48,9 @@ class WalletConnectHub extends EventEmitter {
   constructor() {
     super();
     makeObservable(this, {
-      clients: observable,
+      v1Clients: observable,
       v2Clients: observable,
-      sortedClients: computed,
+      clients: computed,
       connectedCount: computed,
       reset: action,
     });
@@ -66,9 +68,9 @@ class WalletConnectHub extends EventEmitter {
     );
 
     runInAction(() => {
-      this.clients = cs;
-      this.clients.forEach((client) => this.handleLifecycle(client));
-      this.clients.filter((c) => c.lastUsedTimestamp < lastUsedExpiry).forEach((c) => c.killSession());
+      this.v1Clients = cs;
+      this.v1Clients.forEach((client) => this.handleLifecycle(client));
+      this.v1Clients.filter((c) => c.lastUsedTimestamp < lastUsedExpiry).forEach((c) => c.killSession());
     });
 
     this.walletconnect2 = await Web3Wallet.init({
@@ -110,7 +112,7 @@ class WalletConnectHub extends EventEmitter {
     this.cleanInactiveV2();
   }
 
-  async connect(uri: string, extra?: { hostname?: string; fromMobile?: boolean }) {
+  async connect(uri: string, extra?: Extra) {
     const linking = Linking.parse(uri);
     const [_, version] = linking.path?.split('@') ?? [];
 
@@ -129,7 +131,7 @@ class WalletConnectHub extends EventEmitter {
         client.setStore(store);
 
         client.once('sessionApproved', () => {
-          runInAction(() => this.clients.push(client));
+          runInAction(() => this.v1Clients.push(client));
 
           store.session = client.session;
           store.lastUsedTimestamp = Date.now();
@@ -151,9 +153,12 @@ class WalletConnectHub extends EventEmitter {
 
         const pairing = await this.walletconnect2.core.pairing.pair({ uri, activatePairing: true });
         const client_v2 = new WalletConnect_v2(this.walletconnect2);
+        client_v2.store.isMobile = extra?.fromMobile ?? false;
+        client_v2.store.hostname = extra?.hostname || '';
+        console.log('extra:', extra);
 
         this.pendingV2Clients.set(pairing.topic, client_v2);
-        this.handleV2Lifecycle(client_v2, pairing.topic);
+        this.handleV2Lifecycle(client_v2, pairing.topic, extra);
 
         return client_v2;
     }
@@ -168,15 +173,16 @@ class WalletConnectHub extends EventEmitter {
 
     client.once('disconnect', () => {
       client.store?.remove?.();
-      if (!this.clients.includes(client)) return;
-      runInAction(() => (this.clients = this.clients.filter((c) => c !== client)));
+      if (!this.v1Clients.includes(client)) return;
+      runInAction(() => (this.v1Clients = this.v1Clients.filter((c) => c !== client)));
     });
   };
 
-  private handleV2Lifecycle = (client: WalletConnect_v2, pairingTopic?: string) => {
+  private handleV2Lifecycle = (client: WalletConnect_v2, pairingTopic?: string, extra?: Extra) => {
     client.once('sessionApproved', () => {
       this.pendingV2Clients.delete(pairingTopic || '');
       runInAction(() => this.v2Clients.set(client.session!.topic, client));
+      setTimeout(() => this.emit('mobileAppConnected', client), 1000);
     });
 
     client.once('disconnect', () => {
@@ -200,6 +206,8 @@ class WalletConnectHub extends EventEmitter {
   }
 
   find(hostname: string) {
+    if (!hostname) return;
+
     return LINQ.from(this.clients.filter((c) => c.origin === hostname))
       .orderByDescending((i) => i.lastUsedTimestamp)
       .firstOrDefault();
@@ -211,7 +219,8 @@ class WalletConnectHub extends EventEmitter {
       c.dispose();
     });
 
-    this.clients = [];
+    this.v1Clients = [];
+    this.v2Clients.clear();
   }
 }
 
