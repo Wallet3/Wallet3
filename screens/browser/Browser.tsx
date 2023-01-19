@@ -144,13 +144,17 @@ export const Browser = observer(
     }, [viewShot.current]);
 
     useEffect(() => {
+      console.log(webUrl);
+
       isSecureSite(webUrl)
         ? setWebRiskLevel('verified')
-        : isRiskySite(webUrl)
-        ? setWebRiskLevel('risky')
-        : webUrl.startsWith('https://')
-        ? setWebRiskLevel('tls')
-        : setWebRiskLevel('insecure');
+        : isRiskySite(webUrl).then((risky) =>
+            risky
+              ? setWebRiskLevel('risky')
+              : webUrl.startsWith('https://')
+              ? setWebRiskLevel('tls')
+              : setWebRiskLevel('insecure')
+          );
     }, [webUrl]);
 
     const refresh = () => {

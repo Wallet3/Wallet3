@@ -1,12 +1,12 @@
 import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
 
-@Entity({ name: 'url_tags' })
+@Entity({ name: __DEV__ ? 'url_tags_dev' : 'url_tags' })
 export default class UrlTag extends BaseEntity {
   @PrimaryColumn()
   hostname!: string;
 
   @Column({ type: 'boolean', default: false })
-  dangerous?: boolean;
+  dangerous!: boolean;
 
   @Column({ type: 'simple-json', nullable: true })
   extra?: any;

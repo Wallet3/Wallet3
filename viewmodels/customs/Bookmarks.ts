@@ -11,6 +11,8 @@ import PhishingConfig from 'eth-phishing-detect/src/config.json';
 import PopularApps from '../../configs/urls/popular.json';
 import RiskyHosts from '../../configs/urls/risky.json';
 import SecureHosts from '../../configs/urls/verified.json';
+import { isDangerousUrl } from '../services/PhishingShield';
+import isURL from 'validator/lib/isURL';
 
 const Priorities = new Map<string, number>([
   ['DeFi', 1],
@@ -175,8 +177,6 @@ class Bookmarks {
       return;
     }
 
-    if (isRiskySite(metadata.origin)) return;
-
     const deniedColors = ['#ffffff', '#000000', 'white', '#fff', '#000', 'black', 'hsl(0, 0%, 100%)', null, undefined];
 
     metadata.themeColor = deniedColors.includes(metadata.themeColor?.toLowerCase()?.substring(0, 7))
@@ -235,11 +235,11 @@ export function isSecureSite(url: string) {
   return false;
 }
 
-export function isRiskySite(url: string) {
-  if (!url) return false;
+export async function isRiskySite(url: string) {
+  if (!isURL(url)) return false;
 
   try {
-    return RiskyUrlsSet.has(Linking.parse(url).hostname || '');
+    return RiskyUrlsSet.has(Linking.parse(url).hostname || '') || (await isDangerousUrl(url));
   } catch (error) {}
 
   return false;

@@ -7,16 +7,17 @@ const DOMAIN = 'wants you to sign in with your Ethereum account:';
 const ADDRESS = '0x[a-zA-Z0-9]{40}';
 const STATEMENT = '(([^\\n]+)\\n)?';
 const URI = '(([^:?#]+):)?(([^?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))';
-const URI_LINE = `URI: `;
+const URI_LINE = 'URI: ';
 const VERSION = 'Version: ';
 const CHAIN_ID = 'Chain ID: ';
 const NONCE = 'Nonce: ';
-const DATETIME = `([0-9]+)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])[Tt]([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+)?(([Zz])|([\+|\-]([01][0-9]|2[0-3]):[0-5][0-9]))`;
-const ISSUED_AT = `Issued At: `;
-const EXPIRATION_TIME = `Expiration Time: `;
-const NOT_BEFORE = `Not Before: `;
+const DATETIME =
+  '([0-9]+)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])[Tt]([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(.[0-9]+)?(([Zz])|([+|-]([01][0-9]|2[0-3]):[0-5][0-9]))';
+const ISSUED_AT = 'Issued At: ';
+const EXPIRATION_TIME = 'Expiration Time: ';
+const NOT_BEFORE = 'Not Before: ';
 const REQUEST_ID = 'Request ID: ';
-const RESOURCES = `Resources:`;
+const RESOURCES = 'Resources:';
 
 export class ParsedMessage {
   domain: string | undefined;
@@ -50,7 +51,7 @@ export class ParsedMessage {
       this.domain?.toLowerCase().replace('https://', '') === this.origin?.toLowerCase().replace('https://', '');
 
     if (!isURL(this.domain)) {
-      console.log(this.domain)
+      console.log(this.domain);
       throw new Error('Invalid domain');
     }
 
