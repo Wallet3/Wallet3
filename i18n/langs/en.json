@@ -251,6 +251,8 @@
   "modal-tx-details-view-on-explorer": "View on Block Explorer",
   "modal-sign-typed-msg-items": "Items: {{count}}",
   "modal-sign-with-stand-mode": "Sign with Standard Mode",
+  "modal-phishing-title": "Phishing detected",
+  "modal-phishing-content": "ACCORDING TO GO+ SECURITY ENGINE:\n\n{{webUrl}}\n\nTHIS SITE IS REPORTED AS A PHISHING SITE. NEVER CONNECT YOUR WALLET TO THIS SITE.",
   "tx-hub-transaction-confirmed": "Transaction confirmed",
   "tx-hub-transaction-failed": "Transaction failed",
   "tx-hub-confirmed-msg": "Tx: {{hash}} has been confirmed at block: {{block}}",

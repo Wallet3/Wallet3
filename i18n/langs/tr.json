@@ -251,6 +251,8 @@
   "modal-tx-details-view-on-explorer": "Block Explorer'da Gör",
   "modal-sign-typed-msg-items": "Öğeler: {{count}}",
   "modal-sign-with-stand-mode": "Standart Modda İmzala",
+  "modal-phishing-title": "Phishing tespit edildi",
+  "modal-phishing-content": "GO+ GÜVENLİK MOTORUNA GÖRE:\n\n{{webUrl}}\n\nBU SİTE BİR PHISHING SİTESİ OLARAK RAPOR EDİLMIŞTİR. ASLA CÜZDANINIZI BU SİTENİN ÜZERİNE BAĞLAMAYIN.",
   "tx-hub-transaction-confirmed": "İşlem doğrulandı",
   "tx-hub-transaction-failed": "İşlem başarısız",
   "tx-hub-confirmed-msg": "Tx: {{hash}} blokta doğrulandı: {{block}}",

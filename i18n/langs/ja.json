@@ -247,6 +247,8 @@
   "modal-tx-details-view-on-explorer": "ブロックエクスプローラーで見る",
   "modal-sign-typed-msg-items": "{{count}}",
   "modal-sign-with-stand-mode": "標準モードでのサイン",
+  "modal-phishing-title": "フィッシング検出",
+  "modal-phishing-content": "GO+セキュリティエンジンによると、\n\n{{webUrl}}\n\nこのサイトはフィッシングサイトとして報告されています。このサイトにウォレットを接続しないでください。",
   "tx-hub-transaction-confirmed": "トランザクションの確認",
   "tx-hub-transaction-failed": "トランザクションに失敗しました。",
   "tx-hub-confirmed-msg": "トランザクション: {{hash}} がブロック {{block}} で確認されました。",

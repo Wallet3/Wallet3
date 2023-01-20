@@ -4,8 +4,8 @@ import * as Linking from 'expo-linking';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import Bookmarks, { HttpsSecureUrls, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
 import { BreathAnimation, startLayoutAnimation } from '../../utils/animations';
-import { Dimensions, Share, StyleProp, Text, TextInput, TouchableOpacity, View, ViewStyle } from 'react-native';
-import { NullableImage, SafeViewContainer } from '../../components';
+import { Button, NullableImage, SafeViewContainer } from '../../components';
+import { Dimensions, Modal, Share, StyleProp, Text, TextInput, TouchableOpacity, View, ViewStyle } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Web3View, { PageMetadata } from './Web3View';
@@ -107,6 +107,7 @@ export const Browser = observer(
     const [webRiskLevel, setWebRiskLevel] = useState<WebRiskLevel>('insecure');
 
     const { ref: favsRef, open: openFavs, close: closeFavs } = useModalize();
+    const { ref: riskyRef, open: openRiskyTip, close: closeRiskyTip } = useModalize();
 
     const [largeIconSize, setLargeIconSize] = useState(LargeIconSize);
     const [smallIconSize, setSmallIconSize] = useState(SmallIconSize);
@@ -148,13 +149,14 @@ export const Browser = observer(
     useEffect(() => {
       isSecureSite(webUrl)
         ? setWebRiskLevel('verified')
-        : isRiskySite(webUrl).then((risky) =>
-            risky
-              ? setWebRiskLevel('risky')
-              : webUrl.startsWith('https://')
-              ? setWebRiskLevel('tls')
-              : setWebRiskLevel('insecure')
-          );
+        : isRiskySite(webUrl).then((risky) => {
+            if (risky) {
+              setWebRiskLevel('risky');
+              openRiskyTip();
+            } else {
+              webUrl.startsWith('https://') ? setWebRiskLevel('tls') : setWebRiskLevel('insecure');
+            }
+          });
     }, [webUrl]);
 
     const refresh = () => {
@@ -598,6 +600,44 @@ export const Browser = observer(
                     goTo(url);
                     closeFavs();
                   }}
+                />
+              </SafeViewContainer>
+            </SafeAreaProvider>
+          </Modalize>
+
+          <Modalize ref={riskyRef} adjustToContentHeight disableScrollIfPossible withHandle={false} closeOnOverlayTap={false}>
+            <SafeAreaProvider style={{ height: 439, padding: 0, ...modalStyle.containerTopBorderRadius }}>
+              <SafeViewContainer
+                style={{ backgroundColor: warningColor, height: 439, ...modalStyle.containerTopBorderRadius }}
+              >
+                <Text
+                  numberOfLines={1}
+                  style={{ color: '#fff', fontSize: 32, fontWeight: '600', textTransform: 'uppercase', textAlign: 'center' }}
+                >
+                  {t('modal-phishing-title')}
+                </Text>
+
+                <Ionicons name="shield" color="#fff" size={96} style={{ marginVertical: 12, alignSelf: 'center' }} />
+
+                <Text
+                  style={{
+                    color: '#fff',
+                    marginTop: 12,
+                    fontSize: 17,
+                    fontWeight: '500',
+                    lineHeight: 21,
+                  }}
+                >
+                  {t('modal-phishing-content', { webUrl: `${webUrl.startsWith('https:') ? 'https' : 'http'}://${hostname}` })}
+                </Text>
+
+                <View style={{ flex: 1 }} />
+
+                <Button
+                  themeColor={'red'}
+                  txtStyle={{ color: '#fff', textTransform: 'none' }}
+                  title="OK"
+                  onPress={closeRiskyTip}
                 />
               </SafeViewContainer>
             </SafeAreaProvider>
