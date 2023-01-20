@@ -110,7 +110,6 @@ export default observer((props: Web3ViewProps) => {
     if (dapp?.origin === hostname) return;
 
     const wcApp = WalletConnectHub.find(hostname);
-    console.log('web3 view find', wcApp?.uniqueId, wcApp?.isMobileApp, wcApp?.origin);
 
     if (wcApp?.isMobileApp || wcApp?.version === 2) {
       updateDAppState({

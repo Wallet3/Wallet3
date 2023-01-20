@@ -1,5 +1,7 @@
 import * as Linking from 'expo-linking';
 
+import { DAY, SECOND } from '../../utils/time';
+
 import Database from '../../models/Database';
 import UrlTag from '../../models/entities/UrlTag';
 import { isPhishing } from '../../common/apis/GoPlus';
@@ -30,13 +32,19 @@ async function checkUrl() {
     }
 
     let item = await Database.urls.findOne({ where: { hostname } });
-    if (item) {
+    if (item && Date.now() < item.lastUpdatedTimestamp + 30 * DAY) {
       Cache.set(hostname, item.dangerous);
       resolve(item.dangerous);
       return;
     }
 
     const phishing = await isPhishing(url);
+    if (phishing === undefined) {
+      Cache.set(hostname, false);
+      resolve(false);
+      return;
+    }
+
     Cache.set(hostname, phishing);
 
     item = new UrlTag();
@@ -48,7 +56,7 @@ async function checkUrl() {
     resolve(phishing);
   } finally {
     busy = false;
-    setTimeout(() => checkUrl(), 1 * 1000);
+    if (pendingQueue.length > 0) setTimeout(() => checkUrl(), 1 * SECOND);
   }
 }
 

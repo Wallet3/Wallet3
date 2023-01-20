@@ -100,7 +100,7 @@ class WalletConnectHub extends EventEmitter {
     });
 
     const v2Clients = v2Sessions.map((store) => new WalletConnect_v2(this.walletconnect2, store));
-    v2Clients.filter((c) => c.lastUsedTimestamp < lastUsedExpiry).forEach((c) => c.killSession);
+    v2Clients.filter((c) => c.lastUsedTimestamp < lastUsedExpiry).forEach((c) => c.killSession());
 
     runInAction(() => {
       for (let c of v2Clients.filter((c) => c.lastUsedTimestamp > lastUsedExpiry)) {

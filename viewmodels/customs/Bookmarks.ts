@@ -213,22 +213,32 @@ export const HttpsSecureUrls = SecureUrls.map((i) => `https://${i.replace('*.', 
 
 const SecureUrlsSet = new Set(SecureUrls);
 const RiskyUrlsSet = new Set(RiskyHosts);
+const SecureUrlCache = new Set<string>();
 
 export function isSecureSite(url: string) {
   if (!url.startsWith('https://')) return false;
+
+  if (SecureUrlCache.has(url)) return true;
 
   try {
     const { hostname } = Linking.parse(url);
     if (!hostname) return false;
 
-    if (SecureUrlsSet.has(hostname)) return true;
-
-    const domains = hostname.split('.');
-    if (domains.length > 2) {
-      return SecureUrlsSet.has(`*.${hostname.substring(domains[0].length + 1)}`);
+    if (SecureUrlsSet.has(hostname)) {
+      SecureUrlCache.add(url);
+      return true;
     }
 
-    return SecureUrlsSet.has(`*.${hostname}`);
+    const domains = hostname.split('.');
+    if (domains.length > 2 && SecureUrlsSet.has(`*.${hostname.substring(domains[0].length + 1)}`)) {
+      SecureUrlCache.add(url);
+      return true;
+    }
+
+    if (SecureUrlsSet.has(`*.${hostname}`)) {
+      SecureUrlCache.add(url);
+      return true;
+    }
   } catch (error) {}
 
   return false;

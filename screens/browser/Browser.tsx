@@ -49,6 +49,8 @@ const calcIconSize = () => {
 
 const { LargeIconSize, SmallIconSize } = calcIconSize();
 
+type WebRiskLevel = 'verified' | 'tls' | 'insecure' | 'risky';
+
 interface Props {
   pageId: number;
   navigation?: BottomTabNavigationProp<any, any>;
@@ -96,13 +98,13 @@ export const Browser = observer(
     const [loadingProgress, setLoadingProgress] = useState(0);
     const [isFocus, setFocus] = useState(false);
     const [hostname, setHostname] = useState('');
-    const [webUrl, setWebUrl] = useState('');
+    const [webUrl, setWebUrl] = useState(initUrl || '');
 
     const [addr, setAddr] = useState('');
     const [uri, setUri] = useState<string>('');
     const [pageMetadata, setPageMetadata] = useState<{ icon: string; title: string; desc?: string; origin: string }>();
     const [suggests, setSuggests] = useState<string[]>([]);
-    const [webRiskLevel, setWebRiskLevel] = useState('');
+    const [webRiskLevel, setWebRiskLevel] = useState<WebRiskLevel>('insecure');
 
     const { ref: favsRef, open: openFavs, close: closeFavs } = useModalize();
 
@@ -360,7 +362,7 @@ export const Browser = observer(
                       size={12}
                       style={{ marginTop: 2 }}
                     />
-                  ) : webRiskLevel === 'risky' || webRiskLevel === 'insecure' ? (
+                  ) : webRiskLevel === 'risky' || (webRiskLevel === 'insecure' && loadingProgress === 1) ? (
                     <Ionicons name="warning" color={warningColor} size={12} style={{ marginTop: 2 }} />
                   ) : webRiskLevel === 'tls' ? (
                     <Ionicons name="lock-closed" color={foregroundColor} size={12} />
