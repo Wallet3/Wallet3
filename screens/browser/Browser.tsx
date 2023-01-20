@@ -612,7 +612,7 @@ export const Browser = observer(
               >
                 <Text
                   numberOfLines={1}
-                  style={{ color: '#fff', fontSize: 32, fontWeight: '600', textTransform: 'uppercase', textAlign: 'center' }}
+                  style={{ color: '#fff', fontSize: 27, fontWeight: '600', textTransform: 'uppercase', textAlign: 'center' }}
                 >
                   {t('modal-phishing-title')}
                 </Text>
@@ -623,7 +623,7 @@ export const Browser = observer(
                   style={{
                     color: '#fff',
                     marginTop: 12,
-                    fontSize: 17,
+                    fontSize: 16,
                     fontWeight: '500',
                     lineHeight: 21,
                   }}
