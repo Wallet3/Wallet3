@@ -590,8 +590,11 @@ export const Browser = observer(
                   paddingTop: 0,
                 }}
               >
-                <ScrollView horizontal scrollEnabled={false}>
-                  <SectionBookmarks bounces={favs.length >= 3} style={{ paddingTop: 12 }} />
+                <ScrollView horizontal scrollEnabled={false} style={{ flex: 1 }}>
+                  <SectionBookmarks
+                    bounces={favs.length >= 3}
+                    style={{ paddingTop: 12, flex: 1, width: ReactiveScreen.width }}
+                  />
                 </ScrollView>
 
                 <RecentHistory
