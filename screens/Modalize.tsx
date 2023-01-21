@@ -119,33 +119,33 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
 
 const WalletConnect = () => {
   const { ref: connectDappRef, open: openConnectDapp, close: closeConnectDapp } = useModalize();
-  const [connectUri, setConnectUri] = useState<string>();
-  const [extra, setExtra] = useState<any>();
-  const [directClient, setDirectClient] = useState<WalletConnect_v2>();
+  const [state, setState] = useState<{ uri?: string; extra?: any; client_v2?: WalletConnect_v2 }>({
+    uri: undefined,
+    extra: undefined,
+    client_v2: undefined,
+  });
 
   useEffect(() => {
     PubSub.subscribe(MessageKeys.codeScan.walletconnect, (_, { data, extra }) => {
-      setConnectUri(data);
-      setExtra(extra);
+      setState({ uri: data, extra });
       openConnectDapp();
     });
 
     PubSub.subscribe(MessageKeys.walletconnect.pairing_request, (_, { client }) => {
-      setDirectClient(client);
+      setState({ client_v2: client });
       openConnectDapp();
     });
 
     PubSub.subscribe(MessageKeys.walletconnect.notSupportedSessionProposal, () => {
       closeConnectDapp();
-      setConnectUri(undefined);
-      setExtra(undefined);
-      setDirectClient(undefined);
+      setState({});
     });
 
     return () => {
       PubSub.unsubscribe(MessageKeys.codeScan.walletconnect);
       PubSub.unsubscribe(MessageKeys.walletconnect.notSupportedSessionProposal);
       PubSub.unsubscribe(MessageKeys.walletconnect.pairing_request);
+      setState({});
     };
   }, []);
 
@@ -162,7 +162,7 @@ const WalletConnect = () => {
       modalStyle={styles.containerTopBorderRadius}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
-      <WalletConnectDApp uri={connectUri} close={closeConnectDapp} extra={extra} directClient={directClient} />
+      <WalletConnectDApp uri={state.uri} close={closeConnectDapp} extra={state.extra} directClient={state.client_v2} />
     </Modalize>
   );
 };
