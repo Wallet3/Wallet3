@@ -4465,6 +4465,14 @@
     "@urql/core" ">=2.3.1"
     wonka "^4.0.14"
 
+"@waku/react-native@^0.0.12":
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/@waku/react-native/-/react-native-0.0.12.tgz#19d0262696ba5e64e98bc91a832c39f6ce922efd"
+  integrity sha512-1PsDzy/qsohT/qOi7tY7a9RrOB7dAaFbkxoHMVyhk0fjzyCFB9vXS7zExQkgknsdrnPuqofqkfpuiTIpw+nokg==
+  dependencies:
+    base-64 "^1.0.0"
+    big-integer "^1.6.51"
+
 "@walletconnect/auth-client@^2.0.2":
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/@walletconnect/auth-client/-/auth-client-2.0.2.tgz#c56e74612598d28d705dad111529a84d93b90fef"
@@ -5360,6 +5368,11 @@ balanced-match@^1.0.0:
   resolved "https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.2.tgz"
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
 
+base-64@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/base-64/-/base-64-1.0.0.tgz#09d0f2084e32a3fd08c2475b973788eee6ae8f4a"
+  integrity sha512-kwDPIFCGx0NZHog36dj+tHiwP4QMzsZ3AgMViUBKI0+V5n4U0ufTCUMhnQ04diaRI8EX/QcPfql7zlhZ7j4zgg==
+
 base-x@^3.0.2:
   version "3.0.9"
   resolved "https://registry.yarnpkg.com/base-x/-/base-x-3.0.9.tgz#6349aaabb58526332de9f60995e548a53fe21320"
@@ -5402,7 +5415,7 @@ better-opn@~3.0.2:
   dependencies:
     open "^8.0.4"
 
-big-integer@1.6.x:
+big-integer@1.6.x, big-integer@^1.6.51:
   version "1.6.51"
   resolved "https://registry.yarnpkg.com/big-integer/-/big-integer-1.6.51.tgz#0df92a5d9880560d3ff2d5fd20245c889d130686"
   integrity sha512-GPEid2Y9QU1Exl1rpO9B2IPJGHPSupF5GnVIP0blYvNOMer2bTvSWs1jGOUg04hTmu67nmLsQ9TBo1puaotBHg==

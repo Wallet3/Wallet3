@@ -43,6 +43,7 @@
         "typeorm",
         "Viewmodel",
         "viewmodels",
+        "Waku",
         "wallconnect",
         "walletconnect",
         "Wordlist",
