@@ -1193,14 +1193,14 @@ PODS:
     - React-Core
     - SDWebImage (~> 5.11.1)
     - SDWebImageWebPCoder (~> 0.8.4)
-  - RNFBAnalytics (16.5.0):
+  - RNFBAnalytics (16.5.1):
     - Firebase/Analytics (= 10.3.0)
     - React-Core
     - RNFBApp
-  - RNFBApp (16.5.0):
+  - RNFBApp (16.5.1):
     - Firebase/CoreOnly (= 10.3.0)
     - React-Core
-  - RNFBFirestore (16.5.0):
+  - RNFBFirestore (16.5.1):
     - Firebase/Firestore (= 10.3.0)
     - nanopb (< 2.30910.0, >= 2.30908.0)
     - React-Core
@@ -1643,9 +1643,9 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: 8616bd5a58af409453ea4e1b246521bb76578d60
   RNDeviceInfo: 4701f0bf2a06b34654745053db0ce4cb0c53ada7
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
-  RNFBAnalytics: ecfc88d832496f624d1bc9c84bc8d23b194994f2
-  RNFBApp: 2b3e57f4eecd9cfe8a5dd2ea8ed27a87fbc6eada
-  RNFBFirestore: edaf1440a183aefcb887dc5ccee963b5c2a286f7
+  RNFBAnalytics: 6d278d860b1b2a254de8d9d2d3d3f57edb7478ae
+  RNFBApp: 1f48f0e6e976f8b7cc1ead051479fa4051727eb8
+  RNFBFirestore: 69bf9ecff41ce008453374e4514d7aa9a83ec863
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNGoogleSignin: 22e468a9474dbcb8618d8847205ad4f0b2575d13
   RNImageColors: fd9777591fc765780e035f4bec7a42edabc86eb4

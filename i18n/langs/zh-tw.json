@@ -248,7 +248,7 @@
   "modal-sign-typed-msg-items": "{{count}} 個項目",
   "modal-sign-with-stand-mode": "使用標準模式",
   "modal-phishing-title": "檢測到釣魚網站",
-  "modal-phishing-content": "根據 Go+ 安全引擎：\n\n{{webUrl}}\n\n此網站是釣魚網站，絕對不要將您的錢包連接到此網站",
+  "modal-phishing-content": "根據 Go+ 安全引擎報告：\n\n{{webUrl}}\n\n此網站是釣魚網站，請不要將您的錢包連接到此網站。",
   "tx-hub-transaction-confirmed": "交易已確認",
   "tx-hub-transaction-failed": "交易失敗",
   "tx-hub-confirmed-msg": "交易: {{hash}} 已在區塊 {{block}} 上確認",
