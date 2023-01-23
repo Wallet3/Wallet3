@@ -13,4 +13,6 @@ import { registerRootComponent } from 'expo';
 // the environment is set up appropriately
 registerRootComponent(App);
 
-initWaku();
+if (__DEV__) {
+  initWaku();
+}

@@ -33,7 +33,7 @@ export async function initWaku() {
 
   console.log('listen: ', await listenAddresses());
 
-  //   await relaySubscribe();
+  await relaySubscribe("/waku/2/wallet3/proto");
 
   onMessage((event) => {
     console.log(`Message received: ${event.wakuMessage.timestamp} - payload:[${event.wakuMessage.payload}]`);
