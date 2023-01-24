@@ -27,7 +27,7 @@ export async function initWaku() {
   const nodeStarted = await isStarted();
 
   if (!nodeStarted) {
-    await newNode({ host: '127.0.0.1', port: 60000 } as any);
+    await newNode({ host: '0.0.0.0', port: 60002 } as any);
     await start();
   }
 
