@@ -3,7 +3,7 @@ import { EvilIcons, Ionicons } from '@expo/vector-icons';
 import { NFTMetadata, NFTTransferring } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
 
 import React, { useEffect, useState } from 'react';
-import { Share, Text, TouchableOpacity, View } from 'react-native';
+import { Share, Text, TouchableOpacity, View, ScrollView } from 'react-native';
 
 import Avatar from '../../components/Avatar';
 import { BlurView } from 'expo-blur';
