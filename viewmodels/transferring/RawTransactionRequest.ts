@@ -69,13 +69,16 @@ export class RawTransactionRequest extends BaseTransaction {
 
   get tokenAmount() {
     try {
-      const value = Number(utils.formatUnits(this.tokenAmountWei, this.tokenDecimals)) || 0;
+      const bigValue = utils.formatUnits(this.tokenAmountWei, this.tokenDecimals);
+      const value = Number(bigValue) || 0;
 
       return value < 1
         ? value === 0
           ? '0'
-          : utils.formatUnits(this.tokenAmountWei, this.tokenDecimals)
-        : numeral(value).format(Number.isInteger(value) ? '0,0' : '0,0.00');
+          : bigValue
+        : `${value}`.includes('e+')
+        ? bigValue
+        : numeral(bigValue).format(Number.isInteger(value) ? '0,0' : '0,0.00');
     } catch (error) {
       return '0';
     }
@@ -253,7 +256,7 @@ export class RawTransactionRequest extends BaseTransaction {
 
         this.setTo(spender);
 
-        const ownerOf = (await erc721.ownerOf(approveAmountOrTokenId.toString())) || '';
+        const ownerOf = (await erc721.ownerOf(approveAmountOrTokenId.toString(), true)) || '';
         const isERC721 = utils.isAddress(ownerOf) && ownerOf === owner;
 
         if (isERC721) {

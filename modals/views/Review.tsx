@@ -36,10 +36,23 @@ interface Props {
   biometricType?: BioType;
   txDataEditable?: boolean;
   onEditDataPress?: () => void;
+  onInteractionStart?: () => void;
+  onInteractionEnd?: () => void;
 }
 
 const ReviewView = observer(
-  ({ vm, onBack, onGasPress, onSend, disableBack, biometricType, txDataEditable, onEditDataPress }: Props) => {
+  ({
+    vm,
+    onBack,
+    onGasPress,
+    onSend,
+    disableBack,
+    biometricType,
+    txDataEditable,
+    onEditDataPress,
+    onInteractionEnd,
+    onInteractionStart,
+  }: Props) => {
     const { t } = i18n;
     const [busy, setBusy] = React.useState(false);
     const { borderColor, textColor, secondaryTextColor } = Theme;
@@ -236,6 +249,8 @@ const ReviewView = observer(
           onSwipeSuccess={onLongSendPress}
           icon={authIcon}
           themeColor={vm.transferToRisky ? warningColor : vm.network.color}
+          onInteractionStart={onInteractionStart}
+          onInteractionEnd={onInteractionEnd}
         />
       </SafeViewContainer>
     );

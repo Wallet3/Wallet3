@@ -1,6 +1,15 @@
 {
   "Education": ["app.banklessacademy.com", "myfirstnft.info", "speedrunethereum.com"],
-  "Dev": ["*.scroll.io", "*.optimism.io", "*.arbitrum.io", "*.zksync.io", "llamanodes.com", "llamarpc.com", "web3q.io"],
+  "Dev": [
+    "*.ethereum.org",
+    "*.scroll.io",
+    "*.optimism.io",
+    "*.arbitrum.io",
+    "*.zksync.io",
+    "llamanodes.com",
+    "llamarpc.com",
+    "web3q.io"
+  ],
   "DeFi": [
     "*.uniswap.org",
     "app.uniswap.org",
@@ -104,6 +113,7 @@
     "link3.to",
     "cyberconnect.me",
     "app.rabbithole.gg",
+    "www.chainstory.xyz",
     "www.bonfire.xyz",
     "context.app",
     "beta.layer3.xyz",
@@ -137,6 +147,7 @@
     "www.gem.xyz",
     "superrare.com",
     "studio.manifold.xyz",
+    "welook.io",
     "www.sound.xyz",
     "archipelago.art",
     "daidai.io",

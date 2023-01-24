@@ -60,8 +60,6 @@ const TxReview = observer(
     const reviewItemValueStyle = { ...styles.reviewItemValue, color: textColor };
     const safeThemeColor = vm.toAddressRisky ? warningColor : thirdTextColor;
 
-    console.log(vm.nfts.length, vm.nft?.address);
-
     return (
       <SafeViewContainer>
         <View
@@ -478,7 +476,7 @@ const TxReview = observer(
 
         {vm.txException ? <TxException exception={vm.txException} /> : undefined}
 
-        {(vm.type === 'Approve_ERC20' || vm.type === 'Approve_ForAll') && !vm.txException && !vm.insufficientFee && (
+        {(vm.type === 'Approve_ERC20' || vm.type === 'Approve_ForAll') && !vm.isValidParams && (
           <Animated.View
             style={{ paddingHorizontal: 8, paddingVertical: 8, flexDirection: 'row' }}
             entering={FadeInDown.delay(2500).springify()}

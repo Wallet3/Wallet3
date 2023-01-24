@@ -19,10 +19,13 @@ interface Props {
   onSwipeSuccess?: () => void;
   themeColor?: string;
   reverse?: boolean;
+  onInteractionStart?: () => void;
+  onInteractionEnd?: () => void;
 }
 
 export default (props: Props) => {
-  const { disabled, reverse, themeColor, onLongPress, onPress, onSwipeSuccess, title } = props;
+  const { disabled, reverse, themeColor, onLongPress, onPress, onSwipeSuccess, title, onInteractionStart, onInteractionEnd } =
+    props;
 
   const backgroundColor: any = disabled
     ? '#D3D3D3'
@@ -48,7 +51,13 @@ export default (props: Props) => {
   const arrowIcon = () => <Ionicons name="arrow-forward" size={19} color={backgroundColor} style={{}} />;
 
   return onSwipeSuccess ? (
-    <View style={{ ...((props?.style as any) || {}), backgroundColor, borderRadius: 7, height: 42 }}>
+    <View
+      style={{ ...((props?.style as any) || {}), backgroundColor, borderRadius: 7, height: 42 }}
+      onTouchStart={onInteractionStart}
+      onTouchEnd={onInteractionEnd}
+      onPointerEnter={onInteractionStart}
+      onPointerLeave={onInteractionEnd}
+    >
       <Animatable.View
         animation={disabled ? undefined : BreathAnimation}
         duration={2200}

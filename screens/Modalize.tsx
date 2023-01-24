@@ -41,6 +41,7 @@ import Theme from '../viewmodels/settings/Theme';
 import { TokenTransferring } from '../viewmodels/transferring/TokenTransferring';
 import { WCCallRequestRequest } from '../models/entities/WCSession_v1';
 import { WalletConnect_v1 } from '../viewmodels/walletconnect/WalletConnect_v1';
+import { WalletConnect_v2 } from '../viewmodels/walletconnect/WalletConnect_v2';
 import { autorun } from 'mobx';
 import i18n from '../i18n';
 import { isDomain } from '../viewmodels/services/DomainResolver';
@@ -61,7 +62,7 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
   useEffect(() => {
     PubSub.subscribe(
       MessageKeys.wc_request,
-      (_, { client, request }: { client: WalletConnect_v1; request: WCCallRequestRequest }) => {
+      (_, { client, request, chainId }: { client: WalletConnect_v1; request: WCCallRequestRequest; chainId?: number }) => {
         if (!appAuth.appAuthorized) {
           client.rejectRequest(request.id, 'Unauthorized');
           return;
@@ -116,20 +117,35 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
   );
 };
 
-const WalletConnectV1 = () => {
+const WalletConnect = () => {
   const { ref: connectDappRef, open: openConnectDapp, close: closeConnectDapp } = useModalize();
-  const [connectUri, setConnectUri] = useState<string>();
-  const [extra, setExtra] = useState<any>();
+  const [state, setState] = useState<{ uri?: string; extra?: any; client_v2?: WalletConnect_v2 }>({
+    uri: undefined,
+    extra: undefined,
+    client_v2: undefined,
+  });
 
   useEffect(() => {
-    PubSub.subscribe(MessageKeys.CodeScan_wc, (_, { data, extra }) => {
-      setConnectUri(data);
-      setExtra(extra);
+    PubSub.subscribe(MessageKeys.codeScan.walletconnect, (_, { data, extra }) => {
+      setState({ uri: data, extra });
       openConnectDapp();
     });
 
+    PubSub.subscribe(MessageKeys.walletconnect.pairing_request, (_, { client }) => {
+      setState({ client_v2: client });
+      openConnectDapp();
+    });
+
+    PubSub.subscribe(MessageKeys.walletconnect.notSupportedSessionProposal, () => {
+      closeConnectDapp();
+      setState({});
+    });
+
     return () => {
-      PubSub.unsubscribe(MessageKeys.CodeScan_wc);
+      PubSub.unsubscribe(MessageKeys.codeScan.walletconnect);
+      PubSub.unsubscribe(MessageKeys.walletconnect.notSupportedSessionProposal);
+      PubSub.unsubscribe(MessageKeys.walletconnect.pairing_request);
+      setState({});
     };
   }, []);
 
@@ -146,7 +162,7 @@ const WalletConnectV1 = () => {
       modalStyle={styles.containerTopBorderRadius}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
-      <WalletConnectDApp uri={connectUri} close={closeConnectDapp} extra={extra} />
+      <WalletConnectDApp uri={state.uri} close={closeConnectDapp} extra={state.extra} directClient={state.client_v2} />
     </Modalize>
   );
 };
@@ -400,6 +416,7 @@ const RequestFundsModal = () => {
 const SendFundsModal = () => {
   const [vm, setVM] = useState<TokenTransferring>();
   const [isERC681, setIsERC681] = useState(false);
+  const [interacting, setInteracting] = useState(false);
 
   const { ref: sendRef, open: openSendModal, close: closeSendModal } = useModalize();
 
@@ -455,6 +472,10 @@ const SendFundsModal = () => {
       ref={sendRef}
       adjustToContentHeight
       disableScrollIfPossible
+      closeOnOverlayTap={!interacting}
+      withHandle={!interacting}
+      panGestureEnabled={!interacting}
+      panGestureComponentEnabled={!interacting}
       modalStyle={styles.containerTopBorderRadius}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
       onClosed={() => {
@@ -462,7 +483,15 @@ const SendFundsModal = () => {
         setVM(undefined);
       }}
     >
-      {vm ? <Send vm={vm} onClose={clear} erc681={isERC681} /> : undefined}
+      {vm && (
+        <Send
+          vm={vm}
+          onClose={clear}
+          erc681={isERC681}
+          onInteractionStart={() => setInteracting(true)}
+          onInteractionEnd={() => setInteracting(false)}
+        />
+      )}
     </Modalize>
   );
 };
@@ -656,7 +685,7 @@ export default (props: { app: AppVM; appAuth: Authentication }) => {
     <GlobalNetworksMenuModal key="networks-menu" />,
     <GlobalAccountsMenuModal key="accounts-menu" />,
     <GlobalLoadingModal key="loading-modal" />,
-    <WalletConnectV1 key="walletconnect" />,
+    <WalletConnect key="walletconnect" />,
     <WalletConnectRequests key="walletconnect-requests" {...props} />,
     <InpageDAppConnect key="inpage-dapp-connect" />,
     <InpageDAppRequests key="inpage-dapp-requests" />,

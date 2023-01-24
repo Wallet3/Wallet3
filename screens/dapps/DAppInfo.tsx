@@ -11,6 +11,7 @@ import Networks from '../../viewmodels/core/Networks';
 import React from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { WalletConnect_v1 } from '../../viewmodels/walletconnect/WalletConnect_v1';
+import { WalletConnect_v2 } from '../../viewmodels/walletconnect/WalletConnect_v2';
 import dayjs from 'dayjs';
 import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
@@ -19,7 +20,7 @@ import { observer } from 'mobx-react-lite';
 import { thirdFontColor } from '../../constants/styles';
 
 interface Props {
-  client: WalletConnect_v1 | MetamaskDApp;
+  client: WalletConnect_v1 | WalletConnect_v2 | MetamaskDApp;
   defaultAccount?: Account;
   defaultNetwork?: INetwork;
 

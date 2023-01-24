@@ -10,6 +10,10 @@ export class MetamaskDApp extends EventEmitter {
 
   isMobileApp = true;
 
+  get uniqueId() {
+    return `${this.hostname}-${this.lastUsedChainId}`;
+  }
+
   get lastUsedTimestamp() {
     return this.dapp.lastUsedTimestamp;
   }

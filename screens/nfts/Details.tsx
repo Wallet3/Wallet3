@@ -1,15 +1,15 @@
-import { Etherscan, Opensea, Polygon, Rarible } from '../../assets/3rd';
+import { Etherscan, Opensea, Polygon as PolygonLogo, Rarible } from '../../assets/3rd';
 import { EvilIcons, Ionicons } from '@expo/vector-icons';
 import { NFTMetadata, NFTTransferring } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
-import { Platform, Share, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import { Share, Text, TouchableOpacity, View } from 'react-native';
 
 import Avatar from '../../components/Avatar';
 import { BlurView } from 'expo-blur';
 import { Button } from '../../components';
+import { ChainIds } from '../../common/Networks';
 import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
 import { InappBrowserModal } from '../Modalize';
-import LINQ from 'linq';
 import { Modalize } from 'react-native-modalize';
 import MultiSourceImage from '../../components/MultiSourceImage';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -23,11 +23,12 @@ import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { lightOrDark } from '../../utils/color';
 import { observer } from 'mobx-react-lite';
-import { openBrowserAsync } from 'expo-web-browser';
 import { openInappBrowser } from '../../modals/InappBrowser';
 import styles from '../../modals/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+const { Ethereum, Optimism, Arbitrum, Polygon, Avalanche, BNBChain } = ChainIds;
 
 export default observer(({ navigation, route }: NativeStackScreenProps<any, any>) => {
   const { item, colorResult } = route.params as { item: NFTMetadata; colorResult?: ImageColorsResult };
@@ -185,28 +186,28 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
           </View>
         ) : undefined}
 
-        {item.attributes && item.attributes.filter((a) => a.value).length > 0 ? (
+        {item.attributes && item.attributes.filter((a) => a?.value).length > 0 ? (
           <View style={{ padding: 16 }}>
             <Text style={{ color: detailColor, fontSize: 20, fontWeight: '600', marginBottom: 8 }}>
               {t('nft-txt-attributes')}
             </Text>
-            {LINQ.from(item.attributes.filter((a) => a.value)).select((attr, index) => {
+            {item.attributes?.map((attr, index) => {
               return (
                 <View
-                  key={`${attr.key}-${index}`}
+                  key={`${attr?.key}-${index}`}
                   style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 }}
                 >
                   <Text style={{ color: primaryColor, fontWeight: '500' }}>
-                    {attr.key[0]?.toUpperCase() + attr.key.slice(1)}
+                    {(attr?.key?.[0]?.toUpperCase() || '') + attr?.key?.slice(1)}
                   </Text>
-                  <Text style={{ color: primaryColor, fontWeight: '500', textTransform: 'capitalize' }}>{attr.value}</Text>
+                  <Text style={{ color: primaryColor, fontWeight: '500', textTransform: 'capitalize' }}>{attr?.value}</Text>
                 </View>
               );
             })}
           </View>
         ) : undefined}
 
-        {[1, 137].includes(current.chainId) && (
+        {[Ethereum, Optimism, Arbitrum, Polygon, Avalanche, BNBChain].includes(current.chainId) && (
           <View style={{ padding: 16 }}>
             <Text style={{ color: detailColor, fontSize: 20, fontWeight: '600', marginBottom: 8 }}>{t('nft-txt-web3')}</Text>
 
@@ -219,12 +220,13 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
                   <Etherscan width={24} height={24} />
                 </TouchableOpacity>
               )}
+
               {[137].includes(current.chainId) && (
                 <TouchableOpacity
                   style={{ paddingEnd: 20 }}
                   onPress={() => openBrowser(`${current.explorer}/token/${item.contract}?a=${item.tokenId}`)}
                 >
-                  <Polygon width={23} height={24} />
+                  <PolygonLogo width={23} height={24} />
                 </TouchableOpacity>
               )}
 

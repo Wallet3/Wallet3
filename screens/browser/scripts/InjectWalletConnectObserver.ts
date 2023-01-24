@@ -1,3 +1,5 @@
+"document.querySelector('w3m-modal').shadowRoot.querySelector('w3m-modal-router').shadowRoot.querySelector('w3m-connect-wallet-view').shadowRoot.querySelector('w3m-desktop-wallet-selection').shadowRoot.querySelector('w3m-modal-content').querySelector('w3m-walletconnect-qr').shadowRoot.querySelector('w3m-qrcode')";
+
 export default `
 const observeDOM = (function () {
     var MutationObserver =

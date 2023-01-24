@@ -100,12 +100,13 @@ export function convertAlchemyToNfts(result?: AlchemyNFTs): NFTMetadata[] | unde
   if (!result) return;
 
   return result.ownedNfts
-    ?.map((n) => {
-      const previews = convertProtocol([n.metadata?.image, ...(n.media?.map((n) => n.thumbnail) || [])]);
+    ?.filter((n) => n)
+    .map((n) => {
+      const previews = convertProtocol([n.metadata?.image, ...(n.media?.map?.((n) => n.thumbnail) || [])]);
       const images = convertProtocol([
         n.metadata?.image,
-        ...(n.media?.map((m) => m.raw) ?? []),
-        ...(n.media?.map((n) => n.thumbnail) ?? []),
+        ...(n.media?.map?.((m) => m.raw) ?? []),
+        ...(n.media?.map?.((n) => n.thumbnail) ?? []),
       ]);
 
       return {
@@ -115,10 +116,10 @@ export function convertAlchemyToNfts(result?: AlchemyNFTs): NFTMetadata[] | unde
         images,
         types: [],
         description: n.description,
-        title: n.metadata?.name || n.contractMetadata?.openSea.collectionName,
+        title: n.metadata?.name || n.contractMetadata?.openSea?.collectionName,
         previews,
         previewTypes: [],
-        attributes: n.metadata?.attributes?.map((a) => {
+        attributes: n.metadata?.attributes?.map?.((a) => {
           return { key: a.trait_type, value: a.value };
         }),
       };
