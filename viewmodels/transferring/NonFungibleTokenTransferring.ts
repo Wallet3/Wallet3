@@ -22,7 +22,7 @@ export interface NFTMetadata {
   previews: (string | undefined)[];
   previewTypes: (string | undefined)[];
   description?: string;
-  attributes?: { key: string; value: string }[];
+  attributes?: { key?: string; value?: string }[];
 }
 
 interface IConstructor {

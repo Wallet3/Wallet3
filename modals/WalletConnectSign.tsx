@@ -30,7 +30,7 @@ export default observer(({ request, client, close }: Props) => {
   const [verified, setVerified] = useState(false);
   const { backgroundColor } = Theme;
 
-  const themeColor = client.activeNetwork.color;
+  const [themeColor] = useState(client.activeNetwork.color);
 
   useEffect(() => {
     const { params, method } = request;
@@ -82,7 +82,6 @@ export default observer(({ request, client, close }: Props) => {
     if (signed) {
       client.approveRequest(request.id, signed);
       setVerified(true);
-      (reject as any) = undefined;
       setTimeout(() => close(), 1750);
     }
 

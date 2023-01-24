@@ -162,8 +162,10 @@ export function generateNetworkIcon(props: {
     case 1:
       return <Ethereum key={chainId} width={width} height={height ?? width} style={style} />;
     case 42161:
+    case 421613:
       return <Arbitrum key={chainId} width={width} height={height ?? width} style={style} />;
     case 10:
+    case 420:
       return <Optimism key={chainId} width={width} height={height ?? width} style={style} />;
     case 137:
     case 80001:

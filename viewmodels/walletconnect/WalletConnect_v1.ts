@@ -18,8 +18,8 @@ import { showMessage } from 'react-native-flash-message';
 
 const clientMeta = {
   name: 'Wallet 3',
-  description: 'A Secure Wallet for Web3 Era',
-  icons: [],
+  description: 'A Secure Wallet for Web3',
+  icons: ['https://github.com/Wallet3/Wallet3/blob/main/assets/icon@128.png?raw=true'],
   url: 'https://wallet3.io',
 };
 
@@ -30,6 +30,10 @@ export class WalletConnect_v1 extends EventEmitter {
   readonly version = 1;
   peerId = '';
   appMeta: WCClientMeta | null = null;
+
+  get uniqueId() {
+    return `${this.session?.key}_${this.peerId}`;
+  }
 
   get session() {
     return this.client.session;
@@ -109,11 +113,14 @@ export class WalletConnect_v1 extends EventEmitter {
   }
 
   setLastUsedChain(chainId: number, persistent = false, from: 'user' | 'inpage' = 'user') {
+    if (!chainId) return;
+
     this.updateSession({ chainId });
 
     if (!this.store) return;
 
     this.store.lastUsedChainId = `${chainId}`;
+    this.store.lastUsedTimestamp = Date.now();
     if (persistent) this.store.save();
 
     this.emit('lastUsedChainChanged', chainId, from);
@@ -124,6 +131,7 @@ export class WalletConnect_v1 extends EventEmitter {
     if (!this.store) return;
 
     this.store.lastUsedAccount = account;
+    this.store.lastUsedTimestamp = Date.now();
 
     if (persistent) this.store.save();
   }

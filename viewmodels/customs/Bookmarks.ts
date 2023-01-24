@@ -7,10 +7,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import LINQ from 'linq';
 import Langs from '../settings/Langs';
 import { PageMetadata } from '../../screens/browser/Web3View';
-import PhishingConfig from 'eth-phishing-detect/src/config.json';
 import PopularApps from '../../configs/urls/popular.json';
 import RiskyHosts from '../../configs/urls/risky.json';
 import SecureHosts from '../../configs/urls/verified.json';
+import { isDangerousUrl } from '../services/PhishingShield';
+import isURL from 'validator/lib/isURL';
 
 const Priorities = new Map<string, number>([
   ['DeFi', 1],
@@ -175,8 +176,6 @@ class Bookmarks {
       return;
     }
 
-    if (isRiskySite(metadata.origin)) return;
-
     const deniedColors = ['#ffffff', '#000000', 'white', '#fff', '#000', 'black', 'hsl(0, 0%, 100%)', null, undefined];
 
     metadata.themeColor = deniedColors.includes(metadata.themeColor?.toLowerCase()?.substring(0, 7))
@@ -213,33 +212,43 @@ const SecureUrls: string[] = Object.getOwnPropertyNames(SecureHosts).flatMap((ca
 export const HttpsSecureUrls = SecureUrls.map((i) => `https://${i.replace('*.', '')}`);
 
 const SecureUrlsSet = new Set(SecureUrls);
-const RiskyUrlsSet = new Set(PhishingConfig.blacklist.concat(RiskyHosts));
+const RiskyUrlsSet = new Set(RiskyHosts);
+const SecureUrlCache = new Set<string>();
 
 export function isSecureSite(url: string) {
   if (!url.startsWith('https://')) return false;
+
+  if (SecureUrlCache.has(url)) return true;
 
   try {
     const { hostname } = Linking.parse(url);
     if (!hostname) return false;
 
-    if (SecureUrlsSet.has(hostname)) return true;
-
-    const domains = hostname.split('.');
-    if (domains.length > 2) {
-      return SecureUrlsSet.has(`*.${hostname.substring(domains[0].length + 1)}`);
+    if (SecureUrlsSet.has(hostname)) {
+      SecureUrlCache.add(url);
+      return true;
     }
 
-    return SecureUrlsSet.has(`*.${hostname}`);
+    const domains = hostname.split('.');
+    if (domains.length > 2 && SecureUrlsSet.has(`*.${hostname.substring(domains[0].length + 1)}`)) {
+      SecureUrlCache.add(url);
+      return true;
+    }
+
+    if (SecureUrlsSet.has(`*.${hostname}`)) {
+      SecureUrlCache.add(url);
+      return true;
+    }
   } catch (error) {}
 
   return false;
 }
 
-export function isRiskySite(url: string) {
-  if (!url) return false;
+export async function isRiskySite(url: string) {
+  if (!isURL(url)) return false;
 
   try {
-    return RiskyUrlsSet.has(Linking.parse(url).hostname || '');
+    return RiskyUrlsSet.has(Linking.parse(url).hostname || '') || (await isDangerousUrl(url));
   } catch (error) {}
 
   return false;

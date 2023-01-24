@@ -28,8 +28,8 @@ import { NetworksMenu } from '../../modals';
 import { Portal } from 'react-native-portalize';
 import Theme from '../../viewmodels/settings/Theme';
 import ViewShot from 'react-native-view-shot';
+import WalletConnectHub from '../../viewmodels/walletconnect/WalletConnectHub';
 import WalletConnectLogo from '../../assets/3rd/walletconnect.svg';
-import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectV1ClientHub';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import modalStyle from '../../modals/styles';
@@ -116,9 +116,9 @@ export default observer((props: Web3ViewProps) => {
     const hostname = (Linking.parse(webUrl || 'http://').hostname ?? dapp?.origin) || '';
     if (dapp?.origin === hostname) return;
 
-    const wcApp = WalletConnectV1ClientHub.find(hostname);
+    const wcApp = WalletConnectHub.find(hostname);
 
-    if (wcApp?.isMobileApp) {
+    if (wcApp?.isMobileApp || wcApp?.version === 2) {
       updateDAppState({
         lastUsedChainId: wcApp.lastUsedChainId,
         lastUsedAccount: wcApp.lastUsedAccount,
@@ -165,15 +165,13 @@ export default observer((props: Web3ViewProps) => {
 
     hub.on('dappConnected', (app) => updateDAppState(app));
 
-    WalletConnectV1ClientHub.on('mobileAppConnected', () => {
-      updateGlobalState();
-    });
+    WalletConnectHub.on('mobileAppConnected', updateGlobalState);
 
     if (pageMetadata) ((webViewRef as any)?.current as WebView)?.injectJavaScript(`${GetPageMetadata}\ntrue;`);
 
     return () => {
       hub.removeAllListeners();
-      WalletConnectV1ClientHub.removeAllListeners();
+      WalletConnectHub.off('mobileAppConnected', updateGlobalState);
     };
   }, [webUrl]);
 
@@ -218,7 +216,7 @@ export default observer((props: Web3ViewProps) => {
 
   const updateDAppNetworkConfig = (network: INetwork) => {
     if (dapp?.isWalletConnect) {
-      WalletConnectV1ClientHub.find(dapp.origin)?.setLastUsedChain(network.chainId, true);
+      WalletConnectHub.find(dapp.origin)?.setLastUsedChain(network.chainId, true);
       updateDAppState({ ...dapp!, lastUsedChainId: `${network.chainId}` });
     } else {
       hub.setDAppChainId(dapp?.origin!, network.chainId);
@@ -229,7 +227,7 @@ export default observer((props: Web3ViewProps) => {
 
   const updateDAppAccountConfig = (account: string) => {
     if (dapp?.isWalletConnect) {
-      WalletConnectV1ClientHub.find(dapp.origin)?.setLastUsedAccount(account, true);
+      WalletConnectHub.find(dapp.origin)?.setLastUsedAccount(account, true);
       updateDAppState({ ...dapp!, lastUsedAccount: account });
     } else {
       hub.setDAppAccount(dapp?.origin!, account);

@@ -108,7 +108,7 @@ class LinkHub {
 
         const data = queryParams.key ? `${queryParams.uri}&key=${queryParams.key}` : `${queryParams.uri}`;
 
-        PubSub.publish(MessageKeys.CodeScan_wc, { data, extra });
+        PubSub.publish(MessageKeys.codeScan.walletconnect, { data, extra });
       } catch (error) {}
     } else {
       if (scheme === 'wc:') this.handledWalletConnectUrls.add(uri);

@@ -1,11 +1,12 @@
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { convertAlchemyToNfts, convertBounceToNfts, convertOpenseaAssetsToNft } from '../services/NftTransformer';
+import { getAlchemyNFTs, getCenterNFTs } from '../../common/apis/Alchemy';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { HOUR } from '../../utils/time';
 import LINQ from 'linq';
 import { NFTMetadata } from '../transferring/NonFungibleTokenTransferring';
 import Networks from '../core/Networks';
-import { getAlchemyNFTs } from '../../common/apis/Alchemy';
 import { getBounceNfts } from '../../common/apis/Bounce';
 import { getNftsByOwnerV2 } from '../../common/apis/Rarible';
 import { getOpenseaNfts } from '../../common/apis/Opensea';
@@ -53,7 +54,7 @@ export class NFTViewer {
     let cache = await AsyncStorage.getItem(Keys.nfts(chainId, this.owner));
     if (cache) {
       const { timestamp, items } = JSON.parse(cache) as { timestamp: number; items: NFTMetadata[] };
-      if (Date.now() < timestamp + 12 * 60 * 60 * 1000) {
+      if (Date.now() < timestamp + 12 * HOUR) {
         this.cache.set(chainId, items);
         return items;
       }
@@ -64,11 +65,17 @@ export class NFTViewer {
       case 1:
         result = convertOpenseaAssetsToNft(await getOpenseaNfts(this.owner));
         break;
-      case 10:
       case 137:
+      // result = convertRaribleV2ResultToNfts(await getNftsByOwnerV2(this.owner, network), network!);
+      case 10:
       case 42161:
-        // result = convertRaribleV2ResultToNfts(await getNftsByOwnerV2(this.owner, network), network!);
         result = convertAlchemyToNfts(await getAlchemyNFTs(this.owner, chainId));
+        break;
+      case 250:
+      case 43114:
+      case 42220:
+      case 1666600000:
+        result = convertAlchemyToNfts(await getCenterNFTs(this.owner, chainId));
         break;
       case 56:
         result = convertBounceToNfts(await getBounceNfts(this.owner));

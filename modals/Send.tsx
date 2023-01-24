@@ -17,9 +17,11 @@ interface Props {
   vm: TokenTransferring;
   erc681?: boolean;
   onClose?: () => void;
+  onInteractionStart?: () => void;
+  onInteractionEnd?: () => void;
 }
 
-export default observer(({ vm, onClose, erc681 }: Props) => {
+export default observer(({ vm, onClose, erc681, onInteractionStart, onInteractionEnd }: Props) => {
   const [verified, setVerified] = useState(false);
   const swiper = useRef<Swiper>(null);
   const { backgroundColor } = Theme;
@@ -103,6 +105,8 @@ export default observer(({ vm, onClose, erc681 }: Props) => {
             disableBack={erc681}
             biometricType={Authentication.biometricType}
             txDataEditable={vm.isNativeToken}
+            onInteractionStart={onInteractionStart}
+            onInteractionEnd={onInteractionEnd}
           />
 
           <Passpad themeColor={vm.network.color} onCodeEntered={sendTx} onCancel={() => swiper.current?.scrollTo(2)} />

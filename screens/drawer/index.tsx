@@ -17,7 +17,7 @@ import PubSub from 'pubsub-js';
 import { ReactiveScreen } from '../../utils/device';
 import { SafeViewContainer } from '../../components';
 import Theme from '../../viewmodels/settings/Theme';
-import WalletConnectV1ClientHub from '../../viewmodels/walletconnect/WalletConnectV1ClientHub';
+import WalletConnectHub from '../../viewmodels/walletconnect/WalletConnectHub';
 import i18n from '../../i18n';
 import icons from '../../assets/icons/crypto';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
@@ -41,7 +41,7 @@ const Drawer = observer((props: DrawerProps) => {
 
   const { index } = navigation.getState();
 
-  const { connectedCount } = WalletConnectV1ClientHub;
+  const { connectedCount } = WalletConnectHub;
   const { dapps } = MetamaskDAppsHub;
 
   const homeHighlight = index === 0 ? current.color : foregroundColor;

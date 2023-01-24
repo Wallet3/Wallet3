@@ -280,9 +280,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
         bounces={false}
         initialScrollIndex={0}
         keyboardShouldPersistTaps={persistentKeyboard}
-        onScrollToIndexFailed={({ index }) => {
-          console.error('onScrollToIndexFailed', index);
-        }}
+        onScrollToIndexFailed={({ index }) => setTimeout(() => swiper.current?.scrollToIndex({ index, animated: true }), 500)}
       />
 
       <Portal>
