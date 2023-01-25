@@ -11,4 +11,5 @@ LogBox.ignoreLogs([
   'Could not find image file',
   'Require cycle:',
   'This may lead to deadlocks',
+  "Module ReactNative requires main queue setup since it overrides `init` but doesn't implement `requiresMainQueueSetup`",
 ]);
