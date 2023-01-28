@@ -23,6 +23,7 @@ const Priorities = new Map<string, number>([
   ['Bridges', 5],
   ['Innovations', 6],
   ['Tools', 7],
+  ['Utilities', 7],
   ['Education', 8],
   ['Dev', 9],
   ['Others', 999999],
@@ -56,7 +57,7 @@ class Bookmarks {
     return [
       {
         title: 'popular-dapps',
-        data: PopularApps.filter((a) => (a.langs ? a.langs.includes(Langs.currentLang.value) : true)),
+        data: PopularApps.filter((a) => a.langs?.includes(Langs.currentLang.value) ?? true),
       },
       ...this._favs,
     ];

@@ -1,6 +1,7 @@
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import { NFTMetadata } from '../viewmodels/transferring/NonFungibleTokenTransferring';
+import { convertIPFSProtocol } from '../utils/url';
 import { decode as decodeBase64 } from 'js-base64';
 import { eth_call } from '../common/RPC';
 import { ethers } from 'ethers';
@@ -54,7 +55,7 @@ export abstract class NonFungibleToken {
     runInAction(() => (this.loading = true));
 
     try {
-      const tokenURI = await this.getMetadataURI();
+      const tokenURI = convertIPFSProtocol(await this.getMetadataURI());
       const jsonType = 'data:application/json;base64,';
 
       if (tokenURI.startsWith(jsonType)) {

@@ -12,7 +12,8 @@
   {
     "url": "https://link3.to",
     "icon": "https://pbs.twimg.com/profile_images/1600681816045670400/cOCd209I_400x400.jpg",
-    "title": "Link3"
+    "title": "Link3",
+    "langs": ["zh-cn"]
   },
   {
     "url": "https://app.mail3.me",
