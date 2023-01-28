@@ -1,11 +1,9 @@
+import { BigNumber, ethers } from 'ethers';
 import { makeObservable, observable, runInAction } from 'mobx';
 
-import { NFTMetadata } from '../viewmodels/transferring/NonFungibleTokenTransferring';
 import { convertIPFSProtocol } from '../utils/url';
 import { decode as decodeBase64 } from 'js-base64';
 import { eth_call } from '../common/RPC';
-import { ethers } from 'ethers';
-import { getNftById } from '../common/apis/Rarible';
 import isURL from 'validator/lib/isURL';
 
 export interface NonFungibleTokenJsonMetadata {
@@ -55,7 +53,11 @@ export abstract class NonFungibleToken {
     runInAction(() => (this.loading = true));
 
     try {
-      const tokenURI = convertIPFSProtocol(await this.getMetadataURI());
+      const tokenURI = convertIPFSProtocol(await this.getMetadataURI())?.replace(
+        '/0x{id}',
+        `/${BigNumber.from(this.tokenId).toHexString()}`
+      );
+
       const jsonType = 'data:application/json;base64,';
 
       if (tokenURI.startsWith(jsonType)) {

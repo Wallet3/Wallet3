@@ -158,7 +158,9 @@ const TxReview = observer(
           {(vm.type === 'Transfer_ERC721' || vm.type === 'Transfer_ERC1155') && (
             <View style={{ ...reviewItemStyle }}>
               <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-amount')}</Text>
-              <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginStart: 0 }}>
+              <View
+                style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginStart: 16 }}
+              >
                 {vm.tokenAmountWei.gt(0) ? (
                   <Text style={{ ...reviewItemValueStyle, maxWidth: '80%' }} numberOfLines={1}>
                     {`${vm.tokenAmount} ${vm.nft?.metadata?.name || ''}`}
