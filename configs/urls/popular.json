@@ -5,15 +5,20 @@
     "title": "dagen"
   },
   {
-    "url": "https://trove.treasure.lol",
-    "icon": "https://pbs.twimg.com/profile_images/1536362534445391877/9Knv8wiq_400x400.jpg",
-    "title": "Trove"
+    "url": "https://gm.xyz",
+    "icon": "https://gm.xyz/static/favicons/apple-touch-icon.png",
+    "title": "gm.xyz"
   },
   {
     "url": "https://link3.to",
     "icon": "https://pbs.twimg.com/profile_images/1600681816045670400/cOCd209I_400x400.jpg",
     "title": "Link3",
     "langs": ["zh-cn"]
+  },
+  {
+    "url": "https://learn.metamask.io",
+    "icon": "https://www.useweb3.xyz/images/social.png",
+    "title": "Learn"
   },
   {
     "url": "https://app.mail3.me",
@@ -49,5 +54,11 @@
     "url": "https://stargate.finance/transfer",
     "icon": "https://stargate.finance/favicons/favicon-196x196.png",
     "title": "Stargate"
+  },
+  {
+    "url": "https://bidex.pro",
+    "icon": "https://bidex.pro/static/image/logo.png",
+    "title": "Bidex",
+    "langs": ["ja"]
   }
 ]
