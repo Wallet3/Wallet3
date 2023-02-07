@@ -1,4 +1,7 @@
+import DeviceInfo from 'react-native-device-info';
 import { LogBox } from 'react-native';
+import { TCPClient } from '../common/p2p/TCPClient';
+import { TCPServer } from '../common/p2p/TCPServer';
 
 LogBox.ignoreLogs([
   'ReactNativeFiberHostComponent: Calling getNode() on the ref of an Animated component is no longer necessary. You can now directly use the ref instead. This method will be removed in a future release.',
@@ -13,3 +16,14 @@ LogBox.ignoreLogs([
   'This may lead to deadlocks',
   "Module ReactNative requires main queue setup since it overrides `init` but doesn't implement `requiresMainQueueSetup`",
 ]);
+
+if (__DEV__) {
+  if (DeviceInfo.isTablet()) {
+    const sby = new TCPClient();
+    sby.start();
+    console.log('im tablet');
+  } else {
+    const pri = new TCPServer();
+    pri.start();
+  }
+}

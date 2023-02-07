@@ -46,7 +46,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>20230205151301</string>
+	<string>20230207115214</string>
 	<key>FirebaseAutomaticScreenReportingEnabled</key>
 	<false/>
 	<key>ITSAppUsesNonExemptEncryption</key>
@@ -66,6 +66,11 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_wallet3-multi-sign._tcp.</string>
+		<string>_wallet3-multi-sign-standby._tcp.</string>
+	</array>
 	<key>NSCameraUsageDescription</key>
 	<string>This app uses the camera to scan QRCode.</string>
 	<key>NSFaceIDUsageDescription</key>
