@@ -20,6 +20,7 @@ import { ReactiveScreen } from '../utils/device';
 import SettingScreen from './settings';
 import SinglePageBrowserScreen from './browser/Browser';
 import Theme from '../viewmodels/settings/Theme';
+import TxHub from '../viewmodels/hubs/TxHub';
 import WalletScreen from './wallet';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -83,7 +84,7 @@ const RootTab = observer(() => {
         <Screen name="NFTs" component={NFTList} options={{ tabBarLabel: t('home-tab-arts'), headerShown: false }} />
       ) : undefined}
 
-      {Platform.OS !== 'ios' || __DEV__ ? (
+      {Platform.OS !== 'ios' || __DEV__ || TxHub.txs.length > 3 ? (
         <Screen
           name="Exchange"
           component={ExchangeScreen}

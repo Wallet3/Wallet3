@@ -5,13 +5,8 @@ import { NftsByOwnerV2, RaribleItem } from '../../common/apis/Rarible.v2.types';
 import { AlchemyNFTs } from '../../common/apis/Alchemy.types.nfts';
 import { NFTMetadata } from '../transferring/NonFungibleTokenTransferring';
 import { OpenseaAssetsResponse } from '../../common/apis/Opensea.types';
+import { convertIPFSProtocols } from '../../utils/url';
 import { utils } from 'ethers';
-
-const convertProtocol = (items: (string | undefined)[]) => {
-  return items
-    .map((i) => (i?.startsWith('ipfs://') ? i.replace('ipfs://', 'https://ipfs.io/ipfs/') : i))
-    .filter((i) => i) as string[];
-};
 
 export function convertBounceToNfts(result?: BounceResponse) {
   if (!result) return;
@@ -32,12 +27,12 @@ export function convertBounceToNfts(result?: BounceResponse) {
 
   try {
     const erc1155 = result.data.nfts1155.map((item) => {
-      const images = convertProtocol([item.image, item.metadata?.image]);
+      const images = convertIPFSProtocols([item.image, item.metadata?.image]);
       return convertToNft(item, images);
     });
 
     const erc721 = result.data.nfts721.map((item) => {
-      const images = convertProtocol([item.image, item.metadata?.image, item.metadata?.gif_url, item.metadata?.mp4_url]);
+      const images = convertIPFSProtocols([item.image, item.metadata?.image, item.metadata?.gif_url, item.metadata?.mp4_url]);
       return convertToNft(item, images);
     });
 
@@ -76,8 +71,8 @@ export function convertOpenseaAssetsToNft(result?: OpenseaAssetsResponse): NFTMe
   if (!result) return;
 
   return result.assets.map((a) => {
-    const previews = convertProtocol([a.image_preview_url, a.image_url, a.animation_url]);
-    const images = convertProtocol([a.image_url, a.image_preview_url, a.animation_url]);
+    const previews = convertIPFSProtocols([a.image_preview_url, a.image_url, a.animation_url]);
+    const images = convertIPFSProtocols([a.image_url, a.image_preview_url, a.animation_url]);
 
     return {
       id: `${a.asset_contract.address}:${a.token_id}`,
@@ -102,8 +97,8 @@ export function convertAlchemyToNfts(result?: AlchemyNFTs): NFTMetadata[] | unde
   return result.ownedNfts
     ?.filter((n) => n)
     .map((n) => {
-      const previews = convertProtocol([n.metadata?.image, ...(n.media?.map?.((n) => n.thumbnail) || [])]);
-      const images = convertProtocol([
+      const previews = convertIPFSProtocols([n.metadata?.image, ...(n.media?.map?.((n) => n.thumbnail) || [])]);
+      const images = convertIPFSProtocols([
         n.metadata?.image,
         ...(n.media?.map?.((m) => m.raw) ?? []),
         ...(n.media?.map?.((n) => n.thumbnail) ?? []),

@@ -158,7 +158,9 @@ const TxReview = observer(
           {(vm.type === 'Transfer_ERC721' || vm.type === 'Transfer_ERC1155') && (
             <View style={{ ...reviewItemStyle }}>
               <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-amount')}</Text>
-              <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginStart: 0 }}>
+              <View
+                style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginStart: 16 }}
+              >
                 {vm.tokenAmountWei.gt(0) ? (
                   <Text style={{ ...reviewItemValueStyle, maxWidth: '80%' }} numberOfLines={1}>
                     {`${vm.tokenAmount} ${vm.nft?.metadata?.name || ''}`}
@@ -280,7 +282,7 @@ const TxReview = observer(
                     key={nft.id}
                     uriSources={nft.images}
                     sourceTypes={nft.types}
-                    style={{ width: 32, height: 32, borderColor, borderRadius: 5 }}
+                    style={{ width: 29, height: 29, borderColor, borderRadius: 5 }}
                     containerStyle={{ marginStart: 8 }}
                     loadingIconSize={20}
                     borderRadius={3}

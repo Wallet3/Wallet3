@@ -1,6 +1,8 @@
 import { AlchemyApiKeys, CenterNFTApis } from '../../configs/secret';
 
 import { AlchemyNFTs } from './Alchemy.types.nfts';
+import { AssetChangeResult } from './Alchemy.types.simulate';
+import { post } from '../../utils/fetch';
 
 const Chains = {
   1: 'https://eth-mainnet.g.alchemy.com',
@@ -37,5 +39,25 @@ export async function getCenterNFTs(owner: string, chainId: number) {
   try {
     const resp = await fetch(url);
     return (await resp.json()) as AlchemyNFTs;
+  } catch (error) {}
+}
+
+export async function simulateAssetChanges(
+  chainId: number,
+  params: { from: string; to: string; value: string; data: string }[]
+) {
+  const endpoint = Chains[chainId];
+  const keys = AlchemyApiKeys[chainId];
+  const key = keys[Date.now() % keys.length];
+
+  if (!endpoint || !key) return;
+
+  try {
+    return (await post(`${endpoint}v2/${key}`, {
+      id: Date.now(),
+      jsonrpc: '2.0',
+      method: 'alchemy_simulateAssetChanges',
+      params,
+    })) as { error?: { message: string; code: string }; result?: AssetChangeResult };
   } catch (error) {}
 }
