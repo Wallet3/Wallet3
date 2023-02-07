@@ -1119,6 +1119,8 @@ PODS:
     - React-Core
   - react-native-webview (11.26.1):
     - React-Core
+  - react-native-zeroconf (0.13.7):
+    - React-Core
   - React-perflogger (0.70.6)
   - React-RCTActionSheet (0.70.6):
     - React-Core/RCTActionSheetHeaders (= 0.70.6)
@@ -1210,7 +1212,7 @@ PODS:
   - RNGoogleSignin (9.0.2):
     - GoogleSignIn (~> 6.2)
     - React-Core
-  - RNImageColors (1.5.1):
+  - RNImageColors (1.5.2):
     - React-Core
   - RNOS (1.2.6):
     - React
@@ -1256,8 +1258,6 @@ PODS:
     - SDWebImage/Core (~> 5.10)
   - TcpSockets (4.0.0):
     - React
-  - waku-react-native (0.1.0):
-    - React-Core
   - Yoga (1.14.0)
   - ZXingObjC/Core (3.6.5)
   - ZXingObjC/OneD (3.6.5):
@@ -1326,6 +1326,7 @@ DEPENDENCIES:
   - react-native-video (from `../node_modules/react-native-video`)
   - react-native-view-shot (from `../node_modules/react-native-view-shot`)
   - react-native-webview (from `../node_modules/react-native-webview`)
+  - react-native-zeroconf (from `../node_modules/react-native-zeroconf`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -1353,7 +1354,6 @@ DEPENDENCIES:
   - RNSharedElement (from `../node_modules/react-native-shared-element`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - TcpSockets (from `../node_modules/react-native-tcp`)
-  - "waku-react-native (from `../node_modules/@waku/react-native`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -1495,6 +1495,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-view-shot"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
+  react-native-zeroconf:
+    :path: "../node_modules/react-native-zeroconf"
   React-perflogger:
     :path: "../node_modules/react-native/ReactCommon/reactperflogger"
   React-RCTActionSheet:
@@ -1549,8 +1551,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-svg"
   TcpSockets:
     :path: "../node_modules/react-native-tcp"
-  waku-react-native:
-    :path: "../node_modules/@waku/react-native"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -1633,6 +1633,7 @@ SPEC CHECKSUMS:
   react-native-video: c26780b224543c62d5e1b2a7244a5cd1b50e8253
   react-native-view-shot: 792829857bbb23a9c8acdad9a640554bdee397a3
   react-native-webview: 9f111dfbcfc826084d6c507f569e5e03342ee1c1
+  react-native-zeroconf: 54249f2fcc76e4eb97bce9d07469e8eeb638b1f5
   React-perflogger: 8c79399b0500a30ee8152d0f9f11beae7fc36595
   React-RCTActionSheet: 7316773acabb374642b926c19aef1c115df5c466
   React-RCTAnimation: 5341e288375451297057391227f691d9b2326c3d
@@ -1653,7 +1654,7 @@ SPEC CHECKSUMS:
   RNFBFirestore: fb27c396d6110045d27cabc285ad6259ce50dc1c
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNGoogleSignin: 22e468a9474dbcb8618d8847205ad4f0b2575d13
-  RNImageColors: fd9777591fc765780e035f4bec7a42edabc86eb4
+  RNImageColors: 9ac05083b52d5c350e6972650ae3ba0e556466c1
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
   RNReanimated: 6668b0587bebd4b15dd849b99e5a9c70fc12ed95
   RNScreens: ea4cd3a853063cda19a4e3c28d2e52180c80f4eb
@@ -1662,7 +1663,6 @@ SPEC CHECKSUMS:
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   TcpSockets: 4ef55305239923b343ed0a378b1fac188b1373b0
-  waku-react-native: c477aeceeb99374027b7cc594ea2d83594f8fea8
   Yoga: 99caf8d5ab45e9d637ee6e0174ec16fbbb01bcfc
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 

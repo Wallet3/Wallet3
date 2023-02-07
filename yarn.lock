@@ -4393,6 +4393,13 @@
     "@types/react" "*"
     "@types/react-native" "*"
 
+"@types/react-native-zeroconf@^0.12.0":
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/@types/react-native-zeroconf/-/react-native-zeroconf-0.12.0.tgz#49986690e2e1da714808096854bb83c45e7424dc"
+  integrity sha512-RuJr8HShvMJy+dTWqsRwJUzPj1ZXWgDAJ68544qrLejzyDOwlLiHcywWLKem1K0xJ/RuJeMviooGNDiR7jP0Iw==
+  dependencies:
+    "@types/node" "*"
+
 "@types/react-native@*":
   version "0.66.4"
   resolved "https://registry.npmjs.org/@types/react-native/-/react-native-0.66.4.tgz"
@@ -4512,14 +4519,6 @@
   dependencies:
     "@urql/core" ">=2.3.1"
     wonka "^4.0.14"
-
-"@waku/react-native@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@waku/react-native/-/react-native-0.1.0.tgz#e4c0dc0366cd57b818061a219063eeb55e49d55b"
-  integrity sha512-x3G4omBadzwbfe+5tmS9j9scPa5w0uKDeEtha1Q7YNZOIH6oyiYuNmAf1CC59xn2GscvYzXlLxP6F8ILJPDh2Q==
-  dependencies:
-    base-64 "^1.0.0"
-    big-integer "^1.6.51"
 
 "@walletconnect/auth-client@^2.0.2":
   version "2.0.2"
@@ -5516,11 +5515,6 @@ balanced-match@^1.0.0:
   resolved "https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.2.tgz"
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
 
-base-64@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/base-64/-/base-64-1.0.0.tgz#09d0f2084e32a3fd08c2475b973788eee6ae8f4a"
-  integrity sha512-kwDPIFCGx0NZHog36dj+tHiwP4QMzsZ3AgMViUBKI0+V5n4U0ufTCUMhnQ04diaRI8EX/QcPfql7zlhZ7j4zgg==
-
 base-x@^3.0.2:
   version "3.0.9"
   resolved "https://registry.yarnpkg.com/base-x/-/base-x-3.0.9.tgz#6349aaabb58526332de9f60995e548a53fe21320"
@@ -5563,7 +5557,7 @@ better-opn@~3.0.2:
   dependencies:
     open "^8.0.4"
 
-big-integer@1.6.x, big-integer@^1.6.51:
+big-integer@1.6.x:
   version "1.6.51"
   resolved "https://registry.yarnpkg.com/big-integer/-/big-integer-1.6.51.tgz#0df92a5d9880560d3ff2d5fd20245c889d130686"
   integrity sha512-GPEid2Y9QU1Exl1rpO9B2IPJGHPSupF5GnVIP0blYvNOMer2bTvSWs1jGOUg04hTmu67nmLsQ9TBo1puaotBHg==
@@ -11733,10 +11727,10 @@ react-native-gradle-plugin@^0.70.3:
   resolved "https://registry.yarnpkg.com/react-native-gradle-plugin/-/react-native-gradle-plugin-0.70.3.tgz#cbcf0619cbfbddaa9128701aa2d7b4145f9c4fc8"
   integrity sha512-oOanj84fJEXUg9FoEAQomA8ISG+DVIrTZ3qF7m69VQUJyOGYyDZmPqKcjvRku4KXlEH6hWO9i4ACLzNBh8gC0A==
 
-react-native-image-colors@^1.5.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/react-native-image-colors/-/react-native-image-colors-1.5.1.tgz#fcd4786c8e4dcd8e2575c722e85debad753bbed6"
-  integrity sha512-1vMl6BIWssKGEPNgLIujzBxStdgNXIGAz3EDxuFk/bmnnB4x4YQjVzxOtJp+eoKMBl9DNkcul+72IUAw1IFJQw==
+react-native-image-colors@^1.5.2:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/react-native-image-colors/-/react-native-image-colors-1.5.2.tgz#b3aaa42fb5c57c0accaa6922b8412f1a68b315f9"
+  integrity sha512-yGsxwjQZFL5fthNc/F8//sSH1WZtC0OmxN7HQhXE1gSH0ApldOMkl5njTTMnWSUT/t1iCCBZrANSj3gnw1UaOg==
   dependencies:
     node-vibrant "3.1.6"
 
@@ -11927,6 +11921,13 @@ react-native-webview@11.26.1:
   dependencies:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
+
+react-native-zeroconf@^0.13.7:
+  version "0.13.7"
+  resolved "https://registry.yarnpkg.com/react-native-zeroconf/-/react-native-zeroconf-0.13.7.tgz#c3c432fc048be75bc129a50c668e81d6e9b6cc0d"
+  integrity sha512-Y4CaAZ0/iDSq8T7Fek8J82bdB78+q+oHCU9iHRWeM4A+ImYKmMcPwYwu/ahuz2okppcq7xg4Lmc0CCNe8n8Bzw==
+  dependencies:
+    events "^3.0.0"
 
 react-native@0.70.6:
   version "0.70.6"

@@ -14,5 +14,5 @@ if (settings.hasProperty("newArchEnabled") && settings.newArchEnabled == "true")
   project(":ReactAndroid").projectDir = new File(["node", "--print", "require.resolve('react-native/package.json')"].execute(null, rootDir).text.trim(), "../ReactAndroid");
 }
 
-include ':gowaku'
-project(':gowaku').projectDir = new File(rootProject.projectDir, './../node_modules/@waku/react-native/android/gowaku')
+// include ':gowaku'
+// project(':gowaku').projectDir = new File(rootProject.projectDir, './../node_modules/@waku/react-native/android/gowaku')

@@ -53,6 +53,7 @@
         "xprivkey",
         "xpub",
         "Xpubkey",
+        "Zeroconf",
         "ZWSP"
     ]
 }

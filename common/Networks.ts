@@ -240,8 +240,8 @@ export const PublicNetworks: INetwork[] = [
     network: 'Aurora',
     color: '#70d44b',
     defaultTokens: AuroraPopularTokens,
-    explorer: 'https://aurorascan.dev',
-    etherscanApi: 'https://api.aurorascan.dev/api',
+    explorer: 'https://explorer.aurora.dev',
+    etherscanApi: 'https://explorer.mainnet.aurora.dev/api',
   },
   {
     symbol: 'EVMOS',
