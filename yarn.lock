@@ -6434,6 +6434,11 @@ core-js-compat@^3.16.0, core-js-compat@^3.16.2:
     browserslist "^4.17.3"
     semver "7.0.0"
 
+core-js@^3.6.5:
+  version "3.27.2"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.27.2.tgz#85b35453a424abdcacb97474797815f4d62ebbf7"
+  integrity sha512-9ashVQskuh5AZEZ1JdQWp1GqSoC1e1G87MzRqg2gIfVAQ7Qn9K+uFj8EcniUFA4P2NLZfV+TOlX1SzoKfo+s7w==
+
 core-util-is@~1.0.0:
   version "1.0.3"
   resolved "https://registry.npmjs.org/core-util-is/-/core-util-is-1.0.3.tgz"
@@ -11425,10 +11430,39 @@ progress@2.0.3:
   resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.3.tgz#7e8cf8d8f5b8f239c1bc68beb4eb78567d572ef8"
   integrity sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA==
 
+promise-duplex@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/promise-duplex/-/promise-duplex-6.0.0.tgz#9d9d13383ac0f70701b9f095ffd486f106c2232e"
+  integrity sha512-ZL7rquzjTFzInDBeWYcsT+qddolNvzigahk6MI6qLSbQvlyRRCJkU3JztgaVunzvkH28smRa2Qu/cY9RXtSkgA==
+  dependencies:
+    core-js "^3.6.5"
+    promise-readable "^6.0.0"
+    promise-writable "^6.0.0"
+
 promise-inflight@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/promise-inflight/-/promise-inflight-1.0.1.tgz#98472870bf228132fcbdd868129bad12c3c029e3"
   integrity sha1-mEcocL8igTL8vdhoEputEsPAKeM=
+
+promise-readable@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/promise-readable/-/promise-readable-6.0.0.tgz#ab1ec1a3daa53ed8764b61902fb7f3de3242025a"
+  integrity sha512-5NxtmUswijvX5cAM0zPSy6yiCXH/eKBpiiBq6JfAUrmngMquMbzcBhF2qA+ocs4rYYKdvAfv3cOvZxADLtL1CA==
+  dependencies:
+    core-js "^3.6.5"
+
+promise-socket@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/promise-socket/-/promise-socket-7.0.0.tgz#20c147c417033a50fe7e1d1236a46ff59d4280b3"
+  integrity sha512-Oic9BrxmcHOPEnzKp2Js+ehFyvsbd0WxsE5khweCTHuRvdzbXjHUZmSDT6F9TW8SIkAJ0lCzoHjMYnb0WQJPiw==
+  dependencies:
+    promise-duplex "^6.0.0"
+    tslib "^2.0.1"
+
+promise-writable@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/promise-writable/-/promise-writable-6.0.0.tgz#4d703e75873a4e755a39bdb926a37f41538e507f"
+  integrity sha512-b81zre/itgJFS7dwWzIdKNVVqvLiUxYRS/wolUB0H1YY/tAaS146XGKa4Q/5wCbsnXLyn0MCeV6f8HHe4iUHLg==
 
 promise@^7.1.1:
   version "7.3.1"

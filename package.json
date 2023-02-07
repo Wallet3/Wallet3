@@ -75,6 +75,7 @@
     "numeral": "^2.0.6",
     "path-browserify": "^1.0.1",
     "process": "^0.11.0",
+    "promise-socket": "^7.0.0",
     "pubsub-js": "^1.9.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",

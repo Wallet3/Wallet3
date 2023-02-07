@@ -1,4 +1,5 @@
 import DeviceInfo from 'react-native-device-info';
+import LanDiscovery from '../common/p2p/LanDiscovery';
 import { LogBox } from 'react-native';
 import { TCPClient } from '../common/p2p/TCPClient';
 import { TCPServer } from '../common/p2p/TCPServer';
@@ -19,8 +20,11 @@ LogBox.ignoreLogs([
 
 if (__DEV__) {
   if (DeviceInfo.isTablet()) {
-    const sby = new TCPClient();
-    sby.start();
+    LanDiscovery.on('resolved', (svc) => {
+      console.log('tablet', svc);
+      // new TCPClient(svc);
+    });
+    LanDiscovery.scan();
     console.log('im tablet');
   } else {
     const pri = new TCPServer();
