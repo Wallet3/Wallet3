@@ -1,14 +1,23 @@
-import { E2EClient, TCPServer } from '../../common/p2p/TCPServer';
+import { action, computed, makeObservable, observable } from 'mobx';
 
-import { AsyncTCPSocket } from '../../common/p2p/AsyncTCPSocket';
 import LanDiscovery from '../../common/p2p/LanDiscovery';
 import { MultiSignPrimaryServiceType } from '../../common/p2p/Constants';
+import { TCPClient } from '../../common/p2p/TCPClient';
+import { TCPServer } from '../../common/p2p/TCPServer';
 
-type Events = {
-  newClient: (client: AsyncTCPSocket<E2EClient>) => void;
-};
+type Events = {};
 
 export class KeyDistribution extends TCPServer<Events> {
+  readonly clients: TCPClient[] = [];
+
+  constructor() {
+    super();
+    makeObservable(this, { clients: observable, clientCount: computed, rejectClient: action });
+  }
+
+  get clientCount() {
+    return this.clients.length;
+  }
 
   async start(): Promise<void> {
     await super.start();
@@ -18,13 +27,16 @@ export class KeyDistribution extends TCPServer<Events> {
     });
   }
 
-  protected newClient(client: AsyncTCPSocket<E2EClient>): void {
-    this.emit('newClient', client);
+  protected newClient(c: TCPClient): void {
+    c.once('close', () => this.rejectClient(c));
   }
 
-  approveClient(client: AsyncTCPSocket<E2EClient>) {}
+  approveClient(client: TCPClient) {}
 
-  rejectClient(client: AsyncTCPSocket<E2EClient>) {}
+  rejectClient(client: TCPClient) {
+    const index = this.clients.indexOf(client);
+    if (index < 0) return;
 
-  //   onNewClient(callback: ())
+    this.clients.splice(index, 1);
+  }
 }

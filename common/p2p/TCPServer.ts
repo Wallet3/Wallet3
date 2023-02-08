@@ -1,4 +1,4 @@
-import { computed, makeObservable, observable } from 'mobx';
+import { ClientInfo, TCPClient } from './TCPClient';
 import { createECDH, randomBytes } from 'crypto';
 import { decrypt, encrypt } from '../../utils/cipher';
 
@@ -6,21 +6,12 @@ import { AsyncTCPSocket } from './AsyncTCPSocket';
 import EventEmitter from 'eventemitter3';
 import TCP from 'react-native-tcp-socket';
 
-export type E2EClient = {
-  random: string;
-  devtype: string;
-  manufacturer: string;
-  name: string;
-};
-
-export class TCPServer<T extends EventEmitter.ValidEventTypes> extends EventEmitter<T, any> {
+export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends EventEmitter<T, any> {
   private readonly server: TCP.Server;
-  readonly clients = new Map<AsyncTCPSocket<E2EClient>, string>();
 
   constructor() {
     super();
     this.server = TCP.createServer(this.handleClient);
-    makeObservable(this, { clients: observable, clientCount: computed });
   }
 
   get port() {
@@ -29,10 +20,6 @@ export class TCPServer<T extends EventEmitter.ValidEventTypes> extends EventEmit
 
   get address() {
     return this.server.address()?.address;
-  }
-
-  get clientCount() {
-    return this.clients.size;
   }
 
   async start() {
@@ -54,23 +41,19 @@ export class TCPServer<T extends EventEmitter.ValidEventTypes> extends EventEmit
   }
 
   private handleClient = async (c: TCP.Socket) => {
-    const socket = new AsyncTCPSocket<E2EClient>(c);
+    const socket = new AsyncTCPSocket(c);
     const result = await this.handshake(socket);
 
     if (result) {
-      this.clients.set(socket, result.secret);
-      socket.extra = result.info;
       console.log('new client', socket.remoteId, result.info);
+      this.newClient(new TCPClient({ ...result, socket: c }));
     } else {
       socket.destroy();
       return;
     }
-
-    socket.once('close', () => this.clients.delete(socket));
-    this.newClient(socket);
   };
 
-  private handshake = async (socket: AsyncTCPSocket<E2EClient>) => {
+  private handshake = async (socket: AsyncTCPSocket) => {
     const ecdh = createECDH('secp521r1');
 
     try {
@@ -85,14 +68,12 @@ export class TCPServer<T extends EventEmitter.ValidEventTypes> extends EventEmit
       await socket.writeString(encrypt(hello, secret));
       const encrypted = await socket.readString();
 
-      const info: E2EClient = JSON.parse(decrypt(encrypted, secret));
+      const info: ClientInfo = JSON.parse(decrypt(encrypted, secret));
       if (info.random !== random) return;
 
       return { secret, info };
     } catch (error) {}
   };
 
-  protected newClient(_: AsyncTCPSocket<E2EClient>) {
-    throw new Error('Not Implemented');
-  }
+  protected abstract newClient(_: TCPClient): void;
 }

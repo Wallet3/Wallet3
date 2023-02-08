@@ -8,12 +8,41 @@ import { createECDH } from 'crypto';
 
 const { createConnection } = TCP;
 
-export class TCPClient {
-  private socket!: AsyncTCPSocket<void>;
-  private ecdhKey!: string;
+export type ClientInfo = {
+  random: string;
+  devtype: string;
+  manufacturer: string;
+  name: string;
+};
 
-  constructor(args: Service) {
-    this.socket = new AsyncTCPSocket(createConnection({ port: args.port, host: args.host }, () => this.handshake()));
+export class TCPClient extends AsyncTCPSocket {
+  private ecdhKey!: string;
+  info?: ClientInfo;
+
+  constructor({
+    service,
+    socket,
+    secret,
+    info,
+  }: {
+    service?: Service;
+    socket?: TCP.Socket | TCP.TLSSocket;
+    secret?: string;
+    info?: ClientInfo;
+  }) {
+    let internal: TCP.Socket | TCP.TLSSocket = socket!;
+
+    if ((socket && !secret) || (!socket && secret)) {
+      throw new Error('Invalid params: socket and secret should be initialized at the same time.');
+    }
+
+    if (service) {
+      internal = createConnection({ port: service.port, host: service.host }, () => this.handshake());
+    }
+
+    super(internal);
+    this.info = info;
+    this.ecdhKey = secret!;
   }
 
   private handshake = async () => {
@@ -21,12 +50,12 @@ export class TCPClient {
       const ecdh = createECDH('secp521r1');
       const clientKey = ecdh.generateKeys();
 
-      const serverKey = await this.socket.read();
-      await this.socket.write(clientKey);
+      const serverKey = await this.read();
+      await this.write(clientKey);
 
       const secret = ecdh.computeSecret(serverKey).toString('hex');
 
-      const hello = await this.socket.readString();
+      const hello = await this.readString();
 
       const plain = decrypt(hello, secret);
       const random = plain.split(':')[1]?.trim();
@@ -38,7 +67,7 @@ export class TCPClient {
         manufacturer: DeviceInfo.getManufacturerSync(),
       });
 
-      await this.socket.writeString(encrypt(info, secret));
+      await this.writeString(encrypt(info, secret));
 
       this.ecdhKey = secret;
     } catch (e) {}

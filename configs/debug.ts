@@ -1,4 +1,5 @@
 import DeviceInfo from 'react-native-device-info';
+import { KeyDistribution } from '../viewmodels/tss/KeyDistribution';
 import LanDiscovery from '../common/p2p/LanDiscovery';
 import { LogBox } from 'react-native';
 import { MultiSignPrimaryServiceType } from '../common/p2p/Constants';
@@ -22,14 +23,14 @@ LogBox.ignoreLogs([
 
 if (__DEV__) {
   if (DeviceInfo.isTablet()) {
-    LanDiscovery.on('resolved', (svc: Service) => {
-      console.log('tablet', svc);
-      new TCPClient(svc);
+    LanDiscovery.on('resolved', (service: Service) => {
+      console.log('tablet', service);
+      new TCPClient({ service });
     });
 
     LanDiscovery.scan(MultiSignPrimaryServiceType);
   } else {
-    const pri = new TCPServer();
+    const pri = new KeyDistribution();
     pri.start().then(() => {
       LanDiscovery.publishService(MultiSignPrimaryServiceType, 'key-distribution', pri.port!, {
         role: 'primary',

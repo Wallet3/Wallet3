@@ -1,9 +1,10 @@
+import { HTMLElement, parse } from 'node-html-parser';
+
 import AddressTag from '../../models/entities/AddressTag';
 import { DAY } from '../../utils/time';
 import Database from '../../models/Database';
 import Networks from '../core/Networks';
 import axios from 'axios';
-import { parse } from 'node-html-parser';
 import { utils } from 'ethers';
 
 const TagsCache = new Map<string, AddressTag | null>();
@@ -40,15 +41,26 @@ export async function fetchAddressInfo(chainId: number, address: string) {
   const root = await getHTML(chainId, address, 'address');
   if (!root) return item;
 
-  const warnings = (root?.querySelectorAll('span.u-label--danger, span.u-label--warning') || [])
-    .filter((i) => i.innerText.toUpperCase() !== 'OUT')
+  const warnings = (root?.querySelectorAll('span.u-label--danger, span.u-label--warning, .badge.bg-warning') || [])
+    .filter((i) => i.innerText && i.innerText.toUpperCase() !== 'OUT')
     .map((e) => e.innerText);
 
-  let alert = root?.querySelector('div.alert-warning, div.alert-danger')?.innerText;
+  let alert = root?.querySelector('div.alert-warning, div.alert-danger, .badge.bg-danger')?.innerText;
   alert = alert?.startsWith('×') ? alert.substring(1) : alert;
 
-  let [publicNameTag] = root?.querySelectorAll("span.u-label--secondary span[data-toggle='tooltip']");
-  if (!publicNameTag) [publicNameTag] = root?.querySelectorAll("span.u-label--secondary[data-toggle='tooltip']");
+  const tagSelectors = [
+    "span.u-label--secondary span[data-toggle='tooltip']",
+    "span.u-label--secondary[data-toggle='tooltip']",
+    'div.badge span.text-truncate',
+    'a.d-flex span.text-truncate',
+  ];
+
+  let publicNameTag!: HTMLElement;
+
+  for (let selector of tagSelectors) {
+    publicNameTag = root.querySelector(selector)!;
+    if (publicNameTag) break;
+  }
 
   const publicName = (publicNameTag?.innerText || warnings[0])?.trim?.();
 

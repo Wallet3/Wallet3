@@ -4,7 +4,7 @@ import TCP from 'react-native-tcp-socket';
 
 interface Events extends SocketEvents {}
 
-export class AsyncTCPSocket<T> extends EventEmitter<Events> {
+export class AsyncTCPSocket extends EventEmitter<SocketEvents> {
   private socket: TCP.TLSSocket | TCP.Socket;
 
   constructor(socket: TCP.TLSSocket | TCP.Socket) {
@@ -41,6 +41,4 @@ export class AsyncTCPSocket<T> extends EventEmitter<Events> {
   onClose(listener: (had_error: boolean) => void) {
     this.socket.on('close', listener);
   }
-
-  extra?: T;
 }
