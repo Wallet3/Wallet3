@@ -609,6 +609,7 @@ PODS:
   - BoringSSL-GRPC/Implementation (0.0.24):
     - BoringSSL-GRPC/Interface (= 0.0.24)
   - BoringSSL-GRPC/Interface (0.0.24)
+  - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
   - EXAppleAuthentication (5.0.1):
     - ExpoModulesCore
@@ -1110,6 +1111,9 @@ PODS:
     - RCTTypeSafety
     - React-Core
     - ReactCommon/turbomodule/core
+  - react-native-tcp-socket (6.0.5):
+    - CocoaAsyncSocket
+    - React-Core
   - react-native-video (5.2.1):
     - React-Core
     - react-native-video/Video (= 5.2.1)
@@ -1256,8 +1260,6 @@ PODS:
   - SDWebImageWebPCoder (0.8.5):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
-  - TcpSockets (4.0.0):
-    - React
   - Yoga (1.14.0)
   - ZXingObjC/Core (3.6.5)
   - ZXingObjC/OneD (3.6.5):
@@ -1323,6 +1325,7 @@ DEPENDENCIES:
   - react-native-context-menu-view (from `../node_modules/react-native-context-menu-view`)
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-tcp-socket (from `../node_modules/react-native-tcp-socket`)
   - react-native-video (from `../node_modules/react-native-video`)
   - react-native-view-shot (from `../node_modules/react-native-view-shot`)
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -1353,7 +1356,6 @@ DEPENDENCIES:
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSharedElement (from `../node_modules/react-native-shared-element`)
   - RNSVG (from `../node_modules/react-native-svg`)
-  - TcpSockets (from `../node_modules/react-native-tcp`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -1361,6 +1363,7 @@ SPEC REPOS:
     - abseil
     - AppAuth
     - BoringSSL-GRPC
+    - CocoaAsyncSocket
     - Firebase
     - FirebaseAnalytics
     - FirebaseCore
@@ -1489,6 +1492,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-randombytes"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-tcp-socket:
+    :path: "../node_modules/react-native-tcp-socket"
   react-native-video:
     :path: "../node_modules/react-native-video"
   react-native-view-shot:
@@ -1549,8 +1554,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-shared-element"
   RNSVG:
     :path: "../node_modules/react-native-svg"
-  TcpSockets:
-    :path: "../node_modules/react-native-tcp"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -1559,6 +1562,7 @@ SPEC CHECKSUMS:
   AppAuth: 8fca6b5563a5baef2c04bee27538025e4ceb2add
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
+  CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   EXAppleAuthentication: d93f7acd71fb3dcfa14eb6cb12ada053e06d4b66
   EXApplication: 034b1c40a8e9fe1bff76a1e511ee90dff64ad834
@@ -1630,6 +1634,7 @@ SPEC CHECKSUMS:
   react-native-context-menu-view: a54a97ead7e44b0671a8c2b48ac70b9e4e2a19fb
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
+  react-native-tcp-socket: a973f540ca7a05593cc5cdae4a4985a0d69b8141
   react-native-video: c26780b224543c62d5e1b2a7244a5cd1b50e8253
   react-native-view-shot: 792829857bbb23a9c8acdad9a640554bdee397a3
   react-native-webview: 9f111dfbcfc826084d6c507f569e5e03342ee1c1
@@ -1662,7 +1667,6 @@ SPEC CHECKSUMS:
   RNSVG: c1e76b81c76cdcd34b4e1188852892dc280eb902
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
-  TcpSockets: 4ef55305239923b343ed0a378b1fac188b1373b0
   Yoga: 99caf8d5ab45e9d637ee6e0174ec16fbbb01bcfc
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
