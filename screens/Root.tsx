@@ -16,6 +16,9 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../viewmodels/core/Networks';
 import { ReactiveScreen } from '../utils/device';
 import SettingScreen from './settings';
+import SinglePageBrowserScreen from './browser/Browser';
+import Theme from '../viewmodels/settings/Theme';
+import TxHub from '../viewmodels/hubs/TxHub';
 import WalletScreen from './wallet';
 
 const DrawerRoot = createDrawerNavigator();
@@ -74,14 +77,16 @@ const RootTab = observer(() => {
         <Screen name="NFTs" component={NFTList} options={{ tabBarLabel: t('home-tab-arts'), headerShown: false }} />
       ) : undefined}
 
-      <Screen
-        name="Exchange"
-        component={ExchangeScreen}
-        options={{
-          tabBarLabel: t('home-tab-swap'),
-          headerShown: false,
-        }}
-      />
+      {Platform.OS !== 'ios' || TxHub.txs.length > 3 ? (
+        <Screen
+          name="Exchange"
+          component={ExchangeScreen}
+          options={{
+            tabBarLabel: t('home-tab-exchange'),
+            headerShown: false,
+          }}
+        />
+      ) : undefined}
 
       <Screen
         name="Wallet"

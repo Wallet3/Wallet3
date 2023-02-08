@@ -1,5 +1,5 @@
 {
-  "Education": ["app.banklessacademy.com", "myfirstnft.info", "speedrunethereum.com"],
+  "Education": ["app.banklessacademy.com", "myfirstnft.info", "speedrunethereum.com", "learn.metamask.io"],
   "Dev": [
     "*.ethereum.org",
     "*.scroll.io",
@@ -160,7 +160,7 @@
     "oncyber.io",
     "cyber.xyz"
   ],
-  "Innovations": ["app.union.finance"],
+  "Innovations": ["app.union.finance", "*.gitcoin.co"],
   "Games": [
     "axieinfinity.com",
     "game.defikingdoms.com",

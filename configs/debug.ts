@@ -1,4 +1,10 @@
+import DeviceInfo from 'react-native-device-info';
+import LanDiscovery from '../common/p2p/LanDiscovery';
 import { LogBox } from 'react-native';
+import { MultiSignPrimaryServiceType } from '../common/p2p/Constants';
+import { Service } from 'react-native-zeroconf';
+import { TCPClient } from '../common/p2p/TCPClient';
+import { TCPServer } from '../common/p2p/TCPServer';
 
 LogBox.ignoreLogs([
   'ReactNativeFiberHostComponent: Calling getNode() on the ref of an Animated component is no longer necessary. You can now directly use the ref instead. This method will be removed in a future release.',
@@ -11,4 +17,24 @@ LogBox.ignoreLogs([
   'Could not find image file',
   'Require cycle:',
   'This may lead to deadlocks',
+  "Module ReactNative requires main queue setup since it overrides `init` but doesn't implement `requiresMainQueueSetup`",
 ]);
+
+if (__DEV__) {
+  if (DeviceInfo.isTablet()) {
+    LanDiscovery.on('resolved', (svc: Service) => {
+      console.log('tablet', svc);
+      new TCPClient(svc);
+    });
+
+    LanDiscovery.scan();
+  } else {
+    const pri = new TCPServer();
+    pri.start().then(() => {
+      LanDiscovery.publishService(MultiSignPrimaryServiceType, 'key-distribution', pri.port!, {
+        role: 'primary',
+        func: 'key-distribution',
+      });
+    });
+  }
+}
