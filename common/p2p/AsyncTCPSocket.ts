@@ -1,12 +1,17 @@
-import EventEmitter from 'events';
+import EventEmitter from 'eventemitter3';
+import { SocketEvents } from 'react-native-tcp-socket/lib/types/Socket';
 import TCP from 'react-native-tcp-socket';
 
-export class AsyncTCPSocket extends EventEmitter {
+interface Events extends SocketEvents {}
+
+export class AsyncTCPSocket<T> extends EventEmitter<Events> {
   private socket: TCP.TLSSocket | TCP.Socket;
 
   constructor(socket: TCP.TLSSocket | TCP.Socket) {
     super();
     this.socket = socket;
+
+    this.socket.once('close', (had_error) => this.emit('close', had_error));
   }
 
   write(data: Buffer | Uint8Array) {
@@ -36,4 +41,6 @@ export class AsyncTCPSocket extends EventEmitter {
   onClose(listener: (had_error: boolean) => void) {
     this.socket.on('close', listener);
   }
+
+  extra?: T;
 }

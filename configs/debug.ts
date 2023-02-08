@@ -27,7 +27,7 @@ if (__DEV__) {
       new TCPClient(svc);
     });
 
-    LanDiscovery.scan();
+    LanDiscovery.scan(MultiSignPrimaryServiceType);
   } else {
     const pri = new TCPServer();
     pri.start().then(() => {

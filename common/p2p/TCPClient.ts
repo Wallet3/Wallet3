@@ -9,7 +9,7 @@ import { createECDH } from 'crypto';
 const { createConnection } = TCP;
 
 export class TCPClient {
-  private socket!: AsyncTCPSocket;
+  private socket!: AsyncTCPSocket<void>;
   private ecdhKey!: string;
 
   constructor(args: Service) {

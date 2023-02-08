@@ -3,20 +3,22 @@ import { createECDH, randomBytes } from 'crypto';
 import { decrypt, encrypt } from '../../utils/cipher';
 
 import { AsyncTCPSocket } from './AsyncTCPSocket';
+import EventEmitter from 'eventemitter3';
 import TCP from 'react-native-tcp-socket';
 
-type E2EClient = {
+export type E2EClient = {
   random: string;
   devtype: string;
   manufacturer: string;
   name: string;
 };
 
-export class TCPServer {
+export class TCPServer<T extends EventEmitter.ValidEventTypes> extends EventEmitter<T, any> {
   private readonly server: TCP.Server;
-  readonly clients = new Map<string, { secret: string; info: E2EClient }>();
+  readonly clients = new Map<AsyncTCPSocket<E2EClient>, string>();
 
   constructor() {
+    super();
     this.server = TCP.createServer(this.handleClient);
     makeObservable(this, { clients: observable, clientCount: computed });
   }
@@ -45,24 +47,30 @@ export class TCPServer {
         port++;
       }
     }
+  }
 
-    return this.address;
+  stop() {
+    this.server.close();
   }
 
   private handleClient = async (c: TCP.Socket) => {
-    const socket = new AsyncTCPSocket(c);
+    const socket = new AsyncTCPSocket<E2EClient>(c);
     const result = await this.handshake(socket);
 
     if (result) {
-      this.clients.set(socket.remoteId, result);
+      this.clients.set(socket, result.secret);
+      socket.extra = result.info;
       console.log('new client', socket.remoteId, result.info);
     } else {
       socket.destroy();
       return;
     }
+
+    socket.once('close', () => this.clients.delete(socket));
+    this.newClient(socket);
   };
 
-  private handshake = async (socket: AsyncTCPSocket) => {
+  private handshake = async (socket: AsyncTCPSocket<E2EClient>) => {
     const ecdh = createECDH('secp521r1');
 
     try {
@@ -83,4 +91,8 @@ export class TCPServer {
       return { secret, info };
     } catch (error) {}
   };
+
+  protected newClient(_: AsyncTCPSocket<E2EClient>) {
+    throw new Error('Not Implemented');
+  }
 }

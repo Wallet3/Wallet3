@@ -14,8 +14,8 @@ class LanDiscovery extends EventEmitter {
     zc.on('start', () => console.log('The scan has started.'));
   }
 
-  scan() {
-    zc.scan(MultiSignPrimaryServiceType, 'tcp');
+  scan(service: string) {
+    zc.scan(service, 'tcp');
   }
 
   stopScan() {
