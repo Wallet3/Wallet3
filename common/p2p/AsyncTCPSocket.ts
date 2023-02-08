@@ -1,9 +1,11 @@
+import EventEmitter from 'events';
 import TCP from 'react-native-tcp-socket';
 
-export class AsyncTCPSocket {
+export class AsyncTCPSocket extends EventEmitter {
   private socket: TCP.TLSSocket | TCP.Socket;
 
   constructor(socket: TCP.TLSSocket | TCP.Socket) {
+    super();
     this.socket = socket;
   }
 
@@ -29,5 +31,9 @@ export class AsyncTCPSocket {
 
   get remoteId() {
     return `${this.socket.remoteAddress}:${this.socket.remotePort}`;
+  }
+
+  onClose(listener: (had_error: boolean) => void) {
+    this.socket.on('close', listener);
   }
 }

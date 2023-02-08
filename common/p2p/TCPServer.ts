@@ -1,22 +1,36 @@
+import { computed, makeObservable, observable } from 'mobx';
 import { createECDH, randomBytes } from 'crypto';
 import { decrypt, encrypt } from '../../utils/cipher';
 
 import { AsyncTCPSocket } from './AsyncTCPSocket';
-import { MultiSignPrimaryServiceType } from './Constants';
 import TCP from 'react-native-tcp-socket';
-import Zeroconf from 'react-native-zeroconf';
+
+type E2EClient = {
+  random: string;
+  devtype: string;
+  manufacturer: string;
+  name: string;
+};
 
 export class TCPServer {
-  private zc = new Zeroconf();
-  private server: TCP.Server;
-  private clientKeys = new Map<string, Buffer>();
+  private readonly server: TCP.Server;
+  readonly clients = new Map<string, { secret: string; info: E2EClient }>();
 
   constructor() {
     this.server = TCP.createServer(this.handleClient);
+    makeObservable(this, { clients: observable, clientCount: computed });
+  }
+
+  get port() {
+    return this.server.address()?.port;
   }
 
   get address() {
-    return this.server.address() as { port: number; address: string };
+    return this.server.address()?.address;
+  }
+
+  get clientCount() {
+    return this.clients.size;
   }
 
   async start() {
@@ -32,28 +46,23 @@ export class TCPServer {
       }
     }
 
-    this.zc.publishService(MultiSignPrimaryServiceType, 'tcp', undefined, 'key-distribution', port, {
-      role: 'primary',
-      func: 'key-distribution',
-    });
-
     return this.address;
   }
 
-  handleClient = async (c: TCP.Socket) => {
+  private handleClient = async (c: TCP.Socket) => {
     const socket = new AsyncTCPSocket(c);
-    const secret = await this.handshake(socket);
+    const result = await this.handshake(socket);
 
-    if (secret) {
-      console.log('new client', socket.remoteId);
-      this.clientKeys.set(socket.remoteId, secret);
+    if (result) {
+      this.clients.set(socket.remoteId, result);
+      console.log('new client', socket.remoteId, result.info);
     } else {
       socket.destroy();
       return;
     }
   };
 
-  handshake = async (socket: AsyncTCPSocket) => {
+  private handshake = async (socket: AsyncTCPSocket) => {
     const ecdh = createECDH('secp521r1');
 
     try {
@@ -61,19 +70,17 @@ export class TCPServer {
       const clientEcdhKey = await socket.read();
       if (!clientEcdhKey) return;
 
-      const secret = ecdh.computeSecret(clientEcdhKey);
+      const secret = ecdh.computeSecret(clientEcdhKey).toString('hex');
       const random = randomBytes(16).toString('hex');
       const hello = `server: ${random}`;
 
-      await socket.writeString(encrypt(hello, secret.toString('hex')));
+      await socket.writeString(encrypt(hello, secret));
       const encrypted = await socket.readString();
 
-      if (encrypted) {
-        const cr = decrypt(encrypted, secret.toString('hex')).split(':')[1]?.trim();
-        if (cr !== random) return;
-      }
+      const info: E2EClient = JSON.parse(decrypt(encrypted, secret));
+      if (info.random !== random) return;
 
-      return secret;
+      return { secret, info };
     } catch (error) {}
   };
 }
