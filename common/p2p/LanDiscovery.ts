@@ -1,33 +1,36 @@
 import Zeroconf, { Service } from 'react-native-zeroconf';
 
 import EventEmitter from 'events';
-import { MultiSignPrimaryServiceType } from './Constants';
-
-const zc = new Zeroconf();
 
 class LanDiscovery extends EventEmitter {
+  zc = new Zeroconf();
+
   constructor() {
     super();
 
-    zc.on('found', (name) => this.emit('found', name));
-    zc.on('resolved', (service) => this.emit('resolved', service));
-    zc.on('start', () => console.log('The scan has started.'));
+    this.zc.on('found', (name) => this.emit('found', name));
+    this.zc.on('resolved', (service) => this.emit('resolved', service));
+    this.zc.on('start', () => console.log('The scan has started.'));
   }
 
   scan(service: string) {
-    zc.scan(service, 'tcp');
+    this.zc.scan(service, 'tcp');
   }
 
   stopScan() {
-    zc.stop();
+    this.zc.stop();
   }
 
   getService(name: string): Service | undefined {
-    return zc.getServices()[name];
+    return this.zc.getServices()[name];
   }
 
   publishService(type: string, name: string, port: number, extra: any) {
-    zc.publishService(type, 'tcp', undefined, name, port, extra);
+    this.zc.publishService(type, 'tcp', undefined, name, port, extra);
+  }
+
+  unpublishService(name: string) {
+    this.zc.unpublishService(name);
   }
 }
 

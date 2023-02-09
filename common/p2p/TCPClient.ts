@@ -1,15 +1,14 @@
+import { createECDH, randomBytes } from 'crypto';
 import { decrypt, encrypt } from '../../utils/cipher';
 
 import { AsyncTCPSocket } from './AsyncTCPSocket';
 import DeviceInfo from 'react-native-device-info';
 import { Service } from 'react-native-zeroconf';
 import TCP from 'react-native-tcp-socket';
-import { createECDH } from 'crypto';
 
-const { createConnection } = TCP;
+const { createConnection, connectTLS, connect } = TCP;
 
 export type ClientInfo = {
-  random: string;
   devtype: string;
   manufacturer: string;
   name: string;
@@ -25,7 +24,7 @@ export class TCPClient extends AsyncTCPSocket {
     secret,
     info,
   }: {
-    service?: Service;
+    service?: { host: string; port: number };
     socket?: TCP.Socket | TCP.TLSSocket;
     secret?: string;
     info?: ClientInfo;
@@ -37,7 +36,9 @@ export class TCPClient extends AsyncTCPSocket {
     }
 
     if (service) {
-      internal = createConnection({ port: service.port, host: service.host }, () => this.handshake());
+      internal = connect({ port: service.port, host: service.host }, () => this.handshake());
+      internal.on('error', console.error);
+      internal.once('close', console.warn);
     }
 
     super(internal);
@@ -47,7 +48,7 @@ export class TCPClient extends AsyncTCPSocket {
 
   private handshake = async () => {
     try {
-      const ecdh = createECDH('secp521r1');
+      const ecdh = createECDH('secp256k1');
       const clientKey = ecdh.generateKeys();
 
       const serverKey = await this.read();
@@ -55,21 +56,32 @@ export class TCPClient extends AsyncTCPSocket {
 
       const secret = ecdh.computeSecret(serverKey).toString('hex');
 
-      const hello = await this.readString();
+      const serverGreet = await this.readString();
 
-      const plain = decrypt(hello, secret);
+      const plain = decrypt(serverGreet, secret);
       const random = plain.split(':')[1]?.trim();
+      const hello = randomBytes(8).toString('hex');
 
       const info = JSON.stringify({
         random,
         name: DeviceInfo.getDeviceNameSync(),
         devtype: DeviceInfo.getDeviceType(),
         manufacturer: DeviceInfo.getManufacturerSync(),
+        hello,
       });
 
       await this.writeString(encrypt(info, secret));
+      if ((await this.readString()) !== hello) {
+        super.destroy();
+        return;
+      }
 
       this.ecdhKey = secret;
+      this.emit('ready');
     } catch (e) {}
   };
+
+  writeStringWithEncryption(plain: string) {
+    return this.writeString(encrypt(plain, this.ecdhKey));
+  }
 }

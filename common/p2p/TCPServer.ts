@@ -6,12 +6,14 @@ import { AsyncTCPSocket } from './AsyncTCPSocket';
 import EventEmitter from 'eventemitter3';
 import TCP from 'react-native-tcp-socket';
 
+const { createTLSServer, createServer } = TCP;
+
 export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends EventEmitter<T, any> {
   private readonly server: TCP.Server;
 
   constructor() {
     super();
-    this.server = TCP.createServer(this.handleClient);
+    this.server = createServer(this.handleClient);
   }
 
   get port() {
@@ -40,7 +42,7 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
     this.server.close();
   }
 
-  private handleClient = async (c: TCP.Socket) => {
+  private handleClient = async (c: TCP.Socket | TCP.TLSSocket) => {
     const socket = new AsyncTCPSocket(c);
     const result = await this.handshake(socket);
 
@@ -54,7 +56,7 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
   };
 
   private handshake = async (socket: AsyncTCPSocket) => {
-    const ecdh = createECDH('secp521r1');
+    const ecdh = createECDH('secp256k1');
 
     try {
       await socket.write(ecdh.generateKeys());
@@ -68,8 +70,10 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
       await socket.writeString(encrypt(hello, secret));
       const encrypted = await socket.readString();
 
-      const info: ClientInfo = JSON.parse(decrypt(encrypted, secret));
+      const info: ClientInfo & { hello: string; random: string } = JSON.parse(decrypt(encrypted, secret));
       if (info.random !== random) return;
+
+      await socket.writeString(info.hello);
 
       return { secret, info };
     } catch (error) {}

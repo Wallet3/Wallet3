@@ -8,7 +8,7 @@ import Authentication from '../../viewmodels/auth/Authentication';
 import CopyableText from '../../components/CopyableText';
 import { FullPasspad } from '../../modals/views/Passpad';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import MnemonicOnce from '../../viewmodels/auth/MnemonicOnce';
+import { MnemonicOnce } from '../../viewmodels/auth/MnemonicOnce';
 import { Modalize } from 'react-native-modalize';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/core/Networks';
@@ -32,6 +32,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
   const [recoveryKey, setRecoveryKey] = useState<string>();
   const [recoveryKeyPlatform, setRecoveryKeyPlatform] = useState<string>();
   const { textColor } = Theme;
+  const [mn] = useState(new MnemonicOnce());
 
   usePreventScreenCapture();
 
@@ -52,10 +53,10 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
     try {
       if (success) {
         close();
-        MnemonicOnce.setSecret(secret!);
+        mn.setSecret(secret!);
 
         if (wallet?.isHDWallet && !wallet.web2SignedIn) {
-          setWords(MnemonicOnce.secretWords);
+          setWords(mn.secretWords);
         } else if (wallet?.web2SignedIn) {
           setRecoveryKey(secret!);
         } else {
@@ -75,7 +76,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
     setTimeout(() => open(), 0);
     if (Authentication.biometricType) verify();
 
-    return () => MnemonicOnce.clean();
+    return () => mn.clean();
   }, []);
 
   return (
@@ -147,7 +148,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
           )}
         </View>
       ) : (
-        <View></View>
+        <View />
       )}
 
       <Portal>

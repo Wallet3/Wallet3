@@ -5,7 +5,10 @@ import { LogBox } from 'react-native';
 import { MultiSignPrimaryServiceType } from '../common/p2p/Constants';
 import { Service } from 'react-native-zeroconf';
 import { TCPClient } from '../common/p2p/TCPClient';
-import { TCPServer } from '../common/p2p/TCPServer';
+import eccrypto from 'eccrypto';
+import { randomBytes } from 'crypto';
+import secretjs from 'secrets.js-grempe';
+import { utils } from 'ethers';
 
 LogBox.ignoreLogs([
   'ReactNativeFiberHostComponent: Calling getNode() on the ref of an Animated component is no longer necessary. You can now directly use the ref instead. This method will be removed in a future release.',
@@ -30,12 +33,25 @@ if (__DEV__) {
 
     LanDiscovery.scan(MultiSignPrimaryServiceType);
   } else {
-    const pri = new KeyDistribution();
-    pri.start().then(() => {
-      LanDiscovery.publishService(MultiSignPrimaryServiceType, 'key-distribution', pri.port!, {
-        role: 'primary',
-        func: 'key-distribution',
-      });
+    const entropy = randomBytes(16);
+    const mnemonic = utils.entropyToMnemonic(entropy);
+    const root = utils.HDNode.fromMnemonic(mnemonic);
+    console.log(utils.mnemonicToEntropy(mnemonic).substring(2), entropy.toString('hex'), root.privateKey);
+
+    eccrypto.encrypt(Buffer.from(root.publicKey.substring(2), 'hex'), Buffer.from('abc')).then(async (en) => {
+      console.log(en.toString());
+      console.log((await eccrypto.decrypt(Buffer.from(root.privateKey.substring(2), 'hex'), en)).toString('utf8'));
     });
+
+    console.log(secretjs.share(entropy.toString('hex'), 10, 5));
+
+    const pri = new KeyDistribution({ mnemonic });
+    pri.start()
+    // .then(() => {
+    //   LanDiscovery.publishService(MultiSignPrimaryServiceType, 'key-distribution', pri.port!, {
+    //     role: 'primary',
+    //     func: 'key-distribution',
+    //   });
+    // });
   }
 }

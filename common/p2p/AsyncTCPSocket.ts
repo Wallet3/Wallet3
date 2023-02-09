@@ -2,9 +2,11 @@ import EventEmitter from 'eventemitter3';
 import { SocketEvents } from 'react-native-tcp-socket/lib/types/Socket';
 import TCP from 'react-native-tcp-socket';
 
-interface Events extends SocketEvents {}
+interface Events extends SocketEvents {
+  ready: () => void;
+}
 
-export class AsyncTCPSocket extends EventEmitter<SocketEvents> {
+export class AsyncTCPSocket extends EventEmitter<Events> {
   private socket: TCP.TLSSocket | TCP.Socket;
 
   constructor(socket: TCP.TLSSocket | TCP.Socket) {
