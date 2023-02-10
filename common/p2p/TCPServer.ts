@@ -5,12 +5,12 @@ import { CipherAlgorithm } from './Constants';
 import EventEmitter from 'eventemitter3';
 import TCP from 'react-native-tcp-socket';
 import { TCPClient } from './TCPClient';
+import { sleep } from '../../utils/async';
 
 const { createServer } = TCP;
 
 export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends EventEmitter<T, any> {
   private readonly server: TCP.Server;
-  verificationCode!: number | string;
 
   constructor() {
     super();
@@ -48,6 +48,10 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
     const client = await this.handshake(socket);
 
     if (client) {
+      while (!client.greeted) {
+        await sleep(500);
+      }
+
       console.log('new client', socket.remoteId, client.greeted);
       this.newClient(client);
     } else {
@@ -68,14 +72,14 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
       const negotiationKey = negotiation.subarray(16);
 
       const secret = ecdh.computeSecret(negotiationKey);
-      this.verificationCode = `${secret.reduce((p, c) => p * BigInt(c), 1n)}`.replaceAll('0', '').substring(6, 12);
+      const verificationCode = `${secret.reduce((p, c) => p * BigInt(c || 1), 1n)}`.substring(6, 12);
 
       const cipher = createCipheriv(CipherAlgorithm, secret, iv);
       const decipher = createDecipheriv(CipherAlgorithm, secret, civ);
 
-      console.log('server computes:', secret.toString('hex'), this.verificationCode);
+      console.log('server computes:', secret.toString('hex'), verificationCode);
 
-      return new TCPClient({ cipher, decipher, socket: socket.raw });
+      return new TCPClient({ cipher, decipher, socket: socket.raw, verificationCode });
     } catch (error) {
       console.error(error);
     }

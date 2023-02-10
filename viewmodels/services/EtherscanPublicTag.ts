@@ -33,7 +33,7 @@ export async function fetchAddressInfo(chainId: number, address: string) {
 
   let item = await Database.cloud_address_tags.findOne({ where: { address: key } });
 
-  if (item && Date.now() < item?.lastUpdatedTimestamp + 90 * DAY) {
+  if (item && Date.now() < item?.lastUpdatedTimestamp + (__DEV__ ? 1 : (chainId === 1 ? 7 : 90) * DAY)) {
     TagsCache.set(key, item);
     return item;
   }
@@ -51,9 +51,9 @@ export async function fetchAddressInfo(chainId: number, address: string) {
   const tagSelectors = [
     "span.u-label--secondary span[data-toggle='tooltip']",
     "span.u-label--secondary[data-toggle='tooltip']",
-    'div.badge span.text-truncate',
-    'a.d-flex span.text-truncate',
     'span[rel=tooltipEns] span',
+    'div.badge span.text-truncate',
+    'div.d-flex.flex-wrap.align-items-center a.d-flex span.text-truncate',
   ];
 
   let publicNameTag!: HTMLElement;
@@ -63,7 +63,11 @@ export async function fetchAddressInfo(chainId: number, address: string) {
     if (publicNameTag) break;
   }
 
-  const publicName = (publicNameTag?.innerText || warnings[0])?.trim?.();
+  const publicName = (publicNameTag?.innerText || warnings[0])?.trim?.(); //?.replaceAll(, '[?]');
+
+  if (/[\u200B|\u200C|\u200D]/.test(publicName)) {
+    warnings.push('zero-width characters');
+  }
 
   if (item && item.publicName === publicName && !item.dangerous && warnings.length === 0 && !alert) {
     item.lastUpdatedTimestamp = Date.now();

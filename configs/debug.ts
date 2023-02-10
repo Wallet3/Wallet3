@@ -2,6 +2,7 @@ import { createCipheriv, randomBytes } from 'crypto';
 
 import DeviceInfo from 'react-native-device-info';
 import { KeyDistribution } from '../viewmodels/tss/KeyDistribution';
+import { KeyReceiver } from '../viewmodels/tss/KeyReceiver';
 import LanDiscovery from '../common/p2p/LanDiscovery';
 import { LogBox } from 'react-native';
 import { MultiSignPrimaryServiceType } from '../common/p2p/Constants';
@@ -26,16 +27,20 @@ LogBox.ignoreLogs([
 ]);
 
 if (__DEV__) {
+  const entropy = randomBytes(16);
+  const mnemonic = utils.entropyToMnemonic(entropy);
+
+  const pri = new KeyDistribution({ mnemonic });
+
   if (DeviceInfo.isTablet()) {
     LanDiscovery.on('resolved', (service: Service) => {
       console.log('tablet', service);
-      new TCPClient({ service });
+
+      new KeyReceiver(service);
     });
 
     LanDiscovery.scan(MultiSignPrimaryServiceType);
   } else {
-    const entropy = randomBytes(16);
-    const mnemonic = utils.entropyToMnemonic(entropy);
     // const root = utils.HDNode.fromMnemonic(mnemonic);
     // console.log(utils.mnemonicToEntropy(mnemonic).substring(2), entropy.toString('hex'), root.privateKey);
 
@@ -44,10 +49,14 @@ if (__DEV__) {
     //   console.log((await eccrypto.decrypt(Buffer.from(root.privateKey.substring(2), 'hex'), en)).toString('utf8'));
     // });
 
-    // console.log(secretjs.share(entropy.toString('hex'), 10, 5));
+    console.log(secretjs.share(entropy.toString('hex'), 2, 2));
 
-    const pri = new KeyDistribution({ mnemonic });
     pri.start();
+    pri.on('newClient', async (c) => {
+      pri.approveClient(c);
+      await pri.distributeSecret(1);
+      console.log('dist status', pri.status)
+    });
 
     // const aes128cfb = createCipheriv('aes-128-cfb', randomBytes(16), randomBytes(16));
     // aes128cfb.write('abc', 'utf8');
