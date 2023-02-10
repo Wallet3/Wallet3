@@ -1,12 +1,11 @@
-import { createECDH, randomBytes } from 'crypto';
-import { decrypt, encrypt } from '../../utils/cipher';
+import { Cipher, Decipher, createCipheriv, createDecipheriv, createECDH, randomBytes } from 'crypto';
 
 import { AsyncTCPSocket } from './AsyncTCPSocket';
+import { CipherAlgorithm } from './Constants';
 import DeviceInfo from 'react-native-device-info';
-import { Service } from 'react-native-zeroconf';
 import TCP from 'react-native-tcp-socket';
 
-const { createConnection, connectTLS, connect } = TCP;
+const { connect } = TCP;
 
 export type ClientInfo = {
   devtype: string;
@@ -15,73 +14,99 @@ export type ClientInfo = {
 };
 
 export class TCPClient extends AsyncTCPSocket {
-  private ecdhKey!: string;
-  info?: ClientInfo;
+  private cipher!: Cipher;
+  private decipher!: Decipher;
+
+  remoteInfo?: ClientInfo;
+  verificationCode!: number | string;
+
+  get greeted() {
+    return this.remoteInfo ? true : false;
+  }
 
   constructor({
     service,
     socket,
-    secret,
-    info,
+    cipher,
+    decipher,
   }: {
     service?: { host: string; port: number };
     socket?: TCP.Socket | TCP.TLSSocket;
-    secret?: string;
-    info?: ClientInfo;
+    cipher?: Cipher;
+    decipher?: Decipher;
   }) {
     let internal: TCP.Socket | TCP.TLSSocket = socket!;
 
-    if ((socket && !secret) || (!socket && secret)) {
-      throw new Error('Invalid params: socket and secret should be initialized at the same time.');
-    }
-
     if (service) {
       internal = connect({ port: service.port, host: service.host }, () => this.handshake());
-      internal.on('error', console.error);
-      internal.once('close', console.warn);
     }
 
     super(internal);
-    this.info = info;
-    this.ecdhKey = secret!;
+
+    this.cipher = cipher!;
+    this.decipher = decipher!;
+
+    if (socket) {
+      this.hello();
+    }
   }
 
   private handshake = async () => {
     try {
+      const iv = randomBytes(16);
       const ecdh = createECDH('secp256k1');
-      const clientKey = ecdh.generateKeys();
 
-      const serverKey = await this.read();
-      await this.write(clientKey);
+      const negotiation = await this.read();
+      await this.write(Buffer.from([...iv, ...ecdh.generateKeys()]));
 
-      const secret = ecdh.computeSecret(serverKey).toString('hex');
+      const siv = negotiation.subarray(0, 16);
+      const negotiationKey = negotiation.subarray(16);
 
-      const serverGreet = await this.readString();
+      const secret = ecdh.computeSecret(negotiationKey);
+      this.verificationCode = `${secret.reduce((p, c) => p * BigInt(c), 1n)}`.replaceAll('0', '').substring(6, 12);
 
-      const plain = decrypt(serverGreet, secret);
-      const random = plain.split(':')[1]?.trim();
-      const hello = randomBytes(8).toString('hex');
+      console.log('client computes', secret.toString('hex'), this.verificationCode);
 
-      const info = JSON.stringify({
-        random,
-        name: DeviceInfo.getDeviceNameSync(),
-        devtype: DeviceInfo.getDeviceType(),
-        manufacturer: DeviceInfo.getManufacturerSync(),
-        hello,
-      });
+      this.cipher = createCipheriv(CipherAlgorithm, secret, iv);
+      this.decipher = createDecipheriv(CipherAlgorithm, secret, siv);
 
-      await this.writeString(encrypt(info, secret));
-      if ((await this.readString()) !== hello) {
-        super.destroy();
-        return;
-      }
-
-      this.ecdhKey = secret;
+      await this.hello();
       this.emit('ready');
-    } catch (e) {}
+    } catch (e) {
+      console.error(e);
+    }
   };
 
-  writeStringWithEncryption(plain: string) {
-    return this.writeString(encrypt(plain, this.ecdhKey));
+  private hello = async () => {
+    if (this.greeted) return;
+
+    const selfInfo: ClientInfo = {
+      name: DeviceInfo.getDeviceNameSync(),
+      devtype: DeviceInfo.getDeviceType(),
+      manufacturer: DeviceInfo.getManufacturerSync(),
+    };
+
+    this.secureWriteString(JSON.stringify(selfInfo));
+
+    const read = await this.secureReadString();
+    this.remoteInfo = JSON.parse(read);
+  };
+
+  secureWrite(data: Buffer) {
+    return this.write(this.cipher.update(data));
+  }
+
+  secureWriteString(plain: string, encoding: BufferEncoding = 'utf8') {
+    return this.secureWrite(Buffer.from(plain, encoding));
+  }
+
+  async secureRead() {
+    const data = await this.read();
+    return this.decipher.update(data);
+  }
+
+  async secureReadString(encoding: BufferEncoding = 'utf8') {
+    const data = await this.secureRead();
+    return data.toString(encoding);
   }
 }

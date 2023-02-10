@@ -1,15 +1,16 @@
-import { ClientInfo, TCPClient } from './TCPClient';
-import { createECDH, randomBytes } from 'crypto';
-import { decrypt, encrypt } from '../../utils/cipher';
+import { createCipheriv, createDecipheriv, createECDH, randomBytes } from 'crypto';
 
 import { AsyncTCPSocket } from './AsyncTCPSocket';
+import { CipherAlgorithm } from './Constants';
 import EventEmitter from 'eventemitter3';
 import TCP from 'react-native-tcp-socket';
+import { TCPClient } from './TCPClient';
 
-const { createTLSServer, createServer } = TCP;
+const { createServer } = TCP;
 
 export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends EventEmitter<T, any> {
   private readonly server: TCP.Server;
+  verificationCode!: number | string;
 
   constructor() {
     super();
@@ -44,39 +45,40 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
 
   private handleClient = async (c: TCP.Socket | TCP.TLSSocket) => {
     const socket = new AsyncTCPSocket(c);
-    const result = await this.handshake(socket);
+    const client = await this.handshake(socket);
 
-    if (result) {
-      console.log('new client', socket.remoteId, result.info);
-      this.newClient(new TCPClient({ ...result, socket: c }));
+    if (client) {
+      console.log('new client', socket.remoteId, client.greeted);
+      this.newClient(client);
     } else {
       socket.destroy();
       return;
     }
   };
 
-  private handshake = async (socket: AsyncTCPSocket) => {
-    const ecdh = createECDH('secp256k1');
-
+  private handshake = async (socket: AsyncTCPSocket): Promise<TCPClient | undefined> => {
     try {
-      await socket.write(ecdh.generateKeys());
-      const clientEcdhKey = await socket.read();
-      if (!clientEcdhKey) return;
+      const iv = randomBytes(16);
+      const ecdh = createECDH('secp256k1');
 
-      const secret = ecdh.computeSecret(clientEcdhKey).toString('hex');
-      const random = randomBytes(16).toString('hex');
-      const hello = `server: ${random}`;
+      await socket.write(Buffer.from([...iv, ...ecdh.generateKeys()]));
+      const negotiation = await socket.read();
 
-      await socket.writeString(encrypt(hello, secret));
-      const encrypted = await socket.readString();
+      const civ = negotiation.subarray(0, 16);
+      const negotiationKey = negotiation.subarray(16);
 
-      const info: ClientInfo & { hello: string; random: string } = JSON.parse(decrypt(encrypted, secret));
-      if (info.random !== random) return;
+      const secret = ecdh.computeSecret(negotiationKey);
+      this.verificationCode = `${secret.reduce((p, c) => p * BigInt(c), 1n)}`.replaceAll('0', '').substring(6, 12);
 
-      await socket.writeString(info.hello);
+      const cipher = createCipheriv(CipherAlgorithm, secret, iv);
+      const decipher = createDecipheriv(CipherAlgorithm, secret, civ);
 
-      return { secret, info };
-    } catch (error) {}
+      console.log('server computes:', secret.toString('hex'), this.verificationCode);
+
+      return new TCPClient({ cipher, decipher, socket: socket.raw });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   protected abstract newClient(_: TCPClient): void;

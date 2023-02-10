@@ -73,7 +73,7 @@ export class KeyDistribution extends TCPServer<Events> {
 
     await Promise.all(
       shards.slice(1).map((shard, index) =>
-        this.clients[index].writeStringWithEncryption(
+        this.clients[index].secureWriteString(
           JSON.stringify({
             shard,
             pubkey: this.protector.publicKey.substring(2),

@@ -1,3 +1,5 @@
+import { createCipheriv, randomBytes } from 'crypto';
+
 import DeviceInfo from 'react-native-device-info';
 import { KeyDistribution } from '../viewmodels/tss/KeyDistribution';
 import LanDiscovery from '../common/p2p/LanDiscovery';
@@ -6,7 +8,6 @@ import { MultiSignPrimaryServiceType } from '../common/p2p/Constants';
 import { Service } from 'react-native-zeroconf';
 import { TCPClient } from '../common/p2p/TCPClient';
 import eccrypto from 'eccrypto';
-import { randomBytes } from 'crypto';
 import secretjs from 'secrets.js-grempe';
 import { utils } from 'ethers';
 
@@ -35,18 +36,21 @@ if (__DEV__) {
   } else {
     const entropy = randomBytes(16);
     const mnemonic = utils.entropyToMnemonic(entropy);
-    const root = utils.HDNode.fromMnemonic(mnemonic);
-    console.log(utils.mnemonicToEntropy(mnemonic).substring(2), entropy.toString('hex'), root.privateKey);
+    // const root = utils.HDNode.fromMnemonic(mnemonic);
+    // console.log(utils.mnemonicToEntropy(mnemonic).substring(2), entropy.toString('hex'), root.privateKey);
 
-    eccrypto.encrypt(Buffer.from(root.publicKey.substring(2), 'hex'), Buffer.from('abc')).then(async (en) => {
-      console.log(en.toString());
-      console.log((await eccrypto.decrypt(Buffer.from(root.privateKey.substring(2), 'hex'), en)).toString('utf8'));
-    });
+    // eccrypto.encrypt(Buffer.from(root.publicKey.substring(2), 'hex'), Buffer.from('abc')).then(async (en) => {
+    //   console.log(en.toString());
+    //   console.log((await eccrypto.decrypt(Buffer.from(root.privateKey.substring(2), 'hex'), en)).toString('utf8'));
+    // });
 
-    console.log(secretjs.share(entropy.toString('hex'), 10, 5));
+    // console.log(secretjs.share(entropy.toString('hex'), 10, 5));
 
     const pri = new KeyDistribution({ mnemonic });
-    pri.start()
+    pri.start();
+
+    // const aes128cfb = createCipheriv('aes-128-cfb', randomBytes(16), randomBytes(16));
+    // aes128cfb.write('abc', 'utf8');
     // .then(() => {
     //   LanDiscovery.publishService(MultiSignPrimaryServiceType, 'key-distribution', pri.port!, {
     //     role: 'primary',

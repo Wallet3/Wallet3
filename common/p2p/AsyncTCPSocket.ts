@@ -7,17 +7,16 @@ interface Events extends SocketEvents {
 }
 
 export class AsyncTCPSocket extends EventEmitter<Events> {
-  private socket: TCP.TLSSocket | TCP.Socket;
+  readonly raw: TCP.TLSSocket | TCP.Socket;
 
   constructor(socket: TCP.TLSSocket | TCP.Socket) {
     super();
-    this.socket = socket;
-
-    this.socket.once('close', (had_error) => this.emit('close', had_error));
+    this.raw = socket;
+    this.raw.on('close', (had_error) => this.emit('close', had_error));
   }
 
   write(data: Buffer | Uint8Array) {
-    return new Promise<number>((resolve) => this.socket.write(data, 'binary', (err) => resolve(err ? 0 : data.byteLength)));
+    return new Promise<number>((resolve) => this.raw.write(data, 'binary', (err) => resolve(err ? 0 : data.byteLength)));
   }
 
   writeString(data: string, encoding: BufferEncoding = 'utf8') {
@@ -25,22 +24,19 @@ export class AsyncTCPSocket extends EventEmitter<Events> {
   }
 
   read() {
-    return new Promise<Buffer>((resolve) => this.socket.once('data', (data) => resolve(data as Buffer)));
+    return new Promise<Buffer>((resolve) => this.raw.once('data', (data) => resolve(data as Buffer)));
   }
 
   readString(encoding: BufferEncoding = 'utf8') {
-    return new Promise<string>((resolve) => this.socket.once('data', (data) => resolve(data.toString(encoding))));
+    return new Promise<string>((resolve) => this.raw.once('data', (data) => resolve(data.toString(encoding))));
   }
 
   destroy() {
-    this.socket.destroy();
+    this.raw.destroy();
+    this.raw.removeAllListeners();
   }
 
   get remoteId() {
-    return `${this.socket.remoteAddress}:${this.socket.remotePort}`;
-  }
-
-  onClose(listener: (had_error: boolean) => void) {
-    this.socket.on('close', listener);
+    return `${this.raw.remoteAddress}:${this.raw.remotePort}`;
   }
 }
