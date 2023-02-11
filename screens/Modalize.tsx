@@ -30,6 +30,7 @@ import InpageDAppAddAssetModal from '../modals/inpage/InpageDAppAddAsset';
 import InpageDAppAddChain from '../modals/inpage/InpageDAppAddChain';
 import InpageDAppSendTx from '../modals/inpage/InpageDAppTxRequest';
 import InpageDAppSign from '../modals/inpage/InpageDAppSign';
+import { KeyDistributionUI } from '../modals/tss';
 import { Keyboard } from 'react-native';
 import Loading from '../modals/views/Loading';
 import MessageKeys from '../common/MessageKeys';
@@ -577,6 +578,38 @@ export const InappBrowserModal = observer(({ pageKey }: { pageKey?: string }) =>
   );
 });
 
+export const KeyDistributionModal = () => {
+  const { ref, open, close } = useModalize();
+
+  useEffect(() => {
+    PubSub.subscribe(MessageKeys.openKeyDistribution, () => {
+      open();
+    });
+
+    return () => {
+      PubSub.unsubscribe(MessageKeys.openKeyDistribution);
+    };
+  });
+
+  return (
+    <Modalize
+      ref={ref}
+      useNativeDriver
+      adjustToContentHeight
+      withHandle={false}
+      disableScrollIfPossible
+      panGestureEnabled={false}
+      panGestureComponentEnabled={false}
+      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+      modalStyle={{ backgroundColor: 'transparent' }}
+    >
+      <SafeAreaProvider>
+        <KeyDistributionUI />
+      </SafeAreaProvider>
+    </Modalize>
+  );
+};
+
 export const FullScreenQRScanner = observer(() => {
   const { ref, open, close } = useModalize();
   const [tip, setTip] = useState<string>();
@@ -690,5 +723,6 @@ export default (props: { app: AppVM; appAuth: Authentication }) => {
     <InpageDAppConnect key="inpage-dapp-connect" />,
     <InpageDAppRequests key="inpage-dapp-requests" />,
     <BackupTipsModal key="backup-tip" />,
+    <KeyDistributionModal key="key-distribution" />,
   ];
 };

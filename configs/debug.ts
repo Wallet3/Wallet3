@@ -6,10 +6,13 @@ import { KeyDistribution } from '../viewmodels/tss/KeyDistribution';
 import { KeyReceiver } from '../viewmodels/tss/KeyReceiver';
 import LanDiscovery from '../common/p2p/LanDiscovery';
 import { LogBox } from 'react-native';
+import MessageKeys from '../common/MessageKeys';
 import { MultiSignPrimaryServiceType } from '../common/p2p/Constants';
 import { Service } from 'react-native-zeroconf';
 import { TCPClient } from '../common/p2p/TCPClient';
 import eccrypto from 'eccrypto';
+import { getScreenCornerRadius } from '../utils/ios';
+import iosDevice from 'ios-device-list';
 import quickcrypto from 'react-native-quick-crypto';
 import secretjs from 'secrets.js-grempe';
 
@@ -25,6 +28,7 @@ LogBox.ignoreLogs([
   'Require cycle:',
   'This may lead to deadlocks',
   "Module ReactNative requires main queue setup since it overrides `init` but doesn't implement `requiresMainQueueSetup`",
+  'socketDidDisconnect with nil clientDelegate for',
 ]);
 
 if (__DEV__) {
@@ -55,7 +59,6 @@ if (__DEV__) {
     createCipheriv('aes-256-cfb', randomBytes(32), randomBytes(16)).update(randomBytes(1024));
     end = performance.now();
     console.log(`nodecrypto took ${end - start} ms.`);
-
   } else {
     // const root = utils.HDNode.fromMnemonic(mnemonic);
     // console.log(utils.mnemonicToEntropy(mnemonic).substring(2), entropy.toString('hex'), root.privateKey);
@@ -73,6 +76,8 @@ if (__DEV__) {
       await pri.distributeSecret(1);
       console.log('dist status', pri.status);
     });
+
+    setTimeout(() => PubSub.publish(MessageKeys.openKeyDistribution), 5000);
 
     // const aes128cfb = createCipheriv('aes-128-cfb', randomBytes(16), randomBytes(16));
     // aes128cfb.write('abc', 'utf8');
