@@ -26,6 +26,7 @@ const Priorities = new Map<string, number>([
   ['Utilities', 7],
   ['Education', 8],
   ['Dev', 9],
+  ['Governance', 10],
   ['Others', 999999],
 ]);
 

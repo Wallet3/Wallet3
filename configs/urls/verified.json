@@ -230,7 +230,7 @@
     "metamask.github.io/test-dapp"
   ],
   "Bridges": [
-    "bridge.optimism.io",
+    "gateway.optimism.io",
     "bridge.arbitrum.io",
     "bridge.renproject.io",
     "stargate.finance",
@@ -248,5 +248,6 @@
     "bridge.harmony.one",
     "app.barnbridge.com",
     "cbridge.celer.network"
-  ]
+  ],
+  "Governance": ["app.optimism.io", "vote.optimism.io"]
 }

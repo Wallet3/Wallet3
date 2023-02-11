@@ -92,7 +92,7 @@ export class KeyDistribution extends TCPServer<Events> {
   async distributeSecret(threshold: number) {
     console.log('client count', this.clientCount);
 
-    if (this.status === DistributionStatus.distributing) return;
+    if (this.status === DistributionStatus.distributing || this.status === DistributionStatus.distributionSucceed) return;
     if (this.clientCount === 0) return;
 
     runInAction(() => (this.status = DistributionStatus.distributing));
@@ -117,7 +117,7 @@ export class KeyDistribution extends TCPServer<Events> {
     const result = await Promise.all(
       this.clients.map(async (c) => {
         const data = await c.secureReadString();
-        console.log('server received:', data)
+        console.log('server received:', data);
         const ack = JSON.parse(data) as ShardAcknowledgement;
         if (ack.distributionId !== this.id || !ack.success || ack.type !== ContentType.shardAcknowledgement) return false;
 

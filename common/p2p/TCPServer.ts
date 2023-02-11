@@ -1,4 +1,4 @@
-import { createCipheriv, createDecipheriv, createECDH, randomBytes } from 'crypto';
+import { createCipheriv, createDecipheriv, createECDH, createHash, randomBytes } from 'crypto';
 
 import { AsyncTCPSocket } from './AsyncTCPSocket';
 import { CipherAlgorithm } from './Constants';
@@ -74,7 +74,7 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
       const secret = ecdh.computeSecret(negotiationKey);
       const verificationCode = `${secret.reduce((p, c) => p * BigInt(c || 1), 1n)}`.substring(6, 12);
 
-      const cipher = createCipheriv(CipherAlgorithm, secret, iv);
+      const cipher = createCipheriv(CipherAlgorithm, createHash('sha256').update(secret).digest(), iv);
       const decipher = createDecipheriv(CipherAlgorithm, secret, civ);
 
       console.log('server computes:', secret.toString('hex'), verificationCode);

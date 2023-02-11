@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@craftzdog/react-native-buffer": "^6.0.5",
     "@ethersproject/shims": "^5.7.0",
     "@expo/vector-icons": "^13.0.0",
     "@metamask/eth-sig-util": "^4.0.1",
@@ -71,7 +72,7 @@
     "js-base64": "^3.7.5",
     "linq": "^4.0.1",
     "lottie-react-native": "5.1.5",
-    "mobx": "^6.7.0",
+    "mobx": "^6.8.0",
     "mobx-react-lite": "^3.4.0",
     "node-html-parser": "^6.1.4",
     "numeral": "^2.0.6",
@@ -100,6 +101,8 @@
     "react-native-portalize": "^1.0.7",
     "react-native-progress": "^5.0.0",
     "react-native-qrcode-svg": "^6.2.0",
+    "react-native-quick-base64": "^2.0.5",
+    "react-native-quick-crypto": "^0.5.0",
     "react-native-randombytes": "^3.6.1",
     "react-native-reanimated": "~2.14.4",
     "react-native-remote-svg": "^2.0.10",

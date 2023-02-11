@@ -1,9 +1,8 @@
-import { Cipher, Decipher, createCipheriv, createDecipheriv, createECDH, randomBytes } from 'crypto';
+import { Cipher, Decipher, createCipheriv, createDecipheriv, createECDH, createHash, randomBytes } from 'crypto';
 
 import { AsyncTCPSocket } from './AsyncTCPSocket';
 import { CipherAlgorithm } from './Constants';
 import DeviceInfo from 'react-native-device-info';
-import { Platform } from 'react-native';
 import TCP from 'react-native-tcp-socket';
 
 const { connect } = TCP;
@@ -87,7 +86,7 @@ export class TCPClient extends AsyncTCPSocket {
       console.log('client computes', secret.toString('hex'), this.verificationCode);
 
       this.cipher = createCipheriv(CipherAlgorithm, secret, iv);
-      this.decipher = createDecipheriv(CipherAlgorithm, secret, siv);
+      this.decipher = createDecipheriv(CipherAlgorithm, createHash('sha256').update(secret).digest(), siv);
 
       await this.hello();
       this.emit('ready');

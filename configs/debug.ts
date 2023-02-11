@@ -1,4 +1,5 @@
 import { createCipheriv, randomBytes } from 'crypto';
+import { ethers, utils } from 'ethers';
 
 import DeviceInfo from 'react-native-device-info';
 import { KeyDistribution } from '../viewmodels/tss/KeyDistribution';
@@ -9,8 +10,8 @@ import { MultiSignPrimaryServiceType } from '../common/p2p/Constants';
 import { Service } from 'react-native-zeroconf';
 import { TCPClient } from '../common/p2p/TCPClient';
 import eccrypto from 'eccrypto';
+import quickcrypto from 'react-native-quick-crypto';
 import secretjs from 'secrets.js-grempe';
-import { utils } from 'ethers';
 
 LogBox.ignoreLogs([
   'ReactNativeFiberHostComponent: Calling getNode() on the ref of an Animated component is no longer necessary. You can now directly use the ref instead. This method will be removed in a future release.',
@@ -40,6 +41,21 @@ if (__DEV__) {
     });
 
     LanDiscovery.scan(MultiSignPrimaryServiceType);
+
+    let start = performance.now();
+    // ethers.Wallet.createRandom();
+    quickcrypto
+      .createCipheriv('aes-256-cfb', quickcrypto.randomBytes(32), quickcrypto.randomBytes(16))
+      .update(quickcrypto.randomBytes(1024));
+    let end = performance.now();
+    console.log(`quickcrypto took ${end - start} ms.`);
+
+    start = performance.now();
+    // ethers.Wallet.createRandom();
+    createCipheriv('aes-256-cfb', randomBytes(32), randomBytes(16)).update(randomBytes(1024));
+    end = performance.now();
+    console.log(`nodecrypto took ${end - start} ms.`);
+
   } else {
     // const root = utils.HDNode.fromMnemonic(mnemonic);
     // console.log(utils.mnemonicToEntropy(mnemonic).substring(2), entropy.toString('hex'), root.privateKey);
@@ -55,7 +71,7 @@ if (__DEV__) {
     pri.on('newClient', async (c) => {
       pri.approveClient(c);
       await pri.distributeSecret(1);
-      console.log('dist status', pri.status)
+      console.log('dist status', pri.status);
     });
 
     // const aes128cfb = createCipheriv('aes-128-cfb', randomBytes(16), randomBytes(16));
