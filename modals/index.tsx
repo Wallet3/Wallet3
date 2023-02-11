@@ -1,10 +1,10 @@
 import AccountsMenu from './multi-accounts';
-import NetworksMenu from './Networks';
-import QRScan from './QRScan';
-import Request from './Request';
-import Send from './Send';
-import WalletConnectDApp from './WalletConnectDApp';
-import WalletConnectSign from './WalletConnectSign';
-import WalletConnectTxRequest from './WalletConnectTxRequest';
+import NetworksMenu from './app/Networks';
+import QRScan from './app/QRScan';
+import Request from './app/Request';
+import Send from './app/Send';
+import WalletConnectDApp from './walletconnect/WalletConnectDApp';
+import WalletConnectSign from './walletconnect/WalletConnectSign';
+import WalletConnectTxRequest from './walletconnect/WalletConnectTxRequest';
 
 export { Request, Send, NetworksMenu, WalletConnectDApp, WalletConnectSign, WalletConnectTxRequest, AccountsMenu, QRScan };

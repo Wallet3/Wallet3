@@ -19,7 +19,7 @@ import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 import icons from '../../assets/icons/crypto';
 import { observer } from 'mobx-react-lite';
-import { openInappBrowser } from '../../modals/InappBrowser';
+import { openInappBrowser } from '../../modals/app/InappBrowser';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 

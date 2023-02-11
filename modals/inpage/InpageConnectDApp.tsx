@@ -1,18 +1,18 @@
 import React, { useRef, useState } from 'react';
 
-import { Account } from '../viewmodels/account/Account';
-import AccountSelector from './dapp/AccountSelector';
-import App from '../viewmodels/core/App';
-import DAppConnectView from './dapp/DAppConnectView';
-import { INetwork } from '../common/Networks';
-import NetworkSelector from './dapp/NetworkSelector';
-import Networks from '../viewmodels/core/Networks';
+import { Account } from '../../viewmodels/account/Account';
+import AccountSelector from '../dapp/AccountSelector';
+import App from '../../viewmodels/core/App';
+import DAppConnectView from '../dapp/DAppConnectView';
+import { INetwork } from '../../common/Networks';
+import NetworkSelector from '../dapp/NetworkSelector';
+import Networks from '../../viewmodels/core/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
-import Theme from '../viewmodels/settings/Theme';
-import { isSecureSite } from '../viewmodels/customs/Bookmarks';
+import Theme from '../../viewmodels/settings/Theme';
+import { isSecureSite } from '../../viewmodels/customs/Bookmarks';
 import { observer } from 'mobx-react-lite';
-import styles from './styles';
+import styles from '../styles';
 
 interface Props {
   close: () => void;

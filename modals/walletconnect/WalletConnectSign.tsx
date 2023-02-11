@@ -2,20 +2,20 @@ import * as ExpoLinking from 'expo-linking';
 
 import React, { useEffect, useState } from 'react';
 
-import App from '../viewmodels/core/App';
-import Authentication from '../viewmodels/auth/Authentication';
+import App from '../../viewmodels/core/App';
+import Authentication from '../../viewmodels/auth/Authentication';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import Sign from './compositions/Sign';
+import Sign from '../compositions/Sign';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
-import Success from './views/Success';
-import Theme from '../viewmodels/settings/Theme';
-import { WCCallRequestRequest } from '../models/entities/WCSession_v1';
-import { WalletConnect_v1 } from '../viewmodels/walletconnect/WalletConnect_v1';
-import i18n from '../i18n';
+import Success from '../views/Success';
+import Theme from '../../viewmodels/settings/Theme';
+import { WCCallRequestRequest } from '../../models/entities/WCSession_v1';
+import { WalletConnect_v1 } from '../../viewmodels/walletconnect/WalletConnect_v1';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import { parseSignParams } from '../utils/sign';
+import { parseSignParams } from '../../utils/sign';
 import { showMessage } from 'react-native-flash-message';
-import styles from './styles';
+import styles from '../styles';
 
 interface Props {
   request: WCCallRequestRequest;

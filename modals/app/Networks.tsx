@@ -1,21 +1,21 @@
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
 import { Entypo, Feather, MaterialCommunityIcons, Octicons } from '@expo/vector-icons';
 import { FlatList, ListRenderItemInfo, NativeSyntheticEvent, Text, TouchableOpacity, View } from 'react-native';
-import { NetworkIcons, generateNetworkIcon } from '../assets/icons/networks/color';
-import { SafeViewContainer, Separator } from '../components';
+import { NetworkIcons, generateNetworkIcon } from '../../assets/icons/networks/color';
+import { SafeViewContainer, Separator } from '../../components';
 import { useEffect, useRef, useState } from 'react';
 
-import EditNetwork from './views/EditNetwork';
-import { INetwork } from '../common/Networks';
-import Networks from '../viewmodels/core/Networks';
+import EditNetwork from '../views/EditNetwork';
+import { INetwork } from '../../common/Networks';
+import Networks from '../../viewmodels/core/Networks';
 import React from 'react';
-import { ReactiveScreen } from '../utils/device';
+import { ReactiveScreen } from '../../utils/device';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
-import Theme from '../viewmodels/settings/Theme';
-import i18n from '../i18n';
-import { startLayoutAnimation } from '../utils/animations';
-import styles from './styles';
+import Theme from '../../viewmodels/settings/Theme';
+import i18n from '../../i18n';
+import { startLayoutAnimation } from '../../utils/animations';
+import styles from '../styles';
 
 interface Props {
   onNetworkPress?: (network: INetwork) => void;

@@ -1,8 +1,8 @@
-import Browser from '../screens/browser/Browser';
-import MessageKeys from '../common/MessageKeys';
+import Browser from '../../screens/browser/Browser';
+import MessageKeys from '../../common/MessageKeys';
 import React from 'react';
-import { ReactiveScreen } from '../utils/device';
-import Theme from '../viewmodels/settings/Theme';
+import { ReactiveScreen } from '../../utils/device';
+import Theme from '../../viewmodels/settings/Theme';
 import { View } from 'react-native-animatable';
 import { observer } from 'mobx-react-lite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';

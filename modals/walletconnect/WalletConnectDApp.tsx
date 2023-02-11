@@ -1,25 +1,25 @@
-import { Button, SafeViewContainer } from '../components';
+import { Button, SafeViewContainer } from '../../components';
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaView, Text, View } from 'react-native';
 
-import { Account } from '../viewmodels/account/Account';
-import AccountSelector from './dapp/AccountSelector';
-import App from '../viewmodels/core/App';
-import DAppConnectView from './dapp/DAppConnectView';
-import { INetwork } from '../common/Networks';
+import { Account } from '../../viewmodels/account/Account';
+import AccountSelector from '../dapp/AccountSelector';
+import App from '../../viewmodels/core/App';
+import DAppConnectView from '../dapp/DAppConnectView';
+import { INetwork } from '../../common/Networks';
 import { Ionicons } from '@expo/vector-icons';
-import Loading from './views/Loading';
-import NetworkSelector from './dapp/NetworkSelector';
-import Networks from '../viewmodels/core/Networks';
+import Loading from '../views/Loading';
+import NetworkSelector from '../dapp/NetworkSelector';
+import Networks from '../../viewmodels/core/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
-import Theme from '../viewmodels/settings/Theme';
-import WalletConnectHub from '../viewmodels/walletconnect/WalletConnectHub';
-import { WalletConnect_v1 } from '../viewmodels/walletconnect/WalletConnect_v1';
-import { WalletConnect_v2 } from '../viewmodels/walletconnect/WalletConnect_v2';
-import i18n from '../i18n';
+import Theme from '../../viewmodels/settings/Theme';
+import WalletConnectHub from '../../viewmodels/walletconnect/WalletConnectHub';
+import { WalletConnect_v1 } from '../../viewmodels/walletconnect/WalletConnect_v1';
+import { WalletConnect_v2 } from '../../viewmodels/walletconnect/WalletConnect_v2';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import styles from './styles';
+import styles from '../styles';
 
 interface DAppProps {
   client: WalletConnect_v1 | WalletConnect_v2;

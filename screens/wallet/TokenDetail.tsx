@@ -20,7 +20,7 @@ import i18n from '../../i18n';
 import { isURL } from '../../utils/url';
 import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
-import { openInappBrowser } from '../../modals/InappBrowser';
+import { openInappBrowser } from '../../modals/app/InappBrowser';
 
 interface Props {
   token?: IToken;

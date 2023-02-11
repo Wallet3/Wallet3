@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 
-import Authentication from '../viewmodels/auth/Authentication';
+import Authentication from '../../viewmodels/auth/Authentication';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import Success from './views/Success';
-import Theme from '../viewmodels/settings/Theme';
-import TxRequest from './compositions/TxRequest';
-import { WCCallRequestRequest } from '../models/entities/WCSession_v1';
-import { WalletConnectTransactionRequest } from '../viewmodels/transferring/WalletConnectTransactionRequest';
-import { WalletConnect_v1 } from '../viewmodels/walletconnect/WalletConnect_v1';
-import { WalletConnect_v2 } from '../viewmodels/walletconnect/WalletConnect_v2';
+import Success from '../views/Success';
+import Theme from '../../viewmodels/settings/Theme';
+import TxRequest from '../compositions/TxRequest';
+import { WCCallRequestRequest } from '../../models/entities/WCSession_v1';
+import { WalletConnectTransactionRequest } from '../../viewmodels/transferring/WalletConnectTransactionRequest';
+import { WalletConnect_v1 } from '../../viewmodels/walletconnect/WalletConnect_v1';
+import { WalletConnect_v2 } from '../../viewmodels/walletconnect/WalletConnect_v2';
 import { observer } from 'mobx-react-lite';
-import styles from './styles';
+import styles from '../styles';
 
 interface Props {
   client: WalletConnect_v1 | WalletConnect_v2;

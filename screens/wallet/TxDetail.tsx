@@ -12,7 +12,7 @@ import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
-import { openInappBrowser } from '../../modals/InappBrowser';
+import { openInappBrowser } from '../../modals/app/InappBrowser';
 import { thirdFontColor } from '../../constants/styles';
 import { utils } from 'ethers';
 

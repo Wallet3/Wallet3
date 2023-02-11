@@ -22,7 +22,7 @@ import UI from '../../viewmodels/settings/UI';
 import i18n from '../../i18n';
 import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
-import { openInappBrowser } from '../../modals/InappBrowser';
+import { openInappBrowser } from '../../modals/app/InappBrowser';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 type SettingsStack = {

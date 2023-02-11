@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 
-import Authentication from '../viewmodels/auth/Authentication';
-import { InpageDAppSignRequest } from '../screens/browser/controller/InpageDAppController';
-import Networks from '../viewmodels/core/Networks';
-import { ReactiveScreen } from '../utils/device';
+import Authentication from '../../viewmodels/auth/Authentication';
+import { InpageDAppSignRequest } from '../../screens/browser/controller/InpageDAppController';
+import Networks from '../../viewmodels/core/Networks';
+import { ReactiveScreen } from '../../utils/device';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import Sign from './compositions/Sign';
-import Success from './views/Success';
-import Theme from '../viewmodels/settings/Theme';
+import Sign from '../compositions/Sign';
+import Success from '../views/Success';
+import Theme from '../../viewmodels/settings/Theme';
 import { observer } from 'mobx-react-lite';
-import styles from './styles';
+import styles from '../styles';
 
 interface Props extends InpageDAppSignRequest {
   close: () => void;

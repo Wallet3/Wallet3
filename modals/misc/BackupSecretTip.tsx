@@ -1,22 +1,22 @@
-import { Button, SafeViewContainer } from '../components';
+import { Button, SafeViewContainer } from '../../components';
 import { Text, View } from 'react-native';
 
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import Theme from '../viewmodels/settings/Theme';
-import i18n from '../i18n';
+import Theme from '../../viewmodels/settings/Theme';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useNavigation } from '@react-navigation/native';
 
 export default observer(({ onDone }: { onDone: () => void }) => {
   const color = 'crimson';
   const { t } = i18n;
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const { backgroundColor } = Theme;
 
   const goToBackup = () => {
-    navigation.navigate('Backup' as any);
+    navigation.navigate('Backup');
   };
 
   return (
