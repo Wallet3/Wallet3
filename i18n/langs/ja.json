@@ -275,9 +275,9 @@
   "tx-type-contract-interaction": "コントラクト・インタラクション",
   "tx-type-unknown": "未知",
 
-  "multi-sign-welcome-1": "同じ Wi-Fi ネットワークに携帯電話を接続してください",
-  "multi-sign-welcome-2": "「設定」 - 「マルチサインウォレット」に進んでください",
-  "multi-sign-welcome-3": "[ペアリング開始]をタップし、ネットワークへのアクセスを許可してください",
+  "multi-sign-welcome-1": "まず、同じ Wi-Fi ネットワークに接続してください",
+  "multi-sign-welcome-2": "[設定] - [マルチシグウォレット] に進んでください",
+  "multi-sign-welcome-3": "[ペアリング開始]をタップし、ネットワークのアクセスを許可してください",
   "multi-sign-welcome-4": "しばらくお待ちください、他のスマートフォンがこのデバイスに接続します",
 
   "msg-invalid-address": "無効なアドレス",

@@ -17,7 +17,7 @@ const iPhone = {
   'iPhone 13': 47.33,
   'iPhone 13 Pro': 47.33,
   'iPhone 13 Pro Max': 53.33,
-  'iPhone 14 Pro': 48,
+  'iPhone 14 Pro': 55,
   'iPhone 14 Pro Max': 55,
   'iPad Air': 18,
   'iPad Pro': 18,

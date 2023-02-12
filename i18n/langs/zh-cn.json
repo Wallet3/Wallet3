@@ -275,9 +275,9 @@
   "tx-type-contract-interaction": "合约交互",
   "tx-type-unknown": "未知",
 
-  "multi-sign-welcome-1": "将您已经安装 Wallet 3 的多台手机连接到相同的Wi-Fi网络",
-  "multi-sign-welcome-2": "打开 Wallet 3，进入【设置】-【多签钱包】",
-  "multi-sign-welcome-3": "点击【开始配对】，系统将会弹出允许访问本地网络的提示，请批准 Wallet 3 访问本地网络",
+  "multi-sign-welcome-1": "将手机连接到相同的 Wi-Fi 网络",
+  "multi-sign-welcome-2": "进入【设置】-【多签钱包】",
+  "multi-sign-welcome-3": "点击【开始配对】，请批准 Wallet 3 访问本地网络",
   "multi-sign-welcome-4": "稍等片刻，其它手机将会尝试连接本设备",
 
   "msg-invalid-address": "无效地址",

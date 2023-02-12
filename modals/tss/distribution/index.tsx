@@ -26,17 +26,12 @@ export default observer((props) => {
           fontSize: 25,
           fontWeight: '700',
           color: textColor,
-          // textShadowColor: '#777',
-          // textShadowOffset: { width: 0, height: 0 },
-          // textShadowRadius: 5,
         }}
       >
         {item}
       </Text>
     );
   };
-
-  const padding = Math.max(16, borderRadius / 2);
 
   return (
     <ScrollView
@@ -46,9 +41,10 @@ export default observer((props) => {
       contentContainerStyle={{ flexGrow: 1 }}
       style={{
         position: 'relative',
-        margin: 8,
+        margin: 5,
+        marginHorizontal: 6,
         backgroundColor,
-        height: 450,
+        height: 420,
         borderRadius,
         overflow: 'hidden',
         padding: 16,
@@ -67,7 +63,6 @@ export default observer((props) => {
           data={titles}
           renderItem={renderTitle}
           style={{ flexGrow: 0, height: 32, marginBottom: 12 }}
-          // entering={FadeInDown.easing(Easing.ease).duration(450).delay(200)}
         />
 
         <View style={{ flex: 1, width: ReactiveScreen.width - 16, marginHorizontal: -16 }}>
@@ -75,11 +70,13 @@ export default observer((props) => {
         </View>
 
         <Button
+          title="Next"
+          txtStyle={{ fontSize: 18, fontWeight: '600' }}
           style={{
-            borderRadius: 7 + (borderRadius - 20) / 2,
-            height: 42 + (borderRadius - 20) / 3,
-            marginHorizontal: (borderRadius - 20) / 3,
-            marginBottom: (borderRadius - 20) / 6,
+            borderRadius: 7 + (borderRadius - 20) / 2.5,
+            height: 42 + (borderRadius - 20) / 5,
+            marginHorizontal: (borderRadius - 20) / 5,
+            marginBottom: (borderRadius - 20) / 8,
           }}
         />
       </View>
