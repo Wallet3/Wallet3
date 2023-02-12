@@ -45,20 +45,6 @@ if (__DEV__) {
     });
 
     LanDiscovery.scan(MultiSignPrimaryServiceType);
-
-    let start = performance.now();
-    // ethers.Wallet.createRandom();
-    quickcrypto
-      .createCipheriv('aes-256-cfb', quickcrypto.randomBytes(32), quickcrypto.randomBytes(16))
-      .update(quickcrypto.randomBytes(1024));
-    let end = performance.now();
-    console.log(`quickcrypto took ${end - start} ms.`);
-
-    start = performance.now();
-    // ethers.Wallet.createRandom();
-    createCipheriv('aes-256-cfb', randomBytes(32), randomBytes(16)).update(randomBytes(1024));
-    end = performance.now();
-    console.log(`nodecrypto took ${end - start} ms.`);
   } else {
     // const root = utils.HDNode.fromMnemonic(mnemonic);
     // console.log(utils.mnemonicToEntropy(mnemonic).substring(2), entropy.toString('hex'), root.privateKey);

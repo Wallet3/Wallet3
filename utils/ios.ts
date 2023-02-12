@@ -17,7 +17,7 @@ const iPhone = {
   'iPhone 13': 47.33,
   'iPhone 13 Pro': 47.33,
   'iPhone 13 Pro Max': 53.33,
-  'iPhone 14 Pro': 55,
+  'iPhone 14 Pro': 48,
   'iPhone 14 Pro Max': 55,
   'iPad Air': 18,
   'iPad Pro': 18,
@@ -26,6 +26,7 @@ const iPhone = {
 let screenCornerRadius = 0;
 
 export function getScreenCornerRadius() {
+  // return 55;
   if (screenCornerRadius) return screenCornerRadius;
 
   const currentDevice: string = iosDevice.generationByIdentifier(DeviceInfo.getDeviceId())?.toLowerCase() ?? '';

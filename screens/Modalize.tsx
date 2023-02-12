@@ -595,6 +595,7 @@ export const KeyDistributionModal = () => {
     <Modalize
       ref={ref}
       useNativeDriver
+      onClosed={() => setTimeout(() => open(), 1000)}
       adjustToContentHeight
       withHandle={false}
       disableScrollIfPossible

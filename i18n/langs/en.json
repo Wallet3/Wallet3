@@ -278,6 +278,12 @@
   "tx-type-transfer_erc1155": "Transfer NFT",
   "tx-type-contract-interaction": "Contract Interaction",
   "tx-type-unknown": "Unknown",
+
+  "multi-sign-welcome-1": "Connect phones to the same Wi-Fi network.",
+  "multi-sign-welcome-2": "Go to [Settings] - [Multi-Signature Wallet].",
+  "multi-sign-welcome-3": "Tap [Start Pairing] and approve Wallet 3 to access the local network.",
+  "multi-sign-welcome-4": "Wait a moment and your phones will attempt to connect to this device.",
+
   "msg-invalid-address": "Invalid address",
   "msg-invalid-qr-code": "Invalid QR code",
   "msg-invalid-recovery-key": "Invalid recovery key",

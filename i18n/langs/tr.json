@@ -278,6 +278,12 @@
   "tx-type-transfer_erc1155": "NFT Transferi",
   "tx-type-contract-interaction": "Sözleşme Etkileşimi",
   "tx-type-unknown": "Bilinmeyen",
+
+  "multi-sign-welcome-1": "Telefonları aynı Wi-Fi ağına bağlayın.",
+  "multi-sign-welcome-2": "[Ayarlar] - [Çok İmzalı Cüzdan]a gidin.",
+  "multi-sign-welcome-3": "[Başlat Eşleme]i tıklayın ve Wallet 3'e yerel ağa erişmesine izin verin.",
+  "multi-sign-welcome-4": "Bir müddet bekleyin ve telefonlar bu cihaza bağlanmaya çalışacaktır.",
+
   "msg-invalid-address": "Geçersiz adres",
   "msg-invalid-qr-code": "Geçersiz QR kodu",
   "msg-invalid-recovery-key": "Geçersiz kurtarma anahtarı",

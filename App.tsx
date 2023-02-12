@@ -77,6 +77,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
           app.hasWallet ? (
             <Navigator
               initialRouteName="Root"
+              autoHideHomeIndicator
               screenOptions={({ navigation }) => {
                 return {
                   headerTransparent: true,
@@ -138,7 +139,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
               />
             </Navigator>
           ) : (
-            <Navigator>
+            <Navigator autoHideHomeIndicator>
               <Screen name="Land" component={LandScreen} options={{ headerShown: false }} />
             </Navigator>
           )
