@@ -1,6 +1,5 @@
 export enum ContentType {
-  shardClientPairing = 1,
-  shardDistribution,
+  shardDistribution = 1,
   shardAcknowledgement,
   shardAggregation,
 }
@@ -16,9 +15,4 @@ export type ShardAcknowledgement = {
   type: ContentType.shardAcknowledgement;
   distributionId: string;
   success: boolean;
-};
-
-export type ShardClientPairing = {
-  type: ContentType.shardClientPairing;
-  code: string;
 };

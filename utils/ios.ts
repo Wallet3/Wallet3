@@ -1,6 +1,8 @@
 import DeviceInfo from 'react-native-device-info';
 import iosDevice from 'ios-device-list';
 
+const defaultCornerRadius = 20;
+
 const iPhone = {
   'iPhone X': 39,
   'iPhone Xs': 39,
@@ -17,10 +19,11 @@ const iPhone = {
   'iPhone 13': 47.33,
   'iPhone 13 Pro': 47.33,
   'iPhone 13 Pro Max': 53.33,
+  'iPhone 14': 47.33,
   'iPhone 14 Pro': 55,
   'iPhone 14 Pro Max': 55,
-  'iPad Air': 18,
-  'iPad Pro': 18,
+  'iPad Air': defaultCornerRadius,
+  'iPad Pro': defaultCornerRadius,
 };
 
 let screenCornerRadius = 0;
@@ -30,10 +33,14 @@ export function getScreenCornerRadius() {
   if (screenCornerRadius) return screenCornerRadius;
 
   const currentDevice: string = iosDevice.generationByIdentifier(DeviceInfo.getDeviceId())?.toLowerCase() ?? '';
-  if (!currentDevice) return (screenCornerRadius = 20);
-  
-  console.log(Object.getOwnPropertyNames(iPhone).find((i) => currentDevice.includes(i.toLowerCase())));
+  if (!currentDevice) return (screenCornerRadius = defaultCornerRadius);
 
-  screenCornerRadius = iPhone[Object.getOwnPropertyNames(iPhone).find((i) => currentDevice.includes(i.toLowerCase()))!] || 20;
+  console.log(
+    currentDevice,
+    Object.getOwnPropertyNames(iPhone).find((i) => currentDevice.includes(i.toLowerCase()))
+  );
+
+  screenCornerRadius =
+    iPhone[Object.getOwnPropertyNames(iPhone).find((i) => currentDevice.includes(i.toLowerCase()))!] || defaultCornerRadius;
   return screenCornerRadius;
 }

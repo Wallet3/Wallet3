@@ -286,8 +286,9 @@
   "multi-sign-welcome-1": "Connect phones to the same Wi-Fi network.",
   "multi-sign-welcome-2": "Go to [Settings] - [MultiSig Wallet].",
   "multi-sign-welcome-3": "Tap [Start Pairing] and approve Wallet 3 to access the local network.",
-  "multi-sign-welcome-4": "Wait a moment and your phones will attempt to connect to this device.",
-  "multi-sign-connect-tip": "1. Open Wallet 3 on your other phones\n2. Go to [Settings] - [MultiSig Wallet]\n3. Tap [Start Pairing]",
+  "multi-sign-welcome-4": "Wait a moment and other phones will attempt to connect to this device.",
+  "multi-sign-connect-tip": "1. Open Wallet 3 on other phones\n2. Go to [Settings] - [MultiSig Wallet]\n3. Tap [Start Pairing]",
+  "multi-sign-connect-enter-pairing-code": "Please enter the pairing code",
 
   "msg-invalid-address": "Invalid address",
   "msg-invalid-qr-code": "Invalid QR code",

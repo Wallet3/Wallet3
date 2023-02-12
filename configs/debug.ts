@@ -61,7 +61,7 @@ if (__DEV__) {
     //   console.log('dist status', pri.status);
     // });
 
-    setTimeout(() => PubSub.publish(MessageKeys.openKeyDistribution), 5000);
+    setTimeout(() => PubSub.publish(MessageKeys.openKeyDistribution), 3000);
 
     // const aes128cfb = createCipheriv('aes-128-cfb', randomBytes(16), randomBytes(16));
     // aes128cfb.write('abc', 'utf8');

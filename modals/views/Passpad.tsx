@@ -24,16 +24,27 @@ interface Props {
   themeColor?: string;
   onCodeEntered: (code: string) => Promise<boolean>;
   onCancel?: () => void;
-  disableCancel?: boolean;
+  disableCancelButton?: boolean;
   style?: StyleProp<ViewStyle>;
   bioType?: BioType;
   onBioAuth?: () => void;
   failedAttempts?: number;
+  passLength?: number;
 }
 
-const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style, bioType, onBioAuth, failedAttempts }: Props) => {
+const Passpad = ({
+  themeColor,
+  onCancel,
+  onCodeEntered,
+  disableCancelButton,
+  style,
+  bioType,
+  onBioAuth,
+  failedAttempts,
+  passLength,
+}: Props) => {
   const { t } = i18n;
-  const passcodeLength = 6;
+  const passcodeLength = passLength || 6;
   const [passcode, setPasscode] = useState('');
 
   const { isLightMode, foregroundColor, mode } = Theme;
@@ -54,7 +65,7 @@ const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style, bi
   }, [passcode]);
 
   return (
-    <SafeViewContainer style={{ ...styles.container, ...((style as any) || {}) }}>
+    <SafeViewContainer style={{ ...styles.container, ...(style as any) }}>
       <View style={{ flex: 1 }} />
 
       <Animatable.View ref={passcodeView as any} style={{ flexDirection: 'row', justifyContent: 'center' }}>
@@ -62,7 +73,7 @@ const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style, bi
           .fill(0)
           .map((_, index) => renderFilledCircle(index, isLightMode ? foregroundColor : themeColor))}
 
-        {new Array(passcodeLength - passcode.length)
+        {new Array(Math.max(0, passcodeLength - passcode.length))
           .fill(0)
           .map((_, index) => renderEmptyCircle(index, isLightMode ? foregroundColor : themeColor))}
       </Animatable.View>
@@ -86,7 +97,7 @@ const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style, bi
       <View style={{ flex: 1 }} />
 
       <Numpad
-        onPress={(value) => DefaultNumpadHandler(value, passcode, setPasscode)}
+        onPress={(value) => DefaultNumpadHandler({ value, state: passcode, setStateAction: setPasscode, passLength })}
         disableDot
         bioType={bioType}
         onBioAuth={onBioAuth}
@@ -94,7 +105,7 @@ const Passpad = ({ themeColor, onCancel, onCodeEntered, disableCancel, style, bi
         mode={mode}
       />
 
-      {disableCancel ? undefined : (
+      {disableCancelButton ? undefined : (
         <Button title={t('button-cancel')} onPress={() => onCancel?.()} themeColor={themeColor} style={{ marginTop: 12 }} />
       )}
     </SafeViewContainer>
@@ -164,7 +175,7 @@ export const FullPasspad = observer((props: FullPasspadProps) => {
       {appAvailable || (days === 0 && hours === 0 && minutes === 0 && seconds === 0) ? (
         <Passpad
           themeColor={themeColor}
-          disableCancel
+          disableCancelButton
           onCodeEntered={onCodeEntered}
           style={{ marginBottom: 4, width, height: height || fullScreenHeight }}
           onBioAuth={onBioAuth}

@@ -154,11 +154,17 @@ const viewStyles = StyleSheet.create({
   },
 });
 
-export const DefaultNumpadHandler = (
-  value: NumpadChar,
-  state: string,
-  setStateAction: React.Dispatch<React.SetStateAction<string>>
-) => {
+export const DefaultNumpadHandler = ({
+  value,
+  state,
+  setStateAction,
+  passLength,
+}: {
+  value: NumpadChar;
+  state: string;
+  setStateAction: React.Dispatch<React.SetStateAction<string>>;
+  passLength?: number;
+}) => {
   if (value === 'del') {
     setStateAction(state.slice(0, -1));
     return;
@@ -169,7 +175,7 @@ export const DefaultNumpadHandler = (
     return;
   }
 
-  if (state.length >= 6) return;
+  if (state.length >= (passLength ?? 6)) return;
 
   setStateAction((pre) => pre + value);
 };
