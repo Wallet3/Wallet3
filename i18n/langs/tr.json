@@ -279,10 +279,15 @@
   "tx-type-contract-interaction": "Sözleşme Etkileşimi",
   "tx-type-unknown": "Bilinmeyen",
 
+  "multi-sign-title-welcome": "Çok İmzalı Cüzdan",
+  "multi-sign-title-connect-devices": "Cihazları Bağlayın",
+  "multi-sign-title-set-threshold": "Eşik Ayarı",
+  "multi-sign-title-key-distribution": "Anahtar Dağıtımı",
   "multi-sign-welcome-1": "Telefonları aynı Wi-Fi ağına bağlayın.",
   "multi-sign-welcome-2": "[Ayarlar] - [Çok İmzalı Cüzdan]a gidin.",
   "multi-sign-welcome-3": "[Başlat Eşleme]i tıklayın ve Wallet 3'e yerel ağa erişmesine izin verin.",
   "multi-sign-welcome-4": "Bir müddet bekleyin ve telefonlar bu cihaza bağlanmaya çalışacaktır.",
+  "multi-sign-connect-tip": "1. Diğer telefonlarınızda Wallet 3'ü açın.\n2. [Ayarlar] - [Çok İmzalı Cüzdan]a gitin.\n3. [Başlat Eşleme]i tıklayın.",
 
   "msg-invalid-address": "Geçersiz adres",
   "msg-invalid-qr-code": "Geçersiz QR kodu",

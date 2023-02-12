@@ -275,10 +275,16 @@
   "tx-type-contract-interaction": "合约交互",
   "tx-type-unknown": "未知",
 
+
+  "multi-sign-title-welcome": "多签钱包",
+  "multi-sign-title-connect-devices": "连接设备",
+  "multi-sign-title-set-threshold": "门限设置",
+  "multi-sign-title-key-distribution": "密钥分发",
   "multi-sign-welcome-1": "将手机连接到相同的 Wi-Fi 网络",
   "multi-sign-welcome-2": "进入【设置】-【多签钱包】",
   "multi-sign-welcome-3": "点击【开始配对】，请批准 Wallet 3 访问本地网络",
   "multi-sign-welcome-4": "稍等片刻，其它手机将会尝试连接本设备",
+  "multi-sign-connect-tip": "1. 在您的其它手机上打开 Wallet 3\n2. 前往【设置】-【多签钱包】\n3. 点击【开始配对】",
 
   "msg-invalid-address": "无效地址",
   "msg-invalid-qr-code": "无效的二维码",

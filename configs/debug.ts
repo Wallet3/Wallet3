@@ -1,4 +1,4 @@
-import { createCipheriv, randomBytes } from 'crypto';
+import { createCipheriv, createHash, randomBytes } from 'crypto';
 import { ethers, utils } from 'ethers';
 
 import DeviceInfo from 'react-native-device-info';
@@ -32,10 +32,7 @@ LogBox.ignoreLogs([
 ]);
 
 if (__DEV__) {
-  const entropy = randomBytes(16);
-  const mnemonic = utils.entropyToMnemonic(entropy);
-
-  const pri = new KeyDistribution({ mnemonic });
+  
 
   if (DeviceInfo.isTablet()) {
     LanDiscovery.on('resolved', (service: Service) => {
@@ -53,15 +50,16 @@ if (__DEV__) {
     //   console.log(en.toString());
     //   console.log((await eccrypto.decrypt(Buffer.from(root.privateKey.substring(2), 'hex'), en)).toString('utf8'));
     // });
-
-    console.log(secretjs.share(entropy.toString('hex'), 2, 2));
-
-    pri.start();
-    pri.on('newClient', async (c) => {
-      pri.approveClient(c);
-      await pri.distributeSecret(1);
-      console.log('dist status', pri.status);
-    });
+    // const entropy = randomBytes(16);
+    // const mnemonic = utils.entropyToMnemonic(entropy);
+    // console.log(secretjs.share(entropy.toString('hex'), 2, 2));
+    // const pri = new KeyDistribution({ mnemonic });
+    // pri.start();
+    // pri.on('newClient', async (c) => {
+    //   pri.approveClient(c);
+    //   await pri.distributeSecret(1);
+    //   console.log('dist status', pri.status);
+    // });
 
     setTimeout(() => PubSub.publish(MessageKeys.openKeyDistribution), 5000);
 

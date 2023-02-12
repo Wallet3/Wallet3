@@ -26,7 +26,7 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
   }
 
   async start() {
-    if (this.server.listening) return;
+    if (this.server.listening) return false;
     let port = 39127;
 
     while (true) {
@@ -37,6 +37,8 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
         port++;
       }
     }
+
+    return true;
   }
 
   stop() {
@@ -72,7 +74,7 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
       const negotiationKey = negotiation.subarray(16);
 
       const secret = ecdh.computeSecret(negotiationKey);
-      const verificationCode = `${secret.reduce((p, c) => p * BigInt(c || 1), 1n)}`.substring(6, 12);
+      const verificationCode = `${secret.reduce((p, c) => p * BigInt(c || 1), 1n)}`.substring(6, 10);
 
       const cipher = createCipheriv(CipherAlgorithm, createHash('sha256').update(secret).digest(), iv);
       const decipher = createDecipheriv(CipherAlgorithm, secret, civ);

@@ -8,7 +8,7 @@ import React from 'react';
 import SwipeButton from 'rn-swipe-button';
 import { themeColor } from '../constants/styles';
 
-interface Props {
+export interface ButtonProps {
   style?: StyleProp<ViewStyle>;
   txtStyle?: StyleProp<TextStyle>;
   title?: string;
@@ -23,7 +23,7 @@ interface Props {
   onInteractionEnd?: () => void;
 }
 
-export default (props: Props) => {
+export default (props: ButtonProps) => {
   const { disabled, reverse, themeColor, onLongPress, onPress, onSwipeSuccess, title, onInteractionStart, onInteractionEnd } =
     props;
 

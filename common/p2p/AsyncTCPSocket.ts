@@ -7,12 +7,17 @@ interface Events extends SocketEvents {
 }
 
 export class AsyncTCPSocket extends EventEmitter<Events> {
+  private _closed = false;
   readonly raw: TCP.TLSSocket | TCP.Socket;
 
   constructor(socket: TCP.TLSSocket | TCP.Socket) {
     super();
     this.raw = socket;
-    this.raw.on('close', (had_error) => this.emit('close', had_error));
+
+    this.raw.once('close', (had_error) => {
+      this.emit('close', had_error);
+      this._closed = true;
+    });
   }
 
   write(data: Buffer | Uint8Array) {
@@ -38,5 +43,9 @@ export class AsyncTCPSocket extends EventEmitter<Events> {
 
   get remoteId() {
     return `${this.raw.remoteAddress}:${this.raw.remotePort}`;
+  }
+
+  get closed() {
+    return this._closed || this.raw.destroyed;
   }
 }

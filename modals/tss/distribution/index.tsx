@@ -1,23 +1,34 @@
-import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
+import Animated, { Easing, FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { EvilIcons, Ionicons } from '@expo/vector-icons';
-import React, { useRef, useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { ScrollView, FlatList as SystemFlatList, Text, View } from 'react-native';
 
-import { Button } from '../../../components';
+import ConnectDevices from './ConnectDevices';
+import HowTo from './HowTo';
+import { KeyDistribution } from '../../../viewmodels/tss/KeyDistribution';
 import { ReactiveScreen } from '../../../utils/device';
 import Theme from '../../../viewmodels/settings/Theme';
-import Welcome from './Welcome';
 import { getScreenCornerRadius } from '../../../utils/ios';
+import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
+import { randomBytes } from 'crypto';
+import { utils } from 'ethers';
 
 const { FlatList } = Animated;
 
-export default observer((props) => {
+export default observer(({ vm }: { vm: KeyDistribution }) => {
+  const { t } = i18n;
   const { backgroundColor, foregroundColor, textColor, appColor } = Theme;
+  // const [vm] = useState<KeyDistribution>(new KeyDistribution({ mnemonic: utils.entropyToMnemonic(randomBytes(16)) }));
   const [borderRadius] = useState(getScreenCornerRadius());
-  const [step, setStep] = useState(1);
-  const titleList = useRef<typeof FlatList>(null);
-  const titles = ['MultiSig Wallet', 'Devices', 'Distribution'];
+  const [step, setStep] = useState(0);
+  const titleList = useRef<SystemFlatList>(null);
+  const titles = [
+    t('multi-sign-title-welcome'),
+    t('multi-sign-title-connect-devices'),
+    t('multi-sign-title-set-threshold'),
+    t('multi-sign-title-key-distribution'),
+  ];
 
   const renderTitle = ({ item }: { item: string }) => {
     return (
@@ -31,6 +42,11 @@ export default observer((props) => {
         {item}
       </Text>
     );
+  };
+
+  const goTo = (step: number) => {
+    setStep(step);
+    titleList.current?.scrollToIndex({ animated: true, index: step });
   };
 
   return (
@@ -63,22 +79,13 @@ export default observer((props) => {
           data={titles}
           renderItem={renderTitle}
           style={{ flexGrow: 0, height: 32, marginBottom: 12 }}
+          entering={FadeInUp.delay(300).springify()}
         />
 
-        <View style={{ flex: 1, width: ReactiveScreen.width - 16, marginHorizontal: -16 }}>
-          {step === 1 ? <Welcome /> : undefined}
+        <View style={{ flex: 1, width: ReactiveScreen.width - 12, marginHorizontal: -16 }}>
+          {step === 0 ? <HowTo onNext={() => goTo(1)} /> : undefined}
+          {step === 1 ? <ConnectDevices vm={vm} /> : undefined}
         </View>
-
-        <Button
-          title="Next"
-          txtStyle={{ fontSize: 18, fontWeight: '600' }}
-          style={{
-            borderRadius: 7 + (borderRadius - 20) / 2.5,
-            height: 42 + (borderRadius - 20) / 5,
-            marginHorizontal: (borderRadius - 20) / 5,
-            marginBottom: (borderRadius - 20) / 8,
-          }}
-        />
       </View>
     </ScrollView>
   );

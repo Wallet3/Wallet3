@@ -275,10 +275,15 @@
   "tx-type-contract-interaction": "コントラクト・インタラクション",
   "tx-type-unknown": "未知",
 
+  "multi-sign-title-welcome": "マルチシグウォレット",
+  "multi-sign-title-connect-devices": "デバイスの接続",
+  "multi-sign-title-set-threshold": "しきい値の設定",
+  "multi-sign-title-key-distribution": "秘密鍵の配布",
   "multi-sign-welcome-1": "まず、同じ Wi-Fi ネットワークに接続してください",
   "multi-sign-welcome-2": "[設定] - [マルチシグウォレット] に進んでください",
   "multi-sign-welcome-3": "[ペアリング開始]をタップし、ネットワークのアクセスを許可してください",
   "multi-sign-welcome-4": "しばらくお待ちください、他のスマートフォンがこのデバイスに接続します",
+  "multi-sign-connect-tip": "1. あなたの他の携帯で Wallet 3 を開く\n2. [設定] - [マルチシグウォレット]に移動する\n3. [ペアリング開始]をタップする",
 
   "msg-invalid-address": "無効なアドレス",
   "msg-invalid-qr-code": "無効なQRコード",

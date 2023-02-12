@@ -30,6 +30,7 @@ import InpageDAppAddAssetModal from '../modals/inpage/InpageDAppAddAsset';
 import InpageDAppAddChain from '../modals/inpage/InpageDAppAddChain';
 import InpageDAppSendTx from '../modals/inpage/InpageDAppTxRequest';
 import InpageDAppSign from '../modals/inpage/InpageDAppSign';
+import { KeyDistribution } from '../viewmodels/tss/KeyDistribution';
 import { KeyDistributionUI } from '../modals/tss';
 import { Keyboard } from 'react-native';
 import Loading from '../modals/views/Loading';
@@ -49,6 +50,7 @@ import { isDomain } from '../viewmodels/services/DomainResolver';
 import { logScreenView } from '../viewmodels/services/Analytics';
 import { observer } from 'mobx-react-lite';
 import { parse } from 'eth-url-parser';
+import { randomBytes } from 'crypto';
 import { showMessage } from 'react-native-flash-message';
 import styles from '../modals/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
@@ -578,11 +580,13 @@ export const InappBrowserModal = observer(({ pageKey }: { pageKey?: string }) =>
   );
 });
 
-export const KeyDistributionModal = () => {
+export const KeyDistributionModal = observer(() => {
   const { ref, open, close } = useModalize();
+  const [vms, setVMs] = useState<{ keyDistribution?: KeyDistribution }>({});
 
   useEffect(() => {
     PubSub.subscribe(MessageKeys.openKeyDistribution, () => {
+      setVMs({ keyDistribution: new KeyDistribution({ mnemonic: utils.entropyToMnemonic(randomBytes(16)) }) });
       open();
     });
 
@@ -604,12 +608,10 @@ export const KeyDistributionModal = () => {
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
       modalStyle={{ backgroundColor: 'transparent' }}
     >
-      <SafeAreaProvider>
-        <KeyDistributionUI />
-      </SafeAreaProvider>
+      <SafeAreaProvider>{vms.keyDistribution ? <KeyDistributionUI vm={vms.keyDistribution} /> : undefined}</SafeAreaProvider>
     </Modalize>
   );
-};
+});
 
 export const FullScreenQRScanner = observer(() => {
   const { ref, open, close } = useModalize();

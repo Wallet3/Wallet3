@@ -3,6 +3,7 @@ import { Cipher, Decipher, createCipheriv, createDecipheriv, createECDH, createH
 import { AsyncTCPSocket } from './AsyncTCPSocket';
 import { CipherAlgorithm } from './Constants';
 import DeviceInfo from 'react-native-device-info';
+import { Platform } from 'react-native';
 import TCP from 'react-native-tcp-socket';
 
 const { connect } = TCP;
@@ -13,6 +14,7 @@ export type ClientInfo = {
   manufacturer: string;
   name: string;
   os: string;
+  rn_os: 'ios' | 'android';
   osVersion: string;
 };
 
@@ -81,7 +83,7 @@ export class TCPClient extends AsyncTCPSocket {
       const negotiationKey = negotiation.subarray(16);
 
       const secret = ecdh.computeSecret(negotiationKey);
-      this._verificationCode = `${secret.reduce((p, c) => p * BigInt(c || 1), 1n)}`.substring(6, 12);
+      this._verificationCode = `${secret.reduce((p, c) => p * BigInt(c || 1), 1n)}`.substring(6, 10);
 
       console.log('client computes', secret.toString('hex'), this.verificationCode);
 
@@ -104,13 +106,13 @@ export class TCPClient extends AsyncTCPSocket {
       device: DeviceInfo.getDeviceId(),
       manufacturer: DeviceInfo.getManufacturerSync(),
       os: DeviceInfo.getSystemName(),
+      rn_os: Platform.OS as any,
       osVersion: DeviceInfo.getSystemVersion(),
     };
 
     this.secureWriteString(JSON.stringify(selfInfo));
 
     const read = await this.secureReadString();
-    console.log(read);
     this.remoteInfo = JSON.parse(read);
   };
 
