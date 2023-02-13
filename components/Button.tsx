@@ -28,7 +28,7 @@ export default (props: ButtonProps) => {
     props;
 
   const backgroundColor: any = disabled
-    ? '#D3D3D3'
+    ? '#A2A2A250'
     : reverse
     ? 'transparent'
     : props.themeColor || (props?.style as ViewStyle)?.backgroundColor || styles.default.backgroundColor;
