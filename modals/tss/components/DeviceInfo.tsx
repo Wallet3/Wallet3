@@ -14,7 +14,8 @@ export default ({ info, verified }: { info: ClientInfo; verified?: boolean }) =>
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
       <Device deviceId={info.device} os={info.rn_os} style={{ width: 32, height: 42 }} />
-      <View style={{ marginStart: 16 }}>
+
+      <View style={{ marginStart: 16, flex: 1 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 2 }}>
           <Text numberOfLines={1} style={{ color: textColor, fontSize: 22, fontWeight: '600', marginEnd: 6 }}>
             {`${info.name || iosDevice.generationByIdentifier(info.device)}`}
@@ -30,7 +31,9 @@ export default ({ info, verified }: { info: ClientInfo; verified?: boolean }) =>
             alignItems: 'center',
           }}
         >
-          <Text style={{ color: secondaryTextColor }}>{`${info.manufacturer || ''} ${info.os} ${info.osVersion || ''}`}</Text>
+          <Text style={{ color: secondaryTextColor }} numberOfLines={1}>
+            {`${`${iosDevice.generationByIdentifier(info.device)},` || ''} ${info.os} ${info.osVersion || ''}`.trim()}
+          </Text>
         </View>
       </View>
     </View>

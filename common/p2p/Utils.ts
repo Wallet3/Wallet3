@@ -16,6 +16,7 @@ export function getDeviceInfo(): ClientInfo {
 
 export function getDeviceBasicInfo() {
   return {
+    name: DeviceInfo.getDeviceNameSync(),
     devtype: DeviceInfo.getDeviceType(),
     device: DeviceInfo.getDeviceId(),
     manufacturer: DeviceInfo.getManufacturerSync(),

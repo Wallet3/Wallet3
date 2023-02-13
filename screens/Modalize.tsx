@@ -19,7 +19,7 @@ import {
 } from './browser/controller/InpageDAppController';
 import { ERC681, ERC681Transferring } from '../viewmodels/transferring/ERC681Transferring';
 import React, { useEffect, useState } from 'react';
-import { ShardReceiverUI, ShardsDistributionUI } from '../modals/tss';
+import { ShardReceiverUI, ShardsDistributorUI } from '../modals/tss';
 
 import { AppVM } from '../viewmodels/core/App';
 import { Authentication } from '../viewmodels/auth/Authentication';
@@ -605,7 +605,10 @@ export const ShardsModal = observer(() => {
     <Modalize
       ref={ref}
       useNativeDriver
-      onClosed={() => setTimeout(() => open(), 3000)}
+      onClosed={() => {
+        setVMs({});
+        __DEV__ ? PubSub.publish(MessageKeys.openShardsDistribution) : undefined;
+      }}
       adjustToContentHeight
       withHandle={false}
       disableScrollIfPossible
@@ -615,7 +618,7 @@ export const ShardsModal = observer(() => {
       modalStyle={{ backgroundColor: 'transparent' }}
     >
       <SafeAreaProvider>
-        {vms.shardsDistribution ? <ShardsDistributionUI vm={vms.shardsDistribution} /> : undefined}
+        {vms.shardsDistribution ? <ShardsDistributorUI vm={vms.shardsDistribution} /> : undefined}
         {vms.shardReceiver ? <ShardReceiverUI /> : undefined}
       </SafeAreaProvider>
     </Modalize>

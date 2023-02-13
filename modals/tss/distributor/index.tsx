@@ -7,6 +7,7 @@ import HowTo from './HowTo';
 import { ReactiveScreen } from '../../../utils/device';
 import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
 import Theme from '../../../viewmodels/settings/Theme';
+import ThresholdSetting from './ThresholdSetting';
 import { getScreenCornerRadius } from '../../../utils/hardware';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -81,8 +82,9 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
         />
 
         <View style={{ flex: 1, width: ReactiveScreen.width - 12, marginHorizontal: -16 }}>
-          {step === 0 ? <HowTo onNext={() => goTo(1)} /> : undefined}
-          {step === 1 ? <ConnectDevices vm={vm} /> : undefined}
+          {step === 0 && <HowTo onNext={() => goTo(1)} />}
+          {step === 1 && <ConnectDevices vm={vm} onNext={() => goTo(2)} />}
+          {step === 2 && <ThresholdSetting vm={vm} />}
         </View>
       </View>
     </ScrollView>

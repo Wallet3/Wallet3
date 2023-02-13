@@ -2,7 +2,7 @@ import { ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
 import Animated, { FadeIn, FadeInDown, FadeInRight, FadeOutDown, FadeOutLeft, FadeOutUp } from 'react-native-reanimated';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
-import { secureColor, warningColor } from '../../../constants/styles';
+import { secureColor, verifiedColor, warningColor } from '../../../constants/styles';
 
 import Button from '../components/Button';
 import Device from '../../../components/Device';
@@ -32,8 +32,10 @@ export default observer(({ onNext }: { onNext: (selectedService: Service) => voi
           style={{ paddingHorizontal: marginHorizontal, flexDirection: 'row', alignItems: 'center' }}
           onPress={() => setSelectedService(item)}
         >
-          <DeviceInfo info={item.txt.info} />
-          {selectedService?.name === item.name ? <Feather name="check" size={24} color={appColor} /> : undefined}
+          <DeviceInfo info={item.txt?.info ?? {}} />
+          {selectedService?.name === item.name ? (
+            <Feather name="check" size={24} color={verifiedColor} style={{ marginStart: 12 }} />
+          ) : undefined}
         </TouchableOpacity>
       </View>
     );

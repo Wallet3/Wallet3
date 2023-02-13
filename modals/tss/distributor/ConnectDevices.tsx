@@ -18,7 +18,7 @@ import { observer } from 'mobx-react-lite';
 
 const { View, Text } = Animated;
 
-export default observer(({ vm }: { vm: ShardsDistributor }) => {
+export default observer(({ vm, onNext }: { vm: ShardsDistributor; onNext: () => void }) => {
   const { t } = i18n;
   const { textColor, secondaryTextColor, backgroundColor, borderColor } = Theme;
   const { pendingClients, approvedClients, pendingCount, approvedCount } = vm;
@@ -76,7 +76,7 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
         }}
       >
         <DeviceInfo info={item.remoteInfo!} />
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginEnd: -8 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginEnd: -8, marginStart: 36 }}>
           <TouchableOpacity style={styles.confirmButton} onPress={() => vm.rejectClient(item)}>
             <Ionicons name="close-circle-outline" size={32} color={warningColor} />
           </TouchableOpacity>
@@ -140,7 +140,7 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
         </View>
       )}
 
-      <Button title={t('button-next')} disabled={vm.approvedCount === 0} />
+      <Button title={t('button-next')} disabled={vm.approvedCount === 0} onPress={onNext} />
 
       {verifying && (
         <View

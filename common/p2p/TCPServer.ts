@@ -30,7 +30,7 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
     if (this.server.listening) return true;
     let attempts = 0;
 
-    while (attempts < 3) {
+    while (attempts < 10) {
       try {
         await new Promise<void>((resolve) => this.server.listen({ port: TCPServer.port++, host: '0.0.0.0' }, () => resolve()));
         break;
@@ -40,7 +40,7 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
       }
     }
 
-    return attempts < 3;
+    return attempts < 10;
   }
 
   stop() {
