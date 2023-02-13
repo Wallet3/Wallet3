@@ -13,7 +13,8 @@ export default {
   openInappBrowser: 'openInappBrowser',
   openMyAddressQRCode: 'openMyAddressQRCode',
   openGlobalQRScanner: 'openGlobalQRScanner',
-  openKeyDistribution: 'openKeyDistribution',
+  openShardsDistribution: 'openShardsDistribution',
+  openShardReceiver: 'openShardReceiver',
   drawerSwipeEnabled: 'drawer-swipeEnabled',
   wc_request: 'wc_request',
 

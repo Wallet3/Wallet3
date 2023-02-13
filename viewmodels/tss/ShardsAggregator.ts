@@ -1,4 +1,4 @@
-class KeyAggregator {
+class ShardsAggregator {
   readonly id: string;
 
   constructor(id: string) {
@@ -6,6 +6,6 @@ class KeyAggregator {
   }
 
   get name() {
-    return `key-aggregator-${this.id}`;
+    return `shards-aggregator-${this.id}`;
   }
 }

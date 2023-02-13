@@ -1,16 +1,13 @@
 import { ActivityIndicator, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
-import Animated, { FadeInDown, FadeInRight, FadeOut, FadeOutDown, FadeOutLeft, FadeOutUp } from 'react-native-reanimated';
-import { AntDesign, Ionicons, SimpleLineIcons } from '@expo/vector-icons';
+import Animated, { FadeInDown, FadeInRight, FadeOutDown, FadeOutLeft, FadeOutUp } from 'react-native-reanimated';
 import React, { useEffect, useState } from 'react';
-import { secureColor, thirdFontColor, warningColor } from '../../../constants/styles';
+import { secureColor, warningColor } from '../../../constants/styles';
 
 import Button from '../components/Button';
 import Device from '../../../components/Device';
-import { KeyDistribution } from '../../../viewmodels/tss/KeyDistribution';
-import { KeyReceiver } from '../../../viewmodels/tss/KeyReceiver';
+import { Ionicons } from '@expo/vector-icons';
 import { Passpad } from '../../views';
-import { ReactiveScreen } from '../../../utils/device';
-import Swiper from 'react-native-swiper';
+import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
 import { TCPClient } from '../../../common/p2p/TCPClient';
 import Theme from '../../../viewmodels/settings/Theme';
 import { getScreenCornerRadius } from '../../../utils/ios';
@@ -19,10 +16,10 @@ import { observer } from 'mobx-react-lite';
 
 const { View, Text } = Animated;
 
-export default observer(({ vm }: { vm: KeyDistribution }) => {
+export default observer(({ vm }: { vm: ShardsDistributor }) => {
   const { t } = i18n;
   const { textColor, secondaryTextColor, backgroundColor, borderColor } = Theme;
-  const { pendingClients, pendingCount, approvedCount } = vm;
+  const { pendingClients, approvedClients, pendingCount, approvedCount } = vm;
   const [marginHorizontal] = useState((getScreenCornerRadius() - 20) / 4 + 16);
   const [verifying, setVerifying] = useState<{ client: TCPClient; attempts: number }>();
 
@@ -31,15 +28,16 @@ export default observer(({ vm }: { vm: KeyDistribution }) => {
   }, []);
 
   const verifyClient = async (code: string) => {
-    const verified = code === verifying!.client.verificationCode;
+    if (!verifying) return false;
+
+    const verified = code === verifying.client.verificationCode;
     const maxFailedAttempts = 3;
 
-    verified && vm.approveClient(verifying!.client);
-    verifying!.attempts >= maxFailedAttempts && vm.rejectClient(verifying!.client);
+    verified && vm.approveClient(verifying.client);
 
-    verifying!.attempts >= maxFailedAttempts
-      ? setTimeout(() => setVerifying(undefined), 500)
-      : setVerifying(verified ? undefined : { client: verifying!.client, attempts: verifying!.attempts + 1 });
+    verifying.attempts >= maxFailedAttempts
+      ? setTimeout(() => setVerifying(undefined), 500) && vm.rejectClient(verifying.client)
+      : setVerifying(verified ? undefined : { client: verifying.client, attempts: verifying.attempts + 1 });
 
     return verified;
   };
@@ -67,6 +65,25 @@ export default observer(({ vm }: { vm: KeyDistribution }) => {
             <Text style={{ color: secondaryTextColor }}>{`${item.remoteInfo?.os} ${item.remoteInfo?.osVersion}`}</Text>
           </View>
         </View>
+      </View>
+    );
+  };
+
+  const renderConnectedItem = ({ item }: { item: TCPClient }) => {
+    return (
+      <View
+        entering={FadeInDown.delay(50).springify()}
+        exiting={FadeOutUp.springify()}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingHorizontal: marginHorizontal,
+          paddingVertical: 8,
+          position: 'relative',
+        }}
+      >
+        {renderClient({ item })}
+        <Ionicons name="checkmark-circle" color="dodgerblue" size={32} />
       </View>
     );
   };
@@ -107,7 +124,8 @@ export default observer(({ vm }: { vm: KeyDistribution }) => {
     >
       {pendingCount || approvedCount ? (
         <View style={{ flex: 1 }}>
-          <FlatList data={pendingClients} renderItem={renderPendingItem} />
+          <FlatList data={approvedClients} renderItem={renderConnectedItem} keyExtractor={(item) => item.remoteId} />
+          <FlatList data={pendingClients} renderItem={renderPendingItem} keyExtractor={(item) => item.remoteId} />
         </View>
       ) : (
         <View style={{ flex: 1, alignContent: 'center', justifyContent: 'center' }} exiting={FadeOutUp.springify()}>

@@ -1,3 +1,4 @@
-import KeyDistributionUI from './distribution';
+import ShardReceiverUI from './receiver';
+import ShardsDistributionUI from './distribution';
 
-export { KeyDistributionUI };
+export { ShardsDistributionUI, ShardReceiverUI };

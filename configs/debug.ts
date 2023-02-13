@@ -2,13 +2,13 @@ import { createCipheriv, createHash, randomBytes } from 'crypto';
 import { ethers, utils } from 'ethers';
 
 import DeviceInfo from 'react-native-device-info';
-import { KeyDistribution } from '../viewmodels/tss/KeyDistribution';
-import { KeyReceiver } from '../viewmodels/tss/KeyReceiver';
 import LanDiscovery from '../common/p2p/LanDiscovery';
 import { LogBox } from 'react-native';
 import MessageKeys from '../common/MessageKeys';
 import { MultiSignPrimaryServiceType } from '../common/p2p/Constants';
 import { Service } from 'react-native-zeroconf';
+import { ShardReceiver } from '../viewmodels/tss/ShardReceiver';
+import { ShardsDistributor } from '../viewmodels/tss/ShardsDistributor';
 import { TCPClient } from '../common/p2p/TCPClient';
 import eccrypto from 'eccrypto';
 import { getScreenCornerRadius } from '../utils/ios';
@@ -38,7 +38,7 @@ if (__DEV__) {
     LanDiscovery.on('resolved', (service: Service) => {
       console.log('tablet', service);
 
-      new KeyReceiver(service);
+      new ShardReceiver(service);
     });
 
     LanDiscovery.scan(MultiSignPrimaryServiceType);
@@ -61,7 +61,7 @@ if (__DEV__) {
     //   console.log('dist status', pri.status);
     // });
 
-    setTimeout(() => PubSub.publish(MessageKeys.openKeyDistribution), 3000);
+    setTimeout(() => PubSub.publish(MessageKeys.openShardsDistribution), 3000);
 
     // const aes128cfb = createCipheriv('aes-128-cfb', randomBytes(16), randomBytes(16));
     // aes128cfb.write('abc', 'utf8');

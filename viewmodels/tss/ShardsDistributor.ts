@@ -26,7 +26,7 @@ enum DistributionStatus {
   distributionFailed,
 }
 
-export class KeyDistribution extends TCPServer<Events> {
+export class ShardsDistributor extends TCPServer<Events> {
   private rootEntropy: string;
   private root: HDNode;
   private protector: HDNode;
@@ -60,7 +60,7 @@ export class KeyDistribution extends TCPServer<Events> {
   }
 
   get name() {
-    return `key-distribution-${this.id}`;
+    return `shards-distribution-${this.id}`;
   }
 
   get approvedCount() {

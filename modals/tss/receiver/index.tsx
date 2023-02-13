@@ -1,21 +1,23 @@
-import Animated, { FadeInUp } from 'react-native-reanimated';
-import React, { useRef, useState } from 'react';
+import Animated, { Easing, FadeInDown, FadeInUp } from 'react-native-reanimated';
+import { EvilIcons, Ionicons } from '@expo/vector-icons';
+import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, FlatList as SystemFlatList, Text, View } from 'react-native';
 
-import ConnectDevices from './ConnectDevices';
-import HowTo from './HowTo';
 import { ReactiveScreen } from '../../../utils/device';
 import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
 import Theme from '../../../viewmodels/settings/Theme';
 import { getScreenCornerRadius } from '../../../utils/ios';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
+import { randomBytes } from 'crypto';
+import { utils } from 'ethers';
 
 const { FlatList } = Animated;
 
 export default observer(({ vm }: { vm: ShardsDistributor }) => {
   const { t } = i18n;
-  const { backgroundColor, textColor } = Theme;
+  const { backgroundColor, foregroundColor, textColor, appColor } = Theme;
+  
   const [borderRadius] = useState(getScreenCornerRadius());
   const [step, setStep] = useState(0);
   const titleList = useRef<SystemFlatList>(null);
@@ -79,8 +81,8 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
         />
 
         <View style={{ flex: 1, width: ReactiveScreen.width - 12, marginHorizontal: -16 }}>
-          {step === 0 ? <HowTo onNext={() => goTo(1)} /> : undefined}
-          {step === 1 ? <ConnectDevices vm={vm} /> : undefined}
+          {/* {step === 0 ? <HowTo onNext={() => goTo(1)} /> : undefined}
+          {step === 1 ? <ConnectDevices vm={vm} /> : undefined} */}
         </View>
       </View>
     </ScrollView>

@@ -19,6 +19,7 @@ import {
 } from './browser/controller/InpageDAppController';
 import { ERC681, ERC681Transferring } from '../viewmodels/transferring/ERC681Transferring';
 import React, { useEffect, useState } from 'react';
+import { ShardReceiverUI, ShardsDistributionUI } from '../modals/tss';
 
 import { AppVM } from '../viewmodels/core/App';
 import { Authentication } from '../viewmodels/auth/Authentication';
@@ -30,8 +31,6 @@ import InpageDAppAddAssetModal from '../modals/inpage/InpageDAppAddAsset';
 import InpageDAppAddChain from '../modals/inpage/InpageDAppAddChain';
 import InpageDAppSendTx from '../modals/inpage/InpageDAppTxRequest';
 import InpageDAppSign from '../modals/inpage/InpageDAppSign';
-import { KeyDistribution } from '../viewmodels/tss/KeyDistribution';
-import { KeyDistributionUI } from '../modals/tss';
 import { Keyboard } from 'react-native';
 import Loading from '../modals/views/Loading';
 import MessageKeys from '../common/MessageKeys';
@@ -39,6 +38,8 @@ import { Modalize } from 'react-native-modalize';
 import Networks from '../viewmodels/core/Networks';
 import { ReactiveScreen } from '../utils/device';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { ShardReceiver } from '../viewmodels/tss/ShardReceiver';
+import { ShardsDistributor } from '../viewmodels/tss/ShardsDistributor';
 import Theme from '../viewmodels/settings/Theme';
 import { TokenTransferring } from '../viewmodels/transferring/TokenTransferring';
 import { WCCallRequestRequest } from '../models/entities/WCSession_v1';
@@ -580,18 +581,18 @@ export const InappBrowserModal = observer(({ pageKey }: { pageKey?: string }) =>
   );
 });
 
-export const KeyDistributionModal = observer(() => {
+export const ShardsModal = observer(() => {
   const { ref, open, close } = useModalize();
-  const [vms, setVMs] = useState<{ keyDistribution?: KeyDistribution }>({});
+  const [vms, setVMs] = useState<{ shardsDistribution?: ShardsDistributor; shardReceiver?: ShardReceiver }>({});
 
   useEffect(() => {
-    PubSub.subscribe(MessageKeys.openKeyDistribution, () => {
-      setVMs({ keyDistribution: new KeyDistribution({ mnemonic: utils.entropyToMnemonic(randomBytes(16)) }) });
+    PubSub.subscribe(MessageKeys.openShardsDistribution, () => {
+      setVMs({ shardsDistribution: new ShardsDistributor({ mnemonic: utils.entropyToMnemonic(randomBytes(16)) }) });
       open();
     });
 
     return () => {
-      PubSub.unsubscribe(MessageKeys.openKeyDistribution);
+      PubSub.unsubscribe(MessageKeys.openShardsDistribution);
     };
   });
 
@@ -608,7 +609,9 @@ export const KeyDistributionModal = observer(() => {
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
       modalStyle={{ backgroundColor: 'transparent' }}
     >
-      <SafeAreaProvider>{vms.keyDistribution ? <KeyDistributionUI vm={vms.keyDistribution} /> : undefined}</SafeAreaProvider>
+      <SafeAreaProvider>
+        {vms.shardsDistribution ? <ShardsDistributionUI vm={vms.shardsDistribution} /> : undefined}
+      </SafeAreaProvider>
     </Modalize>
   );
 });
@@ -726,6 +729,6 @@ export default (props: { app: AppVM; appAuth: Authentication }) => {
     <InpageDAppConnect key="inpage-dapp-connect" />,
     <InpageDAppRequests key="inpage-dapp-requests" />,
     <BackupTipsModal key="backup-tip" />,
-    <KeyDistributionModal key="key-distribution" />,
+    <ShardsModal key="key-distribution" />,
   ];
 };

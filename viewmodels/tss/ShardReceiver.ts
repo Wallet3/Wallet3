@@ -2,7 +2,7 @@ import { ContentType, ShardAcknowledgement, ShardDistribution } from './network/
 
 import { TCPClient } from '../../common/p2p/TCPClient';
 
-export class KeyReceiver extends TCPClient {
+export class ShardReceiver extends TCPClient {
   keyReceived = false;
 
   constructor({ host, port }: { host: string; port: number }) {
