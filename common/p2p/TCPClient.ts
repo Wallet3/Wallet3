@@ -1,5 +1,6 @@
 import { Cipher, Decipher, createCipheriv, createDecipheriv, createECDH, createHash, randomBytes } from 'crypto';
 import { CipherAlgorithm, ClientInfo } from './Constants';
+import { makeObservable, observable, runInAction } from 'mobx';
 
 import { AsyncTCPSocket } from './AsyncTCPSocket';
 import DeviceInfo from 'react-native-device-info';
@@ -12,16 +13,12 @@ const { connect } = TCP;
 export class TCPClient extends AsyncTCPSocket {
   private cipher!: Cipher;
   private decipher!: Decipher;
-  private _verificationCode!: number | string;
 
+  verificationCode: string;
   remoteInfo?: ClientInfo;
 
   get greeted() {
     return this.remoteInfo ? true : false;
-  }
-
-  get verificationCode() {
-    return this._verificationCode;
   }
 
   constructor({
@@ -55,7 +52,9 @@ export class TCPClient extends AsyncTCPSocket {
 
     this.cipher = cipher!;
     this.decipher = decipher!;
-    this._verificationCode = verificationCode!;
+    this.verificationCode = verificationCode || '';
+
+    makeObservable(this, { verificationCode: observable });
 
     if (socket) {
       this.hello();
@@ -74,7 +73,7 @@ export class TCPClient extends AsyncTCPSocket {
       const negotiationKey = negotiation.subarray(16);
 
       const secret = ecdh.computeSecret(negotiationKey);
-      this._verificationCode = `${secret.reduce((p, c) => p * BigInt(c || 1), 1n)}`.substring(6, 10);
+      runInAction(() => (this.verificationCode = `${secret.reduce((p, c) => p * BigInt(c || 1), 1n)}`.substring(6, 10)));
 
       console.log('client computes', secret.toString('hex'), this.verificationCode);
 
@@ -91,7 +90,7 @@ export class TCPClient extends AsyncTCPSocket {
   private hello = async () => {
     if (this.greeted) return;
 
-    await this.secureWriteString(JSON.stringify(getDeviceInfo()));
+    this.secureWriteString(JSON.stringify(getDeviceInfo()));
 
     const read = await this.secureReadString();
     this.remoteInfo = JSON.parse(read);

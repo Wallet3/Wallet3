@@ -6,6 +6,7 @@ type Events = {
   found: (name: string) => void;
   resolved: (service: Service) => void;
   start: () => void;
+  update: () => void;
 };
 
 class ZeroConfiguration extends EventEmitter<Events> {
@@ -17,6 +18,7 @@ class ZeroConfiguration extends EventEmitter<Events> {
     this.zc.on('found', (name) => this.emit('found', name));
     this.zc.on('resolved', (service) => this.emit('resolved', service));
     this.zc.on('start', () => console.log('The scan has started.'));
+    this.zc.on('update', () => this.emit('update'));
   }
 
   scan(service: string) {
@@ -25,6 +27,10 @@ class ZeroConfiguration extends EventEmitter<Events> {
 
   stopScan() {
     this.zc.stop();
+  }
+
+  getAllServices() {
+    return this.zc.getServices() as { [name: string]: { name: string } };
   }
 
   getService(name: string): Service | undefined {

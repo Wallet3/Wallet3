@@ -2,6 +2,7 @@ import { Button, Coin, SafeViewContainer } from '../../components';
 import { Entypo, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import React, { useRef } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { secondaryFontColor, verifiedColor } from '../../constants/styles';
 
 import AnimatedNumber from '../../components/AnimatedNumber';
 import BackButton from '../components/BackButton';
@@ -13,7 +14,6 @@ import Tokenlist from './Tokenlist';
 import TxException from '../components/TxException';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import { secondaryFontColor } from '../../constants/styles';
 import styles from '../styles';
 
 interface GasProps {
@@ -145,7 +145,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
 
             <TouchableOpacity style={styles.gasSpeedItem} onPress={() => vm.setGas('fast')}>
               <Ionicons name="car-sport" size={13} color="dodgerblue" />
-              <Text style={{ ...styles.gasItemText, color: 'dodgerblue' }}>{t('modal-gas-review-fast')}</Text>
+              <Text style={{ ...styles.gasItemText, color: verifiedColor }}>{t('modal-gas-review-fast')}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.gasSpeedItem} onPress={() => vm.setGas('standard')}>

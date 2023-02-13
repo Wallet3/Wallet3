@@ -291,6 +291,7 @@
   "multi-sign-connect-enter-pairing-code": "Lütfen eşleştirme kodunu girin",
   "multi-sign-connect-approved-clients": "Onaylanan Cihazlar",
   "multi-sign-connect-pending-clients": "Bekleyen Cihazlar",
+  "multi-sign-connect-select-to-pair": "Eşlemeye başlamak için bir cihaz seçin",
 
   "msg-invalid-address": "Geçersiz adres",
   "msg-invalid-qr-code": "Geçersiz QR kodu",
@@ -311,6 +312,7 @@
   "button-next": "Sonraki",
   "button-save": "Kaydet",
   "button-done": "Bitti",
+  "button-start-pairing": "Eşlemeye başla",
   "button-speed-up": "Hızlandır",
   "button-cancel-tx": "İşlemi İptal Et",
   "button-cancel": "İptal",

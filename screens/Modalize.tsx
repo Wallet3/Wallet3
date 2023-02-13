@@ -583,11 +583,16 @@ export const InappBrowserModal = observer(({ pageKey }: { pageKey?: string }) =>
 
 export const ShardsModal = observer(() => {
   const { ref, open, close } = useModalize();
-  const [vms, setVMs] = useState<{ shardsDistribution?: ShardsDistributor; shardReceiver?: ShardReceiver }>({});
+  const [vms, setVMs] = useState<{ shardsDistribution?: ShardsDistributor; shardReceiver?: boolean }>({});
 
   useEffect(() => {
     PubSub.subscribe(MessageKeys.openShardsDistribution, () => {
       setVMs({ shardsDistribution: new ShardsDistributor({ mnemonic: utils.entropyToMnemonic(randomBytes(16)) }) });
+      open();
+    });
+
+    PubSub.subscribe(MessageKeys.openShardReceiver, () => {
+      setVMs({ shardReceiver: true });
       open();
     });
 

@@ -1,5 +1,6 @@
 import { ActivityIndicator, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import Animated, { FadeIn, FadeInDown, FadeInRight, FadeOutDown, FadeOutLeft, FadeOutUp } from 'react-native-reanimated';
+import { Ionicons, Octicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { secureColor, warningColor } from '../../../constants/styles';
 
@@ -7,7 +8,6 @@ import Button from '../components/Button';
 import { ClientInfo } from '../../../common/p2p/Constants';
 import Device from '../../../components/Device';
 import DeviceInfo from '../components/DeviceInfo';
-import { Ionicons } from '@expo/vector-icons';
 import { Passpad } from '../../views';
 import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
 import { TCPClient } from '../../../common/p2p/TCPClient';
@@ -57,8 +57,7 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
           position: 'relative',
         }}
       >
-        <DeviceInfo info={item.remoteInfo!} />
-        <Ionicons name="checkmark-circle" color="dodgerblue" size={32} />
+        <DeviceInfo info={item.remoteInfo!} verified />
       </View>
     );
   };
@@ -77,7 +76,6 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
         }}
       >
         <DeviceInfo info={item.remoteInfo!} />
-        <View style={{ flex: 1 }} />
         <View style={{ flexDirection: 'row', alignItems: 'center', marginEnd: -8 }}>
           <TouchableOpacity style={styles.confirmButton} onPress={() => vm.rejectClient(item)}>
             <Ionicons name="close-circle-outline" size={32} color={warningColor} />

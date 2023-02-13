@@ -2,6 +2,7 @@ import { createCipheriv, createHash, randomBytes } from 'crypto';
 import { ethers, utils } from 'ethers';
 
 import DeviceInfo from 'react-native-device-info';
+import LanDiscovery from '../viewmodels/tss/LanDiscovery';
 import { LogBox } from 'react-native';
 import MessageKeys from '../common/MessageKeys';
 import { MultiSignPrimaryServiceType } from '../viewmodels/tss/Constants';
@@ -33,13 +34,13 @@ LogBox.ignoreLogs([
 
 if (__DEV__) {
   if (DeviceInfo.isTablet()) {
-    ZeroConfiguration.on('resolved', (service: Service) => {
+    LanDiscovery.once('resolved', (service: Service) => {
       console.log('tablet', service);
 
-      new ShardReceiver(service);
+      PubSub.publish(MessageKeys.openShardReceiver);
     });
 
-    ZeroConfiguration.scan(MultiSignPrimaryServiceType);
+    LanDiscovery.scan();
   } else {
     // const root = utils.HDNode.fromMnemonic(mnemonic);
     // console.log(utils.mnemonicToEntropy(mnemonic).substring(2), entropy.toString('hex'), root.privateKey);

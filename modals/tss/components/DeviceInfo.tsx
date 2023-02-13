@@ -1,21 +1,26 @@
+import { MaterialIcons, Octicons } from '@expo/vector-icons';
 import { Text, View } from 'react-native';
 
 import { ClientInfo } from '../../../common/p2p/Constants';
 import Device from '../../../components/Device';
 import React from 'react';
 import Theme from '../../../viewmodels/settings/Theme';
+import iosDevice from 'ios-device-list';
+import { verifiedColor } from '../../../constants/styles';
 
-export default ({ info }: { info: ClientInfo }) => {
+export default ({ info, verified }: { info: ClientInfo; verified?: boolean }) => {
   const { textColor, secondaryTextColor } = Theme;
 
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+    <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
       <Device deviceId={info.device} os={info.rn_os} style={{ width: 32, height: 42 }} />
       <View style={{ marginStart: 16 }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text numberOfLines={1} style={{ color: textColor, fontSize: 22, fontWeight: '600', marginBottom: 2 }}>
-            {`${info.name}`}
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 2 }}>
+          <Text numberOfLines={1} style={{ color: textColor, fontSize: 22, fontWeight: '600', marginEnd: 6 }}>
+            {`${info.name || iosDevice.generationByIdentifier(info.device)}`}
           </Text>
+
+          {verified && <MaterialIcons name="verified" color={verifiedColor} size={19} />}
         </View>
 
         <View
@@ -25,7 +30,7 @@ export default ({ info }: { info: ClientInfo }) => {
             alignItems: 'center',
           }}
         >
-          <Text style={{ color: secondaryTextColor }}>{`${info.os} ${info.osVersion}`}</Text>
+          <Text style={{ color: secondaryTextColor }}>{`${info.manufacturer || ''} ${info.os} ${info.osVersion || ''}`}</Text>
         </View>
       </View>
     </View>

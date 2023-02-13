@@ -2,6 +2,7 @@ import { Button, Coin, SafeViewContainer } from '../../components';
 import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import React, { useRef, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+import { verifiedColor, warningColor } from '../../constants/styles';
 
 import AddressRiskIndicator from '../components/AddressRiskIndicator';
 import AnimatedNumber from '../../components/AnimatedNumber';
@@ -25,7 +26,6 @@ import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 import { utils } from 'ethers';
-import { warningColor } from '../../constants/styles';
 
 interface Props {
   onBack?: () => void;
@@ -122,10 +122,10 @@ const ReviewView = observer(
                   <Ionicons
                     name={vm.isContractWallet ? 'wallet-outline' : 'warning'}
                     size={8}
-                    color={vm.isContractWallet ? 'dodgerblue' : 'crimson'}
+                    color={vm.isContractWallet ? verifiedColor : 'crimson'}
                     style={{ marginEnd: 4 }}
                   />
-                  <Text style={{ fontSize: 8, color: vm.isContractWallet ? 'dodgerblue' : 'crimson' }}>
+                  <Text style={{ fontSize: 8, color: vm.isContractWallet ? verifiedColor : 'crimson' }}>
                     {t(
                       vm.isContractRecipient
                         ? vm.isContractWallet

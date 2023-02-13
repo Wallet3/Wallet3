@@ -21,7 +21,12 @@ export class AsyncTCPSocket extends EventEmitter<Events> {
   }
 
   write(data: Buffer | Uint8Array) {
-    return new Promise<number>((resolve) => this.raw.write(data, 'binary', (err) => resolve(err ? 0 : data.byteLength)));
+    return new Promise<number>((resolve) =>
+      this.raw.write(data, 'binary', (err) => {
+        err ? console.error(err) : undefined;
+        resolve(err ? 0 : data.byteLength);
+      })
+    );
   }
 
   writeString(data: string, encoding: BufferEncoding = 'utf8') {

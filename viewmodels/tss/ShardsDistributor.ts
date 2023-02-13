@@ -47,6 +47,7 @@ export class ShardsDistributor extends TCPServer<Events> {
       distributedClients: observable,
       status: observable,
       approvedCount: computed,
+      pendingCount: computed,
 
       approveClient: action,
       rejectClient: action,
@@ -93,6 +94,9 @@ export class ShardsDistributor extends TCPServer<Events> {
 
   approveClient(client: TCPClient) {
     this.approvedClients.push(client);
+
+    const index = this.pendingClients.indexOf(client);
+    if (index >= 0) this.pendingClients.splice(index, 1);
   }
 
   rejectClient(client: TCPClient) {

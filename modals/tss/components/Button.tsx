@@ -1,7 +1,6 @@
 import Button, { ButtonProps } from '../../../components/Button';
+import { DefaultCornerRadius, getScreenCornerRadius } from '../../../utils/ios';
 import React, { useState } from 'react';
-
-import { getScreenCornerRadius } from '../../../utils/ios';
 
 export default (props: ButtonProps) => {
   const [borderRadius] = useState(getScreenCornerRadius());
@@ -11,10 +10,10 @@ export default (props: ButtonProps) => {
       {...props}
       txtStyle={{ fontSize: 18, fontWeight: '600' }}
       style={{
-        borderRadius: 7 + (borderRadius - 20) / 3,
-        height: 42 + (borderRadius - 20) / 5,
-        marginHorizontal: (borderRadius - 20) / 4 + 16,
-        marginBottom: (borderRadius - 20) / 5,
+        borderRadius: 7 + (borderRadius - DefaultCornerRadius) / 2.4,
+        height: 42 + (borderRadius - DefaultCornerRadius) / 5,
+        marginHorizontal: (borderRadius - DefaultCornerRadius) / 4 + 16,
+        marginBottom: (borderRadius - DefaultCornerRadius) / 5,
       }}
     />
   );

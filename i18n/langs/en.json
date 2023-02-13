@@ -292,6 +292,7 @@
   "multi-sign-connect-enter-pairing-code": "Please enter the pairing code",
   "multi-sign-connect-approved-clients": "Approved devices",
   "multi-sign-connect-pending-clients": "Pending devices",
+  "multi-sign-connect-select-to-pair": "Tap a device to start pairing",
 
   "msg-invalid-address": "Invalid address",
   "msg-invalid-qr-code": "Invalid QR code",
@@ -312,6 +313,7 @@
   "button-next": "Next",
   "button-save": "Save",
   "button-done": "Done",
+  "button-start-pairing": "Start Pairing",
   "button-speed-up": "Speed Up",
   "button-cancel-tx": "Cancel Tx",
   "button-cancel": "Cancel",

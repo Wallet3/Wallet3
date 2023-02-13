@@ -8,7 +8,7 @@ import { EvilIcons, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { formatAddress, formatCurrency } from '../../utils/formatter';
-import { thirdFontColor, warningColor } from '../../constants/styles';
+import { thirdFontColor, verifiedColor, warningColor } from '../../constants/styles';
 
 import { BreathAnimation } from '../../utils/animations';
 import { INetwork } from '../../common/Networks';
@@ -72,7 +72,7 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
                 <Ionicons name="warning" size={19} color={warningColor} />
               </Animatable.View>
             ) : (
-              <MaterialIcons name="verified" size={17} color={vm?.verified ? 'dodgerblue' : borderColor} />
+              <MaterialIcons name="verified" size={17} color={vm?.verified ? verifiedColor : borderColor} />
             )}
           </View>
           {vm?.loading ? (
@@ -85,7 +85,7 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
               {vm?.price
                 ? `$ ${vm?.price.toFixed(2)} (${
                     (vm?.priceChangePercentIn24 || 0) > 0
-                      ? '+' + (vm?.priceChangePercentIn24 || 0).toFixed(2)
+                      ? `+${(vm?.priceChangePercentIn24 || 0).toFixed(2)}`
                       : (vm?.priceChangePercentIn24 || 0).toFixed(2)
                   }% 24h)`
                 : '-'}

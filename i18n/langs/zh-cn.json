@@ -285,6 +285,9 @@
   "multi-sign-welcome-4": "稍等片刻，其它手机将会尝试连接本设备",
   "multi-sign-connect-tip": "1. 在您的其它手机上打开 Wallet 3\n2. 前往【设置】-【多签钱包】\n3. 点击【开始配对】",
   "multi-sign-connect-enter-pairing-code": "请输入配对码",
+  "multi-sign-connect-approved-clients": "已验证",
+  "multi-sign-connect-pending-clients": "等待验证",
+  "multi-sign-connect-select-to-pair": "选择一个设备开始配对",
 
   "msg-invalid-address": "无效地址",
   "msg-invalid-qr-code": "无效的二维码",
@@ -304,6 +307,7 @@
   "button-next": "继续",
   "button-save": "保存",
   "button-done": "完成",
+  "button-start-pairing": "开始配对",
   "button-speed-up": "加速交易",
   "button-cancel-tx": "取消交易",
   "button-cancel": "取消",
