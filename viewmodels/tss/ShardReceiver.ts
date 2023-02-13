@@ -56,4 +56,11 @@ export class ShardReceiver extends TCPClient {
 
     this.onReady();
   };
+
+  dispose() {
+    this.raw.destroy();
+    this.removeAllListeners();
+
+    console.log('shard receiver dispose')
+  }
 }

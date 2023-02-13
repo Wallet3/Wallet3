@@ -1,5 +1,5 @@
 import Animated, { FadeInUp } from 'react-native-reanimated';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, FlatList as SystemFlatList, Text, View } from 'react-native';
 
 import DeviceSelector from './DeviceSelector';
@@ -43,6 +43,13 @@ export default observer(() => {
     setVM(new ShardReceiver(service));
     titleList.current?.scrollToIndex({ animated: true, index: 1 });
   };
+
+  useEffect(() => {
+    return () => {
+      if (!vm) return;
+      vm.dispose();
+    };
+  }, [vm]);
 
   return (
     <ScrollView

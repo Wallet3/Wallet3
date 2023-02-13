@@ -77,6 +77,8 @@ export class ShardsDistributor extends TCPServer<Events> {
     const result = await super.start();
     if (!result) return false;
 
+    console.log('publish service');
+
     ZeroConfiguration.publishService(MultiSignPrimaryServiceType, this.name, this.port!, {
       role: 'primary',
       func: 'shards-distribution',
@@ -159,8 +161,17 @@ export class ShardsDistributor extends TCPServer<Events> {
     );
   }
 
-  stop(): void {
-    super.stop();
+  async stop() {
     ZeroConfiguration.unpublishService(this.name);
+
+    this.approvedClients.forEach((c) => {
+      c.destroy();
+      c.removeAllListeners();
+    });
+
+    this.pendingClients.forEach((c) => {
+      c.destroy();
+      c.removeAllListeners();
+    });
   }
 }

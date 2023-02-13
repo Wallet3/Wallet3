@@ -7,14 +7,15 @@ import TCP from 'react-native-tcp-socket';
 import { TCPClient } from './TCPClient';
 import { sleep } from '../../utils/async';
 
-const { createServer } = TCP;
+const { createServer, Server } = TCP;
 
 export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends EventEmitter<T, any> {
   private readonly server: TCP.Server;
+  private static port = 39127;
 
   constructor() {
     super();
-    this.server = createServer(this.handleClient);
+    this.server = new Server(this.handleClient);
   }
 
   get port() {
@@ -26,23 +27,29 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
   }
 
   async start() {
-    if (this.server.listening) return false;
-    let port = 39127;
+    if (this.server.listening) return true;
+    let attempts = 0;
 
-    while (true) {
+    while (attempts < 3) {
       try {
-        await new Promise<void>((resolve) => this.server.listen({ port, host: '0.0.0.0' }, () => resolve()));
+        await new Promise<void>((resolve) => this.server.listen({ port: TCPServer.port++, host: '0.0.0.0' }, () => resolve()));
         break;
       } catch (error) {
-        port++;
+        console.log(error, TCPServer.port);
+        attempts++;
       }
     }
 
-    return true;
+    return attempts < 3;
   }
 
   stop() {
-    this.server.close();
+    return new Promise<void>((resolve) => {
+      this.server.close((err) => {
+        console.log('close err:', err);
+        resolve();
+      });
+    });
   }
 
   private handleClient = async (c: TCP.Socket | TCP.TLSSocket) => {

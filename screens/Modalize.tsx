@@ -605,7 +605,7 @@ export const ShardsModal = observer(() => {
     <Modalize
       ref={ref}
       useNativeDriver
-      onClosed={() => setTimeout(() => open(), 1000)}
+      onClosed={() => setTimeout(() => open(), 3000)}
       adjustToContentHeight
       withHandle={false}
       disableScrollIfPossible

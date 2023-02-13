@@ -27,13 +27,15 @@ export default observer(({ onNext }: { onNext: (selectedService: Service) => voi
 
   const renderItem = ({ item }: { item: Service }) => {
     return (
-      <TouchableOpacity
-        style={{ paddingHorizontal: marginHorizontal, flexDirection: 'row', alignItems: 'center' }}
-        onPress={() => setSelectedService(item)}
-      >
-        <DeviceInfo info={item.txt.info} />
-        {selectedService?.name === item.name ? <Feather name="check" size={24} color={appColor} /> : undefined}
-      </TouchableOpacity>
+      <View entering={FadeInDown.springify()} exiting={FadeOutDown.springify()}>
+        <TouchableOpacity
+          style={{ paddingHorizontal: marginHorizontal, flexDirection: 'row', alignItems: 'center' }}
+          onPress={() => setSelectedService(item)}
+        >
+          <DeviceInfo info={item.txt.info} />
+          {selectedService?.name === item.name ? <Feather name="check" size={24} color={appColor} /> : undefined}
+        </TouchableOpacity>
+      </View>
     );
   };
 
@@ -49,7 +51,11 @@ export default observer(({ onNext }: { onNext: (selectedService: Service) => voi
         keyExtractor={(i) => i.name}
       />
 
-      <Button title={t('button-start-pairing')} onPress={() => onNext(selectedService!)} disabled={!selectedService} />
+      <Button
+        title={t('button-start-pairing')}
+        onPress={() => onNext(selectedService!)}
+        disabled={!selectedService || LanDiscovery.services.length === 0}
+      />
     </View>
   );
 });
