@@ -3,7 +3,6 @@ import { action, makeObservable, observable, runInAction } from 'mobx';
 import EventEmitter from 'eventemitter3';
 import { MultiSignPrimaryServiceType } from './Constants';
 import { Service } from 'react-native-zeroconf';
-import { TCPClient } from '../../common/p2p/TCPClient';
 import ZeroConfiguration from '../../common/p2p/ZeroConfiguration';
 import { atob } from 'react-native-quick-base64';
 
@@ -25,7 +24,6 @@ class LanDiscovery extends EventEmitter<Events> {
   onUpdate = () => {
     const all = ZeroConfiguration.getAllServices();
     const names = Object.getOwnPropertyNames(all);
-    console.log('on update');
 
     this.services = this.services.filter((s) => names.find((name) => name === s.name));
   };

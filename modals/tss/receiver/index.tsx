@@ -44,12 +44,7 @@ export default observer(() => {
     titleList.current?.scrollToIndex({ animated: true, index: 1 });
   };
 
-  useEffect(() => {
-    return () => {
-      if (!vm) return;
-      vm.dispose();
-    };
-  }, [vm]);
+  useEffect(() => () => vm?.dispose(), [vm]);
 
   return (
     <ScrollView

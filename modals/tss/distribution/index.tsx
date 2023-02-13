@@ -45,11 +45,7 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
     titleList.current?.scrollToIndex({ animated: true, index: step });
   };
 
-  useEffect(() => {
-    return () => {
-      vm.stop();
-    };
-  }, []);
+  useEffect(() => () => vm.dispose(), []);
 
   return (
     <ScrollView

@@ -161,7 +161,7 @@ export class ShardsDistributor extends TCPServer<Events> {
     );
   }
 
-  async stop() {
+  dispose() {
     ZeroConfiguration.unpublishService(this.name);
 
     this.approvedClients.forEach((c) => {
