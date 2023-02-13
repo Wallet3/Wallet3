@@ -611,6 +611,7 @@ export const ShardsModal = observer(() => {
     >
       <SafeAreaProvider>
         {vms.shardsDistribution ? <ShardsDistributionUI vm={vms.shardsDistribution} /> : undefined}
+        {vms.shardReceiver ? <ShardReceiverUI /> : undefined}
       </SafeAreaProvider>
     </Modalize>
   );

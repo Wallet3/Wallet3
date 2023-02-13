@@ -1,10 +1,12 @@
 import { ActivityIndicator, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
-import Animated, { FadeInDown, FadeInRight, FadeOutDown, FadeOutLeft, FadeOutUp } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInDown, FadeInRight, FadeOutDown, FadeOutLeft, FadeOutUp } from 'react-native-reanimated';
 import React, { useEffect, useState } from 'react';
 import { secureColor, warningColor } from '../../../constants/styles';
 
 import Button from '../components/Button';
+import { ClientInfo } from '../../../common/p2p/Constants';
 import Device from '../../../components/Device';
+import DeviceInfo from '../components/DeviceInfo';
 import { Ionicons } from '@expo/vector-icons';
 import { Passpad } from '../../views';
 import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
@@ -42,33 +44,6 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
     return verified;
   };
 
-  const renderClient = ({ item }: { item: TCPClient }) => {
-    return (
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Device deviceId={item.remoteInfo!.device} os={item.remoteInfo!.rn_os} style={{ width: 32, height: 42 }} />
-        <View style={{ marginStart: 16 }}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text numberOfLines={1} style={{ color: textColor, fontSize: 22, fontWeight: '600', marginBottom: 2 }}>
-              {`${item.remoteInfo?.name}`}
-            </Text>
-          </View>
-
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              borderBottomWidth: 0,
-              borderBottomColor: borderColor,
-            }}
-          >
-            <Text style={{ color: secondaryTextColor }}>{`${item.remoteInfo?.os} ${item.remoteInfo?.osVersion}`}</Text>
-          </View>
-        </View>
-      </View>
-    );
-  };
-
   const renderConnectedItem = ({ item }: { item: TCPClient }) => {
     return (
       <View
@@ -82,7 +57,7 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
           position: 'relative',
         }}
       >
-        {renderClient({ item })}
+        <DeviceInfo info={item.remoteInfo!} />
         <Ionicons name="checkmark-circle" color="dodgerblue" size={32} />
       </View>
     );
@@ -101,7 +76,7 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
           position: 'relative',
         }}
       >
-        {renderClient({ item })}
+        <DeviceInfo info={item.remoteInfo!} />
         <View style={{ flex: 1 }} />
         <View style={{ flexDirection: 'row', alignItems: 'center', marginEnd: -8 }}>
           <TouchableOpacity style={styles.confirmButton} onPress={() => vm.rejectClient(item)}>
@@ -123,9 +98,40 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
       exiting={FadeOutLeft.springify()}
     >
       {pendingCount || approvedCount ? (
-        <View style={{ flex: 1 }}>
-          <FlatList data={approvedClients} renderItem={renderConnectedItem} keyExtractor={(item) => item.remoteId} />
-          <FlatList data={pendingClients} renderItem={renderPendingItem} keyExtractor={(item) => item.remoteId} />
+        <View style={{ flex: 1, paddingBottom: 16 }}>
+          {approvedCount > 0 && (
+            <Text
+              entering={FadeInDown.delay(0)}
+              exiting={FadeOutUp.delay(0)}
+              style={{ ...styles.listTitle, color: secondaryTextColor, marginHorizontal }}
+            >
+              {t('multi-sign-connect-approved-clients')}
+            </Text>
+          )}
+
+          <FlatList
+            style={styles.flatList}
+            data={approvedClients}
+            renderItem={renderConnectedItem}
+            keyExtractor={(item) => item.remoteId}
+          />
+
+          {pendingCount > 0 && (
+            <Text
+              entering={FadeInDown.delay(0)}
+              exiting={FadeOutUp.delay(0)}
+              style={{ ...styles.listTitle, color: secondaryTextColor, marginHorizontal }}
+            >
+              {t('multi-sign-connect-pending-clients')}
+            </Text>
+          )}
+
+          <FlatList
+            style={styles.flatList}
+            data={pendingClients}
+            renderItem={renderPendingItem}
+            keyExtractor={(item) => item.remoteId}
+          />
         </View>
       ) : (
         <View style={{ flex: 1, alignContent: 'center', justifyContent: 'center' }} exiting={FadeOutUp.springify()}>
@@ -140,11 +146,13 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
 
       {verifying && (
         <View
-          entering={FadeInDown.delay(0)}
+          entering={FadeInDown.springify()}
           exiting={FadeOutDown.springify()}
           style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, backgroundColor, alignItems: 'center' }}
         >
-          <Text style={{ marginTop: 12, color: secondaryTextColor }}>{t('multi-sign-connect-enter-pairing-code')}:</Text>
+          <Text style={{ marginTop: 12, color: secondaryTextColor, fontWeight: '500' }}>
+            {t('multi-sign-connect-enter-pairing-code')}:
+          </Text>
 
           <Passpad
             disableCancelButton
@@ -160,6 +168,15 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
 });
 
 const styles = StyleSheet.create({
+  listTitle: {
+    marginHorizontal: 18,
+    fontWeight: '500',
+    opacity: 0.75,
+    textTransform: 'capitalize',
+  },
+  flatList: {
+    flexGrow: 0,
+  },
   confirmButton: {
     padding: 4,
     paddingHorizontal: 8,

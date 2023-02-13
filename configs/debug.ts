@@ -2,14 +2,14 @@ import { createCipheriv, createHash, randomBytes } from 'crypto';
 import { ethers, utils } from 'ethers';
 
 import DeviceInfo from 'react-native-device-info';
-import LanDiscovery from '../common/p2p/LanDiscovery';
 import { LogBox } from 'react-native';
 import MessageKeys from '../common/MessageKeys';
-import { MultiSignPrimaryServiceType } from '../common/p2p/Constants';
+import { MultiSignPrimaryServiceType } from '../viewmodels/tss/Constants';
 import { Service } from 'react-native-zeroconf';
 import { ShardReceiver } from '../viewmodels/tss/ShardReceiver';
 import { ShardsDistributor } from '../viewmodels/tss/ShardsDistributor';
 import { TCPClient } from '../common/p2p/TCPClient';
+import ZeroConfiguration from '../common/p2p/ZeroConfiguration';
 import eccrypto from 'eccrypto';
 import { getScreenCornerRadius } from '../utils/ios';
 import iosDevice from 'ios-device-list';
@@ -32,16 +32,14 @@ LogBox.ignoreLogs([
 ]);
 
 if (__DEV__) {
-  
-
   if (DeviceInfo.isTablet()) {
-    LanDiscovery.on('resolved', (service: Service) => {
+    ZeroConfiguration.on('resolved', (service: Service) => {
       console.log('tablet', service);
 
       new ShardReceiver(service);
     });
 
-    LanDiscovery.scan(MultiSignPrimaryServiceType);
+    ZeroConfiguration.scan(MultiSignPrimaryServiceType);
   } else {
     // const root = utils.HDNode.fromMnemonic(mnemonic);
     // console.log(utils.mnemonicToEntropy(mnemonic).substring(2), entropy.toString('hex'), root.privateKey);

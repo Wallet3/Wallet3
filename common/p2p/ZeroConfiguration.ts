@@ -1,8 +1,14 @@
 import Zeroconf, { Service } from 'react-native-zeroconf';
 
-import EventEmitter from 'events';
+import EventEmitter from 'eventemitter3';
 
-class LanDiscovery extends EventEmitter {
+type Events = {
+  found: (name: string) => void;
+  resolved: (service: Service) => void;
+  start: () => void;
+};
+
+class ZeroConfiguration extends EventEmitter<Events> {
   zc = new Zeroconf();
 
   constructor() {
@@ -34,4 +40,4 @@ class LanDiscovery extends EventEmitter {
   }
 }
 
-export default new LanDiscovery();
+export default new ZeroConfiguration();

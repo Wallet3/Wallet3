@@ -289,6 +289,8 @@
   "multi-sign-welcome-4": "Bir müddet bekleyin ve telefonlar bu cihaza bağlanmaya çalışacaktır.",
   "multi-sign-connect-tip": "1. Diğer telefonlarınızda Wallet 3'ü açın.\n2. [Ayarlar] - [Çok İmzalı Cüzdan]a gitin.\n3. [Başlat Eşleme]i tıklayın.",
   "multi-sign-connect-enter-pairing-code": "Lütfen eşleştirme kodunu girin",
+  "multi-sign-connect-approved-clients": "Onaylanan Cihazlar",
+  "multi-sign-connect-pending-clients": "Bekleyen Cihazlar",
 
   "msg-invalid-address": "Geçersiz adres",
   "msg-invalid-qr-code": "Geçersiz QR kodu",

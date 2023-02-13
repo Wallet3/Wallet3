@@ -1,4 +1,4 @@
-import { ContentType, ShardAcknowledgement, ShardDistribution } from './network/Constants';
+import { ContentType, ShardAcknowledgement, ShardDistribution } from './Constants';
 
 import { TCPClient } from '../../common/p2p/TCPClient';
 

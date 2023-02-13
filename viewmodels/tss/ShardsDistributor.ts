@@ -1,12 +1,13 @@
-import { ContentType, ShardAcknowledgement, ShardDistribution } from './network/Constants';
+import { ContentType, MultiSignPrimaryServiceType, ShardAcknowledgement, ShardDistribution } from './Constants';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { atob, btoa } from 'react-native-quick-base64';
+import { getDeviceBasicInfo, getDeviceInfo } from '../../common/p2p/Utils';
 
 import { HDNode } from 'ethers/lib/utils';
 import LINQ from 'linq';
-import LanDiscovery from '../../common/p2p/LanDiscovery';
-import { MultiSignPrimaryServiceType } from '../../common/p2p/Constants';
 import { TCPClient } from '../../common/p2p/TCPClient';
 import { TCPServer } from '../../common/p2p/TCPServer';
+import ZeroConfiguration from '../../common/p2p/ZeroConfiguration';
 import { createHash } from 'crypto';
 import secretjs from 'secrets.js-grempe';
 import { utils } from 'ethers';
@@ -60,7 +61,7 @@ export class ShardsDistributor extends TCPServer<Events> {
   }
 
   get name() {
-    return `shards-distribution-${this.id}`;
+    return `shards-distributor-${this.id}`;
   }
 
   get approvedCount() {
@@ -75,17 +76,17 @@ export class ShardsDistributor extends TCPServer<Events> {
     const result = await super.start();
     if (!result) return false;
 
-    LanDiscovery.publishService(MultiSignPrimaryServiceType, this.name, this.port!, {
+    ZeroConfiguration.publishService(MultiSignPrimaryServiceType, this.name, this.port!, {
       role: 'primary',
-      func: 'key-distribution',
+      func: 'shards-distribution',
       distributionId: this.id,
+      info: btoa(JSON.stringify(getDeviceBasicInfo())),
     });
 
     return true;
   }
 
   protected newClient(c: TCPClient): void {
-    this.emit('newClient', c);
     runInAction(() => this.pendingClients.push(c));
     c.once('close', () => this.rejectClient(c));
   }
@@ -151,6 +152,6 @@ export class ShardsDistributor extends TCPServer<Events> {
 
   stop(): void {
     super.stop();
-    LanDiscovery.unpublishService(this.name);
+    ZeroConfiguration.unpublishService(this.name);
   }
 }

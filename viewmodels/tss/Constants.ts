@@ -1,3 +1,5 @@
+export const MultiSignPrimaryServiceType = 'wallet3-multi-sign';
+
 export enum ContentType {
   shardDistribution = 1,
   shardAcknowledgement,

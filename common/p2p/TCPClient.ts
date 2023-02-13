@@ -1,22 +1,13 @@
 import { Cipher, Decipher, createCipheriv, createDecipheriv, createECDH, createHash, randomBytes } from 'crypto';
+import { CipherAlgorithm, ClientInfo } from './Constants';
 
 import { AsyncTCPSocket } from './AsyncTCPSocket';
-import { CipherAlgorithm } from './Constants';
 import DeviceInfo from 'react-native-device-info';
 import { Platform } from 'react-native';
 import TCP from 'react-native-tcp-socket';
+import { getDeviceInfo } from './Utils';
 
 const { connect } = TCP;
-
-export type ClientInfo = {
-  devtype: string;
-  device: string;
-  manufacturer: string;
-  name: string;
-  os: string;
-  rn_os: 'ios' | 'android';
-  osVersion: string;
-};
 
 export class TCPClient extends AsyncTCPSocket {
   private cipher!: Cipher;
@@ -100,17 +91,7 @@ export class TCPClient extends AsyncTCPSocket {
   private hello = async () => {
     if (this.greeted) return;
 
-    const selfInfo: ClientInfo = {
-      name: DeviceInfo.getDeviceNameSync(),
-      devtype: DeviceInfo.getDeviceType(),
-      device: DeviceInfo.getDeviceId(),
-      manufacturer: DeviceInfo.getManufacturerSync(),
-      os: DeviceInfo.getSystemName(),
-      rn_os: Platform.OS as any,
-      osVersion: DeviceInfo.getSystemVersion(),
-    };
-
-    this.secureWriteString(JSON.stringify(selfInfo));
+    await this.secureWriteString(JSON.stringify(getDeviceInfo()));
 
     const read = await this.secureReadString();
     this.remoteInfo = JSON.parse(read);

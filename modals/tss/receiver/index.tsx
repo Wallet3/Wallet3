@@ -3,6 +3,7 @@ import { EvilIcons, Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, FlatList as SystemFlatList, Text, View } from 'react-native';
 
+import DeviceSelector from './DeviceSelector';
 import { ReactiveScreen } from '../../../utils/device';
 import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
 import Theme from '../../../viewmodels/settings/Theme';
@@ -14,19 +15,14 @@ import { utils } from 'ethers';
 
 const { FlatList } = Animated;
 
-export default observer(({ vm }: { vm: ShardsDistributor }) => {
+export default observer(() => {
   const { t } = i18n;
   const { backgroundColor, foregroundColor, textColor, appColor } = Theme;
-  
+
   const [borderRadius] = useState(getScreenCornerRadius());
   const [step, setStep] = useState(0);
   const titleList = useRef<SystemFlatList>(null);
-  const titles = [
-    t('multi-sign-title-welcome'),
-    t('multi-sign-title-connect-devices'),
-    t('multi-sign-title-set-threshold'),
-    t('multi-sign-title-key-distribution'),
-  ];
+  const titles = [t('multi-sign-title-devices-pairing'), t('multi-sign-title-key-distribution')];
 
   const renderTitle = ({ item }: { item: string }) => {
     return (
@@ -81,8 +77,8 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
         />
 
         <View style={{ flex: 1, width: ReactiveScreen.width - 12, marginHorizontal: -16 }}>
-          {/* {step === 0 ? <HowTo onNext={() => goTo(1)} /> : undefined}
-          {step === 1 ? <ConnectDevices vm={vm} /> : undefined} */}
+          {step === 0 ? <DeviceSelector onNext={() => goTo(1)} /> : undefined}
+          {/* {step === 1 ? <ConnectDevices vm={vm} /> : undefined} */}
         </View>
       </View>
     </ScrollView>
