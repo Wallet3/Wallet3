@@ -19,6 +19,7 @@ import { observer } from 'mobx-react-lite';
 const { View, Text } = Animated;
 
 export default observer(({ vm }: { vm: ShardsDistributor }) => {
+  const { secondaryTextColor, appColor } = Theme;
   return (
     <View
       style={{ flex: 1, position: 'relative' }}
@@ -26,10 +27,10 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
       exiting={FadeOutLeft.springify()}
     >
       <View style={{ flex: 1 }}>
-        <View>
-          <Text>1</Text>
-          <Text>/</Text>
-          <Text>{vm.approvedCount}</Text>
+        <View style={{ alignSelf: 'center', flexDirection: 'row', alignItems: 'baseline' }}>
+          <Text style={{ fontSize: 96, color: appColor, fontWeight: '600' }}>2</Text>
+          <Text style={{ fontSize: 32, marginHorizontal: 12, color: secondaryTextColor, fontWeight: '500' }}>of</Text>
+          <Text style={{ fontSize: 32, color: secondaryTextColor, fontWeight: '600' }}>{vm.approvedCount + 1}</Text>
         </View>
       </View>
       <Button disabled={vm.approvedCount === 0} />

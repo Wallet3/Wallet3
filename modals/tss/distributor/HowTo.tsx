@@ -2,9 +2,9 @@ import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
 
 import Button from '../components/Button';
 import React from 'react';
-import { ReactiveScreen } from '../../../utils/device';
 import { StyleSheet } from 'react-native';
 import Swiper from 'react-native-swiper';
+import Theme from '../../../viewmodels/settings/Theme';
 import i18n from '../../../i18n';
 import { thirdFontColor } from '../../../constants/styles';
 
@@ -15,7 +15,7 @@ export default ({ onNext }: { onNext?: () => void }) => {
 
   return (
     <View style={{ flex: 1 }} entering={FadeInRight.delay(500).springify()} exiting={FadeOutLeft.springify()}>
-      <Swiper paginationStyle={{ marginBottom: -8 }} autoplay>
+      <Swiper paginationStyle={{ marginBottom: -8 }} autoplay dotStyle={{ backgroundColor: `${Theme.secondaryTextColor}40` }}>
         <View style={styles.contentContainer}>
           <View style={{ flex: 1 }} />
           <Text style={styles.txt}>{t('multi-sign-welcome-1')}</Text>

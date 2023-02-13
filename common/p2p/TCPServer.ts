@@ -7,11 +7,12 @@ import TCP from 'react-native-tcp-socket';
 import { TCPClient } from './TCPClient';
 import { sleep } from '../../utils/async';
 
-const { createServer, Server } = TCP;
+const { Server } = TCP;
 
 export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends EventEmitter<T, any> {
   private readonly server: TCP.Server;
   private static port = 39127;
+  private handshakingSockets = new Set<AsyncTCPSocket>();
 
   constructor() {
     super();
@@ -44,6 +45,13 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
   }
 
   stop() {
+    this.handshakingSockets.forEach((s) => {
+      s.destroy();
+      s.removeAllListeners();
+    });
+
+    this.handshakingSockets.clear();
+
     return new Promise<void>((resolve) => {
       this.server.close((err) => {
         console.log('close err:', err);
@@ -54,18 +62,24 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
 
   private handleClient = async (c: TCP.Socket | TCP.TLSSocket) => {
     const socket = new AsyncTCPSocket(c);
-    const client = await this.handshake(socket);
+    this.handshakingSockets.add(socket);
 
-    if (client) {
-      while (!client.greeted) {
-        await sleep(500);
+    try {
+      const client = await this.handshake(socket);
+
+      if (client) {
+        while (!client.greeted) {
+          await sleep(500);
+        }
+
+        console.log('new client', socket.remoteId, client.greeted);
+        this.newClient(client);
+      } else {
+        socket.destroy();
+        return;
       }
-
-      console.log('new client', socket.remoteId, client.greeted);
-      this.newClient(client);
-    } else {
-      socket.destroy();
-      return;
+    } finally {
+      this.handshakingSockets.delete(socket);
     }
   };
 
