@@ -2,7 +2,7 @@ import { ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
 import Animated, { FadeIn, FadeInDown, FadeInRight, FadeOutDown, FadeOutLeft, FadeOutUp } from 'react-native-reanimated';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
-import { getDeviceModel, getScreenCornerRadius } from '../../../utils/ios';
+import { getDeviceModel, getScreenCornerRadius } from '../../../utils/hardware';
 import { secureColor, warningColor } from '../../../constants/styles';
 
 import Button from '../components/Button';

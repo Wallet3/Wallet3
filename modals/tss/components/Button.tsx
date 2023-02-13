@@ -1,5 +1,5 @@
 import Button, { ButtonProps } from '../../../components/Button';
-import { DefaultCornerRadius, getScreenCornerRadius } from '../../../utils/ios';
+import { DefaultCornerRadius, getScreenCornerRadius } from '../../../utils/hardware';
 import React, { useState } from 'react';
 
 export default (props: ButtonProps) => {

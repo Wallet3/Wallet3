@@ -12,7 +12,7 @@ import { ShardsDistributor } from '../viewmodels/tss/ShardsDistributor';
 import { TCPClient } from '../common/p2p/TCPClient';
 import ZeroConfiguration from '../common/p2p/ZeroConfiguration';
 import eccrypto from 'eccrypto';
-import { getScreenCornerRadius } from '../utils/ios';
+import { getScreenCornerRadius } from '../utils/hardware';
 import iosDevice from 'ios-device-list';
 import quickcrypto from 'react-native-quick-crypto';
 import secretjs from 'secrets.js-grempe';

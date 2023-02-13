@@ -8,7 +8,7 @@ import { Service } from 'react-native-zeroconf';
 import { ShardReceiver } from '../../../viewmodels/tss/ShardReceiver';
 import ShardReceiving from './ShardReceiving';
 import Theme from '../../../viewmodels/settings/Theme';
-import { getScreenCornerRadius } from '../../../utils/ios';
+import { getScreenCornerRadius } from '../../../utils/hardware';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
 

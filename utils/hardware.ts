@@ -29,20 +29,14 @@ const iPhone = {
 let screenCornerRadius = 0;
 
 export function getScreenCornerRadius() {
-  // return 55;
   if (screenCornerRadius) return screenCornerRadius;
 
   const currentDevice: string = iosDevice.generationByIdentifier(DeviceInfo.getDeviceId())?.toLowerCase() ?? '';
   if (!currentDevice) return (screenCornerRadius = DefaultCornerRadius);
 
-  console.log(
-    currentDevice,
-    Object.getOwnPropertyNames(iPhone).find((i) => currentDevice.includes(i.toLowerCase()))
+  return (
+    iPhone[Object.getOwnPropertyNames(iPhone).find((i) => currentDevice.includes(i.toLowerCase()))!] || DefaultCornerRadius
   );
-
-  screenCornerRadius =
-    iPhone[Object.getOwnPropertyNames(iPhone).find((i) => currentDevice.includes(i.toLowerCase()))!] || DefaultCornerRadius;
-  return screenCornerRadius;
 }
 
 export function getDeviceModel() {
