@@ -290,6 +290,7 @@
   "multi-sign-connect-select-to-pair": "デバイスを選択して、ペアリングを開始する",
   "multi-sign-txt-pairing-code": "ペアリングコード",
   "multi-sign-txt-dont-close-view": "配布中に、現在のセッションを閉じないでください",
+  "multi-sign-msg-pairing-code-not-match": "ペアリングコードが一致していません。安全な環境で再度お試しください。",
 
   "msg-invalid-address": "無効なアドレス",
   "msg-invalid-qr-code": "無効なQRコード",

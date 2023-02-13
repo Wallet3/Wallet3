@@ -1,8 +1,8 @@
-import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { StyleProp, View, ViewStyle } from 'react-native';
 
 import FastImage from 'react-native-fast-image';
+import LottieView from 'lottie-react-native';
 import iosDevice from 'ios-device-list';
 
 const iPhoneX = require('../assets/devices/iPhone_X.png');
@@ -43,21 +43,14 @@ const Devices = new Map([
 
 const keys = Array.from(Devices.keys());
 
-export default ({ os, deviceId, style }: { os: 'ios' | 'android'; deviceId: string; style?: StyleProp<ViewStyle> }) => {
+export default ({ os, deviceId, style }: { os: 'ios' | 'android'; deviceId: string; style?: StyleProp<ViewStyle> & any }) => {
   const [device] = useState(
     Devices.get(keys.find((k) => (iosDevice.generationByIdentifier(deviceId)?.toLowerCase() ?? os).includes(k))!)
   );
 
-  return (
-    <View style={{ ...(style as any), position: 'relative' }}>
-      <FastImage source={device} style={style as any} resizeMode="contain" />
-      {/* <View style={{ position: 'absolute', top: '38%', alignContent: 'center', alignItems: 'center', alignSelf: 'center' }}>
-        {os === 'ios' ? (
-          <Ionicons name="logo-apple" size={10} color="#fff" />
-        ) : os === 'android' ? (
-          <FontAwesome5 name="android" size={10} color="#3DDC84" />
-        ) : undefined}
-      </View> */}
-    </View>
+  return os === 'ios' ? (
+    <FastImage source={device} style={style} resizeMode="contain" />
+  ) : (
+    <LottieView style={style} source={require('../assets/animations/android-phone.json')} autoPlay />
   );
 };

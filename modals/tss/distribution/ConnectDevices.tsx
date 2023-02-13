@@ -35,7 +35,7 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
     const verified = code === verifying.client.verificationCode;
     const maxFailedAttempts = 3;
 
-    verified && vm.approveClient(verifying.client);
+    verified && vm.approveClient(verifying.client, code);
 
     verifying.attempts >= maxFailedAttempts
       ? setTimeout(() => setVerifying(undefined), 500) && vm.rejectClient(verifying.client)

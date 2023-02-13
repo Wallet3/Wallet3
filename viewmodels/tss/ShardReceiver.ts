@@ -1,7 +1,10 @@
-import { ContentType, ShardAcknowledgement, ShardDistribution } from './Constants';
+import { ContentType, PairingCodeVerified, ShardAcknowledgement, ShardDistribution } from './Constants';
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import { TCPClient } from '../../common/p2p/TCPClient';
+import { createHash } from 'crypto';
+import i18n from '../../i18n';
+import { showMessage } from 'react-native-flash-message';
 
 export class ShardReceiver extends TCPClient {
   shardSaved = false;
@@ -22,8 +25,7 @@ export class ShardReceiver extends TCPClient {
         await this.handleShardDistribution(data as ShardDistribution);
         break;
       case ContentType.pairingCodeVerified:
-        runInAction(() => (this.pairingCodeVerified = true));
-        this.onReady();
+        this.handlePairingCode(data as PairingCodeVerified);
         break;
     }
   };
@@ -40,5 +42,18 @@ export class ShardReceiver extends TCPClient {
     await this.secureWriteString(JSON.stringify(ack));
 
     this.shardSaved = true;
+  };
+
+  private handlePairingCode = async (data: PairingCodeVerified) => {
+    const equals = createHash('sha256').update(this.verificationCode).digest('hex') === data.hash;
+    runInAction(() => (this.pairingCodeVerified = equals));
+
+    if (!equals) {
+      showMessage({ message: i18n.t('multi-sign-msg-pairing-code-not-match'), type: 'danger' });
+      this.destroy();
+      return;
+    }
+
+    this.onReady();
   };
 }

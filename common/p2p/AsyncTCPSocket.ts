@@ -1,3 +1,5 @@
+import { makeObservable, observable, runInAction } from 'mobx';
+
 import EventEmitter from 'eventemitter3';
 import { SocketEvents } from 'react-native-tcp-socket/lib/types/Socket';
 import TCP from 'react-native-tcp-socket';
@@ -7,16 +9,19 @@ interface Events extends SocketEvents {
 }
 
 export class AsyncTCPSocket extends EventEmitter<Events> {
-  private _closed = false;
   readonly raw: TCP.TLSSocket | TCP.Socket;
+
+  closed = false;
 
   constructor(socket: TCP.TLSSocket | TCP.Socket) {
     super();
+
     this.raw = socket;
+    makeObservable(this, { closed: observable });
 
     this.raw.once('close', (had_error) => {
       this.emit('close', had_error);
-      this._closed = true;
+      runInAction(() => (this.closed = true));
     });
   }
 
@@ -48,9 +53,5 @@ export class AsyncTCPSocket extends EventEmitter<Events> {
 
   get remoteId() {
     return `${this.raw.remoteAddress}:${this.raw.remotePort}`;
-  }
-
-  get closed() {
-    return this._closed || this.raw.destroyed;
   }
 }

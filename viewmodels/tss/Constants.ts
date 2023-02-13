@@ -20,6 +20,7 @@ export type ShardAcknowledgement = {
   success: boolean;
 };
 
-export type ShardVerifyCode = {
+export type PairingCodeVerified = {
   type: ContentType.pairingCodeVerified;
+  hash: string;
 };

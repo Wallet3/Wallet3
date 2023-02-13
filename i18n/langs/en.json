@@ -295,6 +295,7 @@
   "multi-sign-connect-select-to-pair": "Tap a device to start pairing",
   "multi-sign-txt-pairing-code": "Pairing code",
   "multi-sign-txt-dont-close-view": "Please don't close the current view during key distribution",
+  "multi-sign-msg-pairing-code-not-match": "The pairing code does not match, please try again in a secure environment.",
 
   "msg-invalid-address": "Invalid address",
   "msg-invalid-qr-code": "Invalid QR code",
@@ -311,6 +312,8 @@
   "msg-sign-in-web2-failed": "Sign failed, please check your internet is connected",
   "msg-the-app-does-not-support-chain": "The {{network}} has not been supported by this app yet.",
   "msg-currently-ethereum-and-evm-networks-support": "Currently, Wallet 3 only supports Ethereum and EVM networks.",
+  "msg-connected": "Connected",
+  "msg-disconnected": "Disconnected",
   "misc-show-full-address": "Show full address",
   "button-next": "Next",
   "button-save": "Save",

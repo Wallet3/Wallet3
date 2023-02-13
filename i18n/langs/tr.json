@@ -294,6 +294,7 @@
   "multi-sign-connect-select-to-pair": "Eşlemeye başlamak için bir cihaz seçin",
   "multi-sign-txt-pairing-code": "Eşleme kodu",
   "multi-sign-txt-dont-close-view": "Anahtar dağıtımı sırasında, lütfen geçerli pencereyi kapatmayın",
+  "multi-sign-msg-pairing-code-not-match": "Eşleşme kodu eşleşmiyor, lütfen güvenli bir ortamda tekrar deneyin.",
 
   "msg-invalid-address": "Geçersiz adres",
   "msg-invalid-qr-code": "Geçersiz QR kodu",
