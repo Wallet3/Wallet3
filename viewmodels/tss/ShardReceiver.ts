@@ -1,12 +1,16 @@
 import { ContentType, ShardAcknowledgement, ShardDistribution } from './Constants';
+import { makeObservable, observable, runInAction } from 'mobx';
 
 import { TCPClient } from '../../common/p2p/TCPClient';
 
 export class ShardReceiver extends TCPClient {
-  keyReceived = false;
+  shardSaved = false;
+  pairingCodeVerified = false;
 
   constructor({ host, port }: { host: string; port: number }) {
     super({ service: { host, port } });
+
+    makeObservable(this, { shardSaved: observable, pairingCodeVerified: observable });
     this.once('ready', this.onReady);
   }
 
@@ -16,6 +20,10 @@ export class ShardReceiver extends TCPClient {
     switch (data.type) {
       case ContentType.shardDistribution:
         await this.handleShardDistribution(data as ShardDistribution);
+        break;
+      case ContentType.pairingCodeVerified:
+        runInAction(() => (this.pairingCodeVerified = true));
+        this.onReady();
         break;
     }
   };
@@ -31,6 +39,6 @@ export class ShardReceiver extends TCPClient {
 
     await this.secureWriteString(JSON.stringify(ack));
 
-    this.keyReceived = true;
+    this.shardSaved = true;
   };
 }

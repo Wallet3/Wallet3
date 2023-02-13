@@ -288,6 +288,8 @@
   "multi-sign-connect-approved-clients": "已验证",
   "multi-sign-connect-pending-clients": "等待验证",
   "multi-sign-connect-select-to-pair": "选择一个设备开始配对",
+  "multi-sign-txt-pairing-code": "设备配对码",
+  "multi-sign-txt-dont-close-view": "请不要关闭当前窗口",
 
   "msg-invalid-address": "无效地址",
   "msg-invalid-qr-code": "无效的二维码",

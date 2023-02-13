@@ -4,6 +4,7 @@ export enum ContentType {
   shardDistribution = 1,
   shardAcknowledgement,
   shardAggregation,
+  pairingCodeVerified,
 }
 
 export type ShardDistribution = {
@@ -17,4 +18,8 @@ export type ShardAcknowledgement = {
   type: ContentType.shardAcknowledgement;
   distributionId: string;
   success: boolean;
+};
+
+export type ShardVerifyCode = {
+  type: ContentType.pairingCodeVerified;
 };

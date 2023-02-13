@@ -1,6 +1,5 @@
-import Animated, { Easing, FadeInDown, FadeInUp } from 'react-native-reanimated';
-import { EvilIcons, Ionicons } from '@expo/vector-icons';
-import React, { useEffect, useRef, useState } from 'react';
+import Animated, { FadeInUp } from 'react-native-reanimated';
+import React, { useRef, useState } from 'react';
 import { ScrollView, FlatList as SystemFlatList, Text, View } from 'react-native';
 
 import DeviceSelector from './DeviceSelector';
@@ -8,13 +7,10 @@ import { ReactiveScreen } from '../../../utils/device';
 import { Service } from 'react-native-zeroconf';
 import { ShardReceiver } from '../../../viewmodels/tss/ShardReceiver';
 import ShardReceiving from './ShardReceiving';
-import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
 import Theme from '../../../viewmodels/settings/Theme';
 import { getScreenCornerRadius } from '../../../utils/ios';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
-import { randomBytes } from 'crypto';
-import { utils } from 'ethers';
 
 const { FlatList } = Animated;
 
@@ -82,8 +78,8 @@ export default observer(() => {
         />
 
         <View style={{ flex: 1, width: ReactiveScreen.width - 12, marginHorizontal: -16 }}>
-          {step === 0 ? <DeviceSelector onNext={(s) => goToReceiving(s)} /> : undefined}
-          {step === 1 && vm ? <ShardReceiving vm={vm} /> : undefined}
+          {step === 0 && <DeviceSelector onNext={(s) => goToReceiving(s)} />}
+          {step === 1 && vm && <ShardReceiving vm={vm} />}
         </View>
       </View>
     </ScrollView>

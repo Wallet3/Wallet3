@@ -292,6 +292,8 @@
   "multi-sign-connect-approved-clients": "Onaylanan Cihazlar",
   "multi-sign-connect-pending-clients": "Bekleyen Cihazlar",
   "multi-sign-connect-select-to-pair": "Eşlemeye başlamak için bir cihaz seçin",
+  "multi-sign-txt-pairing-code": "Eşleme kodu",
+  "multi-sign-txt-dont-close-view": "Anahtar dağıtımı sırasında, lütfen geçerli pencereyi kapatmayın",
 
   "msg-invalid-address": "Geçersiz adres",
   "msg-invalid-qr-code": "Geçersiz QR kodu",

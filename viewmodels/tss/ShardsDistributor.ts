@@ -94,6 +94,7 @@ export class ShardsDistributor extends TCPServer<Events> {
 
   approveClient(client: TCPClient) {
     this.approvedClients.push(client);
+    client.secureWriteString(JSON.stringify({ type: ContentType.pairingCodeVerified }));
 
     const index = this.pendingClients.indexOf(client);
     if (index >= 0) this.pendingClients.splice(index, 1);

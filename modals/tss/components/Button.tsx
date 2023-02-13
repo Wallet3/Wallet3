@@ -10,8 +10,8 @@ export default (props: ButtonProps) => {
       {...props}
       txtStyle={{ fontSize: 18, fontWeight: '600' }}
       style={{
-        borderRadius: 7 + (borderRadius - DefaultCornerRadius) / 2.4,
-        height: 42 + (borderRadius - DefaultCornerRadius) / 5,
+        borderRadius: 7 + (borderRadius - DefaultCornerRadius) / 3,
+        height: 42 + (borderRadius - DefaultCornerRadius) / 4,
         marginHorizontal: (borderRadius - DefaultCornerRadius) / 4 + 16,
         marginBottom: (borderRadius - DefaultCornerRadius) / 5,
       }}

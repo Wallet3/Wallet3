@@ -293,6 +293,8 @@
   "multi-sign-connect-approved-clients": "Approved devices",
   "multi-sign-connect-pending-clients": "Pending devices",
   "multi-sign-connect-select-to-pair": "Tap a device to start pairing",
+  "multi-sign-txt-pairing-code": "Pairing code",
+  "multi-sign-txt-dont-close-view": "Please don't close the current view during key distribution",
 
   "msg-invalid-address": "Invalid address",
   "msg-invalid-qr-code": "Invalid QR code",

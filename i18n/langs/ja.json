@@ -288,6 +288,8 @@
   "multi-sign-connect-approved-clients": "承認済み",
   "multi-sign-connect-pending-clients": "承認中",
   "multi-sign-connect-select-to-pair": "デバイスを選択して、ペアリングを開始する",
+  "multi-sign-txt-pairing-code": "ペアリングコード",
+  "multi-sign-txt-dont-close-view": "配布中に、現在のセッションを閉じないでください",
 
   "msg-invalid-address": "無効なアドレス",
   "msg-invalid-qr-code": "無効なQRコード",

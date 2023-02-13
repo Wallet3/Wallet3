@@ -44,3 +44,7 @@ export function getScreenCornerRadius() {
     iPhone[Object.getOwnPropertyNames(iPhone).find((i) => currentDevice.includes(i.toLowerCase()))!] || DefaultCornerRadius;
   return screenCornerRadius;
 }
+
+export function getDeviceModel() {
+  return iosDevice.generationByIdentifier(DeviceInfo.getDeviceId()) ?? DeviceInfo.getDeviceSync();
+}
