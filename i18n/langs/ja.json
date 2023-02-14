@@ -299,6 +299,7 @@
   "multi-sign-txt-data-saving": "データ保存中",
   "multi-sign-txt-data-saved": "保存成功",
   "multi-sign-txt-data-saving-failed": "保存失敗",
+  "multi-sign-msg-threshold-too-high": "注意、あなたのいずれかのデバイスが損傷または失われた場合、このウォレットは回復できません。少なくとも1つ以上のデバイスを追加することが推奨されます。",
   "multi-sign-msg-pairing-code-not-match": "ペアリングコードが一致していません。安全な環境で再度お試しください。",
   "multi-sign-create-threshold": "あなたは {{threshold}}/{{max}} マルチシグウォレットを作成しています。トランザクションを作成するには、少なくとも {{threshold}} つのデバイスが必要であることを意味します。",
   "multi-sign-keys-distribution": "秘密鍵は以下のデバイスに配布されます",

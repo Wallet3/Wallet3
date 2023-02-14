@@ -1,22 +1,19 @@
-import { ActivityIndicator, FlatList, SectionList, StyleSheet, TouchableOpacity } from 'react-native';
-import Animated, { FadeIn, FadeInDown, FadeInRight, FadeOutDown, FadeOutLeft, FadeOutUp } from 'react-native-reanimated';
-import { Ionicons, Octicons } from '@expo/vector-icons';
+import { ActivityIndicator, SectionList, StyleSheet, TouchableOpacity } from 'react-native';
+import Animated, { FadeInDown, FadeInRight, FadeOutDown, FadeOutLeft, FadeOutUp } from 'react-native-reanimated';
 import React, { useEffect, useState } from 'react';
 import { secureColor, warningColor } from '../../../constants/styles';
 
 import Button from '../components/Button';
-import { ClientInfo } from '../../../common/p2p/Constants';
-import Device from '../../../components/Device';
 import DeviceInfo from '../components/DeviceInfo';
+import { Ionicons } from '@expo/vector-icons';
 import { Passpad } from '../../views';
 import { ShardSender } from '../../../viewmodels/tss/ShardSender';
 import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
-import { TCPClient } from '../../../common/p2p/TCPClient';
 import Theme from '../../../viewmodels/settings/Theme';
 import { calcHorizontalPadding } from '../components/Utils';
-import { getScreenCornerRadius } from '../../../utils/hardware';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { View, Text } = Animated;
 
@@ -26,6 +23,7 @@ export default observer(({ vm, onNext }: { vm: ShardsDistributor; onNext: () => 
   const { pendingClients, approvedClients, pendingCount, approvedCount } = vm;
   const [marginHorizontal] = useState(calcHorizontalPadding());
   const [verifying, setVerifying] = useState<{ client: ShardSender; attempts: number }>();
+  const { bottom: safeBottom } = useSafeAreaInsets();
 
   useEffect(() => {
     vm.start();
@@ -132,7 +130,16 @@ export default observer(({ vm, onNext }: { vm: ShardsDistributor; onNext: () => 
         <View
           entering={FadeInDown.springify()}
           exiting={FadeOutDown.springify()}
-          style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, backgroundColor, alignItems: 'center' }}
+          style={{
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+            backgroundColor,
+            alignItems: 'center',
+            paddingBottom: safeBottom - 16 - 5,
+          }}
         >
           <Text style={{ marginTop: 12, color: secondaryTextColor, fontWeight: '500' }}>
             {t('multi-sign-connect-enter-pairing-code')}:

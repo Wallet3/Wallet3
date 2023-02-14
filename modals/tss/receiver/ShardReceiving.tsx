@@ -33,7 +33,7 @@ export default observer(({ vm }: { vm: ShardReceiver }) => {
 
   const renderCompletedBar = ({ txt, tintColor }: { txt: string; tintColor?: string }) => {
     return (
-      <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 7 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 8 }}>
         <ZoomInView duration={200}>
           <Ionicons name="checkmark-circle" color={tintColor ?? borderColor} size={32} />
         </ZoomInView>
@@ -47,7 +47,7 @@ export default observer(({ vm }: { vm: ShardReceiver }) => {
             alignItems: 'center',
           }}
         >
-          <Text style={{ fontSize: 18, fontWeight: '500', color: tintColor ?? secondaryTextColor }}>{txt}</Text>
+          <Text style={{ fontSize: 18, fontWeight: '600', color: tintColor ?? secondaryTextColor }}>{txt}</Text>
         </FadeInLeftView>
       </View>
     );

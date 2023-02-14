@@ -47,7 +47,7 @@ export class ShardReceiver extends TCPClient {
 
     runInAction(() => (this.secretStatus = ShardPersistentStatus.verifying));
 
-    await sleep(500);
+    await sleep(2500);
 
     runInAction(() => (this.secretStatus = ShardPersistentStatus.verified));
 

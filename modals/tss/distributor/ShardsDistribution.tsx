@@ -24,7 +24,7 @@ import { observer } from 'mobx-react-lite';
 
 const { View } = Animated;
 
-export default observer(({ vm }: { vm: ShardsDistributor }) => {
+export default observer(({ vm, close }: { vm: ShardsDistributor; close: () => void }) => {
   const { t } = i18n;
   const [marginHorizontal] = useState(calcHorizontalPadding());
   const { approvedClients, approvedCount } = vm;
@@ -67,22 +67,29 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
       entering={FadeInRight.delay(500).springify()}
       exiting={FadeOutLeft.springify()}
     >
-      <View style={{ flex: 1, marginBottom: 20 }}>
+      <View style={{ flex: 1, marginBottom: 16 }}>
         <Text style={{ marginHorizontal, fontWeight: '500', color: secondaryTextColor }}>
           {t('multi-sign-keys-distribution')}
         </Text>
 
         <FlatList
-          bounces={approvedCount >= 5}
+          bounces={approvedCount >= 4}
           keyExtractor={(i) => i.remoteIP}
           contentContainerStyle={{ paddingVertical: 4 }}
           data={[selfInfo, ...approvedClients]}
           renderItem={renderConnectedItem}
         />
+
+        {vm.thresholdTooHigh && (
+          <Text style={{ color: warningColor, fontSize: 12.5, fontWeight: '500', marginHorizontal }}>
+            <Ionicons name="warning" size={14} />
+            {`  ${t('multi-sign-msg-threshold-too-high')}`}
+          </Text>
+        )}
       </View>
 
       {vm.status === ShardsDistributionStatus.distributionSucceed ? (
-        <Button title={t('button-done')} themeColor={secureColor} />
+        <Button title={t('button-done')} themeColor={secureColor} onPress={close} />
       ) : (
         <Button
           disabled={approvedCount < 1 || vm.status === ShardsDistributionStatus.distributing}

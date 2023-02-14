@@ -57,11 +57,10 @@ export default observer(() => {
         margin: 5,
         marginHorizontal: 6,
         backgroundColor,
-        height: 420,
+        height: 430,
         borderRadius,
         overflow: 'hidden',
         padding: 16,
-        paddingBottom: 16,
         paddingTop: 20,
       }}
     >

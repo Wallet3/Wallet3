@@ -582,11 +582,12 @@ export const InappBrowserModal = observer(({ pageKey }: { pageKey?: string }) =>
 
 export const ShardsModal = observer(() => {
   const { ref, open, close } = useModalize();
-  const [vms, setVMs] = useState<{ shardsDistribution?: ShardsDistributor; shardReceiver?: boolean }>({});
+  const [vms, setVMs] = useState<{ shardsDistributor?: ShardsDistributor; shardReceiver?: boolean }>({});
+  const [isCritical, setIsCritical] = useState(false);
 
   useEffect(() => {
     PubSub.subscribe(MessageKeys.openShardsDistribution, () => {
-      setVMs({ shardsDistribution: new ShardsDistributor({ mnemonic: utils.entropyToMnemonic(randomBytes(16)) }) });
+      setVMs({ shardsDistributor: new ShardsDistributor({ mnemonic: utils.entropyToMnemonic(randomBytes(16)) }) });
       open();
     });
 
@@ -604,22 +605,25 @@ export const ShardsModal = observer(() => {
     <Modalize
       ref={ref}
       useNativeDriver
-      onClosed={() => {
-        __DEV__ && vms.shardsDistribution
-          ? setTimeout(() => PubSub.publish(MessageKeys.openShardsDistribution), 1000)
-          : undefined;
-        setVMs({});
-      }}
       adjustToContentHeight
       withHandle={false}
       disableScrollIfPossible
+      closeOnOverlayTap={!isCritical}
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
       modalStyle={{ backgroundColor: 'transparent' }}
+      onClosed={() => {
+        __DEV__ && vms.shardsDistributor
+          ? setTimeout(() => PubSub.publish(MessageKeys.openShardsDistribution), 1000)
+          : undefined;
+        setVMs({});
+      }}
     >
       <SafeAreaProvider>
-        {vms.shardsDistribution ? <ShardsDistributorUI vm={vms.shardsDistribution} /> : undefined}
+        {vms.shardsDistributor && (
+          <ShardsDistributorUI vm={vms.shardsDistributor} onCriticalView={() => setIsCritical(true)} close={close} />
+        )}
         {vms.shardReceiver ? <ShardReceiverUI /> : undefined}
       </SafeAreaProvider>
     </Modalize>

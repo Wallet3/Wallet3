@@ -299,6 +299,7 @@
   "multi-sign-txt-data-saving": "数据保存中",
   "multi-sign-txt-data-saved": "已成功保存",
   "multi-sign-txt-data-saving-failed": "保存失败",
+  "multi-sign-msg-threshold-too-high": "注意 ，如果您的任何一部设备损坏或丢失，您的钱包将会无法恢复，建议至少再多添加一部设备。",
   "multi-sign-msg-pairing-code-not-match": "配对码不一致，请在安全的环境中重新尝试",
   "multi-sign-create-threshold": "您正在创建一个 {{threshold}} of {{max}} 多签钱包。这意味着发送交易至少需要 {{threshold}} 个私钥才能成功发送。",
   "multi-sign-keys-distribution": "密钥将会被分发到以下设备",

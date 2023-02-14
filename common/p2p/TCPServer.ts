@@ -15,6 +15,8 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
   private handshakingSockets = new Set<AsyncTCPSocket>();
 
   constructor() {
+    TCPServer.port = TCPServer.port > 65532 ? 20000 : TCPServer.port;
+
     super();
     this.server = new Server(this.handleClient);
   }

@@ -50,6 +50,7 @@ export class ShardsDistributor extends TCPServer<Events> {
       status: observable,
       localShardStatus: observable,
       threshold: observable,
+      thresholdTooHigh: computed,
       approvedCount: computed,
       pendingCount: computed,
 
@@ -76,6 +77,10 @@ export class ShardsDistributor extends TCPServer<Events> {
 
   get pendingCount() {
     return this.pendingClients.length;
+  }
+
+  get thresholdTooHigh() {
+    return this.threshold / this.approvedCount > 0.9999;
   }
 
   async start() {

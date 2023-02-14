@@ -1,5 +1,5 @@
 import Animated, { FadeIn, FadeInDown, FadeInRight, FadeOutDown, FadeOutLeft, FadeOutUp } from 'react-native-reanimated';
-import { FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons, Octicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { secureColor, warningColor } from '../../../constants/styles';
@@ -18,7 +18,7 @@ import { getScreenCornerRadius } from '../../../utils/hardware';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
 
-const { View } = Animated;
+const { View, Text } = Animated;
 
 export default observer(({ vm, onNext }: { vm: ShardsDistributor; onNext: () => void }) => {
   const [marginHorizontal] = useState(calcHorizontalPadding());
@@ -33,7 +33,7 @@ export default observer(({ vm, onNext }: { vm: ShardsDistributor; onNext: () => 
       entering={FadeInRight.delay(500).springify()}
       exiting={FadeOutLeft.springify()}
     >
-      <View style={{ flex: 1, marginBottom: 20 }}>
+      <View style={{ flex: 1, marginBottom: 16 }}>
         <View style={{ flex: 1 }} />
         <View style={{ alignSelf: 'center', flexDirection: 'row', alignItems: 'baseline', marginStart: -6 }}>
           <Text style={{ fontSize: 96, color: appColor, fontWeight: '600', minWidth: 72, textAlign: 'center' }}>
@@ -62,9 +62,20 @@ export default observer(({ vm, onNext }: { vm: ShardsDistributor; onNext: () => 
         </View>
         <View style={{ flex: 1.5 }} />
 
-        <Text style={{ marginHorizontal, marginTop: 8, color: thirdTextColor, lineHeight: 19 }}>
+        <Text style={{ marginHorizontal, marginTop: 8, color: thirdTextColor, lineHeight: 19, fontWeight: '500' }}>
           {t('multi-sign-create-threshold', { threshold, max: approvedCount + 1 })}
         </Text>
+
+        {vm.thresholdTooHigh && (
+          <Text
+            entering={FadeInDown.springify()}
+            exiting={FadeOutUp.springify()}
+            style={{ color: warningColor, fontSize: 12.5, fontWeight: '500', marginHorizontal, marginTop: 8 }}
+          >
+            <Ionicons name="warning" size={14} />
+            {`  ${t('multi-sign-msg-threshold-too-high')}`}
+          </Text>
+        )}
       </View>
 
       <Button onPress={onNext} disabled={approvedCount === 0 || threshold < 2} title={t('button-next')} />

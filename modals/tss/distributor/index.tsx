@@ -15,7 +15,13 @@ import { observer } from 'mobx-react-lite';
 
 const { FlatList } = Animated;
 
-export default observer(({ vm }: { vm: ShardsDistributor }) => {
+interface Props {
+  vm: ShardsDistributor;
+  onCriticalView: () => void;
+  close: () => void;
+}
+
+export default observer(({ vm, onCriticalView, close }: Props) => {
   const { t } = i18n;
   const { backgroundColor, textColor } = Theme;
   const [borderRadius] = useState(getScreenCornerRadius());
@@ -45,6 +51,7 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
   const goTo = (step: number) => {
     setStep(step);
     titleList.current?.scrollToIndex({ animated: true, index: step });
+    step === 3 && onCriticalView?.();
   };
 
   useEffect(() => () => vm.dispose(), []);
@@ -60,11 +67,10 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
         margin: 5,
         marginHorizontal: 6,
         backgroundColor,
-        height: 420,
+        height: 430,
         borderRadius,
         overflow: 'hidden',
         padding: 16,
-        paddingBottom: 16,
         paddingTop: 20,
       }}
     >
@@ -86,7 +92,7 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
           {step === 0 && <Preparations onNext={() => goTo(1)} />}
           {step === 1 && <ConnectDevices vm={vm} onNext={() => goTo(2)} />}
           {step === 2 && <ThresholdSetting vm={vm} onNext={() => goTo(3)} />}
-          {step === 3 && <ShardsDistribution vm={vm} />}
+          {step === 3 && <ShardsDistribution vm={vm} close={close} />}
         </View>
       </View>
     </ScrollView>
