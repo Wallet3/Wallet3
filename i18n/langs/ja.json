@@ -278,7 +278,7 @@
 
   "multi-sign-title-welcome": "マルチシグウォレット",
   "multi-sign-title-connect-devices": "デバイスの接続",
-  "multi-sign-title-set-threshold": "しきい値の設定",
+  "multi-sign-title-set-threshold": "閾値の設定",
   "multi-sign-title-key-distribution": "秘密鍵の配布",
   "multi-sign-welcome-1": "まず、同じ Wi-Fi ネットワークに接続してください",
   "multi-sign-welcome-2": "[メニュー] - [マルチシグウォレット] に進んでください",
@@ -291,8 +291,10 @@
   "multi-sign-connect-select-to-pair": "デバイスを選択して、ペアリングを開始する",
   "multi-sign-txt-pairing-code": "ペアリングコード",
   "multi-sign-txt-dont-close-view": "配布中に、現在のセッションを閉じないでください",
+  "multi-sign-txt-current-device": "自分",
   "multi-sign-msg-pairing-code-not-match": "ペアリングコードが一致していません。安全な環境で再度お試しください。",
   "multi-sign-create-threshold": "あなたは {{threshold}}/{{max}} マルチシグウォレットを作成しています。トランザクションを作成するには、少なくとも {{threshold}} つのデバイスが必要であることを意味します。",
+  "multi-sign-keys-distribution": "秘密鍵は以下のデバイスに配布されます",
 
   "msg-invalid-address": "無効なアドレス",
   "msg-invalid-qr-code": "無効なQRコード",
@@ -313,6 +315,7 @@
   "button-save": "保存",
   "button-done": "完了",
   "button-start-pairing": "ペアリング",
+  "button-shards-distribute": "配布する",
   "button-speed-up": "スピードアップ",
   "button-cancel-tx": "キャンセル",
   "button-cancel": "キャンセル",

@@ -17,21 +17,26 @@ interface Props {
   vm: TokenTransferring;
   erc681?: boolean;
   onClose?: () => void;
-  onInteractionStart?: () => void;
-  onInteractionEnd?: () => void;
+  onReviewEnter?: () => void;
+  onReviewLeave?: () => void;
 }
 
-export default observer(({ vm, onClose, erc681, onInteractionStart, onInteractionEnd }: Props) => {
+export default observer(({ vm, onClose, erc681, onReviewEnter, onReviewLeave }: Props) => {
   const [verified, setVerified] = useState(false);
   const swiper = useRef<Swiper>(null);
   const { backgroundColor } = Theme;
   const [active] = useState({ index: 0 });
 
+  const goTo = (index: number, animated?: boolean) => {
+    swiper.current?.scrollTo(index, animated);
+    index === 2 ? onReviewEnter?.() : onReviewLeave?.();
+  };
+
   useEffect(() => {
     const jump = () =>
       setTimeout(() => {
         try {
-          verified ? undefined : swiper.current?.scrollTo(Math.max(0, active.index - 1));
+          verified ? undefined : goTo(Math.max(0, active.index - 1));
         } catch {}
       }, 100);
 
@@ -64,12 +69,12 @@ export default observer(({ vm, onClose, erc681, onInteractionStart, onInteractio
     });
 
     if (!Authentication.biometricEnabled) {
-      swiper.current?.scrollTo(3);
+      goTo(3);
       return;
     }
 
     if (await sendTx()) return;
-    swiper.current?.scrollTo(3);
+    goTo(3);
   };
 
   return (
@@ -86,30 +91,28 @@ export default observer(({ vm, onClose, erc681, onInteractionStart, onInteractio
           onIndexChanged={(index) => (active.index = index)}
           automaticallyAdjustContentInsets
         >
-          {erc681 ? undefined : <ContactsPad onNext={() => swiper.current?.scrollTo(1, true)} vm={vm} />}
+          {erc681 ? undefined : <ContactsPad onNext={() => goTo(1, true)} vm={vm} />}
           {erc681 ? undefined : (
             <SendAmount
               vm={vm}
-              onBack={() => swiper.current?.scrollTo(0)}
+              onBack={() => goTo(0)}
               onNext={() => {
-                swiper.current?.scrollTo(2);
+                goTo(2);
                 vm.estimateGas();
               }}
             />
           )}
 
           <ReviewPad
-            onBack={() => swiper.current?.scrollTo(1)}
+            onBack={() => goTo(1)}
             vm={vm}
             onSend={onSendClick}
             disableBack={erc681}
             biometricType={Authentication.biometricType}
             txDataEditable={vm.isNativeToken}
-            onInteractionStart={onInteractionStart}
-            onInteractionEnd={onInteractionEnd}
           />
 
-          <Passpad themeColor={vm.network.color} onCodeEntered={sendTx} onCancel={() => swiper.current?.scrollTo(2)} />
+          <Passpad themeColor={vm.network.color} onCodeEntered={sendTx} onCancel={() => goTo(2)} />
         </Swiper>
       )}
     </SafeAreaProvider>

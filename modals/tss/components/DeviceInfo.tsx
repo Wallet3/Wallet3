@@ -11,6 +11,8 @@ import { verifiedColor } from '../../../constants/styles';
 export default ({ info, verified }: { info: ClientInfo; verified?: boolean }) => {
   const { textColor, secondaryTextColor } = Theme;
 
+  if (!info) return null;
+
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
       <Device deviceId={info.device} os={info.rn_os} style={{ width: 32, height: 42 }} />

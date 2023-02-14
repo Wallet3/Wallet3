@@ -41,9 +41,6 @@ const Drawer = observer((props: DrawerProps) => {
 
   const { index } = navigation.getState();
 
-  const { connectedCount } = WalletConnectHub;
-  const { dapps } = MetamaskDAppsHub;
-
   const getHighlightColor = (myindex: number) => (myindex === index ? current.color : foregroundColor);
 
   const fastSwitchNetwork = (network: INetwork) => {
@@ -75,7 +72,13 @@ const Drawer = observer((props: DrawerProps) => {
 
   return (
     <SafeViewContainer
-      style={{ flex: 1, height: screenHeight, paddingHorizontal: 0, paddingTop: 0, paddingBottom: bottom ? 0 : 16 }}
+      style={{
+        flex: 1,
+        height: screenHeight,
+        paddingHorizontal: 0,
+        paddingTop: 0,
+        paddingBottom: bottom ? 0 : 16,
+      }}
     >
       <View
         style={{

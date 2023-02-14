@@ -295,8 +295,10 @@
   "multi-sign-connect-select-to-pair": "Eşlemeye başlamak için bir cihaz seçin",
   "multi-sign-txt-pairing-code": "Eşleme kodu",
   "multi-sign-txt-dont-close-view": "Anahtar dağıtımı sırasında, lütfen geçerli pencereyi kapatmayın",
+  "multi-sign-txt-current-device": "Şuanki cihaz",
   "multi-sign-msg-pairing-code-not-match": "Eşleşme kodu eşleşmiyor, lütfen güvenli bir ortamda tekrar deneyin.",
   "multi-sign-create-threshold": "Siz {{threshold}} of {{max}} çok imza cüzdanı oluşturuyorsunuz. Bu, işlemlerin en az {{threshold}} anahtarının yetkilendirilmesini gerektirdiği anlamına gelir.",
+  "multi-sign-keys-distribution": "Aşağıdaki cihazlara anahtarlar dağıtılacaktır",
 
   "msg-invalid-address": "Geçersiz adres",
   "msg-invalid-qr-code": "Geçersiz QR kodu",
@@ -318,6 +320,7 @@
   "button-save": "Kaydet",
   "button-done": "Bitti",
   "button-start-pairing": "Eşlemeye başla",
+  "button-shards-distribute": "Dağıtma",
   "button-speed-up": "Hızlandır",
   "button-cancel-tx": "İşlemi İptal Et",
   "button-cancel": "İptal",

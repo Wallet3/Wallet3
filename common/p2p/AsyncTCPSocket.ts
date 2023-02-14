@@ -51,7 +51,7 @@ export class AsyncTCPSocket extends EventEmitter<Events> {
     this.raw.removeAllListeners();
   }
 
-  get remoteId() {
+  get remoteIP() {
     return `${this.raw.remoteAddress}:${this.raw.remotePort}`;
   }
 }

@@ -25,6 +25,7 @@ const { View, Text, FlatList } = Animated;
 export default observer(({ vm }: { vm: ShardReceiver }) => {
   const { t } = i18n;
   const { secondaryTextColor, textColor } = Theme;
+  const { pairingCodeVerified } = vm;
 
   const devTxtStyle: any = { color: secondaryTextColor, fontSize: 16, maxWidth: '90%', fontWeight: '500' };
 
@@ -35,8 +36,8 @@ export default observer(({ vm }: { vm: ShardReceiver }) => {
       exiting={FadeOutLeft.springify()}
     >
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        {!vm.pairingCodeVerified && (
-          <View style={{ alignItems: 'center', marginTop: -12 }} exiting={FadeOutUp.springify()}>
+        {!pairingCodeVerified && (
+          <View style={{ alignItems: 'center', marginTop: -24 }} exiting={FadeOutUp.springify()}>
             <Text
               style={{
                 color: secondaryTextColor,

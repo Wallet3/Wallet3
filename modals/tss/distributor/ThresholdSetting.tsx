@@ -20,7 +20,7 @@ import { observer } from 'mobx-react-lite';
 
 const { View } = Animated;
 
-export default observer(({ vm }: { vm: ShardsDistributor }) => {
+export default observer(({ vm, onNext }: { vm: ShardsDistributor; onNext: () => void }) => {
   const [marginHorizontal] = useState(calcHorizontalPadding());
 
   const { t } = i18n;
@@ -35,12 +35,14 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
     >
       <View style={{ flex: 1, marginBottom: 20 }}>
         <View style={{ flex: 1 }} />
-        <View style={{ alignSelf: 'center', flexDirection: 'row', alignItems: 'baseline' }}>
+        <View style={{ alignSelf: 'center', flexDirection: 'row', alignItems: 'baseline', marginStart: -6 }}>
           <Text style={{ fontSize: 96, color: appColor, fontWeight: '600', minWidth: 72, textAlign: 'center' }}>
             {vm.threshold}
           </Text>
-          <Text style={{ fontSize: 32, marginStart: 8, marginEnd: 18, color: secondaryTextColor, fontWeight: '300' }}>of</Text>
-          <Text style={{ fontSize: 31, color: appColor, fontWeight: '700', minWidth: 29 }}>{approvedCount + 1}</Text>
+          <Text style={{ fontSize: 24, marginStart: 10, marginEnd: 18, color: secondaryTextColor, fontWeight: '300' }}>
+            of
+          </Text>
+          <Text style={{ fontSize: 32, color: appColor, fontWeight: '700', minWidth: 29 }}>{approvedCount + 1}</Text>
         </View>
 
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginHorizontal }}>
@@ -58,14 +60,14 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
           />
           <Text style={{ ...styles.thumbTxt, color: secondaryTextColor }}>{approvedCount + 1}</Text>
         </View>
-        <View style={{ flex: 2 }} />
+        <View style={{ flex: 1.5 }} />
 
         <Text style={{ marginHorizontal, marginTop: 8, color: thirdTextColor, lineHeight: 19 }}>
           {t('multi-sign-create-threshold', { threshold, max: approvedCount + 1 })}
         </Text>
       </View>
 
-      <Button disabled={approvedCount === 0 || threshold < 2} title={t('button-next')} />
+      <Button onPress={onNext} disabled={approvedCount === 0 || threshold < 2} title={t('button-next')} />
     </View>
   );
 });

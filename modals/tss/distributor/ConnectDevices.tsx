@@ -102,6 +102,8 @@ export default observer(({ vm, onNext }: { vm: ShardsDistributor; onNext: () => 
     >
       {pendingCount || approvedCount ? (
         <SectionList
+          keyExtractor={(c) => c.remoteIP}
+          bounces={approvedCount + pendingCount >= 5}
           contentContainerStyle={{ paddingBottom: 16 }}
           renderItem={renderItem}
           sections={
@@ -161,7 +163,6 @@ export default observer(({ vm, onNext }: { vm: ShardsDistributor; onNext: () => 
 
 const styles = StyleSheet.create({
   listTitle: {
-    marginHorizontal: 18,
     fontWeight: '500',
     opacity: 0.75,
     textTransform: 'capitalize',

@@ -291,8 +291,10 @@
   "multi-sign-connect-select-to-pair": "选择一个设备开始配对",
   "multi-sign-txt-pairing-code": "设备配对码",
   "multi-sign-txt-dont-close-view": "请不要关闭当前窗口",
+  "multi-sign-txt-current-device": "本设备",
   "multi-sign-msg-pairing-code-not-match": "配对码不一致，请在安全的环境中重新尝试",
   "multi-sign-create-threshold": "您正在创建一个 {{threshold}} of {{max}} 多签钱包。这意味着发送交易至少需要 {{threshold}} 个私钥才能成功发送。",
+  "multi-sign-keys-distribution": "密钥将会被分发到以下设备",
 
   "msg-invalid-address": "无效地址",
   "msg-invalid-qr-code": "无效的二维码",
@@ -313,6 +315,7 @@
   "button-save": "保存",
   "button-done": "完成",
   "button-start-pairing": "开始配对",
+  "button-shards-distribute": "分发",
   "button-speed-up": "加速交易",
   "button-cancel-tx": "取消交易",
   "button-cancel": "取消",

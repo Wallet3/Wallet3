@@ -420,7 +420,7 @@ const RequestFundsModal = () => {
 const SendFundsModal = () => {
   const [vm, setVM] = useState<TokenTransferring>();
   const [isERC681, setIsERC681] = useState(false);
-  const [interacting, setInteracting] = useState(false);
+  const [reviewing, setReviewing] = useState(false);
 
   const { ref: sendRef, open: openSendModal, close: closeSendModal } = useModalize();
 
@@ -476,10 +476,9 @@ const SendFundsModal = () => {
       ref={sendRef}
       adjustToContentHeight
       disableScrollIfPossible
-      closeOnOverlayTap={!interacting}
-      withHandle={!interacting}
-      panGestureEnabled={!interacting}
-      panGestureComponentEnabled={!interacting}
+      withHandle={!reviewing}
+      panGestureEnabled={!reviewing}
+      panGestureComponentEnabled={!reviewing}
       modalStyle={styles.containerTopBorderRadius}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
       onClosed={() => {
@@ -492,8 +491,8 @@ const SendFundsModal = () => {
           vm={vm}
           onClose={clear}
           erc681={isERC681}
-          onInteractionStart={() => setInteracting(true)}
-          onInteractionEnd={() => setInteracting(false)}
+          onReviewEnter={() => setReviewing(true)}
+          onReviewLeave={() => setReviewing(false)}
         />
       )}
     </Modalize>
