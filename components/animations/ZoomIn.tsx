@@ -27,7 +27,7 @@ export default ({ children, style, delay, duration }: Props) => {
       entering={ZoomIn.springify()
         .delay(delay ?? 0)
         .duration(duration ?? 300)}
-      exiting={ZoomOut.springify()}
+      exiting={ZoomOut.delay(0)}
       style={style}
     >
       {children}

@@ -138,7 +138,7 @@ export default observer(({ vm, onNext }: { vm: ShardsDistributor; onNext: () => 
             bottom: 0,
             backgroundColor,
             alignItems: 'center',
-            paddingBottom: safeBottom - 16 - 5,
+            paddingBottom: safeBottom - 16 - 6,
           }}
         >
           <Text style={{ marginTop: 12, color: secondaryTextColor, fontWeight: '500' }}>

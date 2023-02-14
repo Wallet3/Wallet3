@@ -64,8 +64,7 @@ export default observer(({ vm, onCriticalView, close }: Props) => {
       contentContainerStyle={{ flexGrow: 1 }}
       style={{
         position: 'relative',
-        margin: 5,
-        marginHorizontal: 6,
+        margin: 6,
         backgroundColor,
         height: 430,
         borderRadius,

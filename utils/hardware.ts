@@ -1,7 +1,7 @@
 import DeviceInfo from 'react-native-device-info';
 import iosDevice from 'ios-device-list';
 
-export const DefaultCornerRadius = 18;
+export const DefaultCornerRadius = 20;
 
 const iPhone = {
   'iPhone X': 39,
@@ -12,14 +12,14 @@ const iPhone = {
   'iPhone XR': 41.5,
   'iPhone 11': 41.5,
   'iPhone 12 mini': 44,
-  'iPhone 12': 47.33,
-  'iPhone 12 Pro': 47.33,
+  'iPhone 12': 42,
+  'iPhone 12 Pro': 42,
   'iPhone 12 Pro Max': 53.33,
   'iPhone 13 mini': 44,
-  'iPhone 13': 47.33,
-  'iPhone 13 Pro': 47.33,
+  'iPhone 13': 42,
+  'iPhone 13 Pro': 42,
   'iPhone 13 Pro Max': 53.33,
-  'iPhone 14': 47.33,
+  'iPhone 14': 42,
   'iPhone 14 Pro': 55,
   'iPhone 14 Pro Max': 55,
   'iPad Air': DefaultCornerRadius,

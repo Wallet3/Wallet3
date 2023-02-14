@@ -1,6 +1,6 @@
 import { ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
 import Animated, { FadeIn, FadeInDown, FadeInRight, FadeOutDown, FadeOutLeft, FadeOutUp } from 'react-native-reanimated';
-import { FadeInLeftView, FadeInRightView, ZoomInView } from '../../../components/animations';
+import { FadeInLeftView, FadeInRightView, FadeInUpView, ZoomInView } from '../../../components/animations';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { ShardPersistentStatus, ShardReceiver } from '../../../viewmodels/tss/ShardReceiver';
@@ -31,14 +31,14 @@ export default observer(({ vm }: { vm: ShardReceiver }) => {
 
   const devTxtStyle: any = { color: secondaryTextColor, fontSize: 16, maxWidth: '90%', fontWeight: '500' };
 
-  const renderCompletedBar = ({ txt, tintColor }: { txt: string; tintColor?: string }) => {
+  const renderCompletedBar = ({ txt, tintColor, delay }: { txt: string; tintColor?: string; delay?: number }) => {
     return (
       <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 8 }}>
-        <ZoomInView duration={200}>
+        <ZoomInView duration={200} delay={delay}>
           <Ionicons name="checkmark-circle" color={tintColor ?? borderColor} size={32} />
         </ZoomInView>
         <FadeInLeftView
-          delay={300}
+          delay={300 + (delay ?? 0)}
           style={{
             borderRadius: 20,
             height: 28,
@@ -79,9 +79,7 @@ export default observer(({ vm }: { vm: ShardReceiver }) => {
         )}
 
         {vm.pairingCodeVerified && vm.secretStatus === ShardPersistentStatus.waiting && (
-          <View
-            entering={FadeInDown.springify()}
-            exiting={FadeOutUp.springify()}
+          <ZoomInView
             style={{ position: 'relative', width: 250, height: 250, justifyContent: 'center', alignItems: 'center' }}
           >
             <LottieView
@@ -92,13 +90,14 @@ export default observer(({ vm }: { vm: ShardReceiver }) => {
             />
 
             <Device deviceId={vm.remoteInfo!.device} os={vm.remoteInfo!.rn_os} style={{ width: 48, height: 52 }} />
-          </View>
+          </ZoomInView>
         )}
 
         {vm.pairingCodeVerified && vm.secretStatus !== ShardPersistentStatus.waiting && (
-          <View exiting={FadeOutUp.springify()} style={{ position: 'relative', minWidth: 160 }}>
+          <FadeInUpView delay={200} style={{ position: 'relative', minWidth: 160 }}>
             {vm.secretStatus >= ShardPersistentStatus.verifying &&
               renderCompletedBar({
+                delay: 300,
                 tintColor:
                   vm.secretStatus === ShardPersistentStatus.verifying
                     ? undefined
@@ -118,7 +117,7 @@ export default observer(({ vm }: { vm: ShardReceiver }) => {
 
             {vm.secretStatus === ShardPersistentStatus.saveFailed &&
               renderCompletedBar({ txt: t('multi-sign-txt-data-saving-failed'), tintColor: warningColor })}
-          </View>
+          </FadeInUpView>
         )}
       </View>
 

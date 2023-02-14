@@ -20,7 +20,7 @@ export default ({ onNext }: { onNext?: () => void }) => {
 
   return (
     <View style={{ flex: 1 }} entering={FadeInRight.delay(500).springify()} exiting={FadeOutLeft.springify()}>
-      <Swiper paginationStyle={{ marginBottom: -8 }} autoplay dotStyle={{ backgroundColor: `${Theme.secondaryTextColor}40` }}>
+      <Swiper paginationStyle={{ marginBottom: -10 }} autoplay dotStyle={{ backgroundColor: `${Theme.secondaryTextColor}40` }}>
         <View style={styles.contentContainer}>
           <View style={styles.illustrationContainer}>
             <IllustrationSameNetwork width={ReactiveScreen.width - 72} height={150} />
@@ -50,7 +50,7 @@ export default ({ onNext }: { onNext?: () => void }) => {
         </View>
       </Swiper>
 
-      <Button title={t('button-next')} onPress={onNext} />
+      <Button title={t('button-start')} onPress={onNext} />
     </View>
   );
 };
