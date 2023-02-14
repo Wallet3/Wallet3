@@ -37,6 +37,7 @@ export class ShardsDistributor extends TCPServer<Events> {
   pendingClients: TCPClient[] = [];
   distributedClients = new Set<TCPClient>();
   status = DistributionStatus.notDistributed;
+  threshold = 2;
 
   constructor({ mnemonic }: IConstruction) {
     super();
@@ -46,11 +47,13 @@ export class ShardsDistributor extends TCPServer<Events> {
       pendingClients: observable,
       distributedClients: observable,
       status: observable,
+      threshold: observable,
       approvedCount: computed,
       pendingCount: computed,
 
       approveClient: action,
       rejectClient: action,
+      setThreshold: action,
     });
 
     this.rootEntropy = utils.mnemonicToEntropy(mnemonic).substring(2);
@@ -116,6 +119,10 @@ export class ShardsDistributor extends TCPServer<Events> {
     if (index >= 0) this.pendingClients.splice(index, 1);
 
     if (!client.closed) client.destroy();
+  }
+
+  setThreshold(threshold: number) {
+    this.threshold = Math.max(threshold, 2);
   }
 
   async distributeSecret(threshold: number) {

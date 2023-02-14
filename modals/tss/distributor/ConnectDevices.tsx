@@ -1,4 +1,4 @@
-import { ActivityIndicator, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, FlatList, SectionList, StyleSheet, TouchableOpacity } from 'react-native';
 import Animated, { FadeIn, FadeInDown, FadeInRight, FadeOutDown, FadeOutLeft, FadeOutUp } from 'react-native-reanimated';
 import { Ionicons, Octicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
@@ -90,6 +90,10 @@ export default observer(({ vm, onNext }: { vm: ShardsDistributor; onNext: () => 
     );
   };
 
+  const renderItem = ({ item }: { item: TCPClient }) => {
+    return approvedClients.includes(item) ? renderConnectedItem({ item }) : renderPendingItem({ item });
+  };
+
   return (
     <View
       style={{ flex: 1, position: 'relative' }}
@@ -97,41 +101,30 @@ export default observer(({ vm, onNext }: { vm: ShardsDistributor; onNext: () => 
       exiting={FadeOutLeft.springify()}
     >
       {pendingCount || approvedCount ? (
-        <View style={{ flex: 1, paddingBottom: 16 }}>
-          {approvedCount > 0 && (
+        <SectionList
+          contentContainerStyle={{ paddingBottom: 16 }}
+          renderItem={renderItem}
+          sections={
+            [
+              approvedCount > 0 ? { title: t('multi-sign-connect-approved-clients'), data: approvedClients } : undefined,
+              pendingCount > 0 ? { title: t('multi-sign-connect-pending-clients'), data: pendingClients } : undefined,
+            ].filter((i) => i !== undefined) as { title: string; data: TCPClient[] }[]
+          }
+          renderSectionHeader={({ section }) => (
             <Text
-              entering={FadeInDown.delay(0)}
-              exiting={FadeOutUp.delay(0)}
-              style={{ ...styles.listTitle, color: secondaryTextColor, marginHorizontal }}
+              style={{
+                ...styles.listTitle,
+                color: secondaryTextColor,
+                marginHorizontal,
+                textShadowColor: '#fff',
+                textShadowOffset: { width: 0, height: 0 },
+                textShadowRadius: 3,
+              }}
             >
-              {t('multi-sign-connect-approved-clients')}
+              {section.title}
             </Text>
           )}
-
-          <FlatList
-            style={styles.flatList}
-            data={approvedClients}
-            renderItem={renderConnectedItem}
-            keyExtractor={(item) => item.remoteId}
-          />
-
-          {pendingCount > 0 && (
-            <Text
-              entering={FadeInDown.delay(0)}
-              exiting={FadeOutUp.delay(0)}
-              style={{ ...styles.listTitle, color: secondaryTextColor, marginHorizontal }}
-            >
-              {t('multi-sign-connect-pending-clients')}
-            </Text>
-          )}
-
-          <FlatList
-            style={styles.flatList}
-            data={pendingClients}
-            renderItem={renderPendingItem}
-            keyExtractor={(item) => item.remoteId}
-          />
-        </View>
+        />
       ) : (
         <View style={{ flex: 1, alignContent: 'center', justifyContent: 'center' }} exiting={FadeOutUp.springify()}>
           <ActivityIndicator />

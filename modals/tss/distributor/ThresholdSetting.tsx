@@ -1,5 +1,5 @@
-import { ActivityIndicator, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import Animated, { FadeIn, FadeInDown, FadeInRight, FadeOutDown, FadeOutLeft, FadeOutUp } from 'react-native-reanimated';
+import { FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { Ionicons, Octicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { secureColor, warningColor } from '../../../constants/styles';
@@ -18,14 +18,14 @@ import { getScreenCornerRadius } from '../../../utils/hardware';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
 
-const { View, Text } = Animated;
+const { View } = Animated;
 
 export default observer(({ vm }: { vm: ShardsDistributor }) => {
-  const { secondaryTextColor, appColor, thirdTextColor } = Theme;
   const [marginHorizontal] = useState(calcHorizontalPadding());
-  const [threshold, setThreshold] = useState(2);
+
   const { t } = i18n;
-  const { approvedCount } = vm;
+  const { secondaryTextColor, appColor, thirdTextColor } = Theme;
+  const { approvedCount, threshold } = vm;
 
   return (
     <View
@@ -37,7 +37,7 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
         <View style={{ flex: 1 }} />
         <View style={{ alignSelf: 'center', flexDirection: 'row', alignItems: 'baseline' }}>
           <Text style={{ fontSize: 96, color: appColor, fontWeight: '600', minWidth: 72, textAlign: 'center' }}>
-            {threshold}
+            {vm.threshold}
           </Text>
           <Text style={{ fontSize: 32, marginStart: 8, marginEnd: 18, color: secondaryTextColor, fontWeight: '300' }}>of</Text>
           <Text style={{ fontSize: 31, color: appColor, fontWeight: '700', minWidth: 29 }}>{approvedCount + 1}</Text>
@@ -53,7 +53,7 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
             minimumValue={approvedCount <= 1 ? 1 : 2}
             disabled={approvedCount <= 1}
             maximumValue={approvedCount + 1}
-            onValueChange={(v) => setThreshold(v)}
+            onValueChange={(v) => vm.setThreshold(v)}
             minimumTrackTintColor={appColor}
           />
           <Text style={{ ...styles.thumbTxt, color: secondaryTextColor }}>{approvedCount + 1}</Text>

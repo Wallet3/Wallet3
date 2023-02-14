@@ -44,10 +44,7 @@ const Drawer = observer((props: DrawerProps) => {
   const { connectedCount } = WalletConnectHub;
   const { dapps } = MetamaskDAppsHub;
 
-  const homeHighlight = index === 0 ? current.color : foregroundColor;
-  const contactsHighlight = index === 1 ? current.color : foregroundColor;
-  const settingsHighlight = index === 2 ? current.color : foregroundColor;
-  const dappsHighlight = index === 3 ? current.color : foregroundColor;
+  const getHighlightColor = (myindex: number) => (myindex === index ? current.color : foregroundColor);
 
   const fastSwitchNetwork = (network: INetwork) => {
     Networks.switch(network);
@@ -149,39 +146,37 @@ const Drawer = observer((props: DrawerProps) => {
         <DrawerItem
           label={t('home-drawer-home')}
           onPress={() => navigateTo('Home')}
-          labelStyle={{ ...styles.drawerLabel, color: homeHighlight }}
-          icon={() => <Feather color={homeHighlight} size={21} name={'home'} />}
+          labelStyle={{ ...styles.drawerLabel, color: getHighlightColor(0) }}
+          icon={() => <Feather color={getHighlightColor(0)} size={21} name={'home'} />}
         />
 
         <DrawerItem
           label={t('home-drawer-contacts')}
           onPress={() => navigateTo('Contacts')}
-          labelStyle={{ ...styles.drawerLabel, color: contactsHighlight }}
-          icon={() => <Feather name="users" size={20} style={{ width: 21, paddingStart: 1 }} color={contactsHighlight} />}
+          labelStyle={{ ...styles.drawerLabel, color: getHighlightColor(1) }}
+          icon={() => <Feather name="users" size={20} style={{ width: 21, paddingStart: 1 }} color={getHighlightColor(1)} />}
         />
 
-        {connectedCount > 0 || dapps.length > 0 ? (
-          <DrawerItem
-            label={t('home-drawer-dapps')}
-            onPress={() => navigateTo('ConnectedDapps')}
-            labelStyle={{ ...styles.drawerLabel, color: dappsHighlight }}
-            icon={() => <Feather name="layers" size={20} style={{ width: 21, paddingStart: 1 }} color={dappsHighlight} />}
-          />
-        ) : undefined}
+        <DrawerItem
+          label={t('home-drawer-dapps')}
+          onPress={() => navigateTo('ConnectedDapps')}
+          labelStyle={{ ...styles.drawerLabel, color: getHighlightColor(2) }}
+          icon={() => <Feather name="layers" size={20} style={{ width: 21, paddingStart: 1 }} color={getHighlightColor(2)} />}
+        />
 
         <DrawerItem
           label={t('home-drawer-settings')}
           onPress={() => navigateTo('Settings')}
-          labelStyle={{ ...styles.drawerLabel, color: settingsHighlight }}
-          icon={() => <Feather color={settingsHighlight} size={21} name={'settings'} />}
+          labelStyle={{ ...styles.drawerLabel, color: getHighlightColor(3) }}
+          icon={() => <Feather color={getHighlightColor(3)} size={21} name={'settings'} />}
         />
 
         {__DEV__ && (
           <DrawerItem
             label={t('home-drawer-multi-sig')}
             onPress={() => navigateTo('Settings')}
-            labelStyle={{ ...styles.drawerLabel, color: settingsHighlight }}
-            icon={() => <MaterialCommunityIcons color={settingsHighlight} size={21} name="key-chain-variant" />}
+            labelStyle={{ ...styles.drawerLabel, color: getHighlightColor(4) }}
+            icon={() => <MaterialCommunityIcons color={getHighlightColor(4)} size={21} name="key-chain-variant" />}
           />
         )}
       </View>
