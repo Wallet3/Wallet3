@@ -1,5 +1,6 @@
 import { ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
 import Animated, { FadeIn, FadeInDown, FadeInRight, FadeOutDown, FadeOutLeft, FadeOutUp } from 'react-native-reanimated';
+import { FadeInLeftView, FadeInRightView, ZoomInView } from '../../../components/animations';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { ShardPersistentStatus, ShardReceiver } from '../../../viewmodels/tss/ShardReceiver';
@@ -14,6 +15,7 @@ import LottieView from 'lottie-react-native';
 import { Passpad } from '../../views';
 import { Service } from 'react-native-zeroconf';
 import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
+import { Skeleton } from '../../../components';
 import { TCPClient } from '../../../common/p2p/TCPClient';
 import Theme from '../../../viewmodels/settings/Theme';
 import deviceInfoModule from 'react-native-device-info';
@@ -24,10 +26,32 @@ const { View, Text, FlatList } = Animated;
 
 export default observer(({ vm }: { vm: ShardReceiver }) => {
   const { t } = i18n;
-  const { secondaryTextColor, textColor } = Theme;
+  const { secondaryTextColor, textColor, borderColor } = Theme;
   const { pairingCodeVerified } = vm;
 
   const devTxtStyle: any = { color: secondaryTextColor, fontSize: 16, maxWidth: '90%', fontWeight: '500' };
+
+  const renderCompletedBar = ({ txt, tintColor }: { txt: string; tintColor?: string }) => {
+    return (
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 7 }}>
+        <ZoomInView duration={200}>
+          <Ionicons name="checkmark-circle" color={tintColor ?? borderColor} size={32} />
+        </ZoomInView>
+        <FadeInLeftView
+          delay={300}
+          style={{
+            borderRadius: 20,
+            height: 28,
+            marginStart: 10,
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+        >
+          <Text style={{ fontSize: 18, fontWeight: '500', color: tintColor ?? secondaryTextColor }}>{txt}</Text>
+        </FadeInLeftView>
+      </View>
+    );
+  };
 
   return (
     <View
@@ -71,16 +95,29 @@ export default observer(({ vm }: { vm: ShardReceiver }) => {
           </View>
         )}
 
-        {vm.secretStatus !== ShardPersistentStatus.waiting && (
-          <View
-            // entering={FadeInDown.springify()}
-            exiting={FadeOutUp.springify()}
-            style={{ position: 'relative', justifyContent: 'center', alignItems: 'center' }}
-          >
-            <View style={{ flexDirection: 'row' }}>
-              <Ionicons name="checkmark-circle" color={secondaryTextColor} size={24} />
-              <View style={{ borderRadius: 10, width: 250, height: 32, marginStart: 12 }} />
-            </View>
+        {vm.pairingCodeVerified && vm.secretStatus !== ShardPersistentStatus.waiting && (
+          <View exiting={FadeOutUp.springify()} style={{ position: 'relative', minWidth: 160 }}>
+            {vm.secretStatus >= ShardPersistentStatus.verifying &&
+              renderCompletedBar({
+                tintColor:
+                  vm.secretStatus === ShardPersistentStatus.verifying
+                    ? undefined
+                    : vm.secretStatus >= ShardPersistentStatus.verified
+                    ? secureColor
+                    : warningColor,
+                txt:
+                  vm.secretStatus === ShardPersistentStatus.verifying
+                    ? t('multi-sign-txt-data-verifying')
+                    : vm.secretStatus >= ShardPersistentStatus.verified
+                    ? t('multi-sign-txt-data-verified')
+                    : t('multi-sign-txt-data-verifying-failed'),
+              })}
+
+            {vm.secretStatus === ShardPersistentStatus.saved &&
+              renderCompletedBar({ txt: t('multi-sign-txt-data-saved'), tintColor: secureColor })}
+
+            {vm.secretStatus === ShardPersistentStatus.saveFailed &&
+              renderCompletedBar({ txt: t('multi-sign-txt-data-saving-failed'), tintColor: warningColor })}
           </View>
         )}
       </View>

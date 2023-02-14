@@ -6,12 +6,16 @@ import { TCPClient } from '../../common/p2p/TCPClient';
 import { createHash } from 'crypto';
 import i18n from '../../i18n';
 import { showMessage } from 'react-native-flash-message';
+import { sleep } from '../../utils/async';
+import { startLayoutAnimation } from '../../utils/animations';
 
 export enum ShardPersistentStatus {
   waiting,
-  saving,
+  verifying,
+  verifyingFailed,
+  verified,
+  saveFailed,
   saved,
-  failed,
 }
 
 export class ShardReceiver extends TCPClient {
@@ -40,7 +44,12 @@ export class ShardReceiver extends TCPClient {
 
   private handleShardDistribution = async (data: ShardDistribution) => {
     console.log(data);
-    runInAction(() => (this.secretStatus = ShardPersistentStatus.saving));
+
+    runInAction(() => (this.secretStatus = ShardPersistentStatus.verifying));
+
+    await sleep(500);
+
+    runInAction(() => (this.secretStatus = ShardPersistentStatus.verified));
 
     const ack: ShardAcknowledgement = {
       distributionId: data.distributionId,
@@ -51,6 +60,7 @@ export class ShardReceiver extends TCPClient {
     await this.secureWriteString(JSON.stringify(ack));
 
     runInAction(() => (this.secretStatus = ShardPersistentStatus.saved));
+    startLayoutAnimation();
   };
 
   private handlePairingCode = async (data: PairingCodeVerified) => {

@@ -37,7 +37,7 @@ export default ({ onNext }: { onNext?: () => void }) => {
 
         <View style={styles.contentContainer}>
           <View style={styles.illustrationContainer}>
-            <IllustrationConfirmed width={ReactiveScreen.width - 72} height={160} />
+            <IllustrationConfirmed width={ReactiveScreen.width - 72} height={150} />
           </View>
           <Text style={styles.txt}>{t('multi-sign-welcome-3')}</Text>
         </View>

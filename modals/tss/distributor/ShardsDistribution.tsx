@@ -14,6 +14,7 @@ import { Passpad } from '../../views';
 import Slider from '@react-native-community/slider';
 import { TCPClient } from '../../../common/p2p/TCPClient';
 import Theme from '../../../viewmodels/settings/Theme';
+import { ZoomInView } from '../../../components/animations';
 import { calcHorizontalPadding } from '../components/Utils';
 import deviceInfoModule from 'react-native-device-info';
 import { getDeviceInfo } from '../../../common/p2p/Utils';
@@ -50,7 +51,11 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
         <View style={{ marginStart: 24 }}>
           {status === ShardTransferringStatus.sending && <ActivityIndicator size="small" />}
           {status === ShardTransferringStatus.ackFailed && <Ionicons name="warning" color={warningColor} size={20} />}
-          {status === ShardTransferringStatus.ackSucceed && <Ionicons name="checkmark-circle" color={secureColor} size={20} />}
+          {status === ShardTransferringStatus.ackSucceed && (
+            <ZoomInView>
+              <Ionicons name="checkmark-circle" color={secureColor} size={24} />
+            </ZoomInView>
+          )}
         </View>
       </View>
     );

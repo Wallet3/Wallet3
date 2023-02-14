@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, FlatList as SystemFlatList, Text, View } from 'react-native';
 
 import ConnectDevices from './ConnectDevices';
-import HowTo from './HowTo';
+import Preparations from './Preparations';
 import { ReactiveScreen } from '../../../utils/device';
 import ShardsDistribution from './ShardsDistribution';
 import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
@@ -83,7 +83,7 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
         />
 
         <View style={{ flex: 1, width: ReactiveScreen.width - 12, marginHorizontal: -16 }}>
-          {step === 0 && <HowTo onNext={() => goTo(1)} />}
+          {step === 0 && <Preparations onNext={() => goTo(1)} />}
           {step === 1 && <ConnectDevices vm={vm} onNext={() => goTo(2)} />}
           {step === 2 && <ThresholdSetting vm={vm} onNext={() => goTo(3)} />}
           {step === 3 && <ShardsDistribution vm={vm} />}

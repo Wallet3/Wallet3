@@ -37,7 +37,7 @@ if (__DEV__) {
     LanDiscovery.on('resolved', (service: Service) => {
       console.log('tablet', service);
 
-      setTimeout(() => PubSub.publish(MessageKeys.openShardReceiver), 1000);
+      setTimeout(() => PubSub.publish(MessageKeys.openShardReceiver), 3000);
     });
 
     LanDiscovery.scan();
