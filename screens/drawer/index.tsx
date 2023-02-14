@@ -2,7 +2,7 @@ import App, { AppVM } from '../../viewmodels/core/App';
 import { Arbitrum, EVMIcon, Ethereum, NetworkIcons, Optimism, Polygon } from '../../assets/icons/networks/color';
 import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
-import { Feather, MaterialIcons } from '@expo/vector-icons';
+import { Feather, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
@@ -147,7 +147,7 @@ const Drawer = observer((props: DrawerProps) => {
 
       <View style={{ paddingBottom: 12 }}>
         <DrawerItem
-          label={t('home-drawer-wallet')}
+          label={t('home-drawer-home')}
           onPress={() => navigateTo('Home')}
           labelStyle={{ ...styles.drawerLabel, color: homeHighlight }}
           icon={() => <Feather color={homeHighlight} size={21} name={'home'} />}
@@ -175,6 +175,15 @@ const Drawer = observer((props: DrawerProps) => {
           labelStyle={{ ...styles.drawerLabel, color: settingsHighlight }}
           icon={() => <Feather color={settingsHighlight} size={21} name={'settings'} />}
         />
+
+        {__DEV__ && (
+          <DrawerItem
+            label={t('home-drawer-multi-sig')}
+            onPress={() => navigateTo('Settings')}
+            labelStyle={{ ...styles.drawerLabel, color: settingsHighlight }}
+            icon={() => <MaterialCommunityIcons color={settingsHighlight} size={21} name="key-chain-variant" />}
+          />
+        )}
       </View>
 
       <View style={{ flex: 1 }} />
@@ -214,7 +223,8 @@ const Drawer = observer((props: DrawerProps) => {
           >
             {current.network}
           </Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}></View>
+
+          <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }} />
 
           <Feather name="chevron-right" size={16} color={current.color} style={{ marginBottom: -2 }} />
         </TouchableOpacity>

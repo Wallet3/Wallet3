@@ -114,6 +114,8 @@ export class ShardsDistributor extends TCPServer<Events> {
 
     index = this.pendingClients.indexOf(client);
     if (index >= 0) this.pendingClients.splice(index, 1);
+
+    if (!client.closed) client.destroy();
   }
 
   async distributeSecret(threshold: number) {
@@ -163,7 +165,7 @@ export class ShardsDistributor extends TCPServer<Events> {
 
   dispose() {
     super.stop();
-    
+
     ZeroConfiguration.unpublishService(this.name);
 
     this.approvedClients.forEach((c) => {
