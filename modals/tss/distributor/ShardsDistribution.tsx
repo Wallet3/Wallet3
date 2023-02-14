@@ -1,7 +1,9 @@
+import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Animated, { FadeIn, FadeInDown, FadeInRight, FadeOutDown, FadeOutLeft, FadeOutUp } from 'react-native-reanimated';
-import { FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { Ionicons, Octicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
+import { ShardSender, ShardTransferringStatus } from '../../../viewmodels/tss/ShardSender';
+import { ShardsDistributionStatus, ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
 import { secureColor, warningColor } from '../../../constants/styles';
 
 import Button from '../components/Button';
@@ -9,7 +11,6 @@ import { ClientInfo } from '../../../common/p2p/Constants';
 import Device from '../../../components/Device';
 import DeviceInfo from '../components/DeviceInfo';
 import { Passpad } from '../../views';
-import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
 import Slider from '@react-native-community/slider';
 import { TCPClient } from '../../../common/p2p/TCPClient';
 import Theme from '../../../viewmodels/settings/Theme';
@@ -31,23 +32,26 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
   const [selfInfo] = useState({
     ...getDeviceInfo(),
     name: `${deviceInfoModule.getDeviceNameSync()} (${t('multi-sign-txt-current-device')})`,
-    ip: '::1',
+    remoteIP: '::1',
   });
 
-  const renderConnectedItem = ({ info, index }: { info: ClientInfo & { ip: string }; index: number }) => {
+  const renderConnectedItem = ({ item, index }: { item: ShardSender | ClientInfo; index: number }) => {
+    const info: ClientInfo = item['remoteInfo'] ?? item;
+    const status = item['status'] ?? vm.localShardStatus;
+
     return (
       <View
         entering={FadeInDown.delay(50 * index).springify()}
         exiting={FadeOutUp.springify()}
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: marginHorizontal,
-          paddingVertical: 8,
-          position: 'relative',
-        }}
+        style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: marginHorizontal, paddingVertical: 8 }}
       >
         <DeviceInfo info={info} />
+
+        <View style={{ marginStart: 24 }}>
+          {status === ShardTransferringStatus.sending && <ActivityIndicator size="small" />}
+          {status === ShardTransferringStatus.ackFailed && <Ionicons name="warning" color={warningColor} size={20} />}
+          {status === ShardTransferringStatus.ackSucceed && <Ionicons name="checkmark-circle" color={secureColor} size={20} />}
+        </View>
       </View>
     );
   };
@@ -65,18 +69,22 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
 
         <FlatList
           bounces={approvedCount >= 5}
-          keyExtractor={(i) => i.ip}
-          renderItem={(i) => renderConnectedItem({ info: i.item, index: i.index + 1 })}
+          keyExtractor={(i) => i.remoteIP}
           contentContainerStyle={{ paddingVertical: 4 }}
-          data={[selfInfo].concat(
-            approvedClients.map((i) => {
-              return { ...i.remoteInfo!, ip: i.remoteIP };
-            })
-          )}
+          data={[selfInfo, ...approvedClients]}
+          renderItem={renderConnectedItem}
         />
       </View>
 
-      <Button disabled={approvedCount === 0} title={t('button-shards-distribute')} />
+      {vm.status === ShardsDistributionStatus.distributionSucceed ? (
+        <Button title={t('button-done')} themeColor={secureColor} />
+      ) : (
+        <Button
+          disabled={approvedCount < 1 || vm.status === ShardsDistributionStatus.distributing}
+          title={t('button-shards-distribute')}
+          onPress={() => vm.distributeSecret()}
+        />
+      )}
     </View>
   );
 });

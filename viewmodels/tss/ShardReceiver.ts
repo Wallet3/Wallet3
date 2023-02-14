@@ -41,7 +41,7 @@ export class ShardReceiver extends TCPClient {
 
     await this.secureWriteString(JSON.stringify(ack));
 
-    this.shardSaved = true;
+    runInAction(() => (this.shardSaved = true));
   };
 
   private handlePairingCode = async (data: PairingCodeVerified) => {

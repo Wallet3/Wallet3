@@ -5,6 +5,7 @@ import { getDeviceBasicInfo, getDeviceInfo } from '../../common/p2p/Utils';
 
 import { HDNode } from 'ethers/lib/utils';
 import LINQ from 'linq';
+import { ShardSender } from './ShardSender';
 import { TCPClient } from '../../common/p2p/TCPClient';
 import { TCPServer } from '../../common/p2p/TCPServer';
 import ZeroConfiguration from '../../common/p2p/ZeroConfiguration';
@@ -13,15 +14,15 @@ import secretjs from 'secrets.js-grempe';
 import { utils } from 'ethers';
 
 type Events = {
-  newClient: (client: TCPClient) => void;
+  newClient: (client: ShardSender) => void;
 };
 
 interface IConstruction {
   mnemonic: string;
 }
 
-enum DistributionStatus {
-  notDistributed,
+export enum ShardsDistributionStatus {
+  notDistributed = 0,
   distributing,
   distributionSucceed,
   distributionFailed,
@@ -33,10 +34,11 @@ export class ShardsDistributor extends TCPServer<Events> {
   private protector: HDNode;
 
   readonly id: string;
-  approvedClients: TCPClient[] = [];
-  pendingClients: TCPClient[] = [];
-  distributedClients = new Set<TCPClient>();
-  status = DistributionStatus.notDistributed;
+  approvedClients: ShardSender[] = [];
+  pendingClients: ShardSender[] = [];
+
+  localShardStatus = ShardsDistributionStatus.notDistributed;
+  status = ShardsDistributionStatus.notDistributed;
   threshold = 2;
 
   constructor({ mnemonic }: IConstruction) {
@@ -45,8 +47,8 @@ export class ShardsDistributor extends TCPServer<Events> {
     makeObservable(this, {
       approvedClients: observable,
       pendingClients: observable,
-      distributedClients: observable,
       status: observable,
+      localShardStatus: observable,
       threshold: observable,
       approvedCount: computed,
       pendingCount: computed,
@@ -87,31 +89,29 @@ export class ShardsDistributor extends TCPServer<Events> {
       func: 'shards-distribution',
       distributionId: this.id,
       info: btoa(JSON.stringify(getDeviceBasicInfo())),
+      ver: 1,
     });
 
     return true;
   }
 
   protected newClient(c: TCPClient): void {
-    runInAction(() => this.pendingClients.push(c));
-    c.once('close', () => this.rejectClient(c));
+    const s = new ShardSender({ socket: c, distributionId: this.id });
+    runInAction(() => this.pendingClients.push(s));
+    c.once('close', () => this.rejectClient(s));
   }
 
-  approveClient(client: TCPClient, code: string) {
+  approveClient(client: ShardSender, code: string) {
     if (client.closed) return;
 
+    client.sendPairingCode(code);
     this.approvedClients.push(client);
-    client.secureWriteString(
-      JSON.stringify({ type: ContentType.pairingCodeVerified, hash: createHash('sha256').update(code).digest('hex') })
-    );
 
     const index = this.pendingClients.indexOf(client);
     if (index >= 0) this.pendingClients.splice(index, 1);
   }
 
-  rejectClient(client: TCPClient) {
-    this.distributedClients.delete(client);
-
+  rejectClient(client: ShardSender) {
     let index = this.approvedClients.indexOf(client);
     if (index >= 0) this.approvedClients.splice(index, 1);
 
@@ -125,48 +125,35 @@ export class ShardsDistributor extends TCPServer<Events> {
     this.threshold = Math.max(threshold, 2);
   }
 
-  async distributeSecret(threshold: number) {
+  async distributeSecret() {
     console.log('client count', this.approvedCount);
 
-    if (this.status === DistributionStatus.distributing || this.status === DistributionStatus.distributionSucceed) return;
-    if (this.approvedCount === 0) return;
+    if (this.status === ShardsDistributionStatus.distributing || this.status === ShardsDistributionStatus.distributionSucceed)
+      return;
+    if (this.approvedCount + 1 < this.threshold) return;
 
-    runInAction(() => (this.status = DistributionStatus.distributing));
+    runInAction(() => (this.status = ShardsDistributionStatus.distributing));
 
-    threshold = Math.max(2, Math.min(this.approvedCount + 1, threshold));
-    const shards = secretjs.share(this.rootEntropy, this.approvedCount + 1, threshold);
+    const shards = secretjs.share(this.rootEntropy, this.approvedCount + 1, this.threshold);
+
     shards[0];
 
-    await Promise.all(
-      shards.slice(1).map((shard, index) =>
-        this.approvedClients[index].secureWriteString(
-          JSON.stringify({
-            type: ContentType.shardDistribution,
-            shard,
-            pubkey: this.protector.publicKey.substring(2),
-            distributionId: this.id,
-          } as ShardDistribution)
-        )
-      )
-    );
-
     const result = await Promise.all(
-      this.approvedClients.map(async (c) => {
-        const data = await c.secureReadString();
-        console.log('server received:', data);
-        const ack = JSON.parse(data) as ShardAcknowledgement;
-        if (ack.distributionId !== this.id || !ack.success || ack.type !== ContentType.shardAcknowledgement) return false;
+      shards.slice(1).map(async (shard, index) => {
+        const c = this.approvedClients[index];
+        if (!c) return false;
 
-        runInAction(() => this.distributedClients.add(c));
-        return true;
+        c.sendShard({ shard, pubkey: this.protector.publicKey.substring(2) });
+        return await c.readShardAck();
       })
     );
 
-    const succeed = LINQ.from(result).sum((r) => (r ? 1 : 0)) + 1 >= threshold;
+    const succeed = LINQ.from(result).sum((r) => (r ? 1 : 0)) + 1 >= this.threshold;
     console.log('distribution succeed:', succeed);
 
     runInAction(
-      () => (this.status = succeed ? DistributionStatus.distributionSucceed : DistributionStatus.distributionFailed)
+      () =>
+        (this.status = succeed ? ShardsDistributionStatus.distributionSucceed : ShardsDistributionStatus.distributionFailed)
     );
   }
 
@@ -174,15 +161,7 @@ export class ShardsDistributor extends TCPServer<Events> {
     super.stop();
 
     ZeroConfiguration.unpublishService(this.name);
-
-    this.approvedClients.forEach((c) => {
-      c.destroy();
-      c.removeAllListeners();
-    });
-
-    this.pendingClients.forEach((c) => {
-      c.destroy();
-      c.removeAllListeners();
-    });
+    this.approvedClients.forEach((c) => c.destroy());
+    this.pendingClients.forEach((c) => c.destroy());
   }
 }

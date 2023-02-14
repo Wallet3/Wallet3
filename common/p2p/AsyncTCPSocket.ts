@@ -49,6 +49,7 @@ export class AsyncTCPSocket extends EventEmitter<Events> {
   destroy() {
     this.raw.destroy();
     this.raw.removeAllListeners();
+    this.removeAllListeners();
   }
 
   get remoteIP() {

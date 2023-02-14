@@ -9,6 +9,7 @@ import { ClientInfo } from '../../../common/p2p/Constants';
 import Device from '../../../components/Device';
 import DeviceInfo from '../components/DeviceInfo';
 import { Passpad } from '../../views';
+import { ShardSender } from '../../../viewmodels/tss/ShardSender';
 import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
 import { TCPClient } from '../../../common/p2p/TCPClient';
 import Theme from '../../../viewmodels/settings/Theme';
@@ -24,7 +25,7 @@ export default observer(({ vm, onNext }: { vm: ShardsDistributor; onNext: () => 
   const { textColor, secondaryTextColor, backgroundColor, borderColor } = Theme;
   const { pendingClients, approvedClients, pendingCount, approvedCount } = vm;
   const [marginHorizontal] = useState(calcHorizontalPadding());
-  const [verifying, setVerifying] = useState<{ client: TCPClient; attempts: number }>();
+  const [verifying, setVerifying] = useState<{ client: ShardSender; attempts: number }>();
 
   useEffect(() => {
     vm.start();
@@ -45,36 +46,25 @@ export default observer(({ vm, onNext }: { vm: ShardsDistributor; onNext: () => 
     return verified;
   };
 
-  const renderConnectedItem = ({ item }: { item: TCPClient }) => {
+  const renderConnectedItem = ({ item }: { item: ShardSender }) => {
     return (
       <View
         entering={FadeInDown.delay(50).springify()}
         exiting={FadeOutUp.springify()}
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: marginHorizontal,
-          paddingVertical: 8,
-          position: 'relative',
-        }}
+        style={{ ...styles.listItem, paddingHorizontal: marginHorizontal }}
       >
         <DeviceInfo info={item.remoteInfo!} verified />
+        <View style={{ marginStart: 16 }} />
       </View>
     );
   };
 
-  const renderPendingItem = ({ item }: { item: TCPClient }) => {
+  const renderPendingItem = ({ item }: { item: ShardSender }) => {
     return (
       <View
         entering={FadeInDown.delay(50).springify()}
         exiting={FadeOutUp.springify()}
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: marginHorizontal,
-          paddingVertical: 8,
-          position: 'relative',
-        }}
+        style={{ ...styles.listItem, paddingHorizontal: marginHorizontal }}
       >
         <DeviceInfo info={item.remoteInfo!} />
         <View style={{ flexDirection: 'row', alignItems: 'center', marginEnd: -8, marginStart: 36 }}>
@@ -90,7 +80,7 @@ export default observer(({ vm, onNext }: { vm: ShardsDistributor; onNext: () => 
     );
   };
 
-  const renderItem = ({ item }: { item: TCPClient }) => {
+  const renderItem = ({ item }: { item: ShardSender }) => {
     return approvedClients.includes(item) ? renderConnectedItem({ item }) : renderPendingItem({ item });
   };
 
@@ -110,7 +100,7 @@ export default observer(({ vm, onNext }: { vm: ShardsDistributor; onNext: () => 
             [
               approvedCount > 0 ? { title: t('multi-sign-connect-approved-clients'), data: approvedClients } : undefined,
               pendingCount > 0 ? { title: t('multi-sign-connect-pending-clients'), data: pendingClients } : undefined,
-            ].filter((i) => i !== undefined) as { title: string; data: TCPClient[] }[]
+            ].filter((i) => i !== undefined) as { title: string; data: ShardSender[] }[]
           }
           renderSectionHeader={({ section }) => (
             <Text
@@ -167,8 +157,10 @@ const styles = StyleSheet.create({
     opacity: 0.75,
     textTransform: 'capitalize',
   },
-  flatList: {
-    flexGrow: 0,
+  listItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
   },
   confirmButton: {
     padding: 4,

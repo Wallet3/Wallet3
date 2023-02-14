@@ -70,6 +70,16 @@ export default observer(({ vm }: { vm: ShardReceiver }) => {
             <Device deviceId={vm.remoteInfo!.device} os={vm.remoteInfo!.rn_os} style={{ width: 48, height: 52 }} />
           </View>
         )}
+
+        {vm.shardSaved && (
+          <View
+            entering={FadeInDown.springify()}
+            exiting={FadeOutUp.springify()}
+            style={{ position: 'relative', justifyContent: 'center', alignItems: 'center' }}
+          >
+            
+          </View>
+        )}
       </View>
 
       {/* <View style={{ flexDirection: 'row', marginBottom: 32, justifyContent: 'center', alignItems: 'center' }}>
