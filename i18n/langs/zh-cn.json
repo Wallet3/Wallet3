@@ -277,6 +277,7 @@
   "tx-type-unknown": "未知",
 
   "multi-sign-title-welcome": "多签钱包",
+  "multi-sign-title-preparations": "准备工作",
   "multi-sign-title-connect-devices": "连接设备",
   "multi-sign-title-set-threshold": "门限设置",
   "multi-sign-title-key-distribution": "密钥分发",

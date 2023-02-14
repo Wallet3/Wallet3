@@ -1,4 +1,5 @@
 import { ContentType, PairingCodeVerified, ShardAcknowledgement, ShardDistribution } from './Constants';
+import Validator, { AsyncCheckFunction, SyncCheckFunction } from 'fastest-validator';
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import { TCPClient } from '../../common/p2p/TCPClient';
@@ -6,14 +7,21 @@ import { createHash } from 'crypto';
 import i18n from '../../i18n';
 import { showMessage } from 'react-native-flash-message';
 
+export enum ShardPersistentStatus {
+  waiting,
+  saving,
+  saved,
+  failed,
+}
+
 export class ShardReceiver extends TCPClient {
-  shardSaved = false;
+  secretStatus = ShardPersistentStatus.waiting;
   pairingCodeVerified = false;
 
   constructor({ host, port }: { host: string; port: number }) {
     super({ service: { host, port } });
 
-    makeObservable(this, { shardSaved: observable, pairingCodeVerified: observable });
+    makeObservable(this, { secretStatus: observable, pairingCodeVerified: observable });
     this.once('ready', this.onReady);
   }
 
@@ -32,6 +40,7 @@ export class ShardReceiver extends TCPClient {
 
   private handleShardDistribution = async (data: ShardDistribution) => {
     console.log(data);
+    runInAction(() => (this.secretStatus = ShardPersistentStatus.saving));
 
     const ack: ShardAcknowledgement = {
       distributionId: data.distributionId,
@@ -41,11 +50,11 @@ export class ShardReceiver extends TCPClient {
 
     await this.secureWriteString(JSON.stringify(ack));
 
-    runInAction(() => (this.shardSaved = true));
+    runInAction(() => (this.secretStatus = ShardPersistentStatus.saved));
   };
 
   private handlePairingCode = async (data: PairingCodeVerified) => {
-    const equals = createHash('sha256').update(this.verificationCode).digest('hex') === data.hash;
+    const equals = createHash('sha256').update(this.pairingCode).digest('hex') === data.hash;
     runInAction(() => (this.pairingCodeVerified = equals));
 
     if (!equals) {

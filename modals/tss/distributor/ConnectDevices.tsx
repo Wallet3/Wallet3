@@ -34,7 +34,7 @@ export default observer(({ vm, onNext }: { vm: ShardsDistributor; onNext: () => 
   const verifyClient = async (code: string) => {
     if (!verifying) return false;
 
-    const verified = code === verifying.client.verificationCode;
+    const verified = code === verifying.client.pairingCode;
     const maxFailedAttempts = 3;
 
     verified && vm.approveClient(verifying.client, code);

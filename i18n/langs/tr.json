@@ -281,6 +281,7 @@
   "tx-type-unknown": "Bilinmeyen",
 
   "multi-sign-title-welcome": "Çok İmzalı Cüzdan",
+  "multi-sign-title-preparations": "Hazırlık",
   "multi-sign-title-connect-devices": "Cihazları Bağlayın",
   "multi-sign-title-set-threshold": "Eşik Ayarı",
   "multi-sign-title-key-distribution": "Anahtar Dağıtımı",

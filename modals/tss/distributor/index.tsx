@@ -22,7 +22,7 @@ export default observer(({ vm }: { vm: ShardsDistributor }) => {
   const [step, setStep] = useState(0);
   const titleList = useRef<SystemFlatList>(null);
   const titles = [
-    t('multi-sign-title-welcome'),
+    t('multi-sign-title-preparations'),
     t('multi-sign-title-connect-devices'),
     t('multi-sign-title-set-threshold'),
     t('multi-sign-title-key-distribution'),

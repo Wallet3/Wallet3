@@ -281,6 +281,7 @@
   "tx-type-unknown": "Unknown",
 
   "multi-sign-title-welcome": "MultiSig Wallet",
+  "multi-sign-title-preparations": "Preparations",
   "multi-sign-title-connect-devices": "Connect Devices",
   "multi-sign-title-set-threshold": "Threshold Setting",
   "multi-sign-title-key-distribution": "Secret Distribution",

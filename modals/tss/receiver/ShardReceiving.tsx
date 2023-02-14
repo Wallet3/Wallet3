@@ -2,6 +2,7 @@ import { ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
 import Animated, { FadeIn, FadeInDown, FadeInRight, FadeOutDown, FadeOutLeft, FadeOutUp } from 'react-native-reanimated';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
+import { ShardPersistentStatus, ShardReceiver } from '../../../viewmodels/tss/ShardReceiver';
 import { getDeviceModel, getScreenCornerRadius } from '../../../utils/hardware';
 import { secureColor, warningColor } from '../../../constants/styles';
 
@@ -12,7 +13,6 @@ import LanDiscovery from '../../../viewmodels/tss/LanDiscovery';
 import LottieView from 'lottie-react-native';
 import { Passpad } from '../../views';
 import { Service } from 'react-native-zeroconf';
-import { ShardReceiver } from '../../../viewmodels/tss/ShardReceiver';
 import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
 import { TCPClient } from '../../../common/p2p/TCPClient';
 import Theme from '../../../viewmodels/settings/Theme';
@@ -50,11 +50,11 @@ export default observer(({ vm }: { vm: ShardReceiver }) => {
             >
               {`${t('multi-sign-txt-pairing-code')}`}
             </Text>
-            <Text style={{ color: textColor, fontSize: 42, fontWeight: '800' }}>{vm.verificationCode}</Text>
+            <Text style={{ color: textColor, fontSize: 42, fontWeight: '800' }}>{vm.pairingCode}</Text>
           </View>
         )}
 
-        {vm.pairingCodeVerified && !vm.shardSaved && (
+        {vm.pairingCodeVerified && vm.secretStatus === ShardPersistentStatus.waiting && (
           <View
             entering={FadeInDown.springify()}
             exiting={FadeOutUp.springify()}
@@ -71,21 +71,19 @@ export default observer(({ vm }: { vm: ShardReceiver }) => {
           </View>
         )}
 
-        {vm.shardSaved && (
+        {vm.secretStatus !== ShardPersistentStatus.waiting && (
           <View
-            entering={FadeInDown.springify()}
+            // entering={FadeInDown.springify()}
             exiting={FadeOutUp.springify()}
             style={{ position: 'relative', justifyContent: 'center', alignItems: 'center' }}
           >
-            
+            <View style={{ flexDirection: 'row' }}>
+              <Ionicons name="checkmark-circle" color={secondaryTextColor} size={24} />
+              <View style={{ borderRadius: 10, width: 250, height: 32, marginStart: 12 }} />
+            </View>
           </View>
         )}
       </View>
-
-      {/* <View style={{ flexDirection: 'row', marginBottom: 32, justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={{ marginHorizontal: 12, color: secondaryTextColor }}>Waiting for secret distribution</Text>
-        <ActivityIndicator size="small" />
-      </View> */}
 
       <View style={{ flexDirection: 'row' }}>
         <Device os={'ios'} deviceId={deviceInfoModule.getDeviceId()} style={{ width: 48, height: 81 }} />

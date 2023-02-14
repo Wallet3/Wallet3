@@ -35,8 +35,8 @@ export class ShardSender {
     return this.socket.remoteIP;
   }
 
-  get verificationCode() {
-    return this.socket.verificationCode;
+  get pairingCode() {
+    return this.socket.pairingCode;
   }
 
   get greeted() {

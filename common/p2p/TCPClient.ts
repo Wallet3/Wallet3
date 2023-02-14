@@ -14,7 +14,7 @@ export class TCPClient extends AsyncTCPSocket {
   private cipher!: Cipher;
   private decipher!: Decipher;
 
-  verificationCode: string;
+  pairingCode: string;
   remoteInfo?: ClientInfo;
 
   get greeted() {
@@ -26,19 +26,19 @@ export class TCPClient extends AsyncTCPSocket {
     socket,
     cipher,
     decipher,
-    verificationCode,
+    pairingCode,
   }: {
     service?: { host: string; port: number };
     socket?: TCP.Socket | TCP.TLSSocket;
     cipher?: Cipher;
     decipher?: Decipher;
-    verificationCode?: string;
+    pairingCode?: string;
   }) {
     if (service && socket) {
       throw new Error(`'service' and 'socket' should NOT be initialized at the same time.`);
     }
 
-    if (socket && (!cipher || !decipher || !verificationCode)) {
+    if (socket && (!cipher || !decipher || !pairingCode)) {
       throw new Error('socket and cipher/decipher/verificationCode should be initialized at the same time.');
     }
 
@@ -52,9 +52,9 @@ export class TCPClient extends AsyncTCPSocket {
 
     this.cipher = cipher!;
     this.decipher = decipher!;
-    this.verificationCode = verificationCode || '';
+    this.pairingCode = pairingCode || '';
 
-    makeObservable(this, { verificationCode: observable });
+    makeObservable(this, { pairingCode: observable });
 
     if (socket) {
       this.hello();
@@ -73,9 +73,9 @@ export class TCPClient extends AsyncTCPSocket {
       const negotiationKey = negotiation.subarray(16);
 
       const secret = ecdh.computeSecret(negotiationKey);
-      runInAction(() => (this.verificationCode = `${secret.reduce((p, c) => p * BigInt(c || 1), 1n)}`.substring(6, 10)));
+      runInAction(() => (this.pairingCode = `${secret.reduce((p, c) => p * BigInt(c || 1), BigInt(1))}`.substring(6, 10)));
 
-      console.log('client computes', secret.toString('hex'), this.verificationCode);
+      console.log('client computes', secret.toString('hex'), this.pairingCode);
 
       this.cipher = createCipheriv(CipherAlgorithm, secret, iv);
       this.decipher = createDecipheriv(CipherAlgorithm, createHash('sha256').update(secret).digest(), siv);

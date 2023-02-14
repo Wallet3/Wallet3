@@ -95,14 +95,14 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
       const negotiationKey = negotiation.subarray(16);
 
       const secret = ecdh.computeSecret(negotiationKey);
-      const verificationCode = `${secret.reduce((p, c) => p * BigInt(c || 1), 1n)}`.substring(6, 10);
+      const pairingCode = `${secret.reduce((p, c) => p * BigInt(c || 1), BigInt(1))}`.substring(6, 10);
 
       const cipher = createCipheriv(CipherAlgorithm, createHash('sha256').update(secret).digest(), iv);
       const decipher = createDecipheriv(CipherAlgorithm, secret, civ);
 
-      console.log('server computes:', secret.toString('hex'), verificationCode);
+      console.log('server computes:', secret.toString('hex'), pairingCode);
 
-      return new TCPClient({ cipher, decipher, socket: socket.raw, verificationCode });
+      return new TCPClient({ cipher, decipher, socket: socket.raw, pairingCode });
     } catch (error) {
       console.error(error);
     }

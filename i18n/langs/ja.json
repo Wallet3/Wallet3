@@ -277,6 +277,7 @@
   "tx-type-unknown": "未知",
 
   "multi-sign-title-welcome": "マルチシグウォレット",
+  "multi-sign-title-preparations": "準備作業",
   "multi-sign-title-connect-devices": "デバイスの接続",
   "multi-sign-title-set-threshold": "閾値の設定",
   "multi-sign-title-key-distribution": "秘密鍵の配布",

@@ -14,6 +14,14 @@ export type ShardDistribution = {
   distributionId: string;
 };
 
+export const ShardDistributionSchema = {
+  type: ContentType.shardDistribution,
+  shard: 'string',
+  pubkey: 'string',
+  distributionId: 'string',
+  $$strict: true,
+};
+
 export type ShardAcknowledgement = {
   type: ContentType.shardAcknowledgement;
   distributionId: string;
