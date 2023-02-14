@@ -34,10 +34,10 @@ LogBox.ignoreLogs([
 
 if (__DEV__) {
   if (DeviceInfo.isTablet()) {
-    LanDiscovery.once('resolved', (service: Service) => {
+    LanDiscovery.on('resolved', (service: Service) => {
       console.log('tablet', service);
 
-      PubSub.publish(MessageKeys.openShardReceiver);
+      setTimeout(() => PubSub.publish(MessageKeys.openShardReceiver), 1000);
     });
 
     LanDiscovery.scan();

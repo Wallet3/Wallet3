@@ -12,6 +12,7 @@ import { Passpad } from '../../views';
 import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
 import { TCPClient } from '../../../common/p2p/TCPClient';
 import Theme from '../../../viewmodels/settings/Theme';
+import { calcHorizontalPadding } from '../components/Utils';
 import { getScreenCornerRadius } from '../../../utils/hardware';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -22,7 +23,7 @@ export default observer(({ vm, onNext }: { vm: ShardsDistributor; onNext: () => 
   const { t } = i18n;
   const { textColor, secondaryTextColor, backgroundColor, borderColor } = Theme;
   const { pendingClients, approvedClients, pendingCount, approvedCount } = vm;
-  const [marginHorizontal] = useState((getScreenCornerRadius() - 20) / 4 + 16);
+  const [marginHorizontal] = useState(calcHorizontalPadding());
   const [verifying, setVerifying] = useState<{ client: TCPClient; attempts: number }>();
 
   useEffect(() => {
@@ -140,7 +141,7 @@ export default observer(({ vm, onNext }: { vm: ShardsDistributor; onNext: () => 
         </View>
       )}
 
-      <Button title={t('button-next')} disabled={vm.approvedCount === 0} onPress={onNext} />
+      <Button title={t('button-next')} disabled={approvedCount === 0} onPress={onNext} />
 
       {verifying && (
         <View

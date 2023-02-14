@@ -291,6 +291,7 @@
   "multi-sign-txt-pairing-code": "ペアリングコード",
   "multi-sign-txt-dont-close-view": "配布中に、現在のセッションを閉じないでください",
   "multi-sign-msg-pairing-code-not-match": "ペアリングコードが一致していません。安全な環境で再度お試しください。",
+  "multi-sign-create-threshold": "あなたは {{threshold}}/{{max}} マルチシグウォレットを作成しています。トランザクションを作成するには、少なくとも {{threshold}} つのデバイスが必要であることを意味します。",
 
   "msg-invalid-address": "無効なアドレス",
   "msg-invalid-qr-code": "無効なQRコード",

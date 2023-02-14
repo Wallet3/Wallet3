@@ -296,6 +296,7 @@
   "multi-sign-txt-pairing-code": "Pairing code",
   "multi-sign-txt-dont-close-view": "Please don't close the current view during key distribution",
   "multi-sign-msg-pairing-code-not-match": "The pairing code does not match, please try again in a secure environment.",
+  "multi-sign-create-threshold": "You are creating a {{threshold}} of {{max}} multi-signature wallet. It means that transactions require {{threshold}} of the keys, but not necessarily all of them, to be authorized.",
 
   "msg-invalid-address": "Invalid address",
   "msg-invalid-qr-code": "Invalid QR code",

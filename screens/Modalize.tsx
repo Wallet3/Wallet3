@@ -606,8 +606,10 @@ export const ShardsModal = observer(() => {
       ref={ref}
       useNativeDriver
       onClosed={() => {
+        __DEV__ && vms.shardsDistribution
+          ? setTimeout(() => PubSub.publish(MessageKeys.openShardsDistribution), 1000)
+          : undefined;
         setVMs({});
-        __DEV__ ? PubSub.publish(MessageKeys.openShardsDistribution) : undefined;
       }}
       adjustToContentHeight
       withHandle={false}

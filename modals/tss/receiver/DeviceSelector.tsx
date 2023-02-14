@@ -13,6 +13,7 @@ import { Service } from 'react-native-zeroconf';
 import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
 import { TCPClient } from '../../../common/p2p/TCPClient';
 import Theme from '../../../viewmodels/settings/Theme';
+import { calcHorizontalPadding } from '../components/Utils';
 import { getScreenCornerRadius } from '../../../utils/hardware';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -22,7 +23,7 @@ const { View, Text, FlatList } = Animated;
 export default observer(({ onNext }: { onNext: (selectedService: Service) => void }) => {
   const { t } = i18n;
   const { secondaryTextColor, appColor } = Theme;
-  const [marginHorizontal] = useState((getScreenCornerRadius() - 20) / 4 + 16);
+  const [marginHorizontal] = useState(calcHorizontalPadding());
   const [selectedService, setSelectedService] = useState<Service>();
 
   const renderItem = ({ item }: { item: Service }) => {
