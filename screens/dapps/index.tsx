@@ -10,6 +10,7 @@ import App from '../../viewmodels/core/App';
 import DAppInfo from './DAppInfo';
 import { DrawerActions } from '@react-navigation/native';
 import { DrawerScreenProps } from '@react-navigation/drawer';
+import IllustrationNoData from '../../assets/illustrations/misc/nodata.svg';
 import MessageKeys from '../../common/MessageKeys';
 import { MetamaskDApp } from '../../viewmodels/walletconnect/MetamaskDApp';
 import MetamaskDAppsHub from '../../viewmodels/walletconnect/MetamaskDAppsHub';
@@ -297,10 +298,15 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
             />
           ) : (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: -32 }}>
-              <TouchableOpacity style={{ padding: 12 }} onPress={() => PubSub.publish(MessageKeys.openGlobalQRScanner)}>
-                <MaterialCommunityIcons name="qrcode-scan" size={32} color={secondaryTextColor} />
+              <IllustrationNoData width={150} height={150} />
+
+              <TouchableOpacity
+                style={{ alignItems: 'center', flexDirection: 'row', marginTop: 24 }}
+                onPress={() => PubSub.publish(MessageKeys.openGlobalQRScanner)}
+              >
+                <Ionicons name="scan-outline" size={24} color={secondaryTextColor} />
+                <Text style={{ color: secondaryFontColor, marginStart: 12 }}>{t('qrscan-tap-to-scan')}</Text>
               </TouchableOpacity>
-              <Text style={{ color: secondaryFontColor, marginTop: 24 }}>{t('connectedapps-noapps')}</Text>
             </View>
           )}
         </View>

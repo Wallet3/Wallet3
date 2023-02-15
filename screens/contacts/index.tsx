@@ -6,10 +6,10 @@ import React, { useState } from 'react';
 import Avatar from '../../components/Avatar';
 import { Confirm } from '../../modals/views/Confirm';
 import ContactDetails from './ContactDetails';
+import IllustrationNoData from '../../assets/illustrations/misc/nodata.svg';
 import { Modalize } from 'react-native-modalize';
 import { Portal } from 'react-native-portalize';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { SafeViewContainer } from '../../components';
 import Theme from '../../viewmodels/settings/Theme';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
@@ -75,12 +75,18 @@ export default observer(() => {
 
   return (
     <View style={{ flex: 1 }}>
-      <FlatList
-        data={Contacts.sorted}
-        renderItem={renderItem}
-        contentContainerStyle={{ paddingTop: 4 }}
-        keyExtractor={(i) => `${i.address}-${i.name}`}
-      />
+      {Contacts.sorted.length === 0 ? (
+        <View style={{ alignSelf: 'center', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+          <IllustrationNoData width={150} height={150} />
+        </View>
+      ) : (
+        <FlatList
+          data={Contacts.sorted}
+          renderItem={renderItem}
+          contentContainerStyle={{ paddingTop: 4 }}
+          keyExtractor={(i) => `${i.address}-${i.name}`}
+        />
+      )}
 
       <Portal>
         <Modalize

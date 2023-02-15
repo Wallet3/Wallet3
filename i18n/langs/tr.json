@@ -90,6 +90,7 @@
   "qrscan-title": "Tara",
   "qrscan-go-to-settings": "Ayarlara Git",
   "qrscan-no-permission": "Kamera erişimi yok",
+  "qrscan-tap-to-scan": "Kodu tarayabilmek için dokunun",
   "qrscan-tip-1": "WalletConnect, ETH Adresi, vb.",
   "qrscan-tip-2": "Mnemonic Words, Özel Anahtar, Masaüstü Yedekleme QRCode",
   "qrscan-tip-3": "URL QRCode",

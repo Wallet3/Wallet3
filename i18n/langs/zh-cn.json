@@ -90,6 +90,7 @@
   "qrscan-title": "扫描二维码",
   "qrscan-go-to-settings": "跳转到设置",
   "qrscan-no-permission": "无摄像头访问权限",
+  "qrscan-tap-to-scan": "轻触扫描二维码",
   "qrscan-tip-1": "WalletConnect, ETH 地址, 收款二维码",
   "qrscan-tip-2": "助记词, 私钥, Wallet 3 桌面版同步码",
   "qrscan-tip-3": "URL 二维码",

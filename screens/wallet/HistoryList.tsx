@@ -9,7 +9,7 @@ import {
 import { Coin, NullableImage } from '../../components';
 import { FlatList, ListRenderItemInfo, Text, TouchableOpacity, View } from 'react-native';
 
-import { Ionicons } from '@expo/vector-icons';
+import IllustrationNoData from '../../assets/illustrations/misc/nodata.svg';
 import Networks from '../../viewmodels/core/Networks';
 import React from 'react';
 import Theme from '../../viewmodels/settings/Theme';
@@ -144,8 +144,8 @@ export default observer(({ data, onTxPress, onEndReached }: Props) => {
   if (data.length === 0) {
     return (
       <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-        <Ionicons name="server-outline" size={32} color={secondaryFontColor} />
-        <Text style={{ color: secondaryFontColor, marginVertical: 12 }}>{t('home-history-notxs')}</Text>
+        <IllustrationNoData width={150} height={150} />
+        <Text style={{ color: secondaryFontColor, marginTop: 24 }}>{t('home-history-notxs')}</Text>
       </View>
     );
   }
