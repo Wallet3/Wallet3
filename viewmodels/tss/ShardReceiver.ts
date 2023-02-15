@@ -2,6 +2,7 @@ import { ContentType, PairingCodeVerified, ShardAcknowledgement, ShardDistributi
 import Validator, { AsyncCheckFunction, SyncCheckFunction } from 'fastest-validator';
 import { makeObservable, observable, runInAction } from 'mobx';
 
+import Authentication from '../auth/Authentication';
 import EventEmitter from 'eventemitter3';
 import ShardKey from '../../models/entities/ShardKey';
 import { TCPClient } from '../../common/p2p/TCPClient';
@@ -88,9 +89,13 @@ export class ShardReceiver extends TCPClient {
       const key = new ShardKey();
       key.id = data.distributionId;
       key.ownerDevice = this.remoteInfo!;
-      key.secrets = { bip32Shard, rootShard };
       key.secretsInfo = { threshold: data.threshold };
       key.lastUsedTimestamp = Date.now();
+      key.secrets = {
+        bip32Shard: await Authentication.encryptForever(bip32Shard),
+        rootShard: await Authentication.encryptForever(rootShard),
+      };
+
       key.save();
 
       ack.success = true;

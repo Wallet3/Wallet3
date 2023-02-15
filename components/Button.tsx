@@ -86,8 +86,8 @@ export default (props: ButtonProps) => {
         disabledRailBackgroundColor="transparent"
         railFillBackgroundColor="transparent"
         disabledThumbIconBackgroundColor="#fff"
-        shouldResetAfterSuccess
-        resetAfterSuccessAnimDuration={7000}
+        shouldResetAfterSuccess={!disabled}
+        // resetAfterSuccessAnimDuration={000}
         swipeSuccessThreshold={95}
         containerStyles={{
           backgroundColor: 'transparent',

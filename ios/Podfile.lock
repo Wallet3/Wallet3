@@ -653,7 +653,7 @@ PODS:
     - ExpoModulesCore
   - ExpoLocalization (14.0.0):
     - ExpoModulesCore
-  - ExpoModulesCore (1.1.1):
+  - ExpoModulesCore (1.2.2):
     - React-Core
     - ReactCommon/turbomodule/core
   - ExpoRandom (13.0.0):
@@ -1203,20 +1203,20 @@ PODS:
     - React-perflogger (= 0.70.6)
   - RNCAsyncStorage (1.17.11):
     - React-Core
-  - RNDeviceInfo (10.3.0):
+  - RNDeviceInfo (10.4.0):
     - React-Core
   - RNFastImage (8.6.3):
     - React-Core
     - SDWebImage (~> 5.11.1)
     - SDWebImageWebPCoder (~> 0.8.4)
-  - RNFBAnalytics (17.2.0):
+  - RNFBAnalytics (17.3.0):
     - Firebase/Analytics (= 10.5.0)
     - React-Core
     - RNFBApp
-  - RNFBApp (17.2.0):
+  - RNFBApp (17.3.0):
     - Firebase/CoreOnly (= 10.5.0)
     - React-Core
-  - RNFBFirestore (17.2.0):
+  - RNFBFirestore (17.3.0):
     - Firebase/Firestore (= 10.5.0)
     - nanopb (< 2.30910.0, >= 2.30908.0)
     - React-Core
@@ -1602,7 +1602,7 @@ SPEC CHECKSUMS:
   ExpoHaptics: 5a56d30a87ea213dd00b09566dc4b441a4dff97f
   ExpoKeepAwake: 69b59d0a8d2b24de9f82759c39b3821fec030318
   ExpoLocalization: e202d1e2a4950df17ac8d0889d65a1ffd7532d7e
-  ExpoModulesCore: 485dff3a59b036a33b6050c0a5aea3cf1037fdd1
+  ExpoModulesCore: ac434b2177dab8f7dea8f9b6a4a07e6a5d6d422e
   ExpoRandom: 58b7e0a5fe1adf1cb6dc1cbe503a6fe9524f36ce
   ExpoStoreReview: ff6d631f2949eb7e4b2d14146ef6af25a16d770d
   ExpoWebBrowser: 073e50f16669d498fb49063b9b7fe780b24f7fda
@@ -1676,11 +1676,11 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 15437b576139df27635400de0599d9844f1ab817
   ReactCommon: 349be31adeecffc7986a0de875d7fb0dcf4e251c
   RNCAsyncStorage: 8616bd5a58af409453ea4e1b246521bb76578d60
-  RNDeviceInfo: 4701f0bf2a06b34654745053db0ce4cb0c53ada7
+  RNDeviceInfo: 749f2e049dcd79e2e44f134f66b73a06951b5066
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
-  RNFBAnalytics: afbba089aa59753fb3a6a6eab39217e6f2cff8a9
-  RNFBApp: 4f8ea53443d52c7db793234d2398a357fc6cfbf1
-  RNFBFirestore: 4a1b6cf7f262824ffa93780341b68be6f38079ab
+  RNFBAnalytics: 95bce41c45071b5610fe1d4eb96fbe8d1e9857a2
+  RNFBApp: 3672911764485c44b6ff947273a0d470477774df
+  RNFBFirestore: 7104b52d71b367e4c18f61dc983b54e305d5d5ef
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNGoogleSignin: 22e468a9474dbcb8618d8847205ad4f0b2575d13
   RNImageColors: 9ac05083b52d5c350e6972650ae3ba0e556466c1

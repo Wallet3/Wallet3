@@ -1,22 +1,11 @@
-import * as ethSignUtil from '@metamask/eth-sig-util';
+import { action, makeObservable } from 'mobx';
 
-import { Wallet as EthersWallet, providers, utils } from 'ethers';
-import { action, makeObservable, observable, runInAction } from 'mobx';
-import { logEthSign, logSendTx } from '../services/Analytics';
-
-import { Account } from '../account/Account';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Authentication from '../auth/Authentication';
 import Key from '../../models/entities/Key';
-import LINQ from 'linq';
-import MetamaskDAppsHub from '../walletconnect/MetamaskDAppsHub';
-import { ReadableInfo } from '../../models/entities/Transaction';
-import { SignTypedDataVersion } from '@metamask/eth-sig-util';
-import TxHub from '../hubs/TxHub';
 import { WalletBase } from './WalletBase';
-import { showMessage } from 'react-native-flash-message';
+import { utils } from 'ethers';
 
-export class Wallet extends WalletBase {
+export class SingleSigWallet extends WalletBase {
   private _key: Key;
   private refreshTimer!: NodeJS.Timer;
 
@@ -24,10 +13,6 @@ export class Wallet extends WalletBase {
 
   readonly isHDWallet: boolean;
   readonly isMultiSig = false;
-
-  get web2SignedIn() {
-    return this.signInPlatform !== undefined;
-  }
 
   protected get key() {
     return this._key;

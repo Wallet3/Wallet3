@@ -52,10 +52,14 @@ export abstract class WalletBase {
   abstract isHDWallet: boolean;
   abstract isMultiSig: boolean;
 
+  accounts: Account[] = [];
+
   signInPlatform: 'apple' | 'google' | undefined;
   signInUser: string | undefined;
 
-  accounts: Account[] = [];
+  get web2SignedIn() {
+    return this.signInPlatform !== undefined;
+  }
 
   protected abstract get key(): {
     bip32Xpubkey: string;

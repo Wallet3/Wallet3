@@ -17,10 +17,10 @@ import MessageKeys from '../../common/MessageKeys';
 import MetamaskDAppsHub from '../walletconnect/MetamaskDAppsHub';
 import Networks from './Networks';
 import { ReactNativeFirebase } from '@react-native-firebase/app';
+import { SingleSigWallet } from '../wallet/SingleSigWallet';
 import Theme from '../settings/Theme';
 import TxHub from '../hubs/TxHub';
 import UI from '../settings/UI';
-import { Wallet } from '../wallet/Wallet';
 import WalletConnectHub from '../walletconnect/WalletConnectHub';
 import { fetchChainsOverview } from '../../common/apis/Debank';
 import i18n from '../../i18n';
@@ -83,7 +83,7 @@ export class AppVM {
       return;
     }
 
-    const wallet = await new Wallet(key).init();
+    const wallet = await new SingleSigWallet(key).init();
     runInAction(() => {
       this.wallets.push(wallet);
       this.switchAccount(wallet.accounts[0].address);
@@ -209,7 +209,7 @@ export class AppVM {
       AppStoreReview.check();
     });
 
-    const wallets = await Promise.all((await Database.keys.find()).map((key) => new Wallet(key).init()));
+    const wallets = await Promise.all((await Database.keys.find()).map((key) => new SingleSigWallet(key).init()));
     const lastUsedAccount = (await AsyncStorage.getItem('lastUsedAccount')) ?? '';
     if (utils.isAddress(lastUsedAccount)) fetchChainsOverview(lastUsedAccount);
 

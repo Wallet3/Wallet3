@@ -1,7 +1,10 @@
 import { action, makeObservable } from 'mobx';
 
+import Authentication from '../auth/Authentication';
 import MultiSigKey from '../../models/entities/MultiSigKey';
 import { WalletBase } from './WalletBase';
+import secretjs from 'secrets.js-grempe';
+import { utils } from 'ethers';
 
 export class MultiSigWallet extends WalletBase {
   private _key: MultiSigKey;
@@ -20,16 +23,27 @@ export class MultiSigWallet extends WalletBase {
     makeObservable(this, { newAccount: action, removeAccount: action });
   }
 
-  getSecret(pin?: string | undefined): Promise<string | undefined> {
-    throw new Error('Method not implemented.');
+  async getSecret(pin?: string): Promise<string | undefined> {
+    try {
+      return await Authentication.decrypt(this.key.secrets.rootShard, pin);
+    } catch (error) {}
   }
 
   dispose(): void {}
 
-  protected unlockPrivateKey(args: {
+  protected async unlockPrivateKey({
+    pin,
+  }: {
     pin?: string | undefined;
     accountIndex?: number | undefined;
   }): Promise<string | undefined> {
-    throw new Error('Method not implemented.');
+    try {
+      if (this.key.cachedBip32Shards) {
+        const privKey = secretjs.combine(this.key.cachedBip32Shards);
+        // utils.HDNode.
+        utils.HDNode.fromExtendedKey
+      }
+      return await Authentication.decrypt(this.key.secrets.bip32Shard, pin);
+    } catch (error) {}
   }
 }

@@ -24,6 +24,7 @@ const keys = {
   enableBiometrics: 'enableBiometrics',
   userSecretsVerified: 'userSecretsVerified',
   masterKey: 'masterKey',
+  foreverKey: 'foreverKey',
   pin: 'pin',
   appUnlockTime: 'appUnlockTime',
 };
@@ -137,6 +138,17 @@ export class Authentication extends EventEmitter {
     return `${masterKey}_${appEncryptKey}`;
   }
 
+  private async getForeverKey() {
+    let foreverKey = await SecureStore.getItemAsync(keys.foreverKey);
+
+    if (!foreverKey) {
+      foreverKey = Buffer.from(Random.getRandomBytes(16)).toString('hex');
+      await SecureStore.setItemAsync(keys.foreverKey, foreverKey);
+    }
+
+    return foreverKey;
+  }
+
   async setBiometrics(enabled: boolean) {
     if (enabled) {
       if (!(await this.authenticate())) return;
@@ -188,6 +200,15 @@ export class Authentication extends EventEmitter {
   async decrypt(data: string, pin?: string) {
     if (!(await this.authenticate({ pin }))) return undefined;
     return decrypt(data, await this.getMasterKey());
+  }
+
+  async encryptForever(data: string) {
+    return encrypt(data, await this.getForeverKey());
+  }
+
+  async decryptForever(data: string, pin?: string) {
+    if (!(await this.authenticate({ pin }))) return undefined;
+    return decrypt(data, await this.getForeverKey());
   }
 
   async setUserSecretsVerified(verified: boolean) {
