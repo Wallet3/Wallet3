@@ -38,11 +38,22 @@ export default observer(({ vm }: { vm: ShardReceiver }) => {
 
   const devTxtStyle: any = { color: secondaryTextColor, fontSize: 16, maxWidth: '90%', fontWeight: '500' };
 
-  const renderCompletedBar = ({ txt, tintColor, delay }: { txt: string; tintColor?: string; delay?: number }) => {
+  interface ICompletedBarProps {
+    txt: string;
+    tintColor?: string;
+    delay?: number;
+    succeed: boolean;
+  }
+
+  const renderCompletedBar = ({ txt, tintColor, delay, succeed }: ICompletedBarProps) => {
     return (
       <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 8 }}>
-        <ZoomInView duration={200} delay={delay}>
-          <Ionicons name="checkmark-circle" color={tintColor ?? borderColor} size={32} />
+        <ZoomInView duration={200} delay={delay} style={{ width: 32, alignItems: 'center' }}>
+          <Ionicons
+            name={succeed ? 'checkmark-circle' : 'warning'}
+            color={tintColor ?? borderColor}
+            size={succeed ? 32 : 30}
+          />
         </ZoomInView>
         <FadeInLeftView
           delay={300 + (delay ?? 0)}
@@ -104,16 +115,17 @@ export default observer(({ vm }: { vm: ShardReceiver }) => {
           <FadeInUpView delay={200} style={{ position: 'relative', minWidth: 160 }}>
             {secretStatus === ShardPersistentStatus.verifying &&
               dataVerified === undefined &&
-              renderCompletedBar({ delay: 300, txt: t('multi-sign-txt-data-verifying') })}
+              renderCompletedBar({ delay: 300, txt: t('multi-sign-txt-data-verifying'), succeed: true })}
 
-            {dataVerified && renderCompletedBar({ tintColor: secureColor, txt: t('multi-sign-txt-data-verified') })}
+            {dataVerified &&
+              renderCompletedBar({ tintColor: secureColor, txt: t('multi-sign-txt-data-verified'), succeed: true })}
             {dataVerified === false &&
-              renderCompletedBar({ tintColor: warningColor, txt: t('multi-sign-txt-data-verifying-failed') })}
+              renderCompletedBar({ tintColor: warningColor, txt: t('multi-sign-txt-data-verifying-failed'), succeed: false })}
 
             {secretStatus === ShardPersistentStatus.saved &&
-              renderCompletedBar({ txt: t('multi-sign-txt-data-saved'), tintColor: secureColor })}
+              renderCompletedBar({ txt: t('multi-sign-txt-data-saved'), tintColor: secureColor, succeed: true })}
             {secretStatus === ShardPersistentStatus.saveFailed &&
-              renderCompletedBar({ txt: t('multi-sign-txt-data-saving-failed'), tintColor: warningColor })}
+              renderCompletedBar({ txt: t('multi-sign-txt-data-saving-failed'), tintColor: warningColor, succeed: false })}
           </FadeInUpView>
         )}
       </View>

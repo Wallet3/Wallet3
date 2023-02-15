@@ -7,6 +7,7 @@ import InpageDApp from './entities/InpageDApp';
 import Key from './entities/Key';
 import MultiSigKey from './entities/MultiSigKey';
 import NFT from './entities/NFT';
+import ShardKey from './entities/ShardKey';
 import SourcifyMetadata from './entities/SourcifyItem';
 import Transaction from './entities/Transaction';
 import UrlTag from './entities/UrlTag';
@@ -29,12 +30,15 @@ const Schemas: MixedList<Function | string | EntitySchema> = [
 
 if (__DEV__) {
   Schemas.push(MultiSigKey);
+  Schemas.push(ShardKey);
 }
 
 class Database {
   private _dataSource!: DataSource;
 
   keys!: Repository<Key>;
+  multiSigKeys!: Repository<MultiSigKey>;
+  shardKeys!: Repository<ShardKey>;
   txs!: Repository<Transaction>;
   wcV1Sessions!: Repository<WCSession_v1>;
   wcV2Sessions!: Repository<WCV2_Session>;
@@ -70,6 +74,11 @@ class Database {
     this.nfts = this._dataSource.getRepository(NFT);
     this.wcV2Sessions = this._dataSource.getRepository(WCV2_Session);
     this.urls = this._dataSource.getRepository(UrlTag);
+
+    if (__DEV__) {
+      this.multiSigKeys = this._dataSource.getRepository(MultiSigKey);
+      this.shardKeys = this._dataSource.getRepository(ShardKey);
+    }
   }
 
   async reset() {
@@ -80,6 +89,7 @@ class Database {
       this.wcV2Sessions.clear(),
       this.inpageDApps.clear(),
       this.chains.clear(),
+      this.multiSigKeys?.clear(),
     ]);
   }
 }

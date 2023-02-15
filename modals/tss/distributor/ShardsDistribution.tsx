@@ -30,6 +30,28 @@ interface Props {
   onCritical: (flag: boolean) => void;
 }
 
+const DeviceStatus = observer(({ item, vm }: { item: ShardSender | ClientInfo; vm: ShardsDistributor }) => {
+  const status = (item as ShardSender).status ?? vm.localShardStatus;
+
+  return (
+    <View style={{ marginStart: 24 }}>
+      {status === ShardTransferringStatus.sending && <ActivityIndicator size="small" />}
+
+      {status === ShardTransferringStatus.ackFailed && (
+        <ZoomInView>
+          <Ionicons name="warning" color={warningColor} size={20} />
+        </ZoomInView>
+      )}
+
+      {status === ShardTransferringStatus.ackSucceed && (
+        <ZoomInView>
+          <Ionicons name="checkmark-circle" color={secureColor} size={24} />
+        </ZoomInView>
+      )}
+    </View>
+  );
+});
+
 export default observer(({ vm, close, onCritical }: Props) => {
   const { t } = i18n;
   const [marginHorizontal] = useState(calcHorizontalPadding());
@@ -44,7 +66,6 @@ export default observer(({ vm, close, onCritical }: Props) => {
 
   const renderConnectedItem = ({ item, index }: { item: ShardSender | ClientInfo; index: number }) => {
     const info: ClientInfo = item['remoteInfo'] ?? item;
-    const status = item['status'] ?? vm.localShardStatus;
 
     return (
       <View
@@ -53,16 +74,7 @@ export default observer(({ vm, close, onCritical }: Props) => {
         style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: marginHorizontal, paddingVertical: 8 }}
       >
         <DeviceInfo info={info} />
-
-        <View style={{ marginStart: 24 }}>
-          {status === ShardTransferringStatus.sending && <ActivityIndicator size="small" />}
-          {status === ShardTransferringStatus.ackFailed && <Ionicons name="warning" color={warningColor} size={20} />}
-          {status === ShardTransferringStatus.ackSucceed && (
-            <ZoomInView>
-              <Ionicons name="checkmark-circle" color={secureColor} size={24} />
-            </ZoomInView>
-          )}
-        </View>
+        <DeviceStatus item={item} vm={vm} />
       </View>
     );
   };
@@ -94,8 +106,12 @@ export default observer(({ vm, close, onCritical }: Props) => {
         )}
       </View>
 
-      {vm.status === ShardsDistributionStatus.distributionSucceed ? (
-        <Button title={t('button-done')} themeColor={secureColor} onPress={close} />
+      {vm.status > ShardsDistributionStatus.distributing ? (
+        <Button
+          title={t(vm.status === ShardsDistributionStatus.succeed ? 'button-done' : 'button-close')}
+          themeColor={vm.status === ShardsDistributionStatus.succeed ? secureColor : warningColor}
+          onPress={close}
+        />
       ) : (
         <Button
           disabled={approvedCount < 1 || vm.status === ShardsDistributionStatus.distributing}

@@ -1,18 +1,18 @@
-import { ContentType, MultiSignPrimaryServiceType, ShardAcknowledgement, ShardDistribution } from './Constants';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
-import { atob, btoa } from 'react-native-quick-base64';
-import { getDeviceBasicInfo, getDeviceInfo } from '../../common/p2p/Utils';
 
 import { DEFAULT_DERIVATION_PATH } from '../../common/Constants';
 import { HDNode } from 'ethers/lib/utils';
 import LINQ from 'linq';
 import MessageKeys from '../../common/MessageKeys';
 import MultiSigKey from '../../models/entities/MultiSigKey';
+import { MultiSignPrimaryServiceType } from './Constants';
 import { ShardSender } from './ShardSender';
 import { TCPClient } from '../../common/p2p/TCPClient';
 import { TCPServer } from '../../common/p2p/TCPServer';
 import ZeroConfiguration from '../../common/p2p/ZeroConfiguration';
+import { btoa } from 'react-native-quick-base64';
 import { createHash } from 'crypto';
+import { getDeviceBasicInfo } from '../../common/p2p/Utils';
 import i18n from '../../i18n';
 import secretjs from 'secrets.js-grempe';
 import { showMessage } from 'react-native-flash-message';
@@ -28,10 +28,10 @@ interface IConstruction {
 }
 
 export enum ShardsDistributionStatus {
-  notDistributed = 0,
+  ready = 0,
   distributing,
-  distributionSucceed,
-  distributionFailed,
+  succeed,
+  failed,
 }
 
 export class ShardsDistributor extends TCPServer<Events> {
@@ -44,8 +44,8 @@ export class ShardsDistributor extends TCPServer<Events> {
   approvedClients: ShardSender[] = [];
   pendingClients: ShardSender[] = [];
 
-  localShardStatus = ShardsDistributionStatus.notDistributed;
-  status = ShardsDistributionStatus.notDistributed;
+  localShardStatus = ShardsDistributionStatus.ready;
+  status = ShardsDistributionStatus.ready;
   threshold = 2;
 
   constructor({ mnemonic }: IConstruction) {
@@ -146,15 +146,14 @@ export class ShardsDistributor extends TCPServer<Events> {
   }
 
   async distributeSecret() {
-    if (this.status === ShardsDistributionStatus.distributing || this.status === ShardsDistributionStatus.distributionSucceed)
-      return;
+    if (this.status === ShardsDistributionStatus.distributing || this.status === ShardsDistributionStatus.succeed) return;
 
     if (this.totalCount < this.threshold) {
       showMessage({ message: i18n.t('multi-sign-msg-network-lost'), type: 'warning' });
       return;
     }
 
-    runInAction(() => (this.status = ShardsDistributionStatus.distributing));
+    runInAction(() => (this.localShardStatus = this.status = ShardsDistributionStatus.distributing));
 
     const rootShards = secretjs.share(this.rootEntropy, this.totalCount, this.threshold);
     const bip32Shards = secretjs.share(this.bip32.privateKey.substring(2), this.totalCount, this.threshold);
@@ -167,8 +166,9 @@ export class ShardsDistributor extends TCPServer<Events> {
 
     try {
       await key.save();
+      runInAction(() => (this.localShardStatus = ShardsDistributionStatus.succeed));
     } catch (error) {
-      runInAction(() => (this.status = ShardsDistributionStatus.distributionFailed));
+      runInAction(() => (this.localShardStatus = this.status = ShardsDistributionStatus.failed));
       showMessage({ message: i18n.t('msg-database-error'), type: 'danger' });
       return;
     }
@@ -176,7 +176,7 @@ export class ShardsDistributor extends TCPServer<Events> {
     const result = await Promise.all(
       rootShards.slice(1).map(async (rootShard, index) => {
         const c = this.approvedClients[index];
-        if (!c) return false;
+        if (!c) return 0;
 
         c.sendShard({
           rootShard,
@@ -186,11 +186,11 @@ export class ShardsDistributor extends TCPServer<Events> {
           threshold: this.threshold,
         });
 
-        return await c.readShardAck();
+        return (await c.readShardAck()) ? 1 : 0;
       })
     );
 
-    let succeed = LINQ.from(result).sum((r) => (r ? 1 : 0)) + 1 >= this.threshold;
+    const succeed = LINQ.from(result).sum() + 1 >= this.threshold;
 
     if (succeed) {
       PubSub.publish(MessageKeys.multiSigWalletCreated, key);
@@ -198,10 +198,7 @@ export class ShardsDistributor extends TCPServer<Events> {
       await key.remove();
     }
 
-    runInAction(
-      () =>
-        (this.status = succeed ? ShardsDistributionStatus.distributionSucceed : ShardsDistributionStatus.distributionFailed)
-    );
+    runInAction(() => (this.status = succeed ? ShardsDistributionStatus.succeed : ShardsDistributionStatus.failed));
   }
 
   dispose() {
