@@ -1,13 +1,13 @@
 import { Button, SafeViewContainer } from '../../components';
 import React, { useEffect, useRef, useState } from 'react';
-import { SafeAreaView, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 import { Account } from '../../viewmodels/account/Account';
 import AccountSelector from '../dapp/AccountSelector';
 import App from '../../viewmodels/core/App';
 import DAppConnectView from '../dapp/DAppConnectView';
 import { INetwork } from '../../common/Networks';
-import { Ionicons } from '@expo/vector-icons';
+import IllustrationCancel from '../../assets/illustrations/misc/cancel.svg';
 import Loading from '../views/Loading';
 import NetworkSelector from '../dapp/NetworkSelector';
 import Networks from '../../viewmodels/core/Networks';
@@ -151,9 +151,12 @@ const TimeoutView = ({ close, msg }: { close: Function; msg?: string }) => {
   return (
     <SafeViewContainer style={{ flex: 1 }}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Ionicons name="timer-outline" color="crimson" size={72} />
-        <Text style={{ fontSize: 24, color: 'crimson', marginTop: 12 }}>{msg ?? t('modal-dapp-connection-timeout')}</Text>
+        <View style={{ flex: 1 }} />
+        <IllustrationCancel width={125} height={125} />
+        <View style={{ flex: 1 }} />
+        <Text style={{ fontSize: 24, color: 'crimson', marginTop: 24 }}>{msg ?? t('modal-dapp-connection-timeout')}</Text>
         <Text style={{ fontSize: 17, color: 'crimson', marginTop: 12 }}>{t('modal-dapp-connection-refresh-again')}</Text>
+        <View style={{ flex: 1 }} />
       </View>
       <Button title="Close" onPress={() => close()} />
     </SafeViewContainer>
@@ -180,28 +183,30 @@ export default observer(({ uri, close, extra, directClient }: Props) => {
     if (!uri) return;
     if (client) return;
 
-    WalletConnectHub.connect(uri, extra).then((wc_client) => {
-      if (!wc_client) {
-        setErrorMsg(t('modal-dapp-connection-wc-failed'));
-        setConnectTimeout(true);
-        return;
-      }
+    WalletConnectHub.connect(uri, extra)
+      .then((wc_client) => {
+        if (!wc_client) {
+          setErrorMsg(t('modal-dapp-connection-wc-failed'));
+          setConnectTimeout(true);
+          return;
+        }
 
-      const timeout = setTimeout(async () => {
-        setConnectTimeout(true);
-        setConnecting(false);
-        setClient(undefined);
-        await wc_client?.killSession();
-        wc_client?.dispose();
-        wc_client = undefined;
-      }, 15 * 1000);
+        const timeout = setTimeout(async () => {
+          setConnectTimeout(true);
+          setConnecting(false);
+          setClient(undefined);
+          await wc_client?.killSession();
+          wc_client?.dispose();
+          wc_client = undefined;
+        }, 15 * 1000);
 
-      wc_client?.once('sessionRequest', () => {
-        clearTimeout(timeout);
-        setConnecting(false);
-        setClient(wc_client!);
-      });
-    });
+        wc_client?.once('sessionRequest', () => {
+          clearTimeout(timeout);
+          setConnecting(false);
+          setClient(wc_client!);
+        });
+      })
+      .catch(() => setConnectTimeout(true));
   }, [uri]);
 
   return (
