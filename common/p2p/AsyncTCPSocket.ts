@@ -26,12 +26,18 @@ export class AsyncTCPSocket extends EventEmitter<Events> {
   }
 
   write(data: Buffer | Uint8Array) {
-    return new Promise<number>((resolve) =>
-      this.raw.write(data, 'binary', (err) => {
-        err ? console.error(err) : undefined;
-        resolve(err ? 0 : data.byteLength);
-      })
-    );
+    if (this.closed) return 0;
+
+    try {
+      return new Promise<number>((resolve) =>
+        this.raw.write(data, 'binary', (err) => {
+          err ? console.error(err) : undefined;
+          resolve(err ? 0 : data.byteLength);
+        })
+      );
+    } catch (error) {
+      return 0;
+    }
   }
 
   writeString(data: string, encoding: BufferEncoding = 'utf8') {
@@ -39,10 +45,12 @@ export class AsyncTCPSocket extends EventEmitter<Events> {
   }
 
   read() {
+    if (this.closed) return;
     return new Promise<Buffer>((resolve) => this.raw.once('data', (data) => resolve(data as Buffer)));
   }
 
   readString(encoding: BufferEncoding = 'utf8') {
+    if (this.closed) return;
     return new Promise<string>((resolve) => this.raw.once('data', (data) => resolve(data.toString(encoding))));
   }
 

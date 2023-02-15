@@ -28,7 +28,7 @@ export default observer(({ onNext }: { onNext: (selectedService: Service) => voi
 
   const renderItem = ({ item }: { item: Service }) => {
     return (
-      <View entering={FadeInDown.springify()} exiting={FadeOutDown.springify()}>
+      <View entering={FadeInDown.springify()} exiting={FadeOutDown.springify()} style={{ paddingVertical: 8 }}>
         <TouchableOpacity
           style={{ paddingHorizontal: marginHorizontal, flexDirection: 'row', alignItems: 'center' }}
           onPress={() => setSelectedService(item)}
@@ -46,13 +46,7 @@ export default observer(({ onNext }: { onNext: (selectedService: Service) => voi
     <View style={{ flex: 1 }} entering={FadeInRight.delay(500).springify()} exiting={FadeOutLeft.springify()}>
       <Text style={{ color: secondaryTextColor, marginHorizontal }}>{t('multi-sign-connect-select-to-pair')}:</Text>
 
-      <FlatList
-        style={{ flex: 1 }}
-        contentContainerStyle={{ paddingTop: 12 }}
-        data={LanDiscovery.services}
-        renderItem={renderItem}
-        keyExtractor={(i) => i.name}
-      />
+      <FlatList style={{ flex: 1 }} data={LanDiscovery.services} renderItem={renderItem} keyExtractor={(i) => i.name} />
 
       <Button
         title={t('button-start-pairing')}

@@ -66,7 +66,7 @@ export class TCPClient extends AsyncTCPSocket {
       const iv = randomBytes(16);
       const ecdh = createECDH('secp256k1');
 
-      const negotiation = await this.read();
+      const negotiation = await this.read()!;
       await this.write(Buffer.from([...iv, ...ecdh.generateKeys()]));
 
       const siv = negotiation.subarray(0, 16);
@@ -92,7 +92,7 @@ export class TCPClient extends AsyncTCPSocket {
 
     this.secureWriteString(JSON.stringify(getDeviceInfo()));
 
-    const read = await this.secureReadString();
+    const read = (await this.secureReadString())!;
     this.remoteInfo = JSON.parse(read);
   };
 
@@ -106,10 +106,11 @@ export class TCPClient extends AsyncTCPSocket {
 
   async secureRead() {
     const data = await this.read();
+    if (!data) return;
     return this.decipher.update(data);
   }
 
   async secureReadString(encoding: BufferEncoding = 'utf8') {
-    return (await this.secureRead()).toString(encoding);
+    return (await this.secureRead())?.toString(encoding);
   }
 }

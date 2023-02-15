@@ -5,13 +5,14 @@ import { CipherAlgorithm } from './Constants';
 import EventEmitter from 'eventemitter3';
 import TCP from 'react-native-tcp-socket';
 import { TCPClient } from './TCPClient';
+import { randomInt } from '../../utils/math';
 import { sleep } from '../../utils/async';
 
 const { Server } = TCP;
 
 export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends EventEmitter<T, any> {
   private readonly server: TCP.Server;
-  private static port = 39127;
+  private static port = randomInt(20000, 50000);
   private handshakingSockets = new Set<AsyncTCPSocket>();
 
   constructor() {
@@ -91,7 +92,7 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
       const ecdh = createECDH('secp256k1');
 
       await socket.write(Buffer.from([...iv, ...ecdh.generateKeys()]));
-      const negotiation = await socket.read();
+      const negotiation = (await socket.read())!;
 
       const civ = negotiation.subarray(0, 16);
       const negotiationKey = negotiation.subarray(16);

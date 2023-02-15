@@ -76,7 +76,7 @@ export class ShardSender {
   }
 
   async readShardAck() {
-    const data = await this.secureReadString();
+    const data = (await this.secureReadString())!;
     console.log('shard ack received:', data);
 
     try {

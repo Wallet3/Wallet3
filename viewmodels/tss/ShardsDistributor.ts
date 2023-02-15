@@ -39,6 +39,7 @@ export class ShardsDistributor extends TCPServer<Events> {
   private root: HDNode;
   private protector: HDNode;
   private bip32: HDNode;
+  private serviceStarted = false;
 
   readonly id: string;
   approvedClients: ShardSender[] = [];
@@ -101,6 +102,7 @@ export class ShardsDistributor extends TCPServer<Events> {
   async start() {
     const result = await super.start();
     if (!result) return false;
+    if (this.serviceStarted) return true;
 
     console.log('publish service');
 
@@ -112,6 +114,7 @@ export class ShardsDistributor extends TCPServer<Events> {
       ver: 1,
     });
 
+    this.serviceStarted = true;
     return true;
   }
 
@@ -202,6 +205,7 @@ export class ShardsDistributor extends TCPServer<Events> {
   }
 
   dispose() {
+    this.serviceStarted = false;
     super.stop();
 
     Bonjour.unpublishService(this.name);

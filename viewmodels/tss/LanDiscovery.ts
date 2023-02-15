@@ -16,7 +16,7 @@ class LanDiscovery extends EventEmitter<Events> {
   constructor() {
     super();
 
-    makeObservable(this, { services: observable, onUpdate: action, onResolved: action });
+    makeObservable(this, { services: observable });
     Bonjour.on('resolved', this.onResolved);
     Bonjour.on('update', this.onUpdate);
   }
@@ -25,7 +25,7 @@ class LanDiscovery extends EventEmitter<Events> {
     const all = Bonjour.getAllServices();
     const names = Object.getOwnPropertyNames(all);
 
-    this.services = this.services.filter((s) => names.find((name) => name === s.name));
+    runInAction(() => (this.services = this.services.filter((s) => names.find((name) => name === s.name))));
   };
 
   onResolved = (service: Service) => {
@@ -33,7 +33,7 @@ class LanDiscovery extends EventEmitter<Events> {
       if (this.services.find((d) => d.name === service.name)) return;
 
       service.txt.info = JSON.parse(atob(service.txt.info));
-      this.services.push(service);
+      runInAction(() => this.services.push(service));
     } catch (error) {
     } finally {
       this.emit('resolved', service);

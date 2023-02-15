@@ -34,7 +34,9 @@ export default ({ info, verified }: { info: ClientInfo; verified?: boolean }) =>
           }}
         >
           <Text style={{ color: secondaryTextColor }} numberOfLines={1}>
-            {`${`${iosDevice.generationByIdentifier(info.device)},` || ''} ${info.os} ${info.osVersion || ''}`.trim()}
+            {`${`${iosDevice.generationByIdentifier(info.device)}` || ''}  ${
+              info.osVersion ? `,${info.os} ${info.osVersion}` : ''
+            }`.trim()}
           </Text>
         </View>
       </View>

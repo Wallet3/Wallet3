@@ -46,7 +46,7 @@ export class ShardReceiver extends TCPClient {
   }
 
   onReady = async () => {
-    const data = JSON.parse(await this.secureReadString()) as { type: ContentType };
+    const data = JSON.parse((await this.secureReadString())!) as { type: ContentType };
 
     switch (data.type) {
       case ContentType.shardDistribution:
@@ -123,7 +123,7 @@ export class ShardReceiver extends TCPClient {
   };
 
   dispose() {
-    this.raw.destroy();
+    super.destroy();
     this.removeAllListeners();
   }
 }
