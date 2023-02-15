@@ -84,8 +84,10 @@ export default (props: ButtonProps) => {
       <SwipeButton
         disabled={disabled}
         disabledRailBackgroundColor="transparent"
+        railFillBackgroundColor="transparent"
         disabledThumbIconBackgroundColor="#fff"
         shouldResetAfterSuccess
+        resetAfterSuccessAnimDuration={7000}
         swipeSuccessThreshold={95}
         containerStyles={{
           backgroundColor: 'transparent',
@@ -99,12 +101,13 @@ export default (props: ButtonProps) => {
         thumbIconStyles={{ backgroundColor: 'transparent', borderRadius: 6, borderWidth: 0, height: 32 }}
         titleStyles={txtStyle}
         onSwipeSuccess={onSwipeSuccess}
-        railBackgroundColor={'transparent'}
+        railBackgroundColor="transparent"
         railStyles={{
           maxWidth: '100%',
           borderWidth: 0,
           borderColor: 'black',
-          backgroundColor,
+          backgroundColor: disabled ? 'transparent' : backgroundColor,
+          backfaceVisibility: 'hidden',
           borderRadius: 5,
           margin: 0,
           padding: 0,
@@ -113,7 +116,7 @@ export default (props: ButtonProps) => {
         thumbIconComponent={arrowIcon as any}
         thumbIconBackgroundColor="#fff"
         thumbIconWidth={34}
-        titleColor="white"
+        titleColor="#fff"
         height={32}
         title={''}
       />
