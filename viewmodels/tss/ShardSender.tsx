@@ -3,6 +3,7 @@ import { computed, makeObservable, observable, runInAction } from 'mobx';
 
 import { TCPClient } from '../../common/p2p/TCPClient';
 import { createHash } from 'crypto';
+import eccrypto from 'eccrypto';
 
 export enum ShardTransferringStatus {
   ready = 0,
@@ -49,12 +50,26 @@ export class ShardSender {
     );
   }
 
-  sendShard(args: { shard: string; pubkey: string }) {
+  async sendShard(args: { rootShard: string; pubkey: string; signKey: string; bip32Shard: string }) {
+    const { rootShard, signKey, bip32Shard: bip32XprivShard } = args;
     runInAction(() => (this.status = ShardTransferringStatus.sending));
+
+    const signKeyBuffer = Buffer.from(signKey, 'hex');
+
+    const rootSignature = (await eccrypto.sign(signKeyBuffer, createHash('sha256').update(rootShard).digest())).toString(
+      'hex'
+    );
+
+    const bip32Signature = (
+      await eccrypto.sign(signKeyBuffer, createHash('sha256').update(bip32XprivShard).digest())
+    ).toString('hex');
+
     return this.secureWriteString(
       JSON.stringify({
         type: ContentType.shardDistribution,
         ...args,
+        rootSignature,
+        bip32Signature,
         distributionId: this.distributionId,
       } as ShardDistribution)
     );

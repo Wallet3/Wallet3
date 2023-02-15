@@ -25,7 +25,7 @@ export default observer(({ vm, onNext }: { vm: ShardsDistributor; onNext: () => 
 
   const { t } = i18n;
   const { secondaryTextColor, appColor, thirdTextColor } = Theme;
-  const { approvedCount, threshold } = vm;
+  const { approvedCount, threshold, totalCount } = vm;
 
   return (
     <View
@@ -42,7 +42,7 @@ export default observer(({ vm, onNext }: { vm: ShardsDistributor; onNext: () => 
           <Text style={{ fontSize: 24, marginStart: 10, marginEnd: 18, color: secondaryTextColor, fontWeight: '300' }}>
             of
           </Text>
-          <Text style={{ fontSize: 32, color: appColor, fontWeight: '700', minWidth: 29 }}>{approvedCount + 1}</Text>
+          <Text style={{ fontSize: 32, color: appColor, fontWeight: '700', minWidth: 29 }}>{totalCount}</Text>
         </View>
 
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginHorizontal }}>
@@ -54,16 +54,16 @@ export default observer(({ vm, onNext }: { vm: ShardsDistributor; onNext: () => 
             style={{ flex: 1, marginHorizontal: 12 }}
             minimumValue={approvedCount <= 1 ? 1 : 2}
             disabled={approvedCount <= 1}
-            maximumValue={approvedCount + 1}
+            maximumValue={totalCount}
             onValueChange={(v) => vm.setThreshold(v)}
             minimumTrackTintColor={appColor}
           />
-          <Text style={{ ...styles.thumbTxt, color: secondaryTextColor }}>{approvedCount + 1}</Text>
+          <Text style={{ ...styles.thumbTxt, color: secondaryTextColor }}>{totalCount}</Text>
         </View>
         <View style={{ flex: 1.5 }} />
 
         <Text style={{ marginHorizontal, marginTop: 8, color: thirdTextColor, lineHeight: 19, fontWeight: '500' }}>
-          {t('multi-sign-create-threshold', { threshold, max: approvedCount + 1 })}
+          {t('multi-sign-create-threshold', { threshold, max: totalCount })}
         </Text>
 
         {vm.thresholdTooHigh && (

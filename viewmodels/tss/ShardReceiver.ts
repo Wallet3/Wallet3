@@ -2,8 +2,10 @@ import { ContentType, PairingCodeVerified, ShardAcknowledgement, ShardDistributi
 import Validator, { AsyncCheckFunction, SyncCheckFunction } from 'fastest-validator';
 import { makeObservable, observable, runInAction } from 'mobx';
 
+import EventEmitter from 'eventemitter3';
 import { TCPClient } from '../../common/p2p/TCPClient';
 import { createHash } from 'crypto';
+import eccrypto from 'eccrypto';
 import i18n from '../../i18n';
 import { showMessage } from 'react-native-flash-message';
 import { sleep } from '../../utils/async';
@@ -12,10 +14,22 @@ import { startLayoutAnimation } from '../../utils/animations';
 export enum ShardPersistentStatus {
   waiting,
   verifying,
-  verifyingFailed,
-  verified,
-  saveFailed,
   saved,
+  saveFailed,
+}
+
+async function verifyEccSignature(pubkey: string, msg: string, signature: string) {
+  try {
+    await eccrypto.verify(
+      Buffer.from(pubkey, 'hex'),
+      createHash('sha256').update(msg).digest(),
+      Buffer.from(signature, 'hex')
+    );
+
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 export class ShardReceiver extends TCPClient {
@@ -44,23 +58,40 @@ export class ShardReceiver extends TCPClient {
 
   private handleShardDistribution = async (data: ShardDistribution) => {
     console.log(data);
-
+    const { rootShard, rootSignature, bip32Shard, bip32Signature, pubkey } = data;
     runInAction(() => (this.secretStatus = ShardPersistentStatus.verifying));
 
-    await sleep(2500);
+    await sleep(1000);
 
-    runInAction(() => (this.secretStatus = ShardPersistentStatus.verified));
+    const [validRoot, validBip32] = await Promise.all([
+      verifyEccSignature(pubkey, rootShard, rootSignature),
+      verifyEccSignature(pubkey, bip32Shard, bip32Signature),
+    ]);
+
+    const validSignature = validRoot && validBip32;
+
+    this.emit((validSignature ? 'dataVerified' : 'dataVerifyFailed') as any);
+
+    await sleep(1000);
 
     const ack: ShardAcknowledgement = {
       distributionId: data.distributionId,
-      success: true,
+      success: validSignature,
       type: ContentType.shardAcknowledgement,
     };
 
-    await this.secureWriteString(JSON.stringify(ack));
+    try {
+      if (!validSignature) return;
 
-    runInAction(() => (this.secretStatus = ShardPersistentStatus.saved));
-    startLayoutAnimation();
+      ack.success = true;
+
+      runInAction(() => (this.secretStatus = ShardPersistentStatus.saved));
+    } catch (e) {
+      ack.success = false;
+      runInAction(() => (this.secretStatus = ShardPersistentStatus.saveFailed));
+    } finally {
+      await this.secureWriteString(JSON.stringify(ack));
+    }
   };
 
   private handlePairingCode = async (data: PairingCodeVerified) => {

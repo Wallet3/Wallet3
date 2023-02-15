@@ -3,6 +3,7 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 import { atob, btoa } from 'react-native-quick-base64';
 import { getDeviceBasicInfo, getDeviceInfo } from '../../common/p2p/Utils';
 
+import { DEFAULT_DERIVATION_PATH } from '../../common/Constants';
 import { HDNode } from 'ethers/lib/utils';
 import LINQ from 'linq';
 import { ShardSender } from './ShardSender';
@@ -32,6 +33,7 @@ export class ShardsDistributor extends TCPServer<Events> {
   private rootEntropy: string;
   private root: HDNode;
   private protector: HDNode;
+  private bip32: HDNode;
 
   readonly id: string;
   approvedClients: ShardSender[] = [];
@@ -53,6 +55,7 @@ export class ShardsDistributor extends TCPServer<Events> {
       thresholdTooHigh: computed,
       approvedCount: computed,
       pendingCount: computed,
+      totalCount: computed,
 
       approveClient: action,
       rejectClient: action,
@@ -61,14 +64,21 @@ export class ShardsDistributor extends TCPServer<Events> {
 
     this.rootEntropy = utils.mnemonicToEntropy(mnemonic).substring(2);
 
+    const start = performance.now();
     this.root = utils.HDNode.fromMnemonic(mnemonic);
     this.protector = this.root.derivePath(`m/0'/3`);
+    this.bip32 = this.root.derivePath(DEFAULT_DERIVATION_PATH);
+    console.info(`Shards generation: ${performance.now() - start}`);
 
     this.id = createHash('sha256').update(this.protector.address).digest().toString('hex').substring(2, 34);
   }
 
   get name() {
     return `shards-distributor-${this.id}`;
+  }
+
+  get totalCount() {
+    return this.approvedCount + 1;
   }
 
   get approvedCount() {
@@ -135,20 +145,28 @@ export class ShardsDistributor extends TCPServer<Events> {
 
     if (this.status === ShardsDistributionStatus.distributing || this.status === ShardsDistributionStatus.distributionSucceed)
       return;
-    if (this.approvedCount + 1 < this.threshold) return;
+    if (this.totalCount < this.threshold) return;
 
     runInAction(() => (this.status = ShardsDistributionStatus.distributing));
 
-    const shards = secretjs.share(this.rootEntropy, this.approvedCount + 1, this.threshold);
+    const rootShards = secretjs.share(this.rootEntropy, this.totalCount, this.threshold);
+    console.log(this.bip32.extendedKey, this.bip32.privateKey);
+    const bip32Shards = secretjs.share(this.bip32.privateKey.substring(2), this.totalCount, this.threshold);
 
-    shards[0];
+    rootShards[0];
+    bip32Shards[0];
 
     const result = await Promise.all(
-      shards.slice(1).map(async (shard, index) => {
+      rootShards.slice(1).map(async (rootShard, index) => {
         const c = this.approvedClients[index];
         if (!c) return false;
 
-        c.sendShard({ shard, pubkey: this.protector.publicKey.substring(2) });
+        c.sendShard({
+          rootShard,
+          bip32Shard: bip32Shards[index],
+          pubkey: this.protector.publicKey.substring(2),
+          signKey: this.protector.privateKey.substring(2),
+        });
         return await c.readShardAck();
       })
     );

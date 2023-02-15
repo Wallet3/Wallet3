@@ -9,7 +9,10 @@ export enum ContentType {
 
 export type ShardDistribution = {
   type: ContentType.shardDistribution;
-  shard: string;
+  rootShard: string;
+  bip32Shard: string;
+  rootSignature: string;
+  bip32Signature: string;
   pubkey: string;
   distributionId: string;
 };

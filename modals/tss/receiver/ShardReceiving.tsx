@@ -21,13 +21,20 @@ import Theme from '../../../viewmodels/settings/Theme';
 import deviceInfoModule from 'react-native-device-info';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
+import { startLayoutAnimation } from '../../../utils/animations';
 
 const { View, Text, FlatList } = Animated;
 
 export default observer(({ vm }: { vm: ShardReceiver }) => {
   const { t } = i18n;
   const { secondaryTextColor, textColor, borderColor } = Theme;
-  const { pairingCodeVerified } = vm;
+  const { pairingCodeVerified, secretStatus } = vm;
+  const [dataVerified, setDataVerified] = useState<boolean | undefined>(undefined);
+
+  useEffect(() => {
+    vm.once('dataVerified' as any, () => setDataVerified(true));
+    vm.once('dataVerifyFailed' as any, () => setDataVerified(false));
+  }, []);
 
   const devTxtStyle: any = { color: secondaryTextColor, fontSize: 16, maxWidth: '90%', fontWeight: '500' };
 
@@ -78,7 +85,7 @@ export default observer(({ vm }: { vm: ShardReceiver }) => {
           </View>
         )}
 
-        {vm.pairingCodeVerified && vm.secretStatus === ShardPersistentStatus.waiting && (
+        {pairingCodeVerified && secretStatus === ShardPersistentStatus.waiting && (
           <ZoomInView
             style={{ position: 'relative', width: 250, height: 250, justifyContent: 'center', alignItems: 'center' }}
           >
@@ -93,29 +100,24 @@ export default observer(({ vm }: { vm: ShardReceiver }) => {
           </ZoomInView>
         )}
 
-        {vm.pairingCodeVerified && vm.secretStatus !== ShardPersistentStatus.waiting && (
+        {pairingCodeVerified && secretStatus !== ShardPersistentStatus.waiting && (
           <FadeInUpView delay={200} style={{ position: 'relative', minWidth: 160 }}>
-            {vm.secretStatus >= ShardPersistentStatus.verifying &&
+            {secretStatus === ShardPersistentStatus.verifying &&
+              (dataVerified === false || dataVerified === undefined) &&
               renderCompletedBar({
                 delay: 300,
-                tintColor:
-                  vm.secretStatus === ShardPersistentStatus.verifying
-                    ? undefined
-                    : vm.secretStatus >= ShardPersistentStatus.verified
-                    ? secureColor
-                    : warningColor,
-                txt:
-                  vm.secretStatus === ShardPersistentStatus.verifying
-                    ? t('multi-sign-txt-data-verifying')
-                    : vm.secretStatus >= ShardPersistentStatus.verified
-                    ? t('multi-sign-txt-data-verified')
-                    : t('multi-sign-txt-data-verifying-failed'),
+
+                txt: t('multi-sign-txt-data-verifying'),
               })}
 
-            {vm.secretStatus === ShardPersistentStatus.saved &&
+            {dataVerified && renderCompletedBar({ tintColor: secureColor, txt: t('multi-sign-txt-data-verified') })}
+            {dataVerified === false &&
+              renderCompletedBar({ tintColor: warningColor, txt: t('multi-sign-txt-data-verifying-failed') })}
+
+            {secretStatus === ShardPersistentStatus.saved &&
               renderCompletedBar({ txt: t('multi-sign-txt-data-saved'), tintColor: secureColor })}
 
-            {vm.secretStatus === ShardPersistentStatus.saveFailed &&
+            {secretStatus === ShardPersistentStatus.saveFailed &&
               renderCompletedBar({ txt: t('multi-sign-txt-data-saving-failed'), tintColor: warningColor })}
           </FadeInUpView>
         )}

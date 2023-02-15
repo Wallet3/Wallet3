@@ -45,6 +45,8 @@ if (__DEV__) {
     // const root = utils.HDNode.fromMnemonic(mnemonic);
     // console.log(utils.mnemonicToEntropy(mnemonic).substring(2), entropy.toString('hex'), root.privateKey);
 
+    const privkey = Buffer.from('8f7e98cf8f54d9aaedfa24a3d5971b2c80f8e05d2cce799dcbc51884d5f0ed95', 'hex');
+
     // eccrypto.encrypt(Buffer.from(root.publicKey.substring(2), 'hex'), Buffer.from('abc')).then(async (en) => {
     //   console.log(en.toString());
     //   console.log((await eccrypto.decrypt(Buffer.from(root.privateKey.substring(2), 'hex'), en)).toString('utf8'));
