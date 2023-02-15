@@ -6,13 +6,18 @@ import { getDeviceBasicInfo, getDeviceInfo } from '../../common/p2p/Utils';
 import { DEFAULT_DERIVATION_PATH } from '../../common/Constants';
 import { HDNode } from 'ethers/lib/utils';
 import LINQ from 'linq';
+import MessageKeys from '../../common/MessageKeys';
+import MultiSigKey from '../../models/entities/MultiSigKey';
 import { ShardSender } from './ShardSender';
 import { TCPClient } from '../../common/p2p/TCPClient';
 import { TCPServer } from '../../common/p2p/TCPServer';
 import ZeroConfiguration from '../../common/p2p/ZeroConfiguration';
 import { createHash } from 'crypto';
+import i18n from '../../i18n';
 import secretjs from 'secrets.js-grempe';
+import { showMessage } from 'react-native-flash-message';
 import { utils } from 'ethers';
+import { xpubkeyFromHDNode } from '../../utils/bip32';
 
 type Events = {
   newClient: (client: ShardSender) => void;
@@ -141,20 +146,32 @@ export class ShardsDistributor extends TCPServer<Events> {
   }
 
   async distributeSecret() {
-    console.log('client count', this.approvedCount);
-
     if (this.status === ShardsDistributionStatus.distributing || this.status === ShardsDistributionStatus.distributionSucceed)
       return;
-    if (this.totalCount < this.threshold) return;
+
+    if (this.totalCount < this.threshold) {
+      showMessage({ message: i18n.t('multi-sign-msg-network-lost'), type: 'warning' });
+      return;
+    }
 
     runInAction(() => (this.status = ShardsDistributionStatus.distributing));
 
     const rootShards = secretjs.share(this.rootEntropy, this.totalCount, this.threshold);
-    console.log(this.bip32.extendedKey, this.bip32.privateKey);
     const bip32Shards = secretjs.share(this.bip32.privateKey.substring(2), this.totalCount, this.threshold);
 
-    rootShards[0];
-    bip32Shards[0];
+    const key = new MultiSigKey();
+    key.id = this.id;
+    key.secrets = { bip32Shard: bip32Shards[0], rootShard: rootShards[0] };
+    key.secretsInfo = { threshold: this.threshold, devices: this.approvedClients.map((a) => a.remoteInfo!) };
+    key.bip32Xpubkey = xpubkeyFromHDNode(this.bip32);
+
+    try {
+      await key.save();
+    } catch (error) {
+      runInAction(() => (this.status = ShardsDistributionStatus.distributionFailed));
+      showMessage({ message: i18n.t('msg-database-error'), type: 'danger' });
+      return;
+    }
 
     const result = await Promise.all(
       rootShards.slice(1).map(async (rootShard, index) => {
@@ -166,13 +183,20 @@ export class ShardsDistributor extends TCPServer<Events> {
           bip32Shard: bip32Shards[index],
           pubkey: this.protector.publicKey.substring(2),
           signKey: this.protector.privateKey.substring(2),
+          threshold: this.threshold,
         });
+
         return await c.readShardAck();
       })
     );
 
-    const succeed = LINQ.from(result).sum((r) => (r ? 1 : 0)) + 1 >= this.threshold;
-    console.log('distribution succeed:', succeed);
+    let succeed = LINQ.from(result).sum((r) => (r ? 1 : 0)) + 1 >= this.threshold;
+
+    if (succeed) {
+      PubSub.publish(MessageKeys.multiSigWalletCreated, key);
+    } else {
+      await key.remove();
+    }
 
     runInAction(
       () =>

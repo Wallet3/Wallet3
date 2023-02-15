@@ -3,6 +3,7 @@ import Validator, { AsyncCheckFunction, SyncCheckFunction } from 'fastest-valida
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import EventEmitter from 'eventemitter3';
+import ShardKey from '../../models/entities/ShardKey';
 import { TCPClient } from '../../common/p2p/TCPClient';
 import { createHash } from 'crypto';
 import eccrypto from 'eccrypto';
@@ -57,11 +58,12 @@ export class ShardReceiver extends TCPClient {
   };
 
   private handleShardDistribution = async (data: ShardDistribution) => {
-    console.log(data);
-    const { rootShard, rootSignature, bip32Shard, bip32Signature, pubkey } = data;
     runInAction(() => (this.secretStatus = ShardPersistentStatus.verifying));
-
     await sleep(1000);
+
+    __DEV__ && console.log(data);
+
+    const { rootShard, rootSignature, bip32Shard, bip32Signature, pubkey } = data;
 
     const [validRoot, validBip32] = await Promise.all([
       verifyEccSignature(pubkey, rootShard, rootSignature),
@@ -75,13 +77,21 @@ export class ShardReceiver extends TCPClient {
     await sleep(1000);
 
     const ack: ShardAcknowledgement = {
+      type: ContentType.shardAcknowledgement,
       distributionId: data.distributionId,
       success: validSignature,
-      type: ContentType.shardAcknowledgement,
     };
 
     try {
       if (!validSignature) return;
+
+      const key = new ShardKey();
+      key.id = data.distributionId;
+      key.ownerDevice = this.remoteInfo!;
+      key.secrets = { bip32Shard, rootShard };
+      key.secretsInfo = { threshold: data.threshold };
+      key.lastUsedTimestamp = Date.now();
+      key.save();
 
       ack.success = true;
 

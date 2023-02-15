@@ -306,6 +306,7 @@
   "multi-sign-txt-data-saving-failed": "Save failed",
   "multi-sign-msg-threshold-too-high": "If any of your devices get damaged or lost, your wallet will be unrecoverable, it is recommended to add at least one more device.",
   "multi-sign-msg-pairing-code-not-match": "The pairing code does not match, please try again in a secure environment.",
+  "multi-sign-msg-network-lost": "The network connection with other devices has been disconnected, please check your network and try again.",
   "multi-sign-create-threshold": "You are creating a {{threshold}} of {{max}} multi-signature wallet. It means that transactions require {{threshold}} of the keys, but not necessarily all of them, to be authorized.",
   "multi-sign-keys-distribution": "Secret keys will be distributed to following devices",
 
@@ -326,6 +327,7 @@
   "msg-currently-ethereum-and-evm-networks-support": "Currently, Wallet 3 only supports Ethereum and EVM networks.",
   "msg-connected": "Connected",
   "msg-disconnected": "Disconnected",
+  "msg-database-error": "Database error occurred, unable to continue.",
   "misc-show-full-address": "Show full address",
   "button-next": "Next",
   "button-save": "Save",

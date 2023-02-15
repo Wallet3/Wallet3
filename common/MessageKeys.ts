@@ -16,6 +16,7 @@ export default {
   openShardsDistribution: 'openShardsDistribution',
   openShardReceiver: 'openShardReceiver',
   drawerSwipeEnabled: 'drawer-swipeEnabled',
+  multiSigWalletCreated: 'multiSigWalletCreated',
   wc_request: 'wc_request',
 
   walletconnect: {

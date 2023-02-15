@@ -4,6 +4,7 @@ import { Platform } from 'react-native';
 
 export function getDeviceInfo(): ClientInfo {
   return {
+    globalId: DeviceInfo.getUniqueIdSync(),
     name: DeviceInfo.getDeviceNameSync(),
     devtype: DeviceInfo.getDeviceType(),
     device: DeviceInfo.getDeviceId(),

@@ -103,12 +103,8 @@ export default observer(({ vm }: { vm: ShardReceiver }) => {
         {pairingCodeVerified && secretStatus !== ShardPersistentStatus.waiting && (
           <FadeInUpView delay={200} style={{ position: 'relative', minWidth: 160 }}>
             {secretStatus === ShardPersistentStatus.verifying &&
-              (dataVerified === false || dataVerified === undefined) &&
-              renderCompletedBar({
-                delay: 300,
-
-                txt: t('multi-sign-txt-data-verifying'),
-              })}
+              dataVerified === undefined &&
+              renderCompletedBar({ delay: 300, txt: t('multi-sign-txt-data-verifying') })}
 
             {dataVerified && renderCompletedBar({ tintColor: secureColor, txt: t('multi-sign-txt-data-verified') })}
             {dataVerified === false &&
@@ -116,7 +112,6 @@ export default observer(({ vm }: { vm: ShardReceiver }) => {
 
             {secretStatus === ShardPersistentStatus.saved &&
               renderCompletedBar({ txt: t('multi-sign-txt-data-saved'), tintColor: secureColor })}
-
             {secretStatus === ShardPersistentStatus.saveFailed &&
               renderCompletedBar({ txt: t('multi-sign-txt-data-saving-failed'), tintColor: warningColor })}
           </FadeInUpView>

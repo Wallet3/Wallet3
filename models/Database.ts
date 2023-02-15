@@ -1,16 +1,35 @@
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, EntitySchema, MixedList, Repository } from 'typeorm';
 
 import AddressTag from './entities/AddressTag';
 import Chain from './entities/Chain';
 import EtherscanContract from './entities/EtherscanContract';
 import InpageDApp from './entities/InpageDApp';
 import Key from './entities/Key';
+import MultiSigKey from './entities/MultiSigKey';
 import NFT from './entities/NFT';
 import SourcifyMetadata from './entities/SourcifyItem';
 import Transaction from './entities/Transaction';
 import UrlTag from './entities/UrlTag';
 import WCSession_v1 from './entities/WCSession_v1';
 import WCV2_Session from './entities/WCSession_v2';
+
+const Schemas: MixedList<Function | string | EntitySchema> = [
+  Key,
+  Transaction,
+  WCSession_v1,
+  InpageDApp,
+  Chain,
+  EtherscanContract,
+  NFT,
+  SourcifyMetadata,
+  AddressTag,
+  WCV2_Session,
+  UrlTag,
+];
+
+if (__DEV__) {
+  Schemas.push(MultiSigKey);
+}
 
 class Database {
   private _dataSource!: DataSource;
@@ -35,19 +54,7 @@ class Database {
       database: __DEV__ ? 'dev5' : 'appdata',
       driver: require('expo-sqlite'),
       synchronize: true,
-      entities: [
-        Key,
-        Transaction,
-        WCSession_v1,
-        InpageDApp,
-        Chain,
-        EtherscanContract,
-        NFT,
-        SourcifyMetadata,
-        AddressTag,
-        WCV2_Session,
-        UrlTag,
-      ],
+      entities: Schemas,
     });
 
     await this._dataSource.initialize();

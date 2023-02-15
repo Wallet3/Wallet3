@@ -1,6 +1,7 @@
 export const CipherAlgorithm = 'aes-256-cfb';
 
 export type ClientInfo = {
+  globalId: string;
   devtype: string;
   device: string;
   manufacturer: string;

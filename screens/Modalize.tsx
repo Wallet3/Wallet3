@@ -618,12 +618,11 @@ export const ShardsModal = observer(() => {
           ? setTimeout(() => PubSub.publish(MessageKeys.openShardsDistribution), 1000)
           : undefined;
         setVMs({});
+        setIsCritical(false);
       }}
     >
       <SafeAreaProvider>
-        {vms.shardsDistributor && (
-          <ShardsDistributorUI vm={vms.shardsDistributor} onCriticalView={() => setIsCritical(true)} close={close} />
-        )}
+        {vms.shardsDistributor && <ShardsDistributorUI vm={vms.shardsDistributor} onCritical={setIsCritical} close={close} />}
         {vms.shardReceiver ? <ShardReceiverUI /> : undefined}
       </SafeAreaProvider>
     </Modalize>

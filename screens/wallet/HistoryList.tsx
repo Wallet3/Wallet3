@@ -84,7 +84,7 @@ const Tx = observer(
 
             <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
               <Text style={{ fontSize: 16, marginEnd: 4, maxWidth: 180, color: textColor }} numberOfLines={1}>
-                {(cancelTx ? `${t('tip-cancel-action')} ` : '') + `${methodName}`}
+                {`${cancelTx ? `${t('tip-cancel-action')} ` : ''}${methodName}`}
               </Text>
               {method === 'contract-interaction' ? undefined : (
                 <Text style={{ fontSize: 16, color: textColor, maxWidth: '80%' }} numberOfLines={1}>

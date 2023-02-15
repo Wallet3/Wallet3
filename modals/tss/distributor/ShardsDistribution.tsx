@@ -24,7 +24,13 @@ import { observer } from 'mobx-react-lite';
 
 const { View } = Animated;
 
-export default observer(({ vm, close }: { vm: ShardsDistributor; close: () => void }) => {
+interface Props {
+  vm: ShardsDistributor;
+  close: () => void;
+  onCritical: (flag: boolean) => void;
+}
+
+export default observer(({ vm, close, onCritical }: Props) => {
   const { t } = i18n;
   const [marginHorizontal] = useState(calcHorizontalPadding());
   const { approvedClients, approvedCount } = vm;
@@ -94,7 +100,11 @@ export default observer(({ vm, close }: { vm: ShardsDistributor; close: () => vo
         <Button
           disabled={approvedCount < 1 || vm.status === ShardsDistributionStatus.distributing}
           title={t('button-shards-distribute')}
-          onPress={() => vm.distributeSecret()}
+          onPress={async () => {
+            onCritical(true);
+            await vm.distributeSecret();
+            onCritical(false);
+          }}
         />
       )}
     </View>

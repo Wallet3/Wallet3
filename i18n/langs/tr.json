@@ -303,8 +303,9 @@
   "multi-sign-txt-data-saving": "Veriler kaydediliyor",
   "multi-sign-txt-data-saved": "Veriler başarıyla kaydedildi",
   "multi-sign-txt-data-saving-failed": "Kaydedilirken hata oluştu",
-  "multi-sign-msg-threshold-too-high": "Dikkat, eğer cihazlarınızdan herhangi biri zarar görür veya kaybolan durumda cüzdanınız kurtarılamayacaktır. En az bir cihaz daha eklemeniz önerilir.",
+  "multi-sign-msg-threshold-too-high": "Dikkat: eğer cihazlarınızdan herhangi biri zarar görür veya kaybolan durumda cüzdanınız kurtarılamayacaktır. En az bir cihaz daha eklemeniz önerilir.",
   "multi-sign-msg-pairing-code-not-match": "Eşleşme kodu eşleşmiyor, lütfen güvenli bir ortamda tekrar deneyin.",
+  "multi-sign-msg-network-lost": "Diğer cihazlarla olan ağ bağlantısı kesildi, lütfen ağınızı kontrol edin ve yeniden deneyin.",
   "multi-sign-create-threshold": "Siz {{threshold}} of {{max}} çok imza cüzdanı oluşturuyorsunuz. Bu, işlemlerin en az {{threshold}} anahtarının yetkilendirilmesini gerektirdiği anlamına gelir.",
   "multi-sign-keys-distribution": "Aşağıdaki cihazlara anahtarlar dağıtılacaktır",
 
@@ -323,6 +324,7 @@
   "msg-sign-in-web2-failed": "İmza başarısız, lütfen internet bağlantınızın doğru olduğunu kontrol edin",
   "msg-the-app-does-not-support-chain": "Bu uygulama {{network}} desteklemiyor.",
   "msg-currently-ethereum-and-evm-networks-support": "Şu anda Wallet 3 Ethereum ve EVM ağlarını desteklemektedir",
+  "msg-database-error": "Veritabanı hatası, devam edilemiyor",
   "misc-show-full-address": "Tam adresi göster",
   "button-next": "Sonraki",
   "button-save": "Kaydet",

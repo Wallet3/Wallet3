@@ -50,7 +50,7 @@ export class ShardSender {
     );
   }
 
-  async sendShard(args: { rootShard: string; pubkey: string; signKey: string; bip32Shard: string }) {
+  async sendShard(args: { threshold: number; rootShard: string; pubkey: string; signKey: string; bip32Shard: string }) {
     const { rootShard, signKey, bip32Shard: bip32XprivShard } = args;
     runInAction(() => (this.status = ShardTransferringStatus.sending));
 

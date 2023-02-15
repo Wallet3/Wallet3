@@ -15,6 +15,7 @@ export type ShardDistribution = {
   bip32Signature: string;
   pubkey: string;
   distributionId: string;
+  threshold: number;
 };
 
 export const ShardDistributionSchema = {

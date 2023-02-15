@@ -3788,24 +3788,24 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/slider/-/slider-4.4.2.tgz#1fea0eb3ae31841fe87bd6c4fc67569066e9cf4b"
   integrity sha512-D9bv+3Vd2gairAhnRPAghwccgEmoM7g562pm8i4qB3Esrms5mggF81G3UvCyc0w3jjtFHh8dpQkfEoKiP0NW/Q==
 
-"@react-native-firebase/analytics@^17.1.0":
-  version "17.1.0"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-17.1.0.tgz#09591dbc06beadbfccf349aa2bb7551eb4603431"
-  integrity sha512-AnGetxQWGsPaoBAmUE6QPik+PCSTn79zVPAw/IBnrj0FgJ+6lAsaxE8ySTyEP2RNwhlRQHevk1ZR3YDO+gdeJg==
+"@react-native-firebase/analytics@^17.2.0":
+  version "17.2.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-17.2.0.tgz#e63887d410df0b0207878160f084aea2662a5568"
+  integrity sha512-/sFvjCj7fEAvk7hi5pa5ViGVZNRHArCYfM6NCTHpXq1GXrdFFLt1jEWsxzY5sIAhUcufqP0BPmv2IiYwa1JJxw==
 
-"@react-native-firebase/app@^17.1.0":
-  version "17.1.0"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-17.1.0.tgz#c295b058fad0a21b5448929ffd10925a34355155"
-  integrity sha512-Q9uC2uO8kJd9vxs5PEAG/Ks9xPwvNA+eqF0iSlB4tLcdFhnB/tKE0cNuUDw0OmFnJpAkC2P/ir0e1nVGKwuPbw==
+"@react-native-firebase/app@^17.2.0":
+  version "17.2.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-17.2.0.tgz#1c08fec73e7d8bd2fde71843aa1812a16257ff1e"
+  integrity sha512-eZESR0O9RFlC12hQUGD/VmCDwdo36RBv3Uldce1xplewEyQoWgxsVJiBXbrW6BdYnVCqfFx3CPwsxL1CAPB8CQ==
   dependencies:
     "@expo/config-plugins" "^5.0.4"
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
-"@react-native-firebase/firestore@^17.1.0":
-  version "17.1.0"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/firestore/-/firestore-17.1.0.tgz#4bf836ecef482ee1a422109a35cabe653f4f0b34"
-  integrity sha512-RSTjRevPkXaepuyJgwsAxMcTEDLu/8DnjL8qkNEBj/TeNY4Fkl1Dk722IiggxDrJdTC4WsA3U1C+9iV5WaaD9g==
+"@react-native-firebase/firestore@^17.2.0":
+  version "17.2.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/firestore/-/firestore-17.2.0.tgz#58ed3a57c021bfe6db3e98462d2488262b8186f4"
+  integrity sha512-RZyoNNJWc3Mw0ZcgTU2JBxcDkc29OigNNg0seAP3ilDRGP4GJgUicnn/144N6hmYFOPd4YHk3DFB87pcPXp8WQ==
 
 "@react-native-google-signin/google-signin@^9.0.2":
   version "9.0.2"
