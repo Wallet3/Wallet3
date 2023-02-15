@@ -1,4 +1,4 @@
-import { Wallet, parseXpubkey } from './Wallet';
+import { WalletBase, parseXpubkey } from '../wallet/WalletBase';
 import { action, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
 import { providers, utils } from 'ethers';
 
@@ -20,6 +20,7 @@ import { ReactNativeFirebase } from '@react-native-firebase/app';
 import Theme from '../settings/Theme';
 import TxHub from '../hubs/TxHub';
 import UI from '../settings/UI';
+import { Wallet } from '../wallet/Wallet';
 import WalletConnectHub from '../walletconnect/WalletConnectHub';
 import { fetchChainsOverview } from '../../common/apis/Debank';
 import i18n from '../../i18n';
@@ -33,7 +34,7 @@ export class AppVM {
   firebaseApp!: ReactNativeFirebase.FirebaseApp;
 
   initialized = false;
-  wallets: Wallet[] = [];
+  wallets: WalletBase[] = [];
   currentAccount: Account | null = null;
 
   get hasWallet() {

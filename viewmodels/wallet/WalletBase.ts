@@ -7,9 +7,11 @@ import { logEthSign, logSendTx } from '../services/Analytics';
 import { Account } from '../account/Account';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Authentication from '../auth/Authentication';
+import { BaseEntity } from 'typeorm';
 import Key from '../../models/entities/Key';
 import LINQ from 'linq';
 import MetamaskDAppsHub from '../walletconnect/MetamaskDAppsHub';
+import MultiSigKey from '../../models/entities/MultiSigKey';
 import { ReadableInfo } from '../../models/entities/Transaction';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import TxHub from '../hubs/TxHub';
@@ -46,48 +48,30 @@ export function parseXpubkey(mixedKey: string) {
   return components[components.length - 1];
 }
 
-export class Wallet {
-  private key: Key;
-  private refreshTimer!: NodeJS.Timer;
-  private removedIndexes: number[] = [];
+export abstract class WalletBase {
+  abstract isHDWallet: boolean;
+  abstract isMultiSig: boolean;
+
+  signInPlatform: 'apple' | 'google' | undefined;
+  signInUser: string | undefined;
 
   accounts: Account[] = [];
 
-  lastRefreshedTime = 0;
+  protected abstract get key(): {
+    bip32Xpubkey: string;
+    id: string | number;
+    basePathIndex: number;
+    basePath: string;
+  } & BaseEntity;
+  protected removedAccountIndexes: number[] = [];
 
-  readonly isHDWallet: boolean;
-  readonly signInPlatform: 'apple' | 'google' | undefined;
-  readonly signInUser: string | undefined;
-
-  get web2SignedIn() {
-    return this.signInPlatform !== undefined;
-  }
-
-  constructor(key: Key) {
-    this.key = key;
-
-    const components = key.bip32Xpubkey.split(':');
-    this.isHDWallet = components[components.length - 1].startsWith('xpub');
-    this.signInPlatform = components.length > 1 ? (components[0] as any) : undefined;
-    this.signInUser = components.length > 1 ? components[1] : undefined;
-
-    makeObservable(this, {
-      accounts: observable,
-      newAccount: action,
-      removeAccount: action,
-    });
-  }
-
-  isSameKey(key: Key) {
-    return (
-      parseXpubkey(this.key.bip32Xpubkey) === parseXpubkey(key.bip32Xpubkey) &&
-      this.key.basePath === key.basePath &&
-      this.key.basePathIndex === key.basePathIndex
-    );
+  constructor() {
+    makeObservable(this, { accounts: observable });
   }
 
   async init() {
-    this.removedIndexes = JSON.parse((await AsyncStorage.getItem(`${this.key.id}-removed-indexes`)) || '[]');
+    this.removedAccountIndexes = JSON.parse((await AsyncStorage.getItem(`${this.key.id}-removed-indexes`)) || '[]');
+
     const count = Number((await AsyncStorage.getItem(`${this.key.id}-address-count`)) || 1);
     const accounts: Account[] = [];
 
@@ -95,7 +79,7 @@ export class Wallet {
       const bip32 = utils.HDNode.fromExtendedKey(parseXpubkey(this.key.bip32Xpubkey));
 
       for (let i = this.key.basePathIndex; i < this.key.basePathIndex + count; i++) {
-        if (this.removedIndexes.includes(i)) continue;
+        if (this.removedAccountIndexes.includes(i)) continue;
 
         const accountNode = bip32.derivePath(`${i}`);
         accounts.push(new Account(accountNode.address, i, { signInPlatform: this.signInPlatform }));
@@ -109,14 +93,22 @@ export class Wallet {
     return this;
   }
 
-  newAccount() {
+  isSameKey(key: Key | MultiSigKey) {
+    return (
+      parseXpubkey(this.key.bip32Xpubkey) === parseXpubkey(key.bip32Xpubkey) &&
+      this.key.basePath === key.basePath &&
+      this.key.basePathIndex === key.basePathIndex
+    );
+  }
+
+  newAccount(): Account | undefined {
     if (!this.isHDWallet) return;
 
     const bip32 = utils.HDNode.fromExtendedKey(parseXpubkey(this.key.bip32Xpubkey));
     const index =
       Math.max(
         this.accounts[this.accounts.length - 1].index,
-        this.removedIndexes.length > 0 ? LINQ.from(this.removedIndexes).max() : 0
+        this.removedAccountIndexes.length > 0 ? LINQ.from(this.removedAccountIndexes).max() : 0
       ) + 1;
 
     const node = bip32.derivePath(`${index}`);
@@ -132,41 +124,18 @@ export class Wallet {
     const index = this.accounts.findIndex((a) => a.address === account.address);
     if (index === -1) return;
 
-    this.removedIndexes.push(account.index);
+    this.removedAccountIndexes.push(account.index);
     this.accounts.splice(index, 1);
 
     const storeKey = `${this.key.id}-removed-indexes`;
 
     if (this.accounts.length > 0) {
-      await AsyncStorage.setItem(storeKey, JSON.stringify(this.removedIndexes));
+      await AsyncStorage.setItem(storeKey, JSON.stringify(this.removedAccountIndexes));
     } else {
       AsyncStorage.removeItem(storeKey);
     }
 
     MetamaskDAppsHub.removeAccount(account.address);
-  }
-
-  private async unlockPrivateKey({ pin, accountIndex }: { pin?: string; accountIndex?: number }) {
-    try {
-      if (this.isHDWallet) {
-        const xprivkey = await Authentication.decrypt(this.key.bip32Xprivkey, pin);
-        if (!xprivkey) return undefined;
-
-        const bip32 = utils.HDNode.fromExtendedKey(xprivkey);
-        const account = bip32.derivePath(`${accountIndex ?? 0}`);
-        return account.privateKey;
-      } else {
-        const privkey = await Authentication.decrypt(this.key.secret, pin);
-        return privkey;
-      }
-    } catch (error) {}
-  }
-
-  private async openWallet(args: { pin?: string; accountIndex: number }) {
-    const key = await this.unlockPrivateKey(args);
-    if (!key) return undefined;
-
-    return new EthersWallet(key);
   }
 
   async signTx({ accountIndex, tx, pin }: SignTxRequest) {
@@ -224,17 +193,19 @@ export class Wallet {
     return hash;
   }
 
-  async getSecret(pin?: string) {
-    try {
-      return await Authentication.decrypt(this.key.secret, pin);
-    } catch (error) {}
-  }
-
-  dispose() {
-    clearTimeout(this.refreshTimer);
-  }
-
   delete() {
     return this.key.remove();
+  }
+
+  abstract getSecret(pin?: string): Promise<string | undefined>;
+  abstract dispose(): void;
+
+  protected abstract unlockPrivateKey(args: { pin?: string; accountIndex?: number }): Promise<string | undefined>;
+
+  private async openWallet(args: { pin?: string; accountIndex: number }) {
+    const key = await this.unlockPrivateKey(args);
+    if (!key) return undefined;
+
+    return new EthersWallet(key);
   }
 }

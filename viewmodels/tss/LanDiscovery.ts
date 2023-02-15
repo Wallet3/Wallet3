@@ -1,9 +1,9 @@
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
+import Bonjour from '../../common/p2p/Bonjour';
 import EventEmitter from 'eventemitter3';
 import { MultiSignPrimaryServiceType } from './Constants';
 import { Service } from 'react-native-zeroconf';
-import ZeroConfiguration from '../../common/p2p/ZeroConfiguration';
 import { atob } from 'react-native-quick-base64';
 
 type Events = {
@@ -17,12 +17,12 @@ class LanDiscovery extends EventEmitter<Events> {
     super();
 
     makeObservable(this, { services: observable, onUpdate: action, onResolved: action });
-    ZeroConfiguration.on('resolved', this.onResolved);
-    ZeroConfiguration.on('update', this.onUpdate);
+    Bonjour.on('resolved', this.onResolved);
+    Bonjour.on('update', this.onUpdate);
   }
 
   onUpdate = () => {
-    const all = ZeroConfiguration.getAllServices();
+    const all = Bonjour.getAllServices();
     const names = Object.getOwnPropertyNames(all);
 
     this.services = this.services.filter((s) => names.find((name) => name === s.name));
@@ -41,11 +41,11 @@ class LanDiscovery extends EventEmitter<Events> {
   };
 
   scan() {
-    ZeroConfiguration.scan(MultiSignPrimaryServiceType);
+    Bonjour.scan(MultiSignPrimaryServiceType);
   }
 
   stop() {
-    ZeroConfiguration.stopScan();
+    Bonjour.stopScan();
   }
 }
 

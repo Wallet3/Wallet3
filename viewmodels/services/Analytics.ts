@@ -1,6 +1,6 @@
 import Networks from '../core/Networks';
 import { Platform } from 'react-native';
-import { SendTxRequest } from '../core/Wallet';
+import { SendTxRequest } from '../wallet/WalletBase';
 import { SupportedWCSchemes } from '../hubs/LinkHub';
 import Transaction from '../../models/entities/Transaction';
 import analytics from '@react-native-firebase/analytics';

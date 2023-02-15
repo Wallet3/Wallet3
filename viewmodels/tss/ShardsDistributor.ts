@@ -1,5 +1,6 @@
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
+import Bonjour from '../../common/p2p/Bonjour';
 import { DEFAULT_DERIVATION_PATH } from '../../common/Constants';
 import { HDNode } from 'ethers/lib/utils';
 import LINQ from 'linq';
@@ -9,7 +10,6 @@ import { MultiSignPrimaryServiceType } from './Constants';
 import { ShardSender } from './ShardSender';
 import { TCPClient } from '../../common/p2p/TCPClient';
 import { TCPServer } from '../../common/p2p/TCPServer';
-import ZeroConfiguration from '../../common/p2p/ZeroConfiguration';
 import { btoa } from 'react-native-quick-base64';
 import { createHash } from 'crypto';
 import { getDeviceBasicInfo } from '../../common/p2p/Utils';
@@ -104,7 +104,7 @@ export class ShardsDistributor extends TCPServer<Events> {
 
     console.log('publish service');
 
-    ZeroConfiguration.publishService(MultiSignPrimaryServiceType, this.name, this.port!, {
+    Bonjour.publishService(MultiSignPrimaryServiceType, this.name, this.port!, {
       role: 'primary',
       func: 'shards-distribution',
       distributionId: this.id,
@@ -204,7 +204,7 @@ export class ShardsDistributor extends TCPServer<Events> {
   dispose() {
     super.stop();
 
-    ZeroConfiguration.unpublishService(this.name);
+    Bonjour.unpublishService(this.name);
     this.approvedClients.forEach((c) => c.destroy());
     this.pendingClients.forEach((c) => c.destroy());
   }

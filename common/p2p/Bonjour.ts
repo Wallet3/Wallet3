@@ -9,7 +9,7 @@ type Events = {
   update: () => void;
 };
 
-class ZeroConfiguration extends EventEmitter<Events> {
+class Bonjour extends EventEmitter<Events> {
   zc = new Zeroconf();
 
   constructor() {
@@ -46,4 +46,4 @@ class ZeroConfiguration extends EventEmitter<Events> {
   }
 }
 
-export default new ZeroConfiguration();
+export default new Bonjour();

@@ -1,6 +1,7 @@
 import { createCipheriv, createHash, randomBytes } from 'crypto';
 import { ethers, utils } from 'ethers';
 
+import Bonjour from '../common/p2p/Bonjour';
 import DeviceInfo from 'react-native-device-info';
 import LanDiscovery from '../viewmodels/tss/LanDiscovery';
 import { LogBox } from 'react-native';
@@ -10,7 +11,6 @@ import { Service } from 'react-native-zeroconf';
 import { ShardReceiver } from '../viewmodels/tss/ShardReceiver';
 import { ShardsDistributor } from '../viewmodels/tss/ShardsDistributor';
 import { TCPClient } from '../common/p2p/TCPClient';
-import ZeroConfiguration from '../common/p2p/ZeroConfiguration';
 import eccrypto from 'eccrypto';
 import { getScreenCornerRadius } from '../utils/hardware';
 import iosDevice from 'ios-device-list';

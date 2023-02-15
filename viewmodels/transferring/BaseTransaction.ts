@@ -22,7 +22,7 @@ import { ERC20Token } from '../../models/ERC20';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
 import { NativeToken } from '../../models/NativeToken';
-import { Wallet } from '../core/Wallet';
+import { WalletBase } from '../wallet/WalletBase';
 import { fetchAddressInfo } from '../services/EtherscanPublicTag';
 import { getEnsAvatar } from '../../common/ENS';
 import { showMessage } from 'react-native-flash-message';
@@ -34,7 +34,7 @@ export class BaseTransaction {
 
   readonly network: INetwork;
   readonly account: Account;
-  readonly wallet: Wallet;
+  readonly wallet: WalletBase;
   readonly nativeToken: NativeToken;
 
   to = '';
