@@ -219,7 +219,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
         options={{ title: t('connectedapps-title'), headerShown: false }}
       />
       <Screen name="Settings" component={SettingScreen} options={{ title: t('home-drawer-settings') }} />
-      <Screen name="MultiSig" component={MultiSigScreen} options={{ title: t('home-drawer-multi-sig') }} />
+      <Screen name="MultiSig" component={MultiSigScreen} options={{ title: t('home-drawer-multi-sig'), headerShown: false }} />
     </Navigator>
   );
 });

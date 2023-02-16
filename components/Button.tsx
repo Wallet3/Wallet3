@@ -6,6 +6,7 @@ import { BreathAnimation } from '../utils/animations';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import SwipeButton from 'rn-swipe-button';
+import { observable } from 'mobx';
 import { themeColor } from '../constants/styles';
 
 export interface ButtonProps {

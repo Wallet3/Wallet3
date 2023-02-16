@@ -225,8 +225,8 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
       key="metamask"
       style={{ padding: 12, flexDirection: 'row', alignItems: 'center', height: headerHeight, justifyContent: 'center' }}
     >
-      <FontAwesome5 name="compass" color={'deepskyblue'} size={19} />
-      <Text style={{ color: 'deepskyblue', fontWeight: '500', marginStart: 8, fontSize: 18 }}>Web3</Text>
+      <FontAwesome5 name="compass" color={textColor} size={15} />
+      <Text style={{ color: textColor, fontWeight: '500', marginStart: 8, fontSize: 18 }}>Web3</Text>
     </View>,
   ];
 
@@ -266,6 +266,13 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
             style={{ height: headerHeight }}
           />
         </View>
+
+        <TouchableOpacity
+          style={{ padding: 16, paddingVertical: 8, position: 'absolute', right: 0, bottom: 4, zIndex: 9 }}
+          onPress={() => PubSub.publish(MessageKeys.openGlobalQRScanner)}
+        >
+          <Ionicons name="scan-outline" color={textColor} size={20} />
+        </TouchableOpacity>
       </View>
 
       <Swiper ref={swiper} showsPagination={false} showsButtons={false} loop={false} onIndexChanged={scrollToIndex}>
@@ -282,8 +289,8 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
                 justifyContent: 'center',
               }}
             >
-              <FontAwesome5 name="compass" size={24} color="deepskyblue" />
-              <Ionicons name="arrow-forward" size={20} color="deepskyblue" style={{ opacity: 0.6, marginStart: 8 }} />
+              <Ionicons name="arrow-back" size={22} color={textColor} style={{ marginHorizontal: 12 }} />
+              <FontAwesome5 name="compass" size={24} color={textColor} />
             </TouchableOpacity>
           )}
 

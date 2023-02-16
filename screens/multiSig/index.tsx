@@ -11,7 +11,7 @@ import {
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import React, { useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { borderColor, secondaryFontColor, secureColor } from '../../constants/styles';
+import { borderColor, secondaryFontColor, secureColor, verifiedColor, warningColor } from '../../constants/styles';
 
 import { Account } from '../../viewmodels/account/Account';
 import AccountSelector from '../../modals/dapp/AccountSelector';
@@ -34,43 +34,129 @@ import WalletConnectHub from '../../viewmodels/walletconnect/WalletConnectHub';
 import { WalletConnect as WalletConnectLogo } from '../../assets/3rd';
 import { WalletConnect_v1 } from '../../viewmodels/walletconnect/WalletConnect_v1';
 import { WalletConnect_v2 } from '../../viewmodels/walletconnect/WalletConnect_v2';
+import { ZoomInView } from '../../components/animations';
 import i18n from '../../i18n';
 import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 import { startLayoutAnimation } from '../../utils/animations';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
-export default observer(() => {
-  const { secondaryTextColor } = Theme;
+export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
+  const [currentPage, setCurrentPage] = useState(0);
+  const { secondaryTextColor, textColor, foregroundColor, systemBorderColor } = Theme;
   const { currentWallet } = App;
+
+  const { top } = useSafeAreaInsets();
   const { t } = i18n;
+  const headerScroller = useRef<FlatList>(null);
+  const swiper = useRef<Swiper>(null);
+
+  const headerHeight = 49;
+  const scrollToIndex = (index: number) => {
+    headerScroller.current?.scrollToIndex({ index, animated: true });
+    setCurrentPage(index);
+  };
+
+  const logos = [
+    <View
+      key="paired_devices"
+      style={{ padding: 12, flexDirection: 'row', alignItems: 'center', height: headerHeight, justifyContent: 'center' }}
+    >
+      <Ionicons name="phone-portrait-outline" size={15} color={textColor} />
+      <Text style={{ color: textColor, fontWeight: '600', marginHorizontal: 8, fontSize: 18, textTransform: 'capitalize' }}>
+        {t('multi-sig-screen-paired-devices')}
+      </Text>
+    </View>,
+    <View
+      key="my_multiSig_wallet"
+      style={{ padding: 12, flexDirection: 'row', alignItems: 'center', height: headerHeight, justifyContent: 'center' }}
+    >
+      <MaterialCommunityIcons name="key-chain-variant" color={textColor} size={19} />
+      <Text style={{ color: textColor, fontWeight: '600', marginStart: 8, fontSize: 18 }}>
+        {t('multi-sig-modal-title-welcome')}
+      </Text>
+    </View>,
+  ];
 
   return (
-    <SafeViewContainer>
-      <View style={{ marginBottom: 24 }}>
-        <Text style={{ color: secondaryTextColor, fontWeight: '500' }}>My MultiSig Wallet</Text>
-        <Collapsible collapsed={false} style={{ flex: 1 }}>
-          {}
-        </Collapsible>
+    <View style={{ flex: 1, paddingTop: top }}>
+      <View
+        style={{ flexDirection: 'row', alignItems: 'center', borderBottomWidth: 0.333, borderBottomColor: systemBorderColor }}
+      >
+        <TouchableOpacity
+          style={{ padding: 16, paddingVertical: 8, position: 'absolute', zIndex: 9 }}
+          onPress={() => navigation.dispatch(DrawerActions.openDrawer)}
+        >
+          <Feather name="menu" size={20} color={foregroundColor} />
+        </TouchableOpacity>
 
-        {!currentWallet?.isMultiSig && (
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            marginBottom: -2,
+          }}
+        >
+          <FlatList
+            ref={headerScroller}
+            scrollEnabled={false}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
+            pagingEnabled
+            data={logos}
+            renderItem={({ item }) => item}
+            contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
+            style={{ height: headerHeight }}
+          />
+        </View>
+
+        <TouchableOpacity
+          style={{ padding: 16, paddingVertical: 8, position: 'absolute', right: 0, bottom: 4, zIndex: 9 }}
+          onPress={() => {
+            const to = currentPage === 1 ? 0 : 1;
+            scrollToIndex(to);
+            swiper.current?.scrollTo(to, true);
+          }}
+        >
+          {currentPage === 0 ? (
+            <MaterialCommunityIcons name="key-chain-variant" color={textColor} size={21} />
+          ) : (
+            <Ionicons name="phone-portrait-outline" size={18} color={textColor} />
+          )}
+        </TouchableOpacity>
+      </View>
+
+      <Swiper ref={swiper} showsPagination={false} showsButtons={false} loop={false} onIndexChanged={scrollToIndex}>
+        <SafeViewContainer style={{ width: '100%', height: '100%' }}>
+          <FlatList style={{ flexGrow: 1 }} data={[]} renderItem={(i) => <View />} />
+          <ButtonV2
+            title={t('button-start-pairing')}
+            icon={() => <Ionicons name="phone-portrait-outline" color="#fff" size={17} />}
+            style={{ marginTop: 16 }}
+          />
+        </SafeViewContainer>
+
+        <SafeViewContainer>
+          {!currentWallet?.isMultiSig && (
+            <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+              <Text style={{ color: textColor, fontWeight: '500', marginTop: 12, textAlignVertical: 'center' }}>
+                <Ionicons name="arrow-up-circle" size={15} />
+                {` ${t('multi-sig-screen-tip-upgrade-to-multi-sig-wallet')}`}
+              </Text>
+            </View>
+          )}
+
+          {currentWallet?.isMultiSig && <FlatList style={{}} data={[]} renderItem={(i) => <View />} />}
+
           <ButtonV2
             title={t('button-upgrade')}
-            style={{ marginTop: 16 }}
+            style={{ marginTop: 24 }}
             themeColor={secureColor}
-            icon={() => <Ionicons name="arrow-up-circle-outline" color="#fff" size={21} />}
+            icon={() => <Ionicons name="arrow-up-circle-outline" color="#fff" size={19} />}
           />
-        )}
-      </View>
-
-      <View style={{ flex: 1 }}>
-        <Text style={{ color: secondaryTextColor, fontWeight: '500' }}>Paired Wallets</Text>
-        <View style={{ flex: 1 }} />
-        <ButtonV2
-          title={t('button-start-pairing')}
-          icon={() => <MaterialIcons name="phonelink-ring" color="#fff" size={21} />}
-        />
-      </View>
-    </SafeViewContainer>
+        </SafeViewContainer>
+      </Swiper>
+    </View>
   );
 });

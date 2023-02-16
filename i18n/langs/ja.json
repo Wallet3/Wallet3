@@ -277,6 +277,11 @@
   "tx-type-contract-interaction": "コントラクト・インタラクション",
   "tx-type-unknown": "未知",
 
+  "multi-sig-screen-my-multi-wallets": "私のウォレット",
+  "multi-sig-screen-paired-devices": "ペアリングされたデバイス",
+  "multi-sig-screen-tip-upgrade-to-multi-sig-wallet": "このウォレットはマルチシグウォレットではありません。マルチシグウォレットにアップグレードすることができます。",
+  "multi-sig-screen-tip-after-upgrading": "マルチシグウォレットにアップグレードした場合でも、引き出しフレーズを使用してウォレットを復元したり、引き出しフレーズを使用して他の場所でウォレットを復元したりできることに注意してください。",
+
   "multi-sig-modal-title-welcome": "マルチシグウォレット",
   "multi-sig-modal-title-preparations": "準備作業",
   "multi-sig-modal-title-connect-devices": "デバイスの接続",

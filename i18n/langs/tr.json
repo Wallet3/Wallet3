@@ -281,6 +281,11 @@
   "tx-type-contract-interaction": "Sözleşme Etkileşimi",
   "tx-type-unknown": "Bilinmeyen",
 
+  "multi-sig-screen-my-multi-wallets": "Çoklu İmza Cüzdanım",
+  "multi-sig-screen-paired-devices": "Eşleştirilmiş Cihazlar",
+  "multi-sig-screen-tip-upgrade-to-multi-sig-wallet": "Şu anki cüzdan çok imzalı cüzdan değil, çok imzalı cüzdana yükseltebilirsiniz.",
+  "multi-sig-screen-tip-after-upgrading": "Lütfen unutmayın, çoklu imza cüzdanına yükselttikten sonra bile kurtarma kelimesini kullanarak cüzdanınızı geri yükleyebilir veya kurtarma kelimesini kullanarak başka bir yerde cüzdanınızı geri yükleyebilirsiniz.",
+
   "multi-sig-modal-title-welcome": "Çok İmzalı Cüzdan",
   "multi-sig-modal-title-preparations": "Hazırlık",
   "multi-sig-modal-title-connect-devices": "Cihazları Bağlayın",

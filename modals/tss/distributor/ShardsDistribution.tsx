@@ -96,7 +96,7 @@ export default observer(({ vm, close, onCritical }: Props) => {
     >
       <View style={{ flex: 1, marginBottom: 16 }}>
         <Text style={{ marginHorizontal, fontWeight: '500', color: secondaryTextColor }}>
-          {t('multi-sig-modal-keys-distribution')}
+          {t('multi-sig-modal-connect-approved-clients')}:
         </Text>
 
         <FlatList
