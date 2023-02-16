@@ -13,6 +13,7 @@ import Drawer from './drawer';
 import { DrawerNavigationHelpers } from '@react-navigation/drawer/lib/typescript/src/types';
 import ExchangeScreen from './exchange';
 import MessageKeys from '../common/MessageKeys';
+import MultiSigScreen from './multiSig';
 import NFTList from './nfts/List';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../viewmodels/core/Networks';
@@ -218,6 +219,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
         options={{ title: t('connectedapps-title'), headerShown: false }}
       />
       <Screen name="Settings" component={SettingScreen} options={{ title: t('home-drawer-settings') }} />
+      <Screen name="MultiSig" component={MultiSigScreen} options={{ title: t('home-drawer-multi-sig') }} />
     </Navigator>
   );
 });

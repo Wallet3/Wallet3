@@ -12,6 +12,7 @@ import Database from '../../models/Database';
 import GasPrice from '../misc/GasPrice';
 import Key from '../../models/entities/Key';
 import LINQ from 'linq';
+import LanDiscovery from '../../common/p2p/LanDiscovery';
 import LinkHub from '../hubs/LinkHub';
 import MessageKeys from '../../common/MessageKeys';
 import MetamaskDAppsHub from '../walletconnect/MetamaskDAppsHub';
@@ -206,10 +207,6 @@ export class AppVM {
     await Promise.all([Database.init(), Authentication.init()]);
     await Promise.all([Networks.init()]);
 
-    TxHub.init().then(() => {
-      AppStoreReview.check();
-    });
-
     const wallets: WalletBase[] = await Promise.all(
       [
         (await Database.keys.find()).map((key) => new SingleSigWallet(key).init()),
@@ -238,6 +235,9 @@ export class AppVM {
       this.wallets = wallets;
       this.switchAccount(lastUsedAccount, true);
     });
+
+    TxHub.init().then(() => AppStoreReview.check());
+    Database.shardKeys?.count().then((c) => c > 0 && LanDiscovery.scan());
   }
 
   async reset() {

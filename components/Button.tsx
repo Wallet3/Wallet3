@@ -45,7 +45,7 @@ export default (props: ButtonProps) => {
     ...styles.text,
     color: reverse ? (disabled ? 'lightgrey' : themeColor) : '#fff',
     ...((props?.txtStyle as any) || {}),
-    marginStart: props.icon ? 6 : 0,
+    marginStart: props.icon ? 8 : 0,
   };
 
   const arrowIcon = () => <Ionicons name="arrow-forward" size={19} color={backgroundColor} style={{}} />;
@@ -87,7 +87,7 @@ export default (props: ButtonProps) => {
         railFillBackgroundColor="transparent"
         disabledThumbIconBackgroundColor="#fff"
         shouldResetAfterSuccess={!disabled}
-        // resetAfterSuccessAnimDuration={000}
+        resetAfterSuccessAnimDuration={5000}
         swipeSuccessThreshold={95}
         containerStyles={{
           backgroundColor: 'transparent',

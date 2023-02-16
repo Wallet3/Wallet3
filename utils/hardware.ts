@@ -1,6 +1,7 @@
 import DeviceInfo from 'react-native-device-info';
 import { ModalMarginScreen } from '../modals/styles';
 import iosDevice from 'ios-device-list';
+import { useState } from 'react';
 
 export const DefaultCornerRadius = 20;
 
@@ -29,7 +30,7 @@ const iPhone = {
 
 let screenCornerRadius = 0;
 
-export function getScreenCornerRadius() {
+export function getScreenCornerRadius(): number {
   if (screenCornerRadius) return screenCornerRadius;
 
   const currentDevice: string = iosDevice.generationByIdentifier(DeviceInfo.getDeviceId())?.toLowerCase() ?? '';
@@ -42,4 +43,9 @@ export function getScreenCornerRadius() {
 
 export function getDeviceModel() {
   return iosDevice.generationByIdentifier(DeviceInfo.getDeviceId()) ?? DeviceInfo.getDeviceSync();
+}
+
+export function useScreenCornerRadius() {
+  const [cornerRadius] = useState(getScreenCornerRadius());
+  return cornerRadius;
 }

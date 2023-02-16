@@ -34,10 +34,10 @@ export default observer(({ vm, onCritical, close }: Props) => {
 
   const titleList = useRef<SystemFlatList>(null);
   const titles = [
-    t('multi-sign-title-preparations'),
-    t('multi-sign-title-connect-devices'),
-    t('multi-sign-title-set-threshold'),
-    t('multi-sign-title-key-distribution'),
+    t('multi-sig-modal-title-preparations'),
+    t('multi-sig-modal-title-connect-devices'),
+    t('multi-sig-modal-title-set-threshold'),
+    t('multi-sig-modal-title-key-distribution'),
   ];
 
   const renderTitle = ({ item }: { item: string }) => {

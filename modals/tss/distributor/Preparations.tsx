@@ -25,28 +25,28 @@ export default ({ onNext }: { onNext?: () => void }) => {
           <View style={styles.illustrationContainer}>
             <IllustrationSameNetwork width={ReactiveScreen.width - 72} height={150} />
           </View>
-          <Text style={styles.txt}>{t('multi-sign-welcome-1')}</Text>
+          <Text style={styles.txt}>{t('multi-sig-modal-welcome-1')}</Text>
         </View>
 
         <View style={styles.contentContainer}>
           <View style={styles.illustrationContainer}>
             <IllustrationMenuGuide width={ReactiveScreen.width - 72} height={150} />
           </View>
-          <Text style={styles.txt}>{t('multi-sign-welcome-2')}</Text>
+          <Text style={styles.txt}>{t('multi-sig-modal-welcome-2')}</Text>
         </View>
 
         <View style={styles.contentContainer}>
           <View style={styles.illustrationContainer}>
             <IllustrationConfirmed width={ReactiveScreen.width - 72} height={150} />
           </View>
-          <Text style={styles.txt}>{t('multi-sign-welcome-3')}</Text>
+          <Text style={styles.txt}>{t('multi-sig-modal-welcome-3')}</Text>
         </View>
 
         <View style={styles.contentContainer}>
           <View style={styles.illustrationContainer}>
             <IllustrationSync width={ReactiveScreen.width - 72} height={150} />
           </View>
-          <Text style={styles.txt}>{t('multi-sign-welcome-4')}</Text>
+          <Text style={styles.txt}>{t('multi-sig-modal-welcome-4')}</Text>
         </View>
       </Swiper>
 

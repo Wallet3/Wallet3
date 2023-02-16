@@ -22,7 +22,7 @@ export default observer(() => {
   const [vm, setVM] = useState<ShardReceiver>();
   const [step, setStep] = useState(0);
   const titleList = useRef<SystemFlatList>(null);
-  const titles = [t('multi-sign-title-devices-pairing'), t('multi-sign-title-key-distribution')];
+  const titles = [t('multi-sig-modal-title-devices-pairing'), t('multi-sig-modal-title-key-distribution')];
 
   const renderTitle = ({ item }: { item: string }) => {
     return (

@@ -72,7 +72,7 @@ export default observer(({ vm, onNext, isRTL }: { vm: ShardsDistributor; onNext:
         <View style={{ flex: 1.5 }} />
 
         <Text style={{ marginHorizontal, marginTop: 8, color: thirdTextColor, lineHeight: 19, fontWeight: '500' }}>
-          {t('multi-sign-create-threshold', { threshold, max: totalCount })}
+          {t('multi-sig-modal-create-threshold', { threshold, max: totalCount })}
         </Text>
 
         {vm.thresholdTooHigh && (
@@ -82,7 +82,7 @@ export default observer(({ vm, onNext, isRTL }: { vm: ShardsDistributor; onNext:
             style={{ color: warningColor, fontSize: 12.5, fontWeight: '500', marginHorizontal, marginTop: 8 }}
           >
             <Ionicons name="warning" size={14} />
-            {`  ${t('multi-sign-msg-threshold-too-high')}`}
+            {`  ${t('multi-sig-modal-msg-threshold-too-high')}`}
           </Text>
         )}
       </View>

@@ -90,7 +90,7 @@ export default observer(({ vm }: { vm: ShardReceiver }) => {
                 textAlign: 'center',
               }}
             >
-              {`${t('multi-sign-txt-pairing-code')}`}
+              {`${t('multi-sig-modal-txt-pairing-code')}`}
             </Text>
             <Text style={{ color: textColor, fontSize: 42, fontWeight: '800' }}>{vm.pairingCode}</Text>
           </View>
@@ -115,17 +115,17 @@ export default observer(({ vm }: { vm: ShardReceiver }) => {
           <FadeInUpView delay={200} style={{ position: 'relative', minWidth: 160 }}>
             {secretStatus === ShardPersistentStatus.verifying &&
               dataVerified === undefined &&
-              renderCompletedBar({ delay: 300, txt: t('multi-sign-txt-data-verifying'), succeed: true })}
+              renderCompletedBar({ delay: 300, txt: t('multi-sig-modal-txt-data-verifying'), succeed: true })}
 
             {dataVerified &&
-              renderCompletedBar({ tintColor: secureColor, txt: t('multi-sign-txt-data-verified'), succeed: true })}
+              renderCompletedBar({ tintColor: secureColor, txt: t('multi-sig-modal-txt-data-verified'), succeed: true })}
             {dataVerified === false &&
-              renderCompletedBar({ tintColor: warningColor, txt: t('multi-sign-txt-data-verifying-failed'), succeed: false })}
+              renderCompletedBar({ tintColor: warningColor, txt: t('multi-sig-modal-txt-data-verifying-failed'), succeed: false })}
 
             {secretStatus === ShardPersistentStatus.saved &&
-              renderCompletedBar({ txt: t('multi-sign-txt-data-saved'), tintColor: secureColor, succeed: true })}
+              renderCompletedBar({ txt: t('multi-sig-modal-txt-data-saved'), tintColor: secureColor, succeed: true })}
             {secretStatus === ShardPersistentStatus.saveFailed &&
-              renderCompletedBar({ txt: t('multi-sign-txt-data-saving-failed'), tintColor: warningColor, succeed: false })}
+              renderCompletedBar({ txt: t('multi-sig-modal-txt-data-saving-failed'), tintColor: warningColor, succeed: false })}
           </FadeInUpView>
         )}
       </View>

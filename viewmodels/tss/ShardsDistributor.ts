@@ -1,5 +1,6 @@
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
+import Authentication from '../auth/Authentication';
 import Bonjour from '../../common/p2p/Bonjour';
 import { DEFAULT_DERIVATION_PATH } from '../../common/Constants';
 import { HDNode } from 'ethers/lib/utils';
@@ -153,7 +154,7 @@ export class ShardsDistributor extends TCPServer<Events> {
     if (this.status === ShardsDistributionStatus.distributing || this.status === ShardsDistributionStatus.succeed) return;
 
     if (this.totalCount < this.threshold) {
-      showMessage({ message: i18n.t('multi-sign-msg-network-lost'), type: 'warning' });
+      showMessage({ message: i18n.t('multi-sig-modal-msg-network-lost'), type: 'warning' });
       return;
     }
 
@@ -164,9 +165,12 @@ export class ShardsDistributor extends TCPServer<Events> {
 
     const key = new MultiSigKey();
     key.id = this.id;
-    key.secrets = { bip32Shard: bip32Shards[0], rootShard: rootShards[0] };
     key.secretsInfo = { threshold: this.threshold, devices: this.approvedClients.map((a) => a.remoteInfo!) };
     key.bip32Xpubkey = xpubkeyFromHDNode(this.bip32);
+    key.secrets = {
+      bip32Shard: await Authentication.encryptForever(bip32Shards[0]),
+      rootShard: await Authentication.encryptForever(rootShards[0]),
+    };
 
     try {
       await key.save();

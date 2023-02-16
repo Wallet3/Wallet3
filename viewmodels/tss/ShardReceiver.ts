@@ -114,7 +114,7 @@ export class ShardReceiver extends TCPClient {
     runInAction(() => (this.pairingCodeVerified = equals));
 
     if (!equals) {
-      showMessage({ message: i18n.t('multi-sign-msg-pairing-code-not-match'), type: 'danger' });
+      showMessage({ message: i18n.t('multi-sig-modal-msg-pairing-code-not-match'), type: 'danger' });
       this.destroy();
       return;
     }

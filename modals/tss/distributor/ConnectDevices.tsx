@@ -105,8 +105,8 @@ export default observer(({ vm, onNext, isRTL }: { isRTL?: boolean; vm: ShardsDis
           renderItem={renderItem}
           sections={
             [
-              approvedCount > 0 ? { title: t('multi-sign-connect-approved-clients'), data: approvedClients } : undefined,
-              pendingCount > 0 ? { title: t('multi-sign-connect-pending-clients'), data: pendingClients } : undefined,
+              approvedCount > 0 ? { title: t('multi-sig-modal-connect-approved-clients'), data: approvedClients } : undefined,
+              pendingCount > 0 ? { title: t('multi-sig-modal-connect-pending-clients'), data: pendingClients } : undefined,
             ].filter((i) => i !== undefined) as { title: string; data: ShardSender[] }[]
           }
           renderSectionHeader={({ section }) => (
@@ -128,7 +128,7 @@ export default observer(({ vm, onNext, isRTL }: { isRTL?: boolean; vm: ShardsDis
         <View style={{ flex: 1, alignContent: 'center', justifyContent: 'center' }} exiting={FadeOutUp.springify()}>
           <ActivityIndicator />
           <Text style={{ alignSelf: 'center', marginTop: 52, lineHeight: 27, color: secondaryTextColor, fontWeight: '500' }}>
-            {t('multi-sign-connect-tip')}
+            {t('multi-sig-modal-connect-tip')}
           </Text>
         </View>
       )}
@@ -151,7 +151,7 @@ export default observer(({ vm, onNext, isRTL }: { isRTL?: boolean; vm: ShardsDis
           }}
         >
           <Text style={{ marginTop: 12, color: secondaryTextColor, fontWeight: '500' }}>
-            {t('multi-sign-connect-enter-pairing-code')}:
+            {t('multi-sig-modal-connect-enter-pairing-code')}:
           </Text>
 
           <Passpad

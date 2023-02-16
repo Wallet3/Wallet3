@@ -1,6 +1,7 @@
 import Numpad, { NumpadChar } from './Numpad';
 
 import Button from './Button';
+import ButtonV2 from './ButtonV2';
 import Coin from './Coin';
 import DismissKeyboard from './DismissKeyboard';
 import Loader from './Loader';
@@ -14,6 +15,7 @@ import TextBox from './TextBox';
 export {
   TextBox,
   Button,
+  ButtonV2,
   Coin,
   Numpad,
   Separator,

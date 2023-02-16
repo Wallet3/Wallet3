@@ -614,9 +614,9 @@ export const ShardsModal = observer(() => {
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
       modalStyle={{ backgroundColor: 'transparent' }}
       onClosed={() => {
-        __DEV__ && vms.shardsDistributor
-          ? setTimeout(() => PubSub.publish(MessageKeys.openShardsDistribution), 1000)
-          : undefined;
+        // __DEV__ && vms.shardsDistributor
+        //   ? setTimeout(() => PubSub.publish(MessageKeys.openShardsDistribution), 1000)
+        //   : undefined;
         setVMs({});
         setIsCritical(false);
       }}

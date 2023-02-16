@@ -69,7 +69,7 @@ export default observer(({ vm, close, onCritical }: Props) => {
 
   const [selfInfo] = useState({
     ...getDeviceInfo(),
-    name: `${deviceInfoModule.getDeviceNameSync()} (${t('multi-sign-txt-current-device')})`,
+    name: `${deviceInfoModule.getDeviceNameSync()} (${t('multi-sig-modal-txt-current-device')})`,
     remoteIP: '::1',
   });
 
@@ -96,7 +96,7 @@ export default observer(({ vm, close, onCritical }: Props) => {
     >
       <View style={{ flex: 1, marginBottom: 16 }}>
         <Text style={{ marginHorizontal, fontWeight: '500', color: secondaryTextColor }}>
-          {t('multi-sign-keys-distribution')}
+          {t('multi-sig-modal-keys-distribution')}
         </Text>
 
         <FlatList
@@ -110,7 +110,7 @@ export default observer(({ vm, close, onCritical }: Props) => {
         {vm.thresholdTooHigh && (
           <Text style={{ color: warningColor, fontSize: 12.5, fontWeight: '500', marginHorizontal }}>
             <Ionicons name="warning" size={14} />
-            {`  ${t('multi-sign-msg-threshold-too-high')}`}
+            {`  ${t('multi-sig-modal-msg-threshold-too-high')}`}
           </Text>
         )}
       </View>

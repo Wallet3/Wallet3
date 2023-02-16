@@ -177,9 +177,11 @@ const Drawer = observer((props: DrawerProps) => {
         {__DEV__ && (
           <DrawerItem
             label={t('home-drawer-multi-sig')}
-            onPress={() => navigateTo('Settings')}
+            onPress={() => navigateTo('MultiSig')}
             labelStyle={{ ...styles.drawerLabel, color: getHighlightColor(4) }}
-            icon={() => <MaterialCommunityIcons color={getHighlightColor(4)} size={21} name="key-chain-variant" />}
+            icon={() => (
+              <MaterialCommunityIcons color={getHighlightColor(4)} style={{ width: 21 }} size={23} name="key-chain-variant" />
+            )}
           />
         )}
       </View>
