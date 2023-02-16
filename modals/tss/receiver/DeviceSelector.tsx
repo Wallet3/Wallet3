@@ -15,6 +15,7 @@ import { calcHorizontalPadding } from '../components/Utils';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
 import { openSettings } from 'expo-linking';
+import { startLayoutAnimation } from '../../../utils/animations';
 import { verifiedColor } from '../../../constants/styles';
 
 const { View, Text, FlatList } = Animated;
@@ -31,7 +32,11 @@ export default observer(({ onNext }: { onNext: (selectedService: Service) => voi
   }, []);
 
   useEffect(() => {
-    const timer = setTimeout(() => setScanTimeout(LanDiscovery.shardsDistributors.length === 0), 15 * SECOND);
+    const timer = setTimeout(() => {
+      startLayoutAnimation();
+      setScanTimeout(LanDiscovery.shardsDistributors.length === 0);
+    }, 15 * SECOND);
+
     return () => clearTimeout(timer);
   }, []);
 

@@ -29,7 +29,6 @@ import { WCCallRequest_eth_sendTransaction } from '../../models/entities/WCSessi
 import numeral from 'numeral';
 import { showMessage } from 'react-native-flash-message';
 import { sleep } from '../../utils/async';
-import { startLayoutAnimation } from '../../utils/animations';
 
 export interface SpeedupAbleSendParams extends WCCallRequest_eth_sendTransaction {
   speedUp?: boolean;
@@ -287,12 +286,11 @@ export class RawTransactionRequest extends BaseTransaction {
         this.type = approved ? 'Approve_ForAll' : 'Revoke_ForAll';
         this.setTo(operator);
 
-        this.account.nfts.fetch(this.network.chainId).then((v) =>
-          runInAction(() => {
-            startLayoutAnimation();
-            this.nfts = v.filter((i) => i.contract.toLowerCase() === param.to.toLowerCase()).slice(0, 12);
-          })
-        );
+        this.account.nfts
+          .fetch(this.network.chainId)
+          .then((v) =>
+            runInAction(() => (this.nfts = v.filter((i) => i.contract.toLowerCase() === param.to.toLowerCase()).slice(0, 12)))
+          );
 
         break;
 

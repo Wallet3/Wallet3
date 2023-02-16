@@ -95,16 +95,12 @@ export class NFTTransferring extends BaseTransaction {
       utils.isAddress(erc721Owner?.substring(26) || '') &&
       utils.getAddress(erc721Owner!.substring(26)) === this.account.address
     ) {
-      runInAction(() => {
-        startLayoutAnimation();
-        this.nftStandard = 'erc-721';
-      });
+      runInAction(() => (this.nftStandard = 'erc-721'));
     }
 
     try {
       if (BigNumber.from(erc1155Balance || '0').gt(0)) {
         runInAction(() => {
-          startLayoutAnimation();
           this.nftStandard = 'erc-1155';
           this.erc1155Balance = BigNumber.from(erc1155Balance!);
         });

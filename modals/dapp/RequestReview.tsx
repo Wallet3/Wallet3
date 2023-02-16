@@ -2,7 +2,7 @@ import { ActivityIndicator, ScrollView, Text, TextInput, TouchableOpacity, View 
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { AntDesign, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { Coin, SafeViewContainer, Skeleton } from '../../components';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { secondaryFontColor, warningColor } from '../../constants/styles';
 
 import { Account } from '../../viewmodels/account/Account';
@@ -33,6 +33,7 @@ import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { openBrowserAsync } from 'expo-web-browser';
+import { startLayoutAnimation } from '../../utils/animations';
 import styles from '../styles';
 
 interface Props {
@@ -59,6 +60,8 @@ const TxReview = observer(
     const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
     const reviewItemValueStyle = { ...styles.reviewItemValue, color: textColor };
     const safeThemeColor = vm.toAddressRisky ? warningColor : thirdTextColor;
+
+    useEffect(() => startLayoutAnimation(), [vm.nfts]);
 
     return (
       <SafeViewContainer>

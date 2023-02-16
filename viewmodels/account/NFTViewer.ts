@@ -29,7 +29,6 @@ export class NFTViewer {
   }
 
   setNFTs(nfts: NFTMetadata[]) {
-    startLayoutAnimation();
     this.nfts = nfts;
   }
 

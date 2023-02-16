@@ -362,8 +362,6 @@ export class BaseTransaction {
     ]);
 
     runInAction(() => {
-      startLayoutAnimation();
-
       this.nextBlockBaseFeeWei = Number(nextBaseFee.toFixed(0));
 
       this.setNonce(nonce);

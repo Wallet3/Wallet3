@@ -75,8 +75,6 @@ export class TCPClient extends AsyncTCPSocket {
       const secret = ecdh.computeSecret(negotiationKey);
       runInAction(() => (this.pairingCode = `${secret.reduce((p, c) => p * BigInt(c || 1), BigInt(1))}`.substring(6, 10)));
 
-      console.log('client computes', secret.toString('hex'), this.pairingCode);
-
       this.cipher = createCipheriv(CipherAlgorithm, secret, iv);
       this.decipher = createDecipheriv(CipherAlgorithm, createHash('sha256').update(secret).digest(), siv);
 

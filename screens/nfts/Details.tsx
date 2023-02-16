@@ -24,6 +24,7 @@ import i18n from '../../i18n';
 import { lightOrDark } from '../../utils/color';
 import { observer } from 'mobx-react-lite';
 import { openInappBrowser } from '../../modals/app/InappBrowser';
+import { startLayoutAnimation } from '../../utils/animations';
 import styles from '../../modals/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -80,15 +81,12 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
     setMode(lightOrDark(dominantColor) === 'light' ? 'dark' : 'light');
   }, [dominantColor]);
 
-  useEffect(() => {
-    return () => {
-      vm?.dispose();
-    };
-  }, []);
+  useEffect(() => () => vm?.dispose(), []);
+
+  useEffect(() => startLayoutAnimation(), [vm?.nftStandard]);
 
   const openBrowser = (url?: string) => {
     const web = 'https://wallet3.io';
-    // Platform.OS === 'ios' ? openBrowserAsync(url || web) :
     openInappBrowser(url || web, 'nfts');
   };
 

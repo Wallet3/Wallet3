@@ -103,8 +103,6 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
       const cipher = createCipheriv(CipherAlgorithm, createHash('sha256').update(secret).digest(), iv);
       const decipher = createDecipheriv(CipherAlgorithm, secret, civ);
 
-      console.log('server computes:', secret.toString('hex'), pairingCode);
-
       return new TCPClient({ cipher, decipher, socket: socket.raw, pairingCode });
     } catch (error) {
       console.error(error);

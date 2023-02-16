@@ -11,7 +11,6 @@ import eccrypto from 'eccrypto';
 import i18n from '../../i18n';
 import { showMessage } from 'react-native-flash-message';
 import { sleep } from '../../utils/async';
-import { startLayoutAnimation } from '../../utils/animations';
 
 export enum ShardPersistentStatus {
   waiting,

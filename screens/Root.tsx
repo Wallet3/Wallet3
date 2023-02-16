@@ -27,6 +27,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import i18n from '../i18n';
 import { observer } from 'mobx-react-lite';
+import { startLayoutAnimation } from '../utils/animations';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const DrawerRoot = createDrawerNavigator();
@@ -58,6 +59,8 @@ const RootTab = observer(() => {
       PubSub.unsubscribe(MessageKeys.openBrowser);
     };
   }, []);
+
+  useEffect(() => startLayoutAnimation(), [currentAccount?.nfts.nfts, TxHub.pendingCount]);
 
   return (
     <Navigator

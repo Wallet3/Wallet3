@@ -8,10 +8,10 @@ import {
 } from '../../viewmodels/transferring/RequestTypes';
 import { Coin, NullableImage } from '../../components';
 import { FlatList, ListRenderItemInfo, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect } from 'react';
 
 import IllustrationNoData from '../../assets/illustrations/misc/nodata.svg';
 import Networks from '../../viewmodels/core/Networks';
-import React from 'react';
 import Theme from '../../viewmodels/settings/Theme';
 import Transaction from '../../models/entities/Transaction';
 import dayjs from 'dayjs';
@@ -20,6 +20,7 @@ import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { secondaryFontColor } from '../../constants/styles';
+import { startLayoutAnimation } from '../../utils/animations';
 import { useState } from 'react';
 import { utils } from 'ethers';
 
