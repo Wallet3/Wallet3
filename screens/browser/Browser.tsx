@@ -16,6 +16,7 @@ import AnimatedLottieView from 'lottie-react-native';
 import { Bar } from 'react-native-progress';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import Collapsible from 'react-native-collapsible';
+import IllustrationAlert from '../../assets/illustrations/misc/alert.svg';
 import { Ionicons } from '@expo/vector-icons';
 import LINQ from 'linq';
 import MessageKeys from '../../common/MessageKeys';
@@ -113,7 +114,8 @@ export const Browser = observer(
     const [smallIconSize, setSmallIconSize] = useState(SmallIconSize);
 
     const { history, favs, recentSites } = Bookmarks;
-    const { backgroundColor, textColor, borderColor, foregroundColor, isLightMode, statusBarStyle } = Theme;
+    const { backgroundColor, secondaryTextColor, textColor, borderColor, foregroundColor, isLightMode, statusBarStyle } =
+      Theme;
 
     useEffect(() => {
       const handler = () => {
@@ -615,12 +617,18 @@ export const Browser = observer(
               >
                 <Text
                   numberOfLines={1}
-                  style={{ color: '#fff', fontSize: 27, fontWeight: '600', textTransform: 'uppercase', textAlign: 'center' }}
+                  style={{
+                    color: '#fff',
+                    fontSize: 27,
+                    fontWeight: '600',
+                    textTransform: 'uppercase',
+                    textAlign: 'center',
+                  }}
                 >
                   {t('modal-phishing-title')}
                 </Text>
 
-                <Ionicons name="shield" color="#fff" size={96} style={{ marginVertical: 12, alignSelf: 'center' }} />
+                <IllustrationAlert width={120} height={120} style={{ alignSelf: 'center', marginVertical: 8 }} />
 
                 <Text
                   style={{
@@ -637,7 +645,7 @@ export const Browser = observer(
                 <View style={{ flex: 1 }} />
 
                 <Button
-                  themeColor={'red'}
+                  themeColor="orange"
                   txtStyle={{ color: '#fff', textTransform: 'none' }}
                   title="OK"
                   onPress={closeRiskyTip}
