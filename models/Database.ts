@@ -37,8 +37,8 @@ class Database {
   private _dataSource!: DataSource;
 
   keys!: Repository<Key>;
-  multiSigKeys!: Repository<MultiSigKey>;
-  shardKeys!: Repository<ShardKey>;
+  multiSigKeys?: Repository<MultiSigKey>;
+  shardKeys?: Repository<ShardKey>;
   txs!: Repository<Transaction>;
   wcV1Sessions!: Repository<WCSession_v1>;
   wcV2Sessions!: Repository<WCV2_Session>;
@@ -47,7 +47,6 @@ class Database {
   etherscan_contracts!: Repository<EtherscanContract>;
   sourcify_metadata!: Repository<SourcifyMetadata>;
   cloud_address_tags!: Repository<AddressTag>;
-  nfts!: Repository<NFT>;
   urls!: Repository<UrlTag>;
 
   async init() {
@@ -71,7 +70,6 @@ class Database {
     this.etherscan_contracts = this._dataSource.getRepository(EtherscanContract);
     this.sourcify_metadata = this._dataSource.getRepository(SourcifyMetadata);
     this.cloud_address_tags = this._dataSource.getRepository(AddressTag);
-    this.nfts = this._dataSource.getRepository(NFT);
     this.wcV2Sessions = this._dataSource.getRepository(WCV2_Session);
     this.urls = this._dataSource.getRepository(UrlTag);
 

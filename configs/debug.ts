@@ -3,7 +3,7 @@ import { ethers, utils } from 'ethers';
 
 import Bonjour from '../common/p2p/Bonjour';
 import DeviceInfo from 'react-native-device-info';
-import LanDiscovery from '../viewmodels/tss/LanDiscovery';
+import LanDiscovery from '../common/p2p/LanDiscovery';
 import { LogBox } from 'react-native';
 import MessageKeys from '../common/MessageKeys';
 import { MultiSignPrimaryServiceType } from '../viewmodels/tss/Constants';
@@ -34,7 +34,7 @@ LogBox.ignoreLogs([
 
 if (__DEV__) {
   if (DeviceInfo.isTablet()) {
-    LanDiscovery.on('resolved', (service: Service) => {
+    LanDiscovery.on('shardsDistributorFound', (service: Service) => {
       console.log('tablet', service);
 
       setTimeout(() => PubSub.publish(MessageKeys.openShardReceiver), 3000);

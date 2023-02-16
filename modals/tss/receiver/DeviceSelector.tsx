@@ -7,7 +7,7 @@ import { secureColor, verifiedColor, warningColor } from '../../../constants/sty
 import Button from '../components/Button';
 import Device from '../../../components/Device';
 import DeviceInfo from '../components/DeviceInfo';
-import LanDiscovery from '../../../viewmodels/tss/LanDiscovery';
+import LanDiscovery from '../../../common/p2p/LanDiscovery';
 import { Passpad } from '../../views';
 import { Service } from 'react-native-zeroconf';
 import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
@@ -46,12 +46,12 @@ export default observer(({ onNext }: { onNext: (selectedService: Service) => voi
     <View style={{ flex: 1 }} entering={FadeInRight.delay(300).springify()} exiting={FadeOutLeft.springify()}>
       <Text style={{ color: secondaryTextColor, marginHorizontal }}>{t('multi-sign-connect-select-to-pair')}:</Text>
 
-      <FlatList style={{ flex: 1 }} data={LanDiscovery.services} renderItem={renderItem} keyExtractor={(i) => i.name} />
+      <FlatList style={{ flex: 1 }} data={LanDiscovery.shardsDistributors} renderItem={renderItem} keyExtractor={(i) => i.name} />
 
       <Button
         title={t('button-start-pairing')}
         onPress={() => onNext(selectedService!)}
-        disabled={!selectedService || LanDiscovery.services.length === 0}
+        disabled={!selectedService || LanDiscovery.shardsDistributors.length === 0}
       />
     </View>
   );

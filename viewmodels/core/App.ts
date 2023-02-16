@@ -15,6 +15,7 @@ import LINQ from 'linq';
 import LinkHub from '../hubs/LinkHub';
 import MessageKeys from '../../common/MessageKeys';
 import MetamaskDAppsHub from '../walletconnect/MetamaskDAppsHub';
+import { MultiSigWallet } from '../wallet/MultiSigWallet';
 import Networks from './Networks';
 import { ReactNativeFirebase } from '@react-native-firebase/app';
 import { SingleSigWallet } from '../wallet/SingleSigWallet';
@@ -209,7 +210,13 @@ export class AppVM {
       AppStoreReview.check();
     });
 
-    const wallets = await Promise.all((await Database.keys.find()).map((key) => new SingleSigWallet(key).init()));
+    const wallets: WalletBase[] = await Promise.all(
+      [
+        (await Database.keys.find()).map((key) => new SingleSigWallet(key).init()),
+        ((await Database.multiSigKeys?.find()) ?? []).map((key) => new MultiSigWallet(key).init()),
+      ].flat()
+    );
+
     const lastUsedAccount = (await AsyncStorage.getItem('lastUsedAccount')) ?? '';
     if (utils.isAddress(lastUsedAccount)) fetchChainsOverview(lastUsedAccount);
 

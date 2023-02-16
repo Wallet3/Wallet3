@@ -4,6 +4,7 @@ import Bonjour from '../../common/p2p/Bonjour';
 import { DEFAULT_DERIVATION_PATH } from '../../common/Constants';
 import { HDNode } from 'ethers/lib/utils';
 import LINQ from 'linq';
+import { LanServices } from '../../common/p2p/LanDiscovery';
 import MessageKeys from '../../common/MessageKeys';
 import MultiSigKey from '../../models/entities/MultiSigKey';
 import { MultiSignPrimaryServiceType } from './Constants';
@@ -108,7 +109,7 @@ export class ShardsDistributor extends TCPServer<Events> {
 
     Bonjour.publishService(MultiSignPrimaryServiceType, this.name, this.port!, {
       role: 'primary',
-      func: 'shards-distribution',
+      func: LanServices.ShardsDistribution,
       distributionId: this.id,
       info: btoa(JSON.stringify(getDeviceBasicInfo())),
       ver: 1,

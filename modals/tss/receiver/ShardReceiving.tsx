@@ -10,7 +10,7 @@ import { secureColor, warningColor } from '../../../constants/styles';
 import Button from '../components/Button';
 import Device from '../../../components/Device';
 import DeviceInfo from '../components/DeviceInfo';
-import LanDiscovery from '../../../viewmodels/tss/LanDiscovery';
+import LanDiscovery from '../../../common/p2p/LanDiscovery';
 import LottieView from 'lottie-react-native';
 import { Passpad } from '../../views';
 import { Service } from 'react-native-zeroconf';
