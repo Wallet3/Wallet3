@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, FlatList as SystemFlatList, Text, View } from 'react-native';
 
 import DeviceSelector from './DeviceSelector';
+import Preparations from './Preparations';
 import { ReactiveScreen } from '../../../utils/device';
 import { Service } from 'react-native-zeroconf';
 import { ShardReceiver } from '../../../viewmodels/tss/ShardReceiver';
@@ -21,8 +22,13 @@ export default observer(() => {
   const [borderRadius] = useState(getScreenCornerRadius());
   const [vm, setVM] = useState<ShardReceiver>();
   const [step, setStep] = useState(0);
+
   const titleList = useRef<SystemFlatList>(null);
-  const titles = [t('multi-sig-modal-title-devices-pairing'), t('multi-sig-modal-title-key-distribution')];
+  const titles = [
+    t('multi-sig-modal-title-welcome'),
+    t('multi-sig-modal-title-devices-pairing'),
+    t('multi-sig-modal-title-key-distribution'),
+  ];
 
   const renderTitle = ({ item }: { item: string }) => {
     return (
@@ -39,9 +45,13 @@ export default observer(() => {
   };
 
   const goToReceiving = (service: Service) => {
-    setStep(1);
     setVM(new ShardReceiver(service));
-    titleList.current?.scrollToIndex({ animated: true, index: 1 });
+    goTo(2);
+  };
+
+  const goTo = (step: number) => {
+    setStep(step);
+    titleList.current?.scrollToIndex({ animated: true, index: step });
   };
 
   useEffect(() => () => vm?.dispose(), [vm]);
@@ -79,8 +89,9 @@ export default observer(() => {
         />
 
         <View style={{ flex: 1, width: ReactiveScreen.width - 12, marginHorizontal: -16 }}>
-          {step === 0 && <DeviceSelector onNext={(s) => goToReceiving(s)} />}
-          {step === 1 && vm && <ShardReceiving vm={vm} />}
+          {step === 0 && <Preparations onNext={() => goTo(1)} />}
+          {step === 1 && <DeviceSelector onNext={(s) => goToReceiving(s)} />}
+          {step === 2 && vm && <ShardReceiving vm={vm} />}
         </View>
       </View>
     </ScrollView>

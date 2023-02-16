@@ -285,6 +285,7 @@
   "multi-sig-screen-paired-devices": "Eşleştirilmiş Cihazlar",
   "multi-sig-screen-tip-upgrade-to-multi-sig-wallet": "Şu anki cüzdan çok imzalı cüzdan değil, çok imzalı cüzdana yükseltebilirsiniz.",
   "multi-sig-screen-tip-after-upgrading": "Lütfen unutmayın, çoklu imza cüzdanına yükselttikten sonra bile kurtarma kelimesini kullanarak cüzdanınızı geri yükleyebilir veya kurtarma kelimesini kullanarak başka bir yerde cüzdanınızı geri yükleyebilirsiniz.",
+  "multi-sig-screen-txt-no-paired-devices": "Eşleştirilmiş cihaz yok",
 
   "multi-sig-modal-title-welcome": "Çok İmzalı Cüzdan",
   "multi-sig-modal-title-preparations": "Hazırlık",
@@ -294,7 +295,7 @@
   "multi-sig-modal-welcome-1": "Telefonları aynı Wi-Fi ağına bağlayın",
   "multi-sig-modal-welcome-2": "[Menü] - [Çok İmzalı Cüzdan]a gidin",
   "multi-sig-modal-welcome-3": "[Başlat Eşleme]i tıklayın ve Wallet 3'e yerel ağa erişmesine izin verin",
-  "multi-sig-modal-welcome-4": "Bir müddet bekleyin ve telefonlar bu cihaza bağlanmaya çalışacaktır",
+  "multi-sig-modal-welcome-4": "Lütfen bir dakika bekleyin, diğer telefon hedef cihaza bağlanmaya çalışacak",
   "multi-sig-modal-connect-tip": "1. Diğer telefonlarınızda Wallet 3'ü açın.\n2. [Menü] - [Çok İmzalı Cüzdan]a gitin.\n3. [Başlat Eşleme]i tıklayın.",
   "multi-sig-modal-connect-enter-pairing-code": "Lütfen eşleştirme kodunu girin",
   "multi-sig-modal-connect-approved-clients": "Onaylanan Cihazlar",

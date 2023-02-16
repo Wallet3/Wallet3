@@ -285,6 +285,7 @@
   "multi-sig-screen-paired-devices": "Paired devices",
   "multi-sig-screen-tip-upgrade-to-multi-sig-wallet": " This wallet is not a multi-signature wallet. You can upgrade it to a multi-signature wallet.",
   "multi-sig-screen-tip-after-upgrading": "Please note that after upgrading to a multi-signature wallet, you can still restore the wallet using the recovery phrase, or restore the wallet elsewhere using the recovery phrase.",
+  "multi-sig-screen-txt-no-paired-devices": "No paired devices",
 
   "multi-sig-modal-title-welcome": "MultiSig Wallet",
   "multi-sig-modal-title-preparations": "Preparations",
@@ -295,7 +296,7 @@
   "multi-sig-modal-welcome-1": "Connect devices to the same Wi-Fi network",
   "multi-sig-modal-welcome-2": "Go to [Menu] - [MultiSig Wallet]",
   "multi-sig-modal-welcome-3": "Tap [Start Pairing] and approve Wallet 3 to access the local network",
-  "multi-sig-modal-welcome-4": "Wait a moment and other phones will attempt to connect to this device",
+  "multi-sig-modal-welcome-4": "Wait a moment and other phones will attempt to connect to the target device",
   "multi-sig-modal-connect-tip": "1. Open Wallet 3 on other phones.\n2. Go to [Menu] - [MultiSig Wallet].\n3. Tap [Start Pairing].",
   "multi-sig-modal-connect-enter-pairing-code": "Please enter the pairing code",
   "multi-sig-modal-connect-approved-clients": "Approved devices",

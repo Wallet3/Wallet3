@@ -26,6 +26,10 @@ export default observer(({ onNext }: { onNext: (selectedService: Service) => voi
   const [marginHorizontal] = useState(calcHorizontalPadding());
   const [selectedService, setSelectedService] = useState<Service>();
 
+  useEffect(() => {
+    LanDiscovery.scan();
+  }, []);
+
   const renderItem = ({ item }: { item: Service }) => {
     return (
       <View entering={FadeInDown.springify()} exiting={FadeOutDown.springify()} style={{ paddingVertical: 8 }}>
@@ -46,7 +50,12 @@ export default observer(({ onNext }: { onNext: (selectedService: Service) => voi
     <View style={{ flex: 1 }} entering={FadeInRight.delay(300).springify()} exiting={FadeOutLeft.springify()}>
       <Text style={{ color: secondaryTextColor, marginHorizontal }}>{t('multi-sig-modal-connect-select-to-pair')}:</Text>
 
-      <FlatList style={{ flex: 1 }} data={LanDiscovery.shardsDistributors} renderItem={renderItem} keyExtractor={(i) => i.name} />
+      <FlatList
+        style={{ flex: 1 }}
+        data={LanDiscovery.shardsDistributors}
+        renderItem={renderItem}
+        keyExtractor={(i) => i.name}
+      />
 
       <Button
         title={t('button-start-pairing')}

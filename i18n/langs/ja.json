@@ -281,7 +281,8 @@
   "multi-sig-screen-paired-devices": "ペアリングされたデバイス",
   "multi-sig-screen-tip-upgrade-to-multi-sig-wallet": "このウォレットはマルチシグウォレットではありません。マルチシグウォレットにアップグレードすることができます。",
   "multi-sig-screen-tip-after-upgrading": "マルチシグウォレットにアップグレードした場合でも、引き出しフレーズを使用してウォレットを復元したり、引き出しフレーズを使用して他の場所でウォレットを復元したりできることに注意してください。",
-
+  "multi-sig-screen-txt-no-paired-devices": "ペアリングされたデバイスはありません",
+  
   "multi-sig-modal-title-welcome": "マルチシグウォレット",
   "multi-sig-modal-title-preparations": "準備作業",
   "multi-sig-modal-title-connect-devices": "デバイスの接続",
@@ -290,7 +291,7 @@
   "multi-sig-modal-welcome-1": "まず、同じ Wi-Fi ネットワークに接続してください",
   "multi-sig-modal-welcome-2": "「メニュー」 - 「マルチシグウォレット」に進んでください",
   "multi-sig-modal-welcome-3": "「ペアリング開始」をタップし、ネットワークのアクセスを許可してください",
-  "multi-sig-modal-welcome-4": "しばらくお待ちください、他のスマートフォンがこのデバイスに接続します",
+  "multi-sig-modal-welcome-4": "少々お待ちください。他のデバイスがターゲットデバイスに接続します",
   "multi-sig-modal-connect-tip": "1.　他のデバイスで Wallet 3 を開く\n2. 「メニュー」 - 「マルチシグウォレット」に移動する\n3. 「ペアリング開始」をタップする",
   "multi-sig-modal-connect-enter-pairing-code": "ペアリングコードを入力してください",
   "multi-sig-modal-connect-approved-clients": "承認済み",

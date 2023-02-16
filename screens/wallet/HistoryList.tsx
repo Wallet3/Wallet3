@@ -145,7 +145,9 @@ export default observer(({ data, onTxPress, onEndReached }: Props) => {
     return (
       <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
         <IllustrationNoData width={150} height={150} />
-        <Text style={{ color: secondaryFontColor, marginTop: 24 }}>{t('home-history-notxs')}</Text>
+        <Text style={{ color: secondaryFontColor, marginTop: 24, fontWeight: '500', textTransform: 'capitalize' }}>
+          {t('home-history-notxs')}
+        </Text>
       </View>
     );
   }

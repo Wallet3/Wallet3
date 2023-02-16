@@ -281,6 +281,7 @@
   "multi-sig-screen-paired-devices": "已配对的设备",
   "multi-sig-screen-tip-upgrade-to-multi-sig-wallet": "当前钱包不是多签钱包，您可以升级到多签钱包",
   "multi-sig-screen-tip-after-upgrading": "请注意，升级为多签钱包之后，您仍然可以使用助记词恢复该钱包，或在别处使用助记词恢复该钱包",
+  "multi-sig-screen-txt-no-paired-devices": "没有已配对的设备",
 
   "multi-sig-modal-title-welcome": "多签钱包",
   "multi-sig-modal-title-preparations": "准备工作",
@@ -290,7 +291,7 @@
   "multi-sig-modal-welcome-1": "将手机连接到相同的 Wi-Fi 网络",
   "multi-sig-modal-welcome-2": "进入【菜单】-【多签钱包】",
   "multi-sig-modal-welcome-3": "点击【开始配对】，请批准 Wallet 3 访问本地网络",
-  "multi-sig-modal-welcome-4": "稍等片刻，其它手机将会尝试连接本设备",
+  "multi-sig-modal-welcome-4": "稍等片刻，其它设备将会尝试连接目标设备",
   "multi-sig-modal-connect-tip": "1. 在您的其它手机上打开 Wallet 3\n2. 前往【菜单】-【多签钱包】\n3. 点击【开始配对】",
   "multi-sig-modal-connect-enter-pairing-code": "请输入配对码",
   "multi-sig-modal-connect-approved-clients": "已验证",

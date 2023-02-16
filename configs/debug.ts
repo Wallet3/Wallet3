@@ -34,13 +34,11 @@ LogBox.ignoreLogs([
 
 if (__DEV__) {
   if (DeviceInfo.isTablet()) {
-    LanDiscovery.on('shardsDistributorFound', (service: Service) => {
-      console.log('tablet', service);
-
-      setTimeout(() => PubSub.publish(MessageKeys.openShardReceiver), 3000);
-    });
-
-    LanDiscovery.scan();
+    // LanDiscovery.on('shardsDistributorFound', (service: Service) => {
+    //   console.log('tablet', service);
+    //   setTimeout(() => PubSub.publish(MessageKeys.openShardReceiver), 3000);
+    // });
+    // LanDiscovery.scan();
   } else {
     // const root = utils.HDNode.fromMnemonic(mnemonic);
     // console.log(utils.mnemonicToEntropy(mnemonic).substring(2), entropy.toString('hex'), root.privateKey);

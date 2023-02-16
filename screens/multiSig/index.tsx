@@ -21,6 +21,7 @@ import Collapsible from 'react-native-collapsible';
 import { DrawerActions } from '@react-navigation/native';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import IllustrationNoData from '../../assets/illustrations/misc/nodata.svg';
+import IllustrationPairing from '../../assets/illustrations/misc/pair_programming.svg';
 import MessageKeys from '../../common/MessageKeys';
 import { MetamaskDApp } from '../../viewmodels/walletconnect/MetamaskDApp';
 import MetamaskDAppsHub from '../../viewmodels/walletconnect/MetamaskDAppsHub';
@@ -129,11 +130,20 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
 
       <Swiper ref={swiper} showsPagination={false} showsButtons={false} loop={false} onIndexChanged={scrollToIndex}>
         <SafeViewContainer style={{ width: '100%', height: '100%' }}>
-          <FlatList style={{ flexGrow: 1 }} data={[]} renderItem={(i) => <View />} />
+          <View style={{ alignSelf: 'center', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <IllustrationPairing width={150} height={150} />
+            <Text style={{ color: secondaryTextColor, textTransform: 'capitalize', fontWeight: '500' }}>
+              {t('multi-sig-screen-txt-no-paired-devices')}
+            </Text>
+          </View>
+
+          {/* <FlatList style={{ flexGrow: 1 }} data={[]} renderItem={(i) => <View />} /> */}
+
           <ButtonV2
             title={t('button-start-pairing')}
             icon={() => <Ionicons name="phone-portrait-outline" color="#fff" size={17} />}
             style={{ marginTop: 16 }}
+            onPress={() => PubSub.publish(MessageKeys.openShardReceiver)}
           />
         </SafeViewContainer>
 
