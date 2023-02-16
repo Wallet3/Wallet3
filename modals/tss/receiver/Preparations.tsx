@@ -26,9 +26,9 @@ export default observer(({ onNext }: { onNext: () => void }) => {
   const { t } = i18n;
 
   return (
-    <FadeInRightView style={{ flex: 1 }}>
+    <View style={{ flex: 1 }} entering={FadeInDown.delay(300).springify()} exiting={FadeOutLeft.springify()}>
       <Welcome disablePage2 disablePage3 />
       <Button title={t('button-next')} onPress={onNext} />
-    </FadeInRightView>
+    </View>
   );
 });

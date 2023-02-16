@@ -8,6 +8,7 @@ import DeviceInfo from '../components/DeviceInfo';
 import { FadeInDownView } from '../../../components/animations';
 import LanDiscovery from '../../../common/p2p/LanDiscovery';
 import { Placeholder } from '../../../components';
+import { SECOND } from '../../../utils/time';
 import { Service } from 'react-native-zeroconf';
 import Theme from '../../../viewmodels/settings/Theme';
 import { calcHorizontalPadding } from '../components/Utils';
@@ -23,9 +24,15 @@ export default observer(({ onNext }: { onNext: (selectedService: Service) => voi
   const { secondaryTextColor, appColor } = Theme;
   const [marginHorizontal] = useState(calcHorizontalPadding());
   const [selectedService, setSelectedService] = useState<Service>();
+  const [scanTimeout, setScanTimeout] = useState(false);
 
   useEffect(() => {
     LanDiscovery.scan();
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setScanTimeout(LanDiscovery.shardsDistributors.length === 0), 15 * SECOND);
+    return () => clearTimeout(timer);
   }, []);
 
   const renderItem = ({ item }: { item: Service }) => {
@@ -61,13 +68,17 @@ export default observer(({ onNext }: { onNext: (selectedService: Service) => voi
           <Placeholder />
           <ActivityIndicator size="small" />
           <Placeholder />
-          <FadeInDownView>
-            <TouchableOpacity onPress={openSettings}>
-              <Text style={{ marginTop: 24, color: secondaryTextColor, fontWeight: '500', marginHorizontal }}>
-                {t('multi-sig-modal-msg-no-devices-found')}
-              </Text>
-            </TouchableOpacity>
-          </FadeInDownView>
+
+          {scanTimeout && (
+            <FadeInDownView>
+              <TouchableOpacity onPress={openSettings}>
+                <Text style={{ marginTop: 24, color: secondaryTextColor, fontWeight: '500', marginHorizontal }}>
+                  {t('multi-sig-modal-msg-no-devices-found')}
+                </Text>
+              </TouchableOpacity>
+            </FadeInDownView>
+          )}
+
           <Placeholder />
         </View>
       )}
