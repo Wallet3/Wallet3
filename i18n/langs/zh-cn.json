@@ -309,6 +309,7 @@
   "multi-sig-modal-msg-threshold-too-high": "注意：如果您的任何一部设备损坏或丢失，您的钱包将会无法恢复，建议至少再多添加一部设备。",
   "multi-sig-modal-msg-pairing-code-not-match": "配对码不一致，请在安全的环境中重新尝试",
   "multi-sig-modal-msg-network-lost": "与其它设备的网络连接已断开，请检查网络后重试",
+  "multi-sig-modal-msg-no-devices-found": "无法找到设备？ 请保证设备连接到相同的Wi-Fi，并允许 Wallet 3 访问本地网络。 \n\n前往【系统设置】-【Wallet 3】，保证【本地网络】选项已打开。",
   "multi-sig-modal-create-threshold": "您正在创建一个 {{threshold}} of {{max}} 多签钱包。这意味着发送交易至少需要 {{threshold}} 个私钥才能成功发送。",
   "multi-sig-modal-keys-distribution": "密钥将会被分发到以下设备",
 

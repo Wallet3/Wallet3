@@ -314,6 +314,7 @@
   "multi-sig-modal-msg-threshold-too-high": "If any of your devices get damaged or lost, your wallet will be unrecoverable, it is recommended to add at least one more device.",
   "multi-sig-modal-msg-pairing-code-not-match": "The pairing code does not match, please try again in a secure environment.",
   "multi-sig-modal-msg-network-lost": "The network connection with other devices has been disconnected, please check your network and try again.",
+  "multi-sig-modal-msg-no-devices-found": "Can't find devices? Please make sure devices are connected to the same Wi-Fi network and allow Wallet 3 to access the local network.\n\nTap me to go to [System Settings] - [Wallet 3] and make sure the [Local Network] option is turned on.",
   "multi-sig-modal-create-threshold": "You are creating a {{threshold}} of {{max}} multi-signature wallet. It means that transactions require {{threshold}} keys to be authorized.",
   "multi-sig-modal-keys-distribution": "Secrets will be distributed to following devices",
 

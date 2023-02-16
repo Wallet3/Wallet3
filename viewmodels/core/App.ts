@@ -237,7 +237,7 @@ export class AppVM {
     });
 
     TxHub.init().then(() => AppStoreReview.check());
-    Database.shardKeys?.count().then((c) => c > 0 && LanDiscovery.scan());
+    // Database.shardKeys?.count().then((c) => c > 0 && LanDiscovery.scan());
   }
 
   async reset() {

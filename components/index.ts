@@ -7,6 +7,7 @@ import DismissKeyboard from './DismissKeyboard';
 import Loader from './Loader';
 import Mnemonic from './Mnemonic';
 import NullableImage from './NullableImage';
+import Placeholder from './Placeholder';
 import SafeViewContainer from './SafeViewContainer';
 import Separator from './Separator';
 import Skeleton from './Skeleton';
@@ -17,6 +18,7 @@ export {
   Button,
   ButtonV2,
   Coin,
+  Placeholder,
   Numpad,
   Separator,
   DismissKeyboard,

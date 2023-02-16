@@ -1,22 +1,20 @@
-import { ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
-import Animated, { FadeIn, FadeInDown, FadeInRight, FadeOutDown, FadeOutLeft, FadeOutUp } from 'react-native-reanimated';
+import { ActivityIndicator, TouchableOpacity } from 'react-native';
+import Animated, { FadeInDown, FadeInRight, FadeOutDown, FadeOutLeft } from 'react-native-reanimated';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
-import { secureColor, verifiedColor, warningColor } from '../../../constants/styles';
 
 import Button from '../components/Button';
-import Device from '../../../components/Device';
 import DeviceInfo from '../components/DeviceInfo';
+import { FadeInDownView } from '../../../components/animations';
 import LanDiscovery from '../../../common/p2p/LanDiscovery';
-import { Passpad } from '../../views';
+import { Placeholder } from '../../../components';
 import { Service } from 'react-native-zeroconf';
-import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
-import { TCPClient } from '../../../common/p2p/TCPClient';
 import Theme from '../../../viewmodels/settings/Theme';
 import { calcHorizontalPadding } from '../components/Utils';
-import { getScreenCornerRadius } from '../../../utils/hardware';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
+import { openSettings } from 'expo-linking';
+import { verifiedColor } from '../../../constants/styles';
 
 const { View, Text, FlatList } = Animated;
 
@@ -50,12 +48,29 @@ export default observer(({ onNext }: { onNext: (selectedService: Service) => voi
     <View style={{ flex: 1 }} entering={FadeInRight.delay(300).springify()} exiting={FadeOutLeft.springify()}>
       <Text style={{ color: secondaryTextColor, marginHorizontal }}>{t('multi-sig-modal-connect-select-to-pair')}:</Text>
 
-      <FlatList
-        style={{ flex: 1 }}
-        data={LanDiscovery.shardsDistributors}
-        renderItem={renderItem}
-        keyExtractor={(i) => i.name}
-      />
+      {LanDiscovery.shardsDistributors.length > 0 ? (
+        <FlatList
+          style={{ flex: 1 }}
+          data={LanDiscovery.shardsDistributors}
+          renderItem={renderItem}
+          keyExtractor={(i) => i.name}
+        />
+      ) : (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginHorizontal }}>
+          <Placeholder />
+          <Placeholder />
+          <ActivityIndicator size="small" />
+          <Placeholder />
+          <FadeInDownView>
+            <TouchableOpacity onPress={openSettings}>
+              <Text style={{ marginTop: 24, color: secondaryTextColor, fontWeight: '500', marginHorizontal }}>
+                {t('multi-sig-modal-msg-no-devices-found')}
+              </Text>
+            </TouchableOpacity>
+          </FadeInDownView>
+          <Placeholder />
+        </View>
+      )}
 
       <Button
         title={t('button-start-pairing')}
