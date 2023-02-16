@@ -14,6 +14,7 @@ import { secureColor, warningColor } from '../../../constants/styles';
 import Button from '../components/Button';
 import DeviceInfo from '../components/DeviceInfo';
 import { Ionicons } from '@expo/vector-icons';
+import { ModalMarginScreen } from '../../styles';
 import { Passpad } from '../../views';
 import { ShardSender } from '../../../viewmodels/tss/ShardSender';
 import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
@@ -146,7 +147,7 @@ export default observer(({ vm, onNext, isRTL }: { isRTL?: boolean; vm: ShardsDis
             bottom: 0,
             backgroundColor,
             alignItems: 'center',
-            paddingBottom: safeBottom - 16 - 6,
+            paddingBottom: safeBottom - 16 - ModalMarginScreen,
           }}
         >
           <Text style={{ marginTop: 12, color: secondaryTextColor, fontWeight: '500' }}>

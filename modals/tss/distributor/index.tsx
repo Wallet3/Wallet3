@@ -4,6 +4,7 @@ import { ScrollView, FlatList as SystemFlatList, Text, TouchableOpacity, View } 
 
 import ConnectDevices from './ConnectDevices';
 import { Ionicons } from '@expo/vector-icons';
+import { ModalMarginScreen } from '../../styles';
 import Preparations from './Preparations';
 import { ReactiveScreen } from '../../../utils/device';
 import ShardsDistribution from './ShardsDistribution';
@@ -114,7 +115,7 @@ export default observer(({ vm, onCritical, close }: Props) => {
           />
         </View>
 
-        <View style={{ flex: 1, width: ReactiveScreen.width - 12, marginHorizontal: -16 }}>
+        <View style={{ flex: 1, width: ReactiveScreen.width - ModalMarginScreen * 2, marginHorizontal: -16 }}>
           {step === 0 && <Preparations onNext={() => goTo(1)} />}
           {step === 1 && <ConnectDevices vm={vm} onNext={() => goTo(2)} isRTL={isRTL} />}
           {step === 2 && <ThresholdSetting vm={vm} onNext={() => goTo(3)} isRTL={isRTL} />}

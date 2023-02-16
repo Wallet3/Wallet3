@@ -1,30 +1,30 @@
 import DeviceInfo from 'react-native-device-info';
+import { ModalMarginScreen } from '../modals/styles';
 import iosDevice from 'ios-device-list';
 
 export const DefaultCornerRadius = 20;
-const Margin = 6;
 
 const iPhone = {
-  'iPhone X': 39 - Margin,
-  'iPhone Xs': 39 - Margin,
-  'iPhone Xs Max': 39 - Margin,
-  'iPhone 11 Pro': 39 - Margin,
-  'iPhone 11 Pro Max': 39 - Margin,
-  'iPhone XR': 41.5 - Margin,
-  'iPhone 11': 41.5 - Margin,
-  'iPhone 12 mini': 44 - Margin,
-  'iPhone 12': 47.33 - Margin,
-  'iPhone 12 Pro': 47.33 - Margin,
-  'iPhone 12 Pro Max': 53.33 - Margin,
-  'iPhone 13 mini': 44 - Margin,
-  'iPhone 13': 47.33 - Margin,
-  'iPhone 13 Pro': 47.33 - Margin,
-  'iPhone 13 Pro Max': 53.33 - Margin,
-  'iPhone 14': 47.33 - Margin,
-  'iPhone 14 Pro': 55 - Margin,
-  'iPhone 14 Pro Max': 55 - Margin,
-  'iPad Air': DefaultCornerRadius - Margin,
-  'iPad Pro': DefaultCornerRadius - Margin,
+  'iPhone X': 39 - ModalMarginScreen,
+  'iPhone Xs': 39 - ModalMarginScreen,
+  'iPhone Xs Max': 39 - ModalMarginScreen,
+  'iPhone 11 Pro': 39 - ModalMarginScreen,
+  'iPhone 11 Pro Max': 39 - ModalMarginScreen,
+  'iPhone XR': 41.5 - ModalMarginScreen,
+  'iPhone 11': 41.5 - ModalMarginScreen,
+  'iPhone 12 mini': 44 - ModalMarginScreen,
+  'iPhone 12': 47.33 - ModalMarginScreen,
+  'iPhone 12 Pro': 47.33 - ModalMarginScreen,
+  'iPhone 12 Pro Max': 53.33 - ModalMarginScreen,
+  'iPhone 13 mini': 44 - ModalMarginScreen,
+  'iPhone 13': 47.33 - ModalMarginScreen,
+  'iPhone 13 Pro': 47.33 - ModalMarginScreen,
+  'iPhone 13 Pro Max': 53.33 - ModalMarginScreen,
+  'iPhone 14': 47.33 - ModalMarginScreen,
+  'iPhone 14 Pro': 55 - ModalMarginScreen,
+  'iPhone 14 Pro Max': 55 - ModalMarginScreen,
+  'iPad Air': DefaultCornerRadius - ModalMarginScreen,
+  'iPad Pro': DefaultCornerRadius - ModalMarginScreen,
 };
 
 let screenCornerRadius = 0;

@@ -2,6 +2,8 @@ import { borderColor, fontColor, secondaryFontColor } from '../constants/styles'
 
 import { StyleSheet } from 'react-native';
 
+export const ModalMarginScreen = 6;
+
 const ModalBorderRadius = 7;
 
 const ContainerTopBorderRadius = {
