@@ -19,7 +19,7 @@ export default ({ onNext }: { onNext?: () => void }) => {
   const { t } = i18n;
 
   return (
-    <View style={{ flex: 1 }} entering={FadeInRight.delay(500).springify()} exiting={FadeOutLeft.springify()}>
+    <View style={{ flex: 1 }} entering={FadeInRight.delay(300).springify()} exiting={FadeOutLeft.springify()}>
       <Swiper paginationStyle={{ marginBottom: -10 }} autoplay dotStyle={{ backgroundColor: `${Theme.secondaryTextColor}40` }}>
         <View style={styles.contentContainer}>
           <View style={styles.illustrationContainer}>

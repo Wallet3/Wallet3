@@ -1,5 +1,5 @@
-import { getScreenCornerRadius } from '../../../utils/hardware';
+import { DefaultCornerRadius, getScreenCornerRadius } from '../../../utils/hardware';
 
 export function calcHorizontalPadding() {
-  return (getScreenCornerRadius() - 20) / 4 + 16;
+  return (getScreenCornerRadius() - DefaultCornerRadius) / 4 + 16;
 }

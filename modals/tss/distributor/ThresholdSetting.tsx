@@ -1,4 +1,13 @@
-import Animated, { FadeIn, FadeInDown, FadeInRight, FadeOutDown, FadeOutLeft, FadeOutUp } from 'react-native-reanimated';
+import Animated, {
+  FadeIn,
+  FadeInDown,
+  FadeInLeft,
+  FadeInRight,
+  FadeOutDown,
+  FadeOutLeft,
+  FadeOutRight,
+  FadeOutUp,
+} from 'react-native-reanimated';
 import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons, Octicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
@@ -20,7 +29,7 @@ import { observer } from 'mobx-react-lite';
 
 const { View, Text } = Animated;
 
-export default observer(({ vm, onNext }: { vm: ShardsDistributor; onNext: () => void }) => {
+export default observer(({ vm, onNext, isRTL }: { vm: ShardsDistributor; onNext: () => void; isRTL?: boolean }) => {
   const [marginHorizontal] = useState(calcHorizontalPadding());
 
   const { t } = i18n;
@@ -30,8 +39,8 @@ export default observer(({ vm, onNext }: { vm: ShardsDistributor; onNext: () => 
   return (
     <View
       style={{ flex: 1, position: 'relative' }}
-      entering={FadeInRight.delay(500).springify()}
-      exiting={FadeOutLeft.springify()}
+      entering={isRTL ? FadeInLeft.delay(300).springify() : FadeInRight.delay(300).springify()}
+      exiting={isRTL ? FadeOutRight.springify() : FadeOutLeft.springify()}
     >
       <View style={{ flex: 1, marginBottom: 16 }}>
         <View style={{ flex: 1 }} />

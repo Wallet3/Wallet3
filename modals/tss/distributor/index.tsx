@@ -28,9 +28,10 @@ export default observer(({ vm, onCritical, close }: Props) => {
   const { t } = i18n;
   const { backgroundColor, textColor } = Theme;
   const [borderRadius] = useState(getScreenCornerRadius());
-  const [step, setStep] = useState(0);
-  const titleList = useRef<SystemFlatList>(null);
+  const [current, setCurrent] = useState({ step: 0, isRTL: false });
   const [backButtonPadding] = useState(calcHorizontalPadding());
+
+  const titleList = useRef<SystemFlatList>(null);
   const titles = [
     t('multi-sign-title-preparations'),
     t('multi-sign-title-connect-devices'),
@@ -52,13 +53,15 @@ export default observer(({ vm, onCritical, close }: Props) => {
     );
   };
 
-  const goTo = (step: number) => {
+  const goTo = (step: number, isRTL = false) => {
     step = Math.max(step, 0);
-    setStep(step);
+    setCurrent({ step, isRTL });
     titleList.current?.scrollToIndex({ animated: true, index: step });
   };
 
   useEffect(() => () => vm.dispose(), []);
+
+  const { step, isRTL } = current;
 
   return (
     <ScrollView
@@ -82,9 +85,14 @@ export default observer(({ vm, onCritical, close }: Props) => {
           <TouchableOpacity
             style={{ padding: backButtonPadding, margin: -backButtonPadding }}
             disabled={false}
-            onPress={() => goTo(step - 1)}
+            onPress={() => goTo(step - 1, true)}
           >
-            <Ionicons name="arrow-back" size={22} color={textColor} style={{ opacity: step - 1, paddingStart: 2 }} />
+            <Ionicons
+              name="arrow-back"
+              size={22}
+              color={textColor}
+              style={{ opacity: step - 1, marginStart: backButtonPadding - 16 ? 2 : -2, marginTop: 1 }}
+            />
           </TouchableOpacity>
 
           <FlatList
@@ -108,8 +116,8 @@ export default observer(({ vm, onCritical, close }: Props) => {
 
         <View style={{ flex: 1, width: ReactiveScreen.width - 12, marginHorizontal: -16 }}>
           {step === 0 && <Preparations onNext={() => goTo(1)} />}
-          {step === 1 && <ConnectDevices vm={vm} onNext={() => goTo(2)} />}
-          {step === 2 && <ThresholdSetting vm={vm} onNext={() => goTo(3)} />}
+          {step === 1 && <ConnectDevices vm={vm} onNext={() => goTo(2)} isRTL={isRTL} />}
+          {step === 2 && <ThresholdSetting vm={vm} onNext={() => goTo(3)} isRTL={isRTL} />}
           {step === 3 && <ShardsDistribution vm={vm} close={close} onCritical={onCritical} />}
         </View>
       </View>

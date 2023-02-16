@@ -1,5 +1,13 @@
 import { ActivityIndicator, SectionList, StyleSheet, TouchableOpacity } from 'react-native';
-import Animated, { FadeInDown, FadeInRight, FadeOutDown, FadeOutLeft, FadeOutUp } from 'react-native-reanimated';
+import Animated, {
+  FadeInDown,
+  FadeInLeft,
+  FadeInRight,
+  FadeOutDown,
+  FadeOutLeft,
+  FadeOutRight,
+  FadeOutUp,
+} from 'react-native-reanimated';
 import React, { useEffect, useState } from 'react';
 import { secureColor, warningColor } from '../../../constants/styles';
 
@@ -17,7 +25,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { View, Text } = Animated;
 
-export default observer(({ vm, onNext }: { vm: ShardsDistributor; onNext: () => void }) => {
+export default observer(({ vm, onNext, isRTL }: { isRTL?: boolean; vm: ShardsDistributor; onNext: () => void }) => {
   const { t } = i18n;
   const { textColor, secondaryTextColor, backgroundColor, borderColor } = Theme;
   const { pendingClients, approvedClients, pendingCount, approvedCount } = vm;
@@ -85,7 +93,7 @@ export default observer(({ vm, onNext }: { vm: ShardsDistributor; onNext: () => 
   return (
     <View
       style={{ flex: 1, position: 'relative' }}
-      entering={FadeInRight.delay(500).springify()}
+      entering={isRTL ? FadeInLeft.delay(300).springify() : FadeInRight.delay(300).springify()}
       exiting={FadeOutLeft.springify()}
     >
       {pendingCount || approvedCount ? (

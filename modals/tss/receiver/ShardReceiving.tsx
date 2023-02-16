@@ -74,7 +74,7 @@ export default observer(({ vm }: { vm: ShardReceiver }) => {
   return (
     <View
       style={{ flex: 1, paddingHorizontal: 16, paddingBottom: 0 }}
-      entering={FadeInRight.delay(500).springify()}
+      entering={FadeInRight.delay(300).springify()}
       exiting={FadeOutLeft.springify()}
     >
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>

@@ -1,5 +1,14 @@
 import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import Animated, { FadeIn, FadeInDown, FadeInRight, FadeOutDown, FadeOutLeft, FadeOutUp } from 'react-native-reanimated';
+import Animated, {
+  FadeIn,
+  FadeInDown,
+  FadeInLeft,
+  FadeInRight,
+  FadeOutDown,
+  FadeOutLeft,
+  FadeOutRight,
+  FadeOutUp,
+} from 'react-native-reanimated';
 import { Ionicons, Octicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { ShardSender, ShardTransferringStatus } from '../../../viewmodels/tss/ShardSender';
@@ -82,8 +91,8 @@ export default observer(({ vm, close, onCritical }: Props) => {
   return (
     <View
       style={{ flex: 1, position: 'relative' }}
-      entering={FadeInRight.delay(500).springify()}
-      exiting={FadeOutLeft.springify()}
+      entering={FadeInRight.delay(300).springify()}
+      exiting={FadeOutRight.springify()}
     >
       <View style={{ flex: 1, marginBottom: 16 }}>
         <Text style={{ marginHorizontal, fontWeight: '500', color: secondaryTextColor }}>

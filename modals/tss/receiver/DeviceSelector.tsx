@@ -43,7 +43,7 @@ export default observer(({ onNext }: { onNext: (selectedService: Service) => voi
   };
 
   return (
-    <View style={{ flex: 1 }} entering={FadeInRight.delay(500).springify()} exiting={FadeOutLeft.springify()}>
+    <View style={{ flex: 1 }} entering={FadeInRight.delay(300).springify()} exiting={FadeOutLeft.springify()}>
       <Text style={{ color: secondaryTextColor, marginHorizontal }}>{t('multi-sign-connect-select-to-pair')}:</Text>
 
       <FlatList style={{ flex: 1 }} data={LanDiscovery.services} renderItem={renderItem} keyExtractor={(i) => i.name} />
