@@ -1,4 +1,9 @@
-import { DefaultCornerRadius, useOptimizedCornerRadius, useScreenCornerRadius } from '../../utils/hardware';
+import {
+  DefaultCornerRadius,
+  useOptimizedCornerRadius,
+  useOptimizedSafeBottom,
+  useScreenCornerRadius,
+} from '../../utils/hardware';
 import React, { useEffect, useState } from 'react';
 
 import { ModalMarginScreen } from '../styles';
@@ -17,8 +22,8 @@ interface Props {
 
 export default observer(({ passLength, onAutoAuthRequest, onPinEntered, close, maxFailedAttempts }: Props) => {
   const [failedAttempts, setFailedAttempts] = useState(0);
-  const { bottom } = useSafeAreaInsets();
   const optimizedRadius = useOptimizedCornerRadius();
+  const safeBottomPadding = useOptimizedSafeBottom();
 
   const onCodeEntered = async (code: string) => {
     const success = await onPinEntered(code);
@@ -43,7 +48,7 @@ export default observer(({ passLength, onAutoAuthRequest, onPinEntered, close, m
         disableCancelButton
         passLength={passLength ?? 6}
         failedAttempts={failedAttempts}
-        style={{ padding: 0, paddingBottom: bottom - 16 - ModalMarginScreen }}
+        style={{ padding: 0, paddingBottom: safeBottomPadding }}
         numPadStyle={{ borderRadius: Math.max(optimizedRadius, 12) }}
         onCodeEntered={onCodeEntered}
       />

@@ -1,21 +1,11 @@
 import { ActivityIndicator, SectionList, StyleSheet, TouchableOpacity } from 'react-native';
-import Animated, {
-  FadeInDown,
-  FadeInLeft,
-  FadeInRight,
-  FadeOutDown,
-  FadeOutLeft,
-  FadeOutRight,
-  FadeOutUp,
-} from 'react-native-reanimated';
+import Animated, { FadeInDown, FadeInLeft, FadeInRight, FadeOutDown, FadeOutLeft, FadeOutUp } from 'react-native-reanimated';
 import React, { useEffect, useState } from 'react';
 import { secureColor, warningColor } from '../../../constants/styles';
 
 import Button from '../components/Button';
-import { ButtonV2 } from '../../../components';
 import DeviceInfo from '../components/DeviceInfo';
 import { Ionicons } from '@expo/vector-icons';
-import { ModalMarginScreen } from '../../styles';
 import { Passpad } from '../../views';
 import { ShardSender } from '../../../viewmodels/tss/ShardSender';
 import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
@@ -23,7 +13,7 @@ import Theme from '../../../viewmodels/settings/Theme';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useHorizontalPadding } from '../components/Utils';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useOptimizedSafeBottom } from '../../../utils/hardware';
 
 const { View, Text } = Animated;
 
@@ -33,7 +23,7 @@ export default observer(({ vm, onNext, isRTL }: { isRTL?: boolean; vm: ShardsDis
   const { pendingClients, approvedClients, pendingCount, approvedCount } = vm;
   const marginHorizontal = useHorizontalPadding();
   const [verifying, setVerifying] = useState<{ client: ShardSender; attempts: number }>();
-  const { bottom: safeBottom } = useSafeAreaInsets();
+  const safeBottom = useOptimizedSafeBottom();
 
   useEffect(() => {
     vm.start();
@@ -149,7 +139,7 @@ export default observer(({ vm, onNext, isRTL }: { isRTL?: boolean; vm: ShardsDis
             backgroundColor,
             alignItems: 'center',
             flex: 1,
-            paddingBottom: safeBottom - 16 - ModalMarginScreen,
+            paddingBottom: safeBottom,
           }}
         >
           <Text style={{ marginTop: 12, color: secondaryTextColor, fontWeight: '500' }}>
