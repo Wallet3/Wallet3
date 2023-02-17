@@ -1,11 +1,12 @@
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, FlatList as SystemFlatList, Text, TouchableOpacity, View } from 'react-native';
+import { getScreenCornerRadius, useOptimizedCornerRadius } from '../../../utils/hardware';
 
 import ConnectDevices from './ConnectDevices';
 import { Ionicons } from '@expo/vector-icons';
 import { ModalMarginScreen } from '../../styles';
-import ModalRootContainer from '../../core/RootContainer';
+import ModalRootContainer from '../../core/ModalRootContainer';
 import Preparations from './Preparations';
 import { ReactiveScreen } from '../../../utils/device';
 import ShardsDistribution from './ShardsDistribution';
@@ -13,7 +14,6 @@ import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
 import Theme from '../../../viewmodels/settings/Theme';
 import ThresholdSetting from './ThresholdSetting';
 import { ZoomInView } from '../../../components/animations';
-import { getScreenCornerRadius } from '../../../utils/hardware';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useHorizontalPadding } from '../components/Utils';
@@ -30,7 +30,8 @@ export default observer(({ vm, onCritical, close }: Props) => {
   const { t } = i18n;
   const { backgroundColor, textColor } = Theme;
   const [current, setCurrent] = useState({ step: 0, isRTL: false });
-  const [backButtonPadding] = useState(useHorizontalPadding());
+  const backButtonPadding = useHorizontalPadding();
+  const screenRadius = useOptimizedCornerRadius();
 
   const titleList = useRef<SystemFlatList>(null);
   const titles = [
@@ -67,7 +68,7 @@ export default observer(({ vm, onCritical, close }: Props) => {
   return (
     <ModalRootContainer>
       <View style={{ flex: 1 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12, marginTop: screenRadius ? 4 : 0 }}>
           <TouchableOpacity
             style={{ padding: backButtonPadding, margin: -backButtonPadding }}
             disabled={false}

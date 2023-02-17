@@ -1,4 +1,4 @@
-import { ScrollView, StyleProp, ViewStyle } from 'react-native';
+import { ScrollView, StyleProp, View, ViewStyle } from 'react-native';
 
 import React from 'react';
 import Theme from '../../viewmodels/settings/Theme';
@@ -23,11 +23,10 @@ export default ({ children, style }: { style?: StyleProp<ViewStyle>; children: R
         roundness: 0.17650602409638552,
         overflow: 'hidden',
         padding: 16,
-        paddingTop: 20,
         ...(style as any),
       }}
     >
-      {children}
+      <View style={{ flex: 1 }}>{children}</View>
     </ScrollView>
   );
 };

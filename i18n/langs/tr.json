@@ -283,6 +283,7 @@
 
   "multi-sig-screen-my-multi-wallets": "Çoklu İmza Cüzdanım",
   "multi-sig-screen-paired-devices": "Eşleştirilmiş Cihazlar",
+  "multi-sig-screen-paired-device": "Eşleştirilmiş Cihazlar",
   "multi-sig-screen-tip-upgrade-to-multi-sig-wallet": "Şu anki cüzdan çok imzalı cüzdan değil, çok imzalı cüzdana yükseltebilirsiniz.",
   "multi-sig-screen-tip-after-upgrading": "Lütfen unutmayın, çoklu imza cüzdanına yükselttikten sonra bile kurtarma kelimesini kullanarak cüzdanınızı geri yükleyebilir veya kurtarma kelimesini kullanarak başka bir yerde cüzdanınızı geri yükleyebilirsiniz.",
   "multi-sig-screen-txt-no-paired-devices": "Eşleştirilmiş cihaz yok",
@@ -292,6 +293,7 @@
   "multi-sig-modal-title-connect-devices": "Cihazları Bağlayın",
   "multi-sig-modal-title-set-threshold": "Eşik Ayarı",
   "multi-sig-modal-title-key-distribution": "Anahtar Dağıtımı",
+  "multi-sig-modal-title-devices-pairing": "Cihaz eşleştirme",
   "multi-sig-modal-welcome-1": "Telefonları aynı Wi-Fi ağına bağlayın",
   "multi-sig-modal-welcome-2": "[Menü] - [Çok İmzalı Cüzdan]a gidin",
   "multi-sig-modal-welcome-3": "[Başlat Eşleme]i tıklayın ve Wallet 3'e yerel ağa erişmesine izin verin",

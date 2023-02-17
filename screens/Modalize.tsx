@@ -35,8 +35,8 @@ import InpageDAppSign from '../modals/inpage/InpageDAppSign';
 import { Keyboard } from 'react-native';
 import Loading from '../modals/views/Loading';
 import MessageKeys from '../common/MessageKeys';
-import ModalContainer from '../modals/core/ModalContainer';
 import { Modalize } from 'react-native-modalize';
+import ModalizeContainer from '../modals/core/ModalizeContainer';
 import Networks from '../viewmodels/core/Networks';
 import { ReactiveScreen } from '../utils/device';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -604,7 +604,7 @@ export const ShardsModal = observer(() => {
   });
 
   return (
-    <ModalContainer
+    <ModalizeContainer
       ref={ref}
       closeOnOverlayTap={!isCritical}
       panGestureEnabled={false}
@@ -619,7 +619,7 @@ export const ShardsModal = observer(() => {
     >
       {vms.shardsDistributor && <ShardsDistributorUI vm={vms.shardsDistributor} onCritical={setIsCritical} close={close} />}
       {vms.shardReceiver ? <ShardReceiverUI /> : undefined}
-    </ModalContainer>
+    </ModalizeContainer>
   );
 });
 
@@ -688,7 +688,7 @@ export const GlobalPasspadModal = () => {
   }, []);
 
   return (
-    <ModalContainer
+    <ModalizeContainer
       ref={ref}
       closeOnOverlayTap={req?.closeOnOverlayTap ?? false}
       panGestureEnabled={false}
@@ -699,7 +699,7 @@ export const GlobalPasspadModal = () => {
       }}
     >
       {req && <GlobalPasspad {...req} close={close} />}
-    </ModalContainer>
+    </ModalizeContainer>
   );
 };
 

@@ -1,16 +1,16 @@
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, FlatList as SystemFlatList, Text, View } from 'react-native';
+import { getScreenCornerRadius, useOptimizedCornerRadius } from '../../../utils/hardware';
 
 import DeviceSelector from './DeviceSelector';
-import ModalRootContainer from '../../core/RootContainer';
+import ModalRootContainer from '../../core/ModalRootContainer';
 import Preparations from './Preparations';
 import { ReactiveScreen } from '../../../utils/device';
 import { Service } from 'react-native-zeroconf';
 import { ShardReceiver } from '../../../viewmodels/tss/ShardReceiver';
 import ShardReceiving from './ShardReceiving';
 import Theme from '../../../viewmodels/settings/Theme';
-import { getScreenCornerRadius } from '../../../utils/hardware';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
 
@@ -20,7 +20,7 @@ export default observer(() => {
   const { t } = i18n;
   const { backgroundColor, foregroundColor, textColor, appColor } = Theme;
 
-  const [borderRadius] = useState(getScreenCornerRadius());
+  const screenRadius = useOptimizedCornerRadius();
   const [vm, setVM] = useState<ShardReceiver>();
   const [step, setStep] = useState(0);
 
@@ -69,7 +69,7 @@ export default observer(() => {
           contentContainerStyle={{ flexGrow: 0, justifyContent: 'center', alignItems: 'center' }}
           data={titles}
           renderItem={renderTitle}
-          style={{ flexGrow: 0, height: 32, marginBottom: 12 }}
+          style={{ flexGrow: 0, height: 32, marginBottom: 12, marginTop: screenRadius ? 4 : 0 }}
           entering={FadeInUp.delay(300).springify()}
         />
 

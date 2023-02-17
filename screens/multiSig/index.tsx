@@ -2,6 +2,7 @@ import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import React, { useRef, useState } from 'react';
 
+import App from '../../viewmodels/core/App';
 import { DrawerActions } from '@react-navigation/native';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import MultiSigManagement from './MultiSigManagement';
@@ -15,6 +16,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
   const [currentPage, setCurrentPage] = useState(0);
   const { textColor, foregroundColor, systemBorderColor } = Theme;
+  const { currentWallet } = App;
 
   const { top } = useSafeAreaInsets();
   const { t } = i18n;
@@ -37,16 +39,18 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
         {t('multi-sig-screen-paired-devices')}
       </Text>
     </View>,
-    <View
-      key="my_multiSig_wallet"
-      style={{ padding: 12, flexDirection: 'row', alignItems: 'center', height: headerHeight, justifyContent: 'center' }}
-    >
-      <MaterialCommunityIcons name="key-chain-variant" color={textColor} size={19} />
-      <Text style={{ color: textColor, fontWeight: '600', marginStart: 8, fontSize: 18 }}>
-        {t('multi-sig-modal-title-welcome')}
-      </Text>
-    </View>,
-  ];
+    currentWallet?.isHDWallet && (
+      <View
+        key="my_multiSig_wallet"
+        style={{ padding: 12, flexDirection: 'row', alignItems: 'center', height: headerHeight, justifyContent: 'center' }}
+      >
+        <MaterialCommunityIcons name="key-chain-variant" color={textColor} size={19} />
+        <Text style={{ color: textColor, fontWeight: '600', marginStart: 8, fontSize: 18 }}>
+          {t('multi-sig-modal-title-welcome')}
+        </Text>
+      </View>
+    ),
+  ].filter((i) => i) as JSX.Element[];
 
   return (
     <View style={{ flex: 1, paddingTop: top }}>
@@ -81,25 +85,27 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
           />
         </View>
 
-        <TouchableOpacity
-          style={{ padding: 16, paddingVertical: 8, position: 'absolute', right: 0, bottom: 4, zIndex: 9 }}
-          onPress={() => {
-            const to = currentPage === 1 ? 0 : 1;
-            scrollToIndex(to);
-            swiper.current?.scrollTo(to, true);
-          }}
-        >
-          {currentPage === 0 ? (
-            <MaterialCommunityIcons name="key-chain-variant" color={textColor} size={21} />
-          ) : (
-            <Ionicons name="phone-portrait-outline" size={18} color={textColor} />
-          )}
-        </TouchableOpacity>
+        {currentWallet?.isHDWallet && (
+          <TouchableOpacity
+            style={{ padding: 16, paddingVertical: 8, position: 'absolute', right: 0, bottom: 4, zIndex: 9 }}
+            onPress={() => {
+              const to = currentPage === 1 ? 0 : 1;
+              scrollToIndex(to);
+              swiper.current?.scrollTo(to, true);
+            }}
+          >
+            {currentPage === 0 ? (
+              <MaterialCommunityIcons name="key-chain-variant" color={textColor} size={21} />
+            ) : (
+              <Ionicons name="phone-portrait-outline" size={18} color={textColor} />
+            )}
+          </TouchableOpacity>
+        )}
       </View>
 
       <Swiper ref={swiper} showsPagination={false} showsButtons={false} loop={false} onIndexChanged={scrollToIndex}>
         <PairedDevices />
-        <MultiSigManagement />
+        {currentWallet?.isHDWallet && <MultiSigManagement />}
       </Swiper>
     </View>
   );
