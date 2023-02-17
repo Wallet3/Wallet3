@@ -7,9 +7,8 @@ export default class ShardKey extends BaseEntity {
   @PrimaryColumn()
   id!: string;
 
-  get distributionId() {
-    return this.id;
-  }
+  @Column()
+  distributionId!: string;
 
   @Column({ type: 'simple-json' })
   ownerDevice!: ClientInfo;

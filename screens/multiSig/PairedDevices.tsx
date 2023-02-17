@@ -25,6 +25,7 @@ export default observer(() => {
   const { ref, close, open } = useModalize();
   const { t } = i18n;
   const [selectedDevice, setSelectedDevice] = useState<PairedDevice>();
+  const { devices, hasDevices } = PairedDevices;
 
   useEffect(() => {
     PairedDevices.refresh();
@@ -47,11 +48,11 @@ export default observer(() => {
 
   return (
     <SafeViewContainer style={{ width: '100%', height: '100%' }}>
-      {PairedDevices.hasDevices ? (
+      {hasDevices ? (
         <FlatList
           style={{ flexGrow: 1, marginHorizontal: -16, marginTop: -16 }}
           contentContainerStyle={{ paddingVertical: 8 }}
-          data={PairedDevices.devices}
+          data={devices}
           renderItem={renderTrustedDevice}
           keyExtractor={(i) => i.id}
         />

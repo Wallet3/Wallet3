@@ -4,6 +4,7 @@ import { makeObservable, observable, runInAction } from 'mobx';
 
 import Authentication from '../auth/Authentication';
 import EventEmitter from 'eventemitter3';
+import MessageKeys from '../../common/MessageKeys';
 import ShardKey from '../../models/entities/ShardKey';
 import { TCPClient } from '../../common/p2p/TCPClient';
 import { createHash } from 'crypto';
@@ -86,7 +87,8 @@ export class ShardReceiver extends TCPClient {
       if (!validSignature) return;
 
       const key = new ShardKey();
-      key.id = data.distributionId;
+      key.id = `${this.remoteInfo!.globalId}-${data.distributionId}`;
+      key.distributionId = data.distributionId;
       key.ownerDevice = this.remoteInfo!;
       key.secretsInfo = data.secretsInfo;
       key.lastUsedTimestamp = Date.now();
@@ -95,11 +97,12 @@ export class ShardReceiver extends TCPClient {
         rootShard: await Authentication.encryptForever(secrets.rootShard),
       };
 
-      key.save();
+      await key.save();
 
       ack.success = true;
 
       runInAction(() => (this.secretStatus = ShardPersistentStatus.saved));
+      PubSub.publish(MessageKeys.newDevicePaired, key);
     } catch (e) {
       ack.success = false;
       runInAction(() => (this.secretStatus = ShardPersistentStatus.saveFailed));

@@ -13,6 +13,10 @@ export class PairedDevice {
     return this.shard.id;
   }
 
+  get distributionId() {
+    return this.shard.distributionId;
+  }
+
   get deviceInfo() {
     return this.shard.ownerDevice;
   }

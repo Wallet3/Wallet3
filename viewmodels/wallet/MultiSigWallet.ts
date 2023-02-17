@@ -38,11 +38,12 @@ export class MultiSigWallet extends WalletBase {
     accountIndex?: number | undefined;
   }): Promise<string | undefined> {
     try {
-      if (this.key.cachedBip32Shards) {
-        const privKey = secretjs.combine(this.key.cachedBip32Shards);
-        // utils.HDNode.
-        utils.HDNode.fromExtendedKey
+      if (this.key.cachedSecrets) {
+        // const privKey = secretjs.combine(this.key.cachedBip32Shards);
+        // // utils.HDNode.
+        // utils.HDNode.fromExtendedKey
       }
+
       return await Authentication.decrypt(this.key.secrets.bip32Shard, pin);
     } catch (error) {}
   }

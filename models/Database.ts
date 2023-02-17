@@ -6,7 +6,6 @@ import EtherscanContract from './entities/EtherscanContract';
 import InpageDApp from './entities/InpageDApp';
 import Key from './entities/Key';
 import MultiSigKey from './entities/MultiSigKey';
-import NFT from './entities/NFT';
 import ShardKey from './entities/ShardKey';
 import SourcifyMetadata from './entities/SourcifyItem';
 import Transaction from './entities/Transaction';
@@ -21,7 +20,6 @@ const Schemas: MixedList<Function | string | EntitySchema> = [
   InpageDApp,
   Chain,
   EtherscanContract,
-  NFT,
   SourcifyMetadata,
   AddressTag,
   WCV2_Session,
@@ -88,6 +86,7 @@ class Database {
       this.inpageDApps.clear(),
       this.chains.clear(),
       this.multiSigKeys?.clear(),
+      __DEV__ && this.shardKeys?.clear(),
     ]);
   }
 }

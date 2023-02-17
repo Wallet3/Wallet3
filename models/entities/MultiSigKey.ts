@@ -21,7 +21,7 @@ export default class MultiSigKey extends BaseEntity {
   secretsInfo!: { threshold: number; devices: ClientInfo[] };
 
   @Column({ type: 'simple-json', nullable: true })
-  cachedBip32Shards?: string[];
+  cachedSecrets?: { rootShards: string[]; bip32Shards: string[] };
 
   @Column({ type: 'text', default: '' })
   bip32Xpubkey!: string;
