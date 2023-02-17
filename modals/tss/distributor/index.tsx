@@ -13,10 +13,10 @@ import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
 import Theme from '../../../viewmodels/settings/Theme';
 import ThresholdSetting from './ThresholdSetting';
 import { ZoomInView } from '../../../components/animations';
-import { calcHorizontalPadding } from '../components/Utils';
 import { getScreenCornerRadius } from '../../../utils/hardware';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
+import { useHorizontalPadding } from '../components/Utils';
 
 const { FlatList } = Animated;
 
@@ -29,9 +29,8 @@ interface Props {
 export default observer(({ vm, onCritical, close }: Props) => {
   const { t } = i18n;
   const { backgroundColor, textColor } = Theme;
-  const [borderRadius] = useState(getScreenCornerRadius());
   const [current, setCurrent] = useState({ step: 0, isRTL: false });
-  const [backButtonPadding] = useState(calcHorizontalPadding());
+  const [backButtonPadding] = useState(useHorizontalPadding());
 
   const titleList = useRef<SystemFlatList>(null);
   const titles = [

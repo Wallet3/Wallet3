@@ -51,3 +51,8 @@ export function useScreenCornerRadius() {
   const [cornerRadius] = useState(getScreenCornerRadius());
   return cornerRadius;
 }
+
+export function useOptimizedCornerRadius() {
+  const [cornerRadius] = useState(getScreenCornerRadius() - DefaultCornerRadius);
+  return cornerRadius;
+}

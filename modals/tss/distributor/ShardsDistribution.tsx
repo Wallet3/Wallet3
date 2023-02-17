@@ -24,12 +24,12 @@ import Slider from '@react-native-community/slider';
 import { TCPClient } from '../../../common/p2p/TCPClient';
 import Theme from '../../../viewmodels/settings/Theme';
 import { ZoomInView } from '../../../components/animations';
-import { calcHorizontalPadding } from '../components/Utils';
 import deviceInfoModule from 'react-native-device-info';
 import { getDeviceInfo } from '../../../common/p2p/Utils';
 import { getScreenCornerRadius } from '../../../utils/hardware';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
+import { useHorizontalPadding } from '../components/Utils';
 
 const { View } = Animated;
 
@@ -63,7 +63,7 @@ const DeviceStatus = observer(({ item, vm }: { item: ShardSender | ClientInfo; v
 
 export default observer(({ vm, close, onCritical }: Props) => {
   const { t } = i18n;
-  const [marginHorizontal] = useState(calcHorizontalPadding());
+  const marginHorizontal = useHorizontalPadding();
   const { approvedClients, approvedCount } = vm;
   const { secondaryTextColor } = Theme;
 

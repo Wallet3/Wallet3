@@ -22,6 +22,7 @@ export default ({ children, style }: { style?: StyleProp<ViewStyle>; children: R
         backgroundColor,
         height: 430,
         borderRadius,
+        roundness: 0.17650602409638552,
         overflow: 'hidden',
         padding: 16,
         paddingTop: 20,

@@ -19,9 +19,9 @@ import { Passpad } from '../../views';
 import { ShardSender } from '../../../viewmodels/tss/ShardSender';
 import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
 import Theme from '../../../viewmodels/settings/Theme';
-import { calcHorizontalPadding } from '../components/Utils';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
+import { useHorizontalPadding } from '../components/Utils';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { View, Text } = Animated;
@@ -30,7 +30,7 @@ export default observer(({ vm, onNext, isRTL }: { isRTL?: boolean; vm: ShardsDis
   const { t } = i18n;
   const { textColor, secondaryTextColor, backgroundColor, borderColor } = Theme;
   const { pendingClients, approvedClients, pendingCount, approvedCount } = vm;
-  const [marginHorizontal] = useState(calcHorizontalPadding());
+  const marginHorizontal = useHorizontalPadding();
   const [verifying, setVerifying] = useState<{ client: ShardSender; attempts: number }>();
   const { bottom: safeBottom } = useSafeAreaInsets();
 

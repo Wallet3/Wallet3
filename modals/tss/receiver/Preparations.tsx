@@ -15,10 +15,10 @@ import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
 import { TCPClient } from '../../../common/p2p/TCPClient';
 import Theme from '../../../viewmodels/settings/Theme';
 import Welcome from '../components/Introduction';
-import { calcHorizontalPadding } from '../components/Utils';
 import { getScreenCornerRadius } from '../../../utils/hardware';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
+import { useHorizontalPadding } from '../components/Utils';
 
 const { View, Text, FlatList } = Animated;
 

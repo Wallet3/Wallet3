@@ -22,15 +22,15 @@ import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
 import Slider from '@react-native-community/slider';
 import { TCPClient } from '../../../common/p2p/TCPClient';
 import Theme from '../../../viewmodels/settings/Theme';
-import { calcHorizontalPadding } from '../components/Utils';
 import { getScreenCornerRadius } from '../../../utils/hardware';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
+import { useHorizontalPadding } from '../components/Utils';
 
 const { View, Text } = Animated;
 
 export default observer(({ vm, onNext, isRTL }: { vm: ShardsDistributor; onNext: () => void; isRTL?: boolean }) => {
-  const [marginHorizontal] = useState(calcHorizontalPadding());
+  const marginHorizontal = useHorizontalPadding();
 
   const { t } = i18n;
   const { secondaryTextColor, appColor, thirdTextColor } = Theme;

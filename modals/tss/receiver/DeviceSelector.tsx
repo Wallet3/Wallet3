@@ -11,11 +11,11 @@ import { Placeholder } from '../../../components';
 import { SECOND } from '../../../utils/time';
 import { Service } from 'react-native-zeroconf';
 import Theme from '../../../viewmodels/settings/Theme';
-import { calcHorizontalPadding } from '../components/Utils';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
 import { openSettings } from 'expo-linking';
 import { startLayoutAnimation } from '../../../utils/animations';
+import { useHorizontalPadding } from '../components/Utils';
 import { verifiedColor } from '../../../constants/styles';
 
 const { View, Text, FlatList } = Animated;
@@ -23,7 +23,7 @@ const { View, Text, FlatList } = Animated;
 export default observer(({ onNext }: { onNext: (selectedService: Service) => void }) => {
   const { t } = i18n;
   const { secondaryTextColor, appColor } = Theme;
-  const [marginHorizontal] = useState(calcHorizontalPadding());
+  const marginHorizontal = useHorizontalPadding();
   const [selectedService, setSelectedService] = useState<Service>();
   const [scanTimeout, setScanTimeout] = useState(false);
 
