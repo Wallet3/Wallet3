@@ -49,6 +49,8 @@ export function parseXpubkey(mixedKey: string) {
 }
 
 export abstract class WalletBase {
+  protected removedAccountIndexes: number[] = [];
+
   abstract isHDWallet: boolean;
   abstract isMultiSig: boolean;
 
@@ -67,7 +69,10 @@ export abstract class WalletBase {
     basePathIndex: number;
     basePath: string;
   } & BaseEntity;
-  protected removedAccountIndexes: number[] = [];
+
+  get keyPathInfo() {
+    return { basePathIndex: this.key.basePathIndex, basePath: this.key.basePath };
+  }
 
   constructor() {
     makeObservable(this, { accounts: observable });

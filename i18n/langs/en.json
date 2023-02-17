@@ -298,7 +298,7 @@
   "multi-sig-modal-welcome-2": "Go to [Menu] - [MultiSig Wallet]",
   "multi-sig-modal-welcome-3": "Tap [Start Pairing] and approve Wallet 3 to access the local network",
   "multi-sig-modal-welcome-4": "Wait a moment and other phones will attempt to connect to the target device",
-  "multi-sig-modal-connect-tip": "1. Open Wallet 3 on other phones.\n2. Go to [Menu] - [MultiSig Wallet].\n3. Tap [Start Pairing].",
+  "multi-sig-modal-connect-tip": "1. Open Wallet 3 on other devices.\n2. Go to [Menu] - [MultiSig Wallet].\n3. Tap [Start Pairing].",
   "multi-sig-modal-connect-enter-pairing-code": "Please enter the pairing code",
   "multi-sig-modal-connect-approved-clients": "Approved devices",
   "multi-sig-modal-connect-pending-clients": "Pending devices",

@@ -9,6 +9,7 @@ import { ModalMarginScreen } from '../../styles';
 import ModalRootContainer from '../../core/ModalRootContainer';
 import Preparations from './Preparations';
 import { ReactiveScreen } from '../../../utils/device';
+import ScrollTitles from '../../components/ScrollTitles';
 import ShardsDistribution from './ShardsDistribution';
 import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
 import Theme from '../../../viewmodels/settings/Theme';
@@ -82,18 +83,11 @@ export default observer(({ vm, onCritical, close }: Props) => {
             />
           </TouchableOpacity>
 
-          <FlatList
-            ref={titleList as any}
-            pagingEnabled
-            scrollEnabled={false}
-            showsHorizontalScrollIndicator={false}
-            showsVerticalScrollIndicator={false}
+          <ScrollTitles
+            currentIndex={step}
             data={titles}
-            renderItem={renderTitle}
-            style={{ height: 32 }}
-            entering={FadeInUp.delay(300).springify()}
             contentContainerStyle={{
-              flexGrow: 0,
+              
               justifyContent: 'center',
               alignItems: 'center',
               marginStart: -backButtonPadding - 1,

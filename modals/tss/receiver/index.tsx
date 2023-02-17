@@ -7,6 +7,7 @@ import DeviceSelector from './DeviceSelector';
 import ModalRootContainer from '../../core/ModalRootContainer';
 import Preparations from './Preparations';
 import { ReactiveScreen } from '../../../utils/device';
+import ScrollTitles from '../../components/ScrollTitles';
 import { Service } from 'react-native-zeroconf';
 import { ShardReceiver } from '../../../viewmodels/tss/ShardReceiver';
 import ShardReceiving from './ShardReceiving';
@@ -60,17 +61,11 @@ export default observer(() => {
   return (
     <ModalRootContainer>
       <View style={{ flex: 1 }}>
-        <FlatList
-          ref={titleList as any}
-          pagingEnabled
-          scrollEnabled={false}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ flexGrow: 0, justifyContent: 'center', alignItems: 'center' }}
+        <ScrollTitles
+          currentIndex={step}
+          contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
           data={titles}
-          renderItem={renderTitle}
           style={{ flexGrow: 0, height: 32, marginBottom: 12, marginTop: screenRadius ? 4 : 0 }}
-          entering={FadeInUp.delay(300).springify()}
         />
 
         <View style={{ flex: 1, width: ReactiveScreen.width - 12, marginHorizontal: -16 }}>

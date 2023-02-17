@@ -25,8 +25,10 @@ type Events = {
   newClient: (client: ShardSender) => void;
 };
 
-interface IConstruction {
+export interface IShardsDistributorConstruction {
   mnemonic: string;
+  basePath?: string;
+  basePathIndex?: number;
 }
 
 export enum ShardsDistributionStatus {
@@ -51,7 +53,7 @@ export class ShardsDistributor extends TCPServer<Events> {
   status = ShardsDistributionStatus.ready;
   threshold = 2;
 
-  constructor({ mnemonic }: IConstruction) {
+  constructor({ mnemonic, basePath }: IShardsDistributorConstruction) {
     super();
 
     makeObservable(this, {
@@ -75,7 +77,7 @@ export class ShardsDistributor extends TCPServer<Events> {
     const start = performance.now();
     this.root = utils.HDNode.fromMnemonic(mnemonic);
     this.protector = this.root.derivePath(`m/0'/3`);
-    this.bip32 = this.root.derivePath(DEFAULT_DERIVATION_PATH);
+    this.bip32 = this.root.derivePath(basePath ?? DEFAULT_DERIVATION_PATH);
     console.info(`Shards generation: ${performance.now() - start}`);
 
     this.id = createHash('sha256').update(this.protector.address).digest().toString('hex').substring(2, 34);

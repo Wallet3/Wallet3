@@ -32,7 +32,7 @@ export default observer(() => {
     setBusy(true);
     await sleep(200);
 
-    openShardsDistributors(secret!);
+    openShardsDistributors({ mnemonic: secret!, ...currentWallet!.keyPathInfo });
 
     setBusy(false);
   };

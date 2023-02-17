@@ -12,6 +12,7 @@ import ModalizeContainer from '../../modals/core/ModalizeContainer';
 import { PairedDevice } from '../../viewmodels/tss/management/PairedDevice';
 import PairedDevices from '../../viewmodels/tss/management/PairedDevices';
 import { Portal } from 'react-native-portalize';
+import ScrollTitles from '../../modals/components/ScrollTitles';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -71,13 +72,13 @@ export default observer(() => {
       <Portal>
         <ModalizeContainer ref={ref}>
           <ModalRootContainer>
-            <Text style={{ fontSize: 25, fontWeight: '700', color: textColor, textTransform: 'capitalize' }}>
-              {t('multi-sig-screen-paired-device')}
-            </Text>
+            <ScrollTitles
+              data={[t('multi-sig-screen-paired-device')]}
+              contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
+              style={{ flexGrow: 0 }}
+            />
 
-            <View style={{ flex: 1 }}>
-              <DeviceInfo info={selectedDevice?.deviceInfo!} />
-            </View>
+            <DeviceInfo info={selectedDevice?.deviceInfo!} />
           </ModalRootContainer>
         </ModalizeContainer>
       </Portal>
