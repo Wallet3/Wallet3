@@ -4,7 +4,7 @@ import * as SplashScreen from 'expo-splash-screen';
 
 import AppViewModel, { AppVM } from './viewmodels/core/App';
 import AuthViewModel, { Authentication } from './viewmodels/auth/Authentication';
-import Modals, { FullScreenQRScanner, LockScreen } from './screens/Modalize';
+import Modals, { FullScreenQRScanner, GlobalPasspadModal, LockScreen } from './screens/Modalize';
 import { TouchableOpacity, UIManager } from 'react-native';
 
 import { About } from './screens/settings/About';
@@ -150,6 +150,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
       <FlashMessage position="top" />
       <StatusBar style={statusBarStyle} />
 
+      <GlobalPasspadModal />
       <FullScreenQRScanner />
       <LockScreen app={app} appAuth={appAuth} />
     </NavigationContainer>

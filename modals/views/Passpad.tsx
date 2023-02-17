@@ -9,6 +9,8 @@ import { StyleProp, Text, View, ViewStyle } from 'react-native';
 import { renderEmptyCircle, renderFilledCircle } from '../../components/PasscodeCircle';
 
 import { BioType } from '../../viewmodels/auth/Authentication';
+import { FadeInDownView } from '../../components/animations';
+import IllustrationLock from '../../assets/illustrations/misc/lock.svg';
 import { MaterialIcons } from '@expo/vector-icons';
 import { ReactiveScreen } from '../../utils/device';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -183,17 +185,28 @@ export const FullPasspad = observer((props: FullPasspadProps) => {
           failedAttempts={failedAttempts}
         />
       ) : (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <MaterialIcons name="lock" color={warningColor} size={64} />
-          <Text style={{ fontSize: 19, fontWeight: '500', marginVertical: 20, color: warningColor }}>
+        <FadeInDownView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <IllustrationLock width={150} height={150} />
+          <Text
+            style={{ fontSize: 19, fontWeight: '600', marginVertical: 24, color: warningColor, textTransform: 'uppercase' }}
+          >
             {t('lock-screen-wallet-is-locked')}
           </Text>
-          <Text style={{ fontSize: 10, marginTop: 36, color: textColor, opacity: 0.5 }}>
+          <Text
+            style={{
+              fontSize: 12,
+              fontWeight: '500',
+              marginTop: 12,
+              color: textColor,
+              opacity: 0.5,
+              textTransform: 'uppercase',
+            }}
+          >
             {t('lock-screen-remaining-time', {
               time: `${numeral(hours).format('00,')}:${numeral(minutes || 1).format('00,')}`,
             })}
           </Text>
-        </View>
+        </FadeInDownView>
       )}
     </SafeAreaProvider>
   );

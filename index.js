@@ -1,8 +1,8 @@
 import './shim';
-import '@ethersproject/shims';
 import 'react-native-gesture-handler';
 import './configs/polyfill';
 import './configs/debug';
+import '@ethersproject/shims';
 
 import App from './App';
 import { registerRootComponent } from 'expo';

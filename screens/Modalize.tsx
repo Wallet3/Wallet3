@@ -10,6 +10,7 @@ import {
   WalletConnectSign,
   WalletConnectTxRequest,
 } from '../modals';
+import AppAuth, { Authentication } from '../viewmodels/auth/Authentication';
 import {
   ConnectInpageDApp,
   InpageDAppAddAsset,
@@ -22,9 +23,9 @@ import React, { useEffect, useState } from 'react';
 import { ShardReceiverUI, ShardsDistributorUI } from '../modals/tss';
 
 import { AppVM } from '../viewmodels/core/App';
-import { Authentication } from '../viewmodels/auth/Authentication';
 import BackupSecretTip from '../modals/misc/BackupSecretTip';
 import { FullPasspad } from '../modals/views/Passpad';
+import GlobalPasspad from '../modals/global/GlobalPasspad';
 import InappBrowser from '../modals/app/InappBrowser';
 import InpageConnectDApp from '../modals/inpage/InpageConnectDApp';
 import InpageDAppAddAssetModal from '../modals/inpage/InpageDAppAddAsset';
@@ -671,6 +672,48 @@ export const FullScreenQRScanner = observer(() => {
     </Modalize>
   );
 });
+
+export const GlobalPasspadModal = () => {
+  const { ref, open, close } = useModalize();
+  const [req, setReq] = useState<{
+    passLength?: number;
+    onAutoAuthRequest: () => Promise<boolean>;
+    onPinEntered: (pin: string) => Promise<boolean>;
+    onClosed?: () => void;
+  }>();
+
+  useEffect(() => {
+    PubSub.subscribe(MessageKeys.openGlobalPasspad, (_, data) => {
+      setReq(data);
+      open();
+    });
+
+    return () => {
+      PubSub.unsubscribe(MessageKeys.openGlobalPasspad);
+    };
+  }, []);
+
+  return (
+    <Modalize
+      ref={ref}
+      useNativeDriver
+      adjustToContentHeight
+      withHandle={false}
+      disableScrollIfPossible
+      closeOnOverlayTap={false}
+      panGestureEnabled={false}
+      panGestureComponentEnabled={false}
+      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+      modalStyle={{ backgroundColor: 'transparent' }}
+      onClosed={() => {
+        req?.onClosed?.();
+        setReq(undefined);
+      }}
+    >
+      <SafeAreaProvider>{req && <GlobalPasspad {...req} close={close} />}</SafeAreaProvider>
+    </Modalize>
+  );
+};
 
 export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication }) => {
   const { ref: lockScreenRef, open: openLockScreen, close: closeLockScreen } = useModalize();

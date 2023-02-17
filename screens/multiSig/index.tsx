@@ -39,6 +39,7 @@ import { ZoomInView } from '../../components/animations';
 import i18n from '../../i18n';
 import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
+import { openGlobalPasspad } from '../../common/Modals';
 import { startLayoutAnimation } from '../../utils/animations';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
@@ -56,6 +57,15 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
   const scrollToIndex = (index: number) => {
     headerScroller.current?.scrollToIndex({ index, animated: true });
     setCurrentPage(index);
+  };
+
+  const openShardsDistributor = () => {
+    const getSecret = async (pin?: string) => {
+      const secret = await currentWallet?.getSecret(pin);
+      return secret !== undefined;
+    };
+
+    openGlobalPasspad({ onAutoAuthRequest: getSecret, onPinEntered: getSecret });
   };
 
   const logos = [
@@ -164,6 +174,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
             style={{ marginTop: 24 }}
             themeColor={secureColor}
             icon={() => <Ionicons name="arrow-up-circle-outline" color="#fff" size={19} />}
+            onPress={openShardsDistributor}
           />
         </SafeViewContainer>
       </Swiper>

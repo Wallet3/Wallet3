@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, FlatList as SystemFlatList, Text, View } from 'react-native';
 
 import DeviceSelector from './DeviceSelector';
+import ModalRootContainer from '../../components/RootContainer';
 import Preparations from './Preparations';
 import { ReactiveScreen } from '../../../utils/device';
 import { Service } from 'react-native-zeroconf';
@@ -57,23 +58,7 @@ export default observer(() => {
   useEffect(() => () => vm?.dispose(), [vm]);
 
   return (
-    <ScrollView
-      pagingEnabled
-      scrollEnabled={false}
-      horizontal
-      contentContainerStyle={{ flexGrow: 1 }}
-      style={{
-        position: 'relative',
-        margin: 5,
-        marginHorizontal: 6,
-        backgroundColor,
-        height: 430,
-        borderRadius,
-        overflow: 'hidden',
-        padding: 16,
-        paddingTop: 20,
-      }}
-    >
+    <ModalRootContainer>
       <View style={{ flex: 1 }}>
         <FlatList
           ref={titleList as any}
@@ -94,6 +79,6 @@ export default observer(() => {
           {step === 2 && vm && <ShardReceiving vm={vm} />}
         </View>
       </View>
-    </ScrollView>
+    </ModalRootContainer>
   );
 });

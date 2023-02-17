@@ -170,7 +170,7 @@ export class Authentication extends EventEmitter {
       if (this.failedAttempts <= (__DEV__ ? 3 : 6)) return;
 
       this.failedAttempts = 0;
-      this.appUnlockTime = Date.now() + (__DEV__ ? toMilliseconds({ seconds: 120 }) : toMilliseconds({ hours: 3 }));
+      this.appUnlockTime = Date.now() + (__DEV__ ? toMilliseconds({ seconds: 10 }) : toMilliseconds({ hours: 3 }));
       AsyncStorage.setItem(keys.appUnlockTime, this.appUnlockTime.toString());
       logWalletLocked();
     });

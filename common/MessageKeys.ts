@@ -15,6 +15,7 @@ export default {
   openGlobalQRScanner: 'openGlobalQRScanner',
   openShardsDistribution: 'openShardsDistribution',
   openShardReceiver: 'openShardReceiver',
+  openGlobalPasspad: 'openGlobalPasspad',
   drawerSwipeEnabled: 'drawer-swipeEnabled',
   multiSigWalletCreated: 'multiSigWalletCreated',
   wc_request: 'wc_request',

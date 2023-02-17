@@ -5,6 +5,7 @@ import { ScrollView, FlatList as SystemFlatList, Text, TouchableOpacity, View } 
 import ConnectDevices from './ConnectDevices';
 import { Ionicons } from '@expo/vector-icons';
 import { ModalMarginScreen } from '../../styles';
+import ModalRootContainer from '../../components/RootContainer';
 import Preparations from './Preparations';
 import { ReactiveScreen } from '../../../utils/device';
 import ShardsDistribution from './ShardsDistribution';
@@ -65,22 +66,7 @@ export default observer(({ vm, onCritical, close }: Props) => {
   const { step, isRTL } = current;
 
   return (
-    <ScrollView
-      pagingEnabled
-      scrollEnabled={false}
-      horizontal
-      contentContainerStyle={{ flexGrow: 1 }}
-      style={{
-        position: 'relative',
-        margin: 6,
-        backgroundColor,
-        height: 430,
-        borderRadius,
-        overflow: 'hidden',
-        padding: 16,
-        paddingTop: 20,
-      }}
-    >
+    <ModalRootContainer>
       <View style={{ flex: 1 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
           <TouchableOpacity
@@ -122,6 +108,6 @@ export default observer(({ vm, onCritical, close }: Props) => {
           {step === 3 && <ShardsDistribution vm={vm} close={close} onCritical={onCritical} />}
         </View>
       </View>
-    </ScrollView>
+    </ModalRootContainer>
   );
 });
