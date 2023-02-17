@@ -35,6 +35,7 @@ import InpageDAppSign from '../modals/inpage/InpageDAppSign';
 import { Keyboard } from 'react-native';
 import Loading from '../modals/views/Loading';
 import MessageKeys from '../common/MessageKeys';
+import ModalContainer from '../modals/core/ModalContainer';
 import { Modalize } from 'react-native-modalize';
 import Networks from '../viewmodels/core/Networks';
 import { ReactiveScreen } from '../utils/device';
@@ -588,7 +589,7 @@ export const ShardsModal = observer(() => {
 
   useEffect(() => {
     PubSub.subscribe(MessageKeys.openShardsDistribution, (_, data) => {
-      setVMs({ shardsDistributor: new ShardsDistributor({ mnemonic: utils.entropyToMnemonic(randomBytes(16)) }) });
+      setVMs({ shardsDistributor: data });
       open();
     });
 
@@ -603,17 +604,11 @@ export const ShardsModal = observer(() => {
   });
 
   return (
-    <Modalize
+    <ModalContainer
       ref={ref}
-      useNativeDriver
-      adjustToContentHeight
-      withHandle={false}
-      disableScrollIfPossible
       closeOnOverlayTap={!isCritical}
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
-      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-      modalStyle={{ backgroundColor: 'transparent' }}
       onClosed={() => {
         // __DEV__ && vms.shardsDistributor
         //   ? setTimeout(() => PubSub.publish(MessageKeys.openShardsDistribution), 1000)
@@ -622,11 +617,9 @@ export const ShardsModal = observer(() => {
         setIsCritical(false);
       }}
     >
-      <SafeAreaProvider>
-        {vms.shardsDistributor && <ShardsDistributorUI vm={vms.shardsDistributor} onCritical={setIsCritical} close={close} />}
-        {vms.shardReceiver ? <ShardReceiverUI /> : undefined}
-      </SafeAreaProvider>
-    </Modalize>
+      {vms.shardsDistributor && <ShardsDistributorUI vm={vms.shardsDistributor} onCritical={setIsCritical} close={close} />}
+      {vms.shardReceiver ? <ShardReceiverUI /> : undefined}
+    </ModalContainer>
   );
 });
 
@@ -695,24 +688,18 @@ export const GlobalPasspadModal = () => {
   }, []);
 
   return (
-    <Modalize
+    <ModalContainer
       ref={ref}
-      useNativeDriver
-      adjustToContentHeight
-      withHandle={false}
-      disableScrollIfPossible
       closeOnOverlayTap={req?.closeOnOverlayTap ?? false}
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
-      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-      modalStyle={{ backgroundColor: 'transparent' }}
       onClosed={() => {
         req?.onClosed?.();
         setReq(undefined);
       }}
     >
-      <SafeAreaProvider>{req && <GlobalPasspad {...req} close={close} />}</SafeAreaProvider>
-    </Modalize>
+      {req && <GlobalPasspad {...req} close={close} />}
+    </ModalContainer>
   );
 };
 

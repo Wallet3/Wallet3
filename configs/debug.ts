@@ -60,7 +60,14 @@ if (__DEV__) {
     //   console.log('dist status', pri.status);
     // });
 
-    setTimeout(() => PubSub.publish(MessageKeys.openShardsDistribution), 3000);
+    // setTimeout(
+    //   () =>
+    //     PubSub.publish(
+    //       MessageKeys.openShardsDistribution,
+    //       new ShardsDistributor({ mnemonic: utils.entropyToMnemonic(randomBytes(16)) })
+    //     ),
+    //   3000
+    // );
 
     // const aes128cfb = createCipheriv('aes-128-cfb', randomBytes(16), randomBytes(16));
     // aes128cfb.write('abc', 'utf8');

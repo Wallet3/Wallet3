@@ -5,7 +5,7 @@ import { ScrollView, FlatList as SystemFlatList, Text, TouchableOpacity, View } 
 import ConnectDevices from './ConnectDevices';
 import { Ionicons } from '@expo/vector-icons';
 import { ModalMarginScreen } from '../../styles';
-import ModalRootContainer from '../../components/RootContainer';
+import ModalRootContainer from '../../core/RootContainer';
 import Preparations from './Preparations';
 import { ReactiveScreen } from '../../../utils/device';
 import ShardsDistribution from './ShardsDistribution';

@@ -1,9 +1,7 @@
-import Animated, { FadeInUp } from 'react-native-reanimated';
-import React, { useEffect, useRef, useState } from 'react';
-import { ScrollView, StyleProp, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { ScrollView, StyleProp, ViewStyle } from 'react-native';
 
+import React from 'react';
 import Theme from '../../viewmodels/settings/Theme';
-import { observer } from 'mobx-react-lite';
 import { useScreenCornerRadius } from '../../utils/hardware';
 
 export default ({ children, style }: { style?: StyleProp<ViewStyle>; children: React.ReactNode }) => {

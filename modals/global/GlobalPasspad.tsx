@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 import { ModalMarginScreen } from '../styles';
 import { Passpad } from '../views';
-import RootContainer from '../components/RootContainer';
+import RootContainer from '../core/RootContainer';
 import { observer } from 'mobx-react-lite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 

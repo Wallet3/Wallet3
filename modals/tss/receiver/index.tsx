@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, FlatList as SystemFlatList, Text, View } from 'react-native';
 
 import DeviceSelector from './DeviceSelector';
-import ModalRootContainer from '../../components/RootContainer';
+import ModalRootContainer from '../../core/RootContainer';
 import Preparations from './Preparations';
 import { ReactiveScreen } from '../../../utils/device';
 import { Service } from 'react-native-zeroconf';
