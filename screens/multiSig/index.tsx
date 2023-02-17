@@ -9,7 +9,7 @@ import {
   SimpleLineIcons,
 } from '@expo/vector-icons';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { borderColor, secondaryFontColor, secureColor, verifiedColor, warningColor } from '../../constants/styles';
 import { openGlobalPasspad, openShardsDistributors } from '../../common/Modals';
@@ -19,6 +19,7 @@ import AccountSelector from '../../modals/dapp/AccountSelector';
 import App from '../../viewmodels/core/App';
 import Button from '../../modals/tss/components/Button';
 import Collapsible from 'react-native-collapsible';
+import DeviceInfo from '../../modals/tss/components/DeviceInfo';
 import { DrawerActions } from '@react-navigation/native';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import IllustrationNoData from '../../assets/illustrations/misc/nodata.svg';
@@ -29,6 +30,8 @@ import MetamaskDAppsHub from '../../viewmodels/walletconnect/MetamaskDAppsHub';
 import { Modalize } from 'react-native-modalize';
 import NetworkSelector from '../../modals/dapp/NetworkSelector';
 import Networks from '../../viewmodels/core/Networks';
+import { PairedDevice } from '../../viewmodels/tss/management/PairedDevice';
+import PairedDevices from '../../viewmodels/tss/management/PairedDevices';
 import { Portal } from 'react-native-portalize';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
@@ -72,6 +75,10 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
     openShardsDistributors(secret!);
   };
 
+  useEffect(() => {
+    PairedDevices.refresh();
+  }, []);
+
   const logos = [
     <View
       key="paired_devices"
@@ -92,6 +99,14 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
       </Text>
     </View>,
   ];
+
+  const renderTrustedDevice = ({ item }: { item: PairedDevice }) => {
+    return (
+      <View style={{ paddingVertical: 8, paddingHorizontal: 16 }}>
+        <DeviceInfo info={item.deviceInfo} light />
+      </View>
+    );
+  };
 
   return (
     <View style={{ flex: 1, paddingTop: top }}>
@@ -144,19 +159,27 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
 
       <Swiper ref={swiper} showsPagination={false} showsButtons={false} loop={false} onIndexChanged={scrollToIndex}>
         <SafeViewContainer style={{ width: '100%', height: '100%' }}>
-          <View style={{ alignSelf: 'center', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <IllustrationPairing width={150} height={150} />
-            <Text style={{ color: secondaryTextColor, textTransform: 'capitalize', fontWeight: '500' }}>
-              {t('multi-sig-screen-txt-no-paired-devices')}
-            </Text>
-          </View>
-
-          {/* <FlatList style={{ flexGrow: 1 }} data={[]} renderItem={(i) => <View />} /> */}
+          {PairedDevices.hasDevices ? (
+            <FlatList
+              style={{ flexGrow: 1, marginHorizontal: -16, marginTop: -16 }}
+              contentContainerStyle={{ paddingVertical: 8 }}
+              data={PairedDevices.devices}
+              renderItem={renderTrustedDevice}
+              keyExtractor={(i) => i.id}
+            />
+          ) : (
+            <View style={{ alignSelf: 'center', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <IllustrationPairing width={150} height={150} />
+              <Text style={{ color: secondaryTextColor, textTransform: 'capitalize', fontWeight: '500' }}>
+                {t('multi-sig-screen-txt-no-paired-devices')}
+              </Text>
+            </View>
+          )}
 
           <ButtonV2
             title={t('button-start-pairing')}
             icon={() => <Ionicons name="phone-portrait-outline" color="#fff" size={17} />}
-            style={{ marginTop: 16 }}
+            style={{ marginTop: 12 }}
             onPress={() => PubSub.publish(MessageKeys.openShardReceiver)}
           />
         </SafeViewContainer>
@@ -175,7 +198,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
 
           <ButtonV2
             title={t('button-upgrade')}
-            style={{ marginTop: 24 }}
+            style={{ marginTop: 12 }}
             themeColor={secureColor}
             icon={() => <Ionicons name="arrow-up-circle-outline" color="#fff" size={19} />}
             onPress={openShardsDistributor}

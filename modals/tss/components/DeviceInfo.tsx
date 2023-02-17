@@ -8,18 +8,18 @@ import Theme from '../../../viewmodels/settings/Theme';
 import iosDevice from 'ios-device-list';
 import { verifiedColor } from '../../../constants/styles';
 
-export default ({ info, verified }: { info: ClientInfo; verified?: boolean }) => {
+export default ({ info, verified, light }: { info: ClientInfo; verified?: boolean; light?: boolean }) => {
   const { textColor, secondaryTextColor } = Theme;
 
   if (!info) return null;
 
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
-      <Device deviceId={info.device} os={info.rn_os} style={{ width: 32, height: 42 }} />
+      <Device deviceId={info.device} os={info.rn_os} style={{ width: light ? 27 : 32, height: light ? 39 : 42 }} />
 
-      <View style={{ marginStart: 16, flex: 1 }}>
+      <View style={{ marginStart: 12, flex: 1 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 2 }}>
-          <Text numberOfLines={1} style={{ color: textColor, fontSize: 22, fontWeight: '600', marginEnd: 6 }}>
+          <Text numberOfLines={1} style={{ color: textColor, fontSize: light ? 18 : 22, fontWeight: '600', marginEnd: 6 }}>
             {`${info.name || iosDevice.generationByIdentifier(info.device)}`}
           </Text>
 
