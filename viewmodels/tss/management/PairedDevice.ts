@@ -1,4 +1,6 @@
+import { DateTimeFormatter } from '../../../utils/formatter';
 import ShardKey from '../../../models/entities/ShardKey';
+import dayjs from 'dayjs';
 
 export class PairedDevice {
   shard: ShardKey;
@@ -13,5 +15,9 @@ export class PairedDevice {
 
   get deviceInfo() {
     return this.shard.ownerDevice;
+  }
+
+  get lastUsedTimestamp() {
+    return dayjs(this.shard.lastUsedTimestamp).format(DateTimeFormatter);
   }
 }

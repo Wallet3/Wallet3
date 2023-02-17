@@ -359,5 +359,6 @@
   "button-approve": "許可する",
   "button-swap": "スワップ",
   "button-reset": "リセット",
-  "button-start": "開始"
+  "button-start": "開始",
+  "button-view-secret": "キーを表示する"
 }

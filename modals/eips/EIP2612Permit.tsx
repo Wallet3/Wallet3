@@ -1,6 +1,7 @@
 import { ActivityIndicator, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { BigNumber, constants, utils } from 'ethers';
 import { Coin, Skeleton } from '../../components';
+import { DateTimeFormatter, formatAddress } from '../../utils/formatter';
 import React, { useEffect, useState } from 'react';
 
 import AddressRiskIndicator from '../components/AddressRiskIndicator';
@@ -12,7 +13,6 @@ import Networks from '../../viewmodels/core/Networks';
 import { PageMetadata } from '../../screens/browser/Web3View';
 import Theme from '../../viewmodels/settings/Theme';
 import dayjs from 'dayjs';
-import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { openBrowserAsync } from 'expo-web-browser';
@@ -136,7 +136,7 @@ export default ({ eip2612, metadata, onAddressChecked }: Props) => {
       <View style={reviewItemStyle}>
         <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-sign-deadline')}</Text>
         <Text style={reviewItemValueStyle} numberOfLines={1}>
-          {dayjs(Number(eip2612.message.deadline) * 1000).format('YYYY-MM-DD HH:mm:ss')}
+          {dayjs(Number(eip2612.message.deadline) * 1000).format(DateTimeFormatter)}
         </Text>
       </View>
 

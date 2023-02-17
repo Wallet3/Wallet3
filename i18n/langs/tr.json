@@ -315,7 +315,7 @@
   "multi-sig-modal-msg-threshold-too-high": "Dikkat: eğer cihazlarınızdan herhangi biri zarar görür veya kaybolan durumda cüzdanınız kurtarılamayacaktır. En az bir cihaz daha eklemeniz önerilir.",
   "multi-sig-modal-msg-pairing-code-not-match": "Eşleşme kodu eşleşmiyor, lütfen güvenli bir ortamda tekrar deneyin.",
   "multi-sig-modal-msg-network-lost": "Diğer cihazlarla olan ağ bağlantısı kesildi, lütfen ağınızı kontrol edin ve yeniden deneyin.",
-  "multi-sig-modal-msg-no-devices-found":"Cihaz bulunamıyor mu? Lütfen cihazın aynı Wi-Fi ağına bağlı olduğundan ve Wallet 3'ün yerel ağa erişmesine izin verdiğinden emin olun.\n\n \"Sistem Ayarları\" - \"Wallet 3\"e gidin ve \"Yerel Ağ\" seçeneğinin açık olduğundan emin olun.",
+  "multi-sig-modal-msg-no-devices-found": "Cihaz bulunamıyor mu? Lütfen cihazın aynı Wi-Fi ağına bağlı olduğundan ve Wallet 3'ün yerel ağa erişmesine izin verdiğinden emin olun.\n\n \"Sistem Ayarları\" - \"Wallet 3\"e gidin ve \"Yerel Ağ\" seçeneğinin açık olduğundan emin olun.",
   "multi-sig-modal-create-threshold": "Siz {{threshold}} of {{max}} çok imza cüzdanı oluşturuyorsunuz. Bu, işlemlerin en az {{threshold}} anahtarının yetkilendirilmesini gerektirdiği anlamına gelir.",
   "multi-sig-modal-keys-distribution": "Aşağıdaki cihazlara anahtarlar dağıtılacaktır",
 
@@ -336,7 +336,7 @@
   "msg-currently-ethereum-and-evm-networks-support": "Şu anda Wallet 3 Ethereum ve EVM ağlarını desteklemektedir",
   "msg-database-error": "Veritabanı hatası, devam edilemiyor",
   "msg-data-loading": "Veriler yükleniyor",
-  
+
   "misc-show-full-address": "Tam adresi göster",
   "button-next": "Sonraki",
   "button-save": "Kaydet",
@@ -365,5 +365,6 @@
   "button-approve": "Onayla",
   "button-swap": "Değiştir",
   "button-reset": "Sıfırla",
-  "button-start": "Başla"
+  "button-start": "Başla",
+  "button-view-secret": "Özel anahtarı görüntüle"
 }

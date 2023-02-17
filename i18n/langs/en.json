@@ -367,5 +367,6 @@
   "button-approve": "Approve",
   "button-swap": "Swap",
   "button-reset": "Reset",
-  "button-start": "Start"
+  "button-start": "Start",
+  "button-view-secret": "View secret"
 }

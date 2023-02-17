@@ -1,4 +1,5 @@
 import { Button, SafeViewContainer } from '../../components';
+import { DateTimeFormatter, formatAddress } from '../../utils/formatter';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { Account } from '../../viewmodels/account/Account';
@@ -13,7 +14,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { WalletConnect_v1 } from '../../viewmodels/walletconnect/WalletConnect_v1';
 import { WalletConnect_v2 } from '../../viewmodels/walletconnect/WalletConnect_v2';
 import dayjs from 'dayjs';
-import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -68,7 +68,7 @@ export default observer(({ client, onDisconnect, onNetworkPress, onAccountsPress
       <View style={viewStyles.infoItem}>
         <Text style={viewStyles.itemTxt}>{t('connectedapps-modal-last-used')}:</Text>
         <Text style={viewStyles.itemTxt} numberOfLines={1}>
-          {dayjs(client.lastUsedTimestamp).format('YYYY-MM-DD HH:mm:ss')}
+          {dayjs(client.lastUsedTimestamp).format(DateTimeFormatter)}
         </Text>
       </View>
 
