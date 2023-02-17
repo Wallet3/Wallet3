@@ -28,6 +28,7 @@ interface Props {
   onCancel?: () => void;
   disableCancelButton?: boolean;
   style?: StyleProp<ViewStyle>;
+  numPadStyle?: StyleProp<ViewStyle>;
   bioType?: BioType;
   onBioAuth?: () => void;
   failedAttempts?: number;
@@ -44,6 +45,7 @@ const Passpad = ({
   onBioAuth,
   failedAttempts,
   passLength,
+  numPadStyle,
 }: Props) => {
   const { t } = i18n;
   const passcodeLength = passLength || 6;
@@ -67,7 +69,7 @@ const Passpad = ({
   }, [passcode]);
 
   return (
-    <SafeViewContainer style={{ ...styles.container, ...(style as any) }}>
+    <View style={{ ...styles.container, ...(style as any) }}>
       <View style={{ flex: 1 }} />
 
       <Animatable.View ref={passcodeView as any} style={{ flexDirection: 'row', justifyContent: 'center' }}>
@@ -105,12 +107,13 @@ const Passpad = ({
         onBioAuth={onBioAuth}
         color={isLightMode ? undefined : themeColor}
         mode={mode}
+        style={numPadStyle}
       />
 
       {disableCancelButton ? undefined : (
         <Button title={t('button-cancel')} onPress={() => onCancel?.()} themeColor={themeColor} style={{ marginTop: 12 }} />
       )}
-    </SafeViewContainer>
+    </View>
   );
 };
 
@@ -142,7 +145,7 @@ export const FullPasspad = observer((props: FullPasspadProps) => {
   } = props;
 
   const { t } = i18n;
-  const { backgroundColor, textColor } = Theme;
+  const { textColor } = Theme;
   const { height: fullScreenHeight, width } = ReactiveScreen;
   const { days, hours, minutes, seconds } = parseMilliseconds(Math.max(0, (unlockTimestamp || 0) - Date.now()));
 
@@ -164,12 +167,11 @@ export const FullPasspad = observer((props: FullPasspadProps) => {
   }, []);
 
   return (
-    <SafeAreaProvider
+    <SafeViewContainer
       style={{
         flex: 1,
         height: height || fullScreenHeight,
         width,
-        backgroundColor,
         borderTopLeftRadius: borderRadius,
         borderTopRightRadius: borderRadius,
       }}
@@ -179,7 +181,7 @@ export const FullPasspad = observer((props: FullPasspadProps) => {
           themeColor={themeColor}
           disableCancelButton
           onCodeEntered={onCodeEntered}
-          style={{ marginBottom: 4, width, height: height || fullScreenHeight }}
+          style={{ height: height || fullScreenHeight, padding: 0 }}
           onBioAuth={onBioAuth}
           bioType={bioType}
           failedAttempts={failedAttempts}
@@ -187,16 +189,14 @@ export const FullPasspad = observer((props: FullPasspadProps) => {
       ) : (
         <FadeInDownView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <IllustrationLock width={150} height={150} />
-          <Text
-            style={{ fontSize: 19, fontWeight: '600', marginVertical: 24, color: warningColor, textTransform: 'uppercase' }}
-          >
+          <Text style={{ fontSize: 19, fontWeight: '600', marginTop: 24, color: warningColor, textTransform: 'uppercase' }}>
             {t('lock-screen-wallet-is-locked')}
           </Text>
           <Text
             style={{
-              fontSize: 12,
-              fontWeight: '500',
-              marginTop: 12,
+              fontSize: 11.5,
+              fontWeight: '600',
+              marginTop: 8,
               color: textColor,
               opacity: 0.5,
               textTransform: 'uppercase',
@@ -208,6 +208,6 @@ export const FullPasspad = observer((props: FullPasspadProps) => {
           </Text>
         </FadeInDownView>
       )}
-    </SafeAreaProvider>
+    </SafeViewContainer>
   );
 });

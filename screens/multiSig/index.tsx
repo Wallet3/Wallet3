@@ -59,13 +59,15 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
     setCurrentPage(index);
   };
 
-  const openShardsDistributor = () => {
+  const openShardsDistributor = async () => {
+    let secret: string | undefined;
+
     const getSecret = async (pin?: string) => {
-      const secret = await currentWallet?.getSecret(pin);
+      secret = await currentWallet?.getSecret(pin);
       return secret !== undefined;
     };
 
-    openGlobalPasspad({ onAutoAuthRequest: getSecret, onPinEntered: getSecret });
+    await openGlobalPasspad({ onAutoAuthRequest: getSecret, onPinEntered: getSecret, closeOnOverlayTap: true });
   };
 
   const logos = [

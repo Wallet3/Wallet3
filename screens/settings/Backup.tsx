@@ -14,6 +14,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/core/Networks';
 import { Portal } from 'react-native-portalize';
 import QRCode from 'react-native-qrcode-svg';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import SignInWithApple from '../../viewmodels/auth/SignInWithApple';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
@@ -163,14 +164,16 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
           modalStyle={modalStyle.containerTopBorderRadius}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <FullPasspad
-            appAvailable={true}
-            themeColor={themeColor}
-            height={420}
-            borderRadius={modalStyle.containerTopBorderRadius.borderTopEndRadius}
-            failedAttempts={Authentication.failedAttempts}
-            onCodeEntered={(code) => verify(code)}
-          />
+          <SafeAreaProvider>
+            <FullPasspad
+              appAvailable={true}
+              themeColor={themeColor}
+              height={420}
+              borderRadius={modalStyle.containerTopBorderRadius.borderTopEndRadius}
+              failedAttempts={Authentication.failedAttempts}
+              onCodeEntered={(code) => verify(code)}
+            />
+          </SafeAreaProvider>
         </Modalize>
       </Portal>
     </SafeViewContainer>

@@ -680,6 +680,7 @@ export const GlobalPasspadModal = () => {
     onAutoAuthRequest: () => Promise<boolean>;
     onPinEntered: (pin: string) => Promise<boolean>;
     onClosed?: () => void;
+    closeOnOverlayTap?: boolean;
   }>();
 
   useEffect(() => {
@@ -700,7 +701,7 @@ export const GlobalPasspadModal = () => {
       adjustToContentHeight
       withHandle={false}
       disableScrollIfPossible
-      closeOnOverlayTap={false}
+      closeOnOverlayTap={req?.closeOnOverlayTap ?? false}
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
@@ -756,19 +757,21 @@ export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Aut
       modalStyle={{ borderTopStartRadius: 0, borderTopEndRadius: 0 }}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
-      <FullPasspad
-        themeColor={Theme.isLightMode ? Theme.foregroundColor : `${Theme.foregroundColor}80`}
-        bioType={appAuth.biometricType}
-        onBioAuth={bioAuth}
-        appAvailable={appAuth.appAvailable}
-        unlockTimestamp={appAuth.appUnlockTime}
-        failedAttempts={appAuth.failedAttempts}
-        onCodeEntered={async (code) => {
-          const success = await appAuth.authorize(code);
-          if (success) closeLockScreen();
-          return success;
-        }}
-      />
+      <SafeAreaProvider>
+        <FullPasspad
+          themeColor={Theme.isLightMode ? Theme.foregroundColor : `${Theme.foregroundColor}80`}
+          bioType={appAuth.biometricType}
+          onBioAuth={bioAuth}
+          appAvailable={appAuth.appAvailable}
+          unlockTimestamp={appAuth.appUnlockTime}
+          failedAttempts={appAuth.failedAttempts}
+          onCodeEntered={async (code) => {
+            const success = await appAuth.authorize(code);
+            if (success) closeLockScreen();
+            return success;
+          }}
+        />
+      </SafeAreaProvider>
     </Modalize>
   );
 });

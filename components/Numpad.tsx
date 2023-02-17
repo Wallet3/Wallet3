@@ -1,5 +1,5 @@
 import { Feather, MaterialIcons } from '@expo/vector-icons';
-import { StyleSheet, Text, TouchableHighlight, View } from 'react-native';
+import { StyleProp, StyleSheet, Text, TouchableHighlight, View, ViewStyle } from 'react-native';
 import { borderColor, fontColor } from '../constants/styles';
 
 import { BioType } from '../viewmodels/auth/Authentication';
@@ -16,14 +16,15 @@ interface Props {
   bioType?: BioType;
   color?: string;
   mode: 'light' | 'dark';
+  style?: StyleProp<ViewStyle>;
 }
 
-export default ({ onPress, onBioAuth, disableDot, bioType, color, mode }: Props) => {
+export default ({ onPress, onBioAuth, disableDot, bioType, color, mode, style }: Props) => {
   const numStyle = { ...viewStyles.num, color };
   const keyboardStyle = { ...viewStyles.keyboard, borderColor: color ?? borderColor };
 
   return (
-    <View style={{ ...viewStyles.numpadContainer, borderColor: color ?? borderColor }}>
+    <View style={{ ...viewStyles.numpadContainer, borderColor: color ?? borderColor, ...(style as any) }}>
       <TouchableHighlight
         style={{ ...keyboardStyle, borderTopLeftRadius: 9.75 }}
         underlayColor={borderColor}

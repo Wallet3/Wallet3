@@ -1,8 +1,11 @@
+import { DefaultCornerRadius, useScreenCornerRadius } from '../../utils/hardware';
 import React, { useEffect, useState } from 'react';
 
+import { ModalMarginScreen } from '../styles';
 import { Passpad } from '../views';
 import RootContainer from '../components/RootContainer';
 import { observer } from 'mobx-react-lite';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Props {
   passLength?: number;
@@ -14,6 +17,8 @@ interface Props {
 
 export default observer(({ passLength, onAutoAuthRequest, onPinEntered, close, maxFailedAttempts }: Props) => {
   const [failedAttempts, setFailedAttempts] = useState(0);
+  const { bottom } = useSafeAreaInsets();
+  const screenRadius = useScreenCornerRadius();
 
   const onCodeEntered = async (code: string) => {
     const success = await onPinEntered(code);
@@ -38,7 +43,8 @@ export default observer(({ passLength, onAutoAuthRequest, onPinEntered, close, m
         disableCancelButton
         passLength={passLength ?? 6}
         failedAttempts={failedAttempts}
-        style={{ paddingBottom: 12, paddingTop: 0 }}
+        style={{ padding: 0, paddingBottom: bottom - 16 - ModalMarginScreen }}
+        numPadStyle={{ borderRadius: Math.max(screenRadius - DefaultCornerRadius, 10) }}
         onCodeEntered={onCodeEntered}
       />
     </RootContainer>

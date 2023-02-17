@@ -197,26 +197,28 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
           modalStyle={modalStyle.containerTopBorderRadius}
           scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
         >
-          <FullPasspad
-            themeColor={Networks.current.color}
-            height={420}
-            borderRadius={modalStyle.containerTopBorderRadius.borderTopEndRadius}
-            appAvailable={true}
-            failedAttempts={Authentication.failedAttempts}
-            onCodeEntered={async (code) => {
-              const success = await Authentication.verifyPin(code);
-              if (!success) return false;
+          <SafeAreaProvider>
+            <FullPasspad
+              themeColor={Networks.current.color}
+              height={420}
+              borderRadius={modalStyle.containerTopBorderRadius.borderTopEndRadius}
+              appAvailable={true}
+              failedAttempts={Authentication.failedAttempts}
+              onCodeEntered={async (code) => {
+                const success = await Authentication.verifyPin(code);
+                if (!success) return false;
 
-              if (jumpToScreen === 'ResetApp') {
-                setTimeout(() => openReset(), 25);
-              } else {
-                parent?.navigate(jumpToScreen);
-              }
+                if (jumpToScreen === 'ResetApp') {
+                  setTimeout(() => openReset(), 25);
+                } else {
+                  parent?.navigate(jumpToScreen);
+                }
 
-              closePasscode();
-              return true;
-            }}
-          />
+                closePasscode();
+                return true;
+              }}
+            />
+          </SafeAreaProvider>
         </Modalize>
 
         <Modalize

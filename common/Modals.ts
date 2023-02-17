@@ -2,6 +2,7 @@ import MessageKeys from './MessageKeys';
 
 export async function openGlobalPasspad(req: {
   passLength?: number;
+  closeOnOverlayTap?: boolean;
   onAutoAuthRequest: () => Promise<boolean>;
   onPinEntered: (pin: string) => Promise<boolean>;
 }) {
@@ -27,7 +28,7 @@ export async function openGlobalPasspad(req: {
     };
 
     PubSub.publish(MessageKeys.openGlobalPasspad, {
-      passLength: req.passLength,
+      ...req,
       onAutoAuthRequest: onAutoAuthRequestHook,
       onPinEntered: onPinEnteredHook,
       onClosed: onClosedHook,
