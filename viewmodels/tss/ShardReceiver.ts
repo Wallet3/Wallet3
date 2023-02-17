@@ -63,11 +63,11 @@ export class ShardReceiver extends TCPClient {
 
     __DEV__ && console.log(data);
 
-    const { rootShard, rootSignature, bip32Shard, bip32Signature, pubkey } = data;
+    const { secrets, pubkey } = data;
 
     const [validRoot, validBip32] = await Promise.all([
-      verifyEccSignature(pubkey, rootShard, rootSignature),
-      verifyEccSignature(pubkey, bip32Shard, bip32Signature),
+      verifyEccSignature(pubkey, secrets.rootShard, secrets.rootSignature),
+      verifyEccSignature(pubkey, secrets.bip32Shard, secrets.bip32Signature),
     ]);
 
     const validSignature = validRoot && validBip32;
@@ -88,11 +88,11 @@ export class ShardReceiver extends TCPClient {
       const key = new ShardKey();
       key.id = data.distributionId;
       key.ownerDevice = this.remoteInfo!;
-      key.secretsInfo = { threshold: data.threshold };
+      key.secretsInfo = data.secretsInfo;
       key.lastUsedTimestamp = Date.now();
       key.secrets = {
-        bip32Shard: await Authentication.encryptForever(bip32Shard),
-        rootShard: await Authentication.encryptForever(rootShard),
+        bip32Shard: await Authentication.encryptForever(secrets.bip32Shard),
+        rootShard: await Authentication.encryptForever(secrets.rootShard),
       };
 
       key.save();

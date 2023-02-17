@@ -44,6 +44,7 @@ export class ShardsDistributor extends TCPServer<Events> {
   private protector: HDNode;
   private bip32: HDNode;
   private serviceStarted = false;
+  private upgradeInfo?: { basePath: string; basePathIndex: number };
 
   readonly id: string;
   approvedClients: ShardSender[] = [];
@@ -53,7 +54,7 @@ export class ShardsDistributor extends TCPServer<Events> {
   status = ShardsDistributionStatus.ready;
   threshold = 2;
 
-  constructor({ mnemonic, basePath }: IShardsDistributorConstruction) {
+  constructor({ mnemonic, basePath, basePathIndex }: IShardsDistributorConstruction) {
     super();
 
     makeObservable(this, {
@@ -80,7 +81,11 @@ export class ShardsDistributor extends TCPServer<Events> {
     this.bip32 = this.root.derivePath(basePath ?? DEFAULT_DERIVATION_PATH);
     console.info(`Shards generation: ${performance.now() - start}`);
 
-    this.id = createHash('sha256').update(this.protector.address).digest().toString('hex').substring(2, 34);
+    this.id = createHash('sha256').update(this.protector.address).digest('hex').substring(0, 32);
+
+    if (basePath && basePathIndex !== undefined) {
+      this.upgradeInfo = { basePath, basePathIndex };
+    }
   }
 
   get name() {
@@ -169,6 +174,8 @@ export class ShardsDistributor extends TCPServer<Events> {
     key.id = this.id;
     key.secretsInfo = { threshold: this.threshold, devices: this.approvedClients.map((a) => a.remoteInfo!) };
     key.bip32Xpubkey = xpubkeyFromHDNode(this.bip32);
+    key.basePath = this.upgradeInfo?.basePath ?? DEFAULT_DERIVATION_PATH;
+    key.basePathIndex = this.upgradeInfo?.basePathIndex ?? 0;
     key.secrets = {
       bip32Shard: await Authentication.encryptForever(bip32Shards[0]),
       rootShard: await Authentication.encryptForever(rootShards[0]),
@@ -194,6 +201,8 @@ export class ShardsDistributor extends TCPServer<Events> {
           pubkey: this.protector.publicKey.substring(2),
           signKey: this.protector.privateKey.substring(2),
           threshold: this.threshold,
+          bip32Path: key.basePath,
+          bip32PathIndex: key.basePathIndex,
         });
 
         return (await c.readShardAck()) ? 1 : 0;

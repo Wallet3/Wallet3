@@ -9,21 +9,10 @@ export enum ContentType {
 
 export type ShardDistribution = {
   type: ContentType.shardDistribution;
-  rootShard: string;
-  bip32Shard: string;
-  rootSignature: string;
-  bip32Signature: string;
+  secrets: { rootShard: string; bip32Shard: string; rootSignature: string; bip32Signature: string };
+  secretsInfo: { threshold: number; bip32Path: string; bip32PathIndex: number };
   pubkey: string;
   distributionId: string;
-  threshold: number;
-};
-
-export const ShardDistributionSchema = {
-  type: ContentType.shardDistribution,
-  shard: 'string',
-  pubkey: 'string',
-  distributionId: 'string',
-  $$strict: true,
 };
 
 export type ShardAcknowledgement = {

@@ -50,8 +50,16 @@ export class ShardSender {
     );
   }
 
-  async sendShard(args: { threshold: number; rootShard: string; pubkey: string; signKey: string; bip32Shard: string }) {
-    const { rootShard, signKey, bip32Shard: bip32XprivShard } = args;
+  async sendShard(args: {
+    threshold: number;
+    rootShard: string;
+    pubkey: string;
+    signKey: string;
+    bip32Shard: string;
+    bip32Path: string;
+    bip32PathIndex: number;
+  }) {
+    const { rootShard, signKey, bip32Shard: bip32XprivShard, pubkey } = args;
     runInAction(() => (this.status = ShardTransferringStatus.sending));
 
     const signKeyBuffer = Buffer.from(signKey, 'hex');
@@ -67,10 +75,10 @@ export class ShardSender {
     return this.secureWriteString(
       JSON.stringify({
         type: ContentType.shardDistribution,
-        ...args,
-        rootSignature,
-        bip32Signature,
+        pubkey,
         distributionId: this.distributionId,
+        secrets: { rootShard: args.rootShard, rootSignature, bip32Shard: args.bip32Shard, bip32Signature },
+        secretsInfo: { bip32Path: args.bip32Path, bip32PathIndex: args.bip32PathIndex, threshold: args.threshold },
       } as ShardDistribution)
     );
   }

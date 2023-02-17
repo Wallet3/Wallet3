@@ -70,8 +70,8 @@ export abstract class WalletBase {
     basePath: string;
   } & BaseEntity;
 
-  get keyPathInfo() {
-    return { basePathIndex: this.key.basePathIndex, basePath: this.key.basePath };
+  get keyInfo() {
+    return { basePathIndex: this.key.basePathIndex, basePath: this.key.basePath, bip32Xpubkey: this.key.bip32Xpubkey };
   }
 
   constructor() {
