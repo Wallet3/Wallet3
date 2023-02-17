@@ -1,5 +1,3 @@
-import { StyleSheet } from 'react-native';
-
 export const fontColor = '#333';
 export const secondaryFontColor = '#999';
 export const thirdFontColor = '#75869c';

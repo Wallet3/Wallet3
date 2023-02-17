@@ -328,6 +328,8 @@
   "msg-the-app-does-not-support-chain": "该应用还未支持 {{network}} 网络",
   "msg-currently-ethereum-and-evm-networks-support": "当前，Wallet 3 仅支持 Ethereum 以及 EVM 网络",
   "msg-database-error": "数据库发生错误，无法继续",
+  "msg-data-loading": "读取数据中",
+
   "misc-show-full-address": "显示完整地址",
   "button-next": "继续",
   "button-save": "保存",

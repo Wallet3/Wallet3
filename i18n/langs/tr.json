@@ -333,6 +333,8 @@
   "msg-the-app-does-not-support-chain": "Bu uygulama {{network}} desteklemiyor.",
   "msg-currently-ethereum-and-evm-networks-support": "Şu anda Wallet 3 Ethereum ve EVM ağlarını desteklemektedir",
   "msg-database-error": "Veritabanı hatası, devam edilemiyor",
+  "msg-data-loading": "Veriler yükleniyor",
+  
   "misc-show-full-address": "Tam adresi göster",
   "button-next": "Sonraki",
   "button-save": "Kaydet",

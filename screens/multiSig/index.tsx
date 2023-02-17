@@ -1,55 +1,20 @@
-import { ButtonV2, NullableImage, SafeViewContainer } from '../../components';
-import {
-  Feather,
-  FontAwesome,
-  FontAwesome5,
-  Ionicons,
-  MaterialCommunityIcons,
-  MaterialIcons,
-  SimpleLineIcons,
-} from '@expo/vector-icons';
+import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
-import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { borderColor, secondaryFontColor, secureColor, verifiedColor, warningColor } from '../../constants/styles';
-import { openGlobalPasspad, openShardsDistributors } from '../../common/Modals';
+import React, { useRef, useState } from 'react';
 
-import { Account } from '../../viewmodels/account/Account';
-import AccountSelector from '../../modals/dapp/AccountSelector';
-import App from '../../viewmodels/core/App';
-import Button from '../../modals/tss/components/Button';
-import Collapsible from 'react-native-collapsible';
-import DeviceInfo from '../../modals/tss/components/DeviceInfo';
 import { DrawerActions } from '@react-navigation/native';
 import { DrawerScreenProps } from '@react-navigation/drawer';
-import IllustrationNoData from '../../assets/illustrations/misc/nodata.svg';
-import IllustrationPairing from '../../assets/illustrations/misc/pair_programming.svg';
-import MessageKeys from '../../common/MessageKeys';
-import { MetamaskDApp } from '../../viewmodels/walletconnect/MetamaskDApp';
-import MetamaskDAppsHub from '../../viewmodels/walletconnect/MetamaskDAppsHub';
-import { Modalize } from 'react-native-modalize';
-import NetworkSelector from '../../modals/dapp/NetworkSelector';
-import Networks from '../../viewmodels/core/Networks';
-import { PairedDevice } from '../../viewmodels/tss/management/PairedDevice';
-import PairedDevices from '../../viewmodels/tss/management/PairedDevices';
-import { Portal } from 'react-native-portalize';
+import MultiSigManagement from './MultiSigManagement';
+import PairedDevices from './PairedDevices';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
-import WalletConnectHub from '../../viewmodels/walletconnect/WalletConnectHub';
-import { WalletConnect as WalletConnectLogo } from '../../assets/3rd';
-import { WalletConnect_v1 } from '../../viewmodels/walletconnect/WalletConnect_v1';
-import { WalletConnect_v2 } from '../../viewmodels/walletconnect/WalletConnect_v2';
-import { ZoomInView } from '../../components/animations';
 import i18n from '../../i18n';
-import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
-import { startLayoutAnimation } from '../../utils/animations';
-import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
   const [currentPage, setCurrentPage] = useState(0);
-  const { secondaryTextColor, textColor, foregroundColor, systemBorderColor } = Theme;
-  const { currentWallet } = App;
+  const { textColor, foregroundColor, systemBorderColor } = Theme;
 
   const { top } = useSafeAreaInsets();
   const { t } = i18n;
@@ -62,24 +27,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
     setCurrentPage(index);
   };
 
-  const openShardsDistributor = async () => {
-    let secret: string | undefined;
-
-    const getSecret = async (pin?: string) => {
-      secret = await currentWallet?.getSecret(pin);
-      return secret !== undefined;
-    };
-
-    if (!(await openGlobalPasspad({ onAutoAuthRequest: getSecret, onPinEntered: getSecret, closeOnOverlayTap: true }))) return;
-
-    openShardsDistributors(secret!);
-  };
-
-  useEffect(() => {
-    PairedDevices.refresh();
-  }, []);
-
-  const logos = [
+  const headers = [
     <View
       key="paired_devices"
       style={{ padding: 12, flexDirection: 'row', alignItems: 'center', height: headerHeight, justifyContent: 'center' }}
@@ -99,14 +47,6 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
       </Text>
     </View>,
   ];
-
-  const renderTrustedDevice = ({ item }: { item: PairedDevice }) => {
-    return (
-      <View style={{ paddingVertical: 8, paddingHorizontal: 16 }}>
-        <DeviceInfo info={item.deviceInfo} light />
-      </View>
-    );
-  };
 
   return (
     <View style={{ flex: 1, paddingTop: top }}>
@@ -134,7 +74,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
             pagingEnabled
-            data={logos}
+            data={headers}
             renderItem={({ item }) => item}
             contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
             style={{ height: headerHeight }}
@@ -158,52 +98,8 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
       </View>
 
       <Swiper ref={swiper} showsPagination={false} showsButtons={false} loop={false} onIndexChanged={scrollToIndex}>
-        <SafeViewContainer style={{ width: '100%', height: '100%' }}>
-          {PairedDevices.hasDevices ? (
-            <FlatList
-              style={{ flexGrow: 1, marginHorizontal: -16, marginTop: -16 }}
-              contentContainerStyle={{ paddingVertical: 8 }}
-              data={PairedDevices.devices}
-              renderItem={renderTrustedDevice}
-              keyExtractor={(i) => i.id}
-            />
-          ) : (
-            <View style={{ alignSelf: 'center', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-              <IllustrationPairing width={150} height={150} />
-              <Text style={{ color: secondaryTextColor, textTransform: 'capitalize', fontWeight: '500' }}>
-                {t('multi-sig-screen-txt-no-paired-devices')}
-              </Text>
-            </View>
-          )}
-
-          <ButtonV2
-            title={t('button-start-pairing')}
-            icon={() => <Ionicons name="phone-portrait-outline" color="#fff" size={17} />}
-            style={{ marginTop: 12 }}
-            onPress={() => PubSub.publish(MessageKeys.openShardReceiver)}
-          />
-        </SafeViewContainer>
-
-        <SafeViewContainer>
-          {!currentWallet?.isMultiSig && (
-            <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-              <Text style={{ color: textColor, fontWeight: '500', marginTop: 12, textAlignVertical: 'center' }}>
-                <Ionicons name="arrow-up-circle" size={15} />
-                {` ${t('multi-sig-screen-tip-upgrade-to-multi-sig-wallet')}`}
-              </Text>
-            </View>
-          )}
-
-          {currentWallet?.isMultiSig && <FlatList style={{}} data={[]} renderItem={(i) => <View />} />}
-
-          <ButtonV2
-            title={t('button-upgrade')}
-            style={{ marginTop: 12 }}
-            themeColor={secureColor}
-            icon={() => <Ionicons name="arrow-up-circle-outline" color="#fff" size={19} />}
-            onPress={openShardsDistributor}
-          />
-        </SafeViewContainer>
+        <PairedDevices />
+        <MultiSigManagement />
       </Swiper>
     </View>
   );

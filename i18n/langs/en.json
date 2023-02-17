@@ -336,6 +336,8 @@
   "msg-connected": "Connected",
   "msg-disconnected": "Disconnected",
   "msg-database-error": "Database error occurred, unable to continue.",
+  "msg-data-loading": "Loading data",
+
   "misc-show-full-address": "Show full address",
   "button-next": "Next",
   "button-save": "Save",
