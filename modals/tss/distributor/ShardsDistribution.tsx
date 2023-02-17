@@ -9,6 +9,7 @@ import Animated, {
   FadeOutRight,
   FadeOutUp,
 } from 'react-native-reanimated';
+import { FadeInDownView, ZoomInView } from '../../../components/animations';
 import { Ionicons, Octicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { ShardSender, ShardTransferringStatus } from '../../../viewmodels/tss/ShardSender';
@@ -19,11 +20,11 @@ import Button from '../components/Button';
 import { ClientInfo } from '../../../common/p2p/Constants';
 import Device from '../../../components/Device';
 import DeviceInfo from '../components/DeviceInfo';
+import IllustrationCompleted from '../../../assets/illustrations/tss/completed.svg';
 import { Passpad } from '../../views';
 import Slider from '@react-native-community/slider';
 import { TCPClient } from '../../../common/p2p/TCPClient';
 import Theme from '../../../viewmodels/settings/Theme';
-import { ZoomInView } from '../../../components/animations';
 import deviceInfoModule from 'react-native-device-info';
 import { getDeviceInfo } from '../../../common/p2p/Utils';
 import { getScreenCornerRadius } from '../../../utils/hardware';
@@ -65,7 +66,7 @@ export default observer(({ vm, close, onCritical }: Props) => {
   const { t } = i18n;
   const marginHorizontal = useHorizontalPadding();
   const { approvedClients, approvedCount, thresholdTooHigh } = vm;
-  const { secondaryTextColor } = Theme;
+  const { secondaryTextColor, backgroundColor } = Theme;
 
   const [selfInfo] = useState({
     ...getDeviceInfo(),
@@ -94,26 +95,32 @@ export default observer(({ vm, close, onCritical }: Props) => {
       entering={FadeInRight.delay(300).springify()}
       exiting={FadeOutRight.springify()}
     >
-      <View style={{ flex: 1, marginBottom: 16 }}>
-        <Text style={{ marginHorizontal, fontWeight: '500', color: secondaryTextColor }}>
-          {t('multi-sig-modal-connect-approved-clients')}:
-        </Text>
-
-        <FlatList
-          bounces={approvedCount >= 4}
-          keyExtractor={(i) => i.remoteIP}
-          contentContainerStyle={{ paddingVertical: 4 }}
-          data={[selfInfo, ...approvedClients]}
-          renderItem={renderConnectedItem}
-        />
-
-        {thresholdTooHigh && (
-          <Text style={{ color: warningColor, fontSize: 12.5, fontWeight: '500', marginHorizontal }}>
-            <Ionicons name="warning" size={14} />
-            {`  ${t('multi-sig-modal-msg-threshold-too-high')}`}
+      {vm.status === ShardsDistributionStatus.succeed ? (
+        <FadeInDownView style={{ backgroundColor, flex: 1, justifyContent: 'center', alignItems: 'center' }} delay={500}>
+          <IllustrationCompleted width={150} height={150} />
+        </FadeInDownView>
+      ) : (
+        <View style={{ flex: 1, marginBottom: 16 }}>
+          <Text style={{ marginHorizontal, fontWeight: '500', color: secondaryTextColor }}>
+            {t('multi-sig-modal-connect-approved-clients')}:
           </Text>
-        )}
-      </View>
+
+          <FlatList
+            bounces={approvedCount >= 4}
+            keyExtractor={(i) => i.remoteIP}
+            contentContainerStyle={{ paddingVertical: 4 }}
+            data={[selfInfo, ...approvedClients]}
+            renderItem={renderConnectedItem}
+          />
+
+          {thresholdTooHigh && (
+            <Text style={{ color: warningColor, fontSize: 12.5, fontWeight: '500', marginHorizontal }}>
+              <Ionicons name="warning" size={14} />
+              {`  ${t('multi-sig-modal-msg-threshold-too-high')}`}
+            </Text>
+          )}
+        </View>
+      )}
 
       {vm.status > ShardsDistributionStatus.distributing ? (
         <Button

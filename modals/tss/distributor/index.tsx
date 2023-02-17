@@ -1,6 +1,7 @@
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, FlatList as SystemFlatList, Text, TouchableOpacity, View } from 'react-native';
+import { ShardsDistributionStatus, ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
 import { getScreenCornerRadius, useOptimizedCornerRadius } from '../../../utils/hardware';
 
 import ConnectDevices from './ConnectDevices';
@@ -11,7 +12,6 @@ import Preparations from './Preparations';
 import { ReactiveScreen } from '../../../utils/device';
 import ScrollTitles from '../../components/ScrollTitles';
 import ShardsDistribution from './ShardsDistribution';
-import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
 import Theme from '../../../viewmodels/settings/Theme';
 import ThresholdSetting from './ThresholdSetting';
 import { ZoomInView } from '../../../components/animations';
@@ -71,9 +71,13 @@ export default observer(({ vm, onCritical, close }: Props) => {
       <View style={{ flex: 1 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12, marginTop: screenRadius ? 4 : 0 }}>
           <TouchableOpacity
-            style={{ padding: backButtonPadding, margin: -backButtonPadding }}
-            disabled={false}
+            disabled={vm.status !== ShardsDistributionStatus.ready}
             onPress={() => goTo(step - 1, true)}
+            style={{
+              padding: backButtonPadding,
+              margin: -backButtonPadding,
+              opacity: vm.status === ShardsDistributionStatus.ready ? 1 : 0,
+            }}
           >
             <Ionicons
               name="arrow-back"
@@ -87,7 +91,6 @@ export default observer(({ vm, onCritical, close }: Props) => {
             currentIndex={step}
             data={titles}
             contentContainerStyle={{
-              
               justifyContent: 'center',
               alignItems: 'center',
               marginStart: -backButtonPadding - 1,
