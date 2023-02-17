@@ -98,7 +98,7 @@ export class ShardsDistributor extends TCPServer<Events> {
   }
 
   get thresholdTooHigh() {
-    return this.threshold / this.approvedCount > 0.9999;
+    return this.threshold / this.totalCount > 0.9999;
   }
 
   async start() {

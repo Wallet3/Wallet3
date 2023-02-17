@@ -1,6 +1,7 @@
 import DeviceInfo from 'react-native-device-info';
 import { ModalMarginScreen } from '../modals/styles';
 import iosDevice from 'ios-device-list';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useState } from 'react';
 
 export const DefaultCornerRadius = 20;
@@ -55,4 +56,9 @@ export function useScreenCornerRadius() {
 export function useOptimizedCornerRadius() {
   const [cornerRadius] = useState(getScreenCornerRadius() - DefaultCornerRadius);
   return cornerRadius;
+}
+
+export function useOptimizedSafeBottom() {
+  const { bottom } = useSafeAreaInsets();
+  return bottom - 16 - ModalMarginScreen;
 }

@@ -1,4 +1,5 @@
 import MessageKeys from './MessageKeys';
+import { ShardsDistributor } from '../viewmodels/tss/ShardsDistributor';
 
 export async function openGlobalPasspad(req: {
   passLength?: number;
@@ -34,4 +35,9 @@ export async function openGlobalPasspad(req: {
       onClosed: onClosedHook,
     });
   });
+}
+
+export function openShardsDistributors(mnemonic: string) {
+  const vm = new ShardsDistributor({ mnemonic });
+  PubSub.publish(MessageKeys.openShardsDistribution, vm);
 }

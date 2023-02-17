@@ -25,6 +25,7 @@ import Theme from '../../../viewmodels/settings/Theme';
 import { getScreenCornerRadius } from '../../../utils/hardware';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
+import { startLayoutAnimation } from '../../../utils/animations';
 import { useHorizontalPadding } from '../components/Utils';
 
 const { View, Text } = Animated;
@@ -34,7 +35,9 @@ export default observer(({ vm, onNext, isRTL }: { vm: ShardsDistributor; onNext:
 
   const { t } = i18n;
   const { secondaryTextColor, appColor, thirdTextColor } = Theme;
-  const { approvedCount, threshold, totalCount } = vm;
+  const { approvedCount, threshold, totalCount, thresholdTooHigh } = vm;
+
+  useEffect(() => startLayoutAnimation(), [thresholdTooHigh]);
 
   return (
     <View
@@ -69,13 +72,14 @@ export default observer(({ vm, onNext, isRTL }: { vm: ShardsDistributor; onNext:
           />
           <Text style={{ ...styles.thumbTxt, color: secondaryTextColor }}>{totalCount}</Text>
         </View>
+
         <View style={{ flex: 1.5 }} />
 
         <Text style={{ marginHorizontal, marginTop: 8, color: thirdTextColor, lineHeight: 19, fontWeight: '500' }}>
           {t('multi-sig-modal-create-threshold', { threshold, max: totalCount })}
         </Text>
-
-        {vm.thresholdTooHigh && (
+        
+        {thresholdTooHigh && (
           <Text
             entering={FadeInDown.springify()}
             exiting={FadeOutUp.springify()}

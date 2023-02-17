@@ -587,7 +587,7 @@ export const ShardsModal = observer(() => {
   const [isCritical, setIsCritical] = useState(false);
 
   useEffect(() => {
-    PubSub.subscribe(MessageKeys.openShardsDistribution, () => {
+    PubSub.subscribe(MessageKeys.openShardsDistribution, (_, data) => {
       setVMs({ shardsDistributor: new ShardsDistributor({ mnemonic: utils.entropyToMnemonic(randomBytes(16)) }) });
       open();
     });

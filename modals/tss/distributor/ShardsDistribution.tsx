@@ -64,7 +64,7 @@ const DeviceStatus = observer(({ item, vm }: { item: ShardSender | ClientInfo; v
 export default observer(({ vm, close, onCritical }: Props) => {
   const { t } = i18n;
   const marginHorizontal = useHorizontalPadding();
-  const { approvedClients, approvedCount } = vm;
+  const { approvedClients, approvedCount, thresholdTooHigh } = vm;
   const { secondaryTextColor } = Theme;
 
   const [selfInfo] = useState({
@@ -107,7 +107,7 @@ export default observer(({ vm, close, onCritical }: Props) => {
           renderItem={renderConnectedItem}
         />
 
-        {vm.thresholdTooHigh && (
+        {thresholdTooHigh && (
           <Text style={{ color: warningColor, fontSize: 12.5, fontWeight: '500', marginHorizontal }}>
             <Ionicons name="warning" size={14} />
             {`  ${t('multi-sig-modal-msg-threshold-too-high')}`}

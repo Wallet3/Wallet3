@@ -3,6 +3,7 @@ import {
   DefaultCornerRadius,
   getScreenCornerRadius,
   useOptimizedCornerRadius,
+  useOptimizedSafeBottom,
   useScreenCornerRadius,
 } from '../../../utils/hardware';
 import React, { useState } from 'react';
@@ -13,14 +14,14 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default (props: ButtonProps) => {
   const optimizedRadius = useOptimizedCornerRadius();
-  const { bottom: safeBottom } = useSafeAreaInsets();
+  const safeBottom = useOptimizedSafeBottom();
 
   return (
     <ButtonV2
       {...props}
       style={{
         marginHorizontal: optimizedRadius / 4 + 16,
-        marginBottom: Math.max(safeBottom - 16 - ModalMarginScreen, optimizedRadius / 5),
+        marginBottom: Math.max(safeBottom, optimizedRadius / 5),
       }}
     />
   );

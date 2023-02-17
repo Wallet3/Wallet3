@@ -12,6 +12,7 @@ import React, { useEffect, useState } from 'react';
 import { secureColor, warningColor } from '../../../constants/styles';
 
 import Button from '../components/Button';
+import { ButtonV2 } from '../../../components';
 import DeviceInfo from '../components/DeviceInfo';
 import { Ionicons } from '@expo/vector-icons';
 import { ModalMarginScreen } from '../../styles';
@@ -137,16 +138,17 @@ export default observer(({ vm, onNext, isRTL }: { isRTL?: boolean; vm: ShardsDis
 
       {verifying && (
         <View
-          entering={FadeInDown.springify()}
+          entering={FadeInDown.delay(0)}
           exiting={FadeOutDown.springify()}
           style={{
             position: 'absolute',
             left: 0,
             right: 0,
             top: 0,
-            bottom: 0,
+            bottom: -1,
             backgroundColor,
             alignItems: 'center',
+            flex: 1,
             paddingBottom: safeBottom - 16 - ModalMarginScreen,
           }}
         >
@@ -158,7 +160,7 @@ export default observer(({ vm, onNext, isRTL }: { isRTL?: boolean; vm: ShardsDis
             disableCancelButton
             passLength={4}
             failedAttempts={verifying.attempts}
-            style={{ paddingBottom: 12, paddingTop: 0 }}
+            style={{ padding: 0, paddingHorizontal: 16 }}
             onCodeEntered={verifyClient}
           />
         </View>

@@ -12,6 +12,7 @@ import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import React, { useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { borderColor, secondaryFontColor, secureColor, verifiedColor, warningColor } from '../../constants/styles';
+import { openGlobalPasspad, openShardsDistributors } from '../../common/Modals';
 
 import { Account } from '../../viewmodels/account/Account';
 import AccountSelector from '../../modals/dapp/AccountSelector';
@@ -39,7 +40,6 @@ import { ZoomInView } from '../../components/animations';
 import i18n from '../../i18n';
 import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
-import { openGlobalPasspad } from '../../common/Modals';
 import { startLayoutAnimation } from '../../utils/animations';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
@@ -67,7 +67,9 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
       return secret !== undefined;
     };
 
-    await openGlobalPasspad({ onAutoAuthRequest: getSecret, onPinEntered: getSecret, closeOnOverlayTap: true });
+    if (!(await openGlobalPasspad({ onAutoAuthRequest: getSecret, onPinEntered: getSecret, closeOnOverlayTap: true }))) return;
+
+    openShardsDistributors(secret!);
   };
 
   const logos = [

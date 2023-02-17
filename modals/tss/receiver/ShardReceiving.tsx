@@ -4,7 +4,7 @@ import { FadeInLeftView, FadeInRightView, FadeInUpView, ZoomInView } from '../..
 import { Feather, Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { ShardPersistentStatus, ShardReceiver } from '../../../viewmodels/tss/ShardReceiver';
-import { getDeviceModel, getScreenCornerRadius } from '../../../utils/hardware';
+import { getDeviceModel, getScreenCornerRadius, useOptimizedSafeBottom } from '../../../utils/hardware';
 import { secureColor, warningColor } from '../../../constants/styles';
 
 import Button from '../components/Button';
@@ -30,6 +30,7 @@ export default observer(({ vm }: { vm: ShardReceiver }) => {
   const { secondaryTextColor, textColor, borderColor } = Theme;
   const { pairingCodeVerified, secretStatus } = vm;
   const [dataVerified, setDataVerified] = useState<boolean | undefined>(undefined);
+  const safeBottom = useOptimizedSafeBottom();
 
   useEffect(() => {
     vm.once('dataVerified' as any, () => setDataVerified(true));
@@ -102,7 +103,7 @@ export default observer(({ vm }: { vm: ShardReceiver }) => {
           >
             <LottieView
               style={{ width: 250, height: 250, position: 'absolute' }}
-              duration={5000}
+              duration={7000}
               source={require('../../../assets/animations/ripple.json')}
               autoPlay
             />
@@ -120,30 +121,38 @@ export default observer(({ vm }: { vm: ShardReceiver }) => {
             {dataVerified &&
               renderCompletedBar({ tintColor: secureColor, txt: t('multi-sig-modal-txt-data-verified'), succeed: true })}
             {dataVerified === false &&
-              renderCompletedBar({ tintColor: warningColor, txt: t('multi-sig-modal-txt-data-verifying-failed'), succeed: false })}
+              renderCompletedBar({
+                tintColor: warningColor,
+                txt: t('multi-sig-modal-txt-data-verifying-failed'),
+                succeed: false,
+              })}
 
             {secretStatus === ShardPersistentStatus.saved &&
               renderCompletedBar({ txt: t('multi-sig-modal-txt-data-saved'), tintColor: secureColor, succeed: true })}
             {secretStatus === ShardPersistentStatus.saveFailed &&
-              renderCompletedBar({ txt: t('multi-sig-modal-txt-data-saving-failed'), tintColor: warningColor, succeed: false })}
+              renderCompletedBar({
+                txt: t('multi-sig-modal-txt-data-saving-failed'),
+                tintColor: warningColor,
+                succeed: false,
+              })}
           </FadeInUpView>
         )}
       </View>
 
-      <View style={{ flexDirection: 'row' }}>
-        <Device os={'ios'} deviceId={deviceInfoModule.getDeviceId()} style={{ width: 48, height: 81 }} />
+      <View style={{ flexDirection: 'row', paddingBottom: safeBottom }}>
+        <Device os={'ios'} deviceId={deviceInfoModule.getDeviceId()} style={{ width: 48, height: 72 }} />
         <View
           style={{
             marginStart: 4,
             padding: 8,
-            paddingVertical: 4,
+            paddingVertical: 0,
             overflow: 'hidden',
             justifyContent: 'space-around',
             flex: 1,
           }}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={devTxtStyle} numberOfLines={1}>
+            <Text style={{ ...devTxtStyle, maxWidth: '70%' }} numberOfLines={1}>
               {`Name: ${deviceInfoModule.getDeviceNameSync()}`}
             </Text>
 
