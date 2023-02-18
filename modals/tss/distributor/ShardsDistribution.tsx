@@ -130,7 +130,7 @@ export default observer(({ vm, close, onCritical }: Props) => {
         />
       ) : (
         <Button
-          disabled={approvedCount < 1 || vm.status === ShardsDistributionStatus.distributing}
+          disabled={!vm.isClientsOK || vm.status === ShardsDistributionStatus.distributing}
           title={t('button-shards-distribute')}
           onPress={async () => {
             onCritical(true);

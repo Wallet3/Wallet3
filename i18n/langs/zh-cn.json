@@ -281,7 +281,7 @@
   "multi-sig-screen-paired-devices": "已配对的设备",
   "multi-sig-screen-paired-device": "已配对的设备",
   "multi-sig-screen-tip-upgrade-to-multi-sig-wallet": "当前钱包不是多签钱包，您可以升级到多签钱包",
-  "multi-sig-screen-tip-after-upgrading": "请注意，升级为多签钱包之后，您仍然可以使用助记词恢复该钱包，或在别处使用助记词恢复该钱包",
+  "multi-sig-screen-tip-after-upgrading": "请注意，升级为多签钱包之后，您仍然可以在别处使用该助记词恢复该钱包",
   "multi-sig-screen-txt-no-paired-devices": "没有已配对的设备",
 
   "multi-sig-modal-title-welcome": "多签钱包",

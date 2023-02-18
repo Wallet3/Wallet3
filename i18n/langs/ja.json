@@ -281,7 +281,7 @@
   "multi-sig-screen-paired-devices": "ペアリングされたデバイス",
   "multi-sig-screen-paired-device": "ペアリングされたデバイス",
   "multi-sig-screen-tip-upgrade-to-multi-sig-wallet": "このウォレットはマルチシグウォレットではありません。マルチシグウォレットにアップグレードすることができます。",
-  "multi-sig-screen-tip-after-upgrading": "マルチシグウォレットにアップグレードした場合でも、引き出しフレーズを使用してウォレットを復元したり、引き出しフレーズを使用して他の場所でウォレットを復元したりできることに注意してください。",
+  "multi-sig-screen-tip-after-upgrading": "マルチシグウォレットにアップグレードした後でも、リカバリーフレーズを使用して他の場所でこのウォレットを復元できることに注意してください。",
   "multi-sig-screen-txt-no-paired-devices": "ペアリングされたデバイスはありません",
 
   "multi-sig-modal-title-welcome": "マルチシグウォレット",

@@ -149,7 +149,7 @@ export default observer(({ vm, close }: { vm: ShardReceiver; close: () => void }
           }}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ ...devTxtStyle, maxWidth: '70%' }} numberOfLines={1}>
+            <Text style={{ ...devTxtStyle, maxWidth: '64%', flexGrow: 0 }} numberOfLines={1}>
               {`${t('multi-sig-modal-txt-device-name')}: ${deviceInfoModule.getDeviceNameSync()}`}
             </Text>
 
@@ -159,13 +159,13 @@ export default observer(({ vm, close }: { vm: ShardReceiver; close: () => void }
                 backgroundColor: vm.closed ? warningColor : secureColor,
                 alignItems: 'center',
                 justifyContent: 'center',
-                marginStart: 10,
+                marginStart: 8,
                 paddingHorizontal: 8,
                 paddingVertical: 2,
                 marginVertical: -3,
               }}
             >
-              <Text style={{ color: '#fff', fontSize: 12, fontWeight: '500', textTransform: 'capitalize' }}>
+              <Text style={{ color: '#fff', fontSize: 12, fontWeight: '500', textTransform: 'capitalize' }} numberOfLines={1}>
                 {vm.closed ? t('msg-disconnected') : t('msg-connected')}
               </Text>
             </View>
@@ -174,7 +174,7 @@ export default observer(({ vm, close }: { vm: ShardReceiver; close: () => void }
           <Text style={devTxtStyle} numberOfLines={1}>{`${t('multi-sig-modal-txt-device-model')}: ${getDeviceModel()}`}</Text>
           <Placeholder />
           <Text style={devTxtStyle} numberOfLines={1}>
-            {`OS: ${deviceInfoModule.getSystemName()} ${deviceInfoModule.getSystemVersion()}`}
+            {`${deviceInfoModule.getSystemName()} ${deviceInfoModule.getSystemVersion()}`}
           </Text>
         </View>
       </View>

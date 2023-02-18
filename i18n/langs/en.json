@@ -285,7 +285,7 @@
   "multi-sig-screen-paired-devices": "Paired devices",
   "multi-sig-screen-paired-device": "Paired device",
   "multi-sig-screen-tip-upgrade-to-multi-sig-wallet": " This wallet is not a multi-signature wallet. You can upgrade it to a multi-signature wallet.",
-  "multi-sig-screen-tip-after-upgrading": "Please note that after upgrading to a multi-signature wallet, you can still restore the wallet using the recovery phrase, or restore the wallet elsewhere using the recovery phrase.",
+  "multi-sig-screen-tip-after-upgrading": "Please note that after upgrading to a multi-signature wallet, you can still restore this wallet elsewhere using the recovery phrase.",
   "multi-sig-screen-txt-no-paired-devices": "No paired devices",
 
   "multi-sig-modal-title-welcome": "MultiSig Wallet",

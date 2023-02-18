@@ -38,7 +38,7 @@ export async function openGlobalPasspad(req: {
     PubSub.publish(MessageKeys.openGlobalPasspad, {
       ...req,
       onPinEntered: onPinEnteredHook,
-      onAutoAuthRequest: onAutoAuthHook,
+      onAutoAuthRequest: req.fast ? undefined : onAutoAuthHook,
       onClosed: onClosedHook,
     });
   });

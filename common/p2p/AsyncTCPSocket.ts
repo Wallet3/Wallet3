@@ -9,6 +9,8 @@ interface Events extends SocketEvents {
 }
 
 export class AsyncTCPSocket extends EventEmitter<Events> {
+  protected awaits = new Set<Function>();
+
   readonly raw: TCP.TLSSocket | TCP.Socket;
 
   closed = false;
@@ -22,6 +24,10 @@ export class AsyncTCPSocket extends EventEmitter<Events> {
     this.raw.once('close', (had_error) => {
       this.emit('close', had_error);
       runInAction(() => (this.closed = true));
+
+      for (let cancel of this.awaits) {
+        cancel();
+      }
     });
   }
 
@@ -29,12 +35,16 @@ export class AsyncTCPSocket extends EventEmitter<Events> {
     if (this.closed) return 0;
 
     try {
-      return new Promise<number>((resolve) =>
+      return new Promise<number>((resolve, reject) => {
+        this.awaits.add(reject);
+
         this.raw.write(data, 'binary', (err) => {
+          this.awaits.delete(reject);
+
           err ? console.error(err) : undefined;
           resolve(err ? 0 : data.byteLength);
-        })
-      );
+        });
+      });
     } catch (error) {
       return 0;
     }
@@ -46,12 +56,25 @@ export class AsyncTCPSocket extends EventEmitter<Events> {
 
   read() {
     if (this.closed) return;
-    return new Promise<Buffer>((resolve) => this.raw.once('data', (data) => resolve(data as Buffer)));
+
+    return new Promise<Buffer>((resolve, reject) => {
+      this.awaits.add(reject);
+
+      this.raw.once('data', (data) => {
+        this.awaits.delete(reject);
+
+        resolve(data as Buffer);
+      });
+    });
   }
 
-  readString(encoding: BufferEncoding = 'utf8') {
+  async readString(encoding: BufferEncoding = 'utf8') {
     if (this.closed) return;
-    return new Promise<string>((resolve) => this.raw.once('data', (data) => resolve(data.toString(encoding))));
+
+    try {
+      return (await this.read())?.toString(encoding);
+    } catch (error) {}
+    // return new Promise<string>((resolve) => this.raw.once('data', (data) => resolve(data.toString(encoding))));
   }
 
   destroy() {

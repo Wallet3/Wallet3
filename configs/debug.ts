@@ -49,8 +49,19 @@ if (__DEV__) {
     //   console.log(en.toString());
     //   console.log((await eccrypto.decrypt(Buffer.from(root.privateKey.substring(2), 'hex'), en)).toString('utf8'));
     // });
-    // const entropy = randomBytes(16);
-    // const mnemonic = utils.entropyToMnemonic(entropy);
+    const entropy = randomBytes(16);
+    const mnemonic = utils.entropyToMnemonic(entropy);
+    const hd = utils.HDNode.fromMnemonic(mnemonic);
+    const xprivkey = Buffer.from(hd.extendedKey, 'utf8').toString('hex');
+    const shares = secretjs.share(xprivkey, 10, 5);
+    console.log(hd.extendedKey, xprivkey, shares);
+
+    console.log('combined', secretjs.combine(shares.slice(2, 7)));
+    console.log('recovered', Buffer.from(secretjs.combine(shares.slice(2, 7)), 'hex').toString('utf8') === hd.extendedKey);
+
+    if (Buffer.from(secretjs.combine(shares.slice(2, 7)), 'hex').toString('utf8') !== hd.extendedKey) {
+      throw new Error('!!! check !!!');
+    }
     // console.log(secretjs.share(entropy.toString('hex'), 2, 2));
     // const pri = new KeyDistribution({ mnemonic });
     // pri.start();

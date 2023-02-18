@@ -36,7 +36,7 @@ export default (props: Props) => {
           name="arrow-back"
           size={22}
           color={iconColor}
-          style={{ opacity: showBack ? 1 : 0, marginStart: backButtonPadding - 16 ? 4 : -2, marginTop: 1 }}
+          style={{ opacity: showBack ? 1 : 0, marginStart: backButtonPadding - 16 ? 4 : -2, marginTop: 2 }}
         />
       </TouchableOpacity>
 

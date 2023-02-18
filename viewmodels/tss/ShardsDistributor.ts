@@ -67,6 +67,7 @@ export class ShardsDistributor extends TCPServer<Events> {
       approvedCount: computed,
       pendingCount: computed,
       totalCount: computed,
+      isClientsOK: computed,
 
       approveClient: action,
       rejectClient: action,
@@ -106,6 +107,10 @@ export class ShardsDistributor extends TCPServer<Events> {
 
   get thresholdTooHigh() {
     return this.threshold / this.totalCount > 0.9999;
+  }
+
+  get isClientsOK() {
+    return this.totalCount >= this.threshold && this.approvedCount > 1;
   }
 
   async start() {
@@ -160,15 +165,16 @@ export class ShardsDistributor extends TCPServer<Events> {
   async distributeSecret() {
     if (this.status === ShardsDistributionStatus.distributing || this.status === ShardsDistributionStatus.succeed) return;
 
-    if (this.totalCount < this.threshold) {
+    if (!this.isClientsOK) {
       showMessage({ message: i18n.t('multi-sig-modal-msg-network-lost'), type: 'warning' });
       return;
     }
 
     runInAction(() => (this.localShardStatus = this.status = ShardsDistributionStatus.distributing));
 
-    const rootShards = secretjs.share(this.rootEntropy, this.totalCount, this.threshold);
-    const bip32Shards = secretjs.share(this.bip32.privateKey.substring(2), this.totalCount, this.threshold);
+    const rootShards: string[] = secretjs.share(this.rootEntropy, this.totalCount, this.threshold);
+    const bip32XprivKey = Buffer.from(this.bip32.extendedKey, 'utf8').toString('hex');
+    const bip32Shards: string[] = secretjs.share(bip32XprivKey, this.totalCount, this.threshold);
 
     const key = new MultiSigKey();
     key.id = this.id;
@@ -190,14 +196,18 @@ export class ShardsDistributor extends TCPServer<Events> {
       return;
     }
 
+    const zip = rootShards.map<[string, string]>((v1, i) => [v1, bip32Shards[i]]);
+
     const result = await Promise.all(
-      rootShards.slice(1).map(async (rootShard, index) => {
+      zip.slice(1).map(async (shards, index) => {
         const c = this.approvedClients[index];
         if (!c) return 0;
 
+        const [rootShard, bip32Shard] = shards;
+
         c.sendShard({
           rootShard,
-          bip32Shard: bip32Shards[index],
+          bip32Shard,
           pubkey: this.protector.publicKey.substring(2),
           signKey: this.protector.privateKey.substring(2),
           threshold: this.threshold,
