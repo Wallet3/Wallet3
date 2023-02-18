@@ -18,6 +18,7 @@ import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize';
+import { useOptimizedSafeBottom } from '../../utils/hardware';
 import { warningColor } from '../../constants/styles';
 
 export default observer(() => {
@@ -26,6 +27,7 @@ export default observer(() => {
   const { t } = i18n;
   const [selectedDevice, setSelectedDevice] = useState<PairedDevice>();
   const { devices, hasDevices } = PairedDevices;
+  const safeBottom = useOptimizedSafeBottom();
 
   useEffect(() => {
     PairedDevices.refresh();
@@ -98,7 +100,11 @@ export default observer(() => {
             )}
 
             <FadeInDownView delay={400}>
-              <ButtonV2 title={t('button-view-secret')} />
+              <ButtonV2
+                title={t('button-view-secret')}
+                style={{ marginBottom: safeBottom }}
+                icon={() => <Ionicons name="lock-closed" color="#fff" size={16} />}
+              />
             </FadeInDownView>
           </ModalRootContainer>
         </ModalizeContainer>

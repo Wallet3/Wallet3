@@ -1,6 +1,7 @@
 import { ScrollView, StyleProp, View, ViewStyle } from 'react-native';
 
 import React from 'react';
+import { SquircleView } from 'react-native-figma-squircle';
 import Theme from '../../viewmodels/settings/Theme';
 import { useScreenCornerRadius } from '../../utils/hardware';
 
@@ -16,17 +17,23 @@ export default ({ children, style }: { style?: StyleProp<ViewStyle>; children: R
       contentContainerStyle={{ flexGrow: 1 }}
       style={{
         position: 'relative',
-        margin: 6,
-        backgroundColor,
-        height: 430,
-        borderRadius,
-        roundness: 0.17650602409638552,
-        overflow: 'hidden',
-        padding: 16,
-        ...(style as any),
+        backgroundColor: 'transparent',
       }}
     >
-      <View style={{ flex: 1 }}>{children}</View>
+      <SquircleView
+        squircleParams={{ cornerRadius: borderRadius, cornerSmoothing: 0.64, fillColor: backgroundColor }}
+        style={{
+          flex: 1,
+          margin: 6,
+          backgroundColor: 'transparent',
+          width: '100%',
+          height: 430,
+          padding: 16,
+          ...(style as any),
+        }}
+      >
+        {children}
+      </SquircleView>
     </ScrollView>
   );
 };

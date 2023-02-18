@@ -14,7 +14,6 @@ class PairedDevices {
 
   constructor() {
     makeObservable(this, { devices: observable, hasDevices: computed });
-    PubSub.subscribe(MessageKeys.newDevicePaired, (_, key) => this.onNewDevicePaired(key));
   }
 
   async refresh() {
@@ -24,12 +23,12 @@ class PairedDevices {
     runInAction(() => (this.devices = keys.map((key) => new PairedDevice(key))));
   }
 
-  protected onNewDevicePaired = (key: ShardKey) => {
+  addShardKey(key: ShardKey) {
     const device = new PairedDevice(key);
-
     if (this.devices.find((d) => d.id === device.id)) return;
+
     runInAction(() => this.devices.push(device));
-  };
+  }
 }
 
 export default new PairedDevices();

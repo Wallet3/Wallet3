@@ -18,7 +18,6 @@ export default {
   openGlobalPasspad: 'openGlobalPasspad',
   drawerSwipeEnabled: 'drawer-swipeEnabled',
   multiSigWalletCreated: 'multiSigWalletCreated',
-  newDevicePaired: 'newDevicePaired',
   wc_request: 'wc_request',
 
   walletconnect: {

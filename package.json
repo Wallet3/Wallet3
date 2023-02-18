@@ -94,6 +94,7 @@
     "react-native-device-info": "^10.4.0",
     "react-native-draggable-flatlist": "^4.0.0",
     "react-native-fast-image": "^8.6.3",
+    "react-native-figma-squircle": "^0.3.3",
     "react-native-flash-message": "^0.4.0",
     "react-native-gesture-handler": "~2.9.0",
     "react-native-image-colors": "^1.5.2",
