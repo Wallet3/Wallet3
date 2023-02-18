@@ -60,19 +60,17 @@ export default observer(() => {
 
   return (
     <ModalRootContainer>
-      <View style={{ flex: 1 }}>
-        <ScrollTitles
-          currentIndex={step}
-          contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
-          data={titles}
-          style={{ flexGrow: 0, height: 32, marginBottom: 12, marginTop: screenRadius ? 4 : 0 }}
-        />
+      <ScrollTitles
+        currentIndex={step}
+        contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
+        data={titles}
+        style={{ flexGrow: 0, height: 32, marginBottom: 12, marginTop: screenRadius ? 4 : 0 }}
+      />
 
-        <View style={{ flex: 1, width: ReactiveScreen.width - 12, marginHorizontal: -16 }}>
-          {step === 0 && <Preparations onNext={() => goTo(1)} />}
-          {step === 1 && <DeviceSelector onNext={(s) => goToReceiving(s)} />}
-          {step === 2 && vm && <ShardReceiving vm={vm} />}
-        </View>
+      <View style={{ flex: 1, width: ReactiveScreen.width - 12, marginHorizontal: -16 }}>
+        {step === 0 && <Preparations onNext={() => goTo(1)} />}
+        {step === 1 && <DeviceSelector onNext={(s) => goToReceiving(s)} />}
+        {step === 2 && vm && <ShardReceiving vm={vm} />}
       </View>
     </ModalRootContainer>
   );

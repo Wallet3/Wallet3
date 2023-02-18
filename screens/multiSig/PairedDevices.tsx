@@ -1,25 +1,22 @@
-import { ButtonV2, Placeholder, SafeViewContainer } from '../../components';
+import { ButtonV2, SafeViewContainer } from '../../components';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 
-import Device from '../../components/Device';
 import DeviceInfo from '../../modals/tss/components/DeviceInfo';
 import { FadeInDownView } from '../../components/animations';
 import IllustrationPairing from '../../assets/illustrations/misc/pair_programming.svg';
 import { Ionicons } from '@expo/vector-icons';
 import MessageKeys from '../../common/MessageKeys';
-import ModalRootContainer from '../../modals/core/ModalRootContainer';
 import ModalizeContainer from '../../modals/core/ModalizeContainer';
 import { PairedDevice } from '../../viewmodels/tss/management/PairedDevice';
+import { PairedDeviceModal } from './modals';
 import PairedDevices from '../../viewmodels/tss/management/PairedDevices';
 import { Portal } from 'react-native-portalize';
-import ScrollTitles from '../../modals/components/ScrollTitles';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize';
 import { useOptimizedSafeBottom } from '../../utils/hardware';
-import { warningColor } from '../../constants/styles';
 
 export default observer(() => {
   const { secondaryTextColor, textColor, foregroundColor, systemBorderColor } = Theme;
@@ -75,39 +72,7 @@ export default observer(() => {
       />
 
       <Portal>
-        <ModalizeContainer ref={ref}>
-          <ModalRootContainer>
-            <ScrollTitles
-              data={[t('multi-sig-screen-paired-device')]}
-              contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
-              style={{ flexGrow: 0 }}
-            />
-
-            {selectedDevice && (
-              <FadeInDownView style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }} delay={300}>
-                <Device
-                  deviceId={selectedDevice.deviceInfo.device}
-                  os={selectedDevice.deviceInfo!.rn_os!}
-                  style={{ width: 108, height: 150 }}
-                />
-                <Text style={{ marginTop: 16, fontWeight: '500', color: secondaryTextColor }}>
-                  {`${selectedDevice.deviceInfo.name}, ${selectedDevice.deviceInfo.os} ${selectedDevice.deviceInfo.osVersion}`}
-                </Text>
-                <Text style={{ marginTop: 12, fontWeight: '500', color: secondaryTextColor, fontSize: 12 }}>
-                  {`${selectedDevice.lastUsedTimestamp}`}
-                </Text>
-              </FadeInDownView>
-            )}
-
-            <FadeInDownView delay={400}>
-              <ButtonV2
-                title={t('button-view-secret')}
-                style={{ marginBottom: safeBottom }}
-                icon={() => <Ionicons name="lock-closed" color="#fff" size={16} />}
-              />
-            </FadeInDownView>
-          </ModalRootContainer>
-        </ModalizeContainer>
+        <ModalizeContainer ref={ref}>{selectedDevice && <PairedDeviceModal device={selectedDevice} />}</ModalizeContainer>
       </Portal>
     </SafeViewContainer>
   );

@@ -290,6 +290,7 @@
   "multi-sig-modal-title-set-threshold": "閾値の設定",
   "multi-sig-modal-title-key-distribution": "秘密鍵の配布",
   "multi-sig-modal-title-devices-pairing": "デバイスのペアリング",
+  "multi-sig-modal-title-secret-key": "秘密鍵",
   "multi-sig-modal-welcome-1": "まず、同じ Wi-Fi ネットワークに接続してください",
   "multi-sig-modal-welcome-2": "「メニュー」 - 「マルチシグウォレット」に進んでください",
   "multi-sig-modal-welcome-3": "「ペアリング開始」をタップし、ネットワークのアクセスを許可してください",

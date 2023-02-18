@@ -40,10 +40,10 @@ export default (props: Props) => {
       scrollEnabled={false}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
-      style={{ height: 32 }}
       entering={FadeInUp.delay(300).springify()}
       renderItem={renderTitle}
       {...props}
+      style={{ height: 32, ...(props.style as any) }}
     />
   );
 };

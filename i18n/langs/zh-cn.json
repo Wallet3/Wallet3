@@ -290,6 +290,7 @@
   "multi-sig-modal-title-set-threshold": "门限设置",
   "multi-sig-modal-title-key-distribution": "密钥分发",
   "multi-sig-modal-title-devices-pairing": "设备配对",
+  "multi-sig-modal-title-secret-key": "密钥",
   "multi-sig-modal-welcome-1": "将手机连接到相同的 Wi-Fi 网络",
   "multi-sig-modal-welcome-2": "进入【菜单】-【多签钱包】",
   "multi-sig-modal-welcome-3": "点击【开始配对】，请批准 Wallet 3 访问本地网络",

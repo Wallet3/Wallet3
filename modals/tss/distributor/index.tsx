@@ -68,42 +68,40 @@ export default observer(({ vm, onCritical, close }: Props) => {
 
   return (
     <ModalRootContainer>
-      <View style={{ flex: 1 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12, marginTop: screenRadius ? 4 : 0 }}>
-          <TouchableOpacity
-            disabled={vm.status !== ShardsDistributionStatus.ready}
-            onPress={() => goTo(step - 1, true)}
-            style={{
-              padding: backButtonPadding,
-              margin: -backButtonPadding,
-              opacity: vm.status === ShardsDistributionStatus.ready ? 1 : 0,
-            }}
-          >
-            <Ionicons
-              name="arrow-back"
-              size={22}
-              color={textColor}
-              style={{ opacity: step - 1, marginStart: backButtonPadding - 16 ? 2 : -2, marginTop: 1 }}
-            />
-          </TouchableOpacity>
-
-          <ScrollTitles
-            currentIndex={step}
-            data={titles}
-            contentContainerStyle={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginStart: -backButtonPadding - 1,
-            }}
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12, marginTop: screenRadius ? 4 : 0 }}>
+        <TouchableOpacity
+          disabled={vm.status !== ShardsDistributionStatus.ready}
+          onPress={() => goTo(step - 1, true)}
+          style={{
+            padding: backButtonPadding,
+            margin: -backButtonPadding,
+            opacity: vm.status === ShardsDistributionStatus.ready ? 1 : 0,
+          }}
+        >
+          <Ionicons
+            name="arrow-back"
+            size={22}
+            color={textColor}
+            style={{ opacity: step - 1, marginStart: backButtonPadding - 16 ? 2 : -2, marginTop: 1 }}
           />
-        </View>
+        </TouchableOpacity>
 
-        <View style={{ flex: 1, width: ReactiveScreen.width - ModalMarginScreen * 2, marginHorizontal: -16 }}>
-          {step === 0 && <Preparations onNext={() => goTo(1)} />}
-          {step === 1 && <ConnectDevices vm={vm} onNext={() => goTo(2)} isRTL={isRTL} />}
-          {step === 2 && <ThresholdSetting vm={vm} onNext={() => goTo(3)} isRTL={isRTL} />}
-          {step === 3 && <ShardsDistribution vm={vm} close={close} onCritical={onCritical} />}
-        </View>
+        <ScrollTitles
+          currentIndex={step}
+          data={titles}
+          contentContainerStyle={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginStart: -backButtonPadding - 1,
+          }}
+        />
+      </View>
+
+      <View style={{ flex: 1, width: ReactiveScreen.width - ModalMarginScreen * 2, marginHorizontal: -16 }}>
+        {step === 0 && <Preparations onNext={() => goTo(1)} />}
+        {step === 1 && <ConnectDevices vm={vm} onNext={() => goTo(2)} isRTL={isRTL} />}
+        {step === 2 && <ThresholdSetting vm={vm} onNext={() => goTo(3)} isRTL={isRTL} />}
+        {step === 3 && <ShardsDistribution vm={vm} close={close} onCritical={onCritical} />}
       </View>
     </ModalRootContainer>
   );

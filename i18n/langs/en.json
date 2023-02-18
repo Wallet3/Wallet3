@@ -294,6 +294,7 @@
   "multi-sig-modal-title-set-threshold": "Threshold Setting",
   "multi-sig-modal-title-key-distribution": "Secret Distribution",
   "multi-sig-modal-title-devices-pairing": "Devices Pairing",
+  "multi-sig-modal-title-secret-key": "Secret Key",
   "multi-sig-modal-welcome-1": "Connect devices to the same Wi-Fi network",
   "multi-sig-modal-welcome-2": "Go to [Menu] - [MultiSig Wallet]",
   "multi-sig-modal-welcome-3": "Tap [Start Pairing] and approve Wallet 3 to access the local network",
