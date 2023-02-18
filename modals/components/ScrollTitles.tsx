@@ -46,7 +46,7 @@ export default (props: Props) => {
       entering={FadeInUp.delay(300).springify()}
       renderItem={renderTitle}
       {...props}
-      style={{ height: 32, ...(props.style as any) }}
+      style={{ height: 31, ...(props.style as any) }}
     />
   );
 };

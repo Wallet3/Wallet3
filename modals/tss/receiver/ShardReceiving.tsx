@@ -1,27 +1,18 @@
-import { ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
-import Animated, { FadeIn, FadeInDown, FadeInRight, FadeOutDown, FadeOutLeft, FadeOutUp } from 'react-native-reanimated';
-import { FadeInLeftView, FadeInRightView, FadeInUpView, ZoomInView } from '../../../components/animations';
-import { Feather, Ionicons } from '@expo/vector-icons';
+import Animated, { FadeInRight, FadeOutLeft, FadeOutUp } from 'react-native-reanimated';
+import { FadeInLeftView, FadeInUpView, ZoomInView } from '../../../components/animations';
 import React, { useEffect, useState } from 'react';
 import { ShardPersistentStatus, ShardReceiver } from '../../../viewmodels/tss/ShardReceiver';
-import { getDeviceModel, getScreenCornerRadius, useOptimizedSafeBottom } from '../../../utils/hardware';
+import { getDeviceModel, useOptimizedSafeBottom } from '../../../utils/hardware';
 import { secureColor, warningColor } from '../../../constants/styles';
 
-import Button from '../components/Button';
 import Device from '../../../components/Device';
-import DeviceInfo from '../components/DeviceInfo';
-import LanDiscovery from '../../../common/p2p/LanDiscovery';
+import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
-import { Passpad } from '../../views';
-import { Service } from 'react-native-zeroconf';
-import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
-import { Skeleton } from '../../../components';
-import { TCPClient } from '../../../common/p2p/TCPClient';
+import { Placeholder } from '../../../components';
 import Theme from '../../../viewmodels/settings/Theme';
 import deviceInfoModule from 'react-native-device-info';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
-import { startLayoutAnimation } from '../../../utils/animations';
 
 const { View, Text, FlatList } = Animated;
 
@@ -179,7 +170,9 @@ export default observer(({ vm, close }: { vm: ShardReceiver; close: () => void }
               </Text>
             </View>
           </View>
+          <Placeholder />
           <Text style={devTxtStyle} numberOfLines={1}>{`${t('multi-sig-modal-txt-device-model')}: ${getDeviceModel()}`}</Text>
+          <Placeholder />
           <Text style={devTxtStyle} numberOfLines={1}>
             {`OS: ${deviceInfoModule.getSystemName()} ${deviceInfoModule.getSystemVersion()}`}
           </Text>

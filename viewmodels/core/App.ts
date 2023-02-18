@@ -19,6 +19,7 @@ import MetamaskDAppsHub from '../walletconnect/MetamaskDAppsHub';
 import MultiSigKey from '../../models/entities/MultiSigKey';
 import { MultiSigWallet } from '../wallet/MultiSigWallet';
 import Networks from './Networks';
+import PairedDevices from '../tss/management/PairedDevices';
 import { ReactNativeFirebase } from '@react-native-firebase/app';
 import { SingleSigWallet } from '../wallet/SingleSigWallet';
 import Theme from '../settings/Theme';
@@ -213,12 +214,17 @@ export class AppVM {
     await Promise.all([Database.init(), Authentication.init()]);
     await Promise.all([Networks.init()]);
 
-    const wallets: WalletBase[] = await Promise.all(
-      [
-        (await Database.keys.find()).map((key) => new SingleSigWallet(key).init()),
-        ((await Database.multiSigKeys?.find()) ?? []).map((key) => new MultiSigWallet(key).init()),
-      ].flat()
-    );
+    const wallets: WalletBase[] = LINQ.from(
+      await Promise.all(
+        [
+          ((await Database.multiSigKeys?.find()) ?? []).map((key) => new MultiSigWallet(key).init()),
+          (await Database.keys.find()).map((key) => new SingleSigWallet(key).init()),
+        ].flat()
+      )
+    )
+      .where((i) => (i ? true : false))
+      .distinct((w) => `${w.keyInfo.bip32Xpubkey}_${w.keyInfo.basePath}_${w.keyInfo.basePathIndex}`)
+      .toArray();
 
     // console.log(
     //   wallets.length,
@@ -249,7 +255,7 @@ export class AppVM {
     });
 
     TxHub.init().then(() => AppStoreReview.check());
-    Database.shardKeys?.count().then((c) => c > 0 && LanDiscovery.scan());
+    PairedDevices.init();
   }
 
   async reset() {

@@ -1,6 +1,7 @@
 import { computed, makeObservable, observable, runInAction } from 'mobx';
 
 import Database from '../../../models/Database';
+import LanDiscovery from '../../../common/p2p/LanDiscovery';
 import MessageKeys from '../../../common/MessageKeys';
 import { PairedDevice } from './PairedDevice';
 import ShardKey from '../../../models/entities/ShardKey';
@@ -16,11 +17,17 @@ class PairedDevices {
     makeObservable(this, { devices: observable, hasDevices: computed });
   }
 
-  async refresh() {
-    if (this.devices.length > 0) return;
+  async init() {
+    const count = (await this.refresh()).length;
+    if (count === 0) return;
 
+    LanDiscovery.scan();
+  }
+
+  async refresh() {
     const keys = await Database.shardKeys!.find();
     runInAction(() => (this.devices = keys.map((key) => new PairedDevice(key))));
+    return keys;
   }
 
   addShardKey(key: ShardKey) {

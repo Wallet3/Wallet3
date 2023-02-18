@@ -24,12 +24,14 @@ const Schemas: MixedList<Function | string | EntitySchema> = [
   AddressTag,
   WCV2_Session,
   UrlTag,
+  MultiSigKey,
+  ShardKey,
 ];
 
-if (__DEV__) {
-  Schemas.push(MultiSigKey);
-  Schemas.push(ShardKey);
-}
+// if (__DEV__) {
+//   Schemas.push();
+//   Schemas.push();
+// }
 
 class Database {
   private _dataSource!: DataSource;
@@ -71,9 +73,9 @@ class Database {
     this.wcV2Sessions = this._dataSource.getRepository(WCV2_Session);
     this.urls = this._dataSource.getRepository(UrlTag);
 
+    this.multiSigKeys = this._dataSource.getRepository(MultiSigKey);
+    this.shardKeys = this._dataSource.getRepository(ShardKey);
     if (__DEV__) {
-      this.multiSigKeys = this._dataSource.getRepository(MultiSigKey);
-      this.shardKeys = this._dataSource.getRepository(ShardKey);
     }
   }
 

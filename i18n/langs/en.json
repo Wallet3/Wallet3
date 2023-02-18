@@ -316,7 +316,7 @@
   "multi-sig-modal-txt-data-saving-failed": "Save failed",
   "multi-sig-modal-txt-last-used-time": "Last used",
   "multi-sig-modal-txt-threshold": "MultiSig Threshold",
-  "multi-sig-modal-txt-device-name": "Name",
+  "multi-sig-modal-txt-device-name": "My Device",
   "multi-sig-modal-txt-device-model": "Model",
   "multi-sig-modal-msg-threshold-too-high": "If any of your devices get damaged or lost, your wallet will be unrecoverable, it is recommended to add at least one more device.",
   "multi-sig-modal-msg-pairing-code-not-match": "The pairing code does not match, please try again in a secure environment.",

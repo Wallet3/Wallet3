@@ -316,7 +316,7 @@
   "multi-sig-modal-txt-data-saving-failed": "Kaydedilirken hata oluştu",
   "multi-sig-modal-txt-last-used-time": "Son Kullanım",
   "multi-sig-modal-txt-threshold": "Çoklu Sig Eşiği",
-  "multi-sig-modal-txt-device-name": "Cihaz adı",
+  "multi-sig-modal-txt-device-name": "Cihazım",
   "multi-sig-modal-txt-device-model": "Cihaz modeli",
   "multi-sig-modal-msg-threshold-too-high": "Dikkat: eğer cihazlarınızdan herhangi biri zarar görür veya kaybolan durumda cüzdanınız kurtarılamayacaktır. En az bir cihaz daha eklemeniz önerilir.",
   "multi-sig-modal-msg-pairing-code-not-match": "Eşleşme kodu eşleşmiyor, lütfen güvenli bir ortamda tekrar deneyin.",
