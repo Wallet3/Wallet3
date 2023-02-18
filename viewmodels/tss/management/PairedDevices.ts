@@ -38,7 +38,7 @@ class PairedDevices {
   }
 
   removeDevice(device: PairedDevice) {
-    const index = this.devices.indexOf(device);
+    const index = this.devices.findIndex((d) => d.id === device.id);
     if (index < 0) return;
 
     device.remove();

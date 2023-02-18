@@ -205,17 +205,21 @@ export class ShardsDistributor extends TCPServer<Events> {
 
         const [rootShard, bip32Shard] = shards;
 
-        c.sendShard({
-          rootShard,
-          bip32Shard,
-          pubkey: this.protector.publicKey.substring(2),
-          signKey: this.protector.privateKey.substring(2),
-          threshold: this.threshold,
-          bip32Path: key.basePath,
-          bip32PathIndex: key.basePathIndex,
-        });
+        try {
+          c.sendShard({
+            rootShard,
+            bip32Shard,
+            pubkey: this.protector.publicKey.substring(2),
+            signKey: this.protector.privateKey.substring(2),
+            threshold: this.threshold,
+            bip32Path: key.basePath,
+            bip32PathIndex: key.basePathIndex,
+          });
 
-        return (await c.readShardAck()) ? 1 : 0;
+          return (await c.readShardAck()) ? 1 : 0;
+        } catch (error) {
+          return 0;
+        }
       })
     );
 
