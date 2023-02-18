@@ -309,6 +309,7 @@
   "multi-sig-modal-txt-data-saving": "データ保存中",
   "multi-sig-modal-txt-data-saved": "保存成功",
   "multi-sig-modal-txt-data-saving-failed": "保存失敗",
+  "multi-sig-modal-txt-last-used-time": "前回使用",
   "multi-sig-modal-msg-threshold-too-high": "注意：あなたのいずれかのデバイスが損傷または失われた場合、このウォレットは回復できません。少なくとも1つ以上のデバイスを追加することが推奨されます。",
   "multi-sig-modal-msg-pairing-code-not-match": "ペアリングコードが一致していません。安全な環境で再度お試しください。",
   "multi-sig-modal-msg-network-lost": "他のデバイスとのネットワーク接続が切断されました。ネットワークを確認してから再度お試しください",

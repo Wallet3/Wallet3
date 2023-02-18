@@ -312,6 +312,7 @@
   "multi-sig-modal-txt-data-verifying-failed": "Veri başarısız",
   "multi-sig-modal-txt-data-saving": "Veriler kaydediliyor",
   "multi-sig-modal-txt-data-saved": "Veriler başarıyla kaydedildi",
+  "multi-sig-modal-txt-last-used-time": "Son Kullanım",
   "multi-sig-modal-txt-data-saving-failed": "Kaydedilirken hata oluştu",
   "multi-sig-modal-msg-threshold-too-high": "Dikkat: eğer cihazlarınızdan herhangi biri zarar görür veya kaybolan durumda cüzdanınız kurtarılamayacaktır. En az bir cihaz daha eklemeniz önerilir.",
   "multi-sig-modal-msg-pairing-code-not-match": "Eşleşme kodu eşleşmiyor, lütfen güvenli bir ortamda tekrar deneyin.",

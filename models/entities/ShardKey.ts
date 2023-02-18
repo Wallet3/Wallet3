@@ -4,7 +4,7 @@ import { ClientInfo } from '../../common/p2p/Constants';
 
 @Entity({ name: 'shards' })
 export default class ShardKey extends BaseEntity {
-  @PrimaryColumn()
+  @PrimaryColumn({ type: 'text' })
   id!: string;
 
   @Column()

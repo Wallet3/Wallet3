@@ -7,8 +7,8 @@ import {
 import React, { useEffect, useState } from 'react';
 
 import { ModalMarginScreen } from '../styles';
+import ModalRootContainer from '../core/ModalRootContainer';
 import { Passpad } from '../views';
-import RootContainer from '../core/ModalRootContainer';
 import { observer } from 'mobx-react-lite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -43,7 +43,7 @@ export default observer(({ passLength, onAutoAuthRequest, onPinEntered, close, m
   }, []);
 
   return (
-    <RootContainer>
+    <ModalRootContainer>
       <Passpad
         disableCancelButton
         passLength={passLength ?? 6}
@@ -52,6 +52,6 @@ export default observer(({ passLength, onAutoAuthRequest, onPinEntered, close, m
         numPadStyle={{ borderRadius: Math.max(optimizedRadius, 12) }}
         onCodeEntered={onCodeEntered}
       />
-    </RootContainer>
+    </ModalRootContainer>
   );
 });

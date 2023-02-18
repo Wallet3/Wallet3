@@ -1,5 +1,6 @@
 import { IShardsDistributorConstruction, ShardsDistributor } from '../viewmodels/tss/ShardsDistributor';
 
+import Authentication from '../viewmodels/auth/Authentication';
 import MessageKeys from './MessageKeys';
 
 export async function openGlobalPasspad(req: {
@@ -8,15 +9,12 @@ export async function openGlobalPasspad(req: {
   onAutoAuthRequest: () => Promise<boolean>;
   onPinEntered: (pin: string) => Promise<boolean>;
 }) {
+  if (Authentication.biometricEnabled && (await req.onAutoAuthRequest())) {
+    return true;
+  }
+
   return new Promise<boolean>((resolve) => {
     let handled = false;
-
-    const onAutoAuthRequestHook = async () => {
-      const success = await req.onAutoAuthRequest();
-      success && resolve(success);
-      handled = success;
-      return success;
-    };
 
     const onPinEnteredHook = async (pin: string) => {
       const success = await req.onPinEntered(pin);
@@ -31,7 +29,6 @@ export async function openGlobalPasspad(req: {
 
     PubSub.publish(MessageKeys.openGlobalPasspad, {
       ...req,
-      onAutoAuthRequest: onAutoAuthRequestHook,
       onPinEntered: onPinEnteredHook,
       onClosed: onClosedHook,
     });

@@ -2,6 +2,7 @@ import { ActivityIndicator, SectionList, StyleSheet, TouchableOpacity } from 're
 import Animated, { FadeInDown, FadeInLeft, FadeInRight, FadeOutDown, FadeOutLeft, FadeOutUp } from 'react-native-reanimated';
 import React, { useEffect, useState } from 'react';
 import { secureColor, warningColor } from '../../../constants/styles';
+import { useOptimizedCornerRadius, useOptimizedSafeBottom } from '../../../utils/hardware';
 
 import Button from '../components/Button';
 import DeviceInfo from '../components/DeviceInfo';
@@ -13,7 +14,6 @@ import Theme from '../../../viewmodels/settings/Theme';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useHorizontalPadding } from '../components/Utils';
-import { useOptimizedSafeBottom } from '../../../utils/hardware';
 
 const { View, Text } = Animated;
 
@@ -24,6 +24,7 @@ export default observer(({ vm, onNext, isRTL }: { isRTL?: boolean; vm: ShardsDis
   const marginHorizontal = useHorizontalPadding();
   const [verifying, setVerifying] = useState<{ client: ShardSender; attempts: number }>();
   const safeBottom = useOptimizedSafeBottom();
+  const cornerRadius = useOptimizedCornerRadius();
 
   useEffect(() => {
     vm.start();
@@ -135,11 +136,13 @@ export default observer(({ vm, onNext, isRTL }: { isRTL?: boolean; vm: ShardsDis
             left: 0,
             right: 0,
             top: 0,
-            bottom: -1,
+            bottom: 0,
             backgroundColor,
             alignItems: 'center',
             flex: 1,
             paddingBottom: safeBottom,
+            borderBottomLeftRadius: cornerRadius + 20,
+            borderBottomRightRadius: cornerRadius + 20,
           }}
         >
           <Text style={{ marginTop: 12, color: secondaryTextColor, fontWeight: '500' }}>
@@ -151,6 +154,7 @@ export default observer(({ vm, onNext, isRTL }: { isRTL?: boolean; vm: ShardsDis
             passLength={4}
             failedAttempts={verifying.attempts}
             style={{ padding: 0, paddingHorizontal: 16 }}
+            numPadStyle={{ borderRadius: Math.max(cornerRadius, 12) }}
             onCodeEntered={verifyClient}
           />
         </View>

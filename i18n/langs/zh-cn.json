@@ -309,6 +309,7 @@
   "multi-sig-modal-txt-data-saving": "数据保存中",
   "multi-sig-modal-txt-data-saved": "已成功保存",
   "multi-sig-modal-txt-data-saving-failed": "保存失败",
+  "multi-sig-modal-txt-last-used-time": "上次使用",
   "multi-sig-modal-msg-threshold-too-high": "注意：如果您的任何一部设备损坏或丢失，您的钱包将会无法恢复，建议至少再多添加一部设备。",
   "multi-sig-modal-msg-pairing-code-not-match": "配对码不一致，请在安全的环境中重新尝试",
   "multi-sig-modal-msg-network-lost": "与其它设备的网络连接已断开，请检查网络后重试",

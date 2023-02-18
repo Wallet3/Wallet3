@@ -177,8 +177,8 @@ export class ShardsDistributor extends TCPServer<Events> {
     key.basePath = this.upgradeInfo?.basePath ?? DEFAULT_DERIVATION_PATH;
     key.basePathIndex = this.upgradeInfo?.basePathIndex ?? 0;
     key.secrets = {
-      bip32Shard: await Authentication.encryptForever(bip32Shards[0]),
-      rootShard: await Authentication.encryptForever(rootShards[0]),
+      bip32Shard: await Authentication.encrypt(bip32Shards[0]),
+      rootShard: await Authentication.encrypt(rootShards[0]),
     };
 
     try {
