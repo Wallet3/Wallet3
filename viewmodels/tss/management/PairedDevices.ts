@@ -29,6 +29,14 @@ class PairedDevices {
 
     runInAction(() => this.devices.push(device));
   }
+
+  removeDevice(device: PairedDevice) {
+    const index = this.devices.indexOf(device);
+    if (index < 0) return;
+
+    device.remove();
+    runInAction(() => this.devices.splice(index, 1));
+  }
 }
 
 export default new PairedDevices();

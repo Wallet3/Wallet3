@@ -1,21 +1,27 @@
+import { ButtonV2, Placeholder } from '../../../components';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import React, { useRef, useState } from 'react';
 
 import Authentication from '../../../viewmodels/auth/Authentication';
-import { ButtonV2 } from '../../../components';
+import BackableScrollTitles from '../../../modals/components/BackableScrollTitles';
 import Device from '../../../components/Device';
 import { FadeInDownView } from '../../../components/animations';
+import IllustrationAsk from '../../../assets/illustrations/misc/ask.svg';
 import { Ionicons } from '@expo/vector-icons';
 import ModalRootContainer from '../../../modals/core/ModalRootContainer';
 import { PairedDevice } from '../../../viewmodels/tss/management/PairedDevice';
+import PairedDevices from '../../../viewmodels/tss/management/PairedDevices';
+import QRCode from 'react-native-qrcode-svg';
 import ScrollTitles from '../../../modals/components/ScrollTitles';
 import Theme from '../../../viewmodels/settings/Theme';
 import i18n from '../../../i18n';
 import { openGlobalPasspad } from '../../../common/Modals';
+import { sleep } from '../../../utils/async';
 import { useOptimizedSafeBottom } from '../../../utils/hardware';
+import { warningColor } from '../../../constants/styles';
 
 const DeviceOverview = ({ device, onNext }: { device: PairedDevice; onNext: () => void }) => {
-  const { secondaryTextColor, textColor, foregroundColor, systemBorderColor } = Theme;
+  const { secondaryTextColor } = Theme;
   const { t } = i18n;
   const safeBottom = useOptimizedSafeBottom();
 
@@ -43,11 +49,80 @@ const DeviceOverview = ({ device, onNext }: { device: PairedDevice; onNext: () =
   );
 };
 
-export default ({ device }: { device: PairedDevice }) => {
+const SecretView = ({ secret, device, onNext }: { secret: string; device: PairedDevice; onNext: () => void }) => {
+  const safeBottom = useOptimizedSafeBottom();
+  const { secondaryTextColor, textColor, appColor } = Theme;
+  const { t } = i18n;
+
+  return (
+    <FadeInDownView style={{ flex: 1 }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <QRCode
+          value={secret}
+          size={150}
+          color={textColor}
+          enableLinearGradient
+          linearGradient={['rgb(134, 65, 244)', 'rgb(66, 194, 244)']}
+          backgroundColor="transparent"
+        />
+
+        <Text style={{ color: appColor, marginVertical: 16 }}>
+          {`${t('multi-sig-modal-txt-threshold')}: ${device.threshold} of n`}
+        </Text>
+
+        <Text style={{ maxWidth: 250, textAlign: 'center', color: secondaryTextColor, fontWeight: '500' }}>
+          {t('multi-sig-modal-msg-restore-from-shard-qr-code')}
+        </Text>
+      </View>
+
+      <FadeInDownView delay={200}>
+        <ButtonV2
+          style={{ marginBottom: safeBottom }}
+          themeColor={warningColor}
+          title={t('button-remove')}
+          onPress={onNext}
+          icon={() => <Ionicons name="trash" color={'#fff'} size={16} />}
+        />
+      </FadeInDownView>
+    </FadeInDownView>
+  );
+};
+
+const DeleteView = ({ onDone }: { device: PairedDevice; onDone: () => void }) => {
+  const safeBottom = useOptimizedSafeBottom();
+  const { t } = i18n;
+  const { secondaryTextColor, textColor, appColor } = Theme;
+
+  return (
+    <FadeInDownView style={{ flex: 1 }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <IllustrationAsk width={150} height={150} />
+        <Text style={{ maxWidth: 250, textAlign: 'center', marginVertical: 24, color: textColor }}>
+          {t('multi-sig-modal-msg-delete-shard')}
+        </Text>
+      </View>
+
+      <FadeInDownView delay={300}>
+        <ButtonV2
+          onPress={onDone}
+          themeColor={warningColor}
+          style={{ marginBottom: safeBottom }}
+          title={t('button-confirm')}
+          icon={() => <Ionicons name="trash" color={'#fff'} size={16} />}
+        />
+      </FadeInDownView>
+    </FadeInDownView>
+  );
+};
+
+export default ({ device, close }: { device: PairedDevice; close: () => void }) => {
   const { t } = i18n;
   const [step, setStep] = useState(0);
+  const { textColor } = Theme;
+  const [secret, setSecret] = useState('');
 
-  const goTo = (step: number) => {
+  const goTo = async (step: number, delay = 0) => {
+    if (delay) await sleep(delay);
     setStep(step);
   };
 
@@ -55,9 +130,14 @@ export default ({ device }: { device: PairedDevice }) => {
     let success = false;
 
     const autoAuth = async (pin?: string) => {
-      const secret = await Authentication.decryptForever(device.encryptedRootShard, pin);
-      success = secret ? true : false;
-      return success;
+      try {
+        const secret = await Authentication.decryptForever(device.encryptedRootShard, pin);
+        success = secret ? true : false;
+        if (success) setSecret(secret!);
+        return success;
+      } catch (error) {
+        return false;
+      }
     };
 
     await openGlobalPasspad({ onAutoAuthRequest: autoAuth, onPinEntered: autoAuth });
@@ -65,16 +145,28 @@ export default ({ device }: { device: PairedDevice }) => {
     if (success) goTo(1);
   };
 
+  const doDelete = () => {
+    PairedDevices.removeDevice(device);
+    close();
+  };
+
   return (
     <ModalRootContainer>
-      <ScrollTitles
+      <BackableScrollTitles
         currentIndex={step}
-        data={[t('multi-sig-screen-paired-device'), t('multi-sig-modal-title-secret-key')]}
-        contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
-        style={{ flexGrow: 0 }}
+        showBack={step > 0}
+        onBackPress={() => goTo(step - 1)}
+        iconColor={textColor}
+        titles={[
+          t('multi-sig-screen-paired-device'),
+          t('multi-sig-modal-title-secret-key'),
+          t('multi-sig-modal-title-delete-secret-key'),
+        ]}
       />
 
       {step === 0 && <DeviceOverview device={device} onNext={authAndNext} />}
+      {step === 1 && <SecretView device={device} secret={secret} onNext={() => goTo(2)} />}
+      {step === 2 && <DeleteView device={device} onDone={doDelete} />}
     </ModalRootContainer>
   );
 };

@@ -4,6 +4,7 @@ import {
   useOptimizedSafeBottom,
   useScreenCornerRadius,
 } from '../../utils/hardware';
+import { FadeInDownView, FadeInUpView } from '../../components/animations';
 import React, { useEffect, useState } from 'react';
 
 import { ModalMarginScreen } from '../styles';
@@ -44,14 +45,16 @@ export default observer(({ passLength, onAutoAuthRequest, onPinEntered, close, m
 
   return (
     <ModalRootContainer>
-      <Passpad
-        disableCancelButton
-        passLength={passLength ?? 6}
-        failedAttempts={failedAttempts}
-        style={{ padding: 0, paddingBottom: safeBottomPadding }}
-        numPadStyle={{ borderRadius: Math.max(optimizedRadius, 12) }}
-        onCodeEntered={onCodeEntered}
-      />
+      <FadeInDownView style={{ flex: 1 }} delay={200}>
+        <Passpad
+          disableCancelButton
+          passLength={passLength ?? 6}
+          failedAttempts={failedAttempts}
+          style={{ padding: 0, paddingBottom: safeBottomPadding }}
+          numPadStyle={{ borderRadius: Math.max(optimizedRadius, 12) }}
+          onCodeEntered={onCodeEntered}
+        />
+      </FadeInDownView>
     </ModalRootContainer>
   );
 });

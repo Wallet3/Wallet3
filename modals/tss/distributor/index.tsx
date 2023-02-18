@@ -1,25 +1,20 @@
-import Animated, { FadeInUp } from 'react-native-reanimated';
-import React, { useEffect, useRef, useState } from 'react';
-import { ScrollView, FlatList as SystemFlatList, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { ShardsDistributionStatus, ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
-import { getScreenCornerRadius, useOptimizedCornerRadius } from '../../../utils/hardware';
 
+import Animated from 'react-native-reanimated';
+import BackableScrollTitles from '../../components/BackableScrollTitles';
 import ConnectDevices from './ConnectDevices';
-import { Ionicons } from '@expo/vector-icons';
 import { ModalMarginScreen } from '../../styles';
 import ModalRootContainer from '../../core/ModalRootContainer';
 import Preparations from './Preparations';
 import { ReactiveScreen } from '../../../utils/device';
-import ScrollTitles from '../../components/ScrollTitles';
 import ShardsDistribution from './ShardsDistribution';
 import Theme from '../../../viewmodels/settings/Theme';
 import ThresholdSetting from './ThresholdSetting';
-import { ZoomInView } from '../../../components/animations';
+import { View } from 'react-native';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
-import { useHorizontalPadding } from '../components/Utils';
-
-const { FlatList } = Animated;
+import { useOptimizedCornerRadius } from '../../../utils/hardware';
 
 interface Props {
   vm: ShardsDistributor;
@@ -29,12 +24,9 @@ interface Props {
 
 export default observer(({ vm, onCritical, close }: Props) => {
   const { t } = i18n;
-  const { backgroundColor, textColor } = Theme;
+  const { textColor } = Theme;
   const [current, setCurrent] = useState({ step: 0, isRTL: false });
-  const backButtonPadding = useHorizontalPadding();
-  const screenRadius = useOptimizedCornerRadius();
 
-  const titleList = useRef<SystemFlatList>(null);
   const titles = [
     t('multi-sig-modal-title-preparations'),
     t('multi-sig-modal-title-connect-devices'),
@@ -42,24 +34,9 @@ export default observer(({ vm, onCritical, close }: Props) => {
     t('multi-sig-modal-title-key-distribution'),
   ];
 
-  const renderTitle = ({ item }: { item: string }) => {
-    return (
-      <Text
-        style={{
-          fontSize: 25,
-          fontWeight: '700',
-          color: textColor,
-        }}
-      >
-        {item}
-      </Text>
-    );
-  };
-
   const goTo = (step: number, isRTL = false) => {
     step = Math.max(step, 0);
     setCurrent({ step, isRTL });
-    titleList.current?.scrollToIndex({ animated: true, index: step });
   };
 
   useEffect(() => () => vm.dispose(), []);
@@ -68,34 +45,15 @@ export default observer(({ vm, onCritical, close }: Props) => {
 
   return (
     <ModalRootContainer>
-      <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12, marginTop: screenRadius ? 4 : 0 }}>
-        <TouchableOpacity
-          disabled={vm.status !== ShardsDistributionStatus.ready}
-          onPress={() => goTo(step - 1, true)}
-          style={{
-            padding: backButtonPadding,
-            margin: -backButtonPadding,
-            opacity: vm.status === ShardsDistributionStatus.ready ? 1 : 0,
-          }}
-        >
-          <Ionicons
-            name="arrow-back"
-            size={22}
-            color={textColor}
-            style={{ opacity: step - 1, marginStart: backButtonPadding - 16 ? 2 : -2, marginTop: 1 }}
-          />
-        </TouchableOpacity>
-
-        <ScrollTitles
-          currentIndex={step}
-          data={titles}
-          contentContainerStyle={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginStart: -backButtonPadding - 1,
-          }}
-        />
-      </View>
+      <BackableScrollTitles
+        titles={titles}
+        backDisabled={vm.status !== ShardsDistributionStatus.ready || step <= 1}
+        showBack={vm.status === ShardsDistributionStatus.ready && step > 1}
+        currentIndex={step}
+        iconColor={textColor}
+        onBackPress={() => goTo(step - 1, true)}
+        style={{ marginBottom: 12 }}
+      />
 
       <View style={{ flex: 1, width: ReactiveScreen.width - ModalMarginScreen * 2, marginHorizontal: -16 }}>
         {step === 0 && <Preparations onNext={() => goTo(1)} />}

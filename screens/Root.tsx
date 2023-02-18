@@ -88,7 +88,7 @@ const RootTab = observer(() => {
         <Screen name="NFTs" component={NFTList} options={{ tabBarLabel: t('home-tab-arts'), headerShown: false }} />
       ) : undefined}
 
-      {Platform.OS !== 'ios' || TxHub.txs.length > 3 || __DEV__ ? (
+      {Platform.OS !== 'ios' || __DEV__ ? (
         <Screen
           name="Exchange"
           component={ExchangeScreen}

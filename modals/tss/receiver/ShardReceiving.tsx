@@ -153,7 +153,7 @@ export default observer(({ vm }: { vm: ShardReceiver }) => {
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text style={{ ...devTxtStyle, maxWidth: '70%' }} numberOfLines={1}>
-              {`Name: ${deviceInfoModule.getDeviceNameSync()}`}
+              {`${t('multi-sig-modal-txt-device-name')}: ${deviceInfoModule.getDeviceNameSync()}`}
             </Text>
 
             <View
@@ -173,7 +173,7 @@ export default observer(({ vm }: { vm: ShardReceiver }) => {
               </Text>
             </View>
           </View>
-          <Text style={devTxtStyle} numberOfLines={1}>{`Model: ${getDeviceModel()}`}</Text>
+          <Text style={devTxtStyle} numberOfLines={1}>{`${t('multi-sig-modal-txt-device-model')}: ${getDeviceModel()}`}</Text>
           <Text style={devTxtStyle} numberOfLines={1}>
             {`OS: ${deviceInfoModule.getSystemName()} ${deviceInfoModule.getSystemVersion()}`}
           </Text>

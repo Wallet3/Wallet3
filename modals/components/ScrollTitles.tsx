@@ -16,7 +16,10 @@ interface Props {
 export default (props: Props) => {
   const titleList = useRef<FlatList>(null);
 
-  useEffect(() => titleList.current?.scrollToIndex({ index: props.currentIndex ?? 0, animated: true }), [props.currentIndex]);
+  useEffect(
+    () => titleList.current?.scrollToIndex({ index: Math.max(0, props.currentIndex ?? 0), animated: true }),
+    [props.currentIndex]
+  );
 
   const renderTitle = ({ item }: ListRenderItemInfo<string>) => {
     return (

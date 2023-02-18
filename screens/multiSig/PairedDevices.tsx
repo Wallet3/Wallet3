@@ -72,7 +72,9 @@ export default observer(() => {
       />
 
       <Portal>
-        <ModalizeContainer ref={ref}>{selectedDevice && <PairedDeviceModal device={selectedDevice} />}</ModalizeContainer>
+        <ModalizeContainer ref={ref}>
+          {selectedDevice && <PairedDeviceModal close={close} device={selectedDevice} />}
+        </ModalizeContainer>
       </Portal>
     </SafeViewContainer>
   );

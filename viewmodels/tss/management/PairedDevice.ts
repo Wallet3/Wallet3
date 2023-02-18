@@ -28,4 +28,12 @@ export class PairedDevice {
   get encryptedRootShard() {
     return this.shard.secrets.rootShard;
   }
+
+  get threshold() {
+    return this.shard.secretsInfo.threshold;
+  }
+
+  remove() {
+    this.shard.remove();
+  }
 }
