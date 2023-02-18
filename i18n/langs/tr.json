@@ -314,6 +314,7 @@
   "multi-sig-modal-txt-data-saving": "Veriler kaydediliyor",
   "multi-sig-modal-txt-data-saved": "Veriler başarıyla kaydedildi",
   "multi-sig-modal-txt-data-saving-failed": "Kaydedilirken hata oluştu",
+  "multi-sig-modal-txt-data-distribution-failed": "Dağıtım başarısız oldu",
   "multi-sig-modal-txt-last-used-time": "Son Kullanım",
   "multi-sig-modal-txt-threshold": "Çoklu Sig Eşiği",
   "multi-sig-modal-txt-device-name": "Cihazım",

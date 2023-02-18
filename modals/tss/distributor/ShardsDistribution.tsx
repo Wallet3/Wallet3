@@ -1,33 +1,25 @@
-import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, FlatList, Text } from 'react-native';
 import Animated, {
-  FadeIn,
   FadeInDown,
-  FadeInLeft,
   FadeInRight,
-  FadeOutDown,
-  FadeOutLeft,
   FadeOutRight,
   FadeOutUp,
 } from 'react-native-reanimated';
 import { FadeInDownView, ZoomInView } from '../../../components/animations';
-import { Ionicons, Octicons } from '@expo/vector-icons';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ShardSender, ShardTransferringStatus } from '../../../viewmodels/tss/ShardSender';
 import { ShardsDistributionStatus, ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
 import { secureColor, warningColor } from '../../../constants/styles';
 
 import Button from '../components/Button';
 import { ClientInfo } from '../../../common/p2p/Constants';
-import Device from '../../../components/Device';
 import DeviceInfo from '../components/DeviceInfo';
 import IllustrationCompleted from '../../../assets/illustrations/tss/completed.svg';
-import { Passpad } from '../../views';
-import Slider from '@react-native-community/slider';
-import { TCPClient } from '../../../common/p2p/TCPClient';
+import IllustrationDenied from '../../../assets/illustrations/misc/access_denied.svg';
+import { Ionicons } from '@expo/vector-icons';
 import Theme from '../../../viewmodels/settings/Theme';
 import deviceInfoModule from 'react-native-device-info';
 import { getDeviceInfo } from '../../../common/p2p/Utils';
-import { getScreenCornerRadius } from '../../../utils/hardware';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useHorizontalPadding } from '../components/Utils';
@@ -95,11 +87,22 @@ export default observer(({ vm, close, onCritical }: Props) => {
       entering={FadeInRight.delay(300).springify()}
       exiting={FadeOutRight.springify()}
     >
-      {vm.status === ShardsDistributionStatus.succeed ? (
+      {vm.status === ShardsDistributionStatus.succeed && (
         <FadeInDownView style={{ backgroundColor, flex: 1, justifyContent: 'center', alignItems: 'center' }} delay={500}>
           <IllustrationCompleted width={150} height={150} />
         </FadeInDownView>
-      ) : (
+      )}
+
+      {vm.status === ShardsDistributionStatus.failed && (
+        <FadeInDownView style={{ backgroundColor, flex: 1, justifyContent: 'center', alignItems: 'center' }} delay={500}>
+          <IllustrationDenied width={150} height={150} />
+          <Text style={{ color: secondaryTextColor, marginTop: 16, fontWeight: '500' }}>
+            {t('multi-sig-modal-txt-data-distribution-failed')}
+          </Text>
+        </FadeInDownView>
+      )}
+
+      {vm.status <= ShardsDistributionStatus.distributing && (
         <View style={{ flex: 1, marginBottom: 16 }}>
           <Text style={{ marginHorizontal, fontWeight: '500', color: secondaryTextColor }}>
             {t('multi-sig-modal-connect-approved-clients')}:

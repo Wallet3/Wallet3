@@ -9,6 +9,7 @@ import Device from '../../../components/Device';
 import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 import { Placeholder } from '../../../components';
+import { SECOND } from '../../../utils/time';
 import Theme from '../../../viewmodels/settings/Theme';
 import deviceInfoModule from 'react-native-device-info';
 import i18n from '../../../i18n';
@@ -30,7 +31,8 @@ export default observer(({ vm, close }: { vm: ShardReceiver; close: () => void }
 
   useEffect(() => {
     if (!dataVerified) return;
-    const timer = setTimeout(close, 5000);
+
+    const timer = setTimeout(close, 10 * SECOND);
     return () => clearTimeout(timer);
   }, [dataVerified]);
 

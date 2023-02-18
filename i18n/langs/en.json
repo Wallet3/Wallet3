@@ -314,6 +314,7 @@
   "multi-sig-modal-txt-data-saving": "Saving data",
   "multi-sig-modal-txt-data-saved": "Data saved",
   "multi-sig-modal-txt-data-saving-failed": "Save failed",
+  "multi-sig-modal-txt-data-distribution-failed": "Distribution failed",
   "multi-sig-modal-txt-last-used-time": "Last used",
   "multi-sig-modal-txt-threshold": "MultiSig Threshold",
   "multi-sig-modal-txt-device-name": "My Device",

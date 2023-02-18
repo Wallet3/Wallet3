@@ -310,6 +310,7 @@
   "multi-sig-modal-txt-data-saving": "数据保存中",
   "multi-sig-modal-txt-data-saved": "已成功保存",
   "multi-sig-modal-txt-data-saving-failed": "保存失败",
+  "multi-sig-modal-txt-data-distribution-failed": "分发失败",
   "multi-sig-modal-txt-last-used-time": "上次使用",
   "multi-sig-modal-txt-threshold": "多签阈值",
   "multi-sig-modal-txt-device-name": "设备名",
