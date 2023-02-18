@@ -1,9 +1,9 @@
-import { ButtonV2, Placeholder } from '../../../components';
-import { FlatList, Text, TouchableOpacity, View } from 'react-native';
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
+import { Text, View } from 'react-native';
 
 import Authentication from '../../../viewmodels/auth/Authentication';
 import BackableScrollTitles from '../../../modals/components/BackableScrollTitles';
+import { ButtonV2 } from '../../../components';
 import Device from '../../../components/Device';
 import { FadeInDownView } from '../../../components/animations';
 import IllustrationAsk from '../../../assets/illustrations/misc/ask.svg';
@@ -12,7 +12,6 @@ import ModalRootContainer from '../../../modals/core/ModalRootContainer';
 import { PairedDevice } from '../../../viewmodels/tss/management/PairedDevice';
 import PairedDevices from '../../../viewmodels/tss/management/PairedDevices';
 import QRCode from 'react-native-qrcode-svg';
-import ScrollTitles from '../../../modals/components/ScrollTitles';
 import Theme from '../../../viewmodels/settings/Theme';
 import i18n from '../../../i18n';
 import { openGlobalPasspad } from '../../../common/Modals';
@@ -140,7 +139,7 @@ export default ({ device, close }: { device: PairedDevice; close: () => void }) 
       }
     };
 
-    await openGlobalPasspad({ onAutoAuthRequest: autoAuth, onPinEntered: autoAuth });
+    await openGlobalPasspad({ fast: true, onAutoAuthRequest: autoAuth, onPinEntered: autoAuth });
 
     if (success) goTo(1);
   };

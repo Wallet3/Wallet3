@@ -610,15 +610,12 @@ export const ShardsModal = observer(() => {
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
       onClosed={() => {
-        // __DEV__ && vms.shardsDistributor
-        //   ? setTimeout(() => PubSub.publish(MessageKeys.openShardsDistribution), 1000)
-        //   : undefined;
         setVMs({});
         setIsCritical(false);
       }}
     >
       {vms.shardsDistributor && <ShardsDistributorUI vm={vms.shardsDistributor} onCritical={setIsCritical} close={close} />}
-      {vms.shardReceiver ? <ShardReceiverUI /> : undefined}
+      {vms.shardReceiver ? <ShardReceiverUI close={close} /> : undefined}
     </ModalizeContainer>
   );
 });

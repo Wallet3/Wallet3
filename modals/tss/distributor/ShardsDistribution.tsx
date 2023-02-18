@@ -96,7 +96,7 @@ export default observer(({ vm, close, onCritical }: Props) => {
       exiting={FadeOutRight.springify()}
     >
       {vm.status === ShardsDistributionStatus.succeed ? (
-        <FadeInDownView style={{ backgroundColor, flex: 1, justifyContent: 'center', alignItems: 'center' }} delay={1000}>
+        <FadeInDownView style={{ backgroundColor, flex: 1, justifyContent: 'center', alignItems: 'center' }} delay={500}>
           <IllustrationCompleted width={150} height={150} />
         </FadeInDownView>
       ) : (

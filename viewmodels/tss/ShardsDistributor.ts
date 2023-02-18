@@ -211,13 +211,14 @@ export class ShardsDistributor extends TCPServer<Events> {
 
     const succeed = LINQ.from(result).sum() + 1 >= this.threshold;
 
+    runInAction(() => (this.status = succeed ? ShardsDistributionStatus.succeed : ShardsDistributionStatus.failed));
+
     if (succeed) {
       PubSub.publish(MessageKeys.multiSigWalletCreated, key);
+      return key;
     } else {
       await key.remove();
     }
-
-    runInAction(() => (this.status = succeed ? ShardsDistributionStatus.succeed : ShardsDistributionStatus.failed));
   }
 
   dispose() {

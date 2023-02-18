@@ -6,6 +6,8 @@ import { openGlobalPasspad, openShardsDistributors } from '../../common/Modals';
 import App from '../../viewmodels/core/App';
 import IllustrationUpgrade from '../../assets/illustrations/misc/upgrade.svg';
 import { Ionicons } from '@expo/vector-icons';
+import { MultiSigWalletUpgrader } from '../../viewmodels/tss/adapters/MultiSigWalletUpgrader';
+import { SingleSigWallet } from '../../viewmodels/wallet/SingleSigWallet';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -16,10 +18,10 @@ export default observer(() => {
   const [busy, setBusy] = useState(false);
 
   const { currentWallet } = App;
-  const { secondaryTextColor, textColor, foregroundColor, systemBorderColor } = Theme;
+  const { secondaryTextColor } = Theme;
   const { t } = i18n;
 
-  const openShardsDistributor = async () => {
+  const execUpgrade = async () => {
     let secret: string | undefined;
 
     const getSecret = async (pin?: string) => {
@@ -27,12 +29,21 @@ export default observer(() => {
       return secret !== undefined;
     };
 
-    if (!(await openGlobalPasspad({ onAutoAuthRequest: getSecret, onPinEntered: getSecret, closeOnOverlayTap: true }))) return;
+    if (
+      !(await openGlobalPasspad({
+        fast: true,
+        onAutoAuthRequest: getSecret,
+        onPinEntered: getSecret,
+        closeOnOverlayTap: true,
+      }))
+    )
+      return;
 
     setBusy(true);
     await sleep(200);
 
-    openShardsDistributors({ mnemonic: secret!, ...currentWallet!.keyInfo });
+    const upgrader = new MultiSigWalletUpgrader(currentWallet as SingleSigWallet, secret!);
+    upgrader.execUpgrade();
 
     setBusy(false);
   };
@@ -51,7 +62,7 @@ export default observer(() => {
           }}
         >
           <Ionicons name="arrow-up-circle" size={15} />
-          {`${t('multi-sig-screen-tip-upgrade-to-multi-sig-wallet')}`}
+          {` ${t('multi-sig-screen-tip-upgrade-to-multi-sig-wallet')}`}
         </Text>
       </View>
 
@@ -60,7 +71,7 @@ export default observer(() => {
         style={{ marginTop: 12 }}
         themeColor={secureColor}
         icon={() => <Ionicons name="arrow-up-circle-outline" color="#fff" size={19} />}
-        onPress={openShardsDistributor}
+        onPress={execUpgrade}
       />
 
       <Loader loading={busy} message={t('msg-data-loading')} />

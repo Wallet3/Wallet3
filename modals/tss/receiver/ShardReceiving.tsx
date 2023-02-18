@@ -25,7 +25,7 @@ import { startLayoutAnimation } from '../../../utils/animations';
 
 const { View, Text, FlatList } = Animated;
 
-export default observer(({ vm }: { vm: ShardReceiver }) => {
+export default observer(({ vm, close }: { vm: ShardReceiver; close: () => void }) => {
   const { t } = i18n;
   const { secondaryTextColor, textColor, borderColor } = Theme;
   const { pairingCodeVerified, secretStatus } = vm;
@@ -36,6 +36,12 @@ export default observer(({ vm }: { vm: ShardReceiver }) => {
     vm.once('dataVerified' as any, () => setDataVerified(true));
     vm.once('dataVerifyFailed' as any, () => setDataVerified(false));
   }, []);
+
+  useEffect(() => {
+    if (!dataVerified) return;
+    const timer = setTimeout(close, 5000);
+    return () => clearTimeout(timer);
+  }, [dataVerified]);
 
   const devTxtStyle: any = { color: secondaryTextColor, fontSize: 16, maxWidth: '90%', fontWeight: '500' };
 

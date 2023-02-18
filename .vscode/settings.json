@@ -49,6 +49,7 @@
         "txid",
         "typedata",
         "typeorm",
+        "Upgrader",
         "Viewmodel",
         "viewmodels",
         "Waku",

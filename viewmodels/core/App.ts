@@ -16,6 +16,7 @@ import LanDiscovery from '../../common/p2p/LanDiscovery';
 import LinkHub from '../hubs/LinkHub';
 import MessageKeys from '../../common/MessageKeys';
 import MetamaskDAppsHub from '../walletconnect/MetamaskDAppsHub';
+import MultiSigKey from '../../models/entities/MultiSigKey';
 import { MultiSigWallet } from '../wallet/MultiSigWallet';
 import Networks from './Networks';
 import { ReactNativeFirebase } from '@react-native-firebase/app';
@@ -78,14 +79,15 @@ export class AppVM {
     );
   }
 
-  async addWallet(key: Key) {
+  async addWallet(key: Key | MultiSigKey) {
     if (this.wallets.find((w) => w.isSameKey(key))) return;
     if (this.allAccounts.find((a) => a.address === parseXpubkey(key.bip32Xpubkey))) {
       this.switchAccount(parseXpubkey(key.bip32Xpubkey));
       return;
     }
 
-    const wallet = await new SingleSigWallet(key).init();
+    const wallet = await (key instanceof Key ? new SingleSigWallet(key).init() : new MultiSigWallet(key).init());
+
     runInAction(() => {
       this.wallets.push(wallet);
       this.switchAccount(wallet.accounts[0].address);
@@ -198,9 +200,13 @@ export class AppVM {
     if (isCurrentAccount) runInAction(() => this.switchAccount(this.allAccounts[Math.max(0, index - 1)].address));
 
     if (wallet.accounts.length === 0) {
-      runInAction(() => this.wallets.splice(this.wallets.indexOf(wallet), 1));
-      await wallet.delete();
+      await this.removeWallet(wallet);
     }
+  }
+
+  async removeWallet(wallet: WalletBase) {
+    runInAction(() => this.wallets.splice(this.wallets.indexOf(wallet), 1));
+    await wallet.delete();
   }
 
   async init() {
@@ -213,6 +219,12 @@ export class AppVM {
         ((await Database.multiSigKeys?.find()) ?? []).map((key) => new MultiSigWallet(key).init()),
       ].flat()
     );
+
+    // console.log(
+    //   wallets.length,
+    //   (await Database.keys.find()).map((k) => k.bip32Xpubkey),
+    //   (await Database.multiSigKeys?.find())?.map((k) => k.bip32Xpubkey)
+    // );
 
     const lastUsedAccount = (await AsyncStorage.getItem('lastUsedAccount')) ?? '';
     if (utils.isAddress(lastUsedAccount)) fetchChainsOverview(lastUsedAccount);
@@ -237,7 +249,7 @@ export class AppVM {
     });
 
     TxHub.init().then(() => AppStoreReview.check());
-    // Database.shardKeys?.count().then((c) => c > 0 && LanDiscovery.scan());
+    Database.shardKeys?.count().then((c) => c > 0 && LanDiscovery.scan());
   }
 
   async reset() {

@@ -15,11 +15,9 @@ import Theme from '../../../viewmodels/settings/Theme';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
 
-const { FlatList } = Animated;
-
-export default observer(() => {
+export default observer(({ close }: { close: () => void }) => {
   const { t } = i18n;
-  const { backgroundColor, foregroundColor, textColor, appColor } = Theme;
+  const { textColor } = Theme;
 
   const screenRadius = useOptimizedCornerRadius();
   const [vm, setVM] = useState<ShardReceiver>();
@@ -31,20 +29,6 @@ export default observer(() => {
     t('multi-sig-modal-title-devices-pairing'),
     t('multi-sig-modal-title-key-distribution'),
   ];
-
-  const renderTitle = ({ item }: { item: string }) => {
-    return (
-      <Text
-        style={{
-          fontSize: 25,
-          fontWeight: '700',
-          color: textColor,
-        }}
-      >
-        {item}
-      </Text>
-    );
-  };
 
   const goToReceiving = (service: Service) => {
     setVM(new ShardReceiver(service));
@@ -70,7 +54,7 @@ export default observer(() => {
       <View style={{ flex: 1, width: ReactiveScreen.width - 12, marginHorizontal: -16 }}>
         {step === 0 && <Preparations onNext={() => goTo(1)} />}
         {step === 1 && <DeviceSelector onNext={(s) => goToReceiving(s)} />}
-        {step === 2 && vm && <ShardReceiving vm={vm} />}
+        {step === 2 && vm && <ShardReceiving vm={vm} close={close} />}
       </View>
     </ModalRootContainer>
   );

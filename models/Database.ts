@@ -1,4 +1,4 @@
-import { DataSource, EntitySchema, MixedList, Repository } from 'typeorm';
+import { DataSource, EntityManager, EntitySchema, MixedList, Repository } from 'typeorm';
 
 import AddressTag from './entities/AddressTag';
 import Chain from './entities/Chain';
@@ -75,6 +75,10 @@ class Database {
       this.multiSigKeys = this._dataSource.getRepository(MultiSigKey);
       this.shardKeys = this._dataSource.getRepository(ShardKey);
     }
+  }
+
+  execTransaction<T>(runInTransaction: (entityManager: EntityManager) => Promise<T>) {
+    return this._dataSource.manager.transaction(runInTransaction);
   }
 
   async reset() {

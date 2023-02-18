@@ -63,5 +63,5 @@ export function useOptimizedCornerRadius() {
 
 export function useOptimizedSafeBottom() {
   const { bottom } = useSafeAreaInsets();
-  return bottom - 16 - ModalMarginScreen;
+  return Math.max(0, bottom - 16 - ModalMarginScreen);
 }

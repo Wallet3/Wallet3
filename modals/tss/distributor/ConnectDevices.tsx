@@ -66,7 +66,7 @@ export default observer(({ vm, onNext, isRTL }: { isRTL?: boolean; vm: ShardsDis
         style={{ ...styles.listItem, paddingHorizontal: marginHorizontal }}
       >
         <DeviceInfo info={item.remoteInfo!} />
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginEnd: -8, marginStart: 36 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginEnd: -8, marginStart: 24 }}>
           <TouchableOpacity style={styles.confirmButton} onPress={() => vm.rejectClient(item)}>
             <Ionicons name="close-circle-outline" size={32} color={warningColor} />
           </TouchableOpacity>
