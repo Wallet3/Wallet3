@@ -62,11 +62,11 @@ export class ShardReceiver extends TCPClient {
 
     __DEV__ && console.log(data);
 
-    const { secrets, pubkey } = data;
+    const { secrets, verifyPubkey } = data;
 
     const [validRoot, validBip32] = await Promise.all([
-      verifyEccSignature(pubkey, secrets.rootShard, secrets.rootSignature),
-      verifyEccSignature(pubkey, secrets.bip32Shard, secrets.bip32Signature),
+      verifyEccSignature(verifyPubkey, secrets.rootShard, secrets.rootSignature),
+      verifyEccSignature(verifyPubkey, secrets.bip32Shard, secrets.bip32Signature),
     ]);
 
     const validSignature = validRoot && validBip32;

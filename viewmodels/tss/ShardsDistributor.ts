@@ -1,4 +1,5 @@
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { createHash, randomBytes } from 'crypto';
 
 import Authentication from '../auth/Authentication';
 import Bonjour from '../../common/p2p/Bonjour';
@@ -13,7 +14,6 @@ import { ShardSender } from './ShardSender';
 import { TCPClient } from '../../common/p2p/TCPClient';
 import { TCPServer } from '../../common/p2p/TCPServer';
 import { btoa } from 'react-native-quick-base64';
-import { createHash } from 'crypto';
 import { getDeviceBasicInfo } from '../../common/p2p/Utils';
 import i18n from '../../i18n';
 import secretjs from 'secrets.js-grempe';
@@ -182,6 +182,7 @@ export class ShardsDistributor extends TCPServer<Events> {
 
     key.secretsInfo = {
       threshold: this.threshold,
+      version: randomBytes(8).toString('hex'),
       devices: this.approvedClients.map((a) => {
         return { ...a.remoteInfo!, distributedAt: Date.now(), lastUsedAt: Date.now() };
       }),
@@ -214,11 +215,13 @@ export class ShardsDistributor extends TCPServer<Events> {
           c.sendShard({
             rootShard,
             bip32Shard,
-            pubkey: this.protector.publicKey.substring(2),
-            signKey: this.protector.privateKey.substring(2),
+            verifyPubkey: this.protector.publicKey.substring(2),
+            verifySignKey: this.protector.privateKey.substring(2),
             threshold: this.threshold,
             bip32Path: key.basePath,
             bip32PathIndex: key.basePathIndex,
+            bip32Xpubkey: key.bip32Xpubkey,
+            version: key.secretsInfo.version,
           });
 
           return (await c.readShardAck()) ? 1 : 0;
