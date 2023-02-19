@@ -282,6 +282,8 @@
   "multi-sig-screen-paired-device": "ペアリングされたデバイス",
   "multi-sig-screen-tip-upgrade-to-multi-sig-wallet": "このウォレットはマルチシグウォレットではありません。マルチシグウォレットにアップグレードすることができます。",
   "multi-sig-screen-tip-after-upgrading": "マルチシグウォレットにアップグレードした後でも、リカバリーフレーズを使用して他の場所でこのウォレットを復元できることに注意してください。",
+  "multi-sig-screen-tip-security-overview": "現在のウォレットは {{m}} of {{n}} マルチシグメカニズムを使って資産の安全を保護しています。",
+  "multi-sig-screen-tip-modify-threshold": "閾値を変更するには、大多数のデバイスの同意が必要です。",
   "multi-sig-screen-txt-no-paired-devices": "ペアリングされたデバイスはありません",
 
   "multi-sig-modal-title-welcome": "マルチシグウォレット",
@@ -312,6 +314,7 @@
   "multi-sig-modal-txt-data-saving-failed": "保存失敗",
   "multi-sig-modal-txt-data-distribution-failed": "配布失敗",
   "multi-sig-modal-txt-last-used-time": "前回使用",
+  "multi-sig-modal-txt-created-time": "作成時間",
   "multi-sig-modal-txt-threshold": "マルチシグ閾値",
   "multi-sig-modal-txt-device-name": "私のデバイス",
   "multi-sig-modal-txt-device-model": "モデル",

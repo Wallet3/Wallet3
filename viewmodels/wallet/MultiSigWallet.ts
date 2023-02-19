@@ -1,7 +1,8 @@
-import { action, makeObservable } from 'mobx';
+import MultiSigKey, { MultiSigKeyDeviceInfo } from '../../models/entities/MultiSigKey';
+import { action, makeObservable, observable } from 'mobx';
 
 import Authentication from '../auth/Authentication';
-import MultiSigKey from '../../models/entities/MultiSigKey';
+import { PairedDevice } from '../tss/management/PairedDevice';
 import { WalletBase } from './WalletBase';
 import secretjs from 'secrets.js-grempe';
 import { utils } from 'ethers';
@@ -12,6 +13,8 @@ export class MultiSigWallet extends WalletBase {
   readonly isHDWallet = true;
   readonly isMultiSig = true;
 
+  trustedDevices: MultiSigKeyDeviceInfo[];
+
   protected get key() {
     return this._key;
   }
@@ -20,15 +23,17 @@ export class MultiSigWallet extends WalletBase {
     super();
 
     this._key = key;
-    makeObservable(this, { newAccount: action, removeAccount: action });
+    this.trustedDevices = Array.from(key.secretsInfo.devices);
+
+    makeObservable(this, { trustedDevices: observable });
   }
 
   get threshold() {
     return this._key.secretsInfo.threshold;
   }
 
-  get trustedDevice() {
-    return this._key.secretsInfo.devices;
+  get trustedDeviceCount() {
+    return this.trustedDevices.length + 1;
   }
 
   async getSecret(pin?: string): Promise<string | undefined> {

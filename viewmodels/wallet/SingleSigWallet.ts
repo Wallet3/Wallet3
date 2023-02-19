@@ -27,10 +27,6 @@ export class SingleSigWallet extends WalletBase {
     super.signInPlatform = components.length > 1 ? (components[0] as any) : undefined;
     this.signInUser = components.length > 1 ? components[1] : undefined;
 
-    makeObservable(this, {
-      newAccount: action,
-      removeAccount: action,
-    });
   }
 
   protected async unlockPrivateKey({ pin, accountIndex }: { pin?: string; accountIndex?: number }) {

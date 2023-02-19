@@ -2,6 +2,7 @@ import App from '../../core/App';
 import { DistributorForUpgrading } from './ShardsDistributorForUpgrading';
 import MultiSigKey from '../../../models/entities/MultiSigKey';
 import { SingleSigWallet } from '../../wallet/SingleSigWallet';
+import { logUpgradedToMultiSigWallet } from '../../services/Analytics';
 import { openShardsDistributors } from '../../../common/Modals';
 
 export class MultiSigWalletUpgrader {
@@ -25,7 +26,10 @@ export class MultiSigWalletUpgrader {
 
   protected upgradeCallback = async (key?: MultiSigKey) => {
     if (!key) return;
+
     await App.removeWallet(this.singleSigWallet);
     await App.addWallet(key);
+
+    logUpgradedToMultiSigWallet({ threshold: `${key.secretsInfo.threshold}/${key.secretsInfo.devices.length}` });
   };
 }

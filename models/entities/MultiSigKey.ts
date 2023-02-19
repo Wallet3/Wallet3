@@ -2,7 +2,7 @@ import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
 
 import { ClientInfo } from '../../common/p2p/Constants';
 
-export interface MultiKeyDeviceInfo extends ClientInfo {
+export interface MultiSigKeyDeviceInfo extends ClientInfo {
   distributedAt: number;
 }
 
@@ -22,7 +22,7 @@ export default class MultiSigKey extends BaseEntity {
   secrets!: { rootShard: string; bip32Shard: string };
 
   @Column({ type: 'simple-json', nullable: false })
-  secretsInfo!: { threshold: number; devices: MultiKeyDeviceInfo[] };
+  secretsInfo!: { threshold: number; devices: MultiSigKeyDeviceInfo[] };
 
   @Column({ type: 'simple-json', nullable: true })
   cachedSecrets?: { rootShards: string[]; bip32Shards: string[] };

@@ -31,8 +31,10 @@ const DeviceOverview = ({ device, onNext }: { device: PairedDevice; onNext: () =
         <Text style={{ marginTop: 16, fontWeight: '500', color: secondaryTextColor }}>
           {`${device.deviceInfo.name}, ${device.deviceInfo.os} ${device.deviceInfo.osVersion}`}
         </Text>
-        <Text style={{ marginTop: 12, fontWeight: '500', color: secondaryTextColor, fontSize: 12 }}>
-          {`${t('multi-sig-modal-txt-last-used-time')}: ${device.lastUsedTimestamp}`}
+        <Text
+          style={{ marginTop: 12, fontWeight: '500', color: secondaryTextColor, fontSize: 12, textTransform: 'capitalize' }}
+        >
+          {`${t('multi-sig-modal-txt-created-time')}: ${device.createdAt}`}
         </Text>
       </View>
 

@@ -1,10 +1,5 @@
 import { ActivityIndicator, FlatList, Text } from 'react-native';
-import Animated, {
-  FadeInDown,
-  FadeInRight,
-  FadeOutRight,
-  FadeOutUp,
-} from 'react-native-reanimated';
+import Animated, { FadeInDown, FadeInRight, FadeOutRight, FadeOutUp } from 'react-native-reanimated';
 import { FadeInDownView, ZoomInView } from '../../../components/animations';
 import React, { useState } from 'react';
 import { ShardSender, ShardTransferringStatus } from '../../../viewmodels/tss/ShardSender';
@@ -96,7 +91,7 @@ export default observer(({ vm, close, onCritical }: Props) => {
       {vm.status === ShardsDistributionStatus.failed && (
         <FadeInDownView style={{ backgroundColor, flex: 1, justifyContent: 'center', alignItems: 'center' }} delay={500}>
           <IllustrationDenied width={150} height={150} />
-          <Text style={{ color: secondaryTextColor, marginTop: 16, fontWeight: '500' }}>
+          <Text style={{ color: secondaryTextColor, marginTop: 24, fontWeight: '500', textTransform: 'capitalize' }}>
             {t('multi-sig-modal-txt-data-distribution-failed')}
           </Text>
         </FadeInDownView>

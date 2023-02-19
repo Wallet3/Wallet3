@@ -286,6 +286,8 @@
   "multi-sig-screen-paired-device": "Paired device",
   "multi-sig-screen-tip-upgrade-to-multi-sig-wallet": " This wallet is not a multi-signature wallet. You can upgrade it to a multi-signature wallet.",
   "multi-sig-screen-tip-after-upgrading": "Please note that after upgrading to a multi-signature wallet, you can still restore this wallet elsewhere using the recovery phrase.",
+  "multi-sig-screen-tip-security-overview": "Your wallet currently uses {{m}} of {{n}} multi-signature scheme to  protect your crypto assets.",  
+  "multi-sig-screen-tip-modify-threshold": "To modify the multiSig threshold you need the agreement of the majority of devices.",
   "multi-sig-screen-txt-no-paired-devices": "No paired devices",
 
   "multi-sig-modal-title-welcome": "MultiSig Wallet",
@@ -316,6 +318,7 @@
   "multi-sig-modal-txt-data-saving-failed": "Save failed",
   "multi-sig-modal-txt-data-distribution-failed": "Distribution failed",
   "multi-sig-modal-txt-last-used-time": "Last used",
+  "multi-sig-modal-txt-created-time": "Paired at",
   "multi-sig-modal-txt-threshold": "MultiSig Threshold",
   "multi-sig-modal-txt-device-name": "My Device",
   "multi-sig-modal-txt-device-model": "Model",

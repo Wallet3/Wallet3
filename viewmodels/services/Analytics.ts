@@ -121,6 +121,14 @@ export function logBackup() {
   log('backup_secret');
 }
 
+export function logUpgradedToMultiSigWallet(args: { threshold: string }) {
+  log('upgraded_to_multiSig', args);
+}
+
+export function logDevicePaired() {
+  log('multiSig_paired_device');
+}
+
 let version = '';
 
 function log(name: string, args: any = {}) {

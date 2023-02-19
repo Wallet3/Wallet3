@@ -5,10 +5,18 @@ import { ClientInfo } from '../../../common/p2p/Constants';
 import Device from '../../../components/Device';
 import React from 'react';
 import Theme from '../../../viewmodels/settings/Theme';
+import dayjs from 'dayjs';
 import iosDevice from 'ios-device-list';
 import { verifiedColor } from '../../../constants/styles';
 
-export default ({ info, verified, light }: { info: ClientInfo; verified?: boolean; light?: boolean }) => {
+interface Props {
+  info: ClientInfo;
+  verified?: boolean;
+  light?: boolean;
+  lastUsedAt?: number;
+}
+
+export default ({ info, verified, light, lastUsedAt }: Props) => {
   const { textColor, secondaryTextColor } = Theme;
 
   if (!info) return null;
@@ -38,6 +46,8 @@ export default ({ info, verified, light }: { info: ClientInfo; verified?: boolea
               info.osVersion ? `,  ${info.os} ${info.osVersion}` : ''
             }`.trim()}
           </Text>
+
+          <Text>{lastUsedAt ? dayjs(lastUsedAt).format('YYYY-mm-dd') : undefined}</Text>
         </View>
       </View>
     </View>

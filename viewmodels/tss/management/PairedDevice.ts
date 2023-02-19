@@ -21,6 +21,10 @@ export class PairedDevice {
     return this.shard.ownerDevice;
   }
 
+  get createdAt() {
+    return dayjs(this.shard.createdAt).format(DateTimeFormatter);
+  }
+
   get lastUsedTimestamp() {
     return dayjs(this.shard.lastUsedTimestamp).format(DateTimeFormatter);
   }

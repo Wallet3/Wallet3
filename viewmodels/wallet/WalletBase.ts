@@ -75,7 +75,7 @@ export abstract class WalletBase {
   }
 
   constructor() {
-    makeObservable(this, { accounts: observable });
+    makeObservable(this, { accounts: observable, newAccount: action, removeAccount: action });
   }
 
   async init() {
