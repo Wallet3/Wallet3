@@ -1,4 +1,4 @@
-import { ContentType, PairingCodeVerified, ShardAcknowledgement, ShardDistribution } from './Constants';
+import { ContentType, PairingCodeVerified, ShardDistribution, ShardDistributionAck } from './Constants';
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import Authentication from '../auth/Authentication';
@@ -75,8 +75,8 @@ export class ShardReceiver extends TCPClient {
 
     await sleep(1000);
 
-    const ack: ShardAcknowledgement = {
-      type: ContentType.shardAcknowledgement,
+    const ack: ShardDistributionAck = {
+      type: ContentType.shardDistributionAck,
       distributionId: data.distributionId,
       success: validSignature,
     };
@@ -88,7 +88,7 @@ export class ShardReceiver extends TCPClient {
       key.id = `${this.remoteInfo!.globalId}-${data.distributionId}`;
       key.distributionId = data.distributionId;
       key.ownerDevice = this.remoteInfo!;
-      key.secretsInfo = data.secretsInfo;
+      key.secretsInfo = { ...data.secretsInfo, verifyPubkey };
       key.createdAt = Date.now();
       key.lastUsedTimestamp = Date.now();
       key.secrets = {

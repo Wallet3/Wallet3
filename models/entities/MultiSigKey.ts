@@ -20,7 +20,7 @@ export default class MultiSigKey extends BaseEntity {
   name?: string;
 
   @Column({ type: 'simple-json', nullable: false })
-  secrets!: { rootShard: string; bip32Shard: string };
+  secrets!: { rootShard: string; bip32Shard: string; verifySignKey: string };
 
   @Column({ type: 'simple-json', nullable: false })
   secretsInfo!: { threshold: number; devices: MultiSigKeyDeviceInfo[]; version: string };

@@ -1,4 +1,4 @@
-import { ContentType, PairingCodeVerified, ShardAcknowledgement, ShardDistribution } from './Constants';
+import { ContentType, PairingCodeVerified, ShardDistribution, ShardDistributionAck } from './Constants';
 import { computed, makeObservable, observable, runInAction } from 'mobx';
 import { createHash, randomBytes } from 'crypto';
 
@@ -99,7 +99,7 @@ export class ShardSender {
     console.log('shard ack received:', data);
 
     try {
-      const ack = JSON.parse(data) as ShardAcknowledgement;
+      const ack = JSON.parse(data) as ShardDistributionAck;
 
       const success = ack.distributionId === this.distributionId && ack.success;
       runInAction(() => (this.status = success ? ShardTransferringStatus.ackSucceed : ShardTransferringStatus.ackFailed));

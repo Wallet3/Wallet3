@@ -134,7 +134,7 @@ export default observer(({ vm, close, onCritical }: Props) => {
         />
       ) : (
         <Button
-          disabled={!vm.isClientsOK || vm.status === ShardsDistributionStatus.distributing}
+          disabled={!vm.clientsOK || vm.status === ShardsDistributionStatus.distributing}
           title={t('button-shards-distribute')}
           onPress={doCritical}
         />

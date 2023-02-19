@@ -48,6 +48,11 @@ export function parseXpubkey(mixedKey: string) {
   return components[components.length - 1];
 }
 
+export const WalletBaseKeys = {
+  removedIndexes: (id: string | number) => `${id}-removed-indexes`,
+  addressCount: (id: string | number) => `${id}-address-count`,
+};
+
 export abstract class WalletBase {
   protected removedAccountIndexes: number[] = [];
 
@@ -71,7 +76,12 @@ export abstract class WalletBase {
   } & BaseEntity;
 
   get keyInfo() {
-    return { basePathIndex: this.key.basePathIndex, basePath: this.key.basePath, bip32Xpubkey: this.key.bip32Xpubkey };
+    return {
+      id: this.key.id,
+      basePathIndex: this.key.basePathIndex,
+      basePath: this.key.basePath,
+      bip32Xpubkey: this.key.bip32Xpubkey,
+    };
   }
 
   constructor() {
@@ -79,9 +89,9 @@ export abstract class WalletBase {
   }
 
   async init() {
-    this.removedAccountIndexes = JSON.parse((await AsyncStorage.getItem(`${this.key.id}-removed-indexes`)) || '[]');
+    this.removedAccountIndexes = JSON.parse((await AsyncStorage.getItem(WalletBaseKeys.removedIndexes(this.key.id))) || '[]');
 
-    const count = Number((await AsyncStorage.getItem(`${this.key.id}-address-count`)) || 1);
+    const count = Number((await AsyncStorage.getItem(WalletBaseKeys.addressCount(this.key.id))) || 1);
     const accounts: Account[] = [];
 
     if (this.isHDWallet) {
@@ -124,7 +134,7 @@ export abstract class WalletBase {
     const account = new Account(node.address, index, { signInPlatform: this.signInPlatform });
     this.accounts.push(account);
 
-    AsyncStorage.setItem(`${this.key.id}-address-count`, `${index + 1}`);
+    AsyncStorage.setItem(WalletBaseKeys.addressCount(this.key.id), `${index + 1}`);
 
     return account;
   }
@@ -136,7 +146,7 @@ export abstract class WalletBase {
     this.removedAccountIndexes.push(account.index);
     this.accounts.splice(index, 1);
 
-    const storeKey = `${this.key.id}-removed-indexes`;
+    const storeKey = WalletBaseKeys.removedIndexes(this.key.id);
 
     if (this.accounts.length > 0) {
       await AsyncStorage.setItem(storeKey, JSON.stringify(this.removedAccountIndexes));

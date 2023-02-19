@@ -2,8 +2,9 @@ export const MultiSignPrimaryServiceType = 'wallet3-multi-sign';
 
 export enum ContentType {
   shardDistribution = 1,
-  shardAcknowledgement,
-  shardAggregation,
+  shardDistributionAck,
+  shardAggregationRequest,
+  shardAggregationAck,
   pairingCodeVerified,
 }
 
@@ -15,10 +16,21 @@ export type ShardDistribution = {
   distributionId: string;
 };
 
-export type ShardAcknowledgement = {
-  type: ContentType.shardAcknowledgement;
+export type ShardDistributionAck = {
+  type: ContentType.shardDistributionAck;
   distributionId: string;
   success: boolean;
+};
+
+export type ShardAggregationRequest = {
+  type: ContentType.shardAggregationRequest;
+  params: { subPath?: string; subPathIndex?: number; rootShard?: boolean; bip32Shard?: boolean };
+  version: string;
+};
+
+export type ShardAggregationAck = {
+  type: ContentType.shardAggregationAck;
+  shard: string | { iv: string; ephemPublicKey: string; ciphertext: string; mac: string };
 };
 
 export type PairingCodeVerified = {

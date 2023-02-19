@@ -2,7 +2,7 @@ import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
 
 import { ClientInfo } from '../../common/p2p/Constants';
 
-@Entity({ name: 'shards' })
+@Entity({ name: 'primary_shards' })
 export default class ShardKey extends BaseEntity {
   @PrimaryColumn({ type: 'text' })
   id!: string;
@@ -17,7 +17,14 @@ export default class ShardKey extends BaseEntity {
   secrets!: { rootShard: string; bip32Shard: string };
 
   @Column({ type: 'simple-json', nullable: false })
-  secretsInfo!: { threshold: number; bip32Path: string; bip32PathIndex: number; bip32Xpubkey: string; version: string };
+  secretsInfo!: {
+    threshold: number;
+    bip32Path: string;
+    bip32PathIndex: number;
+    bip32Xpubkey: string;
+    version: string;
+    verifyPubkey: string;
+  };
 
   @Column()
   lastUsedTimestamp!: number;

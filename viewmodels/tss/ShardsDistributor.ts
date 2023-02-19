@@ -67,7 +67,7 @@ export class ShardsDistributor extends TCPServer<Events> {
       approvedCount: computed,
       pendingCount: computed,
       totalCount: computed,
-      isClientsOK: computed,
+      clientsOK: computed,
 
       approveClient: action,
       rejectClient: action,
@@ -76,11 +76,9 @@ export class ShardsDistributor extends TCPServer<Events> {
 
     this.rootEntropy = utils.mnemonicToEntropy(mnemonic).substring(2);
 
-    const start = performance.now();
     this.root = utils.HDNode.fromMnemonic(mnemonic);
     this.protector = this.root.derivePath(`m/0'/3`);
     this.bip32 = this.root.derivePath(basePath ?? DEFAULT_DERIVATION_PATH);
-    console.info(`Shards generation: ${performance.now() - start}`);
 
     this.id = createHash('sha256').update(this.protector.address).digest('hex').substring(0, 32);
 
@@ -109,7 +107,7 @@ export class ShardsDistributor extends TCPServer<Events> {
     return this.threshold / this.totalCount > 0.9999;
   }
 
-  get isClientsOK() {
+  get clientsOK() {
     return this.totalCount >= this.threshold && this.approvedCount >= 1;
   }
 
@@ -163,7 +161,7 @@ export class ShardsDistributor extends TCPServer<Events> {
   async distributeSecret() {
     if (this.status === ShardsDistributionStatus.distributing || this.status === ShardsDistributionStatus.succeed) return;
 
-    if (!this.isClientsOK) {
+    if (!this.clientsOK) {
       showMessage({ message: i18n.t('multi-sig-modal-msg-network-lost'), type: 'warning' });
       return;
     }
@@ -191,6 +189,7 @@ export class ShardsDistributor extends TCPServer<Events> {
     key.secrets = {
       bip32Shard: await Authentication.encrypt(bip32Shards.shift()!),
       rootShard: await Authentication.encrypt(rootShards.shift()!),
+      verifySignKey: await Authentication.encrypt(this.protector.privateKey),
     };
 
     try {

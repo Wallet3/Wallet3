@@ -12,15 +12,17 @@ type Events = {
 
 export const LanServices = {
   ShardsDistribution: 'shards-distribution',
+  ShardsAggregator: 'shards-aggregator',
 };
 
 class LanDiscovery extends EventEmitter<Events> {
   shardsDistributors: Service[] = [];
+  shardsAggregators: Service[] = [];
 
   constructor() {
     super();
 
-    makeObservable(this, { shardsDistributors: observable });
+    makeObservable(this, { shardsDistributors: observable, shardsAggregators: observable });
     Bonjour.on('resolved', this.onResolved);
     Bonjour.on('update', this.onUpdate);
   }
@@ -35,14 +37,14 @@ class LanDiscovery extends EventEmitter<Events> {
       if (this.shardsDistributors.find((d) => d.name === service.name)) return;
 
       service.txt.info = JSON.parse(atob(service.txt.info));
-      runInAction(() => this.shardsDistributors.push(service));
 
-      if (service.txt?.['func'] === LanServices.ShardsDistribution) {
-        this.emit('shardsDistributorFound', service);
+      switch (service.txt?.['func']) {
+        case LanServices.ShardsDistribution:
+          this.emit('shardsDistributorFound', service);
+          runInAction(() => this.shardsDistributors.push(service));
+          break;
       }
-    } catch (error) {
-    } finally {
-    }
+    } catch (error) {}
   };
 
   scan() {
