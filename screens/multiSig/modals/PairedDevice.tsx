@@ -27,12 +27,14 @@ export const DeviceOverview = ({
   lastUsedAt,
   onNext,
   buttonTitle,
+  disableNextButton,
 }: {
   deviceInfo: ClientInfo;
   buttonTitle?: string;
   createdAt?: string;
   lastUsedAt?: string;
   onNext: () => void;
+  disableNextButton?: boolean;
 }) => {
   const { secondaryTextColor } = Theme;
   const { t } = i18n;
@@ -60,6 +62,7 @@ export const DeviceOverview = ({
           title={buttonTitle ?? t('button-view-secret')}
           style={{ marginBottom: safeBottom }}
           onPress={onNext}
+          disabled={disableNextButton}
           icon={() => <Ionicons name="lock-closed" color="#fff" size={16} />}
         />
       </FadeInDownView>

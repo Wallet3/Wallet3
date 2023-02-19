@@ -381,5 +381,6 @@
   "button-swap": "Değiştir",
   "button-reset": "Sıfırla",
   "button-start": "Başla",
-  "button-view-secret": "Özel anahtarı görüntüle"
+  "button-view-secret": "Özel anahtarı görüntüle",
+  "button-add-devices": "Cihaz ekle"
 }

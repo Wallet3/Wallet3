@@ -25,6 +25,7 @@ interface Props {
   vm: ShardsDistributor;
   close: () => void;
   onCritical: (flag: boolean) => void;
+  type: 'distributeRoot' | 'addMore';
 }
 
 const DeviceStatus = observer(({ item, vm }: { item: ShardSender | ClientInfo; vm: ShardsDistributor }) => {
@@ -49,7 +50,7 @@ const DeviceStatus = observer(({ item, vm }: { item: ShardSender | ClientInfo; v
   );
 });
 
-export default observer(({ vm, close, onCritical }: Props) => {
+export default observer(({ vm, close, onCritical, type }: Props) => {
   const { t } = i18n;
   const marginHorizontal = useHorizontalPadding();
   const { approvedClients, approvedCount, thresholdTooHigh } = vm;
@@ -60,6 +61,13 @@ export default observer(({ vm, close, onCritical }: Props) => {
     name: `${deviceInfoModule.getDeviceNameSync()} (${t('multi-sig-modal-txt-current-device')})`,
     remoteIP: '::1',
   });
+
+  const doCritical = async () => {
+    onCritical(true);
+    type === 'distributeRoot' && (await vm.distributeSecret());
+    type === 'addMore';
+    onCritical(false);
+  };
 
   const renderConnectedItem = ({ item, index }: { item: ShardSender | ClientInfo; index: number }) => {
     const info: ClientInfo = item['remoteInfo'] ?? item;
@@ -130,11 +138,7 @@ export default observer(({ vm, close, onCritical }: Props) => {
         <Button
           disabled={!vm.isClientsOK || vm.status === ShardsDistributionStatus.distributing}
           title={t('button-shards-distribute')}
-          onPress={async () => {
-            onCritical(true);
-            await vm.distributeSecret();
-            onCritical(false);
-          }}
+          onPress={doCritical}
         />
       )}
     </View>

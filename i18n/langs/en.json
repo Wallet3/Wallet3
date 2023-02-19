@@ -383,5 +383,6 @@
   "button-swap": "Swap",
   "button-reset": "Reset",
   "button-start": "Start",
-  "button-view-secret": "View secret"
+  "button-view-secret": "View secret",
+  "button-add-devices": "Add devices"
 }

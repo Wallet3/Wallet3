@@ -16,9 +16,10 @@ interface Props {
   device: MultiSigKeyDeviceInfo;
   lastUsedAt?: string;
   onDelete: (device: MultiSigKeyDeviceInfo) => void;
+  disableRemove?: boolean;
 }
 
-export default ({ device, lastUsedAt, close, onDelete }: Props) => {
+export default ({ device, lastUsedAt, close, onDelete, disableRemove }: Props) => {
   const { t } = i18n;
   const [step, setStep] = useState(0);
   const { textColor } = Theme;
@@ -60,8 +61,15 @@ export default ({ device, lastUsedAt, close, onDelete }: Props) => {
       />
 
       {step === 0 && (
-        <DeviceOverview deviceInfo={device} lastUsedAt={lastUsed} onNext={authAndNext} buttonTitle={t('button-remove')} />
+        <DeviceOverview
+          deviceInfo={device}
+          disableNextButton={disableRemove}
+          lastUsedAt={lastUsed}
+          onNext={authAndNext}
+          buttonTitle={t('button-remove')}
+        />
       )}
+
       {step === 1 && (
         <DeleteView onDone={doDelete} message={t('multi-sig-modal-msg-delete-trusted-device')} textAlign="auto" />
       )}

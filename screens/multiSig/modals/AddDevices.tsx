@@ -1,20 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { ShardsDistributionStatus, ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
+import { Text, View } from 'react-native';
 
-import Animated from 'react-native-reanimated';
-import BackableScrollTitles from '../../components/BackableScrollTitles';
-import ConnectDevices from './ConnectDevices';
-import { ModalMarginScreen } from '../../styles';
-import ModalRootContainer from '../../core/ModalRootContainer';
-import Preparations from './Preparations';
+import Authentication from '../../../viewmodels/auth/Authentication';
+import BackableScrollTitles from '../../../modals/components/BackableScrollTitles';
+import { ButtonV2 } from '../../../components';
+import { ClientInfo } from '../../../common/p2p/Constants';
+import ConnectDevices from '../../../modals/tss/distributor/ConnectDevices';
+import Device from '../../../components/Device';
+import { FadeInDownView } from '../../../components/animations';
+import IllustrationAsk from '../../../assets/illustrations/misc/ask.svg';
+import { Ionicons } from '@expo/vector-icons';
+import { ModalMarginScreen } from '../../../modals/styles';
+import ModalRootContainer from '../../../modals/core/ModalRootContainer';
+import { PairedDevice } from '../../../viewmodels/tss/management/PairedDevice';
+import PairedDevices from '../../../viewmodels/tss/management/PairedDevices';
+import QRCode from 'react-native-qrcode-svg';
 import { ReactiveScreen } from '../../../utils/device';
-import ShardsDistribution from './ShardsDistribution';
+import ShardsDistribution from '../../../modals/tss/distributor/ShardsDistribution';
 import Theme from '../../../viewmodels/settings/Theme';
-import ThresholdSetting from './ThresholdSetting';
-import { View } from 'react-native';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
-import { useOptimizedCornerRadius } from '../../../utils/hardware';
+import { openGlobalPasspad } from '../../../common/Modals';
+import { sleep } from '../../../utils/async';
+import { startLayoutAnimation } from '../../../utils/animations';
+import { useOptimizedSafeBottom } from '../../../utils/hardware';
+import { warningColor } from '../../../constants/styles';
 
 interface Props {
   vm: ShardsDistributor;
@@ -56,10 +67,8 @@ export default observer(({ vm, onCritical, close }: Props) => {
       />
 
       <View style={{ flex: 1, width: ReactiveScreen.width - ModalMarginScreen * 2, marginHorizontal: -16 }}>
-        {step === 0 && <Preparations onNext={() => goTo(1)} />}
-        {step === 1 && <ConnectDevices vm={vm} onNext={() => goTo(2)} isRTL={isRTL} />}
-        {step === 2 && <ThresholdSetting vm={vm} onNext={() => goTo(3)} isRTL={isRTL} />}
-        {step === 3 && <ShardsDistribution type="distributeRoot" vm={vm} close={close} onCritical={onCritical} />}
+        {step === 0 && <ConnectDevices vm={vm} onNext={() => goTo(2)} isRTL={isRTL} />}
+        {step === 1 && <ShardsDistribution type="addMore" vm={vm} close={close} onCritical={onCritical} />}
       </View>
     </ModalRootContainer>
   );

@@ -21,7 +21,7 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
   const { t } = i18n;
   const { appColor, secondaryTextColor, textColor } = Theme;
   const { bottom } = useSafeAreaInsets();
-  const { trustedDevices } = wallet;
+  const { trustedDevices, trustedDeviceCount } = wallet;
   const [selectedDevice, setSelectedDevice] = useState<MultiSigKeyDeviceInfo>();
   const { ref, close, open } = useModalize();
 
@@ -83,13 +83,18 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
           </View>
         </View>
 
-        <ButtonV2 />
+        <ButtonV2 title={t('button-add-devices')} />
       </ScrollView>
 
       <Portal>
         <ModalizeContainer ref={ref}>
           {selectedDevice && (
-            <TrustedDevice device={selectedDevice} close={close} onDelete={(d) => wallet.removeTrustedDevice(d)} />
+            <TrustedDevice
+              disableRemove={trustedDeviceCount <= wallet.threshold}
+              device={selectedDevice}
+              close={close}
+              onDelete={(d) => wallet.removeTrustedDevice(d)}
+            />
           )}
         </ModalizeContainer>
       </Portal>

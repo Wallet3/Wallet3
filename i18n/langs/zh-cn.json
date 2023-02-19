@@ -375,5 +375,6 @@
   "button-swap": "兑换",
   "button-reset": "重置",
   "button-start": "开始",
-  "button-view-secret": "查看私钥"
+  "button-view-secret": "查看私钥",
+  "button-add-devices": "添加设备"
 }

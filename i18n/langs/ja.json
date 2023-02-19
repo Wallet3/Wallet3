@@ -376,5 +376,6 @@
   "button-swap": "スワップ",
   "button-reset": "リセット",
   "button-start": "開始",
-  "button-view-secret": "秘密鍵を表示する"
+  "button-view-secret": "秘密鍵を表示する",
+  "button-add-devices": "デバイス追加"
 }
