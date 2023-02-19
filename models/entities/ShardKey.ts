@@ -17,7 +17,7 @@ export default class ShardKey extends BaseEntity {
   secrets!: { rootShard: string; bip32Shard: string };
 
   @Column({ type: 'simple-json', nullable: false })
-  secretsInfo!: { threshold: number; bip32Path: string; bip32PathIndex: number };
+  secretsInfo!: { threshold: number; bip32Path: string; bip32PathIndex: number; bip32Xpubkey: string };
 
   @Column()
   lastUsedTimestamp!: number;

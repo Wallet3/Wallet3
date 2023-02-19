@@ -68,7 +68,7 @@ export default observer(({ vm, onCritical, close }: Props) => {
 
       <View style={{ flex: 1, width: ReactiveScreen.width - ModalMarginScreen * 2, marginHorizontal: -16 }}>
         {step === 0 && <ConnectDevices vm={vm} onNext={() => goTo(2)} isRTL={isRTL} />}
-        {step === 1 && <ShardsDistribution type="addMore" vm={vm} close={close} onCritical={onCritical} />}
+        {step === 1 && <ShardsDistribution vm={vm} close={close} onCritical={onCritical} />}
       </View>
     </ModalRootContainer>
   );

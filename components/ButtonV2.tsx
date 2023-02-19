@@ -8,11 +8,10 @@ export default (props: ButtonProps) => {
   return (
     <Button
       {...props}
-      txtStyle={{ fontSize: 16 + Math.min(optimizedRadius / 5, 2), fontWeight: '500' }}
+      txtStyle={{ fontSize: 17, fontWeight: '600' }}
       style={{
         borderRadius: 10 + optimizedRadius / 4,
-        roundness: 0.17650602409638552,
-        height: 42 + optimizedRadius / 6,
+        height: 42 + optimizedRadius / 6.4,
         ...(props.style as any),
       }}
     />

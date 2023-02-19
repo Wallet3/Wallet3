@@ -183,7 +183,7 @@ export class ShardsDistributor extends TCPServer<Events> {
     key.secretsInfo = {
       threshold: this.threshold,
       devices: this.approvedClients.map((a) => {
-        return { ...a.remoteInfo!, distributedAt: Date.now() };
+        return { ...a.remoteInfo!, distributedAt: Date.now(), lastUsedAt: Date.now() };
       }),
     };
 

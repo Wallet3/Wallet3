@@ -4,6 +4,7 @@ import { ClientInfo } from '../../common/p2p/Constants';
 
 export interface MultiSigKeyDeviceInfo extends ClientInfo {
   distributedAt: number;
+  lastUsedAt: number;
 }
 
 @Entity({ name: 'multiSig_keys' })

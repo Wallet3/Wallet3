@@ -4,7 +4,7 @@ import iosDevice from 'ios-device-list';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useState } from 'react';
 
-export const DefaultCornerRadius = 18;
+export const DefaultCornerRadius = 20;
 
 const iPhone = {
   'iPhone X': 39,

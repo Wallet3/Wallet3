@@ -5,6 +5,7 @@ import { StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewSty
 import { BreathAnimation } from '../utils/animations';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
+import { SquircleView } from 'react-native-figma-squircle';
 import SwipeButton from 'rn-swipe-button';
 import { observable } from 'mobx';
 import { themeColor } from '../constants/styles';
@@ -124,8 +125,19 @@ export default (props: ButtonProps) => {
     </View>
   ) : (
     <TouchableOpacity activeOpacity={0.5} onPress={onPress} onLongPress={onLongPress} disabled={disabled} style={buttonStyle}>
-      {props.icon?.()}
-      <Text style={txtStyle}>{title}</Text>
+      {/* <SquircleView
+        style={{ ...buttonStyle, borderRadius: 0, backgroundColor: undefined, borderWidth: 0 }}
+        squircleParams={{
+          cornerSmoothing: 0.9,
+          cornerRadius: buttonStyle.borderRadius,
+          fillColor: buttonStyle.backgroundColor,
+          strokeColor: buttonStyle.borderColor,
+          strokeWidth: buttonStyle.borderWidth,
+        }}
+      > */}
+        {props.icon?.()}
+        <Text style={txtStyle}>{title}</Text>
+      {/* </SquircleView> */}
     </TouchableOpacity>
   );
 };

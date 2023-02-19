@@ -54,13 +54,13 @@ export default observer(() => {
         <IllustrationUpgrade width={150} height={150} />
 
         <Text style={{ color: secondaryTextColor, ...styles.txt }}>
-          <Ionicons name="arrow-up-circle-outline" size={15} />
-          {` ${t('multi-sig-screen-tip-upgrade-to-multi-sig-wallet')}`}
+          <Ionicons name="arrow-up-circle" size={15} />
+          {`  ${t('multi-sig-screen-tip-upgrade-to-multi-sig-wallet')}`}
         </Text>
 
         <Text style={{ color: secondaryTextColor, ...styles.txt, marginTop: 24 }}>
-          <Ionicons name="information-circle-outline" size={15} />
-          {` ${t('multi-sig-screen-tip-after-upgrading')}`}
+          <Ionicons name="information-circle" size={15} />
+          {`  ${t('multi-sig-screen-tip-after-upgrading')}`}
         </Text>
       </View>
 

@@ -4,10 +4,9 @@ import { Text, View } from 'react-native';
 import Authentication from '../../../viewmodels/auth/Authentication';
 import BackableScrollTitles from '../../../modals/components/BackableScrollTitles';
 import { ButtonV2 } from '../../../components';
-import { ClientInfo } from '../../../common/p2p/Constants';
-import Device from '../../../components/Device';
+import DeleteConfirmationView from './views/DeleteConfirmationView';
+import { DeviceOverview } from './views/DeviceOverview';
 import { FadeInDownView } from '../../../components/animations';
-import IllustrationAsk from '../../../assets/illustrations/misc/ask.svg';
 import { Ionicons } from '@expo/vector-icons';
 import ModalRootContainer from '../../../modals/core/ModalRootContainer';
 import { PairedDevice } from '../../../viewmodels/tss/management/PairedDevice';
@@ -20,55 +19,6 @@ import { sleep } from '../../../utils/async';
 import { startLayoutAnimation } from '../../../utils/animations';
 import { useOptimizedSafeBottom } from '../../../utils/hardware';
 import { warningColor } from '../../../constants/styles';
-
-export const DeviceOverview = ({
-  deviceInfo,
-  createdAt,
-  lastUsedAt,
-  onNext,
-  buttonTitle,
-  disableNextButton,
-}: {
-  deviceInfo: ClientInfo;
-  buttonTitle?: string;
-  createdAt?: string;
-  lastUsedAt?: string;
-  onNext: () => void;
-  disableNextButton?: boolean;
-}) => {
-  const { secondaryTextColor } = Theme;
-  const { t } = i18n;
-  const safeBottom = useOptimizedSafeBottom();
-
-  return (
-    <FadeInDownView style={{ flex: 1 }} delay={300}>
-      <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-        <Device deviceId={deviceInfo.device} os={deviceInfo!.rn_os!} style={{ width: 108, height: 150 }} />
-        <Text style={{ marginTop: 16, fontWeight: '500', color: secondaryTextColor }}>
-          {`${deviceInfo.name}, ${deviceInfo.os} ${deviceInfo.osVersion}`}
-        </Text>
-
-        <Text
-          style={{ marginTop: 12, fontWeight: '500', color: secondaryTextColor, fontSize: 12, textTransform: 'capitalize' }}
-        >
-          {`${t(createdAt ? 'multi-sig-modal-txt-created-time' : 'multi-sig-modal-txt-last-used-time')}: ${
-            createdAt || lastUsedAt
-          }`}
-        </Text>
-      </View>
-
-      <FadeInDownView delay={400}>
-        <ButtonV2
-          title={buttonTitle ?? t('button-view-secret')}
-          style={{ marginBottom: safeBottom }}
-          onPress={onNext}
-          disabled={disableNextButton}
-          icon={() => <Ionicons name="lock-closed" color="#fff" size={16} />}
-        />
-      </FadeInDownView>
-    </FadeInDownView>
-  );
-};
 
 export const SecretView = ({ secret, device, onNext }: { secret: string; device: PairedDevice; onNext: () => void }) => {
   const safeBottom = useOptimizedSafeBottom();
@@ -102,41 +52,6 @@ export const SecretView = ({ secret, device, onNext }: { secret: string; device:
           themeColor={warningColor}
           title={t('button-remove')}
           onPress={onNext}
-          icon={() => <Ionicons name="trash" color={'#fff'} size={16} />}
-        />
-      </FadeInDownView>
-    </FadeInDownView>
-  );
-};
-
-export const DeleteView = ({
-  message,
-  onDone,
-  textAlign,
-}: {
-  onDone: () => void;
-  message?: string;
-  textAlign?: 'center' | 'auto';
-}) => {
-  const safeBottom = useOptimizedSafeBottom();
-  const { t } = i18n;
-  const { secondaryTextColor, textColor, appColor } = Theme;
-
-  return (
-    <FadeInDownView style={{ flex: 1 }}>
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <IllustrationAsk width={150} height={150} />
-        <Text style={{ maxWidth: 270, textAlign: textAlign ?? 'center', marginVertical: 24, color: textColor }}>
-          {message ?? t('multi-sig-modal-msg-delete-device')}
-        </Text>
-      </View>
-
-      <FadeInDownView delay={300}>
-        <ButtonV2
-          onPress={onDone}
-          themeColor={warningColor}
-          style={{ marginBottom: safeBottom }}
-          title={t('button-confirm')}
           icon={() => <Ionicons name="trash" color={'#fff'} size={16} />}
         />
       </FadeInDownView>
@@ -197,9 +112,17 @@ export default ({ device, close }: { device: PairedDevice; close: () => void }) 
         ]}
       />
 
-      {step === 0 && <DeviceOverview deviceInfo={device.deviceInfo} createdAt={device.createdAt} onNext={authAndNext} />}
+      {step === 0 && (
+        <DeviceOverview
+          buttonTitle={t('button-view-secret')}
+          deviceInfo={device.deviceInfo}
+          createdAt={device.createdAt}
+          onNext={authAndNext}
+        />
+      )}
+
       {step === 1 && <SecretView device={device} secret={secret} onNext={() => goTo(2)} />}
-      {step === 2 && <DeleteView onDone={doDelete} />}
+      {step === 2 && <DeleteConfirmationView message={t('multi-sig-modal-msg-delete-device')} onDone={doDelete} />}
     </ModalRootContainer>
   );
 };

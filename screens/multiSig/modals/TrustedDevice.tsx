@@ -1,8 +1,9 @@
-import { DeleteView, DeviceOverview } from './PairedDevice';
 import React, { useState } from 'react';
 
 import Authentication from '../../../viewmodels/auth/Authentication';
 import BackableScrollTitles from '../../../modals/components/BackableScrollTitles';
+import DeleteConfirmationView from './views/DeleteConfirmationView';
+import { DeviceOverview } from './views/DeviceOverview';
 import ModalRootContainer from '../../../modals/core/ModalRootContainer';
 import { MultiSigKeyDeviceInfo } from '../../../models/entities/MultiSigKey';
 import Theme from '../../../viewmodels/settings/Theme';
@@ -15,11 +16,11 @@ interface Props {
   close: Function;
   device: MultiSigKeyDeviceInfo;
   lastUsedAt?: string;
-  onDelete: (device: MultiSigKeyDeviceInfo) => void;
   disableRemove?: boolean;
+  onDeleteDevice: (device: MultiSigKeyDeviceInfo) => void;
 }
 
-export default ({ device, lastUsedAt, close, onDelete, disableRemove }: Props) => {
+export default ({ device, lastUsedAt, close, onDeleteDevice: onDelete, disableRemove }: Props) => {
   const { t } = i18n;
   const [step, setStep] = useState(0);
   const { textColor } = Theme;
@@ -63,7 +64,7 @@ export default ({ device, lastUsedAt, close, onDelete, disableRemove }: Props) =
       {step === 0 && (
         <DeviceOverview
           deviceInfo={device}
-          disableNextButton={disableRemove}
+          disableButton={disableRemove}
           lastUsedAt={lastUsed}
           onNext={authAndNext}
           buttonTitle={t('button-remove')}
@@ -71,7 +72,7 @@ export default ({ device, lastUsedAt, close, onDelete, disableRemove }: Props) =
       )}
 
       {step === 1 && (
-        <DeleteView onDone={doDelete} message={t('multi-sig-modal-msg-delete-trusted-device')} textAlign="auto" />
+        <DeleteConfirmationView onDone={doDelete} message={t('multi-sig-modal-msg-delete-trusted-device')} msgAlign="auto" />
       )}
     </ModalRootContainer>
   );

@@ -90,10 +90,10 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
         <ModalizeContainer ref={ref}>
           {selectedDevice && (
             <TrustedDevice
-              disableRemove={trustedDeviceCount <= wallet.threshold}
-              device={selectedDevice}
               close={close}
-              onDelete={(d) => wallet.removeTrustedDevice(d)}
+              device={selectedDevice}
+              onDeleteDevice={(d) => wallet.removeTrustedDevice(d)}
+              disableRemove={trustedDeviceCount <= wallet.threshold}
             />
           )}
         </ModalizeContainer>

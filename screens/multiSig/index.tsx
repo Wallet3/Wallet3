@@ -25,6 +25,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
 
   const headerHeight = 49;
   const scrollToIndex = (index: number) => {
+    index = Math.max(0, index);
     headerScroller.current?.scrollToIndex({ index, animated: true });
     setCurrentPage(index);
   };

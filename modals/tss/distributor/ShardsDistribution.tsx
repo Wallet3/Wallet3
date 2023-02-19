@@ -25,7 +25,6 @@ interface Props {
   vm: ShardsDistributor;
   close: () => void;
   onCritical: (flag: boolean) => void;
-  type: 'distributeRoot' | 'addMore';
 }
 
 const DeviceStatus = observer(({ item, vm }: { item: ShardSender | ClientInfo; vm: ShardsDistributor }) => {
@@ -50,7 +49,7 @@ const DeviceStatus = observer(({ item, vm }: { item: ShardSender | ClientInfo; v
   );
 });
 
-export default observer(({ vm, close, onCritical, type }: Props) => {
+export default observer(({ vm, close, onCritical }: Props) => {
   const { t } = i18n;
   const marginHorizontal = useHorizontalPadding();
   const { approvedClients, approvedCount, thresholdTooHigh } = vm;
@@ -64,8 +63,7 @@ export default observer(({ vm, close, onCritical, type }: Props) => {
 
   const doCritical = async () => {
     onCritical(true);
-    type === 'distributeRoot' && (await vm.distributeSecret());
-    type === 'addMore';
+    await vm.distributeSecret();
     onCritical(false);
   };
 
