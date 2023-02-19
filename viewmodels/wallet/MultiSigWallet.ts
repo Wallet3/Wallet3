@@ -23,6 +23,14 @@ export class MultiSigWallet extends WalletBase {
     makeObservable(this, { newAccount: action, removeAccount: action });
   }
 
+  get threshold() {
+    return this._key.secretsInfo.threshold;
+  }
+
+  get trustedDevice() {
+    return this._key.secretsInfo.devices;
+  }
+
   async getSecret(pin?: string): Promise<string | undefined> {
     try {
       return await Authentication.decrypt(this.key.secrets.rootShard, pin);

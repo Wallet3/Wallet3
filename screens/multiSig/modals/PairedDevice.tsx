@@ -50,7 +50,7 @@ const DeviceOverview = ({ device, onNext }: { device: PairedDevice; onNext: () =
 
 const SecretView = ({ secret, device, onNext }: { secret: string; device: PairedDevice; onNext: () => void }) => {
   const safeBottom = useOptimizedSafeBottom();
-  const { secondaryTextColor, textColor, appColor } = Theme;
+  const { secondaryTextColor, textColor, appColor, borderColor } = Theme;
   const { t } = i18n;
 
   return (
@@ -65,11 +65,11 @@ const SecretView = ({ secret, device, onNext }: { secret: string; device: Paired
           backgroundColor="transparent"
         />
 
-        <Text style={{ color: appColor, marginVertical: 16 }}>
+        <Text style={{ color: appColor, marginVertical: 16, fontWeight: '500' }}>
           {`${t('multi-sig-modal-txt-threshold')}: ${device.threshold} of n`}
         </Text>
 
-        <Text style={{ maxWidth: 250, textAlign: 'center', color: secondaryTextColor, fontWeight: '500' }}>
+        <Text style={{ maxWidth: 200, textAlign: 'center', color: secondaryTextColor, fontWeight: '500' }}>
           {t('multi-sig-modal-msg-restore-from-shard-qr-code')}
         </Text>
       </View>

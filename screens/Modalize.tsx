@@ -615,7 +615,7 @@ export const ShardsModal = observer(() => {
       }}
     >
       {vms.shardsDistributor && <ShardsDistributorUI vm={vms.shardsDistributor} onCritical={setIsCritical} close={close} />}
-      {vms.shardReceiver ? <ShardReceiverUI close={close} /> : undefined}
+      {vms.shardReceiver ? <ShardReceiverUI close={close} onCritical={setIsCritical} /> : undefined}
     </ModalizeContainer>
   );
 });

@@ -1,10 +1,10 @@
+import { LogBox, NativeModules } from 'react-native';
 import { createCipheriv, createHash, randomBytes } from 'crypto';
 import { ethers, utils } from 'ethers';
 
 import Bonjour from '../common/p2p/Bonjour';
 import DeviceInfo from 'react-native-device-info';
 import LanDiscovery from '../common/p2p/LanDiscovery';
-import { LogBox } from 'react-native';
 import MessageKeys from '../common/MessageKeys';
 import { MultiSignPrimaryServiceType } from '../viewmodels/tss/Constants';
 import { Service } from 'react-native-zeroconf';
@@ -33,6 +33,8 @@ LogBox.ignoreLogs([
 ]);
 
 if (__DEV__) {
+  DeviceInfo.getDeviceName().then(console.log);
+
   if (DeviceInfo.isTablet()) {
     // LanDiscovery.on('shardsDistributorFound', (service: Service) => {
     //   console.log('tablet', service);

@@ -17,10 +17,16 @@ import { observer } from 'mobx-react-lite';
 
 const { View, Text, FlatList } = Animated;
 
-export default observer(({ vm, close }: { vm: ShardReceiver; close: () => void }) => {
+interface Props {
+  vm: ShardReceiver;
+  close: () => void;
+  onCritical: (critical: boolean) => void;
+}
+
+export default observer(({ vm, close, onCritical }: Props) => {
   const { t } = i18n;
   const { secondaryTextColor, textColor, borderColor } = Theme;
-  const { pairingCodeVerified, secretStatus } = vm;
+  const { pairingCodeVerified, secretStatus, pairingCode } = vm;
   const [dataVerified, setDataVerified] = useState<boolean | undefined>(undefined);
   const safeBottom = useOptimizedSafeBottom();
 
@@ -35,6 +41,8 @@ export default observer(({ vm, close }: { vm: ShardReceiver; close: () => void }
     const timer = setTimeout(close, 10 * SECOND);
     return () => clearTimeout(timer);
   }, [dataVerified]);
+
+  useEffect(() => onCritical(secretStatus === ShardPersistentStatus.verifying), [secretStatus]);
 
   const devTxtStyle: any = { color: secondaryTextColor, fontSize: 16, maxWidth: '90%', fontWeight: '500' };
 
@@ -92,7 +100,7 @@ export default observer(({ vm, close }: { vm: ShardReceiver; close: () => void }
             >
               {`${t('multi-sig-modal-txt-pairing-code')}`}
             </Text>
-            <Text style={{ color: textColor, fontSize: 42, fontWeight: '800' }}>{vm.pairingCode}</Text>
+            <Text style={{ color: textColor, fontSize: 42, fontWeight: '800' }}>{pairingCode}</Text>
           </View>
         )}
 

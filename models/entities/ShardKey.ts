@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
 
 import { ClientInfo } from '../../common/p2p/Constants';
 
@@ -21,4 +21,7 @@ export default class ShardKey extends BaseEntity {
 
   @Column()
   lastUsedTimestamp!: number;
+
+  @Column()
+  createdAt!: number;
 }

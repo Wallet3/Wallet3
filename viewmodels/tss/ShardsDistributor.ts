@@ -110,15 +110,13 @@ export class ShardsDistributor extends TCPServer<Events> {
   }
 
   get isClientsOK() {
-    return this.totalCount >= this.threshold && this.approvedCount > 1;
+    return this.totalCount >= this.threshold && this.approvedCount >= 1;
   }
 
   async start() {
     const result = await super.start();
     if (!result) return false;
     if (this.serviceStarted) return true;
-
-    console.log('publish service');
 
     Bonjour.publishService(MultiSignPrimaryServiceType, this.name, this.port!, {
       role: 'primary',
@@ -178,13 +176,20 @@ export class ShardsDistributor extends TCPServer<Events> {
 
     const key = new MultiSigKey();
     key.id = this.id;
-    key.secretsInfo = { threshold: this.threshold, devices: this.approvedClients.map((a) => a.remoteInfo!) };
     key.bip32Xpubkey = xpubkeyFromHDNode(this.bip32);
     key.basePath = this.upgradeInfo?.basePath ?? DEFAULT_DERIVATION_PATH;
     key.basePathIndex = this.upgradeInfo?.basePathIndex ?? 0;
+
+    key.secretsInfo = {
+      threshold: this.threshold,
+      devices: this.approvedClients.map((a) => {
+        return { ...a.remoteInfo!, distributedAt: Date.now() };
+      }),
+    };
+
     key.secrets = {
-      bip32Shard: await Authentication.encrypt(bip32Shards[0]),
-      rootShard: await Authentication.encrypt(rootShards[0]),
+      bip32Shard: await Authentication.encrypt(bip32Shards.shift()!),
+      rootShard: await Authentication.encrypt(rootShards.shift()!),
     };
 
     try {
@@ -199,7 +204,7 @@ export class ShardsDistributor extends TCPServer<Events> {
     const zip = rootShards.map<[string, string]>((v1, i) => [v1, bip32Shards[i]]);
 
     const result = await Promise.all(
-      zip.slice(1).map(async (shards, index) => {
+      zip.map(async (shards, index) => {
         const c = this.approvedClients[index];
         if (!c) return 0;
 

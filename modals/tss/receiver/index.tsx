@@ -15,7 +15,7 @@ import Theme from '../../../viewmodels/settings/Theme';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
 
-export default observer(({ close }: { close: () => void }) => {
+export default observer(({ close, onCritical }: { close: () => void; onCritical: (critical: boolean) => void }) => {
   const { t } = i18n;
   const { textColor } = Theme;
 
@@ -54,7 +54,7 @@ export default observer(({ close }: { close: () => void }) => {
       <View style={{ flex: 1, width: ReactiveScreen.width - 12, marginHorizontal: -16 }}>
         {step === 0 && <Preparations onNext={() => goTo(1)} />}
         {step === 1 && <DeviceSelector onNext={(s) => goToReceiving(s)} />}
-        {step === 2 && vm && <ShardReceiving vm={vm} close={close} />}
+        {step === 2 && vm && <ShardReceiving vm={vm} close={close} onCritical={onCritical} />}
       </View>
     </ModalRootContainer>
   );

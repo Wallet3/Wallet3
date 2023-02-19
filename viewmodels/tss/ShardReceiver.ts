@@ -89,6 +89,7 @@ export class ShardReceiver extends TCPClient {
       key.distributionId = data.distributionId;
       key.ownerDevice = this.remoteInfo!;
       key.secretsInfo = data.secretsInfo;
+      key.createdAt = Date.now();
       key.lastUsedTimestamp = Date.now();
       key.secrets = {
         bip32Shard: await Authentication.encryptForever(secrets.bip32Shard),

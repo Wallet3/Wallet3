@@ -5,7 +5,7 @@ import React, { useRef, useState } from 'react';
 import App from '../../viewmodels/core/App';
 import { DrawerActions } from '@react-navigation/native';
 import { DrawerScreenProps } from '@react-navigation/drawer';
-import MultiSigManagement from './MultiSigManagement';
+import MultiSigScreen from './MultiSigScreen';
 import PairedDevices from './PairedDevices';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
@@ -105,7 +105,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
 
       <Swiper ref={swiper} showsPagination={false} showsButtons={false} loop={false} onIndexChanged={scrollToIndex}>
         <PairedDevices />
-        {currentWallet?.isHDWallet && <MultiSigManagement />}
+        {currentWallet?.isHDWallet && <MultiSigScreen />}
       </Swiper>
     </View>
   );
