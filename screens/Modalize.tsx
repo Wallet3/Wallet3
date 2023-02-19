@@ -20,7 +20,7 @@ import {
 } from './browser/controller/InpageDAppController';
 import { ERC681, ERC681Transferring } from '../viewmodels/transferring/ERC681Transferring';
 import React, { useEffect, useState } from 'react';
-import { ShardReceiverUI, ShardsDistributorUI } from '../modals/tss';
+import { ShardReceiverUI, ShardsAggregatorUI, ShardsDistributorUI } from '../modals/tss';
 
 import { AppVM } from '../viewmodels/core/App';
 import BackupSecretTip from '../modals/misc/BackupSecretTip';
@@ -41,6 +41,7 @@ import Networks from '../viewmodels/core/Networks';
 import { ReactiveScreen } from '../utils/device';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ShardReceiver } from '../viewmodels/tss/ShardReceiver';
+import { ShardsAggregator } from '../viewmodels/tss/ShardsAggregator';
 import { ShardsDistributor } from '../viewmodels/tss/ShardsDistributor';
 import Theme from '../viewmodels/settings/Theme';
 import { TokenTransferring } from '../viewmodels/transferring/TokenTransferring';
@@ -584,8 +585,12 @@ export const InappBrowserModal = observer(({ pageKey }: { pageKey?: string }) =>
 
 export const ShardsModal = observer(() => {
   const { ref, open, close } = useModalize();
-  const [vms, setVMs] = useState<{ shardsDistributor?: ShardsDistributor; shardReceiver?: boolean }>({});
   const [isCritical, setIsCritical] = useState(false);
+  const [vms, setVMs] = useState<{
+    shardsDistributor?: ShardsDistributor;
+    shardReceiver?: boolean;
+    shardsAggregator?: ShardsAggregator;
+  }>({});
 
   useEffect(() => {
     PubSub.subscribe(MessageKeys.openShardsDistribution, (_, data) => {
@@ -598,8 +603,15 @@ export const ShardsModal = observer(() => {
       open();
     });
 
+    PubSub.subscribe(MessageKeys.openShardsAggregator, (_, data) => {
+      setVMs({ shardsAggregator: data });
+      open();
+    });
+
     return () => {
-      PubSub.unsubscribe(MessageKeys.openShardsDistribution);
+      [MessageKeys.openShardsDistribution, MessageKeys.openShardReceiver, MessageKeys.openShardsAggregator].forEach(
+        PubSub.unsubscribe
+      );
     };
   });
 
@@ -615,7 +627,8 @@ export const ShardsModal = observer(() => {
       }}
     >
       {vms.shardsDistributor && <ShardsDistributorUI vm={vms.shardsDistributor} onCritical={setIsCritical} close={close} />}
-      {vms.shardReceiver ? <ShardReceiverUI close={close} onCritical={setIsCritical} /> : undefined}
+      {vms.shardReceiver && <ShardReceiverUI close={close} onCritical={setIsCritical} />}
+      {vms.shardsAggregator && <ShardsAggregatorUI close={close} vm={vms.shardsAggregator} />}
     </ModalizeContainer>
   );
 });

@@ -3,8 +3,6 @@ import { CipherAlgorithm, ClientInfo } from './Constants';
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import { AsyncTCPSocket } from './AsyncTCPSocket';
-import DeviceInfo from 'react-native-device-info';
-import { Platform } from 'react-native';
 import TCP from 'react-native-tcp-socket';
 import { getDeviceInfo } from './Utils';
 

@@ -1,5 +1,6 @@
 import { ContentType, MultiSignPrimaryServiceType, ShardAggregationAck, ShardAggregationRequest } from './Constants';
 import eccrypto, { Ecies } from 'eccrypto';
+import { getDeviceBasicInfo, getDeviceInfo } from '../../common/p2p/Utils';
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import Bonjour from '../../common/p2p/Bonjour';
@@ -7,7 +8,6 @@ import { LanServices } from '../../common/p2p/LanDiscovery';
 import { TCPClient } from '../../common/p2p/TCPClient';
 import { TCPServer } from '../../common/p2p/TCPServer';
 import { btoa } from 'react-native-quick-base64';
-import { getDeviceBasicInfo } from '../../common/p2p/Utils';
 import secretjs from 'secrets.js-grempe';
 
 interface Conf {
@@ -29,6 +29,7 @@ export class ShardsAggregator extends TCPServer<{}> {
   readonly version: string;
 
   clients: TCPClient[] = [];
+  readonly device = getDeviceBasicInfo();
 
   constructor(args: IConstruction) {
     super();
