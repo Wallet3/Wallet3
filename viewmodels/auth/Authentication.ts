@@ -162,7 +162,7 @@ export class Authentication extends EventEmitter {
     await SecureStore.setItemAsync(keys.pin, await sha256(`${pin}_${pinEncryptKey}`));
   }
 
-  async verifyPin(pin: string) {
+  verifyPin = async (pin: string) => {
     const success = (await sha256(`${pin}_${pinEncryptKey}`)) === (await SecureStore.getItemAsync(keys.pin));
 
     runInAction(() => {
@@ -176,9 +176,9 @@ export class Authentication extends EventEmitter {
     });
 
     return success;
-  }
+  };
 
-  async authorize(pin?: string) {
+  authorize = async (pin?: string) => {
     const success = await this.authenticate({ pin });
 
     if (!this.appAuthorized) {
@@ -191,30 +191,30 @@ export class Authentication extends EventEmitter {
     }
 
     return success;
-  }
+  };
 
-  async encrypt(data: string) {
+  encrypt = async (data: string) => {
     return encrypt(data, await this.getMasterKey());
-  }
+  };
 
-  async decrypt(data: string, pin?: string) {
+  decrypt = async (data: string, pin?: string) => {
     if (!(await this.authenticate({ pin }))) return undefined;
     return decrypt(data, await this.getMasterKey());
-  }
+  };
 
-  async encryptForever(data: string) {
+  encryptForever = async (data: string) => {
     return encrypt(data, await this.getForeverKey());
-  }
+  };
 
-  async decryptForever(data: string, pin?: string) {
+  decryptForever = async (data: string, pin?: string) => {
     if (!(await this.authenticate({ pin }))) return undefined;
     return decrypt(data, await this.getForeverKey());
-  }
+  };
 
-  async setUserSecretsVerified(verified: boolean) {
+  setUserSecretsVerified = async (verified: boolean) => {
     this.userSecretsVerified = verified;
     await AsyncStorage.setItem(keys.userSecretsVerified, verified.toString());
-  }
+  };
 
   reset() {
     this.appAuthorized = false;

@@ -286,7 +286,7 @@
   "multi-sig-screen-paired-device": "Paired device",
   "multi-sig-screen-tip-upgrade-to-multi-sig-wallet": " This wallet is not a multi-signature wallet. You can upgrade it to a multi-signature wallet.",
   "multi-sig-screen-tip-after-upgrading": "Please note that after upgrading to a multi-signature wallet, you can still restore this wallet elsewhere using the recovery phrase.",
-  "multi-sig-screen-tip-security-overview": "Your wallet currently uses {{m}} of {{n}} multi-signature scheme to  protect your crypto assets.",  
+  "multi-sig-screen-tip-security-overview": "Your wallet currently uses {{m}} of {{n}} multi-signature scheme to  protect your crypto assets.",
   "multi-sig-screen-tip-modify-threshold": "To modify the multiSig threshold you need the agreement of the majority of devices.",
   "multi-sig-screen-txt-no-paired-devices": "No paired devices",
 
@@ -298,6 +298,8 @@
   "multi-sig-modal-title-devices-pairing": "Devices Pairing",
   "multi-sig-modal-title-secret-key": "Secret Key",
   "multi-sig-modal-title-delete-secret-key": "Delete Secret Key",
+  "multi-sig-modal-title-trusted-device": "Trusted device",
+  "multi-sig-modal-title-remove-device": "Remove device",
   "multi-sig-modal-welcome-1": "Connect devices to the same Wi-Fi network",
   "multi-sig-modal-welcome-2": "Go to [Menu] - [MultiSig Wallet]",
   "multi-sig-modal-welcome-3": "Tap [Start Pairing] and approve Wallet 3 to access the local network",
@@ -327,7 +329,8 @@
   "multi-sig-modal-msg-network-lost": "The network connection with other devices has been disconnected, please check your network and try again.",
   "multi-sig-modal-msg-no-devices-found": "Can't find devices? Please make sure devices are connected to the same Wi-Fi network and allow Wallet 3 to access the local network.\n\nTap me to go to [System Settings] - [Wallet 3] and make sure the [Local Network] option is turned on.",
   "multi-sig-modal-msg-restore-from-shard-qr-code": "To restore the wallet, please scan this QR code.",
-  "multi-sig-modal-msg-delete-shard": "The device will also be deleted and cannot be restored.",
+  "multi-sig-modal-msg-delete-device": "The device will be deleted and cannot be restored.",
+  "multi-sig-modal-msg-delete-trusted-device": "This operation will only delete local record information and cannot delete the private key information of the target device. To delete the private key information of the target device, please manually delete it on the target device.",
   "multi-sig-modal-create-threshold": "You are creating a {{threshold}} of {{max}} multi-signature wallet. It means that transactions require {{threshold}} keys to be authorized.",
   "multi-sig-modal-keys-distribution": "Secrets will be distributed to following devices",
 

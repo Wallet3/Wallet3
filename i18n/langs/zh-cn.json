@@ -293,6 +293,8 @@
   "multi-sig-modal-title-devices-pairing": "设备配对",
   "multi-sig-modal-title-secret-key": "密钥",
   "multi-sig-modal-title-delete-secret-key": "移除密钥",
+  "multi-sig-modal-title-trusted-device": "受信任设备",
+  "multi-sig-modal-title-remove-device": "移除设备",
   "multi-sig-modal-welcome-1": "将手机连接到相同的 Wi-Fi 网络",
   "multi-sig-modal-welcome-2": "进入【菜单】-【多签钱包】",
   "multi-sig-modal-welcome-3": "点击【开始配对】，请批准 Wallet 3 访问本地网络",
@@ -322,7 +324,8 @@
   "multi-sig-modal-msg-network-lost": "与其它设备的网络连接已断开，请检查网络后重试",
   "multi-sig-modal-msg-no-devices-found": "无法找到设备？ 请保证设备连接到相同的Wi-Fi，并允许 Wallet 3 访问本地网络。 \n\n前往【系统设置】-【Wallet 3】，保证【本地网络】选项已打开。",
   "multi-sig-modal-msg-restore-from-shard-qr-code": "若需恢复钱包，请扫描该二维码",
-  "multi-sig-modal-msg-delete-shard": "该设备也会被删除且无法恢复",
+  "multi-sig-modal-msg-delete-device": "该设备将被删除且无法恢复",
+  "multi-sig-modal-msg-delete-trusted-device": "该操作只会删除本地的记录信息，无法删除目标设备的私钥信息。若需删除目标设备的私钥信息，请手动在目标设备上删除。",
   "multi-sig-modal-create-threshold": "您正在创建一个 {{threshold}} of {{max}} 多签钱包。这意味着发送交易至少需要 {{threshold}} 个私钥才能成功发送。",
   "multi-sig-modal-keys-distribution": "密钥将会被分发到以下设备",
 

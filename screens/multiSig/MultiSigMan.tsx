@@ -1,24 +1,19 @@
 import { ButtonV2, Placeholder, SafeViewContainer } from '../../components';
-import { FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { secureColor, verifiedColor } from '../../constants/styles';
 
 import DeviceInfo from '../../modals/tss/components/DeviceInfo';
-import { FadeInDownView } from '../../components/animations';
 import IllustrationSafe from '../../assets/illustrations/misc/safe.svg';
-import { Ionicons } from '@expo/vector-icons';
-import MessageKeys from '../../common/MessageKeys';
 import ModalizeContainer from '../../modals/core/ModalizeContainer';
+import { MultiSigKeyDeviceInfo } from '../../models/entities/MultiSigKey';
 import { MultiSigWallet } from '../../viewmodels/wallet/MultiSigWallet';
-import { PairedDevice } from '../../viewmodels/tss/management/PairedDevice';
-import { PairedDeviceModal } from './modals';
-import PairedDevices from '../../viewmodels/tss/management/PairedDevices';
 import { Portal } from 'react-native-portalize';
 import Theme from '../../viewmodels/settings/Theme';
+import TrustedDevice from './modals/TrustedDevice';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize';
-import { useOptimizedSafeBottom } from '../../utils/hardware';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
@@ -26,6 +21,8 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
   const { appColor, secondaryTextColor, textColor } = Theme;
   const { bottom } = useSafeAreaInsets();
   const { trustedDevices } = wallet;
+  const [selectedDevice, setSelectedDevice] = useState<MultiSigKeyDeviceInfo>();
+  const { ref, close, open } = useModalize();
 
   return (
     <SafeViewContainer style={{ padding: 0, paddingBottom: 0 }} paddingHeader={false}>
@@ -50,7 +47,7 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
             </Text>
           </View>
 
-          <View style={styles.itemContainer}>
+          <TouchableOpacity style={styles.itemContainer}>
             <View style={styles.titleContainer}>
               <Text style={{ color: textColor, ...styles.btnTxt }}>Confirmations</Text>
               <Text style={{ color: verifiedColor, ...styles.btnTxt }}>
@@ -59,17 +56,24 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
             </View>
 
             <Text style={{ color: secondaryTextColor, ...styles.subtitle }}>{t('multi-sig-screen-tip-modify-threshold')}</Text>
-          </View>
+          </TouchableOpacity>
 
           <View style={styles.itemContainer}>
-            <View style={{ marginBottom: 12, ...styles.titleContainer }}>
+            <View style={{ marginBottom: 4, ...styles.titleContainer }}>
               <Text style={{ color: textColor, ...styles.btnTxt }}>Trusted Devices</Text>
               <Placeholder />
             </View>
 
             {trustedDevices.map((device) => {
               return (
-                <TouchableOpacity style={{ paddingVertical: 8 }} key={device.globalId}>
+                <TouchableOpacity
+                  style={{ paddingVertical: 8 }}
+                  key={device.globalId}
+                  onPress={() => {
+                    setSelectedDevice(device);
+                    open();
+                  }}
+                >
                   <DeviceInfo info={device} />
                 </TouchableOpacity>
               );
@@ -79,6 +83,12 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
 
         <ButtonV2 />
       </ScrollView>
+
+      <Portal>
+        <ModalizeContainer ref={ref}>
+          {selectedDevice && <TrustedDevice device={selectedDevice} close={close} />}
+        </ModalizeContainer>
+      </Portal>
     </SafeViewContainer>
   );
 });
