@@ -4,6 +4,7 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-nati
 import { secureColor, verifiedColor } from '../../constants/styles';
 
 import DeviceInfo from '../../modals/tss/components/DeviceInfo';
+import { FadeInDownView } from '../../components/animations';
 import IllustrationSafe from '../../assets/illustrations/misc/safe.svg';
 import ModalizeContainer from '../../modals/core/ModalizeContainer';
 import { MultiSigKeyDeviceInfo } from '../../models/entities/MultiSigKey';
@@ -64,18 +65,19 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
               <Placeholder />
             </View>
 
-            {trustedDevices.map((device) => {
+            {trustedDevices.map((device, i) => {
               return (
-                <TouchableOpacity
-                  style={{ paddingVertical: 8 }}
-                  key={device.globalId}
-                  onPress={() => {
-                    setSelectedDevice(device);
-                    open();
-                  }}
-                >
-                  <DeviceInfo info={device} />
-                </TouchableOpacity>
+                <FadeInDownView key={device.globalId} delay={i * 50}>
+                  <TouchableOpacity
+                    style={{ paddingVertical: 8 }}
+                    onPress={() => {
+                      setSelectedDevice(device);
+                      open();
+                    }}
+                  >
+                    <DeviceInfo info={device} />
+                  </TouchableOpacity>
+                </FadeInDownView>
               );
             })}
           </View>
@@ -86,7 +88,9 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
 
       <Portal>
         <ModalizeContainer ref={ref}>
-          {selectedDevice && <TrustedDevice device={selectedDevice} close={close} />}
+          {selectedDevice && (
+            <TrustedDevice device={selectedDevice} close={close} onDelete={(d) => wallet.removeTrustedDevice(d)} />
+          )}
         </ModalizeContainer>
       </Portal>
     </SafeViewContainer>

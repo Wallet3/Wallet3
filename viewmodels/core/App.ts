@@ -206,7 +206,8 @@ export class AppVM {
   }
 
   async removeWallet(wallet: WalletBase) {
-    runInAction(() => this.wallets.splice(this.wallets.indexOf(wallet), 1));
+    const index = this.wallets.indexOf(wallet);
+    index >= 0 && runInAction(() => this.wallets.splice(index, 1));
     await wallet.delete();
   }
 

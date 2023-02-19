@@ -1,28 +1,24 @@
 import { DeleteView, DeviceOverview } from './PairedDevice';
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
 
 import Authentication from '../../../viewmodels/auth/Authentication';
 import BackableScrollTitles from '../../../modals/components/BackableScrollTitles';
-import { ButtonV2 } from '../../../components';
-import { ClientInfo } from '../../../common/p2p/Constants';
-import Device from '../../../components/Device';
-import { FadeInDownView } from '../../../components/animations';
-import IllustrationAsk from '../../../assets/illustrations/misc/ask.svg';
-import { Ionicons } from '@expo/vector-icons';
 import ModalRootContainer from '../../../modals/core/ModalRootContainer';
 import { MultiSigKeyDeviceInfo } from '../../../models/entities/MultiSigKey';
-import { PairedDevice } from '../../../viewmodels/tss/management/PairedDevice';
-import PairedDevices from '../../../viewmodels/tss/management/PairedDevices';
-import QRCode from 'react-native-qrcode-svg';
 import Theme from '../../../viewmodels/settings/Theme';
 import i18n from '../../../i18n';
 import { openGlobalPasspad } from '../../../common/Modals';
 import { sleep } from '../../../utils/async';
-import { useOptimizedSafeBottom } from '../../../utils/hardware';
-import { warningColor } from '../../../constants/styles';
+import { startLayoutAnimation } from '../../../utils/animations';
 
-export default ({ device, lastUsedAt, close }: { close: Function; device: MultiSigKeyDeviceInfo; lastUsedAt?: string }) => {
+interface Props {
+  close: Function;
+  device: MultiSigKeyDeviceInfo;
+  lastUsedAt?: string;
+  onDelete: (device: MultiSigKeyDeviceInfo) => void;
+}
+
+export default ({ device, lastUsedAt, close, onDelete }: Props) => {
   const { t } = i18n;
   const [step, setStep] = useState(0);
   const { textColor } = Theme;
@@ -38,12 +34,18 @@ export default ({ device, lastUsedAt, close }: { close: Function; device: MultiS
       fast: true,
       onAutoAuthRequest: Authentication.authorize,
       onPinEntered: Authentication.authorize,
+      closeOnOverlayTap: true,
     });
 
     success && goTo(1);
   };
 
   const doDelete = () => {
+    setTimeout(() => {
+      onDelete(device);
+      startLayoutAnimation();
+    }, 500);
+
     close();
   };
 

@@ -17,6 +17,7 @@ import Theme from '../../../viewmodels/settings/Theme';
 import i18n from '../../../i18n';
 import { openGlobalPasspad } from '../../../common/Modals';
 import { sleep } from '../../../utils/async';
+import { startLayoutAnimation } from '../../../utils/animations';
 import { useOptimizedSafeBottom } from '../../../utils/hardware';
 import { warningColor } from '../../../constants/styles';
 
@@ -165,13 +166,17 @@ export default ({ device, close }: { device: PairedDevice; close: () => void }) 
       }
     };
 
-    await openGlobalPasspad({ fast: true, onAutoAuthRequest: autoAuth, onPinEntered: autoAuth });
+    await openGlobalPasspad({ fast: true, onAutoAuthRequest: autoAuth, onPinEntered: autoAuth, closeOnOverlayTap: true });
 
     if (success) goTo(1);
   };
 
   const doDelete = () => {
-    PairedDevices.removeDevice(device);
+    setTimeout(() => {
+      PairedDevices.removeDevice(device);
+      startLayoutAnimation();
+    }, 500);
+
     close();
   };
 

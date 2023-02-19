@@ -15,6 +15,7 @@ import { Portal } from 'react-native-portalize';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { startLayoutAnimation } from '../../utils/animations';
 import { useModalize } from 'react-native-modalize';
 import { useOptimizedSafeBottom } from '../../utils/hardware';
 

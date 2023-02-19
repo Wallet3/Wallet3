@@ -1,5 +1,5 @@
 import MultiSigKey, { MultiSigKeyDeviceInfo } from '../../models/entities/MultiSigKey';
-import { action, makeObservable, observable } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
 import Authentication from '../auth/Authentication';
 import { PairedDevice } from '../tss/management/PairedDevice';
@@ -25,7 +25,7 @@ export class MultiSigWallet extends WalletBase {
     this._key = key;
     this.trustedDevices = Array.from(key.secretsInfo.devices);
 
-    makeObservable(this, { trustedDevices: observable });
+    makeObservable(this, { trustedDevices: observable, trustedDeviceCount: computed });
   }
 
   get threshold() {
@@ -34,6 +34,14 @@ export class MultiSigWallet extends WalletBase {
 
   get trustedDeviceCount() {
     return this.trustedDevices.length + 1;
+  }
+
+  removeTrustedDevice(device: MultiSigKeyDeviceInfo) {
+    this._key.secretsInfo.devices = this._key.secretsInfo.devices.filter((d) => d.globalId !== device.globalId);
+    this._key.save();
+
+    const index = this.trustedDevices.findIndex((d) => d.globalId === device.globalId);
+    index >= 0 && runInAction(() => this.trustedDevices.splice(index, 1));
   }
 
   async getSecret(pin?: string): Promise<string | undefined> {

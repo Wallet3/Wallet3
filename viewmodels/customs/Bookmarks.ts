@@ -145,11 +145,11 @@ class Bookmarks {
     if (!group) return;
 
     const index = group.data.findIndex((i) => i.url === url);
-    group.data.splice(index, 1);
+    index >= 0 && group.data.splice(index, 1);
 
     if (group.data.length === 0) {
       const groupIndex = this._favs.findIndex((g) => g.title === group.title);
-      this._favs.splice(groupIndex, 1);
+      groupIndex >= 0 && this._favs.splice(groupIndex, 1);
     }
 
     this._favUrls.delete(url);
