@@ -4,9 +4,9 @@ import { ethers, utils } from 'ethers';
 
 import Bonjour from '../common/p2p/Bonjour';
 import DeviceInfo from 'react-native-device-info';
-import LanDiscovery from '../common/p2p/LanDiscovery';
+import DistributorDiscovery from '../viewmodels/tss/management/DistributorDiscovery';
+import { KeyDistributionService } from '../viewmodels/tss/Constants';
 import MessageKeys from '../common/MessageKeys';
-import { MultiSignPrimaryServiceType } from '../viewmodels/tss/Constants';
 import { Service } from 'react-native-zeroconf';
 import { ShardProvider } from '../viewmodels/tss/ShardProvider';
 import { ShardReceiver } from '../viewmodels/tss/ShardReceiver';

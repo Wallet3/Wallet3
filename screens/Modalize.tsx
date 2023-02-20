@@ -592,11 +592,12 @@ export const ShardsModal = observer(() => {
     shardReceiver?: boolean;
     shardsAggregator?: ShardsAggregator;
     shardProvider?: ShardProvider;
+    onClosed?: () => void;
   }>({});
 
   useEffect(() => {
-    PubSub.subscribe(MessageKeys.openShardsDistribution, (_, data) => {
-      setVMs({ shardsDistributor: data });
+    PubSub.subscribe(MessageKeys.openShardsDistribution, (_, { vm }) => {
+      setVMs({ shardsDistributor: vm });
       open();
     });
 
@@ -605,13 +606,13 @@ export const ShardsModal = observer(() => {
       open();
     });
 
-    PubSub.subscribe(MessageKeys.openShardsAggregator, (_, data) => {
-      setVMs({ shardsAggregator: data });
+    PubSub.subscribe(MessageKeys.openShardsAggregator, (_, { vm }) => {
+      setVMs({ shardsAggregator: vm });
       open();
     });
 
-    PubSub.subscribe(MessageKeys.openShardProvider, (_, data) => {
-      setVMs({ shardProvider: data });
+    PubSub.subscribe(MessageKeys.openShardProvider, (_, { vm, onClosed }) => {
+      setVMs({ shardProvider: vm, onClosed });
       open();
     });
 
@@ -632,6 +633,7 @@ export const ShardsModal = observer(() => {
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
       onClosed={() => {
+        vms?.onClosed?.();
         setVMs({});
         setIsCritical(false);
       }}

@@ -1,10 +1,10 @@
-import { ContentType, MultiSignPrimaryServiceType, ShardAggregationAck, ShardAggregationRequest } from './Constants';
+import { ContentType, KeyAggregationService, ShardAggregationAck, ShardAggregationRequest } from './Constants';
 import eccrypto, { Ecies } from 'eccrypto';
 import { getDeviceBasicInfo, getDeviceInfo } from '../../common/p2p/Utils';
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import Bonjour from '../../common/p2p/Bonjour';
-import { LanServices } from '../../common/p2p/LanDiscovery';
+import { LanServices } from './management/DistributorDiscovery';
 import { TCPClient } from '../../common/p2p/TCPClient';
 import { TCPServer } from '../../common/p2p/TCPServer';
 import { btoa } from 'react-native-quick-base64';
@@ -61,7 +61,7 @@ export class ShardsAggregator extends TCPServer<Events> {
     const succeed = await super.start();
     console.log('aggregator started');
 
-    Bonjour.publishService(MultiSignPrimaryServiceType, this.name, this.port!, {
+    Bonjour.publishService(KeyAggregationService, this.name, this.port!, {
       role: this.role,
       func: LanServices.ShardsAggregation,
       distributionId: this.id,

@@ -7,8 +7,8 @@ import { secureColor, verifiedColor, warningColor } from '../../../constants/sty
 import Button from '../components/Button';
 import Device from '../../../components/Device';
 import DeviceInfo from '../components/DeviceInfo';
+import DistributorDiscovery from '../../../viewmodels/tss/management/DistributorDiscovery';
 import { FadeInRightView } from '../../../components/animations';
-import LanDiscovery from '../../../common/p2p/LanDiscovery';
 import { Passpad } from '../../views';
 import { Service } from 'react-native-zeroconf';
 import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';

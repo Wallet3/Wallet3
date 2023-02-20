@@ -6,11 +6,11 @@ import Authentication from '../auth/Authentication';
 import Bonjour from '../../common/p2p/Bonjour';
 import { DEFAULT_DERIVATION_PATH } from '../../common/Constants';
 import { HDNode } from 'ethers/lib/utils';
+import { KeyDistributionService } from './Constants';
 import LINQ from 'linq';
-import { LanServices } from '../../common/p2p/LanDiscovery';
+import { LanServices } from './management/DistributorDiscovery';
 import MessageKeys from '../../common/MessageKeys';
 import MultiSigKey from '../../models/entities/MultiSigKey';
-import { MultiSignPrimaryServiceType } from './Constants';
 import { ShardSender } from './ShardSender';
 import { TCPClient } from '../../common/p2p/TCPClient';
 import { TCPServer } from '../../common/p2p/TCPServer';
@@ -118,7 +118,7 @@ export class ShardsDistributor extends TCPServer<Events> {
     if (!result) return false;
     if (this.serviceStarted) return true;
 
-    Bonjour.publishService(MultiSignPrimaryServiceType, this.name, this.port!, {
+    Bonjour.publishService(KeyDistributionService, this.name, this.port!, {
       role: 'primary',
       func: LanServices.ShardsDistribution,
       distributionId: this.id,

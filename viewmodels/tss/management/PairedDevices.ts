@@ -1,10 +1,13 @@
+import DistributorDiscovery, { handleRawService } from './DistributorDiscovery';
 import { computed, makeObservable, observable, runInAction } from 'mobx';
 
+import Bonjour from '../../../common/p2p/Bonjour';
 import { ClientInfo } from '../../../common/p2p/Constants';
 import Database from '../../../models/Database';
-import LanDiscovery from '../../../common/p2p/LanDiscovery';
+import { KeyAggregationService } from '../Constants';
 import MessageKeys from '../../../common/MessageKeys';
 import { PairedDevice } from './PairedDevice';
+import { Service } from 'react-native-zeroconf';
 import ShardKey from '../../../models/entities/ShardKey';
 import { ShardProvider } from '../ShardProvider';
 import { openShardProvider } from '../../../common/Modals';
@@ -18,6 +21,7 @@ class PairedDevices {
 
   constructor() {
     makeObservable(this, { devices: observable, hasDevices: computed });
+    Bonjour.on('resolved', this.handleService);
   }
 
   async init() {
@@ -27,23 +31,21 @@ class PairedDevices {
     this.scanLan();
   }
 
-  private scanLan() {
-    LanDiscovery.scan();
+  private handleService = (raw: Service) => {
+    const { shardsAggregation: service } = handleRawService(raw);
+    if (!service) return;
 
-    LanDiscovery.on('shardsAggregatorFound', (service) => {
-      console.log('aggregator', service);
-      
-      if (!service) return;
-      const id = service.txt?.['distributionId'];
-      const devices = this.devices.filter((d) => d.distributionId === id);
-      if (devices.length === 0) return;
+    const id = service.txt?.['distributionId'];
+    const devices = this.devices.filter((d) => d.distributionId === id);
+    if (devices.length === 0) return;
 
-      const device = devices.find((d) => d.deviceInfo.globalId === (service.txt?.info as ClientInfo).globalId);
-      if (!device) return;
+    const device = devices.find((d) => d.deviceInfo.globalId === (service.txt?.info as ClientInfo).globalId);
+    if (!device) return;
 
-      openShardProvider(new ShardProvider({ service, shardKey: device.shard }));
-    });
-  }
+    openShardProvider({ vm: new ShardProvider({ service, shardKey: device.shard }), onClosed: () => this.scanLan() });
+  };
+
+  private scanLan = () => Bonjour.scan(KeyAggregationService);
 
   async refresh() {
     const keys = await Database.shardKeys!.find();
@@ -64,8 +66,6 @@ class PairedDevices {
     index >= 0 && runInAction(() => this.devices.splice(index, 1));
 
     device.remove();
-
-    index >= 0 && this.devices.length <= 1 && LanDiscovery.stop();
   }
 }
 

@@ -5,8 +5,9 @@ import React, { useEffect, useState } from 'react';
 
 import Button from '../components/Button';
 import DeviceInfo from '../components/DeviceInfo';
+import DistributorDiscovery from '../../../viewmodels/tss/management/DistributorDiscovery';
 import { FadeInDownView } from '../../../components/animations';
-import LanDiscovery from '../../../common/p2p/LanDiscovery';
+import { KeyDistributionService } from '../../../viewmodels/tss/Constants';
 import { Placeholder } from '../../../components';
 import { SECOND } from '../../../utils/time';
 import { Service } from 'react-native-zeroconf';
@@ -25,16 +26,14 @@ export default observer(({ onNext }: { onNext: (selectedService: Service) => voi
   const { secondaryTextColor, appColor } = Theme;
   const marginHorizontal = useHorizontalPadding();
   const [selectedService, setSelectedService] = useState<Service>();
-  const [scanTimeout, setScanTimeout] = useState(false);
+  const [foundTimeout, setFoundTimeout] = useState(false);
 
-  useEffect(() => {
-    LanDiscovery.scan();
-  }, []);
+  useEffect(() => DistributorDiscovery.scan(), []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       startLayoutAnimation();
-      setScanTimeout(LanDiscovery.shardsDistributors.length === 0);
+      setFoundTimeout(DistributorDiscovery.shardsDistributors.length === 0);
     }, 15 * SECOND);
 
     return () => clearTimeout(timer);
@@ -60,10 +59,10 @@ export default observer(({ onNext }: { onNext: (selectedService: Service) => voi
     <View style={{ flex: 1 }} entering={FadeInRight.delay(300).springify()} exiting={FadeOutLeft.springify()}>
       <Text style={{ color: secondaryTextColor, marginHorizontal }}>{t('multi-sig-modal-connect-select-to-pair')}:</Text>
 
-      {LanDiscovery.shardsDistributors.length > 0 ? (
+      {DistributorDiscovery.shardsDistributors.length > 0 ? (
         <FlatList
           style={{ flex: 1 }}
-          data={LanDiscovery.shardsDistributors}
+          data={DistributorDiscovery.shardsDistributors}
           renderItem={renderItem}
           keyExtractor={(i) => i.name}
         />
@@ -74,7 +73,7 @@ export default observer(({ onNext }: { onNext: (selectedService: Service) => voi
           <ActivityIndicator size="small" />
           <Placeholder />
 
-          {scanTimeout && (
+          {foundTimeout && (
             <FadeInDownView>
               <TouchableOpacity onPress={openSettings}>
                 <Text style={{ marginTop: 24, color: secondaryTextColor, fontWeight: '500', marginHorizontal }}>
@@ -91,7 +90,7 @@ export default observer(({ onNext }: { onNext: (selectedService: Service) => voi
       <Button
         title={t('button-start-pairing')}
         onPress={() => onNext(selectedService!)}
-        disabled={!selectedService || LanDiscovery.shardsDistributors.length === 0}
+        disabled={!selectedService || DistributorDiscovery.shardsDistributors.length === 0}
       />
     </View>
   );
