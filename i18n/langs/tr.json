@@ -300,6 +300,7 @@
   "multi-sig-modal-title-delete-secret-key": "Gizli Anahtarı Sil",
   "multi-sig-modal-title-trusted-device": "Güvenilir cihazlar",
   "multi-sig-modal-title-remove-device": "Cihazı kaldır",
+  "multi-sig-modal-title-waiting-aggregation": "Cihaz yanıtı bekleniyor",
   "multi-sig-modal-welcome-1": "Telefonları aynı Wi-Fi ağına bağlayın",
   "multi-sig-modal-welcome-2": "[Menü] - [Çok İmzalı Cüzdan]a gidin",
   "multi-sig-modal-welcome-3": "[Başlat Eşleme]i tıklayın ve Wallet 3'e yerel ağa erişmesine izin verin",
@@ -331,6 +332,8 @@
   "multi-sig-modal-msg-restore-from-shard-qr-code": "Cüzdanınızı kurtarmak için lütfen bu QR kodu tarayın.",
   "multi-sig-modal-msg-delete-device": "Cihaz da aynı zamanda silinecek ve geri yüklenemeyecek.",
   "multi-sig-modal-msg-delete-trusted-device": "Bu işlem sadece yerel kayıt bilgilerini siler ve hedef cihazın özel anahtar bilgilerini silmez. Hedef cihazın özel anahtar bilgilerini silmek için lütfen hedef cihazda manuel olarak silin.",
+  "multi-sig-modal-msg-open-wallet3": "Eşleştirilmiş cihazda Cüzdan 3'ü açın, cüzdan hedef cihaza otomatik olarak bağlanacaktır.",
+  "multi-sig-modal-msg-aggregated-count": "Alınan miktar: {{m}}/{{n}}",
   "multi-sig-modal-create-threshold": "Siz {{threshold}} of {{max}} çok imza cüzdanı oluşturuyorsunuz. Bu, işlemlerin en az {{threshold}} anahtarının yetkilendirilmesini gerektirdiği anlamına gelir.",
   "multi-sig-modal-keys-distribution": "Aşağıdaki cihazlara anahtarlar dağıtılacaktır",
 

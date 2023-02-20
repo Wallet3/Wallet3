@@ -24,12 +24,14 @@ export default (props: Props) => {
   const renderTitle = ({ item }: ListRenderItemInfo<string>) => {
     return (
       <Text
+        numberOfLines={1}
         style={{
           fontSize: 25,
           fontWeight: '700',
           color: Theme.textColor,
           textTransform: 'capitalize',
           paddingVertical: 1,
+          maxWidth: '80%',
         }}
       >
         {item}
@@ -47,6 +49,7 @@ export default (props: Props) => {
       entering={FadeInUp.delay(300).springify()}
       renderItem={renderTitle}
       {...props}
+      contentContainerStyle={{ justifyContent: 'center', alignItems: 'center', ...(props.contentContainerStyle as any) }}
       style={{ height: 32, ...(props.style as any) }}
     />
   );

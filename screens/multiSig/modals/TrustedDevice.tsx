@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 
 import Authentication from '../../../viewmodels/auth/Authentication';
 import BackableScrollTitles from '../../../modals/components/BackableScrollTitles';
+import { DateTimeFormatter } from '../../../utils/formatter';
 import DeleteConfirmationView from './views/DeleteConfirmationView';
 import { DeviceOverview } from './views/DeviceOverview';
 import ModalRootContainer from '../../../modals/core/ModalRootContainer';
 import { MultiSigKeyDeviceInfo } from '../../../models/entities/MultiSigKey';
 import Theme from '../../../viewmodels/settings/Theme';
+import dayjs from 'dayjs';
 import i18n from '../../../i18n';
 import { openGlobalPasspad } from '../../../common/Modals';
 import { sleep } from '../../../utils/async';
@@ -15,16 +17,15 @@ import { startLayoutAnimation } from '../../../utils/animations';
 interface Props {
   close: Function;
   device: MultiSigKeyDeviceInfo;
-  lastUsedAt?: string;
   disableRemove?: boolean;
   onDeleteDevice: (device: MultiSigKeyDeviceInfo) => void;
 }
 
-export default ({ device, lastUsedAt, close, onDeleteDevice: onDelete, disableRemove }: Props) => {
+export default ({ device, close, onDeleteDevice: onDelete, disableRemove }: Props) => {
   const { t } = i18n;
   const [step, setStep] = useState(0);
   const { textColor } = Theme;
-  const [lastUsed, setLastUsed] = useState(lastUsedAt);
+  const [lastUsedAt] = useState(dayjs(device.lastUsedAt || 0).format(DateTimeFormatter));
 
   const goTo = async (step: number, delay = 0) => {
     if (delay) await sleep(delay);
@@ -65,7 +66,7 @@ export default ({ device, lastUsedAt, close, onDeleteDevice: onDelete, disableRe
         <DeviceOverview
           deviceInfo={device}
           disableButton={disableRemove}
-          lastUsedAt={lastUsed}
+          lastUsedAt={lastUsedAt}
           onNext={authAndNext}
           buttonTitle={t('button-remove')}
         />

@@ -31,15 +31,6 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
   };
 
   const headers = [
-    <View
-      key="paired_devices"
-      style={{ padding: 12, flexDirection: 'row', alignItems: 'center', height: headerHeight, justifyContent: 'center' }}
-    >
-      <Ionicons name="phone-portrait-outline" size={15} color={textColor} />
-      <Text style={{ color: textColor, fontWeight: '600', marginHorizontal: 8, fontSize: 18, textTransform: 'capitalize' }}>
-        {t('multi-sig-screen-paired-devices')}
-      </Text>
-    </View>,
     currentWallet?.isHDWallet && (
       <View
         key="my_multiSig_wallet"
@@ -51,6 +42,15 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
         </Text>
       </View>
     ),
+    <View
+      key="paired_devices"
+      style={{ padding: 12, flexDirection: 'row', alignItems: 'center', height: headerHeight, justifyContent: 'center' }}
+    >
+      <Ionicons name="phone-portrait-outline" size={15} color={textColor} />
+      <Text style={{ color: textColor, fontWeight: '600', marginHorizontal: 8, fontSize: 18, textTransform: 'capitalize' }}>
+        {t('multi-sig-screen-paired-devices')}
+      </Text>
+    </View>,
   ].filter((i) => i) as JSX.Element[];
 
   return (
@@ -96,17 +96,17 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
             }}
           >
             {currentPage === 0 ? (
-              <MaterialCommunityIcons name="key-chain-variant" color={textColor} size={21} />
-            ) : (
               <Ionicons name="phone-portrait-outline" size={18} color={textColor} />
+            ) : (
+              <MaterialCommunityIcons name="key-chain-variant" color={textColor} size={21} />
             )}
           </TouchableOpacity>
         )}
       </View>
 
       <Swiper ref={swiper} showsPagination={false} showsButtons={false} loop={false} onIndexChanged={scrollToIndex}>
-        <PairedDevices />
         {currentWallet?.isHDWallet && <MultiSigScreen />}
+        <PairedDevices />
       </Swiper>
     </View>
   );

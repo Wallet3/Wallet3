@@ -23,13 +23,9 @@ interface Props {
 export default observer(({ vm, close }: Props) => {
   const { t } = i18n;
   const [current, setCurrent] = useState({ step: 0, isRTL: false });
+  const screenRadius = useOptimizedCornerRadius();
 
-  const titles = [
-    t('multi-sig-modal-title-preparations'),
-    t('multi-sig-modal-title-connect-devices'),
-    t('multi-sig-modal-title-set-threshold'),
-    t('multi-sig-modal-title-key-distribution'),
-  ];
+  const titles = [t('multi-sig-modal-title-waiting-aggregation')];
 
   const goTo = (step: number, isRTL = false) => {
     step = Math.max(step, 0);
@@ -38,14 +34,18 @@ export default observer(({ vm, close }: Props) => {
 
   useEffect(() => () => vm.dispose(), []);
 
-  const { step, isRTL } = current;
+  const { step } = current;
 
   return (
     <ModalRootContainer>
-      <ScrollTitles data={titles} currentIndex={step} style={{ marginBottom: 12 }} />
+      <ScrollTitles
+        data={titles}
+        currentIndex={step}
+        style={{ flexGrow: 0, height: 32, marginBottom: 12, marginTop: screenRadius ? 4 : 0 }}
+      />
 
       <View style={{ flex: 1, width: ReactiveScreen.width - ModalMarginScreen * 2, marginHorizontal: -16 }}>
-        <Aggregation vm={vm} />
+        <Aggregation vm={vm} buttonTitle={t('button-cancel')} />
       </View>
     </ModalRootContainer>
   );

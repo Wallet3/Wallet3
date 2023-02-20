@@ -28,12 +28,13 @@ export class ShardsAggregator extends TCPServer<{}> {
   readonly id: string;
   readonly version: string;
 
-  clients: TCPClient[] = [];
   readonly device = getDeviceBasicInfo();
+  clients: TCPClient[] = [];
+  aggregated = 0;
 
   constructor(args: IConstruction) {
     super();
-    makeObservable(this, { clients: observable });
+    makeObservable(this, { clients: observable, aggregated: observable });
 
     const { distributionId, shardsVersion } = args;
 
@@ -87,11 +88,10 @@ export class ShardsAggregator extends TCPServer<{}> {
           mac: Buffer.from(serialized.mac, 'hex'),
         };
 
-        try {
-          const shard = await eccrypto.decrypt(this.conf.verifyPrivKey!, ecies);
-          this.shards.push(shard.toString('hex'));
-          this.combineShards();
-        } catch (error) {}
+        const shard = (await eccrypto.decrypt(this.conf.verifyPrivKey!, ecies)).toString('utf8');
+        this.shards.push(shard);
+        this.combineShards();
+        runInAction(() => (this.aggregated = this.shards.length));
       }
     } catch (error) {}
   }

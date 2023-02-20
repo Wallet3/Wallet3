@@ -300,6 +300,7 @@
   "multi-sig-modal-title-delete-secret-key": "Delete Secret Key",
   "multi-sig-modal-title-trusted-device": "Trusted device",
   "multi-sig-modal-title-remove-device": "Remove device",
+  "multi-sig-modal-title-waiting-aggregation": "Waiting for Devices",
   "multi-sig-modal-welcome-1": "Connect devices to the same Wi-Fi network",
   "multi-sig-modal-welcome-2": "Go to [Menu] - [MultiSig Wallet]",
   "multi-sig-modal-welcome-3": "Tap [Start Pairing] and approve Wallet 3 to access the local network",
@@ -331,6 +332,8 @@
   "multi-sig-modal-msg-restore-from-shard-qr-code": "To restore the wallet, please scan this QR code.",
   "multi-sig-modal-msg-delete-device": "The device will be deleted and cannot be restored.",
   "multi-sig-modal-msg-delete-trusted-device": "This operation will only delete local record information and cannot delete the private key information of the target device. To delete the private key information of the target device, please manually delete it on the target device.",
+  "multi-sig-modal-msg-open-wallet3": "Please open Wallet 3 on paired devices, Wallet 3 will automatically connect to the target device.",
+  "multi-sig-modal-msg-aggregated-count": "Received quantity: {{m}}/{{n}}",  
   "multi-sig-modal-create-threshold": "You are creating a {{threshold}} of {{max}} multi-signature wallet. It means that transactions require {{threshold}} keys to be authorized.",
   "multi-sig-modal-keys-distribution": "Secrets will be distributed to following devices",
 

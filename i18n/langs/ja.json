@@ -296,6 +296,7 @@
   "multi-sig-modal-title-delete-secret-key": "秘密鍵の削除",
   "multi-sig-modal-title-trusted-device": "信頼デバイス",
   "multi-sig-modal-title-remove-device": "デバイスの削除",
+  "multi-sig-modal-title-waiting-aggregation": "デバイスの応答",
   "multi-sig-modal-welcome-1": "まず、同じ Wi-Fi ネットワークに接続してください",
   "multi-sig-modal-welcome-2": "「メニュー」 - 「マルチシグウォレット」に進んでください",
   "multi-sig-modal-welcome-3": "「ペアリング開始」をタップし、ネットワークのアクセスを許可してください",
@@ -327,6 +328,8 @@
   "multi-sig-modal-msg-restore-from-shard-qr-code": "ウォレットを復元する場合は、このQRコードをスキャンしてください。",
   "multi-sig-modal-msg-delete-device": "そのデバイスは削除され、復元することはできません",
   "multi-sig-modal-msg-delete-trusted-device": "この操作はローカルの記録情報のみを削除し、ターゲットデバイスの秘密鍵情報を削除することはできません。ターゲットデバイスの秘密鍵情報を削除するには、ターゲットデバイス上で手動で削除してください。",
+  "multi-sig-modal-msg-open-wallet3": "ペアリングされたデバイスで Wallet 3 を開くと、Wallet 3 は自動的にターゲットデバイスに接続します。",
+  "multi-sig-modal-msg-aggregated-count": "受信数量: {{m}}/{{n}}",
   "multi-sig-modal-create-threshold": "あなたは {{threshold}}/{{max}} マルチシグウォレットを作成しています。トランザクションを作成するには、少なくとも {{threshold}} つのデバイスが必要であることを意味します。",
   "multi-sig-modal-keys-distribution": "秘密鍵は以下のデバイスに配布されます",
 

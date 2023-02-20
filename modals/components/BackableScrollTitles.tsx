@@ -43,11 +43,7 @@ export default (props: Props) => {
       <ScrollTitles
         currentIndex={currentIndex}
         data={titles}
-        contentContainerStyle={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginStart: -backButtonPadding - 1,
-        }}
+        contentContainerStyle={{ marginStart: -backButtonPadding - 1 }}
       />
     </View>
   );

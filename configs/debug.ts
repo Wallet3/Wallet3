@@ -9,11 +9,13 @@ import MessageKeys from '../common/MessageKeys';
 import { MultiSignPrimaryServiceType } from '../viewmodels/tss/Constants';
 import { Service } from 'react-native-zeroconf';
 import { ShardReceiver } from '../viewmodels/tss/ShardReceiver';
+import { ShardsAggregator } from '../viewmodels/tss/ShardsAggregator';
 import { ShardsDistributor } from '../viewmodels/tss/ShardsDistributor';
 import { TCPClient } from '../common/p2p/TCPClient';
 import eccrypto from 'eccrypto';
 import { getScreenCornerRadius } from '../utils/hardware';
 import iosDevice from 'ios-device-list';
+import { openShardsAggregator } from '../common/Modals';
 import quickcrypto from 'react-native-quick-crypto';
 import secretjs from 'secrets.js-grempe';
 
@@ -81,6 +83,17 @@ if (__DEV__) {
     //     ),
     //   3000
     // );
+
+    setTimeout(() => {
+      openShardsAggregator(
+        new ShardsAggregator({
+          distributionId: '22',
+          shardsVersion: 'vc',
+          threshold: 2,
+          aggregationParams: { bip32Shard: true },
+        })
+      );
+    }, 3000);
 
     // const aes128cfb = createCipheriv('aes-128-cfb', randomBytes(16), randomBytes(16));
     // aes128cfb.write('abc', 'utf8');
