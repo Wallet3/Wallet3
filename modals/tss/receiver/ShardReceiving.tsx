@@ -6,6 +6,7 @@ import { getDeviceModel, useOptimizedSafeBottom } from '../../../utils/hardware'
 import { secureColor, warningColor } from '../../../constants/styles';
 
 import Device from '../../../components/Device';
+import DeviceRipple from '../components/DeviceRipple';
 import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 import { Placeholder } from '../../../components';
@@ -105,18 +106,7 @@ export default observer(({ vm, close, onCritical }: Props) => {
         )}
 
         {pairingCodeVerified && secretStatus === ShardPersistentStatus.waiting && (
-          <ZoomInView
-            style={{ position: 'relative', width: 250, height: 250, justifyContent: 'center', alignItems: 'center' }}
-          >
-            <LottieView
-              style={{ width: 250, height: 250, position: 'absolute' }}
-              duration={7000}
-              source={require('../../../assets/animations/ripple.json')}
-              autoPlay
-            />
-
-            <Device deviceId={vm.remoteInfo!.device} os={vm.remoteInfo!.rn_os} style={{ width: 48, height: 52 }} />
-          </ZoomInView>
+          <DeviceRipple deviceId={vm.remoteInfo!.device} os={vm.remoteInfo!.rn_os} />
         )}
 
         {pairingCodeVerified && secretStatus !== ShardPersistentStatus.waiting && (
