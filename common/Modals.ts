@@ -2,6 +2,7 @@ import { IShardsDistributorConstruction, ShardsDistributor } from '../viewmodels
 
 import Authentication from '../viewmodels/auth/Authentication';
 import MessageKeys from './MessageKeys';
+import { ShardProvider } from '../viewmodels/tss/ShardProvider';
 import { ShardsAggregator } from '../viewmodels/tss/ShardsAggregator';
 
 export async function openGlobalPasspad(req: {
@@ -52,4 +53,8 @@ export function openShardsDistributors(args: IShardsDistributorConstruction | { 
 
 export function openShardsAggregator(vm: ShardsAggregator) {
   PubSub.publish(MessageKeys.openShardsAggregator, vm);
+}
+
+export function openShardProvider(vm: ShardProvider) {
+  PubSub.publish(MessageKeys.openShardProvider, vm);
 }

@@ -2,10 +2,11 @@ import { ClientInfo } from './Constants';
 import DeviceInfo from 'react-native-device-info';
 import { Platform } from 'react-native';
 import { createHash } from 'crypto';
+import { sha256Sync } from '../../utils/cipher';
 
 export function getDeviceInfo(): ClientInfo {
   return {
-    globalId: createHash('sha256').update(Buffer.from(DeviceInfo.getUniqueIdSync(), 'utf8')).digest('hex').substring(0, 16),
+    globalId: sha256Sync(DeviceInfo.getUniqueIdSync()).substring(0, 24),
     name: DeviceInfo.getDeviceNameSync(),
     devtype: DeviceInfo.getDeviceType(),
     device: DeviceInfo.getDeviceId(),

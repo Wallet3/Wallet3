@@ -1,5 +1,6 @@
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { createHash, randomBytes } from 'crypto';
+import { getDeviceBasicInfo, getDeviceInfo } from '../../common/p2p/Utils';
 
 import Authentication from '../auth/Authentication';
 import Bonjour from '../../common/p2p/Bonjour';
@@ -14,9 +15,9 @@ import { ShardSender } from './ShardSender';
 import { TCPClient } from '../../common/p2p/TCPClient';
 import { TCPServer } from '../../common/p2p/TCPServer';
 import { btoa } from 'react-native-quick-base64';
-import { getDeviceBasicInfo } from '../../common/p2p/Utils';
 import i18n from '../../i18n';
 import secretjs from 'secrets.js-grempe';
+import { sha256Sync } from '../../utils/cipher';
 import { showMessage } from 'react-native-flash-message';
 import { utils } from 'ethers';
 import { xpubkeyFromHDNode } from '../../utils/bip32';
@@ -47,6 +48,7 @@ export class ShardsDistributor extends TCPServer<Events> {
   private upgradeInfo?: { basePath: string; basePathIndex: number };
 
   readonly id: string;
+  readonly device = getDeviceInfo();
   approvedClients: ShardSender[] = [];
   pendingClients: ShardSender[] = [];
 
@@ -80,7 +82,7 @@ export class ShardsDistributor extends TCPServer<Events> {
     this.protector = this.root.derivePath(`m/0'/3`);
     this.bip32 = this.root.derivePath(basePath ?? DEFAULT_DERIVATION_PATH);
 
-    this.id = createHash('sha256').update(this.protector.address).digest('hex').substring(0, 32);
+    this.id = sha256Sync(this.protector.address).substring(0, 32);
 
     if (basePath && basePathIndex !== undefined) {
       this.upgradeInfo = { basePath, basePathIndex };
@@ -88,7 +90,7 @@ export class ShardsDistributor extends TCPServer<Events> {
   }
 
   get name() {
-    return `shards-distributor-${this.id}`;
+    return `sd-${this.device.globalId.substring(0, 8)}-${this.id}`;
   }
 
   get totalCount() {

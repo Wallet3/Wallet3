@@ -7,6 +7,7 @@ import MessageKeys from '../../../common/MessageKeys';
 import { PairedDevice } from './PairedDevice';
 import ShardKey from '../../../models/entities/ShardKey';
 import { ShardProvider } from '../ShardProvider';
+import { openShardProvider } from '../../../common/Modals';
 
 class PairedDevices {
   devices: PairedDevice[] = [];
@@ -23,9 +24,15 @@ class PairedDevices {
     const count = (await this.refresh()).length;
     if (count === 0) return;
 
+    this.scanLan();
+  }
+
+  private scanLan() {
     LanDiscovery.scan();
 
     LanDiscovery.on('shardsAggregatorFound', (service) => {
+      console.log('aggregator', service);
+      
       if (!service) return;
       const id = service.txt?.['distributionId'];
       const devices = this.devices.filter((d) => d.distributionId === id);
@@ -34,7 +41,7 @@ class PairedDevices {
       const device = devices.find((d) => d.deviceInfo.globalId === (service.txt?.info as ClientInfo).globalId);
       if (!device) return;
 
-      new ShardProvider({ service, shardKey: device.shard });
+      openShardProvider(new ShardProvider({ service, shardKey: device.shard }));
     });
   }
 
@@ -48,6 +55,7 @@ class PairedDevices {
     const device = new PairedDevice(key);
     if (this.devices.find((d) => d.id === device.id)) return;
 
+    this.devices.length === 0 && this.scanLan();
     runInAction(() => this.devices.push(device));
   }
 
@@ -56,6 +64,8 @@ class PairedDevices {
     index >= 0 && runInAction(() => this.devices.splice(index, 1));
 
     device.remove();
+
+    index >= 0 && this.devices.length <= 1 && LanDiscovery.stop();
   }
 }
 

@@ -36,6 +36,7 @@ class LanDiscovery extends EventEmitter<Events> {
   onResolved = (service: Service) => {
     try {
       if (this.shardsDistributors.find((d) => d.name === service.name)) return;
+      if (this.shardsAggregators.find((d) => d.name === service.name)) return;
 
       service.txt.info = JSON.parse(atob(service.txt.info));
 

@@ -4,6 +4,7 @@ import { createHash, randomBytes } from 'crypto';
 
 import { TCPClient } from '../../common/p2p/TCPClient';
 import eccrypto from 'eccrypto';
+import { sha256Sync } from '../../utils/cipher';
 
 export enum ShardTransferringStatus {
   ready = 0,
@@ -47,7 +48,7 @@ export class ShardSender {
   sendPairingCode(code: string) {
     const data: PairingCodeVerified = {
       type: ContentType.pairingCodeVerified,
-      hash: createHash('sha256').update(code).digest('hex'),
+      hash: sha256Sync(code),
     };
 
     return this.secureWriteString(JSON.stringify(data));

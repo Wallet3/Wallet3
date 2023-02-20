@@ -19,16 +19,12 @@ const { View, Text } = Animated;
 
 export default observer(({ vm, onNext, isRTL }: { isRTL?: boolean; vm: ShardsDistributor; onNext: () => void }) => {
   const { t } = i18n;
-  const { textColor, secondaryTextColor, backgroundColor, borderColor } = Theme;
+  const { secondaryTextColor, backgroundColor } = Theme;
   const { pendingClients, approvedClients, pendingCount, approvedCount } = vm;
   const marginHorizontal = useHorizontalPadding();
   const [verifying, setVerifying] = useState<{ client: ShardSender; attempts: number }>();
   const safeBottom = useOptimizedSafeBottom();
   const cornerRadius = useOptimizedCornerRadius();
-
-  useEffect(() => {
-    vm.start();
-  }, []);
 
   const verifyClient = async (code: string) => {
     if (!verifying) return false;

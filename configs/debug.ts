@@ -86,16 +86,16 @@ if (__DEV__) {
     //   3000
     // );
 
-    setTimeout(() => {
-      openShardsAggregator(
-        new ShardsAggregator({
-          distributionId: '22',
-          shardsVersion: 'vc',
-          threshold: 2,
-          aggregationParams: { bip32Shard: true },
-        })
-      );
-    }, 3000);
+    // setTimeout(() => {
+    //   openShardsAggregator(
+    //     new ShardsAggregator({
+    //       distributionId: '22',
+    //       shardsVersion: 'vc',
+    //       threshold: 2,
+    //       aggregationParams: { bip32Shard: true },
+    //     })
+    //   );
+    // }, 3000);
 
     // const aes128cfb = createCipheriv('aes-128-cfb', randomBytes(16), randomBytes(16));
     // aes128cfb.write('abc', 'utf8');

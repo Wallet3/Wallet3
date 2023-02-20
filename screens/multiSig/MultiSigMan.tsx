@@ -1,6 +1,7 @@
 import { ButtonV2, Placeholder, SafeViewContainer } from '../../components';
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { openGlobalPasspad, openShardsAggregator } from '../../common/Modals';
 import { secureColor, verifiedColor } from '../../constants/styles';
 
 import DeviceInfo from '../../modals/tss/components/DeviceInfo';
@@ -15,7 +16,7 @@ import Theme from '../../viewmodels/settings/Theme';
 import TrustedDevice from './modals/TrustedDevice';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import { openShardsAggregator } from '../../common/Modals';
+import { sleep } from '../../utils/async';
 import { useModalize } from 'react-native-modalize';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -27,8 +28,18 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
   const [selectedDevice, setSelectedDevice] = useState<MultiSigKeyDeviceInfo>();
   const { ref, close, open } = useModalize();
 
-  const addDevices = async () => {
-    const vm = await wallet.requestShardsAggregator({ rootShard: true });
+  const addTrustedDevices = async () => {
+    let vm: ShardsAggregator | undefined;
+
+    const auth = async (pin?: string) => {
+      vm = await wallet.requestShardsAggregator({ rootShard: true }, pin);
+      return vm ? true : false;
+    };
+
+    if (!(await openGlobalPasspad({ onAutoAuthRequest: auth, onPinEntered: auth, fast: true }))) return;
+
+    await sleep(200);
+
     openShardsAggregator(vm!);
   };
 
@@ -90,7 +101,7 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
           </View>
         </View>
 
-        <ButtonV2 title={t('button-add-devices')} />
+        <ButtonV2 title={t('button-add-devices')} onPress={addTrustedDevices} />
       </ScrollView>
 
       <Portal>

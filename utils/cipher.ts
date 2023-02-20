@@ -2,9 +2,14 @@ import * as Crypto from 'expo-crypto';
 import * as Random from 'expo-random';
 
 import CryptoES from 'crypto-es';
+import { createHash } from 'crypto';
 
 export async function sha256(input: string): Promise<string> {
   return await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, input);
+}
+
+export function sha256Sync(input: string) {
+  return createHash('sha256').update(input).digest('hex');
 }
 
 export async function md5(input: string) {

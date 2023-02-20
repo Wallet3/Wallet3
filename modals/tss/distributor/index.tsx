@@ -39,6 +39,11 @@ export default observer(({ vm, onCritical, close }: Props) => {
     setCurrent({ step, isRTL });
   };
 
+  const start = () => {
+    vm.start();
+    goTo(1);
+  };
+
   useEffect(() => () => vm.dispose(), []);
 
   const { step, isRTL } = current;
@@ -56,7 +61,7 @@ export default observer(({ vm, onCritical, close }: Props) => {
       />
 
       <View style={{ flex: 1, width: ReactiveScreen.width - ModalMarginScreen * 2, marginHorizontal: -16 }}>
-        {step === 0 && <Preparations onNext={() => goTo(1)} />}
+        {step === 0 && <Preparations onNext={start} />}
         {step === 1 && <ConnectDevices vm={vm} onNext={() => goTo(2)} isRTL={isRTL} />}
         {step === 2 && <ThresholdSetting vm={vm} onNext={() => goTo(3)} isRTL={isRTL} />}
         {step === 3 && <ShardsDistribution vm={vm} close={close} onCritical={onCritical} />}

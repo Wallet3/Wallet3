@@ -8,6 +8,7 @@ import { TCPClient } from '../../common/p2p/TCPClient';
 import { createHash } from 'crypto';
 import eccrypto from 'eccrypto';
 import i18n from '../../i18n';
+import { sha256Sync } from '../../utils/cipher';
 import { showMessage } from 'react-native-flash-message';
 import { sleep } from '../../utils/async';
 
@@ -115,7 +116,7 @@ export class ShardReceiver extends TCPClient {
   };
 
   private handlePairingCode = async (data: PairingCodeVerified) => {
-    const equals = createHash('sha256').update(this.pairingCode).digest('hex') === data.hash;
+    const equals = sha256Sync(this.pairingCode) === data.hash;
     runInAction(() => (this.pairingCodeVerified = equals));
 
     if (!equals) {

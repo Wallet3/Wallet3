@@ -23,13 +23,17 @@ interface IConstruction extends Conf {
   shardsVersion: string;
 }
 
-export class ShardsAggregator extends TCPServer<{}> {
+interface Events {
+  aggregated: (secret: string) => void;
+}
+
+export class ShardsAggregator extends TCPServer<Events> {
   private conf: Conf;
   private shards: string[] = [];
   readonly id: string;
   readonly version: string;
+  readonly device = getDeviceInfo();
 
-  readonly device = getDeviceBasicInfo();
   clients: TCPClient[] = [];
   aggregated = 0;
 
@@ -45,7 +49,7 @@ export class ShardsAggregator extends TCPServer<{}> {
   }
 
   get name() {
-    return `shards-aggregator-${this.id}`;
+    return `sa-${this.device.globalId.substring(0, 8)}-${this.id}`;
   }
 
   get role() {
@@ -53,13 +57,14 @@ export class ShardsAggregator extends TCPServer<{}> {
   }
 
   async start() {
+    if (super.listening) return true;
     const succeed = await super.start();
 
     Bonjour.publishService(MultiSignPrimaryServiceType, this.name, this.port!, {
       role: this.role,
       func: LanServices.ShardsAggregation,
       distributionId: this.id,
-      info: btoa(JSON.stringify(getDeviceInfo())),
+      info: btoa(JSON.stringify(this.device)),
       ver: 1,
     });
 
@@ -103,6 +108,7 @@ export class ShardsAggregator extends TCPServer<{}> {
     try {
       const secret = secretjs.combine(this.shards);
       this.conf.aggregatedCallback?.(secret);
+      this.emit('aggregated', secret);
     } catch (error) {}
   }
 

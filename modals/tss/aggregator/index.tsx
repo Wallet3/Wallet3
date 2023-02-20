@@ -27,12 +27,10 @@ export default observer(({ vm, close }: Props) => {
 
   const titles = [t('multi-sig-modal-title-waiting-aggregation')];
 
-  const goTo = (step: number, isRTL = false) => {
-    step = Math.max(step, 0);
-    setCurrent({ step, isRTL });
-  };
-
-  useEffect(() => () => vm.dispose(), []);
+  useEffect(() => {
+    vm.start();
+    return () => vm.dispose();
+  }, []);
 
   const { step } = current;
 
@@ -45,7 +43,7 @@ export default observer(({ vm, close }: Props) => {
       />
 
       <View style={{ flex: 1, width: ReactiveScreen.width - ModalMarginScreen * 2, marginHorizontal: -16 }}>
-        <Aggregation vm={vm} buttonTitle={t('button-cancel')} />
+        <Aggregation vm={vm} buttonTitle={t('button-cancel')} onButtonPress={close} />
       </View>
     </ModalRootContainer>
   );

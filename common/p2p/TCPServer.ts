@@ -31,8 +31,12 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
     return this.server.address()?.address;
   }
 
+  get listening() {
+    return this.server.listening;
+  }
+
   async start() {
-    if (this.server.listening) return true;
+    if (this.listening) return true;
     let attempts = 0;
 
     while (attempts < 10) {
