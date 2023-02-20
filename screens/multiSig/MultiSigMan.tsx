@@ -34,7 +34,7 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
     let vm: ShardsAggregator | undefined;
 
     const auth = async (pin?: string) => {
-      vm = await wallet.requestShardsAggregator({ rootShard: true }, pin);
+      vm = await wallet.requestShardsAggregator({ rootShard: true, autoStart: true }, pin);
       return vm ? true : false;
     };
 
@@ -103,7 +103,7 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
           </View>
         </View>
 
-        <ButtonV2 title={t('button-add-devices')} onPress={aggregateShards} />
+        <ButtonV2 title={t('button-add-devices')} onPress={openAddDevices} />
       </ScrollView>
 
       <Portal>
@@ -119,7 +119,7 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
         </ModalizeContainer>
 
         <ModalizeContainer ref={addDevicesModal}>
-          <AddDevices close={closeAddDevices} />
+          <AddDevices wallet={wallet} close={closeAddDevices} />
         </ModalizeContainer>
       </Portal>
     </SafeViewContainer>

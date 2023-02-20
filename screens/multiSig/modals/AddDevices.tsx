@@ -5,6 +5,7 @@ import BackableScrollTitles from '../../../modals/components/BackableScrollTitle
 import Explanation from './views/Explanation';
 import { ModalMarginScreen } from '../../../modals/styles';
 import ModalRootContainer from '../../../modals/core/ModalRootContainer';
+import { MultiSigWallet } from '../../../viewmodels/wallet/MultiSigWallet';
 import { ReactiveScreen } from '../../../utils/device';
 import { ShardsAggregator } from '../../../viewmodels/tss/ShardsAggregator';
 import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
@@ -12,14 +13,15 @@ import Theme from '../../../viewmodels/settings/Theme';
 import { View } from 'react-native';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
+import { openGlobalPasspad } from '../../../common/Modals';
 
 interface Props {
+  wallet: MultiSigWallet;
   shardsDistributor?: ShardsDistributor;
-
   close: () => void;
 }
 
-export default observer(({ shardsDistributor, close }: Props) => {
+export default observer(({ wallet, shardsDistributor, close }: Props) => {
   const { t } = i18n;
   const { textColor } = Theme;
   const [current, setCurrent] = useState({ step: 0, isRTL: false });
@@ -37,12 +39,33 @@ export default observer(({ shardsDistributor, close }: Props) => {
     setCurrent({ step, isRTL });
   };
 
+  const goAggregation = async () => {
+    let vm: ShardsAggregator | undefined;
+
+    const auth = async (pin?: string) => {
+      vm = await wallet.requestShardsAggregator({ rootShard: true }, pin);
+      return vm ? true : false;
+    };
+
+    if (!(await openGlobalPasspad({ onAutoAuthRequest: auth, onPinEntered: auth, fast: true }))) return;
+
+    setShardsAggregator(vm!);
+    goTo(1);
+    vm!.start();
+  };
+
   useEffect(
     () => () => {
       shardsAggregator?.dispose();
+    },
+    [shardsAggregator]
+  );
+
+  useEffect(
+    () => () => {
       shardsDistributor?.dispose();
     },
-    []
+    [shardsDistributor]
   );
 
   const { step, isRTL } = current;
@@ -60,7 +83,7 @@ export default observer(({ shardsDistributor, close }: Props) => {
       />
 
       <View style={{ flex: 1, width: ReactiveScreen.width - ModalMarginScreen * 2, marginHorizontal: -16 }}>
-        {step === 0 && <Explanation onNext={() => goTo(1)} />}
+        {step === 0 && <Explanation onNext={goAggregation} />}
         {step === 1 && <Aggregation vm={shardsAggregator!} buttonTitle={t('button-next')} />}
         {/* {step === 0 && <ConnectDevices vm={vm} onNext={() => goTo(2)} isRTL={isRTL} />}
         {step === 1 && <ShardsDistribution vm={vm} close={close} onCritical={onCritical} />} */}

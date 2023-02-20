@@ -1,6 +1,6 @@
 import { ActivityIndicator, SectionList, StyleSheet, TouchableOpacity } from 'react-native';
 import Animated, { FadeInDown, FadeInLeft, FadeInRight, FadeOutDown, FadeOutLeft, FadeOutUp } from 'react-native-reanimated';
-import { FadeInDownView, ZoomInView } from '../../../components/animations';
+import { FadeInDownView, FadeInRightView, ZoomInView } from '../../../components/animations';
 import React, { useEffect, useState } from 'react';
 import { secureColor, warningColor } from '../../../constants/styles';
 import { useOptimizedCornerRadius, useOptimizedSafeBottom } from '../../../utils/hardware';
@@ -54,21 +54,21 @@ export default observer(({ vm, buttonTitle, onButtonPress }: Props) => {
           </View>
         </ZoomInView>
 
-        <FadeInDownView delay={500}>
-          <Text
-            style={{
-              color: secondaryTextColor,
-              marginHorizontal: 36,
-              fontSize: vm.aggregated > 0 ? 15 : 12,
-              textAlign: 'center',
-              fontWeight: vm.aggregated > 0 ? '500' : undefined,
-            }}
-          >
-            {vm.aggregated === 0
-              ? t('multi-sig-modal-msg-open-wallet3')
-              : `${t('multi-sig-modal-txt-aggregation-received')}: ${aggregated}/${threshold}`}
-          </Text>
-        </FadeInDownView>
+        {vm.aggregated === 0 ? (
+          <FadeInDownView delay={500}>
+            <Text style={{ color: secondaryTextColor, marginHorizontal: 36, fontSize: 12, textAlign: 'center' }}>
+              {t('multi-sig-modal-msg-open-wallet3')}
+            </Text>
+          </FadeInDownView>
+        ) : (
+          <FadeInRightView delay={500}>
+            <Text
+              style={{ color: secondaryTextColor, marginHorizontal: 36, fontSize: 15, textAlign: 'center', fontWeight: '500' }}
+            >
+              {`${t('multi-sig-modal-txt-aggregation-received')}: ${aggregated}/${threshold}`}
+            </Text>
+          </FadeInRightView>
+        )}
       </View>
 
       <Button title={buttonTitle} onPress={onButtonPress} />

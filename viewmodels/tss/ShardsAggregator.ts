@@ -8,11 +8,13 @@ import { LanServices } from './management/DistributorDiscovery';
 import { TCPClient } from '../../common/p2p/TCPClient';
 import { TCPServer } from '../../common/p2p/TCPServer';
 import { btoa } from 'react-native-quick-base64';
+import { randomBytes } from 'crypto';
 import secretjs from 'secrets.js-grempe';
 
 interface Conf {
   threshold: number;
-  initShard?: string;
+  initShard: string;
+  autoStart?: boolean;
   verifyPrivKey?: Buffer;
   aggregatedCallback?: (secret: string) => void;
   aggregationParams: { subPath?: string; subPathIndex?: number; rootShard?: boolean; bip32Shard?: boolean };
@@ -25,7 +27,6 @@ interface IConstruction extends Conf {
 
 interface Events {
   aggregated: (secret: string) => void;
-  othersArrived: (shards: string[]) => void;
 }
 
 export class ShardsAggregator extends TCPServer<Events> {
@@ -48,10 +49,12 @@ export class ShardsAggregator extends TCPServer<Events> {
     this.id = distributionId;
     this.version = shardsVersion;
     this.conf = args;
+
+    args.autoStart && this.start();
   }
 
   get name() {
-    return `sa-${this.device.globalId.substring(0, 8)}-${this.id}`;
+    return `sa-${this.device.globalId.substring(0, 12)}-${this.id}`;
   }
 
   get role() {
@@ -67,6 +70,7 @@ export class ShardsAggregator extends TCPServer<Events> {
     const succeed = await super.start();
 
     Bonjour.publishService(KeyAggregationService, this.name, this.port!, {
+      reqId: randomBytes(8).toString('hex'),
       role: this.role,
       func: LanServices.ShardsAggregation,
       distributionId: this.id,
@@ -99,7 +103,7 @@ export class ShardsAggregator extends TCPServer<Events> {
           mac: Buffer.from(serialized.mac, 'hex'),
         };
 
-        const shard = (await eccrypto.decrypt(this.conf.verifyPrivKey!, ecies)).toString('utf8');
+        const shard = (await eccrypto.decrypt(this.conf.verifyPrivKey!, ecies)).toString('hex');
         if (this.shards.includes(shard)) return;
 
         this.shards.push(shard);
@@ -110,20 +114,16 @@ export class ShardsAggregator extends TCPServer<Events> {
   }
 
   private combineShards() {
-    if (this.shards.length < this.threshold - 1) return;
+    if (this.shards.length < this.threshold) return;
 
     try {
-      if (this.shards.length >= this.threshold) {
-        const secret = secretjs.combine(this.shards);
-        this.conf.aggregatedCallback?.(secret);
-        this.emit('aggregated', secret);
-        return;
-      }
-
-      if (this.shards.length === this.threshold - 1 && !this.conf.initShard) {
-        this.emit('othersArrived', this.shards);
-      }
-    } catch (error) {}
+      const secret = secretjs.combine(this.shards);
+      this.conf.aggregatedCallback?.(secret);
+      this.emit('aggregated', secret);
+      __DEV__ && console.log('aggregated', secret);
+    } catch (error) {
+      console.error('aggregated error:', error);
+    }
   }
 
   dispose() {

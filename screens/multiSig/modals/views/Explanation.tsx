@@ -1,7 +1,8 @@
-import { ActivityIndicator, Button, SectionList, StyleSheet, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, SectionList, StyleSheet, TouchableOpacity } from 'react-native';
 import Animated, { FadeInDown, FadeInLeft, FadeInRight, FadeOutDown, FadeOutLeft, FadeOutUp } from 'react-native-reanimated';
 import React, { useEffect, useState } from 'react';
 
+import Button from '../../../../modals/tss/components/Button';
 import { FadeInDownView } from '../../../../components/animations';
 import IllustrationSameNetwork from '../../../../assets/illustrations/tss/internet.svg';
 import IllustrationTeam from '../../../../assets/illustrations/tss/collaboration.svg';

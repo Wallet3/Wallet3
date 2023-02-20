@@ -14,6 +14,8 @@ import { ShardProvider } from '../ShardProvider';
 import { openShardProvider } from '../../../common/Modals';
 
 class PairedDevices {
+  private handledIds = new Set<string>();
+
   devices: PairedDevice[] = [];
 
   get hasDevices() {
@@ -36,6 +38,14 @@ class PairedDevices {
     const { shardsAggregation: service } = handleRawService(raw);
     if (!service) return;
 
+    const reqId = service.txt?.['reqId'];
+    if (this.handledIds.has(reqId)) {
+      setTimeout(() => this.scanLan(), 15 * 1000);
+      return;
+    } else {
+      this.handledIds.add(reqId);
+    }
+
     const id = service.txt?.['distributionId'];
     const devices = this.devices.filter((d) => d.distributionId === id);
     if (devices.length === 0) return;
@@ -43,16 +53,11 @@ class PairedDevices {
     const device = devices.find((d) => d.deviceInfo.globalId === (service.txt?.info as ClientInfo).globalId);
     if (!device) return;
 
-    let sent = false;
     const vm = new ShardProvider({ service, shardKey: device.shard });
-    vm.once('shardSent' as any, () => (sent = true));
 
     openShardProvider({
       vm,
-      onClosed: () => {
-        vm.removeListener('shardSent' as any);
-        setTimeout(() => this.scanLan(), (sent ? 60 : 10) * SECOND);
-      },
+      onClosed: () => setTimeout(() => this.scanLan(), 15 * SECOND),
     });
   };
 

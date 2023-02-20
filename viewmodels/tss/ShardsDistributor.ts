@@ -90,7 +90,7 @@ export class ShardsDistributor extends TCPServer<Events> {
   }
 
   get name() {
-    return `sd-${this.device.globalId.substring(0, 8)}-${this.id}`;
+    return `sd-${this.device.globalId.substring(0, 12)}-${this.id}`;
   }
 
   get totalCount() {
