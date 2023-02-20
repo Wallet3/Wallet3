@@ -20,7 +20,7 @@ const { View, Text, FlatList } = Animated;
 
 export default () => {
   return (
-    <FadeInDownView>
+    <FadeInDownView style={{ flex: 1 }}>
       <View style={{ flex: 1 }} />
       <Button />
     </FadeInDownView>

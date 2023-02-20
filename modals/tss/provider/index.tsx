@@ -1,8 +1,9 @@
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import React, { useEffect, useRef, useState } from 'react';
-import { ScrollView, FlatList as SystemFlatList, Text, View } from 'react-native';
+import { ScrollView, FlatList as SystemFlatList, Text, TouchableOpacity, View } from 'react-native';
 import { getScreenCornerRadius, useOptimizedCornerRadius } from '../../../utils/hardware';
 
+import BackableScrollTitles from '../../components/BackableScrollTitles';
 import ModalRootContainer from '../../core/ModalRootContainer';
 import { ReactiveScreen } from '../../../utils/device';
 import ScrollTitles from '../../components/ScrollTitles';
@@ -23,7 +24,7 @@ export default observer(({ close, vm }: { close: () => void; vm: ShardProvider }
   const [step, setStep] = useState(0);
 
   const titleList = useRef<SystemFlatList>(null);
-  const titles = [t('multi-sig-modal-title-welcome')];
+  const titles = [t('multi-sig-modal-title-request-secret-key')];
 
   const goTo = (step: number) => {
     setStep(step);
@@ -34,15 +35,17 @@ export default observer(({ close, vm }: { close: () => void; vm: ShardProvider }
 
   return (
     <ModalRootContainer>
-      <ScrollTitles
+      <BackableScrollTitles
         currentIndex={step}
-        data={titles}
+        titles={titles}
         style={{ flexGrow: 0, height: 32, marginBottom: 12, marginTop: screenRadius ? 4 : 0 }}
       />
 
       <View style={{ flex: 1, width: ReactiveScreen.width - 12, marginHorizontal: -16 }}>
         <ShardProviderView />
       </View>
+
+      
     </ModalRootContainer>
   );
 });

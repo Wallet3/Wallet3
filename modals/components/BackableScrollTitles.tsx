@@ -1,4 +1,5 @@
 import { StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { secondaryFontColor, warningColor } from '../../constants/styles';
 
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
@@ -45,6 +46,20 @@ export default (props: Props) => {
         data={titles}
         contentContainerStyle={{ marginStart: -backButtonPadding - 1 }}
       />
+
+      <TouchableOpacity
+        style={{
+          padding: 5,
+          margin: -8,
+          position: 'absolute',
+          right: 8,
+          top: (screenRadius ? 4 : 0) + 10,
+          backgroundColor: `${secondaryFontColor}77`,
+          borderRadius: 50,
+        }}
+      >
+        <Ionicons name={'close'} color="#fff" size={18} />
+      </TouchableOpacity>
     </View>
   );
 };

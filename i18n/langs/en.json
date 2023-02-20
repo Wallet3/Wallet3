@@ -297,6 +297,7 @@
   "multi-sig-modal-title-key-distribution": "Secret Distribution",
   "multi-sig-modal-title-devices-pairing": "Devices Pairing",
   "multi-sig-modal-title-secret-key": "Secret Key",
+  "multi-sig-modal-title-request-secret-key": "Secret Request",
   "multi-sig-modal-title-delete-secret-key": "Delete Secret Key",
   "multi-sig-modal-title-trusted-device": "Trusted device",
   "multi-sig-modal-title-remove-device": "Remove device",
@@ -333,7 +334,8 @@
   "multi-sig-modal-msg-delete-device": "The device will be deleted and cannot be restored.",
   "multi-sig-modal-msg-delete-trusted-device": "This operation will only delete local record information and cannot delete the private key information of the target device. To delete the private key information of the target device, please manually delete it on the target device.",
   "multi-sig-modal-msg-open-wallet3": "Please open Wallet 3 on paired devices, Wallet 3 will automatically connect to the target device.",
-  "multi-sig-modal-msg-aggregated-count": "Received quantity: {{m}}/{{n}}",  
+  "multi-sig-modal-msg-aggregated-count": "Received quantity: {{m}}/{{n}}",
+  "multi-sig-modal-msg-before-aggregation": "This operation requires authorization from trusted devices to proceed.",
   "multi-sig-modal-create-threshold": "You are creating a {{threshold}} of {{max}} multi-signature wallet. It means that transactions require {{threshold}} keys to be authorized.",
   "multi-sig-modal-keys-distribution": "Secrets will be distributed to following devices",
 

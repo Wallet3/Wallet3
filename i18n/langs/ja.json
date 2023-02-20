@@ -293,6 +293,7 @@
   "multi-sig-modal-title-key-distribution": "秘密鍵の配布",
   "multi-sig-modal-title-devices-pairing": "デバイスのペアリング",
   "multi-sig-modal-title-secret-key": "秘密鍵",
+  "multi-sig-modal-title-request-secret-key": "秘密鍵リクエスト",
   "multi-sig-modal-title-delete-secret-key": "秘密鍵の削除",
   "multi-sig-modal-title-trusted-device": "信頼デバイス",
   "multi-sig-modal-title-remove-device": "デバイスの削除",
@@ -330,6 +331,7 @@
   "multi-sig-modal-msg-delete-trusted-device": "この操作はローカルの記録情報のみを削除し、ターゲットデバイスの秘密鍵情報を削除することはできません。ターゲットデバイスの秘密鍵情報を削除するには、ターゲットデバイス上で手動で削除してください。",
   "multi-sig-modal-msg-open-wallet3": "ペアリングされたデバイスで Wallet 3 を開くと、Wallet 3 は自動的にターゲットデバイスに接続します。",
   "multi-sig-modal-msg-aggregated-count": "受信数量: {{m}}/{{n}}",
+  "multi-sig-modal-msg-before-aggregation": "この操作は信頼デバイスによる認可が必要です",
   "multi-sig-modal-create-threshold": "あなたは {{threshold}}/{{max}} マルチシグウォレットを作成しています。トランザクションを作成するには、少なくとも {{threshold}} つのデバイスが必要であることを意味します。",
   "multi-sig-modal-keys-distribution": "秘密鍵は以下のデバイスに配布されます",
 

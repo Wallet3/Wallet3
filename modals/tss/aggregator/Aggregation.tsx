@@ -21,15 +21,13 @@ import { useHorizontalPadding } from '../components/Utils';
 
 const { View, Text } = Animated;
 
-export default ({
-  vm,
-  buttonTitle,
-  onButtonPress,
-}: {
+interface Props {
   vm: ShardsAggregator;
   buttonTitle: string;
   onButtonPress?: () => void;
-}) => {
+}
+
+export default ({ vm, buttonTitle, onButtonPress }: Props) => {
   const { t } = i18n;
   const { secondaryTextColor } = Theme;
 

@@ -292,6 +292,7 @@
   "multi-sig-modal-title-key-distribution": "密钥分发",
   "multi-sig-modal-title-devices-pairing": "设备配对",
   "multi-sig-modal-title-secret-key": "密钥",
+  "multi-sig-modal-title-request-secret-key": "密钥请求",
   "multi-sig-modal-title-delete-secret-key": "移除密钥",
   "multi-sig-modal-title-trusted-device": "受信任设备",
   "multi-sig-modal-title-remove-device": "移除设备",
@@ -329,6 +330,7 @@
   "multi-sig-modal-msg-delete-trusted-device": "该操作只会删除本地的记录信息，无法删除目标设备的私钥信息。若需删除目标设备的私钥信息，请手动在目标设备上删除。",
   "multi-sig-modal-msg-open-wallet3": "请在已配对的设备上打开 Wallet 3，钱包将会自动连接目标设备",
   "multi-sig-modal-msg-aggregated-count": "已收到: {{m}}/{{n}}",  
+  "multi-sig-modal-msg-before-aggregation": "该操作需要已信任设备的授权才能继续",
   "multi-sig-modal-create-threshold": "您正在创建一个 {{threshold}} of {{max}} 多签钱包。这意味着发送交易至少需要 {{threshold}} 个私钥才能成功发送。",
   "multi-sig-modal-keys-distribution": "密钥将会被分发到以下设备",
 

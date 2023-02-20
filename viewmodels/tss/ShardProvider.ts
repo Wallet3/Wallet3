@@ -1,6 +1,7 @@
 import { ContentType, ShardAggregationAck, ShardAggregationRequest } from './Constants';
 import eccrypto, { Ecies } from 'eccrypto';
 
+import Authentication from '../auth/Authentication';
 import ShardKey from '../../models/entities/ShardKey';
 import { TCPClient } from '../../common/p2p/TCPClient';
 
@@ -11,6 +12,7 @@ interface IConstruction {
 
 export class ShardProvider extends TCPClient {
   private key: ShardKey;
+  private _req!: ShardAggregationRequest;
 
   constructor(args: IConstruction) {
     super(args);
@@ -32,10 +34,20 @@ export class ShardProvider extends TCPClient {
         return;
       }
 
-      const shard = await eccrypto.encrypt(
-        Buffer.from(this.key.secretsInfo.verifyPubkey, 'hex'),
-        Buffer.from(req.params.bip32Shard ? this.key.secrets.bip32Shard : this.key.secrets.rootShard, 'hex')
-      );
+      console.log(req);
+      this._req = req;
+    } catch (error) {}
+  };
+
+  send = async (pin?: string) => {
+    if (!this._req) return false;
+
+    try {
+      const cipher = this._req.params.bip32Shard ? this.key.secrets.bip32Shard : this.key.secrets.rootShard;
+      const secret = await Authentication.decryptForever(cipher, pin);
+      if (!secret) return false;
+
+      const shard = await eccrypto.encrypt(Buffer.from(this.key.secretsInfo.verifyPubkey, 'hex'), Buffer.from(secret, 'hex'));
 
       const data: ShardAggregationAck = {
         type: ContentType.shardAggregationAck,
@@ -48,7 +60,11 @@ export class ShardProvider extends TCPClient {
       };
 
       super.secureWriteString(JSON.stringify(data));
+
+      return true;
     } catch (error) {}
+
+    return false;
   };
 
   dispose() {

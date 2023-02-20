@@ -297,6 +297,7 @@
   "multi-sig-modal-title-key-distribution": "Anahtar Dağıtımı",
   "multi-sig-modal-title-devices-pairing": "Cihaz eşleştirme",
   "multi-sig-modal-title-secret-key": "Gizli anahtar",
+  "multi-sig-modal-title-request-secret-key": "Anahtarı iste",
   "multi-sig-modal-title-delete-secret-key": "Gizli Anahtarı Sil",
   "multi-sig-modal-title-trusted-device": "Güvenilir cihazlar",
   "multi-sig-modal-title-remove-device": "Cihazı kaldır",
@@ -334,6 +335,7 @@
   "multi-sig-modal-msg-delete-trusted-device": "Bu işlem sadece yerel kayıt bilgilerini siler ve hedef cihazın özel anahtar bilgilerini silmez. Hedef cihazın özel anahtar bilgilerini silmek için lütfen hedef cihazda manuel olarak silin.",
   "multi-sig-modal-msg-open-wallet3": "Eşleştirilmiş cihazda Cüzdan 3'ü açın, cüzdan hedef cihaza otomatik olarak bağlanacaktır.",
   "multi-sig-modal-msg-aggregated-count": "Alınan miktar: {{m}}/{{n}}",
+  "multi-sig-modal-msg-before-aggregation": "Bu işlem devreye sokulmadan önce güvenilir cihaz onayı gerektirir",
   "multi-sig-modal-create-threshold": "Siz {{threshold}} of {{max}} çok imza cüzdanı oluşturuyorsunuz. Bu, işlemlerin en az {{threshold}} anahtarının yetkilendirilmesini gerektirdiği anlamına gelir.",
   "multi-sig-modal-keys-distribution": "Aşağıdaki cihazlara anahtarlar dağıtılacaktır",
 
