@@ -241,6 +241,9 @@ export class AppVM {
       MetamaskDAppsHub.init();
       LinkHub.start();
       Contacts.init();
+
+      TxHub.init().then(() => AppStoreReview.check());
+      PairedDevices.init();
     });
 
     PubSub.subscribe(MessageKeys.userSecretsNotVerified, () => {
@@ -254,9 +257,6 @@ export class AppVM {
       this.wallets = wallets;
       this.switchAccount(lastUsedAccount, true);
     });
-
-    TxHub.init().then(() => AppStoreReview.check());
-    PairedDevices.init();
   }
 
   async reset() {

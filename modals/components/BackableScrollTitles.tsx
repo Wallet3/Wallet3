@@ -52,15 +52,14 @@ export default (props: Props) => {
         <TouchableOpacity
           style={{
             padding: 5,
-            margin: -8,
             position: 'absolute',
-            right: 8,
-            top: (screenRadius ? 4 : 0) + 10,
+            right: 2,
+            top: (screenRadius ? 4 : 0) + 3,
             backgroundColor: `${secondaryFontColor}60`,
             borderRadius: 50,
           }}
         >
-          <Ionicons name={'close'} color="#fff" size={18} />
+          <Ionicons name={'close'} color="#fff" size={17} />
         </TouchableOpacity>
       )}
     </View>
