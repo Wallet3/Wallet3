@@ -10,6 +10,7 @@ import { useOptimizedCornerRadius } from '../../utils/hardware';
 interface Props {
   backDisabled?: boolean;
   showBack?: boolean;
+  showClose?: boolean;
   iconColor?: string;
   titles: string[];
   currentIndex?: number;
@@ -47,19 +48,21 @@ export default (props: Props) => {
         contentContainerStyle={{ marginStart: -backButtonPadding - 1 }}
       />
 
-      <TouchableOpacity
-        style={{
-          padding: 5,
-          margin: -8,
-          position: 'absolute',
-          right: 8,
-          top: (screenRadius ? 4 : 0) + 10,
-          backgroundColor: `${secondaryFontColor}77`,
-          borderRadius: 50,
-        }}
-      >
-        <Ionicons name={'close'} color="#fff" size={18} />
-      </TouchableOpacity>
+      {props.showClose && (
+        <TouchableOpacity
+          style={{
+            padding: 5,
+            margin: -8,
+            position: 'absolute',
+            right: 8,
+            top: (screenRadius ? 4 : 0) + 10,
+            backgroundColor: `${secondaryFontColor}60`,
+            borderRadius: 50,
+          }}
+        >
+          <Ionicons name={'close'} color="#fff" size={18} />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

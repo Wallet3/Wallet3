@@ -22,6 +22,7 @@ export default (props: ButtonProps) => {
       style={{
         marginHorizontal: optimizedRadius / 4 + 16,
         marginBottom: Math.max(safeBottom, optimizedRadius / 5),
+        ...(props.style as any),
       }}
     />
   );

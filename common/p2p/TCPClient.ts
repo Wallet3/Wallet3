@@ -13,7 +13,7 @@ export class TCPClient extends AsyncTCPSocket {
   private decipher!: Decipher;
 
   pairingCode: string;
-  remoteInfo?: ClientInfo;
+  remoteInfo?: ClientInfo | null = null;
 
   get greeted() {
     return this.remoteInfo ? true : false;
@@ -52,7 +52,7 @@ export class TCPClient extends AsyncTCPSocket {
     this.decipher = decipher!;
     this.pairingCode = pairingCode || '';
 
-    makeObservable(this, { pairingCode: observable });
+    makeObservable(this, { pairingCode: observable, remoteInfo: observable });
 
     if (socket) {
       this.hello();
@@ -89,7 +89,7 @@ export class TCPClient extends AsyncTCPSocket {
     this.secureWriteString(JSON.stringify(getDeviceInfo()));
 
     const read = (await this.secureReadString())!;
-    this.remoteInfo = JSON.parse(read);
+    runInAction(() => (this.remoteInfo = JSON.parse(read)));
   };
 
   secureWrite(data: Buffer) {

@@ -56,6 +56,8 @@ export class ShardReceiver extends TCPClient {
           this.handlePairingCode(data as PairingCodeVerified);
           break;
       }
+
+      await sleep(100);
     }
 
     console.log('socket successfully exits');

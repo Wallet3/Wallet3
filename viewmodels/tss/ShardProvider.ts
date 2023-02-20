@@ -1,5 +1,6 @@
 import { ContentType, ShardAggregationAck, ShardAggregationRequest } from './Constants';
 import eccrypto, { Ecies } from 'eccrypto';
+import { makeObservable, observable, runInAction } from 'mobx';
 
 import Authentication from '../auth/Authentication';
 import ShardKey from '../../models/entities/ShardKey';
@@ -12,11 +13,16 @@ interface IConstruction {
 
 export class ShardProvider extends TCPClient {
   private key: ShardKey;
-  private _req!: ShardAggregationRequest;
+  private req?: ShardAggregationRequest;
+
+  requestType: null | 'bip32' | 'root' = null;
 
   constructor(args: IConstruction) {
     super(args);
+
     this.key = args.shardKey;
+    makeObservable(this, { requestType: observable });
+
     this.once('ready', this.onReady);
   }
 
@@ -34,16 +40,15 @@ export class ShardProvider extends TCPClient {
         return;
       }
 
-      console.log(req);
-      this._req = req;
+      runInAction(() => (this.requestType = req.params.bip32Shard ? 'bip32' : 'root'));
     } catch (error) {}
   };
 
   send = async (pin?: string) => {
-    if (!this._req) return false;
+    if (!this.req) return false;
 
     try {
-      const cipher = this._req.params.bip32Shard ? this.key.secrets.bip32Shard : this.key.secrets.rootShard;
+      const cipher = this.req.params.bip32Shard ? this.key.secrets.bip32Shard : this.key.secrets.rootShard;
       const secret = await Authentication.decryptForever(cipher, pin);
       if (!secret) return false;
 

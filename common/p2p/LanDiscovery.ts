@@ -5,6 +5,7 @@ import EventEmitter from 'eventemitter3';
 import { MultiSignPrimaryServiceType } from '../../viewmodels/tss/Constants';
 import { Service } from 'react-native-zeroconf';
 import { atob } from 'react-native-quick-base64';
+import { getDeviceBasicInfo } from './Utils';
 
 type Events = {
   shardsDistributorFound: (service: Service) => void;
@@ -18,12 +19,11 @@ export const LanServices = {
 
 class LanDiscovery extends EventEmitter<Events> {
   shardsDistributors: Service[] = [];
-  shardsAggregators: Service[] = [];
 
   constructor() {
     super();
 
-    makeObservable(this, { shardsDistributors: observable, shardsAggregators: observable });
+    makeObservable(this, { shardsDistributors: observable });
     Bonjour.on('resolved', this.onResolved);
     Bonjour.on('update', this.onUpdate);
   }
@@ -36,7 +36,6 @@ class LanDiscovery extends EventEmitter<Events> {
   onResolved = (service: Service) => {
     try {
       if (this.shardsDistributors.find((d) => d.name === service.name)) return;
-      if (this.shardsAggregators.find((d) => d.name === service.name)) return;
 
       service.txt.info = JSON.parse(atob(service.txt.info));
 
@@ -47,7 +46,6 @@ class LanDiscovery extends EventEmitter<Events> {
           break;
         case LanServices.ShardsAggregation:
           this.emit('shardsAggregatorFound', service);
-          runInAction(() => this.shardsAggregators.push(service));
           break;
       }
     } catch (error) {}

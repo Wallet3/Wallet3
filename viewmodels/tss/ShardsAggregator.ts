@@ -59,6 +59,7 @@ export class ShardsAggregator extends TCPServer<Events> {
   async start() {
     if (super.listening) return true;
     const succeed = await super.start();
+    console.log('aggregator started');
 
     Bonjour.publishService(MultiSignPrimaryServiceType, this.name, this.port!, {
       role: this.role,
