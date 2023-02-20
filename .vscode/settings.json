@@ -13,6 +13,7 @@
         "eccrypto",
         "ecies",
         "eips",
+        "ephem",
         "faceid",
         "favs",
         "Firestore",

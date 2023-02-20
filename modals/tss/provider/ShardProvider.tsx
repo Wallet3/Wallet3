@@ -1,29 +1,32 @@
-import Animated, { FadeInRight, FadeOutLeft, FadeOutUp } from 'react-native-reanimated';
-import { FadeInDownView, FadeInLeftView, FadeInUpView, ZoomInView } from '../../../components/animations';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Placeholder, Skeleton } from '../../../components';
-import React, { useEffect, useState } from 'react';
-import { ShardPersistentStatus, ShardReceiver } from '../../../viewmodels/tss/ShardReceiver';
-import { getDeviceModel, useOptimizedSafeBottom } from '../../../utils/hardware';
-import { secureColor, warningColor } from '../../../constants/styles';
 
+import Animated from 'react-native-reanimated';
 import Button from '../components/Button';
 import Device from '../../../components/Device';
-import LottieView from 'lottie-react-native';
-import { SECOND } from '../../../utils/time';
+import { FadeInDownView } from '../../../components/animations';
+import React from 'react';
 import { ShardProvider } from '../../../viewmodels/tss/ShardProvider';
 import Theme from '../../../viewmodels/settings/Theme';
-import deviceInfoModule from 'react-native-device-info';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
+import { openGlobalPasspad } from '../../../common/Modals';
+import { sleep } from '../../../utils/async';
 import styles from '../../styles';
+import { warningColor } from '../../../constants/styles';
 
-const { View, Text, FlatList } = Animated;
+const { View, Text } = Animated;
 
 export default observer(({ vm, close }: { vm: ShardProvider; close: Function }) => {
   const { textColor, secondaryTextColor } = Theme;
   const { t } = i18n;
   const { remoteInfo, requestType } = vm;
+
+  const exec = async () => {
+    if (!(await openGlobalPasspad({ onAutoAuthRequest: vm.send, onPinEntered: vm.send, fast: true }))) return;
+    await sleep(200);
+    close();
+  };
 
   return (
     <FadeInDownView style={{ flex: 1 }}>
@@ -85,7 +88,7 @@ export default observer(({ vm, close }: { vm: ShardProvider; close: Function }) 
           style={{ marginHorizontal: 0 }}
           disabled={!requestType || vm.closed}
           title={t('button-approve')}
-          onSwipeSuccess={() => vm.send()}
+          onPress={exec}
         />
       </FadeInDownView>
     </FadeInDownView>

@@ -7,6 +7,7 @@ import Database from '../../../models/Database';
 import { KeyAggregationService } from '../Constants';
 import MessageKeys from '../../../common/MessageKeys';
 import { PairedDevice } from './PairedDevice';
+import { SECOND } from '../../../utils/time';
 import { Service } from 'react-native-zeroconf';
 import ShardKey from '../../../models/entities/ShardKey';
 import { ShardProvider } from '../ShardProvider';
@@ -42,7 +43,17 @@ class PairedDevices {
     const device = devices.find((d) => d.deviceInfo.globalId === (service.txt?.info as ClientInfo).globalId);
     if (!device) return;
 
-    openShardProvider({ vm: new ShardProvider({ service, shardKey: device.shard }), onClosed: () => this.scanLan() });
+    let sent = false;
+    const vm = new ShardProvider({ service, shardKey: device.shard });
+    vm.once('shardSent' as any, () => (sent = true));
+
+    openShardProvider({
+      vm,
+      onClosed: () => {
+        vm.removeListener('shardSent' as any);
+        setTimeout(() => this.scanLan(), (sent ? 60 : 10) * SECOND);
+      },
+    });
   };
 
   private scanLan = () => Bonjour.scan(KeyAggregationService);
@@ -57,8 +68,8 @@ class PairedDevices {
     const device = new PairedDevice(key);
     if (this.devices.find((d) => d.id === device.id)) return;
 
-    this.devices.length === 0 && this.scanLan();
-    runInAction(() => this.devices.push(device));
+    runInAction(() => this.devices.unshift(device));
+    this.scanLan();
   }
 
   removeDevice(device: PairedDevice) {

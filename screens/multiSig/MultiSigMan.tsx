@@ -4,6 +4,7 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-nati
 import { openGlobalPasspad, openShardsAggregator } from '../../common/Modals';
 import { secureColor, verifiedColor } from '../../constants/styles';
 
+import AddDevices from './modals/AddDevices';
 import DeviceInfo from '../../modals/tss/components/DeviceInfo';
 import { FadeInDownView } from '../../components/animations';
 import IllustrationSafe from '../../assets/illustrations/misc/safe.svg';
@@ -26,9 +27,10 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
   const { bottom } = useSafeAreaInsets();
   const { trustedDevices, trustedDeviceCount } = wallet;
   const [selectedDevice, setSelectedDevice] = useState<MultiSigKeyDeviceInfo>();
-  const { ref, close, open } = useModalize();
+  const { ref: trustedDevicesModal, close: closeTrustedDeviceModal, open: openTrustedDeviceModal } = useModalize();
+  const { ref: addDevicesModal, close: closeAddDevices, open: openAddDevices } = useModalize();
 
-  const addTrustedDevices = async () => {
+  const aggregateShards = async () => {
     let vm: ShardsAggregator | undefined;
 
     const auth = async (pin?: string) => {
@@ -90,7 +92,7 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
                     style={{ paddingVertical: 8 }}
                     onPress={() => {
                       setSelectedDevice(device);
-                      open();
+                      openTrustedDeviceModal();
                     }}
                   >
                     <DeviceInfo info={device} />
@@ -101,19 +103,23 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
           </View>
         </View>
 
-        <ButtonV2 title={t('button-add-devices')} onPress={addTrustedDevices} />
+        <ButtonV2 title={t('button-add-devices')} onPress={aggregateShards} />
       </ScrollView>
 
       <Portal>
-        <ModalizeContainer ref={ref}>
+        <ModalizeContainer ref={trustedDevicesModal}>
           {selectedDevice && (
             <TrustedDevice
-              close={close}
+              close={closeTrustedDeviceModal}
               device={selectedDevice}
               onDeleteDevice={(d) => wallet.removeTrustedDevice(d)}
               disableRemove={trustedDeviceCount <= wallet.threshold}
             />
           )}
+        </ModalizeContainer>
+
+        <ModalizeContainer ref={addDevicesModal}>
+          <AddDevices close={closeAddDevices} />
         </ModalizeContainer>
       </Portal>
     </SafeViewContainer>

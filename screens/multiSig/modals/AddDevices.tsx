@@ -1,42 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { ShardsDistributionStatus, ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
-import { Text, View } from 'react-native';
 
-import Authentication from '../../../viewmodels/auth/Authentication';
+import Aggregation from '../../../modals/tss/aggregator/Aggregation';
 import BackableScrollTitles from '../../../modals/components/BackableScrollTitles';
-import { ButtonV2 } from '../../../components';
-import { ClientInfo } from '../../../common/p2p/Constants';
-import ConnectDevices from '../../../modals/tss/distributor/ConnectDevices';
-import Device from '../../../components/Device';
-import { FadeInDownView } from '../../../components/animations';
-import IllustrationAsk from '../../../assets/illustrations/misc/ask.svg';
-import { Ionicons } from '@expo/vector-icons';
+import Explanation from './views/Explanation';
 import { ModalMarginScreen } from '../../../modals/styles';
 import ModalRootContainer from '../../../modals/core/ModalRootContainer';
-import { PairedDevice } from '../../../viewmodels/tss/management/PairedDevice';
-import PairedDevices from '../../../viewmodels/tss/management/PairedDevices';
-import QRCode from 'react-native-qrcode-svg';
 import { ReactiveScreen } from '../../../utils/device';
-import ShardsDistribution from '../../../modals/tss/distributor/ShardsDistribution';
+import { ShardsAggregator } from '../../../viewmodels/tss/ShardsAggregator';
+import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
 import Theme from '../../../viewmodels/settings/Theme';
+import { View } from 'react-native';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
-import { openGlobalPasspad } from '../../../common/Modals';
-import { sleep } from '../../../utils/async';
-import { startLayoutAnimation } from '../../../utils/animations';
-import { useOptimizedSafeBottom } from '../../../utils/hardware';
-import { warningColor } from '../../../constants/styles';
 
 interface Props {
-  vm: ShardsDistributor;
-  onCritical: (flag: boolean) => void;
+  shardsDistributor?: ShardsDistributor;
+
   close: () => void;
 }
 
-export default observer(({ vm, onCritical, close }: Props) => {
+export default observer(({ shardsDistributor, close }: Props) => {
   const { t } = i18n;
   const { textColor } = Theme;
   const [current, setCurrent] = useState({ step: 0, isRTL: false });
+  const [shardsAggregator, setShardsAggregator] = useState<ShardsAggregator>();
 
   const titles = [
     t('multi-sig-modal-title-preparations'),
@@ -50,7 +37,13 @@ export default observer(({ vm, onCritical, close }: Props) => {
     setCurrent({ step, isRTL });
   };
 
-  useEffect(() => () => vm.dispose(), []);
+  useEffect(
+    () => () => {
+      shardsAggregator?.dispose();
+      shardsDistributor?.dispose();
+    },
+    []
+  );
 
   const { step, isRTL } = current;
 
@@ -58,8 +51,8 @@ export default observer(({ vm, onCritical, close }: Props) => {
     <ModalRootContainer>
       <BackableScrollTitles
         titles={titles}
-        backDisabled={vm.status !== ShardsDistributionStatus.ready || step <= 1}
-        showBack={vm.status === ShardsDistributionStatus.ready && step > 1}
+        // backDisabled={vm.status !== ShardsDistributionStatus.ready || step <= 1}
+        // showBack={vm.status === ShardsDistributionStatus.ready && step > 1}
         currentIndex={step}
         iconColor={textColor}
         onBackPress={() => goTo(step - 1, true)}
@@ -67,8 +60,10 @@ export default observer(({ vm, onCritical, close }: Props) => {
       />
 
       <View style={{ flex: 1, width: ReactiveScreen.width - ModalMarginScreen * 2, marginHorizontal: -16 }}>
-        {step === 0 && <ConnectDevices vm={vm} onNext={() => goTo(2)} isRTL={isRTL} />}
-        {step === 1 && <ShardsDistribution vm={vm} close={close} onCritical={onCritical} />}
+        {step === 0 && <Explanation onNext={() => goTo(1)} />}
+        {step === 1 && <Aggregation vm={shardsAggregator!} buttonTitle={t('button-next')} />}
+        {/* {step === 0 && <ConnectDevices vm={vm} onNext={() => goTo(2)} isRTL={isRTL} />}
+        {step === 1 && <ShardsDistribution vm={vm} close={close} onCritical={onCritical} />} */}
       </View>
     </ModalRootContainer>
   );

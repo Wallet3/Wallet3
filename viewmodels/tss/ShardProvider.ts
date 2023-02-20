@@ -40,6 +40,7 @@ export class ShardProvider extends TCPClient {
         return;
       }
 
+      this.req = req;
       runInAction(() => (this.requestType = req.params.bip32Shard ? 'bip32' : 'root'));
     } catch (error) {}
   };
@@ -65,6 +66,8 @@ export class ShardProvider extends TCPClient {
       };
 
       super.secureWriteString(JSON.stringify(data));
+
+      this.emit('shardSent' as any);
 
       return true;
     } catch (error) {}

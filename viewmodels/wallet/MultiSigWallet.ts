@@ -76,7 +76,8 @@ export class MultiSigWallet extends WalletBase {
         [params.bip32Shard ? this.key.secrets.bip32Shard : this.key.secrets.rootShard, this.key.secrets.verifySignKey],
         pin
       )) || [];
-
+      
+    console.log(initShard, verifyPrivKey);
     if (!initShard) return;
 
     return new ShardsAggregator({

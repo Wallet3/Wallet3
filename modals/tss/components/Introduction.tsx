@@ -10,6 +10,7 @@ import { StyleSheet } from 'react-native';
 import Swiper from 'react-native-swiper';
 import Theme from '../../../viewmodels/settings/Theme';
 import i18n from '../../../i18n';
+import styles from './styles'
 import { thirdFontColor } from '../../../constants/styles';
 
 const { View, Text } = Animated;
@@ -65,21 +66,3 @@ export default ({ disablePage1, disablePage2, disablePage3, disablePage4 }: Prop
     </Swiper>
   );
 };
-
-export const styles = StyleSheet.create({
-  illustrationContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-
-  contentContainer: {
-    flex: 1,
-    paddingHorizontal: 12,
-    paddingBottom: 36,
-  },
-
-  txt: {
-    fontSize: 15,
-    marginBottom: 8,
-    marginHorizontal: 12,
-    color: thirdFontColor,
-    textAlign: 'center',
-  },
-});

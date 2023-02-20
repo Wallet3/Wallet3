@@ -191,7 +191,7 @@ export class ShardsDistributor extends TCPServer<Events> {
     key.secrets = {
       bip32Shard: await Authentication.encrypt(bip32Shards.shift()!),
       rootShard: await Authentication.encrypt(rootShards.shift()!),
-      verifySignKey: await Authentication.encrypt(this.protector.privateKey),
+      verifySignKey: await Authentication.encrypt(this.protector.privateKey.substring(2)),
     };
 
     try {

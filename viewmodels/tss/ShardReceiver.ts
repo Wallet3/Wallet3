@@ -47,6 +47,7 @@ export class ShardReceiver extends TCPClient {
   onReady = async () => {
     while (!this.closed) {
       const data = JSON.parse((await this.secureReadString())!) as { type: ContentType };
+      if (!data) break;
 
       switch (data.type) {
         case ContentType.shardDistribution:

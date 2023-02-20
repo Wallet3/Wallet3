@@ -27,9 +27,10 @@ interface Props {
   onButtonPress?: () => void;
 }
 
-export default ({ vm, buttonTitle, onButtonPress }: Props) => {
+export default observer(({ vm, buttonTitle, onButtonPress }: Props) => {
   const { t } = i18n;
   const { secondaryTextColor } = Theme;
+  const { aggregated, threshold } = vm;
 
   return (
     <FadeInDownView style={{ flex: 1 }}>
@@ -54,8 +55,18 @@ export default ({ vm, buttonTitle, onButtonPress }: Props) => {
         </ZoomInView>
 
         <FadeInDownView delay={500}>
-          <Text style={{ color: secondaryTextColor, marginHorizontal: 36, fontSize: 12, textAlign: 'center' }}>
-            {vm.aggregated === 0 ? t('multi-sig-modal-msg-open-wallet3') : ''}
+          <Text
+            style={{
+              color: secondaryTextColor,
+              marginHorizontal: 36,
+              fontSize: vm.aggregated > 0 ? 15 : 12,
+              textAlign: 'center',
+              fontWeight: vm.aggregated > 0 ? '500' : undefined,
+            }}
+          >
+            {vm.aggregated === 0
+              ? t('multi-sig-modal-msg-open-wallet3')
+              : `${t('multi-sig-modal-txt-aggregation-received')}: ${aggregated}/${threshold}`}
           </Text>
         </FadeInDownView>
       </View>
@@ -63,4 +74,4 @@ export default ({ vm, buttonTitle, onButtonPress }: Props) => {
       <Button title={buttonTitle} onPress={onButtonPress} />
     </FadeInDownView>
   );
-};
+});

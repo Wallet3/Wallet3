@@ -12,7 +12,7 @@ import secretjs from 'secrets.js-grempe';
 
 interface Conf {
   threshold: number;
-  initShard: string;
+  initShard?: string;
   verifyPrivKey?: Buffer;
   aggregatedCallback?: (secret: string) => void;
   aggregationParams: { subPath?: string; subPathIndex?: number; rootShard?: boolean; bip32Shard?: boolean };
@@ -25,6 +25,7 @@ interface IConstruction extends Conf {
 
 interface Events {
   aggregated: (secret: string) => void;
+  othersArrived: (shards: string[]) => void;
 }
 
 export class ShardsAggregator extends TCPServer<Events> {
@@ -39,9 +40,10 @@ export class ShardsAggregator extends TCPServer<Events> {
 
   constructor(args: IConstruction) {
     super();
-    makeObservable(this, { clients: observable, aggregated: observable });
+    const { distributionId, shardsVersion, initShard } = args;
 
-    const { distributionId, shardsVersion } = args;
+    initShard && this.shards.push(initShard);
+    makeObservable(this, { clients: observable, aggregated: observable });
 
     this.id = distributionId;
     this.version = shardsVersion;
@@ -56,10 +58,13 @@ export class ShardsAggregator extends TCPServer<Events> {
     return this.conf.verifyPrivKey ? 'primary' : 'standby';
   }
 
+  get threshold() {
+    return this.conf.threshold;
+  }
+
   async start() {
     if (super.listening) return true;
     const succeed = await super.start();
-    console.log('aggregator started');
 
     Bonjour.publishService(KeyAggregationService, this.name, this.port!, {
       role: this.role,
@@ -83,7 +88,6 @@ export class ShardsAggregator extends TCPServer<Events> {
       };
 
       await c.secureWriteString(JSON.stringify(req));
-
       const data: ShardAggregationAck = JSON.parse((await c.secureReadString())!);
 
       if (this.role === 'primary') {
@@ -96,6 +100,8 @@ export class ShardsAggregator extends TCPServer<Events> {
         };
 
         const shard = (await eccrypto.decrypt(this.conf.verifyPrivKey!, ecies)).toString('utf8');
+        if (this.shards.includes(shard)) return;
+
         this.shards.push(shard);
         this.combineShards();
         runInAction(() => (this.aggregated = this.shards.length));
@@ -104,16 +110,24 @@ export class ShardsAggregator extends TCPServer<Events> {
   }
 
   private combineShards() {
-    if (this.shards.length < this.conf.threshold) return;
+    if (this.shards.length < this.threshold - 1) return;
 
     try {
-      const secret = secretjs.combine(this.shards);
-      this.conf.aggregatedCallback?.(secret);
-      this.emit('aggregated', secret);
+      if (this.shards.length >= this.threshold) {
+        const secret = secretjs.combine(this.shards);
+        this.conf.aggregatedCallback?.(secret);
+        this.emit('aggregated', secret);
+        return;
+      }
+
+      if (this.shards.length === this.threshold - 1 && !this.conf.initShard) {
+        this.emit('othersArrived', this.shards);
+      }
     } catch (error) {}
   }
 
   dispose() {
+    Bonjour.unpublishService(this.name);
     this.clients.forEach((c) => c.destroy());
     super.stop();
   }
