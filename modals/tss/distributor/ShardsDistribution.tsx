@@ -4,6 +4,7 @@ import { FadeInDownView, ZoomInView } from '../../../components/animations';
 import React, { useState } from 'react';
 import { ShardSender, ShardTransferringStatus } from '../../../viewmodels/tss/ShardSender';
 import { ShardsDistributionStatus, ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
+import { getDeviceBasicInfo, getDeviceInfo } from '../../../common/p2p/Utils';
 import { secureColor, warningColor } from '../../../constants/styles';
 
 import Button from '../components/Button';
@@ -14,7 +15,6 @@ import IllustrationDenied from '../../../assets/illustrations/misc/access_denied
 import { Ionicons } from '@expo/vector-icons';
 import Theme from '../../../viewmodels/settings/Theme';
 import deviceInfoModule from 'react-native-device-info';
-import { getDeviceInfo } from '../../../common/p2p/Utils';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useHorizontalPadding } from '../components/Utils';
@@ -56,9 +56,9 @@ export default observer(({ vm, close, onCritical }: Props) => {
   const { secondaryTextColor, backgroundColor } = Theme;
 
   const [selfInfo] = useState({
-    ...getDeviceInfo(),
-    name: `${deviceInfoModule.getDeviceNameSync()} (${t('multi-sig-modal-txt-current-device')})`,
+    ...getDeviceBasicInfo(),
     remoteIP: '::1',
+    name: `${deviceInfoModule.getDeviceNameSync()} (${t('multi-sig-modal-txt-current-device')})`,
   });
 
   const doCritical = async () => {
@@ -67,7 +67,13 @@ export default observer(({ vm, close, onCritical }: Props) => {
     onCritical(false);
   };
 
-  const renderConnectedItem = ({ item, index }: { item: ShardSender | ClientInfo; index: number }) => {
+  const renderConnectedItem = ({
+    item,
+    index,
+  }: {
+    item: ShardSender | (ClientInfo & { remoteIP: string });
+    index: number;
+  }) => {
     const info: ClientInfo = item['remoteInfo'] ?? item;
 
     return (
@@ -113,7 +119,7 @@ export default observer(({ vm, close, onCritical }: Props) => {
             bounces={approvedCount >= 4}
             keyExtractor={(i) => i.remoteIP}
             contentContainerStyle={{ paddingVertical: 4 }}
-            data={[selfInfo, ...approvedClients]}
+            data={[selfInfo as any, ...approvedClients]}
             renderItem={renderConnectedItem}
           />
 
