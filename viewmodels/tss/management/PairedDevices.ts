@@ -1,10 +1,12 @@
 import { computed, makeObservable, observable, runInAction } from 'mobx';
 
+import { ClientInfo } from '../../../common/p2p/Constants';
 import Database from '../../../models/Database';
 import LanDiscovery from '../../../common/p2p/LanDiscovery';
 import MessageKeys from '../../../common/MessageKeys';
 import { PairedDevice } from './PairedDevice';
 import ShardKey from '../../../models/entities/ShardKey';
+import { ShardProvider } from '../ShardProvider';
 
 class PairedDevices {
   devices: PairedDevice[] = [];
@@ -22,6 +24,18 @@ class PairedDevices {
     if (count === 0) return;
 
     LanDiscovery.scan();
+
+    LanDiscovery.on('shardsAggregatorFound', (service) => {
+      if (!service) return;
+      const id = service.txt?.['distributionId'];
+      const devices = this.devices.filter((d) => d.distributionId === id);
+      if (devices.length === 0) return;
+
+      const device = devices.find((d) => d.deviceInfo.globalId === (service.txt?.info as ClientInfo).globalId);
+      if (!device) return;
+
+      new ShardProvider({ service, shardKey: device.shard });
+    });
   }
 
   async refresh() {

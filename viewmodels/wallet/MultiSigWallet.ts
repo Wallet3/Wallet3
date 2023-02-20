@@ -3,6 +3,7 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 
 import Authentication from '../auth/Authentication';
 import { PairedDevice } from '../tss/management/PairedDevice';
+import { ShardsAggregator } from '../tss/ShardsAggregator';
 import { WalletBase } from './WalletBase';
 import secretjs from 'secrets.js-grempe';
 import { utils } from 'ethers';
@@ -65,7 +66,26 @@ export class MultiSigWallet extends WalletBase {
         // utils.HDNode.fromExtendedKey
       }
 
-      return await Authentication.decrypt(this.key.secrets.bip32Shard, pin);
+      return await Authentication.decrypt(this.key.secrets.bip32Shard!, pin);
     } catch (error) {}
+  }
+
+  async requestShardsAggregator(params: { bip32Shard?: boolean; rootShard?: boolean }, pin?: string) {
+    const [initShard, verifyPrivKey] =
+      (await Authentication.decrypt(
+        [params.bip32Shard ? this.key.secrets.bip32Shard : this.key.secrets.rootShard, this.key.secrets.verifySignKey],
+        pin
+      )) || [];
+
+    if (!initShard) return;
+
+    return new ShardsAggregator({
+      initShard,
+      aggregationParams: params,
+      distributionId: this.key.distributionId,
+      shardsVersion: this.key.secretsInfo.version,
+      threshold: this.key.secretsInfo.threshold,
+      verifyPrivKey: Buffer.from(verifyPrivKey, 'hex'),
+    });
   }
 }

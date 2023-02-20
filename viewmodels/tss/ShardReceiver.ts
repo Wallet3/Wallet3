@@ -44,16 +44,20 @@ export class ShardReceiver extends TCPClient {
   }
 
   onReady = async () => {
-    const data = JSON.parse((await this.secureReadString())!) as { type: ContentType };
+    while (!this.closed) {
+      const data = JSON.parse((await this.secureReadString())!) as { type: ContentType };
 
-    switch (data.type) {
-      case ContentType.shardDistribution:
-        await this.handleShardDistribution(data as ShardDistribution);
-        break;
-      case ContentType.pairingCodeVerified:
-        this.handlePairingCode(data as PairingCodeVerified);
-        break;
+      switch (data.type) {
+        case ContentType.shardDistribution:
+          await this.handleShardDistribution(data as ShardDistribution);
+          break;
+        case ContentType.pairingCodeVerified:
+          this.handlePairingCode(data as PairingCodeVerified);
+          break;
+      }
     }
+
+    console.log('socket successfully exits');
   };
 
   private handleShardDistribution = async (data: ShardDistribution) => {
@@ -119,8 +123,6 @@ export class ShardReceiver extends TCPClient {
       this.destroy();
       return;
     }
-
-    this.onReady();
   };
 
   dispose() {

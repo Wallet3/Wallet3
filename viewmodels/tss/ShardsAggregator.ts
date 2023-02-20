@@ -12,6 +12,7 @@ import secretjs from 'secrets.js-grempe';
 
 interface Conf {
   threshold: number;
+  initShard: string;
   verifyPrivKey?: Buffer;
   aggregatedCallback?: (secret: string) => void;
   aggregationParams: { subPath?: string; subPathIndex?: number; rootShard?: boolean; bip32Shard?: boolean };
@@ -56,9 +57,9 @@ export class ShardsAggregator extends TCPServer<{}> {
 
     Bonjour.publishService(MultiSignPrimaryServiceType, this.name, this.port!, {
       role: this.role,
-      func: LanServices.ShardsAggregator,
+      func: LanServices.ShardsAggregation,
       distributionId: this.id,
-      info: btoa(JSON.stringify(getDeviceBasicInfo())),
+      info: btoa(JSON.stringify(getDeviceInfo())),
       ver: 1,
     });
 
@@ -72,7 +73,7 @@ export class ShardsAggregator extends TCPServer<{}> {
       const req: ShardAggregationRequest = {
         type: ContentType.shardAggregationRequest,
         params: this.conf.aggregationParams,
-        version: this.version,
+        shardVersion: this.version,
       };
 
       await c.secureWriteString(JSON.stringify(req));

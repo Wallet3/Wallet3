@@ -16,6 +16,7 @@ export default {
   openShardsDistribution: 'openShardsDistribution',
   openShardReceiver: 'openShardReceiver',
   openShardsAggregator: 'openShardsAggregator',
+  openShardProvider: 'openShardProvider',
   openGlobalPasspad: 'openGlobalPasspad',
   drawerSwipeEnabled: 'drawer-swipeEnabled',
   multiSigWalletCreated: 'multiSigWalletCreated',

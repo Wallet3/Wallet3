@@ -30,6 +30,7 @@ const keys = {
 };
 
 export type BioType = 'faceid' | 'fingerprint' | 'iris';
+type StringOrStringArray = string | string[];
 
 export class Authentication extends EventEmitter {
   private lastBackgroundTimestamp = Date.now();
@@ -197,9 +198,16 @@ export class Authentication extends EventEmitter {
     return encrypt(data, await this.getMasterKey());
   };
 
-  decrypt = async (data: string, pin?: string) => {
+  decrypt = async <T = string | string[]>(data: T, pin?: string): Promise<T | undefined> => {
     if (!(await this.authenticate({ pin }))) return undefined;
-    return decrypt(data, await this.getMasterKey());
+
+    const masterKey = await this.getMasterKey();
+
+    if (Array.isArray(data)) {
+      return data.map((d) => decrypt(d, masterKey)) as T;
+    } else {
+      return decrypt(data as string, masterKey) as T;
+    }
   };
 
   encryptForever = async (data: string) => {

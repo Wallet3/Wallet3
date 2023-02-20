@@ -8,11 +8,12 @@ import { atob } from 'react-native-quick-base64';
 
 type Events = {
   shardsDistributorFound: (service: Service) => void;
+  shardsAggregatorFound: (service: Service) => void;
 };
 
 export const LanServices = {
   ShardsDistribution: 'shards-distribution',
-  ShardsAggregator: 'shards-aggregator',
+  ShardsAggregation: 'shards-aggregation',
 };
 
 class LanDiscovery extends EventEmitter<Events> {
@@ -42,6 +43,10 @@ class LanDiscovery extends EventEmitter<Events> {
         case LanServices.ShardsDistribution:
           this.emit('shardsDistributorFound', service);
           runInAction(() => this.shardsDistributors.push(service));
+          break;
+        case LanServices.ShardsAggregation:
+          this.emit('shardsAggregatorFound', service);
+          runInAction(() => this.shardsAggregators.push(service));
           break;
       }
     } catch (error) {}

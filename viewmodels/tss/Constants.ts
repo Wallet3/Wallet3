@@ -25,7 +25,7 @@ export type ShardDistributionAck = {
 export type ShardAggregationRequest = {
   type: ContentType.shardAggregationRequest;
   params: { subPath?: string; subPathIndex?: number; rootShard?: boolean; bip32Shard?: boolean };
-  version: string;
+  shardVersion: string;
 };
 
 export type ShardAggregationAck = {

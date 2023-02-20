@@ -20,7 +20,7 @@ import {
 } from './browser/controller/InpageDAppController';
 import { ERC681, ERC681Transferring } from '../viewmodels/transferring/ERC681Transferring';
 import React, { useEffect, useState } from 'react';
-import { ShardReceiverUI, ShardsAggregatorUI, ShardsDistributorUI } from '../modals/tss';
+import { ShardProviderUI, ShardReceiverUI, ShardsAggregatorUI, ShardsDistributorUI } from '../modals/tss';
 
 import { AppVM } from '../viewmodels/core/App';
 import BackupSecretTip from '../modals/misc/BackupSecretTip';
@@ -40,6 +40,7 @@ import ModalizeContainer from '../modals/core/ModalizeContainer';
 import Networks from '../viewmodels/core/Networks';
 import { ReactiveScreen } from '../utils/device';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { ShardProvider } from '../viewmodels/tss/ShardProvider';
 import { ShardReceiver } from '../viewmodels/tss/ShardReceiver';
 import { ShardsAggregator } from '../viewmodels/tss/ShardsAggregator';
 import { ShardsDistributor } from '../viewmodels/tss/ShardsDistributor';
@@ -590,6 +591,7 @@ export const ShardsModal = observer(() => {
     shardsDistributor?: ShardsDistributor;
     shardReceiver?: boolean;
     shardsAggregator?: ShardsAggregator;
+    shardProvider?: ShardProvider;
   }>({});
 
   useEffect(() => {
@@ -608,10 +610,18 @@ export const ShardsModal = observer(() => {
       open();
     });
 
+    PubSub.subscribe(MessageKeys.openShardProvider, (_, data) => {
+      setVMs({ shardProvider: data });
+      open();
+    });
+
     return () => {
-      [MessageKeys.openShardsDistribution, MessageKeys.openShardReceiver, MessageKeys.openShardsAggregator].forEach(
-        PubSub.unsubscribe
-      );
+      [
+        MessageKeys.openShardsDistribution,
+        MessageKeys.openShardReceiver,
+        MessageKeys.openShardsAggregator,
+        MessageKeys.openShardProvider,
+      ].forEach(PubSub.unsubscribe);
     };
   });
 
@@ -629,6 +639,7 @@ export const ShardsModal = observer(() => {
       {vms.shardsDistributor && <ShardsDistributorUI vm={vms.shardsDistributor} onCritical={setIsCritical} close={close} />}
       {vms.shardReceiver && <ShardReceiverUI close={close} onCritical={setIsCritical} />}
       {vms.shardsAggregator && <ShardsAggregatorUI close={close} vm={vms.shardsAggregator} />}
+      {vms.shardProvider && <ShardProviderUI vm={vms.shardProvider} close={close} />}
     </ModalizeContainer>
   );
 });

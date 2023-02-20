@@ -8,6 +8,7 @@ import LanDiscovery from '../common/p2p/LanDiscovery';
 import MessageKeys from '../common/MessageKeys';
 import { MultiSignPrimaryServiceType } from '../viewmodels/tss/Constants';
 import { Service } from 'react-native-zeroconf';
+import { ShardProvider } from '../viewmodels/tss/ShardProvider';
 import { ShardReceiver } from '../viewmodels/tss/ShardReceiver';
 import { ShardsAggregator } from '../viewmodels/tss/ShardsAggregator';
 import { ShardsDistributor } from '../viewmodels/tss/ShardsDistributor';
@@ -38,10 +39,11 @@ if (__DEV__) {
   DeviceInfo.getDeviceName().then(console.log);
 
   if (DeviceInfo.isTablet()) {
-    // LanDiscovery.on('shardsDistributorFound', (service: Service) => {
+    // LanDiscovery.on('shardsAggregatorFound', (service: Service) => {
     //   console.log('tablet', service);
-    //   setTimeout(() => PubSub.publish(MessageKeys.openShardReceiver), 3000);
+    //   setTimeout(() => PubSub.publish(MessageKeys.openShardProvider, new ShardProvider({ service })), 3000);
     // });
+
     // LanDiscovery.scan();
   } else {
     // const root = utils.HDNode.fromMnemonic(mnemonic);

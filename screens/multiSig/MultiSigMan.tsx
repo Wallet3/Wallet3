@@ -10,10 +10,12 @@ import ModalizeContainer from '../../modals/core/ModalizeContainer';
 import { MultiSigKeyDeviceInfo } from '../../models/entities/MultiSigKey';
 import { MultiSigWallet } from '../../viewmodels/wallet/MultiSigWallet';
 import { Portal } from 'react-native-portalize';
+import { ShardsAggregator } from '../../viewmodels/tss/ShardsAggregator';
 import Theme from '../../viewmodels/settings/Theme';
 import TrustedDevice from './modals/TrustedDevice';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { openShardsAggregator } from '../../common/Modals';
 import { useModalize } from 'react-native-modalize';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -24,6 +26,11 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
   const { trustedDevices, trustedDeviceCount } = wallet;
   const [selectedDevice, setSelectedDevice] = useState<MultiSigKeyDeviceInfo>();
   const { ref, close, open } = useModalize();
+
+  const addDevices = async () => {
+    const vm = await wallet.requestShardsAggregator({ rootShard: true });
+    openShardsAggregator(vm!);
+  };
 
   return (
     <SafeViewContainer style={{ padding: 0, paddingBottom: 0 }} paddingHeader={false}>
