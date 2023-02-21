@@ -40,12 +40,12 @@ export enum ShardsDistributionStatus {
 }
 
 export class ShardsDistributor extends TCPServer<Events> {
-  private rootEntropy: string;
-  private root: HDNode;
-  private protector: HDNode;
-  private bip32: HDNode;
-  private serviceStarted = false;
-  private upgradeInfo?: { basePath: string; basePathIndex: number };
+  protected rootEntropy: string;
+  protected root: HDNode;
+  protected protector: HDNode;
+  protected bip32: HDNode;
+  protected serviceStarted = false;
+  protected upgradeInfo?: { basePath: string; basePathIndex: number };
 
   readonly id: string;
   readonly device = getDeviceInfo();
@@ -183,6 +183,7 @@ export class ShardsDistributor extends TCPServer<Events> {
     key.secretsInfo = {
       threshold: this.threshold,
       version: randomBytes(8).toString('hex'),
+      distributedCount: this.totalCount,
       devices: this.approvedClients.map((a) => {
         return { ...a.remoteInfo!, distributedAt: Date.now(), lastUsedAt: Date.now() };
       }),

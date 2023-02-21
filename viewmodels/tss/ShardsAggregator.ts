@@ -37,14 +37,15 @@ export class ShardsAggregator extends TCPServer<Events> {
   readonly device = getDeviceInfo();
 
   clients: TCPClient[] = [];
-  aggregated = 0;
+  received = 0;
+  aggregated = false;
 
   constructor(args: IConstruction) {
     super();
     const { distributionId, shardsVersion, initShard } = args;
 
     initShard && this.shards.push(initShard);
-    makeObservable(this, { clients: observable, aggregated: observable });
+    makeObservable(this, { clients: observable, received: observable, aggregated: observable });
 
     this.id = distributionId;
     this.version = shardsVersion;
@@ -108,7 +109,7 @@ export class ShardsAggregator extends TCPServer<Events> {
 
         this.shards.push(shard);
         this.combineShards();
-        runInAction(() => (this.aggregated = this.shards.length));
+        runInAction(() => (this.received = this.shards.length));
       }
     } catch (error) {}
   }
@@ -120,7 +121,7 @@ export class ShardsAggregator extends TCPServer<Events> {
       const secret = secretjs.combine(this.shards);
       this.conf.aggregatedCallback?.(secret);
       this.emit('aggregated', secret);
-      __DEV__ && console.log('aggregated', secret);
+      runInAction(() => (this.aggregated = true));
     } catch (error) {
       console.error('aggregated error:', error);
     }

@@ -15,11 +15,12 @@ interface Props {
   titles: string[];
   currentIndex?: number;
   onBackPress?: () => void;
+  onClosePress?: () => void;
   style?: StyleProp<ViewStyle>;
 }
 
 export default (props: Props) => {
-  const { iconColor, showBack, titles, currentIndex, onBackPress, backDisabled, style } = props;
+  const { iconColor, showBack, titles, currentIndex, onBackPress, backDisabled, style, onClosePress } = props;
   const backButtonPadding = useHorizontalPadding();
   const screenRadius = useOptimizedCornerRadius();
 
@@ -50,10 +51,11 @@ export default (props: Props) => {
 
       {props.showClose && (
         <TouchableOpacity
+          onPress={onClosePress}
           style={{
             padding: 5,
             right: 2,
-            top: (screenRadius ? 4 : 0) + 4,
+            top: (screenRadius ? 4 : 0) + 3,
             borderRadius: 50,
             position: 'absolute',
             backgroundColor: `${secondaryFontColor}60`,

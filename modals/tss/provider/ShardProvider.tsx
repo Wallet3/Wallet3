@@ -42,24 +42,34 @@ export default observer(({ vm, close }: { vm: ShardProvider; close: Function }) 
             <Text style={styles.reviewItemTitle}>{t('multi-sig-modal-txt-device')}</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Device deviceId={remoteInfo?.device || ''} os={remoteInfo?.rn_os || 'ios'} style={{ height: 24, width: 36 }} />
-              <Text style={{ ...styles.reviewItemValue, maxWidth: 180 }} numberOfLines={1}>
-                {remoteInfo?.name}
-              </Text>
+              {remoteInfo ? (
+                <Text style={{ ...styles.reviewItemValue, maxWidth: 180 }} numberOfLines={1}>
+                  {remoteInfo.name}
+                </Text>
+              ) : (
+                <Skeleton style={{ width: 64 }} />
+              )}
             </View>
           </View>
 
           <View style={styles.reviewItem}>
             <Text style={styles.reviewItemTitle}>OS</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              {remoteInfo?.rn_os === 'ios' ? (
-                <Ionicons name="logo-apple" color={secondaryTextColor} size={15} style={{ marginEnd: 8 }} />
-              ) : (
-                <MaterialCommunityIcons name="android" size={15} color="yellowgreen" style={{ marginEnd: 10 }} />
-              )}
+              {remoteInfo ? (
+                remoteInfo.rn_os === 'ios' ? (
+                  <Ionicons name="logo-apple" color={secondaryTextColor} size={15} style={{ marginEnd: 8 }} />
+                ) : (
+                  <MaterialCommunityIcons name="android" size={15} color="yellowgreen" style={{ marginEnd: 10 }} />
+                )
+              ) : undefined}
 
-              <Text style={{ ...styles.reviewItemValue, maxWidth: 180 }} numberOfLines={1}>
-                {`${remoteInfo?.os} ${remoteInfo?.osVersion}`}
-              </Text>
+              {remoteInfo ? (
+                <Text style={{ ...styles.reviewItemValue, maxWidth: 180 }} numberOfLines={1}>
+                  {`${remoteInfo?.os} ${remoteInfo?.osVersion}`}
+                </Text>
+              ) : (
+                <Skeleton style={{ width: 64 }} />
+              )}
             </View>
           </View>
 

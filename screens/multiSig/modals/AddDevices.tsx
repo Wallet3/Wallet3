@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import Aggregation from '../../../modals/tss/aggregator/Aggregation';
 import BackableScrollTitles from '../../../modals/components/BackableScrollTitles';
+import ConnectDevices from '../../../modals/tss/distributor/ConnectDevices';
 import Explanation from './views/Explanation';
 import { ModalMarginScreen } from '../../../modals/styles';
 import ModalRootContainer from '../../../modals/core/ModalRootContainer';
@@ -39,7 +40,7 @@ export default observer(({ wallet, shardsDistributor, close }: Props) => {
     setCurrent({ step, isRTL });
   };
 
-  const goAggregation = async () => {
+  const goToAggregation = async () => {
     let vm: ShardsAggregator | undefined;
 
     const auth = async (pin?: string) => {
@@ -53,6 +54,8 @@ export default observer(({ wallet, shardsDistributor, close }: Props) => {
     goTo(1);
     vm!.start();
   };
+
+  const goToConnectDevices = async () => {};
 
   useEffect(
     () => () => {
@@ -83,10 +86,19 @@ export default observer(({ wallet, shardsDistributor, close }: Props) => {
       />
 
       <View style={{ flex: 1, width: ReactiveScreen.width - ModalMarginScreen * 2, marginHorizontal: -16 }}>
-        {step === 0 && <Explanation onNext={goAggregation} />}
-        {step === 1 && <Aggregation vm={shardsAggregator!} buttonTitle={t('button-next')} />}
-        {/* {step === 0 && <ConnectDevices vm={vm} onNext={() => goTo(2)} isRTL={isRTL} />}
-        {step === 1 && <ShardsDistribution vm={vm} close={close} onCritical={onCritical} />} */}
+        {step === 0 && <Explanation onNext={goToAggregation} />}
+
+        {step === 1 && (
+          <Aggregation
+            vm={shardsAggregator!}
+            buttonTitle={t('button-next')}
+            buttonDisabled={!shardsAggregator?.aggregated}
+            onButtonPress={goToConnectDevices}
+          />
+        )}
+
+        {/* {step === 2 && <ConnectDevices vm={shardsDistributor!} onNext={() => goTo(3)} isRTL={isRTL} />} */}
+        {/* {step === 3 && <ShardsDistribution vm={vm} close={close} onCritical={onCritical} />} */}
       </View>
     </ModalRootContainer>
   );

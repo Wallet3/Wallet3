@@ -37,8 +37,9 @@ export default observer(({ close, vm }: { close: () => void; vm: ShardProvider }
     <ModalRootContainer style={{ height: undefined }}>
       <BackableScrollTitles
         showClose
-        currentIndex={step}
         titles={titles}
+        currentIndex={step}
+        onClosePress={close}
         style={{ flexGrow: 0, height: 32, marginBottom: 12, marginTop: screenRadius ? 4 : 0 }}
       />
 
