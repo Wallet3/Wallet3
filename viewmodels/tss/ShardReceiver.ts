@@ -54,11 +54,9 @@ export class ShardReceiver extends TCPClient {
           await this.handleShardDistribution(data as ShardDistribution);
           break;
         case ContentType.pairingCodeVerified:
-          this.handlePairingCode(data as PairingCodeVerified);
+          await this.handlePairingCode(data as PairingCodeVerified);
           break;
       }
-
-      await sleep(100);
     }
 
     console.log('socket successfully exits');

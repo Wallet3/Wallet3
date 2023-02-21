@@ -289,7 +289,9 @@
   "multi-sig-screen-tip-security-overview": "Your wallet currently uses {{m}} of {{n}} multi-signature scheme to  protect your crypto assets.",
   "multi-sig-screen-tip-modify-threshold": "To modify the multiSig threshold you need the agreement of the majority of devices.",
   "multi-sig-screen-txt-no-paired-devices": "No paired devices",
-
+  "multi-sig-screen-title-security": "Security",
+  "multi-sig-screen-title-confirmation-threshold": "Confirmations",
+  
   "multi-sig-modal-title-welcome": "MultiSig Wallet",
   "multi-sig-modal-title-preparations": "Preparations",
   "multi-sig-modal-title-connect-devices": "Connect Devices",

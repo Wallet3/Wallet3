@@ -74,7 +74,7 @@ export default observer(({ vm, close }: { vm: ShardProvider; close: Function }) 
                     maxWidth: 180,
                     fontWeight: '600',
                     color: textColor,
-                    textTransform: requestType === 'root' ? 'uppercase' : undefined,
+                    textTransform: 'capitalize',
                   }}
                 >
                   {t(`multi-sig-modal-txt-aggregation-request-type-${requestType}`)}

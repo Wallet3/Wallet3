@@ -284,6 +284,8 @@
   "multi-sig-screen-tip-after-upgrading": "请注意，升级为多签钱包之后，您仍然可以在别处使用该助记词恢复该钱包",
   "multi-sig-screen-tip-modify-threshold": "您需要得到多数设备的同意才能修改门限阈值",
   "multi-sig-screen-txt-no-paired-devices": "没有已配对的设备",
+  "multi-sig-screen-title-security": "安全级别",
+  "multi-sig-screen-title-confirmation-threshold": "多签阈值",
 
   "multi-sig-modal-title-welcome": "多签钱包",
   "multi-sig-modal-title-preparations": "准备工作",

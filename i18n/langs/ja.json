@@ -285,6 +285,8 @@
   "multi-sig-screen-tip-security-overview": "現在のウォレットは {{m}} of {{n}} マルチシグメカニズムを使って資産の安全を保護しています。",
   "multi-sig-screen-tip-modify-threshold": "閾値を変更するには、大多数のデバイスの同意が必要です。",
   "multi-sig-screen-txt-no-paired-devices": "ペアリングされたデバイスはありません",
+  "multi-sig-screen-title-security": "安全レベル",
+  "multi-sig-screen-title-confirmation-threshold": "確認閾値",
 
   "multi-sig-modal-title-welcome": "マルチシグウォレット",
   "multi-sig-modal-title-preparations": "準備作業",

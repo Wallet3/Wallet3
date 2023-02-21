@@ -289,6 +289,8 @@
   "multi-sig-screen-tip-security-overview": "Mevcut cüzdan, varlık güvenliğini korumak için {{m}}-of-{{n}} çoklu imza mekanizmasını kullanır.",
   "multi-sig-screen-tip-modify-threshold": "Eşik değerini değiştirmek için çoğunlukla cihazların onayını almanız gerekiyor.",
   "multi-sig-screen-txt-no-paired-devices": "Eşleştirilmiş cihaz yok",
+  "multi-sig-screen-title-security": "Güvenlik",
+  "multi-sig-screen-title-confirmation-threshold": "Onay Eşiği",
 
   "multi-sig-modal-title-welcome": "Çok İmzalı Cüzdan",
   "multi-sig-modal-title-preparations": "Hazırlık",

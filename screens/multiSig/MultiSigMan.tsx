@@ -59,7 +59,7 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
         <View style={{ flex: 1, marginBottom: 4 }}>
           <View style={styles.itemContainer}>
             <View style={styles.titleContainer}>
-              <Text style={{ color: textColor, ...styles.btnTxt }}>Security</Text>
+              <Text style={{ color: textColor, ...styles.btnTxt }}>{t('multi-sig-screen-title-security')}</Text>
               <Text style={{ color: secureColor, ...styles.btnTxt }}>Safe</Text>
             </View>
 
@@ -70,7 +70,7 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
 
           <TouchableOpacity style={styles.itemContainer}>
             <View style={styles.titleContainer}>
-              <Text style={{ color: textColor, ...styles.btnTxt }}>Confirmations</Text>
+              <Text style={{ color: textColor, ...styles.btnTxt }}>{t('multi-sig-screen-title-confirmation-threshold')}</Text>
               <Text style={{ color: verifiedColor, ...styles.btnTxt }}>
                 {`${wallet.threshold} of ${wallet.trustedDeviceCount}`}
               </Text>

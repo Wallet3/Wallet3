@@ -40,7 +40,7 @@ export default observer(({ vm, buttonTitle, onButtonPress }: Props) => {
             <Text
               style={{ color: secondaryTextColor, marginHorizontal: 36, fontSize: 12, textAlign: 'center', fontWeight: '500' }}
             >
-              {`${t('multi-sig-modal-txt-aggregation-received')}: ${aggregated}/${threshold}`}
+              {`${t('multi-sig-modal-txt-aggregation-received')}: ${Math.max(0, aggregated - 1)}/${threshold - 1}`}
             </Text>
           </FadeInRightView>
         )}
