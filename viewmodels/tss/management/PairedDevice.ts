@@ -9,6 +9,10 @@ export class PairedDevice {
     this.shard = shard;
   }
 
+  get bonjourDistributorName() {
+    return `sd-${this.deviceInfo.globalId.substring(0, 12)}-${this.distributionId}`;
+  }
+
   get id() {
     return this.shard.id;
   }

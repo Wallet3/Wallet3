@@ -14,6 +14,7 @@ interface IConstruction {
   rootShares: string[];
   bip32Shares: string[];
   key: MultiSigKey;
+  autoStart?: boolean;
 }
 
 export class ShardsDistributionMore extends ShardsDistributor {
@@ -21,11 +22,12 @@ export class ShardsDistributionMore extends ShardsDistributor {
   private rootShares: string[];
   private bip32Shares: string[];
 
-  constructor({ rootShares, bip32Shares, key, rootEntropy }: IConstruction) {
+  constructor({ rootShares, bip32Shares, key, rootEntropy, autoStart }: IConstruction) {
     super({
       mnemonic: utils.entropyToMnemonic(rootEntropy),
       basePath: key.basePath,
       basePathIndex: key.basePathIndex,
+      autoStart,
     });
 
     this.key = key;

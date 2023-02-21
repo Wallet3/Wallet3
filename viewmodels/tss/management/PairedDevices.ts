@@ -83,6 +83,10 @@ class PairedDevices {
 
     device.remove();
   }
+
+  findDistributor(name: string) {
+    return this.devices.find((d) => d.bonjourDistributorName === name);
+  }
 }
 
 export default new PairedDevices();

@@ -72,6 +72,7 @@ export default observer(({ wallet, close, onCritical }: Props) => {
       rootShares: rootShares!,
       rootEntropy: Buffer.from(rootEntropy!, 'hex'),
       key: wallet.key,
+      autoStart: true,
     });
 
     setDistributor(vm);

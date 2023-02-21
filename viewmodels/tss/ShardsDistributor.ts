@@ -30,6 +30,7 @@ export interface IShardsDistributorConstruction {
   mnemonic: string;
   basePath?: string;
   basePathIndex?: number;
+  autoStart?: boolean;
 }
 
 export enum ShardsDistributionStatus {
@@ -56,7 +57,7 @@ export class ShardsDistributor extends TCPServer<Events> {
   status = ShardsDistributionStatus.ready;
   threshold = 2;
 
-  constructor({ mnemonic, basePath, basePathIndex }: IShardsDistributorConstruction) {
+  constructor({ mnemonic, basePath, basePathIndex, autoStart }: IShardsDistributorConstruction) {
     super();
 
     makeObservable(this, {
@@ -87,6 +88,8 @@ export class ShardsDistributor extends TCPServer<Events> {
     if (basePath && basePathIndex !== undefined) {
       this.upgradeInfo = { basePath, basePathIndex };
     }
+
+    autoStart && this.start();
   }
 
   get name() {
