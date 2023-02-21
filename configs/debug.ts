@@ -69,6 +69,7 @@ if (__DEV__) {
       throw new Error('!!! check !!!');
     }
 
+    console.log(secretjs.getConfig())
     // console.log(secretjs.share(entropy.toString('hex'), 2, 2));
     // const pri = new KeyDistribution({ mnemonic });
     // pri.start();

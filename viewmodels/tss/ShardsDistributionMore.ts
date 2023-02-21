@@ -4,6 +4,7 @@ import secretjs, { share } from 'secrets.js-grempe';
 
 import LINQ from 'linq';
 import MultiSigKey from '../../models/entities/MultiSigKey';
+import { MultiSigWallet } from '../wallet/MultiSigWallet';
 import { ShardSender } from './ShardSender';
 import i18n from '../../i18n';
 import { showMessage } from 'react-native-flash-message';
@@ -13,24 +14,24 @@ interface IConstruction {
   rootEntropy: Buffer;
   rootShares: string[];
   bip32Shares: string[];
-  key: MultiSigKey;
+  wallet: MultiSigWallet;
   autoStart?: boolean;
 }
 
 export class ShardsDistributionMore extends ShardsDistributor {
-  private key: MultiSigKey;
+  private wallet: MultiSigWallet;
   private rootShares: string[];
   private bip32Shares: string[];
 
-  constructor({ rootShares, bip32Shares, key, rootEntropy, autoStart }: IConstruction) {
+  constructor({ rootShares, bip32Shares, wallet, rootEntropy, autoStart }: IConstruction) {
     super({
       mnemonic: utils.entropyToMnemonic(rootEntropy),
-      basePath: key.basePath,
-      basePathIndex: key.basePathIndex,
+      basePath: wallet.key.basePath,
+      basePathIndex: wallet.key.basePathIndex,
       autoStart,
     });
 
-    this.key = key;
+    this.wallet = wallet;
     this.rootShares = rootShares;
     this.bip32Shares = bip32Shares;
 
@@ -46,7 +47,7 @@ export class ShardsDistributionMore extends ShardsDistributor {
   }
 
   approveClient(client: ShardSender, code: string): void {
-    if (this.key.secretsInfo.devices.find((d) => d.globalId === client.remoteInfo?.globalId)) return;
+    if (this.wallet.secretsInfo.devices.find((d) => d.globalId === client.remoteInfo?.globalId)) return;
     super.approveClient(client, code);
   }
 
@@ -58,32 +59,42 @@ export class ShardsDistributionMore extends ShardsDistributor {
 
     runInAction(() => (this.status = this.status = ShardsDistributionStatus.distributing));
 
-    const result = await Promise.all(
-      this.approvedClients.map(async (c) => {
-        const index = this.key.secretsInfo.distributedCount++;
+    const result = (
+      await Promise.all(
+        this.approvedClients.map(async (c) => {
+          const index = ++this.wallet.secretsInfo.distributedCount;
 
-        const [rootShard, bip32Shard] = [this.rootShares, this.bip32Shares].map((shares) => secretjs.newShare(index, shares));
+          const [rootShard, bip32Shard] = [this.rootShares, this.bip32Shares].map((shares) =>
+            secretjs.newShare(index, shares)
+          );
 
-        c.sendShard({
-          rootShard,
-          bip32Shard,
-          verifyPubkey: this.protector.publicKey.substring(2),
-          verifySignKey: this.protector.privateKey.substring(2),
-          threshold: this.threshold,
-          bip32Path: this.key.basePath,
-          bip32PathIndex: this.key.basePathIndex,
-          bip32Xpubkey: this.key.bip32Xpubkey,
-          version: this.key.secretsInfo.version,
-        });
+          c.sendShard({
+            rootShard,
+            bip32Shard,
+            verifyPubkey: this.protector.publicKey.substring(2),
+            verifySignKey: this.protector.privateKey.substring(2),
+            threshold: this.threshold,
+            bip32Path: this.wallet.key.basePath,
+            bip32PathIndex: this.wallet.key.basePathIndex,
+            bip32Xpubkey: this.wallet.key.bip32Xpubkey,
+            version: this.wallet.key.secretsInfo.version,
+          });
 
-        (await c.readShardAck()) ? 1 : 0;
+          const succeed = (await c.readShardAck()) ? 1 : 0;
+          return succeed ? c : undefined;
+        })
+      )
+    ).filter((i) => i);
+
+    const succeed = result.length > 0;
+    runInAction(() => (this.status = succeed ? ShardsDistributionStatus.succeed : ShardsDistributionStatus.failed));
+
+    this.wallet.addTrustedDevices(
+      this.approvedClients.map((a) => {
+        return { ...a.remoteInfo!, distributedAt: Date.now(), lastUsedAt: Date.now() };
       })
     );
 
-    const succeed = LINQ.from(result).sum() > 0;
-    runInAction(() => (this.status = succeed ? ShardsDistributionStatus.succeed : ShardsDistributionStatus.failed));
-
-    await this.key.save();
-    return this.key;
+    return this.wallet.key;
   }
 }

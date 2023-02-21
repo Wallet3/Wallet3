@@ -25,6 +25,7 @@ interface Props {
   vm: ShardsDistributor;
   close: () => void;
   onCritical: (flag: boolean) => void;
+  includeSelf?: boolean;
 }
 
 const DeviceStatus = observer(({ item, vm }: { item: ShardSender | ClientInfo; vm: ShardsDistributor }) => {
@@ -49,17 +50,21 @@ const DeviceStatus = observer(({ item, vm }: { item: ShardSender | ClientInfo; v
   );
 });
 
-export default observer(({ vm, close, onCritical }: Props) => {
+export default observer(({ vm, close, onCritical, includeSelf }: Props) => {
   const { t } = i18n;
   const marginHorizontal = useHorizontalPadding();
   const { approvedClients, approvedCount, thresholdTooHigh } = vm;
   const { secondaryTextColor, backgroundColor } = Theme;
 
-  const [selfInfo] = useState({
-    ...getDeviceBasicInfo(),
-    remoteIP: '::1',
-    name: `${deviceInfoModule.getDeviceNameSync()} (${t('multi-sig-modal-txt-current-device')})`,
-  });
+  const [selfInfo] = useState(
+    includeSelf
+      ? {
+          ...getDeviceBasicInfo(),
+          remoteIP: '::1',
+          name: `${deviceInfoModule.getDeviceNameSync()} (${t('multi-sig-modal-txt-current-device')})`,
+        }
+      : undefined
+  );
 
   const doCritical = async () => {
     onCritical(true);
@@ -122,7 +127,7 @@ export default observer(({ vm, close, onCritical }: Props) => {
             bounces={approvedCount >= 4}
             keyExtractor={(i) => i.remoteIP}
             contentContainerStyle={{ paddingVertical: 4 }}
-            data={[selfInfo as any, ...approvedClients]}
+            data={includeSelf ? [selfInfo as any, ...approvedClients] : approvedClients}
             renderItem={renderConnectedItem}
           />
 

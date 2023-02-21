@@ -27,11 +27,11 @@ export default ({ info, verified, light, lastUsedAt }: Props) => {
 
       <View style={{ marginStart: 12, flex: 1 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 2 }}>
-          <Text numberOfLines={1} style={{ color: textColor, fontSize: light ? 18 : 22, fontWeight: '600', marginEnd: 6 }}>
+          <Text numberOfLines={1} style={{ color: textColor, fontSize: light ? 18 : 22, fontWeight: '600', marginEnd: 24 }}>
             {`${info.name || iosDevice.generationByIdentifier(info.device)}`}
           </Text>
 
-          {verified && <MaterialIcons name="verified" color={verifiedColor} size={19} />}
+          {verified && <MaterialIcons name="verified" color={verifiedColor} size={19} style={{}} />}
         </View>
 
         <View

@@ -64,7 +64,7 @@ export default observer(({ vm, onCritical, close }: Props) => {
         {step === 0 && <Preparations onNext={start} />}
         {step === 1 && <ConnectDevices vm={vm} onNext={() => goTo(2)} isRTL={isRTL} />}
         {step === 2 && <ThresholdSetting vm={vm} onNext={() => goTo(3)} isRTL={isRTL} />}
-        {step === 3 && <ShardsDistribution vm={vm} close={close} onCritical={onCritical} />}
+        {step === 3 && <ShardsDistribution vm={vm} close={close} onCritical={onCritical} includeSelf />}
       </View>
     </ModalRootContainer>
   );

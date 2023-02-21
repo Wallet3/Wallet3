@@ -319,7 +319,7 @@
   "multi-sig-modal-txt-data-saved": "保存成功",
   "multi-sig-modal-txt-data-saving-failed": "保存失敗",
   "multi-sig-modal-txt-data-distribution-failed": "配布失敗",
-  "multi-sig-modal-txt-data-distribution-completed": "配信完了",
+  "multi-sig-modal-txt-data-distribution-completed": "配布完了",
   "multi-sig-modal-txt-last-used-time": "前回使用",
   "multi-sig-modal-txt-created-time": "作成時間",
   "multi-sig-modal-txt-threshold": "マルチシグ閾値",

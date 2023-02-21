@@ -38,7 +38,6 @@ export default observer(({ wallet, close, onCritical }: Props) => {
     t('multi-sig-modal-title-waiting-aggregation'),
     t('msg-data-loading'),
     t('multi-sig-modal-title-connect-devices'),
-    t('multi-sig-modal-title-set-threshold'),
     t('multi-sig-modal-title-key-distribution'),
   ];
 
@@ -64,14 +63,14 @@ export default observer(({ wallet, close, onCritical }: Props) => {
 
   const goToConnectDevices = async () => {
     goTo(2);
-    await sleep(300);
-    const { rootShares, bip32Shares, rootEntropy, bip32XprivKey } = aggregator!;
+    await sleep(500);
 
+    const { rootShares, bip32Shares, rootEntropy } = aggregator!;
     const vm = new ShardsDistributionMore({
       bip32Shares: bip32Shares!,
       rootShares: rootShares!,
       rootEntropy: Buffer.from(rootEntropy!, 'hex'),
-      key: wallet.key,
+      wallet,
       autoStart: true,
     });
 
@@ -127,7 +126,7 @@ export default observer(({ wallet, close, onCritical }: Props) => {
           </FadeInDownView>
         )}
 
-        {step === 3 && distributor && <ConnectDevices vm={distributor} onNext={() => goTo(3)} isRTL={isRTL} />}
+        {step === 3 && distributor && <ConnectDevices vm={distributor} onNext={() => goTo(4)} isRTL={isRTL} />}
         {step === 4 && distributor && <ShardsDistribution vm={distributor} close={close} onCritical={onCritical} />}
       </View>
     </ModalRootContainer>

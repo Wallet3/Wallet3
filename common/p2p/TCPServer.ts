@@ -1,3 +1,5 @@
+import * as Random from 'expo-random';
+
 import { createCipheriv, createDecipheriv, createECDH, createHash, randomBytes } from 'crypto';
 
 import { AsyncTCPSocket } from './AsyncTCPSocket';
@@ -93,7 +95,7 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
 
   private handshake = async (socket: AsyncTCPSocket): Promise<TCPClient | undefined> => {
     try {
-      const iv = randomBytes(16);
+      const iv = Random.getRandomBytes(16);
       const ecdh = createECDH('secp256k1');
 
       await socket.write(Buffer.from([...iv, ...ecdh.generateKeys()]));

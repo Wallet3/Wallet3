@@ -1,3 +1,5 @@
+import * as Random from 'expo-random';
+
 import { Cipher, Decipher, createCipheriv, createDecipheriv, createECDH, createHash, randomBytes } from 'crypto';
 import { CipherAlgorithm, ClientInfo } from './Constants';
 import { makeObservable, observable, runInAction } from 'mobx';
@@ -61,7 +63,7 @@ export class TCPClient extends AsyncTCPSocket {
 
   private handshake = async () => {
     try {
-      const iv = randomBytes(16);
+      const iv = Random.getRandomBytes(16);
       const ecdh = createECDH('secp256k1');
 
       const negotiation = await this.read()!;

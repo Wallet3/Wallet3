@@ -1,12 +1,9 @@
 import MultiSigKey, { MultiSigKeyDeviceInfo } from '../../models/entities/MultiSigKey';
-import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { computed, makeObservable, observable, runInAction } from 'mobx';
 
 import Authentication from '../auth/Authentication';
-import { PairedDevice } from '../tss/management/PairedDevice';
 import { ShardsAggregator } from '../tss/ShardsAggregator';
 import { WalletBase } from './WalletBase';
-import secretjs from 'secrets.js-grempe';
-import { utils } from 'ethers';
 
 export class MultiSigWallet extends WalletBase {
   private _key: MultiSigKey;
@@ -41,12 +38,25 @@ export class MultiSigWallet extends WalletBase {
     return this.key.distributionId;
   }
 
+  get secretsInfo() {
+    return this.key.secretsInfo;
+  }
+
   removeTrustedDevice(device: MultiSigKeyDeviceInfo) {
+    if (this.trustedDeviceCount <= this.threshold) return;
+
     this._key.secretsInfo.devices = this._key.secretsInfo.devices.filter((d) => d.globalId !== device.globalId);
     this._key.save();
 
     const index = this.trustedDevices.findIndex((d) => d.globalId === device.globalId);
     index >= 0 && runInAction(() => this.trustedDevices.splice(index, 1));
+  }
+
+  addTrustedDevices(devices: MultiSigKeyDeviceInfo[]) {
+    this.key.secretsInfo.devices = this.key.secretsInfo.devices.concat(devices);
+    this.key.save();
+
+    runInAction(() => (this.trustedDevices = this.key.secretsInfo.devices));
   }
 
   async getSecret(pin?: string): Promise<string | undefined> {
