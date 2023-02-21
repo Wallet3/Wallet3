@@ -38,6 +38,7 @@ export async function openGlobalPasspad(req: {
     };
 
     PubSub.publish(MessageKeys.openGlobalPasspad, {
+      closeOnOverlayTap: true,
       ...req,
       onPinEntered: onPinEnteredHook,
       onAutoAuthRequest: req.fast ? undefined : onAutoAuthHook,

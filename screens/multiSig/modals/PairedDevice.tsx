@@ -84,7 +84,7 @@ export default ({ device, close }: { device: PairedDevice; close: () => void }) 
       }
     };
 
-    await openGlobalPasspad({ fast: true, onAutoAuthRequest: autoAuth, onPinEntered: autoAuth, closeOnOverlayTap: true });
+    await openGlobalPasspad({ fast: true, onAutoAuthRequest: autoAuth, onPinEntered: autoAuth });
 
     if (success) goTo(1);
   };

@@ -37,7 +37,6 @@ export default ({ device, close, onDeleteDevice: onDelete, disableRemove }: Prop
       fast: true,
       onAutoAuthRequest: Authentication.authorize,
       onPinEntered: Authentication.authorize,
-      closeOnOverlayTap: true,
     });
 
     success && goTo(1);

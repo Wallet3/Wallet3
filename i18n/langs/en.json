@@ -323,6 +323,7 @@
   "multi-sig-modal-txt-data-saved": "Data saved",
   "multi-sig-modal-txt-data-saving-failed": "Save failed",
   "multi-sig-modal-txt-data-distribution-failed": "Distribution failed",
+  "multi-sig-modal-txt-data-distribution-completed": "Distribution competed",
   "multi-sig-modal-txt-last-used-time": "Last used",
   "multi-sig-modal-txt-created-time": "Paired at",
   "multi-sig-modal-txt-threshold": "MultiSig Threshold",

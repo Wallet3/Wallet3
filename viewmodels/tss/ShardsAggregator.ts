@@ -118,14 +118,16 @@ export class ShardsAggregator extends TCPServer<Events> {
         rootShard && this.rootShards.add(rootShard);
         bip32Shard && this.bip32Shards.add(bip32Shard);
 
-        this.combineShards();
         runInAction(() => (this.received = this.rootShards.size || this.bip32Shards.size));
+        this.combineShards();
       }
     } catch (error) {}
   }
 
   private combineShards() {
-    if (this.received < this.threshold) return;
+    if (this.rootShards.size < this.threshold && this.bip32Shards.size < this.threshold) {
+      return;
+    }
 
     try {
       const [rootSecret, bip32Secret] = [this.rootShards, this.bip32Shards].map((shards) =>
@@ -135,7 +137,8 @@ export class ShardsAggregator extends TCPServer<Events> {
       this.conf.aggregatedCallback?.({ rootSecret, bip32Secret });
       this.emit('aggregated', { rootSecret, bip32Secret });
 
-      runInAction(() => (this.aggregated = bip32Secret || bip32Secret ? true : false));
+      runInAction(() => (this.aggregated = bip32Secret || rootSecret ? true : false));
+      Bonjour.unpublishService(this.name);
     } catch (error) {
       console.error('aggregated error:', error);
     }

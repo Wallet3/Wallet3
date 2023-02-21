@@ -318,6 +318,7 @@
   "multi-sig-modal-txt-data-saved": "已成功保存",
   "multi-sig-modal-txt-data-saving-failed": "保存失败",
   "multi-sig-modal-txt-data-distribution-failed": "分发失败",
+  "multi-sig-modal-txt-data-distribution-completed": "分发完成",
   "multi-sig-modal-txt-last-used-time": "上次使用",
   "multi-sig-modal-txt-created-time": "配对于",
   "multi-sig-modal-txt-threshold": "多签阈值",

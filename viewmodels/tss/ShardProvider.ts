@@ -41,7 +41,7 @@ export class ShardProvider extends TCPClient {
       }
 
       this.req = req;
-      runInAction(() => (this.requestType = req.params.bip32Shard ? 'bip32' : 'root'));
+      runInAction(() => (this.requestType = req.params.rootShard ? 'root' : 'bip32'));
     } catch (error) {}
   };
 
@@ -52,8 +52,7 @@ export class ShardProvider extends TCPClient {
       const bip32Cipher = this.req.params.bip32Shard ? this.key.secrets.bip32Shard : undefined;
       const rootCipher = this.req.params.rootShard ? this.key.secrets.rootShard : undefined;
 
-      const bip32Secret = bip32Cipher ? await Authentication.decryptForever(bip32Cipher, pin) : undefined;
-      const rootSecret = rootCipher ? await Authentication.decryptForever(rootCipher, pin) : undefined;
+      const [bip32Secret, rootSecret] = (await Authentication.decryptForever([bip32Cipher, rootCipher], pin)) as string[];
       if (!bip32Secret && !rootSecret) return false;
 
       const [bip32Shard, rootShard] = await Promise.all(

@@ -97,6 +97,9 @@ export default observer(({ vm, close, onCritical }: Props) => {
       {vm.status === ShardsDistributionStatus.succeed && (
         <FadeInDownView style={{ backgroundColor, flex: 1, justifyContent: 'center', alignItems: 'center' }} delay={500}>
           <IllustrationCompleted width={150} height={150} />
+          <Text style={{ color: secureColor, marginTop: 24, fontWeight: '600', textTransform: 'capitalize' }}>
+            {t('multi-sig-modal-txt-data-distribution-completed')}
+          </Text>
         </FadeInDownView>
       )}
 

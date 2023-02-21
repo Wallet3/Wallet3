@@ -214,9 +214,16 @@ export class Authentication extends EventEmitter {
     return encrypt(data, await this.getForeverKey());
   };
 
-  decryptForever = async (data: string, pin?: string) => {
+  decryptForever = async <T = string | string[]>(data: T, pin?: string): Promise<T | undefined> => {
     if (!(await this.authenticate({ pin }))) return undefined;
-    return decrypt(data, await this.getForeverKey());
+
+    const foreverKey = await this.getForeverKey();
+
+    if (Array.isArray(data)) {
+      return data.map((d) => (d ? decrypt(d, foreverKey) : d)) as T;
+    } else {
+      return decrypt(data as string, foreverKey) as T;
+    }
   };
 
   setUserSecretsVerified = async (verified: boolean) => {

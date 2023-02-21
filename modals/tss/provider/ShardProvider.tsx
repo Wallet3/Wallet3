@@ -1,6 +1,6 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Placeholder, Skeleton } from '../../../components';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Animated from 'react-native-reanimated';
 import Button from '../components/Button';
@@ -13,7 +13,6 @@ import { observer } from 'mobx-react-lite';
 import { openGlobalPasspad } from '../../../common/Modals';
 import { sleep } from '../../../utils/async';
 import styles from '../../styles';
-import { warningColor } from '../../../constants/styles';
 
 const { View, Text } = Animated;
 
@@ -21,11 +20,18 @@ export default observer(({ vm, close }: { vm: ShardProvider; close: Function }) 
   const { textColor, secondaryTextColor } = Theme;
   const { t } = i18n;
   const { remoteInfo, requestType, closed } = vm;
+  const [busy, setBusy] = useState(false);
 
   const exec = async () => {
-    if (!(await openGlobalPasspad({ onAutoAuthRequest: vm.send, onPinEntered: vm.send, fast: true }))) return;
-    await sleep(200);
-    close();
+    setBusy(true);
+
+    try {
+      if (!(await openGlobalPasspad({ onAutoAuthRequest: vm.send, onPinEntered: vm.send, fast: true }))) return;
+      await sleep(200);
+      close();
+    } finally {
+      setBusy(false);
+    }
   };
 
   useEffect(() => {
@@ -102,7 +108,7 @@ export default observer(({ vm, close }: { vm: ShardProvider; close: Function }) 
       <FadeInDownView delay={300}>
         <Button
           style={{ marginHorizontal: 0 }}
-          disabled={!requestType || vm.closed}
+          disabled={!requestType || vm.closed || busy}
           title={t('button-approve')}
           onPress={exec}
         />

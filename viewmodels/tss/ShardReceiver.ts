@@ -52,7 +52,7 @@ export class ShardReceiver extends TCPClient {
       switch (data.type) {
         case ContentType.shardDistribution:
           await this.handleShardDistribution(data as ShardDistribution);
-          break;
+          return;
         case ContentType.pairingCodeVerified:
           await this.handlePairingCode(data as PairingCodeVerified);
           break;

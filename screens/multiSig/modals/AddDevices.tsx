@@ -44,7 +44,7 @@ export default observer(({ wallet, shardsDistributor, close }: Props) => {
     let vm: ShardsAggregator | undefined;
 
     const auth = async (pin?: string) => {
-      vm = await wallet.requestShardsAggregator({ rootShard: true }, pin);
+      vm = await wallet.requestShardsAggregator({ rootShard: true, bip32Shard: true }, pin);
       return vm ? true : false;
     };
 

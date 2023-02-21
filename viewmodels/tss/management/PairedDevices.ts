@@ -73,7 +73,7 @@ class PairedDevices {
     const device = new PairedDevice(key);
     if (this.devices.find((d) => d.id === device.id)) return;
 
-    runInAction(() => this.devices.unshift(device));
+    runInAction(() => (this.devices = this.devices.concat(device)));
     this.scanLan();
   }
 

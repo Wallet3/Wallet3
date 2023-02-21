@@ -29,15 +29,7 @@ export default observer(() => {
       return secret !== undefined;
     };
 
-    if (
-      !(await openGlobalPasspad({
-        fast: true,
-        onAutoAuthRequest: getSecret,
-        onPinEntered: getSecret,
-        closeOnOverlayTap: true,
-      }))
-    )
-      return;
+    if (!(await openGlobalPasspad({ fast: true, onAutoAuthRequest: getSecret, onPinEntered: getSecret }))) return;
 
     setBusy(true);
     await sleep(200);

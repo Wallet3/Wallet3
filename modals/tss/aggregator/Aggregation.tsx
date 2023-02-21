@@ -1,17 +1,18 @@
 import { FadeInDownView, FadeInRightView, ZoomInView } from '../../../components/animations';
+import React, { useEffect } from 'react';
 
 import Animated from 'react-native-reanimated';
 import Button from '../components/Button';
 import Device from '../../../components/Device';
 import DeviceRipple from '../components/DeviceRipple';
 import LottieView from 'lottie-react-native';
-import React from 'react';
 import { ShardsAggregator } from '../../../viewmodels/tss/ShardsAggregator';
 import { StyleSheet } from 'react-native';
 import Theme from '../../../viewmodels/settings/Theme';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
 import { secureColor } from '../../../constants/styles';
+import { startLayoutAnimation } from '../../../utils/animations';
 
 const { View, Text } = Animated;
 
@@ -26,6 +27,10 @@ export default observer(({ vm, buttonTitle, onButtonPress, buttonDisabled }: Pro
   const { t } = i18n;
   const { secondaryTextColor } = Theme;
   const { received, aggregated, threshold } = vm;
+
+  useEffect(() => {
+    received === 1 && startLayoutAnimation();
+  }, [received]);
 
   return (
     <FadeInDownView style={{ flex: 1 }}>
@@ -57,7 +62,7 @@ export default observer(({ vm, buttonTitle, onButtonPress, buttonDisabled }: Pro
 const styles = StyleSheet.create({
   txt: {
     marginHorizontal: 36,
-    fontSize: 12,
+    fontSize: 14,
     textAlign: 'center',
     fontWeight: '500',
   },
