@@ -10,6 +10,7 @@ import { TCPServer } from '../../common/p2p/TCPServer';
 import { btoa } from 'react-native-quick-base64';
 import { randomBytes } from 'crypto';
 import secretjs from 'secrets.js-grempe';
+import { utils } from 'ethers';
 
 interface Conf {
   threshold: number;
@@ -150,10 +151,16 @@ export class ShardsAggregator extends TCPServer<Events> {
         shards.size >= this.threshold ? secretjs.combine(Array.from(shards)) : undefined
       );
 
+      rootSecret && utils.entropyToMnemonic(Buffer.from(rootSecret, 'hex'));
+
+      if (bip32Secret && !Buffer.from(bip32Secret, 'hex').toString('utf8').startsWith('xprv')) {
+        return;
+      }
+
       this.conf.aggregatedCallback?.({ rootSecret, bip32Secret });
       this.emit('aggregated', { rootSecret, bip32Secret });
 
-      runInAction(() => (this.aggregated = bip32Secret || rootSecret ? true : false));
+      runInAction(() => (this.aggregated = true));
       Bonjour.unpublishService(this.name);
     } catch (error) {
       console.error('aggregated error:', error);

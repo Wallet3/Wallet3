@@ -54,7 +54,7 @@ export default (props: Props) => {
           onPress={onClosePress}
           style={{
             padding: 5,
-            right: 2,
+            right: (screenRadius ? 2 : 0) + 2,
             top: (screenRadius ? 4 : 0) + 3,
             borderRadius: 50,
             position: 'absolute',

@@ -55,16 +55,8 @@ if (__DEV__) {
     //   console.log((await eccrypto.decrypt(Buffer.from(root.privateKey.substring(2), 'hex'), en)).toString('utf8'));
     // });
 
-    console.log(
-      'entropy',
-      utils.mnemonicToEntropy(
-        'skull call flip sister become knife tourist coin off sun kit cute canvas area grid inherit birth glow witness course dolphin angry orphan salt'
-      )
-    );
-
     const entropy = randomBytes(16);
-    const mnemonic =
-      'skull call flip sister become knife tourist coin off sun kit cute canvas area grid inherit birth glow witness course dolphin angry orphan salt'; //utils.entropyToMnemonic(entropy);
+    const mnemonic = utils.entropyToMnemonic(entropy);
     const hd = utils.HDNode.fromMnemonic(mnemonic);
     const xprivkey = Buffer.from(hd.extendedKey, 'utf8').toString('hex');
     const shares = secretjs.share(xprivkey, 2, 2);
@@ -77,12 +69,6 @@ if (__DEV__) {
       throw new Error('!!! check !!!');
     }
 
-    const test = [
-      '8012b06ad61037a13de64297e43e5fb672db60007e7ac6c04f987c8bbeb5a7b3d1ff7e9e495aa3237c841326dd29ce2f889',
-      '802560c47c206f426a1c852fc86d7ebce593251197fe9864aeb9806d67d598d5a8e05e1ef81f9db54640f6f6f4831ead950',
-    ];
-
-    console.log('test', secretjs.combine(test), utils.entropyToMnemonic(`0x${secretjs.combine(test)}`));
     // console.log(secretjs.share(entropy.toString('hex'), 2, 2));
     // const pri = new KeyDistribution({ mnemonic });
     // pri.start();
