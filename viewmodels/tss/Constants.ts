@@ -29,9 +29,12 @@ export type ShardAggregationRequest = {
   shardVersion: string;
 };
 
+type EncryptedShard = { iv: string; ephemPublicKey: string; ciphertext: string; mac: string };
+
 export type ShardAggregationAck = {
   type: ContentType.shardAggregationAck;
-  shard: string | { iv: string; ephemPublicKey: string; ciphertext: string; mac: string };
+  rootShard?: EncryptedShard;
+  bip32Shard?: EncryptedShard;
 };
 
 export type PairingCodeVerified = {

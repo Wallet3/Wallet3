@@ -49,20 +49,35 @@ export class ShardProvider extends TCPClient {
     if (!this.req) return false;
 
     try {
-      const cipher = this.req.params.bip32Shard ? this.key.secrets.bip32Shard : this.key.secrets.rootShard;
-      const secret = await Authentication.decryptForever(cipher, pin);
-      if (!secret) return false;
+      const bip32Cipher = this.req.params.bip32Shard ? this.key.secrets.bip32Shard : undefined;
+      const rootCipher = this.req.params.rootShard ? this.key.secrets.rootShard : undefined;
 
-      const shard = await eccrypto.encrypt(Buffer.from(this.key.secretsInfo.verifyPubkey, 'hex'), Buffer.from(secret, 'hex'));
+      const bip32Secret = bip32Cipher ? await Authentication.decryptForever(bip32Cipher, pin) : undefined;
+      const rootSecret = rootCipher ? await Authentication.decryptForever(rootCipher, pin) : undefined;
+      if (!bip32Secret && !rootSecret) return false;
+
+      const [bip32Shard, rootShard] = await Promise.all(
+        [bip32Secret, rootSecret].map(async (secret) => {
+          if (!secret) return undefined;
+
+          const ecies = await eccrypto.encrypt(
+            Buffer.from(this.key.secretsInfo.verifyPubkey, 'hex'),
+            Buffer.from(secret, 'hex')
+          );
+
+          return {
+            iv: ecies.iv.toString('hex'),
+            ciphertext: ecies.ciphertext.toString('hex'),
+            ephemPublicKey: ecies.ephemPublicKey.toString('hex'),
+            mac: ecies.mac.toString('hex'),
+          };
+        })
+      );
 
       const data: ShardAggregationAck = {
         type: ContentType.shardAggregationAck,
-        shard: {
-          iv: shard.iv.toString('hex'),
-          ciphertext: shard.ciphertext.toString('hex'),
-          ephemPublicKey: shard.ephemPublicKey.toString('hex'),
-          mac: shard.mac.toString('hex'),
-        },
+        bip32Shard,
+        rootShard,
       };
 
       super.secureWriteString(JSON.stringify(data));

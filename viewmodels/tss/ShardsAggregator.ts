@@ -13,10 +13,11 @@ import secretjs from 'secrets.js-grempe';
 
 interface Conf {
   threshold: number;
-  initShard: string;
+  initRootShard?: string;
+  initBip32Shard?: string;
   autoStart?: boolean;
   verifyPrivKey?: Buffer;
-  aggregatedCallback?: (secret: string) => void;
+  aggregatedCallback?: (args: { rootSecret?: string; bip32Secret?: string }) => void;
   aggregationParams: { subPath?: string; subPathIndex?: number; rootShard?: boolean; bip32Shard?: boolean };
 }
 
@@ -26,12 +27,13 @@ interface IConstruction extends Conf {
 }
 
 interface Events {
-  aggregated: (secret: string) => void;
+  aggregated: (args: { rootSecret?: string; bip32Secret?: string }) => void;
 }
 
 export class ShardsAggregator extends TCPServer<Events> {
   private conf: Conf;
-  private shards: string[] = [];
+  private rootShards = new Set<string>();
+  private bip32Shards = new Set<string>();
   readonly id: string;
   readonly version: string;
   readonly device = getDeviceInfo();
@@ -42,9 +44,11 @@ export class ShardsAggregator extends TCPServer<Events> {
 
   constructor(args: IConstruction) {
     super();
-    const { distributionId, shardsVersion, initShard } = args;
+    const { distributionId, shardsVersion, initRootShard, initBip32Shard } = args;
 
-    initShard && this.shards.push(initShard);
+    initRootShard && this.rootShards.add(initRootShard);
+    initBip32Shard && this.bip32Shards.add(initBip32Shard);
+
     makeObservable(this, { clients: observable, received: observable, aggregated: observable });
 
     this.id = distributionId;
@@ -96,32 +100,42 @@ export class ShardsAggregator extends TCPServer<Events> {
       const data: ShardAggregationAck = JSON.parse((await c.secureReadString())!);
 
       if (this.role === 'primary') {
-        const serialized = data.shard as { iv: string; ephemPublicKey: string; ciphertext: string; mac: string };
-        const ecies: Ecies = {
-          ciphertext: Buffer.from(serialized.ciphertext, 'hex'),
-          ephemPublicKey: Buffer.from(serialized.ephemPublicKey, 'hex'),
-          iv: Buffer.from(serialized.iv, 'hex'),
-          mac: Buffer.from(serialized.mac, 'hex'),
-        };
+        const [rootShard, bip32Shard] = await Promise.all(
+          [data.rootShard, data.bip32Shard].map(async (serialized) => {
+            if (!serialized) return undefined;
 
-        const shard = (await eccrypto.decrypt(this.conf.verifyPrivKey!, ecies)).toString('hex');
-        if (this.shards.includes(shard)) return;
+            const ecies: Ecies = {
+              ciphertext: Buffer.from(serialized.ciphertext, 'hex'),
+              ephemPublicKey: Buffer.from(serialized.ephemPublicKey, 'hex'),
+              iv: Buffer.from(serialized.iv, 'hex'),
+              mac: Buffer.from(serialized.mac, 'hex'),
+            };
 
-        this.shards.push(shard);
+            return (await eccrypto.decrypt(this.conf.verifyPrivKey!, ecies)).toString('hex');
+          })
+        );
+
+        rootShard && this.rootShards.add(rootShard);
+        bip32Shard && this.bip32Shards.add(bip32Shard);
+
         this.combineShards();
-        runInAction(() => (this.received = this.shards.length));
+        runInAction(() => (this.received = this.rootShards.size || this.bip32Shards.size));
       }
     } catch (error) {}
   }
 
   private combineShards() {
-    if (this.shards.length < this.threshold) return;
+    if (this.received < this.threshold) return;
 
     try {
-      const secret = secretjs.combine(this.shards);
-      this.conf.aggregatedCallback?.(secret);
-      this.emit('aggregated', secret);
-      runInAction(() => (this.aggregated = true));
+      const [rootSecret, bip32Secret] = [this.rootShards, this.bip32Shards].map((shards) =>
+        shards.size >= this.threshold ? secretjs.combine(Array.from(shards)) : undefined
+      );
+
+      this.conf.aggregatedCallback?.({ rootSecret, bip32Secret });
+      this.emit('aggregated', { rootSecret, bip32Secret });
+
+      runInAction(() => (this.aggregated = bip32Secret || bip32Secret ? true : false));
     } catch (error) {
       console.error('aggregated error:', error);
     }

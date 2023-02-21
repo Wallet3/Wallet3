@@ -9,7 +9,7 @@ interface Events extends SocketEvents {
 }
 
 export class AsyncTCPSocket extends EventEmitter<Events> {
-  protected awaits = new Set<Function>();
+  private awaits = new Set<Function>();
 
   readonly raw: TCP.TLSSocket | TCP.Socket;
 

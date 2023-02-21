@@ -204,7 +204,7 @@ export class Authentication extends EventEmitter {
     const masterKey = await this.getMasterKey();
 
     if (Array.isArray(data)) {
-      return data.map((d) => decrypt(d, masterKey)) as T;
+      return data.map((d) => (d ? decrypt(d, masterKey) : d)) as T;
     } else {
       return decrypt(data as string, masterKey) as T;
     }

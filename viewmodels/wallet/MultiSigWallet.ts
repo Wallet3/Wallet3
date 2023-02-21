@@ -71,23 +71,28 @@ export class MultiSigWallet extends WalletBase {
   }
 
   async requestShardsAggregator(params: { bip32Shard?: boolean; rootShard?: boolean; autoStart?: boolean }, pin?: string) {
-    const [initShard, verifyPrivKey] =
+    const [bip32Shard, initShard, verifyPrivKey] =
       (await Authentication.decrypt(
-        [params.bip32Shard ? this.key.secrets.bip32Shard : this.key.secrets.rootShard, this.key.secrets.verifySignKey],
+        [
+          params.bip32Shard ? this.key.secrets.bip32Shard : undefined,
+          params.rootShard ? this.key.secrets.rootShard : undefined,
+          this.key.secrets.verifySignKey,
+        ],
         pin
       )) || [];
 
     console.log('init shard', initShard, verifyPrivKey);
-    if (!initShard) return;
+    if (!verifyPrivKey) return;
 
     return new ShardsAggregator({
-      initShard,
+      initRootShard: initShard!,
+      initBip32Shard: bip32Shard,
       autoStart: params.autoStart,
       aggregationParams: params,
       distributionId: this.key.distributionId,
       shardsVersion: this.key.secretsInfo.version,
       threshold: this.key.secretsInfo.threshold,
-      verifyPrivKey: Buffer.from(verifyPrivKey, 'hex'),
+      verifyPrivKey: Buffer.from(verifyPrivKey!, 'hex'),
     });
   }
 }
