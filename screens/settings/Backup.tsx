@@ -33,6 +33,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
   const [recoveryKey, setRecoveryKey] = useState<string>();
   const [recoveryKeyPlatform, setRecoveryKeyPlatform] = useState<string>();
   const { textColor } = Theme;
+  const { currentWallet } = App;
   const [mn] = useState(new MnemonicOnce());
 
   usePreventScreenCapture();
@@ -40,12 +41,11 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
   const themeColor = Networks.current.color;
 
   const verify = async (passcode?: string) => {
-    const { wallet } = App.findWallet(App.currentAccount?.address || '') || {};
-    setRecoveryKeyPlatform(wallet?.signInPlatform);
+    setRecoveryKeyPlatform(currentWallet?.signInPlatform);
 
-    const secret = await (wallet?.web2SignedIn
-      ? SignInWithApple.getEncodedRecoverKey(wallet.signInUser!, passcode)
-      : wallet?.getSecret(passcode));
+    const secret = await (currentWallet?.web2SignedIn
+      ? SignInWithApple.getEncodedRecoverKey(currentWallet.signInUser!, passcode)
+      : currentWallet?.getSecret(passcode));
 
     const success = secret ? true : false;
 
@@ -56,9 +56,9 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
         close();
         mn.setSecret(secret!);
 
-        if (wallet?.isHDWallet && !wallet.web2SignedIn) {
+        if (currentWallet?.isHDWallet && !currentWallet.web2SignedIn) {
           setWords(mn.secretWords);
-        } else if (wallet?.web2SignedIn) {
+        } else if (currentWallet?.web2SignedIn) {
           setRecoveryKey(secret!);
         } else {
           setPrivKey(secret!);
@@ -74,7 +74,10 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
   };
 
   useEffect(() => {
+    if (currentWallet?.isMultiSig) return;
+
     setTimeout(() => open(), 0);
+    console.log('is multiSig', currentWallet?.isMultiSig);
     if (Authentication.biometricType) verify();
 
     return () => mn.clean();

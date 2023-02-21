@@ -63,6 +63,7 @@ export default observer(({ wallet, close, onCritical }: Props) => {
 
   const goToConnectDevices = async () => {
     goTo(2);
+    onCritical(true);
     await sleep(500);
 
     const { rootShares, bip32Shares, rootEntropy } = aggregator!;
@@ -76,6 +77,7 @@ export default observer(({ wallet, close, onCritical }: Props) => {
 
     setDistributor(vm);
     await sleep(100);
+    onCritical(false);
     goTo(3);
   };
 

@@ -46,6 +46,10 @@ export class ShardsDistributionMore extends ShardsDistributor {
     throw new Error(`Can't set threshold`);
   }
 
+  get thresholdTooHigh() {
+    return false;
+  }
+
   approveClient(client: ShardSender, code: string): void {
     if (this.wallet.secretsInfo.devices.find((d) => d.globalId === client.remoteInfo?.globalId)) return;
     super.approveClient(client, code);
@@ -77,7 +81,7 @@ export class ShardsDistributionMore extends ShardsDistributor {
             bip32Path: this.wallet.key.basePath,
             bip32PathIndex: this.wallet.key.basePathIndex,
             bip32Xpubkey: this.wallet.key.bip32Xpubkey,
-            version: this.wallet.key.secretsInfo.version,
+            version: this.wallet.secretsInfo.version,
           });
 
           const succeed = (await c.readShardAck()) ? 1 : 0;

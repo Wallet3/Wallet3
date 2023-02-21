@@ -104,9 +104,14 @@ export class ShardsAggregator extends TCPServer<Events> {
   }
 
   protected async newClient(c: TCPClient): Promise<void> {
-    try {
-      runInAction(() => this.clients.push(c));
+    if (this.aggregated) {
+      c.destroy();
+      return;
+    }
 
+    runInAction(() => this.clients.push(c));
+
+    try {
       const req: ShardAggregationRequest = {
         type: ContentType.shardAggregationRequest,
         params: this.conf.aggregationParams,
@@ -142,6 +147,7 @@ export class ShardsAggregator extends TCPServer<Events> {
   }
 
   private combineShards() {
+    if (this.aggregated) return;
     if (this.rootShards.size < this.threshold && this.bip32Shards.size < this.threshold) {
       return;
     }
@@ -154,7 +160,7 @@ export class ShardsAggregator extends TCPServer<Events> {
       rootSecret && utils.entropyToMnemonic(Buffer.from(rootSecret, 'hex'));
 
       if (bip32Secret && !Buffer.from(bip32Secret, 'hex').toString('utf8').startsWith('xprv')) {
-        return;
+        throw new Error('Invalid xprv key');
       }
 
       this.conf.aggregatedCallback?.({ rootSecret, bip32Secret });

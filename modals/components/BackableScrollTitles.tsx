@@ -57,7 +57,7 @@ export default (props: Props) => {
           style={{
             padding: 5,
             right: 4,
-            top: 3,
+            top: screenRadius ? 3 : 2,
             borderRadius: 50,
             position: 'absolute',
             // borderWidth: 1,
