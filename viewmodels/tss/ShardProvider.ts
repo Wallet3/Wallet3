@@ -61,7 +61,7 @@ export class ShardProvider extends TCPClient {
 
           const ecies = await eccrypto.encrypt(
             Buffer.from(this.key.secretsInfo.verifyPubkey, 'hex'),
-            Buffer.from(secret, 'hex')
+            Buffer.from(secret, 'utf8')
           );
 
           return {

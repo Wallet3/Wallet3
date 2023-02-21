@@ -213,7 +213,7 @@ export class WalletConnect_v2 extends EventEmitter {
 
     const session = await this.client.approveSession({
       id: this.sessionProposal!.id,
-      namespaces: getNamespaces([this.lastUsedAccount], chains),
+      namespaces: getNamespaces([this.lastUsedAccount], chains || []),
     });
 
     this.store.session = session;

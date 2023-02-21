@@ -16,7 +16,7 @@ export class MultiSigWallet extends WalletBase {
 
   trustedDevices: MultiSigKeyDeviceInfo[];
 
-  protected get key() {
+  get key() {
     return this._key;
   }
 
@@ -30,11 +30,15 @@ export class MultiSigWallet extends WalletBase {
   }
 
   get threshold() {
-    return this._key.secretsInfo.threshold;
+    return this.key.secretsInfo.threshold;
   }
 
   get trustedDeviceCount() {
     return this.trustedDevices.length + 1;
+  }
+
+  get distributionId() {
+    return this.key.distributionId;
   }
 
   removeTrustedDevice(device: MultiSigKeyDeviceInfo) {
@@ -81,7 +85,6 @@ export class MultiSigWallet extends WalletBase {
         pin
       )) || [];
 
-    console.log('init shard', initShard, verifyPrivKey);
     if (!verifyPrivKey) return;
 
     return new ShardsAggregator({

@@ -204,7 +204,7 @@ export class ShardsDistributor extends TCPServer<Events> {
       return;
     }
 
-    const zip = rootShards.map<[string, string]>((v1, i) => [v1, bip32Shards[i]]);
+    const zip = rootShards.map((v1, i) => [v1, bip32Shards[i]]);
 
     const result = await Promise.all(
       zip.map(async (shards, index) => {

@@ -15,6 +15,7 @@ import { Portal } from 'react-native-portalize';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { openShardReceiver } from '../../common/Modals';
 import { startLayoutAnimation } from '../../utils/animations';
 import { useModalize } from 'react-native-modalize';
 import { useOptimizedSafeBottom } from '../../utils/hardware';
@@ -65,7 +66,7 @@ export default observer(() => {
         title={t('button-start-pairing')}
         icon={() => <Ionicons name="phone-portrait-outline" color="#fff" size={17} />}
         style={{ marginTop: 12 }}
-        onPress={() => PubSub.publish(MessageKeys.openShardReceiver)}
+        onPress={() => openShardReceiver()}
       />
 
       <Portal>

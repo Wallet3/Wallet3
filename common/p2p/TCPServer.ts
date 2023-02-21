@@ -44,7 +44,7 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
         await new Promise<void>((resolve) => this.server.listen({ port: TCPServer.port++, host: '0.0.0.0' }, () => resolve()));
         break;
       } catch (error) {
-        console.log(error, TCPServer.port);
+        console.error(error, TCPServer.port);
         attempts++;
       }
     }

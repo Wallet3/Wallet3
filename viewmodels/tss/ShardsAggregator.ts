@@ -70,6 +70,22 @@ export class ShardsAggregator extends TCPServer<Events> {
     return this.conf.threshold;
   }
 
+  get rootShares() {
+    return this.aggregated ? Array.from(this.rootShards) : undefined;
+  }
+
+  get bip32Shares() {
+    return this.aggregated ? Array.from(this.bip32Shards) : undefined;
+  }
+
+  get rootEntropy() {
+    return this.aggregated ? secretjs.combine(this.rootShares!) : undefined;
+  }
+
+  get bip32XprivKey() {
+    return this.aggregated ? Buffer.from(secretjs.combine(this.bip32Shares!), 'hex').toString('utf8') : undefined;
+  }
+
   async start() {
     if (super.listening) return true;
     const succeed = await super.start();
@@ -111,7 +127,7 @@ export class ShardsAggregator extends TCPServer<Events> {
               mac: Buffer.from(serialized.mac, 'hex'),
             };
 
-            return (await eccrypto.decrypt(this.conf.verifyPrivKey!, ecies)).toString('hex');
+            return (await eccrypto.decrypt(this.conf.verifyPrivKey!, ecies)).toString('utf8');
           })
         );
 

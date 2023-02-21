@@ -29,6 +29,7 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
   const [selectedDevice, setSelectedDevice] = useState<MultiSigKeyDeviceInfo>();
   const { ref: trustedDevicesModal, close: closeTrustedDeviceModal, open: openTrustedDeviceModal } = useModalize();
   const { ref: addDevicesModal, close: closeAddDevices, open: openAddDevices } = useModalize();
+  const [addDevicesCritical, setAddDevicesCritical] = useState(false);
 
   const aggregateShards = async () => {
     let vm: ShardsAggregator | undefined;
@@ -118,8 +119,8 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
           )}
         </ModalizeContainer>
 
-        <ModalizeContainer ref={addDevicesModal}>
-          <AddDevices wallet={wallet} close={closeAddDevices} />
+        <ModalizeContainer ref={addDevicesModal} closeOnOverlayTap={!addDevicesCritical}>
+          <AddDevices wallet={wallet} close={closeAddDevices} onCritical={setAddDevicesCritical} />
         </ModalizeContainer>
       </Portal>
     </SafeViewContainer>

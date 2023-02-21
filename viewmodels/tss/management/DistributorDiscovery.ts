@@ -1,8 +1,10 @@
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
+import App from '../../core/App';
 import Bonjour from '../../../common/p2p/Bonjour';
 import EventEmitter from 'eventemitter3';
 import { KeyDistributionService } from '../Constants';
+import { MultiSigWallet } from '../../wallet/MultiSigWallet';
 import { Service } from 'react-native-zeroconf';
 import { atob } from 'react-native-quick-base64';
 import { getDeviceBasicInfo } from '../../../common/p2p/Utils';
@@ -29,11 +31,13 @@ export function handleRawService(service: Service) {
 
 class DistributorDiscovery extends EventEmitter<{}> {
   shardsDistributors: Service[] = [];
+  pairedDistributors: Service[] = [];
+  pairedServices = new Set<string>();
 
   constructor() {
     super();
 
-    makeObservable(this, { shardsDistributors: observable });
+    makeObservable(this, { shardsDistributors: observable, pairedDistributors: observable });
     Bonjour.on('resolved', this.onResolved);
     Bonjour.on('update', this.onUpdate);
   }
@@ -46,11 +50,19 @@ class DistributorDiscovery extends EventEmitter<{}> {
   onResolved = (raw: Service) => {
     const { shardsDistribution: service } = handleRawService(raw);
     if (!service) return;
+    if (this.shardsDistributors.find((s) => s.name === service.name)) return;
+    if (this.pairedDistributors.find((s) => s.name === service.name)) return;
 
-    runInAction(() => this.shardsDistributors.push(service));
+    if (this.pairedServices.has(service.name)) {
+      runInAction(() => this.pairedDistributors.push(service));
+    } else {
+      runInAction(() => this.shardsDistributors.push(service));
+    }
   };
 
   scan() {
+    const wallets = App.wallets.filter((w) => w.isMultiSig) as MultiSigWallet[];
+    this.pairedServices = new Set(wallets.flatMap((w) => w.trustedDevices.map((d) => `sd-${d.globalId}-${w.distributionId}`)));
     Bonjour.scan(KeyDistributionService);
   }
 
