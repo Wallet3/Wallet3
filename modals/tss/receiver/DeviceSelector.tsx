@@ -39,7 +39,7 @@ const Item = ({
     <View entering={FadeInDown.springify()} exiting={FadeOutDown.springify()} style={{ paddingVertical: 8 }}>
       <TouchableOpacity
         disabled={paired}
-        style={{ paddingHorizontal: marginHorizontal, flexDirection: 'row', alignItems: 'center', opacity: paired ? 0.45 : 1 }}
+        style={{ paddingHorizontal: marginHorizontal, flexDirection: 'row', alignItems: 'center', opacity: paired ? 0.3 : 1 }}
         onPress={() => onPress(item)}
       >
         <DeviceInfo info={item.txt?.info ?? {}} />
@@ -50,7 +50,7 @@ const Item = ({
               alignSelf: 'flex-start',
               padding: 4,
               paddingHorizontal: 12,
-              backgroundColor: secureColor,
+              backgroundColor: verifiedColor,
               borderRadius: 6,
               marginStart: 12,
               marginTop: 4,
@@ -74,6 +74,7 @@ export default observer(({ onNext }: { onNext: (selectedService: Service) => voi
   const marginHorizontal = useHorizontalPadding();
   const [selectedService, setSelectedService] = useState<Service>();
   const [foundTimeout, setFoundTimeout] = useState(false);
+  const { shardsDistributors } = DistributorDiscovery;
 
   useEffect(() => DistributorDiscovery.scan(), []);
 
@@ -94,12 +95,14 @@ export default observer(({ onNext }: { onNext: (selectedService: Service) => voi
     <View style={{ flex: 1 }} entering={FadeInRight.delay(300).springify()} exiting={FadeOutLeft.springify()}>
       <Text style={{ color: secondaryTextColor, marginHorizontal }}>{t('multi-sig-modal-connect-select-to-pair')}:</Text>
 
-      {DistributorDiscovery.shardsDistributors.length > 0 ? (
+      {shardsDistributors.length > 0 ? (
         <FlatList
-          style={{ flex: 1 }}
-          data={DistributorDiscovery.shardsDistributors}
+          style={{ flex: 1, paddingBottom: 12 }}
+          data={shardsDistributors}
           renderItem={renderItem}
           keyExtractor={(i) => i.name}
+          contentContainerStyle={{ paddingTop: 2 }}
+          bounces={shardsDistributors.length > 3}
         />
       ) : (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginHorizontal }}>

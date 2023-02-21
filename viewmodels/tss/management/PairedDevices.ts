@@ -40,10 +40,8 @@ class PairedDevices {
 
     const reqId = service.txt?.['reqId'];
     if (this.handledIds.has(reqId)) {
-      setTimeout(() => this.scanLan(), 15 * 1000);
+      setTimeout(() => this.scanLan(), 10 * SECOND);
       return;
-    } else {
-      this.handledIds.add(reqId);
     }
 
     const id = service.txt?.['distributionId'];
@@ -54,10 +52,14 @@ class PairedDevices {
     if (!device) return;
 
     const vm = new ShardProvider({ service, shardKey: device.shard });
+    vm.once('shardSent' as any, () => this.handledIds.add(reqId));
 
     openShardProvider({
       vm,
-      onClosed: () => setTimeout(() => this.scanLan(), 15 * SECOND),
+      onClosed: () => {
+        vm.removeAllListeners();
+        setTimeout(() => this.scanLan(), 10 * SECOND);
+      },
     });
   };
 

@@ -21,7 +21,7 @@ export default ({ children, style }: { style?: StyleProp<ViewStyle>; children: R
       }}
     >
       <SquircleView
-        squircleParams={{ cornerRadius: corderRadius, cornerSmoothing: 0.64, fillColor: backgroundColor }}
+        squircleParams={{ cornerRadius: corderRadius, cornerSmoothing: 0.81, fillColor: backgroundColor }}
         style={{
           flex: 1,
           backgroundColor: 'transparent',
