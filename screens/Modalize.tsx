@@ -108,6 +108,7 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
   return (
     <ModalizeContainer
       ref={ref}
+      withHandle={false}
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
       tapGestureEnabled={false}
@@ -156,6 +157,7 @@ const WalletConnect = () => {
   return (
     <ModalizeContainer
       ref={connectDappRef}
+      withHandle={false}
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
       tapGestureEnabled={false}
@@ -205,6 +207,7 @@ const InpageDAppConnect = () => {
   return (
     <ModalizeContainer
       ref={connectDappRef}
+      withHandle={false}
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
       tapGestureEnabled={false}
@@ -439,6 +442,7 @@ const SendFundsModal = () => {
     <ModalizeContainer
       key="SendFunds"
       ref={sendRef}
+      withHandle={!reviewing}
       panGestureEnabled={!reviewing}
       panGestureComponentEnabled={!reviewing}
       onClosed={() => {
@@ -473,24 +477,11 @@ const BackupTipsModal = () => {
   }, []);
 
   return (
-    <Modalize
-      ref={ref}
-      useNativeDriver
-      closeOnOverlayTap={false}
-      withHandle={false}
-      adjustToContentHeight
-      disableScrollIfPossible
-      panGestureEnabled={false}
-      panGestureComponentEnabled={false}
-      scrollViewProps={{
-        scrollEnabled: false,
-        showsVerticalScrollIndicator: false,
-        showsHorizontalScrollIndicator: false,
-        bounces: false,
-      }}
-    >
-      <BackupSecretTip onDone={close} />
-    </Modalize>
+    <ModalizeContainer ref={ref} closeOnOverlayTap={false} withHandle={false} safeAreaStyle={{ height: 430 }}>
+      <SquircleViewContainer cornerRadius={18}>
+        <BackupSecretTip onDone={close} />
+      </SquircleViewContainer>
+    </ModalizeContainer>
   );
 };
 
@@ -511,34 +502,26 @@ export const InappBrowserModal = observer(({ pageKey }: { pageKey?: string }) =>
   }, []);
 
   return (
-    <Modalize
+    <ModalizeContainer
       ref={ref}
-      useNativeDriver
       closeOnOverlayTap={false}
       withHandle={false}
       modalHeight={height}
-      disableScrollIfPossible
+      adjustToContentHeight={undefined}
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
-      scrollViewProps={{
-        scrollEnabled: false,
-        showsVerticalScrollIndicator: false,
-        showsHorizontalScrollIndicator: false,
-        bounces: false,
-      }}
+      safeAreaStyle={{ width, height }}
     >
       {props ? (
-        <SafeAreaProvider style={{ width, height }}>
-          <InappBrowser
-            {...props}
-            onClose={() => {
-              close();
-              setProps(undefined);
-            }}
-          />
-        </SafeAreaProvider>
+        <InappBrowser
+          {...props}
+          onClose={() => {
+            close();
+            setProps(undefined);
+          }}
+        />
       ) : undefined}
-    </Modalize>
+    </ModalizeContainer>
   );
 });
 
@@ -587,6 +570,7 @@ export const ShardsModal = observer(() => {
   return (
     <ModalizeContainer
       ref={ref}
+      withHandle={false}
       closeOnOverlayTap={!isCritical}
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
@@ -708,34 +692,31 @@ export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Aut
   }, []);
 
   return (
-    <Modalize
+    <ModalizeContainer
       ref={lockScreenRef}
-      useNativeDriver
       modalHeight={ReactiveScreen.height}
+      adjustToContentHeight={undefined}
       closeOnOverlayTap={false}
       withHandle={false}
-      disableScrollIfPossible
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
       modalStyle={{ borderTopStartRadius: 0, borderTopEndRadius: 0 }}
-      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+      safeAreaStyle={{ backgroundColor: Theme.backgroundColor }}
     >
-      <SafeAreaProvider>
-        <FullPasspad
-          themeColor={Theme.isLightMode ? Theme.foregroundColor : `${Theme.foregroundColor}80`}
-          bioType={appAuth.biometricType}
-          onBioAuth={bioAuth}
-          appAvailable={appAuth.appAvailable}
-          unlockTimestamp={appAuth.appUnlockTime}
-          failedAttempts={appAuth.failedAttempts}
-          onCodeEntered={async (code) => {
-            const success = await appAuth.authorize(code);
-            if (success) closeLockScreen();
-            return success;
-          }}
-        />
-      </SafeAreaProvider>
-    </Modalize>
+      <FullPasspad
+        themeColor={Theme.isLightMode ? Theme.foregroundColor : `${Theme.foregroundColor}80`}
+        bioType={appAuth.biometricType}
+        onBioAuth={bioAuth}
+        appAvailable={appAuth.appAvailable}
+        unlockTimestamp={appAuth.appUnlockTime}
+        failedAttempts={appAuth.failedAttempts}
+        onCodeEntered={async (code) => {
+          const success = await appAuth.authorize(code);
+          if (success) closeLockScreen();
+          return success;
+        }}
+      />
+    </ModalizeContainer>
   );
 });
 

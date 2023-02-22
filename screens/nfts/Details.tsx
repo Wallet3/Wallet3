@@ -11,6 +11,7 @@ import { ChainIds } from '../../common/Networks';
 import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
 import { InappBrowserModal } from '../Modalize';
 import { Modalize } from 'react-native-modalize';
+import ModalizeContainer from '../../modals/core/ModalizeContainer';
 import MultiSourceImage from '../../components/MultiSourceImage';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/core/Networks';
@@ -18,6 +19,7 @@ import { Portal } from 'react-native-portalize';
 import { ReactiveScreen } from '../../utils/device';
 import { ScrollView } from 'react-native-gesture-handler';
 import SendNFT from '../../modals/app/SendNFT';
+import SquircleViewContainer from '../../components/SquircleViewContainer';
 import { StatusBar } from 'expo-status-bar';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
@@ -304,16 +306,11 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
       <StatusBar style={mode} />
 
       <Portal>
-        <Modalize
-          ref={sendRef}
-          onClosed={() => vm?.setTo('')}
-          adjustToContentHeight
-          disableScrollIfPossible
-          modalStyle={styles.containerTopBorderRadius}
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-        >
-          {vm ? <SendNFT vm={vm} onClose={closeSendModal} /> : undefined}
-        </Modalize>
+        <ModalizeContainer ref={sendRef} onClosed={() => vm?.setTo('')}>
+          <SquircleViewContainer cornerRadius={18}>
+            {vm ? <SendNFT vm={vm} onClose={closeSendModal} /> : undefined}
+          </SquircleViewContainer>
+        </ModalizeContainer>
 
         <InappBrowserModal pageKey="nfts" />
       </Portal>

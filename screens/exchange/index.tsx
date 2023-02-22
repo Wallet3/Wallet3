@@ -13,11 +13,13 @@ import App from '../../viewmodels/core/App';
 import Avatar from '../../components/Avatar';
 import Collapsible from 'react-native-collapsible';
 import { IToken } from '../../common/tokens';
+import ModalizeContainer from '../../modals/core/ModalizeContainer';
 import { NetworksMenu } from '../../modals';
 import { OneInch } from '../../assets/3rd';
 import { Portal } from 'react-native-portalize';
 import { ReactiveScreen } from '../../utils/device';
 import { RotateAnimation } from '../../utils/animations';
+import SquircleViewContainer from '../../components/SquircleViewContainer';
 import { SwapProtocol } from '../../common/apis/1inch';
 import { TextInput } from 'react-native-gesture-handler';
 import Theme from '../../viewmodels/settings/Theme';
@@ -338,26 +340,22 @@ export default observer(() => {
       </View>
 
       <Portal>
-        <Modalize ref={networksRef} adjustToContentHeight disableScrollIfPossible>
-          <NetworksMenu
-            title={t('modal-dapp-switch-network', { app: 'Exchange' })}
-            networks={VM.networks}
-            selectedNetwork={VM.userSelectedNetwork}
-            onNetworkPress={(network) => {
-              VM.switchNetwork(network);
-              closeNetworksModal();
-            }}
-          />
-        </Modalize>
+        <ModalizeContainer ref={networksRef}>
+          <SquircleViewContainer cornerRadius={18}>
+            <NetworksMenu
+              title={t('modal-dapp-switch-network', { app: 'Exchange' })}
+              networks={VM.networks}
+              selectedNetwork={VM.userSelectedNetwork}
+              onNetworkPress={(network) => {
+                VM.switchNetwork(network);
+                closeNetworksModal();
+              }}
+            />
+          </SquircleViewContainer>
+        </ModalizeContainer>
 
-        <Modalize
-          ref={accountsRef}
-          adjustToContentHeight
-          disableScrollIfPossible
-          modalStyle={modalStyle.containerTopBorderRadius}
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-        >
-          <SafeAreaProvider style={{ backgroundColor, ...modalStyle.containerTopBorderRadius }}>
+        <ModalizeContainer ref={accountsRef}>
+          <SquircleViewContainer cornerRadius={18}>
             <AccountSelector
               single
               accounts={App.allAccounts}
@@ -370,30 +368,12 @@ export default observer(() => {
                 VM.switchAccount(account);
               }}
             />
-          </SafeAreaProvider>
-        </Modalize>
+          </SquircleViewContainer>
+        </ModalizeContainer>
 
-        <Modalize
-          ref={fromSelectorRef}
-          adjustToContentHeight
-          disableScrollIfPossible
-          modalStyle={modalStyle.containerTopBorderRadius}
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-        >
-          <ScrollView
-            horizontal
-            scrollEnabled={false}
-            style={{ width: ReactiveScreen.width, flex: 1 }}
-            contentContainerStyle={{ flexGrow: 1 }}
-          >
-            <SafeAreaProvider
-              style={{
-                backgroundColor,
-                ...modalStyle.containerTopBorderRadius,
-                height: '100%',
-                width: ReactiveScreen.width,
-              }}
-            >
+        <ModalizeContainer ref={fromSelectorRef}>
+          <SquircleViewContainer cornerRadius={18}>
+            <ScrollView horizontal scrollEnabled={false} style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
               <TokenSelector
                 tokens={VM.tokens}
                 selectedToken={VM.swapFrom as IToken}
@@ -405,24 +385,13 @@ export default observer(() => {
                   closeFromTokens();
                 }}
               />
-            </SafeAreaProvider>
-          </ScrollView>
-        </Modalize>
+            </ScrollView>
+          </SquircleViewContainer>
+        </ModalizeContainer>
 
-        <Modalize
-          ref={toSelectorRef}
-          adjustToContentHeight
-          disableScrollIfPossible
-          modalStyle={modalStyle.containerTopBorderRadius}
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-        >
-          <ScrollView
-            horizontal
-            scrollEnabled={false}
-            style={{ width: ReactiveScreen.width, flex: 1 }}
-            contentContainerStyle={{ flexGrow: 1 }}
-          >
-            <SafeAreaProvider style={{ backgroundColor, ...modalStyle.containerTopBorderRadius, width: ReactiveScreen.width }}>
+        <ModalizeContainer ref={toSelectorRef}>
+          <SquircleViewContainer cornerRadius={18}>
+            <ScrollView horizontal scrollEnabled={false} style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
               <TokenSelector
                 tokens={VM.tokens}
                 chainId={chainId}
@@ -434,9 +403,9 @@ export default observer(() => {
                   closeToTokens();
                 }}
               />
-            </SafeAreaProvider>
-          </ScrollView>
-        </Modalize>
+            </ScrollView>
+          </SquircleViewContainer>
+        </ModalizeContainer>
       </Portal>
     </ScrollView>
   );

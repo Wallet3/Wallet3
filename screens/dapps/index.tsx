@@ -15,10 +15,12 @@ import MessageKeys from '../../common/MessageKeys';
 import { MetamaskDApp } from '../../viewmodels/walletconnect/MetamaskDApp';
 import MetamaskDAppsHub from '../../viewmodels/walletconnect/MetamaskDAppsHub';
 import { Modalize } from 'react-native-modalize';
+import ModalizeContainer from '../../modals/core/ModalizeContainer';
 import NetworkSelector from '../../modals/dapp/NetworkSelector';
 import Networks from '../../viewmodels/core/Networks';
 import { NullableImage } from '../../components';
 import { Portal } from 'react-native-portalize';
+import SquircleViewContainer from '../../components/SquircleViewContainer';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
 import WalletConnectHub from '../../viewmodels/walletconnect/WalletConnectHub';
@@ -70,7 +72,7 @@ const DApp = observer(({ client, allAccounts, close }: Props) => {
   };
 
   return (
-    <SafeAreaProvider style={{ flex: 1, height: 429, backgroundColor, ...modalStyle.containerTopBorderRadius }}>
+    <SafeAreaProvider style={{ flex: 1, height: 429 }}>
       <Swiper
         ref={swiper}
         showsPagination={false}
@@ -329,9 +331,11 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
       </Swiper>
 
       <Portal>
-        <Modalize adjustToContentHeight ref={ref} disableScrollIfPossible modalStyle={modalStyle.containerTopBorderRadius}>
-          {selectedClient ? <DApp client={selectedClient} allAccounts={App.allAccounts} close={close} /> : undefined}
-        </Modalize>
+        <ModalizeContainer ref={ref}>
+          <SquircleViewContainer cornerRadius={18}>
+            {selectedClient ? <DApp client={selectedClient} allAccounts={App.allAccounts} close={close} /> : undefined}
+          </SquircleViewContainer>
+        </ModalizeContainer>
       </Portal>
     </View>
   );

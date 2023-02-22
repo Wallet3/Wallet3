@@ -6,9 +6,11 @@ import { action, makeObservable, observable } from 'mobx';
 import { Browser } from './Browser';
 import MessageKeys from '../../common/MessageKeys';
 import { Modalize } from 'react-native-modalize';
+import ModalizeContainer from '../../modals/core/ModalizeContainer';
 import { PageMetadata } from './Web3View';
 import { Portal } from 'react-native-portalize';
 import { ReactiveScreen } from '../../utils/device';
+import SquircleViewContainer from '../../components/SquircleViewContainer';
 import Theme from '../../viewmodels/settings/Theme';
 import { WebTabs } from './components/Tabs';
 import { observer } from 'mobx-react-lite';
@@ -282,35 +284,31 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
       />
 
       <Portal>
-        <Modalize
-          ref={tabsRef}
-          adjustToContentHeight
-          disableScrollIfPossible
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-          modalStyle={{ padding: 0, margin: 0 }}
-        >
-          <ScrollView
-            scrollEnabled={false}
-            horizontal
-            style={{ width: '100%', flex: 1 }}
-            contentContainerStyle={{ flexGrow: 1 }}
-          >
-            <WebTabs
-              globalState={state}
-              activeIndex={activePageIndex}
-              onRemovePage={removePageId}
-              onRemoveAll={removeAllTabs}
-              onNewTab={() => {
-                newTab(true);
-                closeTabsModal();
-              }}
-              onJumpToPage={(index) => {
-                swiper.current?.scrollToIndex({ index, animated: true });
-                closeTabsModal();
-              }}
-            />
-          </ScrollView>
-        </Modalize>
+        <ModalizeContainer ref={tabsRef}>
+          <SquircleViewContainer cornerRadius={18}>
+            <ScrollView
+              scrollEnabled={false}
+              horizontal
+              style={{ width: '100%', flex: 1 }}
+              contentContainerStyle={{ flexGrow: 1 }}
+            >
+              <WebTabs
+                globalState={state}
+                activeIndex={activePageIndex}
+                onRemovePage={removePageId}
+                onRemoveAll={removeAllTabs}
+                onNewTab={() => {
+                  newTab(true);
+                  closeTabsModal();
+                }}
+                onJumpToPage={(index) => {
+                  swiper.current?.scrollToIndex({ index, animated: true });
+                  closeTabsModal();
+                }}
+              />
+            </ScrollView>
+          </SquircleViewContainer>
+        </ModalizeContainer>
       </Portal>
     </View>
   );

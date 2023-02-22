@@ -20,32 +20,30 @@ export default observer(({ onDone }: { onDone: () => void }) => {
   };
 
   return (
-    <SafeAreaProvider style={{ flex: 1, height: 430 }}>
-      <SafeViewContainer style={{ padding: 16, backgroundColor, flex: 1, borderTopLeftRadius: 7, borderTopRightRadius: 7 }}>
-        <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-          <Ionicons name="warning" size={100} color={color} />
-          <Text style={{ color }}>{t('tip-backup-secret-key')}</Text>
-        </View>
+    <SafeViewContainer style={{ padding: 16, flex: 1 }}>
+      <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+        <Ionicons name="warning" size={100} color={color} />
+        <Text style={{ color }}>{t('tip-backup-secret-key')}</Text>
+      </View>
 
-        <Button
-          themeColor={color}
-          title={t('land-create-backup-now')}
-          style={{ marginBottom: 12 }}
-          txtStyle={{ textTransform: 'none' }}
-          onPress={() => {
-            onDone();
-            goToBackup();
-          }}
-        />
+      <Button
+        themeColor={color}
+        title={t('land-create-backup-now')}
+        style={{ marginBottom: 12 }}
+        txtStyle={{ textTransform: 'none' }}
+        onPress={() => {
+          onDone();
+          goToBackup();
+        }}
+      />
 
-        <Button
-          themeColor={color}
-          reverse
-          onPress={onDone}
-          title={t('land-create-backup-later')}
-          txtStyle={{ textTransform: 'none' }}
-        />
-      </SafeViewContainer>
-    </SafeAreaProvider>
+      <Button
+        themeColor={color}
+        reverse
+        onPress={onDone}
+        title={t('land-create-backup-later')}
+        txtStyle={{ textTransform: 'none' }}
+      />
+    </SafeViewContainer>
   );
 });

@@ -8,8 +8,10 @@ import { Confirm } from '../../modals/views/Confirm';
 import ContactDetails from './ContactDetails';
 import IllustrationNoData from '../../assets/illustrations/misc/nodata.svg';
 import { Modalize } from 'react-native-modalize';
+import ModalizeContainer from '../../modals/core/ModalizeContainer';
 import { Portal } from 'react-native-portalize';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import SquircleViewContainer from '../../components/SquircleViewContainer';
 import Theme from '../../viewmodels/settings/Theme';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
@@ -89,16 +91,8 @@ export default observer(() => {
       )}
 
       <Portal>
-        <Modalize
-          ref={accountModal}
-          adjustToContentHeight
-          withHandle={!editing}
-          closeOnOverlayTap={!editing}
-          disableScrollIfPossible
-          modalStyle={modalStyle.containerTopBorderRadius}
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-        >
-          <SafeAreaProvider style={{ height: 430, backgroundColor, ...modalStyle.containerTopBorderRadius }}>
+        <ModalizeContainer ref={accountModal} closeOnOverlayTap={!editing} safeAreaStyle={{ height: 430 }}>
+          <SquircleViewContainer cornerRadius={18}>
             <ContactDetails
               contact={selectedContact}
               onEditing={setEditing}
@@ -108,17 +102,11 @@ export default observer(() => {
                 Contacts.saveContact(selectedContact!);
               }}
             />
-          </SafeAreaProvider>
-        </Modalize>
+          </SquircleViewContainer>
+        </ModalizeContainer>
 
-        <Modalize
-          ref={confirmModal}
-          adjustToContentHeight
-          disableScrollIfPossible
-          modalStyle={modalStyle.containerTopBorderRadius}
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-        >
-          <SafeAreaProvider style={{ height: 270, backgroundColor, ...modalStyle.containerTopBorderRadius }}>
+        <ModalizeContainer ref={confirmModal} safeAreaStyle={{ height: 270 }}>
+          <SquircleViewContainer cornerRadius={18}>
             <Confirm
               confirmButtonTitle={t('button-confirm')}
               desc={t('contacts-remote-confirm-desc')}
@@ -130,8 +118,8 @@ export default observer(() => {
                 Contacts.remove(selectedContact!);
               }}
             />
-          </SafeAreaProvider>
-        </Modalize>
+          </SquircleViewContainer>
+        </ModalizeContainer>
       </Portal>
     </View>
   );

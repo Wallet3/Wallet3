@@ -10,6 +10,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Success from '../views/Success';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
+import { View } from 'react-native';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 
@@ -61,7 +62,7 @@ export default observer(({ vm, onClose }: Props) => {
   };
 
   return (
-    <SafeAreaProvider style={{ ...styles.safeArea, backgroundColor }}>
+    <View style={{ height: 445 }}>
       {verified ? (
         <Success />
       ) : (
@@ -82,6 +83,6 @@ export default observer(({ vm, onClose }: Props) => {
           <Passpad themeColor={vm.network.color} onCodeEntered={sendTx} onCancel={() => swiper.current?.scrollTo(2)} />
         </Swiper>
       )}
-    </SafeAreaProvider>
+    </View>
   );
 });

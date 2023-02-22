@@ -7,11 +7,13 @@ import { Confirm } from '../../modals/views/Confirm';
 import { LandScreenStack } from '../navigations';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import MessageKeys from '../../common/MessageKeys';
+import ModalizeContainer from '../../modals/core/ModalizeContainer';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Portal } from 'react-native-portalize';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import SignInWithApple from '../../viewmodels/auth/SignInWithApple';
 import SignInWithGoogle from '../../viewmodels/auth/SignInWithGoogle';
+import SquircleViewContainer from '../../components/SquircleViewContainer';
 import i18n from '../../i18n';
 import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
@@ -76,14 +78,8 @@ export default observer(({ navigation, route }: NativeStackScreenProps<LandScree
       />
 
       <Portal>
-        <Modalize
-          ref={resetRef}
-          adjustToContentHeight
-          disableScrollIfPossible
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-          modalStyle={{ padding: 0, margin: 0 }}
-        >
-          <SafeAreaProvider style={{ height: 270, ...modalStyle.containerTopBorderRadius }}>
+        <ModalizeContainer ref={resetRef} safeAreaStyle={{ height: 270 }}>
+          <SquircleViewContainer cornerRadius={18}>
             <Confirm
               confirmButtonTitle={t('settings-reset-modal-button-confirm')}
               desc={t('land-recovery-reset')}
@@ -94,8 +90,8 @@ export default observer(({ navigation, route }: NativeStackScreenProps<LandScree
                 navigation.pop();
               }}
             />
-          </SafeAreaProvider>
-        </Modalize>
+          </SquircleViewContainer>
+        </ModalizeContainer>
       </Portal>
     </SafeViewContainer>
   );

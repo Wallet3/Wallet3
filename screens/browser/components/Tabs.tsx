@@ -186,8 +186,6 @@ export const WebTabs = observer(
         style={{
           maxHeight: 600,
           minHeight: 439,
-          backgroundColor,
-          ...modalStyle.containerTopBorderRadius,
           width: '100%',
         }}
       >
@@ -201,7 +199,6 @@ export const WebTabs = observer(
             paddingTop: 4,
             paddingEnd: 8,
             position: 'absolute',
-            ...modalStyle.containerTopBorderRadius,
             backgroundColor: `${backgroundColor}e0`,
           }}
         >

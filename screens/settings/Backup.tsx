@@ -20,6 +20,7 @@ import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
+import { openGlobalPasspad } from '../../common/Modals';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { usePreventScreenCapture } from 'expo-screen-capture';
 
@@ -75,11 +76,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
 
   useEffect(() => {
     if (currentWallet?.isMultiSig) return;
-
-    setTimeout(() => open(), 0);
-    console.log('is multiSig', currentWallet?.isMultiSig);
-    if (Authentication.biometricType) verify();
-
+    openGlobalPasspad({ closeOnOverlayTap: false, onAutoAuthRequest: verify, onPinEntered: verify, fast: true });
     return () => mn.clean();
   }, []);
 
@@ -154,31 +151,6 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
       ) : (
         <View />
       )}
-
-      <Portal>
-        <Modalize
-          ref={authModalRef}
-          disableScrollIfPossible
-          adjustToContentHeight
-          closeOnOverlayTap={false}
-          withHandle={false}
-          panGestureEnabled={false}
-          panGestureComponentEnabled={false}
-          modalStyle={modalStyle.containerTopBorderRadius}
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-        >
-          <SafeAreaProvider>
-            <FullPasspad
-              appAvailable={true}
-              themeColor={themeColor}
-              height={420}
-              borderRadius={modalStyle.containerTopBorderRadius.borderTopEndRadius}
-              failedAttempts={Authentication.failedAttempts}
-              onCodeEntered={(code) => verify(code)}
-            />
-          </SafeAreaProvider>
-        </Modalize>
-      </Portal>
     </SafeViewContainer>
   );
 });

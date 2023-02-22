@@ -12,11 +12,13 @@ import { FullPasspad } from '../../modals/views/Passpad';
 import { InappBrowserModal } from '../Modalize';
 import Langs from '../../viewmodels/settings/Langs';
 import { Modalize } from 'react-native-modalize';
+import ModalizeContainer from '../../modals/core/ModalizeContainer';
 import Networks from '../../viewmodels/core/Networks';
 import { Portal } from 'react-native-portalize';
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
+import SquircleViewContainer from '../../components/SquircleViewContainer';
 import Theme from '../../viewmodels/settings/Theme';
 import UI from '../../viewmodels/settings/UI';
 import i18n from '../../i18n';
@@ -188,16 +190,8 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
       </TouchableOpacity>
 
       <Portal>
-        <Modalize
-          ref={passcodeRef}
-          disableScrollIfPossible
-          adjustToContentHeight
-          panGestureEnabled={false}
-          panGestureComponentEnabled={false}
-          modalStyle={modalStyle.containerTopBorderRadius}
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-        >
-          <SafeAreaProvider>
+        <ModalizeContainer ref={passcodeRef} panGestureEnabled={false} panGestureComponentEnabled={false}>
+          <SquircleViewContainer cornerRadius={18}>
             <FullPasspad
               themeColor={Networks.current.color}
               height={420}
@@ -218,17 +212,11 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
                 return true;
               }}
             />
-          </SafeAreaProvider>
-        </Modalize>
+          </SquircleViewContainer>
+        </ModalizeContainer>
 
-        <Modalize
-          ref={resetRef}
-          modalHeight={270}
-          disableScrollIfPossible
-          modalStyle={modalStyle.containerTopBorderRadius}
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-        >
-          <SafeAreaProvider style={{ height: 270, backgroundColor, ...modalStyle.containerTopBorderRadius }}>
+        <ModalizeContainer ref={resetRef} safeAreaStyle={{ height: 270 }}>
+          <SquircleViewContainer cornerRadius={18}>
             <Confirm
               onSwipeConfirm={() => App.reset()}
               confirmButtonTitle={t('settings-reset-modal-button-confirm')}
@@ -236,8 +224,8 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
               themeColor="crimson"
               style={{ flex: 1 }}
             />
-          </SafeAreaProvider>
-        </Modalize>
+          </SquircleViewContainer>
+        </ModalizeContainer>
 
         <InappBrowserModal pageKey="settings" />
       </Portal>
