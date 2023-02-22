@@ -82,6 +82,8 @@ export class ShardProvider extends TCPClient {
       super.secureWriteString(JSON.stringify(data));
 
       this.emit('shardSent' as any);
+      this.key.lastUsedTimestamp = Date.now();
+      this.key.save();
 
       return true;
     } catch (error) {}

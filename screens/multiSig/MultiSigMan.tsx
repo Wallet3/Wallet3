@@ -82,7 +82,7 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
 
           <View style={styles.itemContainer}>
             <View style={{ marginBottom: 4, ...styles.titleContainer }}>
-              <Text style={{ color: textColor, ...styles.btnTxt }}>Trusted Devices</Text>
+              <Text style={{ color: textColor, ...styles.btnTxt }}>{t('multi-sig-screen-title-trusted-devices')}</Text>
               <Placeholder />
             </View>
 

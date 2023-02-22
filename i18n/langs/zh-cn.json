@@ -286,6 +286,7 @@
   "multi-sig-screen-txt-no-paired-devices": "没有已配对的设备",
   "multi-sig-screen-title-security": "安全级别",
   "multi-sig-screen-title-confirmation-threshold": "多签阈值",
+  "multi-sig-screen-title-trusted-devices": "信任设备",
 
   "multi-sig-modal-title-welcome": "多签钱包",
   "multi-sig-modal-title-preparations": "准备工作",

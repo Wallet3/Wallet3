@@ -155,6 +155,8 @@ export class ShardsAggregator extends TCPServer<Events> {
         runInAction(() => (this.received = this.rootShards.size || this.bip32Shards.size));
         this.combineShards();
       }
+
+      c.remoteInfo?.globalId && this.wallet.updateDevice(c.remoteInfo.globalId);
     } catch (error) {}
   }
 

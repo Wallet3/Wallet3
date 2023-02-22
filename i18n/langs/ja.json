@@ -287,6 +287,7 @@
   "multi-sig-screen-txt-no-paired-devices": "ペアリングされたデバイスはありません",
   "multi-sig-screen-title-security": "安全レベル",
   "multi-sig-screen-title-confirmation-threshold": "確認閾値",
+  "multi-sig-screen-title-trusted-devices": "信頼デバイス",
 
   "multi-sig-modal-title-welcome": "マルチシグウォレット",
   "multi-sig-modal-title-preparations": "準備作業",

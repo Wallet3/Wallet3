@@ -32,10 +32,10 @@ export default observer(({ vm, close, erc681, onReviewEnter, onReviewLeave }: Pr
   };
 
   useEffect(() => {
-    vm.wallet.once('aggregateShards', () => {
-      setVerified(true);
-      setTimeout(() => close?.(), 1700);
-    });
+    // vm.wallet.once('aggregateShards', () => {
+    //   setVerified(true);
+    //   setTimeout(() => close?.(), 1700);
+    // });
 
     const jump = () =>
       setTimeout(() => {

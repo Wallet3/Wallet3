@@ -55,10 +55,8 @@ export class MultiSigWallet extends WalletBase {
       plain.rootEntropy = plain.rootEntropy && (await Authentication.encrypt(plain.rootEntropy));
       plain.bip32XprvKey = plain.bip32XprvKey && (await Authentication.encrypt(plain.bip32XprvKey));
       this.key.cachedSecrets = plain;
-      console.log('save cache', plain)
     } else {
       this.key.cachedSecrets = {};
-      console.log('delete cache')
     }
 
     this.key.save();
@@ -106,7 +104,7 @@ export class MultiSigWallet extends WalletBase {
       if (!vm) return;
 
       super.emit('aggregateShards');
-      await sleep(2000);
+      await sleep(500);
 
       const xprv = await new Promise<string>((resolve, reject) => {
         openShardsAggregator({ vm, onClosed: () => reject() });
@@ -145,5 +143,13 @@ export class MultiSigWallet extends WalletBase {
       verifyPrivKey: Buffer.from(verifyPrivKey!, 'hex'),
       wallet: this,
     });
+  }
+
+  updateDevice(globalId: string) {
+    const device = this.secretsInfo.devices.find((d) => d.globalId === globalId);
+    if (!device) return;
+
+    device.lastUsedAt = Date.now();
+    this.key.save();
   }
 }

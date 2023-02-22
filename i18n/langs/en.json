@@ -291,6 +291,7 @@
   "multi-sig-screen-txt-no-paired-devices": "No paired devices",
   "multi-sig-screen-title-security": "Security",
   "multi-sig-screen-title-confirmation-threshold": "Confirmations",
+  "multi-sig-screen-title-trusted-devices": "Trusted Devices",
 
   "multi-sig-modal-title-welcome": "MultiSig Wallet",
   "multi-sig-modal-title-preparations": "Preparations",
