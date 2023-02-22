@@ -4,6 +4,7 @@ import { computed, makeObservable, observable, runInAction } from 'mobx';
 import Authentication from '../auth/Authentication';
 import { ShardsAggregator } from '../tss/ShardsAggregator';
 import { WalletBase } from './WalletBase';
+import { openShardsAggregator } from '../../common/Modals';
 import secretjs from 'secrets.js-grempe';
 import { utils } from 'ethers';
 
@@ -87,7 +88,19 @@ export class MultiSigWallet extends WalletBase {
         return account.privateKey;
       }
 
-      
+      const vm = await this.requestShardsAggregator({ autoStart: true, bip32Shard: true }, pin);
+      if (!vm) return;
+
+      const xprv = await new Promise<string>((resolve, reject) => {
+        openShardsAggregator({ vm, onClosed: () => reject() });
+        vm.once('aggregated', ({ bip32Secret }) => resolve(bip32Secret!));
+      });
+
+      if (!xprv) return;
+
+      const bip32 = utils.HDNode.fromExtendedKey(xprv);
+      const account = bip32.derivePath(`${accountIndex ?? 0}`);
+      return account.privateKey;
     } catch (error) {}
   }
 

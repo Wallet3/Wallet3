@@ -159,12 +159,13 @@ export class ShardsAggregator extends TCPServer<Events> {
 
       rootSecret && utils.entropyToMnemonic(Buffer.from(rootSecret, 'hex'));
 
-      if (bip32Secret && !Buffer.from(bip32Secret, 'hex').toString('utf8').startsWith('xprv')) {
-        throw new Error('Invalid xprv key');
+      const xprv = bip32Secret && Buffer.from(bip32Secret, 'hex').toString('utf8')!;
+      if (xprv && !xprv.startsWith('xprv')) {
+        throw new Error('Invalid hd private key');
       }
 
-      this.conf.aggregatedCallback?.({ rootSecret, bip32Secret });
-      this.emit('aggregated', { rootSecret, bip32Secret });
+      this.conf.aggregatedCallback?.({ rootSecret, bip32Secret: xprv });
+      this.emit('aggregated', { rootSecret, bip32Secret: xprv });
 
       runInAction(() => (this.aggregated = true));
       Bonjour.unpublishService(this.name);

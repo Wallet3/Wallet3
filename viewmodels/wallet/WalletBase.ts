@@ -8,6 +8,7 @@ import { Account } from '../account/Account';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Authentication from '../auth/Authentication';
 import { BaseEntity } from 'typeorm';
+import EventEmitter from 'eventemitter3';
 import Key from '../../models/entities/Key';
 import LINQ from 'linq';
 import MetamaskDAppsHub from '../walletconnect/MetamaskDAppsHub';
@@ -53,7 +54,7 @@ export const WalletBaseKeys = {
   addressCount: (id: string | number) => `${id}-address-count`,
 };
 
-export abstract class WalletBase {
+export abstract class WalletBase extends EventEmitter {
   protected removedAccountIndexes: number[] = [];
 
   abstract isHDWallet: boolean;
@@ -85,6 +86,7 @@ export abstract class WalletBase {
   }
 
   constructor() {
+    super();
     makeObservable(this, { accounts: observable, newAccount: action, removeAccount: action });
   }
 

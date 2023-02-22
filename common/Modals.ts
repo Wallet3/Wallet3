@@ -52,8 +52,8 @@ export function openShardsDistributors(args: IShardsDistributorConstruction | { 
   PubSub.publish(MessageKeys.openShardsDistribution, { vm });
 }
 
-export function openShardsAggregator(vm: ShardsAggregator) {
-  PubSub.publish(MessageKeys.openShardsAggregator, { vm });
+export function openShardsAggregator(args: { vm: ShardsAggregator; onClosed?: () => void }) {
+  PubSub.publish(MessageKeys.openShardsAggregator, args);
 }
 
 export function openShardProvider(args: { vm: ShardProvider; onClosed?: () => void }) {

@@ -43,7 +43,7 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
 
     await sleep(200);
 
-    openShardsAggregator(vm!);
+    openShardsAggregator({ vm: vm! });
   };
 
   return (
@@ -108,7 +108,7 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
       </ScrollView>
 
       <Portal>
-        <ModalizeContainer ref={trustedDevicesModal}>
+        <ModalizeContainer ref={trustedDevicesModal} withHandle={false}>
           {selectedDevice && (
             <TrustedDevice
               close={closeTrustedDeviceModal}
@@ -119,7 +119,7 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
           )}
         </ModalizeContainer>
 
-        <ModalizeContainer ref={addDevicesModal} closeOnOverlayTap={!addDevicesCritical}>
+        <ModalizeContainer ref={addDevicesModal} closeOnOverlayTap={!addDevicesCritical} withHandle={false}>
           <AddDevices wallet={wallet} close={closeAddDevices} onCritical={setAddDevicesCritical} />
         </ModalizeContainer>
       </Portal>

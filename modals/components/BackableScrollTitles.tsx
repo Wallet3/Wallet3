@@ -27,7 +27,7 @@ export default (props: Props) => {
   const { textColor, secondaryTextColor } = Theme;
 
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', paddingTop: screenRadius ? 3 : 0, ...(style as any) }}>
+    <View style={{ flexDirection: 'row', alignItems: 'center', paddingTop: 0, ...(style as any) }}>
       <TouchableOpacity
         disabled={backDisabled || currentIndex === 0}
         onPress={onBackPress}
