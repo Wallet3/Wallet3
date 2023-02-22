@@ -31,15 +31,7 @@ export default observer(({ tx, close }: { tx?: Transaction; close?: Function }) 
   };
 
   return (
-    <View
-      style={{
-        padding: 16,
-        paddingTop: 16,
-        paddingBottom: 32,
-        backgroundColor,
-        ...modalStyle.containerTopBorderRadius,
-      }}
-    >
+    <View style={{ padding: 16, paddingTop: 16, paddingBottom: 32 }}>
       <View style={styles.itemContainer}>
         <Text style={styles.txt}>{t('modal-tx-details-network')}:</Text>
         <View style={{ flexDirection: 'row', alignItems: 'center', width: '50%', justifyContent: 'flex-end' }}>
@@ -113,7 +105,7 @@ export default observer(({ tx, close }: { tx?: Transaction; close?: Function }) 
 
       <View style={styles.itemContainer}>
         <Text style={styles.txt}>{t('modal-tx-details-type')}:</Text>
-        <Text style={styles.txt}>{tx?.priorityPrice ? `2 (EIP-1559)` : `0 (Legacy)`}</Text>
+        <Text style={styles.txt}>{tx?.priorityPrice ? '2 (EIP-1559)' : '0 (Legacy)'}</Text>
       </View>
 
       <View style={styles.itemContainer}>

@@ -10,9 +10,11 @@ import { IToken } from '../../common/tokens';
 import { InappBrowserModal } from '../Modalize';
 import MessageKeys from '../../common/MessageKeys';
 import { Modalize } from 'react-native-modalize';
+import ModalizeContainer from '../../modals/core/ModalizeContainer';
 import Networks from '../../viewmodels/core/Networks';
 import Overview from './Overview';
 import { Portal } from 'react-native-portalize';
+import SquircleViewContainer from '../../components/SquircleViewContainer';
 import Theme from '../../viewmodels/settings/Theme';
 import TokenDetail from './TokenDetail';
 import Transaction from '../../models/entities/Transaction';
@@ -108,35 +110,31 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
       />
 
       <Portal>
-        <Modalize
-          adjustToContentHeight
-          ref={tokenDetailModalize}
-          snapPoint={500}
-          modalStyle={modalStyle.containerTopBorderRadius}
-        >
-          <TokenDetail
-            token={selectedToken}
-            network={current}
-            themeColor={current.color}
-            onSendPress={(token) => {
-              PubSub.publish(MessageKeys.openSendFundsModal, { token });
-              closeTokenDetail();
-            }}
-          />
-        </Modalize>
+        <ModalizeContainer ref={tokenDetailModalize} snapPoint={500}>
+          <SquircleViewContainer cornerRadius={18}>
+            <TokenDetail
+              token={selectedToken}
+              network={current}
+              themeColor={current.color}
+              onSendPress={(token) => {
+                PubSub.publish(MessageKeys.openSendFundsModal, { token });
+                closeTokenDetail();
+              }}
+            />
+          </SquircleViewContainer>
+        </ModalizeContainer>
 
-        <Modalize
-          ref={txDetailModalize}
-          adjustToContentHeight
-          snapPoint={500}
-          modalStyle={modalStyle.containerTopBorderRadius}
-        >
-          <TxDetail tx={selectedTx} close={closeTxDetail} />
-        </Modalize>
+        <ModalizeContainer ref={txDetailModalize} snapPoint={500}>
+          <SquircleViewContainer cornerRadius={18}>
+            <TxDetail tx={selectedTx} close={closeTxDetail} />
+          </SquircleViewContainer>
+        </ModalizeContainer>
 
-        <Modalize ref={addressQRModalize} adjustToContentHeight modalStyle={modalStyle.containerTopBorderRadius}>
-          <AddressQRCode account={currentAccount || undefined} />
-        </Modalize>
+        <ModalizeContainer ref={addressQRModalize}>
+          <SquircleViewContainer cornerRadius={18}>
+            <AddressQRCode account={currentAccount || undefined} />
+          </SquircleViewContainer>
+        </ModalizeContainer>
 
         <InappBrowserModal pageKey="wallet" />
       </Portal>

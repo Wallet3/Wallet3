@@ -48,7 +48,7 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
   }, [token]);
 
   return (
-    <View style={{ padding: 16, backgroundColor, ...modalStyle.containerTopBorderRadius, paddingBottom: 24 }}>
+    <View style={{ padding: 16, paddingBottom: 24 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Coin
           chainId={network.chainId}

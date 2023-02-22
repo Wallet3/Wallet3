@@ -578,78 +578,62 @@ export const Browser = observer(
 
         <Portal>
           <ModalizeContainer ref={favsRef} safeAreaStyle={{ height: 439, padding: 0 }}>
-            <SafeViewContainer
-              style={{
-                height: 439,
-                flex: 1,
-                padding: 0,
-                backgroundColor: 'transparent',
-                paddingTop: 0,
-                paddingBottom: 0,
-              }}
-            >
-              <SquircleViewContainer cornerRadius={18} style={{ paddingBottom: useSafeAreaInsets().bottom }}>
-                <ScrollView horizontal scrollEnabled={false} style={{ flex: 1 }}>
-                  <SectionBookmarks
-                    bounces={favs.length >= 3}
-                    style={{ paddingTop: 12, flex: 1, width: ReactiveScreen.width }}
-                  />
-                </ScrollView>
-
-                <RecentHistory
-                  disableContextMenu
-                  onItemPress={(url) => {
-                    goTo(url);
-                    closeFavs();
-                  }}
+            <SquircleViewContainer cornerRadius={18} useSafeBottom>
+              <ScrollView horizontal scrollEnabled={false} style={{ flex: 1 }}>
+                <SectionBookmarks
+                  bounces={favs.length >= 3}
+                  style={{ paddingTop: 12, flex: 1, width: ReactiveScreen.width }}
                 />
-              </SquircleViewContainer>
-            </SafeViewContainer>
+              </ScrollView>
+
+              <RecentHistory
+                disableContextMenu
+                onItemPress={(url) => {
+                  goTo(url);
+                  closeFavs();
+                }}
+              />
+            </SquircleViewContainer>
           </ModalizeContainer>
 
           <ModalizeContainer ref={riskyRef} closeOnOverlayTap={false} safeAreaStyle={{ height: 439, padding: 0 }}>
-            <SafeViewContainer style={{ height: 439, padding: 0, paddingBottom: 0 }}>
-              <SquircleViewContainer
-                cornerRadius={18}
-                style={{ backgroundColor: warningColor, padding: 16, paddingBottom: useSafeAreaInsets().bottom }}
+            <SquircleViewContainer useSafeBottom cornerRadius={18} style={{ backgroundColor: warningColor, padding: 16 }}>
+              <Text
+                numberOfLines={1}
+                style={{
+                  color: '#fff',
+                  fontSize: 27,
+                  fontWeight: '600',
+                  textTransform: 'uppercase',
+                  textAlign: 'center',
+                }}
               >
-                <Text
-                  numberOfLines={1}
-                  style={{
-                    color: '#fff',
-                    fontSize: 27,
-                    fontWeight: '600',
-                    textTransform: 'uppercase',
-                    textAlign: 'center',
-                  }}
-                >
-                  {t('modal-phishing-title')}
-                </Text>
+                {t('modal-phishing-title')}
+              </Text>
 
-                <IllustrationAlert width={120} height={120} style={{ alignSelf: 'center', marginVertical: 8 }} />
+              <IllustrationAlert width={120} height={120} style={{ alignSelf: 'center', marginVertical: 8 }} />
 
-                <Text
-                  style={{
-                    color: '#fff',
-                    marginTop: 12,
-                    fontSize: 16,
-                    fontWeight: '500',
-                    lineHeight: 21,
-                  }}
-                >
-                  {t('modal-phishing-content', { webUrl: `${webUrl.startsWith('https:') ? 'https' : 'http'}://${hostname}` })}
-                </Text>
+              <Text
+                style={{
+                  color: '#fff',
+                  marginTop: 12,
+                  fontSize: 16,
+                  fontWeight: '500',
+                  lineHeight: 21,
+                }}
+              >
+                {t('modal-phishing-content', { webUrl: `${webUrl.startsWith('https:') ? 'https' : 'http'}://${hostname}` })}
+              </Text>
 
-                <View style={{ flex: 1 }} />
+              <View style={{ flex: 1 }} />
 
-                <Button
-                  themeColor="darkorange"
-                  txtStyle={{ color: '#fff', textTransform: 'none' }}
-                  title="OK"
-                  onPress={closeRiskyTip}
-                />
-              </SquircleViewContainer>
-            </SafeViewContainer>
+              <Button
+                themeColor="darkorange"
+                txtStyle={{ color: '#fff', textTransform: 'none' }}
+                title="OK"
+                onPress={closeRiskyTip}
+              />
+            </SquircleViewContainer>
           </ModalizeContainer>
         </Portal>
 

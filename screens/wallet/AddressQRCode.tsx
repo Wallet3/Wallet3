@@ -38,7 +38,7 @@ export default observer(({ account }: { account?: Account }) => {
   const prefixedAddress = current?.addrPrefix ? `${current?.addrPrefix}${address?.substring(2)}` : address;
 
   return (
-    <View style={{ padding: 16, flex: 1, height: 430, backgroundColor, ...modalStyle.containerTopBorderRadius }}>
+    <View style={{ padding: 16, flex: 1, height: 430 }}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
         <View style={{ alignItems: 'center', marginTop: -16 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 12, maxWidth: '70%' }}>

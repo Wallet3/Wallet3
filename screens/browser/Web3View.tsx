@@ -22,9 +22,11 @@ import { JS_POST_MESSAGE_TO_PROVIDER } from './scripts/Utils';
 import LinkHub from '../../viewmodels/hubs/LinkHub';
 import MetamaskMobileProvider from './scripts/Metamask-mobile-provider';
 import { Modalize } from 'react-native-modalize';
+import ModalizeContainer from '../../modals/core/ModalizeContainer';
 import Networks from '../../viewmodels/core/Networks';
 import { NetworksMenu } from '../../modals';
 import { Portal } from 'react-native-portalize';
+import SquircleViewContainer from '../../components/SquircleViewContainer';
 import Theme from '../../viewmodels/settings/Theme';
 import ViewShot from 'react-native-view-shot';
 import WalletConnectHub from '../../viewmodels/walletconnect/WalletConnectHub';
@@ -366,28 +368,18 @@ export default observer((props: Web3ViewProps) => {
       </Animatable.View>
 
       <Portal>
-        <Modalize
-          ref={networksRef}
-          adjustToContentHeight
-          disableScrollIfPossible
-          modalStyle={modalStyle.containerTopBorderRadius}
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-        >
-          <NetworksMenu
-            title={t('modal-dapp-switch-network', { app: pageMetadata?.title?.split(' ')?.[0] ?? '' })}
-            selectedNetwork={appNetwork}
-            onNetworkPress={(network) => updateDAppNetworkConfig(network)}
-          />
-        </Modalize>
+        <ModalizeContainer ref={networksRef}>
+          <SquircleViewContainer cornerRadius={18}>
+            <NetworksMenu
+              title={t('modal-dapp-switch-network', { app: pageMetadata?.title?.split(' ')?.[0] ?? '' })}
+              selectedNetwork={appNetwork}
+              onNetworkPress={(network) => updateDAppNetworkConfig(network)}
+            />
+          </SquircleViewContainer>
+        </ModalizeContainer>
 
-        <Modalize
-          ref={accountsRef}
-          adjustToContentHeight
-          disableScrollIfPossible
-          modalStyle={modalStyle.containerTopBorderRadius}
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-        >
-          <SafeAreaProvider style={{ backgroundColor, ...modalStyle.containerTopBorderRadius }}>
+        <ModalizeContainer ref={accountsRef}>
+          <SquircleViewContainer cornerRadius={18}>
             <ScrollView
               scrollEnabled={false}
               horizontal
@@ -404,8 +396,8 @@ export default observer((props: Web3ViewProps) => {
                 onDone={([account]) => updateDAppAccountConfig(account)}
               />
             </ScrollView>
-          </SafeAreaProvider>
-        </Modalize>
+          </SquircleViewContainer>
+        </ModalizeContainer>
       </Portal>
     </Animated.View>
   );
