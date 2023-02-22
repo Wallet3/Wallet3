@@ -7,6 +7,7 @@ import Contacts from '../../viewmodels/customs/Contacts';
 import NFTReview from '../views/NFTReview';
 import { NFTTransferring } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeViewContainer } from '../../components';
 import Success from '../views/Success';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
@@ -74,13 +75,17 @@ export default observer(({ vm, onClose }: Props) => {
               vm.estimateGas();
             }}
           />
+
           <NFTReview
             onBack={() => swiper.current?.scrollTo(0)}
             vm={vm}
             onSend={onSendClick}
             biometricType={Authentication.biometricType}
           />
-          <Passpad themeColor={vm.network.color} onCodeEntered={sendTx} onCancel={() => swiper.current?.scrollTo(2)} />
+
+          <SafeViewContainer>
+            <Passpad themeColor={vm.network.color} onCodeEntered={sendTx} onCancel={() => swiper.current?.scrollTo(1)} />
+          </SafeViewContainer>
         </Swiper>
       )}
     </View>

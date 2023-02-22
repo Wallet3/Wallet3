@@ -4,6 +4,7 @@ import { BioType } from '../../viewmodels/auth/Authentication';
 import { Passpad } from '../views';
 import { RawTransactionRequest } from '../../viewmodels/transferring/RawTransactionRequest';
 import RequestReview from '../dapp/RequestReview';
+import { SafeViewContainer } from '../../components';
 import Swiper from 'react-native-swiper';
 
 interface Props {
@@ -39,7 +40,9 @@ export default ({ themeColor, vm, app, onApprove, onReject, bioType }: Props) =>
       automaticallyAdjustContentInsets
     >
       <RequestReview vm={vm} app={app} onReject={onReject} onApprove={approve} account={vm.account} bioType={bioType} />
-      <Passpad themeColor={themeColor} onCodeEntered={(c) => onApprove(c)} onCancel={() => swiper.current?.scrollTo(0)} />
+      <SafeViewContainer>
+        <Passpad themeColor={themeColor} onCodeEntered={(c) => onApprove(c)} onCancel={() => swiper.current?.scrollTo(0)} />
+      </SafeViewContainer>
     </Swiper>
   );
 };

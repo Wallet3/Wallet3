@@ -2,7 +2,7 @@ import * as Animatable from 'react-native-animatable';
 import * as Haptics from 'expo-haptics';
 
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
-import { Button, SafeViewContainer } from '../../components';
+import { Button, Placeholder, SafeViewContainer } from '../../components';
 import Numpad, { DefaultNumpadHandler } from '../../components/Numpad';
 import React, { useEffect, useRef, useState } from 'react';
 import { StyleProp, Text, View, ViewStyle } from 'react-native';
@@ -69,8 +69,8 @@ const Passpad = ({
   }, [passcode]);
 
   return (
-    <View style={{ ...styles.container, ...(style as any) }}>
-      <View style={{ flex: 1 }} />
+    <View style={{ flex: 1, ...(style as any) }}>
+      <Placeholder />
 
       <Animatable.View ref={passcodeView as any} style={{ flexDirection: 'row', justifyContent: 'center' }}>
         {new Array(passcode.length)
@@ -98,7 +98,7 @@ const Passpad = ({
         </Animated.View>
       ) : undefined}
 
-      <View style={{ flex: 1 }} />
+      <Placeholder />
 
       <Numpad
         onPress={(value) => DefaultNumpadHandler({ value, state: passcode, setStateAction: setPasscode, passLength })}
@@ -181,7 +181,7 @@ export const FullPasspad = observer((props: FullPasspadProps) => {
           themeColor={themeColor}
           disableCancelButton
           onCodeEntered={onCodeEntered}
-          style={{ height: height || fullScreenHeight, padding: 0 }}
+          style={{ height: height || fullScreenHeight, paddingBottom: 16 }}
           onBioAuth={onBioAuth}
           bioType={bioType}
           failedAttempts={failedAttempts}
