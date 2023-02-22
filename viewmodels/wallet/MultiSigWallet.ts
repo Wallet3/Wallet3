@@ -50,6 +50,14 @@ export class MultiSigWallet extends WalletBase {
     return this.key.cachedSecrets?.rootEntropy || this.key.cachedSecrets?.bip32XprvKey ? true : false;
   }
 
+  get canDistributeMore() {
+    return this.key.secretsInfo.distributedCount <= 250;
+  }
+
+  get maxDistributableCount() {
+    return 252;
+  }
+
   async setSecretsCache(plain?: { rootEntropy?: string; bip32XprvKey?: string }) {
     if (plain) {
       plain.rootEntropy = plain.rootEntropy && (await Authentication.encrypt(plain.rootEntropy));
@@ -73,6 +81,9 @@ export class MultiSigWallet extends WalletBase {
   }
 
   addTrustedDevices(devices: MultiSigKeyDeviceInfo[]) {
+    if (this!.canDistributeMore) return;
+
+    this.key.secretsInfo.distributedCount += devices.length;
     this.key.secretsInfo.devices = this.key.secretsInfo.devices.concat(devices);
     this.key.save();
 

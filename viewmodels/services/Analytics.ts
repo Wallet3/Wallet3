@@ -37,6 +37,8 @@ export function logSendTx(request: SendTxRequest) {
 }
 
 export function logTxConfirmed(tx: Transaction) {
+  if (Networks.find(tx.chainId || 0)?.testnet) return;
+
   if (tx.status) {
     log('tx_confirmed', { chainId: tx.chainId });
   } else {

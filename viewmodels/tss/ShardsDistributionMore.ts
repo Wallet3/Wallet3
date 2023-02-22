@@ -55,21 +55,24 @@ export class ShardsDistributionMore extends ShardsDistributor {
     super.approveClient(client, code);
   }
 
-  async distributeSecret(): Promise<MultiSigKey | undefined> {
+  async distributeSecret() {
     if (!this.clientsOK) {
       showMessage({ message: i18n.t('multi-sig-modal-msg-network-lost'), type: 'warning' });
       return;
     }
 
+    if (!this.wallet.canDistributeMore) return;
+
     runInAction(() => (this.status = this.status = ShardsDistributionStatus.distributing));
+
+    let shareIndex = this.wallet.secretsInfo.distributedCount;
+    const clients = this.approvedClients.slice(0, this.wallet.maxDistributableCount - shareIndex);
 
     const result = (
       await Promise.all(
-        this.approvedClients.map(async (c) => {
-          const index = ++this.wallet.secretsInfo.distributedCount;
-
+        clients.map(async (c, i) => {
           const [rootShard, bip32Shard] = [this.rootShares, this.bip32Shares].map((shares) =>
-            secretjs.newShare(index, shares)
+            secretjs.newShare(shareIndex + i, shares)
           );
 
           c.sendShard({
@@ -88,13 +91,13 @@ export class ShardsDistributionMore extends ShardsDistributor {
           return succeed ? c : undefined;
         })
       )
-    ).filter((i) => i);
+    ).filter((i) => i) as ShardSender[];
 
     const succeed = result.length > 0;
     runInAction(() => (this.status = succeed ? ShardsDistributionStatus.succeed : ShardsDistributionStatus.failed));
 
     this.wallet.addTrustedDevices(
-      this.approvedClients.map((a) => {
+      result.map((a) => {
         return { ...a.remoteInfo!, distributedAt: Date.now(), lastUsedAt: Date.now() };
       })
     );

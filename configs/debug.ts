@@ -36,8 +36,6 @@ LogBox.ignoreLogs([
 ]);
 
 if (__DEV__) {
-  DeviceInfo.getDeviceName().then(console.log);
-
   if (DeviceInfo.isTablet()) {
     // LanDiscovery.on('shardsAggregatorFound', (service: Service) => {
     //   console.log('tablet', service);
@@ -69,7 +67,7 @@ if (__DEV__) {
       throw new Error('!!! check !!!');
     }
 
-    console.log(secretjs.getConfig())
+    console.log(secretjs.getConfig());
     // console.log(secretjs.share(entropy.toString('hex'), 2, 2));
     // const pri = new KeyDistribution({ mnemonic });
     // pri.start();
