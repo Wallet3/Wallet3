@@ -78,7 +78,7 @@ export default observer(({ vm, onClose, erc681, onReviewEnter, onReviewLeave }: 
   };
 
   return (
-    <SafeAreaProvider style={{ ...styles.safeArea, backgroundColor }}>
+    <SafeAreaProvider style={{ ...styles.safeArea }}>
       {verified ? (
         <Success />
       ) : (

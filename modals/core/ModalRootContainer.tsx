@@ -30,6 +30,7 @@ export default ({ children, style }: { style?: StyleProp<ViewStyle>; children: R
           margin: 6,
           padding: 16,
           overflow: 'hidden',
+          borderRadius: corderRadius,
           ...(style as any),
         }}
       >

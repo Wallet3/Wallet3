@@ -36,7 +36,6 @@ export default observer(({ msg, type, chainId, typedData, approve, reject, close
     <SafeAreaProvider
       style={{
         ...styles.safeArea,
-        backgroundColor,
         height: styles.safeArea.height + (typedData ? ReactiveScreen.safeAreaBottom : 0),
       }}
     >

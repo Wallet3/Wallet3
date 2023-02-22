@@ -4,6 +4,8 @@ import { computed, makeObservable, observable, runInAction } from 'mobx';
 import Authentication from '../auth/Authentication';
 import { ShardsAggregator } from '../tss/ShardsAggregator';
 import { WalletBase } from './WalletBase';
+import secretjs from 'secrets.js-grempe';
+import { utils } from 'ethers';
 
 export class MultiSigWallet extends WalletBase {
   private _key: MultiSigKey;
@@ -69,18 +71,23 @@ export class MultiSigWallet extends WalletBase {
 
   protected async unlockPrivateKey({
     pin,
+    accountIndex,
   }: {
     pin?: string | undefined;
     accountIndex?: number | undefined;
   }): Promise<string | undefined> {
     try {
-      if (this.key.cachedSecrets) {
-        // const privKey = secretjs.combine(this.key.cachedBip32Shards);
-        // // utils.HDNode.
-        // utils.HDNode.fromExtendedKey
+      const { bip32Shards } = this.key.cachedSecrets || {};
+
+      if (bip32Shards) {
+        const plainShards = await Authentication.decrypt(bip32Shards, pin);
+        const xprivkey = Buffer.from(secretjs.combine(plainShards!), 'hex').toString('utf8');
+        const bip32 = utils.HDNode.fromExtendedKey(xprivkey);
+        const account = bip32.derivePath(`${accountIndex ?? 0}`);
+        return account.privateKey;
       }
 
-      return await Authentication.decrypt(this.key.secrets.bip32Shard!, pin);
+      
     } catch (error) {}
   }
 

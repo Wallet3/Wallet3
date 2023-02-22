@@ -17,10 +17,10 @@ export default observer((props: { close?: () => void }) => {
   const swiper = useRef<Swiper>(null);
   const [vm] = useState(new TransferRequesting(Networks.current));
 
-  const { tintColor, backgroundColor } = Theme;
+  const { tintColor } = Theme;
 
   return (
-    <SafeAreaProvider style={{ ...styles.safeArea, backgroundColor }}>
+    <SafeAreaProvider style={{ ...styles.safeArea }}>
       <Swiper
         ref={swiper}
         showsPagination={false}

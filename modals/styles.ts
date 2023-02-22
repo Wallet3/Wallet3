@@ -16,7 +16,6 @@ export default StyleSheet.create({
   safeArea: {
     height: 445,
     flex: 1,
-    ...ContainerTopBorderRadius,
   },
 
   containerTopBorderRadius: ContainerTopBorderRadius,

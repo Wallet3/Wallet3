@@ -176,7 +176,6 @@ export default observer(({ uri, close, extra, directClient }: Props) => {
   const [client, setClient] = useState<WalletConnect_v1 | WalletConnect_v2 | undefined>(directClient);
   const [errorMsg, setErrorMsg] = useState<string>();
 
-  const { backgroundColor } = Theme;
   const { t } = i18n;
 
   useEffect(() => {
@@ -210,7 +209,7 @@ export default observer(({ uri, close, extra, directClient }: Props) => {
   }, [uri]);
 
   return (
-    <SafeAreaProvider style={{ ...styles.safeArea, backgroundColor }}>
+    <SafeAreaProvider style={styles.safeArea}>
       {connecting && !connectTimeout ? <Loading /> : undefined}
       {client ? <ConnectDApp client={client} close={close} extra={extra} /> : undefined}
       {connectTimeout ? <TimeoutView close={close} msg={errorMsg} /> : undefined}

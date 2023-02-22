@@ -45,7 +45,7 @@ export default observer(({ client, request, close }: Props) => {
   };
 
   return (
-    <SafeAreaProvider style={{ ...styles.safeArea, height: 520, backgroundColor }}>
+    <SafeAreaProvider style={{ ...styles.safeArea, height: 520 }}>
       {verified ? (
         <Success />
       ) : (

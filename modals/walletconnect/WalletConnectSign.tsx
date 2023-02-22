@@ -89,7 +89,7 @@ export default observer(({ request, client, close }: Props) => {
   };
 
   return (
-    <SafeAreaProvider style={{ ...styles.safeArea, backgroundColor }}>
+    <SafeAreaProvider style={styles.safeArea}>
       {verified ? (
         <Success />
       ) : (

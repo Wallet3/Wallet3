@@ -66,7 +66,7 @@ export default observer(({ close }: { close?: Function }) => {
   };
 
   return (
-    <SafeAreaProvider style={{ ...rootStyles.safeArea, backgroundColor }}>
+    <SafeAreaProvider style={{ ...rootStyles.safeArea }}>
       <Swiper
         ref={swiper}
         showsPagination={false}

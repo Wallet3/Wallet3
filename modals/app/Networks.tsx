@@ -155,7 +155,7 @@ export default ({ title, onNetworkPress, selectedNetwork, useContextMenu, onEdit
   };
 
   return (
-    <SafeAreaProvider style={{ ...styles.safeArea, backgroundColor }}>
+    <SafeAreaProvider style={{ ...styles.safeArea }}>
       <Swiper ref={swiper} showsPagination={false} showsButtons={false} loop={false} scrollEnabled={false}>
         <SafeViewContainer style={{ padding: 16 }}>
           <Text style={{ color: secondaryTextColor }} numberOfLines={1}>

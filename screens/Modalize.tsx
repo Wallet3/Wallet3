@@ -44,6 +44,7 @@ import { ShardProvider } from '../viewmodels/tss/ShardProvider';
 import { ShardReceiver } from '../viewmodels/tss/ShardReceiver';
 import { ShardsAggregator } from '../viewmodels/tss/ShardsAggregator';
 import { ShardsDistributor } from '../viewmodels/tss/ShardsDistributor';
+import SquircleViewContainer from '../components/SquircleViewContainer';
 import Theme from '../viewmodels/settings/Theme';
 import { TokenTransferring } from '../viewmodels/transferring/TokenTransferring';
 import { WCCallRequestRequest } from '../models/entities/WCSession_v1';
@@ -55,7 +56,6 @@ import { isDomain } from '../viewmodels/services/DomainResolver';
 import { logScreenView } from '../viewmodels/services/Analytics';
 import { observer } from 'mobx-react-lite';
 import { parse } from 'eth-url-parser';
-import { randomBytes } from 'crypto';
 import { showMessage } from 'react-native-flash-message';
 import styles from '../modals/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
@@ -106,22 +106,18 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
   }, []);
 
   return (
-    <Modalize
+    <ModalizeContainer
       ref={ref}
-      adjustToContentHeight
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
       tapGestureEnabled={false}
       closeOnOverlayTap={false}
-      withHandle={false}
-      disableScrollIfPossible
-      modalStyle={styles.containerTopBorderRadius}
-      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
-      {type === 'sign' ? <WalletConnectSign client={client!} request={callRequest!} close={close} /> : undefined}
-
-      {type === 'sendTx' ? <WalletConnectTxRequest client={client!} request={callRequest!} close={close} /> : undefined}
-    </Modalize>
+      <SquircleViewContainer cornerRadius={18}>
+        {type === 'sign' ? <WalletConnectSign client={client!} request={callRequest!} close={close} /> : undefined}
+        {type === 'sendTx' ? <WalletConnectTxRequest client={client!} request={callRequest!} close={close} /> : undefined}
+      </SquircleViewContainer>
+    </ModalizeContainer>
   );
 };
 
@@ -158,20 +154,17 @@ const WalletConnect = () => {
   }, []);
 
   return (
-    <Modalize
+    <ModalizeContainer
       ref={connectDappRef}
-      adjustToContentHeight
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
       tapGestureEnabled={false}
       closeOnOverlayTap={false}
-      withHandle={false}
-      disableScrollIfPossible
-      modalStyle={styles.containerTopBorderRadius}
-      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
-      <WalletConnectDApp uri={state.uri} close={closeConnectDapp} extra={state.extra} directClient={state.client_v2} />
-    </Modalize>
+      <SquircleViewContainer cornerRadius={18}>
+        <WalletConnectDApp uri={state.uri} close={closeConnectDapp} extra={state.extra} directClient={state.client_v2} />
+      </SquircleViewContainer>
+    </ModalizeContainer>
   );
 };
 
@@ -210,20 +203,17 @@ const InpageDAppConnect = () => {
   }, []);
 
   return (
-    <Modalize
+    <ModalizeContainer
       ref={connectDappRef}
-      adjustToContentHeight
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
       tapGestureEnabled={false}
       closeOnOverlayTap={false}
-      withHandle={false}
-      disableScrollIfPossible
-      modalStyle={styles.containerTopBorderRadius}
-      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
-      <InpageConnectDApp {...info} close={close} approve={data?.approve} reject={data?.reject} />
-    </Modalize>
+      <SquircleViewContainer cornerRadius={18}>
+        <InpageConnectDApp {...info} close={close} approve={data?.approve} reject={data?.reject} />
+      </SquircleViewContainer>
+    </ModalizeContainer>
   );
 };
 
@@ -269,23 +259,21 @@ const InpageDAppRequests = () => {
   }, []);
 
   return (
-    <Modalize
+    <ModalizeContainer
       ref={ref}
-      adjustToContentHeight
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
       tapGestureEnabled={false}
       closeOnOverlayTap={false}
       withHandle={false}
-      disableScrollIfPossible
-      modalStyle={styles.containerTopBorderRadius}
-      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
-      {type === 'sign' ? <InpageDAppSign {...signRequest!} close={close} /> : undefined}
-      {type === 'sendTx' ? <InpageDAppSendTx {...txRequest!} close={close} /> : undefined}
-      {type === 'addChain' ? <InpageDAppAddChain {...addChain!} close={close} /> : undefined}
-      {type === 'addAsset' ? <InpageDAppAddAssetModal {...addAsset!} close={close} /> : undefined}
-    </Modalize>
+      <SquircleViewContainer cornerRadius={18}>
+        {type === 'sign' && <InpageDAppSign {...signRequest!} close={close} />}
+        {type === 'sendTx' && <InpageDAppSendTx {...txRequest!} close={close} />}
+        {type === 'addChain' && <InpageDAppAddChain {...addChain!} close={close} />}
+        {type === 'addAsset' && <InpageDAppAddAssetModal {...addAsset!} close={close} />}
+      </SquircleViewContainer>
+    </ModalizeContainer>
   );
 };
 
@@ -305,26 +293,19 @@ const GlobalNetworksMenuModal = observer(() => {
   }, []);
 
   return (
-    <Modalize
-      ref={networksRef}
-      adjustToContentHeight
-      disableScrollIfPossible
-      modalStyle={styles.containerTopBorderRadius}
-      closeOnOverlayTap={!editing}
-      panGestureEnabled={!editing}
-      withHandle={!editing}
-      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-    >
-      <NetworksMenu
-        useContextMenu
-        onEditing={setEditing}
-        selectedNetwork={Networks.current}
-        onNetworkPress={(network) => {
-          closeNetworksModal();
-          Networks.switch(network);
-        }}
-      />
-    </Modalize>
+    <ModalizeContainer ref={networksRef} closeOnOverlayTap={!editing} panGestureEnabled={!editing}>
+      <SquircleViewContainer cornerRadius={18}>
+        <NetworksMenu
+          useContextMenu
+          onEditing={setEditing}
+          selectedNetwork={Networks.current}
+          onNetworkPress={(network) => {
+            closeNetworksModal();
+            Networks.switch(network);
+          }}
+        />
+      </SquircleViewContainer>
+    </ModalizeContainer>
   );
 });
 
@@ -343,15 +324,11 @@ const GlobalAccountsMenuModal = () => {
   }, []);
 
   return (
-    <Modalize
-      ref={ref}
-      adjustToContentHeight
-      disableScrollIfPossible
-      modalStyle={styles.containerTopBorderRadius}
-      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-    >
-      <AccountsMenu close={close} />
-    </Modalize>
+    <ModalizeContainer ref={ref}>
+      <SquircleViewContainer cornerRadius={18}>
+        <AccountsMenu close={close} />
+      </SquircleViewContainer>
+    </ModalizeContainer>
   );
 };
 
@@ -369,28 +346,11 @@ const GlobalLoadingModal = () => {
   }, []);
 
   return (
-    <Modalize
-      ref={ref}
-      adjustToContentHeight
-      disableScrollIfPossible
-      closeOnOverlayTap={false}
-      withHandle={false}
-      modalStyle={styles.containerTopBorderRadius}
-      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-    >
-      <SafeAreaProvider
-        style={{
-          backgroundColor: Theme.backgroundColor,
-          height: 439,
-          justifyContent: 'center',
-          alignItems: 'center',
-          borderTopRightRadius: 6,
-          borderTopLeftRadius: 6,
-        }}
-      >
+    <ModalizeContainer ref={ref} closeOnOverlayTap={false}>
+      <SquircleViewContainer style={{ height: 439, justifyContent: 'center', alignItems: 'center' }}>
         <Loading />
-      </SafeAreaProvider>
-    </Modalize>
+      </SquircleViewContainer>
+    </ModalizeContainer>
   );
 };
 
@@ -409,15 +369,16 @@ const RequestFundsModal = () => {
   }, []);
 
   return (
-    <Modalize
+    <ModalizeContainer
       ref={requestRef}
       adjustToContentHeight
       disableScrollIfPossible
-      modalStyle={styles.containerTopBorderRadius}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
-      <Request close={close} />
-    </Modalize>
+      <SquircleViewContainer cornerRadius={18}>
+        <Request close={close} />
+      </SquircleViewContainer>
+    </ModalizeContainer>
   );
 };
 
@@ -475,31 +436,28 @@ const SendFundsModal = () => {
   };
 
   return (
-    <Modalize
+    <ModalizeContainer
       key="SendFunds"
       ref={sendRef}
-      adjustToContentHeight
-      disableScrollIfPossible
-      withHandle={!reviewing}
       panGestureEnabled={!reviewing}
       panGestureComponentEnabled={!reviewing}
-      modalStyle={styles.containerTopBorderRadius}
-      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
       onClosed={() => {
         setIsERC681(false);
         setVM(undefined);
       }}
     >
-      {vm && (
-        <Send
-          vm={vm}
-          onClose={clear}
-          erc681={isERC681}
-          onReviewEnter={() => setReviewing(true)}
-          onReviewLeave={() => setReviewing(false)}
-        />
-      )}
-    </Modalize>
+      <SquircleViewContainer cornerRadius={18}>
+        {vm && (
+          <Send
+            vm={vm}
+            onClose={clear}
+            erc681={isERC681}
+            onReviewEnter={() => setReviewing(true)}
+            onReviewLeave={() => setReviewing(false)}
+          />
+        )}
+      </SquircleViewContainer>
+    </ModalizeContainer>
   );
 };
 
@@ -663,16 +621,13 @@ export const FullScreenQRScanner = observer(() => {
   }, []);
 
   return (
-    <Modalize
+    <ModalizeContainer
       ref={ref}
-      useNativeDriver
       modalHeight={ReactiveScreen.height}
+      adjustToContentHeight={undefined}
       closeOnOverlayTap={false}
-      withHandle={false}
-      disableScrollIfPossible
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
-      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
       modalStyle={{
         borderTopStartRadius: 0,
         borderTopEndRadius: 0,
@@ -682,10 +637,8 @@ export const FullScreenQRScanner = observer(() => {
         flexGrow: 1,
       }}
     >
-      <SafeAreaProvider>
-        <QRScan tip={tip} done={close} />
-      </SafeAreaProvider>
-    </Modalize>
+      <QRScan tip={tip} done={close} />
+    </ModalizeContainer>
   );
 });
 

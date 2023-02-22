@@ -111,7 +111,7 @@ const ConnectPivot = observer(
 
 export default observer((props: Props) => {
   const { approve, reject, close, appName, appDesc, appIcon, appUrl } = props;
-  const { backgroundColor } = Theme;
+
   const onConnect = (userSelected: { network: INetwork; account: Account }) => {
     approve?.(userSelected);
     close();
@@ -123,7 +123,7 @@ export default observer((props: Props) => {
   };
 
   return (
-    <SafeAreaProvider style={{ ...styles.safeArea, backgroundColor }}>
+    <SafeAreaProvider style={styles.safeArea}>
       <ConnectPivot {...props} onApprove={onConnect} onReject={onReject} />
     </SafeAreaProvider>
   );

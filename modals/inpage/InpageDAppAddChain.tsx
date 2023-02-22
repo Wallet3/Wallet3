@@ -23,7 +23,7 @@ export default observer((props: InpageDAppAddEthereumChain & { close: Function }
   };
 
   return (
-    <SafeAreaProvider style={{ ...styles.safeArea, backgroundColor }}>
+    <SafeAreaProvider style={styles.safeArea}>
       <AddChain {...props} themeColor={themeColor} approve={onApprove} reject={onReject} />
     </SafeAreaProvider>
   );
