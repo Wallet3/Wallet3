@@ -23,7 +23,7 @@ export default ({ style, children, cornerRadius }: Props) => {
         borderBottomRightRadius: 0,
       }}
       squircleParams={{
-        fillColor: Theme.backgroundColor,
+        fillColor: style?.['backgroundColor'] ?? Theme.backgroundColor,
         cornerRadius: cornerRadius,
         bottomLeftCornerRadius: 0,
         bottomRightCornerRadius: 0,

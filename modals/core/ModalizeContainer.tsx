@@ -1,9 +1,14 @@
 import { Modalize, ModalizeProps, useModalize } from 'react-native-modalize';
+import { StyleProp, ViewStyle } from 'react-native';
 
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-export default React.forwardRef<Modalize, ModalizeProps>((props: ModalizeProps, ref) => {
+interface Props extends ModalizeProps {
+  safeAreaStyle?: StyleProp<ViewStyle>;
+}
+
+export default React.forwardRef<Modalize, Props>((props: Props, ref) => {
   return (
     <Modalize
       ref={ref}
@@ -12,10 +17,10 @@ export default React.forwardRef<Modalize, ModalizeProps>((props: ModalizeProps, 
       adjustToContentHeight
       disableScrollIfPossible
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-      modalStyle={{ backgroundColor: 'transparent' }}
       {...props}
+      modalStyle={{ ...(props.modalStyle as any), backgroundColor: 'transparent' }}
     >
-      <SafeAreaProvider>{props.children}</SafeAreaProvider>
+      <SafeAreaProvider style={props.safeAreaStyle}>{props.children}</SafeAreaProvider>
     </Modalize>
   );
 });

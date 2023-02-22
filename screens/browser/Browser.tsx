@@ -21,6 +21,7 @@ import { Ionicons } from '@expo/vector-icons';
 import LINQ from 'linq';
 import MessageKeys from '../../common/MessageKeys';
 import { Modalize } from 'react-native-modalize';
+import ModalizeContainer from '../../modals/core/ModalizeContainer';
 import Networks from '../../viewmodels/core/Networks';
 import PopularDApps from '../../configs/urls/popular.json';
 import { Portal } from 'react-native-portalize';
@@ -28,6 +29,7 @@ import { ReactiveScreen } from '../../utils/device';
 import RecentHistory from './components/RecentHistory';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SectionGrid } from 'react-native-super-grid';
+import SquircleViewContainer from '../../components/SquircleViewContainer';
 import { StatusBar } from 'expo-status-bar';
 import Theme from '../../viewmodels/settings/Theme';
 import ViewShot from 'react-native-view-shot';
@@ -575,24 +577,18 @@ export const Browser = observer(
         ) : undefined}
 
         <Portal>
-          <Modalize
-            ref={favsRef}
-            adjustToContentHeight
-            disableScrollIfPossible
-            modalStyle={{ padding: 0, margin: 0 }}
-            scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-          >
-            <SafeAreaProvider style={{ height: 439, padding: 0, ...modalStyle.containerTopBorderRadius }}>
-              <SafeViewContainer
-                style={{
-                  height: 439,
-                  backgroundColor,
-                  flex: 1,
-                  padding: 0,
-                  ...modalStyle.containerTopBorderRadius,
-                  paddingTop: 0,
-                }}
-              >
+          <ModalizeContainer ref={favsRef} safeAreaStyle={{ height: 439, padding: 0 }}>
+            <SafeViewContainer
+              style={{
+                height: 439,
+                flex: 1,
+                padding: 0,
+                backgroundColor: 'transparent',
+                paddingTop: 0,
+                paddingBottom: 0,
+              }}
+            >
+              <SquircleViewContainer cornerRadius={18} style={{ paddingBottom: useSafeAreaInsets().bottom }}>
                 <ScrollView horizontal scrollEnabled={false} style={{ flex: 1 }}>
                   <SectionBookmarks
                     bounces={favs.length >= 3}
@@ -607,14 +603,15 @@ export const Browser = observer(
                     closeFavs();
                   }}
                 />
-              </SafeViewContainer>
-            </SafeAreaProvider>
-          </Modalize>
+              </SquircleViewContainer>
+            </SafeViewContainer>
+          </ModalizeContainer>
 
-          <Modalize ref={riskyRef} adjustToContentHeight disableScrollIfPossible withHandle={false} closeOnOverlayTap={false}>
-            <SafeAreaProvider style={{ height: 439, padding: 0, ...modalStyle.containerTopBorderRadius }}>
-              <SafeViewContainer
-                style={{ backgroundColor: warningColor, height: 439, ...modalStyle.containerTopBorderRadius }}
+          <ModalizeContainer ref={riskyRef} closeOnOverlayTap={false} safeAreaStyle={{ height: 439, padding: 0 }}>
+            <SafeViewContainer style={{ height: 439, padding: 0, paddingBottom: 0 }}>
+              <SquircleViewContainer
+                cornerRadius={18}
+                style={{ backgroundColor: warningColor, padding: 16, paddingBottom: useSafeAreaInsets().bottom }}
               >
                 <Text
                   numberOfLines={1}
@@ -646,14 +643,14 @@ export const Browser = observer(
                 <View style={{ flex: 1 }} />
 
                 <Button
-                  themeColor="orange"
+                  themeColor="darkorange"
                   txtStyle={{ color: '#fff', textTransform: 'none' }}
                   title="OK"
                   onPress={closeRiskyTip}
                 />
-              </SafeViewContainer>
-            </SafeAreaProvider>
-          </Modalize>
+              </SquircleViewContainer>
+            </SafeViewContainer>
+          </ModalizeContainer>
         </Portal>
 
         <StatusBar style={statusBarStyle} />
