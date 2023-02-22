@@ -8,6 +8,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Sign from '../compositions/Sign';
 import Success from '../views/Success';
 import Theme from '../../viewmodels/settings/Theme';
+import { View } from 'react-native';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 
@@ -33,12 +34,7 @@ export default observer(({ msg, type, chainId, typedData, approve, reject, close
   };
 
   return (
-    <SafeAreaProvider
-      style={{
-        ...styles.safeArea,
-        height: styles.safeArea.height + (typedData ? ReactiveScreen.safeAreaBottom : 0),
-      }}
-    >
+    <View style={{ height: styles.safeArea.height + (typedData ? ReactiveScreen.safeAreaBottom : 0), flex: 1 }}>
       {verified ? (
         <Success />
       ) : (
@@ -55,6 +51,6 @@ export default observer(({ msg, type, chainId, typedData, approve, reject, close
           metadata={metadata}
         />
       )}
-    </SafeAreaProvider>
+    </View>
   );
 });

@@ -63,7 +63,7 @@ class PairedDevices {
     });
   };
 
-  private scanLan = () => Bonjour.scan(KeyAggregationService);
+  scanLan = () => this.hasDevices && Bonjour.scan(KeyAggregationService);
 
   async refresh() {
     const keys = await Database.shardKeys!.find();

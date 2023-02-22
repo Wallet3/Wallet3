@@ -1,10 +1,11 @@
 import { ContentType, KeyAggregationService, ShardAggregationAck, ShardAggregationRequest } from './Constants';
+import { action, makeObservable, observable, runInAction } from 'mobx';
 import eccrypto, { Ecies } from 'eccrypto';
 import { getDeviceBasicInfo, getDeviceInfo } from '../../common/p2p/Utils';
-import { makeObservable, observable, runInAction } from 'mobx';
 
 import Bonjour from '../../common/p2p/Bonjour';
 import { LanServices } from './management/DistributorDiscovery';
+import { MultiSigWallet } from '../wallet/MultiSigWallet';
 import { TCPClient } from '../../common/p2p/TCPClient';
 import { TCPServer } from '../../common/p2p/TCPServer';
 import { btoa } from 'react-native-quick-base64';
@@ -25,6 +26,7 @@ interface Conf {
 interface IConstruction extends Conf {
   distributionId: string;
   shardsVersion: string;
+  wallet: MultiSigWallet;
 }
 
 interface Events {
@@ -35,6 +37,7 @@ export class ShardsAggregator extends TCPServer<Events> {
   private conf: Conf;
   private rootShards = new Set<string>();
   private bip32Shards = new Set<string>();
+  private wallet: MultiSigWallet;
   readonly id: string;
   readonly version: string;
   readonly device = getDeviceInfo();
@@ -42,19 +45,28 @@ export class ShardsAggregator extends TCPServer<Events> {
   clients: TCPClient[] = [];
   received = 0;
   aggregated = false;
+  secretCached = false;
 
   constructor(args: IConstruction) {
     super();
-    const { distributionId, shardsVersion, initRootShard, initBip32Shard } = args;
+    const { distributionId, shardsVersion, initRootShard, initBip32Shard, wallet } = args;
 
     initRootShard && this.rootShards.add(initRootShard);
     initBip32Shard && this.bip32Shards.add(initBip32Shard);
+    this.secretCached = wallet.secretsCached;
 
-    makeObservable(this, { clients: observable, received: observable, aggregated: observable });
+    makeObservable(this, {
+      clients: observable,
+      received: observable,
+      aggregated: observable,
+      secretCached: observable,
+      setSecretsCached: action,
+    });
 
     this.id = distributionId;
     this.version = shardsVersion;
     this.conf = args;
+    this.wallet = wallet;
 
     args.autoStart && this.start();
   }
@@ -146,7 +158,7 @@ export class ShardsAggregator extends TCPServer<Events> {
     } catch (error) {}
   }
 
-  private combineShards() {
+  private async combineShards() {
     if (this.aggregated) return;
     if (this.rootShards.size < this.threshold && this.bip32Shards.size < this.threshold) {
       return;
@@ -167,12 +179,24 @@ export class ShardsAggregator extends TCPServer<Events> {
       this.conf.aggregatedCallback?.({ rootSecret, bip32Secret: xprv });
       this.emit('aggregated', { rootSecret, bip32Secret: xprv });
 
-      runInAction(() => (this.aggregated = true));
+      await runInAction(async () => (this.aggregated = true));
+
+      this.setSecretsCached(this.secretCached);
       Bonjour.unpublishService(this.name);
     } catch (error) {
       console.error('aggregated error:', error);
     }
   }
+
+  setSecretsCached = (enable: boolean) => {
+    this.secretCached = enable;
+
+    if (enable) {
+      this.wallet.setSecretsCache({ bip32XprvKey: this.bip32XprivKey, rootEntropy: this.rootEntropy });
+    } else {
+      this.wallet.setSecretsCache();
+    }
+  };
 
   dispose() {
     Bonjour.unpublishService(this.name);

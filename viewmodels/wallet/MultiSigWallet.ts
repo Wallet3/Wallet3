@@ -6,6 +6,7 @@ import { ShardsAggregator } from '../tss/ShardsAggregator';
 import { WalletBase } from './WalletBase';
 import { openShardsAggregator } from '../../common/Modals';
 import secretjs from 'secrets.js-grempe';
+import { sleep } from '../../utils/async';
 import { utils } from 'ethers';
 
 export class MultiSigWallet extends WalletBase {
@@ -45,6 +46,24 @@ export class MultiSigWallet extends WalletBase {
     return this.key.secretsInfo;
   }
 
+  get secretsCached() {
+    return this.key.cachedSecrets?.rootEntropy || this.key.cachedSecrets?.bip32XprvKey ? true : false;
+  }
+
+  async setSecretsCache(plain?: { rootEntropy?: string; bip32XprvKey?: string }) {
+    if (plain) {
+      plain.rootEntropy = plain.rootEntropy && (await Authentication.encrypt(plain.rootEntropy));
+      plain.bip32XprvKey = plain.bip32XprvKey && (await Authentication.encrypt(plain.bip32XprvKey));
+      this.key.cachedSecrets = plain;
+      console.log('save cache', plain)
+    } else {
+      this.key.cachedSecrets = {};
+      console.log('delete cache')
+    }
+
+    this.key.save();
+  }
+
   removeTrustedDevice(device: MultiSigKeyDeviceInfo) {
     if (this.trustedDeviceCount <= this.threshold) return;
 
@@ -70,19 +89,14 @@ export class MultiSigWallet extends WalletBase {
 
   dispose(): void {}
 
-  protected async unlockPrivateKey({
-    pin,
-    accountIndex,
-  }: {
-    pin?: string | undefined;
-    accountIndex?: number | undefined;
-  }): Promise<string | undefined> {
-    try {
-      const { bip32Shards } = this.key.cachedSecrets || {};
+  protected async unlockPrivateKey(args: { pin?: string; accountIndex?: number }) {
+    const { pin, accountIndex } = args;
 
-      if (bip32Shards) {
-        const plainShards = await Authentication.decrypt(bip32Shards, pin);
-        const xprivkey = Buffer.from(secretjs.combine(plainShards!), 'hex').toString('utf8');
+    try {
+      const { bip32XprvKey } = this.key.cachedSecrets || {};
+
+      if (bip32XprvKey) {
+        const xprivkey = (await Authentication.decrypt(bip32XprvKey, pin))!;
         const bip32 = utils.HDNode.fromExtendedKey(xprivkey);
         const account = bip32.derivePath(`${accountIndex ?? 0}`);
         return account.privateKey;
@@ -90,6 +104,9 @@ export class MultiSigWallet extends WalletBase {
 
       const vm = await this.requestShardsAggregator({ autoStart: true, bip32Shard: true }, pin);
       if (!vm) return;
+
+      super.emit('aggregateShards');
+      await sleep(2000);
 
       const xprv = await new Promise<string>((resolve, reject) => {
         openShardsAggregator({ vm, onClosed: () => reject() });
@@ -126,6 +143,7 @@ export class MultiSigWallet extends WalletBase {
       shardsVersion: this.key.secretsInfo.version,
       threshold: this.key.secretsInfo.threshold,
       verifyPrivKey: Buffer.from(verifyPrivKey!, 'hex'),
+      wallet: this,
     });
   }
 }

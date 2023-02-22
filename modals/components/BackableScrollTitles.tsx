@@ -1,5 +1,4 @@
 import { StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
-import { secondaryFontColor, warningColor } from '../../constants/styles';
 
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
@@ -24,7 +23,7 @@ export default (props: Props) => {
   const { iconColor, showBack, titles, currentIndex, onBackPress, backDisabled, style, onClosePress } = props;
   const backButtonPadding = useHorizontalPadding();
   const screenRadius = useOptimizedCornerRadius();
-  const { textColor, secondaryTextColor } = Theme;
+  const { secondaryTextColor } = Theme;
 
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', paddingTop: 0, ...(style as any) }}>
@@ -57,15 +56,12 @@ export default (props: Props) => {
           style={{
             padding: 5,
             right: 4,
-            top: screenRadius ? 3 : 2,
+            top: 2,
             borderRadius: 50,
             position: 'absolute',
-            // borderWidth: 1,
-            // borderColor: textColor,
-            // backgroundColor: `${secondaryFontColor}60`,
           }}
         >
-          <Ionicons name={'close'} color={secondaryTextColor} size={20} style={{ marginBottom: 0 }} />
+          <Ionicons name={'close'} color={secondaryTextColor} size={19} style={{ marginBottom: 0 }} />
         </TouchableOpacity>
       )}
     </View>

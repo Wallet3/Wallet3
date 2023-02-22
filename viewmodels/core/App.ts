@@ -3,9 +3,11 @@ import { action, computed, makeObservable, observable, reaction, runInAction } f
 import { providers, utils } from 'ethers';
 
 import { Account } from '../account/Account';
+import { AppState } from 'react-native';
 import AppStoreReview from '../services/AppStoreReview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Authentication from '../auth/Authentication';
+import Bonjour from '../../common/p2p/Bonjour';
 import Bookmarks from '../customs/Bookmarks';
 import Contacts from '../customs/Contacts';
 import Database from '../../models/Database';
@@ -244,6 +246,17 @@ export class AppVM {
 
       TxHub.init().then(() => AppStoreReview.check());
       PairedDevices.init();
+
+      AppState.addEventListener('change', (nextState) => {
+        if (nextState === 'background') {
+          Bonjour.stopScan();
+          return;
+        }
+
+        if (nextState === 'active') {
+          PairedDevices.scanLan();
+        }
+      });
     });
 
     PubSub.subscribe(MessageKeys.userSecretsNotVerified, () => {

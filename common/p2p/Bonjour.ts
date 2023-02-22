@@ -7,6 +7,7 @@ type Events = {
   resolved: (service: Service) => void;
   start: () => void;
   update: () => void;
+  stop: () => void;
 };
 
 class Bonjour extends EventEmitter<Events> {
@@ -19,6 +20,7 @@ class Bonjour extends EventEmitter<Events> {
     this.zc.on('resolved', (service) => this.emit('resolved', service));
     this.zc.on('start', () => this.emit('start'));
     this.zc.on('update', () => this.emit('update'));
+    this.zc.on('stop', () => this.emit('stop'));
   }
 
   scan(service: string) {

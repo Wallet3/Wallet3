@@ -11924,6 +11924,11 @@ react-native-auto-size-text@^1.1.1:
   dependencies:
     "@testing-library/react-native" "^7.2.0"
 
+react-native-bouncy-checkbox@^3.0.6:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/react-native-bouncy-checkbox/-/react-native-bouncy-checkbox-3.0.6.tgz#c9e98d1f3aefca56cce7f06f169eb9088b6e8f6f"
+  integrity sha512-m6YXu1gKyqDpNp8LAktsaK3Y9DH6JFSuhk4xfUO2bTtIq5RfCqXVr8spXl2DVWGKRQUrtxEsh2ID6R+VBKTltQ==
+
 react-native-canvas@^0.1.38:
   version "0.1.38"
   resolved "https://registry.yarnpkg.com/react-native-canvas/-/react-native-canvas-0.1.38.tgz#d2d76f1a105cd4711792271f265b72bd5699acf0"

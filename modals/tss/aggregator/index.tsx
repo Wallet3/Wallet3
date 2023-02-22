@@ -14,12 +14,14 @@ import { useOptimizedCornerRadius } from '../../../utils/hardware';
 interface Props {
   vm: ShardsAggregator;
   close: () => void;
+  autoClose?: boolean;
 }
 
 export default observer(({ vm, close }: Props) => {
   const { t } = i18n;
-  const [current, setCurrent] = useState({ step: 0 });
+
   const screenRadius = useOptimizedCornerRadius();
+  const { aggregated } = vm;
 
   const titles = [t('multi-sig-modal-title-waiting-aggregation')];
 
@@ -27,23 +29,27 @@ export default observer(({ vm, close }: Props) => {
     return () => vm.dispose();
   }, []);
 
-  const goTo = (step: number) => {
-    setCurrent({ step });
-    vm.start();
-  };
-
-  const { step } = current;
+  useEffect(() => {
+    if (!aggregated) return;
+    const timer = setTimeout(close, 5000);
+    return () => clearTimeout(timer);
+  }, [aggregated]);
 
   return (
     <ModalRootContainer>
       <ScrollTitles
         data={titles}
-        currentIndex={step}
+        currentIndex={0}
         style={{ flexGrow: 0, height: 32, marginBottom: 12, marginTop: screenRadius ? 4 : 0 }}
       />
 
       <View style={{ flex: 1, width: ReactiveScreen.width - ModalMarginScreen * 2, marginHorizontal: -16 }}>
-        <Aggregation vm={vm} buttonTitle={t('button-cancel')} onButtonPress={close} />
+        <Aggregation
+          vm={vm}
+          buttonTitle={aggregated ? t('button-done') : t('button-cancel')}
+          onButtonPress={close}
+          enableCacheOption
+        />
       </View>
     </ModalRootContainer>
   );

@@ -54,7 +54,11 @@ export const WalletBaseKeys = {
   addressCount: (id: string | number) => `${id}-address-count`,
 };
 
-export abstract class WalletBase extends EventEmitter {
+interface Events {
+  aggregateShards: () => void;
+}
+
+export abstract class WalletBase extends EventEmitter<Events> {
   protected removedAccountIndexes: number[] = [];
 
   abstract isHDWallet: boolean;

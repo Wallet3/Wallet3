@@ -16,15 +16,14 @@ import styles from '../styles';
 interface Props {
   vm: TokenTransferring;
   erc681?: boolean;
-  onClose?: () => void;
+  close?: () => void;
   onReviewEnter?: () => void;
   onReviewLeave?: () => void;
 }
 
-export default observer(({ vm, onClose, erc681, onReviewEnter, onReviewLeave }: Props) => {
+export default observer(({ vm, close, erc681, onReviewEnter, onReviewLeave }: Props) => {
   const [verified, setVerified] = useState(false);
   const swiper = useRef<Swiper>(null);
-  const { backgroundColor } = Theme;
   const [active] = useState({ index: 0 });
 
   const goTo = (index: number, animated?: boolean) => {
@@ -33,6 +32,11 @@ export default observer(({ vm, onClose, erc681, onReviewEnter, onReviewLeave }: 
   };
 
   useEffect(() => {
+    vm.wallet.once('aggregateShards', () => {
+      setVerified(true);
+      setTimeout(() => close?.(), 1700);
+    });
+
     const jump = () =>
       setTimeout(() => {
         try {
@@ -43,6 +47,7 @@ export default observer(({ vm, onClose, erc681, onReviewEnter, onReviewLeave }: 
     ReactiveScreen.on('change', jump);
 
     return () => {
+      vm.wallet.removeAllListeners('aggregateShards');
       ReactiveScreen.off('change', jump);
     };
   }, []);
@@ -52,7 +57,7 @@ export default observer(({ vm, onClose, erc681, onReviewEnter, onReviewLeave }: 
 
     if (result.success) {
       setVerified(true);
-      setTimeout(() => onClose?.(), 1700);
+      setTimeout(() => close?.(), 1700);
     }
 
     return result.success;

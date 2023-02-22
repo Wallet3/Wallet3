@@ -454,7 +454,7 @@ const SendFundsModal = () => {
         {vm && (
           <Send
             vm={vm}
-            onClose={clear}
+            close={clear}
             erc681={isERC681}
             onReviewEnter={() => setReviewing(true)}
             onReviewLeave={() => setReviewing(false)}
@@ -653,6 +653,7 @@ export const GlobalPasspadModal = () => {
       closeOnOverlayTap={req?.closeOnOverlayTap ?? false}
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
+      withHandle={false}
       onClosed={() => {
         req?.onClosed?.();
         setReq(undefined);
