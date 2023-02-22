@@ -71,11 +71,11 @@ class PairedDevices {
     return keys;
   }
 
-  addShardKey(key: ShardKey) {
+  async addShardKey(key: ShardKey) {
     const device = new PairedDevice(key);
     if (this.devices.find((d) => d.id === device.id)) return;
 
-    runInAction(() => (this.devices = this.devices.concat(device)));
+    await runInAction(async () => (this.devices = this.devices.concat(device)));
     this.scanLan();
   }
 

@@ -547,8 +547,8 @@ export const ShardsModal = observer(() => {
       open();
     });
 
-    PubSub.subscribe(MessageKeys.openShardsAggregator, (_, { vm }) => {
-      setVMs({ shardsAggregator: vm });
+    PubSub.subscribe(MessageKeys.openShardsAggregator, (_, { vm, onClosed }) => {
+      setVMs({ shardsAggregator: vm, onClosed });
       open();
     });
 
@@ -612,6 +612,7 @@ export const FullScreenQRScanner = observer(() => {
       closeOnOverlayTap={false}
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
+      withHandle={false}
       modalStyle={{
         borderTopStartRadius: 0,
         borderTopEndRadius: 0,

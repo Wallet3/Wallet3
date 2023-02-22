@@ -190,7 +190,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
       </TouchableOpacity>
 
       <Portal>
-        <ModalizeContainer ref={passcodeRef} panGestureEnabled={false} panGestureComponentEnabled={false}>
+        <ModalizeContainer ref={passcodeRef} panGestureEnabled={false} panGestureComponentEnabled={false} withHandle={false}>
           <SquircleViewContainer cornerRadius={18}>
             <FullPasspad
               themeColor={Networks.current.color}
