@@ -95,6 +95,18 @@ export class AppVM {
       this.wallets.push(wallet);
       this.switchAccount(wallet.accounts[0].address);
     });
+
+    // AppState.addEventListener('change', (nextState) => {
+    //   if (nextState === 'background') {
+    //     Bonjour.stopScan();
+    //     Authentication.removeListener('appAuthorized', PairedDevices.scanLan);
+    //     return;
+    //   }
+
+    //   if (nextState === 'active') {
+    //     Authentication.once('appAuthorized', PairedDevices.scanLan);
+    //   }
+    // });
   }
 
   findWallet(accountAddress: string) {
@@ -246,17 +258,6 @@ export class AppVM {
 
       TxHub.init().then(() => AppStoreReview.check());
       PairedDevices.init();
-
-      AppState.addEventListener('change', (nextState) => {
-        if (nextState === 'background') {
-          Bonjour.stopScan();
-          return;
-        }
-
-        if (nextState === 'active') {
-          PairedDevices.scanLan();
-        }
-      });
     });
 
     PubSub.subscribe(MessageKeys.userSecretsNotVerified, () => {

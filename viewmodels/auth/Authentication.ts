@@ -15,7 +15,7 @@ import { decrypt, encrypt, sha256 } from '../../utils/cipher';
 
 import { AppState } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import EventEmitter from 'events';
+import EventEmitter from 'eventemitter3';
 import MessageKeys from '../../common/MessageKeys';
 import { logWalletLocked } from '../services/Analytics';
 import { toMilliseconds } from '../../utils/time';
@@ -30,9 +30,12 @@ const keys = {
 };
 
 export type BioType = 'faceid' | 'fingerprint' | 'iris';
-type StringOrStringArray = string | string[];
 
-export class Authentication extends EventEmitter {
+interface Events {
+  appAuthorized: () => void;
+}
+
+export class Authentication extends EventEmitter<Events> {
   private lastBackgroundTimestamp = Date.now();
 
   biometricSupported = false;
@@ -90,7 +93,7 @@ export class Authentication extends EventEmitter {
       }
 
       if (nextState === 'active') {
-        if (Date.now() - this.lastBackgroundTimestamp < 1000 * 60 * 2) return;
+        if (Date.now() - this.lastBackgroundTimestamp < (__DEV__ ? 20 : 60 * 2) * 1000) return;
         if (!this.appAuthorized) return;
 
         runInAction(() => {

@@ -76,7 +76,7 @@ class PairedDevices {
     if (this.devices.find((d) => d.id === device.id)) return;
 
     await runInAction(async () => (this.devices = this.devices.concat(device)));
-    this.scanLan();
+    setTimeout(() => this.scanLan(), 10 * SECOND);
   }
 
   removeDevice(device: PairedDevice) {

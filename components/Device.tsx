@@ -43,9 +43,9 @@ const Devices = new Map([
 
 const keys = Array.from(Devices.keys());
 
-export default ({ os, deviceId, style }: { os: 'ios' | 'android'; deviceId: string; style?: StyleProp<ViewStyle> & any }) => {
+export default ({ os, deviceId, style }: { os: 'ios' | 'android'; deviceId?: string; style?: StyleProp<ViewStyle> & any }) => {
   const [device] = useState(
-    Devices.get(keys.find((k) => (iosDevice.generationByIdentifier(deviceId)?.toLowerCase() ?? os).includes(k))!)
+    Devices.get(keys.find((k) => (iosDevice.generationByIdentifier(deviceId ?? '')?.toLowerCase() ?? os).includes(k))!)
   );
 
   return os === 'ios' ? (

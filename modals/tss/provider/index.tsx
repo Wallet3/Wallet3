@@ -1,7 +1,7 @@
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, FlatList as SystemFlatList, Text, TouchableOpacity, View } from 'react-native';
-import { getScreenCornerRadius, useOptimizedCornerRadius } from '../../../utils/hardware';
+import { getScreenCornerRadius, useOptimizedCornerRadius, useOptimizedSafeBottom } from '../../../utils/hardware';
 
 import BackableScrollTitles from '../../components/BackableScrollTitles';
 import ModalRootContainer from '../../core/ModalRootContainer';
@@ -14,11 +14,12 @@ import { ShardReceiver } from '../../../viewmodels/tss/ShardReceiver';
 import Theme from '../../../viewmodels/settings/Theme';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default observer(({ close, vm }: { close: () => void; vm: ShardProvider }) => {
   const { t } = i18n;
   const { textColor } = Theme;
-
+  const [height] = useState(360 + useOptimizedSafeBottom());
   const screenRadius = useOptimizedCornerRadius();
 
   const [step, setStep] = useState(0);
@@ -34,7 +35,7 @@ export default observer(({ close, vm }: { close: () => void; vm: ShardProvider }
   useEffect(() => () => vm?.dispose(), [vm]);
 
   return (
-    <ModalRootContainer style={{ height: 360 }}>
+    <ModalRootContainer style={{ height }}>
       <BackableScrollTitles
         showClose
         titles={titles}

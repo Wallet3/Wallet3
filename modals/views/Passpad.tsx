@@ -181,7 +181,7 @@ export const FullPasspad = observer((props: FullPasspadProps) => {
           themeColor={themeColor}
           disableCancelButton
           onCodeEntered={onCodeEntered}
-          style={{ height: height || fullScreenHeight, paddingBottom: 12 }}
+          style={{ height: height || fullScreenHeight, paddingBottom: 8 }}
           onBioAuth={onBioAuth}
           bioType={bioType}
           failedAttempts={failedAttempts}
