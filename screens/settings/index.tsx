@@ -134,9 +134,6 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
         <View style={styles.itemSubContainer}>
           <Ionicons name="file-tray-outline" style={styles.itemStartSymbol} size={16} color={textColor} />
           <Text style={itemText}>{t('settings-security-backup')}</Text>
-          {!Authentication.userSecretsVerified ? (
-            <Ionicons name="alert-circle" size={15} color="darkorange" style={{ marginStart: 4, marginTop: -8 }} />
-          ) : undefined}
         </View>
         <View style={styles.itemSubContainer}>
           <Entypo name="chevron-right" style={styles.itemEndSymbol} />

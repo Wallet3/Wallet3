@@ -25,7 +25,6 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
   useEffect(() => {
     const success = MnemonicOnce.setSecret(mnemonic);
     setVerified(success);
-    Authentication.setUserSecretsVerified(success);
   }, [mnemonic]);
 
   useEffect(() => {

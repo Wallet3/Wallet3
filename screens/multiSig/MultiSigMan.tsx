@@ -1,4 +1,5 @@
 import { ButtonV2, Placeholder, SafeViewContainer } from '../../components';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { openGlobalPasspad, openShardsAggregator } from '../../common/Modals';
@@ -130,6 +131,7 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
           title={t('button-add-devices')}
           onPress={openAddDevices}
           themeColor={secureColor}
+          icon={() => <Ionicons name="add-circle-outline" color="#fff" size={20} />}
           disabled={!wallet.canDistributeMore}
         />
       </ScrollView>

@@ -22,7 +22,6 @@ import { toMilliseconds } from '../../utils/time';
 
 const keys = {
   enableBiometrics: 'enableBiometrics',
-  userSecretsVerified: 'userSecretsVerified',
   masterKey: 'masterKey',
   foreverKey: 'foreverKey',
   pin: 'pin',
@@ -43,7 +42,6 @@ export class Authentication extends EventEmitter<Events> {
   biometricEnabled = true;
 
   appAuthorized = false;
-  userSecretsVerified = false;
 
   failedAttempts = 0;
   appUnlockTime = 0;
@@ -75,13 +73,12 @@ export class Authentication extends EventEmitter<Events> {
       supportedTypes: observable,
       biometricEnabled: observable,
       appAuthorized: observable,
-      userSecretsVerified: observable,
       failedAttempts: observable,
       appUnlockTime: observable,
       appAvailable: computed,
+
       setBiometrics: action,
       reset: action,
-      setUserSecretsVerified: action,
     });
 
     this.init();
@@ -105,12 +102,11 @@ export class Authentication extends EventEmitter<Events> {
   }
 
   async init() {
-    const [supported, enrolled, supportedTypes, enableBiometrics, userSecretsVerified, appUnlockTime] = await Promise.all([
+    const [supported, enrolled, supportedTypes, enableBiometrics, appUnlockTime] = await Promise.all([
       hasHardwareAsync(),
       isEnrolledAsync(),
       supportedAuthenticationTypesAsync(),
       AsyncStorage.getItem(keys.enableBiometrics),
-      AsyncStorage.getItem(keys.userSecretsVerified),
       AsyncStorage.getItem(keys.appUnlockTime),
     ]);
 
@@ -118,7 +114,6 @@ export class Authentication extends EventEmitter<Events> {
       this.biometricSupported = supported && enrolled;
       this.supportedTypes = supportedTypes;
       this.biometricEnabled = enableBiometrics === 'true';
-      this.userSecretsVerified = userSecretsVerified === 'true';
       this.appUnlockTime = Number(appUnlockTime) || 0;
     });
   }
@@ -187,11 +182,7 @@ export class Authentication extends EventEmitter<Events> {
 
     if (!this.appAuthorized) {
       runInAction(() => (this.appAuthorized = success));
-
-      if (success) {
-        this.emit('appAuthorized');
-        if (!this.userSecretsVerified) PubSub.publish(MessageKeys.userSecretsNotVerified);
-      }
+      success && this.emit('appAuthorized');
     }
 
     return success;
@@ -229,14 +220,8 @@ export class Authentication extends EventEmitter<Events> {
     }
   };
 
-  setUserSecretsVerified = async (verified: boolean) => {
-    this.userSecretsVerified = verified;
-    await AsyncStorage.setItem(keys.userSecretsVerified, verified.toString());
-  };
-
   reset() {
     this.appAuthorized = false;
-    this.userSecretsVerified = false;
     this.biometricEnabled = false;
     return SecureStore.deleteItemAsync(keys.masterKey);
   }

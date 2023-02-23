@@ -40,7 +40,6 @@ export default ({ onDone, onCancel }: { onDone?: () => void; onCancel?: () => vo
 
       if (key) {
         await App.addWallet(key);
-        await Authentication.setUserSecretsVerified(true);
         logImportWallet();
         onDone?.();
       } else {

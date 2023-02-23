@@ -286,10 +286,11 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
                 bottom: '5%',
                 alignItems: 'center',
                 justifyContent: 'center',
+                opacity: 0.5,
               }}
             >
-              <Ionicons name="arrow-back" size={22} color={textColor} style={{ marginHorizontal: 12 }} />
-              <FontAwesome5 name="compass" size={24} color={textColor} />
+              <Ionicons name="arrow-back" size={22} color={secondaryTextColor} style={{ marginHorizontal: 12 }} />
+              <FontAwesome5 name="compass" size={24} color={secondaryTextColor} />
             </TouchableOpacity>
           )}
 
