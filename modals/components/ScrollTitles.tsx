@@ -1,5 +1,5 @@
 import Animated, { FadeInUp } from 'react-native-reanimated';
-import { FlatList, ListRenderItemInfo, StyleProp, Text, ViewStyle } from 'react-native';
+import { FlatList, ListRenderItemInfo, StyleProp, Text, TextStyle, ViewStyle } from 'react-native';
 import React, { useEffect, useRef } from 'react';
 
 import Theme from '../../viewmodels/settings/Theme';
@@ -11,6 +11,7 @@ interface Props {
   currentIndex?: number;
   contentContainerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
+  txtStyle?: StyleProp<TextStyle>;
 }
 
 export default (props: Props) => {
@@ -32,6 +33,7 @@ export default (props: Props) => {
           textTransform: 'capitalize',
           paddingVertical: 1,
           maxWidth: '80%',
+          ...(props.txtStyle as any),
         }}
       >
         {item}

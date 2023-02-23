@@ -28,17 +28,12 @@ const Schemas: MixedList<Function | string | EntitySchema> = [
   ShardKey,
 ];
 
-// if (__DEV__) {
-//   Schemas.push();
-//   Schemas.push();
-// }
-
 class Database {
   private _dataSource!: DataSource;
 
   keys!: Repository<Key>;
-  multiSigKeys?: Repository<MultiSigKey>;
-  shardKeys?: Repository<ShardKey>;
+  multiSigKeys!: Repository<MultiSigKey>;
+  shardKeys!: Repository<ShardKey>;
   txs!: Repository<Transaction>;
   wcV1Sessions!: Repository<WCSession_v1>;
   wcV2Sessions!: Repository<WCV2_Session>;
@@ -75,8 +70,6 @@ class Database {
 
     this.multiSigKeys = this._dataSource.getRepository(MultiSigKey);
     this.shardKeys = this._dataSource.getRepository(ShardKey);
-    if (__DEV__) {
-    }
   }
 
   execTransaction<T>(runInTransaction: (entityManager: EntityManager) => Promise<T>) {
@@ -91,8 +84,8 @@ class Database {
       this.wcV2Sessions.clear(),
       this.inpageDApps.clear(),
       this.chains.clear(),
-      this.multiSigKeys?.clear(),
-      __DEV__ && this.shardKeys?.clear(),
+      this.multiSigKeys.clear(),
+      __DEV__ && this.shardKeys.clear(),
     ]);
   }
 }

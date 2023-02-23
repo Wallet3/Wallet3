@@ -32,6 +32,7 @@ import { fetchChainsOverview } from '../../common/apis/Debank';
 import i18n from '../../i18n';
 import { logAppReset } from '../services/Analytics';
 import { showMessage } from 'react-native-flash-message';
+import { tipWalletUpgrade } from '../misc/MultiSigUpgradeTip';
 
 export class AppVM {
   private lastRefreshedTime = 0;
@@ -220,7 +221,7 @@ export class AppVM {
     const wallets: WalletBase[] = LINQ.from(
       await Promise.all(
         [
-          ((await Database.multiSigKeys?.find()) ?? []).map((key) => new MultiSigWallet(key).init()),
+          (await Database.multiSigKeys.find()).map((key) => new MultiSigWallet(key).init()),
           (await Database.keys.find()).map((key) => new SingleSigWallet(key).init()),
         ].flat()
       )
@@ -228,12 +229,6 @@ export class AppVM {
       .where((i) => (i ? true : false))
       .distinct((w) => `${w.keyInfo.bip32Xpubkey}_${w.keyInfo.basePath}_${w.keyInfo.basePathIndex}`)
       .toArray();
-
-    // console.log(
-    //   wallets.length,
-    //   (await Database.keys.find()).map((k) => k.bip32Xpubkey),
-    //   (await Database.multiSigKeys?.find())?.map((k) => k.bip32Xpubkey)
-    // );
 
     const lastUsedAccount = (await AsyncStorage.getItem('lastUsedAccount')) ?? '';
     if (utils.isAddress(lastUsedAccount)) fetchChainsOverview(lastUsedAccount);
@@ -246,12 +241,8 @@ export class AppVM {
 
       TxHub.init().then(() => AppStoreReview.check());
       PairedDevices.init();
-    });
 
-    PubSub.subscribe(MessageKeys.userSecretsNotVerified, () => {
-      if ((this.currentAccount?.balance || 0) === 0) return;
-      if (this.currentWallet?.signInPlatform) return;
-      setTimeout(() => PubSub.publish(MessageKeys.openBackupSecretTip), 1000);
+      tipWalletUpgrade(this.currentWallet);
     });
 
     runInAction(() => {
@@ -265,8 +256,6 @@ export class AppVM {
     this.wallets.forEach((w) => w.dispose());
     this.wallets = [];
     this.currentAccount = null;
-
-    PubSub.unsubscribe(MessageKeys.userSecretsNotVerified);
 
     TxHub.reset();
     Contacts.reset();

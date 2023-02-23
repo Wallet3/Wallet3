@@ -349,6 +349,7 @@
   "multi-sig-modal-msg-aggregated-count": "Alınan miktar: {{m}}/{{n}}",
   "multi-sig-modal-msg-aggregated-remember-key": "Sonraki sefere otomatik izin ver",
   "multi-sig-modal-msg-before-aggregation": "Bu işlem devreye sokulmadan önce güvenilir cihaz onayı gerektirir",
+  "multi-sig-modal-msg-upgrade-tip": "Çoklu imza cüzdanı, kripto varlıklarınızı birden çok cihazla yönetmenize ve daha güvenilir bir kurtarma mekanizması sağlar. Çoklu imza cüzdana yükseltmeniz önerilir.",
   "multi-sig-modal-create-threshold": "Siz {{threshold}} of {{max}} çok imza cüzdanı oluşturuyorsunuz. Bu, işlemlerin en az {{threshold}} anahtarının yetkilendirilmesini gerektirdiği anlamına gelir.",
   "multi-sig-modal-keys-distribution": "Aşağıdaki cihazlara anahtarlar dağıtılacaktır",
 

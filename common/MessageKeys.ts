@@ -29,8 +29,8 @@ export default {
 
   CodeScan_wallet3sync: 'CodeScan-wallet3sync:',
   CodeScan_64Length: 'CodeScan-64Length',
-  openBackupSecretTip: 'openBackupSecretTip',
-  userSecretsNotVerified: 'userSecretsNotVerified',
+  openUpgradeWalletTip: 'openUpgradeWalletTip',
+  
   openUrl: 'openUrl',
   openUrlInPageId: (pageId: number) => `openUrl_page${pageId}`,
   openBrowser: 'openBrowser',

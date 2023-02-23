@@ -25,10 +25,12 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
 
   const headerHeight = 49;
   const goTo = (to: number) => {
+    if (to === currentPage) return;
+
     to = Math.max(0, to);
+    setCurrentPage(to);
     headerScroller.current?.scrollToIndex({ index: to, animated: true });
     swiper.current?.scrollTo(to, true);
-    setCurrentPage(to);
   };
 
   const headers = [
@@ -91,8 +93,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
           <TouchableOpacity
             style={{ padding: 16, paddingVertical: 8, position: 'absolute', right: 0, bottom: 4, zIndex: 9 }}
             onPress={() => {
-              const to = currentPage === 1 ? 0 : 1;
-              goTo(to);
+              goTo(currentPage === 1 ? 0 : 1);
             }}
           >
             {currentPage === 0 ? (

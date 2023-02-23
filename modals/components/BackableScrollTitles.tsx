@@ -1,4 +1,4 @@
-import { StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { StyleProp, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
 
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
@@ -17,6 +17,7 @@ interface Props {
   onBackPress?: () => void;
   onClosePress?: () => void;
   style?: StyleProp<ViewStyle>;
+  txtStyle?: StyleProp<TextStyle>;
 }
 
 export default (props: Props) => {
@@ -47,6 +48,7 @@ export default (props: Props) => {
       </TouchableOpacity>
 
       <ScrollTitles
+        txtStyle={props.txtStyle}
         currentIndex={currentIndex}
         data={titles}
         contentContainerStyle={{ marginStart: -backButtonPadding - 1 }}

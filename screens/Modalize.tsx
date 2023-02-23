@@ -23,7 +23,7 @@ import { ShardProviderUI, ShardReceiverUI, ShardsAggregatorUI, ShardsDistributor
 
 import { AppVM } from '../viewmodels/core/App';
 import { Authentication } from '../viewmodels/auth/Authentication';
-import BackupSecretTip from '../modals/misc/BackupSecretTip';
+import BackupSecretTip from '../modals/misc/UpgradeWalletTip';
 import { FullPasspad } from '../modals/views/Passpad';
 import GlobalPasspad from '../modals/global/GlobalPasspad';
 import InappBrowser from '../modals/app/InappBrowser';
@@ -452,17 +452,17 @@ const BackupTipsModal = () => {
   const { ref, open, close } = useModalize();
 
   useEffect(() => {
-    PubSub.subscribe(MessageKeys.openBackupSecretTip, () => open());
+    PubSub.subscribe(MessageKeys.openUpgradeWalletTip, () => open());
 
     return () => {
-      PubSub.unsubscribe(MessageKeys.openBackupSecretTip);
+      PubSub.unsubscribe(MessageKeys.openUpgradeWalletTip);
     };
   }, []);
 
   return (
-    <SquircleModalize ref={ref} closeOnOverlayTap={false} withHandle={false} safeAreaStyle={{ height: 430 }}>
+    <ModalizeContainer ref={ref} withHandle={false} panGestureEnabled={false} panGestureComponentEnabled={false}>
       <BackupSecretTip onDone={close} />
-    </SquircleModalize>
+    </ModalizeContainer>
   );
 };
 
