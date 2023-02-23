@@ -86,7 +86,7 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
               <TouchableOpacity
                 style={styles.itemContainer}
                 onPress={() => {
-                  wallet.setSecretsCache({});
+                  wallet.setSecretsCache();
                   setForceUpdate(false);
                 }}
               >
@@ -118,7 +118,7 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
                       openTrustedDeviceModal();
                     }}
                   >
-                    <DeviceInfo info={device} />
+                    <DeviceInfo info={device} light />
                   </TouchableOpacity>
                 </FadeInDownView>
               );

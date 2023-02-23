@@ -25,7 +25,7 @@ export default ({ info, verified, light, lastUsedAt }: Props) => {
     <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
       <Device deviceId={info.device} os={info.rn_os} style={{ width: light ? 27 : 32, height: light ? 39 : 42 }} />
 
-      <View style={{ marginStart: 12, flex: 1 }}>
+      <View style={{ marginHorizontal: 12, flex: 1 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 2 }}>
           <Text numberOfLines={1} style={{ color: textColor, fontSize: light ? 18 : 22, fontWeight: '600', marginEnd: 24 }}>
             {`${info.name || iosDevice.generationByIdentifier(info.device)}`}

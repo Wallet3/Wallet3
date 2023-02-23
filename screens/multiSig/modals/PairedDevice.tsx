@@ -90,11 +90,7 @@ export default ({ device, close }: { device: PairedDevice; close: () => void }) 
   };
 
   const doDelete = () => {
-    setTimeout(() => {
-      PairedDevices.removeDevice(device);
-      startLayoutAnimation();
-    }, 500);
-
+    PairedDevices.removeDevice(device);
     close();
   };
 

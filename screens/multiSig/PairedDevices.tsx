@@ -28,6 +28,8 @@ export default observer(() => {
   const { devices, hasDevices } = PairedDevices;
   const safeBottom = useOptimizedSafeBottom();
 
+  useEffect(() => startLayoutAnimation(), [devices]);
+
   const renderTrustedDevice = ({ item, index }: { item: PairedDevice; index: number }) => {
     return (
       <TouchableOpacity

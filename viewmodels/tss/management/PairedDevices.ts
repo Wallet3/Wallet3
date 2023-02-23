@@ -1,16 +1,15 @@
-import DistributorDiscovery, { handleRawService } from './DistributorDiscovery';
 import { computed, makeObservable, observable, runInAction } from 'mobx';
 
 import Bonjour from '../../../common/p2p/Bonjour';
 import { ClientInfo } from '../../../common/p2p/Constants';
 import Database from '../../../models/Database';
 import { KeyAggregationService } from '../Constants';
-import MessageKeys from '../../../common/MessageKeys';
 import { PairedDevice } from './PairedDevice';
 import { SECOND } from '../../../utils/time';
 import { Service } from 'react-native-zeroconf';
 import ShardKey from '../../../models/entities/ShardKey';
 import { ShardProvider } from '../ShardProvider';
+import { handleRawService } from './DistributorDiscovery';
 import { openShardProvider } from '../../../common/Modals';
 
 class PairedDevices {
@@ -81,7 +80,7 @@ class PairedDevices {
 
   removeDevice(device: PairedDevice) {
     const index = this.devices.findIndex((d) => d.id === device.id);
-    index >= 0 && runInAction(() => this.devices.splice(index, 1));
+    index >= 0 && runInAction(() => (this.devices = this.devices.filter((d) => d.id !== device.id)));
 
     device.remove();
   }
