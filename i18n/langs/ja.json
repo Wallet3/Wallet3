@@ -284,9 +284,11 @@
   "multi-sig-screen-tip-after-upgrading": "マルチシグウォレットにアップグレードした後でも、リカバリーフレーズを使用して他の場所でこのウォレットを復元できることに注意してください。",
   "multi-sig-screen-tip-security-overview": "現在のウォレットは {{m}} of {{n}} マルチシグメカニズムを使って資産の安全を保護しています。",
   "multi-sig-screen-tip-modify-threshold": "閾値を変更するには、大多数のデバイスの同意が必要です。",
+  "multi-sig-screen-tip-clear-secrets-cache": "秘密キーキャッシュをクリアするには、ここをクリックします。 次回は、他の信頼できるデバイスから認証を取得するよう求められます。",
   "multi-sig-screen-txt-no-paired-devices": "ペアリングされたデバイスはありません",
   "multi-sig-screen-title-security": "安全レベル",
   "multi-sig-screen-title-confirmation-threshold": "確認閾値",
+  "multi-sig-screen-title-clear-secrets-cache": "秘密キーのクリア",
   "multi-sig-screen-title-trusted-devices": "信頼デバイス",
 
   "multi-sig-modal-title-welcome": "マルチシグウォレット",

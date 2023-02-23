@@ -30,6 +30,7 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
   const { ref: trustedDevicesModal, close: closeTrustedDeviceModal, open: openTrustedDeviceModal } = useModalize();
   const { ref: addDevicesModal, close: closeAddDevices, open: openAddDevices } = useModalize();
   const [addDevicesCritical, setAddDevicesCritical] = useState(false);
+  const [_, setForceUpdate] = useState<any>();
 
   const aggregateShards = async () => {
     let vm: ShardsAggregator | undefined;
@@ -79,6 +80,27 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
 
             <Text style={{ color: secondaryTextColor, ...styles.subtitle }}>{t('multi-sig-screen-tip-modify-threshold')}</Text>
           </TouchableOpacity>
+
+          {wallet.secretsCached && (
+            <FadeInDownView>
+              <TouchableOpacity
+                style={styles.itemContainer}
+                onPress={() => {
+                  wallet.setSecretsCache({});
+                  setForceUpdate(false);
+                }}
+              >
+                <View style={styles.titleContainer}>
+                  <Text style={{ color: textColor, ...styles.btnTxt }}>{t('multi-sig-screen-title-clear-secrets-cache')}</Text>
+                  <Text style={{ color: verifiedColor, ...styles.btnTxt }}>{}</Text>
+                </View>
+
+                <Text style={{ color: secondaryTextColor, ...styles.subtitle }}>
+                  {t('multi-sig-screen-tip-clear-secrets-cache')}
+                </Text>
+              </TouchableOpacity>
+            </FadeInDownView>
+          )}
 
           <View style={styles.itemContainer}>
             <View style={{ marginBottom: 4, ...styles.titleContainer }}>

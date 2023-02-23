@@ -34,7 +34,7 @@ export default observer(({ close, vm }: { close: () => void; vm: ShardProvider }
   useEffect(() => () => vm?.dispose(), [vm]);
 
   return (
-    <ModalRootContainer style={{ height: undefined }}>
+    <ModalRootContainer style={{ height: 360 }}>
       <BackableScrollTitles
         showClose
         titles={titles}

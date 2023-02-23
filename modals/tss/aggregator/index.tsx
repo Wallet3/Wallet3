@@ -9,6 +9,7 @@ import { ShardsAggregator } from '../../../viewmodels/tss/ShardsAggregator';
 import { View } from 'react-native';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
+import { secureColor } from '../../../constants/styles';
 import { useOptimizedCornerRadius } from '../../../utils/hardware';
 
 interface Props {
@@ -31,7 +32,7 @@ export default observer(({ vm, close }: Props) => {
 
   useEffect(() => {
     if (!aggregated) return;
-    const timer = setTimeout(close, 5000);
+    const timer = setTimeout(close, 3000);
     return () => clearTimeout(timer);
   }, [aggregated]);
 
@@ -46,9 +47,10 @@ export default observer(({ vm, close }: Props) => {
       <View style={{ flex: 1, width: ReactiveScreen.width - ModalMarginScreen * 2, marginHorizontal: -16 }}>
         <Aggregation
           vm={vm}
-          buttonTitle={aggregated ? t('button-done') : t('button-cancel')}
-          onButtonPress={close}
           enableCacheOption
+          buttonColor={aggregated ? secureColor : undefined}
+          onButtonPress={close}
+          buttonTitle={aggregated ? t('button-done') : t('button-cancel')}
         />
       </View>
     </ModalRootContainer>
