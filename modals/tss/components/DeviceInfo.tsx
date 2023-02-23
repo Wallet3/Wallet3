@@ -27,7 +27,7 @@ export default ({ info, verified, light, lastUsedAt }: Props) => {
 
       <View style={{ marginHorizontal: 12, flex: 1 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 2 }}>
-          <Text numberOfLines={1} style={{ color: textColor, fontSize: light ? 18 : 22, fontWeight: '600', marginEnd: 24 }}>
+          <Text numberOfLines={1} style={{ color: textColor, fontSize: light ? 18 : 22, fontWeight: '600', marginEnd: 8 }}>
             {`${info.name || iosDevice.generationByIdentifier(info.device)}`}
           </Text>
 

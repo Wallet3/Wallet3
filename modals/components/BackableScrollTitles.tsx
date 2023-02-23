@@ -26,7 +26,9 @@ export default (props: Props) => {
   const { secondaryTextColor } = Theme;
 
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', paddingTop: 0, ...(style as any) }}>
+    <View
+      style={{ flexDirection: 'row', alignItems: 'center', paddingTop: screenRadius && showBack ? 4 : 0, ...(style as any) }}
+    >
       <TouchableOpacity
         disabled={backDisabled || currentIndex === 0}
         onPress={onBackPress}
@@ -40,7 +42,7 @@ export default (props: Props) => {
           name="arrow-back"
           size={22}
           color={iconColor}
-          style={{ opacity: showBack ? 1 : 0, marginStart: backButtonPadding - 16 ? 4 : -2, marginTop: 2 }}
+          style={{ opacity: showBack ? 1 : 0, marginStart: backButtonPadding - 16 ? 4 : -2, marginTop: 1.5 }}
         />
       </TouchableOpacity>
 

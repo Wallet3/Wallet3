@@ -80,12 +80,12 @@ export class MultiSigWallet extends WalletBase {
     index >= 0 && runInAction(() => this.trustedDevices.splice(index, 1));
   }
 
-  addTrustedDevices(devices: MultiSigKeyDeviceInfo[]) {
-    if (this!.canDistributeMore) return;
+  async addTrustedDevices(devices: MultiSigKeyDeviceInfo[]) {
+    if (!this.canDistributeMore) return;
 
     this.key.secretsInfo.distributedCount += devices.length;
     this.key.secretsInfo.devices = this.key.secretsInfo.devices.concat(devices);
-    this.key.save();
+    await this.key.save();
 
     runInAction(() => (this.trustedDevices = this.key.secretsInfo.devices));
   }

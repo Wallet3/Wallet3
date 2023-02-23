@@ -96,7 +96,7 @@ export class ShardsDistributionMore extends ShardsDistributor {
     const succeed = result.length > 0;
     runInAction(() => (this.status = succeed ? ShardsDistributionStatus.succeed : ShardsDistributionStatus.failed));
 
-    this.wallet.addTrustedDevices(
+    await this.wallet.addTrustedDevices(
       result.map((a) => {
         return { ...a.remoteInfo!, distributedAt: Date.now(), lastUsedAt: Date.now() };
       })
