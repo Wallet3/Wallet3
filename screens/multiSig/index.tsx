@@ -24,10 +24,11 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
   const swiper = useRef<Swiper>(null);
 
   const headerHeight = 49;
-  const scrollToIndex = (index: number) => {
-    index = Math.max(0, index);
-    headerScroller.current?.scrollToIndex({ index, animated: true });
-    setCurrentPage(index);
+  const goTo = (to: number) => {
+    to = Math.max(0, to);
+    headerScroller.current?.scrollToIndex({ index: to, animated: true });
+    swiper.current?.scrollTo(to, true);
+    setCurrentPage(to);
   };
 
   const headers = [
@@ -91,8 +92,7 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
             style={{ padding: 16, paddingVertical: 8, position: 'absolute', right: 0, bottom: 4, zIndex: 9 }}
             onPress={() => {
               const to = currentPage === 1 ? 0 : 1;
-              scrollToIndex(to);
-              swiper.current?.scrollTo(to, true);
+              goTo(to);
             }}
           >
             {currentPage === 0 ? (
@@ -104,8 +104,8 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
         )}
       </View>
 
-      <Swiper ref={swiper} showsPagination={false} showsButtons={false} loop={false} onIndexChanged={scrollToIndex}>
-        {currentWallet?.isHDWallet && <MultiSigScreen />}
+      <Swiper ref={swiper} showsPagination={false} showsButtons={false} loop={false} onIndexChanged={goTo}>
+        {currentWallet?.isHDWallet && <MultiSigScreen onNextPage={() => goTo(1)} />}
         <PairedDevices />
       </Swiper>
     </View>

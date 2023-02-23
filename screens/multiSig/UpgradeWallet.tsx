@@ -14,7 +14,7 @@ import { openGlobalPasspad } from '../../common/Modals';
 import { secureColor } from '../../constants/styles';
 import { sleep } from '../../utils/async';
 
-export default observer(() => {
+export default observer(({ onNextPage }: { onNextPage?: () => void }) => {
   const [busy, setBusy] = useState(false);
 
   const { currentWallet } = App;
@@ -56,14 +56,24 @@ export default observer(() => {
         </Text>
 
         <TouchableOpacity
-          disabled
-          style={{ position: 'absolute', bottom: 52, right: 16, flexDirection: 'row', alignItems: 'center', opacity: 1 }}
+          onPress={onNextPage}
+          style={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            flexDirection: 'row',
+            alignItems: 'center',
+            backgroundColor: appColor,
+            borderRadius: 6,
+            paddingHorizontal: 8,
+            paddingVertical: 5,
+          }}
         >
-          <Ionicons name="phone-portrait-outline" color={appColor} />
-          <Text style={{ color: appColor, marginHorizontal: 4, fontWeight: '500', textTransform: 'capitalize' }}>
+          <Ionicons name="phone-portrait-outline" size={15} color={'#fff'} />
+          <Text style={{ color: '#fff', marginHorizontal: 4, fontWeight: '500', fontSize: 12, textTransform: 'uppercase' }}>
             {t('multi-sig-screen-paired-devices')}
           </Text>
-          <Ionicons name="arrow-forward" color={appColor} size={17} />
+          <Ionicons name="arrow-forward" color={'#fff'} size={14} />
         </TouchableOpacity>
       </View>
 

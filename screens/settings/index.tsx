@@ -190,7 +190,6 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
           <FullPasspad
             themeColor={Networks.current.color}
             height={420}
-            borderRadius={modalStyle.containerTopBorderRadius.borderTopEndRadius}
             appAvailable={true}
             failedAttempts={Authentication.failedAttempts}
             onCodeEntered={async (code) => {

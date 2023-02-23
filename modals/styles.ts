@@ -5,20 +5,11 @@ import Theme from '../viewmodels/settings/Theme';
 
 export const ModalMarginScreen = 6;
 
-const ModalBorderRadius = 7;
-
-const ContainerTopBorderRadius = {
-  borderTopStartRadius: ModalBorderRadius,
-  borderTopEndRadius: ModalBorderRadius,
-};
-
 export default StyleSheet.create({
   safeArea: {
     height: 445,
     flex: 1,
   },
-
-  containerTopBorderRadius: ContainerTopBorderRadius,
 
   container: {
     padding: 16,
