@@ -1,4 +1,4 @@
-import { Feather, FontAwesome, FontAwesome5, Ionicons, MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
+import { Feather, FontAwesome, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import React, { useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -14,13 +14,11 @@ import IllustrationNoData from '../../assets/illustrations/misc/nodata.svg';
 import MessageKeys from '../../common/MessageKeys';
 import { MetamaskDApp } from '../../viewmodels/walletconnect/MetamaskDApp';
 import MetamaskDAppsHub from '../../viewmodels/walletconnect/MetamaskDAppsHub';
-import { Modalize } from 'react-native-modalize';
-import ModalizeContainer from '../../modals/core/ModalizeContainer';
 import NetworkSelector from '../../modals/dapp/NetworkSelector';
 import Networks from '../../viewmodels/core/Networks';
 import { NullableImage } from '../../components';
 import { Portal } from 'react-native-portalize';
-import SquircleViewContainer from '../../components/SquircleViewContainer';
+import SquircleModalize from '../../modals/core/SquircleModalize';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
 import WalletConnectHub from '../../viewmodels/walletconnect/WalletConnectHub';
@@ -28,7 +26,6 @@ import { WalletConnect as WalletConnectLogo } from '../../assets/3rd';
 import { WalletConnect_v1 } from '../../viewmodels/walletconnect/WalletConnect_v1';
 import { WalletConnect_v2 } from '../../viewmodels/walletconnect/WalletConnect_v2';
 import i18n from '../../i18n';
-import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 import { startLayoutAnimation } from '../../utils/animations';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
@@ -331,11 +328,9 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
       </Swiper>
 
       <Portal>
-        <ModalizeContainer ref={ref}>
-          <SquircleViewContainer cornerRadius={18}>
-            {selectedClient ? <DApp client={selectedClient} allAccounts={App.allAccounts} close={close} /> : undefined}
-          </SquircleViewContainer>
-        </ModalizeContainer>
+        <SquircleModalize ref={ref}>
+          {selectedClient && <DApp client={selectedClient} allAccounts={App.allAccounts} close={close} />}
+        </SquircleModalize>
       </Portal>
     </View>
   );

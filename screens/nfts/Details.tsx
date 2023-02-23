@@ -10,8 +10,6 @@ import { Button } from '../../components';
 import { ChainIds } from '../../common/Networks';
 import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
 import { InappBrowserModal } from '../Modalize';
-import { Modalize } from 'react-native-modalize';
-import ModalizeContainer from '../../modals/core/ModalizeContainer';
 import MultiSourceImage from '../../components/MultiSourceImage';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/core/Networks';
@@ -19,7 +17,7 @@ import { Portal } from 'react-native-portalize';
 import { ReactiveScreen } from '../../utils/device';
 import { ScrollView } from 'react-native-gesture-handler';
 import SendNFT from '../../modals/app/SendNFT';
-import SquircleViewContainer from '../../components/SquircleViewContainer';
+import SquircleModalize from '../../modals/core/SquircleModalize';
 import { StatusBar } from 'expo-status-bar';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
@@ -27,7 +25,6 @@ import { lightOrDark } from '../../utils/color';
 import { observer } from 'mobx-react-lite';
 import { openInappBrowser } from '../../modals/app/InappBrowser';
 import { startLayoutAnimation } from '../../utils/animations';
-import styles from '../../modals/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -306,11 +303,9 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
       <StatusBar style={mode} />
 
       <Portal>
-        <ModalizeContainer ref={sendRef} onClosed={() => vm?.setTo('')}>
-          <SquircleViewContainer cornerRadius={18}>
-            {vm ? <SendNFT vm={vm} onClose={closeSendModal} /> : undefined}
-          </SquircleViewContainer>
-        </ModalizeContainer>
+        <SquircleModalize ref={sendRef} onClosed={() => vm?.setTo('')}>
+          {vm && <SendNFT vm={vm} onClose={closeSendModal} />}
+        </SquircleModalize>
 
         <InappBrowserModal pageKey="nfts" />
       </Portal>

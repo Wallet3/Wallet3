@@ -9,12 +9,10 @@ import GasPrice from '../../viewmodels/misc/GasPrice';
 import { IToken } from '../../common/tokens';
 import { InappBrowserModal } from '../Modalize';
 import MessageKeys from '../../common/MessageKeys';
-import { Modalize } from 'react-native-modalize';
-import ModalizeContainer from '../../modals/core/ModalizeContainer';
 import Networks from '../../viewmodels/core/Networks';
 import Overview from './Overview';
 import { Portal } from 'react-native-portalize';
-import SquircleViewContainer from '../../components/SquircleViewContainer';
+import SquircleModalize from '../../modals/core/SquircleModalize';
 import Theme from '../../viewmodels/settings/Theme';
 import TokenDetail from './TokenDetail';
 import Transaction from '../../models/entities/Transaction';
@@ -22,7 +20,6 @@ import TxDetail from './TxDetail';
 import { View } from 'react-native';
 import WalletConnectHub from '../../viewmodels/walletconnect/WalletConnectHub';
 import { logScreenView } from '../../viewmodels/services/Analytics';
-import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
@@ -110,31 +107,25 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
       />
 
       <Portal>
-        <ModalizeContainer ref={tokenDetailModalize} snapPoint={500}>
-          <SquircleViewContainer cornerRadius={18}>
-            <TokenDetail
-              token={selectedToken}
-              network={current}
-              themeColor={current.color}
-              onSendPress={(token) => {
-                PubSub.publish(MessageKeys.openSendFundsModal, { token });
-                closeTokenDetail();
-              }}
-            />
-          </SquircleViewContainer>
-        </ModalizeContainer>
+        <SquircleModalize ref={tokenDetailModalize} snapPoint={500}>
+          <TokenDetail
+            token={selectedToken}
+            network={current}
+            themeColor={current.color}
+            onSendPress={(token) => {
+              PubSub.publish(MessageKeys.openSendFundsModal, { token });
+              closeTokenDetail();
+            }}
+          />
+        </SquircleModalize>
 
-        <ModalizeContainer ref={txDetailModalize} snapPoint={500}>
-          <SquircleViewContainer cornerRadius={18}>
-            <TxDetail tx={selectedTx} close={closeTxDetail} />
-          </SquircleViewContainer>
-        </ModalizeContainer>
+        <SquircleModalize ref={txDetailModalize} snapPoint={500}>
+          <TxDetail tx={selectedTx} close={closeTxDetail} />
+        </SquircleModalize>
 
-        <ModalizeContainer ref={addressQRModalize}>
-          <SquircleViewContainer cornerRadius={18}>
-            <AddressQRCode account={currentAccount || undefined} />
-          </SquircleViewContainer>
-        </ModalizeContainer>
+        <SquircleModalize ref={addressQRModalize}>
+          <AddressQRCode account={currentAccount || undefined} />
+        </SquircleModalize>
 
         <InappBrowserModal pageKey="wallet" />
       </Portal>

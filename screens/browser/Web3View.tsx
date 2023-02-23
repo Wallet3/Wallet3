@@ -5,7 +5,6 @@ import Animated, { ComplexAnimationBuilder, FadeInDown, FadeOut, FadeOutDown } f
 import { Entypo, Feather, Ionicons } from '@expo/vector-icons';
 import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
-import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { WebView, WebViewMessageEvent, WebViewNavigation, WebViewProps } from 'react-native-webview';
 
 import { Account } from '../../viewmodels/account/Account';
@@ -21,21 +20,19 @@ import { InpageDAppController } from './controller/InpageDAppController';
 import { JS_POST_MESSAGE_TO_PROVIDER } from './scripts/Utils';
 import LinkHub from '../../viewmodels/hubs/LinkHub';
 import MetamaskMobileProvider from './scripts/Metamask-mobile-provider';
-import { Modalize } from 'react-native-modalize';
-import ModalizeContainer from '../../modals/core/ModalizeContainer';
 import Networks from '../../viewmodels/core/Networks';
 import { NetworksMenu } from '../../modals';
 import { Portal } from 'react-native-portalize';
-import SquircleViewContainer from '../../components/SquircleViewContainer';
+import SquircleModalize from '../../modals/core/SquircleModalize';
 import Theme from '../../viewmodels/settings/Theme';
 import ViewShot from 'react-native-view-shot';
 import WalletConnectHub from '../../viewmodels/walletconnect/WalletConnectHub';
 import WalletConnectLogo from '../../assets/3rd/walletconnect.svg';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
-import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export interface PageMetadata {
   icon: string;
@@ -368,36 +365,32 @@ export default observer((props: Web3ViewProps) => {
       </Animatable.View>
 
       <Portal>
-        <ModalizeContainer ref={networksRef}>
-          <SquircleViewContainer cornerRadius={18}>
-            <NetworksMenu
-              title={t('modal-dapp-switch-network', { app: pageMetadata?.title?.split(' ')?.[0] ?? '' })}
-              selectedNetwork={appNetwork}
-              onNetworkPress={(network) => updateDAppNetworkConfig(network)}
-            />
-          </SquircleViewContainer>
-        </ModalizeContainer>
+        <SquircleModalize ref={networksRef}>
+          <NetworksMenu
+            title={t('modal-dapp-switch-network', { app: pageMetadata?.title?.split(' ')?.[0] ?? '' })}
+            selectedNetwork={appNetwork}
+            onNetworkPress={(network) => updateDAppNetworkConfig(network)}
+          />
+        </SquircleModalize>
 
-        <ModalizeContainer ref={accountsRef}>
-          <SquircleViewContainer cornerRadius={18}>
-            <ScrollView
-              scrollEnabled={false}
-              horizontal
-              style={{ width: '100%', flex: 1 }}
-              contentContainerStyle={{ flexGrow: 1 }}
-            >
-              <AccountSelector
-                single
-                accounts={App.allAccounts}
-                selectedAccounts={appAccount ? [appAccount.address] : []}
-                style={{ padding: 16, height: 430 }}
-                expanded
-                themeColor={appNetwork?.color}
-                onDone={([account]) => updateDAppAccountConfig(account)}
-              />
-            </ScrollView>
-          </SquircleViewContainer>
-        </ModalizeContainer>
+        <SquircleModalize ref={accountsRef}>
+          <ScrollView
+            scrollEnabled={false}
+            horizontal
+            style={{ width: '100%', flex: 1 }}
+            contentContainerStyle={{ flexGrow: 1 }}
+          >
+            <AccountSelector
+              single
+              accounts={App.allAccounts}
+              selectedAccounts={appAccount ? [appAccount.address] : []}
+              style={{ padding: 16, height: 430 }}
+              expanded
+              themeColor={appNetwork?.color}
+              onDone={([account]) => updateDAppAccountConfig(account)}
+            />
+          </ScrollView>
+        </SquircleModalize>
       </Portal>
     </Animated.View>
   );

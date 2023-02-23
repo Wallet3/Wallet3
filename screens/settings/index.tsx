@@ -1,6 +1,5 @@
-import { Button, SafeViewContainer } from '../../components';
 import { Entypo, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { SafeAreaView, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { fontColor, secondaryFontColor } from '../../constants/styles';
 
 import App from '../../viewmodels/core/App';
@@ -11,14 +10,11 @@ import { DrawerScreenProps } from '@react-navigation/drawer';
 import { FullPasspad } from '../../modals/views/Passpad';
 import { InappBrowserModal } from '../Modalize';
 import Langs from '../../viewmodels/settings/Langs';
-import { Modalize } from 'react-native-modalize';
-import ModalizeContainer from '../../modals/core/ModalizeContainer';
 import Networks from '../../viewmodels/core/Networks';
 import { Portal } from 'react-native-portalize';
 import React from 'react';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
-import SquircleViewContainer from '../../components/SquircleViewContainer';
+import SquircleModalize from '../../modals/core/SquircleModalize';
 import Theme from '../../viewmodels/settings/Theme';
 import UI from '../../viewmodels/settings/UI';
 import i18n from '../../i18n';
@@ -190,42 +186,38 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
       </TouchableOpacity>
 
       <Portal>
-        <ModalizeContainer ref={passcodeRef} panGestureEnabled={false} panGestureComponentEnabled={false} withHandle={false}>
-          <SquircleViewContainer cornerRadius={18}>
-            <FullPasspad
-              themeColor={Networks.current.color}
-              height={420}
-              borderRadius={modalStyle.containerTopBorderRadius.borderTopEndRadius}
-              appAvailable={true}
-              failedAttempts={Authentication.failedAttempts}
-              onCodeEntered={async (code) => {
-                const success = await Authentication.verifyPin(code);
-                if (!success) return false;
+        <SquircleModalize ref={passcodeRef} panGestureEnabled={false} panGestureComponentEnabled={false} withHandle={false}>
+          <FullPasspad
+            themeColor={Networks.current.color}
+            height={420}
+            borderRadius={modalStyle.containerTopBorderRadius.borderTopEndRadius}
+            appAvailable={true}
+            failedAttempts={Authentication.failedAttempts}
+            onCodeEntered={async (code) => {
+              const success = await Authentication.verifyPin(code);
+              if (!success) return false;
 
-                if (jumpToScreen === 'ResetApp') {
-                  setTimeout(() => openReset(), 25);
-                } else {
-                  parent?.navigate(jumpToScreen);
-                }
+              if (jumpToScreen === 'ResetApp') {
+                setTimeout(() => openReset(), 25);
+              } else {
+                parent?.navigate(jumpToScreen);
+              }
 
-                closePasscode();
-                return true;
-              }}
-            />
-          </SquircleViewContainer>
-        </ModalizeContainer>
+              closePasscode();
+              return true;
+            }}
+          />
+        </SquircleModalize>
 
-        <ModalizeContainer ref={resetRef} safeAreaStyle={{ height: 270 }}>
-          <SquircleViewContainer cornerRadius={18}>
-            <Confirm
-              onSwipeConfirm={() => App.reset()}
-              confirmButtonTitle={t('settings-reset-modal-button-confirm')}
-              desc={t('settings-modal-erase')}
-              themeColor="crimson"
-              style={{ flex: 1 }}
-            />
-          </SquircleViewContainer>
-        </ModalizeContainer>
+        <SquircleModalize ref={resetRef} safeAreaStyle={{ height: 270 }}>
+          <Confirm
+            onSwipeConfirm={() => App.reset()}
+            confirmButtonTitle={t('settings-reset-modal-button-confirm')}
+            desc={t('settings-modal-erase')}
+            themeColor="crimson"
+            style={{ flex: 1 }}
+          />
+        </SquircleModalize>
 
         <InappBrowserModal pageKey="settings" />
       </Portal>

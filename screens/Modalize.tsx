@@ -10,7 +10,6 @@ import {
   WalletConnectSign,
   WalletConnectTxRequest,
 } from '../modals';
-import AppAuth, { Authentication } from '../viewmodels/auth/Authentication';
 import {
   ConnectInpageDApp,
   InpageDAppAddAsset,
@@ -23,6 +22,7 @@ import React, { useEffect, useState } from 'react';
 import { ShardProviderUI, ShardReceiverUI, ShardsAggregatorUI, ShardsDistributorUI } from '../modals/tss';
 
 import { AppVM } from '../viewmodels/core/App';
+import { Authentication } from '../viewmodels/auth/Authentication';
 import BackupSecretTip from '../modals/misc/BackupSecretTip';
 import { FullPasspad } from '../modals/views/Passpad';
 import GlobalPasspad from '../modals/global/GlobalPasspad';
@@ -35,16 +35,13 @@ import InpageDAppSign from '../modals/inpage/InpageDAppSign';
 import { Keyboard } from 'react-native';
 import Loading from '../modals/views/Loading';
 import MessageKeys from '../common/MessageKeys';
-import { Modalize } from 'react-native-modalize';
 import ModalizeContainer from '../modals/core/ModalizeContainer';
 import Networks from '../viewmodels/core/Networks';
 import { ReactiveScreen } from '../utils/device';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ShardProvider } from '../viewmodels/tss/ShardProvider';
-import { ShardReceiver } from '../viewmodels/tss/ShardReceiver';
 import { ShardsAggregator } from '../viewmodels/tss/ShardsAggregator';
 import { ShardsDistributor } from '../viewmodels/tss/ShardsDistributor';
-import SquircleViewContainer from '../components/SquircleViewContainer';
+import SquircleModalize from '../modals/core/SquircleModalize';
 import Theme from '../viewmodels/settings/Theme';
 import { TokenTransferring } from '../viewmodels/transferring/TokenTransferring';
 import { WCCallRequestRequest } from '../models/entities/WCSession_v1';
@@ -57,7 +54,6 @@ import { logScreenView } from '../viewmodels/services/Analytics';
 import { observer } from 'mobx-react-lite';
 import { parse } from 'eth-url-parser';
 import { showMessage } from 'react-native-flash-message';
-import styles from '../modals/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { utils } from 'ethers';
 
@@ -106,7 +102,7 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
   }, []);
 
   return (
-    <ModalizeContainer
+    <SquircleModalize
       ref={ref}
       withHandle={false}
       panGestureEnabled={false}
@@ -114,11 +110,9 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
       tapGestureEnabled={false}
       closeOnOverlayTap={false}
     >
-      <SquircleViewContainer cornerRadius={18}>
-        {type === 'sign' ? <WalletConnectSign client={client!} request={callRequest!} close={close} /> : undefined}
-        {type === 'sendTx' ? <WalletConnectTxRequest client={client!} request={callRequest!} close={close} /> : undefined}
-      </SquircleViewContainer>
-    </ModalizeContainer>
+      {type === 'sign' ? <WalletConnectSign client={client!} request={callRequest!} close={close} /> : undefined}
+      {type === 'sendTx' ? <WalletConnectTxRequest client={client!} request={callRequest!} close={close} /> : undefined}
+    </SquircleModalize>
   );
 };
 
@@ -155,7 +149,7 @@ const WalletConnect = () => {
   }, []);
 
   return (
-    <ModalizeContainer
+    <SquircleModalize
       ref={connectDappRef}
       withHandle={false}
       panGestureEnabled={false}
@@ -163,10 +157,8 @@ const WalletConnect = () => {
       tapGestureEnabled={false}
       closeOnOverlayTap={false}
     >
-      <SquircleViewContainer cornerRadius={18}>
-        <WalletConnectDApp uri={state.uri} close={closeConnectDapp} extra={state.extra} directClient={state.client_v2} />
-      </SquircleViewContainer>
-    </ModalizeContainer>
+      <WalletConnectDApp uri={state.uri} close={closeConnectDapp} extra={state.extra} directClient={state.client_v2} />
+    </SquircleModalize>
   );
 };
 
@@ -205,7 +197,7 @@ const InpageDAppConnect = () => {
   }, []);
 
   return (
-    <ModalizeContainer
+    <SquircleModalize
       ref={connectDappRef}
       withHandle={false}
       panGestureEnabled={false}
@@ -213,10 +205,8 @@ const InpageDAppConnect = () => {
       tapGestureEnabled={false}
       closeOnOverlayTap={false}
     >
-      <SquircleViewContainer cornerRadius={18}>
-        <InpageConnectDApp {...info} close={close} approve={data?.approve} reject={data?.reject} />
-      </SquircleViewContainer>
-    </ModalizeContainer>
+      <InpageConnectDApp {...info} close={close} approve={data?.approve} reject={data?.reject} />
+    </SquircleModalize>
   );
 };
 
@@ -262,7 +252,7 @@ const InpageDAppRequests = () => {
   }, []);
 
   return (
-    <ModalizeContainer
+    <SquircleModalize
       ref={ref}
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
@@ -270,13 +260,11 @@ const InpageDAppRequests = () => {
       closeOnOverlayTap={false}
       withHandle={false}
     >
-      <SquircleViewContainer cornerRadius={18}>
-        {type === 'sign' && <InpageDAppSign {...signRequest!} close={close} />}
-        {type === 'sendTx' && <InpageDAppSendTx {...txRequest!} close={close} />}
-        {type === 'addChain' && <InpageDAppAddChain {...addChain!} close={close} />}
-        {type === 'addAsset' && <InpageDAppAddAssetModal {...addAsset!} close={close} />}
-      </SquircleViewContainer>
-    </ModalizeContainer>
+      {type === 'sign' && <InpageDAppSign {...signRequest!} close={close} />}
+      {type === 'sendTx' && <InpageDAppSendTx {...txRequest!} close={close} />}
+      {type === 'addChain' && <InpageDAppAddChain {...addChain!} close={close} />}
+      {type === 'addAsset' && <InpageDAppAddAssetModal {...addAsset!} close={close} />}
+    </SquircleModalize>
   );
 };
 
@@ -296,19 +284,17 @@ const GlobalNetworksMenuModal = observer(() => {
   }, []);
 
   return (
-    <ModalizeContainer ref={networksRef} closeOnOverlayTap={!editing} panGestureEnabled={!editing}>
-      <SquircleViewContainer cornerRadius={18}>
-        <NetworksMenu
-          useContextMenu
-          onEditing={setEditing}
-          selectedNetwork={Networks.current}
-          onNetworkPress={(network) => {
-            closeNetworksModal();
-            Networks.switch(network);
-          }}
-        />
-      </SquircleViewContainer>
-    </ModalizeContainer>
+    <SquircleModalize ref={networksRef} withHandle={!editing} closeOnOverlayTap={!editing} panGestureEnabled={!editing}>
+      <NetworksMenu
+        useContextMenu
+        onEditing={setEditing}
+        selectedNetwork={Networks.current}
+        onNetworkPress={(network) => {
+          closeNetworksModal();
+          Networks.switch(network);
+        }}
+      />
+    </SquircleModalize>
   );
 });
 
@@ -327,11 +313,9 @@ const GlobalAccountsMenuModal = () => {
   }, []);
 
   return (
-    <ModalizeContainer ref={ref}>
-      <SquircleViewContainer cornerRadius={18}>
-        <AccountsMenu close={close} />
-      </SquircleViewContainer>
-    </ModalizeContainer>
+    <SquircleModalize ref={ref}>
+      <AccountsMenu close={close} />
+    </SquircleModalize>
   );
 };
 
@@ -349,11 +333,14 @@ const GlobalLoadingModal = () => {
   }, []);
 
   return (
-    <ModalizeContainer ref={ref} closeOnOverlayTap={false}>
-      <SquircleViewContainer style={{ height: 439, justifyContent: 'center', alignItems: 'center' }}>
-        <Loading />
-      </SquircleViewContainer>
-    </ModalizeContainer>
+    <SquircleModalize
+      ref={ref}
+      withHandle={false}
+      closeOnOverlayTap={false}
+      squircleContainerStyle={{ height: 439, justifyContent: 'center', alignItems: 'center' }}
+    >
+      <Loading />
+    </SquircleModalize>
   );
 };
 
@@ -372,16 +359,14 @@ const RequestFundsModal = () => {
   }, []);
 
   return (
-    <ModalizeContainer
+    <SquircleModalize
       ref={requestRef}
       adjustToContentHeight
       disableScrollIfPossible
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
-      <SquircleViewContainer cornerRadius={18}>
-        <Request close={close} />
-      </SquircleViewContainer>
-    </ModalizeContainer>
+      <Request close={close} />
+    </SquircleModalize>
   );
 };
 
@@ -439,7 +424,7 @@ const SendFundsModal = () => {
   };
 
   return (
-    <ModalizeContainer
+    <SquircleModalize
       key="SendFunds"
       ref={sendRef}
       withHandle={!reviewing}
@@ -450,18 +435,16 @@ const SendFundsModal = () => {
         setVM(undefined);
       }}
     >
-      <SquircleViewContainer cornerRadius={18}>
-        {vm && (
-          <Send
-            vm={vm}
-            close={clear}
-            erc681={isERC681}
-            onReviewEnter={() => setReviewing(true)}
-            onReviewLeave={() => setReviewing(false)}
-          />
-        )}
-      </SquircleViewContainer>
-    </ModalizeContainer>
+      {vm && (
+        <Send
+          vm={vm}
+          close={clear}
+          erc681={isERC681}
+          onReviewEnter={() => setReviewing(true)}
+          onReviewLeave={() => setReviewing(false)}
+        />
+      )}
+    </SquircleModalize>
   );
 };
 
@@ -477,11 +460,9 @@ const BackupTipsModal = () => {
   }, []);
 
   return (
-    <ModalizeContainer ref={ref} closeOnOverlayTap={false} withHandle={false} safeAreaStyle={{ height: 430 }}>
-      <SquircleViewContainer cornerRadius={18}>
-        <BackupSecretTip onDone={close} />
-      </SquircleViewContainer>
-    </ModalizeContainer>
+    <SquircleModalize ref={ref} closeOnOverlayTap={false} withHandle={false} safeAreaStyle={{ height: 430 }}>
+      <BackupSecretTip onDone={close} />
+    </SquircleModalize>
   );
 };
 

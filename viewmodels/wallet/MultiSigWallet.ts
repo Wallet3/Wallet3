@@ -51,11 +51,11 @@ export class MultiSigWallet extends WalletBase {
   }
 
   get canDistributeMore() {
-    return this.key.secretsInfo.distributedCount <= 250;
+    return this.key.secretsInfo.distributedCount < 250;
   }
 
   get maxDistributableCount() {
-    return 252;
+    return 250;
   }
 
   async setSecretsCache(plain?: { rootEntropy?: string; bip32XprvKey?: string }) {

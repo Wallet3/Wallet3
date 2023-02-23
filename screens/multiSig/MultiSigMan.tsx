@@ -104,7 +104,12 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
           </View>
         </View>
 
-        <ButtonV2 title={t('button-add-devices')} onPress={openAddDevices} themeColor={secureColor} />
+        <ButtonV2
+          title={t('button-add-devices')}
+          onPress={openAddDevices}
+          themeColor={secureColor}
+          disabled={!wallet.canDistributeMore}
+        />
       </ScrollView>
 
       <Portal>

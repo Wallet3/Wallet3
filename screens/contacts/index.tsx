@@ -7,15 +7,11 @@ import Avatar from '../../components/Avatar';
 import { Confirm } from '../../modals/views/Confirm';
 import ContactDetails from './ContactDetails';
 import IllustrationNoData from '../../assets/illustrations/misc/nodata.svg';
-import { Modalize } from 'react-native-modalize';
-import ModalizeContainer from '../../modals/core/ModalizeContainer';
 import { Portal } from 'react-native-portalize';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import SquircleViewContainer from '../../components/SquircleViewContainer';
+import SquircleModalize from '../../modals/core/SquircleModalize';
 import Theme from '../../viewmodels/settings/Theme';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
-import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 import { startLayoutAnimation } from '../../utils/animations';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
@@ -91,35 +87,31 @@ export default observer(() => {
       )}
 
       <Portal>
-        <ModalizeContainer ref={accountModal} closeOnOverlayTap={!editing} safeAreaStyle={{ height: 430 }}>
-          <SquircleViewContainer cornerRadius={18}>
-            <ContactDetails
-              contact={selectedContact}
-              onEditing={setEditing}
-              onSave={() => {
-                closeAccountModal();
-                startLayoutAnimation();
-                Contacts.saveContact(selectedContact!);
-              }}
-            />
-          </SquircleViewContainer>
-        </ModalizeContainer>
+        <SquircleModalize ref={accountModal} closeOnOverlayTap={!editing} safeAreaStyle={{ height: 430 }}>
+          <ContactDetails
+            contact={selectedContact}
+            onEditing={setEditing}
+            onSave={() => {
+              closeAccountModal();
+              startLayoutAnimation();
+              Contacts.saveContact(selectedContact!);
+            }}
+          />
+        </SquircleModalize>
 
-        <ModalizeContainer ref={confirmModal} safeAreaStyle={{ height: 270 }}>
-          <SquircleViewContainer cornerRadius={18}>
-            <Confirm
-              confirmButtonTitle={t('button-confirm')}
-              desc={t('contacts-remote-confirm-desc')}
-              themeColor="crimson"
-              style={{ flex: 1 }}
-              onConfirm={() => {
-                closeConfirmModal();
-                startLayoutAnimation();
-                Contacts.remove(selectedContact!);
-              }}
-            />
-          </SquircleViewContainer>
-        </ModalizeContainer>
+        <SquircleModalize ref={confirmModal} safeAreaStyle={{ height: 270 }}>
+          <Confirm
+            confirmButtonTitle={t('button-confirm')}
+            desc={t('contacts-remote-confirm-desc')}
+            themeColor="crimson"
+            style={{ flex: 1 }}
+            onConfirm={() => {
+              closeConfirmModal();
+              startLayoutAnimation();
+              Contacts.remove(selectedContact!);
+            }}
+          />
+        </SquircleModalize>
       </Portal>
     </View>
   );
