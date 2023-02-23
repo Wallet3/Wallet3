@@ -14,6 +14,7 @@ import { openShardProvider } from '../../../common/Modals';
 
 class PairedDevices {
   private handledIds = new Set<string>();
+  private handlingIds = new Set<string>();
 
   devices: PairedDevice[] = [];
 
@@ -38,7 +39,7 @@ class PairedDevices {
     if (!service) return;
 
     const reqId = service.txt?.['reqId'];
-    if (this.handledIds.has(reqId)) {
+    if (this.handledIds.has(reqId) || this.handlingIds.has(reqId)) {
       setTimeout(() => this.scanLan(), 10 * SECOND);
       return;
     }
@@ -57,6 +58,7 @@ class PairedDevices {
       vm,
       onClosed: () => {
         vm.removeAllListeners();
+        this.handlingIds.delete(reqId);
         setTimeout(() => this.scanLan(), 10 * SECOND);
       },
     });

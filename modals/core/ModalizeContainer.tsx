@@ -15,7 +15,7 @@ export default React.forwardRef<Modalize, Props>((props: Props, ref) => {
       ref={ref}
       useNativeDriver
       handlePosition="inside"
-      handleStyle={{ marginTop: -3, backgroundColor: Theme.borderColor, width: 36 }}
+      handleStyle={{ marginTop: -3, backgroundColor: Theme.borderColor, width: 36, opacity: 0.75 }}
       withHandle={true}
       adjustToContentHeight
       disableScrollIfPossible

@@ -19,7 +19,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 export default observer(({ close, vm }: { close: () => void; vm: ShardProvider }) => {
   const { t } = i18n;
   const { textColor } = Theme;
-  const [height] = useState(360 + useOptimizedSafeBottom());
+  const [height] = useState(372 + useOptimizedSafeBottom());
   const screenRadius = useOptimizedCornerRadius();
 
   const [step, setStep] = useState(0);
@@ -37,7 +37,6 @@ export default observer(({ close, vm }: { close: () => void; vm: ShardProvider }
   return (
     <ModalRootContainer style={{ height }}>
       <BackableScrollTitles
-        showClose
         titles={titles}
         currentIndex={step}
         onClosePress={close}

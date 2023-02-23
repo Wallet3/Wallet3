@@ -242,6 +242,7 @@ export class AppVM {
       TxHub.init().then(() => AppStoreReview.check());
       PairedDevices.init();
 
+      Authentication.on('appAuthorized', () => setTimeout(() => PairedDevices.scanLan(), 2000));
       tipWalletUpgrade(this.currentWallet);
     });
 
