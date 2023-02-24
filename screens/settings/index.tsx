@@ -33,8 +33,9 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
   const parent = navigation.getParent();
   const [jumpToScreen, setJumpToScreen] = React.useState('');
   const { ref: passcodeRef, open: openPasscode, close: closePasscode } = useModalize();
-  const { ref: resetRef, open: openReset, close: closeReset } = useModalize();
-  const { foregroundColor, textColor, backgroundColor, mode } = Theme;
+  const { ref: resetRef, open: openReset } = useModalize();
+  const { textColor, mode } = Theme;
+  const { currentWallet } = App;
 
   const openChangePasscode = () => {
     openPasscode();
@@ -130,7 +131,10 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.itemContainer} onPress={() => parent?.navigate('Backup')}>
+      <TouchableOpacity
+        style={styles.itemContainer}
+        onPress={() => parent?.navigate(currentWallet?.isMultiSig ? 'MultiSig' : 'Backup')}
+      >
         <View style={styles.itemSubContainer}>
           <Ionicons name="file-tray-outline" style={styles.itemStartSymbol} size={16} color={textColor} />
           <Text style={itemText}>{t('settings-security-backup')}</Text>

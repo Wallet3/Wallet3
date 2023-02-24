@@ -13,7 +13,6 @@ import { ReactiveScreen } from '../../../utils/device';
 import { ShardsAggregator } from '../../../viewmodels/tss/ShardsAggregator';
 import ShardsDistribution from '../../../modals/tss/distributor/ShardsDistribution';
 import { ShardsDistributionMore } from '../../../viewmodels/tss/ShardsDistributionMore';
-import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
 import Theme from '../../../viewmodels/settings/Theme';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -58,6 +57,8 @@ export default observer(({ wallet, close, onCritical }: Props) => {
 
     setAggregator(vm!);
     vm!.start();
+    vm?.once('aggregated', () => setTimeout(() => current.step === 1 && goTo(2), 5000));
+
     goTo(1);
   };
 
