@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from 'react';
 
 import Aggregation from './Aggregation';
+import MiniAggregation from './MiniAggregation';
 import { ModalMarginScreen } from '../../styles';
 import ModalRootContainer from '../../core/ModalRootContainer';
 import { ReactiveScreen } from '../../../utils/device';
 import ScrollTitles from '../../components/ScrollTitles';
 import { ShardsAggregator } from '../../../viewmodels/tss/ShardsAggregator';
+import SquircleViewContainer from '../../../components/SquircleViewContainer';
+import Theme from '../../../viewmodels/settings/Theme';
 import { View } from 'react-native';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
 import { secureColor } from '../../../constants/styles';
 import { useOptimizedCornerRadius } from '../../../utils/hardware';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Props {
   vm: ShardsAggregator;
@@ -19,12 +23,8 @@ interface Props {
 }
 
 export default observer(({ vm, close }: Props) => {
-  const { t } = i18n;
-
-  const screenRadius = useOptimizedCornerRadius();
   const { aggregated } = vm;
-
-  const titles = [t('multi-sig-modal-title-waiting-aggregation')];
+  const [marginBottom] = useState(ReactiveScreen.height - (useSafeAreaInsets().top || 16));
 
   useEffect(() => {
     return () => vm.dispose();
@@ -37,22 +37,15 @@ export default observer(({ vm, close }: Props) => {
   }, [aggregated]);
 
   return (
-    <ModalRootContainer>
-      <ScrollTitles
-        data={titles}
-        currentIndex={0}
-        style={{ flexGrow: 0, height: 32, marginBottom: 12, marginTop: screenRadius ? 4 : 0 }}
-      />
-
-      <View style={{ flex: 1, width: ReactiveScreen.width - ModalMarginScreen * 2, marginHorizontal: -16 }}>
-        <Aggregation
-          vm={vm}
-          enableCacheOption
-          buttonColor={aggregated ? secureColor : undefined}
-          onButtonPress={close}
-          buttonTitle={aggregated ? t('button-done') : t('button-cancel')}
-        />
-      </View>
-    </ModalRootContainer>
+    <View
+      style={{
+        backgroundColor: 'transparent',
+        margin: 0,
+        padding: 0,
+        marginBottom,
+      }}
+    >
+      <MiniAggregation vm={vm} close={close} />
+    </View>
   );
 });

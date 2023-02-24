@@ -26,6 +26,7 @@ import { Authentication } from '../viewmodels/auth/Authentication';
 import BackupSecretTip from '../modals/misc/UpgradeWalletTip';
 import { FullPasspad } from '../modals/views/Passpad';
 import GlobalPasspad from '../modals/global/GlobalPasspad';
+import { IConfigProps } from 'react-native-modalize/lib/options';
 import InappBrowser from '../modals/app/InappBrowser';
 import InpageConnectDApp from '../modals/inpage/InpageConnectDApp';
 import InpageDAppAddAssetModal from '../modals/inpage/InpageDAppAddAsset';
@@ -515,6 +516,7 @@ export const ShardsModal = observer(() => {
     shardsAggregator?: ShardsAggregator;
     shardProvider?: ShardProvider;
     onClosed?: () => void;
+    openAnimationConfig?: IConfigProps;
   }>({});
 
   useEffect(() => {
@@ -529,8 +531,8 @@ export const ShardsModal = observer(() => {
     });
 
     PubSub.subscribe(MessageKeys.openShardsAggregator, (_, { vm, onClosed }) => {
-      setVMs({ shardsAggregator: vm, onClosed });
-      open();
+      setVMs({ shardsAggregator: vm, onClosed, openAnimationConfig: { timing: { duration: 150 } } });
+      open('top');
     });
 
     PubSub.subscribe(MessageKeys.openShardProvider, (_, { vm, onClosed }) => {
@@ -555,6 +557,7 @@ export const ShardsModal = observer(() => {
       closeOnOverlayTap={!isCritical}
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
+      openAnimationConfig={vms.openAnimationConfig}
       onClosed={() => {
         vms?.onClosed?.();
         setVMs({});

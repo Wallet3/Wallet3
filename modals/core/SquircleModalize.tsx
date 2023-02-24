@@ -15,7 +15,12 @@ interface Props extends ModalizeProps {
 export default React.forwardRef<Modalize, Props>((props: Props, ref) => {
   return (
     <ModalizeContainer ref={ref} {...props}>
-      <SquircleViewContainer cornerRadius={22} style={props.squircleContainerStyle} useSafeBottom={props.useSafeBottom}>
+      <SquircleViewContainer
+        cornerRadius={22}
+        style={props.squircleContainerStyle}
+        useSafeBottom={props.useSafeBottom}
+        excludeBottomCorners
+      >
         {props.children}
       </SquircleViewContainer>
     </ModalizeContainer>

@@ -5,9 +5,15 @@ import { SquircleView } from 'react-native-figma-squircle';
 import Theme from '../../viewmodels/settings/Theme';
 import { useScreenCornerRadius } from '../../utils/hardware';
 
-export default ({ children, style }: { style?: StyleProp<ViewStyle>; children: React.ReactNode }) => {
+interface Props {
+  cornerRadius?: number;
+  style?: StyleProp<ViewStyle>;
+  children: React.ReactNode;
+}
+
+export default ({ cornerRadius, children, style }: Props) => {
   const { backgroundColor } = Theme;
-  const corderRadius = useScreenCornerRadius();
+  const DefaultCornerRadius = cornerRadius ?? useScreenCornerRadius();
 
   return (
     <ScrollView
@@ -15,13 +21,14 @@ export default ({ children, style }: { style?: StyleProp<ViewStyle>; children: R
       scrollEnabled={false}
       horizontal
       contentContainerStyle={{ flexGrow: 1 }}
-      style={{
-        position: 'relative',
-        backgroundColor: 'transparent',
-      }}
+      style={{ position: 'relative', backgroundColor: 'transparent' }}
     >
       <SquircleView
-        squircleParams={{ cornerRadius: corderRadius, cornerSmoothing: 0.81, fillColor: backgroundColor }}
+        squircleParams={{
+          cornerRadius: DefaultCornerRadius,
+          cornerSmoothing: 0.81,
+          fillColor: style?.['backgroundColor'] ?? backgroundColor,
+        }}
         style={{
           flex: 1,
           backgroundColor: 'transparent',
@@ -30,7 +37,7 @@ export default ({ children, style }: { style?: StyleProp<ViewStyle>; children: R
           margin: 6,
           padding: 16,
           overflow: 'hidden',
-          borderRadius: corderRadius,
+          borderRadius: DefaultCornerRadius,
           ...(style as any),
         }}
       >

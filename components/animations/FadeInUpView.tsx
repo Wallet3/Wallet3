@@ -9,29 +9,31 @@ import Animated, {
   ZoomIn,
   ZoomOut,
 } from 'react-native-reanimated';
-import { StyleProp, ViewStyle } from 'react-native';
+import { StyleProp, ViewProps, ViewStyle } from 'react-native';
 
 import React from 'react';
 
 const { View } = Animated;
 
-interface Props {
+interface Props extends ViewProps {
   style?: StyleProp<ViewStyle>;
   children: React.ReactNode;
   delay?: number;
   duration?: number;
 }
 
-export default ({ children, style, delay, duration }: Props) => {
+export default (props: Props) => {
+  const { delay, duration } = props;
+
   return (
     <View
       entering={FadeInUp.springify()
         .delay(delay ?? 0)
         .duration(duration ?? 300)}
       exiting={FadeOutUp.springify()}
-      style={style}
+      {...props}
     >
-      {children}
+      {props.children}
     </View>
   );
 };

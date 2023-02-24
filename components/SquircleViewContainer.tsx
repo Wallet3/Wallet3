@@ -10,9 +10,10 @@ interface Props {
   children: React.ReactNode;
   cornerRadius?: number;
   useSafeBottom?: boolean;
+  excludeBottomCorners?: boolean;
 }
 
-export default ({ style, children, cornerRadius, useSafeBottom }: Props) => {
+export default ({ style, children, cornerRadius, useSafeBottom, excludeBottomCorners }: Props) => {
   return (
     <SquircleView
       style={{
@@ -22,14 +23,14 @@ export default ({ style, children, cornerRadius, useSafeBottom }: Props) => {
         backgroundColor: 'transparent',
         overflow: 'hidden',
         borderRadius: cornerRadius,
-        borderBottomLeftRadius: 0,
-        borderBottomRightRadius: 0,
+        borderBottomLeftRadius: excludeBottomCorners ? 0 : cornerRadius,
+        borderBottomRightRadius: excludeBottomCorners ? 0 : cornerRadius,
       }}
       squircleParams={{
         fillColor: style?.['backgroundColor'] ?? Theme.backgroundColor,
         cornerRadius: cornerRadius,
-        bottomLeftCornerRadius: 0,
-        bottomRightCornerRadius: 0,
+        bottomLeftCornerRadius: excludeBottomCorners ? 0 : cornerRadius,
+        bottomRightCornerRadius: excludeBottomCorners ? 0 : cornerRadius,
         cornerSmoothing: 0.81,
       }}
     >
