@@ -47,6 +47,7 @@ export class ShardSender {
 
   sendPairingCode(code: string) {
     const data: PairingCodeVerified = {
+      randomPadding: randomBytes(16).toString('hex'),
       type: ContentType.pairingCodeVerified,
       hash: sha256Sync(code),
     };

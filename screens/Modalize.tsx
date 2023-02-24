@@ -507,37 +507,57 @@ export const InappBrowserModal = observer(({ pageKey }: { pageKey?: string }) =>
   );
 });
 
+type ShardsParam = {
+  shardsDistributor?: ShardsDistributor;
+  shardReceiver?: boolean;
+  shardsAggregator?: ShardsAggregator;
+  shardProvider?: ShardProvider;
+  onClosed?: () => void;
+  openAnimationConfig?: IConfigProps;
+};
+
 export const ShardsModal = observer(() => {
   const { ref, open, close } = useModalize();
   const [isCritical, setIsCritical] = useState(false);
-  const [vms, setVMs] = useState<{
-    shardsDistributor?: ShardsDistributor;
-    shardReceiver?: boolean;
-    shardsAggregator?: ShardsAggregator;
-    shardProvider?: ShardProvider;
-    onClosed?: () => void;
-    openAnimationConfig?: IConfigProps;
-  }>({});
+  const [vms, setVMs] = useState<ShardsParam | undefined>();
+  const [queue] = useState<ShardsParam[]>([]);
+
+  const enqueue = (param: ShardsParam) => {
+    queue.push(param);
+
+    if (vms) return;
+    setVMs(queue.shift()!);
+    open();
+  };
+
+  const dequeue = () => {
+    setIsCritical(false);
+    setVMs(undefined);
+
+    const next = queue.shift();
+    if (!next) return;
+
+    setTimeout(() => {
+      setVMs(next);
+      open();
+    }, 0);
+  };
 
   useEffect(() => {
     PubSub.subscribe(MessageKeys.openShardsDistribution, (_, { vm }) => {
-      setVMs({ shardsDistributor: vm });
-      open();
+      enqueue({ shardsDistributor: vm });
     });
 
     PubSub.subscribe(MessageKeys.openShardReceiver, () => {
-      setVMs({ shardReceiver: true });
-      open();
+      enqueue({ shardReceiver: true });
     });
 
     PubSub.subscribe(MessageKeys.openShardsAggregator, (_, { vm, onClosed }) => {
-      setVMs({ shardsAggregator: vm, onClosed, openAnimationConfig: { timing: { duration: 100 } } });
-      open('top');
+      enqueue({ shardsAggregator: vm, onClosed, openAnimationConfig: { timing: { duration: 100 } } });
     });
 
     PubSub.subscribe(MessageKeys.openShardProvider, (_, { vm, onClosed }) => {
-      setVMs({ shardProvider: vm, onClosed });
-      open();
+      enqueue({ shardProvider: vm, onClosed });
     });
 
     return () =>
@@ -556,17 +576,16 @@ export const ShardsModal = observer(() => {
       closeOnOverlayTap={!isCritical}
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
-      openAnimationConfig={vms.openAnimationConfig}
+      openAnimationConfig={vms?.openAnimationConfig}
       onClosed={() => {
         vms?.onClosed?.();
-        setVMs({});
-        setIsCritical(false);
+        dequeue();
       }}
     >
-      {vms.shardsDistributor && <ShardsDistributorUI vm={vms.shardsDistributor} onCritical={setIsCritical} close={close} />}
-      {vms.shardReceiver && <ShardReceiverUI close={close} onCritical={setIsCritical} />}
-      {vms.shardsAggregator && <ShardsAggregatorUI close={close} vm={vms.shardsAggregator} />}
-      {vms.shardProvider && <ShardProviderUI vm={vms.shardProvider} close={close} />}
+      {vms?.shardsDistributor && <ShardsDistributorUI vm={vms.shardsDistributor} onCritical={setIsCritical} close={close} />}
+      {vms?.shardReceiver && <ShardReceiverUI close={close} onCritical={setIsCritical} />}
+      {vms?.shardsAggregator && <ShardsAggregatorUI close={close} vm={vms.shardsAggregator} />}
+      {vms?.shardProvider && <ShardProviderUI vm={vms.shardProvider} close={close} />}
     </ModalizeContainer>
   );
 });

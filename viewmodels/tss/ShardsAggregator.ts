@@ -11,6 +11,7 @@ import { TCPServer } from '../../common/p2p/TCPServer';
 import { btoa } from 'react-native-quick-base64';
 import { randomBytes } from 'crypto';
 import secretjs from 'secrets.js-grempe';
+import { sha256Sync } from '../../utils/cipher';
 import { utils } from 'ethers';
 
 interface Conf {
@@ -109,7 +110,8 @@ export class ShardsAggregator extends TCPServer<Events> {
       func: LanServices.ShardsAggregation,
       distributionId: this.id,
       info: btoa(JSON.stringify(this.device)),
-      ver: 1,
+      protocol: 1,
+      version: sha256Sync(this.version).substring(0, 16),
     });
 
     return succeed;
@@ -125,10 +127,10 @@ export class ShardsAggregator extends TCPServer<Events> {
 
     try {
       const req: ShardAggregationRequest = {
+        randomPadding: randomBytes(16).toString('hex'),
         type: ContentType.shardAggregationRequest,
         params: this.conf.aggregationParams,
         shardVersion: this.version,
-        randomPadding: randomBytes(32).toString('hex'),
       };
 
       await c.secureWriteString(JSON.stringify(req));

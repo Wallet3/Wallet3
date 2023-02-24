@@ -11,6 +11,7 @@ import ShardKey from '../../../models/entities/ShardKey';
 import { ShardProvider } from '../ShardProvider';
 import { handleRawService } from './DistributorDiscovery';
 import { openShardProvider } from '../../../common/Modals';
+import { sha256Sync } from '../../../utils/cipher';
 
 class PairedDevices {
   private handledIds = new Set<string>();
@@ -39,6 +40,7 @@ class PairedDevices {
     if (!service) return;
 
     const reqId = service.txt?.['reqId'];
+    const verHash = service.txt?.['version'];
     if (this.handledIds.has(reqId) || this.handlingIds.has(reqId)) {
       setTimeout(() => this.scanLan(), 10 * SECOND);
       return;
@@ -50,10 +52,12 @@ class PairedDevices {
 
     const device = devices.find((d) => d.deviceInfo.globalId === (service.txt?.info as ClientInfo).globalId);
     if (!device) return;
+    if (sha256Sync(device.shard.secretsInfo.version).substring(0, 16) !== verHash) return;
 
     const vm = new ShardProvider({ service, shardKey: device.shard });
     vm.once('shardSent' as any, () => this.handledIds.add(reqId));
 
+    this.handlingIds.add(reqId);
     openShardProvider({
       vm,
       onClosed: () => {

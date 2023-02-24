@@ -26,14 +26,12 @@ export default observer(({ vm, close }: Props) => {
   const { t } = i18n;
   const { secondaryTextColor, textColor, tintColor, thirdTextColor, backgroundColor } = Theme;
   const { device, received, aggregated, threshold } = vm;
-  const [width] = useState(Math.min(ReactiveScreen.width - 24, 520));
+  const { width } = ReactiveScreen;
 
-  useEffect(() => {
-    received === 1 && startLayoutAnimation();
-  }, [received]);
+  useEffect(() => startLayoutAnimation(), [width]);
 
   return (
-    <FadeInUpView style={{ width, flex: 1, alignSelf: 'center' }} delay={300}>
+    <FadeInUpView style={{ width: Math.min(width - 24, 520), flex: 1, alignSelf: 'center' }} delay={300}>
       <SquircleViewContainer
         cornerRadius={22}
         style={{ height: 72, flex: 1, backgroundColor, flexDirection: 'row', alignItems: 'center', position: 'relative' }}

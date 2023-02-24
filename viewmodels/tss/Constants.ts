@@ -39,6 +39,7 @@ export type ShardAggregationAck = {
 };
 
 export type PairingCodeVerified = {
+  randomPadding: string;
   type: ContentType.pairingCodeVerified;
   hash: string;
 };
