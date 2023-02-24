@@ -531,7 +531,7 @@ export const ShardsModal = observer(() => {
     });
 
     PubSub.subscribe(MessageKeys.openShardsAggregator, (_, { vm, onClosed }) => {
-      setVMs({ shardsAggregator: vm, onClosed, openAnimationConfig: { timing: { duration: 150 } } });
+      setVMs({ shardsAggregator: vm, onClosed, openAnimationConfig: { timing: { duration: 100 } } });
       open('top');
     });
 
@@ -540,14 +540,13 @@ export const ShardsModal = observer(() => {
       open();
     });
 
-    return () => {
+    return () =>
       [
         MessageKeys.openShardsDistribution,
         MessageKeys.openShardReceiver,
         MessageKeys.openShardsAggregator,
         MessageKeys.openShardProvider,
       ].forEach(PubSub.unsubscribe);
-    };
   });
 
   return (

@@ -24,7 +24,7 @@ interface Props {
 
 export default observer(({ vm, close }: Props) => {
   const { aggregated } = vm;
-  const [marginBottom] = useState(ReactiveScreen.height - (useSafeAreaInsets().top || 16));
+  const [marginBottom] = useState(ReactiveScreen.height - (useSafeAreaInsets().top || 16) - 72);
 
   useEffect(() => {
     return () => vm.dispose();
@@ -32,7 +32,7 @@ export default observer(({ vm, close }: Props) => {
 
   useEffect(() => {
     if (!aggregated) return;
-    const timer = setTimeout(close, 3000);
+    const timer = setTimeout(close, 2500);
     return () => clearTimeout(timer);
   }, [aggregated]);
 
