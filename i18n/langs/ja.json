@@ -290,6 +290,9 @@
   "multi-sig-screen-title-confirmation-threshold": "確認閾値",
   "multi-sig-screen-title-clear-secrets-cache": "秘密キーのクリア",
   "multi-sig-screen-title-trusted-devices": "信頼デバイス",
+  "multi-sig-screen-security-level-high": "安全",
+  "multi-sig-screen-security-level-medium": "一般",
+  "multi-sig-screen-security-level-low": "リスク",
 
   "multi-sig-modal-title-welcome": "マルチシグウォレット",
   "multi-sig-modal-title-preparations": "準備作業",

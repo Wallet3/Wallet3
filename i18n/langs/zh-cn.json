@@ -289,6 +289,9 @@
   "multi-sig-screen-title-confirmation-threshold": "多签阈值",
   "multi-sig-screen-title-clear-secrets-cache": "清除密钥缓存",
   "multi-sig-screen-title-trusted-devices": "信任设备",
+  "multi-sig-screen-security-level-high": "安全",
+  "multi-sig-screen-security-level-medium": "一般",
+  "multi-sig-screen-security-level-low": "不安全",
 
   "multi-sig-modal-title-welcome": "多签钱包",
   "multi-sig-modal-title-preparations": "准备工作",

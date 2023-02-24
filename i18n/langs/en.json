@@ -294,6 +294,9 @@
   "multi-sig-screen-title-confirmation-threshold": "Confirmations",
   "multi-sig-screen-title-clear-secrets-cache": "Clear secrets cache",
   "multi-sig-screen-title-trusted-devices": "Trusted Devices",
+  "multi-sig-screen-security-level-high": "Safe",
+  "multi-sig-screen-security-level-medium": "Medium",
+  "multi-sig-screen-security-level-low": "Not Safe",
 
   "multi-sig-modal-title-welcome": "MultiSig Wallet",
   "multi-sig-modal-title-preparations": "Preparations",

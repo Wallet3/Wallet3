@@ -107,7 +107,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
       />
 
       <Portal>
-        <SquircleModalize ref={tokenDetailModalize} snapPoint={500}>
+        <SquircleModalize ref={tokenDetailModalize}>
           <TokenDetail
             token={selectedToken}
             network={current}
@@ -119,7 +119,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
           />
         </SquircleModalize>
 
-        <SquircleModalize ref={txDetailModalize} snapPoint={500}>
+        <SquircleModalize ref={txDetailModalize}>
           <TxDetail tx={selectedTx} close={closeTxDetail} />
         </SquircleModalize>
 

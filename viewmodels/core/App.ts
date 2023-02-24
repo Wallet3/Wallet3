@@ -14,6 +14,7 @@ import Database from '../../models/Database';
 import DistributorDiscovery from '../tss/management/DistributorDiscovery';
 import GasPrice from '../misc/GasPrice';
 import Key from '../../models/entities/Key';
+import KeySecurity from '../tss/management/KeySecurity';
 import LINQ from 'linq';
 import LinkHub from '../hubs/LinkHub';
 import MessageKeys from '../../common/MessageKeys';
@@ -242,6 +243,7 @@ export class AppVM {
       TxHub.init().then(() => AppStoreReview.check());
       PairedDevices.init();
 
+      KeySecurity.init();
       Authentication.on('appAuthorized', () => setTimeout(() => PairedDevices.scanLan(), 2000));
       tipWalletUpgrade(this.currentWallet);
     });

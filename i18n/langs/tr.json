@@ -294,7 +294,10 @@
   "multi-sig-screen-title-confirmation-threshold": "Onay Eşiği",
   "multi-sig-screen-title-clear-secrets-cache": "Anahtar önbelleğini temizleme",
   "multi-sig-screen-title-trusted-devices": "Güvenilir Cihazlar",
-
+  "multi-sig-screen-security-level-high": "Güvenli",
+  "multi-sig-screen-security-level-medium": "Orta",
+  "multi-sig-screen-security-level-low": "Güvenli Değil",
+  
   "multi-sig-modal-title-welcome": "Çok İmzalı Cüzdan",
   "multi-sig-modal-title-preparations": "Hazırlık",
   "multi-sig-modal-title-connect-devices": "Cihazları Bağlayın",

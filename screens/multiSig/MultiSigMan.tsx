@@ -1,9 +1,10 @@
 import { ButtonV2, Placeholder, SafeViewContainer } from '../../components';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import KeySecurity, { SecurityLevel } from '../../viewmodels/tss/management/KeySecurity';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { openGlobalPasspad, openShardsAggregator } from '../../common/Modals';
-import { secureColor, verifiedColor } from '../../constants/styles';
+import { secureColor, verifiedColor, warningColor } from '../../constants/styles';
 
 import AddDevices from './modals/AddDevices';
 import DeviceInfo from '../../modals/tss/components/DeviceInfo';
@@ -22,9 +23,16 @@ import { sleep } from '../../utils/async';
 import { useModalize } from 'react-native-modalize';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+const Colors = new Map([
+  [SecurityLevel.high, secureColor],
+  [SecurityLevel.medium, 'orange'],
+  [SecurityLevel.low, warningColor],
+]);
+
 export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
   const { t } = i18n;
   const { appColor, secondaryTextColor, textColor } = Theme;
+  const [securityLevel, setSecurityLevel] = useState<SecurityLevel>();
   const { bottom } = useSafeAreaInsets();
   const { trustedDevices, trustedDeviceCount } = wallet;
   const [selectedDevice, setSelectedDevice] = useState<MultiSigKeyDeviceInfo>();
@@ -48,6 +56,13 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
     openShardsAggregator({ vm: vm! });
   };
 
+  useEffect(() => {
+    if (!wallet) return;
+    setSecurityLevel(KeySecurity.check(wallet.key));
+  }, [wallet]);
+
+  console.log(securityLevel);
+
   return (
     <SafeViewContainer style={{ padding: 0, paddingBottom: 0 }} paddingHeader={false}>
       <ScrollView
@@ -63,7 +78,9 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
           <View style={styles.itemContainer}>
             <View style={styles.titleContainer}>
               <Text style={{ color: textColor, ...styles.btnTxt }}>{t('multi-sig-screen-title-security')}</Text>
-              <Text style={{ color: secureColor, ...styles.btnTxt }}>Safe</Text>
+              <Text style={{ color: Colors.get(securityLevel!), ...styles.btnTxt }}>
+                {securityLevel && t(`multi-sig-screen-security-level-${securityLevel}`)}
+              </Text>
             </View>
 
             <Text style={{ color: secondaryTextColor, ...styles.subtitle }}>
