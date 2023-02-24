@@ -38,6 +38,10 @@ export class MultiSigWallet extends WalletBase {
     return this.trustedDevices.length + 1;
   }
 
+  get thresholdTooHigh() {
+    return this.threshold / this.trustedDeviceCount > 0.999;
+  }
+
   get distributionId() {
     return this.key.distributionId;
   }

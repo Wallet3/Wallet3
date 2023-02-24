@@ -7,6 +7,7 @@ import { openGlobalPasspad, openShardsAggregator } from '../../common/Modals';
 import { secureColor, verifiedColor, warningColor } from '../../constants/styles';
 
 import AddDevices from './modals/AddDevices';
+import { DAY } from '../../utils/time';
 import DeviceInfo from '../../modals/tss/components/DeviceInfo';
 import { FadeInDownView } from '../../components/animations';
 import IllustrationSafe from '../../assets/illustrations/misc/safe.svg';
@@ -84,14 +85,16 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
             </View>
 
             <Text style={{ color: secondaryTextColor, ...styles.subtitle }}>
-              {t('multi-sig-screen-tip-security-overview', { m: wallet.threshold, n: wallet.trustedDeviceCount })}
+              {wallet.thresholdTooHigh
+                ? t('multi-sig-modal-msg-threshold-too-high')
+                : t('multi-sig-screen-tip-security-overview', { m: wallet.threshold, n: wallet.trustedDeviceCount })}
             </Text>
           </View>
 
           <TouchableOpacity style={styles.itemContainer}>
             <View style={styles.titleContainer}>
               <Text style={{ color: textColor, ...styles.btnTxt }}>{t('multi-sig-screen-title-confirmation-threshold')}</Text>
-              <Text style={{ color: verifiedColor, ...styles.btnTxt }}>
+              <Text style={{ color: wallet.thresholdTooHigh ? warningColor : verifiedColor, ...styles.btnTxt }}>
                 {`${wallet.threshold} of ${wallet.trustedDeviceCount}`}
               </Text>
             </View>
@@ -127,16 +130,19 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
             </View>
 
             {trustedDevices.map((device, i) => {
+              const [expired] = useState(device.lastUsedAt < Date.now() - 30 * DAY);
+
               return (
                 <FadeInDownView key={device.globalId} delay={i * 50}>
                   <TouchableOpacity
-                    style={{ paddingVertical: 8 }}
+                    style={{ paddingVertical: 8, flexDirection: 'row', alignItems: 'center' }}
                     onPress={() => {
                       setSelectedDevice(device);
                       openTrustedDeviceModal();
                     }}
                   >
                     <DeviceInfo info={device} light />
+                    {expired && <Ionicons name="warning" size={15} color={warningColor} />}
                   </TouchableOpacity>
                 </FadeInDownView>
               );

@@ -290,7 +290,7 @@
   "multi-sig-screen-tip-modify-threshold": "To modify the multiSig threshold you need the agreement of the majority of devices.",
   "multi-sig-screen-tip-clear-secrets-cache": "Tap here to clear secrets cache. Next time you will be asked to obtain authorization from another trusted device.",
   "multi-sig-screen-txt-no-paired-devices": "No paired devices",
-  "multi-sig-screen-title-security": "Security",
+  "multi-sig-screen-title-security": "Security Level",
   "multi-sig-screen-title-confirmation-threshold": "Confirmations",
   "multi-sig-screen-title-clear-secrets-cache": "Clear secrets cache",
   "multi-sig-screen-title-trusted-devices": "Trusted Devices",

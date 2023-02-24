@@ -19,7 +19,12 @@ class KeySecurity {
       () => {
         const { currentWallet } = App;
         if (!currentWallet?.isMultiSig) return;
-        this.check((currentWallet as MultiSigWallet).key);
+
+        const expired = Date.now() - 30 * DAY;
+        const count = (currentWallet as MultiSigWallet).key.secretsInfo.devices.filter((i) => i.lastUsedAt < expired).length;
+        if (count === 0) return;
+
+        
       }
     );
   }

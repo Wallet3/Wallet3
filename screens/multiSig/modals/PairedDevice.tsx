@@ -20,16 +20,24 @@ import { startLayoutAnimation } from '../../../utils/animations';
 import { useOptimizedSafeBottom } from '../../../utils/hardware';
 import { warningColor } from '../../../constants/styles';
 
-export const SecretView = ({ secret, device, onNext }: { secret: string; device: PairedDevice; onNext: () => void }) => {
+interface Props {
+  secret: string;
+  threshold: number;
+  device: PairedDevice;
+  onNext: () => void;
+}
+
+export const SecretView = ({ secret, threshold, device, onNext }: Props) => {
   const safeBottom = useOptimizedSafeBottom();
   const { secondaryTextColor, textColor, appColor, borderColor } = Theme;
   const { t } = i18n;
+  const [value] = useState(JSON.stringify({ secret, threshold }));
 
   return (
     <FadeInDownView style={{ flex: 1 }}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <QRCode
-          value={secret}
+          value={value}
           size={150}
           color={textColor}
           enableLinearGradient
@@ -114,10 +122,11 @@ export default ({ device, close }: { device: PairedDevice; close: () => void }) 
           deviceInfo={device.deviceInfo}
           createdAt={device.createdAt}
           onNext={authAndNext}
+          expired={device.expired}
         />
       )}
 
-      {step === 1 && <SecretView device={device} secret={secret} onNext={() => goTo(2)} />}
+      {step === 1 && <SecretView device={device} threshold={device.threshold} secret={secret} onNext={() => goTo(2)} />}
       {step === 2 && <DeleteConfirmationView message={t('multi-sig-modal-msg-delete-device')} onDone={doDelete} />}
     </ModalRootContainer>
   );

@@ -9,6 +9,7 @@ import React from 'react';
 import Theme from '../../../../viewmodels/settings/Theme';
 import i18n from '../../../../i18n';
 import { useOptimizedSafeBottom } from '../../../../utils/hardware';
+import { warningColor } from '../../../../constants/styles';
 
 interface Props {
   deviceInfo: ClientInfo;
@@ -17,9 +18,10 @@ interface Props {
   lastUsedAt?: string;
   onNext: () => void;
   disableButton?: boolean;
+  expired?: boolean;
 }
 
-export const DeviceOverview = ({ deviceInfo, createdAt, lastUsedAt, onNext, buttonTitle, disableButton }: Props) => {
+export const DeviceOverview = ({ deviceInfo, createdAt, lastUsedAt, onNext, buttonTitle, disableButton, expired }: Props) => {
   const { secondaryTextColor } = Theme;
   const { t } = i18n;
   const safeBottom = useOptimizedSafeBottom();
@@ -32,13 +34,21 @@ export const DeviceOverview = ({ deviceInfo, createdAt, lastUsedAt, onNext, butt
           {`${deviceInfo.name}, ${deviceInfo.os} ${deviceInfo.osVersion}`}
         </Text>
 
-        <Text
-          style={{ marginTop: 12, fontWeight: '500', color: secondaryTextColor, fontSize: 12, textTransform: 'capitalize' }}
-        >
-          {`${t(createdAt ? 'multi-sig-modal-txt-created-time' : 'multi-sig-modal-txt-last-used-time')}: ${
-            createdAt || lastUsedAt
-          }`}
-        </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 12 }}>
+          <Text
+            style={{
+              fontWeight: '500',
+              color: expired ? warningColor : secondaryTextColor,
+              fontSize: 12,
+              textTransform: 'capitalize',
+            }}
+          >
+            {`${t(createdAt ? 'multi-sig-modal-txt-created-time' : 'multi-sig-modal-txt-last-used-time')}: ${
+              createdAt || lastUsedAt
+            }`}
+          </Text>
+          {expired && <Ionicons name="warning" color={warningColor} size={15} style={{ marginStart: 8 }} />}
+        </View>
       </View>
 
       <FadeInDownView delay={400}>

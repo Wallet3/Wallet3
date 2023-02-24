@@ -1,3 +1,4 @@
+import { DAY } from '../../../utils/time';
 import { DateTimeFormatter } from '../../../utils/formatter';
 import ShardKey from '../../../models/entities/ShardKey';
 import dayjs from 'dayjs';
@@ -39,6 +40,10 @@ export class PairedDevice {
 
   get threshold() {
     return this.shard.secretsInfo.threshold;
+  }
+
+  get expired() {
+    return this.shard.lastUsedTimestamp < Date.now() - 30 * DAY;
   }
 
   remove() {

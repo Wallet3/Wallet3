@@ -14,6 +14,7 @@ import { ShardsAggregator } from '../../../viewmodels/tss/ShardsAggregator';
 import ShardsDistribution from '../../../modals/tss/distributor/ShardsDistribution';
 import { ShardsDistributionMore } from '../../../viewmodels/tss/ShardsDistributionMore';
 import Theme from '../../../viewmodels/settings/Theme';
+import ThresholdSetting from '../../../modals/tss/distributor/ThresholdSetting';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
 import { openGlobalPasspad } from '../../../common/Modals';
@@ -102,6 +103,8 @@ export default observer(({ wallet, close, onCritical }: Props) => {
     <ModalRootContainer>
       <BackableScrollTitles
         titles={titles}
+        // backDisabled={vm.status !== ShardsDistributionStatus.ready || step <= 1}
+        // showBack={vm.status === ShardsDistributionStatus.ready && step > 1}
         currentIndex={step}
         iconColor={textColor}
         onBackPress={() => goTo(step - 1, true)}
@@ -127,7 +130,7 @@ export default observer(({ wallet, close, onCritical }: Props) => {
           </FadeInDownView>
         )}
 
-        {step === 3 && distributor && <ConnectDevices vm={distributor} onNext={() => goTo(4)} isRTL={isRTL} />}
+        {step === 3 && distributor && <ThresholdSetting vm={distributor} onNext={() => goTo(4)} />}
         {step === 4 && distributor && <ShardsDistribution vm={distributor} close={close} onCritical={onCritical} />}
       </View>
     </ModalRootContainer>
