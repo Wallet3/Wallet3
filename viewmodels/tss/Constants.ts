@@ -27,6 +27,7 @@ export type ShardAggregationRequest = {
   type: ContentType.shardAggregationRequest;
   params: { subPath?: string; subPathIndex?: number; rootShard?: boolean; bip32Shard?: boolean };
   shardVersion: string;
+  randomPadding: string;
 };
 
 type EncryptedShard = { iv: string; ephemPublicKey: string; ciphertext: string; mac: string };
