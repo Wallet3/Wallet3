@@ -41,8 +41,12 @@ export class AppVM {
   wallets: WalletBase[] = [];
   currentAccount: Account | null = null;
 
-  get hasWallet() {
+  get hasWalletSet() {
     return this.wallets.length > 0 && Authentication.pinSet;
+  }
+
+  get hasWallet() {
+    return this.wallets.length > 0;
   }
 
   get allAccounts() {
@@ -59,6 +63,7 @@ export class AppVM {
     makeObservable(this, {
       initialized: observable,
       wallets: observable,
+      hasWalletSet: computed,
       hasWallet: computed,
       reset: action,
       switchAccount: action,

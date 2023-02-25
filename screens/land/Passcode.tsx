@@ -22,16 +22,11 @@ export default observer(({ route }: NativeStackScreenProps<LandScreenStack, 'Bac
     setBusy(true);
 
     await Authentication.setupPin(passcode);
-
     await Authentication.authorize(passcode);
-
-    if (await MnemonicOnce.save()) {
-      AppVM.init();
-    } else {
-      showMessage({ message: 'msg-failed-to-import-wallet', type: 'warning' });
-    }
-
+    await MnemonicOnce.save();
     setBusy(false);
+
+    setTimeout(() => AppVM.init(), 0);
   };
 
   return (

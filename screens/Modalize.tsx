@@ -679,7 +679,7 @@ export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Aut
 
   useEffect(() => {
     const dispose = autorun(() => {
-      if (!app.hasWallet || (appAuth.appAuthorized && appAuth.appAvailable)) return;
+      if (!app.hasWalletSet || (appAuth.appAuthorized && appAuth.appAvailable)) return;
 
       openLockScreen();
 

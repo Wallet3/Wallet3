@@ -74,7 +74,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
     >
       <Host style={{ backgroundColor: backgroundColor }}>
         {app.initialized ? (
-          app.hasWallet ? (
+          app.hasWalletSet ? (
             <Navigator
               initialRouteName="Root"
               screenOptions={({ navigation }) => {

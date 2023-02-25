@@ -64,7 +64,6 @@ export class MnemonicOnce {
       return await this.savePrivKey();
     } catch (error) {
       console.error(error);
-      return undefined;
     } finally {
       this.clean();
       logCreateWallet();
@@ -90,6 +89,8 @@ export class MnemonicOnce {
   }
 
   private async savePrivKey() {
+    if (!this.secret) return;
+
     const key = new Key();
     key.id = Date.now();
     key.secret = await Authentication.encrypt(this.secret);
