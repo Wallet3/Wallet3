@@ -3,6 +3,7 @@ import { StyleProp, Text, View, ViewStyle } from 'react-native';
 import Arbitrum from './arbitrum.svg';
 import Aurora from './aurora.svg';
 import Avalanche from './avalanche.svg';
+import Base from './base.svg';
 import Boba from './boba.svg';
 import Bsc from './bnb.svg';
 import Canto from './canto.svg';
@@ -113,6 +114,7 @@ const EVMOS = generateNetworkIcon({ chainId: 9001, width: 29, height: 32 });
 const KAVA = generateNetworkIcon({ chainId: 2222, width: 19, height: 25 });
 const NOVA = generateNetworkIcon({ chainId: 42170, width: 27, height: 27 });
 const CANTO = generateNetworkIcon({ chainId: 7700, width: 27, height: 27 });
+const BASE = generateNetworkIcon({ chainId: 84531, width: 27, height: 27 });
 
 export const NetworkIcons = {
   1: ETH,
@@ -145,6 +147,7 @@ export const NetworkIcons = {
   2222: KAVA,
   42170: NOVA,
   7700: CANTO,
+  84531: BASE,
 };
 
 export function generateNetworkIcon(props: {
@@ -230,6 +233,8 @@ export function generateNetworkIcon(props: {
       return <Nova key={chainId} width={width} height={height ?? width} style={style} />;
     case 7700:
       return <Canto key={chainId} width={width} height={height ?? width} style={style} />;
+    case 84531:
+      return <Base key={chainId} width={width} height={height ?? width} style={style} />;
     default:
       return coins[symbol?.toLowerCase() || ''] ? (
         <Coin symbol={symbol} size={height ?? width} address="" chainId={chainId} style={style as any} />

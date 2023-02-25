@@ -431,6 +431,15 @@ export const Testnets: INetwork[] = [
     explorer: 'https://goerli.arbiscan.io',
   },
   {
+    symbol: 'ETH',
+    network: 'Base Goerli',
+    chainId: 84531,
+    color: '#588af5',
+    testnet: true,
+    defaultTokens: [],
+    explorer: 'https://goerli.basescan.org',
+  },
+  {
     comm_id: '',
     symbol: 'MATIC',
     network: 'Mumbai',

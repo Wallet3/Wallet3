@@ -655,8 +655,6 @@ PODS:
     - React-Core
     - React-RCTAppDelegate
     - ReactCommon/turbomodule/core
-  - ExpoRandom (13.1.1):
-    - ExpoModulesCore
   - ExpoStoreReview (6.2.1):
     - ExpoModulesCore
   - ExpoWebBrowser (12.1.1):
@@ -1342,7 +1340,6 @@ DEPENDENCIES:
   - ExpoLocalAuthentication (from `../node_modules/expo-local-authentication/ios`)
   - ExpoLocalization (from `../node_modules/expo-localization/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
-  - ExpoRandom (from `../node_modules/expo-random/ios`)
   - ExpoStoreReview (from `../node_modules/expo-store-review/ios`)
   - ExpoWebBrowser (from `../node_modules/expo-web-browser/ios`)
   - EXScreenCapture (from `../node_modules/expo-screen-capture/ios`)
@@ -1487,8 +1484,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-localization/ios"
   ExpoModulesCore:
     :path: "../node_modules/expo-modules-core"
-  ExpoRandom:
-    :path: "../node_modules/expo-random/ios"
   ExpoStoreReview:
     :path: "../node_modules/expo-store-review/ios"
   ExpoWebBrowser:
@@ -1643,7 +1638,6 @@ SPEC CHECKSUMS:
   ExpoLocalAuthentication: b870b7a8df5e15b8b0be042185a2bb7764093096
   ExpoLocalization: f26cd431ad9ea3533c5b08c4fabd879176a794bb
   ExpoModulesCore: f11d8a16e8d3f26c183da2541d75edc6aa9cf8eb
-  ExpoRandom: 7ee07d62e7003b74d0536e0495e3a653fe1b2a74
   ExpoStoreReview: d057dcca4b9c95f3c9db11bd2e168dab9cba59f3
   ExpoWebBrowser: 033d34c478d9986da2f1679729041423837626e0
   EXScreenCapture: d9284f4a6508c86d0d463805b93672397d18de0f

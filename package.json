@@ -62,7 +62,6 @@
     "expo-secure-store": "~12.1.1",
     "expo-splash-screen": "~0.18.1",
     "expo-sqlite": "~11.1.1",
-    "expo-standard-web-crypto": "^1.4.3",
     "expo-status-bar": "~1.4.4",
     "expo-store-review": "~6.2.1",
     "expo-web-browser": "~12.1.1",
