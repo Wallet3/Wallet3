@@ -4,10 +4,12 @@ import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navig
 import React, { useRef } from 'react';
 
 import Backup from './Backup';
+import CreateMultiSigWallet from './CreateMultiSigWallet';
 import CreateWallet from './CreateWallet';
 import ImportWallet from './ImportWallet';
 import { Ionicons } from '@expo/vector-icons';
 import { LandScreenStack } from '../navigations';
+import OtherOptions from './OtherOptions';
 import SetRecoveryKey from './SignInWeb2SetRecoveryKey';
 import SetupPasscode from './Passcode';
 import { TouchableOpacity } from 'react-native';
@@ -34,7 +36,13 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
       initialRouteName="Welcome"
     >
       <Screen name="Welcome" component={Welcome} options={{ headerShown: false }} />
+      <Screen name="OtherOptions" component={OtherOptions} options={{ title: t('land-welcome-other-options') }} />
       <Screen name="ImportWallet" component={ImportWallet} options={{ title: t('land-welcome-import-wallet') }} />
+      <Screen
+        name="CreateMultiSigWallet"
+        component={CreateMultiSigWallet}
+        options={{ title: t('land-welcome-create-multi-sig-wallet') }}
+      />
       <Screen name="CreateWallet" component={CreateWallet} options={{ title: t('land-welcome-create-wallet') }} />
       <Screen name="Backup" component={Backup} options={{ title: t('land-backup-title') }} />
       <Screen name="SetupPasscode" component={SetupPasscode} options={{ title: t('land-passcode-title') }} />

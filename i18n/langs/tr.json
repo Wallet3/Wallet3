@@ -1,6 +1,8 @@
 {
   "land-welcome-import-wallet": "Cüzdanı içe aktar",
   "land-welcome-create-wallet": "Cüzdan oluştur",
+  "land-welcome-create-multi-sig-wallet": "Multi-sig cüzdanı oluşturma",
+  "land-welcome-other-options": "Diğer seçenekler",
   "land-welcome-i-agree-to": "Okudum ve kullanım şartlarını kabul ediyorum",
   "land-welcome-terms-of-use": "Kullanım Şartları",
   "land-import-placeholder": "Lütfen geri yükleme cümlesini veya özel anahtarı buraya girin",

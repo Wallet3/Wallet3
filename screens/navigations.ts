@@ -4,6 +4,8 @@ export type LandScreenStack = {
   Welcome: undefined;
   ImportWallet: undefined;
   CreateWallet: undefined;
+  CreateMultiSigWallet: undefined;
+  OtherOptions: undefined;
   Backup: undefined;
   SetupPasscode: undefined;
   Home: undefined;
