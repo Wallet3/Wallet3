@@ -3,21 +3,17 @@ import { action, computed, makeObservable, observable, reaction, runInAction } f
 import { providers, utils } from 'ethers';
 
 import { Account } from '../account/Account';
-import { AppState } from 'react-native';
 import AppStoreReview from '../services/AppStoreReview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Authentication from '../auth/Authentication';
-import Bonjour from '../../common/p2p/Bonjour';
 import Bookmarks from '../customs/Bookmarks';
 import Contacts from '../customs/Contacts';
 import Database from '../../models/Database';
-import DistributorDiscovery from '../tss/management/DistributorDiscovery';
 import GasPrice from '../misc/GasPrice';
 import Key from '../../models/entities/Key';
 import KeySecurity from '../tss/management/KeySecurity';
 import LINQ from 'linq';
 import LinkHub from '../hubs/LinkHub';
-import MessageKeys from '../../common/MessageKeys';
 import MetamaskDAppsHub from '../walletconnect/MetamaskDAppsHub';
 import MultiSigKey from '../../models/entities/MultiSigKey';
 import { MultiSigWallet } from '../wallet/MultiSigWallet';
@@ -243,9 +239,9 @@ export class AppVM {
       TxHub.init().then(() => AppStoreReview.check());
       PairedDevices.init();
 
-      KeySecurity.init();
       Authentication.on('appAuthorized', () => setTimeout(() => PairedDevices.scanLan(), 2000));
-      tipWalletUpgrade(this.currentWallet);
+      // KeySecurity.init();
+      // tipWalletUpgrade(this.currentWallet);
     });
 
     runInAction(() => {

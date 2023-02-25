@@ -5,6 +5,27 @@
    <BuildAction
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES">
+      <PreActions>
+         <ExecutionAction
+            ActionType="Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction"
+         >
+            <ActionContent
+               title="Run Script"
+               scriptText='# Type a script or drag a script file from your workspace to insert its path.&#10;# https://medium.com/ios-os-x-development/xcode-automatic-bundle-versioning-1179b08a9b37&#10;&#10;formatDate=$(date "+%Y%m%d%H%M%S")&#10;buildNumber="${formatDate}"&#10;/usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${buildNumber}" "${PROJECT_DIR}/${INFOPLIST_FILE}"&#10;'
+            >
+               <EnvironmentBuildable>
+               <BuildableReference
+                  BuildableIdentifier="primary"
+                  BlueprintIdentifier="13B07F861A680F5B00A75B9A"
+                  BuildableName="Wallet3.app"
+                  BlueprintName="Wallet3"
+                  ReferencedContainer="container:Wallet3.xcodeproj"
+               >
+               </BuildableReference>
+               </EnvironmentBuildable>
+            </ActionContent>
+         </ExecutionAction>
+      </PreActions>
       <BuildActionEntries>
          <BuildActionEntry
             buildForTesting = "YES"
