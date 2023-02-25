@@ -1,18 +1,37 @@
-import { Button, Placeholder, SafeViewContainer } from '../../components';
+import { Button, Loader, Placeholder, SafeViewContainer } from '../../components';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { secondaryFontColor, secureColor, themeColor, thirdFontColor } from '../../constants/styles';
 
 import IllustrationNomad from '../../assets/illustrations/tss/nomad.svg';
 import IllustrationPartying from '../../assets/illustrations/misc/partying.svg';
 import IllustrationWorld from '../../assets/illustrations/tss/world.svg';
-import React from 'react';
+import Loading from '../../modals/views/Loading';
+import { ShardsDistributor } from '../../viewmodels/tss/ShardsDistributor';
 import Swiper from 'react-native-swiper';
+import { getRandomBytes } from 'expo-crypto';
 import i18n from '../../i18n';
+import { openShardsDistributors } from '../../common/Modals';
+import { sleep } from '../../utils/async';
 import { useNavigation } from '@react-navigation/native';
+import { utils } from 'ethers';
 
 export default () => {
   const { t } = i18n;
   const navigation = useNavigation<any>();
+  const [busy, setBusy] = useState(false);
+
+  const create = async () => {
+    setBusy(true);
+
+    await sleep(100);
+    const vm = new ShardsDistributor({ mnemonic: utils.entropyToMnemonic(getRandomBytes(32)) });
+    vm.once('secretDistributed', () => setTimeout(() => navigation.navigate('SetupPasscode'), 500));
+    await sleep(50);
+
+    setBusy(false);
+    openShardsDistributors({ vm, onClosed: () => vm.removeListener('secretDistributed') });
+  };
 
   return (
     <SafeViewContainer style={{ flex: 1, backgroundColor: '#fff' }} paddingHeader>
@@ -50,7 +69,9 @@ export default () => {
         reverse
       />
 
-      <Button title={t('button-start')} onPress={() => {}} themeColor={secureColor} txtStyle={{ textTransform: 'none' }} />
+      <Button title={t('button-start')} onPress={create} themeColor={secureColor} txtStyle={{ textTransform: 'none' }} />
+
+      <Loader loading={busy} message={t('msg-data-loading')} />
     </SafeViewContainer>
   );
 };

@@ -20,7 +20,7 @@ import MessageKeys from '../../common/MessageKeys';
 import { logWalletLocked } from '../services/Analytics';
 import { toMilliseconds } from '../../utils/time';
 
-const keys = {
+const Keys = {
   enableBiometrics: 'enableBiometrics',
   masterKey: 'masterKey',
   foreverKey: 'foreverKey',
@@ -40,6 +40,7 @@ export class Authentication extends EventEmitter<Events> {
   biometricSupported = false;
   supportedTypes: AuthenticationType[] = [];
   biometricEnabled = true;
+  pinSet = false;
 
   appAuthorized = false;
 
@@ -75,6 +76,7 @@ export class Authentication extends EventEmitter<Events> {
       appAuthorized: observable,
       failedAttempts: observable,
       appUnlockTime: observable,
+      pinSet: observable,
       appAvailable: computed,
 
       setBiometrics: action,
@@ -102,12 +104,13 @@ export class Authentication extends EventEmitter<Events> {
   }
 
   async init() {
-    const [supported, enrolled, supportedTypes, enableBiometrics, appUnlockTime] = await Promise.all([
+    const [supported, enrolled, supportedTypes, enableBiometrics, appUnlockTime, pinCode] = await Promise.all([
       hasHardwareAsync(),
       isEnrolledAsync(),
       supportedAuthenticationTypesAsync(),
-      AsyncStorage.getItem(keys.enableBiometrics),
-      AsyncStorage.getItem(keys.appUnlockTime),
+      AsyncStorage.getItem(Keys.enableBiometrics),
+      AsyncStorage.getItem(Keys.appUnlockTime),
+      SecureStore.getItemAsync(Keys.pin),
     ]);
 
     runInAction(() => {
@@ -115,6 +118,7 @@ export class Authentication extends EventEmitter<Events> {
       this.supportedTypes = supportedTypes;
       this.biometricEnabled = enableBiometrics === 'true';
       this.appUnlockTime = Number(appUnlockTime) || 0;
+      this.pinSet = pinCode ? true : false;
     });
   }
 
@@ -127,22 +131,22 @@ export class Authentication extends EventEmitter<Events> {
   }
 
   private async getMasterKey() {
-    let masterKey = await SecureStore.getItemAsync(keys.masterKey);
+    let masterKey = await SecureStore.getItemAsync(Keys.masterKey);
 
     if (!masterKey) {
       masterKey = Buffer.from(Crypto.getRandomBytes(16)).toString('hex');
-      await SecureStore.setItemAsync(keys.masterKey, masterKey);
+      await SecureStore.setItemAsync(Keys.masterKey, masterKey);
     }
 
     return `${masterKey}_${appEncryptKey}`;
   }
 
   private async getForeverKey() {
-    let foreverKey = await SecureStore.getItemAsync(keys.foreverKey);
+    let foreverKey = await SecureStore.getItemAsync(Keys.foreverKey);
 
     if (!foreverKey) {
       foreverKey = Buffer.from(Crypto.getRandomBytes(16)).toString('hex');
-      await SecureStore.setItemAsync(keys.foreverKey, foreverKey);
+      await SecureStore.setItemAsync(Keys.foreverKey, foreverKey);
     }
 
     return foreverKey;
@@ -154,15 +158,15 @@ export class Authentication extends EventEmitter<Events> {
     }
 
     runInAction(() => (this.biometricEnabled = enabled));
-    AsyncStorage.setItem(keys.enableBiometrics, enabled.toString());
+    AsyncStorage.setItem(Keys.enableBiometrics, enabled.toString());
   }
 
   async setupPin(pin: string) {
-    await SecureStore.setItemAsync(keys.pin, await sha256(`${pin}_${pinEncryptKey}`));
+    await SecureStore.setItemAsync(Keys.pin, await sha256(`${pin}_${pinEncryptKey}`));
   }
 
   verifyPin = async (pin: string) => {
-    const success = (await sha256(`${pin}_${pinEncryptKey}`)) === (await SecureStore.getItemAsync(keys.pin));
+    const success = (await sha256(`${pin}_${pinEncryptKey}`)) === (await SecureStore.getItemAsync(Keys.pin));
 
     runInAction(() => {
       this.failedAttempts = success ? 0 : this.failedAttempts + 1;
@@ -170,7 +174,7 @@ export class Authentication extends EventEmitter<Events> {
 
       this.failedAttempts = 0;
       this.appUnlockTime = Date.now() + (__DEV__ ? toMilliseconds({ seconds: 20 }) : toMilliseconds({ hours: 3 }));
-      AsyncStorage.setItem(keys.appUnlockTime, this.appUnlockTime.toString());
+      AsyncStorage.setItem(Keys.appUnlockTime, this.appUnlockTime.toString());
       logWalletLocked();
     });
 
@@ -224,7 +228,7 @@ export class Authentication extends EventEmitter<Events> {
     this.appAuthorized = false;
     this.biometricEnabled = false;
     this.removeAllListeners();
-    return SecureStore.deleteItemAsync(keys.masterKey);
+    return SecureStore.deleteItemAsync(Keys.masterKey);
   }
 }
 

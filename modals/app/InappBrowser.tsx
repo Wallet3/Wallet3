@@ -9,10 +9,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Props {
   initUrl: string;
-  onClose?: () => void;
+  close?: () => void;
 }
 
-export default observer(({ initUrl, onClose }: Props) => {
+export default observer(({ initUrl, close }: Props) => {
   const { width, height } = ReactiveScreen;
   const { backgroundColor, systemBorderColor } = Theme;
   const { bottom } = useSafeAreaInsets();
@@ -24,8 +24,8 @@ export default observer(({ initUrl, onClose }: Props) => {
         singlePage
         pageId={Date.now()}
         initUrl={initUrl}
-        onHome={onClose}
-        onNewTab={onClose}
+        onHome={close}
+        onNewTab={close}
         disableRecordRecentHistory
       />
 

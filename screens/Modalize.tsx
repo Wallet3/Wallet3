@@ -497,9 +497,9 @@ export const InappBrowserModal = observer(({ pageKey }: { pageKey?: string }) =>
       {props ? (
         <InappBrowser
           {...props}
-          onClose={() => {
+          close={() => {
             close();
-            setProps(undefined);
+            setTimeout(() => setProps(undefined), 500);
           }}
         />
       ) : undefined}
@@ -544,8 +544,8 @@ export const ShardsModal = observer(() => {
   };
 
   useEffect(() => {
-    PubSub.subscribe(MessageKeys.openShardsDistribution, (_, { vm }) => {
-      enqueue({ shardsDistributor: vm });
+    PubSub.subscribe(MessageKeys.openShardsDistribution, (_, { vm, onClosed }) => {
+      enqueue({ shardsDistributor: vm, onClosed });
     });
 
     PubSub.subscribe(MessageKeys.openShardReceiver, () => {

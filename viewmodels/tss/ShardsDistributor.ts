@@ -24,6 +24,7 @@ import { xpubkeyFromHDNode } from '../../utils/bip32';
 
 type Events = {
   newClient: (client: ShardSender) => void;
+  secretDistributed: () => void;
 };
 
 export interface IShardsDistributorConstruction {
@@ -241,7 +242,7 @@ export class ShardsDistributor extends TCPServer<Events> {
     runInAction(() => (this.status = succeed ? ShardsDistributionStatus.succeed : ShardsDistributionStatus.failed));
 
     if (succeed) {
-      PubSub.publish(MessageKeys.multiSigWalletCreated, key);
+      super.emit('secretDistributed');
       return key;
     } else {
       await key.remove();

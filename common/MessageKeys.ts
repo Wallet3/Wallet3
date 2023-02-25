@@ -19,7 +19,7 @@ export default {
   openShardProvider: 'openShardProvider',
   openGlobalPasspad: 'openGlobalPasspad',
   drawerSwipeEnabled: 'drawer-swipeEnabled',
-  multiSigWalletCreated: 'multiSigWalletCreated',
+
   wc_request: 'wc_request',
 
   walletconnect: {
@@ -30,7 +30,7 @@ export default {
   CodeScan_wallet3sync: 'CodeScan-wallet3sync:',
   CodeScan_64Length: 'CodeScan-64Length',
   openUpgradeWalletTip: 'openUpgradeWalletTip',
-  
+
   openUrl: 'openUrl',
   openUrlInPageId: (pageId: number) => `openUrl_page${pageId}`,
   openBrowser: 'openBrowser',

@@ -42,7 +42,7 @@ export class AppVM {
   currentAccount: Account | null = null;
 
   get hasWallet() {
-    return this.wallets.length > 0;
+    return this.wallets.length > 0 && Authentication.pinSet;
   }
 
   get allAccounts() {
@@ -78,6 +78,46 @@ export class AppVM {
         UI.gasIndicator && GasPrice.refresh();
       }
     );
+  }
+
+  async init() {
+    await Promise.all([Database.init(), Authentication.init()]);
+    await Promise.all([Networks.init()]);
+
+    const wallets: WalletBase[] = LINQ.from(
+      await Promise.all(
+        [
+          (await Database.multiSigKeys.find()).map((key) => new MultiSigWallet(key).init()),
+          (await Database.keys.find()).map((key) => new SingleSigWallet(key).init()),
+        ].flat()
+      )
+    )
+      .where((i) => (i ? true : false))
+      .distinct((w) => `${w.keyInfo.bip32Xpubkey}_${w.keyInfo.basePath}_${w.keyInfo.basePathIndex}`)
+      .toArray();
+
+    const lastUsedAccount = (await AsyncStorage.getItem('lastUsedAccount')) ?? '';
+    if (utils.isAddress(lastUsedAccount)) fetchChainsOverview(lastUsedAccount);
+
+    Authentication.once('appAuthorized', () => {
+      WalletConnectHub.init();
+      MetamaskDAppsHub.init();
+      LinkHub.start();
+      Contacts.init();
+
+      TxHub.init().then(() => AppStoreReview.check());
+      PairedDevices.init();
+
+      Authentication.on('appAuthorized', () => setTimeout(() => PairedDevices.scanLan(), 2000));
+      // KeySecurity.init();
+      // tipWalletUpgrade(this.currentWallet);
+    });
+
+    runInAction(() => {
+      this.initialized = true;
+      this.wallets = wallets;
+      this.switchAccount(lastUsedAccount, true);
+    });
   }
 
   async addWallet(key: Key | MultiSigKey) {
@@ -209,46 +249,6 @@ export class AppVM {
     const index = this.wallets.indexOf(wallet);
     index >= 0 && runInAction(() => this.wallets.splice(index, 1));
     await wallet.delete();
-  }
-
-  async init() {
-    await Promise.all([Database.init(), Authentication.init()]);
-    await Promise.all([Networks.init()]);
-
-    const wallets: WalletBase[] = LINQ.from(
-      await Promise.all(
-        [
-          (await Database.multiSigKeys.find()).map((key) => new MultiSigWallet(key).init()),
-          (await Database.keys.find()).map((key) => new SingleSigWallet(key).init()),
-        ].flat()
-      )
-    )
-      .where((i) => (i ? true : false))
-      .distinct((w) => `${w.keyInfo.bip32Xpubkey}_${w.keyInfo.basePath}_${w.keyInfo.basePathIndex}`)
-      .toArray();
-
-    const lastUsedAccount = (await AsyncStorage.getItem('lastUsedAccount')) ?? '';
-    if (utils.isAddress(lastUsedAccount)) fetchChainsOverview(lastUsedAccount);
-
-    Authentication.once('appAuthorized', () => {
-      WalletConnectHub.init();
-      MetamaskDAppsHub.init();
-      LinkHub.start();
-      Contacts.init();
-
-      TxHub.init().then(() => AppStoreReview.check());
-      PairedDevices.init();
-
-      Authentication.on('appAuthorized', () => setTimeout(() => PairedDevices.scanLan(), 2000));
-      // KeySecurity.init();
-      // tipWalletUpgrade(this.currentWallet);
-    });
-
-    runInAction(() => {
-      this.initialized = true;
-      this.wallets = wallets;
-      this.switchAccount(lastUsedAccount, true);
-    });
   }
 
   async reset() {

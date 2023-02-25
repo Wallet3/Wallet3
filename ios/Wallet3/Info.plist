@@ -46,7 +46,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>20230225143910</string>
+	<string>20230225160658</string>
 	<key>FirebaseAutomaticScreenReportingEnabled</key>
 	<false/>
 	<key>ITSAppUsesNonExemptEncryption</key>
@@ -70,7 +70,7 @@
 	<array>
 		<string>_wallet3_multiSign_key_distribution._tcp.</string>
 		<string>_wallet3_multiSign_key_aggregation._tcp.</string>
-    <string>_wallet3_multiSign_key_management._tcp.</string>
+		<string>_wallet3_multiSign_key_management._tcp.</string>
 		<string>_wallet3_nearby._tcp.</string>
 	</array>
 	<key>NSCameraUsageDescription</key>

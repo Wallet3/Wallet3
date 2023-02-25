@@ -47,9 +47,11 @@ export async function openGlobalPasspad(req: {
   });
 }
 
-export function openShardsDistributors(args: IShardsDistributorConstruction | { vm: ShardsDistributor }) {
+export function openShardsDistributors(
+  args: (IShardsDistributorConstruction | { vm: ShardsDistributor }) & { onClosed?: () => void }
+) {
   const vm: ShardsDistributor = args['vm'] ?? new ShardsDistributor(args as IShardsDistributorConstruction);
-  PubSub.publish(MessageKeys.openShardsDistribution, { vm });
+  PubSub.publish(MessageKeys.openShardsDistribution, { vm, ...args });
 }
 
 export function openShardsAggregator(args: { vm: ShardsAggregator; onClosed?: () => void }) {
