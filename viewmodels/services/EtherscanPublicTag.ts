@@ -17,7 +17,6 @@ async function getHTML(chainId: number, param: string, type: 'address' | 'tx') {
   try {
     const resp = await axios.get(`${explorer}/${type}/${param}`);
     const root = parse(resp.data as string);
-
     return root;
   } catch (error) {}
 
@@ -52,7 +51,7 @@ export async function fetchAddressInfo(chainId: number, address: string) {
     "span.u-label--secondary span[data-toggle='tooltip']",
     "span.u-label--secondary[data-toggle='tooltip']",
     'span[rel=tooltipEns] span',
-    'section .badge .text-truncate span',
+    '.badge .text-truncate span',
     'div.d-flex.flex-wrap.align-items-center a.d-flex span.text-truncate',
   ];
 

@@ -228,7 +228,7 @@ export class Authentication extends EventEmitter<Events> {
     this.appAuthorized = false;
     this.biometricEnabled = false;
     this.removeAllListeners();
-    return SecureStore.deleteItemAsync(Keys.masterKey);
+    return Promise.all([SecureStore.deleteItemAsync(Keys.masterKey), SecureStore.deleteItemAsync(Keys.pin)]);
   }
 }
 
