@@ -1,4 +1,4 @@
-import * as Random from 'expo-random';
+import * as Crypto from 'expo-crypto';
 import * as SecureStore from 'expo-secure-store';
 
 import {
@@ -130,7 +130,7 @@ export class Authentication extends EventEmitter<Events> {
     let masterKey = await SecureStore.getItemAsync(keys.masterKey);
 
     if (!masterKey) {
-      masterKey = Buffer.from(Random.getRandomBytes(16)).toString('hex');
+      masterKey = Buffer.from(Crypto.getRandomBytes(16)).toString('hex');
       await SecureStore.setItemAsync(keys.masterKey, masterKey);
     }
 
@@ -141,7 +141,7 @@ export class Authentication extends EventEmitter<Events> {
     let foreverKey = await SecureStore.getItemAsync(keys.foreverKey);
 
     if (!foreverKey) {
-      foreverKey = Buffer.from(Random.getRandomBytes(16)).toString('hex');
+      foreverKey = Buffer.from(Crypto.getRandomBytes(16)).toString('hex');
       await SecureStore.setItemAsync(keys.foreverKey, foreverKey);
     }
 

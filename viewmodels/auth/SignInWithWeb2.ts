@@ -1,4 +1,4 @@
-import * as Random from 'expo-random';
+import * as Crypto from 'expo-crypto';
 import * as SecureStore from 'expo-secure-store';
 
 import { computed, makeObservable, observable, runInAction } from 'mobx';
@@ -81,7 +81,7 @@ export abstract class SignInWithWeb2 {
   }
 
   protected async generate() {
-    this.recoveryKey = Buffer.from(Random.getRandomBytes(32)).toString('hex');
+    this.recoveryKey = Buffer.from(Crypto.getRandomBytes(32)).toString('hex');
     await SecureStore.setItemAsync(Keys.recovery(this.mini_uid), this.recoveryKey);
 
     const plainSecret = await MnemonicOnce.generate(24);

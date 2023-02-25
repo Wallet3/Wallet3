@@ -1,6 +1,6 @@
 import 'text-encoding-polyfill';
 
-import * as Random from 'expo-random';
+import * as Crypto from 'expo-crypto';
 
 import { polyfillWebCrypto } from 'expo-standard-web-crypto';
 
@@ -11,7 +11,7 @@ if (!global.crypto) {
 
   const getRandomValues = (array: Array<any> | Buffer) => {
     let length = array.length;
-    let random = Random.getRandomBytes(length);
+    let random = Crypto.getRandomBytes(length);
     random.forEach((value, index) => {
       array[index] = value;
     });

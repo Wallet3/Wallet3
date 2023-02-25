@@ -1,4 +1,4 @@
-import * as Random from 'expo-random';
+import * as Crypto from 'expo-crypto';
 import * as ethers from 'ethers';
 
 import Authentication from './Authentication';
@@ -24,7 +24,7 @@ export class MnemonicOnce {
   }
 
   async generate(length: 12 | 24 = 12) {
-    const entropy = Random.getRandomBytes(length === 12 ? 16 : 32);
+    const entropy = Crypto.getRandomBytes(length === 12 ? 16 : 32);
     this.secret = ethers.utils.entropyToMnemonic(entropy);
     return this.secret;
   }
