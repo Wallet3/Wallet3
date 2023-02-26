@@ -2,6 +2,7 @@
   "land-welcome-import-wallet": "导入钱包",
   "land-welcome-create-wallet": "创建钱包",
   "land-welcome-create-multi-sig-wallet": "创建多签钱包",
+  "land-welcome-restore-multi-sig-wallet": "恢复多签钱包",
   "land-welcome-other-options": "其它选项",
   "land-welcome-i-agree-to": "我已阅读并同意",
   "land-welcome-terms-of-use": "使用条款",

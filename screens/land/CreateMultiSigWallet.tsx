@@ -58,7 +58,14 @@ export default observer(() => {
   };
 
   useEffect(() => {
-    aggregator.once('combined', (mnemonic) => {});
+    aggregator.once('combined', async (mnemonic) => {
+      setBusy(true);
+      await aggregator.save(mnemonic);
+      setBusy(false);
+
+      close();
+      setTimeout(() => navigation.navigate('SetupPasscode'), 0);
+    });
 
     return () => {
       aggregator.removeAllListeners();
@@ -93,7 +100,7 @@ export default observer(() => {
       </Swiper>
 
       <Button
-        title={t('land-welcome-import-wallet')}
+        title={t('land-welcome-restore-multi-sig-wallet')}
         onPress={() => open()}
         themeColor={secureColor}
         style={{ marginBottom: 12 }}

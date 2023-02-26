@@ -26,7 +26,7 @@ export default observer(({ route }: NativeStackScreenProps<LandScreenStack, 'Bac
     await MnemonicOnce.save();
     setBusy(false);
 
-    setTimeout(() => AppVM.init(), 0);
+    setTimeout(() => AppVM.init(), 25);
   };
 
   return (

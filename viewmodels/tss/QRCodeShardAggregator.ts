@@ -37,7 +37,7 @@ type Events = {
 };
 
 export class QRCodeShardAggregator extends EventEmitter<Events> {
-  private readonly validator = new Validator({ debug: true }).compile(QRSecretItemSchema) as SyncCheckFunction;
+  private readonly validator = new Validator().compile(QRSecretItemSchema) as SyncCheckFunction;
   shards: ShardItem[] = [];
 
   get count() {
@@ -69,6 +69,7 @@ export class QRCodeShardAggregator extends EventEmitter<Events> {
     }
 
     this.shards.push(item);
+
     if (this.count >= this.threshold) this.combine();
 
     return true;
@@ -77,11 +78,13 @@ export class QRCodeShardAggregator extends EventEmitter<Events> {
   combine() {
     try {
       const entropy = secretjs.combine(this.shards.map((s) => s.root));
-      const mnemonic = utils.entropyToMnemonic(entropy);
+      const mnemonic = utils.entropyToMnemonic(Buffer.from(entropy, 'hex'));
       if (!utils.isValidMnemonic(mnemonic)) return;
 
       this.emit('combined', mnemonic);
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async save(mnemonic: string) {

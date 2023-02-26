@@ -24,7 +24,6 @@ import { warningColor } from '../../../constants/styles';
 interface Props {
   root: string;
   bip32: string;
-
   device: PairedDevice;
   onNext: () => void;
 }
@@ -47,7 +46,7 @@ export const SecretView = ({ root, bip32, device, onNext }: Props) => {
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <QRCode
           value={value}
-          size={150}
+          size={170}
           color={textColor}
           enableLinearGradient
           linearGradient={['rgb(134, 65, 244)', 'rgb(66, 194, 244)']}
