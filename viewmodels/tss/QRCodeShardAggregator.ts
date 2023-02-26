@@ -23,24 +23,34 @@ export class QRCodeShardAggregator {
     return this.shards.length;
   }
 
-  constructor() {
-    makeObservable(this, { shards: observable, count: computed, add: action });
+  get threshold() {
+    return this.shards[0]?.threshold ?? 0;
   }
 
-  add(data: string) {
+  constructor() {
+    makeObservable(this, { shards: observable, count: computed, add: action, clear: action });
+  }
+
+  add(data: string): boolean {
     let item: SecretItem;
 
     try {
       item = JSON.parse(data);
-      if (true !== this.validator(item)) return;
+      if (true !== this.validator(item)) return false;
+      if (this.shards.find((i) => i.shard === item.shard)) return false;
     } catch (error) {
-      return;
+      return false;
     }
 
-    if (this.shards.find((i) => i.shard === item.shard)) return;
     this.shards.push(item);
     if (this.count >= item.threshold) this.combine();
+
+    return true;
   }
 
   combine() {}
+
+  clear() {
+    this.shards = [];
+  }
 }

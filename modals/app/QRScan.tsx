@@ -1,5 +1,5 @@
 import Scanner, { BarCodeScanningResult } from '../../components/Scanner';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 
 import { AntDesign } from '@expo/vector-icons';
 import Authentication from '../../viewmodels/auth/Authentication';
@@ -16,9 +16,10 @@ interface Props {
   tip?: string;
   close?: () => void;
   handler?: (params: BarCodeScanningResult) => void;
+  style?: StyleProp<ViewStyle>;
 }
 
-export default observer(({ tip, close, handler }: Props) => {
+export default observer(({ tip, close, handler, style }: Props) => {
   const { t } = i18n;
   const { top } = useSafeAreaInsets();
 
@@ -39,6 +40,7 @@ export default observer(({ tip, close, handler }: Props) => {
         position: 'relative',
         width: ReactiveScreen.width,
         height: ReactiveScreen.height,
+        ...(style as any),
       }}
     >
       <Scanner

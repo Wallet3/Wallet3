@@ -1,14 +1,16 @@
 import { Button, Loader, Placeholder, SafeViewContainer } from '../../components';
+import { FadeInDownView, ZoomInView } from '../../components/animations';
 import React, { useState } from 'react';
 import Scanner, { BarCodeScanningResult } from '../../components/Scanner';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { secondaryFontColor, secureColor, themeColor, thirdFontColor } from '../../constants/styles';
+import { secondaryFontColor, secureColor, themeColor, thirdFontColor, verifiedColor } from '../../constants/styles';
 
 import { AntDesign } from '@expo/vector-icons';
 import IllustrationNomad from '../../assets/illustrations/tss/nomad.svg';
 import IllustrationPartying from '../../assets/illustrations/misc/partying.svg';
 import IllustrationWorld from '../../assets/illustrations/tss/world.svg';
 import Loading from '../../modals/views/Loading';
+import LottieView from 'lottie-react-native';
 import ModalizeContainer from '../../modals/core/ModalizeContainer';
 import { Portal } from 'react-native-portalize';
 import { QRCodeShardAggregator } from '../../viewmodels/tss/QRCodeShardAggregator';
@@ -23,6 +25,7 @@ import { openShardsDistributors } from '../../common/Modals';
 import { sleep } from '../../utils/async';
 import { useModalize } from 'react-native-modalize';
 import { useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { utils } from 'ethers';
 
 export default observer(() => {
@@ -30,6 +33,9 @@ export default observer(() => {
   const navigation = useNavigation<any>();
   const [busy, setBusy] = useState(false);
   const { ref, open, close } = useModalize();
+  const { top } = useSafeAreaInsets();
+  const [added, setAdded] = useState(false);
+  const { width: screenWidth, height: screenHeight } = ReactiveScreen;
 
   const [aggregator] = useState(new QRCodeShardAggregator());
 
@@ -46,7 +52,9 @@ export default observer(() => {
   };
 
   const handleBarCodeScanned = ({ data }: BarCodeScanningResult) => {
-    aggregator.add(data);
+    if (!aggregator.add(data)) return;
+    setAdded(true);
+    setTimeout(() => setAdded(false), 3000);
   };
 
   return (
@@ -92,12 +100,13 @@ export default observer(() => {
       <Portal>
         <ModalizeContainer
           ref={ref}
-          modalHeight={ReactiveScreen.height}
+          modalHeight={screenHeight}
           adjustToContentHeight={undefined}
           // panGestureEnabled={false}
           panGestureComponentEnabled={false}
           withHandle={false}
-          safeAreaStyle={{ flex: 1, backgroundColor: '#000', width: ReactiveScreen.width, height: ReactiveScreen.height }}
+          safeAreaStyle={{ flex: 1, backgroundColor: '#000', width: screenWidth, height: screenHeight }}
+          onClosed={() => aggregator.clear()}
           modalStyle={{
             borderTopStartRadius: 0,
             borderTopEndRadius: 0,
@@ -106,9 +115,46 @@ export default observer(() => {
             flexGrow: 1,
           }}
         >
-          <QRScan tip={t('qrscan-tip-paired-devices-qrcode')} handler={handleBarCodeScanned} close={close} />
-          <View style={{ position: 'absolute', right: 16, top: 16 }}>
-            <Text style={{ color: '#fff' }}>{aggregator.count}</Text>
+          <QRScan
+            tip={t('qrscan-tip-paired-devices-qrcode')}
+            handler={handleBarCodeScanned}
+            close={close}
+            style={{ position: 'absolute' }}
+          />
+
+          {added && (
+            <ZoomInView
+              style={{
+                position: 'absolute',
+                left: (screenWidth - 250) / 2,
+                top: (screenHeight - 250) / 2,
+              }}
+            >
+              <LottieView
+                autoPlay
+                loop={false}
+                style={{ width: 250, height: 250 }}
+                source={require('../../assets/animations/check-verde.json')}
+              />
+            </ZoomInView>
+          )}
+
+          <View
+            style={{
+              position: 'absolute',
+              right: 16,
+              top: top + 16,
+              backgroundColor: `${verifiedColor}c0`,
+              borderRadius: 15,
+              paddingHorizontal: 16,
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingVertical: 2,
+            }}
+          >
+            <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600' }}>
+              {`${aggregator.count} / ${aggregator.threshold}`}
+            </Text>
           </View>
         </ModalizeContainer>
       </Portal>
