@@ -131,18 +131,17 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.itemContainer}
-        onPress={() => parent?.navigate(currentWallet?.isMultiSig ? 'MultiSig' : 'Backup')}
-      >
-        <View style={styles.itemSubContainer}>
-          <Ionicons name="file-tray-outline" style={styles.itemStartSymbol} size={16} color={textColor} />
-          <Text style={itemText}>{t('settings-security-backup')}</Text>
-        </View>
-        <View style={styles.itemSubContainer}>
-          <Entypo name="chevron-right" style={styles.itemEndSymbol} />
-        </View>
-      </TouchableOpacity>
+      {!currentWallet?.isMultiSig && (
+        <TouchableOpacity style={styles.itemContainer} onPress={() => parent?.navigate('Backup')}>
+          <View style={styles.itemSubContainer}>
+            <Ionicons name="file-tray-outline" style={styles.itemStartSymbol} size={16} color={textColor} />
+            <Text style={itemText}>{t('settings-security-backup')}</Text>
+          </View>
+          <View style={styles.itemSubContainer}>
+            <Entypo name="chevron-right" style={styles.itemEndSymbol} />
+          </View>
+        </TouchableOpacity>
+      )}
 
       <TouchableOpacity style={styles.itemContainer} onPress={() => openResetApp()}>
         <View style={styles.itemSubContainer}>

@@ -65,6 +65,7 @@ export class ShardSender {
     bip32PathIndex: number;
     bip32Xpubkey: string;
     version: string;
+    mainAddress: string;
   }) {
     const { rootShard, bip32Shard, verifySignKey, verifyPubkey, bip32Xpubkey, version } = args;
     runInAction(() => (this.status = ShardTransferringStatus.sending));
@@ -90,6 +91,7 @@ export class ShardSender {
         threshold: args.threshold,
         bip32Xpubkey,
         version,
+        mainAddress: args.mainAddress,
       },
     };
 

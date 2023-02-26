@@ -70,6 +70,7 @@
 	<array>
 		<string>_wallet3_multiSign_key_distribution._tcp.</string>
 		<string>_wallet3_multiSign_key_aggregation._tcp.</string>
+		<string>_wallet3_multiSign_key_recovery._tcp.</string>
 		<string>_wallet3_multiSign_key_management._tcp.</string>
 		<string>_wallet3_nearby._tcp.</string>
 	</array>

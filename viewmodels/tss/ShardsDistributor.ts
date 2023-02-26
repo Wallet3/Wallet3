@@ -228,6 +228,7 @@ export class ShardsDistributor extends TCPServer<Events> {
             bip32PathIndex: key.basePathIndex,
             bip32Xpubkey: key.bip32Xpubkey,
             version: key.secretsInfo.version,
+            mainAddress: this.bip32.address,
           });
 
           return (await c.readShardAck()) ? 1 : 0;

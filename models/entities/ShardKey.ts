@@ -24,6 +24,7 @@ export default class ShardKey extends BaseEntity {
     bip32Xpubkey: string;
     version: string;
     verifyPubkey: string;
+    mainAddress: string;
   };
 
   @Column()

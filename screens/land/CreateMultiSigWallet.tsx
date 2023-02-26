@@ -62,9 +62,9 @@ export default observer(() => {
       setBusy(true);
       await aggregator.save(mnemonic);
       setBusy(false);
-
       close();
-      setTimeout(() => navigation.navigate('SetupPasscode'), 0);
+
+      setTimeout(() => navigation.navigate('SetupPasscode'), 125);
     });
 
     return () => {
