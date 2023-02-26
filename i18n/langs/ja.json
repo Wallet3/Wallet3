@@ -101,6 +101,7 @@
   "qrscan-tip-3": "URL QRコード",
   "qrscan-tip-4": "リカバリーキー",
   "qrscan-tip-desktop-backup-qrcode": "Wallet 3 デスクトップ版 QRコード",
+  "qrscan-tip-paired-devices-qrcode": "秘密QRコード（ペアリング済みのデバイスに）",
   "qrscan-tip-eth-address": "ENS, ETH アドレス",
   "qrscan-tip-above-types": "上記のいずれかのQRコードをスキャンしてください",
   "lock-screen-wallet-is-locked": "ロックされました",

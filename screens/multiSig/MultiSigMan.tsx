@@ -1,8 +1,8 @@
 import { ButtonV2, Placeholder, SafeViewContainer } from '../../components';
+import { FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import KeySecurity, { SecurityLevel } from '../../viewmodels/tss/management/KeySecurity';
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { openGlobalPasspad, openShardsAggregator } from '../../common/Modals';
 import { secureColor, verifiedColor, warningColor } from '../../constants/styles';
 
@@ -130,8 +130,6 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
             </View>
 
             {trustedDevices.map((device, i) => {
-              const [expired] = useState(device.lastUsedAt < Date.now() - 30 * DAY);
-
               return (
                 <FadeInDownView key={device.globalId} delay={i * 50}>
                   <TouchableOpacity
@@ -142,7 +140,7 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
                     }}
                   >
                     <DeviceInfo info={device} light />
-                    {expired && <Ionicons name="warning" size={15} color={warningColor} />}
+                    {device.lastUsedAt < Date.now() - 30 * DAY && <Ionicons name="warning" size={15} color={warningColor} />}
                   </TouchableOpacity>
                 </FadeInDownView>
               );

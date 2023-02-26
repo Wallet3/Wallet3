@@ -101,6 +101,7 @@
   "qrscan-tip-3": "URL QRCode",
   "qrscan-tip-4": "Kurtarma Anahtarı",
   "qrscan-tip-desktop-backup-qrcode": "Wallet 3 Masaüstü Yedekleme QRCode",
+  "qrscan-tip-paired-devices-qrcode": "Eşleştirilmiş cihazlarda gizli QR Kodu",
   "qrscan-tip-eth-address": "ENS, ETH Adresi",
   "qrscan-tip-above-types": "Lütfen yukarıdaki QRCode türlerinden birini tara.",
   "lock-screen-wallet-is-locked": "Cüzdan kilitli",

@@ -12,9 +12,14 @@ import { logQRScanned } from '../../viewmodels/services/Analytics';
 import { observer } from 'mobx-react-lite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-export default observer(({ tip, done }: { tip?: string; done?: () => void }) => {
-  const { t } = i18n;
+interface Props {
+  tip?: string;
+  close?: () => void;
+  handler?: (params: BarCodeScanningResult) => void;
+}
 
+export default observer(({ tip, close, handler }: Props) => {
+  const { t } = i18n;
   const { top } = useSafeAreaInsets();
 
   const handleBarCodeScanned = ({ data }: BarCodeScanningResult) => {
@@ -22,7 +27,7 @@ export default observer(({ tip, done }: { tip?: string; done?: () => void }) => 
 
     if (handled) {
       logQRScanned(data);
-      done?.();
+      close?.();
     }
   };
 
@@ -37,16 +42,16 @@ export default observer(({ tip, done }: { tip?: string; done?: () => void }) => 
       }}
     >
       <Scanner
-        onBarCodeScanned={handleBarCodeScanned}
+        onBarCodeScanned={handler ?? handleBarCodeScanned}
         style={{ flex: 1, width: '100%', height: '100%', position: 'absolute' }}
       />
 
       <View
         style={{
           position: 'absolute',
-          bottom: 16,
-          left: 16,
-          right: 16,
+          bottom: 24,
+          left: 18,
+          right: 18,
           height: 48,
           flexDirection: 'row',
           alignItems: 'center',
@@ -56,14 +61,14 @@ export default observer(({ tip, done }: { tip?: string; done?: () => void }) => 
 
         <View>
           <Text style={styles.tip} numberOfLines={1}>
-            {Authentication.appAuthorized ? tip || t('qrscan-tip-1') : tip || t('qrscan-tip-desktop-backup-qrcode')}
+            {tip || t('qrscan-tip-1')}
           </Text>
           <Text style={{ ...styles.tip, fontSize: 9 }}>{t('qrscan-tip-above-types')}</Text>
         </View>
       </View>
 
-      <TouchableOpacity style={{ padding: 8, position: 'absolute', top, left: 4 }} onPress={done}>
-        <AntDesign name="close" color="#fff" size={24} />
+      <TouchableOpacity style={{ padding: 8, position: 'absolute', top: top + 4, left: 8 }} onPress={close}>
+        <AntDesign name="close" color="#fff" size={22} />
       </TouchableOpacity>
 
       <StatusBar style="light" />

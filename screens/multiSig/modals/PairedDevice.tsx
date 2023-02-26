@@ -13,6 +13,7 @@ import { PairedDevice } from '../../../viewmodels/tss/management/PairedDevice';
 import PairedDevices from '../../../viewmodels/tss/management/PairedDevices';
 import QRCode from 'react-native-qrcode-svg';
 import Theme from '../../../viewmodels/settings/Theme';
+import { getDeviceInfo } from '../../../common/p2p/Utils';
 import i18n from '../../../i18n';
 import { openGlobalPasspad } from '../../../common/Modals';
 import { sleep } from '../../../utils/async';
@@ -29,9 +30,11 @@ interface Props {
 
 export const SecretView = ({ secret, threshold, device, onNext }: Props) => {
   const safeBottom = useOptimizedSafeBottom();
-  const { secondaryTextColor, textColor, appColor, borderColor } = Theme;
+  const { secondaryTextColor, textColor, appColor,  } = Theme;
   const { t } = i18n;
-  const [value] = useState(JSON.stringify({ secret, threshold }));
+  const [value] = useState(
+    JSON.stringify({ secret, threshold, version: device.shard.secretsInfo.version, device: getDeviceInfo() })
+  );
 
   return (
     <FadeInDownView style={{ flex: 1 }}>

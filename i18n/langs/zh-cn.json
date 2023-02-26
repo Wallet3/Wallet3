@@ -101,6 +101,7 @@
   "qrscan-tip-3": "URL 二维码",
   "qrscan-tip-4": "恢复密钥",
   "qrscan-tip-desktop-backup-qrcode": "Wallet 3 桌面版同步码",
+  "qrscan-tip-paired-devices-qrcode": "已配对设备上的密钥二维码",
   "qrscan-tip-eth-address": "ENS, ETH 地址",
   "qrscan-tip-above-types": "请扫描上述任一类型的二维码",
   "lock-screen-wallet-is-locked": "钱包已锁定",

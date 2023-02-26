@@ -624,7 +624,7 @@ export const FullScreenQRScanner = observer(() => {
         flexGrow: 1,
       }}
     >
-      <QRScan tip={tip} done={close} />
+      <QRScan tip={tip} close={close} />
     </ModalizeContainer>
   );
 });
