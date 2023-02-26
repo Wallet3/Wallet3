@@ -34,10 +34,6 @@ export class PairedDevice {
     return dayjs(this.shard.lastUsedTimestamp).format(DateTimeFormatter);
   }
 
-  get encryptedRootShard() {
-    return this.shard.secrets.rootShard;
-  }
-
   get threshold() {
     return this.shard.secretsInfo.threshold;
   }

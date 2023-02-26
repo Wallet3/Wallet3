@@ -85,9 +85,7 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
             </View>
 
             <Text style={{ color: secondaryTextColor, ...styles.subtitle }}>
-              {wallet.thresholdTooHigh
-                ? t('multi-sig-modal-msg-threshold-too-high')
-                : t('multi-sig-screen-tip-security-overview', { m: wallet.threshold, n: wallet.trustedDeviceCount })}
+              {t('multi-sig-screen-tip-security-overview', { m: wallet.threshold, n: wallet.trustedDeviceCount })}
             </Text>
           </View>
 
@@ -99,7 +97,11 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
               </Text>
             </View>
 
-            <Text style={{ color: secondaryTextColor, ...styles.subtitle }}>{t('multi-sig-screen-tip-modify-threshold')}</Text>
+            <Text style={{ color: wallet.thresholdTooHigh ? warningColor : secondaryTextColor, ...styles.subtitle }}>
+              {wallet.thresholdTooHigh
+                ? t('multi-sig-modal-msg-threshold-too-high')
+                : t('multi-sig-screen-tip-modify-threshold')}
+            </Text>
           </TouchableOpacity>
 
           {wallet.secretsCached && (

@@ -1,6 +1,6 @@
 import { Button, Loader, Placeholder, SafeViewContainer } from '../../components';
 import { FadeInDownView, ZoomInView } from '../../components/animations';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Scanner, { BarCodeScanningResult } from '../../components/Scanner';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { secondaryFontColor, secureColor, themeColor, thirdFontColor, verifiedColor } from '../../constants/styles';
@@ -57,6 +57,14 @@ export default observer(() => {
     setTimeout(() => setAdded(false), 3000);
   };
 
+  useEffect(() => {
+    aggregator.once('combined', (mnemonic) => {});
+
+    return () => {
+      aggregator.removeAllListeners();
+    };
+  }, []);
+
   return (
     <SafeViewContainer style={{ flex: 1, backgroundColor: '#fff' }} paddingHeader>
       <Swiper
@@ -102,8 +110,6 @@ export default observer(() => {
           ref={ref}
           modalHeight={screenHeight}
           adjustToContentHeight={undefined}
-          // panGestureEnabled={false}
-          panGestureComponentEnabled={false}
           withHandle={false}
           safeAreaStyle={{ flex: 1, backgroundColor: '#000', width: screenWidth, height: screenHeight }}
           onClosed={() => aggregator.clear()}
@@ -153,7 +159,7 @@ export default observer(() => {
             }}
           >
             <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600' }}>
-              {`${aggregator.count} / ${aggregator.threshold}`}
+              {`${aggregator.count} / ${aggregator.threshold || 'n'}`}
             </Text>
           </View>
         </ModalizeContainer>

@@ -206,7 +206,7 @@ export class ShardsAggregator extends TCPServer<Events> {
   dispose() {
     super.stop();
     this.removeAllListeners();
-    Bonjour.unpublishService(this.name);
     this.clients.forEach((c) => c.destroy());
+    Bonjour.unpublishService(this.name);
   }
 }

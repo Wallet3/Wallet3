@@ -57,11 +57,12 @@ if (__DEV__) {
     const mnemonic = utils.entropyToMnemonic(entropy);
     const hd = utils.HDNode.fromMnemonic(mnemonic);
     const xprivkey = Buffer.from(hd.extendedKey, 'utf8').toString('hex');
-    const shares = secretjs.share(xprivkey, 2, 2);
+    const shares = secretjs.share(xprivkey, 3, 2);
     console.log(hd.extendedKey, xprivkey, shares);
 
     console.log('combined', secretjs.combine(shares));
     console.log('recovered', Buffer.from(secretjs.combine(shares), 'hex').toString('utf8') === hd.extendedKey);
+    console.log('first', secretjs.newShare(1, shares.slice(1)), shares[0]);
 
     if (Buffer.from(secretjs.combine(shares), 'hex').toString('utf8') !== hd.extendedKey) {
       throw new Error('!!! check !!!');

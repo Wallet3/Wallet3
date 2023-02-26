@@ -23,8 +23,6 @@ class KeySecurity {
         const expired = Date.now() - 30 * DAY;
         const count = (currentWallet as MultiSigWallet).key.secretsInfo.devices.filter((i) => i.lastUsedAt < expired).length;
         if (count === 0) return;
-
-        
       }
     );
   }
@@ -39,11 +37,10 @@ class KeySecurity {
     score += notUsedDevices.length === 0 ? 5 : 0;
     score += thresholdRate >= 0.6 && thresholdRate <= 0.9 ? 5 : 0;
     score += thresholdRate <= 0.5 ? -2 : 0;
-    score += thresholdRate > 0.999 ? -2 : 0;
 
-    if (score >= 10) {
+    if (score >= 5) {
       return SecurityLevel.high;
-    } else if (score >= 3) {
+    } else if (score >= 3 && score < 5) {
       return SecurityLevel.medium;
     } else {
       return SecurityLevel.low;

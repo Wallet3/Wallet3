@@ -22,18 +22,24 @@ import { useOptimizedSafeBottom } from '../../../utils/hardware';
 import { warningColor } from '../../../constants/styles';
 
 interface Props {
-  secret: string;
-  threshold: number;
+  root: string;
+  bip32: string;
+
   device: PairedDevice;
   onNext: () => void;
 }
 
-export const SecretView = ({ secret, threshold, device, onNext }: Props) => {
+export const SecretView = ({ root, bip32, device, onNext }: Props) => {
   const safeBottom = useOptimizedSafeBottom();
-  const { secondaryTextColor, textColor, appColor,  } = Theme;
+  const { secondaryTextColor, textColor, appColor } = Theme;
   const { t } = i18n;
   const [value] = useState(
-    JSON.stringify({ secret, threshold, version: device.shard.secretsInfo.version, device: getDeviceInfo() })
+    JSON.stringify({
+      root,
+      bip32,
+      device: getDeviceInfo(),
+      secretsInfo: device.shard.secretsInfo,
+    })
   );
 
   return (
@@ -74,7 +80,8 @@ export default ({ device, close }: { device: PairedDevice; close: () => void }) 
   const { t } = i18n;
   const [step, setStep] = useState(0);
   const { textColor } = Theme;
-  const [secret, setSecret] = useState('');
+  const [root, setRoot] = useState('');
+  const [bip32, setBip32] = useState('');
 
   const goTo = async (step: number, delay = 0) => {
     if (delay) await sleep(delay);
@@ -86,9 +93,16 @@ export default ({ device, close }: { device: PairedDevice; close: () => void }) 
 
     const autoAuth = async (pin?: string) => {
       try {
-        const secret = await Authentication.decryptForever(device.encryptedRootShard, pin);
-        success = secret ? true : false;
-        if (success) setSecret(secret!);
+        const [root, bip32] =
+          (await Authentication.decryptForever([device.shard.secrets.rootShard, device.shard.secrets.bip32Shard], pin)) || [];
+
+        success = root && bip32 ? true : false;
+
+        if (success) {
+          setRoot(root);
+          setBip32(bip32);
+        }
+
         return success;
       } catch (error) {
         return false;
@@ -129,7 +143,7 @@ export default ({ device, close }: { device: PairedDevice; close: () => void }) 
         />
       )}
 
-      {step === 1 && <SecretView device={device} threshold={device.threshold} secret={secret} onNext={() => goTo(2)} />}
+      {step === 1 && <SecretView device={device} bip32={bip32} root={root} onNext={() => goTo(2)} />}
       {step === 2 && <DeleteConfirmationView message={t('multi-sig-modal-msg-delete-device')} onDone={doDelete} />}
     </ModalRootContainer>
   );

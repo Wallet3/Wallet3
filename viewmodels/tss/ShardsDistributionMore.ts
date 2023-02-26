@@ -72,7 +72,7 @@ export class ShardsDistributionMore extends ShardsDistributor {
       await Promise.all(
         clients.map(async (c, i) => {
           const [rootShard, bip32Shard] = [this.rootShares, this.bip32Shares].map((shares) =>
-            secretjs.newShare(shareIndex + i, shares)
+            secretjs.newShare(shareIndex + (i + 1), shares)
           );
 
           c.sendShard({
