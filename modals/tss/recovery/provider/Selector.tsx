@@ -43,7 +43,7 @@ export default ({ onNext }: Props) => {
         onPress={() => setSelectedDevice(item)}
         style={{ paddingHorizontal: marginHorizontal, paddingVertical: 8, flexDirection: 'row', alignItems: 'center' }}
       >
-        <DeviceInfo info={item.deviceInfo} />
+        <DeviceInfo info={item.deviceInfo} mainAddress={item.secretsInfo.mainAddress} />
         {selectedDevice?.id === item.id && (
           <Feather name="check" size={24} color={verifiedColor} style={{ marginStart: 12 }} />
         )}

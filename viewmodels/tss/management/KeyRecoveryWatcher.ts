@@ -1,6 +1,7 @@
 import { computed, makeObservable, observable, runInAction } from 'mobx';
 import { openKeyRecoveryProvider, openShardProvider } from '../../../common/Modals';
 
+import App from '../../core/App';
 import Bonjour from '../../../common/p2p/Bonjour';
 import { ClientInfo } from '../../../common/p2p/Constants';
 import Database from '../../../models/Database';
@@ -23,6 +24,8 @@ class KeyRecoveryWatcher {
   }
 
   private handleService = (raw: Service) => {
+    if (!App.hasWalletSet) return;
+
     const { keyRecoveryRequestor: service } = handleRawService(raw);
     if (!service) return;
 

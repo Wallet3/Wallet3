@@ -85,7 +85,7 @@ export class ShardsDistributionMore extends ShardsDistributor {
             bip32PathIndex: this.wallet.key.basePathIndex,
             bip32Xpubkey: this.wallet.key.bip32Xpubkey,
             version: this.wallet.secretsInfo.version,
-            mainAddress: this.bip32.address,
+            mainAddress: this.mainAddress,
           });
 
           const succeed = (await c.readShardAck()) ? 1 : 0;

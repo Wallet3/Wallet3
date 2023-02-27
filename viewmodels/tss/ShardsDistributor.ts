@@ -50,6 +50,7 @@ export class ShardsDistributor extends TCPServer<Events> {
   protected upgradeInfo?: { basePath: string; basePathIndex: number };
 
   readonly id: string;
+  readonly mainAddress: string;
   readonly device = getDeviceInfo();
   approvedClients: ShardSender[] = [];
   pendingClients: ShardSender[] = [];
@@ -83,6 +84,7 @@ export class ShardsDistributor extends TCPServer<Events> {
     this.root = utils.HDNode.fromMnemonic(mnemonic);
     this.protector = this.root.derivePath(`m/0'/3`);
     this.bip32 = this.root.derivePath(basePath ?? DEFAULT_DERIVATION_PATH);
+    this.mainAddress = this.bip32.derivePath(`${basePathIndex ?? 0}`).address;
 
     this.id = sha256Sync(this.protector.address).substring(0, 32);
 
@@ -228,7 +230,7 @@ export class ShardsDistributor extends TCPServer<Events> {
             bip32PathIndex: key.basePathIndex,
             bip32Xpubkey: key.bip32Xpubkey,
             version: key.secretsInfo.version,
-            mainAddress: this.bip32.address,
+            mainAddress: this.mainAddress,
           });
 
           return (await c.readShardAck()) ? 1 : 0;

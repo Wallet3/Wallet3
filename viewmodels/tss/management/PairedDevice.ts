@@ -26,6 +26,10 @@ export class PairedDevice {
     return this.shard.ownerDevice;
   }
 
+  get secretsInfo() {
+    return this.shard.secretsInfo;
+  }
+
   get createdAt() {
     return dayjs(this.shard.createdAt).format(DateTimeFormatter);
   }

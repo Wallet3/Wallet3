@@ -44,10 +44,6 @@ export default observer(({ vm }: Props) => {
   const [busy, setBusy] = useState(false);
   const { verified, distributed } = vm;
 
-  useEffect(() => {
-    vm.dispose();
-  }, []);
-
   const send = async () => {
     setBusy(true);
     await openGlobalPasspad({ onAutoAuthRequest: vm.send, onPinEntered: vm.send, fast: true, closeOnOverlayTap: true });
