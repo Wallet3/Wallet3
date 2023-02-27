@@ -1,8 +1,8 @@
+import { KeyManagementService, PairingCodeVerified } from './Constants';
 import { computed, makeObservable, observable, runInAction } from 'mobx';
 import { getDeviceBasicInfo, getDeviceInfo } from '../../common/p2p/Utils';
 
 import Bonjour from '../../common/p2p/Bonjour';
-import { KeyManagementService } from './Constants';
 import { KeyRecovery } from './KeyRecovery';
 import { LanServices } from './management/DistributorDiscovery';
 import { TCPClient } from '../../common/p2p/TCPClient';
@@ -10,6 +10,7 @@ import { TCPServer } from '../../common/p2p/TCPServer';
 import { btoa } from 'react-native-quick-base64';
 import { genEmojis } from '../../utils/emoji';
 import { randomBytes } from 'crypto';
+import { sha256Sync } from '../../utils/cipher';
 
 export class KeyRecoveryRequestor extends TCPServer<{}> {
   private recovery = new KeyRecovery();
@@ -60,8 +61,17 @@ export class KeyRecoveryRequestor extends TCPServer<{}> {
   }
 
   protected async newClient(c: TCPClient): Promise<void> {
-    runInAction(() => (this.pendingClients = this.pendingClients.concat(c)));
-    const pairingCode = await c.secureReadString();
+    runInAction(() => this.pendingClients.push(c));
+    c.once('close', () => runInAction(() => this.pendingClients.splice(this.pendingClients.indexOf(c), 1)));
+
+    const { hash } = JSON.parse((await c.secureReadString())!) as PairingCodeVerified;
+
+    if (sha256Sync(c.pairingCode) !== hash) {
+      c.destroy();
+      return;
+    }
+
+    runInAction(() => this.pendingClients.splice(this.pendingClients.indexOf(c), 1));
   }
 
   dispose() {

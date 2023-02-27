@@ -1,10 +1,12 @@
-import { ContentType, ShardAggregationAck, ShardAggregationRequest } from './Constants';
+import { ContentType, PairingCodeVerified, ShardAggregationAck, ShardAggregationRequest } from './Constants';
 import eccrypto, { Ecies } from 'eccrypto';
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import Authentication from '../auth/Authentication';
 import ShardKey from '../../models/entities/ShardKey';
 import { TCPClient } from '../../common/p2p/TCPClient';
+import { randomBytes } from 'crypto';
+import { sha256Sync } from '../../utils/cipher';
 
 interface IConstruction {
   shardKey: ShardKey;
@@ -93,6 +95,17 @@ export class KeyRecoveryProvider extends TCPClient {
   verifyPairingCode = async (code: string) => {
     const success = code === this.pairingCode;
     runInAction(() => (this.verified = success));
+
+    if (success) {
+      const data: PairingCodeVerified = {
+        randomPadding: randomBytes(8).toString('hex'),
+        type: ContentType.pairingCodeVerified,
+        hash: sha256Sync(code),
+      };
+
+      this.secureWriteString(JSON.stringify(data));
+    }
+
     return success;
   };
 

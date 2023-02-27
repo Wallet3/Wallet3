@@ -7,6 +7,7 @@ import Aggregation from '../../aggregator/Aggregation';
 import BackableScrollTitles from '../../../components/BackableScrollTitles';
 import Button from '../../components/Button';
 import DeviceInfo from '../../components/DeviceInfo';
+import { FadeInDownView } from '../../../../components/animations';
 import { KeyRecoveryProvider } from '../../../../viewmodels/tss/KeyRecoveryProvider';
 import { KeyRecoveryRequestor } from '../../../../viewmodels/tss/KeyRecoveryRequestor';
 import ModalRootContainer from '../../../core/ModalRootContainer';
@@ -26,14 +27,14 @@ import { observer } from 'mobx-react-lite';
 import { useHorizontalPadding } from '../../components/Utils';
 
 interface Props {
-  device: PairedDevice;
+  vm: KeyRecoveryProvider;
   service: Service;
 }
 
-export default observer(({ device, service }: Props) => {
+export default observer(({ vm, service }: Props) => {
   const { t } = i18n;
   const { secondaryTextColor, appColor } = Theme;
-  const [vm] = useState(new KeyRecoveryProvider({ service, shardKey: device.shard }));
+
   const marginHorizontal = useHorizontalPadding();
   const [failedAttempts, setFailedAttempts] = useState(0);
   const cornerRadius = useOptimizedCornerRadius();
@@ -49,11 +50,12 @@ export default observer(({ device, service }: Props) => {
   return (
     <View style={{ flex: 1, width: ReactiveScreen.width - 12, marginHorizontal: -16 }}>
       {vm.verified ? (
-        <View>
+        <FadeInDownView style={{ flex: 1 }}>
+          <View style={{ flex: 1 }} />
           <Button title={t('button-next')} />
-        </View>
+        </FadeInDownView>
       ) : (
-        <View style={{ flex: 1, paddingBottom: useOptimizedSafeBottom(), paddingHorizontal: 16 }}>
+        <FadeInDownView style={{ flex: 1, paddingBottom: useOptimizedSafeBottom(), paddingHorizontal: 16 }}>
           <Passpad
             disableCancelButton
             passLength={4}
@@ -62,7 +64,7 @@ export default observer(({ device, service }: Props) => {
             numPadStyle={{ borderRadius: Math.max(cornerRadius, 12) }}
             onCodeEntered={verifyPairingCode}
           />
-        </View>
+        </FadeInDownView>
       )}
     </View>
   );

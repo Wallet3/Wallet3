@@ -35,12 +35,11 @@ export default observer(({ close, onCritical, service }: Props) => {
 
   const [step, setStep] = useState(0);
   const [vm, setVM] = useState<KeyRecoveryProvider>();
-  const [selectedDevice, setSelectedDevice] = useState<PairedDevice>();
 
   const titles = [t('multi-sig-modal-title-wallet-recovery'), t('multi-sig-modal-title-key-distribution')];
 
   const goTo = (device: PairedDevice) => {
-    setSelectedDevice(device);
+    setVM(new KeyRecoveryProvider({ service, shardKey: device.shard }));
     setStep(1);
   };
 
@@ -50,7 +49,7 @@ export default observer(({ close, onCritical, service }: Props) => {
     <ModalRootContainer>
       <BackableScrollTitles currentIndex={step} titles={titles} style={{ marginBottom: 12 }} />
       {step === 0 && <Selector onNext={goTo} />}
-      {step === 1 && <Distribution service={service} device={selectedDevice!} />}
+      {step === 1 && <Distribution service={service} vm={vm!} />}
     </ModalRootContainer>
   );
 });

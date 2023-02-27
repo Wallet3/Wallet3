@@ -14,6 +14,7 @@ export class TCPClient extends AsyncTCPSocket {
   private cipher!: Cipher;
   private decipher!: Decipher;
 
+  ready = false;
   pairingCode: string;
   remoteInfo?: ClientInfo | null = null;
 
@@ -54,7 +55,7 @@ export class TCPClient extends AsyncTCPSocket {
     this.decipher = decipher!;
     this.pairingCode = pairingCode || '';
 
-    makeObservable(this, { pairingCode: observable, remoteInfo: observable });
+    makeObservable(this, { pairingCode: observable, remoteInfo: observable, ready: observable });
 
     if (socket) {
       this.hello();
@@ -79,6 +80,8 @@ export class TCPClient extends AsyncTCPSocket {
       this.decipher = createDecipheriv(CipherAlgorithm, createHash('sha256').update(secret).digest(), siv);
 
       await this.hello();
+      runInAction(() => (this.ready = true));
+
       this.emit('ready');
     } catch (e) {
       console.error(e);
