@@ -11,6 +11,7 @@ import { Ionicons } from '@expo/vector-icons';
 import ModalRootContainer from '../../../modals/core/ModalRootContainer';
 import { PairedDevice } from '../../../viewmodels/tss/management/PairedDevice';
 import PairedDevices from '../../../viewmodels/tss/management/PairedDevices';
+import { PlainSecretItem } from '../../../viewmodels/tss/KeyRecovery';
 import QRCode from 'react-native-qrcode-svg';
 import Theme from '../../../viewmodels/settings/Theme';
 import { getDeviceInfo } from '../../../common/p2p/Utils';
@@ -38,7 +39,7 @@ export const SecretView = ({ root, bip32, device, onNext }: Props) => {
       bip32,
       device: getDeviceInfo(),
       secretsInfo: device.shard.secretsInfo,
-    })
+    } as PlainSecretItem)
   );
 
   return (

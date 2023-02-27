@@ -4,6 +4,7 @@ import { createHash, randomBytes } from 'crypto';
 
 import { TCPClient } from '../../common/p2p/TCPClient';
 import eccrypto from 'eccrypto';
+import { randomInt } from '../../utils/math';
 import { sha256Sync } from '../../utils/cipher';
 
 export enum ShardTransferringStatus {
@@ -47,9 +48,10 @@ export class ShardSender {
 
   sendPairingCode(code: string) {
     const data: PairingCodeVerified = {
-      randomPadding: randomBytes(16).toString('hex'),
+      r1: randomBytes(randomInt(1, 256)).toString('hex'),
       type: ContentType.pairingCodeVerified,
       hash: sha256Sync(code),
+      r2: randomBytes(randomInt(1, 32)).toString('hex'),
     };
 
     return this.secureWriteString(JSON.stringify(data));
@@ -81,6 +83,7 @@ export class ShardSender {
     );
 
     const data: ShardDistribution = {
+      r1: randomBytes(randomInt(1, 256)).toString('hex'),
       type: ContentType.shardDistribution,
       verifyPubkey,
       distributionId: this.distributionId,
@@ -93,6 +96,7 @@ export class ShardSender {
         version,
         mainAddress: args.mainAddress,
       },
+      r2: randomBytes(randomInt(1, 256)).toString('hex'),
     };
 
     return this.secureWriteString(JSON.stringify(data));

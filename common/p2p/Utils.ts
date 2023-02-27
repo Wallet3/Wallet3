@@ -1,7 +1,6 @@
 import { ClientInfo } from './Constants';
 import DeviceInfo from 'react-native-device-info';
 import { Platform } from 'react-native';
-import { createHash } from 'crypto';
 import { sha256Sync } from '../../utils/cipher';
 
 export function getDeviceInfo(nameSuffix?: string): ClientInfo {

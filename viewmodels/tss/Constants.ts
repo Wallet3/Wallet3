@@ -9,6 +9,7 @@ export enum ContentType {
 }
 
 export type ShardDistribution = {
+  r1: string;
   type: ContentType.shardDistribution;
   secrets: { rootShard: string; bip32Shard: string; rootSignature: string; bip32Signature: string };
   secretsInfo: {
@@ -21,6 +22,7 @@ export type ShardDistribution = {
   };
   verifyPubkey: string;
   distributionId: string;
+  r2: string;
 };
 
 export type ShardDistributionAck = {
@@ -30,10 +32,11 @@ export type ShardDistributionAck = {
 };
 
 export type ShardAggregationRequest = {
+  r1: string;
   type: ContentType.shardAggregationRequest;
   params: { subPath?: string; subPathIndex?: number; rootShard?: boolean; bip32Shard?: boolean };
   shardVersion: string;
-  randomPadding: string;
+  r2: string;
 };
 
 type EncryptedShard = { iv: string; ephemPublicKey: string; ciphertext: string; mac: string };
@@ -45,7 +48,8 @@ export type ShardAggregationAck = {
 };
 
 export type PairingCodeVerified = {
-  randomPadding: string;
+  r1: string;
   type: ContentType.pairingCodeVerified;
   hash: string;
+  r2?: string;
 };

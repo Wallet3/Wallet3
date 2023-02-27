@@ -10,6 +10,7 @@ import { TCPClient } from '../../common/p2p/TCPClient';
 import { TCPServer } from '../../common/p2p/TCPServer';
 import { btoa } from 'react-native-quick-base64';
 import { randomBytes } from 'crypto';
+import { randomInt } from '../../utils/math';
 import secretjs from 'secrets.js-grempe';
 import { sha256Sync } from '../../utils/cipher';
 import { utils } from 'ethers';
@@ -127,10 +128,11 @@ export class ShardsAggregator extends TCPServer<Events> {
 
     try {
       const req: ShardAggregationRequest = {
-        randomPadding: randomBytes(16).toString('hex'),
+        r1: randomBytes(randomInt(1, 256)).toString('hex'),
         type: ContentType.shardAggregationRequest,
         params: this.conf.aggregationParams,
         shardVersion: this.version,
+        r2: randomBytes(randomInt(1, 128)).toString('hex'),
       };
 
       await c.secureWriteString(JSON.stringify(req));

@@ -7,6 +7,7 @@ import { makeObservable, observable, runInAction } from 'mobx';
 import { AsyncTCPSocket } from './AsyncTCPSocket';
 import TCP from 'react-native-tcp-socket';
 import { getDeviceInfo } from './Utils';
+import { randomInt } from '../../utils/math';
 
 const { connect } = TCP;
 
@@ -91,7 +92,13 @@ export class TCPClient extends AsyncTCPSocket {
   private hello = async () => {
     if (this.greeted) return;
 
-    this.secureWriteString(JSON.stringify(getDeviceInfo()));
+    this.secureWriteString(
+      JSON.stringify({
+        r1: randomBytes(randomInt(1, 256)).toString('hex'),
+        ...getDeviceInfo(),
+        r2: randomBytes(randomInt(1, 128)).toString('hex'),
+      })
+    );
 
     const read = (await this.secureReadString())!;
     runInAction(() => (this.remoteInfo = JSON.parse(read)));

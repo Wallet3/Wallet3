@@ -18,7 +18,7 @@ const QRSecretItemSchema = {
   $$strict: false,
 };
 
-export type ShardItem = {
+export type PlainSecretItem = {
   root: string;
   bip32: string;
   device: ClientInfo;
@@ -29,6 +29,7 @@ export type ShardItem = {
     bip32Xpubkey: string;
     version: string;
     verifyPubkey: string;
+    mainAddress: string;
   };
 };
 
@@ -38,7 +39,7 @@ type Events = {
 
 export class KeyRecovery extends EventEmitter<Events> {
   private readonly validator = new Validator().compile(QRSecretItemSchema) as SyncCheckFunction;
-  shards: ShardItem[] = [];
+  shards: PlainSecretItem[] = [];
 
   get count() {
     return this.shards.length;
@@ -58,7 +59,7 @@ export class KeyRecovery extends EventEmitter<Events> {
   }
 
   add(data: string): boolean {
-    let item: ShardItem;
+    let item: PlainSecretItem;
 
     try {
       item = JSON.parse(data);

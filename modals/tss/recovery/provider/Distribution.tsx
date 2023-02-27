@@ -8,6 +8,7 @@ import BackableScrollTitles from '../../../components/BackableScrollTitles';
 import Button from '../../components/Button';
 import DeviceInfo from '../../components/DeviceInfo';
 import { FadeInDownView } from '../../../../components/animations';
+import IllustrationSecureFiles from '../../../../assets/illustrations/misc/secure_files.svg';
 import { KeyRecoveryProvider } from '../../../../viewmodels/tss/KeyRecoveryProvider';
 import { KeyRecoveryRequestor } from '../../../../viewmodels/tss/KeyRecoveryRequestor';
 import ModalRootContainer from '../../../core/ModalRootContainer';
@@ -24,6 +25,7 @@ import { ShardReceiver } from '../../../../viewmodels/tss/ShardReceiver';
 import Theme from '../../../../viewmodels/settings/Theme';
 import i18n from '../../../../i18n';
 import { observer } from 'mobx-react-lite';
+import { secureColor } from '../../../../constants/styles';
 import { useHorizontalPadding } from '../../components/Utils';
 
 interface Props {
@@ -51,8 +53,10 @@ export default observer(({ vm, service }: Props) => {
     <View style={{ flex: 1, width: ReactiveScreen.width - 12, marginHorizontal: -16 }}>
       {vm.verified ? (
         <FadeInDownView style={{ flex: 1 }}>
-          <View style={{ flex: 1 }} />
-          <Button title={t('button-next')} />
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <IllustrationSecureFiles width={200} height={200} />
+          </View>
+          <Button title={t('button-shards-distribute')} themeColor={secureColor} />
         </FadeInDownView>
       ) : (
         <FadeInDownView style={{ flex: 1, paddingBottom: useOptimizedSafeBottom(), paddingHorizontal: 16 }}>
