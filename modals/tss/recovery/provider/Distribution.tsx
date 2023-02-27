@@ -30,7 +30,7 @@ interface Props {
   service: Service;
 }
 
-export default ({ device, service }: Props) => {
+export default observer(({ device, service }: Props) => {
   const { t } = i18n;
   const { secondaryTextColor, appColor } = Theme;
   const [vm] = useState(new KeyRecoveryProvider({ service, shardKey: device.shard }));
@@ -66,4 +66,4 @@ export default ({ device, service }: Props) => {
       )}
     </View>
   );
-};
+});

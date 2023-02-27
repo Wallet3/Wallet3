@@ -9,9 +9,10 @@ interface Props {
   cornerRadius?: number;
   style?: StyleProp<ViewStyle>;
   children: React.ReactNode;
+  disableHorizontal?: boolean;
 }
 
-export default ({ cornerRadius, children, style }: Props) => {
+export default ({ cornerRadius, children, style, disableHorizontal }: Props) => {
   const { backgroundColor } = Theme;
   const DefaultCornerRadius = cornerRadius ?? useScreenCornerRadius();
 
@@ -19,7 +20,7 @@ export default ({ cornerRadius, children, style }: Props) => {
     <ScrollView
       pagingEnabled
       scrollEnabled={false}
-      horizontal
+      horizontal={disableHorizontal ? undefined : true}
       contentContainerStyle={{ flexGrow: 1 }}
       style={{ position: 'relative', backgroundColor: 'transparent' }}
     >

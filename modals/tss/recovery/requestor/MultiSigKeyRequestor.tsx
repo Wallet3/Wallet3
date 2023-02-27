@@ -25,14 +25,11 @@ interface Props {
 
 export default observer(({ close, onCritical, vm }: Props) => {
   const { t } = i18n;
-
   const [step, setStep] = useState(0);
-
   const titles = [t('multi-sig-modal-title-wallet-recovery'), t('multi-sig-modal-title-waiting-aggregation')];
 
   const goToRecovery = () => {
     setStep(1);
-    console.log('here')
     vm.start();
   };
 

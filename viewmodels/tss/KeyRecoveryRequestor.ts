@@ -1,5 +1,5 @@
+import { computed, makeObservable, observable, runInAction } from 'mobx';
 import { getDeviceBasicInfo, getDeviceInfo } from '../../common/p2p/Utils';
-import { makeObservable, observable, runInAction } from 'mobx';
 
 import Bonjour from '../../common/p2p/Bonjour';
 import { KeyManagementService } from './Constants';
@@ -22,9 +22,20 @@ export class KeyRecoveryRequestor extends TCPServer<{}> {
   received = 0;
   threshold = 0;
 
+  get pendingCount() {
+    return this.pendingClients.length;
+  }
+
   constructor() {
     super();
-    makeObservable(this, { pendingClients: observable, aggregated: observable, received: observable, threshold: observable });
+
+    makeObservable(this, {
+      pendingClients: observable,
+      aggregated: observable,
+      received: observable,
+      threshold: observable,
+      pendingCount: computed,
+    });
   }
 
   get name() {
@@ -49,7 +60,7 @@ export class KeyRecoveryRequestor extends TCPServer<{}> {
   }
 
   protected async newClient(c: TCPClient): Promise<void> {
-    runInAction(() => this.pendingClients.push(c));
+    runInAction(() => (this.pendingClients = this.pendingClients.concat(c)));
     const pairingCode = await c.secureReadString();
   }
 

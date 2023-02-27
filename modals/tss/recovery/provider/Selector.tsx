@@ -1,4 +1,5 @@
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { Feather, Ionicons } from '@expo/vector-icons';
 import { FlatList, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { getScreenCornerRadius, useOptimizedCornerRadius } from '../../../../utils/hardware';
@@ -23,6 +24,7 @@ import Theme from '../../../../viewmodels/settings/Theme';
 import i18n from '../../../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useHorizontalPadding } from '../../components/Utils';
+import { verifiedColor } from '../../../../constants/styles';
 
 interface Props {
   onNext: (selected: PairedDevice) => void;
@@ -39,9 +41,12 @@ export default ({ onNext }: Props) => {
     return (
       <TouchableOpacity
         onPress={() => setSelectedDevice(item)}
-        style={{ paddingHorizontal: marginHorizontal, paddingVertical: 8 }}
+        style={{ paddingHorizontal: marginHorizontal, paddingVertical: 8, flexDirection: 'row', alignItems: 'center' }}
       >
         <DeviceInfo info={item.deviceInfo} />
+        {selectedDevice?.id === item.id && (
+          <Feather name="check" size={24} color={verifiedColor} style={{ marginStart: 12 }} />
+        )}
       </TouchableOpacity>
     );
   };
