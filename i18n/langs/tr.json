@@ -328,6 +328,7 @@
   "multi-sig-modal-connect-approved-clients": "Onaylanan Cihazlar",
   "multi-sig-modal-connect-pending-clients": "Bekleyen Cihazlar",
   "multi-sig-modal-connect-select-to-pair": "Eşlemeye başlamak için bir cihaz seçin",
+  "multi-sig-modal-connect-recover-wallet": "Cüzdanı kurtarmak için bir cihaza dokunun",
   "multi-sig-modal-txt-pairing-code": "Eşleme kodu",
   "multi-sig-modal-txt-dont-close-view": "Anahtar dağıtımı sırasında, lütfen geçerli pencereyi kapatmayın",
   "multi-sig-modal-txt-current-device": "Şuanki cihaz",

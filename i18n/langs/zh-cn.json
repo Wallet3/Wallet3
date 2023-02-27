@@ -323,6 +323,7 @@
   "multi-sig-modal-connect-approved-clients": "已验证",
   "multi-sig-modal-connect-pending-clients": "等待验证",
   "multi-sig-modal-connect-select-to-pair": "选择一个设备开始配对",
+  "multi-sig-modal-connect-recover-wallet": "选择一个设备来恢复钱包",
   "multi-sig-modal-txt-pairing-code": "设备配对码",
   "multi-sig-modal-txt-dont-close-view": "请不要关闭当前窗口",
   "multi-sig-modal-txt-current-device": "本设备",

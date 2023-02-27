@@ -41,7 +41,6 @@ export class KeyRecoveryProvider extends TCPClient {
       }
 
       this.req = req;
-      
     } catch (error) {}
   };
 
@@ -89,6 +88,12 @@ export class KeyRecoveryProvider extends TCPClient {
     } catch (error) {}
 
     return false;
+  };
+
+  verifyPairingCode = async (code: string) => {
+    const success = code === this.pairingCode;
+    runInAction(() => (this.verified = success));
+    return success;
   };
 
   dispose() {

@@ -43,6 +43,7 @@ import MultiSigKeyProvider from '../modals/tss/recovery/provider/MultiSigKeyProv
 import MultiSigKeyRequestor from '../modals/tss/recovery/requestor/MultiSigKeyRequestor';
 import Networks from '../viewmodels/core/Networks';
 import { ReactiveScreen } from '../utils/device';
+import { Service } from 'react-native-zeroconf';
 import { ShardProvider } from '../viewmodels/tss/ShardProvider';
 import { ShardsAggregator } from '../viewmodels/tss/ShardsAggregator';
 import { ShardsDistributor } from '../viewmodels/tss/ShardsDistributor';
@@ -517,7 +518,7 @@ type ShardsParam = {
   shardsAggregator?: ShardsAggregator;
   shardProvider?: ShardProvider;
   keyRecoveryRequestor?: KeyRecoveryRequestor;
-  keyRecoveryProvider?: KeyRecoveryProvider;
+  keyRecoveryProviderService?: Service;
   onClosed?: () => void;
   openAnimationConfig?: IConfigProps;
 };
@@ -570,6 +571,10 @@ export const ShardsModal = observer(() => {
       enqueue({ keyRecoveryRequestor: vm, onClosed });
     });
 
+    PubSub.subscribe(MessageKeys.openKeyRecoveryProvider, (_, { service, onClosed }) => {
+      enqueue({ keyRecoveryProviderService: service, onClosed });
+    });
+
     return () =>
       [
         MessageKeys.openShardsDistribution,
@@ -598,7 +603,7 @@ export const ShardsModal = observer(() => {
       {vms?.shardsAggregator && <ShardsAggregatorUI close={close} vm={vms.shardsAggregator} />}
       {vms?.shardProvider && <ShardProviderUI vm={vms.shardProvider} close={close} />}
       {vms?.keyRecoveryRequestor && <MultiSigKeyRequestor vm={vms.keyRecoveryRequestor} close={close} />}
-      {vms?.keyRecoveryProvider && <MultiSigKeyProvider vm={vms.keyRecoveryProvider} close={close} />}
+      {vms?.keyRecoveryProviderService && <MultiSigKeyProvider service={vms.keyRecoveryProviderService} close={close} />}
     </ModalizeContainer>
   );
 });

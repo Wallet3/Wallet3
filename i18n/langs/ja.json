@@ -324,6 +324,7 @@
   "multi-sig-modal-connect-approved-clients": "承認済み",
   "multi-sig-modal-connect-pending-clients": "承認中",
   "multi-sig-modal-connect-select-to-pair": "デバイスを選択し、ペアリングを開始する",
+  "multi-sig-modal-connect-recover-wallet": "デバイスをタップしてウォレットを復元する",
   "multi-sig-modal-txt-pairing-code": "ペアリングコード",
   "multi-sig-modal-txt-dont-close-view": "配布中に、現在のセッションを閉じないでください",
   "multi-sig-modal-txt-current-device": "自分",

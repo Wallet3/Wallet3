@@ -328,6 +328,7 @@
   "multi-sig-modal-connect-approved-clients": "Approved devices",
   "multi-sig-modal-connect-pending-clients": "Pending devices",
   "multi-sig-modal-connect-select-to-pair": "Tap a device to start pairing",
+  "multi-sig-modal-connect-recover-wallet": "Tap a device to recover a wallet",
   "multi-sig-modal-txt-pairing-code": "Pairing code",
   "multi-sig-modal-txt-dont-close-view": "Please don't close the current view during key distribution",
   "multi-sig-modal-txt-current-device": "Current",

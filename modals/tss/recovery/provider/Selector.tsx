@@ -1,5 +1,5 @@
 import Animated, { FadeInUp } from 'react-native-reanimated';
-import { FlatList, ScrollView, FlatList as SystemFlatList, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { getScreenCornerRadius, useOptimizedCornerRadius } from '../../../../utils/hardware';
 
@@ -7,7 +7,7 @@ import Aggregation from '../../aggregator/Aggregation';
 import BackableScrollTitles from '../../../components/BackableScrollTitles';
 import Button from '../../components/Button';
 import DeviceInfo from '../../components/DeviceInfo';
-import Distribution from './Distribution';
+import { FadeInDownView } from '../../../../components/animations';
 import { KeyRecoveryProvider } from '../../../../viewmodels/tss/KeyRecoveryProvider';
 import { KeyRecoveryRequestor } from '../../../../viewmodels/tss/KeyRecoveryRequestor';
 import ModalRootContainer from '../../../core/ModalRootContainer';
@@ -17,40 +17,50 @@ import Preparations from '../requestor/Preparations';
 import { ReactiveScreen } from '../../../../utils/device';
 import RecoveryAggregation from '../requestor/RecoveryAggregation';
 import ScrollTitles from '../../../components/ScrollTitles';
-import Selector from './Selector';
 import { Service } from 'react-native-zeroconf';
 import { ShardReceiver } from '../../../../viewmodels/tss/ShardReceiver';
 import Theme from '../../../../viewmodels/settings/Theme';
 import i18n from '../../../../i18n';
 import { observer } from 'mobx-react-lite';
+import { useHorizontalPadding } from '../../components/Utils';
 
 interface Props {
-  close: () => void;
-  onCritical?: (critical: boolean) => void;
-  service: Service;
+  onNext: (selected: PairedDevice) => void;
 }
 
-export default observer(({ close, onCritical, service }: Props) => {
-  const { t } = i18n;
-
-  const [step, setStep] = useState(0);
-  const [vm, setVM] = useState<KeyRecoveryProvider>();
+export default ({ onNext }: Props) => {
   const [selectedDevice, setSelectedDevice] = useState<PairedDevice>();
+  const { t } = i18n;
+  const { secondaryTextColor, appColor } = Theme;
 
-  const titles = [t('multi-sig-modal-title-wallet-recovery'), t('multi-sig-modal-title-key-distribution')];
+  const marginHorizontal = useHorizontalPadding();
 
-  const goTo = (device: PairedDevice) => {
-    setSelectedDevice(device);
-    setStep(1);
+  const renderItem = ({ item }: { item: PairedDevice }) => {
+    return (
+      <TouchableOpacity
+        onPress={() => setSelectedDevice(item)}
+        style={{ paddingHorizontal: marginHorizontal, paddingVertical: 8 }}
+      >
+        <DeviceInfo info={item.deviceInfo} />
+      </TouchableOpacity>
+    );
   };
 
-  useEffect(() => () => vm?.dispose(), []);
-
   return (
-    <ModalRootContainer>
-      <BackableScrollTitles currentIndex={step} titles={titles} style={{ marginBottom: 12 }} />
-      {step === 0 && <Selector onNext={goTo} />}
-      {step === 1 && <Distribution service={service} device={selectedDevice!} />}
-    </ModalRootContainer>
+    <FadeInDownView style={{ flex: 1, width: ReactiveScreen.width - 12, marginHorizontal: -16 }} delay={300}>
+      <Text style={{ color: secondaryTextColor, marginHorizontal }}>{t('multi-sig-modal-connect-recover-wallet')}:</Text>
+
+      <FlatList
+        contentContainerStyle={{ paddingVertical: 2, paddingBottom: 8 }}
+        data={PairedDevices.devices}
+        renderItem={renderItem}
+        keyExtractor={(i) => i.id}
+        bounces={PairedDevices.devices.length > 3}
+      />
+
+      <FadeInDownView delay={500}>
+        <Button title={t('button-next')} onPress={() => onNext(selectedDevice!)} disabled={!selectedDevice} />
+      </FadeInDownView>
+    </FadeInDownView>
   );
-});
+};

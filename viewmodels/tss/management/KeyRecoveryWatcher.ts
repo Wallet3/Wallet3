@@ -25,14 +25,14 @@ class KeyRecoveryWatcher {
   private handleService = (raw: Service) => {
     const { keyRecoveryRequestor: service } = handleRawService(raw);
     if (!service) return;
-    console.log('found recovery request', raw);
 
     const reqId = service.txt?.['reqId'];
     if (this.handledIds.has(reqId)) {
       return;
     }
 
-    openKeyRecoveryProvider({});
+    this.handledIds.add(reqId);
+    openKeyRecoveryProvider({ service });
   };
 
   scanLan = () => PairedDevices.hasDevices && Bonjour.scan(KeyManagementService);

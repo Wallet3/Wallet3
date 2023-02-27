@@ -85,7 +85,6 @@ class Database {
       this.inpageDApps.clear(),
       this.chains.clear(),
       this.multiSigKeys.clear(),
-      __DEV__ && this.shardKeys.clear(),
     ]);
   }
 }
