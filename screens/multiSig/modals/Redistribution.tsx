@@ -116,10 +116,7 @@ export default observer(({ wallet, close, onCritical }: Props) => {
 
         {step === 1 && aggregator && (
           <Aggregation
-            device={aggregator.device}
-            threshold={aggregator.threshold}
-            received={aggregator.received}
-            aggregated={aggregator.aggregated}
+            vm={aggregator}
             onSecretCacheSelected={aggregator.setSecretsCached}
             buttonTitle={t('button-next')}
             buttonDisabled={!aggregator?.aggregated}

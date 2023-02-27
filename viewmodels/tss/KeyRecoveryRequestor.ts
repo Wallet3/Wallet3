@@ -1,5 +1,5 @@
 import { getDeviceBasicInfo, getDeviceInfo } from '../../common/p2p/Utils';
-import { makeObservable, observable } from 'mobx';
+import { makeObservable, observable, runInAction } from 'mobx';
 
 import Bonjour from '../../common/p2p/Bonjour';
 import { KeyRecovery } from './KeyRecovery';
@@ -9,12 +9,14 @@ import { TCPClient } from '../../common/p2p/TCPClient';
 import { TCPServer } from '../../common/p2p/TCPServer';
 import { btoa } from 'react-native-quick-base64';
 import { genEmojis } from '../../utils/emoji';
+import { randomBytes } from 'crypto';
 
 export class KeyRecoveryRequestor extends TCPServer<{}> {
   private recovery = new KeyRecovery();
 
   readonly avatar = genEmojis(4);
   readonly device = getDeviceInfo(this.avatar);
+  pendingClients: TCPClient[] = [];
 
   aggregated = false;
   received = 0;
@@ -22,7 +24,7 @@ export class KeyRecoveryRequestor extends TCPServer<{}> {
 
   constructor() {
     super();
-    makeObservable(this, { aggregated: observable, received: observable, threshold: observable });
+    makeObservable(this, { pendingClients: observable, aggregated: observable, received: observable, threshold: observable });
   }
 
   get name() {
@@ -35,15 +37,19 @@ export class KeyRecoveryRequestor extends TCPServer<{}> {
 
     Bonjour.publishService(KeyRecoveryService, this.name, this.port!, {
       role: 'primary',
-      func: LanServices.ShardsDistribution,
+      func: LanServices.RequestKeyRecovery,
       info: btoa(JSON.stringify(getDeviceBasicInfo(this.avatar))),
       protocol: 1,
+      reqId: randomBytes(8).toString('hex'),
     });
 
     return succeed;
   }
 
-  protected newClient(_: TCPClient): void {}
+  protected async newClient(c: TCPClient): Promise<void> {
+    runInAction(() => this.pendingClients.push(c));
+    const pairingCode = await c.secureReadString();
+  }
 
   dispose() {
     super.stop();

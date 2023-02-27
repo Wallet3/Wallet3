@@ -13,6 +13,7 @@ import { getDeviceBasicInfo } from '../../../common/p2p/Utils';
 export const LanServices = {
   ShardsDistribution: 'shards-distribution',
   ShardsAggregation: 'shards-aggregation',
+  RequestKeyRecovery: 'key-recovery-request',
 };
 
 export function handleRawService(service: Service) {
@@ -25,6 +26,8 @@ export function handleRawService(service: Service) {
       return { shardsDistribution: service };
     case LanServices.ShardsAggregation:
       return { shardsAggregation: service };
+    case LanServices.RequestKeyRecovery:
+      return { keyRecoveryRequestor: service };
   }
 
   return {};

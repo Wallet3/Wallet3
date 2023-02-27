@@ -17,10 +17,13 @@ import { useHorizontalPadding } from '../components/Utils';
 const { View, Text } = Animated;
 
 interface Props {
-  device: ClientInfo;
-  received: number;
-  threshold: number;
-  aggregated: boolean;
+  vm: {
+    device: ClientInfo;
+    received: number;
+    threshold: number;
+    aggregated: boolean;
+  };
+
   buttonTitle: string;
   buttonColor?: string;
   hideButton?: boolean;
@@ -32,15 +35,12 @@ interface Props {
 
 export default observer(
   ({
-    device,
+    vm,
     buttonTitle,
     onButtonPress,
     enableCacheOption,
     hideButton,
     buttonColor,
-    received,
-    threshold,
-    aggregated,
     buttonDisabled,
     onSecretCacheSelected,
   }: Props) => {
@@ -48,6 +48,7 @@ export default observer(
     const { secondaryTextColor, appColor } = Theme;
 
     const marginHorizontal = useHorizontalPadding() + 2;
+    const { device, received, threshold, aggregated } = vm;
 
     useEffect(() => {
       received === 1 && startLayoutAnimation();

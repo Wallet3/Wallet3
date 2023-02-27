@@ -1,12 +1,16 @@
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { FlatList, ScrollView, FlatList as SystemFlatList, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
-import { ScrollView, FlatList as SystemFlatList, Text, View } from 'react-native';
 import { getScreenCornerRadius, useOptimizedCornerRadius } from '../../../utils/hardware';
 
 import Aggregation from '../aggregator/Aggregation';
 import BackableScrollTitles from '../../components/BackableScrollTitles';
+import DeviceInfo from '../components/DeviceInfo';
+import { KeyRecoveryProvider } from '../../../viewmodels/tss/KeyRecoveryProvider';
 import { KeyRecoveryRequestor } from '../../../viewmodels/tss/KeyRecoveryRequestor';
 import ModalRootContainer from '../../core/ModalRootContainer';
+import { PairedDevice } from '../../../viewmodels/tss/management/PairedDevice';
+import PairedDevices from '../../../viewmodels/tss/management/PairedDevices';
 import Preparations from './Preparations';
 import { ReactiveScreen } from '../../../utils/device';
 import RecoveryAggregation from './RecoveryAggregation';
@@ -18,7 +22,7 @@ import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
 
 interface Props {
-  vm: KeyRecoveryRequestor;
+  vm: KeyRecoveryProvider;
   close: () => void;
   onCritical?: (critical: boolean) => void;
 }
@@ -32,18 +36,25 @@ export default observer(({ close, onCritical, vm }: Props) => {
 
   const goTo = (step: number) => {
     setStep(step);
-    vm.start();
   };
 
   useEffect(() => () => vm.dispose(), []);
+
+  const renderItem = ({ item }: { item: PairedDevice }) => {
+    return (
+      <TouchableOpacity>
+        <DeviceInfo info={item.deviceInfo} />
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <ModalRootContainer>
       <BackableScrollTitles currentIndex={step} titles={titles} />
 
       <View style={{ flex: 1, width: ReactiveScreen.width - 12, marginHorizontal: -16 }}>
-        {step === 0 && <Preparations onNext={() => goTo(1)} />}
-        {step === 1 && <RecoveryAggregation vm={vm} />}
+        <FlatList data={PairedDevices.devices} renderItem={renderItem} keyExtractor={(i) => i.id} />
+        
       </View>
     </ModalRootContainer>
   );
