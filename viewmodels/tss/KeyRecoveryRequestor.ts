@@ -1,4 +1,5 @@
 import { getDeviceBasicInfo, getDeviceInfo } from '../../common/p2p/Utils';
+import { makeObservable, observable } from 'mobx';
 
 import Bonjour from '../../common/p2p/Bonjour';
 import { KeyRecovery } from './KeyRecovery';
@@ -15,8 +16,13 @@ export class KeyRecoveryRequestor extends TCPServer<{}> {
   readonly avatar = genEmojis(4);
   readonly device = getDeviceInfo(this.avatar);
 
+  aggregated = false;
+  received = 0;
+  threshold = 0;
+
   constructor() {
     super();
+    makeObservable(this, { aggregated: observable, received: observable, threshold: observable });
   }
 
   get name() {

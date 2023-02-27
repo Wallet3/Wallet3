@@ -1,15 +1,12 @@
-import { FadeInDownView, FadeInRightView, ZoomInView } from '../../../components/animations';
+import { FadeInDownView, FadeInRightView } from '../../../components/animations';
 import React, { useEffect } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import Animated from 'react-native-reanimated';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import Button from '../components/Button';
-import Device from '../../../components/Device';
+import { ClientInfo } from '../../../common/p2p/Constants';
 import DeviceRipple from '../components/DeviceRipple';
-import { Ionicons } from '@expo/vector-icons';
-import LottieView from 'lottie-react-native';
-import { ShardsAggregator } from '../../../viewmodels/tss/ShardsAggregator';
+import { StyleSheet } from 'react-native';
 import Theme from '../../../viewmodels/settings/Theme';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -20,20 +17,36 @@ import { useHorizontalPadding } from '../components/Utils';
 const { View, Text } = Animated;
 
 interface Props {
-  vm: ShardsAggregator;
+  device: ClientInfo;
+  received: number;
+  threshold: number;
+  aggregated: boolean;
   buttonTitle: string;
   buttonColor?: string;
   hideButton?: boolean;
   buttonDisabled?: boolean;
   enableCacheOption?: boolean;
   onButtonPress?: () => void;
+  onSecretCacheSelected?: (selected: boolean) => void;
 }
 
 export default observer(
-  ({ vm, buttonTitle, onButtonPress, buttonDisabled, enableCacheOption, hideButton, buttonColor }: Props) => {
+  ({
+    device,
+    buttonTitle,
+    onButtonPress,
+    enableCacheOption,
+    hideButton,
+    buttonColor,
+    received,
+    threshold,
+    aggregated,
+    buttonDisabled,
+    onSecretCacheSelected,
+  }: Props) => {
     const { t } = i18n;
-    const { secondaryTextColor, tintColor, thirdTextColor, appColor } = Theme;
-    const { received, aggregated, threshold } = vm;
+    const { secondaryTextColor, appColor } = Theme;
+
     const marginHorizontal = useHorizontalPadding() + 2;
 
     useEffect(() => {
@@ -43,15 +56,15 @@ export default observer(
     return (
       <FadeInDownView style={{ flex: 1 }}>
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginBottom: enableCacheOption ? 32 : 24 }}>
-          <DeviceRipple deviceId={vm.device.device} os={vm.device.rn_os} />
+          <DeviceRipple deviceId={device.device} os={device.rn_os} />
 
-          {vm.received === 0 ? (
+          {received === 0 ? (
             <FadeInDownView delay={500}>
               <Text style={{ color: secondaryTextColor, ...styles.txt, marginHorizontal }}>
                 {t('multi-sig-modal-msg-open-wallet3')}
               </Text>
             </FadeInDownView>
-          ) : vm.aggregated ? (
+          ) : aggregated ? (
             <FadeInDownView delay={500}>
               <Text style={{ color: secureColor, ...styles.txt }}>{t('multi-sig-modal-txt-aggregation-done')}</Text>
             </FadeInDownView>
@@ -68,7 +81,7 @@ export default observer(
           <FadeInDownView delay={700}>
             <BouncyCheckbox
               size={15}
-              onPress={(checked) => vm.setSecretsCached(checked)}
+              onPress={onSecretCacheSelected}
               text={t('multi-sig-modal-msg-aggregated-remember-key')}
               textStyle={{ textDecorationLine: 'none', color: secondaryTextColor, fontSize: 14 }}
               iconStyle={{ borderRadius: 3 }}
