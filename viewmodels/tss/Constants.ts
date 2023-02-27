@@ -1,6 +1,4 @@
-export const KeyDistributionService = 'wallet3_multiSign_key_distribution';
-export const KeyAggregationService = 'wallet3_multiSign_key_aggregation';
-export const KeyRecoveryService = 'wallet3_multiSign_key_recovery';
+export const KeyManagementService = 'wallet3_multiSign_key_management';
 
 export enum ContentType {
   shardDistribution = 1,

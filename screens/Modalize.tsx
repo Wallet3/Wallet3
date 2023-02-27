@@ -33,12 +33,14 @@ import InpageDAppAddAssetModal from '../modals/inpage/InpageDAppAddAsset';
 import InpageDAppAddChain from '../modals/inpage/InpageDAppAddChain';
 import InpageDAppSendTx from '../modals/inpage/InpageDAppTxRequest';
 import InpageDAppSign from '../modals/inpage/InpageDAppSign';
+import { KeyRecoveryProvider } from '../viewmodels/tss/KeyRecoveryProvider';
 import { KeyRecoveryRequestor } from '../viewmodels/tss/KeyRecoveryRequestor';
 import { Keyboard } from 'react-native';
 import Loading from '../modals/views/Loading';
 import MessageKeys from '../common/MessageKeys';
 import ModalizeContainer from '../modals/core/ModalizeContainer';
-import MultiSigKeyRequestor from '../modals/tss/recovery/MultiSigKeyRequestor';
+import MultiSigKeyProvider from '../modals/tss/recovery/provider/MultiSigKeyProvider';
+import MultiSigKeyRequestor from '../modals/tss/recovery/requestor/MultiSigKeyRequestor';
 import Networks from '../viewmodels/core/Networks';
 import { ReactiveScreen } from '../utils/device';
 import { ShardProvider } from '../viewmodels/tss/ShardProvider';
@@ -515,6 +517,7 @@ type ShardsParam = {
   shardsAggregator?: ShardsAggregator;
   shardProvider?: ShardProvider;
   keyRecoveryRequestor?: KeyRecoveryRequestor;
+  keyRecoveryProvider?: KeyRecoveryProvider;
   onClosed?: () => void;
   openAnimationConfig?: IConfigProps;
 };
@@ -594,7 +597,8 @@ export const ShardsModal = observer(() => {
       {vms?.shardReceiver && <ShardReceiverUI close={close} onCritical={setIsCritical} />}
       {vms?.shardsAggregator && <ShardsAggregatorUI close={close} vm={vms.shardsAggregator} />}
       {vms?.shardProvider && <ShardProviderUI vm={vms.shardProvider} close={close} />}
-      {vms?.keyRecoveryRequestor&& <MultiSigKeyRequestor vm={vms.keyRecoveryRequestor} close={close} />}
+      {vms?.keyRecoveryRequestor && <MultiSigKeyRequestor vm={vms.keyRecoveryRequestor} close={close} />}
+      {vms?.keyRecoveryProvider && <MultiSigKeyProvider vm={vms.keyRecoveryProvider} close={close} />}
     </ModalizeContainer>
   );
 });

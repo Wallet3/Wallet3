@@ -1,13 +1,13 @@
 import { FlatList, TouchableOpacity, View } from 'react-native';
 
-import Aggregation from '../aggregator/Aggregation';
-import DeviceInfo from '../components/DeviceInfo';
-import { FadeInDownView } from '../../../components/animations';
+import Aggregation from '../../aggregator/Aggregation';
+import DeviceInfo from '../../components/DeviceInfo';
+import { FadeInDownView } from '../../../../components/animations';
 import { Ionicons } from '@expo/vector-icons';
-import { KeyRecoveryRequestor } from '../../../viewmodels/tss/KeyRecoveryRequestor';
+import { KeyRecoveryRequestor } from '../../../../viewmodels/tss/KeyRecoveryRequestor';
 import React from 'react';
-import { TCPClient } from '../../../common/p2p/TCPClient';
-import i18n from '../../../i18n';
+import { TCPClient } from '../../../../common/p2p/TCPClient';
+import i18n from '../../../../i18n';
 import { observer } from 'mobx-react-lite';
 
 export default observer(({ vm }: { vm: KeyRecoveryRequestor }) => {

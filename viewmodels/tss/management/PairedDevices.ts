@@ -3,7 +3,7 @@ import { computed, makeObservable, observable, runInAction } from 'mobx';
 import Bonjour from '../../../common/p2p/Bonjour';
 import { ClientInfo } from '../../../common/p2p/Constants';
 import Database from '../../../models/Database';
-import { KeyAggregationService } from '../Constants';
+import { KeyManagementService } from '../Constants';
 import { PairedDevice } from './PairedDevice';
 import { SECOND } from '../../../utils/time';
 import { Service } from 'react-native-zeroconf';
@@ -68,7 +68,7 @@ class PairedDevices {
     });
   };
 
-  scanLan = () => this.hasDevices && Bonjour.scan(KeyAggregationService);
+  scanLan = () => this.hasDevices && Bonjour.scan(KeyManagementService);
 
   async refresh() {
     const keys = await Database.shardKeys!.find();

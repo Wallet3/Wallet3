@@ -3,7 +3,7 @@ import { action, makeObservable, observable, runInAction } from 'mobx';
 import App from '../../core/App';
 import Bonjour from '../../../common/p2p/Bonjour';
 import EventEmitter from 'eventemitter3';
-import { KeyDistributionService } from '../Constants';
+import { KeyManagementService } from '../Constants';
 import { MultiSigWallet } from '../../wallet/MultiSigWallet';
 import PairedDevices from './PairedDevices';
 import { Service } from 'react-native-zeroconf';
@@ -58,7 +58,7 @@ class DistributorDiscovery extends EventEmitter<{}> {
   };
 
   scan() {
-    Bonjour.scan(KeyDistributionService);
+    Bonjour.scan(KeyManagementService);
   }
 
   stop() {

@@ -2,8 +2,8 @@ import { getDeviceBasicInfo, getDeviceInfo } from '../../common/p2p/Utils';
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import Bonjour from '../../common/p2p/Bonjour';
+import { KeyManagementService } from './Constants';
 import { KeyRecovery } from './KeyRecovery';
-import { KeyRecoveryService } from './Constants';
 import { LanServices } from './management/DistributorDiscovery';
 import { TCPClient } from '../../common/p2p/TCPClient';
 import { TCPServer } from '../../common/p2p/TCPServer';
@@ -32,16 +32,18 @@ export class KeyRecoveryRequestor extends TCPServer<{}> {
   }
 
   async start(): Promise<boolean> {
-    const succeed = await super.start();
     if (super.listening) return true;
+    const succeed = await super.start();
 
-    Bonjour.publishService(KeyRecoveryService, this.name, this.port!, {
+    Bonjour.publishService(KeyManagementService, this.name, this.port!, {
       role: 'primary',
       func: LanServices.RequestKeyRecovery,
-      info: btoa(JSON.stringify(getDeviceBasicInfo(this.avatar))),
+      info: btoa(JSON.stringify(getDeviceBasicInfo())),
       protocol: 1,
       reqId: randomBytes(8).toString('hex'),
     });
+
+    console.log('requestor started');
 
     return succeed;
   }

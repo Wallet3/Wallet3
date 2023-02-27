@@ -8,7 +8,6 @@ import Button from '../components/Button';
 import DeviceInfo from '../components/DeviceInfo';
 import DistributorDiscovery from '../../../viewmodels/tss/management/DistributorDiscovery';
 import { FadeInDownView } from '../../../components/animations';
-import { KeyDistributionService } from '../../../viewmodels/tss/Constants';
 import PairedDevice from '../../../screens/multiSig/modals/PairedDevice';
 import PairedDevices from '../../../viewmodels/tss/management/PairedDevices';
 import { Placeholder } from '../../../components';

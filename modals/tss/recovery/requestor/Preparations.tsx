@@ -1,9 +1,9 @@
 import Animated, { FadeInDown, FadeOutLeft } from 'react-native-reanimated';
 
-import Button from '../components/Button';
+import Button from '../../components/Button';
 import React from 'react';
-import Welcome from '../components/Introduction';
-import i18n from '../../../i18n';
+import Welcome from '../../components/Introduction';
+import i18n from '../../../../i18n';
 
 const { View } = Animated;
 

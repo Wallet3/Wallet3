@@ -11,6 +11,7 @@ import Contacts from '../customs/Contacts';
 import Database from '../../models/Database';
 import GasPrice from '../misc/GasPrice';
 import Key from '../../models/entities/Key';
+import KeyRecoveryWatcher from '../tss/management/KeyRecoveryWatcher';
 import KeySecurity from '../tss/management/KeySecurity';
 import LINQ from 'linq';
 import LinkHub from '../hubs/LinkHub';
@@ -112,6 +113,7 @@ export class AppVM {
 
       TxHub.init().then(() => AppStoreReview.check());
       PairedDevices.init();
+      KeyRecoveryWatcher.scanLan();
 
       Authentication.on('appAuthorized', () => setTimeout(() => PairedDevices.scanLan(), 2000));
       // KeySecurity.init();

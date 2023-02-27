@@ -1,4 +1,4 @@
-import { ContentType, KeyAggregationService, ShardAggregationAck, ShardAggregationRequest } from './Constants';
+import { ContentType, KeyManagementService, ShardAggregationAck, ShardAggregationRequest } from './Constants';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import eccrypto, { Ecies } from 'eccrypto';
 import { getDeviceBasicInfo, getDeviceInfo } from '../../common/p2p/Utils';
@@ -104,7 +104,7 @@ export class ShardsAggregator extends TCPServer<Events> {
     if (super.listening) return true;
     const succeed = await super.start();
 
-    Bonjour.publishService(KeyAggregationService, this.name, this.port!, {
+    Bonjour.publishService(KeyManagementService, this.name, this.port!, {
       reqId: randomBytes(8).toString('hex'),
       role: this.role,
       func: LanServices.ShardsAggregation,

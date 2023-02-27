@@ -18,6 +18,7 @@ export default {
   openShardsAggregator: 'openShardsAggregator',
   openShardProvider: 'openShardProvider',
   openKeyRecoveryRequestor: 'openKeyRecoveryRequestor',
+  openKeyRecoveryProvider: 'openKeyRecoveryProvider',
   openGlobalPasspad: 'openGlobalPasspad',
   drawerSwipeEnabled: 'drawer-swipeEnabled',
 

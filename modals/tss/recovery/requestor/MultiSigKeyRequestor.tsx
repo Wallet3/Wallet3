@@ -1,20 +1,20 @@
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, FlatList as SystemFlatList, Text, View } from 'react-native';
-import { getScreenCornerRadius, useOptimizedCornerRadius } from '../../../utils/hardware';
+import { getScreenCornerRadius, useOptimizedCornerRadius } from '../../../../utils/hardware';
 
-import Aggregation from '../aggregator/Aggregation';
-import BackableScrollTitles from '../../components/BackableScrollTitles';
-import { KeyRecoveryRequestor } from '../../../viewmodels/tss/KeyRecoveryRequestor';
-import ModalRootContainer from '../../core/ModalRootContainer';
+import Aggregation from '../../aggregator/Aggregation';
+import BackableScrollTitles from '../../../components/BackableScrollTitles';
+import { KeyRecoveryRequestor } from '../../../../viewmodels/tss/KeyRecoveryRequestor';
+import ModalRootContainer from '../../../core/ModalRootContainer';
 import Preparations from './Preparations';
-import { ReactiveScreen } from '../../../utils/device';
+import { ReactiveScreen } from '../../../../utils/device';
 import RecoveryAggregation from './RecoveryAggregation';
-import ScrollTitles from '../../components/ScrollTitles';
+import ScrollTitles from '../../../components/ScrollTitles';
 import { Service } from 'react-native-zeroconf';
-import { ShardReceiver } from '../../../viewmodels/tss/ShardReceiver';
-import Theme from '../../../viewmodels/settings/Theme';
-import i18n from '../../../i18n';
+import { ShardReceiver } from '../../../../viewmodels/tss/ShardReceiver';
+import Theme from '../../../../viewmodels/settings/Theme';
+import i18n from '../../../../i18n';
 import { observer } from 'mobx-react-lite';
 
 interface Props {
@@ -30,8 +30,9 @@ export default observer(({ close, onCritical, vm }: Props) => {
 
   const titles = [t('multi-sig-modal-title-wallet-recovery'), t('multi-sig-modal-title-waiting-aggregation')];
 
-  const goTo = (step: number) => {
-    setStep(step);
+  const goToRecovery = () => {
+    setStep(1);
+    console.log('here')
     vm.start();
   };
 
@@ -42,7 +43,7 @@ export default observer(({ close, onCritical, vm }: Props) => {
       <BackableScrollTitles currentIndex={step} titles={titles} />
 
       <View style={{ flex: 1, width: ReactiveScreen.width - 12, marginHorizontal: -16 }}>
-        {step === 0 && <Preparations onNext={() => goTo(1)} />}
+        {step === 0 && <Preparations onNext={() => goToRecovery()} />}
         {step === 1 && <RecoveryAggregation vm={vm} />}
       </View>
     </ModalRootContainer>
