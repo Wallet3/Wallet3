@@ -1,25 +1,28 @@
 import { MaterialIcons, Octicons } from '@expo/vector-icons';
+import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 
 import { ClientInfo } from '../../../common/p2p/Constants';
 import Device from '../../../components/Device';
-import React from 'react';
 import Theme from '../../../viewmodels/settings/Theme';
 import dayjs from 'dayjs';
+import { formatAddress } from '../../../utils/formatter';
 import iosDevice from 'ios-device-list';
 import { verifiedColor } from '../../../constants/styles';
 
 interface Props {
   info: ClientInfo;
+  mainAddress?: string;
   verified?: boolean;
   light?: boolean;
   lastUsedAt?: number;
 }
 
-export default ({ info, verified, light, lastUsedAt }: Props) => {
+export default ({ info, verified, light, lastUsedAt, mainAddress }: Props) => {
   const { textColor, secondaryTextColor } = Theme;
-
   if (!info) return null;
+
+  const [generation] = useState(iosDevice.generationByIdentifier(info.device));
 
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
@@ -28,7 +31,7 @@ export default ({ info, verified, light, lastUsedAt }: Props) => {
       <View style={{ marginHorizontal: 12, flex: 1 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 2 }}>
           <Text numberOfLines={1} style={{ color: textColor, fontSize: light ? 18 : 22, fontWeight: '600', marginEnd: 8 }}>
-            {`${info.name || iosDevice.generationByIdentifier(info.device)}`}
+            {`${info.name || generation}`}
           </Text>
 
           {verified && <MaterialIcons name="verified" color={verifiedColor} size={19} style={{}} />}
@@ -42,7 +45,7 @@ export default ({ info, verified, light, lastUsedAt }: Props) => {
           }}
         >
           <Text style={{ color: secondaryTextColor }} numberOfLines={1}>
-            {`${`${iosDevice.generationByIdentifier(info.device)}` || ''}${
+            {`${mainAddress ? `${formatAddress(mainAddress, 6, 4, '...')}, ` : ''}${`${generation}` || ''}${
               info.osVersion ? `,  ${info.os} ${info.osVersion}` : ''
             }`.trim()}
           </Text>

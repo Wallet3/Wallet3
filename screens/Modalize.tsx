@@ -33,10 +33,12 @@ import InpageDAppAddAssetModal from '../modals/inpage/InpageDAppAddAsset';
 import InpageDAppAddChain from '../modals/inpage/InpageDAppAddChain';
 import InpageDAppSendTx from '../modals/inpage/InpageDAppTxRequest';
 import InpageDAppSign from '../modals/inpage/InpageDAppSign';
+import { KeyRecoveryRequestor } from '../viewmodels/tss/KeyRecoveryRequestor';
 import { Keyboard } from 'react-native';
 import Loading from '../modals/views/Loading';
 import MessageKeys from '../common/MessageKeys';
 import ModalizeContainer from '../modals/core/ModalizeContainer';
+import MultiSigKeyRequestor from '../modals/tss/recovery/MultiSigKeyRequestor';
 import Networks from '../viewmodels/core/Networks';
 import { ReactiveScreen } from '../utils/device';
 import { ShardProvider } from '../viewmodels/tss/ShardProvider';
@@ -512,6 +514,7 @@ type ShardsParam = {
   shardReceiver?: boolean;
   shardsAggregator?: ShardsAggregator;
   shardProvider?: ShardProvider;
+  keyRecoveryRequestor?: KeyRecoveryRequestor;
   onClosed?: () => void;
   openAnimationConfig?: IConfigProps;
 };
@@ -560,12 +563,17 @@ export const ShardsModal = observer(() => {
       enqueue({ shardProvider: vm, onClosed });
     });
 
+    PubSub.subscribe(MessageKeys.openKeyRecoveryRequestor, (_, { vm, onClosed }) => {
+      enqueue({ keyRecoveryRequestor: vm, onClosed });
+    });
+
     return () =>
       [
         MessageKeys.openShardsDistribution,
         MessageKeys.openShardReceiver,
         MessageKeys.openShardsAggregator,
         MessageKeys.openShardProvider,
+        MessageKeys.openKeyRecoveryRequestor,
       ].forEach(PubSub.unsubscribe);
   });
 
@@ -586,6 +594,7 @@ export const ShardsModal = observer(() => {
       {vms?.shardReceiver && <ShardReceiverUI close={close} onCritical={setIsCritical} />}
       {vms?.shardsAggregator && <ShardsAggregatorUI close={close} vm={vms.shardsAggregator} />}
       {vms?.shardProvider && <ShardProviderUI vm={vms.shardProvider} close={close} />}
+      {vms?.keyRecoveryRequestor&& <MultiSigKeyRequestor vm={vms.keyRecoveryRequestor} close={close} />}
     </ModalizeContainer>
   );
 });

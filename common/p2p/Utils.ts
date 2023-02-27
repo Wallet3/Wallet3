@@ -4,10 +4,10 @@ import { Platform } from 'react-native';
 import { createHash } from 'crypto';
 import { sha256Sync } from '../../utils/cipher';
 
-export function getDeviceInfo(): ClientInfo {
+export function getDeviceInfo(nameSuffix?: string): ClientInfo {
   return {
     globalId: sha256Sync(DeviceInfo.getUniqueIdSync()).substring(0, 24),
-    name: DeviceInfo.getDeviceNameSync(),
+    name: DeviceInfo.getDeviceNameSync() + (nameSuffix ? ` ${nameSuffix}` : ''),
     devtype: DeviceInfo.getDeviceType(),
     device: DeviceInfo.getDeviceId(),
     manufacturer: DeviceInfo.getManufacturerSync(),
@@ -17,9 +17,9 @@ export function getDeviceInfo(): ClientInfo {
   };
 }
 
-export function getDeviceBasicInfo() {
+export function getDeviceBasicInfo(nameSuffix?: string) {
   return {
-    name: DeviceInfo.getDeviceNameSync(),
+    name: DeviceInfo.getDeviceNameSync() + (nameSuffix ? ` ${nameSuffix}` : ''),
     devtype: DeviceInfo.getDeviceType(),
     device: DeviceInfo.getDeviceId(),
     manufacturer: DeviceInfo.getManufacturerSync(),

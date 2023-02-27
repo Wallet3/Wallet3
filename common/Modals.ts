@@ -1,6 +1,7 @@
 import { IShardsDistributorConstruction, ShardsDistributor } from '../viewmodels/tss/ShardsDistributor';
 
 import Authentication from '../viewmodels/auth/Authentication';
+import { KeyRecoveryRequestor } from '../viewmodels/tss/KeyRecoveryRequestor';
 import MessageKeys from './MessageKeys';
 import { ShardProvider } from '../viewmodels/tss/ShardProvider';
 import { ShardsAggregator } from '../viewmodels/tss/ShardsAggregator';
@@ -64,4 +65,8 @@ export function openShardProvider(args: { vm: ShardProvider; onClosed?: () => vo
 
 export function openShardReceiver() {
   PubSub.publish(MessageKeys.openShardReceiver);
+}
+
+export function openKeyRecoveryRequestor(args: { vm: KeyRecoveryRequestor; onClosed?: () => void }) {
+  PubSub.publish(MessageKeys.openKeyRecoveryRequestor, args);
 }

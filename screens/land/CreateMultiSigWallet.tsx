@@ -3,17 +3,19 @@ import { FadeInDownView, ZoomInView } from '../../components/animations';
 import React, { useEffect, useState } from 'react';
 import Scanner, { BarCodeScanningResult } from '../../components/Scanner';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { openKeyRecoveryRequestor, openShardsDistributors } from '../../common/Modals';
 import { secondaryFontColor, secureColor, themeColor, thirdFontColor, verifiedColor } from '../../constants/styles';
 
 import { AntDesign } from '@expo/vector-icons';
 import IllustrationNomad from '../../assets/illustrations/tss/nomad.svg';
 import IllustrationPartying from '../../assets/illustrations/misc/partying.svg';
 import IllustrationWorld from '../../assets/illustrations/tss/world.svg';
+import { KeyRecovery } from '../../viewmodels/tss/KeyRecovery';
+import { KeyRecoveryRequestor } from '../../viewmodels/tss/KeyRecoveryRequestor';
 import Loading from '../../modals/views/Loading';
 import LottieView from 'lottie-react-native';
 import ModalizeContainer from '../../modals/core/ModalizeContainer';
 import { Portal } from 'react-native-portalize';
-import { QRCodeShardAggregator } from '../../viewmodels/tss/QRCodeShardAggregator';
 import { QRScan } from '../../modals';
 import { ReactiveScreen } from '../../utils/device';
 import { ShardsDistributor } from '../../viewmodels/tss/ShardsDistributor';
@@ -21,7 +23,6 @@ import Swiper from 'react-native-swiper';
 import { getRandomBytes } from 'expo-crypto';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import { openShardsDistributors } from '../../common/Modals';
 import { sleep } from '../../utils/async';
 import { useModalize } from 'react-native-modalize';
 import { useNavigation } from '@react-navigation/native';
@@ -32,12 +33,12 @@ export default observer(() => {
   const { t } = i18n;
   const navigation = useNavigation<any>();
   const [busy, setBusy] = useState(false);
-  const { ref, open, close } = useModalize();
+  const { ref, open: openQRCode, close } = useModalize();
   const { top } = useSafeAreaInsets();
   const [added, setAdded] = useState(false);
   const { width: screenWidth, height: screenHeight } = ReactiveScreen;
 
-  const [aggregator] = useState(new QRCodeShardAggregator());
+  const [aggregator] = useState(new KeyRecovery());
 
   const create = async () => {
     setBusy(true);
@@ -72,6 +73,11 @@ export default observer(() => {
     };
   }, []);
 
+  const openKeyRequestor = () => {
+    const vm = new KeyRecoveryRequestor();
+    openKeyRecoveryRequestor({ vm });
+  };
+
   return (
     <SafeViewContainer style={{ flex: 1, backgroundColor: '#fff' }} paddingHeader>
       <Swiper
@@ -100,9 +106,18 @@ export default observer(() => {
       </Swiper>
 
       <Button
-        title={t('land-welcome-restore-multi-sig-wallet')}
-        onPress={() => open()}
-        themeColor={secureColor}
+        title={t('land-welcome-restore-multiSig-via-qrcode')}
+        onPress={() => openQRCode()}
+        themeColor={secondaryFontColor}
+        style={{ marginBottom: 12 }}
+        txtStyle={{ textTransform: 'none' }}
+        reverse
+      />
+
+      <Button
+        title={t('land-welcome-restore-multiSig-via-network')}
+        onPress={() => openKeyRequestor()}
+        themeColor={verifiedColor}
         style={{ marginBottom: 12 }}
         txtStyle={{ textTransform: 'none' }}
         reverse

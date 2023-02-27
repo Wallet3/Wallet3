@@ -39,7 +39,7 @@ export default observer(() => {
         }}
       >
         <FadeInDownView style={{ paddingVertical: 8, paddingHorizontal: 16, flexDirection: 'row' }} delay={index * 50}>
-          <DeviceInfo info={item.deviceInfo} light />
+          <DeviceInfo info={item.deviceInfo} light mainAddress={item.mainAddress}/>
         </FadeInDownView>
       </TouchableOpacity>
     );

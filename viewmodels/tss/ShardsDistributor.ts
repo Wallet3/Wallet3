@@ -127,7 +127,7 @@ export class ShardsDistributor extends TCPServer<Events> {
       func: LanServices.ShardsDistribution,
       distributionId: this.id,
       info: btoa(JSON.stringify(getDeviceBasicInfo())),
-      ver: 1,
+      protocol: 1,
     });
 
     this.serviceStarted = true;

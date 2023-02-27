@@ -42,6 +42,10 @@ export class PairedDevice {
     return this.shard.lastUsedTimestamp < Date.now() - 30 * DAY;
   }
 
+  get mainAddress() {
+    return this.shard.secretsInfo.mainAddress;
+  }
+
   remove() {
     this.shard.remove();
   }

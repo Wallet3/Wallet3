@@ -159,6 +159,16 @@ export function genEmoji() {
   return emojis[index];
 }
 
+export function genEmojis(length: number) {
+  let emojis = '';
+
+  for (let i = 0; i < length; i++) {
+    emojis += genEmoji();
+  }
+
+  return emojis;
+}
+
 export function genColor() {
-  return `hsl(${360 * Math.random()},${(25 + 70 * Math.random())}%,${(85 + 10 * Math.random())}%)`;
+  return `hsl(${360 * Math.random()},${25 + 70 * Math.random()}%,${85 + 10 * Math.random()}%)`;
 }
