@@ -20,12 +20,13 @@ export class KeyRecoveryProvider extends TCPClient {
   private req?: ShardAggregationRequest;
 
   verified = false;
+  distributed = false;
 
   constructor(args: IConstruction) {
     super(args);
 
     this.key = args.shardKey;
-    makeObservable(this, { verified: observable });
+    makeObservable(this, { verified: observable, distributed: observable });
   }
 
   send = async (pin?: string) => {
@@ -52,6 +53,7 @@ export class KeyRecoveryProvider extends TCPClient {
       this.key.lastUsedTimestamp = Date.now();
       this.key.save();
 
+      runInAction(() => (this.distributed = true));
       return true;
     } catch (error) {}
 

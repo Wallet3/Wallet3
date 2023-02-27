@@ -1,9 +1,9 @@
 import { KeyManagementService, PairingCodeVerified } from './Constants';
+import { KeyRecovery, PlainSecretItem } from './KeyRecovery';
 import { computed, makeObservable, observable, runInAction } from 'mobx';
 import { getDeviceBasicInfo, getDeviceInfo } from '../../common/p2p/Utils';
 
 import Bonjour from '../../common/p2p/Bonjour';
-import { KeyRecovery } from './KeyRecovery';
 import { LanServices } from './management/DistributorDiscovery';
 import { TCPClient } from '../../common/p2p/TCPClient';
 import { TCPServer } from '../../common/p2p/TCPServer';
@@ -20,8 +20,14 @@ export class KeyRecoveryRequestor extends TCPServer<{}> {
   pendingClients: TCPClient[] = [];
 
   aggregated = false;
-  received = 0;
-  threshold = 0;
+
+  get received() {
+    return this.recovery.count;
+  }
+
+  get threshold() {
+    return this.recovery.threshold;
+  }
 
   get pendingCount() {
     return this.pendingClients.length;
@@ -33,8 +39,8 @@ export class KeyRecoveryRequestor extends TCPServer<{}> {
     makeObservable(this, {
       pendingClients: observable,
       aggregated: observable,
-      received: observable,
-      threshold: observable,
+      received: computed,
+      threshold: computed,
       pendingCount: computed,
     });
   }
@@ -72,6 +78,15 @@ export class KeyRecoveryRequestor extends TCPServer<{}> {
     }
 
     runInAction(() => this.pendingClients.splice(this.pendingClients.indexOf(c), 1));
+
+    const secret = await c.secureReadString();
+
+    if (!secret) {
+      c.destroy();
+      return;
+    }
+
+    this.recovery.add(secret!);
   }
 
   dispose() {

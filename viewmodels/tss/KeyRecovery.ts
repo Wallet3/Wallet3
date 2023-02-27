@@ -55,7 +55,7 @@ export class KeyRecovery extends EventEmitter<Events> {
 
   constructor() {
     super();
-    makeObservable(this, { shards: observable, count: computed, add: action, clear: action });
+    makeObservable(this, { shards: observable, count: computed, threshold: computed, add: action, clear: action });
   }
 
   add(data: string): boolean {
