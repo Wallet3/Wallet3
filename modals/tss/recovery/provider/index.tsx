@@ -43,7 +43,7 @@ export default observer(({ close, onCritical, service }: Props) => {
     setStep(1);
   };
 
-  useEffect(() => () => vm?.dispose(), []);
+  useEffect(() => () => vm?.dispose(), [vm]);
 
   return (
     <ModalRootContainer>
