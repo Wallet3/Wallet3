@@ -530,6 +530,9 @@ export const ShardsModal = observer(() => {
   const [queue] = useState<ShardsParam[]>([]);
 
   const enqueue = (param: ShardsParam) => {
+    const reqId = param.keyRecoveryProviderService?.txt?.['reqId'];
+    if (reqId && queue.find((param) => param.keyRecoveryProviderService?.txt?.['reqId'] === reqId)) return;
+
     queue.push(param);
 
     if (vms) return;

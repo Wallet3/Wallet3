@@ -83,7 +83,11 @@ export class KeyRecoveryRequestor extends TCPServer<Events> {
 
   protected async newClient(c: TCPClient): Promise<void> {
     runInAction(() => this.pendingClients.push(c));
-    c.once('close', () => runInAction(() => this.pendingClients.splice(this.pendingClients.indexOf(c), 1)));
+
+    c.once('close', () => {
+      const index = this.pendingClients.indexOf(c);
+      index >= 0 && runInAction(() => this.pendingClients.splice(index, 1));
+    });
 
     const { hash } = JSON.parse((await c.secureReadString())!) as PairingCodeVerified;
 
@@ -108,5 +112,6 @@ export class KeyRecoveryRequestor extends TCPServer<Events> {
     super.stop();
     this.recovery.removeAllListeners();
     this.removeAllListeners();
+    this.pendingClients.forEach((c) => c.destroy());
   }
 }

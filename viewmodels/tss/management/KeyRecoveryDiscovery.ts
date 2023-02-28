@@ -30,7 +30,6 @@ class KeyRecoveryWatcher {
     if (!service) return;
 
     const reqId = service.txt?.['reqId'];
-    console.log(reqId, this.handledIds.has(reqId))
     if (this.handledIds.has(reqId)) {
       setTimeout(() => this.scanLan(), 15 * SECOND);
       return;
