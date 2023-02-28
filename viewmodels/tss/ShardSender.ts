@@ -52,7 +52,7 @@ export class ShardSender {
       hash: sha256Sync(code),
     };
 
-    await this.secureWriteString(JSON.stringify(data));
+    this.secureWriteString(JSON.stringify(data));
 
     const keyExchange: OneTimeKeyExchange = JSON.parse((await this.secureReadString())!);
     this.oneTimePubkey = Buffer.from(keyExchange.pubkey, 'hex');

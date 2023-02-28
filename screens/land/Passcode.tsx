@@ -11,6 +11,7 @@ import { SafeAreaView } from 'react-native';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { showMessage } from 'react-native-flash-message';
+import { sleep } from '../../utils/async';
 import styles from './styles';
 import { themeColor } from '../../constants/styles';
 
@@ -19,14 +20,16 @@ export default observer(({ route }: NativeStackScreenProps<LandScreenStack, 'Bac
   const [busy, setBusy] = useState(false);
 
   const finishInitialization = async (passcode: string) => {
-    setBusy(true);
+    if (Authentication.appAuthorized) return;
 
+    setBusy(true);
     await Authentication.setupPin(passcode);
     await Authentication.authorize(passcode);
     await MnemonicOnce.save();
+    await sleep(1000);
     setBusy(false);
 
-    setTimeout(() => AppVM.init(), 25);
+    setTimeout(() => AppVM.init(), 5);
   };
 
   return (
