@@ -56,13 +56,11 @@ export class ShardReceiver extends TCPClient {
           await this.handleShardDistribution(data as ShardDistribution);
           return;
         case ContentType.pairingCodeVerified:
-          await this.handlePairingCode(data as PairingCodeVerified);
+          if (!(await this.handlePairingCode(data as PairingCodeVerified))) return;
           await this.oneTimeKeyExchange();
           break;
       }
     }
-
-    console.log('socket successfully exits');
   };
 
   private handleShardDistribution = async (data: ShardDistribution) => {
@@ -136,11 +134,11 @@ export class ShardReceiver extends TCPClient {
     const equals = sha256Sync(this.pairingCode) === data.hash;
     runInAction(() => (this.pairingCodeVerified = equals));
 
-    if (!equals) {
-      showMessage({ message: i18n.t('multi-sig-modal-msg-pairing-code-not-match'), type: 'danger' });
-      this.destroy();
-      return;
-    }
+    if (equals) return true;
+
+    showMessage({ message: i18n.t('multi-sig-modal-msg-pairing-code-not-match'), type: 'danger' });
+    this.destroy();
+    return false;
   };
 
   private oneTimeKeyExchange = async () => {

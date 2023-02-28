@@ -128,11 +128,9 @@ export class ShardsAggregator extends TCPServer<Events> {
 
     try {
       const req: ShardAggregationRequest = {
-        r1: randomBytes(randomInt(1, 256)).toString('hex'),
         type: ContentType.shardAggregationRequest,
         params: this.conf.aggregationParams,
         shardVersion: this.version,
-        r2: randomBytes(randomInt(1, 128)).toString('hex'),
       };
 
       await c.secureWriteString(JSON.stringify(req));

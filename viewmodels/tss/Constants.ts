@@ -1,3 +1,5 @@
+import { ClientInfo } from '../../common/p2p/Constants';
+
 export const KeyManagementService = 'wallet3_multiSign_key_management';
 
 export enum ContentType {
@@ -7,6 +9,7 @@ export enum ContentType {
   shardAggregationAck,
   pairingCodeVerified,
   oneTimeKeyExchange,
+  recoveryKeyAck,
 }
 
 type EncryptedShard = { iv: string; ephemPublicKey: string; ciphertext: string; mac: string };
@@ -38,11 +41,9 @@ export type ShardDistributionAck = {
 };
 
 export type ShardAggregationRequest = {
-  r1: string;
   type: ContentType.shardAggregationRequest;
   params: { subPath?: string; subPathIndex?: number; rootShard?: boolean; bip32Shard?: boolean };
   shardVersion: string;
-  r2: string;
 };
 
 export type ShardAggregationAck = {
@@ -54,4 +55,20 @@ export type ShardAggregationAck = {
 export type PairingCodeVerified = {
   type: ContentType.pairingCodeVerified;
   hash: string;
+};
+
+export type RecoveryKeyAck = {
+  type: ContentType.recoveryKeyAck;
+  root: EncryptedShard;
+  bip32: EncryptedShard;
+  device: ClientInfo;
+  secretsInfo: {
+    threshold: number;
+    bip32Path: string;
+    bip32PathIndex: number;
+    bip32Xpubkey: string;
+    version: string;
+    verifyPubkey: string;
+    mainAddress: string;
+  };
 };

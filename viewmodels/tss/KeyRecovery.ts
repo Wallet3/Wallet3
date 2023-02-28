@@ -59,10 +59,11 @@ export class KeyRecovery extends EventEmitter<Events> {
   }
 
   add(data: string): boolean {
-    let item: PlainSecretItem;
+    return this.addItem(JSON.parse(data));
+  }
 
+  addItem(item: PlainSecretItem) {
     try {
-      item = JSON.parse(data);
       if (true !== this.validator(item)) return false;
       if (this.shards.find((i) => i.root === item.root)) return false;
     } catch (error) {

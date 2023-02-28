@@ -1,13 +1,11 @@
-import { ContentType, PairingCodeVerified, ShardAggregationAck, ShardAggregationRequest } from './Constants';
+import { ContentType, OneTimeKeyExchange, PairingCodeVerified, RecoveryKeyAck } from './Constants';
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import Authentication from '../auth/Authentication';
-import { PlainSecretItem } from './KeyRecovery';
 import ShardKey from '../../models/entities/ShardKey';
 import { TCPClient } from '../../common/p2p/TCPClient';
+import eccrypto from 'eccrypto';
 import { getDeviceInfo } from '../../common/p2p/Utils';
-import { randomBytes } from 'crypto';
-import { randomInt } from '../../utils/math';
 import { sha256Sync } from '../../utils/cipher';
 
 interface IConstruction {
@@ -17,6 +15,7 @@ interface IConstruction {
 
 export class KeyRecoveryProvider extends TCPClient {
   private key: ShardKey;
+  private oneTimePubkey!: Buffer;
 
   verified = false;
   distributed = false;
@@ -37,9 +36,22 @@ export class KeyRecoveryProvider extends TCPClient {
 
       if (!bip32Secret || !rootSecret) return false;
 
-      const data: PlainSecretItem = {
-        bip32: bip32Secret,
-        root: rootSecret,
+      const [bip32, root] = await Promise.all(
+        [bip32Secret, rootSecret].map(async (secret) => {
+          const cipher = await eccrypto.encrypt(this.oneTimePubkey, Buffer.from(secret, 'utf8'));
+          return {
+            iv: cipher.iv.toString('hex'),
+            ciphertext: cipher.ciphertext.toString('hex'),
+            ephemPublicKey: cipher.ephemPublicKey.toString('hex'),
+            mac: cipher.mac.toString('hex'),
+          };
+        })
+      );
+
+      const data: RecoveryKeyAck = {
+        type: ContentType.recoveryKeyAck,
+        bip32,
+        root,
         device: getDeviceInfo(),
         secretsInfo: this.key.secretsInfo,
       };
@@ -68,7 +80,10 @@ export class KeyRecoveryProvider extends TCPClient {
         hash: sha256Sync(code),
       };
 
-      this.secureWriteString(JSON.stringify(data));
+      await this.secureWriteString(JSON.stringify(data));
+
+      const { pubkey } = JSON.parse((await this.secureReadString())!) as OneTimeKeyExchange;
+      this.oneTimePubkey = Buffer.from(pubkey, 'hex');
     }
 
     return success;

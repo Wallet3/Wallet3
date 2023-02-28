@@ -1,14 +1,14 @@
-import { KeyManagementService, PairingCodeVerified } from './Constants';
-import { KeyRecovery, PlainSecretItem } from './KeyRecovery';
+import { ContentType, KeyManagementService, OneTimeKeyExchange, PairingCodeVerified, RecoveryKeyAck } from './Constants';
 import { computed, makeObservable, observable, runInAction } from 'mobx';
 import { getDeviceBasicInfo, getDeviceInfo } from '../../common/p2p/Utils';
 
 import Bonjour from '../../common/p2p/Bonjour';
+import { KeyRecovery } from './KeyRecovery';
 import { LanServices } from './management/DistributorDiscovery';
 import { TCPClient } from '../../common/p2p/TCPClient';
 import { TCPServer } from '../../common/p2p/TCPServer';
 import { btoa } from 'react-native-quick-base64';
-import { genEmojis } from '../../utils/emoji';
+import eccrypto from 'eccrypto';
 import { randomBytes } from 'crypto';
 import { sha256Sync } from '../../utils/cipher';
 import { sleep } from '../../utils/async';
@@ -99,14 +99,30 @@ export class KeyRecoveryRequestor extends TCPServer<Events> {
 
     runInAction(() => this.pendingClients.splice(this.pendingClients.indexOf(c), 1));
 
-    const secret = await c.secureReadString();
+    const oneTimeKey = randomBytes(32);
+    const oneTimeEx: OneTimeKeyExchange = {
+      type: ContentType.oneTimeKeyExchange,
+      pubkey: eccrypto.getPublic(oneTimeKey).toString('hex'),
+    };
 
-    if (!secret) {
-      c.destroy();
-      return;
-    }
+    await c.secureWriteString(JSON.stringify(oneTimeEx));
 
-    this.recovery.add(secret!);
+    const secret: RecoveryKeyAck = JSON.parse((await c.secureReadString())!);
+    
+    const [bip32, root] = await Promise.all(
+      [secret.bip32, secret.root].map(async (ecies) => {
+        const plain = await eccrypto.decrypt(oneTimeKey, {
+          iv: Buffer.from(ecies.iv, 'hex'),
+          ciphertext: Buffer.from(ecies.ciphertext, 'hex'),
+          ephemPublicKey: Buffer.from(ecies.ephemPublicKey, 'hex'),
+          mac: Buffer.from(ecies.mac, 'hex'),
+        });
+
+        return plain.toString('utf8');
+      })
+    );
+
+    this.recovery.addItem({ ...secret, bip32, root });
   }
 
   dispose() {
