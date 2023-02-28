@@ -114,8 +114,7 @@ export class AppVM {
       Contacts.init();
 
       TxHub.init().then(() => AppStoreReview.check());
-      PairedDevices.init();
-      KeyRecoveryDiscovery.scanLan();
+      PairedDevices.init().then(() => KeyRecoveryDiscovery.scanLan());
 
       Authentication.on('appAuthorized', () => setTimeout(() => PairedDevices.scanLan(), 2000));
       // KeySecurity.init();

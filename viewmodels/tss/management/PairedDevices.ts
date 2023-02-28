@@ -29,10 +29,7 @@ class PairedDevices {
   }
 
   async init() {
-    const count = (await this.refresh()).length;
-    if (count === 0) return;
-    console.log('paired devs', count);
-    this.scanLan();
+    await this.refresh();
   }
 
   private handleService = (raw: Service) => {

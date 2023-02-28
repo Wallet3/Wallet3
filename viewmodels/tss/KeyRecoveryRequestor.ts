@@ -68,6 +68,7 @@ export class KeyRecoveryRequestor extends TCPServer<Events> {
 
   async start(): Promise<boolean> {
     if (super.listening) return true;
+
     const succeed = await super.start();
 
     Bonjour.publishService(KeyManagementService, this.name, this.port!, {
@@ -109,9 +110,10 @@ export class KeyRecoveryRequestor extends TCPServer<Events> {
   }
 
   dispose() {
-    super.stop();
+    Bonjour.unpublishService(this.name);
     this.recovery.removeAllListeners();
     this.removeAllListeners();
     this.pendingClients.forEach((c) => c.destroy());
+    super.stop();
   }
 }

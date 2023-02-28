@@ -131,6 +131,7 @@ export class ShardsDistributor extends TCPServer<Events> {
     Bonjour.publishService(KeyManagementService, this.name, this.port!, {
       role: 'primary',
       func: LanServices.ShardsDistribution,
+      reqId: randomBytes(8).toString('hex'),
       distributionId: this.id,
       info: btoa(JSON.stringify(getDeviceBasicInfo())),
       protocol: 1,
@@ -257,11 +258,10 @@ export class ShardsDistributor extends TCPServer<Events> {
   }
 
   dispose() {
-    this.serviceStarted = false;
-    super.stop();
-
     Bonjour.unpublishService(this.name);
+    this.serviceStarted = false;
     this.approvedClients.forEach((c) => c.destroy());
     this.pendingClients.forEach((c) => c.destroy());
+    super.stop();
   }
 }

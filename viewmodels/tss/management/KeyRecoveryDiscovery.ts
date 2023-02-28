@@ -39,7 +39,9 @@ class KeyRecoveryWatcher {
     openKeyRecoveryProvider({ service, onClosed: () => setTimeout(() => this.scanLan(), 15 * SECOND) });
   };
 
-  scanLan = () => Bonjour.scan(KeyManagementService);
+  scanLan = () => {
+    Bonjour.scan(KeyManagementService);
+  };
 }
 
 export default new KeyRecoveryWatcher();
