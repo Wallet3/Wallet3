@@ -9,7 +9,9 @@ import React, { useEffect } from 'react';
 import { Text, View } from 'react-native-animatable';
 import { secondaryFontColor, themeColor } from '../../constants/styles';
 
+import { FadeInDownView } from '../../components/animations';
 import { G } from '../../assets/3rd';
+import IllustrationVault from '../../assets/illustrations/misc/vault.svg';
 import { LandScreenStack } from '../navigations';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Platform } from 'react-native';
@@ -59,11 +61,11 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
   return (
     <SafeViewContainer style={{ flex: 1, backgroundColor: '#fff', alignItems: 'center' }}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text animation="fadeInUp" style={{ fontFamily: 'Questrial', fontWeight: '600', fontSize: 42, color: '#6186ff' }}>
-          Wallet 3
-        </Text>
+        <FadeInDownView delay={200}>
+          <IllustrationVault width={200} height={200} />
+        </FadeInDownView>
         <Text animation="fadeInUp" delay={500} style={{ color: secondaryFontColor, fontSize: 12, fontWeight: '500' }}>
-          A Secure Wallet for Web3
+          Secure, Simple, Powerful
         </Text>
       </View>
 
