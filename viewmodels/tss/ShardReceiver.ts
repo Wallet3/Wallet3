@@ -1,14 +1,14 @@
-import { ContentType, PairingCodeVerified, ShardDistribution, ShardDistributionAck } from './Constants';
+import { ContentType, OneTimeKeyExchange, PairingCodeVerified, ShardDistribution, ShardDistributionAck } from './Constants';
+import { createHash, randomBytes } from 'crypto';
 import { makeObservable, observable, runInAction } from 'mobx';
+import { sha256, sha256Sync } from '../../utils/cipher';
 
 import Authentication from '../auth/Authentication';
 import PairedDevices from './management/PairedDevices';
 import ShardKey from '../../models/entities/ShardKey';
 import { TCPClient } from '../../common/p2p/TCPClient';
-import { createHash } from 'crypto';
 import eccrypto from 'eccrypto';
 import i18n from '../../i18n';
-import { sha256Sync } from '../../utils/cipher';
 import { showMessage } from 'react-native-flash-message';
 import { sleep } from '../../utils/async';
 
@@ -34,6 +34,8 @@ async function verifyEccSignature(pubkey: string, msg: string, signature: string
 }
 
 export class ShardReceiver extends TCPClient {
+  private oneTimeKey = randomBytes(32);
+
   secretStatus = ShardPersistentStatus.waiting;
   pairingCodeVerified = false;
 
@@ -55,6 +57,7 @@ export class ShardReceiver extends TCPClient {
           return;
         case ContentType.pairingCodeVerified:
           await this.handlePairingCode(data as PairingCodeVerified);
+          await this.oneTimeKeyExchange();
           break;
       }
     }
@@ -70,9 +73,22 @@ export class ShardReceiver extends TCPClient {
 
     const { secrets, verifyPubkey } = data;
 
+    const [rootShard, bip32Shard] = await Promise.all(
+      [secrets.rootShard, secrets.bip32Shard].map(async (ecies) => {
+        const data = {
+          iv: Buffer.from(ecies.iv, 'hex'),
+          mac: Buffer.from(ecies.mac, 'hex'),
+          ciphertext: Buffer.from(ecies.ciphertext, 'hex'),
+          ephemPublicKey: Buffer.from(ecies.ephemPublicKey, 'hex'),
+        };
+
+        return (await eccrypto.decrypt(this.oneTimeKey, data)).toString('utf8');
+      })
+    );
+
     const [validRoot, validBip32] = await Promise.all([
-      verifyEccSignature(verifyPubkey, secrets.rootShard, secrets.rootSignature),
-      verifyEccSignature(verifyPubkey, secrets.bip32Shard, secrets.bip32Signature),
+      verifyEccSignature(verifyPubkey, rootShard, secrets.rootSignature),
+      verifyEccSignature(verifyPubkey, bip32Shard, secrets.bip32Signature),
     ]);
 
     const validSignature = validRoot && validBip32;
@@ -98,8 +114,8 @@ export class ShardReceiver extends TCPClient {
       key.createdAt = Date.now();
       key.lastUsedTimestamp = Date.now();
       key.secrets = {
-        bip32Shard: await Authentication.encryptForever(secrets.bip32Shard),
-        rootShard: await Authentication.encryptForever(secrets.rootShard),
+        bip32Shard: await Authentication.encryptForever(bip32Shard),
+        rootShard: await Authentication.encryptForever(rootShard),
       };
 
       await key.save();
@@ -125,6 +141,15 @@ export class ShardReceiver extends TCPClient {
       this.destroy();
       return;
     }
+  };
+
+  private oneTimeKeyExchange = async () => {
+    const data: OneTimeKeyExchange = {
+      type: ContentType.oneTimeKeyExchange,
+      pubkey: eccrypto.getPublic(this.oneTimeKey).toString('hex'),
+    };
+
+    await this.secureWriteString(JSON.stringify(data));
   };
 
   dispose() {

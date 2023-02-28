@@ -64,7 +64,6 @@ export class KeyRecoveryProvider extends TCPClient {
 
     if (success) {
       const data: PairingCodeVerified = {
-        r1: randomBytes(randomInt(1, 256)).toString('hex'),
         type: ContentType.pairingCodeVerified,
         hash: sha256Sync(code),
       };

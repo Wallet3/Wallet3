@@ -32,6 +32,7 @@ LogBox.ignoreLogs([
   'This may lead to deadlocks',
   "Module ReactNative requires main queue setup since it overrides `init` but doesn't implement `requiresMainQueueSetup`",
   'socketDidDisconnect with nil clientDelegate for',
+  'RCTView has a shadow set but cannot calculate shadow efficiently',
 ]);
 
 if (__DEV__) {

@@ -1,10 +1,9 @@
-import { ContentType, PairingCodeVerified, ShardDistribution, ShardDistributionAck } from './Constants';
+import { ContentType, OneTimeKeyExchange, PairingCodeVerified, ShardDistribution, ShardDistributionAck } from './Constants';
 import { computed, makeObservable, observable, runInAction } from 'mobx';
 import { createHash, randomBytes } from 'crypto';
 
 import { TCPClient } from '../../common/p2p/TCPClient';
 import eccrypto from 'eccrypto';
-import { randomInt } from '../../utils/math';
 import { sha256Sync } from '../../utils/cipher';
 
 export enum ShardTransferringStatus {
@@ -15,6 +14,7 @@ export enum ShardTransferringStatus {
 }
 
 export class ShardSender {
+  private oneTimePubkey!: Buffer;
   readonly socket: TCPClient;
   readonly distributionId: string;
 
@@ -46,15 +46,16 @@ export class ShardSender {
     return this.socket.greeted;
   }
 
-  sendPairingCode(code: string) {
+  async sendPairingCode(code: string) {
     const data: PairingCodeVerified = {
-      r1: randomBytes(randomInt(1, 256)).toString('hex'),
       type: ContentType.pairingCodeVerified,
       hash: sha256Sync(code),
-      r2: randomBytes(randomInt(1, 32)).toString('hex'),
     };
 
-    return this.secureWriteString(JSON.stringify(data));
+    await this.secureWriteString(JSON.stringify(data));
+
+    const keyExchange: OneTimeKeyExchange = JSON.parse((await this.secureReadString())!);
+    this.oneTimePubkey = Buffer.from(keyExchange.pubkey, 'hex');
   }
 
   async sendShard(args: {
@@ -82,12 +83,29 @@ export class ShardSender {
       'hex'
     );
 
+    const enRootShard = await eccrypto.encrypt(this.oneTimePubkey, Buffer.from(rootShard, 'utf8'));
+    const enBip32Shard = await eccrypto.encrypt(this.oneTimePubkey, Buffer.from(bip32Shard, 'utf8'));
+
     const data: ShardDistribution = {
-      r1: randomBytes(randomInt(1, 256)).toString('hex'),
       type: ContentType.shardDistribution,
       verifyPubkey,
       distributionId: this.distributionId,
-      secrets: { rootShard: args.rootShard, rootSignature, bip32Shard: args.bip32Shard, bip32Signature },
+      secrets: {
+        rootShard: {
+          iv: enRootShard.iv.toString('hex'),
+          ciphertext: enRootShard.ciphertext.toString('hex'),
+          ephemPublicKey: enRootShard.ephemPublicKey.toString('hex'),
+          mac: enRootShard.mac.toString('hex'),
+        },
+        bip32Shard: {
+          iv: enBip32Shard.iv.toString('hex'),
+          ciphertext: enBip32Shard.ciphertext.toString('hex'),
+          ephemPublicKey: enBip32Shard.ephemPublicKey.toString('hex'),
+          mac: enBip32Shard.mac.toString('hex'),
+        },
+        rootSignature,
+        bip32Signature,
+      },
       secretsInfo: {
         bip32Path: args.bip32Path,
         bip32PathIndex: args.bip32PathIndex,
@@ -96,7 +114,6 @@ export class ShardSender {
         version,
         mainAddress: args.mainAddress,
       },
-      r2: randomBytes(randomInt(1, 256)).toString('hex'),
     };
 
     return this.secureWriteString(JSON.stringify(data));
