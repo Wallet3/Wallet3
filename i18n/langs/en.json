@@ -360,7 +360,7 @@
   "multi-sig-modal-msg-delete-trusted-device": "This operation will only delete local record information and cannot delete the private key information of the target device. To delete the private key information of the target device, please manually delete it on the target device.",
   "multi-sig-modal-msg-open-wallet3": "Please open Wallet 3 on paired devices.",
   "multi-sig-modal-msg-aggregated-count": "Received quantity: {{m}}/{{n}}",
-  "multi-sig-modal-msg-aggregated-remember-key": "Remember the Signing Key",
+  "multi-sig-modal-msg-aggregated-remember-key": "Remember the signing key",
   "multi-sig-modal-msg-before-aggregation": "This operation requires authorization from trusted devices to proceed.",
   "multi-sig-modal-msg-upgrade-tip": "A multi-signature wallet allows you to manage your crypto assets with multiple devices and provides a more reliable recovery mechanism. It is recommended that you upgrade to a multi-signature wallet.",
   "multi-sig-modal-create-threshold": "You are creating a {{threshold}} of {{max}} multi-signature wallet. It means that transactions require {{threshold}} keys to be authorized.",

@@ -16,6 +16,7 @@ import { TCPClient } from '../../common/p2p/TCPClient';
 import { TCPServer } from '../../common/p2p/TCPServer';
 import { btoa } from 'react-native-quick-base64';
 import i18n from '../../i18n';
+import { reverseLookupAddress } from '../services/DomainResolver';
 import secretjs from 'secrets.js-grempe';
 import { sha256Sync } from '../../utils/cipher';
 import { showMessage } from 'react-native-flash-message';
@@ -50,8 +51,9 @@ export class ShardsDistributor extends TCPServer<Events> {
   protected upgradeInfo?: { basePath: string; basePathIndex: number };
 
   readonly id: string;
-  readonly mainAddress: string;
   readonly device = getDeviceInfo();
+
+  mainAddress: string;
   approvedClients: ShardSender[] = [];
   pendingClients: ShardSender[] = [];
 
@@ -85,6 +87,8 @@ export class ShardsDistributor extends TCPServer<Events> {
     this.protector = this.root.derivePath(`m/0'/3`);
     this.bip32 = this.root.derivePath(basePath ?? DEFAULT_DERIVATION_PATH);
     this.mainAddress = this.bip32.derivePath(`${basePathIndex ?? 0}`).address;
+
+    reverseLookupAddress(this.mainAddress).then((name) => (this.mainAddress = name || this.mainAddress));
 
     this.id = sha256Sync(this.protector.address).substring(0, 32);
 

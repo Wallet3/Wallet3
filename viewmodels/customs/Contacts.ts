@@ -4,6 +4,7 @@ import App from '../core/App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Networks from '../core/Networks';
 import { getEnsAvatar } from '../../common/ENS';
+import { reverseLookupAddress } from '../services/DomainResolver';
 
 export interface IContact {
   address: string;
@@ -26,7 +27,7 @@ class Contacts {
   }
 
   init() {
-    AsyncStorage.getItem(`contacts`).then((v) => {
+    AsyncStorage.getItem('contacts').then((v) => {
       const contacts: IContact[] = JSON.parse(v || '[]');
       for (let c of contacts) {
         c.more = c.more || {};
@@ -47,31 +48,27 @@ class Contacts {
     const freq = this.contacts.find((c) => c.address.toLowerCase() === address.toLowerCase());
     if (freq) {
       this.contacts = [freq, ...this.contacts.filter((c) => c !== freq)];
-      AsyncStorage.setItem(`contacts`, JSON.stringify(this.contacts));
+      AsyncStorage.setItem('contacts', JSON.stringify(this.contacts));
       return;
     }
 
     this.contacts = [contact, ...this.contacts];
-    AsyncStorage.setItem(`contacts`, JSON.stringify(this.contacts));
+    AsyncStorage.setItem('contacts', JSON.stringify(this.contacts));
 
-    if (!ens) {
-      const provider = Networks.MainnetWsProvider;
-      ens = (await provider.lookupAddress(address)) || '';
-    }
+    if (!ens) ens = (await reverseLookupAddress(address)) || '';
+    if (!ens) return;
 
-    if (ens) {
-      getEnsAvatar(ens, address).then((v) => {
-        if (!v?.url) return;
+    getEnsAvatar(ens, address).then((v) => {
+      if (!v?.url) return;
 
-        const target = this.contacts.find((c) => c.address === address);
-        if (target) {
-          target.avatar = v.url;
-          target.ens = ens;
-        }
+      const target = this.contacts.find((c) => c.address === address);
+      if (target) {
+        target.avatar = v.url;
+        target.ens = ens;
+      }
 
-        AsyncStorage.setItem(`contacts`, JSON.stringify(this.contacts));
-      });
-    }
+      AsyncStorage.setItem('contacts', JSON.stringify(this.contacts));
+    });
   }
 
   remove(contact: IContact) {
@@ -79,7 +76,7 @@ class Contacts {
     if (index === -1) return;
 
     this.contacts = this.contacts.filter((c) => c !== contact);
-    AsyncStorage.setItem(`contacts`, JSON.stringify(this.contacts));
+    AsyncStorage.setItem('contacts', JSON.stringify(this.contacts));
   }
 
   reset() {

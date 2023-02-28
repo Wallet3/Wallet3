@@ -17,3 +17,7 @@ export function isUnstoppableDomain(domain: string) {
   const lower = domain.toLowerCase();
   return suffixes.some((item) => lower.endsWith(item));
 }
+
+export async function reverseLookup(address: string) {
+  return sdk.reverse(address);
+}

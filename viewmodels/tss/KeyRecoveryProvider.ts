@@ -46,7 +46,6 @@ export class KeyRecoveryProvider extends TCPClient {
 
       super.secureWriteString(JSON.stringify(data));
 
-      this.emit('secretSent' as any);
       this.key.lastUsedTimestamp = Date.now();
       this.key.save();
 

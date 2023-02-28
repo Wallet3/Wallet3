@@ -78,9 +78,11 @@ export default observer(({ vm, close }: Props) => {
           </FadeInDownView>
         </View>
 
-        <TouchableOpacity style={{ padding: 12 }} onPress={close}>
-          <Ionicons name="close" size={17} color={secondaryTextColor} />
-        </TouchableOpacity>
+        <FadeInRightView delay={700}>
+          <TouchableOpacity style={{ padding: 12 }} onPress={close}>
+            <Ionicons name="close" size={17} color={secondaryTextColor} />
+          </TouchableOpacity>
+        </FadeInRightView>
       </SquircleViewContainer>
     </FadeInUpView>
   );

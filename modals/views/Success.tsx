@@ -4,21 +4,15 @@ import LottieView from 'lottie-react-native';
 import { View } from 'react-native';
 
 export default () => {
-  const ref = useRef<LottieView>(null);
-
-  useEffect(() => {
-    ref.current?.play();
-  }, []);
-
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <LottieView
-        ref={ref}
+        autoPlay
         loop={false}
-        source={require('../../assets/animations/success.json')}
+        source={require('../../assets/animations/check-verde.json')}
         style={{
-          width: 200,
-          height: 200,
+          width: 250,
+          height: 250,
           justifyContent: 'center',
           alignItems: 'center',
         }}

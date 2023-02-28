@@ -21,8 +21,7 @@ type Events = {
 export class KeyRecoveryRequestor extends TCPServer<Events> {
   private recovery = new KeyRecovery();
 
-  readonly avatar = genEmojis(4);
-  readonly device = getDeviceInfo(this.avatar);
+  readonly device = getDeviceInfo();
   pendingClients: TCPClient[] = [];
 
   aggregated = false;
@@ -78,8 +77,6 @@ export class KeyRecoveryRequestor extends TCPServer<Events> {
       protocol: 1,
       reqId: randomBytes(8).toString('hex'),
     });
-
-    console.log('requestor started');
 
     return succeed;
   }
