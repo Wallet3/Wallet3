@@ -11,9 +11,11 @@ import Contacts from '../customs/Contacts';
 import Database from '../../models/Database';
 import GasPrice from '../misc/GasPrice';
 import Key from '../../models/entities/Key';
-import KeyRecoveryWatcher from '../tss/management/KeyRecoveryWatcher';
+import KeyRecoveryDiscovery from '../tss/management/KeyRecoveryDiscovery';
+import KeyRecoveryWatcher from '../tss/management/KeyRecoveryDiscovery';
 import KeySecurity from '../tss/management/KeySecurity';
 import LINQ from 'linq';
+import LanWatcher from '../tss/management/LanWatcher';
 import LinkHub from '../hubs/LinkHub';
 import MetamaskDAppsHub from '../walletconnect/MetamaskDAppsHub';
 import MultiSigKey from '../../models/entities/MultiSigKey';
@@ -113,7 +115,7 @@ export class AppVM {
 
       TxHub.init().then(() => AppStoreReview.check());
       PairedDevices.init();
-      KeyRecoveryWatcher.scanLan();
+      KeyRecoveryDiscovery.scanLan();
 
       Authentication.on('appAuthorized', () => setTimeout(() => PairedDevices.scanLan(), 2000));
       // KeySecurity.init();

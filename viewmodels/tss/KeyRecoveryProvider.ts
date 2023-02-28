@@ -17,7 +17,6 @@ interface IConstruction {
 
 export class KeyRecoveryProvider extends TCPClient {
   private key: ShardKey;
-  private req?: ShardAggregationRequest;
 
   verified = false;
   distributed = false;
@@ -30,8 +29,6 @@ export class KeyRecoveryProvider extends TCPClient {
   }
 
   send = async (pin?: string) => {
-    if (!this.req) return false;
-
     try {
       const [bip32Secret, rootSecret] = (await Authentication.decryptForever(
         [this.key.secrets.bip32Shard, this.key.secrets.rootShard],
@@ -55,7 +52,9 @@ export class KeyRecoveryProvider extends TCPClient {
 
       runInAction(() => (this.distributed = true));
       return true;
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
 
     return false;
   };

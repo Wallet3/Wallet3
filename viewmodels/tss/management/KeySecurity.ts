@@ -31,7 +31,7 @@ class KeySecurity {
     const expired = Date.now() - 30 * DAY;
     const notUsedDevices = (key.secretsInfo.devices || []).filter((v) => v.lastUsedAt < expired);
     const thresholdRate = key.secretsInfo.threshold / (key.secretsInfo.devices.length + 1);
-    console.log(key.secretsInfo.threshold, thresholdRate);
+    
     let score = 0;
 
     score += notUsedDevices.length === 0 ? 5 : 0;

@@ -32,9 +32,11 @@ import { useHorizontalPadding } from '../../components/Utils';
 
 interface Props {
   vm: KeyRecoveryProvider;
+  close: () => void;
+  onCritical?: (critical: boolean) => void;
 }
 
-export default observer(({ vm }: Props) => {
+export default observer(({ vm, close, onCritical }: Props) => {
   const { t } = i18n;
   const { secondaryTextColor, appColor } = Theme;
 
@@ -43,6 +45,8 @@ export default observer(({ vm }: Props) => {
   const [failedAttempts, setFailedAttempts] = useState(0);
   const [busy, setBusy] = useState(false);
   const { verified, distributed } = vm;
+
+  useEffect(() => onCritical?.(busy), [busy]);
 
   const send = async () => {
     setBusy(true);
@@ -66,7 +70,7 @@ export default observer(({ vm }: Props) => {
                 <LottieView
                   autoPlay
                   loop={false}
-                  style={{ width: 200, height: 200 }}
+                  style={{ width: 250, height: 250 }}
                   source={require('../../../../assets/animations/check-verde.json')}
                 />
               </ZoomInView>
@@ -74,10 +78,28 @@ export default observer(({ vm }: Props) => {
               <IllustrationSecureFiles width={200} height={200} />
             )}
           </View>
-          <Button title={t('button-shards-distribute')} themeColor={secureColor} disabled={busy} onPress={send} />
+
+          <Button
+            disabled={busy}
+            themeColor={secureColor}
+            onPress={distributed ? close : send}
+            title={distributed ? t('button-done') : t('button-shards-distribute')}
+          />
         </FadeInDownView>
       ) : (
-        <FadeInDownView style={{ flex: 1, paddingBottom: useOptimizedSafeBottom(), paddingHorizontal: 16 }}>
+        <FadeInDownView
+          style={{
+            flex: 1,
+            paddingBottom: useOptimizedSafeBottom(),
+            paddingHorizontal: 16,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Text style={{ marginTop: 12, color: secondaryTextColor, fontWeight: '500' }}>
+            {t('multi-sig-modal-connect-enter-pairing-code')}:
+          </Text>
+
           <Passpad
             disableCancelButton
             passLength={4}

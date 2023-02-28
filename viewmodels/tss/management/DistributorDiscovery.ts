@@ -60,10 +60,6 @@ class DistributorDiscovery extends EventEmitter<{}> {
   scan() {
     Bonjour.scan(KeyManagementService);
   }
-
-  stop() {
-    Bonjour.stopScan();
-  }
 }
 
 export default new DistributorDiscovery();

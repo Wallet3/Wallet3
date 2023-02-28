@@ -62,8 +62,6 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
     setSecurityLevel(KeySecurity.check(wallet.key));
   }, [wallet]);
 
-  console.log(securityLevel);
-
   return (
     <SafeViewContainer style={{ padding: 0, paddingBottom: 0 }} paddingHeader={false}>
       <ScrollView

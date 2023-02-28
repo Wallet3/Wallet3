@@ -82,7 +82,7 @@ export class ShardsAggregator extends TCPServer<Events> {
   }
 
   get threshold() {
-    return this.conf.threshold;
+    return this.conf.threshold - 1;
   }
 
   get rootShares() {
@@ -157,7 +157,7 @@ export class ShardsAggregator extends TCPServer<Events> {
         rootShard && this.rootShards.add(rootShard);
         bip32Shard && this.bip32Shards.add(bip32Shard);
 
-        runInAction(() => (this.received = this.rootShards.size || this.bip32Shards.size));
+        runInAction(() => (this.received = Math.max(0, (this.rootShards.size || this.bip32Shards.size) - 1)));
         this.combineShards();
       }
 

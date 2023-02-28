@@ -31,14 +31,15 @@ class KeyRecoveryWatcher {
 
     const reqId = service.txt?.['reqId'];
     if (this.handledIds.has(reqId)) {
+      setTimeout(() => this.scanLan(), 15 * SECOND);
       return;
     }
 
     this.handledIds.add(reqId);
-    openKeyRecoveryProvider({ service });
+    openKeyRecoveryProvider({ service, onClosed: () => setTimeout(() => this.scanLan(), 15 * SECOND) });
   };
 
-  scanLan = () => PairedDevices.hasDevices && Bonjour.scan(KeyManagementService);
+  scanLan = () => Bonjour.scan(KeyManagementService);
 }
 
 export default new KeyRecoveryWatcher();

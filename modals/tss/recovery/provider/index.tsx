@@ -49,7 +49,7 @@ export default observer(({ close, onCritical, service }: Props) => {
     <ModalRootContainer>
       <BackableScrollTitles currentIndex={step} titles={titles} style={{ marginBottom: 12 }} />
       {step === 0 && <Selector onNext={goTo} />}
-      {step === 1 && <Distribution vm={vm!} />}
+      {step === 1 && <Distribution vm={vm!} close={close} />}
     </ModalRootContainer>
   );
 });

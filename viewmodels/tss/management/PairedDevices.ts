@@ -31,7 +31,7 @@ class PairedDevices {
   async init() {
     const count = (await this.refresh()).length;
     if (count === 0) return;
-
+    console.log('paired devs', count);
     this.scanLan();
   }
 

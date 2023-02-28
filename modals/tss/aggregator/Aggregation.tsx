@@ -72,7 +72,7 @@ export default observer(
           ) : (
             <FadeInRightView delay={500}>
               <Text style={{ color: secondaryTextColor, ...styles.txt }}>
-                {`${t('multi-sig-modal-txt-aggregation-received')}: ${Math.max(0, received - 1)}/${threshold - 1}`}
+                {`${t('multi-sig-modal-txt-aggregation-received')}: ${received}/${threshold}`}
               </Text>
             </FadeInRightView>
           )}
