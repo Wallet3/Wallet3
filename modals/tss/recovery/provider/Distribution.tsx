@@ -41,12 +41,18 @@ export default observer(({ vm, close, onCritical }: Props) => {
   const { secondaryTextColor, appColor } = Theme;
 
   const cornerRadius = useOptimizedCornerRadius();
-  const marginHorizontal = useHorizontalPadding();
   const [failedAttempts, setFailedAttempts] = useState(0);
   const [busy, setBusy] = useState(false);
   const { verified, distributed } = vm;
 
   useEffect(() => onCritical?.(busy), [busy]);
+
+  useEffect(() => {
+    if (!distributed) return;
+
+    const timer = setTimeout(close, 3000);
+    return () => clearTimeout(timer);
+  }, [distributed]);
 
   const send = async () => {
     setBusy(true);

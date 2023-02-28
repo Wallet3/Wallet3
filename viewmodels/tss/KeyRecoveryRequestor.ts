@@ -11,8 +11,14 @@ import { btoa } from 'react-native-quick-base64';
 import { genEmojis } from '../../utils/emoji';
 import { randomBytes } from 'crypto';
 import { sha256Sync } from '../../utils/cipher';
+import { sleep } from '../../utils/async';
 
-export class KeyRecoveryRequestor extends TCPServer<{}> {
+type Events = {
+  saving: () => void;
+  saved: () => void;
+};
+
+export class KeyRecoveryRequestor extends TCPServer<Events> {
   private recovery = new KeyRecovery();
 
   readonly avatar = genEmojis(4);
@@ -33,6 +39,10 @@ export class KeyRecoveryRequestor extends TCPServer<{}> {
     return this.pendingClients.length;
   }
 
+  get name() {
+    return `kr-${this.device.globalId}`;
+  }
+
   constructor() {
     super();
 
@@ -43,11 +53,19 @@ export class KeyRecoveryRequestor extends TCPServer<{}> {
       threshold: computed,
       pendingCount: computed,
     });
+
+    this.recovery.once('combined', this.save);
   }
 
-  get name() {
-    return `kr-${this.device.globalId}`;
-  }
+  save = async (mnemonic: string) => {
+    runInAction(() => (this.aggregated = true));
+    this.emit('saving');
+
+    await sleep(100);
+    await this.recovery.save(mnemonic);
+
+    this.emit('saved');
+  };
 
   async start(): Promise<boolean> {
     if (super.listening) return true;
@@ -91,5 +109,7 @@ export class KeyRecoveryRequestor extends TCPServer<{}> {
 
   dispose() {
     super.stop();
+    this.recovery.removeAllListeners();
+    this.removeAllListeners();
   }
 }
