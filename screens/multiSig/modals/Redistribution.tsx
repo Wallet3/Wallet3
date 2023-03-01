@@ -13,6 +13,7 @@ import { ReactiveScreen } from '../../../utils/device';
 import { ShardsAggregator } from '../../../viewmodels/tss/ShardsAggregator';
 import ShardsDistribution from '../../../modals/tss/distributor/ShardsDistribution';
 import { ShardsDistributionMore } from '../../../viewmodels/tss/ShardsDistributionMore';
+import { ShardsRedistributorController } from '../../../viewmodels/tss/ShardsReDistributor';
 import Theme from '../../../viewmodels/settings/Theme';
 import ThresholdSetting from '../../../modals/tss/distributor/ThresholdSetting';
 import i18n from '../../../i18n';
@@ -30,8 +31,7 @@ export default observer(({ wallet, close, onCritical }: Props) => {
   const { t } = i18n;
   const { textColor } = Theme;
   const [current, setCurrent] = useState({ step: 0, isRTL: false });
-  const [aggregator, setAggregator] = useState<ShardsAggregator>();
-  const [distributor, setDistributor] = useState<ShardsDistributionMore>();
+  const [controller] = useState(new ShardsRedistributorController(wallet));
 
   const titles = [
     t('multi-sig-modal-title-preparations'),
@@ -47,59 +47,33 @@ export default observer(({ wallet, close, onCritical }: Props) => {
   };
 
   const goToAggregation = async () => {
-    let vm: ShardsAggregator | undefined;
-
     const auth = async (pin?: string) => {
-      vm = await wallet.requestShardsAggregator({ rootShard: true, bip32Shard: true, autoStart: true }, pin);
+      const vm = await controller.requestAggregator(pin);
+      vm?.once('aggregated', () => goToConnectDevices());
       return vm ? true : false;
     };
 
     if (!(await openGlobalPasspad({ onAutoAuthRequest: auth, onPinEntered: auth, fast: true }))) return;
 
-    setAggregator(vm!);
     goTo(1);
-
-    vm?.once('aggregated', () => {
-      vm?.dispose();
-      setTimeout(() => goToConnectDevices(vm!), 1000);
-    });
   };
 
-  const goToConnectDevices = async (aggregator: ShardsAggregator) => {
+  const goToConnectDevices = async () => {
     goTo(2);
+
     onCritical(true);
     await sleep(500);
-
-    const { rootShares, bip32Shares, rootEntropy } = aggregator!;
-    const vm = new ShardsDistributionMore({
-      bip32Shares: bip32Shares!,
-      rootShares: rootShares!,
-      rootEntropy: Buffer.from(rootEntropy!, 'hex'),
-      wallet,
-      autoStart: true,
-    });
-
-    setDistributor(vm);
+    await controller.requestRedistributor();
     await sleep(100);
     onCritical(false);
+
     goTo(3);
   };
 
-  useEffect(
-    () => () => {
-      aggregator?.dispose();
-    },
-    [aggregator]
-  );
-
-  useEffect(
-    () => () => {
-      distributor?.dispose();
-    },
-    [distributor]
-  );
+  useEffect(() => () => controller?.dispose(), [controller]);
 
   const { step, isRTL } = current;
+  const { aggregator, redistributor } = controller;
 
   return (
     <ModalRootContainer>
@@ -132,8 +106,10 @@ export default observer(({ wallet, close, onCritical }: Props) => {
           </FadeInDownView>
         )}
 
-        {step === 3 && distributor && <ThresholdSetting vm={distributor} onNext={() => goTo(4)} />}
-        {step === 4 && distributor && <ShardsDistribution vm={distributor} close={close} onCritical={onCritical} />}
+        {step === 3 && redistributor && <ConnectDevices vm={redistributor} onNext={() => goTo(4)} />}
+
+        {step === 4 && redistributor && <ThresholdSetting vm={redistributor} onNext={() => goTo(5)} />}
+        {step === 5 && redistributor && <ShardsDistribution vm={redistributor} close={close} onCritical={onCritical} />}
       </View>
     </ModalRootContainer>
   );

@@ -99,6 +99,10 @@ export class ShardsAggregator extends TCPServer<Events> {
     return this.aggregated ? secretjs.combine(this.rootShares!) : undefined;
   }
 
+  get mnemonic() {
+    return this.aggregated ? utils.entropyToMnemonic(this.rootEntropy!) : undefined;
+  }
+
   get bip32XprivKey() {
     return this.aggregated ? Buffer.from(secretjs.combine(this.bip32Shares!), 'hex').toString('utf8') : undefined;
   }

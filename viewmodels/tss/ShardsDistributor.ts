@@ -186,6 +186,7 @@ export class ShardsDistributor extends TCPServer<Events> {
     const bip32Shards: string[] = secretjs.share(bip32XprivKey, this.totalCount, this.threshold);
 
     const key = (await MultiSigKey.findOne({ where: { id: this.id } })) ?? new MultiSigKey();
+
     key.id = this.id;
     key.bip32Xpubkey = xpubkeyFromHDNode(this.bip32);
     key.basePath = this.upgradeInfo?.basePath ?? DEFAULT_DERIVATION_PATH;

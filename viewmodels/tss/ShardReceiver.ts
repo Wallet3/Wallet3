@@ -104,8 +104,10 @@ export class ShardReceiver extends TCPClient {
     try {
       if (!validSignature) return;
 
-      const key = new ShardKey();
-      key.id = `${this.remoteInfo!.globalId}-${data.distributionId}`;
+      const id = `${this.remoteInfo!.globalId}-${data.distributionId}`;
+      const key = (await ShardKey.findOne({ where: { id } })) ?? new ShardKey();
+
+      key.id = id;
       key.distributionId = data.distributionId;
       key.ownerDevice = this.remoteInfo!;
       key.secretsInfo = { ...data.secretsInfo, verifyPubkey };

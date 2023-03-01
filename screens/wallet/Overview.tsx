@@ -188,7 +188,7 @@ export default observer(
             <Text style={{ ...styles.buttonText, color: textColor }}>{t('button-send')}</Text>
           </Ripple>
 
-          <View style={{ width: separatorWidth ?? 1, backgroundColor: separatorColor ?? '#ffffff3a' }}></View>
+          <View style={{ width: separatorWidth ?? 1, backgroundColor: separatorColor ?? '#ffffff3a' }} />
 
           <Ripple
             style={styles.button}
