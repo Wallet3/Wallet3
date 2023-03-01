@@ -4,7 +4,7 @@ import { getDeviceBasicInfo, getDeviceInfo } from '../../common/p2p/Utils';
 
 import Bonjour from '../../common/p2p/Bonjour';
 import { KeyRecovery } from './KeyRecovery';
-import { LanServices } from './management/DistributorDiscovery';
+import { LanServices } from './management/Common';
 import { TCPClient } from '../../common/p2p/TCPClient';
 import { TCPServer } from '../../common/p2p/TCPServer';
 import { btoa } from 'react-native-quick-base64';

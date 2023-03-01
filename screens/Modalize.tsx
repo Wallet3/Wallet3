@@ -19,7 +19,13 @@ import {
 } from './browser/controller/InpageDAppController';
 import { ERC681, ERC681Transferring } from '../viewmodels/transferring/ERC681Transferring';
 import React, { useEffect, useState } from 'react';
-import { ShardProviderUI, ShardReceiverUI, ShardsAggregatorUI, ShardsDistributorUI } from '../modals/tss';
+import {
+  ShardProviderUI,
+  ShardReceiverUI,
+  ShardRedistributionReceiverUI,
+  ShardsAggregatorUI,
+  ShardsDistributorUI,
+} from '../modals/tss';
 
 import { AppVM } from '../viewmodels/core/App';
 import { Authentication } from '../viewmodels/auth/Authentication';
@@ -519,6 +525,7 @@ type ShardsParam = {
   shardProvider?: ShardProvider;
   keyRecoveryRequestor?: KeyRecoveryRequestor;
   keyRecoveryProviderService?: Service;
+  shardRedistributionReceiverService?: Service;
   onClosed?: () => void;
   openAnimationConfig?: IConfigProps;
 };
@@ -575,6 +582,10 @@ export const ShardsModal = observer(() => {
       enqueue({ keyRecoveryProviderService: service, onClosed });
     });
 
+    PubSub.subscribe(MessageKeys.openShardRedistributionReceiver, (_, { service, onClosed }) => {
+      enqueue({ shardRedistributionReceiverService: service, onClosed });
+    });
+
     return () =>
       [
         MessageKeys.openShardsDistribution,
@@ -582,6 +593,7 @@ export const ShardsModal = observer(() => {
         MessageKeys.openShardsAggregator,
         MessageKeys.openShardProvider,
         MessageKeys.openKeyRecoveryRequestor,
+        MessageKeys.openShardRedistributionReceiver,
       ].forEach(PubSub.unsubscribe);
   }, []);
 
@@ -604,6 +616,9 @@ export const ShardsModal = observer(() => {
       {vms?.shardProvider && <ShardProviderUI vm={vms.shardProvider} close={close} />}
       {vms?.keyRecoveryRequestor && <MultiSigKeyRequestor vm={vms.keyRecoveryRequestor} close={close} />}
       {vms?.keyRecoveryProviderService && <MultiSigKeyProvider service={vms.keyRecoveryProviderService} close={close} />}
+      {vms?.shardRedistributionReceiverService && (
+        <ShardRedistributionReceiverUI service={vms.shardRedistributionReceiverService} close={close} />
+      )}
     </ModalizeContainer>
   );
 });

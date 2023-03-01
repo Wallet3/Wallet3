@@ -8,31 +8,10 @@ import { MultiSigWallet } from '../../wallet/MultiSigWallet';
 import PairedDevices from './PairedDevices';
 import { Service } from 'react-native-zeroconf';
 import { atob } from 'react-native-quick-base64';
+import eccrypto from 'eccrypto';
 import { getDeviceBasicInfo } from '../../../common/p2p/Utils';
-
-export const LanServices = {
-  ShardsDistribution: 'shards-distribution',
-  ShardsAggregation: 'shards-aggregation',
-  RequestKeyRecovery: 'key-recovery-request',
-  ShardsRedistribution: 'shards-redistribution',
-};
-
-export function handleRawService(service: Service) {
-  try {
-    service.txt.info = JSON.parse(atob(service.txt.info));
-  } catch (error) {}
-
-  switch (service.txt?.['func']) {
-    case LanServices.ShardsDistribution:
-      return { shardsDistribution: service };
-    case LanServices.ShardsAggregation:
-      return { shardsAggregation: service };
-    case LanServices.RequestKeyRecovery:
-      return { keyRecoveryRequestor: service };
-  }
-
-  return {};
-}
+import { handleRawService } from './Common';
+import { openShardRedistributionReceiver } from '../../../common/Modals';
 
 class DistributorDiscovery extends EventEmitter<{}> {
   shardsDistributors: Service[] = [];
@@ -45,17 +24,48 @@ class DistributorDiscovery extends EventEmitter<{}> {
     Bonjour.on('update', this.onUpdate);
   }
 
-  onUpdate = () => {
+  private onUpdate = () => {
     const all = Object.getOwnPropertyNames(Bonjour.getAllServices() || {});
     runInAction(() => (this.shardsDistributors = this.shardsDistributors.filter((s) => all.find((name) => name === s.name))));
   };
 
-  onResolved = (raw: Service) => {
+  private onResolved = (raw: Service) => {
+    this.handleDistributor(raw);
+    this.handleRedistributor(raw);
+  };
+
+  private handleDistributor = (raw: Service) => {
     const { shardsDistribution: service } = handleRawService(raw);
     if (!service) return;
     if (this.shardsDistributors.find((s) => s.name === service.name)) return;
 
     runInAction(() => this.shardsDistributors.push(service));
+  };
+
+  private handleRedistributor = async (raw: Service) => {
+    const { shardsRedistribution: service } = handleRawService(raw);
+    if (!service) return;
+    if (!service.txt.witness) return;
+
+    const id = service.txt.distributionId;
+    const devices = PairedDevices.devices.filter((d) => d.distributionId === id);
+    const device = devices.find((d) => d.deviceInfo.globalId === service.txt.info.globalId);
+
+    if (!device) return;
+
+    const { now, signature } = service.txt.witness as { now: number; signature: string };
+
+    try {
+      await eccrypto.verify(
+        Buffer.from(device.secretsInfo.verifyPubkey),
+        Buffer.from(`${now}_${device.secretsInfo.version}`, 'utf8'),
+        Buffer.from(signature, 'hex')
+      );
+    } catch (error) {
+      return;
+    }
+
+    openShardRedistributionReceiver({ service });
   };
 
   scan() {

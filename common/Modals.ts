@@ -76,3 +76,7 @@ export function openKeyRecoveryRequestor(args: { vm: KeyRecoveryRequestor; onClo
 export function openKeyRecoveryProvider(args: { service: Service; onClosed?: () => void }) {
   PubSub.publish(MessageKeys.openKeyRecoveryProvider, args);
 }
+
+export function openShardRedistributionReceiver(args: { service: Service; onClosed?: () => void }) {
+  PubSub.publish(MessageKeys.openShardRedistributionReceiver, args);
+}

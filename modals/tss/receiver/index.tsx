@@ -45,8 +45,8 @@ export default observer(({ close, onCritical }: { close: () => void; onCritical:
   return (
     <ModalRootContainer>
       <ScrollTitles
-        currentIndex={step}
         data={titles}
+        currentIndex={step}
         style={{ flexGrow: 0, height: 32, marginBottom: 12, marginTop: screenRadius ? 4 : 0 }}
       />
 

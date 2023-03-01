@@ -1,22 +1,29 @@
+import { IShardsDistributorConstruction, ShardsDistributor } from './ShardsDistributor';
 import { computed, makeObservable, observable, runInAction } from 'mobx';
+import { getDeviceBasicInfo, getDeviceInfo } from '../../common/p2p/Utils';
 
 import Bonjour from '../../common/p2p/Bonjour';
 import EventEmitter from 'eventemitter3';
 import { KeyManagementService } from './Constants';
-import { LanServices } from './management/DistributorDiscovery';
+import { LanServices } from './management/Common';
 import { MultiSigWallet } from '../wallet/MultiSigWallet';
 import { ShardSender } from './ShardSender';
 import { ShardsAggregator } from './ShardsAggregator';
-import { ShardsDistributor } from './ShardsDistributor';
 import { TCPClient } from '../../common/p2p/TCPClient';
 import { btoa } from 'react-native-quick-base64';
 import eccrypto from 'eccrypto';
-import { getDeviceBasicInfo } from '../../common/p2p/Utils';
 import { randomBytes } from 'crypto';
 
 class ShardsRedistributor extends ShardsDistributor {
+  readonly wallet: MultiSigWallet;
+
   get name() {
     return `resd-${this.device.globalId.substring(0, 12)}-${this.id}`;
+  }
+
+  constructor(args: IShardsDistributorConstruction & { wallet: MultiSigWallet }) {
+    super(args);
+    this.wallet = args.wallet;
   }
 
   async start(_?: boolean): Promise<boolean> {
@@ -24,7 +31,10 @@ class ShardsRedistributor extends ShardsDistributor {
 
     const now = Date.now();
     const signature = (
-      await eccrypto.sign(Buffer.from(this.protector.privateKey.substring(2), 'hex'), Buffer.from(`${now}_`, 'utf8'))
+      await eccrypto.sign(
+        Buffer.from(this.protector.privateKey.substring(2), 'hex'),
+        Buffer.from(`${now}_${this.wallet.secretsInfo.version}`, 'utf8')
+      )
     ).toString('hex');
 
     Bonjour.publishService(KeyManagementService, this.name, this.port!, {
@@ -32,16 +42,12 @@ class ShardsRedistributor extends ShardsDistributor {
       func: LanServices.ShardsRedistribution,
       reqId: randomBytes(8).toString('hex'),
       distributionId: this.id,
-      info: btoa(JSON.stringify(getDeviceBasicInfo())),
+      info: btoa(JSON.stringify(getDeviceInfo())),
       protocol: 1,
       witness: { now, signature },
     });
 
     return succeed;
-  }
-
-  setApprovedClients(clients: TCPClient[]) {
-    runInAction(() => (this.approvedClients = clients.map((c) => new ShardSender({ socket: c, distributionId: this.id }))));
   }
 }
 
@@ -72,8 +78,12 @@ export class ShardsRedistributorController extends EventEmitter {
   async requestRedistributor() {
     if (!this.aggregator) return;
 
-    const vm = new ShardsRedistributor({ mnemonic: this.aggregator.mnemonic!, ...this.wallet.keyInfo });
-    vm.setApprovedClients(this.aggregator.clients);
+    const vm = new ShardsRedistributor({
+      mnemonic: this.aggregator.mnemonic!,
+      ...this.wallet.keyInfo,
+      autoStart: true,
+      wallet: this.wallet,
+    });
 
     await runInAction(async () => (this.redistributor = vm));
   }

@@ -4,7 +4,7 @@ import eccrypto, { Ecies } from 'eccrypto';
 import { getDeviceBasicInfo, getDeviceInfo } from '../../common/p2p/Utils';
 
 import Bonjour from '../../common/p2p/Bonjour';
-import { LanServices } from './management/DistributorDiscovery';
+import { LanServices } from './management/Common';
 import { MultiSigWallet } from '../wallet/MultiSigWallet';
 import { TCPClient } from '../../common/p2p/TCPClient';
 import { TCPServer } from '../../common/p2p/TCPServer';

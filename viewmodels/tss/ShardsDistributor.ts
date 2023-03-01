@@ -8,7 +8,7 @@ import { DEFAULT_DERIVATION_PATH } from '../../common/Constants';
 import { HDNode } from 'ethers/lib/utils';
 import { KeyManagementService } from './Constants';
 import LINQ from 'linq';
-import { LanServices } from './management/DistributorDiscovery';
+import { LanServices } from './management/Common';
 import MessageKeys from '../../common/MessageKeys';
 import MultiSigKey from '../../models/entities/MultiSigKey';
 import { ShardSender } from './ShardSender';

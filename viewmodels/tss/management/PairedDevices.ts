@@ -9,7 +9,7 @@ import { SECOND } from '../../../utils/time';
 import { Service } from 'react-native-zeroconf';
 import ShardKey from '../../../models/entities/ShardKey';
 import { ShardProvider } from '../ShardProvider';
-import { handleRawService } from './DistributorDiscovery';
+import { handleRawService } from './Common';
 import { openShardProvider } from '../../../common/Modals';
 import { sha256Sync } from '../../../utils/cipher';
 

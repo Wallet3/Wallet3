@@ -1,20 +1,9 @@
-import { computed, makeObservable, observable, runInAction } from 'mobx';
-import { openKeyRecoveryProvider, openShardProvider } from '../../../common/Modals';
-
-import App from '../../core/App';
 import Bonjour from '../../../common/p2p/Bonjour';
-import { ClientInfo } from '../../../common/p2p/Constants';
-import Database from '../../../models/Database';
 import { KeyManagementService } from '../Constants';
-import { KeyRecoveryProvider } from '../KeyRecoveryProvider';
-import { PairedDevice } from './PairedDevice';
-import PairedDevices from './PairedDevices';
 import { SECOND } from '../../../utils/time';
 import { Service } from 'react-native-zeroconf';
-import ShardKey from '../../../models/entities/ShardKey';
-import { ShardProvider } from '../ShardProvider';
-import { handleRawService } from './DistributorDiscovery';
-import { sha256Sync } from '../../../utils/cipher';
+import { handleRawService } from './Common';
+import { openKeyRecoveryProvider } from '../../../common/Modals';
 
 class KeyRecoveryWatcher {
   private handledIds = new Set<string>();
@@ -24,8 +13,6 @@ class KeyRecoveryWatcher {
   }
 
   private handleService = (raw: Service) => {
-    if (!App.hasWalletSet) return;
-
     const { keyRecoveryRequestor: service } = handleRawService(raw);
     if (!service) return;
 

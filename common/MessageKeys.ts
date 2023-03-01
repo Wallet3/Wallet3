@@ -15,6 +15,7 @@ export default {
   openGlobalQRScanner: 'openGlobalQRScanner',
   openShardsDistribution: 'openShardsDistribution',
   openShardReceiver: 'openShardReceiver',
+  openShardRedistributionReceiver: 'openShardRedistributionReceiver',
   openShardsAggregator: 'openShardsAggregator',
   openShardProvider: 'openShardProvider',
   openKeyRecoveryRequestor: 'openKeyRecoveryRequestor',
