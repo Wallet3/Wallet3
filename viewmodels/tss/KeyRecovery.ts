@@ -35,6 +35,7 @@ export type PlainSecretItem = {
 
 type Events = {
   combined: (mnemonic: string) => void;
+  combineError: (error: Error) => void;
 };
 
 export class KeyRecovery extends EventEmitter<Events> {
@@ -85,6 +86,7 @@ export class KeyRecovery extends EventEmitter<Events> {
 
       this.emit('combined', mnemonic);
     } catch (error) {
+      this.emit('combineError', error as Error);
       console.error(error);
     }
   }

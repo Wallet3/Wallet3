@@ -82,7 +82,7 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
           await sleep(500);
         }
 
-        console.log('new client', socket.remoteIP, client.greeted);
+        __DEV__ && console.log('new client', socket.remoteIP, client.greeted);
         this.newClient(client);
       } else {
         socket.destroy();

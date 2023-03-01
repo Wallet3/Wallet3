@@ -162,7 +162,7 @@ export async function eth_call_return(
       });
 
       if (resp.error) {
-        console.log(resp.error, url, args);
+        __DEV__ && console.log(resp.error, url, args);
 
         if (fast) {
           return resp;
@@ -175,7 +175,7 @@ export async function eth_call_return(
 
       return resp;
     } catch (error) {
-      console.error(error, url);
+      __DEV__ && console.error(error, url);
       markRPCFailed(chainId, url);
     }
   }

@@ -83,26 +83,25 @@ export class ShardSender {
       'hex'
     );
 
-    const enRootShard = await eccrypto.encrypt(this.oneTimePubkey, Buffer.from(rootShard, 'utf8'));
-    const enBip32Shard = await eccrypto.encrypt(this.oneTimePubkey, Buffer.from(bip32Shard, 'utf8'));
+    const [enRootShard, enBip32Shard] = await Promise.all(
+      [rootShard, bip32Shard].map(async (secret) => {
+        const cipher = await eccrypto.encrypt(this.oneTimePubkey, Buffer.from(secret, 'utf8'));
+        return {
+          iv: cipher.iv.toString('hex'),
+          ciphertext: cipher.ciphertext.toString('hex'),
+          ephemPublicKey: cipher.ephemPublicKey.toString('hex'),
+          mac: cipher.mac.toString('hex'),
+        };
+      })
+    );
 
     const data: ShardDistribution = {
       type: ContentType.shardDistribution,
       verifyPubkey,
       distributionId: this.distributionId,
       secrets: {
-        rootShard: {
-          iv: enRootShard.iv.toString('hex'),
-          ciphertext: enRootShard.ciphertext.toString('hex'),
-          ephemPublicKey: enRootShard.ephemPublicKey.toString('hex'),
-          mac: enRootShard.mac.toString('hex'),
-        },
-        bip32Shard: {
-          iv: enBip32Shard.iv.toString('hex'),
-          ciphertext: enBip32Shard.ciphertext.toString('hex'),
-          ephemPublicKey: enBip32Shard.ephemPublicKey.toString('hex'),
-          mac: enBip32Shard.mac.toString('hex'),
-        },
+        rootShard: enRootShard,
+        bip32Shard: enBip32Shard,
         rootSignature,
         bip32Signature,
       },

@@ -227,7 +227,7 @@ export class WalletConnect_v2 extends EventEmitter {
       this.store.hostname = Linking.parse(url).hostname!;
     }
 
-    console.log('save', this.origin);
+    __DEV__ && console.log('save', this.origin);
     this.store.save();
 
     this.emit('sessionApproved', this);

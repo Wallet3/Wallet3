@@ -1,5 +1,6 @@
 import { FadeInDownView, FadeInRightView } from '../../../components/animations';
 import React, { useEffect } from 'react';
+import { secureColor, warningColor } from '../../../constants/styles';
 
 import Animated from 'react-native-reanimated';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
@@ -10,7 +11,6 @@ import { StyleSheet } from 'react-native';
 import Theme from '../../../viewmodels/settings/Theme';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
-import { secureColor } from '../../../constants/styles';
 import { startLayoutAnimation } from '../../../utils/animations';
 import { useHorizontalPadding } from '../components/Utils';
 
@@ -22,6 +22,7 @@ interface Props {
     received: number;
     threshold: number;
     aggregated: boolean;
+    lastError: any;
   };
 
   buttonTitle: string;
@@ -48,7 +49,7 @@ export default observer(
     const { secondaryTextColor, appColor } = Theme;
 
     const marginHorizontal = useHorizontalPadding() + 2;
-    const { device, received, threshold, aggregated } = vm;
+    const { device, received, threshold, aggregated, lastError } = vm;
 
     useEffect(() => {
       received === 1 && startLayoutAnimation();
@@ -71,9 +72,13 @@ export default observer(
             </FadeInDownView>
           ) : (
             <FadeInRightView delay={500}>
-              <Text style={{ color: secondaryTextColor, ...styles.txt }}>
-                {`${t('multi-sig-modal-txt-aggregation-received')}: ${received}/${threshold}`}
-              </Text>
+              {lastError ? (
+                <Text style={{ color: warningColor, ...styles.txt }}>{`${t('multi-sig-modal-txt-aggregation-error')}`}</Text>
+              ) : (
+                <Text style={{ color: secondaryTextColor, ...styles.txt }}>
+                  {`${t('multi-sig-modal-txt-aggregation-received')}: ${received}/${threshold}`}
+                </Text>
+              )}
             </FadeInRightView>
           )}
         </View>

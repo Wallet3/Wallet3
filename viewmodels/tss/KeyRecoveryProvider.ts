@@ -64,7 +64,7 @@ export class KeyRecoveryProvider extends TCPClient {
       runInAction(() => (this.distributed = true));
       return true;
     } catch (error) {
-      console.log(error);
+      __DEV__ && console.log(error);
     }
 
     return false;

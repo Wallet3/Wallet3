@@ -351,6 +351,8 @@
   "multi-sig-modal-txt-aggregation-request-type-bip32": "Signing Key",
   "multi-sig-modal-txt-aggregation-received": "Received",
   "multi-sig-modal-txt-aggregation-done": "Successfully Confirmed",
+  "multi-sig-modal-txt-aggregation-error": "An error occurred. The keys may not match.",
+  
   "multi-sig-modal-msg-threshold-too-high": "If any of your devices get damaged or lost, your wallet will be unrecoverable, it is recommended to add at least one more device.",
   "multi-sig-modal-msg-pairing-code-not-match": "The pairing code does not match, please try again in a secure environment.",
   "multi-sig-modal-msg-network-lost": "The network connection with other devices has been disconnected, please check your network and try again.",
@@ -384,6 +386,7 @@
   "msg-connected": "Connected",
   "msg-disconnected": "Disconnected",
   "msg-database-error": "Database error occurred, unable to continue.",
+  "msg-error-occurs": "Error occurs",
   "msg-data-loading": "Loading data",
 
   "misc-show-full-address": "Show full address",

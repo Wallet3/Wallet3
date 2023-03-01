@@ -89,7 +89,7 @@ export async function getText(ens: string, field: string, resolver?: string) {
 
     return getText(ens, field, resolverAddress);
   } catch (error) {
-    console.log(error);
+    __DEV__ && console.log(error);
   }
 }
 

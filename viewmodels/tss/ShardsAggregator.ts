@@ -48,6 +48,7 @@ export class ShardsAggregator extends TCPServer<Events> {
   received = 0;
   aggregated = false;
   secretCached = false;
+  lastError: Error | null = null;
 
   constructor(args: IConstruction) {
     super();
@@ -62,6 +63,7 @@ export class ShardsAggregator extends TCPServer<Events> {
       received: observable,
       aggregated: observable,
       secretCached: observable,
+      lastError: observable,
       setSecretsCached: action,
     });
 
@@ -189,6 +191,7 @@ export class ShardsAggregator extends TCPServer<Events> {
       this.setSecretsCached(this.secretCached);
       Bonjour.unpublishService(this.name);
     } catch (error) {
+      runInAction(() => (this.lastError = error as Error));
       console.error('aggregated error:', error);
     }
   }

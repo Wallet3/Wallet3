@@ -37,8 +37,6 @@ export default observer(({ vm }: { vm: KeyRecoveryRequestor }) => {
     );
   };
 
-  console.log('pending recovery:', pendingCount);
-
   return (
     <FadeInDownView style={{ flex: 1 }}>
       <Aggregation vm={vm} buttonTitle={t('button-cancel')} buttonDisabled hideButton />

@@ -1,7 +1,6 @@
 import Networks from '../core/Networks';
 import { Platform } from 'react-native';
 import { SendTxRequest } from '../wallet/WalletBase';
-import { SupportedWCSchemes } from '../hubs/LinkHub';
 import Transaction from '../../models/entities/Transaction';
 import analytics from '@react-native-firebase/analytics';
 import { getReadableVersion } from 'react-native-device-info';
@@ -100,7 +99,7 @@ export function logQRScanned(data: string) {
     type = `.${c[c.length - 1]}`;
   } else if (data.startsWith('http')) {
     type = 'url';
-  } else if (data.startsWith('wc:') || SupportedWCSchemes.find((s) => data.startsWith(s))) {
+  } else if (data.startsWith('wc:')) {
     type = data.includes('@2') ? 'wc_v2' : 'wc_v1';
   }
 

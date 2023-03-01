@@ -59,7 +59,7 @@ export default observer(
       try {
         setSiwe(new ParsedMessage(msg, metadata?.origin!));
       } catch (error) {
-        console.log(error);
+        __DEV__ && console.log(error);
       }
     }, [msg]);
 

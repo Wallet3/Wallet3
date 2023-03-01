@@ -20,11 +20,11 @@ type Events = {
 
 export class KeyRecoveryRequestor extends TCPServer<Events> {
   private recovery = new KeyRecovery();
-
   readonly device = getDeviceInfo();
-  pendingClients: TCPClient[] = [];
 
+  pendingClients: TCPClient[] = [];
   aggregated = false;
+  lastError: Error | null = null;
 
   get received() {
     return this.recovery.count;
@@ -39,7 +39,7 @@ export class KeyRecoveryRequestor extends TCPServer<Events> {
   }
 
   get name() {
-    return `kr-${this.device.globalId}`;
+    return `kr-${this.device.globalId.substring(0, 12)}`;
   }
 
   constructor() {
@@ -51,9 +51,11 @@ export class KeyRecoveryRequestor extends TCPServer<Events> {
       received: computed,
       threshold: computed,
       pendingCount: computed,
+      lastError: observable,
     });
 
     this.recovery.once('combined', this.save);
+    this.recovery.once('combineError', (e) => runInAction(() => (this.lastError = e)));
   }
 
   save = async (mnemonic: string) => {
@@ -108,7 +110,7 @@ export class KeyRecoveryRequestor extends TCPServer<Events> {
     await c.secureWriteString(JSON.stringify(oneTimeEx));
 
     const secret: RecoveryKeyAck = JSON.parse((await c.secureReadString())!);
-    
+
     const [bip32, root] = await Promise.all(
       [secret.bip32, secret.root].map(async (ecies) => {
         const plain = await eccrypto.decrypt(oneTimeKey, {

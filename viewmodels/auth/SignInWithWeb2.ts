@@ -120,7 +120,7 @@ export abstract class SignInWithWeb2 {
       await SecureStore.setItemAsync(Keys.recovery(this.mini_uid), key);
       return true;
     } catch (error) {
-      console.log(error);
+      __DEV__ && console.log(error);
     }
 
     return false;
