@@ -1,13 +1,45 @@
 import { computed, makeObservable, observable, runInAction } from 'mobx';
 
+import Bonjour from '../../common/p2p/Bonjour';
 import EventEmitter from 'eventemitter3';
+import { KeyManagementService } from './Constants';
+import { LanServices } from './management/DistributorDiscovery';
 import { MultiSigWallet } from '../wallet/MultiSigWallet';
 import { ShardSender } from './ShardSender';
 import { ShardsAggregator } from './ShardsAggregator';
 import { ShardsDistributor } from './ShardsDistributor';
 import { TCPClient } from '../../common/p2p/TCPClient';
+import { btoa } from 'react-native-quick-base64';
+import eccrypto from 'eccrypto';
+import { getDeviceBasicInfo } from '../../common/p2p/Utils';
+import { randomBytes } from 'crypto';
 
 class ShardsRedistributor extends ShardsDistributor {
+  get name() {
+    return `resd-${this.device.globalId.substring(0, 12)}-${this.id}`;
+  }
+
+  async start(_?: boolean): Promise<boolean> {
+    const succeed = await super.start(false);
+
+    const now = Date.now();
+    const signature = (
+      await eccrypto.sign(Buffer.from(this.protector.privateKey.substring(2), 'hex'), Buffer.from(`${now}_`, 'utf8'))
+    ).toString('hex');
+
+    Bonjour.publishService(KeyManagementService, this.name, this.port!, {
+      role: 'primary',
+      func: LanServices.ShardsRedistribution,
+      reqId: randomBytes(8).toString('hex'),
+      distributionId: this.id,
+      info: btoa(JSON.stringify(getDeviceBasicInfo())),
+      protocol: 1,
+      witness: { now, signature },
+    });
+
+    return succeed;
+  }
+
   setApprovedClients(clients: TCPClient[]) {
     runInAction(() => (this.approvedClients = clients.map((c) => new ShardSender({ socket: c, distributionId: this.id }))));
   }

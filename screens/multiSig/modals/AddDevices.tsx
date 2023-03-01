@@ -35,7 +35,7 @@ export default observer(({ wallet, close, onCritical }: Props) => {
   const [distributor, setDistributor] = useState<ShardsDistributionMore>();
 
   const titles = [
-    t('multi-sig-modal-title-preparations'),
+    t('button-add-devices'),
     t('multi-sig-modal-title-waiting-aggregation'),
     t('msg-data-loading'),
     t('multi-sig-modal-title-connect-devices'),

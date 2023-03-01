@@ -100,7 +100,7 @@ export class ShardsAggregator extends TCPServer<Events> {
   }
 
   get mnemonic() {
-    return this.aggregated ? utils.entropyToMnemonic(this.rootEntropy!) : undefined;
+    return this.aggregated ? utils.entropyToMnemonic(Buffer.from(this.rootEntropy!, 'hex')) : undefined;
   }
 
   get bip32XprivKey() {

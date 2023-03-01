@@ -14,6 +14,7 @@ export const LanServices = {
   ShardsDistribution: 'shards-distribution',
   ShardsAggregation: 'shards-aggregation',
   RequestKeyRecovery: 'key-recovery-request',
+  ShardsRedistribution: 'shards-redistribution',
 };
 
 export function handleRawService(service: Service) {

@@ -10,6 +10,7 @@ export enum ContentType {
   pairingCodeVerified,
   oneTimeKeyExchange,
   recoveryKeyAck,
+  shardRedistribution,
 }
 
 type EncryptedShard = { iv: string; ephemPublicKey: string; ciphertext: string; mac: string };
@@ -33,6 +34,10 @@ export type ShardDistribution = {
   verifyPubkey: string;
   distributionId: string;
 };
+
+export interface ShardRedistribution extends ShardDistribution {
+  oldVersion: string;
+}
 
 export type ShardDistributionAck = {
   type: ContentType.shardDistributionAck;

@@ -38,6 +38,7 @@ export default observer(({ wallet, close, onCritical }: Props) => {
     t('multi-sig-modal-title-waiting-aggregation'),
     t('msg-data-loading'),
     t('multi-sig-modal-title-connect-devices'),
+    t('multi-sig-modal-title-set-threshold'),
     t('multi-sig-modal-title-key-distribution'),
   ];
 
@@ -79,8 +80,8 @@ export default observer(({ wallet, close, onCritical }: Props) => {
     <ModalRootContainer>
       <BackableScrollTitles
         titles={titles}
-        // backDisabled={vm.status !== ShardsDistributionStatus.ready || step <= 1}
-        // showBack={vm.status === ShardsDistributionStatus.ready && step > 1}
+        // backDisabled={step === 3}
+        showBack={step > 3}
         currentIndex={step}
         iconColor={textColor}
         onBackPress={() => goTo(step - 1, true)}
@@ -106,9 +107,8 @@ export default observer(({ wallet, close, onCritical }: Props) => {
           </FadeInDownView>
         )}
 
-        {step === 3 && redistributor && <ConnectDevices vm={redistributor} onNext={() => goTo(4)} />}
-
-        {step === 4 && redistributor && <ThresholdSetting vm={redistributor} onNext={() => goTo(5)} />}
+        {step === 3 && redistributor && <ConnectDevices vm={redistributor} onNext={() => goTo(4)} isRTL={isRTL} />}
+        {step === 4 && redistributor && <ThresholdSetting vm={redistributor} onNext={() => goTo(5)} isRTL={isRTL} />}
         {step === 5 && redistributor && <ShardsDistribution vm={redistributor} close={close} onCritical={onCritical} />}
       </View>
     </ModalRootContainer>

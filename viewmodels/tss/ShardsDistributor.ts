@@ -47,7 +47,6 @@ export class ShardsDistributor extends TCPServer<Events> {
   protected root: HDNode;
   protected protector: HDNode;
   protected bip32: HDNode;
-  protected serviceStarted = false;
   protected upgradeInfo?: { basePath: string; basePathIndex: number };
 
   readonly id: string;
@@ -123,21 +122,22 @@ export class ShardsDistributor extends TCPServer<Events> {
     return this.totalCount >= this.threshold && this.approvedCount >= 1;
   }
 
-  async start() {
+  async start(publishService = true) {
+    if (super.listening) return true;
+
     const result = await super.start();
     if (!result) return false;
-    if (this.serviceStarted) return true;
 
-    Bonjour.publishService(KeyManagementService, this.name, this.port!, {
-      role: 'primary',
-      func: LanServices.ShardsDistribution,
-      reqId: randomBytes(8).toString('hex'),
-      distributionId: this.id,
-      info: btoa(JSON.stringify(getDeviceBasicInfo())),
-      protocol: 1,
-    });
+    publishService &&
+      Bonjour.publishService(KeyManagementService, this.name, this.port!, {
+        role: 'primary',
+        func: LanServices.ShardsDistribution,
+        reqId: randomBytes(8).toString('hex'),
+        distributionId: this.id,
+        info: btoa(JSON.stringify(getDeviceBasicInfo())),
+        protocol: 1,
+      });
 
-    this.serviceStarted = true;
     return true;
   }
 
@@ -260,7 +260,7 @@ export class ShardsDistributor extends TCPServer<Events> {
 
   dispose() {
     Bonjour.unpublishService(this.name);
-    this.serviceStarted = false;
+
     this.approvedClients.forEach((c) => c.destroy());
     this.pendingClients.forEach((c) => c.destroy());
     super.stop();
