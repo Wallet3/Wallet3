@@ -111,9 +111,10 @@ export default observer(
 
 const styles = StyleSheet.create({
   txt: {
-    marginTop: -12,
+    marginTop: -8,
     fontSize: 14,
     textAlign: 'center',
     fontWeight: '500',
+    marginHorizontal: 24,
   },
 });

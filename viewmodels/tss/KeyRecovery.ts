@@ -1,5 +1,5 @@
 import Validator, { SyncCheckFunction } from 'fastest-validator';
-import { action, computed, makeObservable, observable } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
 import Authentication from '../auth/Authentication';
 import { ClientInfo } from '../../common/p2p/Constants';
@@ -71,7 +71,7 @@ export class KeyRecovery extends EventEmitter<Events> {
       return false;
     }
 
-    this.shards.push(item);
+    runInAction(() => this.shards.push(item));
 
     if (this.count >= this.threshold) this.combine();
 
