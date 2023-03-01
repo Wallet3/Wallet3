@@ -22,7 +22,7 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
 
     super();
     this.server = new Server(this.handleClient);
-    this.server.on('error', console.warn);
+    this.server.once('error', () => this.stop());
   }
 
   get port() {
@@ -64,6 +64,7 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
 
     return new Promise<void>((resolve) => {
       this.server.close((err) => {
+        __DEV__ && err && console.error(`tcp server close err: ${err.name} ${err.message} ${err.cause}`);
         resolve();
         this.server.removeAllListeners();
       });

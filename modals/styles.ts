@@ -56,7 +56,7 @@ export default StyleSheet.create({
   reviewItemsContainer: {
     borderWidth: 1,
     borderColor: Theme.borderColor,
-    borderRadius: 10,
+    borderRadius: 12,
     marginTop: 10,
   },
 

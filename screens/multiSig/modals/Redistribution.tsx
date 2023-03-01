@@ -50,20 +50,22 @@ export default observer(({ wallet, close, onCritical }: Props) => {
     let vm: ShardsAggregator | undefined;
 
     const auth = async (pin?: string) => {
-      vm = await wallet.requestShardsAggregator({ rootShard: true, bip32Shard: true }, pin);
+      vm = await wallet.requestShardsAggregator({ rootShard: true, bip32Shard: true, autoStart: true }, pin);
       return vm ? true : false;
     };
 
     if (!(await openGlobalPasspad({ onAutoAuthRequest: auth, onPinEntered: auth, fast: true }))) return;
 
     setAggregator(vm!);
-    vm!.start();
-    vm?.once('aggregated', () => setTimeout(() => current.step === 1 && goTo(2), 5000));
-
     goTo(1);
+
+    vm?.once('aggregated', () => {
+      vm?.dispose();
+      setTimeout(() => goToConnectDevices(vm!), 1000);
+    });
   };
 
-  const goToConnectDevices = async () => {
+  const goToConnectDevices = async (aggregator: ShardsAggregator) => {
     goTo(2);
     onCritical(true);
     await sleep(500);
@@ -112,15 +114,14 @@ export default observer(({ wallet, close, onCritical }: Props) => {
       />
 
       <View style={{ flex: 1, width: ReactiveScreen.width - ModalMarginScreen * 2, marginHorizontal: -16 }}>
-        {step === 0 && <Explanation onNext={goToAggregation} />}
+        {step === 0 && <Explanation onNext={() => goToAggregation()} />}
 
         {step === 1 && aggregator && (
           <Aggregation
             vm={aggregator}
             onSecretCacheSelected={aggregator.setSecretsCached}
             buttonTitle={t('button-next')}
-            buttonDisabled={!aggregator?.aggregated}
-            onButtonPress={goToConnectDevices}
+            hideButton
           />
         )}
 

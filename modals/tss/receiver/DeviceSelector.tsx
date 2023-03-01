@@ -31,6 +31,7 @@ const Item = ({
   selectedService?: Service;
   onPress: (item: Service) => void;
 }) => {
+  const { t } = i18n;
   const marginHorizontal = useHorizontalPadding();
   const [paired] = useState(PairedDevices.findDistributor(item.name) ? true : false);
 
@@ -55,7 +56,9 @@ const Item = ({
               marginTop: 4,
             }}
           >
-            <Text style={{ color: '#fff', textTransform: 'uppercase', fontWeight: '600', fontSize: 10 }}>Paired</Text>
+            <Text style={{ color: '#fff', textTransform: 'uppercase', fontWeight: '600', fontSize: 10 }}>
+              {t('multi-sig-modal-txt-paired')}
+            </Text>
           </View>
         )}
 

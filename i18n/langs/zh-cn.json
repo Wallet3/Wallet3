@@ -337,6 +337,7 @@
   "multi-sig-modal-txt-data-distribution-completed": "分发完成",
   "multi-sig-modal-txt-last-used-time": "上次使用",
   "multi-sig-modal-txt-created-time": "配对于",
+  "multi-sig-modal-txt-paired": "已配对",
   "multi-sig-modal-txt-threshold": "多签阈值",
   "multi-sig-modal-txt-device-name": "设备名",
   "multi-sig-modal-txt-device-model": "设备型号",

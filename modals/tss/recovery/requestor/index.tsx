@@ -59,7 +59,7 @@ export default observer(({ close, onCritical, vm }: Props) => {
   }, []);
 
   return (
-    <ModalRootContainer>
+    <ModalRootContainer disableHorizontal>
       <BackableScrollTitles currentIndex={step} titles={titles} />
 
       <View style={{ flex: 1, width: ReactiveScreen.width - 12, marginHorizontal: -16 }}>

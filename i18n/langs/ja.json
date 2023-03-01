@@ -338,6 +338,7 @@
   "multi-sig-modal-txt-data-distribution-completed": "配布完了",
   "multi-sig-modal-txt-last-used-time": "前回使用",
   "multi-sig-modal-txt-created-time": "作成時間",
+  "multi-sig-modal-txt-paired": "ペアリング済み",
   "multi-sig-modal-txt-threshold": "マルチシグ閾値",
   "multi-sig-modal-txt-device-name": "私のデバイス",
   "multi-sig-modal-txt-device-model": "モデル",

@@ -15,6 +15,7 @@ import ModalizeContainer from '../../modals/core/ModalizeContainer';
 import { MultiSigKeyDeviceInfo } from '../../models/entities/MultiSigKey';
 import { MultiSigWallet } from '../../viewmodels/wallet/MultiSigWallet';
 import { Portal } from 'react-native-portalize';
+import Redistribution from './modals/Redistribution';
 import { ShardsAggregator } from '../../viewmodels/tss/ShardsAggregator';
 import Theme from '../../viewmodels/settings/Theme';
 import TrustedDevice from './modals/TrustedDevice';
@@ -39,7 +40,9 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
   const [selectedDevice, setSelectedDevice] = useState<MultiSigKeyDeviceInfo>();
   const { ref: trustedDevicesModal, close: closeTrustedDeviceModal, open: openTrustedDeviceModal } = useModalize();
   const { ref: addDevicesModal, close: closeAddDevices, open: openAddDevices } = useModalize();
+  const { ref: redistributionModal, close: closeRedistribution, open: openRedistribution } = useModalize();
   const [addDevicesCritical, setAddDevicesCritical] = useState(false);
+  const [redistributionCritical, setRedistributionCritical] = useState(false);
   const [_, setForceUpdate] = useState<any>();
 
   const aggregateShards = async () => {
@@ -87,7 +90,7 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
             </Text>
           </View>
 
-          <TouchableOpacity style={styles.itemContainer}>
+          <TouchableOpacity style={styles.itemContainer} onPress={() => openRedistribution()}>
             <View style={styles.titleContainer}>
               <Text style={{ color: textColor, ...styles.btnTxt }}>{t('multi-sig-screen-title-confirmation-threshold')}</Text>
               <Text style={{ color: wallet.thresholdTooHigh ? warningColor : verifiedColor, ...styles.btnTxt }}>
@@ -171,6 +174,10 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
 
         <ModalizeContainer ref={addDevicesModal} closeOnOverlayTap={!addDevicesCritical} withHandle={false}>
           <AddDevices wallet={wallet} close={closeAddDevices} onCritical={setAddDevicesCritical} />
+        </ModalizeContainer>
+
+        <ModalizeContainer ref={redistributionModal} closeOnOverlayTap={!redistributionCritical} withHandle={false}>
+          <Redistribution wallet={wallet} close={closeRedistribution} onCritical={setRedistributionCritical} />
         </ModalizeContainer>
       </Portal>
     </SafeViewContainer>
