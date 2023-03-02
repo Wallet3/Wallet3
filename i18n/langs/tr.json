@@ -355,6 +355,8 @@
   "multi-sig-modal-txt-aggregation-received": "Alınan miktar",
   "multi-sig-modal-txt-aggregation-done": "Başarılı Onay",
   "multi-sig-modal-txt-aggregation-error": "Bir hata oluştu. Anahtarlar eşleşmeyebilir.",
+  "multi-sig-modal-txt-aggregation-at-least": "Devam etmek için en az {{n}} güvenilir cihaza bağlanmanız gerekiyor.",
+  
   "multi-sig-modal-msg-threshold-too-high": "Dikkat: eğer cihazlarınızdan herhangi biri zarar görür veya kaybolan durumda cüzdanınız kurtarılamayacaktır. En az bir cihaz daha eklemeniz önerilir.",
   "multi-sig-modal-msg-pairing-code-not-match": "Eşleşme kodu eşleşmiyor, lütfen güvenli bir ortamda tekrar deneyin.",
   "multi-sig-modal-msg-network-lost": "Diğer cihazlarla olan ağ bağlantısı kesildi, lütfen ağınızı kontrol edin ve yeniden deneyin.",

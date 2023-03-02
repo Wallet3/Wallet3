@@ -8,6 +8,7 @@ import { KeyManagementService } from './Constants';
 import { LanServices } from './management/Common';
 import MultiSigKey from '../../models/entities/MultiSigKey';
 import { MultiSigWallet } from '../wallet/MultiSigWallet';
+import PairedDevices from './management/PairedDevices';
 import { ShardSender } from './ShardSender';
 import { ShardsAggregator } from './ShardsAggregator';
 import { TCPClient } from '../../common/p2p/TCPClient';
@@ -71,7 +72,11 @@ class ShardsRedistributor extends ShardsDistributor {
 
   async distributeSecret(): Promise<MultiSigKey | undefined> {
     const key = await super.distributeSecret();
-    key && this.wallet.setKey(key);
+    if (!key) return undefined;
+
+    this.wallet.setKey(key);
+    PairedDevices.refresh();
+
     return key;
   }
 }
@@ -92,16 +97,17 @@ export class ShardsRedistributionController extends EventEmitter {
   async requestAggregator(pin?: string) {
     this.aggregator?.dispose();
 
-    const aggregator = await this.wallet.requestShardsAggregator({ bip32Shard: false, rootShard: true, autoStart: true }, pin);
+    const vm = await this.wallet.requestShardsAggregator({ bip32Shard: false, rootShard: true, autoStart: true }, pin);
 
-    aggregator?.once('aggregated', () => {});
+    vm?.once('aggregated', () => {});
 
-    runInAction(() => (this.aggregator = aggregator));
-    return aggregator;
+    runInAction(() => (this.aggregator = vm));
+    return vm;
   }
 
   async requestRedistributor() {
     if (!this.aggregator) return;
+    this.redistributor?.dispose();
 
     const vm = new ShardsRedistributor({
       mnemonic: this.aggregator.mnemonic!,
@@ -111,6 +117,7 @@ export class ShardsRedistributionController extends EventEmitter {
     });
 
     await runInAction(async () => (this.redistributor = vm));
+    return vm;
   }
 
   dispose() {

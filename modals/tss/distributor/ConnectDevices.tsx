@@ -11,6 +11,7 @@ import { Passpad } from '../../views';
 import { ShardSender } from '../../../viewmodels/tss/ShardSender';
 import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
 import Theme from '../../../viewmodels/settings/Theme';
+import TinyInfo from '../../components/TinyInfo';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useHorizontalPadding } from '../components/Utils';
@@ -25,7 +26,7 @@ export default observer(({ vm, onNext, isRTL }: { isRTL?: boolean; vm: ShardsDis
 
   const { t } = i18n;
   const { secondaryTextColor, backgroundColor } = Theme;
-  const { pendingClients, approvedClients, pendingCount, approvedCount, distributable } = vm;
+  const { pendingClients, approvedClients, pendingCount, approvedCount, distributable, threshold } = vm;
 
   const verifyClient = async (code: string) => {
     if (!verifying) return false;
@@ -120,6 +121,15 @@ export default observer(({ vm, onNext, isRTL }: { isRTL?: boolean; vm: ShardsDis
             {t('multi-sig-modal-connect-tip')}
           </Text>
         </View>
+      )}
+
+      {approvedCount >= 1 && !distributable && (
+        <TinyInfo
+          style={{ flexDirection: 'row', marginHorizontal, marginBottom: 8 }}
+          color={secondaryTextColor}
+          icon="information-circle"
+          message={t('multi-sig-modal-txt-aggregation-at-least', { n: threshold - 1 })}
+        />
       )}
 
       <Button title={t('button-next')} disabled={!distributable} onPress={onNext} />

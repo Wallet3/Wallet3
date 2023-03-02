@@ -48,7 +48,12 @@ export default observer(({ wallet, close, onCritical }: Props) => {
   const goToAggregation = async () => {
     const auth = async (pin?: string) => {
       const vm = await controller.requestAggregator(pin);
-      vm?.once('aggregated', () => goToConnectDevices());
+
+      vm?.once('aggregated', () => {
+        vm.dispose();
+        goToConnectDevices();
+      });
+
       return vm ? true : false;
     };
 

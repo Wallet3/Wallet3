@@ -45,7 +45,7 @@ export default observer(({ vm, close }: Props) => {
         />
 
         <View style={{ flex: 1, marginStart: 64, flexDirection: 'column' }}>
-          {received === 0 ? (
+          {received <= 1 ? (
             <FadeInDownView delay={500}>
               <Text numberOfLines={1} style={{ color: secureColor, ...styles.txt }}>
                 {t('multi-sig-modal-msg-open-wallet3')}
@@ -58,7 +58,10 @@ export default observer(({ vm, close }: Props) => {
           ) : (
             <FadeInRightView delay={300}>
               <Text style={{ color: secondaryTextColor, ...styles.txt }}>
-                {`${t('multi-sig-modal-txt-aggregation-received')}: ${Math.max(0, received - 1)}/${threshold - 1}`}
+                {`${t('multi-sig-modal-txt-aggregation-received')}: ${Math.max(0, received - 1)}/${Math.max(
+                  0,
+                  threshold - 1
+                )}`}
               </Text>
             </FadeInRightView>
           )}

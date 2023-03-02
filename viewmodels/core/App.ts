@@ -3,6 +3,7 @@ import { action, computed, makeObservable, observable, reaction, runInAction } f
 import { providers, utils } from 'ethers';
 
 import { Account } from '../account/Account';
+import { AppState } from 'react-native';
 import AppStoreReview from '../services/AppStoreReview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Authentication from '../auth/Authentication';
@@ -86,6 +87,11 @@ export class AppVM {
         UI.gasIndicator && GasPrice.refresh();
       }
     );
+
+    AppState.addEventListener('change', (state) => {
+      if (state !== 'active') return;
+      Authentication.appAuthorized && KeyRecoveryDiscovery.scanLan();
+    });
   }
 
   async init() {
@@ -117,6 +123,7 @@ export class AppVM {
       PairedDevices.init().then(() => KeyRecoveryDiscovery.scanLan());
 
       Authentication.on('appAuthorized', () => setTimeout(() => PairedDevices.scanLan(), 2000));
+
       // KeySecurity.init();
       // tipWalletUpgrade(this.currentWallet);
     });

@@ -57,6 +57,7 @@ export class ShardsAggregator extends TCPServer<Events> {
     initRootShard && this.rootShards.add(initRootShard);
     initBip32Shard && this.bip32Shards.add(initBip32Shard);
     this.secretCached = wallet.secretsCached;
+    this.received = this.rootShards.size || this.bip32Shards.size;
 
     makeObservable(this, {
       clients: observable,
@@ -84,7 +85,7 @@ export class ShardsAggregator extends TCPServer<Events> {
   }
 
   get threshold() {
-    return this.conf.threshold - 1;
+    return this.conf.threshold;
   }
 
   get rootShares() {
@@ -161,7 +162,7 @@ export class ShardsAggregator extends TCPServer<Events> {
         rootShard && this.rootShards.add(rootShard);
         bip32Shard && this.bip32Shards.add(bip32Shard);
 
-        runInAction(() => (this.received = Math.max(0, (this.rootShards.size || this.bip32Shards.size) - 1)));
+        runInAction(() => (this.received = Math.max(0, this.rootShards.size || this.bip32Shards.size)));
         this.combineShards();
       }
 
@@ -171,9 +172,7 @@ export class ShardsAggregator extends TCPServer<Events> {
 
   private async combineShards() {
     if (this.aggregated) return;
-    if (this.rootShards.size < this.threshold && this.bip32Shards.size < this.threshold) {
-      return;
-    }
+    if (this.rootShards.size < this.threshold && this.bip32Shards.size < this.threshold) return;
 
     try {
       const [rootSecret, bip32Secret] = [this.rootShards, this.bip32Shards].map((shards) =>

@@ -60,7 +60,7 @@ export default observer(
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginBottom: enableCacheOption ? 32 : 24 }}>
           <DeviceRipple deviceId={device.device} os={device.rn_os} />
 
-          {received === 0 ? (
+          {received <= 1 ? (
             <FadeInDownView delay={500}>
               <Text style={{ color: secondaryTextColor, ...styles.txt, marginHorizontal }}>
                 {t('multi-sig-modal-msg-open-wallet3')}
@@ -76,7 +76,10 @@ export default observer(
                 <Text style={{ color: warningColor, ...styles.txt }}>{`${t('multi-sig-modal-txt-aggregation-error')}`}</Text>
               ) : (
                 <Text style={{ color: secondaryTextColor, ...styles.txt }}>
-                  {`${t('multi-sig-modal-txt-aggregation-received')}: ${received}/${threshold}`}
+                  {`${t('multi-sig-modal-txt-aggregation-received')}: ${Math.max(0, received - 1)}/${Math.max(
+                    0,
+                    threshold - 1
+                  )}`}
                 </Text>
               )}
             </FadeInRightView>

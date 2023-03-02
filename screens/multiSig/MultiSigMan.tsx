@@ -45,21 +45,6 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
   const [redistributionCritical, setRedistributionCritical] = useState(false);
   const [_, setForceUpdate] = useState<any>();
 
-  const aggregateShards = async () => {
-    let vm: ShardsAggregator | undefined;
-
-    const auth = async (pin?: string) => {
-      vm = await wallet.requestShardsAggregator({ rootShard: true, autoStart: true }, pin);
-      return vm ? true : false;
-    };
-
-    if (!(await openGlobalPasspad({ onAutoAuthRequest: auth, onPinEntered: auth, fast: true }))) return;
-
-    await sleep(200);
-
-    openShardsAggregator({ vm: vm! });
-  };
-
   useEffect(() => {
     if (!wallet) return;
     setSecurityLevel(KeySecurity.check(wallet.key));
@@ -111,7 +96,7 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
                 style={styles.itemContainer}
                 onPress={() => {
                   wallet.setSecretsCache();
-                  setForceUpdate(false);
+                  setForceUpdate(Date.now());
                 }}
               >
                 <View style={styles.titleContainer}>
@@ -176,7 +161,12 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
           <AddDevices wallet={wallet} close={closeAddDevices} onCritical={setAddDevicesCritical} />
         </ModalizeContainer>
 
-        <ModalizeContainer ref={redistributionModal} closeOnOverlayTap={!redistributionCritical} withHandle={false}>
+        <ModalizeContainer
+          ref={redistributionModal}
+          closeOnOverlayTap={!redistributionCritical}
+          withHandle={false}
+          onClosed={() => setForceUpdate(Date.now())}
+        >
           <Redistribution wallet={wallet} close={closeRedistribution} onCritical={setRedistributionCritical} />
         </ModalizeContainer>
       </Portal>

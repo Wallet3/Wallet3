@@ -68,7 +68,7 @@ class PairedDevices {
   scanLan = () => this.hasDevices && Bonjour.scan(KeyManagementService);
 
   async refresh() {
-    const keys = await Database.shardKeys!.find();
+    const keys = await Database.shardKeys.find();
     runInAction(() => (this.devices = keys.map((key) => new PairedDevice(key))));
     return keys;
   }
