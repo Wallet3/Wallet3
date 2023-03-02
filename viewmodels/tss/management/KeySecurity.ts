@@ -5,6 +5,7 @@ import { DAY } from '../../../utils/time';
 import Database from '../../../models/Database';
 import MultiSigKey from '../../../models/entities/MultiSigKey';
 import { MultiSigWallet } from '../../wallet/MultiSigWallet';
+import { openDeviceExpiredTip } from '../../../common/Modals';
 
 export enum SecurityLevel {
   high = 'high',
@@ -21,8 +22,10 @@ class KeySecurity {
         if (!currentWallet?.isMultiSig) return;
 
         const expired = Date.now() - 30 * DAY;
-        const count = (currentWallet as MultiSigWallet).key.secretsInfo.devices.filter((i) => i.lastUsedAt < expired).length;
-        if (count === 0) return;
+        const expiredDevices = (currentWallet as MultiSigWallet).key.secretsInfo.devices.filter((i) => i.lastUsedAt < expired);
+        if (expiredDevices.length === 0) return;
+
+        openDeviceExpiredTip({ devices: expiredDevices });
       }
     );
   }
@@ -31,7 +34,7 @@ class KeySecurity {
     const expired = Date.now() - 30 * DAY;
     const notUsedDevices = (key.secretsInfo.devices || []).filter((v) => v.lastUsedAt < expired);
     const thresholdRate = key.secretsInfo.threshold / (key.secretsInfo.devices.length + 1);
-    
+
     let score = 0;
 
     score += notUsedDevices.length === 0 ? 5 : 0;

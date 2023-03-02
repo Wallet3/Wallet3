@@ -1,6 +1,7 @@
 import { IShardsDistributorConstruction, ShardsDistributor } from '../viewmodels/tss/ShardsDistributor';
 
 import Authentication from '../viewmodels/auth/Authentication';
+import { ClientInfo } from './p2p/Constants';
 import { KeyRecoveryProvider } from '../viewmodels/tss/KeyRecoveryProvider';
 import { KeyRecoveryRequestor } from '../viewmodels/tss/KeyRecoveryRequestor';
 import MessageKeys from './MessageKeys';
@@ -80,4 +81,8 @@ export function openKeyRecoveryProvider(args: { service: Service; onClosed?: () 
 
 export function openShardRedistributionReceiver(args: { device: PairedDevice; service: Service; onClosed?: () => void }) {
   PubSub.publish(MessageKeys.openShardRedistributionReceiver, args);
+}
+
+export function openDeviceExpiredTip(args: { devices: ClientInfo[] }) {
+  PubSub.publish(MessageKeys.openDeviceExpiredTip, args);
 }

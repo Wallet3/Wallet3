@@ -29,7 +29,6 @@ import {
 
 import { AppVM } from '../viewmodels/core/App';
 import { Authentication } from '../viewmodels/auth/Authentication';
-import BackupSecretTip from '../modals/misc/UpgradeWalletTip';
 import { FullPasspad } from '../modals/views/Passpad';
 import GlobalPasspad from '../modals/global/GlobalPasspad';
 import { IConfigProps } from 'react-native-modalize/lib/options';
@@ -57,6 +56,7 @@ import { ShardsDistributor } from '../viewmodels/tss/ShardsDistributor';
 import SquircleModalize from '../modals/core/SquircleModalize';
 import Theme from '../viewmodels/settings/Theme';
 import { TokenTransferring } from '../viewmodels/transferring/TokenTransferring';
+import UpgradeWalletTip from '../modals/misc/UpgradeWalletTip';
 import { WCCallRequestRequest } from '../models/entities/WCSession_v1';
 import { WalletConnect_v1 } from '../viewmodels/walletconnect/WalletConnect_v1';
 import { WalletConnect_v2 } from '../viewmodels/walletconnect/WalletConnect_v2';
@@ -463,9 +463,13 @@ const SendFundsModal = () => {
 
 const BackupTipsModal = () => {
   const { ref, open, close } = useModalize();
+  const [context, setContext] = useState<{ upgrade?: boolean }>({});
 
   useEffect(() => {
-    PubSub.subscribe(MessageKeys.openUpgradeWalletTip, () => open());
+    PubSub.subscribe(MessageKeys.openUpgradeWalletTip, () => {
+      setContext({ upgrade: true });
+      open();
+    });
 
     return () => {
       PubSub.unsubscribe(MessageKeys.openUpgradeWalletTip);
@@ -474,7 +478,7 @@ const BackupTipsModal = () => {
 
   return (
     <ModalizeContainer ref={ref} withHandle={false} panGestureEnabled={false} panGestureComponentEnabled={false}>
-      <BackupSecretTip onDone={close} />
+      <UpgradeWalletTip onDone={close} />
     </ModalizeContainer>
   );
 };
@@ -543,7 +547,7 @@ export const ShardsModal = observer(() => {
 
     if (vms) return;
     setVMs(queue.shift()!);
-    open();
+    setImmediate(() => open());
   };
 
   const dequeue = () => {
@@ -553,10 +557,8 @@ export const ShardsModal = observer(() => {
     const next = queue.shift();
     if (!next) return;
 
-    setTimeout(() => {
-      setVMs(next);
-      open();
-    }, 0);
+    setVMs(next);
+    setImmediate(() => open());
   };
 
   useEffect(() => {
@@ -682,7 +684,7 @@ export const GlobalPasspadModal = () => {
   useEffect(() => {
     PubSub.subscribe(MessageKeys.openGlobalPasspad, (_, data) => {
       setReq(data);
-      open();
+      setImmediate(() => open());
     });
 
     return () => {
