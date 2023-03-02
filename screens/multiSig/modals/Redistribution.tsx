@@ -10,10 +10,8 @@ import { ModalMarginScreen } from '../../../modals/styles';
 import ModalRootContainer from '../../../modals/core/ModalRootContainer';
 import { MultiSigWallet } from '../../../viewmodels/wallet/MultiSigWallet';
 import { ReactiveScreen } from '../../../utils/device';
-import { ShardsAggregator } from '../../../viewmodels/tss/ShardsAggregator';
 import ShardsDistribution from '../../../modals/tss/distributor/ShardsDistribution';
-import { ShardsDistributionMore } from '../../../viewmodels/tss/ShardsDistributionMore';
-import { ShardsRedistributorController } from '../../../viewmodels/tss/ShardsReDistributor';
+import { ShardsRedistributionController } from '../../../viewmodels/tss/ShardsRedistributionController';
 import Theme from '../../../viewmodels/settings/Theme';
 import ThresholdSetting from '../../../modals/tss/distributor/ThresholdSetting';
 import i18n from '../../../i18n';
@@ -31,7 +29,7 @@ export default observer(({ wallet, close, onCritical }: Props) => {
   const { t } = i18n;
   const { textColor } = Theme;
   const [current, setCurrent] = useState({ step: 0, isRTL: false });
-  const [controller] = useState(new ShardsRedistributorController(wallet));
+  const [controller] = useState(new ShardsRedistributionController(wallet));
 
   const titles = [
     t('multi-sig-modal-title-preparations'),
@@ -109,7 +107,9 @@ export default observer(({ wallet, close, onCritical }: Props) => {
 
         {step === 3 && redistributor && <ConnectDevices vm={redistributor} onNext={() => goTo(4)} isRTL={isRTL} />}
         {step === 4 && redistributor && <ThresholdSetting vm={redistributor} onNext={() => goTo(5)} isRTL={isRTL} />}
-        {step === 5 && redistributor && <ShardsDistribution vm={redistributor} close={close} onCritical={onCritical} />}
+        {step === 5 && redistributor && (
+          <ShardsDistribution includeSelf vm={redistributor} close={close} onCritical={onCritical} />
+        )}
       </View>
     </ModalRootContainer>
   );

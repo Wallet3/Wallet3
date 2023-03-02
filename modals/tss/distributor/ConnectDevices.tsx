@@ -18,13 +18,14 @@ import { useHorizontalPadding } from '../components/Utils';
 const { View, Text } = Animated;
 
 export default observer(({ vm, onNext, isRTL }: { isRTL?: boolean; vm: ShardsDistributor; onNext: () => void }) => {
-  const { t } = i18n;
-  const { secondaryTextColor, backgroundColor } = Theme;
-  const { pendingClients, approvedClients, pendingCount, approvedCount } = vm;
   const marginHorizontal = useHorizontalPadding();
-  const [verifying, setVerifying] = useState<{ client: ShardSender; attempts: number }>();
   const safeBottom = useOptimizedSafeBottom();
   const cornerRadius = useOptimizedCornerRadius();
+  const [verifying, setVerifying] = useState<{ client: ShardSender; attempts: number }>();
+
+  const { t } = i18n;
+  const { secondaryTextColor, backgroundColor } = Theme;
+  const { pendingClients, approvedClients, pendingCount, approvedCount, distributable } = vm;
 
   const verifyClient = async (code: string) => {
     if (!verifying) return false;
@@ -121,7 +122,7 @@ export default observer(({ vm, onNext, isRTL }: { isRTL?: boolean; vm: ShardsDis
         </View>
       )}
 
-      <Button title={t('button-next')} disabled={approvedCount === 0} onPress={onNext} />
+      <Button title={t('button-next')} disabled={!distributable} onPress={onNext} />
 
       {verifying && (
         <View

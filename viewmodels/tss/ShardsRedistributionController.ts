@@ -6,6 +6,7 @@ import Bonjour from '../../common/p2p/Bonjour';
 import EventEmitter from 'eventemitter3';
 import { KeyManagementService } from './Constants';
 import { LanServices } from './management/Common';
+import MultiSigKey from '../../models/entities/MultiSigKey';
 import { MultiSigWallet } from '../wallet/MultiSigWallet';
 import { ShardSender } from './ShardSender';
 import { ShardsAggregator } from './ShardsAggregator';
@@ -21,13 +22,31 @@ class ShardsRedistributor extends ShardsDistributor {
     return `resd-${this.device.globalId.substring(0, 12)}-${this.id}`;
   }
 
+  get trustedCount() {
+    return (
+      this.approvedClients.filter((c) => this.wallet.secretsInfo.devices.find((sc) => sc.globalId === c.remoteInfo?.globalId))
+        .length + 1
+    );
+  }
+
+  get distributable() {
+    if (this.wallet.secretsInfo.threshold > this.wallet.secretsInfo.devices.length / 2) {
+      return this.trustedCount >= this.wallet.secretsInfo.threshold;
+    }
+
+    return this.trustedCount >= this.wallet.secretsInfo.devices.length - this.wallet.secretsInfo.threshold;
+  }
+
   constructor(args: IShardsDistributorConstruction & { wallet: MultiSigWallet }) {
     super(args);
     this.wallet = args.wallet;
+
+    makeObservable(this, { trustedCount: computed });
   }
 
   async start(_?: boolean): Promise<boolean> {
     const succeed = await super.start(false);
+    if (!succeed) return false;
 
     const now = Date.now();
     const signature = (
@@ -44,14 +63,20 @@ class ShardsRedistributor extends ShardsDistributor {
       distributionId: this.id,
       info: btoa(JSON.stringify(getDeviceInfo())),
       protocol: 1,
-      witness: { now, signature },
+      witness: JSON.stringify({ now, signature }),
     });
 
     return succeed;
   }
+
+  async distributeSecret(): Promise<MultiSigKey | undefined> {
+    const key = await super.distributeSecret();
+    key && this.wallet.setKey(key);
+    return key;
+  }
 }
 
-export class ShardsRedistributorController extends EventEmitter {
+export class ShardsRedistributionController extends EventEmitter {
   private wallet: MultiSigWallet;
 
   aggregator?: ShardsAggregator | null = null;

@@ -48,6 +48,7 @@ import ModalizeContainer from '../modals/core/ModalizeContainer';
 import MultiSigKeyProvider from '../modals/tss/recovery/provider';
 import MultiSigKeyRequestor from '../modals/tss/recovery/requestor';
 import Networks from '../viewmodels/core/Networks';
+import { PairedDevice } from '../viewmodels/tss/management/PairedDevice';
 import { ReactiveScreen } from '../utils/device';
 import { Service } from 'react-native-zeroconf';
 import { ShardProvider } from '../viewmodels/tss/ShardProvider';
@@ -526,6 +527,7 @@ type ShardsParam = {
   keyRecoveryRequestor?: KeyRecoveryRequestor;
   keyRecoveryProviderService?: Service;
   shardRedistributionReceiverService?: Service;
+  pairedDevice?: PairedDevice;
   onClosed?: () => void;
   openAnimationConfig?: IConfigProps;
 };
@@ -582,8 +584,8 @@ export const ShardsModal = observer(() => {
       enqueue({ keyRecoveryProviderService: service, onClosed });
     });
 
-    PubSub.subscribe(MessageKeys.openShardRedistributionReceiver, (_, { service, onClosed }) => {
-      enqueue({ shardRedistributionReceiverService: service, onClosed });
+    PubSub.subscribe(MessageKeys.openShardRedistributionReceiver, (_, { service, onClosed, device }) => {
+      enqueue({ shardRedistributionReceiverService: service, onClosed, pairedDevice: device });
     });
 
     return () =>
@@ -617,7 +619,12 @@ export const ShardsModal = observer(() => {
       {vms?.keyRecoveryRequestor && <MultiSigKeyRequestor vm={vms.keyRecoveryRequestor} close={close} />}
       {vms?.keyRecoveryProviderService && <MultiSigKeyProvider service={vms.keyRecoveryProviderService} close={close} />}
       {vms?.shardRedistributionReceiverService && (
-        <ShardRedistributionReceiverUI service={vms.shardRedistributionReceiverService} close={close} />
+        <ShardRedistributionReceiverUI
+          close={close}
+          device={vms.pairedDevice!}
+          onCritical={setIsCritical}
+          service={vms.shardRedistributionReceiverService}
+        />
       )}
     </ModalizeContainer>
   );

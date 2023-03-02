@@ -315,6 +315,8 @@
   "multi-sig-modal-title-remove-device": "デバイスの削除",
   "multi-sig-modal-title-waiting-aggregation": "デバイスの応答",
   "multi-sig-modal-title-wallet-recovery": "ウォレットの復元",
+  "multi-sig-modal-title-redistribute-keys": "秘密鍵の再配布",
+  
   "multi-sig-modal-welcome-1": "まず、同じ Wi-Fi ネットワークに接続してください",
   "multi-sig-modal-welcome-2": "「メニュー」 - 「マルチシグウォレット」に進んでください",
   "multi-sig-modal-welcome-3": "「ペアリング開始」をタップし、ネットワークのアクセスを許可してください",

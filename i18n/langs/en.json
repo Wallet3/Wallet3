@@ -319,6 +319,8 @@
   "multi-sig-modal-title-remove-device": "Remove device",
   "multi-sig-modal-title-waiting-aggregation": "Waiting for Approvals",
   "multi-sig-modal-title-wallet-recovery": "Wallet Recovery",
+  "multi-sig-modal-title-redistribute-keys": "Redistribute Keys",
+  
   "multi-sig-modal-welcome-1": "Connect devices to the same Wi-Fi network",
   "multi-sig-modal-welcome-2": "Go to [Menu] - [MultiSig Wallet]",
   "multi-sig-modal-welcome-3": "Tap [Start Pairing] and approve Wallet 3 to access the local network",

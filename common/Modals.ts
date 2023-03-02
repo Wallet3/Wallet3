@@ -4,6 +4,7 @@ import Authentication from '../viewmodels/auth/Authentication';
 import { KeyRecoveryProvider } from '../viewmodels/tss/KeyRecoveryProvider';
 import { KeyRecoveryRequestor } from '../viewmodels/tss/KeyRecoveryRequestor';
 import MessageKeys from './MessageKeys';
+import { PairedDevice } from '../viewmodels/tss/management/PairedDevice';
 import { Service } from 'react-native-zeroconf';
 import { ShardProvider } from '../viewmodels/tss/ShardProvider';
 import { ShardsAggregator } from '../viewmodels/tss/ShardsAggregator';
@@ -77,6 +78,6 @@ export function openKeyRecoveryProvider(args: { service: Service; onClosed?: () 
   PubSub.publish(MessageKeys.openKeyRecoveryProvider, args);
 }
 
-export function openShardRedistributionReceiver(args: { service: Service; onClosed?: () => void }) {
+export function openShardRedistributionReceiver(args: { device: PairedDevice; service: Service; onClosed?: () => void }) {
   PubSub.publish(MessageKeys.openShardRedistributionReceiver, args);
 }

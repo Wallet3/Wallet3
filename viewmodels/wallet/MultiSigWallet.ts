@@ -1,5 +1,5 @@
 import MultiSigKey, { MultiSigKeyDeviceInfo } from '../../models/entities/MultiSigKey';
-import { computed, makeObservable, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
 import Authentication from '../auth/Authentication';
 import { ShardsAggregator } from '../tss/ShardsAggregator';
@@ -10,12 +10,12 @@ import { sleep } from '../../utils/async';
 import { utils } from 'ethers';
 
 export class MultiSigWallet extends WalletBase {
-  private _key: MultiSigKey;
+  private _key!: MultiSigKey;
 
   readonly isHDWallet = true;
   readonly isMultiSig = true;
 
-  trustedDevices: MultiSigKeyDeviceInfo[];
+  trustedDevices!: MultiSigKeyDeviceInfo[];
 
   get key() {
     return this._key;
@@ -24,10 +24,8 @@ export class MultiSigWallet extends WalletBase {
   constructor(key: MultiSigKey) {
     super();
 
-    this._key = key;
-    this.trustedDevices = Array.from(key.secretsInfo.devices);
-
-    makeObservable(this, { trustedDevices: observable, trustedDeviceCount: computed });
+    this.setKey(key);
+    makeObservable(this, { trustedDevices: observable, trustedDeviceCount: computed, setKey: action });
   }
 
   get threshold() {
@@ -60,6 +58,11 @@ export class MultiSigWallet extends WalletBase {
 
   get maxDistributableCount() {
     return 250;
+  }
+
+  setKey(key: MultiSigKey) {
+    this._key = key;
+    this.trustedDevices = Array.from(key.secretsInfo.devices);
   }
 
   async setSecretsCache(plain?: { rootEntropy?: string; bip32XprvKey?: string }) {
@@ -95,9 +98,7 @@ export class MultiSigWallet extends WalletBase {
   }
 
   async getSecret(pin?: string): Promise<string | undefined> {
-    try {
-      return await Authentication.decrypt(this.key.secrets.rootShard, pin);
-    } catch (error) {}
+    return undefined;
   }
 
   dispose(): void {}

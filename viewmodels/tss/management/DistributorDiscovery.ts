@@ -31,41 +31,18 @@ class DistributorDiscovery extends EventEmitter<{}> {
 
   private onResolved = (raw: Service) => {
     this.handleDistributor(raw);
-    this.handleRedistributor(raw);
   };
 
   private handleDistributor = (raw: Service) => {
-    const { shardsDistribution: service } = handleRawService(raw);
-    if (!service) return;
-    if (this.shardsDistributors.find((s) => s.name === service.name)) return;
+    const { shardsDistribution, shardsRedistribution } = handleRawService(raw);
 
-    runInAction(() => this.shardsDistributors.push(service));
-  };
+    shardsDistribution &&
+      !this.shardsDistributors.find((s) => s.name === shardsDistribution.name) &&
+      runInAction(() => this.shardsDistributors.push(shardsDistribution));
 
-  private handleRedistributor = async (raw: Service) => {
-    const { shardsRedistribution: service } = handleRawService(raw);
-    if (!service) return;
-    if (!service.txt.witness) return;
-
-    const id = service.txt.distributionId;
-    const devices = PairedDevices.devices.filter((d) => d.distributionId === id);
-    const device = devices.find((d) => d.deviceInfo.globalId === service.txt.info.globalId);
-
-    if (!device) return;
-
-    const { now, signature } = service.txt.witness as { now: number; signature: string };
-
-    try {
-      await eccrypto.verify(
-        Buffer.from(device.secretsInfo.verifyPubkey),
-        Buffer.from(`${now}_${device.secretsInfo.version}`, 'utf8'),
-        Buffer.from(signature, 'hex')
-      );
-    } catch (error) {
-      return;
-    }
-
-    openShardRedistributionReceiver({ service });
+    shardsRedistribution &&
+      !this.shardsDistributors.find((s) => s.name === shardsRedistribution.name) &&
+      runInAction(() => this.shardsDistributors.push(shardsRedistribution));
   };
 
   scan() {

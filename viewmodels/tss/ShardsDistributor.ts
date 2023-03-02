@@ -74,6 +74,7 @@ export class ShardsDistributor extends TCPServer<Events> {
       pendingCount: computed,
       totalCount: computed,
       clientsOK: computed,
+      distributable: computed,
 
       approveClient: action,
       rejectClient: action,
@@ -120,6 +121,10 @@ export class ShardsDistributor extends TCPServer<Events> {
 
   get clientsOK() {
     return this.totalCount >= this.threshold && this.approvedCount >= 1;
+  }
+
+  get distributable() {
+    return this.approvedCount >= 1;
   }
 
   async start(publishService = true) {
