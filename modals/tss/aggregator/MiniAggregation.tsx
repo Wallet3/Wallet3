@@ -1,6 +1,7 @@
 import { FadeInDownView, FadeInRightView, FadeInUpView } from '../../../components/animations';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
+import { secureColor, verifiedColor } from '../../../constants/styles';
 
 import Animated from 'react-native-reanimated';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
@@ -12,7 +13,6 @@ import SquircleViewContainer from '../../../components/SquircleViewContainer';
 import Theme from '../../../viewmodels/settings/Theme';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
-import { secureColor } from '../../../constants/styles';
 import { startLayoutAnimation } from '../../../utils/animations';
 
 const { View, Text } = Animated;
@@ -57,7 +57,7 @@ export default observer(({ vm, close }: Props) => {
             </FadeInRightView>
           ) : (
             <FadeInRightView delay={300}>
-              <Text style={{ color: secondaryTextColor, ...styles.txt }}>
+              <Text style={{ color: verifiedColor, ...styles.txt }}>
                 {`${t('multi-sig-modal-txt-aggregation-received')}: ${Math.max(0, received - 1)}/${Math.max(
                   0,
                   threshold - 1

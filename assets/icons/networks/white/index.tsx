@@ -4,6 +4,7 @@ import Arbitrum from './arbitrum.svg';
 import Aurora from './aurora.svg';
 import Avalanche from './avalanche.svg';
 import BSC from './bnb.svg';
+import Base from './base.svg';
 import Boba from './boba.svg';
 import Canto from './canto.svg';
 import Celo from './celo.svg';
@@ -17,6 +18,7 @@ import Findora from './findora.svg';
 import Fuse from './fuse.svg';
 import Harmony from './harmony-one.svg';
 import Heco from './heco.svg';
+import JapanOpenChain from './japanopenchain.svg';
 import Kava from './kava.svg';
 import Klaytn from './klaytn.svg';
 import Metis from './metis.svg';
@@ -62,6 +64,8 @@ export default {
   2222: <Kava width={40} height={30} style={styles.kava} />,
   42170: <Nova width={45} height={45} style={styles.nova} />,
   7700: <Canto width={45} height={45} style={styles.canto} />,
+  84531: <Base width={45} height={45} style={styles.canto} />,
+  99999: <JapanOpenChain width={45} height={45} style={styles.canto} />,
 };
 
 export const EVMIcon = ({
@@ -158,6 +162,10 @@ export function generateNetworkIcon(props: {
       return <Evmos key={chainId} width={width} height={height ?? width} style={style} />;
     case 2222:
       return <Kava key={chainId} width={width} height={height ?? width} style={style} />;
+    case 84531:
+      return <Base key={chainId} width={width} height={height ?? width} style={style} />;
+    case 99999:
+      return <JapanOpenChain key={chainId} width={width} height={height ?? width} style={style} />;
     default:
       return coins[symbol?.toLowerCase() || ''] ? (
         <Coin symbol={symbol} size={height ?? width} address="" chainId={chainId} style={style as any} />

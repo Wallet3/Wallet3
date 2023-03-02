@@ -11,8 +11,8 @@ export default () => {
         loop={false}
         source={require('../../assets/animations/check-verde.json')}
         style={{
-          width: 270,
-          height: 270,
+          width: 290,
+          height: 290,
           justifyContent: 'center',
           alignItems: 'center',
         }}
