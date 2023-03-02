@@ -424,7 +424,7 @@ const TxReview = observer(
               {generateNetworkIcon({ ...network, width: 15, style: { marginEnd: 6 } })}
 
               <Text style={{ ...reviewItemValueStyle, color: network?.color }} numberOfLines={1}>
-                {network?.network?.split(' ')?.[0]}
+                {network?.network}
               </Text>
 
               {vm.loading ? <ActivityIndicator size="small" style={{ marginStart: 5 }} /> : undefined}

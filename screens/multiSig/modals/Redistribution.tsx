@@ -32,7 +32,7 @@ export default observer(({ wallet, close, onCritical }: Props) => {
   const [controller] = useState(new ShardsRedistributionController(wallet));
 
   const titles = [
-    t('multi-sig-modal-title-preparations'),
+    t('multi-sig-modal-title-redistribute-keys'),
     t('multi-sig-modal-title-waiting-aggregation'),
     t('msg-data-loading'),
     t('multi-sig-modal-title-connect-devices'),

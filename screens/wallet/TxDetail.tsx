@@ -31,7 +31,7 @@ export default observer(({ tx, close }: { tx?: Transaction; close?: Function }) 
   };
 
   return (
-    <View style={{ padding: 16, paddingTop: 16, paddingBottom: 32 }}>
+    <View style={{ padding: 16, paddingTop: 20, paddingBottom: 32 }}>
       <View style={styles.itemContainer}>
         <Text style={styles.txt}>{t('modal-tx-details-network')}:</Text>
         <View style={{ flexDirection: 'row', alignItems: 'center', width: '50%', justifyContent: 'flex-end' }}>
