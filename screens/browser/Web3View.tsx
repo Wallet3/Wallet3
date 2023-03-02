@@ -234,7 +234,7 @@ export default observer((props: Web3ViewProps) => {
 
   return (
     <Animated.View style={{ flex: 1, position: 'relative' }} exiting={exitingTransition}>
-      <ViewShot ref={viewShotRef} style={{ flex: 1 }} options={{ result: 'data-uri', quality: 0.1, format: 'jpg' }}>
+      <ViewShot ref={viewShotRef} style={{ flex: 1 }} options={{ result: 'tmpfile', quality: 0.1, format: 'jpg' }}>
         <WebView
           {...props}
           ref={webViewRef}
