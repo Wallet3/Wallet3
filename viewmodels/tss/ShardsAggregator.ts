@@ -195,7 +195,7 @@ export class ShardsAggregator extends TCPServer<Events> {
       Bonjour.unpublishService(this.name);
     } catch (error) {
       runInAction(() => (this.lastError = error as Error));
-      console.error('aggregated error:', error);
+      __DEV__ && console.error('aggregated error:', error);
     }
   }
 

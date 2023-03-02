@@ -87,7 +87,7 @@ export class KeyRecovery extends EventEmitter<Events> {
       this.emit('combined', mnemonic);
     } catch (error) {
       this.emit('combineError', error as Error);
-      console.error(error);
+      __DEV__ && console.error(error);
     }
   }
 

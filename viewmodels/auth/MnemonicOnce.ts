@@ -63,7 +63,7 @@ export class MnemonicOnce {
 
       return await this.savePrivKey();
     } catch (error) {
-      console.error(error);
+      __DEV__ && console.error(error);
     } finally {
       this.clean();
       logCreateWallet();

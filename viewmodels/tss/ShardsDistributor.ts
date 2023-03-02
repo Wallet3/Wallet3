@@ -256,7 +256,7 @@ export class ShardsDistributor extends TCPServer<Events> {
     runInAction(() => (this.status = succeed ? ShardsDistributionStatus.succeed : ShardsDistributionStatus.failed));
 
     if (succeed) {
-      super.emit('secretDistributed');
+      setImmediate(() => super.emit('secretDistributed'));
       return key;
     } else {
       await key.remove();
@@ -268,6 +268,7 @@ export class ShardsDistributor extends TCPServer<Events> {
 
     this.approvedClients.forEach((c) => c.destroy());
     this.pendingClients.forEach((c) => c.destroy());
+    this.removeAllListeners();
     super.stop();
   }
 }

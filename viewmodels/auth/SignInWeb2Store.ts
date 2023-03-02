@@ -17,7 +17,7 @@ export class SignInWeb2Store {
       await firestore().collection(Keys.users).doc(user.uid).set(user);
       return true;
     } catch (e) {
-      console.error('Error adding document: ', e);
+      __DEV__ && console.error('Error adding document: ', e);
     }
 
     return false;

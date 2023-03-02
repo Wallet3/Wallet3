@@ -127,7 +127,11 @@ export function logUpgradedToMultiSigWallet(args: { threshold: string }) {
 }
 
 export function logDevicePaired() {
-  log('multiSig_paired_device');
+  log('multiSig_new_device_paired');
+}
+
+export function logCreateMultiSigWallet(args: { threshold: string }) {
+  log('multiSig_wallet_created', args);
 }
 
 let version = '';

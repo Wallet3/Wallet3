@@ -85,7 +85,7 @@ export class TCPClient extends AsyncTCPSocket {
 
       this.emit('ready');
     } catch (e) {
-      console.error(e);
+      __DEV__ && console.error(e);
     }
   };
 

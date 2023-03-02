@@ -29,6 +29,7 @@ import {
 
 import { AppVM } from '../viewmodels/core/App';
 import { Authentication } from '../viewmodels/auth/Authentication';
+import { ClientInfo } from '../common/p2p/Constants';
 import { FullPasspad } from '../modals/views/Passpad';
 import GlobalPasspad from '../modals/global/GlobalPasspad';
 import { IConfigProps } from 'react-native-modalize/lib/options';
@@ -463,12 +464,12 @@ const SendFundsModal = () => {
 
 const BackupTipsModal = () => {
   const { ref, open, close } = useModalize();
-  const [context, setContext] = useState<{ upgrade?: boolean }>({});
+  const [context, setContext] = useState<{ upgrade?: boolean; expiredDevices?: ClientInfo[] }>({});
 
   useEffect(() => {
     PubSub.subscribe(MessageKeys.openUpgradeWalletTip, () => {
       setContext({ upgrade: true });
-      open();
+      setImmediate(() => open());
     });
 
     return () => {
@@ -478,7 +479,7 @@ const BackupTipsModal = () => {
 
   return (
     <ModalizeContainer ref={ref} withHandle={false} panGestureEnabled={false} panGestureComponentEnabled={false}>
-      <UpgradeWalletTip onDone={close} />
+      {context.upgrade && <UpgradeWalletTip onDone={close} />}
     </ModalizeContainer>
   );
 };

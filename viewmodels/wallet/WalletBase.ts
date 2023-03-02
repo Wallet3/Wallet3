@@ -200,7 +200,7 @@ export abstract class WalletBase extends EventEmitter<Events> {
         data: request.typedData,
       });
     } catch (error) {
-      console.error(error);
+      __DEV__ && console.error(error);
     } finally {
       logEthSign('typed_data');
     }
