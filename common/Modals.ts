@@ -5,6 +5,7 @@ import { ClientInfo } from './p2p/Constants';
 import { KeyRecoveryProvider } from '../viewmodels/tss/KeyRecoveryProvider';
 import { KeyRecoveryRequestor } from '../viewmodels/tss/KeyRecoveryRequestor';
 import MessageKeys from './MessageKeys';
+import { MultiSigKeyDeviceInfo } from '../models/entities/MultiSigKey';
 import { PairedDevice } from '../viewmodels/tss/management/PairedDevice';
 import { Service } from 'react-native-zeroconf';
 import { ShardProvider } from '../viewmodels/tss/ShardProvider';
@@ -83,6 +84,6 @@ export function openShardRedistributionReceiver(args: { device: PairedDevice; se
   PubSub.publish(MessageKeys.openShardRedistributionReceiver, args);
 }
 
-export function openDeviceExpiredTip(args: { devices: ClientInfo[] }) {
-  PubSub.publish(MessageKeys.openDeviceExpiredTip, args);
+export function openInactiveDevicesTip(args: { devices: MultiSigKeyDeviceInfo[] }) {
+  PubSub.publish(MessageKeys.openInactiveDevicesTip, args);
 }

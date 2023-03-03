@@ -5,7 +5,7 @@ import { DAY } from '../../../utils/time';
 import Database from '../../../models/Database';
 import MultiSigKey from '../../../models/entities/MultiSigKey';
 import { MultiSigWallet } from '../../wallet/MultiSigWallet';
-import { openDeviceExpiredTip } from '../../../common/Modals';
+import { openInactiveDevicesTip } from '../../../common/Modals';
 
 export enum SecurityLevel {
   high = 'high',
@@ -14,18 +14,22 @@ export enum SecurityLevel {
 }
 
 class KeySecurity {
-  init() {
-    reaction(
-      () => App.currentWallet,
+  initCheck() {
+    autorun(
+      // () => App.currentWallet,
       () => {
         const { currentWallet } = App;
         if (!currentWallet?.isMultiSig) return;
 
-        const expired = Date.now() - 30 * DAY;
-        const expiredDevices = (currentWallet as MultiSigWallet).key.secretsInfo.devices.filter((i) => i.lastUsedAt < expired);
-        if (expiredDevices.length === 0) return;
+        const expired = Date.now() - (__DEV__ ? 10 : 30 * DAY);
 
-        openDeviceExpiredTip({ devices: expiredDevices });
+        const inactiveDevices = (currentWallet as MultiSigWallet).key.secretsInfo.devices.filter(
+          (i) => i.lastUsedAt < expired
+        );
+
+        if (inactiveDevices.length === 0) return;
+
+        openInactiveDevicesTip({ devices: inactiveDevices });
       }
     );
   }

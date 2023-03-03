@@ -43,13 +43,13 @@ const Devices = new Map([
 
 const keys = Array.from(Devices.keys());
 
-export default ({ os, deviceId, style }: { os: 'ios' | 'android'; deviceId?: string; style?: StyleProp<ViewStyle> & any }) => {
+export default ({ os, deviceId, style }: { os: 'ios' | 'android'; deviceId?: string; style?: StyleProp<ViewStyle> }) => {
   const [device] = useState(
     Devices.get(keys.find((k) => (iosDevice.generationByIdentifier(deviceId ?? '')?.toLowerCase() ?? os).includes(k))!)
   );
 
   return os === 'ios' ? (
-    <FastImage source={device} style={style} resizeMode="contain" />
+    <FastImage source={device} style={style as any} resizeMode="contain" />
   ) : (
     <LottieView style={style} source={require('../assets/animations/android-phone.json')} autoPlay />
   );

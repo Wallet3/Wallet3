@@ -124,7 +124,7 @@ export class AppVM {
 
       Authentication.on('appAuthorized', () => setTimeout(() => PairedDevices.scanLan(), 2000));
 
-      // KeySecurity.init();
+      KeySecurity.initCheck();
       // tipWalletUpgrade(this.currentWallet);
     });
 

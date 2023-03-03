@@ -18,7 +18,7 @@ export default {
   openShardRedistributionReceiver: 'openShardRedistributionReceiver',
   openShardsAggregator: 'openShardsAggregator',
   openShardProvider: 'openShardProvider',
-  openDeviceExpiredTip: 'openDeviceExpiredTip',
+  openInactiveDevicesTip: 'openInactiveDevicesTip',
   openKeyRecoveryRequestor: 'openKeyRecoveryRequestor',
   openKeyRecoveryProvider: 'openKeyRecoveryProvider',
   openGlobalPasspad: 'openGlobalPasspad',

@@ -316,6 +316,7 @@
   "multi-sig-modal-title-waiting-aggregation": "デバイスの応答",
   "multi-sig-modal-title-wallet-recovery": "ウォレットの復元",
   "multi-sig-modal-title-redistribute-keys": "秘密鍵の再配布",
+  "multi-sig-modal-title-inactive-devices": "非アクティブなデバイス",
   
   "multi-sig-modal-welcome-1": "まず、同じ Wi-Fi ネットワークに接続してください",
   "multi-sig-modal-welcome-2": "「メニュー」 - 「マルチシグウォレット」に進んでください",
@@ -365,6 +366,7 @@
   "multi-sig-modal-msg-aggregated-remember-key": "次回以降自動許可",  
   "multi-sig-modal-msg-before-aggregation": "この操作は信頼デバイスによる認可が必要です",
   "multi-sig-modal-msg-upgrade-tip": "マルチシグネチャーウォレットを使用すると、複数のデバイスで暗号通貨資産を管理し、より信頼性の高い復元機能が提供されます。マルチシグネチャーウォレットへのアップグレードをお勧めします。",
+  "multi-sig-modal-msg-inactive-devices": "以下のデバイスは長い間使用されていません。まだ利用可能かどうかを確認してください",
   "multi-sig-modal-create-threshold": "あなたは {{threshold}}/{{max}} マルチシグウォレットを作成しています。トランザクションを作成するには、少なくとも {{threshold}} つのデバイスが必要であることを意味します。",
   "multi-sig-modal-keys-distribution": "秘密鍵は以下のデバイスに配布されます",
 

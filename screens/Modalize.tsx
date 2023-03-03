@@ -33,6 +33,7 @@ import { ClientInfo } from '../common/p2p/Constants';
 import { FullPasspad } from '../modals/views/Passpad';
 import GlobalPasspad from '../modals/global/GlobalPasspad';
 import { IConfigProps } from 'react-native-modalize/lib/options';
+import InactiveDevicesWarn from '../modals/misc/InactiveDevicesWarn';
 import InappBrowser from '../modals/app/InappBrowser';
 import InpageConnectDApp from '../modals/inpage/InpageConnectDApp';
 import InpageDAppAddAssetModal from '../modals/inpage/InpageDAppAddAsset';
@@ -45,6 +46,7 @@ import { Keyboard } from 'react-native';
 import Loading from '../modals/views/Loading';
 import MessageKeys from '../common/MessageKeys';
 import ModalizeContainer from '../modals/core/ModalizeContainer';
+import { MultiSigKeyDeviceInfo } from '../models/entities/MultiSigKey';
 import MultiSigKeyProvider from '../modals/tss/recovery/provider';
 import MultiSigKeyRequestor from '../modals/tss/recovery/requestor';
 import Networks from '../viewmodels/core/Networks';
@@ -464,7 +466,7 @@ const SendFundsModal = () => {
 
 const BackupTipsModal = () => {
   const { ref, open, close } = useModalize();
-  const [context, setContext] = useState<{ upgrade?: boolean; expiredDevices?: ClientInfo[] }>({});
+  const [context, setContext] = useState<{ upgrade?: boolean; inactiveDevices?: MultiSigKeyDeviceInfo[] }>({});
 
   useEffect(() => {
     PubSub.subscribe(MessageKeys.openUpgradeWalletTip, () => {
@@ -472,14 +474,18 @@ const BackupTipsModal = () => {
       setImmediate(() => open());
     });
 
-    return () => {
-      PubSub.unsubscribe(MessageKeys.openUpgradeWalletTip);
-    };
+    PubSub.subscribe(MessageKeys.openInactiveDevicesTip, (_, { devices }) => {
+      setContext({ inactiveDevices: devices });
+      setImmediate(() => open());
+    });
+
+    return () => [MessageKeys.openUpgradeWalletTip, MessageKeys.openInactiveDevicesTip].forEach((t) => PubSub.unsubscribe(t));
   }, []);
 
   return (
     <ModalizeContainer ref={ref} withHandle={false} panGestureEnabled={false} panGestureComponentEnabled={false}>
       {context.upgrade && <UpgradeWalletTip onDone={close} />}
+      {context.inactiveDevices && <InactiveDevicesWarn onDone={close} devices={context.inactiveDevices} />}
     </ModalizeContainer>
   );
 };

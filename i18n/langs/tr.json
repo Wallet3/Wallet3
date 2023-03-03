@@ -320,7 +320,8 @@
   "multi-sig-modal-title-waiting-aggregation": "Cihaz yanıtı bekleniyor",
   "multi-sig-modal-title-wallet-recovery": "Cüzdanı geri yükle",
   "multi-sig-modal-title-redistribute-keys": "Anahtarları yeniden dağıtın",
-  
+  "multi-sig-modal-title-inactive-devices": "Etkin olmayan cihazlar",
+
   "multi-sig-modal-welcome-1": "Telefonları aynı Wi-Fi ağına bağlayın",
   "multi-sig-modal-welcome-2": "[Menü] - [Çok İmzalı Cüzdan]a gidin",
   "multi-sig-modal-welcome-3": "[Başlat Eşleme]i tıklayın ve Wallet 3'e yerel ağa erişmesine izin verin",
@@ -369,6 +370,7 @@
   "multi-sig-modal-msg-aggregated-remember-key": "Sonraki sefere otomatik izin ver",
   "multi-sig-modal-msg-before-aggregation": "Bu işlem devreye sokulmadan önce güvenilir cihaz onayı gerektirir",
   "multi-sig-modal-msg-upgrade-tip": "Çoklu imza cüzdanı, kripto varlıklarınızı birden çok cihazla yönetmenize ve daha güvenilir bir kurtarma mekanizması sağlar. Çoklu imza cüzdana yükseltmeniz önerilir.",
+  "multi-sig-modal-msg-inactive-devices": "Aşağıdaki cihazlar uzun süredir kullanılmadı, hala kullanılabilir olup olmadıklarını kontrol edin",
   "multi-sig-modal-create-threshold": "Siz {{threshold}} of {{max}} çok imza cüzdanı oluşturuyorsunuz. Bu, işlemlerin en az {{threshold}} anahtarının yetkilendirilmesini gerektirdiği anlamına gelir.",
   "multi-sig-modal-keys-distribution": "Aşağıdaki cihazlara anahtarlar dağıtılacaktır",
 
