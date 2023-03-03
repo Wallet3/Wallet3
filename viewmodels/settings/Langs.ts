@@ -19,17 +19,22 @@ class Langs {
     { flag: 'usa', name: 'English', value: 'en' },
     { flag: 'jp', name: '日本語', value: 'ja' },
     { flag: 'tr', name: 'Türkçe', value: 'tr' },
-    { flag: 'tw', name: '繁体中文', value: 'zh-tw' },
     { flag: 'cn', name: '简体中文', value: 'zh-cn' },
+    { flag: 'tw', name: '繁体中文', value: 'zh-tw' },
   ];
 
   constructor() {
     const userLocale = Localization.locale.toLowerCase();
     this.systemLang = userLocale;
 
+    const [main] = userLocale.split('-') || [userLocale];
+
     this.currentLang =
-      this.supportedLangs.find((l) => userLocale.includes(l.value) || l.value.toLowerCase().includes(userLocale)) ??
-      this.supportedLangs[0];
+      this.supportedLangs.find(
+        (l) => userLocale.includes(l.value) || l.value.includes(userLocale) || l.value.includes(main)
+      ) ?? this.supportedLangs[0];
+
+    i18n.locale = this.currentLang.value;
 
     makeObservable(this, { currentLang: observable, setLang: action });
 

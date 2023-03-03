@@ -175,7 +175,7 @@ export default observer(() => {
             style={{
               position: 'absolute',
               right: 16,
-              top: top + 16,
+              top: top + 10,
               backgroundColor: `${verifiedColor}c0`,
               borderRadius: 15,
               paddingHorizontal: 16,
