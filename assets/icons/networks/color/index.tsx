@@ -112,11 +112,11 @@ const METIS = generateNetworkIcon({ chainId: 1088, width: 42, style: { marginVer
 const FUSE = generateNetworkIcon({ chainId: 122, width: 27, height: 32 });
 const SHIDEN = generateNetworkIcon({ chainId: 336, width: 22, height: 32 });
 const EVMOS = generateNetworkIcon({ chainId: 9001, width: 29, height: 32 });
-const KAVA = generateNetworkIcon({ chainId: 2222, width: 19, height: 25 });
-const NOVA = generateNetworkIcon({ chainId: 42170, width: 27, height: 27 });
-const CANTO = generateNetworkIcon({ chainId: 7700, width: 27, height: 27 });
-const BASE = generateNetworkIcon({ chainId: 84531, width: 27, height: 27 });
-const JOC = generateNetworkIcon({ chainId: 99999, width: 27, height: 27 });
+const KAVA = generateNetworkIcon({ chainId: 2222, width: 19, height: 32 });
+const NOVA = generateNetworkIcon({ chainId: 42170, width: 27, height: 32 });
+const CANTO = generateNetworkIcon({ chainId: 7700, width: 27, height: 32 });
+const BASE = generateNetworkIcon({ chainId: 84531, width: 27, height: 32 });
+const JOC = generateNetworkIcon({ chainId: 99999, width: 27, height: 32 });
 
 export const NetworkIcons = {
   1: ETH,

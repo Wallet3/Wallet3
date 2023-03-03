@@ -156,8 +156,6 @@ export abstract class WalletBase extends EventEmitter<Events> {
 
     if (this.accounts.length > 0) {
       await AsyncStorage.setItem(storeKey, JSON.stringify(this.removedAccountIndexes));
-    } else {
-      AsyncStorage.removeItem(storeKey);
     }
 
     MetamaskDAppsHub.removeAccount(account.address);
@@ -218,8 +216,11 @@ export abstract class WalletBase extends EventEmitter<Events> {
     return hash;
   }
 
-  async delete() {
+  async delete(): Promise<boolean> {
+    AsyncStorage.removeItem(WalletBaseKeys.removedIndexes(this.key.id));
+    AsyncStorage.removeItem(WalletBaseKeys.addressCount(this.key.id));
     await this.key.remove();
+    return true;
   }
 
   abstract getSecret(pin?: string): Promise<string | undefined>;

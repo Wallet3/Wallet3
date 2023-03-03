@@ -255,19 +255,21 @@ export class AppVM {
     const { wallet } = this.findWallet(account.address) || {};
     if (!wallet) return;
 
-    await wallet.removeAccount(account);
+    if (wallet.accounts.length > 1) {
+      await wallet.removeAccount(account);
+    } else {
+      if (!(await this.removeWallet(wallet))) return;
+    }
 
     if (isCurrentAccount) runInAction(() => this.switchAccount(this.allAccounts[Math.max(0, index - 1)].address));
-
-    if (wallet.accounts.length === 0) {
-      await this.removeWallet(wallet);
-    }
   }
 
   async removeWallet(wallet: WalletBase) {
+    if (!(await wallet.delete())) return false;
+
     const index = this.wallets.indexOf(wallet);
     index >= 0 && runInAction(() => this.wallets.splice(index, 1));
-    await wallet.delete();
+    return true;
   }
 
   async reset() {
