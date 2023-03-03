@@ -43,8 +43,8 @@ export default observer(({ onDone, devices }: { onDone: () => void; devices: Mul
           </Text>
           <Placeholder />
           <Text style={{ color: warningColor, marginBottom: -2, fontWeight: '500' }} numberOfLines={1}>
-            <Ionicons name="warning" size={14} />
-            {`  ${dayjs(item.lastUsedAt).format(DateTimeFormatter)}`}
+            {/* <Ionicons name="warning" size={14} /> */}
+            {`${t('multi-sig-modal-txt-last-used-time')}: ${dayjs(item.lastUsedAt).format(DateTimeFormatter)}`}
           </Text>
         </View>
       </View>

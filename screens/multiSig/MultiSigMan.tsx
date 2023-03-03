@@ -47,7 +47,7 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
 
   useEffect(() => {
     if (!wallet) return;
-    setSecurityLevel(KeySecurity.check(wallet.key));
+    setSecurityLevel(KeySecurity.checkSecurityLevel(wallet.key));
   }, [wallet]);
 
   return (

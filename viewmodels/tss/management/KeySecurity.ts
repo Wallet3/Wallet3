@@ -1,10 +1,7 @@
-import { autorun, reaction } from 'mobx';
-
-import App from '../../core/App';
 import { DAY } from '../../../utils/time';
-import Database from '../../../models/Database';
 import MultiSigKey from '../../../models/entities/MultiSigKey';
 import { MultiSigWallet } from '../../wallet/MultiSigWallet';
+import { WalletBase } from '../../wallet/WalletBase';
 import { openInactiveDevicesTip } from '../../../common/Modals';
 
 export enum SecurityLevel {
@@ -14,27 +11,17 @@ export enum SecurityLevel {
 }
 
 class KeySecurity {
-  initCheck() {
-    autorun(
-      // () => App.currentWallet,
-      () => {
-        const { currentWallet } = App;
-        if (!currentWallet?.isMultiSig) return;
+  checkInactiveDevices(wallet?: WalletBase) {
+    if (!wallet?.isMultiSig) return;
 
-        const expired = Date.now() - (__DEV__ ? 10 : 30 * DAY);
+    const expired = Date.now() - (__DEV__ ? 10 : 30 * DAY);
+    const inactiveDevices = (wallet as MultiSigWallet).key.secretsInfo.devices.filter((i) => i.lastUsedAt < expired);
+    if (inactiveDevices.length === 0) return;
 
-        const inactiveDevices = (currentWallet as MultiSigWallet).key.secretsInfo.devices.filter(
-          (i) => i.lastUsedAt < expired
-        );
-
-        if (inactiveDevices.length === 0) return;
-
-        openInactiveDevicesTip({ devices: inactiveDevices });
-      }
-    );
+    openInactiveDevicesTip({ devices: inactiveDevices });
   }
 
-  check(key: MultiSigKey) {
+  checkSecurityLevel(key: MultiSigKey) {
     const expired = Date.now() - 30 * DAY;
     const notUsedDevices = (key.secretsInfo.devices || []).filter((v) => v.lastUsedAt < expired);
     const thresholdRate = key.secretsInfo.threshold / (key.secretsInfo.devices.length + 1);

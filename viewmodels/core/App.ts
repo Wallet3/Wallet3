@@ -88,6 +88,11 @@ export class AppVM {
       }
     );
 
+    reaction(
+      () => this.currentWallet,
+      () => KeySecurity.checkInactiveDevices(this.currentWallet)
+    );
+
     AppState.addEventListener('change', (state) => {
       if (state !== 'active') return;
       Authentication.appAuthorized && KeyRecoveryDiscovery.scanLan();
@@ -124,7 +129,6 @@ export class AppVM {
 
       Authentication.on('appAuthorized', () => setTimeout(() => PairedDevices.scanLan(), 2000));
 
-      KeySecurity.initCheck();
       // tipWalletUpgrade(this.currentWallet);
     });
 
