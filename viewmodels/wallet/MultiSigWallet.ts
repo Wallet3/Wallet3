@@ -1,10 +1,11 @@
 import MultiSigKey, { MultiSigKeyDeviceInfo } from '../../models/entities/MultiSigKey';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { openGlobalPasspad, openShardsAggregator } from '../../common/Modals';
 
 import Authentication from '../auth/Authentication';
+import { BaseEntity } from 'typeorm';
 import { ShardsAggregator } from '../tss/ShardsAggregator';
 import { WalletBase } from './WalletBase';
-import { openShardsAggregator } from '../../common/Modals';
 import secretjs from 'secrets.js-grempe';
 import { sleep } from '../../utils/async';
 import { utils } from 'ethers';
@@ -97,19 +98,25 @@ export class MultiSigWallet extends WalletBase {
     runInAction(() => (this.trustedDevices = this.key.secretsInfo.devices));
   }
 
+  updateDevice(globalId: string) {
+    const device = this.secretsInfo.devices.find((d) => d.globalId === globalId);
+    if (!device) return;
+
+    device.lastUsedAt = Date.now();
+    this.key.save();
+  }
+
   async getSecret(pin?: string): Promise<string | undefined> {
     return undefined;
   }
 
-  dispose(): void {}
-
-  protected async unlockPrivateKey(args: { pin?: string; accountIndex?: number }) {
-    const { pin, accountIndex } = args;
+  protected async unlockPrivateKey(args: { pin?: string; accountIndex?: number; disableCache?: boolean }) {
+    const { pin, accountIndex, disableCache } = args;
 
     try {
       const { bip32XprvKey } = this.key.cachedSecrets || {};
 
-      if (bip32XprvKey) {
+      if (!disableCache && bip32XprvKey) {
         const xprivkey = (await Authentication.decrypt(bip32XprvKey, pin))!;
         const bip32 = utils.HDNode.fromExtendedKey(xprivkey);
         const account = bip32.derivePath(`${accountIndex ?? 0}`);
@@ -161,11 +168,12 @@ export class MultiSigWallet extends WalletBase {
     });
   }
 
-  updateDevice(globalId: string) {
-    const device = this.secretsInfo.devices.find((d) => d.globalId === globalId);
-    if (!device) return;
+  async delete() {
+    const auth = async (pin?: string) => ((await this.unlockPrivateKey({ pin, disableCache: true })) ? true : false);
+    if (!(await openGlobalPasspad({ onAutoAuthRequest: auth, onPinEntered: auth, fast: true }))) return;
 
-    device.lastUsedAt = Date.now();
-    this.key.save();
+    await this.key.remove();
   }
+
+  dispose(): void {}
 }

@@ -218,8 +218,8 @@ export abstract class WalletBase extends EventEmitter<Events> {
     return hash;
   }
 
-  delete() {
-    return this.key.remove();
+  async delete() {
+    await this.key.remove();
   }
 
   abstract getSecret(pin?: string): Promise<string | undefined>;

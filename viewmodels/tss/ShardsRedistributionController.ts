@@ -96,11 +96,7 @@ export class ShardsRedistributionController extends EventEmitter {
 
   async requestAggregator(pin?: string) {
     this.aggregator?.dispose();
-
     const vm = await this.wallet.requestShardsAggregator({ bip32Shard: false, rootShard: true, autoStart: true }, pin);
-
-    vm?.once('aggregated', () => {});
-
     runInAction(() => (this.aggregator = vm));
     return vm;
   }
