@@ -541,6 +541,7 @@ type ShardsParam = {
   pairedDevice?: PairedDevice;
   onClosed?: () => void;
   openAnimationConfig?: IConfigProps;
+  modalHeight?: number;
 };
 
 export const ShardsModal = observer(() => {
@@ -578,7 +579,12 @@ export const ShardsModal = observer(() => {
     });
 
     PubSub.subscribe(MessageKeys.openShardsAggregator, (_, { vm, onClosed }) => {
-      enqueue({ shardsAggregator: vm, onClosed, openAnimationConfig: { timing: { duration: 100 } } });
+      enqueue({
+        shardsAggregator: vm,
+        onClosed,
+        openAnimationConfig: { timing: { duration: 100 } },
+        modalHeight: ReactiveScreen.height,
+      });
     });
 
     PubSub.subscribe(MessageKeys.openShardProvider, (_, { vm, onClosed }) => {
@@ -616,6 +622,8 @@ export const ShardsModal = observer(() => {
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
       openAnimationConfig={vms?.openAnimationConfig}
+      modalHeight={vms?.modalHeight}
+      adjustToContentHeight={vms?.modalHeight ? false : true}
       onClosed={() => {
         vms?.onClosed?.();
         dequeue();

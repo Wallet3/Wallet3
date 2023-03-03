@@ -63,7 +63,7 @@ export default observer(
           {received <= 1 ? (
             <FadeInDownView delay={500}>
               <Text style={{ color: secondaryTextColor, ...styles.txt, marginHorizontal }}>
-                {t('multi-sig-modal-msg-open-wallet3')}
+                {t('multi-sig-modal-msg-authorize-on-trusted-devices')}
               </Text>
             </FadeInDownView>
           ) : aggregated ? (

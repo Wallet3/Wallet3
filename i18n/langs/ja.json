@@ -361,7 +361,7 @@
   "multi-sig-modal-msg-restore-from-shard-qr-code": "ウォレットを復元する場合は、このQRコードをスキャンしてください。",
   "multi-sig-modal-msg-delete-device": "そのデバイスは削除され、復元することはできません",
   "multi-sig-modal-msg-delete-trusted-device": "この操作はローカルの記録情報のみを削除し、ターゲットデバイスの秘密鍵情報を削除することはできません。ターゲットデバイスの秘密鍵情報を削除するには、ターゲットデバイス上で手動で削除してください。",
-  "multi-sig-modal-msg-open-wallet3": "他のデバイスで Wallet 3 を開けてください",
+  "multi-sig-modal-msg-authorize-on-trusted-devices": "信頼できるデバイスで承認してください",
   "multi-sig-modal-msg-aggregated-count": "受信数: {{m}}/{{n}}",
   "multi-sig-modal-msg-aggregated-remember-key": "次回以降自動許可",  
   "multi-sig-modal-msg-before-aggregation": "この操作は信頼デバイスによる認可が必要です",

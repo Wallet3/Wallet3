@@ -365,7 +365,7 @@
   "multi-sig-modal-msg-restore-from-shard-qr-code": "Cüzdanınızı kurtarmak için lütfen bu QR kodu tarayın.",
   "multi-sig-modal-msg-delete-device": "Cihaz da aynı zamanda silinecek ve geri yüklenemeyecek.",
   "multi-sig-modal-msg-delete-trusted-device": "Bu işlem sadece yerel kayıt bilgilerini siler ve hedef cihazın özel anahtar bilgilerini silmez. Hedef cihazın özel anahtar bilgilerini silmek için lütfen hedef cihazda manuel olarak silin.",
-  "multi-sig-modal-msg-open-wallet3": "Lütfen eşleştirilmiş cihazlarda Wallet 3'ü açın",
+  "multi-sig-modal-msg-authorize-on-trusted-devices": "Güvenilir cihazlarda yetkilendirin.",
   "multi-sig-modal-msg-aggregated-count": "Alınan miktar: {{m}}/{{n}}",
   "multi-sig-modal-msg-aggregated-remember-key": "Sonraki sefere otomatik izin ver",
   "multi-sig-modal-msg-before-aggregation": "Bu işlem devreye sokulmadan önce güvenilir cihaz onayı gerektirir",

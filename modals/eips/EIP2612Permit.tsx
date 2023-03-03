@@ -149,7 +149,7 @@ export default ({ eip2612, metadata, onAddressChecked }: Props) => {
             {network?.network?.split(' ')?.[0]}
           </Text>
 
-          {decimals < 0 ? <ActivityIndicator size="small" style={{ marginStart: 5 }} /> : undefined}
+          {decimals < 0 ? <ActivityIndicator size="small" style={{ marginStart: 6 }} /> : undefined}
         </View>
       </View>
     </View>

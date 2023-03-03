@@ -5,6 +5,7 @@ import MiniAggregation from './MiniAggregation';
 import { ModalMarginScreen } from '../../styles';
 import ModalRootContainer from '../../core/ModalRootContainer';
 import { ReactiveScreen } from '../../../utils/device';
+import { SafeViewContainer } from '../../../components';
 import ScrollTitles from '../../components/ScrollTitles';
 import { ShardsAggregator } from '../../../viewmodels/tss/ShardsAggregator';
 import SquircleViewContainer from '../../../components/SquircleViewContainer';
@@ -24,7 +25,7 @@ interface Props {
 
 export default observer(({ vm, close }: Props) => {
   const { aggregated } = vm;
-  const [marginBottom] = useState(ReactiveScreen.height - (useSafeAreaInsets().top || 16) - 72);
+  const { top } = useSafeAreaInsets();
 
   useEffect(() => {
     return () => vm.dispose();
@@ -37,14 +38,7 @@ export default observer(({ vm, close }: Props) => {
   }, [aggregated]);
 
   return (
-    <View
-      style={{
-        backgroundColor: 'transparent',
-        margin: 0,
-        padding: 0,
-        marginBottom,
-      }}
-    >
+    <View style={{ backgroundColor: 'transparent', paddingTop: top || 16 }}>
       <MiniAggregation vm={vm} close={close} />
     </View>
   );

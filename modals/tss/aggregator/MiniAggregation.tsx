@@ -31,7 +31,7 @@ export default observer(({ vm, close }: Props) => {
   useEffect(() => startLayoutAnimation(), [width]);
 
   return (
-    <FadeInUpView style={{ width: Math.min(width - 24, 520), flex: 1, alignSelf: 'center' }} delay={300}>
+    <FadeInUpView style={{ width: Math.min(width - 24, 520), alignSelf: 'center' }} delay={300}>
       <SquircleViewContainer
         cornerRadius={22}
         style={{ height: 72, flex: 1, backgroundColor, flexDirection: 'row', alignItems: 'center', position: 'relative' }}
@@ -48,7 +48,7 @@ export default observer(({ vm, close }: Props) => {
           {received <= 1 ? (
             <FadeInDownView delay={500}>
               <Text numberOfLines={1} style={{ color: secureColor, ...styles.txt }}>
-                {t('multi-sig-modal-msg-open-wallet3')}
+                {t('multi-sig-modal-msg-authorize-on-trusted-devices')}
               </Text>
             </FadeInDownView>
           ) : aggregated ? (
