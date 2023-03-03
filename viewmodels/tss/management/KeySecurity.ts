@@ -37,8 +37,8 @@ class KeySecurity {
     let score = 0;
 
     score += notUsedDevices.length === 0 ? 5 : 0;
-    score += thresholdRate >= 0.6 && thresholdRate <= 0.9 ? 5 : 0;
-    score += thresholdRate <= 0.5 ? -2 : 0;
+    score += thresholdRate >= 0.5 && thresholdRate <= 0.9 ? 5 : 0;
+    score += thresholdRate < 0.5 ? -2 : 0;
 
     if (score >= 5) {
       return SecurityLevel.high;

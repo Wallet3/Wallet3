@@ -315,7 +315,7 @@
   "multi-sig-modal-title-remove-device": "移除设备",
   "multi-sig-modal-title-waiting-aggregation": "等待设备授权",
   "multi-sig-modal-title-wallet-recovery": "恢复钱包",
-  "multi-sig-modal-title-redistribute-keys": "密钥分发",
+  "multi-sig-modal-title-redistribute-keys": "重置密钥分发",
   "multi-sig-modal-title-inactive-devices": "非活动设备",
 
   "multi-sig-modal-welcome-1": "将手机连接到相同的 Wi-Fi 网络",
