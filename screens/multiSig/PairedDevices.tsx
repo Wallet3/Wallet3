@@ -26,7 +26,6 @@ export default observer(() => {
   const { t } = i18n;
   const [selectedDevice, setSelectedDevice] = useState<PairedDevice>();
   const { devices, hasDevices } = PairedDevices;
-  const safeBottom = useOptimizedSafeBottom();
 
   useEffect(() => startLayoutAnimation(), [devices]);
 
@@ -39,7 +38,7 @@ export default observer(() => {
         }}
       >
         <FadeInDownView style={{ paddingVertical: 8, paddingHorizontal: 16, flexDirection: 'row' }} delay={index * 50}>
-          <DeviceInfo info={item.deviceInfo} light mainAddress={item.mainAddress}/>
+          <DeviceInfo info={item.deviceInfo} light mainAddress={item.mainAddress} />
         </FadeInDownView>
       </TouchableOpacity>
     );

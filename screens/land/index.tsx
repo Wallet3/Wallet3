@@ -18,6 +18,7 @@ import ViewRecoveryKey from './SignInWeb2ViewRecoveryKey';
 import Welcome from './Welcome';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { openShardReceiver } from '../../common/Modals';
 
 const { Navigator, Screen } = createNativeStackNavigator();
 
@@ -42,7 +43,14 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
       <Screen
         name="CreateMultiSigWallet"
         component={CreateMultiSigWallet}
-        options={{ title: t('land-welcome-create-multi-sig-wallet') }}
+        options={{
+          title: t('land-welcome-create-multi-sig-wallet'),
+          // headerRight: () => (
+          //   <TouchableOpacity style={{ padding: 12, margin: -12 }} onPress={() => openShardReceiver()}>
+          //     <Ionicons name="phone-portrait-outline" size={19} color={'#000'} />
+          //   </TouchableOpacity>
+          // ),
+        }}
       />
       <Screen name="CreateWallet" component={CreateWallet} options={{ title: t('land-welcome-create-wallet') }} />
       <Screen name="Backup" component={Backup} options={{ title: t('land-backup-title') }} />
