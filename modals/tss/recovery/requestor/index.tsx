@@ -29,7 +29,7 @@ export default observer(({ close, onCritical, vm }: Props) => {
   const { t } = i18n;
   const [step, setStep] = useState(0);
   const navigation = useNavigation<any>();
-  const { textColor } = Theme;
+  const { textColor, secondaryTextColor } = Theme;
 
   const titles = [
     t('multi-sig-modal-title-wallet-recovery'),
@@ -69,7 +69,7 @@ export default observer(({ close, onCritical, vm }: Props) => {
         {step === 2 && (
           <FadeInDownView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <ActivityIndicator size="small" />
-            <Text style={{ color: textColor, marginVertical: 24 }}>{t('msg-wait-a-moment')}</Text>
+            <Text style={{ color: secondaryTextColor, marginVertical: 24 }}>{t('msg-wait-a-moment')}</Text>
           </FadeInDownView>
         )}
       </View>

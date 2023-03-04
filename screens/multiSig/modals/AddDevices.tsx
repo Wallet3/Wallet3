@@ -29,7 +29,7 @@ interface Props {
 
 export default observer(({ wallet, close, onCritical }: Props) => {
   const { t } = i18n;
-  const { textColor } = Theme;
+  const { textColor, secondaryTextColor } = Theme;
   const [current, setCurrent] = useState({ step: 0, isRTL: false });
   const [aggregator, setAggregator] = useState<ShardsAggregator>();
   const [distributor, setDistributor] = useState<ShardsDistributionMore>();
@@ -127,7 +127,7 @@ export default observer(({ wallet, close, onCritical }: Props) => {
         {step === 2 && (
           <FadeInDownView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <ActivityIndicator size="small" />
-            <Text style={{ color: textColor, marginVertical: 24 }}>{t('msg-wait-a-moment')}</Text>
+            <Text style={{ color: secondaryTextColor, marginVertical: 24 }}>{t('msg-wait-a-moment')}</Text>
           </FadeInDownView>
         )}
 

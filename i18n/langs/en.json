@@ -296,7 +296,7 @@
   "multi-sig-screen-tip-after-upgrading": "Please note that after upgrading to a multi-signature wallet, you can still restore this wallet elsewhere using the recovery phrase.",
   "multi-sig-screen-tip-security-overview": "Your wallet currently uses {{m}} of {{n}} multi-signature scheme to  protect your crypto assets.",
   "multi-sig-screen-tip-modify-threshold": "To modify the multiSig threshold you need the agreement of the majority of devices.",
-  "multi-sig-screen-tip-clear-secrets-cache": "Tap here to clear secrets cache. Next time you will be asked to obtain authorization from another trusted device.",
+  "multi-sig-screen-tip-clear-secrets-cache": "Tap here to clear secrets cache. Next time you will be asked to obtain authorization from other trusted devices.",
   "multi-sig-screen-txt-no-paired-devices": "No paired devices",
   "multi-sig-screen-title-security": "Security Level",
   "multi-sig-screen-title-confirmation-threshold": "Confirmations",

@@ -22,6 +22,7 @@ import TrustedDevice from './modals/TrustedDevice';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { sleep } from '../../utils/async';
+import { startLayoutAnimation } from '../../utils/animations';
 import { useModalize } from 'react-native-modalize';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -96,6 +97,7 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
                 style={styles.itemContainer}
                 onPress={() => {
                   wallet.setSecretsCache();
+                  startLayoutAnimation();
                   setForceUpdate(Date.now());
                 }}
               >

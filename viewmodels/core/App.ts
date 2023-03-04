@@ -95,7 +95,7 @@ export class AppVM {
 
     AppState.addEventListener('change', (state) => {
       if (state !== 'active') return;
-      Authentication.appAuthorized && KeyRecoveryDiscovery.scanLan();
+      Authentication.appAuthorized && setTimeout(() => KeyRecoveryDiscovery.scanLan(), 2000);
     });
   }
 
