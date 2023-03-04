@@ -2,6 +2,7 @@ import { ContentType, OneTimeKeyExchange, PairingCodeVerified, RecoveryKeyAck } 
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import Authentication from '../auth/Authentication';
+import PairedDevices from './management/PairedDevices';
 import ShardKey from '../../models/entities/ShardKey';
 import { TCPClient } from '../../common/p2p/TCPClient';
 import eccrypto from 'eccrypto';
@@ -62,23 +63,28 @@ export class KeyRecoveryProvider extends TCPClient {
       this.key.lastUsedTimestamp = Date.now();
       this.key.save();
 
-      const newPaired =
-        (await ShardKey.findOne({
-          where: { ownerDevice: { globalId: this.remoteInfo?.globalId }, distributionId: this.key.distributionId },
-        })) ?? new ShardKey();
+      const id = `${this.remoteInfo!.globalId}-${this.key.distributionId}`;
 
-      newPaired.id = `${this.remoteInfo!.globalId}-${this.key.distributionId}`;
-      newPaired.distributionId = this.key.distributionId;
-      newPaired.ownerDevice = this.remoteInfo!;
-      newPaired.secretsInfo = data.secretsInfo;
-      newPaired.createdAt = Date.now();
-      newPaired.lastUsedTimestamp = Date.now();
-      newPaired.secrets = {
-        bip32Shard: await Authentication.encryptForever(bip32Secret),
-        rootShard: await Authentication.encryptForever(rootSecret),
-      };
+      if (this.key.id !== id) {
+        const newPaired =
+          (await ShardKey.findOne({
+            where: { ownerDevice: { globalId: this.remoteInfo?.globalId }, distributionId: this.key.distributionId },
+          })) ?? new ShardKey();
 
-      await newPaired.save();
+        newPaired.id = id;
+        newPaired.distributionId = this.key.distributionId;
+        newPaired.ownerDevice = this.remoteInfo!;
+        newPaired.secretsInfo = data.secretsInfo;
+        newPaired.createdAt = Date.now();
+        newPaired.lastUsedTimestamp = Date.now();
+        newPaired.secrets = {
+          bip32Shard: await Authentication.encryptForever(bip32Secret),
+          rootShard: await Authentication.encryptForever(rootSecret),
+        };
+
+        await newPaired.save();
+        setImmediate(() => PairedDevices.refresh());
+      }
 
       runInAction(() => (this.distributed = true));
       return true;

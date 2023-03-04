@@ -62,11 +62,13 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
 
     this.handshakingSockets.clear();
 
+    if (!this.listening) return;
+    this.server.removeAllListeners();
+
     return new Promise<void>((resolve) => {
       this.server.close((err) => {
         __DEV__ && err && console.error(`tcp server close err: ${err.name} ${err.message}`);
         resolve();
-        this.server.removeAllListeners();
       });
     });
   }

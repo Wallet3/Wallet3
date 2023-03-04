@@ -21,6 +21,7 @@ class Bonjour extends EventEmitter<Events> {
     this.zc.on('start', () => this.emit('start'));
     this.zc.on('update', () => this.emit('update'));
     this.zc.on('stop', () => this.emit('stop'));
+    this.zc.on('error', (e) => {});
   }
 
   scan(service: string) {
