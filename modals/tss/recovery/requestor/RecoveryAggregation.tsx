@@ -39,7 +39,7 @@ export default observer(({ vm }: { vm: KeyRecoveryRequestor }) => {
 
   return (
     <FadeInDownView style={{ flex: 1 }}>
-      <Aggregation vm={vm} buttonTitle={t('button-cancel')} buttonDisabled hideButton />
+      <Aggregation vm={vm} buttonTitle={t('button-cancel')} buttonDisabled hideButton recoveryMode />
 
       {pendingCount > 0 && (
         <FadeInRightView style={{ height: 72, flexDirection: 'row', alignItems: 'center' }}>

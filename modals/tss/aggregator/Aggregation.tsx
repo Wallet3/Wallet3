@@ -32,6 +32,7 @@ interface Props {
   enableCacheOption?: boolean;
   onButtonPress?: () => void;
   onSecretCacheSelected?: (selected: boolean) => void;
+  recoveryMode?: boolean;
 }
 
 export default observer(
@@ -44,6 +45,7 @@ export default observer(
     buttonColor,
     buttonDisabled,
     onSecretCacheSelected,
+    recoveryMode,
   }: Props) => {
     const { t } = i18n;
     const { secondaryTextColor, appColor } = Theme;
@@ -52,7 +54,7 @@ export default observer(
     const { device, received, threshold, aggregated, lastError } = vm;
 
     useEffect(() => {
-      received <= 1 && startLayoutAnimation();
+      received === 1 && startLayoutAnimation();
     }, [received]);
 
     return (
@@ -60,7 +62,7 @@ export default observer(
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginBottom: enableCacheOption ? 32 : 24 }}>
           <DeviceRipple deviceId={device.device} os={device.rn_os} />
 
-          {received <= 1 ? (
+          {received <= (recoveryMode ? 0 : 1) ? (
             <FadeInDownView delay={500}>
               <Text style={{ color: secondaryTextColor, ...styles.txt, marginHorizontal }}>
                 {t('multi-sig-modal-msg-authorize-on-trusted-devices')}
@@ -76,10 +78,10 @@ export default observer(
                 <Text style={{ color: warningColor, ...styles.txt }}>{`${t('multi-sig-modal-txt-aggregation-error')}`}</Text>
               ) : (
                 <Text style={{ color: secondaryTextColor, ...styles.txt }}>
-                  {`${t('multi-sig-modal-txt-aggregation-received')}: ${Math.max(0, received - 1)}/${Math.max(
+                  {`${t('multi-sig-modal-txt-aggregation-received')}: ${Math.max(
                     0,
-                    threshold - 1
-                  )}`}
+                    received - (recoveryMode ? 0 : 1)
+                  )}/${Math.max(0, threshold - (recoveryMode ? 0 : 1))}`}
                 </Text>
               )}
             </FadeInRightView>

@@ -9,7 +9,7 @@
   "land-welcome-terms-of-use": "使用條款",
   "land-create-multi-sig-txt-1": "多簽錢包使用一個以上的私鑰來授權交易",
   "land-create-multi-sig-txt-2": "在多個不同的地方持有不同的私鑰可以提高錢包安全性，同時也可提高錢包的可用性",
-  "land-create-multi-sig-txt-3": "Wallet 3 允許用戶自由創建 n-of-m 類型的非托管多簽錢包",
+  "land-create-multi-sig-txt-3": "Wallet 3 允許用戶自由創建 n-of-m 類型的自托管多簽錢包",
   "land-import-placeholder": "請輸入助記詞組或私鑰",
   "land-import-derivation-path": "地址派生路徑",
   "land-import-button-sync": "從 Wallet 3 桌面版導入",
@@ -366,7 +366,7 @@
   "multi-sig-modal-msg-aggregated-remember-key": "下次使用時免去受信設備許可",
   "multi-sig-modal-msg-before-aggregation": "該操作需要已信任設備的授權才能繼續",
   "multi-sig-modal-msg-upgrade-tip": "多簽錢包可以讓您用多臺設備管理您的加密資產，以及更可靠的恢復機製。推薦您升級為多簽錢包",
-  "multi-sig-modal-msg-inactive-devices": "以下設備已經很長時間沒使用過，請檢查以下設備是否仍然可用",
+  "multi-sig-modal-msg-inactive-devices": "以下設備已有較長時間沒使用，請檢查以下設備是否仍然可用",
   "multi-sig-modal-create-threshold": "您正在創建一個 {{threshold}} of {{max}} 多簽錢包。這意味著發送交易至少需要 {{threshold}} 個私鑰才能成功發送。",
   "multi-sig-modal-keys-distribution": "密鑰將會被分發到以下設備",
 
