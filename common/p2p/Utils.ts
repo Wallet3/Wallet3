@@ -3,9 +3,11 @@ import DeviceInfo from 'react-native-device-info';
 import { Platform } from 'react-native';
 import { sha256Sync } from '../../utils/cipher';
 
+export const globalId = sha256Sync(DeviceInfo.getUniqueIdSync()).substring(0, 24);
+
 export function getDeviceInfo(nameSuffix?: string): ClientInfo {
   return {
-    globalId: sha256Sync(DeviceInfo.getUniqueIdSync()).substring(0, 24),
+    globalId,
     name: DeviceInfo.getDeviceNameSync() + (nameSuffix ? ` ${nameSuffix}` : ''),
     devtype: DeviceInfo.getDeviceType(),
     device: DeviceInfo.getDeviceId(),

@@ -1,18 +1,17 @@
 import Bonjour from '../../../common/p2p/Bonjour';
-import DeviceInfo from 'react-native-device-info';
 import { KeyManagementService } from '../Constants';
 import PairedDevices from './PairedDevices';
 import { SECOND } from '../../../utils/time';
 import { Service } from 'react-native-zeroconf';
 import eccrypto from 'eccrypto';
+import { globalId } from '../../../common/p2p/Utils';
 import { handleRawService } from './Common';
 import { openKeyRecoveryProvider } from '../../../common/Modals';
 import { openShardRedistributionReceiver } from '../../../common/Modals';
-import { sha256Sync } from '../../../utils/cipher';
 
 class KeyRecoveryWatcher {
   private handledIds = new Set<string>();
-  private selfId = sha256Sync(DeviceInfo.getUniqueIdSync()).substring(0, 24);
+  private selfId = globalId;
 
   constructor() {
     Bonjour.on('resolved', this.onResolved);
@@ -42,6 +41,7 @@ class KeyRecoveryWatcher {
     const { shardsRedistribution: service } = handleRawService(raw);
     if (!service) return;
     if (!service.txt.witness) return;
+    if (service.txt.info.globalId === this.selfId) return;
     if (this.handledIds.has(service.txt.reqId)) return;
 
     this.handledIds.add(service.txt.reqId);
