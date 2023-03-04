@@ -76,7 +76,7 @@ export class KeyRecoveryRequestor extends TCPServer<Events> {
     Bonjour.publishService(KeyManagementService, this.name, this.port!, {
       role: 'primary',
       func: LanServices.RequestKeyRecovery,
-      info: btoa(JSON.stringify(getDeviceBasicInfo())),
+      info: btoa(JSON.stringify(getDeviceInfo())),
       protocol: 1,
       reqId: randomBytes(8).toString('hex'),
     });

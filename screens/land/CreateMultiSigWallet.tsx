@@ -1,22 +1,16 @@
-import { Button, Loader, Placeholder, SafeViewContainer } from '../../components';
-import { FadeInDownView, ZoomInView } from '../../components/animations';
-import React, { useEffect, useState } from 'react';
-import Scanner, { BarCodeScanningResult } from '../../components/Scanner';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Button, Loader, SafeViewContainer } from '../../components';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { openKeyRecoveryRequestor, openShardsDistributors } from '../../common/Modals';
-import { secondaryFontColor, secureColor, themeColor, thirdFontColor, verifiedColor } from '../../constants/styles';
+import { secondaryFontColor, secureColor, thirdFontColor, verifiedColor } from '../../constants/styles';
 
-import { AntDesign } from '@expo/vector-icons';
 import IllustrationNomad from '../../assets/illustrations/tss/nomad.svg';
 import IllustrationPartying from '../../assets/illustrations/misc/partying.svg';
 import IllustrationWorld from '../../assets/illustrations/tss/world.svg';
-import { KeyRecovery } from '../../viewmodels/tss/KeyRecovery';
 import { KeyRecoveryRequestor } from '../../viewmodels/tss/KeyRecoveryRequestor';
-import Loading from '../../modals/views/Loading';
-import LottieView from 'lottie-react-native';
 import ModalizeContainer from '../../modals/core/ModalizeContainer';
+import MultiWalletQRScan from './modals/MultiWalletQRScan';
 import { Portal } from 'react-native-portalize';
-import { QRScan } from '../../modals';
 import { ReactiveScreen } from '../../utils/device';
 import { ShardsDistributor } from '../../viewmodels/tss/ShardsDistributor';
 import Swiper from 'react-native-swiper';
@@ -27,19 +21,15 @@ import { observer } from 'mobx-react-lite';
 import { sleep } from '../../utils/async';
 import { useModalize } from 'react-native-modalize';
 import { useNavigation } from '@react-navigation/native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { utils } from 'ethers';
 
 export default observer(() => {
   const { t } = i18n;
   const navigation = useNavigation<any>();
   const [busy, setBusy] = useState(false);
-  const { ref, open: openQRCode, close } = useModalize();
-  const { top } = useSafeAreaInsets();
-  const [added, setAdded] = useState(false);
-  const { width: screenWidth, height: screenHeight } = ReactiveScreen;
+  const { ref, open: openQRScan, close: closeQRScan } = useModalize();
 
-  const [aggregator] = useState(new KeyRecovery());
+  const { width: screenWidth, height: screenHeight } = ReactiveScreen;
 
   const create = async () => {
     setBusy(true);
@@ -55,27 +45,6 @@ export default observer(() => {
     setBusy(false);
     openShardsDistributors({ vm });
   };
-
-  const handleBarCodeScanned = ({ data }: BarCodeScanningResult) => {
-    if (!aggregator.add(data)) return;
-    setAdded(true);
-    setTimeout(() => setAdded(false), 3000);
-  };
-
-  useEffect(() => {
-    aggregator.once('combined', async (mnemonic) => {
-      setBusy(true);
-      await aggregator.save(mnemonic);
-      setBusy(false);
-      close();
-
-      setTimeout(() => navigation.navigate('SetupPasscode'), 125);
-    });
-
-    return () => {
-      aggregator.removeAllListeners();
-    };
-  }, []);
 
   const openKeyRequestor = () => {
     const vm = new KeyRecoveryRequestor();
@@ -111,7 +80,7 @@ export default observer(() => {
 
       <Button
         title={t('land-welcome-restore-multiSig-via-qrcode')}
-        onPress={() => openQRCode()}
+        onPress={() => openQRScan()}
         themeColor={secondaryFontColor}
         style={{ marginBottom: 12 }}
         txtStyle={{ textTransform: 'none' }}
@@ -138,7 +107,6 @@ export default observer(() => {
           adjustToContentHeight={undefined}
           withHandle={false}
           safeAreaStyle={{ flex: 1, backgroundColor: '#000', width: screenWidth, height: screenHeight }}
-          onClosed={() => aggregator.clear()}
           modalStyle={{
             borderTopStartRadius: 0,
             borderTopEndRadius: 0,
@@ -147,47 +115,7 @@ export default observer(() => {
             flexGrow: 1,
           }}
         >
-          <QRScan
-            tip={t('qrscan-tip-paired-devices-qrcode')}
-            handler={handleBarCodeScanned}
-            close={close}
-            style={{ position: 'absolute' }}
-          />
-
-          {added && (
-            <ZoomInView
-              style={{
-                position: 'absolute',
-                left: (screenWidth - 250) / 2,
-                top: (screenHeight - 250) / 2,
-              }}
-            >
-              <LottieView
-                autoPlay
-                loop={false}
-                style={{ width: 250, height: 250 }}
-                source={require('../../assets/animations/check-verde.json')}
-              />
-            </ZoomInView>
-          )}
-
-          <View
-            style={{
-              position: 'absolute',
-              right: 16,
-              top: top + 10,
-              backgroundColor: `${verifiedColor}c0`,
-              borderRadius: 15,
-              paddingHorizontal: 16,
-              justifyContent: 'center',
-              alignItems: 'center',
-              paddingVertical: 2,
-            }}
-          >
-            <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600' }}>
-              {`${aggregator.count} / ${aggregator.threshold || 'n'}`}
-            </Text>
-          </View>
+          <MultiWalletQRScan close={closeQRScan} onBusy={setBusy} />
         </ModalizeContainer>
       </Portal>
     </SafeViewContainer>
