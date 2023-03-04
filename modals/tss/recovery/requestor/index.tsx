@@ -51,7 +51,7 @@ export default observer(({ close, onCritical, vm }: Props) => {
       setTimeout(() => navigation.navigate('SetupPasscode'), 0);
     });
 
-    vm.once('error', () => (timer = setTimeout(() => close(), 3000)));
+    vm.once('error', () => (timer = setTimeout(() => close(), 5000)));
 
     return () => {
       vm.dispose();
