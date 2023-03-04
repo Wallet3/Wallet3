@@ -5,6 +5,7 @@
   "land-welcome-restore-multiSig-via-qrcode": "通過 QRCode 恢復錢包",
   "land-welcome-restore-multiSig-via-network": "通過信任設備恢復錢包",
   "land-welcome-other-options": "其它選項",
+  "land-welcome-short-slogan": "安全、簡單、強大",
   "land-welcome-i-agree-to": "我已閱讀並同意",
   "land-welcome-terms-of-use": "使用條款",
   "land-create-multi-sig-txt-1": "多簽錢包使用一個以上的私鑰來授權交易",

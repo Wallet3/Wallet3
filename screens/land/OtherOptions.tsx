@@ -62,10 +62,14 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
     <SafeViewContainer style={{ flex: 1, backgroundColor: '#fff', alignItems: 'center' }}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <FadeInDownView delay={200}>
-          <IllustrationVault width={200} height={200} />
+          <IllustrationVault width={200} height={200} style={{ marginVertical: -24 }} />
         </FadeInDownView>
-        <Text animation="fadeInUp" delay={500} style={{ color: secondaryFontColor, fontSize: 12, fontWeight: '500' }}>
-          Secure, Simple, Powerful
+        <Text
+          animation="fadeInUp"
+          delay={500}
+          style={{ color: secondaryFontColor, fontSize: 12, fontWeight: '500', textTransform: 'capitalize' }}
+        >
+          {t('land-welcome-short-slogan')}
         </Text>
       </View>
 

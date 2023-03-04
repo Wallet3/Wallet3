@@ -5,6 +5,7 @@
   "land-welcome-restore-multiSig-via-qrcode": "QR Kodu aracılığıyla cüzdanın geri yüklenmesi",
   "land-welcome-restore-multiSig-via-network": "Ağ üzerinden cüzdanı geri yükle",
   "land-welcome-other-options": "Diğer seçenekler",
+  "land-welcome-short-slogan": "Güvenli, basit ve güçlü",
   "land-welcome-i-agree-to": "Okudum ve kullanım şartlarını kabul ediyorum",
   "land-welcome-terms-of-use": "Kullanım Şartları",
   "land-create-multi-sig-txt-1": "Çok imzalı cüzdanlar, işlemleri yetkilendirmek için birden fazla özel anahtar kullanır.",

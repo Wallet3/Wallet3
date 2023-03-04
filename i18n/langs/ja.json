@@ -5,6 +5,7 @@
   "land-welcome-restore-multiSig-via-qrcode": "QRCodeでウォレットの復元",
   "land-welcome-restore-multiSig-via-network": "ネットでウォレットの復元",
   "land-welcome-other-options": "他のオプション",
+  "land-welcome-short-slogan": "安全で、簡単で、パワフル",
   "land-welcome-i-agree-to": "確認しました",
   "land-welcome-terms-of-use": "利用規約",
   "land-create-multi-sig-txt-1": "マルチシグウォレットは、トランザクションの承認に複数の秘密鍵を使用します",

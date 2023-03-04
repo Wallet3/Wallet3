@@ -5,6 +5,7 @@
   "land-welcome-restore-multiSig-via-qrcode": "Recover wallet via QRCode",
   "land-welcome-restore-multiSig-via-network": "Recover wallet via network",
   "land-welcome-other-options": "Other options",
+  "land-welcome-short-slogan": "Secure, Simple, Powerful",
   "land-welcome-i-agree-to": "I have read and agree to the",
   "land-welcome-terms-of-use": "Terms of Use",
   "land-create-multi-sig-txt-1": "A multi-signature wallet uses more than one private key to authorize transactions.",
