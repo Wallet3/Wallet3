@@ -16,6 +16,7 @@ import { sleep } from '../../utils/async';
 type Events = {
   saving: () => void;
   saved: () => void;
+  error: (e: Error) => void;
 };
 
 export class KeyRecoveryRequestor extends TCPServer<Events> {
@@ -55,7 +56,10 @@ export class KeyRecoveryRequestor extends TCPServer<Events> {
     });
 
     this.recovery.once('combined', this.save);
-    this.recovery.once('combineError', (e) => runInAction(() => (this.lastError = e)));
+    this.recovery.once('combineError', (e) => {
+      runInAction(() => (this.lastError = e));
+      this.emit('error', e);
+    });
   }
 
   save = async (mnemonic: string) => {

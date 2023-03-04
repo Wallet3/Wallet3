@@ -1,9 +1,6 @@
-import { ActivityIndicator, ScrollView, FlatList as SystemFlatList, Text, View } from 'react-native';
-import Animated, { FadeInUp } from 'react-native-reanimated';
-import React, { useEffect, useRef, useState } from 'react';
-import { getScreenCornerRadius, useOptimizedCornerRadius } from '../../../../utils/hardware';
+import { ActivityIndicator, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
 
-import Aggregation from '../../aggregator/Aggregation';
 import BackableScrollTitles from '../../../components/BackableScrollTitles';
 import { FadeInDownView } from '../../../../components/animations';
 import { KeyRecoveryRequestor } from '../../../../viewmodels/tss/KeyRecoveryRequestor';
@@ -11,9 +8,6 @@ import ModalRootContainer from '../../../core/ModalRootContainer';
 import Preparations from './Preparations';
 import { ReactiveScreen } from '../../../../utils/device';
 import RecoveryAggregation from './RecoveryAggregation';
-import ScrollTitles from '../../../components/ScrollTitles';
-import { Service } from 'react-native-zeroconf';
-import { ShardReceiver } from '../../../../viewmodels/tss/ShardReceiver';
 import Theme from '../../../../viewmodels/settings/Theme';
 import i18n from '../../../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -29,7 +23,7 @@ export default observer(({ close, onCritical, vm }: Props) => {
   const { t } = i18n;
   const [step, setStep] = useState(0);
   const navigation = useNavigation<any>();
-  const { textColor, secondaryTextColor } = Theme;
+  const { secondaryTextColor } = Theme;
 
   const titles = [
     t('multi-sig-modal-title-wallet-recovery'),
@@ -45,6 +39,8 @@ export default observer(({ close, onCritical, vm }: Props) => {
   useEffect(() => () => vm.dispose(), []);
 
   useEffect(() => {
+    let timer: NodeJS.Timer;
+
     vm.once('saving', () => {
       setStep(2);
       onCritical?.(true);
@@ -55,7 +51,12 @@ export default observer(({ close, onCritical, vm }: Props) => {
       setTimeout(() => navigation.navigate('SetupPasscode'), 0);
     });
 
-    return () => vm.dispose();
+    vm.once('error', () => (timer = setTimeout(() => close(), 3000)));
+
+    return () => {
+      vm.dispose();
+      clearTimeout(timer);
+    };
   }, []);
 
   return (
