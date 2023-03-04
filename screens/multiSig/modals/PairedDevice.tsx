@@ -23,13 +23,14 @@ import { useOptimizedSafeBottom } from '../../../utils/hardware';
 import { warningColor } from '../../../constants/styles';
 
 interface Props {
+  distributionId: string;
   root: string;
   bip32: string;
   device: PairedDevice;
   onNext: () => void;
 }
 
-export const SecretView = ({ root, bip32, device, onNext }: Props) => {
+export const SecretView = ({ root, bip32, device, onNext, distributionId }: Props) => {
   const safeBottom = useOptimizedSafeBottom();
   const { secondaryTextColor, textColor, appColor } = Theme;
   const { t } = i18n;
@@ -37,6 +38,7 @@ export const SecretView = ({ root, bip32, device, onNext }: Props) => {
     JSON.stringify({
       root,
       bip32,
+      distributionId,
       device: getDeviceInfo(),
       secretsInfo: device.shard.secretsInfo,
     } as PlainSecretItem)
@@ -143,7 +145,10 @@ export default ({ device, close }: { device: PairedDevice; close: () => void }) 
         />
       )}
 
-      {step === 1 && <SecretView device={device} bip32={bip32} root={root} onNext={() => goTo(2)} />}
+      {step === 1 && (
+        <SecretView distributionId={device.distributionId} device={device} bip32={bip32} root={root} onNext={() => goTo(2)} />
+      )}
+
       {step === 2 && <DeleteConfirmationView message={t('multi-sig-modal-msg-delete-device')} onDone={doDelete} />}
     </ModalRootContainer>
   );

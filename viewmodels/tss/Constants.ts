@@ -67,6 +67,7 @@ export type RecoveryKeyAck = {
   root: EncryptedShard;
   bip32: EncryptedShard;
   device: ClientInfo;
+  distributionId: string;
   secretsInfo: {
     threshold: number;
     bip32Path: string;

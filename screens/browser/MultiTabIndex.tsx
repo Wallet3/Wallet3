@@ -288,6 +288,8 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
         <SquircleModalize ref={tabsRef}>
           <ScrollView
             scrollEnabled={false}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
             horizontal
             style={{ width: '100%', flex: 1 }}
             contentContainerStyle={{ flexGrow: 1 }}

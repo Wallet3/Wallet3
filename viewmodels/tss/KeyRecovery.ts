@@ -22,6 +22,7 @@ export type PlainSecretItem = {
   root: string;
   bip32: string;
   device: ClientInfo;
+  distributionId: string;
   secretsInfo: {
     threshold: number;
     bip32Path: string;
@@ -79,6 +80,14 @@ export class KeyRecovery extends EventEmitter<Events> {
   }
 
   private combine() {
+    if (
+      new Set(this.shards.map((s) => s.secretsInfo.version)).size > 1 ||
+      new Set(this.shards.map((s) => s.distributionId)).size > 1
+    ) {
+      this.emit('combineError', new Error('Keys not match'));
+      return;
+    }
+
     try {
       const entropy = secretjs.combine(this.shards.map((s) => s.root));
       const mnemonic = utils.entropyToMnemonic(Buffer.from(entropy, 'hex'));

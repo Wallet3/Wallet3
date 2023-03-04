@@ -9,7 +9,7 @@
   "land-welcome-terms-of-use": "利用規約",
   "land-create-multi-sig-txt-1": "マルチシグウォレットは、トランザクションの承認に複数の秘密鍵を使用します",
   "land-create-multi-sig-txt-2": "複数の場所に秘密鍵を保持することでセキュリティが向上し、複数の鍵による署名によってトランザクションの利用性が向上します",
-  "land-create-multi-sig-txt-3": " Wallet 3 では、ユーザーが n-of-m の非管理型マルチシグネチャウォレットを自由に作成できます",
+  "land-create-multi-sig-txt-3": "Wallet 3 では、ユーザーは自由に n-of-m 自己保管マルチシグウォレットを作成できます",
   "land-import-placeholder": "ニーモニック/秘密鍵を入力してください。",
   "land-import-derivation-path": "派生パス",
   "land-import-button-sync": "Wallet 3 デスクトップ版からインポート",

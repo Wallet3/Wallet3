@@ -9,7 +9,7 @@
   "land-welcome-terms-of-use": "Terms of Use",
   "land-create-multi-sig-txt-1": "A multi-signature wallet uses more than one private key to authorize transactions.",
   "land-create-multi-sig-txt-2": "Holding private keys in different locations enhances security, while allowing multiple keys to sign a transaction improves usability.",
-  "land-create-multi-sig-txt-3": "Wallet 3 allows users to freely create n-of-m non-custodial multi-signature wallets.",
+  "land-create-multi-sig-txt-3": "Wallet 3 allows users to freely create n-of-m self-custodial multi-signature wallets.",
   "land-import-placeholder": "Please enter recovery phrase or private key here",
   "land-import-derivation-path": "Derivation Path",
   "land-import-button-sync": "Import from Wallet 3 Desktop",

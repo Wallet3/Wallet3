@@ -211,6 +211,7 @@ export const WebTabs = observer(
               borderColor: tintColor,
               flexDirection: 'row',
               alignItems: 'center',
+              marginEnd: 2,
             }}
           >
             <Ionicons name="close-circle-outline" size={12} color={thirdTextColor} />

@@ -69,7 +69,7 @@ export default observer(({ vm, close, onCritical }: Props) => {
   return (
     <View style={{ flex: 1, width: ReactiveScreen.width - 12, marginHorizontal: -16 }}>
       {verified ? (
-        <FadeInDownView style={{ flex: 1 }}>
+        <View style={{ flex: 1 }}>
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             {distributed ? (
               <ZoomInView>
@@ -81,17 +81,21 @@ export default observer(({ vm, close, onCritical }: Props) => {
                 />
               </ZoomInView>
             ) : (
-              <IllustrationSecureFiles width={200} height={200} />
+              <FadeInDownView>
+                <IllustrationSecureFiles width={200} height={200} />
+              </FadeInDownView>
             )}
           </View>
 
-          <Button
-            disabled={busy}
-            themeColor={secureColor}
-            onPress={distributed ? close : send}
-            title={distributed ? t('button-done') : t('button-shards-distribute')}
-          />
-        </FadeInDownView>
+          <FadeInDownView delay={300}>
+            <Button
+              disabled={busy}
+              themeColor={secureColor}
+              onPress={distributed ? close : send}
+              title={distributed ? t('button-done') : t('button-shards-distribute')}
+            />
+          </FadeInDownView>
+        </View>
       ) : (
         <FadeInDownView
           style={{

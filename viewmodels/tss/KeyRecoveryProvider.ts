@@ -50,6 +50,7 @@ export class KeyRecoveryProvider extends TCPClient {
 
       const data: RecoveryKeyAck = {
         type: ContentType.recoveryKeyAck,
+        distributionId: this.key.distributionId,
         bip32,
         root,
         device: getDeviceInfo(),

@@ -9,7 +9,7 @@
   "land-welcome-terms-of-use": "Kullanım Şartları",
   "land-create-multi-sig-txt-1": "Çok imzalı cüzdanlar, işlemleri yetkilendirmek için birden fazla özel anahtar kullanır.",
   "land-create-multi-sig-txt-2": "Özel anahtarları farklı konumlarda tutmak güvenliği artırırken, bir işlemi imzalamak için birden fazla anahtar kullanılması kullanılabilirliği artırır.",
-  "land-create-multi-sig-txt-3": "Wallet 3, kullanıcıların n-of-m güvensiz çoklu imza cüzdanlarını özgürce oluşturmasına olanak tanır.",
+  "land-create-multi-sig-txt-3": "Wallet 3, kullanıcılara n-of-m öz-yatırımlı çok imzalı cüzdanları özgürce oluşturma imkanı sunar.",
   "land-import-placeholder": "Lütfen geri yükleme cümlesini veya özel anahtarı buraya girin",
   "land-import-derivation-path": "Türetim Yolu",
   "land-import-button-sync": "Wallet 3 Masaüstü'den içe aktar",

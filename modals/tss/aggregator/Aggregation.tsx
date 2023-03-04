@@ -52,7 +52,7 @@ export default observer(
     const { device, received, threshold, aggregated, lastError } = vm;
 
     useEffect(() => {
-      received === 1 && startLayoutAnimation();
+      received <= 1 && startLayoutAnimation();
     }, [received]);
 
     return (

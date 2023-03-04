@@ -9,7 +9,7 @@
   "land-welcome-terms-of-use": "使用条款",
   "land-create-multi-sig-txt-1": "多签钱包使用一个以上的私钥来授权交易",
   "land-create-multi-sig-txt-2": "在多个不同的地方持有不同的私钥可以提高钱包安全性，同时也可提高钱包的可用性",
-  "land-create-multi-sig-txt-3": "Wallet 3 允许用户自由创建 n-of-m 类型的非托管多签钱包",
+  "land-create-multi-sig-txt-3": "Wallet 3 允许用户自由创建 n-of-m 类型的自托管多签钱包",
   "land-import-placeholder": "请输入助记词组或私钥",
   "land-import-derivation-path": "地址派生路径",
   "land-import-button-sync": "从 Wallet 3 桌面版导入",
