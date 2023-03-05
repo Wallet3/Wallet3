@@ -40,7 +40,7 @@ export async function fetchAddressInfo(chainId: number, address: string) {
   const root = await getHTML(chainId, address, 'address');
   if (!root) return item;
 
-  const warnings = (root?.querySelectorAll('span.u-label--danger, span.u-label--warning, .badge.bg-warning') || [])
+  const warnings = (root?.querySelectorAll('span.u-label--danger, span.u-label--warning, .badge.bg-warning, .badge.bg-danger') || [])
     .filter((i) => i.innerText && i.innerText.toUpperCase() !== 'OUT')
     .map((e) => e.innerText);
 
