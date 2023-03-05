@@ -101,15 +101,15 @@ export async function isTransactionAbandoned(chainId: number, tx: string) {
   const root = await getHTML(chainId, tx, 'tx');
 
   const abandoned =
-    root?.querySelector('p.lead')?.innerText?.toLowerCase?.().includes?.('sorry, we are unable to locate') ?? false;
-  const hasTx = root?.querySelector('#spanTxHash');
+    root?.querySelector('h2.h5')?.innerText?.toLowerCase?.().includes?.('sorry, we are unable to locate') ?? false;
 
   if (abandoned) {
     AbandonCache.set(key, true);
     return true;
   }
 
-  if (hasTx) {
+  const pendingTx = root?.querySelector('#spanTxHash');
+  if (pendingTx) {
     AbandonCache.set(key, false);
     return false;
   }
