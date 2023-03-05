@@ -4194,24 +4194,24 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/slider/-/slider-4.4.2.tgz#1fea0eb3ae31841fe87bd6c4fc67569066e9cf4b"
   integrity sha512-D9bv+3Vd2gairAhnRPAghwccgEmoM7g562pm8i4qB3Esrms5mggF81G3UvCyc0w3jjtFHh8dpQkfEoKiP0NW/Q==
 
-"@react-native-firebase/analytics@^17.3.1":
-  version "17.3.1"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-17.3.1.tgz#d41b73020c6a0d2cac7af5976121db1e40382418"
-  integrity sha512-HrxsBcJZk1MA7V6zFlYNl/8G0Er5gQm+ChD8kmvaReKWrN8HlvnrZpGa1dTJ/Bg6Z0dCaWE+3a/UJQ4Vt0qAPg==
+"@react-native-firebase/analytics@^17.3.2":
+  version "17.3.2"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-17.3.2.tgz#31ddb8b349f073b540d6e15ac2c4216439b39390"
+  integrity sha512-xjgH5QFmVDHpaxxndhGMXhMFBizNg9Rkr5ukeWIMeR/K6Shi/xGVoomjn/PmgoCZWIjX3EJkokXSxsntMlh+Vg==
 
-"@react-native-firebase/app@^17.3.1":
-  version "17.3.1"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-17.3.1.tgz#2ceca920fda786b6a32abf77c3fa9459f22e95e9"
-  integrity sha512-iZsxp9kgL3O544v5U8rIm5qcpp7yO9k//dBCXZByWzhumwVAn/TvgTrXCs60leCAJxNr9seXTSBHrToFabF+Gw==
+"@react-native-firebase/app@^17.3.2":
+  version "17.3.2"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-17.3.2.tgz#c39dd34f5389ff65845c5d67313bbf2371275a8f"
+  integrity sha512-JPA9PuD3il2/FERnsW5bC/PbXdcBcVMtk4V0vL8YgLh+jQg+E3qQTQmeWn9eOWTYJb6BYOiiNHTdTglvqoo5Cg==
   dependencies:
     "@expo/config-plugins" "^5.0.4"
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
-"@react-native-firebase/firestore@^17.3.1":
-  version "17.3.1"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/firestore/-/firestore-17.3.1.tgz#366bc48797fd4d680bfd33742e44a0ba64282889"
-  integrity sha512-mPLydK++X2E9lA2qIKYIve/8K7dtyTDrI5Yd4SGbBxRnsjZoNEWT8zwqvhZR4L9pQNjVYfo1Akkp/uIJuJ8t+g==
+"@react-native-firebase/firestore@^17.3.2":
+  version "17.3.2"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/firestore/-/firestore-17.3.2.tgz#1b15d65bd0cb042f48cbbb4b85eeff0c0dcb5796"
+  integrity sha512-ZqdtYcZExAdfFXIntfy5/hTRK8jAyZnQCbpCyvC3O8f1m4C2pDo57xLzTdukORtJjiBGkxBpcULLBrSbOJ/SXw==
 
 "@react-native-google-signin/google-signin@^9.0.2":
   version "9.0.2"
@@ -11116,10 +11116,10 @@ mkdirp@~0.5.1:
   dependencies:
     minimist "^1.2.6"
 
-mobx-react-lite@^3.4.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/mobx-react-lite/-/mobx-react-lite-3.4.0.tgz#d59156a96889cdadad751e5e4dab95f28926dfff"
-  integrity sha512-bRuZp3C0itgLKHu/VNxi66DN/XVkQG7xtoBVWxpvC5FhAqbOCP21+nPhULjnzEqd7xBMybp6KwytdUpZKEgpIQ==
+mobx-react-lite@^3.4.2:
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/mobx-react-lite/-/mobx-react-lite-3.4.2.tgz#6604beb842405f47175ae69448d3fac5de6e00ad"
+  integrity sha512-wOFI6qhMBucYNy00aSDoee23L2//wKYJp4z5k+YOhOCY303prwLaWiEhJU0H2c//oIEEswGqUHtVV2qptk/g5g==
 
 mobx@^6.8.0:
   version "6.8.0"
