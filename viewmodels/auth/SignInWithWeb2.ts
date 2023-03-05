@@ -8,6 +8,7 @@ import { decrypt, encrypt } from '../../utils/cipher';
 import Authentication from './Authentication';
 import MnemonicOnce from './MnemonicOnce';
 import { SignInWeb2Store } from './SignInWeb2Store';
+import { getSecureRandomBytes } from '../../utils/math';
 import { logSignWithWeb2 } from '../services/Analytics';
 import { utils } from 'ethers';
 
@@ -81,7 +82,7 @@ export abstract class SignInWithWeb2 {
   }
 
   protected async generate() {
-    this.recoveryKey = Buffer.from(Crypto.getRandomBytes(32)).toString('hex');
+    this.recoveryKey = Buffer.from(getSecureRandomBytes(32)).toString('hex');
     await SecureStore.setItemAsync(Keys.recovery(this.mini_uid), this.recoveryKey);
 
     const plainSecret = await MnemonicOnce.generate(24);

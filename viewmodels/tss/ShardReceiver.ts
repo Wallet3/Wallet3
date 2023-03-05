@@ -1,14 +1,15 @@
 import { ContentType, OneTimeKeyExchange, PairingCodeVerified, ShardDistribution, ShardDistributionAck } from './Constants';
-import { createHash, randomBytes } from 'crypto';
 import { makeObservable, observable, runInAction } from 'mobx';
-import { sha256, sha256Sync } from '../../utils/cipher';
 
 import Authentication from '../auth/Authentication';
 import PairedDevices from './management/PairedDevices';
 import ShardKey from '../../models/entities/ShardKey';
 import { TCPClient } from '../../common/p2p/TCPClient';
+import { createHash } from 'crypto';
 import eccrypto from 'eccrypto';
+import { getSecureRandomBytes } from '../../utils/math';
 import i18n from '../../i18n';
+import { sha256Sync } from '../../utils/cipher';
 import { showMessage } from 'react-native-flash-message';
 import { sleep } from '../../utils/async';
 
@@ -34,7 +35,7 @@ async function verifyEccSignature(pubkey: string, msg: string, signature: string
 }
 
 export class ShardReceiver extends TCPClient {
-  private oneTimeKey = randomBytes(32);
+  private oneTimeKey = getSecureRandomBytes(32);
 
   secretStatus = ShardPersistentStatus.waiting;
   pairingCodeVerified = false;

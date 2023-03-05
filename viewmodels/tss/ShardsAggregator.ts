@@ -1,7 +1,6 @@
 import { ContentType, KeyManagementService, ShardAggregationAck, ShardAggregationRequest } from './Constants';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import eccrypto, { Ecies } from 'eccrypto';
-import { getDeviceBasicInfo, getDeviceInfo } from '../../common/p2p/Utils';
 
 import Bonjour from '../../common/p2p/Bonjour';
 import { LanServices } from './management/Common';
@@ -9,8 +8,8 @@ import { MultiSigWallet } from '../wallet/MultiSigWallet';
 import { TCPClient } from '../../common/p2p/TCPClient';
 import { TCPServer } from '../../common/p2p/TCPServer';
 import { btoa } from 'react-native-quick-base64';
-import { randomBytes } from 'crypto';
-import { randomInt } from '../../utils/math';
+import { getDeviceInfo } from '../../common/p2p/Utils';
+import { getSecureRandomBytes } from '../../utils/math';
 import secretjs from 'secrets.js-grempe';
 import { sha256Sync } from '../../utils/cipher';
 import { utils } from 'ethers';
@@ -113,7 +112,7 @@ export class ShardsAggregator extends TCPServer<Events> {
     const succeed = await super.start();
 
     Bonjour.publishService(KeyManagementService, this.name, this.port!, {
-      reqId: randomBytes(8).toString('hex'),
+      reqId: getSecureRandomBytes(8).toString('hex'),
       role: this.role,
       func: LanServices.ShardsAggregation,
       distributionId: this.id,
@@ -162,7 +161,7 @@ export class ShardsAggregator extends TCPServer<Events> {
         rootShard && this.rootShards.add(rootShard);
         bip32Shard && this.bip32Shards.add(bip32Shard);
 
-        runInAction(() => (this.received = Math.max(0, this.rootShards.size || this.bip32Shards.size)));
+        runInAction(() => (this.received = Math.max(0, this.rootShards.size, this.bip32Shards.size)));
         this.combineShards();
       }
 

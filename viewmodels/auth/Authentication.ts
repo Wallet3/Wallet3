@@ -1,4 +1,3 @@
-import * as Crypto from 'expo-crypto';
 import * as SecureStore from 'expo-secure-store';
 
 import {
@@ -16,7 +15,7 @@ import { decrypt, encrypt, sha256 } from '../../utils/cipher';
 import { AppState } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import EventEmitter from 'eventemitter3';
-import MessageKeys from '../../common/MessageKeys';
+import { getSecureRandomBytes } from '../../utils/math';
 import { logWalletLocked } from '../services/Analytics';
 import { toMilliseconds } from '../../utils/time';
 
@@ -134,7 +133,7 @@ export class Authentication extends EventEmitter<Events> {
     let masterKey = await SecureStore.getItemAsync(Keys.masterKey);
 
     if (!masterKey) {
-      masterKey = Buffer.from(Crypto.getRandomBytes(16)).toString('hex');
+      masterKey = Buffer.from(getSecureRandomBytes(16)).toString('hex');
       await SecureStore.setItemAsync(Keys.masterKey, masterKey);
     }
 
@@ -145,7 +144,7 @@ export class Authentication extends EventEmitter<Events> {
     let foreverKey = await SecureStore.getItemAsync(Keys.foreverKey);
 
     if (!foreverKey) {
-      foreverKey = Buffer.from(Crypto.getRandomBytes(16)).toString('hex');
+      foreverKey = Buffer.from(getSecureRandomBytes(16)).toString('hex');
       await SecureStore.setItemAsync(Keys.foreverKey, foreverKey);
     }
 

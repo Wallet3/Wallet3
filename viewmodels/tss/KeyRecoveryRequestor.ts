@@ -9,6 +9,7 @@ import { TCPClient } from '../../common/p2p/TCPClient';
 import { TCPServer } from '../../common/p2p/TCPServer';
 import { btoa } from 'react-native-quick-base64';
 import eccrypto from 'eccrypto';
+import { getSecureRandomBytes } from '../../utils/math';
 import { randomBytes } from 'crypto';
 import { sha256Sync } from '../../utils/cipher';
 import { sleep } from '../../utils/async';
@@ -82,7 +83,7 @@ export class KeyRecoveryRequestor extends TCPServer<Events> {
       func: LanServices.RequestKeyRecovery,
       info: btoa(JSON.stringify(getDeviceInfo())),
       protocol: 1,
-      reqId: randomBytes(8).toString('hex'),
+      reqId: getSecureRandomBytes(8).toString('hex'),
     });
 
     return succeed;
@@ -105,7 +106,7 @@ export class KeyRecoveryRequestor extends TCPServer<Events> {
 
     runInAction(() => this.pendingClients.splice(this.pendingClients.indexOf(c), 1));
 
-    const oneTimeKey = randomBytes(32);
+    const oneTimeKey = getSecureRandomBytes(32);
     const oneTimeEx: OneTimeKeyExchange = {
       type: ContentType.oneTimeKeyExchange,
       pubkey: eccrypto.getPublic(oneTimeKey).toString('hex'),

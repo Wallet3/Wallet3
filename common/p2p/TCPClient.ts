@@ -1,13 +1,11 @@
-import * as Crypto from 'expo-crypto';
-
-import { Cipher, Decipher, createCipheriv, createDecipheriv, createECDH, createHash, randomBytes } from 'crypto';
+import { Cipher, Decipher, createCipheriv, createDecipheriv, createECDH, createHash } from 'crypto';
 import { CipherAlgorithm, ClientInfo } from './Constants';
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import { AsyncTCPSocket } from './AsyncTCPSocket';
 import TCP from 'react-native-tcp-socket';
 import { getDeviceInfo } from './Utils';
-import { randomInt } from '../../utils/math';
+import { getSecureRandomBytes } from '../../utils/math';
 
 const { connect } = TCP;
 
@@ -65,7 +63,7 @@ export class TCPClient extends AsyncTCPSocket {
 
   private handshake = async () => {
     try {
-      const iv = Crypto.getRandomBytes(16);
+      const iv = getSecureRandomBytes(16);
       const ecdh = createECDH('secp256k1');
 
       const negotiation = await this.read()!;
@@ -92,13 +90,7 @@ export class TCPClient extends AsyncTCPSocket {
   private hello = async () => {
     if (this.greeted) return;
 
-    this.secureWriteString(
-      JSON.stringify({
-        r1: randomBytes(randomInt(1, 256)).toString('hex'),
-        ...getDeviceInfo(),
-        r2: randomBytes(randomInt(1, 128)).toString('hex'),
-      })
-    );
+    this.secureWriteString(JSON.stringify(getDeviceInfo()));
 
     const read = (await this.secureReadString())!;
     runInAction(() => (this.remoteInfo = JSON.parse(read)));

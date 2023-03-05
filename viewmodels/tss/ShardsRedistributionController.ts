@@ -1,6 +1,5 @@
 import { IShardsDistributorConstruction, ShardsDistributor } from './ShardsDistributor';
 import { computed, makeObservable, observable, runInAction } from 'mobx';
-import { getDeviceBasicInfo, getDeviceInfo } from '../../common/p2p/Utils';
 
 import Bonjour from '../../common/p2p/Bonjour';
 import EventEmitter from 'eventemitter3';
@@ -9,12 +8,11 @@ import { LanServices } from './management/Common';
 import MultiSigKey from '../../models/entities/MultiSigKey';
 import { MultiSigWallet } from '../wallet/MultiSigWallet';
 import PairedDevices from './management/PairedDevices';
-import { ShardSender } from './ShardSender';
 import { ShardsAggregator } from './ShardsAggregator';
-import { TCPClient } from '../../common/p2p/TCPClient';
 import { btoa } from 'react-native-quick-base64';
 import eccrypto from 'eccrypto';
-import { randomBytes } from 'crypto';
+import { getDeviceInfo } from '../../common/p2p/Utils';
+import { getSecureRandomBytes } from '../../utils/math';
 
 class ShardsRedistributor extends ShardsDistributor {
   readonly wallet: MultiSigWallet;
@@ -60,7 +58,7 @@ class ShardsRedistributor extends ShardsDistributor {
     Bonjour.publishService(KeyManagementService, this.name, this.port!, {
       role: 'primary',
       func: LanServices.ShardsRedistribution,
-      reqId: randomBytes(8).toString('hex'),
+      reqId: getSecureRandomBytes(8).toString('hex'),
       distributionId: this.id,
       info: btoa(JSON.stringify(getDeviceInfo())),
       protocol: 1,

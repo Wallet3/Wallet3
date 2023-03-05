@@ -1,25 +1,22 @@
 import * as Crypto from 'expo-crypto';
 
 import { createCipheriv, createDecipheriv, createECDH, createHash, randomBytes } from 'crypto';
+import { getSecureRandomBytes, randomInt } from '../../utils/math';
 
 import { AsyncTCPSocket } from './AsyncTCPSocket';
 import { CipherAlgorithm } from './Constants';
 import EventEmitter from 'eventemitter3';
 import TCP from 'react-native-tcp-socket';
 import { TCPClient } from './TCPClient';
-import { randomInt } from '../../utils/math';
 import { sleep } from '../../utils/async';
 
 const { Server } = TCP;
 
 export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends EventEmitter<T, any> {
   private readonly server: TCP.Server;
-  private static port = randomInt(20000, 50000);
   private handshakingSockets = new Set<AsyncTCPSocket>();
 
   constructor() {
-    TCPServer.port = TCPServer.port > 65532 ? 20000 : TCPServer.port;
-
     super();
     this.server = new Server(this.handleClient);
     this.server.once('error', () => this.stop());
@@ -43,10 +40,12 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
 
     while (attempts < 10) {
       try {
-        await new Promise<void>((resolve) => this.server.listen({ port: TCPServer.port++, host: '0.0.0.0' }, () => resolve()));
+        await new Promise<void>((resolve) =>
+          this.server.listen({ port: randomInt(10000, 60000), host: '0.0.0.0' }, () => resolve())
+        );
         break;
       } catch (error) {
-        __DEV__ && console.error(error, TCPServer.port);
+        __DEV__ && console.error(error);
         attempts++;
       }
     }
@@ -61,9 +60,9 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
     });
 
     this.handshakingSockets.clear();
+    this.server.removeAllListeners();
 
     if (!this.listening) return;
-    this.server.removeAllListeners();
 
     return new Promise<void>((resolve) => {
       this.server.close((err) => {
@@ -85,7 +84,6 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
           await sleep(500);
         }
 
-        __DEV__ && console.log('new client', socket.remoteIP, client.greeted);
         this.newClient(client);
       } else {
         socket.destroy();
@@ -98,7 +96,7 @@ export abstract class TCPServer<T extends EventEmitter.ValidEventTypes> extends 
 
   private handshake = async (socket: AsyncTCPSocket): Promise<TCPClient | undefined> => {
     try {
-      const iv = Crypto.getRandomBytes(16);
+      const iv = getSecureRandomBytes(16);
       const ecdh = createECDH('secp256k1');
 
       await socket.write(Buffer.from([...iv, ...ecdh.generateKeys()]));

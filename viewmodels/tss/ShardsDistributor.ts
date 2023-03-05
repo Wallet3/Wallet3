@@ -9,12 +9,12 @@ import { HDNode } from 'ethers/lib/utils';
 import { KeyManagementService } from './Constants';
 import LINQ from 'linq';
 import { LanServices } from './management/Common';
-import MessageKeys from '../../common/MessageKeys';
 import MultiSigKey from '../../models/entities/MultiSigKey';
 import { ShardSender } from './ShardSender';
 import { TCPClient } from '../../common/p2p/TCPClient';
 import { TCPServer } from '../../common/p2p/TCPServer';
 import { btoa } from 'react-native-quick-base64';
+import { getSecureRandomBytes } from '../../utils/math';
 import i18n from '../../i18n';
 import { reverseLookupAddress } from '../services/DomainResolver';
 import secretjs from 'secrets.js-grempe';
@@ -137,7 +137,7 @@ export class ShardsDistributor extends TCPServer<Events> {
       Bonjour.publishService(KeyManagementService, this.name, this.port!, {
         role: 'primary',
         func: LanServices.ShardsDistribution,
-        reqId: randomBytes(8).toString('hex'),
+        reqId: getSecureRandomBytes(8).toString('hex'),
         distributionId: this.id,
         info: btoa(JSON.stringify(getDeviceBasicInfo())),
         protocol: 1,
@@ -199,7 +199,7 @@ export class ShardsDistributor extends TCPServer<Events> {
 
     key.secretsInfo = {
       threshold: this.threshold,
-      version: randomBytes(8).toString('hex'),
+      version: getSecureRandomBytes(8).toString('hex'),
       distributedCount: this.totalCount,
       devices: this.approvedClients.map((a) => {
         return { ...a.remoteInfo!, distributedAt: Date.now(), lastUsedAt: Date.now() };

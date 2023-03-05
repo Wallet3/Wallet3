@@ -9,7 +9,7 @@ interface Events extends SocketEvents {
 }
 
 export class AsyncTCPSocket extends EventEmitter<Events> {
-  private awaits = new Set<Function>();
+  private awaits = new Set<(reason?: any) => void>();
 
   readonly raw: TCP.TLSSocket | TCP.Socket;
 
@@ -74,7 +74,6 @@ export class AsyncTCPSocket extends EventEmitter<Events> {
     try {
       return (await this.read())?.toString(encoding);
     } catch (error) {}
-    // return new Promise<string>((resolve) => this.raw.once('data', (data) => resolve(data.toString(encoding))));
   }
 
   destroy() {
