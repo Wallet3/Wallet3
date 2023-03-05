@@ -49,6 +49,8 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
   return (
     <ScrollView
       bounces={false}
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
       contentContainerStyle={{ paddingBottom: 24 }}
       style={{ padding: 16, paddingBottom: 24, maxHeight: 760 }}
     >

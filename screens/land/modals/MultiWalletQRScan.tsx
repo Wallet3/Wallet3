@@ -73,17 +73,17 @@ export default observer(({ close, onBusy }: { close: () => void; onBusy: (busy: 
         style={{
           position: 'absolute',
           right: 16,
-          top: top + 10,
+          top: top + 9,
           backgroundColor: `${verifiedColor}c0`,
           borderRadius: 15,
           paddingHorizontal: 16,
           justifyContent: 'center',
           alignItems: 'center',
-          paddingVertical: 2,
+          paddingVertical: 3,
         }}
       >
         <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600' }}>
-          {`${aggregator.count} / ${aggregator.threshold || 'n'}`}
+          {`${aggregator.count} / ${aggregator.threshold || 'N'}`}
         </Text>
       </View>
     </View>

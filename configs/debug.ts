@@ -14,6 +14,7 @@ import { ShardsDistributor } from '../viewmodels/tss/ShardsDistributor';
 import { TCPClient } from '../common/p2p/TCPClient';
 import eccrypto from 'eccrypto';
 import { getScreenCornerRadius } from '../utils/hardware';
+import { getSecureRandomBytes } from '../utils/math';
 import iosDevice from 'ios-device-list';
 import { openShardsAggregator } from '../common/Modals';
 import quickcrypto from 'react-native-quick-crypto';
@@ -53,7 +54,7 @@ if (__DEV__) {
     //   console.log((await eccrypto.decrypt(Buffer.from(root.privateKey.substring(2), 'hex'), en)).toString('utf8'));
     // });
 
-    const entropy = randomBytes(16);
+    const entropy = getSecureRandomBytes(16);
     const mnemonic = utils.entropyToMnemonic(entropy);
     const hd = utils.HDNode.fromMnemonic(mnemonic);
     const xprivkey = Buffer.from(hd.extendedKey, 'utf8').toString('hex');
