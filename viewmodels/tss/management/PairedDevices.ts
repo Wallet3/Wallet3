@@ -47,9 +47,11 @@ class PairedDevices {
     const devices = this.devices.filter((d) => d.distributionId === id);
     if (devices.length === 0) return;
 
-    const device = devices.find((d) => d.deviceInfo.globalId === (service.txt?.info as ClientInfo).globalId);
+    const device =
+      devices.find((d) => d.deviceInfo.globalId === (service.txt?.info as ClientInfo).globalId) ??
+      devices.find((d) => sha256Sync(d.shard.secretsInfo.version).substring(0, 16) === verHash);
+
     if (!device) return;
-    if (sha256Sync(device.shard.secretsInfo.version).substring(0, 16) !== verHash) return;
 
     const vm = new ShardProvider({ service, shardKey: device.shard });
     vm.once('shardSent' as any, () => this.handledIds.add(reqId));
