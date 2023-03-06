@@ -38,6 +38,7 @@
 				<string>pillarwallet</string>
 				<string>celowallet</string>
 				<string>bitpie</string>
+				<string>pitaka</string>
 				<string>abt</string>
 				<string>wc</string>
 				<string>https</string>
@@ -46,7 +47,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>20230305165943</string>
+	<string>20230306095650</string>
 	<key>FirebaseAutomaticScreenReportingEnabled</key>
 	<false/>
 	<key>ITSAppUsesNonExemptEncryption</key>

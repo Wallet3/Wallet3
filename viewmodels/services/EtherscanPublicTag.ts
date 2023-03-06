@@ -40,7 +40,7 @@ export async function fetchAddressInfo(chainId: number, address: string) {
   const root = await getHTML(chainId, address, 'address');
   if (!root) return item;
 
-  const warnings = (root?.querySelectorAll('span.u-label--danger, span.u-label--warning, .badge.bg-warning') || [])
+  const warnings = (root?.querySelectorAll('span.u-label--danger, span.u-label--warning, .badge.bg-warning, .badge.bg-danger') || [])
     .filter((i) => i.innerText && i.innerText.toUpperCase() !== 'OUT')
     .map((e) => e.innerText);
 
@@ -101,15 +101,15 @@ export async function isTransactionAbandoned(chainId: number, tx: string) {
   const root = await getHTML(chainId, tx, 'tx');
 
   const abandoned =
-    root?.querySelector('p.lead')?.innerText?.toLowerCase?.().includes?.('sorry, we are unable to locate') ?? false;
-  const hasTx = root?.querySelector('#spanTxHash');
+    root?.querySelector('h2.h5')?.innerText?.toLowerCase?.().includes?.('sorry, we are unable to locate') ?? false;
 
   if (abandoned) {
     AbandonCache.set(key, true);
     return true;
   }
 
-  if (hasTx) {
+  const pendingTx = root?.querySelector('#spanTxHash');
+  if (pendingTx) {
     AbandonCache.set(key, false);
     return false;
   }

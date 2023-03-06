@@ -130,8 +130,16 @@ export function logDevicePaired() {
   log('multiSig_new_device_paired');
 }
 
-export function logCreateMultiSigWallet(args: { threshold: string }) {
+export function logMultiSigWalletCreated(args: { threshold: string }) {
   log('multiSig_wallet_created', args);
+}
+
+export function logMultiSigWalletRecovered() {
+  log('multiSig_wallet_recovered');
+}
+
+export function logMultiSigKeyAggregated() {
+  log('multiSig_wallet_key_aggregated');
 }
 
 let version = '';

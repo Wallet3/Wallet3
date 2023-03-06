@@ -6,6 +6,7 @@ import { ClientInfo } from '../../common/p2p/Constants';
 import { DEFAULT_DERIVATION_PATH } from '../../common/Constants';
 import EventEmitter from 'eventemitter3';
 import MultiSigKey from '../../models/entities/MultiSigKey';
+import { logMultiSigWalletRecovered } from '../services/Analytics';
 import secretjs from 'secrets.js-grempe';
 import { sha256Sync } from '../../utils/cipher';
 import { utils } from 'ethers';
@@ -138,7 +139,8 @@ export class KeyRecovery extends EventEmitter<Events> {
       verifySignKey: await Authentication.encrypt(protector.privateKey.substring(2)),
     };
 
-    key.save();
+    await key.save();
+    logMultiSigWalletRecovered();
   }
 
   clear() {

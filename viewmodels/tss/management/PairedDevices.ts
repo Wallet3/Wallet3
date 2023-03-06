@@ -1,5 +1,6 @@
 import { computed, makeObservable, observable, runInAction } from 'mobx';
 
+import Authentication from '../../auth/Authentication';
 import Bonjour from '../../../common/p2p/Bonjour';
 import { ClientInfo } from '../../../common/p2p/Constants';
 import Database from '../../../models/Database';
@@ -35,9 +36,9 @@ class PairedDevices {
   private handleService = (raw: Service) => {
     const { shardsAggregation: service } = handleRawService(raw);
     if (!service) return;
+    if (!Authentication.pinSet) return;
 
     const reqId = service.txt?.['reqId'];
-    const verHash = service.txt?.['version'];
     if (this.handledIds.has(reqId) || this.handlingIds.has(reqId)) {
       setTimeout(() => this.scanLan(), 10 * SECOND);
       return;
@@ -47,6 +48,7 @@ class PairedDevices {
     const devices = this.devices.filter((d) => d.distributionId === id);
     if (devices.length === 0) return;
 
+    const verHash = service.txt?.['version'];
     const device =
       devices.find((d) => d.deviceInfo.globalId === (service.txt?.info as ClientInfo).globalId) ??
       devices.find((d) => sha256Sync(d.shard.secretsInfo.version).substring(0, 16) === verHash);

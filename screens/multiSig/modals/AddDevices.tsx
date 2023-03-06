@@ -13,10 +13,9 @@ import { ReactiveScreen } from '../../../utils/device';
 import { ShardsAggregator } from '../../../viewmodels/tss/ShardsAggregator';
 import ShardsDistribution from '../../../modals/tss/distributor/ShardsDistribution';
 import { ShardsDistributionMore } from '../../../viewmodels/tss/ShardsDistributionMore';
-import { ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
 import Theme from '../../../viewmodels/settings/Theme';
-import aggregator from '../../../modals/tss/aggregator';
 import i18n from '../../../i18n';
+import { logDevicePaired } from '../../../viewmodels/services/Analytics';
 import { observer } from 'mobx-react-lite';
 import { openGlobalPasspad } from '../../../common/Modals';
 import { sleep } from '../../../utils/async';
@@ -79,6 +78,8 @@ export default observer(({ wallet, close, onCritical }: Props) => {
       wallet,
       autoStart: true,
     });
+
+    vm.once('secretDistributed', () => logDevicePaired());
 
     setDistributor(vm);
     await sleep(100);
