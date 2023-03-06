@@ -6,6 +6,7 @@ import Device from '../../../../components/Device';
 import { FadeInDownView } from '../../../../components/animations';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
+import { TextInput } from 'react-native-gesture-handler';
 import Theme from '../../../../viewmodels/settings/Theme';
 import i18n from '../../../../i18n';
 import { useOptimizedSafeBottom } from '../../../../utils/hardware';
@@ -19,9 +20,19 @@ interface Props {
   onNext: () => void;
   disableButton?: boolean;
   expired?: boolean;
+  onDeviceNameChanged?: () => void;
 }
 
-export const DeviceOverview = ({ deviceInfo, createdAt, lastUsedAt, onNext, buttonTitle, disableButton, expired }: Props) => {
+export const DeviceOverview = ({
+  deviceInfo,
+  createdAt,
+  lastUsedAt,
+  onNext,
+  buttonTitle,
+  disableButton,
+  expired,
+  onDeviceNameChanged,
+}: Props) => {
   const { secondaryTextColor } = Theme;
   const { t } = i18n;
   const safeBottom = useOptimizedSafeBottom();
@@ -30,9 +41,31 @@ export const DeviceOverview = ({ deviceInfo, createdAt, lastUsedAt, onNext, butt
     <FadeInDownView style={{ flex: 1 }} delay={300}>
       <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
         <Device deviceId={deviceInfo.device} os={deviceInfo!.rn_os!} style={{ width: 108, height: 150 }} />
-        <Text style={{ marginTop: 16, fontWeight: '500', color: secondaryTextColor }}>
-          {`${deviceInfo.name}, ${deviceInfo.os} ${deviceInfo.osVersion}`}
-        </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 16 }}>
+          <TextInput
+            defaultValue={deviceInfo.name}
+            placeholder={'Device Name'}
+            maxLength={32}
+            onChangeText={(t) => (deviceInfo.name = t.trim())}
+            onBlur={() => onDeviceNameChanged?.()}
+            style={{
+              minWidth: 32,
+              maxWidth: 200,
+              textAlign: 'center',
+              textDecorationStyle: 'dotted',
+              textDecorationLine: 'underline',
+              textDecorationColor: secondaryTextColor,
+            }}
+          />
+
+          <Ionicons
+            name="pencil-outline"
+            color={secondaryTextColor}
+            style={{ marginStart: 2, marginEnd: 8, marginBottom: 0, opacity: 0.75 }}
+          />
+
+          <Text style={{ fontWeight: '500', color: secondaryTextColor }}>{`${deviceInfo.os} ${deviceInfo.osVersion}`}</Text>
+        </View>
 
         <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 12 }}>
           <Text

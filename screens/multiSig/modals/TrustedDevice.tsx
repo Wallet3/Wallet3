@@ -19,9 +19,10 @@ interface Props {
   device: MultiSigKeyDeviceInfo;
   disableRemove?: boolean;
   onDeleteDevice: (device: MultiSigKeyDeviceInfo) => void;
+  onDeviceNameChanged: () => void;
 }
 
-export default ({ device, close, onDeleteDevice: onDelete, disableRemove }: Props) => {
+export default ({ device, close, onDeleteDevice: onDelete, disableRemove, onDeviceNameChanged }: Props) => {
   const { t } = i18n;
   const [step, setStep] = useState(0);
   const { textColor } = Theme;
@@ -67,6 +68,7 @@ export default ({ device, close, onDeleteDevice: onDelete, disableRemove }: Prop
           disableButton={disableRemove}
           lastUsedAt={lastUsedAt}
           onNext={authAndNext}
+          onDeviceNameChanged={onDeviceNameChanged}
           buttonTitle={t('button-remove')}
         />
       )}

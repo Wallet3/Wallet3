@@ -26,6 +26,7 @@ export default observer(() => {
   const { t } = i18n;
   const [selectedDevice, setSelectedDevice] = useState<PairedDevice>();
   const { devices, hasDevices } = PairedDevices;
+  const [_, forceUpdate] = useState(0);
 
   useEffect(() => startLayoutAnimation(), [devices]);
 
@@ -72,7 +73,9 @@ export default observer(() => {
 
       <Portal>
         <ModalizeContainer ref={ref} withHandle={false}>
-          {selectedDevice && <PairedDeviceModal close={close} device={selectedDevice} />}
+          {selectedDevice && (
+            <PairedDeviceModal close={close} device={selectedDevice} onForceUpdate={() => forceUpdate(Date.now())} />
+          )}
         </ModalizeContainer>
       </Portal>
     </SafeViewContainer>

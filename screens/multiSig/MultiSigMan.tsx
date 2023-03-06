@@ -155,6 +155,10 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
               device={selectedDevice}
               onDeleteDevice={(d) => wallet.removeTrustedDevice(d)}
               disableRemove={trustedDeviceCount <= wallet.threshold}
+              onDeviceNameChanged={async () => {
+                await wallet.save();
+                setForceUpdate(Date.now());
+              }}
             />
           )}
         </ModalizeContainer>

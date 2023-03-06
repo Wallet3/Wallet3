@@ -107,6 +107,10 @@ export class MultiSigWallet extends WalletBase {
     this.key.save();
   }
 
+  async save() {
+    await this.key.save();
+  }
+
   async getSecret(pin?: string): Promise<string | undefined> {
     return undefined;
   }

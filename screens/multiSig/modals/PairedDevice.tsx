@@ -78,7 +78,7 @@ export const SecretView = ({ root, bip32, device, onNext, distributionId }: Prop
   );
 };
 
-export default ({ device, close }: { device: PairedDevice; close: () => void }) => {
+export default ({ device, close, onForceUpdate }: { device: PairedDevice; close: () => void; onForceUpdate?: () => void }) => {
   const { t } = i18n;
   const [step, setStep] = useState(0);
   const { textColor } = Theme;
@@ -142,6 +142,10 @@ export default ({ device, close }: { device: PairedDevice; close: () => void }) 
           createdAt={device.createdAt}
           onNext={authAndNext}
           expired={device.expired}
+          onDeviceNameChanged={() => {
+            device.save();
+            onForceUpdate?.();
+          }}
         />
       )}
 

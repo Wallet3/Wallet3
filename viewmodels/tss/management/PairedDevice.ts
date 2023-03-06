@@ -50,6 +50,10 @@ export class PairedDevice {
     return this.shard.secretsInfo.mainAddress;
   }
 
+  save() {
+    this.shard.save();
+  }
+
   remove() {
     this.shard.remove();
   }
