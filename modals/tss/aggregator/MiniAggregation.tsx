@@ -71,12 +71,12 @@ export default observer(({ vm, close }: Props) => {
               size={14}
               onPress={(checked) => vm.setSecretsCached(checked)}
               text={t('multi-sig-modal-msg-aggregated-remember-key')}
-              textStyle={{ textDecorationLine: 'none', color: thirdTextColor, fontSize: 14 }}
+              textStyle={{ textDecorationLine: 'none', color: secondaryTextColor, fontSize: 14 }}
               iconStyle={{ borderRadius: 3 }}
               textContainerStyle={{ marginStart: 8 }}
               innerIconStyle={{ marginHorizontal: 0, paddingHorizontal: 0, borderRadius: 3 }}
               style={{}}
-              fillColor={thirdTextColor}
+              fillColor={secondaryTextColor}
             />
           </FadeInDownView>
         </View>

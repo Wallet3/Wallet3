@@ -13,6 +13,7 @@ import { btoa } from 'react-native-quick-base64';
 import eccrypto from 'eccrypto';
 import { getDeviceInfo } from '../../common/p2p/Utils';
 import { getSecureRandomBytes } from '../../utils/math';
+import { logMultiSigWalletRedistribution } from '../services/Analytics';
 
 class ShardsRedistributor extends ShardsDistributor {
   readonly wallet: MultiSigWallet;
@@ -109,6 +110,8 @@ export class ShardsRedistributionController extends EventEmitter {
       autoStart: true,
       wallet: this.wallet,
     });
+
+    vm.once('secretDistributed', () => logMultiSigWalletRedistribution());
 
     await runInAction(async () => (this.redistributor = vm));
     return vm;

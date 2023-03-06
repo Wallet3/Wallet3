@@ -138,6 +138,10 @@ export function logMultiSigWalletRecovered() {
   log('multiSig_wallet_recovered');
 }
 
+export function logMultiSigWalletRedistribution() {
+  log('multiSig_wallet_redistribution');
+}
+
 export function logMultiSigKeyAggregated() {
   log('multiSig_wallet_key_aggregated');
 }

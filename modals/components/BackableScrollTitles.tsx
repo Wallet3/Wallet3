@@ -1,9 +1,10 @@
+import React, { useEffect } from 'react';
 import { StyleProp, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
 
 import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
 import ScrollTitles from './ScrollTitles';
 import Theme from '../../viewmodels/settings/Theme';
+import { startLayoutAnimation } from '../../utils/animations';
 import { useHorizontalPadding } from '../tss/components/Utils';
 import { useOptimizedCornerRadius } from '../../utils/hardware';
 
@@ -26,12 +27,14 @@ export default (props: Props) => {
   const screenRadius = useOptimizedCornerRadius();
   const { secondaryTextColor } = Theme;
 
+  useEffect(() => startLayoutAnimation(), [showBack]);
+
   return (
     <View
       style={{ flexDirection: 'row', alignItems: 'center', paddingTop: screenRadius && showBack ? 4 : 0, ...(style as any) }}
     >
       <TouchableOpacity
-        disabled={backDisabled || currentIndex === 0}
+        disabled={backDisabled || currentIndex === 0 || !showBack}
         onPress={onBackPress}
         style={{
           padding: backButtonPadding,

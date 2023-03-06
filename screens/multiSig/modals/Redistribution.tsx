@@ -11,6 +11,7 @@ import ModalRootContainer from '../../../modals/core/ModalRootContainer';
 import { MultiSigWallet } from '../../../viewmodels/wallet/MultiSigWallet';
 import { ReactiveScreen } from '../../../utils/device';
 import ShardsDistribution from '../../../modals/tss/distributor/ShardsDistribution';
+import { ShardsDistributionStatus } from '../../../viewmodels/tss/ShardsDistributor';
 import { ShardsRedistributionController } from '../../../viewmodels/tss/ShardsRedistributionController';
 import Theme from '../../../viewmodels/settings/Theme';
 import ThresholdSetting from '../../../modals/tss/distributor/ThresholdSetting';
@@ -83,8 +84,7 @@ export default observer(({ wallet, close, onCritical }: Props) => {
     <ModalRootContainer>
       <BackableScrollTitles
         titles={titles}
-        // backDisabled={step === 3}
-        showBack={step > 3}
+        showBack={step > 3 && redistributor?.status === ShardsDistributionStatus.ready}
         currentIndex={step}
         iconColor={textColor}
         onBackPress={() => goTo(step - 1, true)}

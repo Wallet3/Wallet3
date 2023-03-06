@@ -79,9 +79,14 @@ class PairedDevices {
 
   async addShardKey(key: ShardKey) {
     const device = new PairedDevice(key);
-    if (this.devices.find((d) => d.id === device.id)) return;
+    const index = this.devices.findIndex((d) => d.id === device.id);
 
-    await runInAction(async () => (this.devices = this.devices.concat(device)));
+    if (index < 0) {
+      runInAction(() => (this.devices = this.devices.concat(device)));
+    } else {
+      runInAction(() => (this.devices[index] = device));
+    }
+
     setTimeout(() => this.scanLan(), 10 * SECOND);
   }
 
