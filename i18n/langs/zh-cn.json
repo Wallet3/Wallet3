@@ -368,6 +368,7 @@
   "multi-sig-modal-msg-before-aggregation": "该操作需要已信任设备的授权才能继续",
   "multi-sig-modal-msg-upgrade-tip": "多签钱包可以让您用多台设备管理您的加密资产，以及更可靠的恢复机制。推荐您升级为多签钱包",
   "multi-sig-modal-msg-inactive-devices": "以下设备已有较长时间没使用，请检查以下设备是否仍然可用",
+  "multi-sig-modal-msg-device-exists": "该设备已存在",
   "multi-sig-modal-create-threshold": "您正在创建一个 {{threshold}} of {{max}} 多签钱包。这意味着发送交易至少需要 {{threshold}} 个私钥才能成功发送。",
   "multi-sig-modal-keys-distribution": "密钥将会被分发到以下设备",
 

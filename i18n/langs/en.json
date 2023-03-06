@@ -372,6 +372,7 @@
   "multi-sig-modal-msg-before-aggregation": "This operation requires authorization from trusted devices to proceed.",
   "multi-sig-modal-msg-upgrade-tip": "A multi-signature wallet allows you to manage your crypto assets with multiple devices and provides a more reliable recovery mechanism. It is recommended that you upgrade to a multi-signature wallet.",
   "multi-sig-modal-msg-inactive-devices": "The following devices have not been used for a long time, please check if they are still available",
+  "multi-sig-modal-msg-device-exists": "This device already exists.",
   "multi-sig-modal-create-threshold": "You are creating a {{threshold}} of {{max}} multi-signature wallet. It means that transactions require {{threshold}} keys to be authorized.",
   "multi-sig-modal-keys-distribution": "Secrets will be distributed to following devices",
 

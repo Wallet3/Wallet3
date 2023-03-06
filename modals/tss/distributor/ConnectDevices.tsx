@@ -14,6 +14,7 @@ import Theme from '../../../viewmodels/settings/Theme';
 import TinyInfo from '../../components/TinyInfo';
 import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
+import { showMessage } from 'react-native-flash-message';
 import { useHorizontalPadding } from '../components/Utils';
 
 const { View, Text } = Animated;
@@ -34,11 +35,21 @@ export default observer(({ vm, onNext, isRTL }: { isRTL?: boolean; vm: ShardsDis
     const verified = code === verifying.client.pairingCode;
     const maxFailedAttempts = 3;
 
-    verified && vm.approveClient(verifying.client, code);
+    if (verified) {
+      if (!vm.approveClient(verifying.client, code)) {
+        showMessage({ message: t('multi-sig-modal-msg-device-exists'), type: 'warning' });
+        vm.rejectClient(verifying.client);
+      }
 
-    verifying.attempts >= maxFailedAttempts
-      ? setTimeout(() => setVerifying(undefined), 500) && vm.rejectClient(verifying.client)
-      : setVerifying(verified ? undefined : { client: verifying.client, attempts: verifying.attempts + 1 });
+      setVerifying(undefined);
+    } else {
+      if (verifying.attempts >= maxFailedAttempts) {
+        setTimeout(() => setVerifying(undefined), 0);
+        vm.rejectClient(verifying.client);
+      }
+
+      setVerifying({ client: verifying.client, attempts: verifying.attempts + 1 });
+    }
 
     return verified;
   };

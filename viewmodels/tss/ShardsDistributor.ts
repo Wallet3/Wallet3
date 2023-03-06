@@ -1,5 +1,4 @@
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
-import { createHash, randomBytes } from 'crypto';
 import { getDeviceBasicInfo, getDeviceInfo } from '../../common/p2p/Utils';
 
 import Authentication from '../auth/Authentication';
@@ -153,13 +152,15 @@ export class ShardsDistributor extends TCPServer<Events> {
   }
 
   approveClient(client: ShardSender, code: string) {
-    if (client.closed) return;
+    if (client.closed) return false;
 
     client.sendPairingCode(code);
     this.approvedClients.push(client);
 
     const index = this.pendingClients.indexOf(client);
     if (index >= 0) this.pendingClients.splice(index, 1);
+
+    return true;
   }
 
   rejectClient(client: ShardSender) {

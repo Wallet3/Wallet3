@@ -368,6 +368,7 @@
   "multi-sig-modal-msg-before-aggregation": "該操作需要已信任設備的授權才能繼續",
   "multi-sig-modal-msg-upgrade-tip": "多簽錢包可以讓您用多臺設備管理您的加密資產，以及更可靠的恢復機製。推薦您升級為多簽錢包",
   "multi-sig-modal-msg-inactive-devices": "以下設備已有較長時間沒使用，請檢查以下設備是否仍然可用",
+  "multi-sig-modal-msg-device-exists": "該設備已存在",
   "multi-sig-modal-create-threshold": "您正在創建一個 {{threshold}} of {{max}} 多簽錢包。這意味著發送交易至少需要 {{threshold}} 個私鑰才能成功發送。",
   "multi-sig-modal-keys-distribution": "密鑰將會被分發到以下設備",
 

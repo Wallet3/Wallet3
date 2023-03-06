@@ -50,9 +50,9 @@ export class ShardsDistributionMore extends ShardsDistributor {
     return false;
   }
 
-  approveClient(client: ShardSender, code: string): void {
-    if (this.wallet.secretsInfo.devices.find((d) => d.globalId === client.remoteInfo?.globalId)) return;
-    super.approveClient(client, code);
+  approveClient(client: ShardSender, code: string) {
+    if (this.wallet.secretsInfo.devices.find((d) => d.globalId === client.remoteInfo?.globalId)) return false;
+    return super.approveClient(client, code);
   }
 
   async distributeSecret() {
