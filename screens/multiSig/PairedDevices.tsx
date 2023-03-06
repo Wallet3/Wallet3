@@ -20,8 +20,12 @@ import { startLayoutAnimation } from '../../utils/animations';
 import { useModalize } from 'react-native-modalize';
 import { useOptimizedSafeBottom } from '../../utils/hardware';
 
-export default observer(() => {
-  const { secondaryTextColor, textColor, foregroundColor, systemBorderColor } = Theme;
+interface Props {
+  paddingHeader?: boolean;
+}
+
+export default observer(({ paddingHeader }: Props) => {
+  const { secondaryTextColor } = Theme;
   const { ref, close, open } = useModalize();
   const { t } = i18n;
   const [selectedDevice, setSelectedDevice] = useState<PairedDevice>();
@@ -46,7 +50,7 @@ export default observer(() => {
   };
 
   return (
-    <SafeViewContainer style={{ width: '100%', height: '100%' }}>
+    <SafeViewContainer style={{ width: '100%', height: '100%' }} paddingHeader={paddingHeader}>
       {hasDevices ? (
         <FlatList
           style={{ flexGrow: 1, marginHorizontal: -16, marginTop: -16 }}

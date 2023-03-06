@@ -1,12 +1,13 @@
 import { Button, Loader, SafeViewContainer } from '../../components';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { openKeyRecoveryRequestor, openShardsDistributors } from '../../common/Modals';
 import { secondaryFontColor, secureColor, thirdFontColor, verifiedColor } from '../../constants/styles';
 
 import IllustrationNomad from '../../assets/illustrations/tss/nomad.svg';
 import IllustrationPartying from '../../assets/illustrations/misc/partying.svg';
 import IllustrationWorld from '../../assets/illustrations/tss/world.svg';
+import { Ionicons } from '@expo/vector-icons';
 import { KeyRecoveryRequestor } from '../../viewmodels/tss/KeyRecoveryRequestor';
 import ModalizeContainer from '../../modals/core/ModalizeContainer';
 import MultiWalletQRScan from './modals/MultiWalletQRScan';
@@ -14,6 +15,7 @@ import { Portal } from 'react-native-portalize';
 import { ReactiveScreen } from '../../utils/device';
 import { ShardsDistributor } from '../../viewmodels/tss/ShardsDistributor';
 import Swiper from 'react-native-swiper';
+import Theme from '../../viewmodels/settings/Theme';
 import { getSecureRandomBytes } from '../../utils/math';
 import i18n from '../../i18n';
 import { logMultiSigWalletCreated } from '../../viewmodels/services/Analytics';
@@ -21,14 +23,16 @@ import { observer } from 'mobx-react-lite';
 import { sleep } from '../../utils/async';
 import { useModalize } from 'react-native-modalize';
 import { useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { utils } from 'ethers';
 
 export default observer(() => {
   const { t } = i18n;
   const navigation = useNavigation<any>();
   const [busy, setBusy] = useState(false);
+  const { top } = useSafeAreaInsets();
   const { ref, open: openQRScan, close: closeQRScan } = useModalize();
-
+  const { appColor } = Theme;
   const { width: screenWidth, height: screenHeight } = ReactiveScreen;
 
   const create = async () => {

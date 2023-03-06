@@ -13,6 +13,7 @@ export type LandScreenStack = {
   Root: undefined;
   ViewRecoveryKey: undefined;
   SetRecoveryKey: undefined;
+  PairedDevices: undefined;
 };
 
 export type RootStack = {

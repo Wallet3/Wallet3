@@ -132,6 +132,7 @@ export class AppVM {
       // tipWalletUpgrade(this.currentWallet);
     });
 
+
     runInAction(() => {
       this.initialized = true;
       this.wallets = wallets;
