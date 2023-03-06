@@ -93,5 +93,6 @@ export class ShardProvider extends TCPClient {
 
   dispose() {
     super.destroy();
+    this.removeAllListeners();
   }
 }

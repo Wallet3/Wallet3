@@ -49,9 +49,11 @@ class PairedDevices {
     if (devices.length === 0) return;
 
     const verHash = service.txt?.['version'];
-    const device =
-      devices.find((d) => d.deviceInfo.globalId === (service.txt?.info as ClientInfo).globalId) ??
-      devices.find((d) => sha256Sync(d.shard.secretsInfo.version).substring(0, 16) === verHash);
+    const device = devices.find(
+      (d) =>
+        d.deviceInfo.globalId === (service.txt?.info as ClientInfo).globalId &&
+        sha256Sync(d.shard.secretsInfo.version).substring(0, 16) === verHash
+    );
 
     if (!device) return;
 

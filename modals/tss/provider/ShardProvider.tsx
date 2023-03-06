@@ -34,12 +34,6 @@ export default observer(({ vm, close }: { vm: ShardProvider; close: Function }) 
     }
   };
 
-  useEffect(() => {
-    if (!closed) return;
-    const timer = setTimeout(close, 3 * 1000);
-    return () => clearTimeout(timer);
-  }, [closed]);
-
   return (
     <FadeInDownView style={{ flex: 1 }}>
       <View style={styles.reviewItemsContainer}>
@@ -103,13 +97,13 @@ export default observer(({ vm, close }: { vm: ShardProvider; close: Function }) 
           </View>
         </View>
       </View>
-      
+
       <Placeholder />
 
       <FadeInDownView delay={300}>
         <Button
           style={{ marginHorizontal: 0 }}
-          disabled={!requestType || vm.closed || busy}
+          disabled={!requestType || closed || busy}
           title={t('button-approve')}
           onPress={exec}
         />
