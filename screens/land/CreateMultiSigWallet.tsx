@@ -16,7 +16,7 @@ import { ShardsDistributor } from '../../viewmodels/tss/ShardsDistributor';
 import Swiper from 'react-native-swiper';
 import { getSecureRandomBytes } from '../../utils/math';
 import i18n from '../../i18n';
-import { logCreateMultiSigWallet } from '../../viewmodels/services/Analytics';
+import { logMultiSigWalletCreated } from '../../viewmodels/services/Analytics';
 import { observer } from 'mobx-react-lite';
 import { sleep } from '../../utils/async';
 import { useModalize } from 'react-native-modalize';
@@ -38,7 +38,7 @@ export default observer(() => {
     const vm = new ShardsDistributor({ mnemonic: utils.entropyToMnemonic(getSecureRandomBytes(32)) });
     vm.once('secretDistributed', () => {
       setTimeout(() => navigation.navigate('SetupPasscode'), 500);
-      logCreateMultiSigWallet({ threshold: `${vm.threshold}/${vm.approvedClients.length}` });
+      logMultiSigWalletCreated({ threshold: `${vm.threshold}/${vm.approvedClients.length}` });
     });
     await sleep(50);
 

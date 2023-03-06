@@ -6,6 +6,7 @@ import Authentication from '../auth/Authentication';
 import { BaseEntity } from 'typeorm';
 import { ShardsAggregator } from '../tss/ShardsAggregator';
 import { WalletBase } from './WalletBase';
+import { logMultiSigKeyAggregated } from '../services/Analytics';
 import secretjs from 'secrets.js-grempe';
 import { sleep } from '../../utils/async';
 import { utils } from 'ethers';
@@ -131,7 +132,10 @@ export class MultiSigWallet extends WalletBase {
 
       const xprv = await new Promise<string>((resolve, reject) => {
         openShardsAggregator({ vm, onClosed: () => reject() });
-        vm.once('aggregated', ({ bip32Secret }) => resolve(bip32Secret!));
+        vm.once('aggregated', ({ bip32Secret }) => {
+          resolve(bip32Secret!);
+          logMultiSigKeyAggregated();
+        });
       });
 
       if (!xprv) return;
