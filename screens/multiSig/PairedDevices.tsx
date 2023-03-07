@@ -21,10 +21,10 @@ import { useModalize } from 'react-native-modalize';
 import { useOptimizedSafeBottom } from '../../utils/hardware';
 
 interface Props {
-  paddingHeader?: boolean;
+  route?: { params?: { paddingHeader?: boolean } };
 }
 
-export default observer(({ paddingHeader }: Props) => {
+export default observer(({ route }: Props) => {
   const { secondaryTextColor } = Theme;
   const { ref, close, open } = useModalize();
   const { t } = i18n;
@@ -50,14 +50,15 @@ export default observer(({ paddingHeader }: Props) => {
   };
 
   return (
-    <SafeViewContainer style={{ width: '100%', height: '100%' }} paddingHeader={paddingHeader}>
+    <SafeViewContainer style={{ width: '100%', height: '100%' }} paddingHeader={route?.params?.paddingHeader}>
       {hasDevices ? (
         <FlatList
-          style={{ flexGrow: 1, marginHorizontal: -16, marginTop: -16 }}
-          contentContainerStyle={{ paddingVertical: 8 }}
           data={devices}
-          renderItem={renderTrustedDevice}
           keyExtractor={(i) => i.id}
+          bounces={devices.length > 7}
+          renderItem={renderTrustedDevice}
+          contentContainerStyle={{ paddingVertical: 8 }}
+          style={{ flexGrow: 1, marginHorizontal: -16, marginTop: -16 }}
         />
       ) : (
         <View style={{ alignSelf: 'center', flex: 1, justifyContent: 'center', alignItems: 'center' }}>

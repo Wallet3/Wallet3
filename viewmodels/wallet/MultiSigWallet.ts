@@ -178,7 +178,7 @@ export class MultiSigWallet extends WalletBase {
 
   async delete() {
     const auth = async (pin?: string) => ((await this.unlockPrivateKey({ pin, disableCache: true })) ? true : false);
-    if (!(await openGlobalPasspad({ onAutoAuthRequest: auth, onPinEntered: auth, fast: true }))) return false;
+    if (!(await openGlobalPasspad({ onAutoAuthRequest: auth, onPinEntered: auth }))) return false;
 
     return super.delete();
   }

@@ -16,10 +16,20 @@ export async function openGlobalPasspad(req: {
   closeOnOverlayTap?: boolean;
   onAutoAuthRequest: () => Promise<boolean>;
   onPinEntered: (pin: string) => Promise<boolean>;
-  fast?: boolean;
 }) {
-  if (req.fast && Authentication.biometricEnabled && (await req.onAutoAuthRequest())) {
+  const fast = Authentication.biometricEnabled;
+  const fastOnly = !Authentication.pinSet && Authentication.biometricEnabled;
+
+  if ((fast || fastOnly) && (await req.onAutoAuthRequest())) {
     return true;
+  }
+
+  if (fastOnly) {
+    return false;
+  }
+
+  if (!Authentication.pinSet && !Authentication.biometricEnabled) {
+    return false;
   }
 
   return new Promise<boolean>((resolve) => {
@@ -47,7 +57,7 @@ export async function openGlobalPasspad(req: {
       closeOnOverlayTap: true,
       ...req,
       onPinEntered: onPinEnteredHook,
-      onAutoAuthRequest: req.fast ? undefined : onAutoAuthHook,
+      onAutoAuthRequest: fast || fastOnly ? undefined : onAutoAuthHook,
       onClosed: onClosedHook,
     });
   });

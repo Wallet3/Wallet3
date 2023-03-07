@@ -54,7 +54,7 @@ export default observer(({ wallet, close, onCritical }: Props) => {
       return vm ? true : false;
     };
 
-    if (!(await openGlobalPasspad({ onAutoAuthRequest: auth, onPinEntered: auth, fast: true }))) return;
+    if (!(await openGlobalPasspad({ onAutoAuthRequest: auth, onPinEntered: auth }))) return;
 
     setAggregator(vm!);
     goTo(1);

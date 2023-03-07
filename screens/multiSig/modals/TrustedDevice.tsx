@@ -35,7 +35,6 @@ export default ({ device, close, onDeleteDevice: onDelete, disableRemove, onDevi
 
   const authAndNext = async () => {
     const success = await openGlobalPasspad({
-      fast: true,
       onAutoAuthRequest: Authentication.authorize,
       onPinEntered: Authentication.authorize,
     });

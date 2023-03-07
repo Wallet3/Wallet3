@@ -1,34 +1,19 @@
-import Animated, { FadeInUp } from 'react-native-reanimated';
 import { FadeInDownView, ZoomInView } from '../../../../components/animations';
-import { FlatList, ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
-import { getScreenCornerRadius, useOptimizedCornerRadius, useOptimizedSafeBottom } from '../../../../utils/hardware';
+import React, { useEffect, useState } from 'react';
+import { Text, View } from 'react-native';
+import { useOptimizedCornerRadius, useOptimizedSafeBottom } from '../../../../utils/hardware';
 
-import Aggregation from '../../aggregator/Aggregation';
-import BackableScrollTitles from '../../../components/BackableScrollTitles';
 import Button from '../../components/Button';
-import DeviceInfo from '../../components/DeviceInfo';
 import IllustrationSecureFiles from '../../../../assets/illustrations/misc/secure_files.svg';
 import { KeyRecoveryProvider } from '../../../../viewmodels/tss/KeyRecoveryProvider';
-import { KeyRecoveryRequestor } from '../../../../viewmodels/tss/KeyRecoveryRequestor';
 import LottieView from 'lottie-react-native';
-import ModalRootContainer from '../../../core/ModalRootContainer';
-import { PairedDevice } from '../../../../viewmodels/tss/management/PairedDevice';
-import PairedDevices from '../../../../viewmodels/tss/management/PairedDevices';
 import { Passpad } from '../../../views';
-import Preparations from '../requestor/Preparations';
 import { ReactiveScreen } from '../../../../utils/device';
-import RecoveryAggregation from '../requestor/RecoveryAggregation';
-import { SafeViewContainer } from '../../../../components';
-import ScrollTitles from '../../../components/ScrollTitles';
-import { Service } from 'react-native-zeroconf';
-import { ShardReceiver } from '../../../../viewmodels/tss/ShardReceiver';
 import Theme from '../../../../viewmodels/settings/Theme';
 import i18n from '../../../../i18n';
 import { observer } from 'mobx-react-lite';
 import { openGlobalPasspad } from '../../../../common/Modals';
 import { secureColor } from '../../../../constants/styles';
-import { useHorizontalPadding } from '../../components/Utils';
 
 interface Props {
   vm: KeyRecoveryProvider;
@@ -56,7 +41,7 @@ export default observer(({ vm, close, onCritical }: Props) => {
 
   const send = async () => {
     setBusy(true);
-    await openGlobalPasspad({ onAutoAuthRequest: vm.send, onPinEntered: vm.send, fast: true, closeOnOverlayTap: true });
+    await openGlobalPasspad({ onAutoAuthRequest: vm.send, onPinEntered: vm.send, closeOnOverlayTap: true });
     setBusy(false);
   };
 

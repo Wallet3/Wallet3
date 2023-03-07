@@ -27,7 +27,6 @@ class KeyRecoveryWatcher {
     const { keyRecoveryRequestor: service } = handleRawService(raw);
     if (!service) return;
     if (service.txt.info.globalId === this.selfId) return;
-    if (!Authentication.pinSet) return;
 
     const reqId = service.txt?.['reqId'];
     if (this.handledIds.has(reqId)) {

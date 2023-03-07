@@ -111,7 +111,7 @@ export default ({ device, close, onForceUpdate }: { device: PairedDevice; close:
       }
     };
 
-    await openGlobalPasspad({ fast: true, onAutoAuthRequest: autoAuth, onPinEntered: autoAuth });
+    await openGlobalPasspad({ onAutoAuthRequest: autoAuth, onPinEntered: autoAuth });
 
     if (success) goTo(1);
   };

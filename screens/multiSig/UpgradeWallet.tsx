@@ -29,7 +29,7 @@ export default observer(({ onNextPage }: { onNextPage?: () => void }) => {
       return secret !== undefined;
     };
 
-    if (!(await openGlobalPasspad({ fast: true, onAutoAuthRequest: getSecret, onPinEntered: getSecret }))) return;
+    if (!(await openGlobalPasspad({ onAutoAuthRequest: getSecret, onPinEntered: getSecret }))) return;
 
     setBusy(true);
     await sleep(200);

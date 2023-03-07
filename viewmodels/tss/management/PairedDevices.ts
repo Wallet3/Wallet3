@@ -36,7 +36,6 @@ class PairedDevices {
   private handleService = (raw: Service) => {
     const { shardsAggregation: service } = handleRawService(raw);
     if (!service) return;
-    if (!Authentication.pinSet) return;
 
     const reqId = service.txt?.['reqId'];
     if (this.handledIds.has(reqId) || this.handlingIds.has(reqId)) {
