@@ -15,7 +15,6 @@ import Key from '../../models/entities/Key';
 import KeyRecoveryWatcher from '../tss/management/KeyRecoveryDiscovery';
 import KeySecurity from '../tss/management/KeySecurity';
 import LINQ from 'linq';
-import LanWatcher from '../tss/management/LanWatcher';
 import LinkHub from '../hubs/LinkHub';
 import MetamaskDAppsHub from '../walletconnect/MetamaskDAppsHub';
 import MultiSigKey from '../../models/entities/MultiSigKey';
@@ -126,7 +125,7 @@ export class AppVM {
       TxHub.init().then(() => AppStoreReview.check());
 
       setTimeout(() => PairedDevices.hasDevices && PairedDevices.scanLan(), 1000);
-      Authentication.on('appAuthorized', () => setTimeout(() => PairedDevices.scanLan(), 2000));
+      Authentication.on('appAuthorized', () => setTimeout(() => PairedDevices.scanLan(), 1000));
 
       tipWalletUpgrade(this.currentWallet);
     });

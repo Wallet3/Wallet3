@@ -331,7 +331,7 @@
   "multi-sig-modal-connect-recover-wallet": "选择一个设备来恢复钱包",
   "multi-sig-modal-txt-pairing-code": "设备配对码",
   "multi-sig-modal-txt-dont-close-view": "请不要关闭当前窗口",
-  "multi-sig-modal-txt-current-device": "本设备",
+  "multi-sig-modal-txt-current-device": "本机",
   "multi-sig-modal-txt-data-verifying": "数据验证中",
   "multi-sig-modal-txt-data-verified": "数据已验证",
   "multi-sig-modal-txt-data-verifying-failed": "数据验证失败",

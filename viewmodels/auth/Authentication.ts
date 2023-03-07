@@ -224,6 +224,7 @@ export class Authentication extends EventEmitter<Events> {
   };
 
   reset() {
+    this.pinSet = false;
     this.appAuthorized = false;
     this.biometricEnabled = false;
     this.removeAllListeners();
