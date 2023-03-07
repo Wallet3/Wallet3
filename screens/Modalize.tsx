@@ -831,11 +831,11 @@ export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Aut
 
 export default (props: { app: AppVM; appAuth: Authentication }) => {
   return [
-    <BackupTipsModal key="backup-tip" />,
     <SendFundsModal key="send-funds" />,
     <RequestFundsModal key="request-funds" />,
     <GlobalNetworksMenuModal key="networks-menu" />,
     <GlobalAccountsMenuModal key="accounts-menu" />,
+    <BackupTipsModal key="backup-tip" />,
     <GlobalLoadingModal key="loading-modal" />,
     <WalletConnect key="walletconnect" />,
     <WalletConnectRequests key="walletconnect-requests" {...props} />,
