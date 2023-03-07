@@ -68,10 +68,10 @@ export default observer(({ vm, close }: Props) => {
 
           <FadeInDownView delay={700} style={{ marginTop: 8 }}>
             <BouncyCheckbox
-              size={14}
+              size={12}
               onPress={(checked) => vm.setSecretsCached(checked)}
               text={t('multi-sig-modal-msg-aggregated-remember-key')}
-              textStyle={{ textDecorationLine: 'none', color: secondaryTextColor, fontSize: 14 }}
+              textStyle={{ textDecorationLine: 'none', color: secondaryTextColor, fontSize: 12 }}
               iconStyle={{ borderRadius: 3 }}
               textContainerStyle={{ marginStart: 8 }}
               innerIconStyle={{ marginHorizontal: 0, paddingHorizontal: 0, borderRadius: 3 }}

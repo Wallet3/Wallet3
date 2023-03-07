@@ -19,6 +19,7 @@ export async function openGlobalPasspad(req: {
 }) {
   if (!Authentication.pinSet) {
     if (!Authentication.biometricSupported) {
+      showMessage({ message: i18n.t('msg-please-enable-biometric'), type: 'info' });
       return false;
     } else {
       !Authentication.biometricEnabled && (await Authentication.setBiometrics(true));

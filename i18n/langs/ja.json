@@ -388,7 +388,7 @@
   "msg-currently-ethereum-and-evm-networks-support": "現在、Ethereum および EVM ネットワークをサポートしています。",
   "msg-database-error": "データベースエラーが発生しました。続行できません",
   "msg-data-loading": "データを読み込み中",
-  "msg-please-enable-biometric":"バイオメトリック認証を有効にしてください",
+  "msg-please-enable-biometric":"この操作を承認するには生体認証を使用してください。",
 
   "misc-show-full-address": "アドレスを詳しく見る",
   "button-next": "次へ",
