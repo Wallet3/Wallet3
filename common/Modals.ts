@@ -41,6 +41,13 @@ export async function openGlobalPasspad(req: {
   return new Promise<boolean>((resolve) => {
     let handled = false;
 
+    const onAutoAuthHook = async () => {
+      const success = await req.onAutoAuthRequest();
+      success && resolve(success);
+      handled = success;
+      return success;
+    };
+
     const onPinEnteredHook = async (pin: string) => {
       const success = await req.onPinEntered(pin);
       success && resolve(success);
@@ -56,6 +63,7 @@ export async function openGlobalPasspad(req: {
       closeOnOverlayTap: true,
       ...req,
       onPinEntered: onPinEnteredHook,
+      onAutoAuthRequest: fast || fastOnly ? undefined : onAutoAuthHook, // override requests onAutoAuthRequest
       onClosed: onClosedHook,
     });
   });

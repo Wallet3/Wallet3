@@ -578,15 +578,6 @@ export const ShardsModal = observer(() => {
       enqueue({ shardReceiver: true });
     });
 
-    PubSub.subscribe(MessageKeys.openShardsAggregator, (_, { vm, onClosed }) => {
-      enqueue({
-        shardsAggregator: vm,
-        onClosed,
-        openAnimationConfig: { timing: { duration: 100 } },
-        modalHeight: ReactiveScreen.height,
-      });
-    });
-
     PubSub.subscribe(MessageKeys.openShardProvider, (_, { vm, onClosed }) => {
       enqueue({ shardProvider: vm, onClosed });
     });
@@ -607,7 +598,7 @@ export const ShardsModal = observer(() => {
       [
         MessageKeys.openShardsDistribution,
         MessageKeys.openShardReceiver,
-        MessageKeys.openShardsAggregator,
+
         MessageKeys.openShardProvider,
         MessageKeys.openKeyRecoveryRequestor,
         MessageKeys.openShardRedistributionReceiver,
@@ -631,7 +622,6 @@ export const ShardsModal = observer(() => {
     >
       {vms?.shardsDistributor && <ShardsDistributorUI vm={vms.shardsDistributor} onCritical={setIsCritical} close={close} />}
       {vms?.shardReceiver && <ShardReceiverUI close={close} onCritical={setIsCritical} />}
-      {vms?.shardsAggregator && <ShardsAggregatorUI close={close} vm={vms.shardsAggregator} />}
       {vms?.shardProvider && <ShardProviderUI vm={vms.shardProvider} close={close} />}
       {vms?.keyRecoveryRequestor && <MultiSigKeyRequestor vm={vms.keyRecoveryRequestor} close={close} />}
       {vms?.keyRecoveryProviderService && <MultiSigKeyProvider service={vms.keyRecoveryProviderService} close={close} />}
@@ -643,6 +633,64 @@ export const ShardsModal = observer(() => {
           service={vms.shardRedistributionReceiverService}
         />
       )}
+    </ModalizeContainer>
+  );
+});
+
+export const PriorityShardsModal = observer(() => {
+  const { ref, open, close } = useModalize();
+  const [isCritical, setIsCritical] = useState(false);
+  const [vms, setVMs] = useState<ShardsParam | undefined>();
+  const [queue] = useState<ShardsParam[]>([]);
+
+  const enqueue = (param: ShardsParam) => {
+    queue.push(param);
+
+    if (vms) return;
+    setVMs(queue.shift()!);
+    setImmediate(() => open());
+  };
+
+  const dequeue = () => {
+    setIsCritical(false);
+    setVMs(undefined);
+
+    const next = queue.shift();
+    if (!next) return;
+
+    setVMs(next);
+    setImmediate(() => open());
+  };
+
+  useEffect(() => {
+    PubSub.subscribe(MessageKeys.openShardsAggregator, (_, { vm, onClosed }) => {
+      enqueue({
+        shardsAggregator: vm,
+        onClosed,
+        openAnimationConfig: { timing: { duration: 100 } },
+        modalHeight: ReactiveScreen.height,
+      });
+    });
+
+    return () => [MessageKeys.openShardsAggregator].forEach(PubSub.unsubscribe);
+  }, []);
+
+  return (
+    <ModalizeContainer
+      ref={ref}
+      withHandle={false}
+      closeOnOverlayTap={!isCritical}
+      panGestureEnabled={false}
+      panGestureComponentEnabled={false}
+      openAnimationConfig={vms?.openAnimationConfig}
+      modalHeight={vms?.modalHeight}
+      adjustToContentHeight={vms?.modalHeight ? false : true}
+      onClosed={() => {
+        vms?.onClosed?.();
+        dequeue();
+      }}
+    >
+      {vms?.shardsAggregator && <ShardsAggregatorUI close={close} vm={vms.shardsAggregator} />}
     </ModalizeContainer>
   );
 });
@@ -783,6 +831,7 @@ export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Aut
 
 export default (props: { app: AppVM; appAuth: Authentication }) => {
   return [
+    <BackupTipsModal key="backup-tip" />,
     <SendFundsModal key="send-funds" />,
     <RequestFundsModal key="request-funds" />,
     <GlobalNetworksMenuModal key="networks-menu" />,
@@ -792,7 +841,8 @@ export default (props: { app: AppVM; appAuth: Authentication }) => {
     <WalletConnectRequests key="walletconnect-requests" {...props} />,
     <InpageDAppConnect key="inpage-dapp-connect" />,
     <InpageDAppRequests key="inpage-dapp-requests" />,
-    <BackupTipsModal key="backup-tip" />,
-    <ShardsModal key="key-distribution" />,
+    <ShardsModal key="shards-management" />,
+    <GlobalPasspadModal key="global-passpad" />,
+    <PriorityShardsModal key="shards-aggregation" />,
   ];
 };

@@ -131,7 +131,6 @@ export class MultiSigWallet extends WalletBase {
       const vm = await this.requestShardsAggregator({ autoStart: true, bip32Shard: true }, pin);
       if (!vm) return;
 
-      super.emit('aggregateShards');
       await sleep(500);
 
       const xprv = await new Promise<string>((resolve, reject) => {

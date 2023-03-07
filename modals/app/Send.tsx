@@ -43,7 +43,6 @@ export default observer(({ vm, close, erc681, onReviewEnter, onReviewLeave }: Pr
     ReactiveScreen.on('change', jump);
 
     return () => {
-      vm.wallet.removeAllListeners('aggregateShards');
       ReactiveScreen.off('change', jump);
     };
   }, []);

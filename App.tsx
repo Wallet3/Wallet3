@@ -145,12 +145,12 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
         ) : undefined}
       </Host>
 
+
       {Modals({ app, appAuth })}
 
       <FlashMessage position="top" />
       <StatusBar style={statusBarStyle} />
 
-      <GlobalPasspadModal />
       <FullScreenQRScanner />
       <LockScreen app={app} appAuth={appAuth} />
     </NavigationContainer>

@@ -54,9 +54,7 @@ export const WalletBaseKeys = {
   addressCount: (id: string | number) => `${id}-address-count`,
 };
 
-interface Events {
-  aggregateShards: () => void;
-}
+interface Events {}
 
 export abstract class WalletBase extends EventEmitter<Events> {
   protected removedAccountIndexes: number[] = [];

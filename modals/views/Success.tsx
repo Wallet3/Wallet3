@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 
 import LottieView from 'lottie-react-native';
 import { ReactiveScreen } from '../../utils/device';
+import { View } from 'react-native';
 import { ZoomInView } from '../../components/animations';
 
 export default ({ size }: { size?: number }) => {
@@ -9,7 +10,7 @@ export default ({ size }: { size?: number }) => {
   console.log(size);
 
   return (
-    <ZoomInView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <LottieView
         autoPlay
         loop={false}
@@ -21,6 +22,6 @@ export default ({ size }: { size?: number }) => {
           alignItems: 'center',
         }}
       />
-    </ZoomInView>
+    </View>
   );
 };

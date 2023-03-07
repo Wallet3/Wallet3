@@ -28,8 +28,7 @@ export default observer(({ passLength, onAutoAuthRequest, onPinEntered, close, m
 
   const onCodeEntered = async (code: string) => {
     const success = await onPinEntered(code);
-    success && close();
-    success ? setFailedAttempts(0) : setFailedAttempts((prev) => prev + 1);
+    success ? setTimeout(() => close(), 0) : setFailedAttempts((prev) => prev + 1);
 
     if (!success && failedAttempts > (maxFailedAttempts ?? 3)) {
       close();
