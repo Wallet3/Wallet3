@@ -396,7 +396,8 @@
   "msg-database-error": "Database error occurred, unable to continue.",
   "msg-error-occurs": "Error occurs",
   "msg-data-loading": "Loading data",
-
+  "msg-please-enable-biometric":"Please enable biometric authentication.",
+  
   "misc-show-full-address": "Show full address",
   "button-next": "Next",
   "button-save": "Save",

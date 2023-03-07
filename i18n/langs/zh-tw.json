@@ -388,6 +388,7 @@
   "msg-currently-ethereum-and-evm-networks-support": "當前，Wallet 3 僅支持 Ethereum 以及 EVM 網絡",
   "msg-database-error": "數據庫發生錯誤，無法繼續",
   "msg-data-loading": "讀取數據中",
+  "msg-please-enable-biometric": "請啟用生物認證",
 
   "misc-show-full-address": "顯示完整地址",
   "button-next": "繼續",

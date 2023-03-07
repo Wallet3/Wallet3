@@ -9,6 +9,7 @@ import { KeyRecoveryProvider } from '../../../../viewmodels/tss/KeyRecoveryProvi
 import LottieView from 'lottie-react-native';
 import { Passpad } from '../../../views';
 import { ReactiveScreen } from '../../../../utils/device';
+import Success from '../../../views/Success';
 import Theme from '../../../../viewmodels/settings/Theme';
 import i18n from '../../../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -57,14 +58,7 @@ export default observer(({ vm, close, onCritical }: Props) => {
         <View style={{ flex: 1 }}>
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             {distributed ? (
-              <ZoomInView>
-                <LottieView
-                  autoPlay
-                  loop={false}
-                  style={{ width: 250, height: 250 }}
-                  source={require('../../../../assets/animations/check-verde.json')}
-                />
-              </ZoomInView>
+              <Success />
             ) : (
               <FadeInDownView>
                 <IllustrationSecureFiles width={200} height={200} />

@@ -393,6 +393,7 @@
   "msg-currently-ethereum-and-evm-networks-support": "Şu anda Wallet 3 Ethereum ve EVM ağlarını desteklemektedir",
   "msg-database-error": "Veritabanı hatası, devam edilemiyor",
   "msg-data-loading": "Veriler yükleniyor",
+  "msg-please-enable-biometric":"Biyometrik kimlik doğrulamayı etkinleştirin lütfen.",
 
   "misc-show-full-address": "Tam adresi göster",
   "button-next": "Sonraki",
