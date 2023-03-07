@@ -12,7 +12,6 @@ import Contacts from '../customs/Contacts';
 import Database from '../../models/Database';
 import GasPrice from '../misc/GasPrice';
 import Key from '../../models/entities/Key';
-import KeyRecoveryDiscovery from '../tss/management/KeyRecoveryDiscovery';
 import KeyRecoveryWatcher from '../tss/management/KeyRecoveryDiscovery';
 import KeySecurity from '../tss/management/KeySecurity';
 import LINQ from 'linq';
@@ -95,7 +94,7 @@ export class AppVM {
 
     AppState.addEventListener('change', (state) => {
       if (state !== 'active') return;
-      Authentication.appAuthorized && setTimeout(() => KeyRecoveryDiscovery.scanLan(), 2000);
+      Authentication.appAuthorized && setTimeout(() => KeyRecoveryWatcher.scanLan(), 2000);
     });
   }
 
@@ -126,18 +125,19 @@ export class AppVM {
 
       TxHub.init().then(() => AppStoreReview.check());
 
+      setTimeout(() => PairedDevices.hasDevices && PairedDevices.scanLan(), 1000);
       Authentication.on('appAuthorized', () => setTimeout(() => PairedDevices.scanLan(), 2000));
 
-      // tipWalletUpgrade(this.currentWallet);
+      tipWalletUpgrade(this.currentWallet);
     });
-
-    PairedDevices.init().then(() => KeyRecoveryDiscovery.scanLan());
 
     runInAction(() => {
       this.initialized = true;
       this.wallets = wallets;
       this.switchAccount(lastUsedAccount, true);
     });
+
+    PairedDevices.init().then(() => !this.hasWalletSet && KeyRecoveryWatcher.scanLan());
   }
 
   async addWallet(key: Key | MultiSigKey) {

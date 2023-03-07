@@ -27,8 +27,8 @@ export default observer(({ vm, close }: { vm: ShardProvider; close: Function }) 
 
     try {
       if (!(await openGlobalPasspad({ onAutoAuthRequest: vm.send, onPinEntered: vm.send }))) return;
-      await sleep(200);
-      close();
+      await sleep(2000);
+      setTimeout(() => close(), 0);
     } finally {
       setBusy(false);
     }

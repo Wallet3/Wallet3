@@ -6,7 +6,6 @@ import DeviceInfo from '../../modals/tss/components/DeviceInfo';
 import { FadeInDownView } from '../../components/animations';
 import IllustrationPairing from '../../assets/illustrations/misc/pair_programming.svg';
 import { Ionicons } from '@expo/vector-icons';
-import MessageKeys from '../../common/MessageKeys';
 import ModalizeContainer from '../../modals/core/ModalizeContainer';
 import { PairedDevice } from '../../viewmodels/tss/management/PairedDevice';
 import { PairedDeviceModal } from './modals';
@@ -18,14 +17,13 @@ import { observer } from 'mobx-react-lite';
 import { openShardReceiver } from '../../common/Modals';
 import { startLayoutAnimation } from '../../utils/animations';
 import { useModalize } from 'react-native-modalize';
-import { useOptimizedSafeBottom } from '../../utils/hardware';
 
 interface Props {
   route?: { params?: { paddingHeader?: boolean } };
 }
 
 export default observer(({ route }: Props) => {
-  const { secondaryTextColor } = Theme;
+  const { secondaryTextColor, backgroundColor } = Theme;
   const { ref, close, open } = useModalize();
   const { t } = i18n;
   const [selectedDevice, setSelectedDevice] = useState<PairedDevice>();
@@ -50,7 +48,7 @@ export default observer(({ route }: Props) => {
   };
 
   return (
-    <SafeViewContainer style={{ width: '100%', height: '100%' }} paddingHeader={route?.params?.paddingHeader}>
+    <SafeViewContainer style={{ width: '100%', height: '100%', backgroundColor }} paddingHeader={route?.params?.paddingHeader}>
       {hasDevices ? (
         <FlatList
           data={devices}
