@@ -3,15 +3,14 @@ import * as Linking from 'expo-linking';
 
 import Animated, { ComplexAnimationBuilder, FadeInDown, FadeOut, FadeOutDown } from 'react-native-reanimated';
 import { Entypo, Feather, Ionicons } from '@expo/vector-icons';
-import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { WebView, WebViewMessageEvent, WebViewNavigation, WebViewProps } from 'react-native-webview';
 
 import { Account } from '../../viewmodels/account/Account';
 import AccountSelector from '../../modals/dapp/AccountSelector';
 import App from '../../viewmodels/core/App';
 import Avatar from '../../components/Avatar';
-import DeviceInfo from 'react-native-device-info';
 import GetPageMetadata from './scripts/Metadata';
 import HookRainbowKit from './scripts/InjectRainbowKitObserver';
 import HookWalletConnect from './scripts/InjectWalletConnectObserver';
@@ -25,6 +24,7 @@ import { NetworksMenu } from '../../modals';
 import { Portal } from 'react-native-portalize';
 import SquircleModalize from '../../modals/core/SquircleModalize';
 import Theme from '../../viewmodels/settings/Theme';
+import { UA } from '../../utils/platform';
 import ViewShot from 'react-native-view-shot';
 import WalletConnectHub from '../../viewmodels/walletconnect/WalletConnectHub';
 import WalletConnectLogo from '../../assets/3rd/walletconnect.svg';
@@ -69,12 +69,6 @@ export default observer((props: Web3ViewProps) => {
   const { t } = i18n;
   const { webViewRef, viewShotRef, tabCount, onTabPress } = props;
   const [hub] = useState(new InpageDAppController());
-  const [appName] = useState(`Wallet3/${DeviceInfo.getVersion() || '0.0.0'}`);
-  const [ua] = useState(
-    DeviceInfo.isTablet()
-      ? `Mozilla/5.0 (iPad; CPU OS 15_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/98.0.4758.85 Mobile/15E148 Safari/604.1 ${appName}`
-      : `Mozilla/5.0 (iPhone; CPU iPhone OS 15_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/98.0.4758.85 Mobile/15E148 Safari/604.1 ${appName}`
-  );
 
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
   const { onMetadataChange, onGoHome, onNewTab, expanded, onBookmarksPress, onAppNetworkChange } = props;
@@ -242,7 +236,7 @@ export default observer((props: Web3ViewProps) => {
           contentInsetAdjustmentBehavior={'never'}
           contentInset={{ bottom: expanded ? 37 + (safeAreaBottom === 0 ? 8 : 0) : 0 }}
           onNavigationStateChange={onNavigationStateChange}
-          userAgent={ua}
+          userAgent={UA}
           allowsFullscreenVideo={false}
           forceDarkOn={mode === 'dark'}
           injectedJavaScript={`${GetPageMetadata}\ntrue;\n${HookWalletConnect}\n${HookRainbowKit}\ntrue;`}
