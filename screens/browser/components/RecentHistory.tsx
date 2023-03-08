@@ -9,6 +9,7 @@ import { NullableImage } from '../../../components';
 import React from 'react';
 import Theme from '../../../viewmodels/settings/Theme';
 import i18n from '../../../i18n';
+import { isAndroid } from '../../../utils/platform';
 import { observer } from 'mobx-react-lite';
 import { startLayoutAnimation } from '../../../utils/animations';
 
@@ -59,7 +60,9 @@ export default observer(({ onItemPress, tabCount, onTabsPress, disableContextMen
                   width: 37,
                 }}
               >
-                <Text style={{ fontSize: 15, fontWeight: '600', color: tintColor }}>{tabCount}</Text>
+                <Text style={{ fontSize: 15, fontWeight: '600', color: tintColor, marginTop: isAndroid ? -2 : undefined }}>
+                  {tabCount}
+                </Text>
               </View>
             </TouchableOpacity>
           </View>

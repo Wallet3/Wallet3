@@ -3,14 +3,12 @@ import React, { useState } from 'react';
 import Authentication from '../../viewmodels/auth/Authentication';
 import { InpageDAppSignRequest } from '../../screens/browser/controller/InpageDAppController';
 import Networks from '../../viewmodels/core/Networks';
-import { ReactiveScreen } from '../../utils/device';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Sign from '../compositions/Sign';
 import Success from '../views/Success';
-import Theme from '../../viewmodels/settings/Theme';
 import { View } from 'react-native';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Props extends InpageDAppSignRequest {
   close: () => void;
@@ -19,7 +17,7 @@ interface Props extends InpageDAppSignRequest {
 export default observer(({ msg, type, chainId, typedData, approve, reject, close, account, metadata }: Props) => {
   const [verified, setVerified] = useState(false);
   const [themeColor] = useState(Networks.find(chainId)?.color ?? Networks.Ethereum.color);
-  const { backgroundColor } = Theme;
+  const { bottom } = useSafeAreaInsets();
 
   const onReject = () => {
     reject();
@@ -34,7 +32,7 @@ export default observer(({ msg, type, chainId, typedData, approve, reject, close
   };
 
   return (
-    <View style={{ height: styles.safeArea.height + (typedData ? ReactiveScreen.safeAreaBottom : 0), flex: 1 }}>
+    <View style={{ height: styles.safeArea.height + (typedData ? bottom : 0), flex: 1 }}>
       {verified ? (
         <Success />
       ) : (

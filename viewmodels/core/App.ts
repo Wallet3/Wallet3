@@ -130,10 +130,10 @@ export class AppVM {
       tipWalletUpgrade(this.currentWallet);
     });
 
-    runInAction(() => {
-      this.initialized = true;
+    await runInAction(async () => {
       this.wallets = wallets;
       this.switchAccount(lastUsedAccount, true);
+      this.initialized = true;
     });
 
     PairedDevices.init().then(() => !this.hasWalletSet && KeyRecoveryWatcher.scanLan());

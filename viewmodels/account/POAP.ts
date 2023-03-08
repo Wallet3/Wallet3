@@ -1,11 +1,11 @@
 import { BigNumber, ethers } from 'ethers';
 import { action, makeObservable, observable, runInAction } from 'mobx';
-import { eth_call, getRPCUrls } from '../../common/RPC';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DAY } from '../../utils/time';
 import POAPABI from '../../abis/POAP.json';
 import axios from 'axios';
+import { eth_call } from '../../common/RPC';
 
 const POAPAddress = '0x22C1f6050E56d2876009903609a2cC3fEf83B415';
 
