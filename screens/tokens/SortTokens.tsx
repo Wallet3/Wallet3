@@ -1,4 +1,4 @@
-import { Coin, Separator } from '../../components';
+import { Coin, SafeViewContainer, Separator } from '../../components';
 import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Switch, Text, TouchableOpacity, View } from 'react-native';
@@ -81,7 +81,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeViewContainer style={{ flex: 1, padding: 0 }} paddingHeader>
       <Text style={{ paddingHorizontal: 16, color: secondaryFontColor, paddingBottom: 4 }}>{t('home-tokens-drag-tip')}</Text>
       <Separator style={{ backgroundColor: borderColor }} />
       <DraggableFlatList
@@ -95,6 +95,6 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
           setData(data);
         }}
       />
-    </SafeAreaView>
+    </SafeViewContainer>
   );
 });

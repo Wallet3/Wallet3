@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { SquircleView } from 'react-native-figma-squircle';
 import SwipeButton from 'rn-swipe-button';
+import { isAndroid } from '../utils/platform';
 import { observable } from 'mobx';
 import { themeColor } from '../constants/styles';
 
@@ -135,8 +136,8 @@ export default (props: ButtonProps) => {
           strokeWidth: buttonStyle.borderWidth,
         }}
       > */}
-        {props.icon?.()}
-        <Text style={txtStyle}>{title}</Text>
+      {props.icon?.()}
+      <Text style={txtStyle}>{title}</Text>
       {/* </SquircleView> */}
     </TouchableOpacity>
   );
@@ -155,8 +156,10 @@ const styles = StyleSheet.create({
 
   text: {
     color: 'white',
+    fontWeight: '500',
     textTransform: 'capitalize',
     fontSize: 17,
-    fontWeight: '500',
+    lineHeight: isAndroid ? 17 : undefined,
+    marginBottom: isAndroid ? -2 : undefined,
   },
 });

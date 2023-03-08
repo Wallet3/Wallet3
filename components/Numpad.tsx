@@ -139,7 +139,7 @@ const viewStyles = StyleSheet.create({
   keyboard: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: '33.3%',
+    width: '33.333%',
     height: '25%',
     minHeight: 49,
     borderBottomWidth: 1,

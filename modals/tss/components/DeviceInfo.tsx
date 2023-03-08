@@ -22,7 +22,12 @@ export default ({ info, verified, light, lastUsedAt, mainAddress }: Props) => {
   const { textColor, secondaryTextColor } = Theme;
   if (!info) return null;
 
-  const [generation] = useState(iosDevice.generationByIdentifier(info.device));
+  console.log(
+    iosDevice.generationByIdentifier(info.device) === undefined,
+    typeof iosDevice.generationByIdentifier(info.device)
+  );
+
+  const [generation] = useState(iosDevice.generationByIdentifier(info.device) ?? `${info.manufacturer} ${info.os}`);
 
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
@@ -45,9 +50,7 @@ export default ({ info, verified, light, lastUsedAt, mainAddress }: Props) => {
           }}
         >
           <Text style={{ color: secondaryTextColor }} numberOfLines={1}>
-            {`${mainAddress ? `${formatAddress(mainAddress, 6, 4, '...')}, ` : ''}${`${generation}` || ''}${
-              info.osVersion ? `,  ${info.os} ${info.osVersion}` : ''
-            }`.trim()}
+            {`${mainAddress ? `${formatAddress(mainAddress, 6, 4, '...')}, ` : ''}${`${generation}` || ''}`.trim()}
           </Text>
 
           <Text>{lastUsedAt ? dayjs(lastUsedAt).format('YYYY-mm-dd') : undefined}</Text>

@@ -10,6 +10,7 @@ import { TouchableOpacity, UIManager } from 'react-native';
 import { About } from './screens/settings/About';
 import AddToken from './screens/tokens/AddToken';
 import Backup from './screens/settings/Backup';
+import { CardStyleInterpolators } from '@react-navigation/stack';
 import ChangePasscode from './screens/settings/ChangePasscode';
 import Currencies from './screens/settings/Currencies';
 import FlashMessage from 'react-native-flash-message';
@@ -79,6 +80,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
               initialRouteName="Root"
               screenOptions={({ navigation }) => {
                 return {
+                  cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
                   headerTransparent: true,
                   headerTintColor: foregroundColor,
                   contentStyle: { backgroundColor },
@@ -144,7 +146,6 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
           )
         ) : undefined}
       </Host>
-
 
       {Modals({ app, appAuth })}
 

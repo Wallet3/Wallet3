@@ -12,7 +12,6 @@ import MessageKeys from '../../common/MessageKeys';
 import Networks from '../../viewmodels/core/Networks';
 import Overview from './Overview';
 import { Portal } from 'react-native-portalize';
-import { ReactiveScreen } from '../../utils/device';
 import SquircleModalize from '../../modals/core/SquircleModalize';
 import Theme from '../../viewmodels/settings/Theme';
 import TokenDetail from './TokenDetail';
@@ -109,10 +108,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
       />
 
       <Portal>
-        <SquircleModalize
-          ref={tokenDetailModalize}
-          safeAreaStyle={isAndroid ? { height: ReactiveScreen.height * 0.9 } : undefined}
-        >
+        <SquircleModalize ref={tokenDetailModalize}>
           <TokenDetail
             token={selectedToken}
             network={current}

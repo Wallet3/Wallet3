@@ -32,21 +32,6 @@ export default observer(({ vm, close, erc681, onReviewEnter, onReviewLeave }: Pr
     index === 2 ? onReviewEnter?.() : onReviewLeave?.();
   };
 
-  useEffect(() => {
-    const jump = () =>
-      setTimeout(() => {
-        try {
-          verified ? undefined : goTo(Math.max(0, active.index - 1));
-        } catch {}
-      }, 100);
-
-    ReactiveScreen.on('change', jump);
-
-    return () => {
-      ReactiveScreen.off('change', jump);
-    };
-  }, []);
-
   const sendTx = async (pin?: string) => {
     const result = await vm.sendTx(pin);
 

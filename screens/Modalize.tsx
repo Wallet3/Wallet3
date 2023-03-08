@@ -518,7 +518,7 @@ export const InappBrowserModal = observer(({ pageKey }: { pageKey?: string }) =>
       panGestureComponentEnabled={false}
       safeAreaStyle={{ width, height }}
     >
-      {props ? (
+      {props && (
         <InappBrowser
           {...props}
           close={() => {
@@ -526,7 +526,7 @@ export const InappBrowserModal = observer(({ pageKey }: { pageKey?: string }) =>
             setTimeout(() => setProps(undefined), 500);
           }}
         />
-      ) : undefined}
+      )}
     </ModalizeContainer>
   );
 });
@@ -812,7 +812,7 @@ export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Aut
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
       modalStyle={{ borderTopStartRadius: 0, borderTopEndRadius: 0 }}
-      safeAreaStyle={{ backgroundColor: Theme.backgroundColor }}
+      safeAreaStyle={{ backgroundColor: Theme.backgroundColor, ...ReactiveScreen }}
     >
       <FullPasspad
         themeColor={Theme.isLightMode ? Theme.foregroundColor : `${Theme.foregroundColor}80`}

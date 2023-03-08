@@ -14,6 +14,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
+import { isIOS } from '../../utils/platform';
 import { startLayoutAnimation } from '../../utils/animations';
 import styles from '../styles';
 
@@ -36,16 +37,9 @@ export default ({ title, onNetworkPress, selectedNetwork, useContextMenu, onEdit
 
   useEffect(() => {
     const timer = setTimeout(() => setNets(networks ?? Networks.all), 25);
-    const reset = () => {
-      swiper.current?.scrollTo(0);
-      onEditing?.(false);
-    };
-
-    ReactiveScreen.on('change', reset);
 
     return () => {
       clearTimeout(timer);
-      ReactiveScreen.off('change', reset);
     };
   }, []);
 

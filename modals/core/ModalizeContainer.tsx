@@ -29,7 +29,7 @@ export default React.forwardRef<Modalize, Props>((props: Props, ref) => {
       {...props}
       modalStyle={{ ...(props.modalStyle as any), backgroundColor: 'transparent' }}
     >
-      <SafeAreaProvider style={[isAndroid ? { height: 439 } : undefined, props.safeAreaStyle]}>
+      <SafeAreaProvider style={[isAndroid ? { minHeight: 439 } : undefined, props.safeAreaStyle]}>
         {props.children}
       </SafeAreaProvider>
     </Modalize>

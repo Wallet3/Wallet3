@@ -51,6 +51,8 @@ export default ({ os, deviceId, style }: { os: 'ios' | 'android'; deviceId?: str
   return os === 'ios' ? (
     <FastImage source={device} style={style as any} resizeMode="contain" />
   ) : (
-    <LottieView style={style} source={require('../assets/animations/android-phone.json')} autoPlay />
+    <View style={[style, { justifyContent: 'center', alignItems: 'center' }]}>
+      <LottieView style={[style]} source={require('../assets/animations/android-phone.json')} autoPlay />
+    </View>
   );
 };
