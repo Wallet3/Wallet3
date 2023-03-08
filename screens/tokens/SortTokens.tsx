@@ -9,6 +9,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/core/Networks';
 import { RootStack } from '../navigations';
 import Theme from '../../viewmodels/settings/Theme';
+import ToggleSwitch from 'toggle-switch-react-native';
 import { UserToken } from '../../viewmodels/services/TokensMan';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -50,7 +51,7 @@ const DraggableToken = observer(
       />
       <Text style={{ fontSize: 18, color: textColor }}>{item.symbol}</Text>
       <View style={{ flex: 1 }} />
-      <Switch value={item.shown} onValueChange={(on) => onValueChange(on)} trackColor={{ true: Networks.current.color }} />
+      <ToggleSwitch isOn={item.shown ?? false} onToggle={(on) => onValueChange(on)} onColor={Networks.current.color} />
     </TouchableOpacity>
   )
 );

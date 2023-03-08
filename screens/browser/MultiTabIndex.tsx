@@ -14,6 +14,7 @@ import SquircleModalize from '../../modals/core/SquircleModalize';
 import SquircleViewContainer from '../../components/SquircleViewContainer';
 import Theme from '../../viewmodels/settings/Theme';
 import { WebTabs } from './components/Tabs';
+import { isIOS } from '../../utils/platform';
 import { observer } from 'mobx-react-lite';
 import { startLayoutAnimation } from '../../utils/animations';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
@@ -262,6 +263,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
         initialNumToRender={99}
         horizontal
         pagingEnabled
+        scrollEnabled={isIOS}
         onMomentumScrollEnd={onScrollEnd}
         showsHorizontalScrollIndicator={false}
         bounces={false}

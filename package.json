@@ -125,6 +125,7 @@
     "secrets.js-grempe": "^2.0.0",
     "stream-browserify": "^3.0.0",
     "text-encoding-polyfill": "^0.6.7",
+    "toggle-switch-react-native": "^3.3.0",
     "typeorm": "^0.3.12",
     "url": "^0.11.0",
     "validator": "^13.9.0",
