@@ -166,7 +166,7 @@ const RootTab = observer(() => {
 
       <Screen
         name="Browser"
-        component={Platform.OS === 'android' ? SinglePageBrowserScreen : BrowserScreen}
+        component={BrowserScreen}
         options={{
           tabBarLabel: 'Web3',
           headerShown: false,
@@ -199,6 +199,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
         sceneContainerStyle: { backgroundColor: backgroundColor },
         headerTransparent: false,
         headerTintColor: foregroundColor,
+        headerTitleAlign: 'center',
         swipeEdgeWidth: ReactiveScreen.width * 0.1,
         swipeEnabled,
         drawerType: 'slide',

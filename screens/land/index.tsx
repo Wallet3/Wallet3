@@ -3,13 +3,10 @@
 import * as Animatable from 'react-native-animatable';
 
 import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
-import React, { useRef } from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import { secureColor, verifiedColor } from '../../constants/styles';
 
 import App from '../../viewmodels/core/App';
 import Backup from './Backup';
-import { BreathAnimation } from '../../utils/animations';
 import CreateMultiSigWallet from './CreateMultiSigWallet';
 import CreateWallet from './CreateWallet';
 import ImportWallet from './ImportWallet';
@@ -17,13 +14,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { LandScreenStack } from '../navigations';
 import OtherOptions from './OtherOptions';
 import PairedDevices from '../multiSig/PairedDevices';
+import React from 'react';
 import SetRecoveryKey from './SignInWeb2SetRecoveryKey';
 import SetupPasscode from './Passcode';
 import ViewRecoveryKey from './SignInWeb2ViewRecoveryKey';
 import Welcome from './Welcome';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import { openShardReceiver } from '../../common/Modals';
 
 const { Navigator, Screen } = createNativeStackNavigator();
 
@@ -35,6 +32,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
       initialRouteName={App.hasWallet ? 'SetupPasscode' : 'Welcome'}
       screenOptions={{
         headerTransparent: true,
+        headerTitleAlign: 'center',
         headerLeft: () => (
           <TouchableOpacity onPress={() => navigation.pop()}>
             <Ionicons name="arrow-back-outline" size={20} />

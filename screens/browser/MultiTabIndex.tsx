@@ -185,26 +185,12 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
   };
 
   useEffect(() => {
-    const handler = () => {
-      setTimeout(
-        () =>
-          swiper.current?.scrollToIndex({
-            index: Math.max(0, Math.min(state.activePageIndex, tabs.size - 1)),
-            animated: true,
-          }),
-        225
-      );
-    };
-
-    ReactiveScreen.on('change', handler);
-
     PubSub.subscribe(MessageKeys.openUrl, (_, { data }) => {
       PubSub.publish(MessageKeys.openUrlInPageId(state.activePageId), { data });
     });
 
     return () => {
       PubSub.unsubscribe(MessageKeys.openUrl);
-      ReactiveScreen.off('change', handler);
     };
   }, []);
 

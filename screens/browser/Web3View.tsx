@@ -308,7 +308,7 @@ export default observer((props: Web3ViewProps) => {
 
             <TouchableOpacity
               style={styles.navTouchableItem}
-              onPress={() => (Platform.OS === 'android' ? onGoHome?.() : dapp ? (onNewTab || onGoHome)?.() : onGoHome?.())}
+              onPress={() => (dapp ? (onNewTab || onGoHome)?.() : onGoHome?.())}
             >
               <Entypo name="circle" size={19} color={tintColor} />
             </TouchableOpacity>

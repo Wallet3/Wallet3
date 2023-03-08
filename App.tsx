@@ -80,8 +80,8 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
               initialRouteName="Root"
               screenOptions={({ navigation }) => {
                 return {
-                  cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
                   headerTransparent: true,
+                  headerTitleAlign: 'center',
                   headerTintColor: foregroundColor,
                   contentStyle: { backgroundColor },
                   headerLeft: () => (
