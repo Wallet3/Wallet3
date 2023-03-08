@@ -1264,8 +1264,6 @@ PODS:
     - React-Core
   - RNImageColors (1.5.2):
     - React-Core
-  - RNOS (1.2.6):
-    - React
   - RNReanimated (2.14.4):
     - DoubleConversion
     - FBLazyVector
@@ -1397,7 +1395,6 @@ DEPENDENCIES:
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - "RNGoogleSignin (from `../node_modules/@react-native-google-signin/google-signin`)"
   - RNImageColors (from `../node_modules/react-native-image-colors`)
-  - RNOS (from `../node_modules/react-native-os`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSharedElement (from `../node_modules/react-native-shared-element`)
@@ -1590,8 +1587,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-google-signin/google-signin"
   RNImageColors:
     :path: "../node_modules/react-native-image-colors"
-  RNOS:
-    :path: "../node_modules/react-native-os"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -1706,7 +1701,6 @@ SPEC CHECKSUMS:
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNGoogleSignin: 22e468a9474dbcb8618d8847205ad4f0b2575d13
   RNImageColors: 9ac05083b52d5c350e6972650ae3ba0e556466c1
-  RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
   RNReanimated: cc5e3aa479cb9170bcccf8204291a6950a3be128
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
   RNSharedElement: 504fa28a235b12505b6daedbb452a9ec96809bd0

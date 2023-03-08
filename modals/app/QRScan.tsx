@@ -45,7 +45,7 @@ export default observer(({ tip, close, handler, style }: Props) => {
     >
       <Scanner
         onBarCodeScanned={handler ?? handleBarCodeScanned}
-        style={{ flex: 1, width: '100%', height: '100%', position: 'absolute' }}
+        style={{ flex: 1, width: ReactiveScreen.width, height: ReactiveScreen.height, position: 'absolute' }}
       />
 
       <View

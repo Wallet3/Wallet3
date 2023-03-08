@@ -16,6 +16,7 @@ import Swiper from 'react-native-swiper';
 import { TransferRequesting } from '../../viewmodels/transferring/TransferRequesting';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
+import { isIOS } from '../../utils/platform';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 
@@ -193,22 +194,27 @@ const QRView = observer(({ vm, onBack, themeColor }: Props) => {
         </View>
 
         <View
-          style={{
-            position: 'relative',
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: 24,
-            borderRadius: 15,
-
-            shadowColor: '#000',
-            shadowOffset: {
-              width: 0,
-              height: 2,
+          style={[
+            isIOS
+              ? {
+                  shadowColor: '#000',
+                  shadowOffset: {
+                    width: 0,
+                    height: 2,
+                  },
+                  shadowOpacity: 0.23,
+                  shadowRadius: 2.62,
+                  elevation: 5,
+                }
+              : {},
+            {
+              position: 'relative',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 24,
+              borderRadius: 15,
             },
-            shadowOpacity: 0.23,
-            shadowRadius: 2.62,
-            elevation: 5,
-          }}
+          ]}
         >
           <QRCode
             value={requestingUri}

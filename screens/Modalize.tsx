@@ -65,6 +65,7 @@ import { WalletConnect_v1 } from '../viewmodels/walletconnect/WalletConnect_v1';
 import { WalletConnect_v2 } from '../viewmodels/walletconnect/WalletConnect_v2';
 import { autorun } from 'mobx';
 import i18n from '../i18n';
+import { isAndroid } from '../utils/platform';
 import { isDomain } from '../viewmodels/services/DomainResolver';
 import { logScreenView } from '../viewmodels/services/Analytics';
 import { observer } from 'mobx-react-lite';
@@ -720,6 +721,7 @@ export const FullScreenQRScanner = observer(() => {
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
       withHandle={false}
+      safeAreaStyle={isAndroid ? { ...ReactiveScreen } : undefined}
       modalStyle={{
         borderTopStartRadius: 0,
         borderTopEndRadius: 0,

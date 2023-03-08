@@ -12,6 +12,7 @@ import MessageKeys from '../../common/MessageKeys';
 import Networks from '../../viewmodels/core/Networks';
 import Overview from './Overview';
 import { Portal } from 'react-native-portalize';
+import { ReactiveScreen } from '../../utils/device';
 import SquircleModalize from '../../modals/core/SquircleModalize';
 import Theme from '../../viewmodels/settings/Theme';
 import TokenDetail from './TokenDetail';
@@ -19,6 +20,7 @@ import Transaction from '../../models/entities/Transaction';
 import TxDetail from './TxDetail';
 import { View } from 'react-native';
 import WalletConnectHub from '../../viewmodels/walletconnect/WalletConnectHub';
+import { isAndroid } from '../../utils/platform';
 import { logScreenView } from '../../viewmodels/services/Analytics';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
@@ -107,7 +109,10 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
       />
 
       <Portal>
-        <SquircleModalize ref={tokenDetailModalize}>
+        <SquircleModalize
+          ref={tokenDetailModalize}
+          safeAreaStyle={isAndroid ? { height: ReactiveScreen.height * 0.9 } : undefined}
+        >
           <TokenDetail
             token={selectedToken}
             network={current}
