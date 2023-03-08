@@ -2,19 +2,16 @@ import { Animated, FlatList, Keyboard, NativeScrollEvent, NativeSyntheticEvent, 
 import { BottomTabScreenProps, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import React, { useEffect, useRef, useState } from 'react';
 import { action, makeObservable, observable } from 'mobx';
+import { isAndroid, isIOS } from '../../utils/platform';
 
 import { Browser } from './Browser';
 import MessageKeys from '../../common/MessageKeys';
-import { Modalize } from 'react-native-modalize';
-import ModalizeContainer from '../../modals/core/ModalizeContainer';
 import { PageMetadata } from './Web3View';
 import { Portal } from 'react-native-portalize';
 import { ReactiveScreen } from '../../utils/device';
 import SquircleModalize from '../../modals/core/SquircleModalize';
-import SquircleViewContainer from '../../components/SquircleViewContainer';
 import Theme from '../../viewmodels/settings/Theme';
 import { WebTabs } from './components/Tabs';
-import { isIOS } from '../../utils/platform';
 import { observer } from 'mobx-react-lite';
 import { startLayoutAnimation } from '../../utils/animations';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
@@ -179,6 +176,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
     }
 
     const pageIndex = Math.min(Math.max(Math.floor(e.nativeEvent.contentOffset.x / ReactiveScreen.width + 0.5), 0), tabs.size);
+
     setActivePageIndex(pageIndex);
     state.setActivePageIdByPageIndex(pageIndex);
 
@@ -264,7 +262,8 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
         horizontal
         pagingEnabled
         scrollEnabled={isIOS}
-        onMomentumScrollEnd={onScrollEnd}
+        onMomentumScrollEnd={isIOS ? onScrollEnd : undefined}
+        onScroll={isAndroid ? onScrollEnd : undefined}
         showsHorizontalScrollIndicator={false}
         bounces={false}
         initialScrollIndex={0}
