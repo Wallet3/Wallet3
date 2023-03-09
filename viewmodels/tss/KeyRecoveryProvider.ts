@@ -61,7 +61,8 @@ export class KeyRecoveryProvider extends TCPClient {
       super.secureWriteString(JSON.stringify(data));
 
       this.key.lastUsedTimestamp = Date.now();
-      this.key.save();
+      this.key.ownerDevice = this.remoteInfo!;
+      await this.key.save();
 
       runInAction(() => (this.distributed = true));
       return true;
