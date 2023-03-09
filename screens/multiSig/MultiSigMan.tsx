@@ -130,7 +130,9 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
                     }}
                   >
                     <DeviceInfo info={device} light />
-                    {device.lastUsedAt < Date.now() - 30 * DAY && <Ionicons name="warning" size={15} color={warningColor} />}
+                    {device.lastUsedAt < Date.now() - KeySecurity.inactiveDAYS && (
+                      <Ionicons name="warning" size={15} color={warningColor} />
+                    )}
                   </TouchableOpacity>
                 </FadeInDownView>
               );
