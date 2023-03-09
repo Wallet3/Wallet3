@@ -22,11 +22,6 @@ export default ({ info, verified, light, lastUsedAt, mainAddress }: Props) => {
   const { textColor, secondaryTextColor } = Theme;
   if (!info) return null;
 
-  console.log(
-    iosDevice.generationByIdentifier(info.device) === undefined,
-    typeof iosDevice.generationByIdentifier(info.device)
-  );
-
   const [generation] = useState(iosDevice.generationByIdentifier(info.device) ?? `${info.manufacturer} ${info.os}`);
 
   return (

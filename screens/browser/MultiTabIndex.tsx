@@ -13,7 +13,6 @@ import SquircleModalize from '../../modals/core/SquircleModalize';
 import Theme from '../../viewmodels/settings/Theme';
 import { WebTabs } from './components/Tabs';
 import { observer } from 'mobx-react-lite';
-import { startLayoutAnimation } from '../../utils/animations';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -198,8 +197,6 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
     if (pageIndexToBeRemoved < 0) return;
 
     const removeTab = () => {
-      startLayoutAnimation();
-
       let newPageIndex = -1;
 
       if (activePageIndex === tabs.size - 1 || pageIndexToBeRemoved < activePageIndex) {
@@ -222,16 +219,14 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
 
       setTimeout(() => {
         Array.from(state.pageMetas.values())[newPageIndex] ? hideTabBar() : showTabBar();
-        if (tabs.size > 1) swiper.current?.scrollToIndex({ index: newPageIndex, animated: false });
+        swiper.current?.scrollToIndex({ index: newPageIndex, animated: false });
       }, 0);
     };
 
     if (tabs.size === 1) {
       newTab();
 
-      setTimeout(() => {
-        removeTab();
-      }, 500);
+      setTimeout(() => removeTab(), 500);
 
       closeTabsModal();
       return;

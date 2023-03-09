@@ -7,7 +7,6 @@ import { ZoomInView } from '../../components/animations';
 
 export default ({ size }: { size?: number }) => {
   size = size ?? Math.min(ReactiveScreen.width - 24, 300);
-  console.log(size);
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
