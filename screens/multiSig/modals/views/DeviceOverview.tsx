@@ -44,12 +44,12 @@ export const DeviceOverview = ({
         <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 16 }}>
           <TextInput
             defaultValue={deviceInfo.name}
-            placeholder={'Device Name'}
+            placeholder={'-----'}
             maxLength={32}
             onChangeText={(t) => (deviceInfo.name = t.trim())}
-            onBlur={() => onDeviceNameChanged?.()}
+            onBlur={() => deviceInfo.name && onDeviceNameChanged?.()}
             style={{
-              minWidth: 32,
+              minWidth: 16,
               maxWidth: 200,
               textAlign: 'center',
               textDecorationStyle: 'dotted',

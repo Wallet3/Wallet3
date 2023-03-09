@@ -159,7 +159,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     textTransform: 'capitalize',
     fontSize: 17,
-    lineHeight: isAndroid ? 17 : undefined,
-    marginBottom: isAndroid ? -2.5 : undefined,
+    marginTop: isAndroid ? -2.5 : undefined,
   },
 });

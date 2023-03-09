@@ -86,9 +86,8 @@ export default ({ onDone, onCancel }: { onDone?: () => void; onCancel?: () => vo
               textAlignVertical: 'top',
               borderWidth: 1,
               borderColor: themeColor,
-              borderRadius: 10,
+              borderRadius: 12,
               padding: 8,
-              paddingVertical: 24,
               fontSize: 16,
               color: foregroundColor,
             }}

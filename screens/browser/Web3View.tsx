@@ -5,7 +5,6 @@ import Animated, { ComplexAnimationBuilder, FadeInDown, FadeOut, FadeOutDown } f
 import { Entypo, Feather, Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { UA, isAndroid } from '../../utils/platform';
 import { WebView, WebViewMessageEvent, WebViewNavigation, WebViewProps } from 'react-native-webview';
 
 import { Account } from '../../viewmodels/account/Account';
@@ -25,6 +24,7 @@ import { NetworksMenu } from '../../modals';
 import { Portal } from 'react-native-portalize';
 import SquircleModalize from '../../modals/core/SquircleModalize';
 import Theme from '../../viewmodels/settings/Theme';
+import { UA } from '../../utils/platform';
 import ViewShot from 'react-native-view-shot';
 import WalletConnectHub from '../../viewmodels/walletconnect/WalletConnectHub';
 import WalletConnectLogo from '../../assets/3rd/walletconnect.svg';

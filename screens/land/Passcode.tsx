@@ -1,16 +1,15 @@
 import { Loader, SafeViewContainer } from '../../components';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import AppVM from '../../viewmodels/core/App';
 import Authentication from '../../viewmodels/auth/Authentication';
+import { BackHandler } from 'react-native';
 import ConfirmPasscode from '../components/ConfirmPasscode';
 import { LandScreenStack } from '../navigations';
 import MnemonicOnce from '../../viewmodels/auth/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { SafeAreaView } from 'react-native';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import { showMessage } from 'react-native-flash-message';
 import { sleep } from '../../utils/async';
 import styles from './styles';
 import { themeColor } from '../../constants/styles';
@@ -31,6 +30,11 @@ export default observer(({ route }: NativeStackScreenProps<LandScreenStack, 'Bac
 
     setTimeout(() => AppVM.init(), 5);
   };
+
+  useEffect(() => {
+    const event = BackHandler.addEventListener('hardwareBackPress', () => true);
+    return () => event.remove();
+  }, []);
 
   return (
     <SafeViewContainer style={styles.rootContainer} paddingHeader>

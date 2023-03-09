@@ -7,6 +7,8 @@
     "eject": "expo eject",
     "postinstall": "node_modules/.bin/rn-nodeify --install crypto,buffer,react-native-randombytes,vm,stream,http,https,url,process,path --hack",
     "ios_cleanup": "rm -rf node_modules .expo ios/build ios/Pods ios/Podfile.lock && yarn && yarn ios",
+    "buildApk": "cd ./android && ./gradlew assembleRelease && cd ..",
+    "buildAab": "cd ./android && ./gradlew bundleRelease && cd ..",
     "test": "jest"
   },
   "dependencies": {
@@ -151,6 +153,7 @@
     "babel-plugin-transform-typescript-metadata": "^0.3.2",
     "jest": "^29.5.0",
     "jest-expo": "^48.0.2",
+    "patch-package": "^6.5.1",
     "react-native-svg-transformer": "^1.0.0",
     "react-test-renderer": "^18.2.0",
     "rn-nodeify": "^10.3.0",

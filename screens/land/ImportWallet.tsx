@@ -71,9 +71,8 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
             textAlignVertical: 'top',
             borderWidth: 1,
             borderColor: themeColor,
-            borderRadius: 10,
+            borderRadius: 12,
             padding: 8,
-            paddingVertical: 24,
             fontSize: 16,
           }}
         />
