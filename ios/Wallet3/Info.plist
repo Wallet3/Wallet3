@@ -38,6 +38,7 @@
 				<string>pillarwallet</string>
 				<string>celowallet</string>
 				<string>bitpie</string>
+				<string>pitaka</string>
 				<string>abt</string>
 				<string>wc</string>
 				<string>https</string>
@@ -46,7 +47,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>20230208124113</string>
+	<string>20230309154517</string>
 	<key>FirebaseAutomaticScreenReportingEnabled</key>
 	<false/>
 	<key>ITSAppUsesNonExemptEncryption</key>
@@ -68,8 +69,7 @@
 	</dict>
 	<key>NSBonjourServices</key>
 	<array>
-		<string>_wallet3-multi-sign._tcp.</string>
-		<string>_wallet3-multi-sign-standby._tcp.</string>
+		<string>_wallet3_multiSign_key_management._tcp.</string>
 	</array>
 	<key>NSCameraUsageDescription</key>
 	<string>This app uses the camera to scan QRCode.</string>

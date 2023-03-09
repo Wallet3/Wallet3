@@ -1,8 +1,9 @@
-import { Wallet, parseXpubkey } from './Wallet';
+import { WalletBase, parseXpubkey } from '../wallet/WalletBase';
 import { action, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
 import { providers, utils } from 'ethers';
 
 import { Account } from '../account/Account';
+import { AppState } from 'react-native';
 import AppStoreReview from '../services/AppStoreReview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Authentication from '../auth/Authentication';
@@ -11,12 +12,17 @@ import Contacts from '../customs/Contacts';
 import Database from '../../models/Database';
 import GasPrice from '../misc/GasPrice';
 import Key from '../../models/entities/Key';
+import KeyRecoveryWatcher from '../tss/management/KeyRecoveryDiscovery';
+import KeySecurity from '../tss/management/KeySecurity';
 import LINQ from 'linq';
 import LinkHub from '../hubs/LinkHub';
-import MessageKeys from '../../common/MessageKeys';
 import MetamaskDAppsHub from '../walletconnect/MetamaskDAppsHub';
+import MultiSigKey from '../../models/entities/MultiSigKey';
+import { MultiSigWallet } from '../wallet/MultiSigWallet';
 import Networks from './Networks';
+import PairedDevices from '../tss/management/PairedDevices';
 import { ReactNativeFirebase } from '@react-native-firebase/app';
+import { SingleSigWallet } from '../wallet/SingleSigWallet';
 import Theme from '../settings/Theme';
 import TxHub from '../hubs/TxHub';
 import UI from '../settings/UI';
@@ -25,6 +31,7 @@ import { fetchChainsOverview } from '../../common/apis/Debank';
 import i18n from '../../i18n';
 import { logAppReset } from '../services/Analytics';
 import { showMessage } from 'react-native-flash-message';
+import { tipWalletUpgrade } from '../misc/MultiSigUpgradeTip';
 
 export class AppVM {
   private lastRefreshedTime = 0;
@@ -33,8 +40,12 @@ export class AppVM {
   firebaseApp!: ReactNativeFirebase.FirebaseApp;
 
   initialized = false;
-  wallets: Wallet[] = [];
+  wallets: WalletBase[] = [];
   currentAccount: Account | null = null;
+
+  get hasWalletSet() {
+    return this.wallets.length > 0 && Authentication.pinSet;
+  }
 
   get hasWallet() {
     return this.wallets.length > 0;
@@ -54,6 +65,7 @@ export class AppVM {
     makeObservable(this, {
       initialized: observable,
       wallets: observable,
+      hasWalletSet: computed,
       hasWallet: computed,
       reset: action,
       switchAccount: action,
@@ -73,16 +85,69 @@ export class AppVM {
         UI.gasIndicator && GasPrice.refresh();
       }
     );
+
+    reaction(
+      () => this.currentWallet,
+      () => KeySecurity.checkInactiveDevices(this.currentWallet)
+    );
+
+    AppState.addEventListener('change', (state) => {
+      if (state !== 'active') return;
+      Authentication.appAuthorized && setTimeout(() => KeyRecoveryWatcher.scanLan(), 2000);
+    });
   }
 
-  async addWallet(key: Key) {
+  async init() {
+    await Promise.all([Database.init(), Authentication.init()]);
+    await Promise.all([Networks.init()]);
+
+    const wallets: WalletBase[] = LINQ.from(
+      await Promise.all(
+        [
+          (await Database.multiSigKeys.find()).map((key) => new MultiSigWallet(key).init()),
+          (await Database.keys.find()).map((key) => new SingleSigWallet(key).init()),
+        ].flat()
+      )
+    )
+      .where((i) => (i ? true : false))
+      .distinct((w) => `${w.keyInfo.bip32Xpubkey}_${w.keyInfo.basePath}_${w.keyInfo.basePathIndex}`)
+      .toArray();
+
+    const lastUsedAccount = (await AsyncStorage.getItem('lastUsedAccount')) ?? '';
+    if (utils.isAddress(lastUsedAccount)) fetchChainsOverview(lastUsedAccount);
+
+    Authentication.once('appAuthorized', () => {
+      WalletConnectHub.init();
+      MetamaskDAppsHub.init();
+      LinkHub.start();
+      Contacts.init();
+
+      TxHub.init().then(() => AppStoreReview.check());
+
+      setTimeout(() => PairedDevices.hasDevices && PairedDevices.scanLan(), 1000);
+      Authentication.on('appAuthorized', () => setTimeout(() => PairedDevices.scanLan(), 1000));
+
+      tipWalletUpgrade(this.currentWallet);
+    });
+
+    await runInAction(async () => {
+      this.wallets = wallets;
+      this.switchAccount(lastUsedAccount, true);
+      this.initialized = true;
+    });
+
+    PairedDevices.init().then(() => !this.hasWalletSet && KeyRecoveryWatcher.scanLan());
+  }
+
+  async addWallet(key: Key | MultiSigKey) {
     if (this.wallets.find((w) => w.isSameKey(key))) return;
     if (this.allAccounts.find((a) => a.address === parseXpubkey(key.bip32Xpubkey))) {
       this.switchAccount(parseXpubkey(key.bip32Xpubkey));
       return;
     }
 
-    const wallet = await new Wallet(key).init();
+    const wallet = await (key instanceof Key ? new SingleSigWallet(key).init() : new MultiSigWallet(key).init());
+
     runInAction(() => {
       this.wallets.push(wallet);
       this.switchAccount(wallet.accounts[0].address);
@@ -190,54 +255,27 @@ export class AppVM {
     const { wallet } = this.findWallet(account.address) || {};
     if (!wallet) return;
 
-    await wallet.removeAccount(account);
+    if (wallet.accounts.length > 1) {
+      await wallet.removeAccount(account);
+    } else {
+      if (!(await this.removeWallet(wallet))) return;
+    }
 
     if (isCurrentAccount) runInAction(() => this.switchAccount(this.allAccounts[Math.max(0, index - 1)].address));
-
-    if (wallet.accounts.length === 0) {
-      runInAction(() => this.wallets.splice(this.wallets.indexOf(wallet), 1));
-      await wallet.delete();
-    }
   }
 
-  async init() {
-    await Promise.all([Database.init(), Authentication.init()]);
-    await Promise.all([Networks.init()]);
+  async removeWallet(wallet: WalletBase) {
+    if (!(await wallet.delete())) return false;
 
-    TxHub.init().then(() => {
-      AppStoreReview.check();
-    });
-
-    const wallets = await Promise.all((await Database.keys.find()).map((key) => new Wallet(key).init()));
-    const lastUsedAccount = (await AsyncStorage.getItem('lastUsedAccount')) ?? '';
-    if (utils.isAddress(lastUsedAccount)) fetchChainsOverview(lastUsedAccount);
-
-    Authentication.once('appAuthorized', () => {
-      WalletConnectHub.init();
-      MetamaskDAppsHub.init();
-      LinkHub.start();
-      Contacts.init();
-    });
-
-    PubSub.subscribe(MessageKeys.userSecretsNotVerified, () => {
-      if ((this.currentAccount?.balance || 0) === 0) return;
-      if (this.currentWallet?.signInPlatform) return;
-      setTimeout(() => PubSub.publish(MessageKeys.openBackupSecretTip), 1000);
-    });
-
-    runInAction(() => {
-      this.initialized = true;
-      this.wallets = wallets;
-      this.switchAccount(lastUsedAccount, true);
-    });
+    const index = this.wallets.indexOf(wallet);
+    index >= 0 && runInAction(() => this.wallets.splice(index, 1));
+    return true;
   }
 
   async reset() {
     this.wallets.forEach((w) => w.dispose());
     this.wallets = [];
     this.currentAccount = null;
-
-    PubSub.unsubscribe(MessageKeys.userSecretsNotVerified);
 
     TxHub.reset();
     Contacts.reset();

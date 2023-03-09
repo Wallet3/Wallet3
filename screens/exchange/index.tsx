@@ -4,9 +4,7 @@ import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 import { Button, Coin, Skeleton } from '../../components';
 import { FlatList, Keyboard, ListRenderItemInfo, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { Modalize, useModalize } from 'react-native-modalize';
 import React, { useEffect, useState } from 'react';
-import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import AccountSelector from '../../modals/dapp/AccountSelector';
 import App from '../../viewmodels/core/App';
@@ -18,6 +16,7 @@ import { OneInch } from '../../assets/3rd';
 import { Portal } from 'react-native-portalize';
 import { ReactiveScreen } from '../../utils/device';
 import { RotateAnimation } from '../../utils/animations';
+import SquircleModalize from '../../modals/core/SquircleModalize';
 import { SwapProtocol } from '../../common/apis/1inch';
 import { TextInput } from 'react-native-gesture-handler';
 import Theme from '../../viewmodels/settings/Theme';
@@ -28,8 +27,9 @@ import { formatCurrency } from '../../utils/formatter';
 import { generateDexLogo } from '../../assets/dexs';
 import { generateNetworkIcon } from '../../assets/icons/networks/white';
 import i18n from '../../i18n';
-import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
+import { useModalize } from 'react-native-modalize';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default observer(() => {
   const { backgroundColor, borderColor, foregroundColor, textColor, secondaryTextColor } = Theme;
@@ -338,7 +338,7 @@ export default observer(() => {
       </View>
 
       <Portal>
-        <Modalize ref={networksRef} adjustToContentHeight disableScrollIfPossible>
+        <SquircleModalize ref={networksRef}>
           <NetworksMenu
             title={t('modal-dapp-switch-network', { app: 'Exchange' })}
             networks={VM.networks}
@@ -348,95 +348,54 @@ export default observer(() => {
               closeNetworksModal();
             }}
           />
-        </Modalize>
+        </SquircleModalize>
 
-        <Modalize
-          ref={accountsRef}
-          adjustToContentHeight
-          disableScrollIfPossible
-          modalStyle={modalStyle.containerTopBorderRadius}
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-        >
-          <SafeAreaProvider style={{ backgroundColor, ...modalStyle.containerTopBorderRadius }}>
-            <AccountSelector
-              single
-              accounts={App.allAccounts}
-              selectedAccounts={[VM.account?.address || '']}
-              style={{ padding: 16, height: 430 }}
-              expanded
-              themeColor={VM.userSelectedNetwork.color}
-              onDone={([account]) => {
-                closeAccountsModal();
-                VM.switchAccount(account);
+        <SquircleModalize ref={accountsRef}>
+          <AccountSelector
+            single
+            accounts={App.allAccounts}
+            selectedAccounts={[VM.account?.address || '']}
+            style={{ padding: 16, height: 430 }}
+            expanded
+            themeColor={VM.userSelectedNetwork.color}
+            onDone={([account]) => {
+              closeAccountsModal();
+              VM.switchAccount(account);
+            }}
+          />
+        </SquircleModalize>
+
+        <SquircleModalize ref={fromSelectorRef}>
+          <ScrollView horizontal scrollEnabled={false} style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
+            <TokenSelector
+              tokens={VM.tokens}
+              selectedToken={VM.swapFrom as IToken}
+              chainId={chainId}
+              themeColor={userSelectedNetwork.color}
+              onAddTokenRequested={(t) => VM.addToken(t)}
+              onTokenSelected={(t) => {
+                VM.switchSwapFrom(t as any);
+                closeFromTokens();
               }}
             />
-          </SafeAreaProvider>
-        </Modalize>
+          </ScrollView>
+        </SquircleModalize>
 
-        <Modalize
-          ref={fromSelectorRef}
-          adjustToContentHeight
-          disableScrollIfPossible
-          modalStyle={modalStyle.containerTopBorderRadius}
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-        >
-          <ScrollView
-            horizontal
-            scrollEnabled={false}
-            style={{ width: ReactiveScreen.width, flex: 1 }}
-            contentContainerStyle={{ flexGrow: 1 }}
-          >
-            <SafeAreaProvider
-              style={{
-                backgroundColor,
-                ...modalStyle.containerTopBorderRadius,
-                height: '100%',
-                width: ReactiveScreen.width,
+        <SquircleModalize ref={toSelectorRef}>
+          <ScrollView horizontal scrollEnabled={false} style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
+            <TokenSelector
+              tokens={VM.tokens}
+              chainId={chainId}
+              themeColor={userSelectedNetwork.color}
+              selectedToken={VM.swapTo as IToken}
+              onAddTokenRequested={(t) => VM.addToken(t)}
+              onTokenSelected={(t) => {
+                VM.switchSwapTo(t as any);
+                closeToTokens();
               }}
-            >
-              <TokenSelector
-                tokens={VM.tokens}
-                selectedToken={VM.swapFrom as IToken}
-                chainId={chainId}
-                themeColor={userSelectedNetwork.color}
-                onAddTokenRequested={(t) => VM.addToken(t)}
-                onTokenSelected={(t) => {
-                  VM.switchSwapFrom(t as any);
-                  closeFromTokens();
-                }}
-              />
-            </SafeAreaProvider>
+            />
           </ScrollView>
-        </Modalize>
-
-        <Modalize
-          ref={toSelectorRef}
-          adjustToContentHeight
-          disableScrollIfPossible
-          modalStyle={modalStyle.containerTopBorderRadius}
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-        >
-          <ScrollView
-            horizontal
-            scrollEnabled={false}
-            style={{ width: ReactiveScreen.width, flex: 1 }}
-            contentContainerStyle={{ flexGrow: 1 }}
-          >
-            <SafeAreaProvider style={{ backgroundColor, ...modalStyle.containerTopBorderRadius, width: ReactiveScreen.width }}>
-              <TokenSelector
-                tokens={VM.tokens}
-                chainId={chainId}
-                themeColor={userSelectedNetwork.color}
-                selectedToken={VM.swapTo as IToken}
-                onAddTokenRequested={(t) => VM.addToken(t)}
-                onTokenSelected={(t) => {
-                  VM.switchSwapTo(t as any);
-                  closeToTokens();
-                }}
-              />
-            </SafeAreaProvider>
-          </ScrollView>
-        </Modalize>
+        </SquircleModalize>
       </Portal>
     </ScrollView>
   );

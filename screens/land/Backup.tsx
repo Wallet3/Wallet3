@@ -28,7 +28,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
         onVerified={(v) => {
           setVerified(v);
           if (!v) return;
-          Authentication.setUserSecretsVerified(true);
+
           logBackup();
         }}
       />

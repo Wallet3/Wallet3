@@ -21,7 +21,6 @@ class ReactScreen extends EventEmitter {
       width: observable,
       safeAreaBottom: observable,
       isPortrait: computed,
-      setSafeAreaBottom: action,
     });
 
     const updateScreenDimensions = () => {
@@ -40,11 +39,6 @@ class ReactScreen extends EventEmitter {
 
   get isPortrait() {
     return this.height > this.width;
-  }
-
-  setSafeAreaBottom(bottom: number) {
-    if (bottom === this.safeAreaBottom || bottom === 0) return;
-    this.safeAreaBottom = bottom;
   }
 }
 

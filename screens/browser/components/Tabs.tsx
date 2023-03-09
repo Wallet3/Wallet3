@@ -10,6 +10,7 @@ import Theme from '../../../viewmodels/settings/Theme';
 import i18n from '../../../i18n';
 import modalStyle from '../../../modals/styles';
 import { observer } from 'mobx-react-lite';
+import { verifiedColor } from '../../../constants/styles';
 
 const calcTabWidth = () => {
   const { width } = ReactiveScreen;
@@ -70,7 +71,7 @@ const WebTab = ({
         borderBottomEndRadius: 7,
         borderBottomStartRadius: 7,
         backgroundColor: '#fff',
-        shadowColor: `#00000060`,
+        shadowColor: '#00000060',
         shadowOffset: {
           width: 0,
           height: 2,
@@ -79,7 +80,7 @@ const WebTab = ({
         shadowOpacity: 0.5,
         elevation: 5,
         borderWidth: activeIndex === listIndex ? 2.5 : 0,
-        borderColor: 'dodgerblue',
+        borderColor: verifiedColor,
       }}
     >
       <View
@@ -185,8 +186,6 @@ export const WebTabs = observer(
         style={{
           maxHeight: 600,
           minHeight: 439,
-          backgroundColor,
-          ...modalStyle.containerTopBorderRadius,
           width: '100%',
         }}
       >
@@ -200,7 +199,6 @@ export const WebTabs = observer(
             paddingTop: 4,
             paddingEnd: 8,
             position: 'absolute',
-            ...modalStyle.containerTopBorderRadius,
             backgroundColor: `${backgroundColor}e0`,
           }}
         >
@@ -213,6 +211,7 @@ export const WebTabs = observer(
               borderColor: tintColor,
               flexDirection: 'row',
               alignItems: 'center',
+              marginEnd: 2,
             }}
           >
             <Ionicons name="close-circle-outline" size={12} color={thirdTextColor} />
@@ -234,7 +233,7 @@ export const WebTabs = observer(
             width: 48,
             height: 48,
             backgroundColor: tintColor,
-            shadowColor: `#00000060`,
+            shadowColor: '#00000060',
             shadowOffset: {
               width: 0,
               height: 2,

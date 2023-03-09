@@ -431,6 +431,16 @@ export const Testnets: INetwork[] = [
     explorer: 'https://goerli.arbiscan.io',
   },
   {
+    symbol: 'ETH',
+    network: 'Base Goerli',
+    chainId: 84531,
+    color: '#588af5',
+    eip1559: true,
+    testnet: true,
+    defaultTokens: [],
+    explorer: 'https://goerli.basescan.org',
+  },
+  {
     comm_id: '',
     symbol: 'MATIC',
     network: 'Mumbai',
@@ -442,6 +452,17 @@ export const Testnets: INetwork[] = [
     testnet: true,
     explorer: 'https://mumbai.polygonscan.com',
     etherscanApi: 'https://mumbai.polygonscan.com/api',
+  },
+  {
+    comm_id: '',
+    symbol: 'ETH',
+    network: 'Japan Open Chain',
+    chainId: 99999,
+    color: '#BC002D',
+    defaultTokens: [],
+    blockTimeMs: 3 * 1000,
+    testnet: true,
+    explorer: 'https://sandbox1.japanopenchain.org',
   },
 ];
 

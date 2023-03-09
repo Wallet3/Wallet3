@@ -51,7 +51,7 @@ export class ParsedMessage {
       this.domain?.toLowerCase().replace('https://', '') === this.origin?.toLowerCase().replace('https://', '');
 
     if (!isURL(this.domain)) {
-      console.log(this.domain);
+      __DEV__ && console.log(this.domain);
       throw new Error('Invalid domain');
     }
 

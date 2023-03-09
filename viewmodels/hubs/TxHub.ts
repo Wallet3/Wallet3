@@ -11,7 +11,6 @@ import i18n from '../../i18n';
 import { isTransactionAbandoned } from '../services/EtherscanPublicTag';
 import { logTxConfirmed } from '../services/Analytics';
 import { showMessage } from 'react-native-flash-message';
-import { startLayoutAnimation } from '../../utils/animations';
 
 class TxHub {
   private watchTimer!: NodeJS.Timeout;
@@ -167,7 +166,6 @@ class TxHub {
 
       abandonedTxs.map((t) => t.remove());
 
-      startLayoutAnimation();
       this.pendingTxs = newPending;
     });
   }

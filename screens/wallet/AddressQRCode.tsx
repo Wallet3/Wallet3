@@ -15,9 +15,10 @@ import QRCode from 'react-native-qrcode-svg';
 import Theme from '../../viewmodels/settings/Theme';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
+import { isIOS } from '../../utils/platform';
 import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
-import { openInappBrowser } from '../../modals/InappBrowser';
+import { openInappBrowser } from '../../modals/app/InappBrowser';
 import { setStringAsync } from 'expo-clipboard';
 
 export default observer(({ account }: { account?: Account }) => {
@@ -38,7 +39,7 @@ export default observer(({ account }: { account?: Account }) => {
   const prefixedAddress = current?.addrPrefix ? `${current?.addrPrefix}${address?.substring(2)}` : address;
 
   return (
-    <View style={{ padding: 16, flex: 1, height: 430, backgroundColor, ...modalStyle.containerTopBorderRadius }}>
+    <View style={{ padding: 16, flex: 1, height: 430 }}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
         <View style={{ alignItems: 'center', marginTop: -16 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 12, maxWidth: '70%' }}>
@@ -72,21 +73,27 @@ export default observer(({ account }: { account?: Account }) => {
         </View>
 
         <View
-          style={{
-            position: 'relative',
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: 24,
-            borderRadius: 15,
-            shadowColor: '#000',
-            shadowOffset: {
-              width: 0,
-              height: 2,
+          style={[
+            isIOS
+              ? {
+                  shadowColor: '#000',
+                  shadowOffset: {
+                    width: 0,
+                    height: 2,
+                  },
+                  shadowOpacity: 0.23,
+                  shadowRadius: 2.62,
+                  elevation: 5,
+                }
+              : {},
+            {
+              position: 'relative',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 24,
+              borderRadius: 15,
             },
-            shadowOpacity: 0.23,
-            shadowRadius: 2.62,
-            elevation: 5,
-          }}
+          ]}
         >
           <QRCode
             value={address}

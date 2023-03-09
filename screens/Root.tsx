@@ -11,6 +11,8 @@ import ContactsScreen from './contacts';
 import DAppsScreen from './dapps';
 import Drawer from './drawer';
 import ExchangeScreen from './exchange';
+import MessageKeys from '../common/MessageKeys';
+import MultiSigScreen from './multiSig';
 import NFTList from './nfts/List';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../viewmodels/core/Networks';
@@ -20,6 +22,12 @@ import SinglePageBrowserScreen from './browser/Browser';
 import Theme from '../viewmodels/settings/Theme';
 import TxHub from '../viewmodels/hubs/TxHub';
 import WalletScreen from './wallet';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import i18n from '../i18n';
+import { observer } from 'mobx-react-lite';
+import { startLayoutAnimation } from '../utils/animations';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const DrawerRoot = createDrawerNavigator();
 const TabNavigation = createBottomTabNavigator<any>();
@@ -51,6 +59,8 @@ const RootTab = observer(() => {
     };
   }, []);
 
+  useEffect(() => startLayoutAnimation(), [currentAccount?.nfts.nfts, TxHub.pendingCount]);
+
   return (
     <Navigator
       initialRouteName="Wallet"
@@ -77,7 +87,7 @@ const RootTab = observer(() => {
         <Screen name="NFTs" component={NFTList} options={{ tabBarLabel: t('home-tab-arts'), headerShown: false }} />
       ) : undefined}
 
-      {Platform.OS !== 'ios' || TxHub.txs.length > 3 ? (
+      {Platform.OS !== 'ios' || __DEV__ ? (
         <Screen
           name="Exchange"
           component={ExchangeScreen}
@@ -155,7 +165,7 @@ const RootTab = observer(() => {
 
       <Screen
         name="Browser"
-        component={Platform.OS === 'android' ? SinglePageBrowserScreen : BrowserScreen}
+        component={BrowserScreen}
         options={{
           tabBarLabel: 'Web3',
           headerShown: false,
@@ -188,6 +198,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
         sceneContainerStyle: { backgroundColor: backgroundColor },
         headerTransparent: false,
         headerTintColor: foregroundColor,
+        headerTitleAlign: 'center',
         swipeEdgeWidth: ReactiveScreen.width * 0.1,
         swipeEnabled,
         drawerType: 'slide',
@@ -205,12 +216,13 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStackParamLi
     >
       <Screen name="Home" component={RootTab} options={{ headerShown: false }} />
       <Screen name="Contacts" component={ContactsScreen} options={{ title: t('home-drawer-contacts') }} />
-      <Screen name="Settings" component={SettingScreen} options={{ title: t('home-drawer-settings') }} />
       <Screen
         name="ConnectedDapps"
         component={DAppsScreen}
         options={{ title: t('connectedapps-title'), headerShown: false }}
       />
+      <Screen name="Settings" component={SettingScreen} options={{ title: t('home-drawer-settings') }} />
+      <Screen name="MultiSig" component={MultiSigScreen} options={{ title: t('home-drawer-multi-sig'), headerShown: false }} />
     </Navigator>
   );
 });

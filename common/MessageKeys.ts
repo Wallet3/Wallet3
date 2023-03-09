@@ -13,7 +13,17 @@ export default {
   openInappBrowser: 'openInappBrowser',
   openMyAddressQRCode: 'openMyAddressQRCode',
   openGlobalQRScanner: 'openGlobalQRScanner',
+  openShardsDistribution: 'openShardsDistribution',
+  openShardReceiver: 'openShardReceiver',
+  openShardRedistributionReceiver: 'openShardRedistributionReceiver',
+  openShardsAggregator: 'openShardsAggregator',
+  openShardProvider: 'openShardProvider',
+  openInactiveDevicesTip: 'openInactiveDevicesTip',
+  openKeyRecoveryRequestor: 'openKeyRecoveryRequestor',
+  openKeyRecoveryProvider: 'openKeyRecoveryProvider',
+  openGlobalPasspad: 'openGlobalPasspad',
   drawerSwipeEnabled: 'drawer-swipeEnabled',
+
   wc_request: 'wc_request',
 
   walletconnect: {
@@ -23,8 +33,8 @@ export default {
 
   CodeScan_wallet3sync: 'CodeScan-wallet3sync:',
   CodeScan_64Length: 'CodeScan-64Length',
-  openBackupSecretTip: 'openBackupSecretTip',
-  userSecretsNotVerified: 'userSecretsNotVerified',
+  openUpgradeWalletTip: 'openUpgradeWalletTip',
+
   openUrl: 'openUrl',
   openUrlInPageId: (pageId: number) => `openUrl_page${pageId}`,
   openBrowser: 'openBrowser',

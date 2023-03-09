@@ -1,4 +1,3 @@
-import * as Random from 'expo-random';
 import * as SecureStore from 'expo-secure-store';
 
 import {
@@ -15,30 +14,34 @@ import { decrypt, encrypt, sha256 } from '../../utils/cipher';
 
 import { AppState } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import EventEmitter from 'events';
-import MessageKeys from '../../common/MessageKeys';
+import EventEmitter from 'eventemitter3';
+import { getSecureRandomBytes } from '../../utils/math';
 import { logWalletLocked } from '../services/Analytics';
 import { toMilliseconds } from '../../utils/time';
 
-const keys = {
+const Keys = {
   enableBiometrics: 'enableBiometrics',
-  userSecretsVerified: 'userSecretsVerified',
   masterKey: 'masterKey',
+  foreverKey: 'foreverKey',
   pin: 'pin',
   appUnlockTime: 'appUnlockTime',
 };
 
 export type BioType = 'faceid' | 'fingerprint' | 'iris';
 
-export class Authentication extends EventEmitter {
+interface Events {
+  appAuthorized: () => void;
+}
+
+export class Authentication extends EventEmitter<Events> {
   private lastBackgroundTimestamp = Date.now();
 
   biometricSupported = false;
   supportedTypes: AuthenticationType[] = [];
   biometricEnabled = true;
+  pinSet = false;
 
   appAuthorized = false;
-  userSecretsVerified = false;
 
   failedAttempts = 0;
   appUnlockTime = 0;
@@ -70,13 +73,13 @@ export class Authentication extends EventEmitter {
       supportedTypes: observable,
       biometricEnabled: observable,
       appAuthorized: observable,
-      userSecretsVerified: observable,
       failedAttempts: observable,
       appUnlockTime: observable,
+      pinSet: observable,
       appAvailable: computed,
+
       setBiometrics: action,
       reset: action,
-      setUserSecretsVerified: action,
     });
 
     this.init();
@@ -88,7 +91,7 @@ export class Authentication extends EventEmitter {
       }
 
       if (nextState === 'active') {
-        if (Date.now() - this.lastBackgroundTimestamp < 1000 * 60 * 2) return;
+        if (Date.now() - this.lastBackgroundTimestamp < (__DEV__ ? 20 : 60 * 2) * 1000) return;
         if (!this.appAuthorized) return;
 
         runInAction(() => {
@@ -100,21 +103,21 @@ export class Authentication extends EventEmitter {
   }
 
   async init() {
-    const [supported, enrolled, supportedTypes, enableBiometrics, userSecretsVerified, appUnlockTime] = await Promise.all([
+    const [supported, enrolled, supportedTypes, enableBiometrics, appUnlockTime, pinCode] = await Promise.all([
       hasHardwareAsync(),
       isEnrolledAsync(),
       supportedAuthenticationTypesAsync(),
-      AsyncStorage.getItem(keys.enableBiometrics),
-      AsyncStorage.getItem(keys.userSecretsVerified),
-      AsyncStorage.getItem(keys.appUnlockTime),
+      AsyncStorage.getItem(Keys.enableBiometrics),
+      AsyncStorage.getItem(Keys.appUnlockTime),
+      SecureStore.getItemAsync(Keys.pin),
     ]);
 
     runInAction(() => {
       this.biometricSupported = supported && enrolled;
       this.supportedTypes = supportedTypes;
       this.biometricEnabled = enableBiometrics === 'true';
-      this.userSecretsVerified = userSecretsVerified === 'true';
       this.appUnlockTime = Number(appUnlockTime) || 0;
+      this.pinSet = pinCode ? true : false;
     });
   }
 
@@ -127,14 +130,25 @@ export class Authentication extends EventEmitter {
   }
 
   private async getMasterKey() {
-    let masterKey = await SecureStore.getItemAsync(keys.masterKey);
+    let masterKey = await SecureStore.getItemAsync(Keys.masterKey);
 
     if (!masterKey) {
-      masterKey = Buffer.from(Random.getRandomBytes(16)).toString('hex');
-      await SecureStore.setItemAsync(keys.masterKey, masterKey);
+      masterKey = Buffer.from(getSecureRandomBytes(16)).toString('hex');
+      await SecureStore.setItemAsync(Keys.masterKey, masterKey);
     }
 
     return `${masterKey}_${appEncryptKey}`;
+  }
+
+  private async getForeverKey() {
+    let foreverKey = await SecureStore.getItemAsync(Keys.foreverKey);
+
+    if (!foreverKey) {
+      foreverKey = Buffer.from(getSecureRandomBytes(16)).toString('hex');
+      await SecureStore.setItemAsync(Keys.foreverKey, foreverKey);
+    }
+
+    return foreverKey;
   }
 
   async setBiometrics(enabled: boolean) {
@@ -143,63 +157,78 @@ export class Authentication extends EventEmitter {
     }
 
     runInAction(() => (this.biometricEnabled = enabled));
-    AsyncStorage.setItem(keys.enableBiometrics, enabled.toString());
+    AsyncStorage.setItem(Keys.enableBiometrics, enabled.toString());
   }
 
   async setupPin(pin: string) {
-    await SecureStore.setItemAsync(keys.pin, await sha256(`${pin}_${pinEncryptKey}`));
+    await SecureStore.setItemAsync(Keys.pin, await sha256(`${pin}_${pinEncryptKey}`));
   }
 
-  async verifyPin(pin: string) {
-    const success = (await sha256(`${pin}_${pinEncryptKey}`)) === (await SecureStore.getItemAsync(keys.pin));
+  verifyPin = async (pin: string) => {
+    const success = (await sha256(`${pin}_${pinEncryptKey}`)) === (await SecureStore.getItemAsync(Keys.pin));
 
     runInAction(() => {
       this.failedAttempts = success ? 0 : this.failedAttempts + 1;
-      if (this.failedAttempts <= (__DEV__ ? 3 : 6)) return;
+      if (this.failedAttempts <= (__DEV__ ? 2 : 6)) return;
 
       this.failedAttempts = 0;
-      this.appUnlockTime = Date.now() + (__DEV__ ? toMilliseconds({ seconds: 120 }) : toMilliseconds({ hours: 3 }));
-      AsyncStorage.setItem(keys.appUnlockTime, this.appUnlockTime.toString());
+      this.appUnlockTime = Date.now() + (__DEV__ ? toMilliseconds({ seconds: 20 }) : toMilliseconds({ hours: 3 }));
+      AsyncStorage.setItem(Keys.appUnlockTime, this.appUnlockTime.toString());
       logWalletLocked();
     });
 
     return success;
-  }
+  };
 
-  async authorize(pin?: string) {
+  authorize = async (pin?: string) => {
     const success = await this.authenticate({ pin });
 
     if (!this.appAuthorized) {
       runInAction(() => (this.appAuthorized = success));
-
-      if (success) {
-        this.emit('appAuthorized');
-        if (!this.userSecretsVerified) PubSub.publish(MessageKeys.userSecretsNotVerified);
-      }
+      success && this.emit('appAuthorized');
     }
 
     return success;
-  }
+  };
 
-  async encrypt(data: string) {
+  encrypt = async (data: string) => {
     return encrypt(data, await this.getMasterKey());
-  }
+  };
 
-  async decrypt(data: string, pin?: string) {
+  decrypt = async <T = string | string[]>(data: T, pin?: string): Promise<T | undefined> => {
     if (!(await this.authenticate({ pin }))) return undefined;
-    return decrypt(data, await this.getMasterKey());
-  }
 
-  async setUserSecretsVerified(verified: boolean) {
-    this.userSecretsVerified = verified;
-    await AsyncStorage.setItem(keys.userSecretsVerified, verified.toString());
-  }
+    const masterKey = await this.getMasterKey();
+
+    if (Array.isArray(data)) {
+      return data.map((d) => (d ? decrypt(d, masterKey) : d)) as T;
+    } else {
+      return decrypt(data as string, masterKey) as T;
+    }
+  };
+
+  encryptForever = async (data: string) => {
+    return encrypt(data, await this.getForeverKey());
+  };
+
+  decryptForever = async <T = string | string[]>(data: T, pin?: string): Promise<T | undefined> => {
+    if (!(await this.authenticate({ pin }))) return undefined;
+
+    const foreverKey = await this.getForeverKey();
+
+    if (Array.isArray(data)) {
+      return data.map((d) => (d ? decrypt(d, foreverKey) : d)) as T;
+    } else {
+      return decrypt(data as string, foreverKey) as T;
+    }
+  };
 
   reset() {
+    this.pinSet = false;
     this.appAuthorized = false;
-    this.userSecretsVerified = false;
     this.biometricEnabled = false;
-    return SecureStore.deleteItemAsync(keys.masterKey);
+    this.removeAllListeners();
+    return Promise.all([SecureStore.deleteItemAsync(Keys.masterKey), SecureStore.deleteItemAsync(Keys.pin)]);
   }
 }
 

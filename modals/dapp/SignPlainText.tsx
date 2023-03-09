@@ -26,7 +26,7 @@ interface Props {
   onSign?: () => Promise<void>;
   account?: Account;
   bioType?: BioType;
-  onStandardModeChanged: (on: boolean) => void;
+  onStandardModeChanged?: (on: boolean) => void;
   standardMode?: boolean;
   metadata?: PageMetadata;
 }
@@ -59,7 +59,7 @@ export default observer(
       try {
         setSiwe(new ParsedMessage(msg, metadata?.origin!));
       } catch (error) {
-        console.log(error);
+        __DEV__ && console.log(error);
       }
     }, [msg]);
 
@@ -91,12 +91,12 @@ export default observer(
           </ScrollView>
         )}
 
-        {isByte ? (
+        {/* {isByte ? (
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 }}>
             <Text style={{ color: thirdFontColor }}>{t('modal-sign-with-stand-mode')}</Text>
             <Switch value={standardMode} trackColor={{ true: themeColor }} onValueChange={(v) => onStandardModeChanged(v)} />
           </View>
-        ) : undefined}
+        ) : undefined} */}
 
         <RejectApproveButtons
           disabledApprove={busy}

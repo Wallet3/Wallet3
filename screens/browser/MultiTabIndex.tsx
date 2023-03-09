@@ -2,17 +2,17 @@ import { Animated, FlatList, Keyboard, NativeScrollEvent, NativeSyntheticEvent, 
 import { BottomTabScreenProps, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import React, { useEffect, useRef, useState } from 'react';
 import { action, makeObservable, observable } from 'mobx';
+import { isAndroid, isIOS } from '../../utils/platform';
 
 import { Browser } from './Browser';
 import MessageKeys from '../../common/MessageKeys';
-import { Modalize } from 'react-native-modalize';
 import { PageMetadata } from './Web3View';
 import { Portal } from 'react-native-portalize';
 import { ReactiveScreen } from '../../utils/device';
+import SquircleModalize from '../../modals/core/SquircleModalize';
 import Theme from '../../viewmodels/settings/Theme';
 import { WebTabs } from './components/Tabs';
 import { observer } from 'mobx-react-lite';
-import { startLayoutAnimation } from '../../utils/animations';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -175,6 +175,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
     }
 
     const pageIndex = Math.min(Math.max(Math.floor(e.nativeEvent.contentOffset.x / ReactiveScreen.width + 0.5), 0), tabs.size);
+
     setActivePageIndex(pageIndex);
     state.setActivePageIdByPageIndex(pageIndex);
 
@@ -182,26 +183,12 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
   };
 
   useEffect(() => {
-    const handler = () => {
-      setTimeout(
-        () =>
-          swiper.current?.scrollToIndex({
-            index: Math.max(0, Math.min(state.activePageIndex, tabs.size - 1)),
-            animated: true,
-          }),
-        225
-      );
-    };
-
-    ReactiveScreen.on('change', handler);
-
     PubSub.subscribe(MessageKeys.openUrl, (_, { data }) => {
       PubSub.publish(MessageKeys.openUrlInPageId(state.activePageId), { data });
     });
 
     return () => {
       PubSub.unsubscribe(MessageKeys.openUrl);
-      ReactiveScreen.off('change', handler);
     };
   }, []);
 
@@ -210,8 +197,6 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
     if (pageIndexToBeRemoved < 0) return;
 
     const removeTab = () => {
-      startLayoutAnimation();
-
       let newPageIndex = -1;
 
       if (activePageIndex === tabs.size - 1 || pageIndexToBeRemoved < activePageIndex) {
@@ -234,16 +219,14 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
 
       setTimeout(() => {
         Array.from(state.pageMetas.values())[newPageIndex] ? hideTabBar() : showTabBar();
-        if (tabs.size > 1) swiper.current?.scrollToIndex({ index: newPageIndex, animated: false });
+        swiper.current?.scrollToIndex({ index: newPageIndex, animated: false });
       }, 0);
     };
 
     if (tabs.size === 1) {
       newTab();
 
-      setTimeout(() => {
-        removeTab();
-      }, 500);
+      setTimeout(() => removeTab(), 500);
 
       closeTabsModal();
       return;
@@ -273,7 +256,9 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
         initialNumToRender={99}
         horizontal
         pagingEnabled
-        onMomentumScrollEnd={onScrollEnd}
+        scrollEnabled={isIOS}
+        onMomentumScrollEnd={isIOS ? onScrollEnd : undefined}
+        onScroll={isAndroid ? onScrollEnd : undefined}
         showsHorizontalScrollIndicator={false}
         bounces={false}
         initialScrollIndex={0}
@@ -282,15 +267,11 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
       />
 
       <Portal>
-        <Modalize
-          ref={tabsRef}
-          adjustToContentHeight
-          disableScrollIfPossible
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-          modalStyle={{ padding: 0, margin: 0 }}
-        >
+        <SquircleModalize ref={tabsRef}>
           <ScrollView
             scrollEnabled={false}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
             horizontal
             style={{ width: '100%', flex: 1 }}
             contentContainerStyle={{ flexGrow: 1 }}
@@ -310,7 +291,7 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
               }}
             />
           </ScrollView>
-        </Modalize>
+        </SquircleModalize>
       </Portal>
     </View>
   );

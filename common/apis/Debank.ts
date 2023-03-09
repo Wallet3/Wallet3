@@ -244,7 +244,7 @@ export async function preExecTx(tx: {
 
     return result;
   } catch (error) {
-    console.log(error);
+    __DEV__ && console.log(error);
   }
 
   return null;

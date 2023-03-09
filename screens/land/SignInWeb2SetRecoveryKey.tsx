@@ -1,5 +1,4 @@
 import { Button, SafeViewContainer, TextBox } from '../../components';
-import { Modalize, useModalize } from 'react-native-modalize';
 import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 
@@ -9,14 +8,14 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import MessageKeys from '../../common/MessageKeys';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Portal } from 'react-native-portalize';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import SignInWithApple from '../../viewmodels/auth/SignInWithApple';
 import SignInWithGoogle from '../../viewmodels/auth/SignInWithGoogle';
+import SquircleModalize from '../../modals/core/SquircleModalize';
 import i18n from '../../i18n';
-import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 import { showMessage } from 'react-native-flash-message';
 import styles from './styles';
+import { useModalize } from 'react-native-modalize';
 import { warningColor } from '../../constants/styles';
 
 export default observer(({ navigation, route }: NativeStackScreenProps<LandScreenStack, 'SetRecoveryKey'>) => {
@@ -76,26 +75,18 @@ export default observer(({ navigation, route }: NativeStackScreenProps<LandScree
       />
 
       <Portal>
-        <Modalize
-          ref={resetRef}
-          adjustToContentHeight
-          disableScrollIfPossible
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-          modalStyle={{ padding: 0, margin: 0 }}
-        >
-          <SafeAreaProvider style={{ height: 270, ...modalStyle.containerTopBorderRadius }}>
-            <Confirm
-              confirmButtonTitle={t('settings-reset-modal-button-confirm')}
-              desc={t('land-recovery-reset')}
-              themeColor="crimson"
-              style={{ flex: 1 }}
-              onSwipeConfirm={() => {
-                platform === 'apple' ? SignInWithApple.reset() : SignInWithGoogle.reset();
-                navigation.pop();
-              }}
-            />
-          </SafeAreaProvider>
-        </Modalize>
+        <SquircleModalize ref={resetRef} safeAreaStyle={{ height: 270 }}>
+          <Confirm
+            confirmButtonTitle={t('settings-reset-modal-button-confirm')}
+            desc={t('land-recovery-reset')}
+            themeColor="crimson"
+            style={{ flex: 1 }}
+            onSwipeConfirm={() => {
+              platform === 'apple' ? SignInWithApple.reset() : SignInWithGoogle.reset();
+              navigation.pop();
+            }}
+          />
+        </SquircleModalize>
       </Portal>
     </SafeViewContainer>
   );

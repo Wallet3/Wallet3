@@ -83,7 +83,7 @@ export default observer((props: Props) => {
   };
 
   return (
-    <View style={{ padding: 16, paddingBottom: 0 }}>
+    <View style={{ padding: 16, paddingBottom: 0, flex: 1 }}>
       <TextBox
         iconColor={isLightMode ? `${foregroundColor}80` : tintColor}
         style={{ marginBottom: 16 }}

@@ -51,9 +51,7 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
             words={MnemonicOnce.secretWords}
             onVerified={(v) => {
               setVerified(v);
-              if (!v) return;
-              Authentication.setUserSecretsVerified(true);
-              logBackup();
+              v && logBackup();
             }}
           />
         </View>

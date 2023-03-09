@@ -1,7 +1,7 @@
 import { Github, Opensea, Twitter } from '../../assets/3rd';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect } from 'react';
-import { secondaryFontColor, thirdFontColor } from '../../constants/styles';
+import { secondaryFontColor, thirdFontColor, verifiedColor } from '../../constants/styles';
 
 import App from '../../viewmodels/core/App';
 import CachedImage from 'react-native-fast-image';
@@ -19,7 +19,7 @@ import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 import icons from '../../assets/icons/crypto';
 import { observer } from 'mobx-react-lite';
-import { openInappBrowser } from '../../modals/InappBrowser';
+import { openInappBrowser } from '../../modals/app/InappBrowser';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -52,7 +52,7 @@ export default observer(() => {
       <View
         style={{
           paddingTop: top + headerHeight,
-          backgroundColor: 'dodgerblue',
+          backgroundColor: verifiedColor,
           position: 'relative',
           marginBottom: 48,
           marginHorizontal: -16,
@@ -107,7 +107,7 @@ export default observer(() => {
 
           <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
             <Ionicons name="location" size={15} color="dodgerblue" style={{ marginEnd: 4 }} />
-            <Text style={{ fontSize: 14, color: 'dodgerblue' }}>{ens?.location || 'Unknown'}</Text>
+            <Text style={{ fontSize: 14, color: verifiedColor }}>{ens?.location || 'Unknown'}</Text>
           </View>
         </View>
 
@@ -221,7 +221,7 @@ export default observer(() => {
                 style={{
                   width: 18,
                   height: 18,
-                  backgroundColor: 'dodgerblue',
+                  backgroundColor: verifiedColor,
                   position: 'absolute',
                   borderColor: 'white',
                   right: -1,

@@ -4,12 +4,13 @@ import * as SplashScreen from 'expo-splash-screen';
 
 import AppViewModel, { AppVM } from './viewmodels/core/App';
 import AuthViewModel, { Authentication } from './viewmodels/auth/Authentication';
-import Modals, { FullScreenQRScanner, LockScreen } from './screens/Modalize';
+import Modals, { FullScreenQRScanner, GlobalPasspadModal, LockScreen } from './screens/Modalize';
 import { TouchableOpacity, UIManager } from 'react-native';
 
 import { About } from './screens/settings/About';
 import AddToken from './screens/tokens/AddToken';
 import Backup from './screens/settings/Backup';
+import { CardStyleInterpolators } from '@react-navigation/stack';
 import ChangePasscode from './screens/settings/ChangePasscode';
 import Currencies from './screens/settings/Currencies';
 import FlashMessage from 'react-native-flash-message';
@@ -74,12 +75,13 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
     >
       <Host style={{ backgroundColor: backgroundColor }}>
         {app.initialized ? (
-          app.hasWallet ? (
+          app.hasWalletSet ? (
             <Navigator
               initialRouteName="Root"
               screenOptions={({ navigation }) => {
                 return {
                   headerTransparent: true,
+                  headerTitleAlign: 'center',
                   headerTintColor: foregroundColor,
                   contentStyle: { backgroundColor },
                   headerLeft: () => (

@@ -1,9 +1,10 @@
+import { HTMLElement, parse } from 'node-html-parser';
+
 import AddressTag from '../../models/entities/AddressTag';
 import { DAY } from '../../utils/time';
 import Database from '../../models/Database';
 import Networks from '../core/Networks';
 import axios from 'axios';
-import { parse } from 'node-html-parser';
 import { utils } from 'ethers';
 
 const TagsCache = new Map<string, AddressTag | null>();
@@ -16,7 +17,6 @@ async function getHTML(chainId: number, param: string, type: 'address' | 'tx') {
   try {
     const resp = await axios.get(`${explorer}/${type}/${param}`);
     const root = parse(resp.data as string);
-
     return root;
   } catch (error) {}
 
@@ -32,7 +32,7 @@ export async function fetchAddressInfo(chainId: number, address: string) {
 
   let item = await Database.cloud_address_tags.findOne({ where: { address: key } });
 
-  if (item && Date.now() < item?.lastUpdatedTimestamp + 90 * DAY) {
+  if (item && Date.now() < item?.lastUpdatedTimestamp + (__DEV__ ? 1 : (chainId === 1 ? 7 : 90) * DAY)) {
     TagsCache.set(key, item);
     return item;
   }
@@ -40,17 +40,33 @@ export async function fetchAddressInfo(chainId: number, address: string) {
   const root = await getHTML(chainId, address, 'address');
   if (!root) return item;
 
-  const warnings = (root?.querySelectorAll('span.u-label--danger, span.u-label--warning') || [])
-    .filter((i) => i.innerText.toUpperCase() !== 'OUT')
+  const warnings = (root?.querySelectorAll('span.u-label--danger, span.u-label--warning, .badge.bg-warning, .badge.bg-danger') || [])
+    .filter((i) => i.innerText && i.innerText.toUpperCase() !== 'OUT')
     .map((e) => e.innerText);
 
-  let alert = root?.querySelector('div.alert-warning, div.alert-danger')?.innerText;
+  let alert = root?.querySelector('div.alert-warning, div.alert-danger, .badge.bg-danger')?.innerText;
   alert = alert?.startsWith('×') ? alert.substring(1) : alert;
 
-  let [publicNameTag] = root?.querySelectorAll("span.u-label--secondary span[data-toggle='tooltip']");
-  if (!publicNameTag) [publicNameTag] = root?.querySelectorAll("span.u-label--secondary[data-toggle='tooltip']");
+  const tagSelectors = [
+    "span.u-label--secondary span[data-toggle='tooltip']",
+    "span.u-label--secondary[data-toggle='tooltip']",
+    'span[rel=tooltipEns] span',
+    '.badge .text-truncate span',
+    'div.d-flex.flex-wrap.align-items-center a.d-flex span.text-truncate',
+  ];
 
-  const publicName = (publicNameTag?.innerText || warnings[0])?.trim?.();
+  let publicNameTag!: HTMLElement;
+
+  for (let selector of tagSelectors) {
+    publicNameTag = root.querySelector(selector)!;
+    if (publicNameTag) break;
+  }
+
+  const publicName = (publicNameTag?.innerText || warnings[0])?.trim?.(); //?.replaceAll(, '[?]');
+
+  if (/[\u200B|\u200C|\u200D]/.test(publicName)) {
+    warnings.push('zero-width characters');
+  }
 
   if (item && item.publicName === publicName && !item.dangerous && warnings.length === 0 && !alert) {
     item.lastUpdatedTimestamp = Date.now();
@@ -85,15 +101,15 @@ export async function isTransactionAbandoned(chainId: number, tx: string) {
   const root = await getHTML(chainId, tx, 'tx');
 
   const abandoned =
-    root?.querySelector('p.lead')?.innerText?.toLowerCase?.().includes?.('sorry, we are unable to locate') ?? false;
-  const hasTx = root?.querySelector('#spanTxHash');
+    root?.querySelector('h2.h5')?.innerText?.toLowerCase?.().includes?.('sorry, we are unable to locate') ?? false;
 
   if (abandoned) {
     AbandonCache.set(key, true);
     return true;
   }
 
-  if (hasTx) {
+  const pendingTx = root?.querySelector('#spanTxHash');
+  if (pendingTx) {
     AbandonCache.set(key, false);
     return false;
   }

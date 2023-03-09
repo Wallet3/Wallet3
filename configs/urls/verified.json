@@ -119,6 +119,7 @@
     "beta.layer3.xyz",
     "layer3.xyz",
     "app.showme.fan",
+    "nftychat.xyz",
     "chat.blockscan.com",
     "*.poap.xyz"
   ],
@@ -219,6 +220,7 @@
     "explorer.celo.org",
     "explorer.harmony.one",
     "aurorascan.dev",
+    "privacypools.com",
     "bscscan.com",
     "gnosisscan.io",
     "polygonscan.com",
@@ -230,7 +232,7 @@
     "metamask.github.io/test-dapp"
   ],
   "Bridges": [
-    "bridge.optimism.io",
+    "gateway.optimism.io",
     "bridge.arbitrum.io",
     "bridge.renproject.io",
     "stargate.finance",
@@ -248,5 +250,6 @@
     "bridge.harmony.one",
     "app.barnbridge.com",
     "cbridge.celer.network"
-  ]
+  ],
+  "Governance": ["app.optimism.io", "vote.optimism.io"]
 }

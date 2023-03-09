@@ -2,7 +2,7 @@ import { ActivityIndicator, ScrollView, Text, TextInput, TouchableOpacity, View 
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { AntDesign, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { Coin, SafeViewContainer, Skeleton } from '../../components';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { secondaryFontColor, warningColor } from '../../constants/styles';
 
 import { Account } from '../../viewmodels/account/Account';
@@ -27,12 +27,14 @@ import { ReactiveScreen } from '../../utils/device';
 import RejectApproveButtons from '../components/RejectApproveButtons';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
+import TinyInfo from '../components/TinyInfo';
 import TxException from '../components/TxException';
 import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { openBrowserAsync } from 'expo-web-browser';
+import { startLayoutAnimation } from '../../utils/animations';
 import styles from '../styles';
 
 interface Props {
@@ -59,6 +61,8 @@ const TxReview = observer(
     const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
     const reviewItemValueStyle = { ...styles.reviewItemValue, color: textColor };
     const safeThemeColor = vm.toAddressRisky ? warningColor : thirdTextColor;
+
+    useEffect(() => startLayoutAnimation(), [vm.nfts]);
 
     return (
       <SafeViewContainer>
@@ -420,7 +424,7 @@ const TxReview = observer(
               {generateNetworkIcon({ ...network, width: 15, style: { marginEnd: 6 } })}
 
               <Text style={{ ...reviewItemValueStyle, color: network?.color }} numberOfLines={1}>
-                {network?.network?.split(' ')?.[0]}
+                {network?.network}
               </Text>
 
               {vm.loading ? <ActivityIndicator size="small" style={{ marginStart: 5 }} /> : undefined}
@@ -479,19 +483,13 @@ const TxReview = observer(
         {vm.txException ? <TxException exception={vm.txException} /> : undefined}
 
         {(vm.type === 'Approve_ERC20' || vm.type === 'Approve_ForAll') && vm.isValidParams && (
-          <Animated.View
-            style={{ paddingHorizontal: 8, paddingVertical: 8, flexDirection: 'row' }}
-            entering={FadeInDown.delay(2500).springify()}
-          >
-            <Ionicons
-              name={vm.toAddressRisky ? 'warning' : 'information-circle'}
-              color={vm.toAddressRisky ? warningColor : thirdTextColor}
-              style={{ marginEnd: 4 }}
-            />
-            <Text style={{ fontSize: 10, fontWeight: '600', marginEnd: 2, color: thirdTextColor }}>
-              {t('tip-approval-funds')}
-            </Text>
-          </Animated.View>
+          <TinyInfo
+            icon={vm.toAddressRisky ? 'warning' : 'information-circle'}
+            color={vm.toAddressRisky ? warningColor : thirdTextColor}
+            style={{ paddingHorizontal: 8, paddingTop: 8, flexDirection: 'row' }}
+            message={t('tip-approval-funds')}
+            delay={2500}
+          />
         )}
 
         <View style={{ flex: 1 }} />

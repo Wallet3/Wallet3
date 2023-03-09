@@ -2,6 +2,7 @@ import { Button, Coin, SafeViewContainer } from '../../components';
 import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import React, { useRef, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+import { verifiedColor, warningColor } from '../../constants/styles';
 
 import AddressRiskIndicator from '../components/AddressRiskIndicator';
 import AnimatedNumber from '../../components/AnimatedNumber';
@@ -25,7 +26,6 @@ import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 import { utils } from 'ethers';
-import { warningColor } from '../../constants/styles';
 
 interface Props {
   onBack?: () => void;
@@ -36,23 +36,10 @@ interface Props {
   biometricType?: BioType;
   txDataEditable?: boolean;
   onEditDataPress?: () => void;
-  onInteractionStart?: () => void;
-  onInteractionEnd?: () => void;
 }
 
 const ReviewView = observer(
-  ({
-    vm,
-    onBack,
-    onGasPress,
-    onSend,
-    disableBack,
-    biometricType,
-    txDataEditable,
-    onEditDataPress,
-    onInteractionEnd,
-    onInteractionStart,
-  }: Props) => {
+  ({ vm, onBack, onGasPress, onSend, disableBack, biometricType, txDataEditable, onEditDataPress }: Props) => {
     const { t } = i18n;
     const [busy, setBusy] = React.useState(false);
     const { borderColor, textColor, secondaryTextColor } = Theme;
@@ -122,10 +109,10 @@ const ReviewView = observer(
                   <Ionicons
                     name={vm.isContractWallet ? 'wallet-outline' : 'warning'}
                     size={8}
-                    color={vm.isContractWallet ? 'dodgerblue' : 'crimson'}
+                    color={vm.isContractWallet ? verifiedColor : 'crimson'}
                     style={{ marginEnd: 4 }}
                   />
-                  <Text style={{ fontSize: 8, color: vm.isContractWallet ? 'dodgerblue' : 'crimson' }}>
+                  <Text style={{ fontSize: 8, color: vm.isContractWallet ? verifiedColor : 'crimson' }}>
                     {t(
                       vm.isContractRecipient
                         ? vm.isContractWallet
@@ -169,7 +156,7 @@ const ReviewView = observer(
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               {generateNetworkIcon({ ...vm.network, width: 15, style: { marginEnd: 5 } })}
               <Text style={{ ...reviewItemValueStyle, color: vm.network.color, maxWidth: 150 }} numberOfLines={1}>
-                {vm.network.network.split(' ')[0]}
+                {vm.network.network}
               </Text>
             </View>
           </View>
@@ -249,8 +236,6 @@ const ReviewView = observer(
           onSwipeSuccess={onLongSendPress}
           icon={authIcon}
           themeColor={vm.transferToRisky ? warningColor : vm.network.color}
-          onInteractionStart={onInteractionStart}
-          onInteractionEnd={onInteractionEnd}
         />
       </SafeViewContainer>
     );
@@ -258,7 +243,7 @@ const ReviewView = observer(
 );
 
 export default observer((props: Props) => {
-  const { onBack, vm, onSend, disableBack } = props;
+  const { vm } = props;
   const swiper = useRef<Swiper>(null);
   const [type, setType] = useState(0);
 

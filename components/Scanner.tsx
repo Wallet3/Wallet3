@@ -5,6 +5,7 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import Button from './Button';
 import { StatusBar } from 'expo-status-bar';
 import i18n from '../i18n';
+import { isAndroid } from '../utils/platform';
 import { openSettings } from 'expo-linking';
 
 interface Props {
@@ -54,8 +55,7 @@ export default ({ onBarCodeScanned, style }: Props) => {
     );
   }
 
-  // return <Camera onBarCodeScanned={onBarCodeScanned} style={style} />;
-  return <BarCodeScanner onBarCodeScanned={onBarCodeScanned} style={style} />; // for iOS
+  return <BarCodeScanner onBarCodeScanned={onBarCodeScanned} style={isAndroid ? { width: 1000, height: 1000 } : style} />; // for iOS
 };
 
 const styles = StyleSheet.create({

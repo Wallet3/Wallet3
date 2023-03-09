@@ -1,4 +1,4 @@
-import { Feather, FontAwesome, FontAwesome5, Ionicons, MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
+import { Feather, FontAwesome, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import React, { useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -10,14 +10,15 @@ import App from '../../viewmodels/core/App';
 import DAppInfo from './DAppInfo';
 import { DrawerActions } from '@react-navigation/native';
 import { DrawerScreenProps } from '@react-navigation/drawer';
+import IllustrationNoData from '../../assets/illustrations/misc/nodata.svg';
 import MessageKeys from '../../common/MessageKeys';
 import { MetamaskDApp } from '../../viewmodels/walletconnect/MetamaskDApp';
 import MetamaskDAppsHub from '../../viewmodels/walletconnect/MetamaskDAppsHub';
-import { Modalize } from 'react-native-modalize';
 import NetworkSelector from '../../modals/dapp/NetworkSelector';
 import Networks from '../../viewmodels/core/Networks';
 import { NullableImage } from '../../components';
 import { Portal } from 'react-native-portalize';
+import SquircleModalize from '../../modals/core/SquircleModalize';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
 import WalletConnectHub from '../../viewmodels/walletconnect/WalletConnectHub';
@@ -25,7 +26,6 @@ import { WalletConnect as WalletConnectLogo } from '../../assets/3rd';
 import { WalletConnect_v1 } from '../../viewmodels/walletconnect/WalletConnect_v1';
 import { WalletConnect_v2 } from '../../viewmodels/walletconnect/WalletConnect_v2';
 import i18n from '../../i18n';
-import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 import { startLayoutAnimation } from '../../utils/animations';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
@@ -69,7 +69,7 @@ const DApp = observer(({ client, allAccounts, close }: Props) => {
   };
 
   return (
-    <SafeAreaProvider style={{ flex: 1, height: 429, backgroundColor, ...modalStyle.containerTopBorderRadius }}>
+    <SafeAreaProvider style={{ flex: 1, height: 429 }}>
       <Swiper
         ref={swiper}
         showsPagination={false}
@@ -224,8 +224,8 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
       key="metamask"
       style={{ padding: 12, flexDirection: 'row', alignItems: 'center', height: headerHeight, justifyContent: 'center' }}
     >
-      <FontAwesome5 name="compass" color={'deepskyblue'} size={19} />
-      <Text style={{ color: 'deepskyblue', fontWeight: '500', marginStart: 8, fontSize: 18 }}>Web3</Text>
+      <FontAwesome5 name="compass" color={textColor} size={15} />
+      <Text style={{ color: textColor, fontWeight: '500', marginStart: 8, fontSize: 18 }}>Web3</Text>
     </View>,
   ];
 
@@ -265,6 +265,13 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
             style={{ height: headerHeight }}
           />
         </View>
+
+        <TouchableOpacity
+          style={{ padding: 16, paddingVertical: 8, position: 'absolute', right: 0, bottom: 4, zIndex: 9 }}
+          onPress={() => PubSub.publish(MessageKeys.openGlobalQRScanner)}
+        >
+          <Ionicons name="scan-outline" color={textColor} size={20} />
+        </TouchableOpacity>
       </View>
 
       <Swiper ref={swiper} showsPagination={false} showsButtons={false} loop={false} onIndexChanged={scrollToIndex}>
@@ -279,10 +286,11 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
                 bottom: '5%',
                 alignItems: 'center',
                 justifyContent: 'center',
+                opacity: 0.5,
               }}
             >
-              <FontAwesome5 name="compass" size={24} color="deepskyblue" />
-              <Ionicons name="arrow-forward" size={20} color="deepskyblue" style={{ opacity: 0.6, marginStart: 8 }} />
+              <Ionicons name="arrow-back" size={22} color={secondaryTextColor} style={{ marginHorizontal: 12 }} />
+              <FontAwesome5 name="compass" size={24} color={secondaryTextColor} />
             </TouchableOpacity>
           )}
 
@@ -297,10 +305,15 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
             />
           ) : (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: -32 }}>
-              <TouchableOpacity style={{ padding: 12 }} onPress={() => PubSub.publish(MessageKeys.openGlobalQRScanner)}>
-                <MaterialCommunityIcons name="qrcode-scan" size={32} color={secondaryTextColor} />
+              <IllustrationNoData width={150} height={150} />
+
+              <TouchableOpacity
+                style={{ alignItems: 'center', flexDirection: 'row', marginTop: 24 }}
+                onPress={() => PubSub.publish(MessageKeys.openGlobalQRScanner)}
+              >
+                <Ionicons name="scan-outline" size={24} color={secondaryTextColor} />
+                <Text style={{ color: secondaryFontColor, marginStart: 12 }}>{t('qrscan-tap-to-scan')}</Text>
               </TouchableOpacity>
-              <Text style={{ color: secondaryFontColor, marginTop: 24 }}>{t('connectedapps-noapps')}</Text>
             </View>
           )}
         </View>
@@ -316,9 +329,9 @@ export default observer(({ navigation }: DrawerScreenProps<{}, never>) => {
       </Swiper>
 
       <Portal>
-        <Modalize adjustToContentHeight ref={ref} disableScrollIfPossible modalStyle={modalStyle.containerTopBorderRadius}>
-          {selectedClient ? <DApp client={selectedClient} allAccounts={App.allAccounts} close={close} /> : undefined}
-        </Modalize>
+        <SquircleModalize ref={ref}>
+          {selectedClient && <DApp client={selectedClient} allAccounts={App.allAccounts} close={close} />}
+        </SquircleModalize>
       </Portal>
     </View>
   );

@@ -1,26 +1,24 @@
 import App, { AppVM } from '../../viewmodels/core/App';
-import { Arbitrum, EVMIcon, Ethereum, NetworkIcons, Optimism, Polygon } from '../../assets/icons/networks/color';
-import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Arbitrum, EVMIcon, Ethereum, NetworkIcons, Optimism } from '../../assets/icons/networks/color';
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
-import { Feather, MaterialIcons } from '@expo/vector-icons';
+import { Feather, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
-import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
 import Avatar from '../../components/Avatar';
 import { DrawerActions } from '@react-navigation/core';
 import FastImage from 'react-native-fast-image';
 import { INetwork } from '../../common/Networks';
 import MessageKeys from '../../common/MessageKeys';
-import MetamaskDAppsHub from '../../viewmodels/walletconnect/MetamaskDAppsHub';
 import Networks from '../../viewmodels/core/Networks';
 import PubSub from 'pubsub-js';
 import { ReactiveScreen } from '../../utils/device';
 import { SafeViewContainer } from '../../components';
 import Theme from '../../viewmodels/settings/Theme';
-import WalletConnectHub from '../../viewmodels/walletconnect/WalletConnectHub';
+import { fontColor } from '../../constants/styles';
 import i18n from '../../i18n';
-import icons from '../../assets/icons/crypto';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
+import { isIOS } from '../../utils/platform';
 import { observer } from 'mobx-react-lite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -41,13 +39,7 @@ const Drawer = observer((props: DrawerProps) => {
 
   const { index } = navigation.getState();
 
-  const { connectedCount } = WalletConnectHub;
-  const { dapps } = MetamaskDAppsHub;
-
-  const homeHighlight = index === 0 ? current.color : foregroundColor;
-  const contactsHighlight = index === 1 ? current.color : foregroundColor;
-  const settingsHighlight = index === 2 ? current.color : foregroundColor;
-  const dappsHighlight = index === 3 ? current.color : foregroundColor;
+  const getHighlightColor = (myindex: number) => (myindex === index ? current.color : foregroundColor);
 
   const fastSwitchNetwork = (network: INetwork) => {
     Networks.switch(network);
@@ -78,7 +70,13 @@ const Drawer = observer((props: DrawerProps) => {
 
   return (
     <SafeViewContainer
-      style={{ flex: 1, height: screenHeight, paddingHorizontal: 0, paddingTop: 0, paddingBottom: bottom ? 0 : 16 }}
+      style={{
+        flex: 1,
+        height: screenHeight,
+        paddingHorizontal: 0,
+        paddingTop: 0,
+        paddingBottom: bottom ? 0 : 16,
+      }}
     >
       <View
         style={{
@@ -147,78 +145,93 @@ const Drawer = observer((props: DrawerProps) => {
 
       <View style={{ paddingBottom: 12 }}>
         <DrawerItem
-          label={t('home-drawer-wallet')}
+          label={t('home-drawer-home')}
           onPress={() => navigateTo('Home')}
-          labelStyle={{ ...styles.drawerLabel, color: homeHighlight }}
-          icon={() => <Feather color={homeHighlight} size={21} name={'home'} />}
+          labelStyle={{ ...styles.drawerLabel, color: getHighlightColor(0) }}
+          icon={() => <Feather color={getHighlightColor(0)} size={21} name={'home'} />}
         />
 
         <DrawerItem
           label={t('home-drawer-contacts')}
           onPress={() => navigateTo('Contacts')}
-          labelStyle={{ ...styles.drawerLabel, color: contactsHighlight }}
-          icon={() => <Feather name="users" size={20} style={{ width: 21, paddingStart: 1 }} color={contactsHighlight} />}
+          labelStyle={{ ...styles.drawerLabel, color: getHighlightColor(1) }}
+          icon={() => <Feather name="users" size={20} style={{ width: 21, paddingStart: 1 }} color={getHighlightColor(1)} />}
         />
 
-        {connectedCount > 0 || dapps.length > 0 ? (
-          <DrawerItem
-            label={t('home-drawer-dapps')}
-            onPress={() => navigateTo('ConnectedDapps')}
-            labelStyle={{ ...styles.drawerLabel, color: dappsHighlight }}
-            icon={() => <Feather name="layers" size={20} style={{ width: 21, paddingStart: 1 }} color={dappsHighlight} />}
-          />
-        ) : undefined}
+        <DrawerItem
+          label={t('home-drawer-dapps')}
+          onPress={() => navigateTo('ConnectedDapps')}
+          labelStyle={{ ...styles.drawerLabel, color: getHighlightColor(2) }}
+          icon={() => <Feather name="layers" size={20} style={{ width: 21, paddingStart: 1 }} color={getHighlightColor(2)} />}
+        />
 
         <DrawerItem
           label={t('home-drawer-settings')}
           onPress={() => navigateTo('Settings')}
-          labelStyle={{ ...styles.drawerLabel, color: settingsHighlight }}
-          icon={() => <Feather color={settingsHighlight} size={21} name={'settings'} />}
+          labelStyle={{ ...styles.drawerLabel, color: getHighlightColor(3) }}
+          icon={() => <Feather color={getHighlightColor(3)} size={21} name={'settings'} />}
+        />
+
+        <DrawerItem
+          label={t('home-drawer-multi-sig')}
+          onPress={() => navigateTo('MultiSig')}
+          labelStyle={{ ...styles.drawerLabel, color: getHighlightColor(4) }}
+          icon={() => (
+            <MaterialCommunityIcons
+              color={getHighlightColor(4)}
+              style={{ width: 22, marginStart: -1 }}
+              size={23}
+              name="key-chain-variant"
+            />
+          )}
         />
       </View>
 
       <View style={{ flex: 1 }} />
 
-      <View style={{ padding: 16, paddingBottom: bottom === 0 ? 4 : 8 }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Text style={{ color: secondaryTextColor, fontSize: 14 }}>{t('home-drawer-networks')}</Text>
+      {isIOS && (
+        <View style={{ padding: 16, paddingBottom: bottom === 0 ? 4 : 8 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Text style={{ color: secondaryTextColor, fontSize: 14 }}>{t('home-drawer-networks')}</Text>
 
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <TouchableOpacity onPress={() => fastSwitchNetwork(Networks.Ethereum)} style={styles.smallNetworkContainer}>
-              <Ethereum width={14} height={14} />
-            </TouchableOpacity>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <TouchableOpacity onPress={() => fastSwitchNetwork(Networks.Ethereum)} style={styles.smallNetworkContainer}>
+                <Ethereum width={14} height={14} />
+              </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => fastSwitchNetwork(Networks.Arbitrum)} style={styles.smallNetworkContainer}>
-              <Arbitrum width={14} height={14} />
-            </TouchableOpacity>
+              <TouchableOpacity onPress={() => fastSwitchNetwork(Networks.Arbitrum)} style={styles.smallNetworkContainer}>
+                <Arbitrum width={14} height={14} />
+              </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => fastSwitchNetwork(Networks.Optimism)} style={styles.smallNetworkContainer}>
-              <Optimism width={14} height={13} />
-            </TouchableOpacity>
+              <TouchableOpacity onPress={() => fastSwitchNetwork(Networks.Optimism)} style={styles.smallNetworkContainer}>
+                <Optimism width={14} height={13} />
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
 
-        <View style={{ height: 1, backgroundColor: borderColor, marginVertical: 4, marginBottom: 8 }} />
+          <View style={{ height: 1, backgroundColor: borderColor, marginVertical: 4, marginBottom: 8 }} />
 
-        <TouchableOpacity
-          style={{ flexDirection: 'row', alignItems: 'center' }}
-          onPress={() => {
-            navigation.dispatch(DrawerActions.closeDrawer());
-            PubSub.publish(MessageKeys.openNetworksMenu);
-          }}
-        >
-          {NetworkIcons[current.chainId] || <EVMIcon color={current.color} hideEVMTitle />}
-          <Text
-            style={{ marginStart: 8, fontSize: 16, color: current.color, fontWeight: '500', maxWidth: '80%' }}
-            numberOfLines={1}
+          <TouchableOpacity
+            style={{ flexDirection: 'row', alignItems: 'center' }}
+            onPress={() => {
+              navigation.dispatch(DrawerActions.closeDrawer());
+              PubSub.publish(MessageKeys.openNetworksMenu);
+            }}
           >
-            {current.network}
-          </Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}></View>
+            {NetworkIcons[current.chainId] || <EVMIcon color={current.color} hideEVMTitle />}
+            <Text
+              style={{ marginStart: 8, fontSize: 16, color: current.color, fontWeight: '500', maxWidth: '80%' }}
+              numberOfLines={1}
+            >
+              {current.network}
+            </Text>
 
-          <Feather name="chevron-right" size={16} color={current.color} style={{ marginBottom: -2 }} />
-        </TouchableOpacity>
-      </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }} />
+
+            <Feather name="chevron-right" size={16} color={current.color} style={{ marginBottom: -2 }} />
+          </TouchableOpacity>
+        </View>
+      )}
     </SafeViewContainer>
   );
 });

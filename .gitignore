@@ -80,3 +80,5 @@ GoogleService-Info.plist
 configs/.android
 google-services.json
 metro.config.bk.js
+*.pem*
+index.android.bundle

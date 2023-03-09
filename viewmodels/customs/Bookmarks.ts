@@ -4,6 +4,7 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 import { logAddBookmark, logRemoveBookmark } from '../services/Analytics';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import DevApps from '../../configs/urls/dev.json';
 import LINQ from 'linq';
 import Langs from '../settings/Langs';
 import { PageMetadata } from '../../screens/browser/Web3View';
@@ -26,6 +27,7 @@ const Priorities = new Map<string, number>([
   ['Utilities', 7],
   ['Education', 8],
   ['Dev', 9],
+  ['Governance', 10],
   ['Others', 999999],
 ]);
 
@@ -105,6 +107,7 @@ class Bookmarks {
       .then((v) =>
         runInAction(() => {
           this._favs = JSON.parse(v || '[]');
+          __DEV__ && this._favs.push(...(DevApps as any));
           this._favUrls = new Map(this._favs.flatMap((g) => g.data.map((item) => [item.url, g.title] as [string, string])));
         })
       )
@@ -144,11 +147,11 @@ class Bookmarks {
     if (!group) return;
 
     const index = group.data.findIndex((i) => i.url === url);
-    group.data.splice(index, 1);
+    index >= 0 && group.data.splice(index, 1);
 
     if (group.data.length === 0) {
       const groupIndex = this._favs.findIndex((g) => g.title === group.title);
-      this._favs.splice(groupIndex, 1);
+      groupIndex >= 0 && this._favs.splice(groupIndex, 1);
     }
 
     this._favUrls.delete(url);
