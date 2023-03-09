@@ -52,7 +52,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
         <View animation="fadeInUp" delay={300}>
           <Button
             title={t('land-welcome-create-wallet')}
-            onPress={() => navigation.navigate('CreateMultiSigWallet')}
+            onPress={() => navigation.navigate('CreateWallet')}
             txtStyle={{ textTransform: 'none' }}
             disabled={!read}
           />

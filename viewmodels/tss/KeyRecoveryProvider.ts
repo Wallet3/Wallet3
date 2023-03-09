@@ -63,29 +63,6 @@ export class KeyRecoveryProvider extends TCPClient {
       this.key.lastUsedTimestamp = Date.now();
       this.key.save();
 
-      const id = `${this.remoteInfo!.globalId}-${this.key.distributionId}`;
-
-      if (this.key.id !== id) {
-        const newPaired =
-          (await ShardKey.findOne({
-            where: { ownerDevice: { globalId: this.remoteInfo?.globalId }, distributionId: this.key.distributionId },
-          })) ?? new ShardKey();
-
-        newPaired.id = id;
-        newPaired.distributionId = this.key.distributionId;
-        newPaired.ownerDevice = this.remoteInfo!;
-        newPaired.secretsInfo = data.secretsInfo;
-        newPaired.createdAt = Date.now();
-        newPaired.lastUsedTimestamp = Date.now();
-        newPaired.secrets = {
-          bip32Shard: await Authentication.encryptForever(bip32Secret),
-          rootShard: await Authentication.encryptForever(rootSecret),
-        };
-
-        await newPaired.save();
-        setImmediate(() => PairedDevices.refresh());
-      }
-
       runInAction(() => (this.distributed = true));
       return true;
     } catch (error) {

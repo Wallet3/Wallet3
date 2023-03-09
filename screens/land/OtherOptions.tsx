@@ -5,9 +5,10 @@ import {
   AppleAuthenticationButtonType,
 } from 'expo-apple-authentication';
 import { Button, Loader, SafeViewContainer } from '../../components';
+import { Ionicons, MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
 import React, { useEffect } from 'react';
 import { Text, View } from 'react-native-animatable';
-import { secondaryFontColor, themeColor } from '../../constants/styles';
+import { secondaryFontColor, secureColor, themeColor } from '../../constants/styles';
 
 import { FadeInDownView } from '../../components/animations';
 import { G } from '../../assets/3rd';
@@ -81,14 +82,17 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
             themeColor={themeColor}
             style={{ marginBottom: 12 }}
             txtStyle={{ textTransform: 'none' }}
+            icon={() => <Ionicons name="wallet-outline" size={16} color={themeColor} />}
             reverse
           />
         </View>
 
         <View animation="fadeInUp" delay={500}>
           <Button
-            title={t('land-welcome-create-wallet')}
-            onPress={() => navigation.navigate('CreateWallet')}
+            themeColor={secureColor}
+            title={t('land-welcome-create-multi-sig-wallet')}
+            onPress={() => navigation.navigate('CreateMultiSigWallet')}
+            icon={() => <MaterialCommunityIcons name="key-chain-variant" color="#fff" size={16} style={{ marginEnd: -2 }} />}
             txtStyle={{ textTransform: 'none' }}
           />
         </View>
@@ -110,7 +114,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
             <Button
               reverse
               icon={() => <G width={12} />}
-              themeColor="#4285F4"
+              themeColor="#EA4335"
               title={t('land-sign-in-continue-with-google')}
               txtStyle={{ textTransform: 'none' }}
               onPress={async () => jumpTo('google', await SignInWithGoogle.signIn())}
