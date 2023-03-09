@@ -20,7 +20,7 @@ class KeySecurity {
   async checkInactiveDevices(wallet?: WalletBase) {
     if (!wallet?.isMultiSig) return;
 
-    const expired = Date.now() - (__DEV__ ? 10 : 30 * DAY);
+    const expired = Date.now() - (__DEV__ ? 10 : 7 * DAY);
     const inactiveDevices = (wallet as MultiSigWallet).key.secretsInfo.devices.filter((i) => i.lastUsedAt < expired);
     if (inactiveDevices.length === 0) return;
 
