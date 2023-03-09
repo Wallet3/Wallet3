@@ -160,6 +160,6 @@ const styles = StyleSheet.create({
     textTransform: 'capitalize',
     fontSize: 17,
     lineHeight: isAndroid ? 17 : undefined,
-    marginBottom: isAndroid ? -2 : undefined,
+    marginBottom: isAndroid ? -2.5 : undefined,
   },
 });

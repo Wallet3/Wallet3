@@ -4,6 +4,7 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 import { logAddBookmark, logRemoveBookmark } from '../services/Analytics';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import DevApps from '../../configs/urls/dev.json';
 import LINQ from 'linq';
 import Langs from '../settings/Langs';
 import { PageMetadata } from '../../screens/browser/Web3View';
@@ -106,6 +107,7 @@ class Bookmarks {
       .then((v) =>
         runInAction(() => {
           this._favs = JSON.parse(v || '[]');
+          __DEV__ && this._favs.push(...(DevApps as any));
           this._favUrls = new Map(this._favs.flatMap((g) => g.data.map((item) => [item.url, g.title] as [string, string])));
         })
       )

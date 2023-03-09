@@ -200,7 +200,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
           />
         </SquircleModalize>
 
-        <SquircleModalize ref={resetRef} safeAreaStyle={{ height: 270 }}>
+        <SquircleModalize ref={resetRef} safeAreaStyle={{ minHeight: 270, height: 270 }}>
           <Confirm
             onSwipeConfirm={() => App.reset()}
             confirmButtonTitle={t('settings-reset-modal-button-confirm')}
