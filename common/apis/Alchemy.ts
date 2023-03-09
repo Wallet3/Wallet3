@@ -16,9 +16,7 @@ export async function getAlchemyNFTs(owner: string, chainId: number) {
   const key = keys[Date.now() % keys.length];
 
   try {
-    const resp = await fetch(
-      `${Chains[chainId]}/nft/v2/${key}/getNFTs?owner=${owner}&withMetadata=true&orderBy=transferTime&excludeFilters\[\]=SPAM`
-    );
+    const resp = await fetch(`${Chains[chainId]}/nft/v2/${key}/getNFTs?owner=${owner}&withMetadata=true&orderBy=transferTime`);
     return (await resp.json()) as AlchemyNFTs;
   } catch (error) {}
 }
