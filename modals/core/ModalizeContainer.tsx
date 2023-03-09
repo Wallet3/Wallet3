@@ -27,7 +27,14 @@ export default React.forwardRef<Modalize, Props>((props: Props, ref) => {
         bounces: false,
       }}
       {...props}
-      modalStyle={{ ...(props.modalStyle as any), backgroundColor: 'transparent' }}
+      modalStyle={{
+        ...(props.modalStyle as any),
+        backgroundColor: '#ffffff00',
+        shadowColor: undefined,
+        shadowOffset: undefined,
+        shadowOpacity: 0,
+        shadowRadius: 0,
+      }}
     >
       <SafeAreaProvider style={[isAndroid ? { minHeight: 439 } : undefined, props.safeAreaStyle]}>
         {props.children}

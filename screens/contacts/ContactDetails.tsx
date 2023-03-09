@@ -19,7 +19,7 @@ export default observer(
     const textInputStyle = { ...styles.textInput, color: secondaryTextColor };
 
     return (
-      <SafeViewContainer style={{ padding: 16 }}>
+      <SafeViewContainer>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
           <View>
             <Text

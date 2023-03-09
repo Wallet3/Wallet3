@@ -29,6 +29,7 @@ import Themes from './screens/settings/Themes';
 import Tokens from './screens/tokens/SortTokens';
 import VerifySecret from './screens/settings/VerifySecret';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
 import i18n from './i18n';
 import { logScreenView } from './viewmodels/services/Analytics';
 import { observer } from 'mobx-react-lite';
@@ -158,4 +159,4 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
   );
 });
 
-export default () => <App app={AppViewModel} appAuth={AuthViewModel} />;
+export default gestureHandlerRootHOC(() => <App app={AppViewModel} appAuth={AuthViewModel} />);
