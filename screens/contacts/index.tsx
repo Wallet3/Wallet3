@@ -12,6 +12,7 @@ import SquircleModalize from '../../modals/core/SquircleModalize';
 import Theme from '../../viewmodels/settings/Theme';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
+import { isIOS } from '../../utils/platform';
 import { observer } from 'mobx-react-lite';
 import { startLayoutAnimation } from '../../utils/animations';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
@@ -87,7 +88,7 @@ export default observer(() => {
       )}
 
       <Portal>
-        <SquircleModalize ref={accountModal} closeOnOverlayTap={!editing}>
+        <SquircleModalize ref={accountModal} closeOnOverlayTap={!editing} safeAreaStyle={isIOS ? { height: 439 } : undefined}>
           <ContactDetails
             contact={selectedContact}
             onEditing={setEditing}

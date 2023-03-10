@@ -1,5 +1,5 @@
-import { AntDesign, EvilIcons, FontAwesome, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { Button, SafeViewContainer } from '../../components';
+import { EvilIcons, Ionicons } from '@expo/vector-icons';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 import Avatar from '../../components/Avatar';
@@ -8,7 +8,6 @@ import React from 'react';
 import Theme from '../../viewmodels/settings/Theme';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
-import { isAndroid } from '../../utils/platform';
 import { observer } from 'mobx-react-lite';
 import { runInAction } from 'mobx';
 
