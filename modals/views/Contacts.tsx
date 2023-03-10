@@ -1,16 +1,15 @@
 import Contacts, { IContact } from '../../viewmodels/customs/Contacts';
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
-import { FontAwesome, Ionicons } from '@expo/vector-icons';
-import { ListRenderItemInfo, NativeSyntheticEvent, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
+import { ListRenderItemInfo, NativeSyntheticEvent, Text, TouchableOpacity, View } from 'react-native';
+import React, { useRef, useState } from 'react';
 import { SafeViewContainer, Skeleton, TextBox } from '../../components';
-import { borderColor, fontColor, secondaryFontColor } from '../../constants/styles';
 
 import Avatar from '../../components/Avatar';
 import { BaseTransaction } from '../../viewmodels/transferring/BaseTransaction';
 import Button from '../../components/Button';
 import { ERC681 } from '../../viewmodels/transferring/ERC681Transferring';
 import { FlatList } from 'react-native-gesture-handler';
+import { FontAwesome } from '@expo/vector-icons';
 import Image from 'react-native-fast-image';
 import MiniScanner from './MiniScanner';
 import Networks from '../../viewmodels/core/Networks';
@@ -19,8 +18,10 @@ import Theme from '../../viewmodels/settings/Theme';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 import { isDomain } from '../../viewmodels/services/DomainResolver';
+import { isIOS } from '../../utils/platform';
 import { observer } from 'mobx-react-lite';
 import { parse as parseERC681 } from 'eth-url-parser';
+import { secondaryFontColor } from '../../constants/styles';
 import { startLayoutAnimation } from '../../utils/animations';
 import styles from '../styles';
 import { utils } from 'ethers';
@@ -64,7 +65,7 @@ export default observer(({ onNext, vm }: Props) => {
     };
 
     return (
-      <ContextMenu actions={actions} onPress={onActionPress} previewBackgroundColor={backgroundColor}>
+      <ContextMenu actions={isIOS ? actions : undefined} onPress={onActionPress} previewBackgroundColor={backgroundColor}>
         <TouchableOpacity
           style={{
             paddingHorizontal: 16,

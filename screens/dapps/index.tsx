@@ -43,8 +43,6 @@ const DApp = observer(({ client, allAccounts, close }: Props) => {
   const [defaultAccount, setDefaultAccount] = useState(client.activeAccount);
   const [defaultNetwork, setDefaultNetwork] = useState(client.activeNetwork);
 
-  const { backgroundColor } = Theme;
-
   const disconnect = () => {
     startLayoutAnimation();
     client.killSession();

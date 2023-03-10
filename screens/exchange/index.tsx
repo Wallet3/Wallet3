@@ -340,7 +340,7 @@ export default observer(() => {
       <Portal>
         <SquircleModalize ref={networksRef}>
           <NetworksMenu
-            title={t('modal-dapp-switch-network', { app: 'Exchange' })}
+            title={t('modal-dapp-switch-network', { app: '1inch Exchange' })}
             networks={VM.networks}
             selectedNetwork={VM.userSelectedNetwork}
             onNetworkPress={(network) => {

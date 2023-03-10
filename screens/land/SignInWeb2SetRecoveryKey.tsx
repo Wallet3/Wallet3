@@ -75,7 +75,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<LandScree
       />
 
       <Portal>
-        <SquircleModalize ref={resetRef} safeAreaStyle={{ height: 270 }}>
+        <SquircleModalize ref={resetRef} safeAreaStyle={{ minHeight: 270, height: 270 }}>
           <Confirm
             confirmButtonTitle={t('settings-reset-modal-button-confirm')}
             desc={t('land-recovery-reset')}

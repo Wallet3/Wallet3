@@ -20,7 +20,6 @@ export default observer(({ close }: { close?: Function }) => {
   const swiper = useRef<Swiper>(null);
   const [type, setType] = useState('');
   const [account, setAccount] = useState<Account>();
-  const { backgroundColor } = Theme;
 
   const onRemoveAccount = (account: Account) => {
     setType('removeAccount');

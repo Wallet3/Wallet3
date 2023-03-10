@@ -87,7 +87,7 @@ export default observer(() => {
       )}
 
       <Portal>
-        <SquircleModalize ref={accountModal} closeOnOverlayTap={!editing} safeAreaStyle={{ height: 430 }}>
+        <SquircleModalize ref={accountModal} closeOnOverlayTap={!editing}>
           <ContactDetails
             contact={selectedContact}
             onEditing={setEditing}
@@ -99,7 +99,7 @@ export default observer(() => {
           />
         </SquircleModalize>
 
-        <SquircleModalize ref={confirmModal} safeAreaStyle={{ height: 270 }}>
+        <SquircleModalize ref={confirmModal} safeAreaStyle={{ minHeight: 270, height: 270 }}>
           <Confirm
             confirmButtonTitle={t('button-confirm')}
             desc={t('contacts-remote-confirm-desc')}

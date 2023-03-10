@@ -233,6 +233,7 @@
   "modal-dapp-add-asset-type": "タイプ",
   "modal-dapp-add-asset-decimals": "小数",
   "modal-dapp-add-asset-address": "アドレス",
+  "modal-dapp-switch-network": "{{app}}のネットワークを切り替え",
   "modal-token-details-about": "{{token}} について",
   "modal-token-details-value": "価値",
   "modal-token-details-balance": "残高",

@@ -8,6 +8,7 @@ import React from 'react';
 import Theme from '../../viewmodels/settings/Theme';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
+import { isAndroid } from '../../utils/platform';
 import { observer } from 'mobx-react-lite';
 import { runInAction } from 'mobx';
 
