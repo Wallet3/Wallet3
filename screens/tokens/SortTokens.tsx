@@ -1,4 +1,4 @@
-import { Coin, SafeViewContainer, Separator } from '../../components';
+import { Coin, SafeViewContainer, Separator, Toggle } from '../../components';
 import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Switch, Text, TouchableOpacity, View } from 'react-native';
@@ -51,7 +51,7 @@ const DraggableToken = observer(
       />
       <Text style={{ fontSize: 18, color: textColor }}>{item.symbol}</Text>
       <View style={{ flex: 1 }} />
-      <ToggleSwitch isOn={item.shown ?? false} onToggle={(on) => onValueChange(on)} onColor={Networks.current.color} />
+      <Toggle isOn={item.shown ?? false} onToggle={(on) => onValueChange(on)} onColor={Networks.current.color} />
     </TouchableOpacity>
   )
 );

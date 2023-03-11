@@ -8324,6 +8324,11 @@ expo-sqlite@~11.1.1:
   dependencies:
     "@expo/websql" "^1.0.1"
 
+expo-standard-web-crypto@^1.4.3:
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/expo-standard-web-crypto/-/expo-standard-web-crypto-1.4.3.tgz#471941bb9188940d8185130ef18f1d8d1026aac4"
+  integrity sha512-5gUM16C7+hk+2qNSYAFtTdyqqwz8FBkAk2zs+3Rjv5UoxLpTY7jhRTCYpKhTMELIJxSNzD/2h2k7sp2qczZ0QA==
+
 expo-status-bar@~1.4.4:
   version "1.4.4"
   resolved "https://registry.yarnpkg.com/expo-status-bar/-/expo-status-bar-1.4.4.tgz#6874ccfda5a270d66f123a9f220735a76692d114"

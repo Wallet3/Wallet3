@@ -12,6 +12,7 @@ import SafeViewContainer from './SafeViewContainer';
 import Separator from './Separator';
 import Skeleton from './Skeleton';
 import TextBox from './TextBox';
+import Toggle from './Toggle';
 
 export {
   TextBox,
@@ -28,4 +29,5 @@ export {
   SafeViewContainer,
   NullableImage,
   Skeleton,
+  Toggle,
 };
