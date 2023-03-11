@@ -191,7 +191,7 @@ export class NFTTransferring extends BaseTransaction {
 
   get openseaLink() {
     return this.network.chainId === 1
-      ? `https://opensea.io/assets/${this.nft.contract}/${this.nft.tokenId}`
+      ? `https://opensea.io/assets/ethereum/${this.nft.contract}/${this.nft.tokenId}`
       : `https://opensea.io/assets/${this.network.symbol.toLowerCase()}/${this.nft.contract}/${this.nft.tokenId}`;
   }
 
@@ -200,6 +200,8 @@ export class NFTTransferring extends BaseTransaction {
 
     return this.network.chainId === 1
       ? `https://rarible.com/token/${item.contract}:${item.tokenId}`
-      : `https://rarible.com/token/${this.network.network.toLowerCase()}/${item.contract}:${item.tokenId}`;
+      : `https://rarible.com/token/${this.network.network.toLowerCase()}/${item.contract}:${BigNumber.from(
+          item.tokenId
+        ).toString()}`;
   }
 }
