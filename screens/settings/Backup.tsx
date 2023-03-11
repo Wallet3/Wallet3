@@ -144,7 +144,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
             <Button
               title={t('settings-security-backup-button-verify')}
               themeColor={themeColor}
-              onPress={() => navigation.navigate('VerifySecret')}
+              onPress={() => navigation.navigate('VerifySecret', { words: mn.secretWords })}
             />
           )}
         </View>
