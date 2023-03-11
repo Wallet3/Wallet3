@@ -1,7 +1,7 @@
 import { ActivityIndicator, SectionList, StyleSheet, TouchableOpacity } from 'react-native';
 import Animated, { FadeInDown, FadeInLeft, FadeInRight, FadeOutDown, FadeOutLeft, FadeOutUp } from 'react-native-reanimated';
 import React, { useEffect, useState } from 'react';
-import { secureColor, warningColor } from '../../../constants/styles';
+import { secureColor, verifiedColor, warningColor } from '../../../constants/styles';
 import { useOptimizedCornerRadius, useOptimizedSafeBottom } from '../../../utils/hardware';
 
 import Button from '../components/Button';
@@ -127,7 +127,7 @@ export default observer(({ vm, onNext, isRTL }: { isRTL?: boolean; vm: ShardsDis
         />
       ) : (
         <View style={{ flex: 1, alignContent: 'center', justifyContent: 'center' }} exiting={FadeOutUp.springify()}>
-          <ActivityIndicator />
+          <ActivityIndicator color={verifiedColor} />
           <Text style={{ alignSelf: 'center', marginTop: 52, lineHeight: 27, color: secondaryTextColor, fontWeight: '500' }}>
             {t('multi-sig-modal-connect-tip')}
           </Text>

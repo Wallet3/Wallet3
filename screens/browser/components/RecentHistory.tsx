@@ -90,7 +90,7 @@ export default observer(({ onItemPress, tabCount, onTabsPress, disableContextMen
             return (
               <ContextMenu
                 key={item.origin}
-                actions={disableContextMenu ? [] : actions}
+                actions={disableContextMenu || isAndroid ? undefined : actions}
                 onPress={onActionPress}
                 previewBackgroundColor={backgroundColor}
                 style={{ marginHorizontal: 4 }}

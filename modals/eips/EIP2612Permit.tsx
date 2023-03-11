@@ -3,6 +3,7 @@ import { BigNumber, constants, utils } from 'ethers';
 import { Coin, Skeleton } from '../../components';
 import { DateTimeFormatter, formatAddress } from '../../utils/formatter';
 import React, { useEffect, useState } from 'react';
+import { verifiedColor, warningColor } from '../../constants/styles';
 
 import AddressRiskIndicator from '../components/AddressRiskIndicator';
 import { EIP2612 } from '../../eips/eip2612';
@@ -17,7 +18,6 @@ import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { openBrowserAsync } from 'expo-web-browser';
 import styles from '../styles';
-import { warningColor } from '../../constants/styles';
 
 interface Props {
   eip2612: EIP2612;
@@ -149,7 +149,7 @@ export default ({ eip2612, metadata, onAddressChecked }: Props) => {
             {network?.network?.split(' ')?.[0]}
           </Text>
 
-          {decimals < 0 ? <ActivityIndicator size="small" style={{ marginStart: 6 }} /> : undefined}
+          {decimals < 0 ? <ActivityIndicator size="small" style={{ marginStart: 6 }} color={verifiedColor} /> : undefined}
         </View>
       </View>
     </View>

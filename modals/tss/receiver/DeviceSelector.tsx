@@ -110,7 +110,7 @@ export default observer(({ onNext }: { onNext: (selectedService: Service) => voi
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginHorizontal }}>
           <Placeholder />
           <Placeholder />
-          <ActivityIndicator size="small" />
+          <ActivityIndicator size="small" color={verifiedColor} />
           <Placeholder />
 
           {foundTimeout && (

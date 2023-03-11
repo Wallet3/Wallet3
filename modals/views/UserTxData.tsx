@@ -41,7 +41,6 @@ export default observer(({ vm, onBack, themeColor }: Props) => {
           borderColor,
           borderRadius: 10,
           padding: 8,
-          paddingVertical: 24,
           fontSize: 16,
           flex: 1,
           marginBottom: 16,

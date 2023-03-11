@@ -3,7 +3,7 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { AntDesign, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { Coin, SafeViewContainer, Skeleton } from '../../components';
 import React, { useEffect, useRef, useState } from 'react';
-import { secondaryFontColor, warningColor } from '../../constants/styles';
+import { secondaryFontColor, verifiedColor, warningColor } from '../../constants/styles';
 
 import { Account } from '../../viewmodels/account/Account';
 import AccountIndicator from '../components/AccountIndicator';
@@ -427,7 +427,7 @@ const TxReview = observer(
                 {network?.network}
               </Text>
 
-              {vm.loading ? <ActivityIndicator size="small" style={{ marginStart: 5 }} /> : undefined}
+              {vm.loading ? <ActivityIndicator size="small" style={{ marginStart: 5 }} color={verifiedColor} /> : undefined}
             </View>
           </View>
         </View>
