@@ -68,7 +68,7 @@ export default ({
 
       <TextInput
         ref={addrRef}
-        style={{ fontSize: 20, flex: 1, color: textColor ?? fontColor }}
+        style={{ fontSize: 20, flex: 1, color: textColor ?? fontColor, marginBottom: isAndroid ? -2 : 0 }}
         value={value ?? innerValue}
         placeholder={placeholder}
         defaultValue={defaultValue}

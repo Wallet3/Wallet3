@@ -52,7 +52,7 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={{ paddingBottom: 24 }}
-      style={{ padding: 16, paddingBottom: 24, maxHeight: 760 }}
+      style={{ padding: 16, maxHeight: 760 }}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Coin

@@ -1,5 +1,4 @@
-import * as ExpoCrypto from 'expo-crypto';
-
+import { getRandomBytes } from 'expo-crypto';
 import { randomBytes } from 'crypto';
 
 export function randomInt(min: number, max: number) {
@@ -9,5 +8,5 @@ export function randomInt(min: number, max: number) {
 }
 
 export function getSecureRandomBytes(size: number) {
-  return __DEV__ ? randomBytes(size) : Buffer.from(ExpoCrypto.getRandomBytes(size));
+  return __DEV__ ? randomBytes(size) : Buffer.from(getRandomBytes(size));
 }
