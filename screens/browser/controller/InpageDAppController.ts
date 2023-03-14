@@ -3,9 +3,9 @@ import * as Linking from 'expo-linking';
 import Networks, { AddEthereumChainParameter } from '../../../viewmodels/core/Networks';
 import { providers, utils } from 'ethers';
 
-import { Account } from '../../../viewmodels/account/Account';
 import App from '../../../viewmodels/core/App';
 import DeviceInfo from 'react-native-device-info';
+import { EOAAccount } from '../../../viewmodels/account/EOAAccount';
 import { ERC20Token } from '../../../models/ERC20';
 import EventEmitter from 'events';
 import { INetwork } from '../../../common/Networks';
@@ -61,7 +61,7 @@ interface WatchAssetParams {
 
 export interface ConnectInpageDApp extends Payload {
   origin: string;
-  approve: (userSelected: { network: INetwork; account: Account }) => void;
+  approve: (userSelected: { network: INetwork; account: EOAAccount }) => void;
   reject: () => void;
 }
 
@@ -72,7 +72,7 @@ export interface InpageDAppSignRequest {
   typedData?: any;
   approve: (opt?: { pin?: string; standardMode?: boolean }) => Promise<boolean>;
   reject: () => void;
-  account: Account;
+  account: EOAAccount;
   metadata: PageMetadata;
 }
 
@@ -213,7 +213,7 @@ export class InpageDAppController extends EventEmitter {
     }
 
     return new Promise<string[] | any>((resolve) => {
-      const approve = ({ account, network }: { account: Account; network: INetwork }) => {
+      const approve = ({ account, network }: { account: EOAAccount; network: INetwork }) => {
         const app = new InpageDApp();
         app.origin = origin;
         app.lastUsedAccount = account.address;

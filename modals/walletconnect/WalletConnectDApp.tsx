@@ -2,10 +2,10 @@ import { Button, SafeViewContainer } from '../../components';
 import React, { useEffect, useRef, useState } from 'react';
 import { Text, View } from 'react-native';
 
-import { Account } from '../../viewmodels/account/Account';
 import AccountSelector from '../dapp/AccountSelector';
 import App from '../../viewmodels/core/App';
 import DAppConnectView from '../dapp/DAppConnectView';
+import { EOAAccount } from '../../viewmodels/account/EOAAccount';
 import { INetwork } from '../../common/Networks';
 import IllustrationCancel from '../../assets/illustrations/misc/cancel.svg';
 import Loading from '../views/Loading';
@@ -29,7 +29,7 @@ interface DAppProps {
   onConnect: () => void;
 
   network: INetwork;
-  account?: Account;
+  account?: EOAAccount;
 }
 
 const DApp = observer(({ client, onNetworksPress, onAccountsPress, close, onConnect, account, network }: DAppProps) => {

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { Account } from '../../viewmodels/account/Account';
 import App from '../../viewmodels/core/App';
+import { EOAAccount } from '../../viewmodels/account/EOAAccount';
 import { NFCPad } from '../views';
 import Networks from '../../viewmodels/core/Networks';
 import { RequestAmount } from '../views';

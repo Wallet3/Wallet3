@@ -1,5 +1,11 @@
 import { BigNumber, providers, utils } from 'ethers';
-import { EncodedERC1271ContractWalletCallData, Gwei_1, MAX_GWEI_PRICE } from '../../common/Constants';
+import {
+  ERC4337EntryPoint,
+  EncodedERC1271ContractWalletCallData,
+  EncodedERC4337EntryPoint,
+  Gwei_1,
+  MAX_GWEI_PRICE,
+} from '../../common/Constants';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { clearPendingENSRequests, isENSDomain } from '../services/ENSResolver';
 import {
@@ -13,11 +19,11 @@ import {
 } from '../../common/RPC';
 import { isDomain, resolveDomain } from '../services/DomainResolver';
 
-import { Account } from '../account/Account';
 import AddressTag from '../../models/entities/AddressTag';
 import App from '../core/App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Coingecko from '../../common/apis/Coingecko';
+import { EOAAccount } from '../account/EOAAccount';
 import { ERC20Token } from '../../models/ERC20';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
@@ -33,7 +39,7 @@ export class BaseTransaction {
   private timer?: NodeJS.Timer;
 
   readonly network: INetwork;
-  readonly account: Account;
+  readonly account: EOAAccount;
   readonly wallet: WalletBase;
   readonly nativeToken: NativeToken;
 
@@ -55,7 +61,7 @@ export class BaseTransaction {
   initializing = false;
   feeToken: ERC20Token | null = null;
 
-  constructor(args: { network: INetwork; account: Account }, initChainData = true) {
+  constructor(args: { network: INetwork; account: EOAAccount }, initChainData = true) {
     this.network = args.network;
     this.account = args.account;
     this.wallet = App.findWallet(this.account.address)!.wallet;
@@ -333,14 +339,15 @@ export class BaseTransaction {
       return;
     }
 
-    const result = await eth_call_return(
-      this.network.chainId,
-      { to: this.toAddress, data: EncodedERC1271ContractWalletCallData },
-      true
-    );
+    const [erc1271Result, erc4337EntryPoint] = await Promise.all([
+      eth_call_return(this.network.chainId, { to: this.toAddress, data: EncodedERC1271ContractWalletCallData }, true),
+      eth_call_return(this.network.chainId, { to: this.toAddress, data: EncodedERC4337EntryPoint }),
+    ]);
 
-    const errorCode = Number(result?.error?.code);
-    const isContractWallet = Boolean(result?.error?.data && Number.isInteger(errorCode) && errorCode !== -32000);
+    const errorCode = Number(erc1271Result?.error?.code);
+    const isContractWallet =
+      Boolean(erc1271Result?.error?.data && Number.isInteger(errorCode) && errorCode !== -32000) ||
+      erc4337EntryPoint?.result?.endsWith(ERC4337EntryPoint);
 
     runInAction(() => {
       this.isContractWallet = isContractWallet;

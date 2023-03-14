@@ -4,9 +4,9 @@ import { SwapProtocol, SwapResponse, fetchTokens, quote, swap } from '../../../c
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { swapFeePercent, swapFeeReferrer } from '../../../configs/secret';
 
-import { Account } from '../../account/Account';
 import App from '../../core/App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { EOAAccount } from '../../account/EOAAccount';
 import { ERC20Token } from '../../../models/ERC20';
 import { INetwork } from '../../../common/Networks';
 import LINQ from 'linq';
@@ -137,9 +137,9 @@ export class OneInch {
     setTimeout(() => this.refreshFromAmount(), 30 * 1000);
   }
 
-  async switchAccount(account: Account | string) {
+  async switchAccount(account: EOAAccount | string) {
     this.account =
-      typeof account === 'string' ? (App.findAccount(account) as Account) : (account as Account) || App.currentAccount;
+      typeof account === 'string' ? (App.findAccount(account) as EOAAccount) : (account as EOAAccount) || App.currentAccount;
 
     AsyncStorage.setItem(Keys.userSelectedAccount, this.account.address);
 

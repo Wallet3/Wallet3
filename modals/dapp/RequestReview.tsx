@@ -5,7 +5,6 @@ import { Coin, SafeViewContainer, Skeleton } from '../../components';
 import React, { useEffect, useRef, useState } from 'react';
 import { secondaryFontColor, verifiedColor, warningColor } from '../../constants/styles';
 
-import { Account } from '../../viewmodels/account/Account';
 import AccountIndicator from '../components/AccountIndicator';
 import AddressRiskIndicator from '../components/AddressRiskIndicator';
 import AnimatedNumber from '../../components/AnimatedNumber';
@@ -13,6 +12,7 @@ import BalanceChangePreview from '../views/BalanceChangePreview';
 import { BioType } from '../../viewmodels/auth/Authentication';
 import Currency from '../../viewmodels/settings/Currency';
 import { DecodedFunc } from '../../viewmodels/hubs/EtherscanHub';
+import { EOAAccount } from '../../viewmodels/account/EOAAccount';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';
 import FuncReview from '../views/FuncReview';
 import GasReview from '../views/GasReview';
@@ -45,7 +45,7 @@ interface Props {
   onGasPress?: () => void;
   onDecodedFuncPress?: (decodedFunc: DecodedFunc) => void;
   onBalanceChangePreviewPress?: (previewResult: PreExecResult) => void;
-  account: Account;
+  account: EOAAccount;
   bioType?: BioType;
 }
 

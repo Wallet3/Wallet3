@@ -1,4 +1,5 @@
 import { LogBox } from 'react-native';
+import { eth_call_return } from '../common/RPC';
 
 LogBox.ignoreLogs([
   'ReactNativeFiberHostComponent: Calling getNode() on the ref of an Animated component is no longer necessary. You can now directly use the ref instead. This method will be removed in a future release.',
@@ -15,3 +16,9 @@ LogBox.ignoreLogs([
   'socketDidDisconnect with nil clientDelegate for',
   'RCTView has a shadow set but cannot calculate shadow efficiently',
 ]);
+
+if (__DEV__) {
+  (async () => {
+    console.log(await eth_call_return(5, { data: '0xb0d691fe', to: '0x39E94A577A8CaCF7A1B9653F5ca2F67656F6497e' }));
+  })();
+}

@@ -2,8 +2,8 @@ import { Button, SafeViewContainer } from '../../components';
 import { FlatList, StyleProp, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import React, { useState } from 'react';
 
-import { Account } from '../../viewmodels/account/Account';
 import Avatar from '../../components/Avatar';
+import { EOAAccount } from '../../viewmodels/account/EOAAccount';
 import { Feather } from '@expo/vector-icons';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
@@ -11,7 +11,7 @@ import { observer } from 'mobx-react-lite';
 import { secondaryFontColor } from '../../constants/styles';
 
 interface Props {
-  accounts: Account[];
+  accounts: EOAAccount[];
   selectedAccounts: string[];
   onDone: (selectedAccounts: string[]) => void;
   single?: boolean;
@@ -40,7 +40,7 @@ export default observer(({ accounts, selectedAccounts, onDone, single, style, ex
     }
   };
 
-  const renderItem = ({ item }: { item: Account }) => {
+  const renderItem = ({ item }: { item: EOAAccount }) => {
     return (
       <TouchableOpacity
         onPress={() => toggleAddress(item.address)}

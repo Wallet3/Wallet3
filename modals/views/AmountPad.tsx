@@ -4,9 +4,9 @@ import React, { useEffect, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { numericFontFamily, secondaryFontColor } from '../../constants/styles';
 
-import { Account } from '../../viewmodels/account/Account';
 import Avatar from '../../components/Avatar';
 import BackButton from '../components/BackButton';
+import { EOAAccount } from '../../viewmodels/account/EOAAccount';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -35,7 +35,7 @@ interface SubViewProps {
   themeColor?: string;
   initValue?: string;
   network: INetwork;
-  account?: Account;
+  account?: EOAAccount;
 }
 
 export default observer((props: SubViewProps) => {

@@ -4,12 +4,12 @@ import React, { useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { borderColor, secondaryFontColor } from '../../constants/styles';
 
-import { Account } from '../../viewmodels/account/Account';
 import AccountSelector from '../../modals/dapp/AccountSelector';
 import App from '../../viewmodels/core/App';
 import DAppInfo from './DAppInfo';
 import { DrawerActions } from '@react-navigation/native';
 import { DrawerScreenProps } from '@react-navigation/drawer';
+import { EOAAccount } from '../../viewmodels/account/EOAAccount';
 import IllustrationNoData from '../../assets/illustrations/misc/nodata.svg';
 import MessageKeys from '../../common/MessageKeys';
 import { MetamaskDApp } from '../../viewmodels/walletconnect/MetamaskDApp';
@@ -32,7 +32,7 @@ import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 interface Props {
   client: WalletConnect_v1 | MetamaskDApp | WalletConnect_v2;
-  allAccounts: Account[];
+  allAccounts: EOAAccount[];
   close: Function;
 }
 

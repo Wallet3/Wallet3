@@ -2,8 +2,8 @@ import { Button, SafeViewContainer } from '../../components';
 import { DateTimeFormatter, formatAddress } from '../../utils/formatter';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { Account } from '../../viewmodels/account/Account';
 import Avatar from '../../components/Avatar';
+import { EOAAccount } from '../../viewmodels/account/EOAAccount';
 import { Entypo } from '@expo/vector-icons';
 import { INetwork } from '../../common/Networks';
 import Image from 'react-native-fast-image';
@@ -21,7 +21,7 @@ import { thirdFontColor } from '../../constants/styles';
 
 interface Props {
   client: WalletConnect_v1 | WalletConnect_v2 | MetamaskDApp;
-  defaultAccount?: Account;
+  defaultAccount?: EOAAccount;
   defaultNetwork?: INetwork;
 
   onDisconnect: () => void;

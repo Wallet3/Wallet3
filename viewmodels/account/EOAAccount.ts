@@ -11,7 +11,8 @@ import { POAP } from './POAP';
 import { formatAddress } from '../../utils/formatter';
 import { getEnsAvatar } from '../../common/ENS';
 
-export class Account {
+export class EOAAccount {
+  readonly type: 'eoa' | 'erc4337' = 'eoa';
   readonly address: string;
   readonly index: number;
   readonly signInPlatform?: string;

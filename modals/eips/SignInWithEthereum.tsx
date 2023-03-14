@@ -3,8 +3,8 @@ import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import React, { useRef } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { Account } from '../../viewmodels/account/Account';
 import AccountIndicator from '../components/AccountIndicator';
+import { EOAAccount } from '../../viewmodels/account/EOAAccount';
 import { PageMetadata } from '../../screens/browser/Web3View';
 import { ParsedMessage } from '../../eips/eip4361/siwe_plain';
 import Swiper from 'react-native-swiper';
@@ -17,7 +17,7 @@ interface Props {
   rawMsg: string;
   metadata?: PageMetadata;
   siwe: ParsedMessage;
-  account?: Account;
+  account?: EOAAccount;
   themeColor?: string;
 }
 

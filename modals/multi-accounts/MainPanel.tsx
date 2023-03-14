@@ -4,10 +4,10 @@ import { FlatList, ListRenderItemInfo, NativeSyntheticEvent, StyleSheet, Text, T
 import React, { useEffect, useRef } from 'react';
 import { SafeViewContainer, Separator } from '../../components';
 
-import { Account } from '../../viewmodels/account/Account';
 import AccountItem from './AccountItem';
 import App from '../../viewmodels/core/App';
 import CachedImage from 'react-native-fast-image';
+import { EOAAccount } from '../../viewmodels/account/EOAAccount';
 import Networks from '../../viewmodels/core/Networks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Theme from '../../viewmodels/settings/Theme';
@@ -18,8 +18,8 @@ import { secondaryFontColor } from '../../constants/styles';
 import { utils } from 'ethers';
 
 interface Props {
-  onRemoveAccount?: (account: Account) => void;
-  onEditAccount?: (account: Account) => void;
+  onRemoveAccount?: (account: EOAAccount) => void;
+  onEditAccount?: (account: EOAAccount) => void;
   onImportWallet?: () => void;
   onDone?: () => void;
 }
@@ -30,7 +30,7 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDon
   const list = useRef<FlatList>(null);
   const { borderColor, textColor, backgroundColor } = Theme;
 
-  const renderAccount = ({ item }: ListRenderItemInfo<Account>) => (
+  const renderAccount = ({ item }: ListRenderItemInfo<EOAAccount>) => (
     <AccountItem
       account={item}
       textColor={textColor}

@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { secureColor, thirdFontColor } from '../../constants/styles';
 
-import { Account } from '../../viewmodels/account/Account';
 import Avatar from '../../components/Avatar';
+import { EOAAccount } from '../../viewmodels/account/EOAAccount';
 import { INetwork } from '../../common/Networks';
 import { Ionicons } from '@expo/vector-icons';
 import { NullableImage } from '../../components';
@@ -14,7 +14,7 @@ import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 
 interface Props {
-  account?: Account;
+  account?: EOAAccount;
   network: INetwork;
   onAccountsPress?: () => void;
   onNetworksPress?: () => void;

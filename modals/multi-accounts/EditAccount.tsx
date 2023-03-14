@@ -3,8 +3,8 @@ import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
 import { emojis, genColor } from '../../utils/emoji';
 
-import { Account } from '../../viewmodels/account/Account';
 import Avatar from '../../components/Avatar';
+import { EOAAccount } from '../../viewmodels/account/EOAAccount';
 import { FlatGrid } from 'react-native-super-grid';
 import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/core/Networks';
@@ -13,7 +13,7 @@ import Theme from '../../viewmodels/settings/Theme';
 import { observer } from 'mobx-react-lite';
 
 interface Props {
-  account?: Account;
+  account?: EOAAccount;
   onDone?: () => void;
 }
 
