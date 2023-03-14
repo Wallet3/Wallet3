@@ -32,7 +32,6 @@ import { WalletBase } from '../wallet/WalletBase';
 import { fetchAddressInfo } from '../services/EtherscanPublicTag';
 import { getEnsAvatar } from '../../common/ENS';
 import { showMessage } from 'react-native-flash-message';
-import { startLayoutAnimation } from '../../utils/animations';
 
 export class BaseTransaction {
   private toAddressTypeCache = new Map<string, { isContractWallet: boolean; isContractRecipient: boolean }>();
@@ -339,15 +338,24 @@ export class BaseTransaction {
       return;
     }
 
-    const [erc1271Result, erc4337EntryPoint] = await Promise.all([
-      eth_call_return(this.network.chainId, { to: this.toAddress, data: EncodedERC1271ContractWalletCallData }, true),
-      eth_call_return(this.network.chainId, { to: this.toAddress, data: EncodedERC4337EntryPoint }),
-    ]);
+    const erc4337EntryPoint = await eth_call_return(
+      this.network.chainId,
+      { to: this.toAddress, data: EncodedERC4337EntryPoint },
+      true
+    );
 
-    const errorCode = Number(erc1271Result?.error?.code);
-    const isContractWallet =
-      Boolean(erc1271Result?.error?.data && Number.isInteger(errorCode) && errorCode !== -32000) ||
-      erc4337EntryPoint?.result?.endsWith(ERC4337EntryPoint);
+    let isContractWallet = erc4337EntryPoint?.result?.endsWith?.(ERC4337EntryPoint);
+
+    if (!isContractWallet) {
+      const erc1271Result = await eth_call_return(
+        this.network.chainId,
+        { to: this.toAddress, data: EncodedERC1271ContractWalletCallData },
+        true
+      );
+
+      const errorCode = Number(erc1271Result?.error?.code);
+      isContractWallet = Boolean(erc1271Result?.error?.data && Number.isInteger(errorCode) && errorCode !== -32000);
+    }
 
     runInAction(() => {
       this.isContractWallet = isContractWallet;

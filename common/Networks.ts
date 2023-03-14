@@ -212,6 +212,14 @@ export const PublicNetworks: INetwork[] = [
     etherscanApi: 'https://api-nova.arbiscan.io/api',
   },
   {
+    symbol: 'FIL',
+    network: 'Filecoin',
+    chainId: 314,
+    color: '#0090FF',
+    defaultTokens: [],
+    explorer: 'https://beryx.zondax.ch/v1/search/fil/mainnet',
+  },
+  {
     symbol: 'RON',
     comm_id: 'ron',
     chainId: 2020,

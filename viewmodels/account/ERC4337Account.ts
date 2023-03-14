@@ -1,5 +1,5 @@
-import { EOAAccount } from './EOAAccount';
+import { AccountBase } from './AccountBase';
 
-export class ERC4337Account extends EOAAccount {
-  readonly type: 'eoa' | 'erc4337' = 'erc4337';
+export class ERC4337Account extends AccountBase {
+  readonly type = 'erc4337';
 }
