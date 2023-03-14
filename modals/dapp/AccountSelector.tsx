@@ -3,7 +3,7 @@ import { FlatList, StyleProp, Text, TouchableOpacity, View, ViewStyle } from 're
 import React, { useState } from 'react';
 
 import Avatar from '../../components/Avatar';
-import { EOAAccount } from '../../viewmodels/account/EOAAccount';
+import { EOA } from '../../viewmodels/account/EOA';
 import { Feather } from '@expo/vector-icons';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
@@ -11,7 +11,7 @@ import { observer } from 'mobx-react-lite';
 import { secondaryFontColor } from '../../constants/styles';
 
 interface Props {
-  accounts: EOAAccount[];
+  accounts: EOA[];
   selectedAccounts: string[];
   onDone: (selectedAccounts: string[]) => void;
   single?: boolean;
@@ -40,7 +40,7 @@ export default observer(({ accounts, selectedAccounts, onDone, single, style, ex
     }
   };
 
-  const renderItem = ({ item }: { item: EOAAccount }) => {
+  const renderItem = ({ item }: { item: EOA }) => {
     return (
       <TouchableOpacity
         onPress={() => toggleAddress(item.address)}

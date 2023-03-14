@@ -3,7 +3,7 @@ import { NativeSyntheticEvent, Text, TouchableOpacity, View } from 'react-native
 
 import App from '../../viewmodels/core/App';
 import Avatar from '../../components/Avatar';
-import { EOAAccount } from '../../viewmodels/account/EOAAccount';
+import { EOA } from '../../viewmodels/account/EOA';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import i18n from '../../i18n';
@@ -12,11 +12,11 @@ import { secondaryFontColor } from '../../constants/styles';
 import { utils } from 'ethers';
 
 interface Props {
-  account: EOAAccount;
+  account: EOA;
   themeColor: string;
-  onPress?: (item: EOAAccount) => void;
-  onEdit?: (item: EOAAccount) => void;
-  onRemove?: (item: EOAAccount) => void;
+  onPress?: (item: EOA) => void;
+  onEdit?: (item: EOA) => void;
+  onRemove?: (item: EOA) => void;
   textColor: string;
   previewBackgroundColor: string;
 }

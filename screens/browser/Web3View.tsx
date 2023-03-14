@@ -10,7 +10,7 @@ import { WebView, WebViewMessageEvent, WebViewNavigation, WebViewProps } from 'r
 import AccountSelector from '../../modals/dapp/AccountSelector';
 import App from '../../viewmodels/core/App';
 import Avatar from '../../components/Avatar';
-import { EOAAccount } from '../../viewmodels/account/EOAAccount';
+import { EOA } from '../../viewmodels/account/EOA';
 import GetPageMetadata from './scripts/Metadata';
 import HookRainbowKit from './scripts/InjectRainbowKitObserver';
 import HookWalletConnect from './scripts/InjectWalletConnectObserver';
@@ -80,7 +80,7 @@ export default observer((props: Web3ViewProps) => {
 
   const [pageMetadata, setPageMetadata] = useState<PageMetadata>();
   const [appNetwork, setAppNetwork] = useState<INetwork>();
-  const [appAccount, setAppAccount] = useState<EOAAccount>();
+  const [appAccount, setAppAccount] = useState<EOA>();
   const [dapp, setDApp] = useState<ConnectedBrowserDApp | undefined>();
   const [webUrl, setWebUrl] = useState('');
   const [exitingTransition, setExitingTransition] = useState<ComplexAnimationBuilder>();

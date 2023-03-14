@@ -6,7 +6,7 @@ import { numericFontFamily, secondaryFontColor } from '../../constants/styles';
 
 import Avatar from '../../components/Avatar';
 import BackButton from '../components/BackButton';
-import { EOAAccount } from '../../viewmodels/account/EOAAccount';
+import { EOA } from '../../viewmodels/account/EOA';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -35,7 +35,7 @@ interface SubViewProps {
   themeColor?: string;
   initValue?: string;
   network: INetwork;
-  account?: EOAAccount;
+  account?: EOA;
 }
 
 export default observer((props: SubViewProps) => {

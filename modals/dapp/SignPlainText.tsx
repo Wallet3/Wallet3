@@ -4,7 +4,7 @@ import { Switch, Text, View } from 'react-native';
 
 import AccountIndicator from '../components/AccountIndicator';
 import { BioType } from '../../viewmodels/auth/Authentication';
-import { EOAAccount } from '../../viewmodels/account/EOAAccount';
+import { EOA } from '../../viewmodels/account/EOA';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';
 import { PageMetadata } from '../../screens/browser/Web3View';
 import { ParsedMessage } from '../../eips/eip4361/siwe_plain';
@@ -24,7 +24,7 @@ interface Props {
   themeColor: string;
   onReject?: () => void;
   onSign?: () => Promise<void>;
-  account?: EOAAccount;
+  account?: EOA;
   bioType?: BioType;
   onStandardModeChanged?: (on: boolean) => void;
   standardMode?: boolean;

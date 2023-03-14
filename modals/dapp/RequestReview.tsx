@@ -12,7 +12,7 @@ import BalanceChangePreview from '../views/BalanceChangePreview';
 import { BioType } from '../../viewmodels/auth/Authentication';
 import Currency from '../../viewmodels/settings/Currency';
 import { DecodedFunc } from '../../viewmodels/hubs/EtherscanHub';
-import { EOAAccount } from '../../viewmodels/account/EOAAccount';
+import { EOA } from '../../viewmodels/account/EOA';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';
 import FuncReview from '../views/FuncReview';
 import GasReview from '../views/GasReview';
@@ -45,7 +45,7 @@ interface Props {
   onGasPress?: () => void;
   onDecodedFuncPress?: (decodedFunc: DecodedFunc) => void;
   onBalanceChangePreviewPress?: (previewResult: PreExecResult) => void;
-  account: EOAAccount;
+  account: EOA;
   bioType?: BioType;
 }
 

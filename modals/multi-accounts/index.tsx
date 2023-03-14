@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 
 import App from '../../viewmodels/core/App';
 import { Confirm } from '../views/Confirm';
-import { EOAAccount } from '../../viewmodels/account/EOAAccount';
+import { EOA } from '../../viewmodels/account/EOA';
 import EditAccount from './EditAccount';
 import ImportWallet from './ImportWallet';
 import MainPanel from './MainPanel';
@@ -19,9 +19,9 @@ export default observer(({ close }: { close?: Function }) => {
   const { t } = i18n;
   const swiper = useRef<Swiper>(null);
   const [type, setType] = useState('');
-  const [account, setAccount] = useState<EOAAccount>();
+  const [account, setAccount] = useState<EOA>();
 
-  const onRemoveAccount = (account: EOAAccount) => {
+  const onRemoveAccount = (account: EOA) => {
     setType('removeAccount');
     setAccount(account);
     setTimeout(() => swiper.current?.scrollTo(1), 0);
@@ -43,7 +43,7 @@ export default observer(({ close }: { close?: Function }) => {
     setTimeout(() => setType(''), 500);
   };
 
-  const editAccount = (account: EOAAccount) => {
+  const editAccount = (account: EOA) => {
     setType('editAccount');
     setAccount(account);
     setTimeout(() => swiper.current?.scrollTo(1), 0);

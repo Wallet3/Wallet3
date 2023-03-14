@@ -7,7 +7,7 @@ import { logEthSign, logSendTx } from '../services/Analytics';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Authentication from '../auth/Authentication';
 import { BaseEntity } from 'typeorm';
-import { EOAAccount } from '../account/EOAAccount';
+import { EOA } from '../account/EOA';
 import EventEmitter from 'eventemitter3';
 import Key from '../../models/entities/Key';
 import LINQ from 'linq';
@@ -62,7 +62,7 @@ export abstract class WalletBase extends EventEmitter<Events> {
   abstract isHDWallet: boolean;
   abstract isMultiSig: boolean;
 
-  accounts: EOAAccount[] = [];
+  accounts: EOA[] = [];
 
   signInPlatform: 'apple' | 'google' | undefined;
   signInUser: string | undefined;
@@ -96,7 +96,7 @@ export abstract class WalletBase extends EventEmitter<Events> {
     this.removedAccountIndexes = JSON.parse((await AsyncStorage.getItem(WalletBaseKeys.removedIndexes(this.key.id))) || '[]');
 
     const count = Number((await AsyncStorage.getItem(WalletBaseKeys.addressCount(this.key.id))) || 1);
-    const accounts: EOAAccount[] = [];
+    const accounts: EOA[] = [];
 
     if (this.isHDWallet) {
       const bip32 = utils.HDNode.fromExtendedKey(parseXpubkey(this.key.bip32Xpubkey));
@@ -105,10 +105,10 @@ export abstract class WalletBase extends EventEmitter<Events> {
         if (this.removedAccountIndexes.includes(i)) continue;
 
         const accountNode = bip32.derivePath(`${i}`);
-        accounts.push(new EOAAccount(accountNode.address, i, { signInPlatform: this.signInPlatform }));
+        accounts.push(new EOA(accountNode.address, i, { signInPlatform: this.signInPlatform }));
       }
     } else {
-      accounts.push(new EOAAccount(this.key.bip32Xpubkey, 0, { signInPlatform: '' }));
+      accounts.push(new EOA(this.key.bip32Xpubkey, 0, { signInPlatform: '' }));
     }
 
     runInAction(() => (this.accounts = accounts));
@@ -124,7 +124,7 @@ export abstract class WalletBase extends EventEmitter<Events> {
     );
   }
 
-  newAccount(): EOAAccount | undefined {
+  newAccount(): EOA | undefined {
     if (!this.isHDWallet) return;
 
     const bip32 = utils.HDNode.fromExtendedKey(parseXpubkey(this.key.bip32Xpubkey));
@@ -135,7 +135,7 @@ export abstract class WalletBase extends EventEmitter<Events> {
       ) + 1;
 
     const node = bip32.derivePath(`${index}`);
-    const account = new EOAAccount(node.address, index, { signInPlatform: this.signInPlatform });
+    const account = new EOA(node.address, index, { signInPlatform: this.signInPlatform });
     this.accounts.push(account);
 
     AsyncStorage.setItem(WalletBaseKeys.addressCount(this.key.id), `${index + 1}`);
@@ -143,7 +143,7 @@ export abstract class WalletBase extends EventEmitter<Events> {
     return account;
   }
 
-  async removeAccount(account: EOAAccount) {
+  async removeAccount(account: EOA) {
     const index = this.accounts.findIndex((a) => a.address === account.address);
     if (index === -1) return;
 

@@ -5,7 +5,7 @@ import { providers, utils } from 'ethers';
 
 import App from '../../../viewmodels/core/App';
 import DeviceInfo from 'react-native-device-info';
-import { EOAAccount } from '../../../viewmodels/account/EOAAccount';
+import { EOA } from '../../../viewmodels/account/EOA';
 import { ERC20Token } from '../../../models/ERC20';
 import EventEmitter from 'events';
 import { INetwork } from '../../../common/Networks';
@@ -61,7 +61,7 @@ interface WatchAssetParams {
 
 export interface ConnectInpageDApp extends Payload {
   origin: string;
-  approve: (userSelected: { network: INetwork; account: EOAAccount }) => void;
+  approve: (userSelected: { network: INetwork; account: EOA }) => void;
   reject: () => void;
 }
 
@@ -72,7 +72,7 @@ export interface InpageDAppSignRequest {
   typedData?: any;
   approve: (opt?: { pin?: string; standardMode?: boolean }) => Promise<boolean>;
   reject: () => void;
-  account: EOAAccount;
+  account: EOA;
   metadata: PageMetadata;
 }
 
@@ -213,7 +213,7 @@ export class InpageDAppController extends EventEmitter {
     }
 
     return new Promise<string[] | any>((resolve) => {
-      const approve = ({ account, network }: { account: EOAAccount; network: INetwork }) => {
+      const approve = ({ account, network }: { account: EOA; network: INetwork }) => {
         const app = new InpageDApp();
         app.origin = origin;
         app.lastUsedAccount = account.address;

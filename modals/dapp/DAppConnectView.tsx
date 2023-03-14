@@ -4,7 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { secureColor, thirdFontColor } from '../../constants/styles';
 
 import Avatar from '../../components/Avatar';
-import { EOAAccount } from '../../viewmodels/account/EOAAccount';
+import { EOA } from '../../viewmodels/account/EOA';
 import { INetwork } from '../../common/Networks';
 import { Ionicons } from '@expo/vector-icons';
 import { NullableImage } from '../../components';
@@ -14,7 +14,7 @@ import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 
 interface Props {
-  account?: EOAAccount;
+  account?: EOA;
   network: INetwork;
   onAccountsPress?: () => void;
   onNetworksPress?: () => void;

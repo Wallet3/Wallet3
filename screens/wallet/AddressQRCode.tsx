@@ -8,7 +8,7 @@ import Avatar from '../../components/Avatar';
 import { BlankPNG } from '../../common/Constants';
 import CachedImage from 'react-native-fast-image';
 import CopyableText from '../../components/CopyableText';
-import { EOAAccount } from '../../viewmodels/account/EOAAccount';
+import { EOA } from '../../viewmodels/account/EOA';
 import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/core/Networks';
 import QRCode from 'react-native-qrcode-svg';
@@ -21,7 +21,7 @@ import { observer } from 'mobx-react-lite';
 import { openInappBrowser } from '../../modals/app/InappBrowser';
 import { setStringAsync } from 'expo-clipboard';
 
-export default observer(({ account }: { account?: EOAAccount }) => {
+export default observer(({ account }: { account?: EOA }) => {
   const { t } = i18n;
   const { backgroundColor, thirdTextColor } = Theme;
   const { current } = Networks;

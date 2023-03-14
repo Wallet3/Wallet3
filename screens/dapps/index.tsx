@@ -9,7 +9,7 @@ import App from '../../viewmodels/core/App';
 import DAppInfo from './DAppInfo';
 import { DrawerActions } from '@react-navigation/native';
 import { DrawerScreenProps } from '@react-navigation/drawer';
-import { EOAAccount } from '../../viewmodels/account/EOAAccount';
+import { EOA } from '../../viewmodels/account/EOA';
 import IllustrationNoData from '../../assets/illustrations/misc/nodata.svg';
 import MessageKeys from '../../common/MessageKeys';
 import { MetamaskDApp } from '../../viewmodels/walletconnect/MetamaskDApp';
@@ -32,7 +32,7 @@ import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 interface Props {
   client: WalletConnect_v1 | MetamaskDApp | WalletConnect_v2;
-  allAccounts: EOAAccount[];
+  allAccounts: EOA[];
   close: Function;
 }
 

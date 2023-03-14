@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import { BioType } from '../../viewmodels/auth/Authentication';
-import { EOAAccount } from '../../viewmodels/account/EOAAccount';
+import { EOA } from '../../viewmodels/account/EOA';
 import { PageMetadata } from '../../screens/browser/Web3View';
 import { Passpad } from '../views';
 import { SafeViewContainer } from '../../components';
@@ -18,7 +18,7 @@ interface Props {
   sign: (opt: { pin: string; standardMode?: boolean }) => Promise<boolean>;
   typedData?: any;
   biometricType?: BioType;
-  account?: EOAAccount;
+  account?: EOA;
   metadata?: PageMetadata;
 }
 

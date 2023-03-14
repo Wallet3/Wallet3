@@ -1,11 +1,11 @@
 import { Text, View } from 'react-native';
 
 import Avatar from '../../components/Avatar';
-import { EOAAccount } from '../../viewmodels/account/EOAAccount';
+import { EOA } from '../../viewmodels/account/EOA';
 import React from 'react';
 import { thirdFontColor } from '../../constants/styles';
 
-export default ({ account, textColor }: { account: EOAAccount; textColor?: string }) => {
+export default ({ account, textColor }: { account: EOA; textColor?: string }) => {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
       <Avatar uri={account.avatar} size={20} emojiSize={8} emoji={account.emojiAvatar} backgroundColor={account.emojiColor} />

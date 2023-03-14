@@ -1,6 +1,6 @@
 import { AccountBase } from './AccountBase';
 
-export class EOAAccount extends AccountBase {
+export class EOA extends AccountBase {
   readonly type = 'eoa';
 
   constructor(address: string, index: number, extra: { signInPlatform?: string }) {

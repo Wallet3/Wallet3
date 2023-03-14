@@ -23,7 +23,7 @@ import AddressTag from '../../models/entities/AddressTag';
 import App from '../core/App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Coingecko from '../../common/apis/Coingecko';
-import { EOAAccount } from '../account/EOAAccount';
+import { EOA } from '../account/EOA';
 import { ERC20Token } from '../../models/ERC20';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
@@ -38,7 +38,7 @@ export class BaseTransaction {
   private timer?: NodeJS.Timer;
 
   readonly network: INetwork;
-  readonly account: EOAAccount;
+  readonly account: EOA;
   readonly wallet: WalletBase;
   readonly nativeToken: NativeToken;
 
@@ -60,7 +60,7 @@ export class BaseTransaction {
   initializing = false;
   feeToken: ERC20Token | null = null;
 
-  constructor(args: { network: INetwork; account: EOAAccount }, initChainData = true) {
+  constructor(args: { network: INetwork; account: EOA }, initChainData = true) {
     this.network = args.network;
     this.account = args.account;
     this.wallet = App.findWallet(this.account.address)!.wallet;

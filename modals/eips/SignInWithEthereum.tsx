@@ -4,7 +4,7 @@ import React, { useRef } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import AccountIndicator from '../components/AccountIndicator';
-import { EOAAccount } from '../../viewmodels/account/EOAAccount';
+import { EOA } from '../../viewmodels/account/EOA';
 import { PageMetadata } from '../../screens/browser/Web3View';
 import { ParsedMessage } from '../../eips/eip4361/siwe_plain';
 import Swiper from 'react-native-swiper';
@@ -17,7 +17,7 @@ interface Props {
   rawMsg: string;
   metadata?: PageMetadata;
   siwe: ParsedMessage;
-  account?: EOAAccount;
+  account?: EOA;
   themeColor?: string;
 }
 

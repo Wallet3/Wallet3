@@ -4,7 +4,7 @@ import { estimateGas, eth_call } from '../../common/RPC';
 
 import App from '../core/App';
 import { BaseTransaction } from './BaseTransaction';
-import { EOAAccount } from '../account/EOAAccount';
+import { EOA } from '../account/EOA';
 import { ERC1155Token } from '../../models/ERC1155';
 import { ERC721Token } from '../../models/ERC721';
 import { Gwei_1 } from '../../common/Constants';
@@ -28,7 +28,7 @@ export interface NFTMetadata {
 interface IConstructor {
   nft: NFTMetadata;
   network: INetwork;
-  account?: EOAAccount;
+  account?: EOA;
 }
 
 export class NFTTransferring extends BaseTransaction {

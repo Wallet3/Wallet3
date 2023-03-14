@@ -3,7 +3,7 @@ import { DateTimeFormatter, formatAddress } from '../../utils/formatter';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import Avatar from '../../components/Avatar';
-import { EOAAccount } from '../../viewmodels/account/EOAAccount';
+import { EOA } from '../../viewmodels/account/EOA';
 import { Entypo } from '@expo/vector-icons';
 import { INetwork } from '../../common/Networks';
 import Image from 'react-native-fast-image';
@@ -21,7 +21,7 @@ import { thirdFontColor } from '../../constants/styles';
 
 interface Props {
   client: WalletConnect_v1 | WalletConnect_v2 | MetamaskDApp;
-  defaultAccount?: EOAAccount;
+  defaultAccount?: EOA;
   defaultNetwork?: INetwork;
 
   onDisconnect: () => void;

@@ -7,7 +7,7 @@ import AccountIndicator from '../components/AccountIndicator';
 import { BioType } from '../../viewmodels/auth/Authentication';
 import Collapsible from 'react-native-collapsible';
 import EIP2612Permit from '../eips/EIP2612Permit';
-import { EOAAccount } from '../../viewmodels/account/EOAAccount';
+import { EOA } from '../../viewmodels/account/EOA';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';
 import { PageMetadata } from '../../screens/browser/Web3View';
 import RejectApproveButtons from '../components/RejectApproveButtons';
@@ -24,7 +24,7 @@ interface Props {
   data: any;
   onReject: () => void;
   onSign: () => Promise<void>;
-  account?: EOAAccount;
+  account?: EOA;
   bioType?: BioType;
   metadata?: PageMetadata;
 }
