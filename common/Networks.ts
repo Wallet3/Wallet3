@@ -160,6 +160,14 @@ export const PublicNetworks: INetwork[] = [
     github_dir: 'avalanchec',
   },
   {
+    symbol: 'FIL',
+    network: 'Filecoin',
+    chainId: 314,
+    color: '#0090FF',
+    defaultTokens: [],
+    explorer: 'https://beryx.zondax.ch/v1/search/fil/mainnet',
+  },
+  {
     symbol: 'ETH',
     comm_id: 'boba',
     network: 'Boba',
@@ -210,14 +218,6 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: NovaPopularTokens,
     explorer: 'https://nova.arbiscan.io',
     etherscanApi: 'https://api-nova.arbiscan.io/api',
-  },
-  {
-    symbol: 'FIL',
-    network: 'Filecoin',
-    chainId: 314,
-    color: '#0090FF',
-    defaultTokens: [],
-    explorer: 'https://beryx.zondax.ch/v1/search/fil/mainnet',
   },
   {
     symbol: 'RON',

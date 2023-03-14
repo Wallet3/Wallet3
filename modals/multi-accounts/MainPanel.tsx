@@ -88,16 +88,34 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDon
 
       <Separator style={{ marginBottom: 4, opacity: 0.5, backgroundColor: borderColor }} />
 
-      <TouchableOpacity style={styles.option} onPress={newAccount}>
-        <MaterialIcons name="add-circle" size={22} color={themeColor} />
-        <Text style={{ marginStart: 10, color: themeColor, fontWeight: '600', fontSize: 15 }}>
-          {t('modal-multi-accounts-button-create-account')}
-        </Text>
-      </TouchableOpacity>
+      {__DEV__ ? (
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <MaterialIcons name="add-circle" size={22} color={themeColor} />
+
+          <TouchableOpacity style={styles.option} onPress={newAccount}>
+            <Text style={[{ marginStart: 10, color: themeColor }, styles.txt]}>
+              {t('modal-multi-accounts-button-create-account')}
+            </Text>
+          </TouchableOpacity>
+
+          <Text style={[{ marginStart: 6, color: themeColor, marginEnd: 8 }, styles.txt]}>/</Text>
+
+          <TouchableOpacity style={styles.option}>
+            <Text style={[{ color: themeColor }, styles.txt]}>{t('modal-multi-accounts-button-super-account')}</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <TouchableOpacity style={styles.option} onPress={newAccount}>
+          <MaterialIcons name="add-circle" size={22} color={themeColor} />
+          <Text style={{ marginStart: 10, color: themeColor, fontWeight: '600', fontSize: 15 }}>
+            {t('modal-multi-accounts-button-create-account')}
+          </Text>
+        </TouchableOpacity>
+      )}
 
       <TouchableOpacity style={styles.option} onPress={onImportWallet}>
         <Ionicons name="key-outline" size={19} color={themeColor} style={{ paddingHorizontal: 1.5 }} />
-        <Text style={{ marginStart: 10, color: themeColor, fontWeight: '600', fontSize: 15 }}>
+        <Text style={[{ marginStart: 10, color: themeColor }, styles.txt]}>
           {t('modal-multi-accounts-button-import-account')}
         </Text>
       </TouchableOpacity>
@@ -110,5 +128,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 8,
+  },
+
+  txt: {
+    fontWeight: '600',
+    fontSize: 15,
   },
 });
