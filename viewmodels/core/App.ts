@@ -137,8 +137,8 @@ export class AppVM {
       tipWalletUpgrade(this.currentWallet);
     });
 
-    await PairedDevices.init().then(() => !this.hasWalletSet && KeyRecoveryWatcher.scanLan());
-    lastUsedAccount && utils.isAddress(lastUsedAccount) && fetchChainsOverview(lastUsedAccount);
+    PairedDevices.init().then(() => !this.hasWalletSet && KeyRecoveryWatcher.scanLan());
+    lastUsedAccount && utils.isAddress(lastUsedAccount) && fetchChainsOverview(lastUsedAccount).catch();
   }
 
   async addWallet(key: Key | MultiSigKey) {

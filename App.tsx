@@ -4,14 +4,13 @@ import * as SplashScreen from 'expo-splash-screen';
 
 import AppViewModel, { AppVM } from './viewmodels/core/App';
 import AuthViewModel, { Authentication } from './viewmodels/auth/Authentication';
-import Modals, { FullScreenQRScanner, GlobalPasspadModal, LockScreen } from './screens/Modalize';
+import Modals, { FullScreenQRScanner, LockScreen } from './screens/Modalize';
 import React, { useEffect, useState } from 'react';
 import { TouchableOpacity, UIManager } from 'react-native';
 
 import { About } from './screens/settings/About';
 import AddToken from './screens/tokens/AddToken';
 import Backup from './screens/settings/Backup';
-import { CardStyleInterpolators } from '@react-navigation/stack';
 import ChangePasscode from './screens/settings/ChangePasscode';
 import Currencies from './screens/settings/Currencies';
 import FlashMessage from 'react-native-flash-message';
@@ -22,7 +21,9 @@ import Languages from './screens/settings/Languages';
 import NFTDetails from './screens/nfts/Details';
 import { NavigationContainer } from '@react-navigation/native';
 import ProfileScreen from './screens/profile';
+import RecoveryMode from './screens/security/RecoveryMode';
 import Root from './screens/Root';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import Theme from './viewmodels/settings/Theme';
 import Themes from './screens/settings/Themes';
@@ -51,7 +52,11 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
     AppViewModel.init().catch(() => setRecoveryMode(true));
   }, []);
 
-  return (
+  return recoveryMode ? (
+    <SafeAreaProvider>
+      <RecoveryMode />
+    </SafeAreaProvider>
+  ) : (
     <NavigationContainer
       ref={navigationRef}
       onReady={() => (routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name)}
@@ -142,7 +147,7 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
         ) : undefined}
       </Host>
 
-      {Modals({ app, appAuth })}
+      {Modals()}
 
       <FlashMessage position="top" />
       <StatusBar style={statusBarStyle} />

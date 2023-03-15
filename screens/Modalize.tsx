@@ -10,6 +10,7 @@ import {
   WalletConnectSign,
   WalletConnectTxRequest,
 } from '../modals';
+import AuthenticationVM, { Authentication } from '../viewmodels/auth/Authentication';
 import {
   ConnectInpageDApp,
   InpageDAppAddAsset,
@@ -28,7 +29,6 @@ import {
 } from '../modals/tss';
 
 import { AppVM } from '../viewmodels/core/App';
-import { Authentication } from '../viewmodels/auth/Authentication';
 import { ClientInfo } from '../common/p2p/Constants';
 import { FullPasspad } from '../modals/views/Passpad';
 import GlobalPasspad from '../modals/global/GlobalPasspad';
@@ -74,7 +74,7 @@ import { showMessage } from 'react-native-flash-message';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { utils } from 'ethers';
 
-const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app: AppVM }) => {
+const WalletConnectRequests = () => {
   const { ref, open, close } = useModalize();
   const [type, setType] = useState<string>();
   const [client, setClient] = useState<WalletConnect_v1>();
@@ -84,7 +84,7 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
     PubSub.subscribe(
       MessageKeys.wc_request,
       (_, { client, request, chainId }: { client: WalletConnect_v1; request: WCCallRequestRequest; chainId?: number }) => {
-        if (!appAuth.appAuthorized) {
+        if (!AuthenticationVM.appAuthorized) {
           client.rejectRequest(request.id, 'Unauthorized');
           return;
         }
@@ -831,7 +831,7 @@ export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Aut
   );
 });
 
-export default (props: { app: AppVM; appAuth: Authentication }) => {
+export default () => {
   return [
     <SendFundsModal key="send-funds" />,
     <RequestFundsModal key="request-funds" />,
@@ -840,7 +840,7 @@ export default (props: { app: AppVM; appAuth: Authentication }) => {
     <BackupTipsModal key="backup-tip" />,
     <GlobalLoadingModal key="loading-modal" />,
     <WalletConnect key="walletconnect" />,
-    <WalletConnectRequests key="walletconnect-requests" {...props} />,
+    <WalletConnectRequests key="walletconnect-requests" />,
     <InpageDAppConnect key="inpage-dapp-connect" />,
     <InpageDAppRequests key="inpage-dapp-requests" />,
     <ShardsModal key="shards-management" />,

@@ -58,18 +58,18 @@ class Database {
     await this._dataSource.initialize();
 
     this.keys = this._dataSource.getRepository(Key);
+    this.multiSigKeys = this._dataSource.getRepository(MultiSigKey);
+    this.chains = this._dataSource.getRepository(Chain);
+    this.shardKeys = this._dataSource.getRepository(ShardKey);
+
     this.txs = this._dataSource.getRepository(Transaction);
     this.wcV1Sessions = this._dataSource.getRepository(WCSession_v1);
     this.inpageDApps = this._dataSource.getRepository(InpageDApp);
-    this.chains = this._dataSource.getRepository(Chain);
     this.etherscan_contracts = this._dataSource.getRepository(EtherscanContract);
     this.sourcify_metadata = this._dataSource.getRepository(SourcifyMetadata);
     this.cloud_address_tags = this._dataSource.getRepository(AddressTag);
     this.wcV2Sessions = this._dataSource.getRepository(WCV2_Session);
     this.urls = this._dataSource.getRepository(UrlTag);
-
-    this.multiSigKeys = this._dataSource.getRepository(MultiSigKey);
-    this.shardKeys = this._dataSource.getRepository(ShardKey);
   }
 
   execTransaction<T>(runInTransaction: (entityManager: EntityManager) => Promise<T>) {
