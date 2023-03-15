@@ -1,13 +1,11 @@
 import MultiSigKey, { MultiSigKeyDeviceInfo } from '../../models/entities/MultiSigKey';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
-import { openGlobalPasspad, openShardsAggregator } from '../../common/Modals';
 
 import Authentication from '../auth/Authentication';
-import { BaseEntity } from 'typeorm';
 import { ShardsAggregator } from '../tss/ShardsAggregator';
 import { WalletBase } from './WalletBase';
 import { logMultiSigKeyAggregated } from '../services/Analytics';
-import secretjs from 'secrets.js-grempe';
+import { openShardsAggregator } from '../../common/Modals';
 import { sleep } from '../../utils/async';
 import { utils } from 'ethers';
 

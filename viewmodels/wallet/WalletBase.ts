@@ -153,10 +153,9 @@ export abstract class WalletBase extends EventEmitter<Events> {
     return account;
   }
 
-  newERC4337Account() {
+  async newERC4337Account() {
     if (!this.isHDWallet && this.accounts.find((a) => a.type === 'erc4337')) return;
 
-    let privateKey: string | undefined;
     const subPath = `4337'/`;
 
     const erc4337s = this.accounts.filter((a) => a.type === 'erc4337');
@@ -166,10 +165,9 @@ export abstract class WalletBase extends EventEmitter<Events> {
         this.removedERC4337Indexes.length > 0 ? LINQ.from(this.removedERC4337Indexes).max() : 0
       ) + 1;
 
-    const auth = async (pin?: string) => {
-      privateKey = await this.unlockPrivateKey(this.isHDWallet ? { subPath, pin, accountIndex: index } : { pin });
-      return privateKey ? true : false;
-    };
+    const privateKey = await this.unlockPrivateKey(this.isHDWallet ? { subPath, accountIndex: index } : {});
+    if (!privateKey) return;
+    
   }
 
   async removeAccount(account: AccountBase) {
