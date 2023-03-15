@@ -61,7 +61,7 @@ export default observer(({ account }: { account?: AccountBase }) => {
 
           <CopyableText
             copyText={prefixedAddress || ''}
-            iconSize={10}
+            iconSize={12}
             iconColor={thirdTextColor}
             iconStyle={{ marginStart: 5 }}
             txtLines={2}

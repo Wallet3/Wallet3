@@ -119,7 +119,6 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
                 txtLines={1}
                 iconColor={thirdFontColor}
                 txtStyle={{ color: thirdFontColor }}
-                iconStyle={{ marginStart: 6 }}
               />
             </View>
           )}

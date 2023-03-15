@@ -129,7 +129,7 @@ const RootTab = observer(() => {
                   onPress={() => PubSub.publish(MessageKeys.openAccountsMenu)}
                   style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 0 }}
                 >
-                  <Logo height={16} color={foregroundColor} />
+                  <Logo height={16} width={170} color={foregroundColor} />
                 </TouchableOpacity>
               </View>
 

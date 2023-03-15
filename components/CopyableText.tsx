@@ -29,7 +29,7 @@ export default ({ copyText, txtStyle, iconStyle, iconSize, iconColor, title, txt
       <Animatable.Text ref={txtView as any} style={txtStyle} numberOfLines={txtLines || 1}>
         {title || copyText}
         {'  '}
-        <Feather name="copy" size={iconSize ?? 10} color={iconColor ?? '#fff'} style={iconStyle} />
+        <Feather name="copy" size={iconSize ?? 12} color={iconColor ?? '#fff'} style={[iconStyle]} />
       </Animatable.Text>
     </TouchableOpacity>
   );
