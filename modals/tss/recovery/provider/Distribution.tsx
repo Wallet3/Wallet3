@@ -42,7 +42,7 @@ export default observer(({ vm, close, onCritical }: Props) => {
 
   const send = async () => {
     setBusy(true);
-    await openGlobalPasspad({ onAutoAuthRequest: vm.send, onPinEntered: vm.send, closeOnOverlayTap: true });
+    await vm.send();
     setBusy(false);
   };
 

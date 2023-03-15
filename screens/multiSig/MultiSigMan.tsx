@@ -76,7 +76,10 @@ export default observer(({ wallet }: { wallet: MultiSigWallet }) => {
             </Text>
           </View>
 
-          <TouchableOpacity style={styles.itemContainer} onPress={() => openRedistribution()}>
+          <TouchableOpacity
+            style={styles.itemContainer}
+            onPress={() => (wallet.thresholdTooHigh ? openAddDevices() : openRedistribution())}
+          >
             <View style={styles.titleContainer}>
               <Text style={{ color: textColor, ...styles.btnTxt }}>{t('multi-sig-screen-title-confirmation-threshold')}</Text>
               <Text style={{ color: wallet.thresholdTooHigh ? warningColor : verifiedColor, ...styles.btnTxt }}>

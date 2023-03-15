@@ -16,7 +16,6 @@ import QRCode from 'react-native-qrcode-svg';
 import Theme from '../../../viewmodels/settings/Theme';
 import { getDeviceInfo } from '../../../common/p2p/Utils';
 import i18n from '../../../i18n';
-import { openGlobalPasspad } from '../../../common/Modals';
 import { sleep } from '../../../utils/async';
 import { startLayoutAnimation } from '../../../utils/animations';
 import { useOptimizedSafeBottom } from '../../../utils/hardware';
@@ -93,25 +92,17 @@ export default ({ device, close, onForceUpdate }: { device: PairedDevice; close:
   const authAndNext = async () => {
     let success = false;
 
-    const autoAuth = async (pin?: string) => {
-      try {
-        const [root, bip32] =
-          (await Authentication.decryptForever([device.shard.secrets.rootShard, device.shard.secrets.bip32Shard], pin)) || [];
+    try {
+      const [root, bip32] =
+        (await Authentication.decryptForever([device.shard.secrets.rootShard, device.shard.secrets.bip32Shard])) || [];
 
-        success = root && bip32 ? true : false;
+      success = root && bip32 ? true : false;
 
-        if (success) {
-          setRoot(root);
-          setBip32(bip32);
-        }
-
-        return success;
-      } catch (error) {
-        return false;
+      if (success) {
+        setRoot(root);
+        setBip32(bip32);
       }
-    };
-
-    await openGlobalPasspad({ onAutoAuthRequest: autoAuth, onPinEntered: autoAuth });
+    } catch (error) {}
 
     if (success) goTo(1);
   };

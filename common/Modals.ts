@@ -14,7 +14,7 @@ import { showMessage } from 'react-native-flash-message';
 export async function openGlobalPasspad(req: {
   passLength?: number;
   closeOnOverlayTap?: boolean;
-  onAutoAuthRequest: () => Promise<boolean>;
+  onAutoAuthRequest?: () => Promise<boolean>;
   onPinEntered: (pin: string) => Promise<boolean>;
 }) {
   if (!Authentication.pinSet) {
@@ -29,7 +29,7 @@ export async function openGlobalPasspad(req: {
   const fast = Authentication.biometricEnabled;
   const fastOnly = !Authentication.pinSet && Authentication.biometricEnabled;
 
-  if ((fast || fastOnly) && (await req.onAutoAuthRequest())) {
+  if ((fast || fastOnly) && (await req.onAutoAuthRequest?.())) {
     return true;
   }
 
@@ -42,7 +42,7 @@ export async function openGlobalPasspad(req: {
     let handled = false;
 
     const onAutoAuthHook = async () => {
-      const success = await req.onAutoAuthRequest();
+      const success = (await req.onAutoAuthRequest?.()) ?? false;
       success && resolve(success);
       handled = success;
       return success;
@@ -63,7 +63,7 @@ export async function openGlobalPasspad(req: {
       closeOnOverlayTap: true,
       ...req,
       onPinEntered: onPinEnteredHook,
-      onAutoAuthRequest: fast || fastOnly ? undefined : onAutoAuthHook, // override requests onAutoAuthRequest
+      onAutoAuthRequest: fast || fastOnly ? undefined : req.onAutoAuthRequest ? onAutoAuthHook : undefined, // override requests onAutoAuthRequest
       onClosed: onClosedHook,
     });
   });

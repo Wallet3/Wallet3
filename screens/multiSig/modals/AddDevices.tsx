@@ -48,14 +48,8 @@ export default observer(({ wallet, close, onCritical }: Props) => {
   };
 
   const goToAggregation = async () => {
-    let vm: ShardsAggregator | undefined;
-
-    const auth = async (pin?: string) => {
-      vm = await wallet.requestShardsAggregator({ rootShard: true, bip32Shard: true, autoStart: true }, pin);
-      return vm ? true : false;
-    };
-
-    if (!(await openGlobalPasspad({ onAutoAuthRequest: auth, onPinEntered: auth }))) return;
+    const vm = await wallet.requestShardsAggregator({ rootShard: true, bip32Shard: true, autoStart: true });
+    if (!vm) return;
 
     setAggregator(vm!);
     goTo(1);

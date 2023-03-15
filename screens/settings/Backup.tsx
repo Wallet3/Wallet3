@@ -76,7 +76,7 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
 
   useEffect(() => {
     if (currentWallet?.isMultiSig) return;
-    openGlobalPasspad({ closeOnOverlayTap: false, onAutoAuthRequest: verify, onPinEntered: verify });
+    verify().then((v) => !v && navigation.pop());
     return () => mn.clean();
   }, []);
 

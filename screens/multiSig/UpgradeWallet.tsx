@@ -10,7 +10,6 @@ import { SingleSigWallet } from '../../viewmodels/wallet/SingleSigWallet';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import { openGlobalPasspad } from '../../common/Modals';
 import { secureColor } from '../../constants/styles';
 import { sleep } from '../../utils/async';
 
@@ -22,14 +21,8 @@ export default observer(({ onNextPage }: { onNextPage?: () => void }) => {
   const { t } = i18n;
 
   const execUpgrade = async () => {
-    let secret: string | undefined;
-
-    const getSecret = async (pin?: string) => {
-      secret = await currentWallet?.getSecret(pin);
-      return secret !== undefined;
-    };
-
-    if (!(await openGlobalPasspad({ onAutoAuthRequest: getSecret, onPinEntered: getSecret }))) return;
+    const secret = await currentWallet?.getSecret();
+    if (!secret) return;
 
     setBusy(true);
     await sleep(200);

@@ -780,7 +780,7 @@ export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Aut
   const bioAuth = async () => {
     if (!appAuth.biometricEnabled || !appAuth.biometricSupported) return;
 
-    const success = await appAuth.authorize();
+    const success = await appAuth.authorizeApp();
     if (success) closeLockScreen();
   };
 
@@ -822,7 +822,7 @@ export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Aut
         unlockTimestamp={appAuth.appUnlockTime}
         failedAttempts={appAuth.failedAttempts}
         onCodeEntered={async (code) => {
-          const success = await appAuth.authorize(code);
+          const success = await appAuth.authorizeApp(code);
           if (success) closeLockScreen();
           return success;
         }}

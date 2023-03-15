@@ -17,6 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import EventEmitter from 'eventemitter3';
 import { getSecureRandomBytes } from '../../utils/math';
 import { logWalletLocked } from '../services/Analytics';
+import { openGlobalPasspad } from '../../common/Modals';
 import { toMilliseconds } from '../../utils/time';
 
 const Keys = {
@@ -121,13 +122,29 @@ export class Authentication extends EventEmitter<Events> {
     });
   }
 
-  private async authenticate({ pin, options }: { pin?: string; options?: LocalAuthenticationOptions } = {}): Promise<boolean> {
-    if (pin) return await this.verifyPin(pin);
-    if (!this.biometricSupported) return false;
+  authenticate = async ({
+    pin,
+    options,
+    disableAutoPinRequest,
+  }: { pin?: string; options?: LocalAuthenticationOptions; disableAutoPinRequest?: boolean } = {}): Promise<boolean> => {
+    const requestPin = async () => {
+      console.log('request gui pin');
+      return await openGlobalPasspad({ closeOnOverlayTap: true, onPinEntered: this.verifyPin });
+    };
 
-    const { success } = await authenticateAsync(options);
+    if (pin) return await this.verifyPin(pin);
+    
+    if (!this.biometricSupported) {
+      return disableAutoPinRequest ? false : await requestPin();
+    }
+
+    let { success } = await authenticateAsync(options);
+    if (!success && !pin && !disableAutoPinRequest) {
+      success = await requestPin();
+    }
+
     return success;
-  }
+  };
 
   private async getMasterKey() {
     let masterKey = await SecureStore.getItemAsync(Keys.masterKey);
@@ -180,7 +197,7 @@ export class Authentication extends EventEmitter<Events> {
     return success;
   };
 
-  authorize = async (pin?: string) => {
+  authorizeApp = async (pin?: string) => {
     const success = await this.authenticate({ pin });
 
     if (!this.appAuthorized) {

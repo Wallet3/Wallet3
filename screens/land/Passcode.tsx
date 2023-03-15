@@ -23,7 +23,7 @@ export default observer(({ route }: NativeStackScreenProps<LandScreenStack, 'Bac
 
     setBusy(true);
     await Authentication.setupPin(passcode);
-    await Authentication.authorize(passcode);
+    await Authentication.authorizeApp(passcode);
     await MnemonicOnce.save();
     await sleep(1000);
     setBusy(false);

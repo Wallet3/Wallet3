@@ -24,6 +24,7 @@ export type SignTxRequest = {
   accountIndex: number;
   tx: providers.TransactionRequest;
   pin?: string;
+  disableAutoPinRequest?: boolean;
 };
 
 export type SendTxRequest = {
