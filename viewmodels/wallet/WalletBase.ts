@@ -101,7 +101,7 @@ export abstract class WalletBase extends EventEmitter<Events> {
         AsyncStorage.getItem(WalletBaseKeys.removedIndexes(this.key.id)),
         AsyncStorage.getItem(WalletBaseKeys.removedERC4337Indexes(this.key.id)),
       ])
-    ).map((v) => JSON.parse(v || '[]'));
+    ).map((v) => JSON.parse(v || '[]') as number[]);
 
     const count = Number((await AsyncStorage.getItem(WalletBaseKeys.addressCount(this.key.id))) || 1);
     const accounts: AccountBase[] = [];
@@ -167,7 +167,6 @@ export abstract class WalletBase extends EventEmitter<Events> {
 
     const privateKey = await this.unlockPrivateKey(this.isHDWallet ? { subPath, accountIndex: index } : {});
     if (!privateKey) return;
-    
   }
 
   async removeAccount(account: AccountBase) {

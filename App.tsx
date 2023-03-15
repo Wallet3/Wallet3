@@ -33,7 +33,6 @@ import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
 import i18n from './i18n';
 import { logScreenView } from './viewmodels/services/Analytics';
 import { observer } from 'mobx-react-lite';
-import { useFonts } from 'expo-font';
 
 SplashScreen.hideAsync();
 AppViewModel.init();
@@ -48,14 +47,6 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
   const { backgroundColor, foregroundColor, statusBarStyle } = Theme;
   const routeNameRef = React.useRef();
   const navigationRef = React.useRef();
-
-  const [loaded] = useFonts({
-    Questrial: require('./assets/fonts/Questrial.ttf'),
-  });
-
-  if (!loaded) {
-    return null;
-  }
 
   return (
     <NavigationContainer
