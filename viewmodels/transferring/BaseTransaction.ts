@@ -433,6 +433,7 @@ export class BaseTransaction {
       accountIndex: this.account.index,
       tx,
       pin,
+      disableAutoPinRequest: true,
     });
 
     if (!txHex || error) {

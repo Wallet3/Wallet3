@@ -1,5 +1,6 @@
 import * as ethSignUtil from '@metamask/eth-sig-util';
 
+import Authentication, { AuthOptions } from '../auth/Authentication';
 import { Wallet as EthersWallet, providers, utils } from 'ethers';
 import { PaymasterAPI, SimpleAccountAPI } from '@account-abstraction/sdk';
 import { action, makeObservable, observable, runInAction } from 'mobx';
@@ -7,7 +8,6 @@ import { logEthSign, logSendTx } from '../services/Analytics';
 
 import { AccountBase } from '../account/AccountBase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Authentication from '../auth/Authentication';
 import { BaseEntity } from 'typeorm';
 import { EOA } from '../account/EOA';
 import EventEmitter from 'eventemitter3';
@@ -23,8 +23,6 @@ import { showMessage } from 'react-native-flash-message';
 export type SignTxRequest = {
   accountIndex: number;
   tx: providers.TransactionRequest;
-  pin?: string;
-  disableAutoPinRequest?: boolean;
 };
 
 export type SendTxRequest = {
@@ -37,13 +35,11 @@ export type SignMessageRequest = {
   accountIndex: number;
   msg: string | Uint8Array;
   standardMode?: boolean;
-  pin?: string;
 };
 
 export type SignTypedDataRequest = {
   accountIndex: number;
   typedData: any;
-  pin?: string;
   version?: SignTypedDataVersion;
 };
 
@@ -192,16 +188,16 @@ export abstract class WalletBase extends EventEmitter<Events> {
     MetamaskDAppsHub.removeAccount(account.address);
   }
 
-  async signTx({ accountIndex, tx, pin }: SignTxRequest) {
+  async signTx(args: SignTxRequest & AuthOptions) {
     try {
-      const txHex = await (await this.openWallet({ accountIndex, pin }))?.signTransaction(tx);
+      const txHex = await (await this.openWallet(args))?.signTransaction(args.tx);
       return { txHex };
     } catch (error: any) {
       return { error: error.message };
     }
   }
 
-  async signMessage(request: SignMessageRequest) {
+  async signMessage(request: SignMessageRequest & AuthOptions) {
     try {
       if (utils.isBytes(request.msg) && !request.standardMode) {
         showMessage({ message: 'DANGEROUS: Wallet 3 rejects signing this data.', type: 'danger' });
@@ -218,7 +214,7 @@ export abstract class WalletBase extends EventEmitter<Events> {
     }
   }
 
-  async signTypedData(request: SignTypedDataRequest) {
+  async signTypedData(request: SignTypedDataRequest & AuthOptions) {
     try {
       const key = await this.unlockPrivateKey(request);
       if (!key) return undefined;
@@ -257,13 +253,14 @@ export abstract class WalletBase extends EventEmitter<Events> {
   abstract getSecret(pin?: string): Promise<string | undefined>;
   abstract dispose(): void;
 
-  protected abstract unlockPrivateKey(args: {
-    pin?: string;
-    accountIndex?: number;
-    subPath?: string;
-  }): Promise<string | undefined>;
+  protected abstract unlockPrivateKey(
+    args: {
+      accountIndex?: number;
+      subPath?: string;
+    } & AuthOptions
+  ): Promise<string | undefined>;
 
-  private async openWallet(args: { pin?: string; accountIndex: number; subPath?: string }) {
+  private async openWallet(args: { accountIndex: number; subPath?: string } & AuthOptions) {
     const key = await this.unlockPrivateKey(args);
     if (!key) return undefined;
 

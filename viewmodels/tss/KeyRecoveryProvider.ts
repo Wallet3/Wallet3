@@ -31,8 +31,9 @@ export class KeyRecoveryProvider extends TCPClient {
   send = async (pin?: string) => {
     try {
       const [bip32Secret, rootSecret] =
-        ((await Authentication.decryptForever([this.key.secrets.bip32Shard, this.key.secrets.rootShard], pin)) as string[]) ??
-        [];
+        ((await Authentication.decryptForever([this.key.secrets.bip32Shard, this.key.secrets.rootShard], {
+          pin,
+        })) as string[]) ?? [];
 
       if (!bip32Secret || !rootSecret) return false;
 

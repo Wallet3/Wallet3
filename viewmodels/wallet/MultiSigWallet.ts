@@ -122,7 +122,7 @@ export class MultiSigWallet extends WalletBase {
       const { bip32XprvKey } = this.key.cachedSecrets || {};
 
       if (!disableCache && bip32XprvKey) {
-        const xprivkey = (await Authentication.decrypt(bip32XprvKey, pin))!;
+        const xprivkey = (await Authentication.decrypt(bip32XprvKey, { pin }))!;
         const bip32 = utils.HDNode.fromExtendedKey(xprivkey);
         const account = bip32.derivePath(`${subPath ?? ''}${accountIndex ?? 0}`);
         return account.privateKey;
@@ -157,7 +157,7 @@ export class MultiSigWallet extends WalletBase {
           params.rootShard ? this.key.secrets.rootShard : undefined,
           this.key.secrets.verifySignKey,
         ],
-        pin
+        { pin }
       )) || [];
 
     if (!verifyPrivKey) return;

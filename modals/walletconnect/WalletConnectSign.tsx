@@ -76,8 +76,14 @@ export default observer(({ request, client, close }: Props) => {
     }
 
     const signed = typedData
-      ? await wallet.signTypedData({ typedData, pin, accountIndex, version: SignTypedDataVersion.V4 })
-      : await wallet.signMessage({ msg: msg!, pin, accountIndex, standardMode });
+      ? await wallet.signTypedData({
+          typedData,
+          pin,
+          accountIndex,
+          version: SignTypedDataVersion.V4,
+          disableAutoPinRequest: true,
+        })
+      : await wallet.signMessage({ msg: msg!, pin, accountIndex, standardMode, disableAutoPinRequest: true });
 
     if (signed) {
       client.approveRequest(request.id, signed);

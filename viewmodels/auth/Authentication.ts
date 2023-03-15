@@ -30,6 +30,11 @@ const Keys = {
 
 export type BioType = 'faceid' | 'fingerprint' | 'iris';
 
+export type AuthOptions = {
+  pin?: string;
+  disableAutoPinRequest?: boolean;
+};
+
 interface Events {
   appAuthorized: () => void;
 }
@@ -126,14 +131,11 @@ export class Authentication extends EventEmitter<Events> {
     pin,
     options,
     disableAutoPinRequest,
-  }: { pin?: string; options?: LocalAuthenticationOptions; disableAutoPinRequest?: boolean } = {}): Promise<boolean> => {
-    const requestPin = async () => {
-      console.log('request gui pin');
-      return await openGlobalPasspad({ closeOnOverlayTap: true, onPinEntered: this.verifyPin });
-    };
-
+  }: { options?: LocalAuthenticationOptions } & AuthOptions = {}): Promise<boolean> => {
     if (pin) return await this.verifyPin(pin);
-    
+
+    const requestPin = async () => await openGlobalPasspad({ closeOnOverlayTap: true, onPinEntered: this.verifyPin });
+
     if (!this.biometricSupported) {
       return disableAutoPinRequest ? false : await requestPin();
     }
@@ -212,8 +214,8 @@ export class Authentication extends EventEmitter<Events> {
     return encrypt(data, await this.getMasterKey());
   };
 
-  decrypt = async <T = string | string[]>(data: T, pin?: string): Promise<T | undefined> => {
-    if (!(await this.authenticate({ pin }))) return undefined;
+  decrypt = async <T = string | string[]>(data: T, authOptions?: AuthOptions): Promise<T | undefined> => {
+    if (!(await this.authenticate(authOptions))) return undefined;
 
     const masterKey = await this.getMasterKey();
 
@@ -228,8 +230,8 @@ export class Authentication extends EventEmitter<Events> {
     return encrypt(data, await this.getForeverKey());
   };
 
-  decryptForever = async <T = string | string[]>(data: T, pin?: string): Promise<T | undefined> => {
-    if (!(await this.authenticate({ pin }))) return undefined;
+  decryptForever = async <T = string | string[]>(data: T, authOptions?: AuthOptions): Promise<T | undefined> => {
+    if (!(await this.authenticate(authOptions))) return undefined;
 
     const foreverKey = await this.getForeverKey();
 

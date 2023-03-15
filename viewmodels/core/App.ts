@@ -174,6 +174,7 @@ export class AppVM {
     const { txHex, error } = await wallet.signTx({
       ...opts,
       accountIndex: accountIndex!,
+      disableAutoPinRequest: true,
     });
 
     if (!txHex || error) {

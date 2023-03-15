@@ -270,8 +270,8 @@ export class InpageDAppController extends EventEmitter {
       const approve = async ({ pin, standardMode }: { pin?: string; standardMode?: boolean } = {}) => {
         const signed =
           type === 'typedData'
-            ? await wallet.signTypedData({ typedData, pin, accountIndex, version: typedVersion })
-            : await wallet.signMessage({ msg: msg!, pin, accountIndex, standardMode });
+            ? await wallet.signTypedData({ typedData, pin, accountIndex, version: typedVersion, disableAutoPinRequest: true })
+            : await wallet.signMessage({ msg: msg!, pin, accountIndex, standardMode, disableAutoPinRequest: true });
 
         if (signed) resolve(signed);
 
