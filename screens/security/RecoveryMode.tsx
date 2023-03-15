@@ -1,10 +1,12 @@
 import * as SecureStore from 'expo-secure-store';
 
 import React, { useEffect, useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import Authentication from '../../viewmodels/auth/Authentication';
 import CopyableText from '../../components/CopyableText';
 import Database from '../../models/Database';
+import IllustrationBug from '../../assets/illustrations/misc/bug.svg';
 import { SafeViewContainer } from '../../components';
 import { appEncryptKey } from '../../configs/secret';
 import { decrypt } from '../../utils/cipher';
@@ -17,6 +19,8 @@ export default () => {
 
   useEffect(() => {
     Database.keys.find().then(async (keys) => {
+      if (!(await Authentication.authenticate({ disableAutoPinRequest: true }))) return;
+
       const masterKey = `${await SecureStore.getItemAsync('masterKey')}_${appEncryptKey}`;
       if (!masterKey || keys.length === 0) return;
 
@@ -35,13 +39,17 @@ export default () => {
   }, []);
 
   return (
-    <SafeViewContainer style={{ flex: 1, backgroundColor: 'yellow', paddingTop: top }}>
-      <Text style={{ color: warningColor, fontWeight: '700', textTransform: 'uppercase' }}>
+    <SafeViewContainer style={{ flex: 1, backgroundColor: '#fff', paddingTop: top }}>
+      <IllustrationBug width={150} height={150} style={{ alignSelf: 'center', marginBottom: 24 }} />
+
+      <Text style={styles.txt}>
         Sorry, Wallet 3 can't be initialized. To ensure the security of your encrypted assets, please manually backup your
         private keys.
       </Text>
 
-      <ScrollView style={{ marginTop: 24 }} contentContainerStyle={{ paddingBottom: bottom }}>
+      <Text style={styles.txt}>Please enable biometric authentication.</Text>
+
+      <ScrollView contentContainerStyle={{ paddingBottom: bottom }}>
         {keys.map((key, index) => {
           return (
             <View key={key} style={{ marginBottom: 24 }}>
@@ -51,16 +59,25 @@ export default () => {
                 txtStyle={{ color: warningColor, fontWeight: '600' }}
                 txtLines={10}
                 iconColor={warningColor}
-                iconSize={12}
+                iconSize={11}
               />
             </View>
           );
         })}
 
-        <Text style={{ color: warningColor, fontWeight: '700', textTransform: 'uppercase' }}>
-          After backing up your private keys, Please uninstall and reinstall Wallet 3.
-        </Text>
+        {keys.length > 0 && (
+          <Text style={styles.txt}>After backing up your private keys, Please uninstall and reinstall Wallet 3.</Text>
+        )}
       </ScrollView>
     </SafeViewContainer>
   );
 };
+
+const styles = StyleSheet.create({
+  txt: {
+    color: '#6186ff',
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    marginBottom: 24,
+  },
+});

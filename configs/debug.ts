@@ -1,5 +1,4 @@
 import { LogBox } from 'react-native';
-import { eth_call_return } from '../common/RPC';
 
 LogBox.ignoreLogs([
   'ReactNativeFiberHostComponent: Calling getNode() on the ref of an Animated component is no longer necessary. You can now directly use the ref instead. This method will be removed in a future release.',
@@ -18,5 +17,4 @@ LogBox.ignoreLogs([
 ]);
 
 if (__DEV__) {
-  
 }
