@@ -168,7 +168,7 @@
   "profile-my-qrcode": "",
   "modal-multi-accounts-title": "Accounts",
   "modal-multi-accounts-remove-account-desc": "Are you sure to remove this account?\n{{addr}}",
-  "modal-multi-accounts-button-create-account": "Create a account",
+  "modal-multi-accounts-button-create-account": "Create an account",
   "modal-multi-accounts-button-super-account": "a super account",
   "modal-multi-accounts-button-import-account": "Import an existing wallet",
   "modal-accounts-selector-title": "Select an account",
