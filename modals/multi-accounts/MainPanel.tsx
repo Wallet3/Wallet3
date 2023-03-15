@@ -1,25 +1,20 @@
-import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
-import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { FlatList, ListRenderItemInfo, NativeSyntheticEvent, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, ListRenderItemInfo, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useRef } from 'react';
 import { SafeViewContainer, Separator } from '../../components';
 
+import { AccountBase } from '../../viewmodels/account/AccountBase';
 import AccountItem from './AccountItem';
 import App from '../../viewmodels/core/App';
-import CachedImage from 'react-native-fast-image';
-import { EOA } from '../../viewmodels/account/EOA';
 import Networks from '../../viewmodels/core/Networks';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import rootStyles from '../styles';
 import { secondaryFontColor } from '../../constants/styles';
-import { utils } from 'ethers';
 
 interface Props {
-  onRemoveAccount?: (account: EOA) => void;
-  onEditAccount?: (account: EOA) => void;
+  onRemoveAccount?: (account: AccountBase) => void;
+  onEditAccount?: (account: AccountBase) => void;
   onImportWallet?: () => void;
   onDone?: () => void;
 }
@@ -30,7 +25,7 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDon
   const list = useRef<FlatList>(null);
   const { borderColor, textColor, backgroundColor } = Theme;
 
-  const renderAccount = ({ item }: ListRenderItemInfo<EOA>) => (
+  const renderAccount = ({ item }: ListRenderItemInfo<AccountBase>) => (
     <AccountItem
       account={item}
       textColor={textColor}

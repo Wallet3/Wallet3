@@ -16,8 +16,8 @@ import EtherscanHub, { DecodedFunc } from '../hubs/EtherscanHub';
 import { PreExecResult, preExecTx } from '../../common/apis/Debank';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
+import { AccountBase } from '../account/AccountBase';
 import { BaseTransaction } from './BaseTransaction';
-import { EOA } from '../account/EOA';
 import { ERC1155Token } from '../../models/ERC1155';
 import { ERC20Token } from '../../models/ERC20';
 import { ERC721Token } from '../../models/ERC721';
@@ -36,7 +36,7 @@ export interface SpeedupAbleSendParams extends WCCallRequest_eth_sendTransaction
 
 interface IConstructor {
   network: INetwork;
-  account: EOA;
+  account: AccountBase;
   param: SpeedupAbleSendParams;
 }
 

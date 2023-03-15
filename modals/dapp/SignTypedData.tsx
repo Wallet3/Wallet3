@@ -3,11 +3,11 @@ import React, { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import eip2612, { EIP2612, EIP2612Mock } from '../../eips/eip2612';
 
+import { AccountBase } from '../../viewmodels/account/AccountBase';
 import AccountIndicator from '../components/AccountIndicator';
 import { BioType } from '../../viewmodels/auth/Authentication';
 import Collapsible from 'react-native-collapsible';
 import EIP2612Permit from '../eips/EIP2612Permit';
-import { EOA } from '../../viewmodels/account/EOA';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';
 import { PageMetadata } from '../../screens/browser/Web3View';
 import RejectApproveButtons from '../components/RejectApproveButtons';
@@ -24,7 +24,7 @@ interface Props {
   data: any;
   onReject: () => void;
   onSign: () => Promise<void>;
-  account?: EOA;
+  account?: AccountBase;
   bioType?: BioType;
   metadata?: PageMetadata;
 }

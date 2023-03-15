@@ -4,11 +4,11 @@ import * as ExpoLinking from 'expo-linking';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useRef, useState } from 'react';
 
+import { AccountBase } from '../../viewmodels/account/AccountBase';
 import Avatar from '../../components/Avatar';
 import { BlankPNG } from '../../common/Constants';
 import CachedImage from 'react-native-fast-image';
 import CopyableText from '../../components/CopyableText';
-import { EOA } from '../../viewmodels/account/EOA';
 import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/core/Networks';
 import QRCode from 'react-native-qrcode-svg';
@@ -21,7 +21,7 @@ import { observer } from 'mobx-react-lite';
 import { openInappBrowser } from '../../modals/app/InappBrowser';
 import { setStringAsync } from 'expo-clipboard';
 
-export default observer(({ account }: { account?: EOA }) => {
+export default observer(({ account }: { account?: AccountBase }) => {
   const { t } = i18n;
   const { backgroundColor, thirdTextColor } = Theme;
   const { current } = Networks;

@@ -1,9 +1,9 @@
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
 import { NativeSyntheticEvent, Text, TouchableOpacity, View } from 'react-native';
 
+import { AccountBase } from '../../viewmodels/account/AccountBase';
 import App from '../../viewmodels/core/App';
 import Avatar from '../../components/Avatar';
-import { EOA } from '../../viewmodels/account/EOA';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import i18n from '../../i18n';
@@ -12,11 +12,11 @@ import { secondaryFontColor } from '../../constants/styles';
 import { utils } from 'ethers';
 
 interface Props {
-  account: EOA;
+  account: AccountBase;
   themeColor: string;
-  onPress?: (item: EOA) => void;
-  onEdit?: (item: EOA) => void;
-  onRemove?: (item: EOA) => void;
+  onPress?: (item: AccountBase) => void;
+  onEdit?: (item: AccountBase) => void;
+  onRemove?: (item: AccountBase) => void;
   textColor: string;
   previewBackgroundColor: string;
 }

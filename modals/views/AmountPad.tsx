@@ -4,9 +4,9 @@ import React, { useEffect, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { numericFontFamily, secondaryFontColor } from '../../constants/styles';
 
+import { AccountBase } from '../../viewmodels/account/AccountBase';
 import Avatar from '../../components/Avatar';
 import BackButton from '../components/BackButton';
-import { EOA } from '../../viewmodels/account/EOA';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -35,7 +35,7 @@ interface SubViewProps {
   themeColor?: string;
   initValue?: string;
   network: INetwork;
-  account?: EOA;
+  account?: AccountBase;
 }
 
 export default observer((props: SubViewProps) => {
@@ -46,7 +46,7 @@ export default observer((props: SubViewProps) => {
   const onNumPress = (num: string) => {
     if (num === '.') {
       if (amount.includes('.')) return;
-      setAmount((pre) => pre + '.');
+      setAmount((pre) => `${pre}.`);
       return;
     }
 

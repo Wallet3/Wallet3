@@ -1,9 +1,11 @@
 import * as ethSignUtil from '@metamask/eth-sig-util';
 
 import { Wallet as EthersWallet, providers, utils } from 'ethers';
+import { PaymasterAPI, SimpleAccountAPI } from '@account-abstraction/sdk';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { logEthSign, logSendTx } from '../services/Analytics';
 
+import { AccountBase } from '../account/AccountBase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Authentication from '../auth/Authentication';
 import { BaseEntity } from 'typeorm';
@@ -51,7 +53,10 @@ export function parseXpubkey(mixedKey: string) {
 
 export const WalletBaseKeys = {
   removedIndexes: (id: string | number) => `${id}-removed-indexes`,
-  addressCount: (id: string | number) => `${id}-address-count`,
+  removedERC4337Indexes: (walletId: string | number) => `${walletId}-removed-erc4337-indexes`,
+  addressCount: (walletId: string | number) => `${walletId}-address-count`,
+  erc4437Count: (walletId: string | number) => `${walletId}-erc4437-count`,
+  erc4437Accounts: (walletId: string | number) => `${walletId}-erc4437-accounts`,
 };
 
 interface Events {}
@@ -62,7 +67,7 @@ export abstract class WalletBase extends EventEmitter<Events> {
   abstract isHDWallet: boolean;
   abstract isMultiSig: boolean;
 
-  accounts: EOA[] = [];
+  accounts: AccountBase[] = [];
 
   signInPlatform: 'apple' | 'google' | undefined;
   signInUser: string | undefined;
@@ -89,14 +94,14 @@ export abstract class WalletBase extends EventEmitter<Events> {
 
   constructor() {
     super();
-    makeObservable(this, { accounts: observable, newAccount: action, removeAccount: action });
+    makeObservable(this, { accounts: observable, newEOA: action, removeAccount: action });
   }
 
   async init() {
     this.removedAccountIndexes = JSON.parse((await AsyncStorage.getItem(WalletBaseKeys.removedIndexes(this.key.id))) || '[]');
 
     const count = Number((await AsyncStorage.getItem(WalletBaseKeys.addressCount(this.key.id))) || 1);
-    const accounts: EOA[] = [];
+    const accounts: AccountBase[] = [];
 
     if (this.isHDWallet) {
       const bip32 = utils.HDNode.fromExtendedKey(parseXpubkey(this.key.bip32Xpubkey));
@@ -124,7 +129,7 @@ export abstract class WalletBase extends EventEmitter<Events> {
     );
   }
 
-  newAccount(): EOA | undefined {
+  newEOA(): EOA | undefined {
     if (!this.isHDWallet) return;
 
     const bip32 = utils.HDNode.fromExtendedKey(parseXpubkey(this.key.bip32Xpubkey));
@@ -143,7 +148,11 @@ export abstract class WalletBase extends EventEmitter<Events> {
     return account;
   }
 
-  async removeAccount(account: EOA) {
+  newERC4337Account() {
+    if (!this.isHDWallet && this.accounts.find((a) => a.type === 'erc4337')) return;
+  }
+
+  async removeAccount(account: AccountBase) {
     const index = this.accounts.findIndex((a) => a.address === account.address);
     if (index === -1) return;
 

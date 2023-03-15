@@ -1,10 +1,10 @@
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
-import { Switch, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
+import { AccountBase } from '../../viewmodels/account/AccountBase';
 import AccountIndicator from '../components/AccountIndicator';
 import { BioType } from '../../viewmodels/auth/Authentication';
-import { EOA } from '../../viewmodels/account/EOA';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';
 import { PageMetadata } from '../../screens/browser/Web3View';
 import { ParsedMessage } from '../../eips/eip4361/siwe_plain';
@@ -24,7 +24,7 @@ interface Props {
   themeColor: string;
   onReject?: () => void;
   onSign?: () => Promise<void>;
-  account?: EOA;
+  account?: AccountBase;
   bioType?: BioType;
   onStandardModeChanged?: (on: boolean) => void;
   standardMode?: boolean;

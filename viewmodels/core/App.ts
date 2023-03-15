@@ -2,6 +2,7 @@ import { WalletBase, parseXpubkey } from '../wallet/WalletBase';
 import { action, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
 import { providers, utils } from 'ethers';
 
+import { AccountBase } from '../account/AccountBase';
 import { AppState } from 'react-native';
 import AppStoreReview from '../services/AppStoreReview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,7 +10,6 @@ import Authentication from '../auth/Authentication';
 import Bookmarks from '../customs/Bookmarks';
 import Contacts from '../customs/Contacts';
 import Database from '../../models/Database';
-import { EOA } from '../account/EOA';
 import GasPrice from '../misc/GasPrice';
 import Key from '../../models/entities/Key';
 import KeyRecoveryWatcher from '../tss/management/KeyRecoveryDiscovery';
@@ -41,7 +41,7 @@ export class AppVM {
 
   initialized = false;
   wallets: WalletBase[] = [];
-  currentAccount: EOA | null = null;
+  currentAccount: AccountBase | null = null;
 
   get hasWalletSet() {
     return this.wallets.length > 0 && Authentication.pinSet;
@@ -198,13 +198,13 @@ export class AppVM {
 
   newAccount() {
     let { wallet } = this.findWallet(this.currentAccount!.address) || {};
-    let account: EOA | undefined;
+    let account: AccountBase | undefined;
 
     if (wallet?.isHDWallet) {
-      account = wallet.newAccount();
+      account = wallet.newEOA();
     } else {
       wallet = this.wallets.find((w) => w.isHDWallet);
-      account = wallet?.newAccount();
+      account = wallet?.newEOA();
     }
 
     if (!account) {
@@ -246,7 +246,7 @@ export class AppVM {
     this.refreshTimer = setTimeout(() => this.refreshAccount(), 12 * 1000);
   }
 
-  async removeAccount(account: EOA) {
+  async removeAccount(account: AccountBase) {
     if (this.allAccounts.length === 1) return;
 
     const isCurrentAccount = account.address === this.currentAccount?.address;

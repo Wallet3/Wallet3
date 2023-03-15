@@ -19,11 +19,11 @@ import {
 } from '../../common/RPC';
 import { isDomain, resolveDomain } from '../services/DomainResolver';
 
+import { AccountBase } from '../account/AccountBase';
 import AddressTag from '../../models/entities/AddressTag';
 import App from '../core/App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Coingecko from '../../common/apis/Coingecko';
-import { EOA } from '../account/EOA';
 import { ERC20Token } from '../../models/ERC20';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
@@ -38,7 +38,7 @@ export class BaseTransaction {
   private timer?: NodeJS.Timer;
 
   readonly network: INetwork;
-  readonly account: EOA;
+  readonly account: AccountBase;
   readonly wallet: WalletBase;
   readonly nativeToken: NativeToken;
 
@@ -60,7 +60,7 @@ export class BaseTransaction {
   initializing = false;
   feeToken: ERC20Token | null = null;
 
-  constructor(args: { network: INetwork; account: EOA }, initChainData = true) {
+  constructor(args: { network: INetwork; account: AccountBase }, initChainData = true) {
     this.network = args.network;
     this.account = args.account;
     this.wallet = App.findWallet(this.account.address)!.wallet;
