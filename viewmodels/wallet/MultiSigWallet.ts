@@ -115,8 +115,8 @@ export class MultiSigWallet extends WalletBase {
     return undefined;
   }
 
-  protected async unlockPrivateKey(args: { pin?: string; accountIndex?: number; disableCache?: boolean }) {
-    const { pin, accountIndex, disableCache } = args;
+  protected async unlockPrivateKey(args: { pin?: string; accountIndex?: number; disableCache?: boolean; subPath?: string }) {
+    const { pin, accountIndex, disableCache, subPath } = args;
 
     try {
       const { bip32XprvKey } = this.key.cachedSecrets || {};
@@ -124,7 +124,7 @@ export class MultiSigWallet extends WalletBase {
       if (!disableCache && bip32XprvKey) {
         const xprivkey = (await Authentication.decrypt(bip32XprvKey, pin))!;
         const bip32 = utils.HDNode.fromExtendedKey(xprivkey);
-        const account = bip32.derivePath(`${accountIndex ?? 0}`);
+        const account = bip32.derivePath(`${subPath ?? ''}${accountIndex ?? 0}`);
         return account.privateKey;
       }
 
@@ -144,7 +144,7 @@ export class MultiSigWallet extends WalletBase {
       if (!xprv) return;
 
       const bip32 = utils.HDNode.fromExtendedKey(xprv);
-      const account = bip32.derivePath(`${accountIndex ?? 0}`);
+      const account = bip32.derivePath(`${subPath ?? ''}${accountIndex ?? 0}`);
       return account.privateKey;
     } catch (error) {}
   }

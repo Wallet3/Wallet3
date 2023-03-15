@@ -62,7 +62,8 @@ export const WalletBaseKeys = {
 interface Events {}
 
 export abstract class WalletBase extends EventEmitter<Events> {
-  protected removedAccountIndexes: number[] = [];
+  protected removedEOAIndexes: number[] = [];
+  protected removedERC4337Indexes: number[] = [];
 
   abstract isHDWallet: boolean;
   abstract isMultiSig: boolean;
@@ -98,7 +99,12 @@ export abstract class WalletBase extends EventEmitter<Events> {
   }
 
   async init() {
-    this.removedAccountIndexes = JSON.parse((await AsyncStorage.getItem(WalletBaseKeys.removedIndexes(this.key.id))) || '[]');
+    [this.removedEOAIndexes, this.removedERC4337Indexes] = (
+      await Promise.all([
+        AsyncStorage.getItem(WalletBaseKeys.removedIndexes(this.key.id)),
+        AsyncStorage.getItem(WalletBaseKeys.removedERC4337Indexes(this.key.id)),
+      ])
+    ).map((v) => JSON.parse(v || '[]'));
 
     const count = Number((await AsyncStorage.getItem(WalletBaseKeys.addressCount(this.key.id))) || 1);
     const accounts: AccountBase[] = [];
@@ -107,7 +113,7 @@ export abstract class WalletBase extends EventEmitter<Events> {
       const bip32 = utils.HDNode.fromExtendedKey(parseXpubkey(this.key.bip32Xpubkey));
 
       for (let i = this.key.basePathIndex; i < this.key.basePathIndex + count; i++) {
-        if (this.removedAccountIndexes.includes(i)) continue;
+        if (this.removedEOAIndexes.includes(i)) continue;
 
         const accountNode = bip32.derivePath(`${i}`);
         accounts.push(new EOA(accountNode.address, i, { signInPlatform: this.signInPlatform }));
@@ -133,10 +139,12 @@ export abstract class WalletBase extends EventEmitter<Events> {
     if (!this.isHDWallet) return;
 
     const bip32 = utils.HDNode.fromExtendedKey(parseXpubkey(this.key.bip32Xpubkey));
+    const eoas = this.accounts.filter((a) => a.type === 'eoa');
+
     const index =
       Math.max(
-        this.accounts[this.accounts.length - 1].index,
-        this.removedAccountIndexes.length > 0 ? LINQ.from(this.removedAccountIndexes).max() : 0
+        eoas.length > 0 ? LINQ.from(eoas).max((a) => a.index) : 0,
+        this.removedEOAIndexes.length > 0 ? LINQ.from(this.removedEOAIndexes).max() : 0
       ) + 1;
 
     const node = bip32.derivePath(`${index}`);
@@ -150,19 +158,34 @@ export abstract class WalletBase extends EventEmitter<Events> {
 
   newERC4337Account() {
     if (!this.isHDWallet && this.accounts.find((a) => a.type === 'erc4337')) return;
+
+    let privateKey: string | undefined;
+    const subPath = `4337'/`;
+
+    const erc4337s = this.accounts.filter((a) => a.type === 'erc4337');
+    const index =
+      Math.max(
+        erc4337s.length > 0 ? LINQ.from(erc4337s).max((a) => a.index) : 0,
+        this.removedERC4337Indexes.length > 0 ? LINQ.from(this.removedERC4337Indexes).max() : 0
+      ) + 1;
+
+    const auth = async (pin?: string) => {
+      privateKey = await this.unlockPrivateKey(this.isHDWallet ? { subPath, pin, accountIndex: index } : { pin });
+      return privateKey ? true : false;
+    };
   }
 
   async removeAccount(account: AccountBase) {
     const index = this.accounts.findIndex((a) => a.address === account.address);
     if (index === -1) return;
 
-    this.removedAccountIndexes.push(account.index);
+    this.removedEOAIndexes.push(account.index);
     this.accounts.splice(index, 1);
 
     const storeKey = WalletBaseKeys.removedIndexes(this.key.id);
 
     if (this.accounts.length > 0) {
-      await AsyncStorage.setItem(storeKey, JSON.stringify(this.removedAccountIndexes));
+      await AsyncStorage.setItem(storeKey, JSON.stringify(this.removedEOAIndexes));
     }
 
     MetamaskDAppsHub.removeAccount(account.address);
@@ -233,9 +256,13 @@ export abstract class WalletBase extends EventEmitter<Events> {
   abstract getSecret(pin?: string): Promise<string | undefined>;
   abstract dispose(): void;
 
-  protected abstract unlockPrivateKey(args: { pin?: string; accountIndex?: number }): Promise<string | undefined>;
+  protected abstract unlockPrivateKey(args: {
+    pin?: string;
+    accountIndex?: number;
+    subPath?: string;
+  }): Promise<string | undefined>;
 
-  private async openWallet(args: { pin?: string; accountIndex: number }) {
+  private async openWallet(args: { pin?: string; accountIndex: number; subPath?: string }) {
     const key = await this.unlockPrivateKey(args);
     if (!key) return undefined;
 

@@ -26,17 +26,16 @@ export class SingleSigWallet extends WalletBase {
     this.isHDWallet = components[components.length - 1].startsWith('xpub');
     super.signInPlatform = components.length > 1 ? (components[0] as any) : undefined;
     this.signInUser = components.length > 1 ? components[1] : undefined;
-
   }
 
-  protected async unlockPrivateKey({ pin, accountIndex }: { pin?: string; accountIndex?: number }) {
+  protected async unlockPrivateKey({ pin, accountIndex, subPath }: { pin?: string; accountIndex?: number; subPath?: string }) {
     try {
       if (this.isHDWallet) {
         const xprivkey = await Authentication.decrypt(this._key.bip32Xprivkey, pin);
         if (!xprivkey) return undefined;
 
         const bip32 = utils.HDNode.fromExtendedKey(xprivkey);
-        const account = bip32.derivePath(`${accountIndex ?? 0}`);
+        const account = bip32.derivePath(`${subPath ?? ''}${accountIndex ?? 0}`);
         return account.privateKey;
       } else {
         const privkey = await Authentication.decrypt(this._key.secret, pin);

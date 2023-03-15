@@ -1,6 +1,5 @@
 import { DAY, SECOND } from '../../../utils/time';
 
-import { AsyncLocalStorage } from 'async_hooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MultiSigKey from '../../../models/entities/MultiSigKey';
 import { MultiSigWallet } from '../../wallet/MultiSigWallet';
@@ -23,7 +22,7 @@ class KeySecurity {
   async checkInactiveDevices(wallet?: WalletBase) {
     if (!wallet?.isMultiSig) return;
 
-    const expired = Date.now() - (__DEV__ ? 10 * SECOND : this.inactiveDAYS);
+    const expired = Date.now() - (__DEV__ ? 10 * DAY : this.inactiveDAYS);
     const inactiveDevices = (wallet as MultiSigWallet).key.secretsInfo.devices.filter((i) => i.lastUsedAt < expired);
     if (inactiveDevices.length === 0) return;
 

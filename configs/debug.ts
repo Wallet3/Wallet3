@@ -18,7 +18,5 @@ LogBox.ignoreLogs([
 ]);
 
 if (__DEV__) {
-  (async () => {
-    console.log(await eth_call_return(5, { data: '0xb0d691fe', to: '0x39E94A577A8CaCF7A1B9653F5ca2F67656F6497e' }));
-  })();
+  
 }
