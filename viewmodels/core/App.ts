@@ -33,6 +33,10 @@ import { logAppReset } from '../services/Analytics';
 import { showMessage } from 'react-native-flash-message';
 import { tipWalletUpgrade } from '../misc/MultiSigUpgradeTip';
 
+const Keys = {
+  lastUsedAccount: 'lastUsedAccount',
+};
+
 export class AppVM {
   private lastRefreshedTime = 0;
   private refreshTimer!: NodeJS.Timer;
@@ -98,8 +102,8 @@ export class AppVM {
   }
 
   async init() {
-    await Promise.all([Database.init(), Authentication.init()]);
-    await Promise.all([Networks.init()]);
+    await Promise.all([Database.init(), Authentication.init().catch()]);
+    const [_, lastUsedAccount] = await Promise.all([Networks.init().catch(), AsyncStorage.getItem(Keys.lastUsedAccount)]);
 
     const wallets: WalletBase[] = LINQ.from(
       await Promise.all(
@@ -113,8 +117,11 @@ export class AppVM {
       .distinct((w) => `${w.keyInfo.bip32Xpubkey}_${w.keyInfo.basePath}_${w.keyInfo.basePathIndex}`)
       .toArray();
 
-    const lastUsedAccount = (await AsyncStorage.getItem('lastUsedAccount')) ?? '';
-    if (utils.isAddress(lastUsedAccount)) fetchChainsOverview(lastUsedAccount);
+    await runInAction(async () => {
+      this.wallets = wallets;
+      this.switchAccount(lastUsedAccount || '', true);
+      this.initialized = true;
+    });
 
     Authentication.once('appAuthorized', () => {
       WalletConnectHub.init();
@@ -124,19 +131,14 @@ export class AppVM {
 
       TxHub.init().then(() => AppStoreReview.check());
 
-      setTimeout(() => PairedDevices.hasDevices && PairedDevices.scanLan(), 1000);
+      setTimeout(() => PairedDevices.scanLan(), 1000);
       Authentication.on('appAuthorized', () => setTimeout(() => PairedDevices.scanLan(), 1000));
 
       tipWalletUpgrade(this.currentWallet);
     });
 
-    await runInAction(async () => {
-      this.wallets = wallets;
-      this.switchAccount(lastUsedAccount, true);
-      this.initialized = true;
-    });
-
-    PairedDevices.init().then(() => !this.hasWalletSet && KeyRecoveryWatcher.scanLan());
+    await PairedDevices.init().then(() => !this.hasWalletSet && KeyRecoveryWatcher.scanLan());
+    lastUsedAccount && utils.isAddress(lastUsedAccount) && fetchChainsOverview(lastUsedAccount);
   }
 
   async addWallet(key: Key | MultiSigKey) {
@@ -232,7 +234,7 @@ export class AppVM {
 
     clearTimeout(this.refreshTimer);
     this.refreshTimer = setTimeout(() => this.refreshAccount(), 1000 * 20);
-    AsyncStorage.setItem('lastUsedAccount', target.address);
+    AsyncStorage.setItem(Keys.lastUsedAccount, target.address);
   }
 
   async refreshAccount() {

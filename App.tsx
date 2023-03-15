@@ -5,6 +5,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import AppViewModel, { AppVM } from './viewmodels/core/App';
 import AuthViewModel, { Authentication } from './viewmodels/auth/Authentication';
 import Modals, { FullScreenQRScanner, GlobalPasspadModal, LockScreen } from './screens/Modalize';
+import React, { useEffect, useState } from 'react';
 import { TouchableOpacity, UIManager } from 'react-native';
 
 import { About } from './screens/settings/About';
@@ -21,7 +22,6 @@ import Languages from './screens/settings/Languages';
 import NFTDetails from './screens/nfts/Details';
 import { NavigationContainer } from '@react-navigation/native';
 import ProfileScreen from './screens/profile';
-import React from 'react';
 import Root from './screens/Root';
 import { StatusBar } from 'expo-status-bar';
 import Theme from './viewmodels/settings/Theme';
@@ -35,8 +35,6 @@ import { logScreenView } from './viewmodels/services/Analytics';
 import { observer } from 'mobx-react-lite';
 
 SplashScreen.hideAsync();
-AppViewModel.init();
-
 UIManager.setLayoutAnimationEnabledExperimental?.(true);
 
 const StackRoot = createNativeStackNavigator();
@@ -45,8 +43,13 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
   const { Navigator, Screen } = StackRoot;
   const { t } = i18n;
   const { backgroundColor, foregroundColor, statusBarStyle } = Theme;
+  const [recoveryMode, setRecoveryMode] = useState(false);
   const routeNameRef = React.useRef();
   const navigationRef = React.useRef();
+
+  useEffect(() => {
+    AppViewModel.init().catch(() => setRecoveryMode(true));
+  }, []);
 
   return (
     <NavigationContainer

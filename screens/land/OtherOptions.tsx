@@ -14,6 +14,7 @@ import { FadeInDownView } from '../../components/animations';
 import { G } from '../../assets/3rd';
 import IllustrationVault from '../../assets/illustrations/misc/vault.svg';
 import { LandScreenStack } from '../navigations';
+import MnemonicOnce from '../../viewmodels/auth/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Platform } from 'react-native';
 import { SignInType } from '../../viewmodels/auth/SignInWithWeb2';
@@ -52,6 +53,8 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
   };
 
   useEffect(() => {
+    MnemonicOnce.clean();
+
     if (Platform.OS === 'ios') {
       SignInWithApple.init();
     }
