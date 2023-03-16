@@ -1,4 +1,4 @@
-import { computed, makeObservable, observable, runInAction } from 'mobx';
+import { makeObservable, observable, runInAction } from 'mobx';
 
 import { AccountBase } from './AccountBase';
 import AsyncStorage from '@react-native-async-storage/async-storage';

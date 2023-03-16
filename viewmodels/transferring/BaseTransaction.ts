@@ -1,6 +1,8 @@
-import { BigNumber, providers, utils } from 'ethers';
+import { BigNumber, ethers, providers, utils } from 'ethers';
 import {
   ERC4337EntryPoint,
+  ERC4337EntryPointAddress,
+  ERC4337SimpleFactoryAddress,
   EncodedERC1271ContractWalletCallData,
   EncodedERC4337EntryPoint,
   Gwei_1,
@@ -15,6 +17,7 @@ import {
   getGasPrice,
   getMaxPriorityFee,
   getNextBlockBaseFee,
+  getRPCUrls,
   getTransactionCount,
 } from '../../common/RPC';
 import { isDomain, resolveDomain } from '../services/DomainResolver';
@@ -25,9 +28,11 @@ import App from '../core/App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Coingecko from '../../common/apis/Coingecko';
 import { ERC20Token } from '../../models/ERC20';
+import { ERC4337Account } from '../account/ERC4337Account';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
 import { NativeToken } from '../../models/NativeToken';
+import { SimpleAccountAPI } from '@account-abstraction/sdk';
 import { WalletBase } from '../wallet/WalletBase';
 import { fetchAddressInfo } from '../services/EtherscanPublicTag';
 import { getEnsAvatar } from '../../common/ENS';
@@ -424,14 +429,25 @@ export class BaseTransaction {
     runInAction(() => (this.feeToken = feeToken));
   }
 
-  protected initERC4337ChainData() {}
+  sendRawTx(
+    args: { tx?: providers.TransactionRequest; txs?: providers.TransactionRequest[]; readableInfo?: any },
+    pin?: string
+  ) {
+    const { tx, readableInfo, txs } = args;
 
-  protected estimateERC4337Gas() {}
+    if (this.account.isEOA) {
+      if (!tx) return { success: false, error: 'No transaction' };
+      return this.sendEOATx({ tx, readableInfo }, pin);
+    }
 
-  async sendRawTx(args: { tx?: providers.TransactionRequest; readableInfo?: any }, pin?: string) {
+    if (this.account.isERC4337) {
+      if (!tx) return { success: false, error: 'No transaction' };
+      return this.sendERC4337Tx({ tx, txs, readableInfo });
+    }
+  }
+
+  protected async sendEOATx(args: { tx: providers.TransactionRequest; readableInfo?: any }, pin?: string) {
     const { tx, readableInfo } = args;
-
-    if (!tx) return { success: false, error: 'No transaction' };
 
     const { txHex, error } = await this.wallet.signTx({
       accountIndex: this.account.index,
@@ -452,5 +468,41 @@ export class BaseTransaction {
     });
 
     return { success: true, txHex, tx: utils.parseTransaction(txHex) };
+  }
+
+  protected async sendERC4337Tx(
+    args: { tx: providers.TransactionRequest; txs?: providers.TransactionRequest[]; readableInfo?: any },
+    pin?: string
+  ) {
+    const { tx: txRequest } = args;
+    const target = utils.getAddress(txRequest.to!);
+    const value = txRequest.value || BigNumber.from(0);
+
+    const owner = await this.wallet.openWallet({
+      accountIndex: this.account.index,
+      subPath: this.wallet.ERC4337SubPath,
+      disableAutoPinRequest: true,
+      pin,
+    });
+
+    if (!owner) return { success: false };
+
+    for (let url of getRPCUrls(this.network.chainId)) {
+      const provider = new ethers.providers.JsonRpcProvider(url);
+      const api = new SimpleAccountAPI({
+        provider,
+        owner,
+        entryPointAddress: ERC4337EntryPointAddress,
+        factoryAddress: ERC4337SimpleFactoryAddress,
+      });
+
+      const op = await api.createSignedUserOp({
+        target,
+        value,
+        data: (txRequest.data as string) || '0x',
+        maxFeePerGas: Number.parseInt(`${this.maxGasPrice * Gwei_1}`),
+        maxPriorityFeePerGas: Number.parseInt(`${this.maxPriorityPrice * Gwei_1}`),
+      });
+    }
   }
 }

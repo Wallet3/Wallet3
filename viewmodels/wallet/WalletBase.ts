@@ -61,6 +61,8 @@ export const WalletBaseKeys = {
 interface Events {}
 
 export abstract class WalletBase extends EventEmitter<Events> {
+  readonly ERC4337SubPath = `4337'/`;
+
   protected removedEOAIndexes: number[] = [];
   protected removedERC4337Indexes: number[] = [];
 
@@ -172,8 +174,6 @@ export abstract class WalletBase extends EventEmitter<Events> {
   async newERC4337Account(onBusy?: (busy: boolean) => void) {
     if (!this.isHDWallet) return;
 
-    const ERC4337SubPath = `4337'/`;
-
     const erc4337s = this.accounts.filter((a) => a.isERC4337);
     const index =
       Math.max(
@@ -181,7 +181,7 @@ export abstract class WalletBase extends EventEmitter<Events> {
         this.removedERC4337Indexes.length > 0 ? LINQ.from(this.removedERC4337Indexes).max() : -1
       ) + 1;
 
-    const privateKey = await this.unlockPrivateKey(this.isHDWallet ? { subPath: ERC4337SubPath, accountIndex: index } : {});
+    const privateKey = await this.unlockPrivateKey({ subPath: this.ERC4337SubPath, accountIndex: index });
     if (!privateKey) return;
 
     onBusy?.(true);
@@ -318,7 +318,7 @@ export abstract class WalletBase extends EventEmitter<Events> {
     } & AuthOptions
   ): Promise<string | undefined>;
 
-  private async openWallet(args: { accountIndex: number; subPath?: string } & AuthOptions) {
+  async openWallet(args: { accountIndex: number; subPath?: string } & AuthOptions) {
     const key = await this.unlockPrivateKey(args);
     if (!key) return undefined;
 
