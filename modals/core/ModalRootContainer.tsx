@@ -1,4 +1,4 @@
-import { ScrollView, StyleProp, View, ViewStyle } from 'react-native';
+import { ScrollView, StyleProp, ViewStyle } from 'react-native';
 
 import React from 'react';
 import { SquircleView } from 'react-native-figma-squircle';

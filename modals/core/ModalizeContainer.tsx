@@ -1,5 +1,5 @@
-import { Modalize, ModalizeProps, useModalize } from 'react-native-modalize';
-import { Platform, StyleProp, ViewStyle } from 'react-native';
+import { Modalize, ModalizeProps } from 'react-native-modalize';
+import { StyleProp, ViewStyle } from 'react-native';
 
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';

@@ -351,18 +351,25 @@ export default observer(() => {
         </SquircleModalize>
 
         <SquircleModalize ref={accountsRef}>
-          <AccountSelector
-            single
-            accounts={App.allAccounts}
-            selectedAccounts={[VM.account?.address || '']}
-            style={{ padding: 16, height: 430 }}
-            expanded
-            network={VM.userSelectedNetwork}
-            onDone={([account]) => {
-              closeAccountsModal();
-              VM.switchAccount(account);
-            }}
-          />
+          <ScrollView
+            horizontal
+            pagingEnabled={false}
+            style={{ flex: 1, flexGrow: 1 }}
+            contentContainerStyle={{ flex: 1, flexGrow: 1 }}
+          >
+            <AccountSelector
+              single
+              accounts={App.allAccounts}
+              selectedAccounts={[VM.account?.address || '']}
+              style={{ padding: 16, height: 430 }}
+              expanded
+              network={VM.userSelectedNetwork}
+              onDone={([account]) => {
+                closeAccountsModal();
+                VM.switchAccount(account);
+              }}
+            />
+          </ScrollView>
         </SquircleModalize>
 
         <SquircleModalize ref={fromSelectorRef}>
