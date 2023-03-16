@@ -42,12 +42,8 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDon
   );
 
   const newAccount = async (type: AccountType) => {
-    if (type === 'eoa') {
-      App.newEOA();
-    } else {
-      await App.newERC4337Account(() => setBusy(true));
-      setBusy(false);
-    }
+    await App.newAccount(type, () => setBusy(true));
+    setBusy(false);
 
     const index = App.allAccounts.findIndex((a) => a === App.currentAccount);
     index > 0 && setTimeout(() => list.current?.scrollToIndex({ index, animated: true }), 0);

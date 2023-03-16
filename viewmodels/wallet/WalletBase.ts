@@ -158,9 +158,12 @@ export abstract class WalletBase extends EventEmitter<Events> {
         this.removedEOAIndexes.length > 0 ? LINQ.from(this.removedEOAIndexes).max() : 0
       ) + 1;
 
+    let position = LINQ.from(this.accounts).lastIndexOf((a) => a.type === 'eoa');
+    if (position === -1) position = Math.max(0, this.accounts.length - 1);
+
     const node = bip32.derivePath(`${index}`);
     const account = new EOA(node.address, index, { signInPlatform: this.signInPlatform });
-    this.accounts.push(account);
+    this.accounts.splice(position + 1, 0, account);
 
     AsyncStorage.setItem(WalletBaseKeys.addressCount(this.id), `${index + 1}`);
 

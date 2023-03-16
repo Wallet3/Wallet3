@@ -75,7 +75,7 @@ export class AppVM {
       switchAccount: action,
       currentAccount: observable,
       currentWallet: computed,
-      newEOA: action,
+      newAccount: action,
       removeAccount: action,
       allAccounts: computed,
     });
@@ -199,30 +199,16 @@ export class AppVM {
     return this.allAccounts.find((a) => a.address === account);
   }
 
-  newEOA() {
+  async newAccount(type: AccountType, onBusy?: () => void) {
     let { wallet } = this.findWallet(this.currentAccount!.address) || {};
-    let account: AccountBase | undefined;
+    !wallet?.isHDWallet && (wallet = this.wallets.find((w) => w.isHDWallet));
 
-    if (wallet?.isHDWallet) {
-      account = wallet.newEOA();
-    } else {
-      wallet = this.wallets.find((w) => w.isHDWallet);
-      account = wallet?.newEOA();
-    }
+    const account = type === 'eoa' ? wallet?.newEOA() : await wallet?.newERC4337Account(onBusy);
 
     if (!account) {
       showMessage({ message: i18n.t('msg-no-hd-wallet'), type: 'warning' });
       return;
     }
-
-    this.switchAccount(account.address);
-  }
-
-  async newERC4337Account(onBusy?: () => void) {
-    let { wallet } = this.findWallet(this.currentAccount!.address) || {};
-
-    let account = await wallet?.newERC4337Account(onBusy);
-    if (!account) return;
 
     this.switchAccount(account.address);
   }

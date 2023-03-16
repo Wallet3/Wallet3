@@ -88,12 +88,12 @@ export default observer(({ account, themeColor, onPress, onEdit, onRemove, textC
                   paddingStart: 8,
                   paddingEnd: 5,
                   paddingVertical: 2,
-                  marginTop: -1,
+                  marginTop: -0.5,
                   flexDirection: 'row',
                   alignItems: 'center',
                 }}
               >
-                <Text style={{ textTransform: 'uppercase', color: '#fff', fontSize: 11, fontWeight: '700' }}>Super</Text>
+                <Text style={{ textTransform: 'uppercase', color: '#fff', fontSize: 10, fontWeight: '700' }}>Super</Text>
                 <MaterialCommunityIcons name="lightning-bolt" color="#fff" style={{ marginStart: 5 }} size={12} />
               </View>
             )}

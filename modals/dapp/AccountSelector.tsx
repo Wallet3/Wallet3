@@ -1,10 +1,10 @@
 import { Button, SafeViewContainer } from '../../components';
+import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { FlatList, StyleProp, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import React, { useState } from 'react';
 
 import { AccountBase } from '../../viewmodels/account/AccountBase';
 import Avatar from '../../components/Avatar';
-import { Feather } from '@expo/vector-icons';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -80,6 +80,24 @@ export default observer(({ accounts, selectedAccounts, onDone, single, style, ex
         >
           {item.displayName}
         </Text>
+
+        {item.isERC4337 && (
+          <View
+            style={{
+              marginStart: 8,
+              borderRadius: 5,
+              backgroundColor: themeColor,
+              paddingStart: 8,
+              paddingVertical: 2,
+              paddingEnd: 5,
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+          >
+            <Text style={{ textTransform: 'uppercase', color: '#fff', fontSize: 10 }}>Super</Text>
+            <MaterialCommunityIcons name="lightning-bolt" color="#fff" style={{ marginStart: 4 }} size={11} />
+          </View>
+        )}
       </TouchableOpacity>
     );
   };
