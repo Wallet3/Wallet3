@@ -1,10 +1,11 @@
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
+import { Feather, FontAwesome, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeSyntheticEvent, Text, TouchableOpacity, View } from 'react-native';
 
 import { AccountBase } from '../../viewmodels/account/AccountBase';
 import App from '../../viewmodels/core/App';
 import Avatar from '../../components/Avatar';
-import { Feather } from '@expo/vector-icons';
+import { Placeholder } from '../../components';
 import React from 'react';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -65,17 +66,39 @@ export default observer(({ account, themeColor, onPress, onEdit, onRemove, textC
         />
 
         <View style={{ flex: 1, marginStart: 12, justifyContent: 'space-between' }}>
-          <Text
-            style={{
-              fontSize: 17,
-              fontWeight: '500',
-              marginBottom: 2,
-              color: account.address === currentAccount?.address ? themeColor : textColor,
-            }}
-            numberOfLines={1}
-          >
-            {account.displayName}
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text
+              style={{
+                fontSize: 17,
+                fontWeight: '500',
+                marginBottom: 2,
+                color: account.address === currentAccount?.address ? themeColor : textColor,
+              }}
+              numberOfLines={1}
+            >
+              {account.displayName}
+            </Text>
+
+            {account.isERC4337 && (
+              <View
+                style={{
+                  marginStart: 8,
+                  borderRadius: 5,
+                  backgroundColor: themeColor,
+                  paddingStart: 8,
+                  paddingEnd: 5,
+                  paddingVertical: 2,
+                  marginTop: -1,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
+              >
+                <Text style={{ textTransform: 'uppercase', color: '#fff', fontSize: 11, fontWeight: '700' }}>Super</Text>
+                <MaterialCommunityIcons name="lightning-bolt" color="#fff" style={{ marginStart: 5 }} size={12} />
+              </View>
+            )}
+          </View>
+          <Placeholder />
           <Text style={{ color: secondaryFontColor }}>{balance}</Text>
         </View>
 

@@ -218,20 +218,11 @@ export class AppVM {
     this.switchAccount(account.address);
   }
 
-  newERC4337Account() {
+  async newERC4337Account(onBusy?: () => void) {
     let { wallet } = this.findWallet(this.currentAccount!.address) || {};
-    let account: AccountBase | undefined;
 
-    if (wallet?.isHDWallet) {
-      wallet.newERC4337Account();
-    } else {
-      wallet = this.wallets.find((w) => w.isHDWallet);
-      wallet?.newERC4337Account();
-    }
-
-    if (!account) {
-      return;
-    }
+    let account = await wallet?.newERC4337Account(onBusy);
+    if (!account) return;
 
     this.switchAccount(account.address);
   }

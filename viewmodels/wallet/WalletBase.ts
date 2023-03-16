@@ -84,9 +84,13 @@ export abstract class WalletBase extends EventEmitter<Events> {
     basePath: string;
   } & BaseEntity;
 
+  get id() {
+    return this.key.id;
+  }
+
   get keyInfo() {
     return {
-      id: this.key.id,
+      id: this.id,
       basePathIndex: this.key.basePathIndex,
       basePath: this.key.basePath,
       bip32Xpubkey: this.key.bip32Xpubkey,
@@ -101,12 +105,12 @@ export abstract class WalletBase extends EventEmitter<Events> {
   async init() {
     [this.removedEOAIndexes, this.removedERC4337Indexes] = (
       await Promise.all([
-        AsyncStorage.getItem(WalletBaseKeys.removedIndexes(this.key.id)),
-        AsyncStorage.getItem(WalletBaseKeys.removedERC4337Indexes(this.key.id)),
+        AsyncStorage.getItem(WalletBaseKeys.removedIndexes(this.id)),
+        AsyncStorage.getItem(WalletBaseKeys.removedERC4337Indexes(this.id)),
       ])
     ).map((v) => JSON.parse(v || '[]') as number[]);
 
-    const count = Number((await AsyncStorage.getItem(WalletBaseKeys.addressCount(this.key.id))) || 1);
+    const count = Number((await AsyncStorage.getItem(WalletBaseKeys.addressCount(this.id))) || 1);
     const accounts: AccountBase[] = [];
 
     if (this.isHDWallet) {
@@ -122,7 +126,14 @@ export abstract class WalletBase extends EventEmitter<Events> {
       accounts.push(new EOA(this.key.bip32Xpubkey, 0, { signInPlatform: '' }));
     }
 
-    runInAction(() => (this.accounts = accounts));
+    const erc4337s = (
+      JSON.parse((await AsyncStorage.getItem(WalletBaseKeys.erc4337Accounts(this.id))) || '[]') as {
+        address: string;
+        index: number;
+      }[]
+    ).map((data) => new ERC4337Account(data.address, data.index));
+
+    runInAction(() => (this.accounts = accounts.concat(erc4337s)));
 
     return this;
   }
@@ -151,25 +162,27 @@ export abstract class WalletBase extends EventEmitter<Events> {
     const account = new EOA(node.address, index, { signInPlatform: this.signInPlatform });
     this.accounts.push(account);
 
-    AsyncStorage.setItem(WalletBaseKeys.addressCount(this.key.id), `${index + 1}`);
+    AsyncStorage.setItem(WalletBaseKeys.addressCount(this.id), `${index + 1}`);
 
     return account;
   }
 
-  async newERC4337Account() {
-    if (!this.isHDWallet && this.accounts.find((a) => a.type === 'erc4337')) return;
+  async newERC4337Account(onBusy?: () => void) {
+    if (!this.isHDWallet) return;
 
-    const subPath = `4337'/`;
+    const ERC4337SubPath = `4337'/`;
 
     const erc4337s = this.accounts.filter((a) => a.type === 'erc4337');
     const index =
       Math.max(
-        erc4337s.length > 0 ? LINQ.from(erc4337s).max((a) => a.index) : 0,
-        this.removedERC4337Indexes.length > 0 ? LINQ.from(this.removedERC4337Indexes).max() : 0
+        erc4337s.length > 0 ? LINQ.from(erc4337s).max((a) => a.index) : -1,
+        this.removedERC4337Indexes.length > 0 ? LINQ.from(this.removedERC4337Indexes).max() : -1
       ) + 1;
 
-    const privateKey = await this.unlockPrivateKey(this.isHDWallet ? { subPath, accountIndex: index } : {});
+    const privateKey = await this.unlockPrivateKey(this.isHDWallet ? { subPath: ERC4337SubPath, accountIndex: index } : {});
     if (!privateKey) return;
+
+    onBusy?.();
 
     const owner = new Wallet(privateKey);
     let address = '';
@@ -191,12 +204,15 @@ export abstract class WalletBase extends EventEmitter<Events> {
 
     if (!utils.isAddress(address)) return;
 
+    let position = LINQ.from(this.accounts).lastIndexOf((a) => a.type === 'erc4337');
+    if (position === -1) position = Math.max(0, this.accounts.length - 1);
+
     const erc4337 = new ERC4337Account(address, index);
-    runInAction(() => this.accounts.push(erc4337));
+    runInAction(() => this.accounts.splice(position + 1, 0, erc4337));
     erc4337s.push(erc4337);
 
     await AsyncStorage.setItem(
-      WalletBaseKeys.erc4337Accounts(this.key.id),
+      WalletBaseKeys.erc4337Accounts(this.id),
       JSON.stringify(
         erc4337s.map((a) => {
           return { address: a.address, index: a.index };
@@ -214,7 +230,7 @@ export abstract class WalletBase extends EventEmitter<Events> {
     this.removedEOAIndexes.push(account.index);
     this.accounts.splice(index, 1);
 
-    const storeKey = WalletBaseKeys.removedIndexes(this.key.id);
+    const storeKey = WalletBaseKeys.removedIndexes(this.id);
 
     if (this.accounts.length > 0) {
       await AsyncStorage.setItem(storeKey, JSON.stringify(this.removedEOAIndexes));
@@ -279,8 +295,8 @@ export abstract class WalletBase extends EventEmitter<Events> {
   }
 
   async delete(): Promise<boolean> {
-    AsyncStorage.removeItem(WalletBaseKeys.removedIndexes(this.key.id));
-    AsyncStorage.removeItem(WalletBaseKeys.addressCount(this.key.id));
+    AsyncStorage.removeItem(WalletBaseKeys.removedIndexes(this.id));
+    AsyncStorage.removeItem(WalletBaseKeys.addressCount(this.id));
     await this.key.remove();
     return true;
   }

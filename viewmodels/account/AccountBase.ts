@@ -47,6 +47,10 @@ export abstract class AccountBase {
     return CurrencyViewmodel.usdToToken(this.tokens.balanceUSD);
   }
 
+  get isERC4337() {
+    return this.type === 'erc4337';
+  }
+
   constructor(address: string, index: number, extra?: { signInPlatform?: string }) {
     this.address = address;
     this.index = index;

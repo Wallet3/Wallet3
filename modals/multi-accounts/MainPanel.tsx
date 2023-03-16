@@ -1,8 +1,8 @@
 import { AccountBase, AccountType } from '../../viewmodels/account/AccountBase';
 import { FlatList, ListRenderItemInfo, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import React, { useEffect, useRef } from 'react';
-import { SafeViewContainer, Separator } from '../../components';
+import { Loader, SafeViewContainer, Separator } from '../../components';
+import React, { useEffect, useRef, useState } from 'react';
 
 import AccountItem from './AccountItem';
 import App from '../../viewmodels/core/App';
@@ -24,6 +24,7 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDon
   const themeColor = Networks.current.color;
   const list = useRef<FlatList>(null);
   const { borderColor, textColor, backgroundColor } = Theme;
+  const [busy, setBusy] = useState(false);
 
   const renderAccount = ({ item }: ListRenderItemInfo<AccountBase>) => (
     <AccountItem
@@ -41,8 +42,15 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDon
   );
 
   const newAccount = async (type: AccountType) => {
-    type === 'eoa' ? App.newEOA() : App.newERC4337Account();
-    setTimeout(() => list.current?.scrollToEnd({ animated: true }), 150);
+    if (type === 'eoa') {
+      App.newEOA();
+    } else {
+      await App.newERC4337Account(() => setBusy(true));
+      setBusy(false);
+    }
+
+    const index = App.allAccounts.findIndex((a) => a === App.currentAccount);
+    index > 0 && setTimeout(() => list.current?.scrollToIndex({ index, animated: true }), 0);
   };
 
   useEffect(() => {
@@ -114,6 +122,8 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDon
           {t('modal-multi-accounts-button-import-account')}
         </Text>
       </TouchableOpacity>
+
+      <Loader loading={busy} message={t('land-passcode-encrypting')} />
     </SafeViewContainer>
   );
 });
