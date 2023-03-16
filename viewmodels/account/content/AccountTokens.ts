@@ -1,16 +1,16 @@
-import * as Debank from '../../common/apis/Debank';
+import * as Debank from '../../../common/apis/Debank';
 
 import { BigNumber, utils } from 'ethers';
-import TokensMan, { UserToken } from '../services/TokensMan';
+import TokensMan, { UserToken } from '../../services/TokensMan';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ERC20Token } from '../../models/ERC20';
-import { IToken } from '../../common/tokens';
-import { NativeToken } from '../../models/NativeToken';
-import Networks from '../core/Networks';
-import { clearBalanceCache } from '../../common/apis/Debank';
-import { logAddToken } from '../services/Analytics';
+import { ERC20Token } from '../../../models/ERC20';
+import { IToken } from '../../../common/tokens';
+import { NativeToken } from '../../../models/NativeToken';
+import Networks from '../../core/Networks';
+import { clearBalanceCache } from '../../../common/apis/Debank';
+import { logAddToken } from '../../services/Analytics';
 
 const Keys = {
   tokensDigest: (chainId: number, owner: string) => `${chainId}_${owner}_tokens_digest`,

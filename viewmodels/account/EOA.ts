@@ -3,7 +3,7 @@ import { AccountBase } from './AccountBase';
 export class EOA extends AccountBase {
   readonly type = 'eoa';
 
-  constructor(address: string, index: number, extra: { signInPlatform?: string }) {
+  constructor(address: string, index: number, extra?: { signInPlatform?: string }) {
     // address = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045';
     // address = '0xb8c2C29ee19D8307cb7255e1Cd9CbDE883A267d5'; // nick.eth
     // address = '0x23d09ed7a3f46270271f5b2e00bfb4aecf361160';

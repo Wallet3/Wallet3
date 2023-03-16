@@ -1,10 +1,10 @@
-import * as Unstoppable from '../services/UnstoppableDomains';
+import * as Unstoppable from '../../services/UnstoppableDomains';
 
-import { getEnsAvatar, getText } from '../../common/ENS';
+import { getEnsAvatar, getText } from '../../../common/ENS';
 import { makeAutoObservable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Networks from '../core/Networks';
+import Networks from '../../core/Networks';
 
 const Keys = {
   ensAvatar: (owner: string) => `ens-avatar-${owner}`,

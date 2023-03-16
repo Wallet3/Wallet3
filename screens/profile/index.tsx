@@ -11,7 +11,7 @@ import { FlatGrid } from 'react-native-super-grid';
 import { InappBrowserModal } from '../Modalize';
 import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/core/Networks';
-import { POAPBadge } from '../../viewmodels/account/POAP';
+import { POAPBadge } from '../../viewmodels/account/content/POAP';
 import { Portal } from 'react-native-portalize';
 import { Skeleton } from '../../components';
 import { StatusBar } from 'expo-status-bar';

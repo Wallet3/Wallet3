@@ -1,15 +1,18 @@
 import * as ethSignUtil from '@metamask/eth-sig-util';
 
 import Authentication, { AuthOptions } from '../auth/Authentication';
-import { Wallet as EthersWallet, providers, utils } from 'ethers';
+import { ERC4337EntryPointAddress, ERC4337SimpleFactoryAddress } from '../../common/Constants';
 import { PaymasterAPI, SimpleAccountAPI } from '@account-abstraction/sdk';
+import { Wallet, ethers, providers, utils } from 'ethers';
 import { action, makeObservable, observable, runInAction } from 'mobx';
+import { eth_call_return, getRPCUrls } from '../../common/RPC';
 import { logEthSign, logSendTx } from '../services/Analytics';
 
 import { AccountBase } from '../account/AccountBase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BaseEntity } from 'typeorm';
 import { EOA } from '../account/EOA';
+import { ERC4337Account } from '../account/ERC4337Account';
 import EventEmitter from 'eventemitter3';
 import Key from '../../models/entities/Key';
 import LINQ from 'linq';
@@ -52,8 +55,8 @@ export const WalletBaseKeys = {
   removedIndexes: (id: string | number) => `${id}-removed-indexes`,
   removedERC4337Indexes: (walletId: string | number) => `${walletId}-removed-erc4337-indexes`,
   addressCount: (walletId: string | number) => `${walletId}-address-count`,
-  erc4437Count: (walletId: string | number) => `${walletId}-erc4437-count`,
-  erc4437Accounts: (walletId: string | number) => `${walletId}-erc4437-accounts`,
+  erc4337Count: (walletId: string | number) => `${walletId}-erc4337-count`,
+  erc4337Accounts: (walletId: string | number) => `${walletId}-erc4337-accounts`,
 };
 
 interface Events {}
@@ -167,6 +170,41 @@ export abstract class WalletBase extends EventEmitter<Events> {
 
     const privateKey = await this.unlockPrivateKey(this.isHDWallet ? { subPath, accountIndex: index } : {});
     if (!privateKey) return;
+
+    const owner = new Wallet(privateKey);
+    let address = '';
+
+    for (let url of getRPCUrls(1)) {
+      const provider = new ethers.providers.JsonRpcProvider(url);
+      const api = new SimpleAccountAPI({
+        provider,
+        owner,
+        entryPointAddress: ERC4337EntryPointAddress,
+        factoryAddress: ERC4337SimpleFactoryAddress,
+      });
+
+      try {
+        address = await api.getCounterFactualAddress();
+        if (utils.isAddress(address)) break;
+      } catch (error) {}
+    }
+
+    if (!utils.isAddress(address)) return;
+
+    const erc4337 = new ERC4337Account(address, index);
+    runInAction(() => this.accounts.push(erc4337));
+    erc4337s.push(erc4337);
+
+    await AsyncStorage.setItem(
+      WalletBaseKeys.erc4337Accounts(this.key.id),
+      JSON.stringify(
+        erc4337s.map((a) => {
+          return { address: a.address, index: a.index };
+        })
+      )
+    );
+
+    return erc4337;
   }
 
   async removeAccount(account: AccountBase) {
@@ -261,6 +299,6 @@ export abstract class WalletBase extends EventEmitter<Events> {
     const key = await this.unlockPrivateKey(args);
     if (!key) return undefined;
 
-    return new EthersWallet(key);
+    return new Wallet(key);
   }
 }

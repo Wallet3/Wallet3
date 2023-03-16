@@ -1,18 +1,20 @@
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { genColor, genEmoji } from '../../utils/emoji';
 
-import { AccountTokens } from './AccountTokens';
+import { AccountTokens } from './content/AccountTokens';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CurrencyViewmodel from '../settings/Currency';
-import { ENSViewer } from './ENSViewer';
-import { NFTViewer } from './NFTViewer';
+import { ENSViewer } from './content/ENSViewer';
+import { NFTViewer } from './content/NFTViewer';
 import Networks from '../core/Networks';
-import { POAP } from './POAP';
+import { POAP } from './content/POAP';
 import { formatAddress } from '../../utils/formatter';
 import { getEnsAvatar } from '../../common/ENS';
 
+export type AccountType = 'eoa' | 'erc4337';
+
 export abstract class AccountBase {
-  abstract readonly type: 'eoa' | 'erc4337';
+  abstract readonly type: AccountType;
   readonly address: string;
   readonly index: number;
   readonly signInPlatform?: string;
@@ -45,7 +47,7 @@ export abstract class AccountBase {
     return CurrencyViewmodel.usdToToken(this.tokens.balanceUSD);
   }
 
-  constructor(address: string, index: number, extra: { signInPlatform?: string }) {
+  constructor(address: string, index: number, extra?: { signInPlatform?: string }) {
     this.address = address;
     this.index = index;
     this.signInPlatform = extra?.signInPlatform;

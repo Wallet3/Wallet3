@@ -1,8 +1,8 @@
+import { AccountBase, AccountType } from '../account/AccountBase';
 import { WalletBase, parseXpubkey } from '../wallet/WalletBase';
 import { action, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
 import { providers, utils } from 'ethers';
 
-import { AccountBase } from '../account/AccountBase';
 import { AppState } from 'react-native';
 import AppStoreReview from '../services/AppStoreReview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -75,7 +75,7 @@ export class AppVM {
       switchAccount: action,
       currentAccount: observable,
       currentWallet: computed,
-      newAccount: action,
+      newEOA: action,
       removeAccount: action,
       allAccounts: computed,
     });
@@ -199,7 +199,7 @@ export class AppVM {
     return this.allAccounts.find((a) => a.address === account);
   }
 
-  newAccount() {
+  newEOA() {
     let { wallet } = this.findWallet(this.currentAccount!.address) || {};
     let account: AccountBase | undefined;
 
@@ -212,6 +212,24 @@ export class AppVM {
 
     if (!account) {
       showMessage({ message: i18n.t('msg-no-hd-wallet'), type: 'warning' });
+      return;
+    }
+
+    this.switchAccount(account.address);
+  }
+
+  newERC4337Account() {
+    let { wallet } = this.findWallet(this.currentAccount!.address) || {};
+    let account: AccountBase | undefined;
+
+    if (wallet?.isHDWallet) {
+      wallet.newERC4337Account();
+    } else {
+      wallet = this.wallets.find((w) => w.isHDWallet);
+      wallet?.newERC4337Account();
+    }
+
+    if (!account) {
       return;
     }
 

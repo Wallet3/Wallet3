@@ -1,9 +1,9 @@
+import { AccountBase, AccountType } from '../../viewmodels/account/AccountBase';
 import { FlatList, ListRenderItemInfo, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useRef } from 'react';
 import { SafeViewContainer, Separator } from '../../components';
 
-import { AccountBase } from '../../viewmodels/account/AccountBase';
 import AccountItem from './AccountItem';
 import App from '../../viewmodels/core/App';
 import Networks from '../../viewmodels/core/Networks';
@@ -40,8 +40,8 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDon
     />
   );
 
-  const newAccount = async () => {
-    App.newAccount();
+  const newAccount = async (type: AccountType) => {
+    type === 'eoa' ? App.newEOA() : App.newERC4337Account();
     setTimeout(() => list.current?.scrollToEnd({ animated: true }), 150);
   };
 
@@ -87,7 +87,7 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDon
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <MaterialIcons name="add-circle" size={22} color={themeColor} />
 
-          <TouchableOpacity style={styles.option} onPress={newAccount}>
+          <TouchableOpacity style={styles.option} onPress={() => newAccount('eoa')}>
             <Text style={[{ marginStart: 10, color: themeColor }, styles.txt]}>
               {t('modal-multi-accounts-button-create-account')}
             </Text>
@@ -95,12 +95,12 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDon
 
           <Text style={[{ marginStart: 6, color: themeColor, marginEnd: 8 }, styles.txt]}>/</Text>
 
-          <TouchableOpacity style={styles.option}>
+          <TouchableOpacity style={styles.option} onPress={() => newAccount('erc4337')}>
             <Text style={[{ color: themeColor }, styles.txt]}>{t('modal-multi-accounts-button-super-account')}</Text>
           </TouchableOpacity>
         </View>
       ) : (
-        <TouchableOpacity style={styles.option} onPress={newAccount}>
+        <TouchableOpacity style={styles.option} onPress={() => newAccount('eoa')}>
           <MaterialIcons name="add-circle" size={22} color={themeColor} />
           <Text style={{ marginStart: 10, color: themeColor, fontWeight: '600', fontSize: 15 }}>
             {t('modal-multi-accounts-button-create-account')}
