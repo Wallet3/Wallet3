@@ -200,7 +200,7 @@ export class Authentication extends EventEmitter<Events> {
   };
 
   authorizeApp = async (pin?: string) => {
-    const success = await this.authenticate({ pin });
+    const success = await this.authenticate({ pin, disableAutoPinRequest: true });
 
     if (!this.appAuthorized) {
       runInAction(() => (this.appAuthorized = success));

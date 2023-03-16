@@ -104,9 +104,7 @@ export class AppVM {
   async init() {
     await Promise.all([Database.init(), Authentication.init().catch()]);
     const [_, lastUsedAccount] = await Promise.all([Networks.init().catch(), AsyncStorage.getItem(Keys.lastUsedAccount)]);
-    if (__DEV__) {
-      throw new Error('');
-    }
+
     const wallets: WalletBase[] = LINQ.from(
       await Promise.all(
         [
@@ -119,7 +117,7 @@ export class AppVM {
       .distinct((w) => `${w.keyInfo.bip32Xpubkey}_${w.keyInfo.basePath}_${w.keyInfo.basePathIndex}`)
       .toArray();
 
-    await runInAction(async () => {
+    runInAction(() => {
       this.wallets = wallets;
       this.switchAccount(lastUsedAccount || '', true);
       this.initialized = true;
