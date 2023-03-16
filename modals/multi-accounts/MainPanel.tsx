@@ -21,14 +21,16 @@ interface Props {
 
 export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDone }: Props) => {
   const { t } = i18n;
-  const themeColor = Networks.current.color;
+  const { current } = Networks;
   const list = useRef<FlatList>(null);
   const { borderColor, textColor, backgroundColor } = Theme;
   const [busy, setBusy] = useState(false);
+  const themeColor = current.color;
 
   const renderAccount = ({ item }: ListRenderItemInfo<AccountBase>) => (
     <AccountItem
       account={item}
+      currentNetwork={current}
       textColor={textColor}
       themeColor={themeColor}
       onEdit={onEditAccount}

@@ -2,13 +2,15 @@ import { Button, SafeViewContainer } from '../../components';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { FlatList, StyleProp, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import React, { useState } from 'react';
+import { inactivatedColor, secondaryFontColor } from '../../constants/styles';
 
 import { AccountBase } from '../../viewmodels/account/AccountBase';
 import Avatar from '../../components/Avatar';
+import { ERC4337Account } from '../../viewmodels/account/ERC4337Account';
+import { INetwork } from '../../common/Networks';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import { secondaryFontColor } from '../../constants/styles';
 
 interface Props {
   accounts: AccountBase[];
@@ -17,13 +19,14 @@ interface Props {
   single?: boolean;
   style?: StyleProp<ViewStyle>;
   expanded?: boolean;
-  themeColor?: string;
+  network?: INetwork;
 }
 
-export default observer(({ accounts, selectedAccounts, onDone, single, style, expanded, themeColor }: Props) => {
+export default observer(({ accounts, selectedAccounts, onDone, single, style, expanded, network }: Props) => {
   const [selected, setSelected] = useState(selectedAccounts);
   const { t } = i18n;
   const { borderColor, textColor } = Theme;
+  const themeColor = network?.color;
 
   const toggleAddress = (account: string) => {
     if (single || expanded) {
@@ -86,12 +89,14 @@ export default observer(({ accounts, selectedAccounts, onDone, single, style, ex
             style={{
               marginStart: 8,
               borderRadius: 5,
-              backgroundColor: themeColor,
               paddingStart: 8,
               paddingVertical: 2,
               paddingEnd: 5,
               flexDirection: 'row',
               alignItems: 'center',
+              backgroundColor: (item as ERC4337Account).activatedChains.get(network?.chainId || 0)
+                ? themeColor
+                : inactivatedColor,
             }}
           >
             <Text style={{ textTransform: 'uppercase', color: '#fff', fontSize: 10 }}>Super</Text>

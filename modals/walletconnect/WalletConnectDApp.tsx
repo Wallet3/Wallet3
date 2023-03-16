@@ -138,7 +138,7 @@ const ConnectDApp = observer(({ client, close }: ConnectDAppProps) => {
           accounts={App.allAccounts}
           selectedAccounts={client.accounts}
           onDone={selectAccounts}
-          themeColor={network.color}
+          network={network}
         />
       ) : undefined}
     </Swiper>

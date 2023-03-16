@@ -357,7 +357,7 @@ export default observer(() => {
             selectedAccounts={[VM.account?.address || '']}
             style={{ padding: 16, height: 430 }}
             expanded
-            themeColor={VM.userSelectedNetwork.color}
+            network={VM.userSelectedNetwork}
             onDone={([account]) => {
               closeAccountsModal();
               VM.switchAccount(account);

@@ -101,7 +101,7 @@ const ConnectPivot = observer(
             accounts={App.allAccounts}
             selectedAccounts={[account.address]}
             onDone={onSelectAccountsDone}
-            themeColor={selectedNetwork.color}
+            network={selectedNetwork}
           />
         ) : undefined}
       </Swiper>

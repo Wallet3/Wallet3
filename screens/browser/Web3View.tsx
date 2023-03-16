@@ -380,7 +380,7 @@ export default observer((props: Web3ViewProps) => {
               selectedAccounts={appAccount ? [appAccount.address] : []}
               style={{ padding: 16, height: 430 }}
               expanded
-              themeColor={appNetwork?.color}
+              network={appNetwork}
               onDone={([account]) => updateDAppAccountConfig(account)}
             />
           </ScrollView>

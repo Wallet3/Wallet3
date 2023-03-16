@@ -6,5 +6,6 @@ export const themeColor = '#6186ff';
 export const secureColor = '#76B947';
 export const warningColor = '#DC143C';
 export const verifiedColor = '#1E90FF';
+export const inactivatedColor = '#bbbbbb99';
 
 export const numericFontFamily = 'Avenir Next';

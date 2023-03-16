@@ -95,7 +95,7 @@ const DApp = observer(({ client, allAccounts, close }: Props) => {
             accounts={allAccounts}
             selectedAccounts={client.accounts}
             onDone={selectAccounts}
-            themeColor={defaultNetwork.color}
+            network={defaultNetwork}
           />
         ) : undefined}
       </Swiper>
