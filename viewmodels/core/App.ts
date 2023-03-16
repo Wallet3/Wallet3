@@ -10,6 +10,7 @@ import Authentication from '../auth/Authentication';
 import Bookmarks from '../customs/Bookmarks';
 import Contacts from '../customs/Contacts';
 import Database from '../../models/Database';
+import { ERC4337Account } from '../account/ERC4337Account';
 import GasPrice from '../misc/GasPrice';
 import Key from '../../models/entities/Key';
 import KeyRecoveryWatcher from '../tss/management/KeyRecoveryDiscovery';
@@ -85,6 +86,7 @@ export class AppVM {
       () => {
         this.currentAccount?.tokens.refreshOverview();
         this.currentAccount?.nfts.refresh();
+        this.currentAccount?.isERC4337 && (this.currentAccount as ERC4337Account).checkActivated(Networks.current.chainId);
         this.allAccounts.forEach((a) => a.tokens.refreshNativeToken());
         UI.gasIndicator && GasPrice.refresh();
       }
@@ -225,6 +227,8 @@ export class AppVM {
     target.tokens.refreshOverview();
     target.nfts.refresh();
     target.poap.checkDefaultBadge();
+    target.isERC4337 && (target as ERC4337Account).checkActivated(Networks.current.chainId);
+
     this.currentAccount = target;
 
     clearTimeout(this.refreshTimer);

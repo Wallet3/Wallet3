@@ -353,7 +353,7 @@ export async function getMaxPriorityFeeByRPC(url: string) {
   return Number.parseInt(resp.result || 0);
 }
 
-export async function getCode(chainId: number, contract: string) {
+export async function getCode(chainId: number, contract: string): Promise<string | undefined> {
   const urls = getRPCUrls(chainId);
   let attempts = 0;
 
