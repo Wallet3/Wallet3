@@ -51,6 +51,7 @@ class Database {
       type: 'expo',
       database: __DEV__ ? 'dev5' : 'appdata',
       driver: require('expo-sqlite'),
+      synchronize: true,
       entities: Schemas,
     });
 

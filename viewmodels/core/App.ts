@@ -139,7 +139,10 @@ export class AppVM {
       tipWalletUpgrade(this.currentWallet);
     });
 
-    PairedDevices.init().then(() => !this.hasWalletSet && KeyRecoveryWatcher.scanLan());
+    PairedDevices.init()
+      .then(() => !this.hasWalletSet && KeyRecoveryWatcher.scanLan())
+      .catch();
+
     lastUsedAccount && utils.isAddress(lastUsedAccount) && fetchChainsOverview(lastUsedAccount).catch();
   }
 
