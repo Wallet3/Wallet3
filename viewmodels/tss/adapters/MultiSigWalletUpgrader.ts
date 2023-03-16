@@ -30,12 +30,12 @@ export class MultiSigWalletUpgrader {
     if (!key) return;
 
     const [indexes, count] = await Promise.all([
-      AsyncStorage.getItem(WalletBaseKeys.removedIndexes(this.singleSigWallet.keyInfo.id)),
+      AsyncStorage.getItem(WalletBaseKeys.removedEOAIndexes(this.singleSigWallet.keyInfo.id)),
       AsyncStorage.getItem(WalletBaseKeys.addressCount(this.singleSigWallet.keyInfo.id)),
     ]);
 
     await Promise.all([
-      indexes ? AsyncStorage.setItem(WalletBaseKeys.removedIndexes(key.id), indexes) : undefined,
+      indexes ? AsyncStorage.setItem(WalletBaseKeys.removedEOAIndexes(key.id), indexes) : undefined,
       count ? AsyncStorage.setItem(WalletBaseKeys.addressCount(key.id), count) : undefined,
     ]);
 

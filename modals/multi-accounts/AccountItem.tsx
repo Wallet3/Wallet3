@@ -88,7 +88,7 @@ export default observer(({ account, themeColor, onPress, onEdit, onRemove, textC
                   paddingStart: 8,
                   paddingEnd: 5,
                   paddingVertical: 2,
-                  marginTop: -0.5,
+                  marginTop: -2,
                   flexDirection: 'row',
                   alignItems: 'center',
                 }}

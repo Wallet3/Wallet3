@@ -16,7 +16,6 @@ import { ERC4337Account } from '../account/ERC4337Account';
 import EventEmitter from 'eventemitter3';
 import Key from '../../models/entities/Key';
 import LINQ from 'linq';
-import MetamaskDAppsHub from '../walletconnect/MetamaskDAppsHub';
 import MultiSigKey from '../../models/entities/MultiSigKey';
 import { ReadableInfo } from '../../models/entities/Transaction';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
@@ -52,7 +51,7 @@ export function parseXpubkey(mixedKey: string) {
 }
 
 export const WalletBaseKeys = {
-  removedIndexes: (id: string | number) => `${id}-removed-indexes`,
+  removedEOAIndexes: (id: string | number) => `${id}-removed-indexes`,
   removedERC4337Indexes: (walletId: string | number) => `${walletId}-removed-erc4337-indexes`,
   addressCount: (walletId: string | number) => `${walletId}-address-count`,
   erc4337Count: (walletId: string | number) => `${walletId}-erc4337-count`,
@@ -105,7 +104,7 @@ export abstract class WalletBase extends EventEmitter<Events> {
   async init() {
     [this.removedEOAIndexes, this.removedERC4337Indexes] = (
       await Promise.all([
-        AsyncStorage.getItem(WalletBaseKeys.removedIndexes(this.id)),
+        AsyncStorage.getItem(WalletBaseKeys.removedEOAIndexes(this.id)),
         AsyncStorage.getItem(WalletBaseKeys.removedERC4337Indexes(this.id)),
       ])
     ).map((v) => JSON.parse(v || '[]') as number[]);
@@ -150,7 +149,7 @@ export abstract class WalletBase extends EventEmitter<Events> {
     if (!this.isHDWallet) return;
 
     const bip32 = utils.HDNode.fromExtendedKey(parseXpubkey(this.key.bip32Xpubkey));
-    const eoas = this.accounts.filter((a) => a.type === 'eoa');
+    const eoas = this.accounts.filter((a) => a.isEOA);
 
     const index =
       Math.max(
@@ -158,7 +157,7 @@ export abstract class WalletBase extends EventEmitter<Events> {
         this.removedEOAIndexes.length > 0 ? LINQ.from(this.removedEOAIndexes).max() : 0
       ) + 1;
 
-    let position = LINQ.from(this.accounts).lastIndexOf((a) => a.type === 'eoa');
+    let position = LINQ.from(this.accounts).lastIndexOf((a) => a.isEOA);
     if (position === -1) position = Math.max(0, this.accounts.length - 1);
 
     const node = bip32.derivePath(`${index}`);
@@ -170,12 +169,12 @@ export abstract class WalletBase extends EventEmitter<Events> {
     return account;
   }
 
-  async newERC4337Account(onBusy?: () => void) {
+  async newERC4337Account(onBusy?: (busy: boolean) => void) {
     if (!this.isHDWallet) return;
 
     const ERC4337SubPath = `4337'/`;
 
-    const erc4337s = this.accounts.filter((a) => a.type === 'erc4337');
+    const erc4337s = this.accounts.filter((a) => a.isERC4337);
     const index =
       Math.max(
         erc4337s.length > 0 ? LINQ.from(erc4337s).max((a) => a.index) : -1,
@@ -185,61 +184,66 @@ export abstract class WalletBase extends EventEmitter<Events> {
     const privateKey = await this.unlockPrivateKey(this.isHDWallet ? { subPath: ERC4337SubPath, accountIndex: index } : {});
     if (!privateKey) return;
 
-    onBusy?.();
+    onBusy?.(true);
 
-    const owner = new Wallet(privateKey);
-    let address = '';
+    try {
+      const owner = new Wallet(privateKey);
+      let address = '';
 
-    for (let url of getRPCUrls(1)) {
-      const provider = new ethers.providers.JsonRpcProvider(url);
-      const api = new SimpleAccountAPI({
-        provider,
-        owner,
-        entryPointAddress: ERC4337EntryPointAddress,
-        factoryAddress: ERC4337SimpleFactoryAddress,
-      });
+      for (let url of getRPCUrls(1)) {
+        const provider = new ethers.providers.JsonRpcProvider(url);
+        const api = new SimpleAccountAPI({
+          provider,
+          owner,
+          entryPointAddress: ERC4337EntryPointAddress,
+          factoryAddress: ERC4337SimpleFactoryAddress,
+        });
 
-      try {
-        address = await api.getCounterFactualAddress();
-        if (utils.isAddress(address)) break;
-      } catch (error) {}
+        try {
+          address = await api.getCounterFactualAddress();
+          if (utils.isAddress(address)) break;
+        } catch (error) {}
+      }
+
+      if (!utils.isAddress(address)) return;
+
+      let position = LINQ.from(this.accounts).lastIndexOf((a) => a.isERC4337);
+      if (position === -1) position = Math.max(0, this.accounts.length - 1);
+
+      const erc4337 = new ERC4337Account(address, index);
+      runInAction(() => this.accounts.splice(position + 1, 0, erc4337));
+      erc4337s.push(erc4337);
+
+      await AsyncStorage.setItem(
+        WalletBaseKeys.erc4337Accounts(this.id),
+        JSON.stringify(erc4337s.map((a) => a.toPlainObject()))
+      );
+
+      return erc4337;
+    } finally {
+      onBusy?.(false);
     }
-
-    if (!utils.isAddress(address)) return;
-
-    let position = LINQ.from(this.accounts).lastIndexOf((a) => a.type === 'erc4337');
-    if (position === -1) position = Math.max(0, this.accounts.length - 1);
-
-    const erc4337 = new ERC4337Account(address, index);
-    runInAction(() => this.accounts.splice(position + 1, 0, erc4337));
-    erc4337s.push(erc4337);
-
-    await AsyncStorage.setItem(
-      WalletBaseKeys.erc4337Accounts(this.id),
-      JSON.stringify(
-        erc4337s.map((a) => {
-          return { address: a.address, index: a.index };
-        })
-      )
-    );
-
-    return erc4337;
   }
 
   async removeAccount(account: AccountBase) {
     const index = this.accounts.findIndex((a) => a.address === account.address);
     if (index === -1) return;
 
-    this.removedEOAIndexes.push(account.index);
     this.accounts.splice(index, 1);
 
-    const storeKey = WalletBaseKeys.removedIndexes(this.id);
-
-    if (this.accounts.length > 0) {
-      await AsyncStorage.setItem(storeKey, JSON.stringify(this.removedEOAIndexes));
+    if (account.isEOA) {
+      this.removedEOAIndexes.push(account.index);
+      AsyncStorage.setItem(WalletBaseKeys.removedEOAIndexes(this.id), JSON.stringify(this.removedEOAIndexes));
     }
 
-    MetamaskDAppsHub.removeAccount(account.address);
+    if (account.isERC4337) {
+      this.removedERC4337Indexes.push(account.index);
+      AsyncStorage.setItem(WalletBaseKeys.removedERC4337Indexes(this.id), JSON.stringify(this.removedERC4337Indexes));
+      AsyncStorage.setItem(
+        WalletBaseKeys.erc4337Accounts(this.id),
+        JSON.stringify(this.accounts.filter((a) => a.isERC4337).map((a) => a.toPlainObject()))
+      );
+    }
   }
 
   async signTx(args: SignTxRequest & AuthOptions) {
@@ -298,7 +302,7 @@ export abstract class WalletBase extends EventEmitter<Events> {
   }
 
   async delete(): Promise<boolean> {
-    AsyncStorage.removeItem(WalletBaseKeys.removedIndexes(this.id));
+    AsyncStorage.removeItem(WalletBaseKeys.removedEOAIndexes(this.id));
     AsyncStorage.removeItem(WalletBaseKeys.addressCount(this.id));
     await this.key.remove();
     return true;

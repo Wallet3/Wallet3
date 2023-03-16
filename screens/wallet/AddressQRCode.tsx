@@ -2,7 +2,7 @@ import * as Animatable from 'react-native-animatable';
 import * as ExpoLinking from 'expo-linking';
 
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { AccountBase } from '../../viewmodels/account/AccountBase';
 import Avatar from '../../components/Avatar';
@@ -16,14 +16,14 @@ import Theme from '../../viewmodels/settings/Theme';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 import { isIOS } from '../../utils/platform';
-import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 import { openInappBrowser } from '../../modals/app/InappBrowser';
 import { setStringAsync } from 'expo-clipboard';
+import { startLayoutAnimation } from '../../utils/animations';
 
 export default observer(({ account }: { account?: AccountBase }) => {
   const { t } = i18n;
-  const { backgroundColor, thirdTextColor } = Theme;
+  const { thirdTextColor } = Theme;
   const { current } = Networks;
   const { address, avatar } = account || {};
   const ens = account?.ens.name;
@@ -35,6 +35,8 @@ export default observer(({ account }: { account?: AccountBase }) => {
       .hostname?.split('.')
       .filter((i) => i.length > 3)[0]
   );
+
+  useEffect(() => startLayoutAnimation(), [showFullAddress]);
 
   const prefixedAddress = current?.addrPrefix ? `${current?.addrPrefix}${address?.substring(2)}` : address;
 

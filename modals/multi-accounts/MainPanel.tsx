@@ -42,11 +42,10 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDon
   );
 
   const newAccount = async (type: AccountType) => {
-    await App.newAccount(type, () => setBusy(true));
-    setBusy(false);
+    await App.newAccount(type, (busy) => setBusy(busy));
 
     const index = App.allAccounts.findIndex((a) => a === App.currentAccount);
-    index > 0 && setTimeout(() => list.current?.scrollToIndex({ index, animated: true }), 0);
+    index >= 5 && setTimeout(() => list.current?.scrollToIndex({ index, animated: true }), 100);
   };
 
   useEffect(() => {
@@ -83,6 +82,7 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDon
         keyExtractor={(i) => i.address}
         style={{ flex: 1, marginHorizontal: -16 }}
         contentContainerStyle={{ paddingVertical: 4 }}
+        onScrollToIndexFailed={({ index }) => setTimeout(() => list.current?.scrollToIndex({ index }), 200)}
       />
 
       <Separator style={{ marginBottom: 4, opacity: 0.5, backgroundColor: borderColor }} />
@@ -119,7 +119,7 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDon
         </Text>
       </TouchableOpacity>
 
-      <Loader loading={busy} message={t('land-passcode-encrypting')} />
+      <Loader loading={busy} message={t('msg-data-loading')} />
     </SafeViewContainer>
   );
 });

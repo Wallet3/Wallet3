@@ -204,14 +204,14 @@ export class AppVM {
     return this.allAccounts.find((a) => a.address === account);
   }
 
-  async newAccount(type: AccountType, onBusy?: () => void) {
+  async newAccount(type: AccountType, onBusy?: (busy: boolean) => void) {
     let { wallet } = this.findWallet(this.currentAccount!.address) || {};
     !wallet?.isHDWallet && (wallet = this.wallets.find((w) => w.isHDWallet));
 
     const account = type === 'eoa' ? wallet?.newEOA() : await wallet?.newERC4337Account(onBusy);
 
     if (!account) {
-      showMessage({ message: i18n.t('msg-no-hd-wallet'), type: 'warning' });
+      !wallet?.isHDWallet && showMessage({ message: i18n.t('msg-no-hd-wallet'), type: 'warning' });
       return;
     }
 
@@ -260,13 +260,17 @@ export class AppVM {
     const { wallet } = this.findWallet(account.address) || {};
     if (!wallet) return;
 
-    if (wallet.accounts.length > 1) {
-      await wallet.removeAccount(account);
-    } else {
-      if (!(await this.removeWallet(wallet))) return;
-    }
+    try {
+      if (wallet.accounts.length > 1) {
+        await wallet.removeAccount(account);
+      } else {
+        if (!(await this.removeWallet(wallet))) return;
+      }
 
-    if (isCurrentAccount) runInAction(() => this.switchAccount(this.allAccounts[Math.max(0, index - 1)].address));
+      if (isCurrentAccount) runInAction(() => this.switchAccount(this.allAccounts[Math.max(0, index - 1)].address));
+    } finally {
+      MetamaskDAppsHub.removeAccount(account.address);
+    }
   }
 
   async removeWallet(wallet: WalletBase) {

@@ -424,6 +424,10 @@ export class BaseTransaction {
     runInAction(() => (this.feeToken = feeToken));
   }
 
+  protected initERC4337ChainData() {}
+
+  protected estimateERC4337Gas() {}
+
   async sendRawTx(args: { tx?: providers.TransactionRequest; readableInfo?: any }, pin?: string) {
     const { tx, readableInfo } = args;
 

@@ -51,6 +51,10 @@ export abstract class AccountBase {
     return this.type === 'erc4337';
   }
 
+  get isEOA() {
+    return this.type === 'eoa';
+  }
+
   constructor(address: string, index: number, extra?: { signInPlatform?: string }) {
     this.address = address;
     this.index = index;
@@ -98,5 +102,12 @@ export abstract class AccountBase {
       `${this.address}-local-avatar`,
       JSON.stringify({ emoji: this.emojiAvatar, color: this.emojiColor, nickname: this.nickname })
     );
+  }
+
+  toPlainObject() {
+    return {
+      address: this.address,
+      index: this.index,
+    };
   }
 }
