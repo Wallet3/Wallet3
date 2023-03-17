@@ -6,6 +6,7 @@ import { getTransactionReceipt, sendTransaction } from '../../common/RPC';
 
 import Database from '../../models/Database';
 import EventEmitter from 'eventemitter3';
+import { INetwork } from '../../common/Networks';
 import LINQ from 'linq';
 import { UserOperationStruct } from '@account-abstraction/contracts/dist/types/EntryPoint';
 import { formatAddress } from '../../utils/formatter';
@@ -218,7 +219,9 @@ class TxHub extends EventEmitter<Events> {
     return hash;
   }
 
-  watchERC4337Op(opHash: string, struct: UserOperationStruct) {}
+  watchERC4337Op(network: INetwork, opHash: string, struct: UserOperationStruct) {
+    // const txHash = await api.getUserOpReceipt(opHash);
+  }
 
   saveTx = async (tx: ITransaction) => {
     if ((await this.repository.find({ where: { hash: tx.hash } })).length > 0) {

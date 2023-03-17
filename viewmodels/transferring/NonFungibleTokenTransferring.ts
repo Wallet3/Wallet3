@@ -162,10 +162,10 @@ export class NFTTransferring extends BaseTransaction {
       };
 
       if (tx.type === 0) {
-        tx.gasPrice = Number.parseInt((this.maxGasPrice * Gwei_1) as any);
+        tx.gasPrice = Number.parseInt(`${this.maxGasPrice * Gwei_1}`);
       } else {
-        tx.maxFeePerGas = Number.parseInt((this.maxGasPrice * Gwei_1) as any);
-        tx.maxPriorityFeePerGas = Number.parseInt((this.maxPriorityPrice * Gwei_1) as any);
+        tx.maxFeePerGas = Number.parseInt(`${this.maxGasPrice * Gwei_1}`);
+        tx.maxPriorityFeePerGas = Number.parseInt(`${this.maxPriorityPrice * Gwei_1}`);
       }
 
       return tx;

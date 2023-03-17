@@ -37,7 +37,7 @@ export default observer(({ client, request, close }: Props) => {
 
     if (result.success) {
       setVerified(true);
-      client.approveRequest(request.id, result.tx?.hash || '');
+      client.approveRequest(request.id, result['tx']?.hash || '');
       setTimeout(() => close(), 1700);
     }
 

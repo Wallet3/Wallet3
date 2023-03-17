@@ -5,15 +5,34 @@ import { AccountTokens } from './content/AccountTokens';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CurrencyViewmodel from '../settings/Currency';
 import { ENSViewer } from './content/ENSViewer';
+import { INetwork } from '../../common/Networks';
 import { NFTViewer } from './content/NFTViewer';
 import Networks from '../core/Networks';
 import { POAP } from './content/POAP';
+import { WalletBase } from '../wallet/WalletBase';
 import { formatAddress } from '../../utils/formatter';
 import { getEnsAvatar } from '../../common/ENS';
+import { providers } from 'ethers';
 
 export type AccountType = 'eoa' | 'erc4337';
 
+export type SendTxRequest = Partial<{
+  tx: providers.TransactionRequest;
+  txs: providers.TransactionRequest[];
+  readableInfo: any;
+  network: INetwork;
+  gas: { maxFeePerGas: number; maxPriorityFeePerGas: number };
+}>;
+
+export type SendTxResponse = {
+  success: boolean;
+  txHash?: string;
+  error?: { message: string; code: number };
+};
+
 export abstract class AccountBase {
+  protected wallet: WalletBase | null;
+
   abstract readonly type: AccountType;
   readonly address: string;
   readonly index: number;
@@ -55,7 +74,8 @@ export abstract class AccountBase {
     return this.type === 'eoa';
   }
 
-  constructor(address: string, index: number, extra?: { signInPlatform?: string }) {
+  constructor(wallet: WalletBase, address: string, index: number, extra?: { signInPlatform?: string }) {
+    this.wallet = wallet;
     this.address = address;
     this.index = index;
     this.signInPlatform = extra?.signInPlatform;
@@ -92,6 +112,8 @@ export abstract class AccountBase {
       });
     });
   }
+
+  abstract sendTx(args: SendTxRequest, pin?: string): Promise<SendTxResponse>;
 
   setAvatar(objs: { emoji?: string; color?: string; nickname?: string }) {
     this.emojiAvatar = objs.emoji || this.emojiAvatar;

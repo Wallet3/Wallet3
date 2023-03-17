@@ -120,10 +120,10 @@ export abstract class WalletBase extends EventEmitter<Events> {
         if (this.removedEOAIndexes.includes(i)) continue;
 
         const accountNode = bip32.derivePath(`${i}`);
-        accounts.push(new EOA(accountNode.address, i, { signInPlatform: this.signInPlatform }));
+        accounts.push(new EOA(this, accountNode.address, i, { signInPlatform: this.signInPlatform }));
       }
     } else {
-      accounts.push(new EOA(this.key.bip32Xpubkey, 0, { signInPlatform: '' }));
+      accounts.push(new EOA(this, this.key.bip32Xpubkey, 0, { signInPlatform: '' }));
     }
 
     const erc4337s = (
@@ -131,7 +131,7 @@ export abstract class WalletBase extends EventEmitter<Events> {
         address: string;
         index: number;
       }[]
-    ).map((data) => new ERC4337Account(data.address, data.index));
+    ).map((data) => new ERC4337Account(this, data.address, data.index));
 
     runInAction(() => (this.accounts = accounts.concat(erc4337s)));
 
@@ -162,7 +162,7 @@ export abstract class WalletBase extends EventEmitter<Events> {
     if (position === -1) position = Math.max(0, this.accounts.length - 1);
 
     const node = bip32.derivePath(`${index}`);
-    const account = new EOA(node.address, index, { signInPlatform: this.signInPlatform });
+    const account = new EOA(this, node.address, index, { signInPlatform: this.signInPlatform });
     this.accounts.splice(position + 1, 0, account);
 
     AsyncStorage.setItem(WalletBaseKeys.addressCount(this.id), `${index + 1}`);
@@ -209,7 +209,7 @@ export abstract class WalletBase extends EventEmitter<Events> {
       let position = LINQ.from(this.accounts).lastIndexOf((a) => a.isERC4337);
       if (position === -1) position = Math.max(0, this.accounts.length - 1);
 
-      const erc4337 = new ERC4337Account(address, index);
+      const erc4337 = new ERC4337Account(this, address, index);
       runInAction(() => this.accounts.splice(position + 1, 0, erc4337));
       erc4337s.push(erc4337);
 

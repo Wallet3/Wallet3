@@ -30,6 +30,7 @@ import { ERC4337Account } from '../account/ERC4337Account';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
 import { NativeToken } from '../../models/NativeToken';
+import TxHub from '../hubs/TxHub';
 import { WalletBase } from '../wallet/WalletBase';
 import { entryPointAddress } from '../../configs/erc4337.json';
 import { fetchAddressInfo } from '../services/EtherscanPublicTag';
@@ -433,93 +434,16 @@ export class BaseTransaction {
     args: { tx?: providers.TransactionRequest; txs?: providers.TransactionRequest[]; readableInfo?: any },
     pin?: string
   ) {
-    const { tx, readableInfo, txs } = args;
-
-    if (this.account.isEOA) {
-      if (!tx) return { success: false, error: 'No transaction' };
-      return this.sendEOATx({ tx, readableInfo }, pin);
-    }
-
-    if (this.account.isERC4337) {
-      if (!tx) return { success: false, error: 'No transaction' };
-      return this.sendERC4337Tx({ tx, txs, readableInfo }, pin);
-    }
-  }
-
-  protected async sendEOATx(args: { tx: providers.TransactionRequest; readableInfo?: any }, pin?: string) {
-    const { tx, readableInfo } = args;
-
-    const { txHex, error } = await this.wallet.signTx({
-      accountIndex: this.account.index,
-      tx,
-      pin,
-      disableAutoPinRequest: true,
-    });
-
-    if (!txHex || error) {
-      if (error) showMessage({ message: error, type: 'warning' });
-      return { success: false, error };
-    }
-
-    this.wallet.sendTx({
-      tx,
-      txHex,
-      readableInfo,
-    });
-
-    return { success: true, txHex, tx: utils.parseTransaction(txHex) };
-  }
-
-  protected async sendERC4337Tx(
-    args: { tx: providers.TransactionRequest; txs?: providers.TransactionRequest[]; readableInfo?: any },
-    pin?: string
-  ) {
-    if (!this.network.erc4337) return { success: false, error: 'ERC4337 not supported' };
-
-    const { tx: txRequest } = args;
-    const target = utils.getAddress(txRequest.to!);
-    const value = txRequest.value || BigNumber.from(0);
-
-    console.log(target, value, txRequest);
-
-    const owner = await this.wallet.openWallet({
-      accountIndex: this.account.index,
-      subPath: this.wallet.ERC4337SubPath,
-      disableAutoPinRequest: true,
-      pin,
-    });
-
-    if (!owner) return { success: false };
-
-    const { bundlerUrls, entryPointAddress, factoryAddress } = this.network.erc4337;
-
-    for (let url of getRPCUrls(this.network.chainId)) {
-      const provider = new ethers.providers.JsonRpcProvider(url);
-      const api = new SimpleAccountAPI({
-        provider,
-        owner,
-        entryPointAddress,
-        factoryAddress,
-      });
-
-      const op = await api.createSignedUserOp({
-        target,
-        value,
-        data: (txRequest.data as string) || '0x',
-        maxFeePerGas: Number.parseInt(`${this.maxGasPrice * Gwei_1}`),
-        maxPriorityFeePerGas: Number.parseInt(`${this.maxPriorityPrice * Gwei_1}`),
-      });
-
-      for (let bundlerUrl of bundlerUrls) {
-        const http = new HttpRpcClient(bundlerUrl, entryPointAddress, this.network.chainId);
-        const opHash = await http.sendUserOpToBundler(op);
-        console.log('op:', opHash);
-        const txHash = await api.getUserOpReceipt(opHash);
-        console.log('tx:', txHash);
-        break;
-      }
-
-      break;
-    }
+    return this.account.sendTx(
+      {
+        ...args,
+        network: this.network,
+        gas: {
+          maxFeePerGas: Number.parseInt(`${this.maxGasPrice * Gwei_1}`),
+          maxPriorityFeePerGas: Number.parseInt(`${this.maxPriorityPrice * Gwei_1}`),
+        },
+      },
+      pin
+    );
   }
 }
