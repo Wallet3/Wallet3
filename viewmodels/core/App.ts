@@ -1,12 +1,11 @@
-import { AccountBase, AccountType } from '../account/AccountBase';
+import { AccountBase, AccountType, SendTxRequest } from '../account/AccountBase';
+import Authentication, { AuthOptions } from '../auth/Authentication';
 import { WalletBase, parseXpubkey } from '../wallet/WalletBase';
 import { action, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
-import { providers, utils } from 'ethers';
 
 import { AppState } from 'react-native';
 import AppStoreReview from '../services/AppStoreReview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Authentication from '../auth/Authentication';
 import Bookmarks from '../customs/Bookmarks';
 import Contacts from '../customs/Contacts';
 import Database from '../../models/Database';
@@ -33,6 +32,7 @@ import i18n from '../../i18n';
 import { logAppReset } from '../services/Analytics';
 import { showMessage } from 'react-native-flash-message';
 import { tipWalletUpgrade } from '../misc/MultiSigUpgradeTip';
+import { utils } from 'ethers';
 
 const Keys = {
   lastUsedAccount: 'lastUsedAccount',
@@ -176,7 +176,7 @@ export class AppVM {
     return { wallet, accountIndex: account.index, account };
   }
 
-  async sendTxFromAccount(address: string, opts: { tx: providers.TransactionRequest; pin?: string; readableInfo?: any }) {
+  async sendTxFromAccount(address: string, opts: SendTxRequest & AuthOptions) {
     const account = this.findAccount(address);
     const { pin } = opts;
 

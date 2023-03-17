@@ -27,7 +27,7 @@ export type SignTxRequest = {
   tx: providers.TransactionRequest;
 };
 
-export type SendTxRequest = {
+export type BroadcastTxRequest = {
   tx: providers.TransactionRequest;
   txHex: string;
   readableInfo: ReadableInfo;
@@ -290,7 +290,7 @@ export abstract class WalletBase extends EventEmitter<Events> {
     }
   }
 
-  async sendTx(request: SendTxRequest) {
+  async sendTx(request: BroadcastTxRequest) {
     const hash = await TxHub.broadcastTx({
       chainId: request.tx.chainId!,
       txHex: request.txHex,
@@ -303,10 +303,15 @@ export abstract class WalletBase extends EventEmitter<Events> {
   }
 
   async delete(): Promise<boolean> {
-    AsyncStorage.removeItem(WalletBaseKeys.removedEOAIndexes(this.id));
-    AsyncStorage.removeItem(WalletBaseKeys.addressCount(this.id));
-    AsyncStorage.removeItem(WalletBaseKeys.removedERC4337Indexes(this.id));
-    AsyncStorage.removeItem(WalletBaseKeys.erc4337Accounts(this.id));
+    await Promise.all(
+      [
+        WalletBaseKeys.removedEOAIndexes(this.id),
+        WalletBaseKeys.addressCount(this.id),
+        WalletBaseKeys.removedERC4337Indexes(this.id),
+        WalletBaseKeys.erc4337Accounts(this.id),
+      ].map((k) => AsyncStorage.removeItem(k))
+    );
+
     await this.key.remove();
     return true;
   }
