@@ -128,7 +128,16 @@ export default observer(({ vm, onNext, isRTL }: { isRTL?: boolean; vm: ShardsDis
       ) : (
         <View style={{ flex: 1, alignContent: 'center', justifyContent: 'center' }} exiting={FadeOutUp.springify()}>
           <ActivityIndicator color={verifiedColor} />
-          <Text style={{ alignSelf: 'center', marginTop: 52, lineHeight: 27, color: secondaryTextColor, fontWeight: '500' }}>
+          <Text
+            style={{
+              alignSelf: 'center',
+              marginTop: 52,
+              lineHeight: 27,
+              color: secondaryTextColor,
+              fontWeight: '500',
+              marginHorizontal: 24,
+            }}
+          >
             {t('multi-sig-modal-connect-tip')}
           </Text>
         </View>
