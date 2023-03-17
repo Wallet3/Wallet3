@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 
+import AwaitablePasspad from '../views/AwaitablePasspad';
 import { BioType } from '../../viewmodels/auth/Authentication';
 import { Passpad } from '../views';
 import { RawTransactionRequest } from '../../viewmodels/transferring/RawTransactionRequest';
@@ -40,9 +41,12 @@ export default ({ themeColor, vm, app, onApprove, onReject, bioType }: Props) =>
       automaticallyAdjustContentInsets
     >
       <RequestReview vm={vm} app={app} onReject={onReject} onApprove={approve} account={vm.account} bioType={bioType} />
-      <SafeViewContainer>
-        <Passpad themeColor={themeColor} onCodeEntered={(c) => onApprove(c)} onCancel={() => swiper.current?.scrollTo(0)} />
-      </SafeViewContainer>
+
+      <AwaitablePasspad
+        themeColor={themeColor}
+        onCodeEntered={(c) => onApprove(c)}
+        onCancel={() => swiper.current?.scrollTo(0)}
+      />
     </Swiper>
   );
 };

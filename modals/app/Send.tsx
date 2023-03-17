@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import App from '../../viewmodels/core/App';
 import Authentication from '../../viewmodels/auth/Authentication';
+import AwaitablePasspad from '../views/AwaitablePasspad';
 import Contacts from '../../viewmodels/customs/Contacts';
 import { ReactiveScreen } from '../../utils/device';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -97,9 +98,7 @@ export default observer(({ vm, close, erc681, onReviewEnter, onReviewLeave }: Pr
             txDataEditable={vm.isNativeToken}
           />
 
-          <SafeViewContainer>
-            <Passpad themeColor={vm.network.color} onCodeEntered={sendTx} onCancel={() => goTo(2)} />
-          </SafeViewContainer>
+          <AwaitablePasspad themeColor={vm.network.color} onCodeEntered={sendTx} onCancel={() => goTo(2)} />
         </Swiper>
       )}
     </SafeAreaProvider>

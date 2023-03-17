@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import App from '../../viewmodels/core/App';
 import Authentication from '../../viewmodels/auth/Authentication';
+import AwaitablePasspad from '../views/AwaitablePasspad';
 import Contacts from '../../viewmodels/customs/Contacts';
 import NFTReview from '../views/NFTReview';
 import { NFTTransferring } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
@@ -83,9 +84,11 @@ export default observer(({ vm, onClose }: Props) => {
             biometricType={Authentication.biometricType}
           />
 
-          <SafeViewContainer>
-            <Passpad themeColor={vm.network.color} onCodeEntered={sendTx} onCancel={() => swiper.current?.scrollTo(1)} />
-          </SafeViewContainer>
+          <AwaitablePasspad
+            themeColor={vm.network.color}
+            onCodeEntered={sendTx}
+            onCancel={() => swiper.current?.scrollTo(1)}
+          />
         </Swiper>
       )}
     </View>
