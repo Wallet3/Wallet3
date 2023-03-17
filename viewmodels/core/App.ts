@@ -175,33 +175,11 @@ export class AppVM {
     return { wallet, accountIndex: account.index, account };
   }
 
-  async sendTxFromAccount(account: string, opts: { tx: providers.TransactionRequest; pin?: string; readableInfo?: any }) {
-    const { wallet, accountIndex } = this.findWallet(account) || {};
-    if (!wallet) {
-      showMessage({ message: i18n.t('msg-account-not-found'), type: 'warning' });
-      return { error: { message: 'Invalid account', code: -32602 } };
-    }
+  async sendTxFromAccount(address: string, opts: { tx: providers.TransactionRequest; pin?: string; readableInfo?: any }) {
+    const account = this.findAccount(address);
+    const { pin } = opts;
 
-    const { txHex, error } = await wallet.signTx({
-      ...opts,
-      accountIndex: accountIndex!,
-      disableAutoPinRequest: true,
-    });
-
-    if (!txHex || error) {
-      if (error) showMessage({ type: 'warning', message: error.message });
-      return { error: { message: 'Signing tx failed', code: -32602 } };
-    }
-
-    const broadcastTx = {
-      txHex,
-      tx: opts.tx,
-      readableInfo: opts.readableInfo,
-    };
-
-    wallet.sendTx(broadcastTx);
-
-    return { txHash: utils.parseTransaction(txHex).hash || '', error: undefined };
+    return (await account?.sendTx(opts, pin)) ?? { error: { message: 'Invalid account', code: -32602 }, txHash: undefined };
   }
 
   findAccount(account: string) {

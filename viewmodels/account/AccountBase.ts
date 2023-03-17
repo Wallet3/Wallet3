@@ -132,4 +132,8 @@ export abstract class AccountBase {
       index: this.index,
     };
   }
+
+  dispose() {
+    this.wallet = null;
+  }
 }

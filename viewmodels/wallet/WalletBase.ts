@@ -243,6 +243,8 @@ export abstract class WalletBase extends EventEmitter<Events> {
         JSON.stringify(this.accounts.filter((a) => a.isERC4337).map((a) => a.toPlainObject()))
       );
     }
+
+    account.dispose();
   }
 
   async signTx(args: SignTxRequest & AuthOptions) {

@@ -42,6 +42,8 @@ export class ERC4337Account extends AccountBase {
   }
 
   async sendTx(args: SendTxRequest, pin?: string) {
+    if (!this.wallet) return { success: false, error: { message: 'Account not available', code: -1 } };
+
     const { tx: txRequest, network, gas } = args;
     if (!network?.erc4337) return { success: false, error: { message: 'ERC4337 not supported', code: -1 } };
 
@@ -50,9 +52,9 @@ export class ERC4337Account extends AccountBase {
 
     console.log(target, value, txRequest);
 
-    const owner = await this.wallet!.openWallet({
+    const owner = await this.wallet.openWallet({
       accountIndex: this.index,
-      subPath: this.wallet!.ERC4337SubPath,
+      subPath: this.wallet.ERC4337SubPath,
       disableAutoPinRequest: true,
       pin,
     });

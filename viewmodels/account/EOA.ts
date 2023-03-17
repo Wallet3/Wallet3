@@ -7,9 +7,11 @@ export class EOA extends AccountBase {
   readonly type = 'eoa';
 
   async sendTx(args: { tx: TransactionRequest; readableInfo?: any }, pin?: string) {
+    if (!this.wallet) return { success: false, error: { message: 'Account not available', code: -1 } };
+
     const { tx, readableInfo } = args;
 
-    const { txHex, error } = await this.wallet!.signTx({
+    const { txHex, error } = await this.wallet.signTx({
       accountIndex: this.index,
       tx,
       pin,
@@ -21,7 +23,7 @@ export class EOA extends AccountBase {
       return { success: false, error: { message: 'Signing tx failed', code: -32602 } };
     }
 
-    this.wallet!.sendTx({
+    this.wallet.sendTx({
       tx,
       txHex,
       readableInfo,
