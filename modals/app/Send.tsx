@@ -27,6 +27,7 @@ export default observer(({ vm, close, erc681, onReviewEnter, onReviewLeave }: Pr
   const [verified, setVerified] = useState(false);
   const swiper = useRef<Swiper>(null);
   const [active] = useState({ index: 0 });
+  const [networkBusy, setNetworkBusy] = useState(false);
 
   const goTo = (index: number, animated?: boolean) => {
     swiper.current?.scrollTo(index, animated);
@@ -34,13 +35,15 @@ export default observer(({ vm, close, erc681, onReviewEnter, onReviewLeave }: Pr
   };
 
   const sendTx = async (pin?: string) => {
-    const result = await vm.sendTx(pin);
+    onReviewEnter?.();
+    const result = await vm.sendTx(pin, () => setNetworkBusy(true));
 
     if (result.success) {
       setVerified(true);
       setTimeout(() => close?.(), 1700);
     }
 
+    onReviewLeave?.();
     return result.success;
   };
 
@@ -98,7 +101,7 @@ export default observer(({ vm, close, erc681, onReviewEnter, onReviewLeave }: Pr
             txDataEditable={vm.isNativeToken}
           />
 
-          <AwaitablePasspad themeColor={vm.network.color} onCodeEntered={sendTx} onCancel={() => goTo(2)} />
+          <AwaitablePasspad busy={networkBusy} themeColor={vm.network.color} onCodeEntered={sendTx} onCancel={() => goTo(2)} />
         </Swiper>
       )}
     </SafeAreaProvider>

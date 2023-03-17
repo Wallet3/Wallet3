@@ -22,6 +22,7 @@ export type SendTxRequest = Partial<{
   readableInfo: any;
   network: INetwork;
   gas: { maxFeePerGas: number; maxPriorityFeePerGas: number };
+  onNetworkRequest?: () => void;
 }>;
 
 export type SendTxResponse = {

@@ -183,10 +183,11 @@ export class TokenTransferring extends BaseTransaction {
     this.txException = '';
   }
 
-  sendTx(pin?: string) {
+  sendTx(pin?: string, onNetworkRequest?: () => void) {
     return super.sendRawTx(
       {
         tx: this.txRequest,
+        onNetworkRequest,
         readableInfo: {
           type: 'transfer',
           symbol: this.token.symbol,

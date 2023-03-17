@@ -431,7 +431,12 @@ export class BaseTransaction {
   }
 
   sendRawTx(
-    args: { tx?: providers.TransactionRequest; txs?: providers.TransactionRequest[]; readableInfo?: any },
+    args: {
+      tx?: providers.TransactionRequest;
+      txs?: providers.TransactionRequest[];
+      readableInfo?: any;
+      onNetworkRequest?: () => void;
+    },
     pin?: string
   ) {
     return this.account.sendTx(

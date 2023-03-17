@@ -25,6 +25,7 @@ export default observer(({ vm, onClose }: Props) => {
   const { backgroundColor } = Theme;
   const swiper = useRef<Swiper>(null);
   const [verified, setVerified] = useState(false);
+  const [networkBusy, setNetworkBusy] = useState(false);
 
   useEffect(() => {
     return () => {
@@ -33,7 +34,7 @@ export default observer(({ vm, onClose }: Props) => {
   }, []);
 
   const sendTx = async (pin?: string) => {
-    const result = await vm.sendTx(pin);
+    const result = await vm.sendTx(pin, () => setNetworkBusy(true));
 
     if (result.success) {
       setVerified(true);
@@ -85,6 +86,7 @@ export default observer(({ vm, onClose }: Props) => {
           />
 
           <AwaitablePasspad
+            busy={networkBusy}
             themeColor={vm.network.color}
             onCodeEntered={sendTx}
             onCancel={() => swiper.current?.scrollTo(1)}
