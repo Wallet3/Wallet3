@@ -147,11 +147,6 @@ class TxHub extends EventEmitter<Events> {
     const abandonedTxs: Transaction[] = [];
 
     for (let tx of this.pendingTxs) {
-      if (!tx.hash) {
-        abandonedTxs.push(tx);
-        continue;
-      }
-
       if (!tx.hash && tx.isERC4337) {
         const client = await this.getERC4337Client(tx.chainId);
         try {
@@ -159,10 +154,15 @@ class TxHub extends EventEmitter<Events> {
           if (!txHash) continue;
 
           tx.hash = txHash;
-          tx.save();
+          await tx.save();
         } catch (error) {
           continue;
         }
+      }
+
+      if (!tx.hash) {
+        abandonedTxs.push(tx);
+        continue;
       }
 
       const receipt = await getTransactionReceipt(tx.chainId, tx.hash);
@@ -285,30 +285,27 @@ class TxHub extends EventEmitter<Events> {
     this.watchTimer = setTimeout(() => this.watchPendingTxs(), 2000);
   };
 
-  async watchERC4337Op(network: INetwork, opHash: string, ops: UserOperationS[]) {
+  async watchERC4337Op(network: INetwork, opHash: string, ops: UserOperationS[], txReq: ITransaction) {
     if (await this.erc4337Repo.exist({ where: { opHash } })) return;
     console.log('op hash:', opHash);
 
     const tx = new ERC4337Transaction();
+    tx.hash = '';
     tx.opHash = opHash;
     tx.chainId = network.chainId;
     tx.data = (ops[0]?.callData as string) || '0x';
     tx.from = ops[0]?.sender || '0x';
+    tx.to = txReq.to || '0x';
     tx.gas = Number(ops[0]?.callGasLimit.toString() || 0);
     tx.nonce = Number(ops[0]?.nonce || 0);
+    tx.value = txReq.value?.toString() || '0x0';
     tx.gasPrice = Number(ops[0]?.maxFeePerGas || Gwei_1);
     tx.userOps = ops;
+    tx.timestamp = Date.now();
+    tx.readableInfo = txReq.readableInfo;
     await tx.save();
 
     this.addPendingTx(tx);
-
-    const client = await this.getERC4337Client(network.chainId);
-    const txHash = await client!.getUserOpReceipt(opHash);
-
-    tx.hash = txHash || '';
-    tx.save();
-
-    console.log('erc4337 tx:', txHash);
   }
 
   saveTx = async (tx: ITransaction) => {

@@ -43,7 +43,7 @@ export class ERC4337Account extends AccountBase {
   async sendTx(args: SendTxRequest, pin?: string) {
     if (!this.wallet) return { success: false, error: { message: 'Account not available', code: -1 } };
 
-    const { tx, txs, network, gas } = args;
+    const { tx, txs, network, gas, readableInfo } = args;
     if (!network?.erc4337) return { success: false, error: { message: 'ERC4337 not supported', code: -1 } };
 
     const owner = await this.wallet.openWallet({
@@ -80,7 +80,7 @@ export class ERC4337Account extends AccountBase {
         for (let bundlerUrl of bundlerUrls) {
           const http = new HttpRpcClient(bundlerUrl, entryPointAddress, network.chainId);
           const opHash = await http.sendUserOpToBundler(op);
-          TxHub.watchERC4337Op(network, opHash, await Promise.all([op].map(userOpsToJSON))).catch();
+          TxHub.watchERC4337Op(network, opHash, await Promise.all([op].map(userOpsToJSON)), { ...tx, readableInfo }).catch();
 
           return { success: true, txHash: opHash };
         }
