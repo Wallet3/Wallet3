@@ -5,8 +5,6 @@ import { getCode, getRPCUrls } from '../../common/RPC';
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { INetwork } from '../../common/Networks';
-import { TransactionRequest } from '@ethersproject/abstract-provider';
 import TxHub from '../hubs/TxHub';
 import { WalletBase } from '../wallet/WalletBase';
 
@@ -44,13 +42,8 @@ export class ERC4337Account extends AccountBase {
   async sendTx(args: SendTxRequest, pin?: string) {
     if (!this.wallet) return { success: false, error: { message: 'Account not available', code: -1 } };
 
-    const { tx: txRequest, network, gas } = args;
+    const { tx, txs, network, gas } = args;
     if (!network?.erc4337) return { success: false, error: { message: 'ERC4337 not supported', code: -1 } };
-
-    const target = utils.getAddress(txRequest!.to!);
-    const value = txRequest!.value || BigNumber.from(0);
-
-    console.log(target, value, txRequest);
 
     const owner = await this.wallet.openWallet({
       accountIndex: this.index,
@@ -59,35 +52,40 @@ export class ERC4337Account extends AccountBase {
       pin,
     });
 
-    if (!owner) return { success: false };
+    if (tx) {
+      const target = utils.getAddress(tx.to!);
+      const value = tx.value || BigNumber.from(0);
 
-    const { bundlerUrls, entryPointAddress, factoryAddress } = network.erc4337;
+      if (!owner) return { success: false };
 
-    for (let url of getRPCUrls(network.chainId)) {
-      const provider = new ethers.providers.JsonRpcProvider(url);
-      const api = new SimpleAccountAPI({
-        provider,
-        owner,
-        entryPointAddress,
-        factoryAddress,
-      });
+      const { bundlerUrls, entryPointAddress, factoryAddress } = network.erc4337;
 
-      const op = await api.createSignedUserOp({
-        target,
-        value,
-        data: (txRequest!.data as string) || '0x',
-        ...gas,
-      });
+      for (let url of getRPCUrls(network.chainId)) {
+        const provider = new ethers.providers.JsonRpcProvider(url);
+        const api = new SimpleAccountAPI({
+          provider,
+          owner,
+          entryPointAddress,
+          factoryAddress,
+        });
 
-      for (let bundlerUrl of bundlerUrls) {
-        const http = new HttpRpcClient(bundlerUrl, entryPointAddress, network.chainId);
-        const opHash = await http.sendUserOpToBundler(op);
-        TxHub.watchERC4337Op(network, opHash, op);
+        const op = await api.createSignedUserOp({
+          target,
+          value,
+          data: (tx.data as string) || '0x',
+          ...gas,
+        });
 
-        return { success: true, txHash: opHash };
+        for (let bundlerUrl of bundlerUrls) {
+          const http = new HttpRpcClient(bundlerUrl, entryPointAddress, network.chainId);
+          const opHash = await http.sendUserOpToBundler(op);
+          TxHub.watchERC4337Op(network, opHash, op);
+
+          return { success: true, txHash: opHash };
+        }
+
+        break;
       }
-
-      break;
     }
 
     return { success: false, error: { message: 'Network error', code: -1 } };

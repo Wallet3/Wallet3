@@ -53,6 +53,10 @@ export default class Transaction extends BaseEntity {
 
   @Column({ nullable: true, type: 'simple-json' })
   readableInfo: { type: 'transfer'; dapp?: string; icon?: string; cancelTx?: boolean } & any;
+
+  get isERC4337() {
+    return false;
+  }
 }
 
 interface TransferInfo {

@@ -32,6 +32,10 @@ class TxHub extends EventEmitter<Events> {
     return Database.txs;
   }
 
+  get erc4337Repo() {
+    return Database.erc4337Txs;
+  }
+
   get pendingCount() {
     return this.pendingTxs.length;
   }
@@ -42,16 +46,26 @@ class TxHub extends EventEmitter<Events> {
   }
 
   async init() {
-    let [minedTxs, unconfirmedTxs] = await Promise.all([
+    let [minedTxs, unconfirmedTxs, mined4337Txs, unconfirmed4337Txs] = await Promise.all([
       this.repository.find({
         where: { blockHash: Not(IsNull()) },
         order: { timestamp: 'DESC' },
         take: 100,
       }),
       this.repository.find({ where: { blockHash: IsNull() } }),
+      this.erc4337Repo.find({
+        where: { blockHash: Not(IsNull()) },
+        order: { timestamp: 'DESC' },
+        take: 100,
+      }),
+      this.erc4337Repo.find({ where: { blockHash: IsNull() } }),
     ]);
 
-    await runInAction(async () => (this.txs = minedTxs));
+    const confirmed = LINQ.from(minedTxs.concat(mined4337Txs))
+      .orderByDescending((t) => t.timestamp)
+      .toArray();
+
+    await runInAction(async () => (this.txs = confirmed));
 
     const abandonedTxs = unconfirmedTxs.filter((un) =>
       minedTxs.find((t) => t.from.toLowerCase() === un.from.toLowerCase() && t.chainId === un.chainId && t.nonce >= un.nonce)
@@ -219,7 +233,7 @@ class TxHub extends EventEmitter<Events> {
     return hash;
   }
 
-  watchERC4337Op(network: INetwork, opHash: string, struct: UserOperationStruct) {
+  async watchERC4337Op(network: INetwork, opHash: string, struct: UserOperationStruct) {
     // const txHash = await api.getUserOpReceipt(opHash);
   }
 
