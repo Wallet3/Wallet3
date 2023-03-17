@@ -1,6 +1,6 @@
 import { IShardsDistributorConstruction, ShardsDistributor } from '../viewmodels/tss/ShardsDistributor';
 
-import Authentication from '../viewmodels/auth/Authentication';
+import { Authentication } from '../viewmodels/auth/Authentication';
 import { KeyRecoveryRequestor } from '../viewmodels/tss/KeyRecoveryRequestor';
 import MessageKeys from './MessageKeys';
 import { MultiSigKeyDeviceInfo } from '../models/entities/MultiSigKey';
@@ -16,24 +16,28 @@ export async function openGlobalPasspad(req: {
   closeOnOverlayTap?: boolean;
   onAutoAuthRequest?: () => Promise<boolean>;
   onPinEntered: (pin: string) => Promise<boolean>;
+  authentication: Authentication;
 }) {
-  if (!Authentication.pinSet) {
-    if (!Authentication.biometricSupported) {
+  const { authentication } = req;
+  const { pinSet, biometricEnabled, biometricSupported } = authentication;
+
+  if (!pinSet) {
+    if (!biometricSupported) {
       showMessage({ message: i18n.t('msg-please-enable-biometric'), type: 'info' });
       return false;
     } else {
-      !Authentication.biometricEnabled && (await Authentication.setBiometrics(true));
+      !biometricEnabled && (await authentication.setBiometrics(true));
     }
   }
 
-  const fast = Authentication.biometricEnabled;
-  const fastOnly = !Authentication.pinSet && Authentication.biometricEnabled;
+  const fast = biometricEnabled;
+  const fastOnly = !pinSet && biometricEnabled;
 
   if ((fast || fastOnly) && (await req.onAutoAuthRequest?.())) {
     return true;
   }
 
-  if (fastOnly || !Authentication.pinSet) {
+  if (fastOnly || !pinSet) {
     showMessage({ message: i18n.t('msg-please-enable-biometric'), type: 'info' });
     return false;
   }

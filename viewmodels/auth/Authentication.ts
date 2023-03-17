@@ -134,7 +134,8 @@ export class Authentication extends EventEmitter<Events> {
   }: { options?: LocalAuthenticationOptions } & AuthOptions = {}): Promise<boolean> => {
     if (pin) return await this.verifyPin(pin);
 
-    const requestPin = async () => await openGlobalPasspad({ closeOnOverlayTap: true, onPinEntered: this.verifyPin });
+    const requestPin = async () =>
+      await openGlobalPasspad({ closeOnOverlayTap: true, onPinEntered: this.verifyPin, authentication: this });
 
     if (!this.biometricSupported) {
       return disableAutoPinRequest ? false : await requestPin();
