@@ -1,15 +1,21 @@
+import ERC4337Transaction, { UserOperationS } from '../../models/entities/ERC4337Transaction';
 import { HOUR, MINUTE } from '../../utils/time';
 import { IsNull, LessThanOrEqual, MoreThan, Not } from 'typeorm';
 import Transaction, { ITransaction } from '../../models/entities/Transaction';
+import { Wallet, providers, utils } from 'ethers';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
-import { getTransactionReceipt, sendTransaction } from '../../common/RPC';
+import { getRPCUrls, getTransactionReceipt, sendTransaction } from '../../common/RPC';
 
 import Database from '../../models/Database';
 import EventEmitter from 'eventemitter3';
+import { Gwei_1 } from '../../common/Constants';
 import { INetwork } from '../../common/Networks';
 import LINQ from 'linq';
+import Networks from '../core/Networks';
+import { SimpleAccountAPI } from '@account-abstraction/sdk';
 import { UserOperationStruct } from '@account-abstraction/contracts/dist/types/EntryPoint';
 import { formatAddress } from '../../utils/formatter';
+import { getSecureRandomBytes } from '../../utils/math';
 import i18n from '../../i18n';
 import { isTransactionAbandoned } from '../services/EtherscanPublicTag';
 import { logTxConfirmed } from '../services/Analytics';
@@ -21,6 +27,8 @@ interface Events {
 
 class TxHub extends EventEmitter<Events> {
   private watchTimer!: NodeJS.Timeout;
+  private erc4337Clients = new Map<number, SimpleAccountAPI>();
+
   pendingTxs: Transaction[] = [];
   txs: Transaction[] = [];
 
@@ -38,6 +46,34 @@ class TxHub extends EventEmitter<Events> {
 
   get pendingCount() {
     return this.pendingTxs.length;
+  }
+
+  private async getERC4337Client(chainId: number) {
+    const cache = this.erc4337Clients.get(chainId);
+    if (cache) return cache;
+
+    const network = Networks.find(chainId);
+    if (!network?.erc4337) return;
+
+    const { entryPointAddress, factoryAddress } = network.erc4337;
+    const rpcUrls = getRPCUrls(chainId);
+
+    let provider!: providers.JsonRpcProvider;
+
+    for (let url of rpcUrls) {
+      provider = new providers.JsonRpcProvider(url);
+      if (await provider.getBlockNumber()) break;
+    }
+
+    const client = new SimpleAccountAPI({
+      provider,
+      owner: new Wallet(getSecureRandomBytes(32)),
+      entryPointAddress,
+      factoryAddress,
+    });
+
+    this.erc4337Clients.set(chainId, client);
+    return client;
   }
 
   constructor() {
@@ -233,8 +269,25 @@ class TxHub extends EventEmitter<Events> {
     return hash;
   }
 
-  async watchERC4337Op(network: INetwork, opHash: string, struct: UserOperationStruct) {
-    // const txHash = await api.getUserOpReceipt(opHash);
+  async watchERC4337Op(network: INetwork, opHash: string, ops: UserOperationS[]) {
+    if (await this.erc4337Repo.exist({ where: { opHash } })) return;
+    console.log('op hash:', opHash);
+
+    const tx = new ERC4337Transaction();
+    tx.opHash = opHash;
+    tx.chainId = network.chainId;
+    tx.data = (ops[0]?.callData as string) || '0x';
+    tx.from = ops[0]?.sender || '0x';
+    tx.gas = Number(ops[0]?.callGasLimit.toString() || 0);
+    tx.nonce = Number(ops[0]?.nonce || 0);
+    tx.gasPrice = Number(ops[0]?.maxFeePerGas || Gwei_1);
+    tx.userOps = ops;
+    await tx.save();
+
+    const client = await this.getERC4337Client(network.chainId);
+    const txHash = await client!.getUserOpReceipt(opHash);
+
+    console.log('erc4337 tx:', txHash);
   }
 
   saveTx = async (tx: ITransaction) => {

@@ -123,6 +123,7 @@ export class AppVM {
       this.wallets = wallets;
       this.switchAccount(lastUsedAccount || '', true);
       this.initialized = true;
+      this.allAccounts.filter((a) => a.isERC4337).map((a) => (a as ERC4337Account).checkActivated(Networks.current.chainId));
     });
 
     Authentication.once('appAuthorized', () => {

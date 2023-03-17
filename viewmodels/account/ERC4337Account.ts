@@ -7,6 +7,7 @@ import { makeObservable, observable, runInAction } from 'mobx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TxHub from '../hubs/TxHub';
 import { WalletBase } from '../wallet/WalletBase';
+import { userOpsToJSON } from '../../models/entities/ERC4337Transaction';
 
 const Keys = {
   accountActivated: (address: string, chainId: number) => `${chainId}_${address}_erc4337_activated`,
@@ -62,14 +63,14 @@ export class ERC4337Account extends AccountBase {
 
       for (let url of getRPCUrls(network.chainId)) {
         const provider = new ethers.providers.JsonRpcProvider(url);
-        const api = new SimpleAccountAPI({
+        const client = new SimpleAccountAPI({
           provider,
           owner,
           entryPointAddress,
           factoryAddress,
         });
 
-        const op = await api.createSignedUserOp({
+        const op = await client.createSignedUserOp({
           target,
           value,
           data: (tx.data as string) || '0x',
@@ -79,7 +80,7 @@ export class ERC4337Account extends AccountBase {
         for (let bundlerUrl of bundlerUrls) {
           const http = new HttpRpcClient(bundlerUrl, entryPointAddress, network.chainId);
           const opHash = await http.sendUserOpToBundler(op);
-          TxHub.watchERC4337Op(network, opHash, op);
+          TxHub.watchERC4337Op(network, opHash, await Promise.all([op].map(userOpsToJSON)));
 
           return { success: true, txHash: opHash };
         }
