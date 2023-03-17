@@ -27,6 +27,7 @@ import { Gwei_1 } from './Constants';
 export interface IERC4337 {
   bundlerUrls: string[];
   factoryAddress: string;
+  entryPointAddress: string;
   paymasterUrl?: string;
 }
 

@@ -1,10 +1,10 @@
 import * as ethSignUtil from '@metamask/eth-sig-util';
 
 import Authentication, { AuthOptions } from '../auth/Authentication';
-import { ERC4337EntryPointAddress, ERC4337SimpleFactoryAddress } from '../../common/Constants';
 import { PaymasterAPI, SimpleAccountAPI } from '@account-abstraction/sdk';
 import { Wallet, ethers, providers, utils } from 'ethers';
 import { action, makeObservable, observable, runInAction } from 'mobx';
+import { entryPointAddress, factoryAddress } from '../../configs/erc4337.json';
 import { eth_call_return, getRPCUrls } from '../../common/RPC';
 import { logEthSign, logSendTx } from '../services/Analytics';
 
@@ -195,8 +195,8 @@ export abstract class WalletBase extends EventEmitter<Events> {
         const api = new SimpleAccountAPI({
           provider,
           owner,
-          entryPointAddress: ERC4337EntryPointAddress,
-          factoryAddress: ERC4337SimpleFactoryAddress,
+          entryPointAddress: entryPointAddress,
+          factoryAddress: factoryAddress,
         });
 
         try {

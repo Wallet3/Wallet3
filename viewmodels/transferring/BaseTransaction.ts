@@ -1,10 +1,7 @@
 import { BigNumber, ethers, providers, utils } from 'ethers';
 import {
-  ERC4337EntryPoint,
-  ERC4337EntryPointAddress,
-  ERC4337SimpleFactoryAddress,
   EncodedERC1271ContractWalletCallData,
-  EncodedERC4337EntryPoint,
+  EncodedERC4337EntryPointCallData,
   Gwei_1,
   MAX_GWEI_PRICE,
 } from '../../common/Constants';
@@ -34,6 +31,7 @@ import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
 import { NativeToken } from '../../models/NativeToken';
 import { WalletBase } from '../wallet/WalletBase';
+import { entryPointAddress } from '../../configs/erc4337.json';
 import { fetchAddressInfo } from '../services/EtherscanPublicTag';
 import { getEnsAvatar } from '../../common/ENS';
 import { showMessage } from 'react-native-flash-message';
@@ -345,11 +343,13 @@ export class BaseTransaction {
 
     const erc4337EntryPoint = await eth_call_return(
       this.network.chainId,
-      { to: this.toAddress, data: EncodedERC4337EntryPoint },
+      { to: this.toAddress, data: EncodedERC4337EntryPointCallData },
       true
     );
 
-    let isContractWallet = erc4337EntryPoint?.result?.endsWith?.(ERC4337EntryPoint);
+    let isContractWallet = erc4337EntryPoint?.result
+      ?.toLowerCase?.()
+      ?.endsWith?.(entryPointAddress.substring(2).toLowerCase());
 
     if (!isContractWallet) {
       const erc1271Result = await eth_call_return(
@@ -491,13 +491,15 @@ export class BaseTransaction {
 
     if (!owner) return { success: false };
 
+    const { bundlerUrls, entryPointAddress, factoryAddress } = this.network.erc4337;
+
     for (let url of getRPCUrls(this.network.chainId)) {
       const provider = new ethers.providers.JsonRpcProvider(url);
       const api = new SimpleAccountAPI({
         provider,
         owner,
-        entryPointAddress: ERC4337EntryPointAddress,
-        factoryAddress: ERC4337SimpleFactoryAddress,
+        entryPointAddress,
+        factoryAddress,
       });
 
       const op = await api.createSignedUserOp({
@@ -508,11 +510,12 @@ export class BaseTransaction {
         maxPriorityFeePerGas: Number.parseInt(`${this.maxPriorityPrice * Gwei_1}`),
       });
 
-      for (let bundlerUrl of this.network.erc4337.bundlerUrls) {
-        const http = new HttpRpcClient(bundlerUrl, ERC4337EntryPointAddress, this.network.chainId);
+      for (let bundlerUrl of bundlerUrls) {
+        const http = new HttpRpcClient(bundlerUrl, entryPointAddress, this.network.chainId);
         const opHash = await http.sendUserOpToBundler(op);
-
-        console.log(opHash);
+        console.log('op:', opHash);
+        const txHash = await api.getUserOpReceipt(opHash);
+        console.log('tx:', txHash);
         break;
       }
 

@@ -7,6 +7,7 @@ import { getTransactionReceipt, sendTransaction } from '../../common/RPC';
 import Database from '../../models/Database';
 import EventEmitter from 'eventemitter3';
 import LINQ from 'linq';
+import { UserOperationStruct } from '@account-abstraction/contracts/dist/types/EntryPoint';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 import { isTransactionAbandoned } from '../services/EtherscanPublicTag';
@@ -216,6 +217,8 @@ class TxHub extends EventEmitter<Events> {
 
     return hash;
   }
+
+  watchERC4337Op(opHash: string, struct: UserOperationStruct) {}
 
   saveTx = async (tx: ITransaction) => {
     if ((await this.repository.find({ where: { hash: tx.hash } })).length > 0) {
