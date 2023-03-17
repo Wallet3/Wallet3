@@ -54,7 +54,6 @@ export const WalletBaseKeys = {
   removedEOAIndexes: (id: string | number) => `${id}-removed-indexes`,
   removedERC4337Indexes: (walletId: string | number) => `${walletId}-removed-erc4337-indexes`,
   addressCount: (walletId: string | number) => `${walletId}-address-count`,
-  erc4337Count: (walletId: string | number) => `${walletId}-erc4337-count`,
   erc4337Accounts: (walletId: string | number) => `${walletId}-erc4337-accounts`,
 };
 
@@ -304,6 +303,8 @@ export abstract class WalletBase extends EventEmitter<Events> {
   async delete(): Promise<boolean> {
     AsyncStorage.removeItem(WalletBaseKeys.removedEOAIndexes(this.id));
     AsyncStorage.removeItem(WalletBaseKeys.addressCount(this.id));
+    AsyncStorage.removeItem(WalletBaseKeys.removedERC4337Indexes(this.id));
+    AsyncStorage.removeItem(WalletBaseKeys.erc4337Accounts(this.id));
     await this.key.remove();
     return true;
   }
