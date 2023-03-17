@@ -80,7 +80,7 @@ export class ERC4337Account extends AccountBase {
         for (let bundlerUrl of bundlerUrls) {
           const http = new HttpRpcClient(bundlerUrl, entryPointAddress, network.chainId);
           const opHash = await http.sendUserOpToBundler(op);
-          TxHub.watchERC4337Op(network, opHash, await Promise.all([op].map(userOpsToJSON)));
+          TxHub.watchERC4337Op(network, opHash, await Promise.all([op].map(userOpsToJSON))).catch();
 
           return { success: true, txHash: opHash };
         }

@@ -152,6 +152,19 @@ class TxHub extends EventEmitter<Events> {
         continue;
       }
 
+      if (!tx.hash && tx.isERC4337) {
+        const client = await this.getERC4337Client(tx.chainId);
+        try {
+          const txHash = await client?.getUserOpReceipt((tx as ERC4337Transaction).opHash);
+          if (!txHash) continue;
+
+          tx.hash = txHash;
+          tx.save();
+        } catch (error) {
+          continue;
+        }
+      }
+
       const receipt = await getTransactionReceipt(tx.chainId, tx.hash);
 
       if (this.txs.find((t) => t.from === tx.from && t.chainId === tx.chainId && t.nonce >= tx.nonce && t.blockHash)) {
@@ -250,6 +263,11 @@ class TxHub extends EventEmitter<Events> {
     const pendingTx = await this.saveTx({ ...tx, hash });
     if (!pendingTx) return undefined;
 
+    this.addPendingTx(pendingTx);
+    return hash;
+  }
+
+  protected addPendingTx = (pendingTx: Transaction) => {
     clearTimeout(this.watchTimer);
 
     runInAction(() => {
@@ -264,10 +282,8 @@ class TxHub extends EventEmitter<Events> {
       this.pendingTxs = [maxPriTx, ...this.pendingTxs.filter((t) => !sameNonces.find((t2) => t2.hash === t.hash))];
     });
 
-    this.watchTimer = setTimeout(() => this.watchPendingTxs(), 1200);
-
-    return hash;
-  }
+    this.watchTimer = setTimeout(() => this.watchPendingTxs(), 2000);
+  };
 
   async watchERC4337Op(network: INetwork, opHash: string, ops: UserOperationS[]) {
     if (await this.erc4337Repo.exist({ where: { opHash } })) return;
@@ -284,8 +300,13 @@ class TxHub extends EventEmitter<Events> {
     tx.userOps = ops;
     await tx.save();
 
+    this.addPendingTx(tx);
+
     const client = await this.getERC4337Client(network.chainId);
     const txHash = await client!.getUserOpReceipt(opHash);
+
+    tx.hash = txHash || '';
+    tx.save();
 
     console.log('erc4337 tx:', txHash);
   }
