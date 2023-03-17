@@ -5,6 +5,7 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 import { getTransactionReceipt, sendTransaction } from '../../common/RPC';
 
 import Database from '../../models/Database';
+import EventEmitter from 'eventemitter3';
 import LINQ from 'linq';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
@@ -12,7 +13,11 @@ import { isTransactionAbandoned } from '../services/EtherscanPublicTag';
 import { logTxConfirmed } from '../services/Analytics';
 import { showMessage } from 'react-native-flash-message';
 
-class TxHub {
+interface Events {
+  txConfirmed: (tx: Transaction) => void;
+}
+
+class TxHub extends EventEmitter<Events> {
   private watchTimer!: NodeJS.Timeout;
   pendingTxs: Transaction[] = [];
   txs: Transaction[] = [];
@@ -30,6 +35,7 @@ class TxHub {
   }
 
   constructor() {
+    super();
     makeObservable(this, { pendingTxs: observable, pendingCount: computed, txs: observable, reset: action });
   }
 
@@ -139,8 +145,6 @@ class TxHub {
 
     if (confirmedTxs.length === 0 && abandonedTxs.length === 0) return;
 
-    confirmedTxs.forEach((tx) => logTxConfirmed(tx));
-
     runInAction(() => {
       const minedTxs = this.txs.filter((tx) => !abandonedTxs.find((t) => t.hash === tx.hash));
       minedTxs.unshift(...confirmedTxs.filter((t) => t.blockHash && !this.txs.find((t2) => t2.hash === t.hash)));
@@ -167,6 +171,11 @@ class TxHub {
       abandonedTxs.map((t) => t.remove());
 
       this.pendingTxs = newPending;
+    });
+
+    confirmedTxs.forEach((tx) => {
+      logTxConfirmed(tx);
+      super.emit('txConfirmed', tx);
     });
   }
 
@@ -234,6 +243,7 @@ class TxHub {
   reset() {
     this.pendingTxs = [];
     this.txs = [];
+    this.removeAllListeners();
   }
 }
 

@@ -132,6 +132,10 @@ export class AppVM {
       Contacts.init();
 
       TxHub.init().then(() => AppStoreReview.check());
+      TxHub.on('txConfirmed', (tx) => {
+        if (!(tx.from === this.currentAccount?.address && tx.chainId === Networks.current.chainId)) return;
+        this.currentAccount.tokens.refreshNativeToken();
+      });
 
       setTimeout(() => PairedDevices.scanLan(), 1000);
       Authentication.on('appAuthorized', () => setTimeout(() => PairedDevices.scanLan(), 1000));

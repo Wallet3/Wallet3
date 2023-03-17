@@ -8,6 +8,7 @@ import {
   Gwei_1,
   MAX_GWEI_PRICE,
 } from '../../common/Constants';
+import { HttpRpcClient, SimpleAccountAPI } from '@account-abstraction/sdk';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { clearPendingENSRequests, isENSDomain } from '../services/ENSResolver';
 import {
@@ -32,7 +33,6 @@ import { ERC4337Account } from '../account/ERC4337Account';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
 import { NativeToken } from '../../models/NativeToken';
-import { SimpleAccountAPI } from '@account-abstraction/sdk';
 import { WalletBase } from '../wallet/WalletBase';
 import { fetchAddressInfo } from '../services/EtherscanPublicTag';
 import { getEnsAvatar } from '../../common/ENS';
@@ -442,7 +442,7 @@ export class BaseTransaction {
 
     if (this.account.isERC4337) {
       if (!tx) return { success: false, error: 'No transaction' };
-      return this.sendERC4337Tx({ tx, txs, readableInfo });
+      return this.sendERC4337Tx({ tx, txs, readableInfo }, pin);
     }
   }
 
@@ -474,9 +474,13 @@ export class BaseTransaction {
     args: { tx: providers.TransactionRequest; txs?: providers.TransactionRequest[]; readableInfo?: any },
     pin?: string
   ) {
+    if (!this.network.erc4337) return { success: false, error: 'ERC4337 not supported' };
+
     const { tx: txRequest } = args;
     const target = utils.getAddress(txRequest.to!);
     const value = txRequest.value || BigNumber.from(0);
+
+    console.log(target, value, txRequest);
 
     const owner = await this.wallet.openWallet({
       accountIndex: this.account.index,
@@ -503,6 +507,16 @@ export class BaseTransaction {
         maxFeePerGas: Number.parseInt(`${this.maxGasPrice * Gwei_1}`),
         maxPriorityFeePerGas: Number.parseInt(`${this.maxPriorityPrice * Gwei_1}`),
       });
+
+      for (let bundlerUrl of this.network.erc4337.bundlerUrls) {
+        const http = new HttpRpcClient(bundlerUrl, ERC4337EntryPointAddress, this.network.chainId);
+        const opHash = await http.sendUserOpToBundler(op);
+
+        console.log(opHash);
+        break;
+      }
+
+      break;
     }
   }
 }
