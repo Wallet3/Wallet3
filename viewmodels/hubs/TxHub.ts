@@ -14,6 +14,7 @@ import LINQ from 'linq';
 import Networks from '../core/Networks';
 import { SimpleAccountAPI } from '@account-abstraction/sdk';
 import { UserOperationStruct } from '@account-abstraction/contracts/dist/types/EntryPoint';
+import { createERC4337Client } from '../services/ERC4337';
 import { formatAddress } from '../../utils/formatter';
 import { getSecureRandomBytes } from '../../utils/math';
 import i18n from '../../i18n';
@@ -27,7 +28,6 @@ interface Events {
 
 class TxHub extends EventEmitter<Events> {
   private watchTimer!: NodeJS.Timeout;
-  private erc4337Clients = new Map<number, SimpleAccountAPI>();
 
   pendingTxs: Transaction[] = [];
   txs: Transaction[] = [];
@@ -46,34 +46,6 @@ class TxHub extends EventEmitter<Events> {
 
   get pendingCount() {
     return this.pendingTxs.length;
-  }
-
-  private async getERC4337Client(chainId: number) {
-    const cache = this.erc4337Clients.get(chainId);
-    if (cache) return cache;
-
-    const network = Networks.find(chainId);
-    if (!network?.erc4337) return;
-
-    const { entryPointAddress, factoryAddress } = network.erc4337;
-    const rpcUrls = getRPCUrls(chainId);
-
-    let provider!: providers.JsonRpcProvider;
-
-    for (let url of rpcUrls) {
-      provider = new providers.JsonRpcProvider(url);
-      if (await provider.getBlockNumber()) break;
-    }
-
-    const client = new SimpleAccountAPI({
-      provider,
-      owner: new Wallet(getSecureRandomBytes(32)),
-      entryPointAddress,
-      factoryAddress,
-    });
-
-    this.erc4337Clients.set(chainId, client);
-    return client;
   }
 
   constructor() {
@@ -148,7 +120,8 @@ class TxHub extends EventEmitter<Events> {
 
     for (let tx of this.pendingTxs) {
       if (!tx.hash && tx.isERC4337) {
-        const client = await this.getERC4337Client(tx.chainId);
+        const client = await createERC4337Client(tx.chainId);
+
         try {
           const txHash = await client?.getUserOpReceipt((tx as ERC4337Transaction).opHash);
           if (!txHash) continue;

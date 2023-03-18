@@ -58,7 +58,8 @@ const Tx = observer(
     textColor: string;
     iconBackgroundColor: string;
   }) => {
-    const method = Methods.get((item.data as string)?.substring(0, 10)) ?? 'contract-interaction';
+    const method =
+      Methods.get((item.data as string)?.substring(0, 10)) ?? (item.readableInfo?.type as string) ?? 'contract-interaction';
     const { t } = i18n;
 
     const { chainId } = item;
@@ -87,7 +88,7 @@ const Tx = observer(
               <Text style={{ fontSize: 16, marginEnd: 4, maxWidth: 180, color: textColor }} numberOfLines={1}>
                 {`${cancelTx ? `${t('tip-cancel-action')} ` : ''}${methodName}`}
               </Text>
-              {method === 'contract-interaction' ? undefined : (
+              {method.endsWith('-interaction') ? undefined : (
                 <Text style={{ fontSize: 16, color: textColor, maxWidth: '80%' }} numberOfLines={1}>
                   {`${amount > 0 ? amount : ''} ${nft || tokenSymbol}`.trim()}
                 </Text>

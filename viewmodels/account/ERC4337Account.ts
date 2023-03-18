@@ -7,6 +7,7 @@ import { makeObservable, observable, runInAction } from 'mobx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TxHub from '../hubs/TxHub';
 import { WalletBase } from '../wallet/WalletBase';
+import { createERC4337Client } from '../services/ERC4337';
 import { userOpsToJSON } from '../../models/entities/ERC4337Transaction';
 
 const Keys = {
@@ -62,42 +63,38 @@ export class ERC4337Account extends AccountBase {
       pin,
     });
 
+    if (!owner) return { success: false };
+
+    onNetworkRequest?.();
+
+    const { bundlerUrls, entryPointAddress, factoryAddress } = network.erc4337;
+
+    const client = await createERC4337Client(network.chainId, owner);
+    if (!client) return { success: false };
+
     if (tx) {
       const target = utils.getAddress(tx.to!);
       const value = tx.value || BigNumber.from(0);
 
-      if (!owner) return { success: false };
+      const op = await client.createSignedUserOp({
+        target,
+        value,
+        data: (tx.data as string) || '0x',
+        ...gas,
+      });
 
-      const { bundlerUrls, entryPointAddress, factoryAddress } = network.erc4337;
+      for (let bundlerUrl of bundlerUrls) {
+        const http = new HttpRpcClient(bundlerUrl, entryPointAddress, network.chainId);
+        const opHash = await http.sendUserOpToBundler(op);
+        TxHub.watchERC4337Op(network, opHash, await Promise.all([op].map(userOpsToJSON)), { ...tx, readableInfo }).catch();
 
-      onNetworkRequest?.();
-
-      for (let url of getRPCUrls(network.chainId)) {
-        const provider = new ethers.providers.JsonRpcProvider(url);
-        const client = new SimpleAccountAPI({
-          provider,
-          owner,
-          entryPointAddress,
-          factoryAddress,
-        });
-
-        const op = await client.createSignedUserOp({
-          target,
-          value,
-          data: (tx.data as string) || '0x',
-          ...gas,
-        });
-
-        for (let bundlerUrl of bundlerUrls) {
-          const http = new HttpRpcClient(bundlerUrl, entryPointAddress, network.chainId);
-          const opHash = await http.sendUserOpToBundler(op);
-          TxHub.watchERC4337Op(network, opHash, await Promise.all([op].map(userOpsToJSON)), { ...tx, readableInfo }).catch();
-
-          return { success: true, txHash: opHash };
-        }
-
-        break;
+        return { success: true, txHash: opHash };
       }
+    }
+
+    if (txs) {
+      const ca = await client._getAccountContract();
+      ca.interface;
     }
 
     return { success: false, error: { message: 'Network error', code: -1 } };
