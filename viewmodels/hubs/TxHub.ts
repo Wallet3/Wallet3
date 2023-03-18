@@ -1,4 +1,4 @@
-import ERC4337Transaction, { UserOperationS } from '../../models/entities/ERC4337Transaction';
+import ERC4337Transaction, { UserOperationS, userOpsToJSON } from '../../models/entities/ERC4337Transaction';
 import { HOUR, MINUTE } from '../../utils/time';
 import { IsNull, LessThanOrEqual, MoreThan, Not } from 'typeorm';
 import Transaction, { ITransaction } from '../../models/entities/Transaction';
@@ -260,19 +260,19 @@ class TxHub extends EventEmitter<Events> {
 
   async watchERC4337Op(network: INetwork, opHash: string, op: UserOperationStruct, txReq: ITransaction) {
     if (await this.erc4337Repo.exist({ where: { opHash } })) return;
-    console.log('op hash:', opHash);
+    const opJson = await userOpsToJSON(op);
 
     const tx = new ERC4337Transaction();
     tx.hash = '';
     tx.opHash = opHash;
     tx.chainId = network.chainId;
-    tx.data = (op?.callData as string) || '0x';
-    tx.from = (op?.sender as string) || '0x';
+    tx.data = opJson.callData || '0x';
+    tx.from = opJson.sender || '0x';
     tx.to = txReq.to || '0x';
-    tx.gas = Number(op?.callGasLimit.toString() || 0);
-    tx.nonce = Number(op?.nonce || 0);
+    tx.gas = Number(opJson.callGasLimit.toString() || 0);
+    tx.nonce = Number(opJson.nonce || 0);
     tx.value = txReq.value?.toString() || '0x0';
-    tx.gasPrice = Number(op?.maxFeePerGas || Gwei_1);
+    tx.gasPrice = Number(opJson.maxFeePerGas || Gwei_1);
     tx.timestamp = Date.now();
     tx.readableInfo = txReq.readableInfo;
     await tx.save();

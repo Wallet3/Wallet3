@@ -37,7 +37,7 @@ export async function userOpsToJSON(op: Partial<UserOperationStruct>) {
     ) as UserOperationS;
 }
 
-@Entity({ name: 'erc4337_txs_v0' })
+@Entity({ name: 'erc4337_txs_v1' })
 export default class ERC4337Transaction extends Transaction {
   @PrimaryColumn()
   opHash!: string;

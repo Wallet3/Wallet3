@@ -1,11 +1,10 @@
 import { AccountBase, SendTxRequest, SendTxResponse } from './AccountBase';
-import { BigNumber, ethers, utils } from 'ethers';
-import { HttpRpcClient, SimpleAccountAPI } from '@account-abstraction/sdk';
-import { UserOperationS, userOpsToJSON } from '../../models/entities/ERC4337Transaction';
-import { estimateGas, eth_call_return, getCode, getRPCUrls } from '../../common/RPC';
+import { BigNumber, utils } from 'ethers';
+import { eth_call_return, getCode } from '../../common/RPC';
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { HttpRpcClient } from '@account-abstraction/sdk';
 import TxHub from '../hubs/TxHub';
 import { WalletBase } from '../wallet/WalletBase';
 import { createERC4337Client } from '../services/ERC4337';
@@ -96,6 +95,12 @@ export class ERC4337Account extends AccountBase {
 
     for (let bundlerUrl of bundlerUrls) {
       const http = new HttpRpcClient(bundlerUrl, entryPointAddress, network.chainId);
+
+      try {
+        await http.validateChainId();
+      } catch (error) {
+        continue;
+      }
 
       try {
         const opHash = await http.sendUserOpToBundler(op);
