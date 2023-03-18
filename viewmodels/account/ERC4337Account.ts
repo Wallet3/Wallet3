@@ -1,7 +1,7 @@
-import { AccountBase, SendTxRequest } from './AccountBase';
+import { AccountBase, SendTxRequest, SendTxResponse } from './AccountBase';
 import { BigNumber, ethers, utils } from 'ethers';
 import { HttpRpcClient, SimpleAccountAPI } from '@account-abstraction/sdk';
-import { eth_call_return, getCode, getRPCUrls } from '../../common/RPC';
+import { estimateGas, eth_call_return, getCode, getRPCUrls } from '../../common/RPC';
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -51,7 +51,7 @@ export class ERC4337Account extends AccountBase {
     return true;
   }
 
-  async sendTx(args: SendTxRequest, pin?: string) {
+  async sendTx(args: SendTxRequest, pin?: string): Promise<SendTxResponse> {
     if (!this.wallet) return { success: false, error: { message: 'Account not available', code: -1 } };
 
     const { tx, txs, network, gas, readableInfo, onNetworkRequest } = args;
@@ -73,14 +73,20 @@ export class ERC4337Account extends AccountBase {
     const client = await createERC4337Client(network.chainId, owner);
     if (!client) return { success: false };
 
+    const ca = await client._getAccountContract();
+
     if (tx) {
       const target = utils.getAddress(tx.to!);
-      const value = tx.value || BigNumber.from(0);
+      const value = BigNumber.from(tx.value || 0);
+      const data = ca.interface.encodeFunctionData('execute', [target, value, tx.data || '0x']);
+
+      const gasLimit = await estimateGas(network.chainId, { to: this.address, data, from: entryPointAddress });
+      if (gasLimit.errorMessage) return { success: false, error: { message: gasLimit.errorMessage, code: -1 } };
 
       const op = await client.createSignedUserOp({
-        target,
-        value,
-        data: (tx.data as string) || '0x',
+        target: this.address,
+        data,
+        gasLimit: gasLimit.gas,
         ...gas,
       });
 
@@ -94,8 +100,28 @@ export class ERC4337Account extends AccountBase {
     }
 
     if (txs) {
-      const ca = await client._getAccountContract();
-      ca.interface;
+      const execs = txs.map((tx) => {
+        return {
+          dest: tx.to!,
+          data: ca.interface.encodeFunctionData('execute', [
+            utils.getAddress(tx.to!),
+            BigNumber.from(tx.value || 0),
+            tx.data || '0x',
+          ]),
+        };
+      });
+
+      const data = ca.interface.encodeFunctionData('executeBatch', [execs.map((e) => e.dest), execs.map((e) => e.data)]);
+
+      const gasLimit = await estimateGas(network.chainId, { to: this.address, data, from: entryPointAddress });
+      if (gasLimit.errorMessage) return { success: false, error: { message: gasLimit.errorMessage, code: -1 } };
+
+      client.createSignedUserOp({
+        target: this.address,
+        data,
+        gasLimit: gasLimit.gas,
+        ...gas,
+      });
     }
 
     return { success: false, error: { message: 'Network error', code: -1 } };
