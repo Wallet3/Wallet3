@@ -5,12 +5,14 @@ import React, { useRef } from 'react';
 import { StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { formatAddress, formatCurrency } from '../../utils/formatter';
 
+import { AccountBase } from '../../viewmodels/account/AccountBase';
 import AnimatedNumber from '../../components/AnimatedNumber';
 import ColorLogos from '../../assets/icons/networks/color';
 import { INetwork } from '../../common/Networks';
 import Image from 'react-native-fast-image';
 import MessageKeys from '../../common/MessageKeys';
 import Ripple from 'react-native-material-ripple';
+import SuperBadge from '../../components/SuperBadge';
 import UI from '../../viewmodels/settings/UI';
 import WhiteLogos from '../../assets/icons/networks/white';
 import i18n from '../../i18n';
@@ -20,15 +22,10 @@ import { themeColor } from '../../constants/styles';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
-  balance?: number;
   currency?: string;
-  network?: INetwork;
+  network: INetwork;
   connectedApps?: number;
-  address?: string;
-  ens?: string;
-  avatar?: string;
-  chainId: number;
-  disabled?: boolean;
+  account: AccountBase;
   separatorColor?: string;
   separatorWidth?: number;
   textColor: string;
@@ -38,35 +35,30 @@ interface Props {
   onQRCodePress?: () => void;
   mode?: 'light' | 'dark';
   gasPrice?: number;
-  signInPlatform?: string;
 }
 
 export default observer(
   ({
     style,
-    address,
-    balance,
+    account,
     network,
-    avatar,
-    chainId,
     connectedApps,
     currency,
     onSendPress,
     onRequestPress,
     onDAppsPress,
-    disabled,
     separatorColor,
     separatorWidth,
     textColor,
     mode,
     gasPrice,
     onQRCodePress,
-    signInPlatform,
   }: Props) => {
     const { t } = i18n;
     const { hideBalance, gasIndicator } = UI;
     const addrTextView = useRef<Animatable.Text>(null);
 
+    const { address, balance, avatar, signInPlatform, tokens, isERC4337 } = account;
     const prefixedAddress = (network?.addrPrefix ? `${network?.addrPrefix}${address?.substring(2)}` : address) || '';
 
     return (
@@ -144,6 +136,25 @@ export default observer(
           ) : undefined}
 
           <MaterialCommunityIcons name="qrcode" size={12} color={textColor} style={{ paddingHorizontal: 6 }} />
+
+          {isERC4337 && (
+            <SuperBadge
+              containerStyle={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                backgroundColor: '#ffffff30',
+                paddingVertical: 2,
+                paddingStart: 5,
+                paddingEnd: 3,
+                borderRadius: 5,
+                marginStart: 2,
+              }}
+              txtStyle={{ textTransform: 'uppercase', color: '#fff', fontSize: 10, fontWeight: '700' }}
+              iconColor="#fff"
+              iconStyle={{ marginStart: 4 }}
+              iconSize={9}
+            />
+          )}
         </TouchableOpacity>
 
         <View style={{ height: 36, backgroundColor: 'transparent' }} />
@@ -166,7 +177,7 @@ export default observer(
             )}
           </TouchableOpacity>
 
-          {mode === 'light' ? WhiteLogos[chainId] : ColorLogos[chainId]}
+          {mode === 'light' ? WhiteLogos[network.chainId] : ColorLogos[network.chainId]}
         </View>
 
         <View
@@ -182,7 +193,7 @@ export default observer(
           <Ripple
             style={styles.button}
             rippleColor={mode === 'light' ? undefined : themeColor}
-            onPress={(_) => (disabled ? undefined : onSendPress?.())}
+            onPress={(_) => (tokens.loadingTokens ? undefined : onSendPress?.())}
           >
             <Ionicons name="md-arrow-up-circle-outline" size={18} color={textColor} />
             <Text style={{ ...styles.buttonText, color: textColor }}>{t('button-send')}</Text>
@@ -193,7 +204,7 @@ export default observer(
           <Ripple
             style={styles.button}
             rippleColor={mode === 'light' ? undefined : themeColor}
-            onPress={(_) => (disabled ? undefined : onRequestPress?.())}
+            onPress={(_) => (tokens.loadingTokens ? undefined : onRequestPress?.())}
           >
             <Ionicons name="md-arrow-down-circle-outline" size={18} color={textColor} />
             <Text style={{ ...styles.buttonText, color: textColor }}>{t('button-request')}</Text>

@@ -8,6 +8,7 @@ import { AccountBase } from '../../viewmodels/account/AccountBase';
 import Avatar from '../../components/Avatar';
 import { ERC4337Account } from '../../viewmodels/account/ERC4337Account';
 import { INetwork } from '../../common/Networks';
+import SuperBadge from '../../components/SuperBadge';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -85,8 +86,8 @@ export default observer(({ accounts, selectedAccounts, onDone, single, style, ex
         </Text>
 
         {item.isERC4337 && (
-          <View
-            style={{
+          <SuperBadge
+            containerStyle={{
               marginStart: 8,
               borderRadius: 5,
               paddingStart: 8,
@@ -98,10 +99,11 @@ export default observer(({ accounts, selectedAccounts, onDone, single, style, ex
                 ? themeColor
                 : inactivatedColor,
             }}
-          >
-            <Text style={{ textTransform: 'uppercase', color: '#fff', fontSize: 10 }}>Super</Text>
-            <MaterialCommunityIcons name="lightning-bolt" color="#fff" style={{ marginStart: 4 }} size={11} />
-          </View>
+            txtStyle={{ textTransform: 'uppercase', color: '#fff', fontSize: 10 }}
+            iconColor="#fff"
+            iconStyle={{ marginStart: 4 }}
+            iconSize={11}
+          />
         )}
       </TouchableOpacity>
     );

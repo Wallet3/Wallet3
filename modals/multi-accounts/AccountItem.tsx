@@ -10,6 +10,7 @@ import { ERC4337Account } from '../../viewmodels/account/ERC4337Account';
 import { INetwork } from '../../common/Networks';
 import { Placeholder } from '../../components';
 import React from 'react';
+import SuperBadge from '../../components/SuperBadge';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { utils } from 'ethers';
@@ -84,8 +85,8 @@ export default observer(
               </Text>
 
               {account.isERC4337 && (
-                <View
-                  style={{
+                <SuperBadge
+                  containerStyle={{
                     marginStart: 8,
                     borderRadius: 5,
                     paddingStart: 8,
@@ -98,10 +99,11 @@ export default observer(
                       ? themeColor
                       : inactivatedColor,
                   }}
-                >
-                  <Text style={{ textTransform: 'uppercase', color: '#fff', fontSize: 10, fontWeight: '700' }}>Super</Text>
-                  <MaterialCommunityIcons name="lightning-bolt" color="#fff" style={{ marginStart: 5 }} size={12} />
-                </View>
+                  txtStyle={{ textTransform: 'uppercase', color: '#fff', fontSize: 10, fontWeight: '700' }}
+                  iconColor="#fff"
+                  iconStyle={{ marginStart: 5 }}
+                  iconSize={12}
+                />
               )}
             </View>
             <Placeholder />

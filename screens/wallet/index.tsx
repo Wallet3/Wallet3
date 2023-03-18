@@ -80,21 +80,15 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         }}
         separatorColor={isLightMode ? undefined : current.color}
         textColor={isLightMode ? '#fff' : current.color}
-        address={currentAccount?.address}
-        balance={currentAccount?.balance}
-        currency={CurrencyViewmodel.currentCurrency.symbol}
+        account={currentAccount!}
         network={current}
-        chainId={current.chainId}
-        avatar={currentAccount?.avatar}
-        ens={currentAccount?.ens.name}
+        currency={CurrencyViewmodel.currentCurrency.symbol}
         connectedApps={WalletConnectHub.connectedCount}
-        disabled={currentAccount?.tokens.loadingTokens}
         onSendPress={() => PubSub.publish(MessageKeys.openSendFundsModal)}
         onRequestPress={() => PubSub.publish(MessageKeys.openRequestFundsModal)}
         onDAppsPress={() => navigation.navigate('ConnectedDapps')}
         gasPrice={GasPrice.currentGwei}
         onQRCodePress={() => openAddressQR()}
-        signInPlatform={currentAccount?.signInPlatform}
       />
 
       <Assets
