@@ -33,8 +33,9 @@ export class ERC4337Account extends AccountBase {
     return BigNumber.from(resp.result).toNumber();
   }
 
-  async checkActivated(chainId: number) {
+  async checkActivated(chainId: number, cacheOnly = false) {
     if (this.activatedChains.get(chainId)) return true;
+    if (cacheOnly) return false;
 
     const info = await AsyncStorage.getItem(Keys.accountActivated(this.address, chainId));
     if (info === Keys.activated) {

@@ -19,11 +19,7 @@ export default ({ containerStyle, txtStyle, iconSize, iconColor, iconStyle }: Pr
           flexDirection: 'row',
           alignItems: 'center',
           backgroundColor: '#ffffff30',
-          paddingVertical: 2,
-          paddingStart: 5,
-          paddingEnd: 3,
           borderRadius: 5,
-          marginStart: 2,
         },
         containerStyle,
       ]}

@@ -119,7 +119,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         </SquircleModalize>
 
         <SquircleModalize ref={addressQRModalize}>
-          <AddressQRCode account={currentAccount || undefined} />
+          <AddressQRCode account={currentAccount!} />
         </SquircleModalize>
 
         <InappBrowserModal pageKey="wallet" />

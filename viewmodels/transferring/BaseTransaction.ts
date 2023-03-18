@@ -1,41 +1,28 @@
-import { BigNumber, ethers, providers, utils } from 'ethers';
+import { AccountBase, SendTxRequest } from '../account/AccountBase';
+import { BigNumber, utils } from 'ethers';
 import {
   EncodedERC1271ContractWalletCallData,
   EncodedERC4337EntryPointCallData,
   Gwei_1,
   MAX_GWEI_PRICE,
 } from '../../common/Constants';
-import { HttpRpcClient, SimpleAccountAPI } from '@account-abstraction/sdk';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { clearPendingENSRequests, isENSDomain } from '../services/ENSResolver';
-import {
-  estimateGas,
-  eth_call_return,
-  getCode,
-  getGasPrice,
-  getMaxPriorityFee,
-  getNextBlockBaseFee,
-  getRPCUrls,
-  getTransactionCount,
-} from '../../common/RPC';
+import { estimateGas, eth_call_return, getCode, getGasPrice, getMaxPriorityFee, getNextBlockBaseFee } from '../../common/RPC';
 import { isDomain, resolveDomain } from '../services/DomainResolver';
 
-import { AccountBase } from '../account/AccountBase';
 import AddressTag from '../../models/entities/AddressTag';
 import App from '../core/App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Coingecko from '../../common/apis/Coingecko';
 import { ERC20Token } from '../../models/ERC20';
-import { ERC4337Account } from '../account/ERC4337Account';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
 import { NativeToken } from '../../models/NativeToken';
-import TxHub from '../hubs/TxHub';
 import { WalletBase } from '../wallet/WalletBase';
 import { entryPointAddress } from '../../configs/erc4337.json';
 import { fetchAddressInfo } from '../services/EtherscanPublicTag';
 import { getEnsAvatar } from '../../common/ENS';
-import { showMessage } from 'react-native-flash-message';
 
 export class BaseTransaction {
   private toAddressTypeCache = new Map<string, { isContractWallet: boolean; isContractRecipient: boolean }>();
@@ -430,15 +417,7 @@ export class BaseTransaction {
     runInAction(() => (this.feeToken = feeToken));
   }
 
-  sendRawTx(
-    args: {
-      tx?: providers.TransactionRequest;
-      txs?: providers.TransactionRequest[];
-      readableInfo?: any;
-      onNetworkRequest?: () => void;
-    },
-    pin?: string
-  ) {
+  sendRawTx(args: SendTxRequest, pin?: string) {
     return this.account.sendTx(
       {
         ...args,
