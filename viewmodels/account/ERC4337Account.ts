@@ -1,6 +1,7 @@
 import { AccountBase, SendTxRequest, SendTxResponse } from './AccountBase';
 import { BigNumber, ethers, utils } from 'ethers';
 import { HttpRpcClient, SimpleAccountAPI } from '@account-abstraction/sdk';
+import { UserOperationS, userOpsToJSON } from '../../models/entities/ERC4337Transaction';
 import { estimateGas, eth_call_return, getCode, getRPCUrls } from '../../common/RPC';
 import { makeObservable, observable, runInAction } from 'mobx';
 
@@ -8,7 +9,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import TxHub from '../hubs/TxHub';
 import { WalletBase } from '../wallet/WalletBase';
 import { createERC4337Client } from '../services/ERC4337';
-import { userOpsToJSON } from '../../models/entities/ERC4337Transaction';
 
 const Keys = {
   accountActivated: (address: string, chainId: number) => `${chainId}_${address}_erc4337_activated`,
@@ -55,6 +55,7 @@ export class ERC4337Account extends AccountBase {
     if (!this.wallet) return { success: false, error: { message: 'Account not available', code: -1 } };
 
     const { tx, txs, network, gas, readableInfo, onNetworkRequest } = args;
+    if (!(tx || txs)) return { success: false };
     if (!network?.erc4337) return { success: false, error: { message: 'ERC4337 not supported', code: -1 } };
 
     const owner = await this.wallet.openWallet({
@@ -73,55 +74,35 @@ export class ERC4337Account extends AccountBase {
     const client = await createERC4337Client(network.chainId, owner);
     if (!client) return { success: false };
 
-    const ca = await client._getAccountContract();
+    const op = Array.isArray(txs)
+      ? await client.createSignedUserOpForTransactions(
+          txs.map((tx) => {
+            return {
+              target: utils.getAddress(tx.to!),
+              value: tx.value || 0,
+              data: (tx.data as string) || '0x',
+            };
+          }),
+          gas
+        )
+      : await client.createSignedUserOp({
+          target: utils.getAddress(tx!.to!),
+          value: tx!.value || 0,
+          data: (tx!.data as string) || '0x',
+          ...gas,
+        });
 
-    if (tx) {
-      const target = utils.getAddress(tx.to!);
-      const value = BigNumber.from(tx.value || 0);
-      const data = ca.interface.encodeFunctionData('execute', [target, value, tx.data || '0x']);
+    if (!op) return { success: false };
 
-      const gasLimit = await estimateGas(network.chainId, { to: this.address, data, from: entryPointAddress });
-      if (gasLimit.errorMessage) return { success: false, error: { message: gasLimit.errorMessage, code: -1 } };
+    for (let bundlerUrl of bundlerUrls) {
+      const http = new HttpRpcClient(bundlerUrl, entryPointAddress, network.chainId);
 
-      const op = await client.createSignedUserOp({
-        target: this.address,
-        data,
-        gasLimit: gasLimit.gas,
-        ...gas,
-      });
-
-      for (let bundlerUrl of bundlerUrls) {
-        const http = new HttpRpcClient(bundlerUrl, entryPointAddress, network.chainId);
+      try {
         const opHash = await http.sendUserOpToBundler(op);
-        TxHub.watchERC4337Op(network, opHash, await Promise.all([op].map(userOpsToJSON)), { ...tx, readableInfo }).catch();
+        TxHub.watchERC4337Op(network, opHash, op, { ...tx, readableInfo }).catch();
 
         return { success: true, txHash: opHash };
-      }
-    }
-
-    if (txs) {
-      const execs = txs.map((tx) => {
-        return {
-          dest: tx.to!,
-          data: ca.interface.encodeFunctionData('execute', [
-            utils.getAddress(tx.to!),
-            BigNumber.from(tx.value || 0),
-            tx.data || '0x',
-          ]),
-        };
-      });
-
-      const data = ca.interface.encodeFunctionData('executeBatch', [execs.map((e) => e.dest), execs.map((e) => e.data)]);
-
-      const gasLimit = await estimateGas(network.chainId, { to: this.address, data, from: entryPointAddress });
-      if (gasLimit.errorMessage) return { success: false, error: { message: gasLimit.errorMessage, code: -1 } };
-
-      client.createSignedUserOp({
-        target: this.address,
-        data,
-        gasLimit: gasLimit.gas,
-        ...gas,
-      });
+      } catch (error) {}
     }
 
     return { success: false, error: { message: 'Network error', code: -1 } };

@@ -22,6 +22,7 @@ import {
 } from './tokens';
 
 import ERC4337Configs from '../configs/erc4337.json';
+import { GoerliPopTokens } from './tokens/Goerli';
 import { Gwei_1 } from './Constants';
 
 export interface IERC4337 {
@@ -411,7 +412,7 @@ export const Testnets: INetwork[] = [
     eip1559: true,
     erc4337: ERC4337Configs['5'],
     testnet: true,
-    defaultTokens: [],
+    defaultTokens: GoerliPopTokens,
     explorer: 'https://goerli.etherscan.io',
   },
   {

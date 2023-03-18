@@ -42,9 +42,6 @@ export default class ERC4337Transaction extends Transaction {
   @PrimaryColumn()
   opHash!: string;
 
-  @Column({ type: 'simple-json', nullable: true })
-  userOps!: UserOperationS[];
-
   get isERC4337() {
     return true;
   }

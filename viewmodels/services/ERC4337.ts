@@ -1,11 +1,11 @@
 import { BytesLike, Wallet, providers } from 'ethers';
 
+import { ERC4337Client } from './ERC4337Client';
 import Networks from '../core/Networks';
-import { SimpleAccountAPI } from '@account-abstraction/sdk';
 import { getRPCUrls } from '../../common/RPC';
 import { getSecureRandomBytes } from '../../utils/math';
 
-const ERC4337Clients = new Map<number, SimpleAccountAPI>();
+const ERC4337Clients = new Map<number, ERC4337Client>();
 
 export async function createERC4337Client(chainId: number, owner = new Wallet(getSecureRandomBytes(32))) {
   const cache = ERC4337Clients.get(chainId);
@@ -27,7 +27,7 @@ export async function createERC4337Client(chainId: number, owner = new Wallet(ge
     } catch (error) {}
   }
 
-  const client = new SimpleAccountAPI({
+  const client = new ERC4337Client({
     provider,
     owner,
     entryPointAddress,

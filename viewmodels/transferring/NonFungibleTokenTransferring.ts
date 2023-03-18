@@ -154,7 +154,7 @@ export class NFTTransferring extends BaseTransaction {
         chainId: this.network.chainId,
         from: this.account.address,
         to: this.nft.contract,
-        value: 0,
+        value: '0x0',
         nonce: this.nonce,
         data: this.txData,
         gasLimit: this.gasLimit,

@@ -258,7 +258,7 @@ class TxHub extends EventEmitter<Events> {
     this.watchTimer = setTimeout(() => this.watchPendingTxs(), 2000);
   };
 
-  async watchERC4337Op(network: INetwork, opHash: string, ops: UserOperationS[], txReq: ITransaction) {
+  async watchERC4337Op(network: INetwork, opHash: string, op: UserOperationStruct, txReq: ITransaction) {
     if (await this.erc4337Repo.exist({ where: { opHash } })) return;
     console.log('op hash:', opHash);
 
@@ -266,14 +266,13 @@ class TxHub extends EventEmitter<Events> {
     tx.hash = '';
     tx.opHash = opHash;
     tx.chainId = network.chainId;
-    tx.data = (ops[0]?.callData as string) || '0x';
-    tx.from = ops[0]?.sender || '0x';
+    tx.data = (op?.callData as string) || '0x';
+    tx.from = (op?.sender as string) || '0x';
     tx.to = txReq.to || '0x';
-    tx.gas = Number(ops[0]?.callGasLimit.toString() || 0);
-    tx.nonce = Number(ops[0]?.nonce || 0);
+    tx.gas = Number(op?.callGasLimit.toString() || 0);
+    tx.nonce = Number(op?.nonce || 0);
     tx.value = txReq.value?.toString() || '0x0';
-    tx.gasPrice = Number(ops[0]?.maxFeePerGas || Gwei_1);
-    tx.userOps = ops;
+    tx.gasPrice = Number(op?.maxFeePerGas || Gwei_1);
     tx.timestamp = Date.now();
     tx.readableInfo = txReq.readableInfo;
     await tx.save();
