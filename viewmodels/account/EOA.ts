@@ -1,10 +1,15 @@
 import { AccountBase } from './AccountBase';
 import { TransactionRequest } from '@ethersproject/abstract-provider';
+import { getTransactionCount } from '../../common/RPC';
 import { showMessage } from 'react-native-flash-message';
 import { utils } from 'ethers';
 
 export class EOA extends AccountBase {
   readonly type = 'eoa';
+
+  getNonce(chainId: number) {
+    return getTransactionCount(chainId, this.address);
+  }
 
   async sendTx(args: { tx: TransactionRequest; readableInfo?: any }, pin?: string) {
     if (!this.wallet) return { success: false, error: { message: 'Account not available', code: -1 } };

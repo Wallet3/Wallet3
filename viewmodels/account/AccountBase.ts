@@ -115,6 +115,7 @@ export abstract class AccountBase {
   }
 
   abstract sendTx(args: SendTxRequest, pin?: string): Promise<SendTxResponse>;
+  abstract getNonce(chainId: number): Promise<number>;
 
   setAvatar(objs: { emoji?: string; color?: string; nickname?: string }) {
     this.emojiAvatar = objs.emoji || this.emojiAvatar;

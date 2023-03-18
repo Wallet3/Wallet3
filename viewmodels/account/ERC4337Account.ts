@@ -1,7 +1,7 @@
 import { AccountBase, SendTxRequest } from './AccountBase';
 import { BigNumber, ethers, utils } from 'ethers';
 import { HttpRpcClient, SimpleAccountAPI } from '@account-abstraction/sdk';
-import { getCode, getRPCUrls } from '../../common/RPC';
+import { eth_call_return, getCode, getRPCUrls } from '../../common/RPC';
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -21,6 +21,15 @@ export class ERC4337Account extends AccountBase {
   constructor(wallet: WalletBase, address: string, index: number, extra?: { signInPlatform?: string }) {
     super(wallet, address, index, extra);
     makeObservable(this, { activatedChains: observable });
+  }
+
+  async getNonce(chainId: number) {
+    if (!(await this.checkActivated(chainId))) return 0;
+
+    const resp = await eth_call_return(chainId, { to: this.address, data: '0xaffed0e0' });
+    if (!resp || resp.error) return 0;
+
+    return BigNumber.from(resp.result).toNumber();
   }
 
   async checkActivated(chainId: number) {

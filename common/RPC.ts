@@ -148,7 +148,7 @@ export async function eth_call_return(
     data: string;
   },
   fast = false
-) {
+): Promise<{ result?: any; error?: { message: string; code: number; data: any }; id: number } | undefined> {
   let attempts = 0;
   const urls = getRPCUrls(chainId);
 

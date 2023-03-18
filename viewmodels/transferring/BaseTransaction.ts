@@ -111,7 +111,7 @@ export class BaseTransaction {
 
     this.nativeToken.getBalance();
 
-    if (initChainData) this.initChainData({ ...args, account: args.account.address });
+    if (initChainData) this.initChainData();
 
     if (this.network.eip1559) this.refreshEIP1559(this.network.chainId);
     if (this.network.feeTokens) this.initFeeToken();
@@ -370,8 +370,8 @@ export class BaseTransaction {
     });
   }
 
-  protected async initChainData({ network, account }: { network: INetwork; account: string }) {
-    const { chainId, eip1559 } = network;
+  protected async initChainData() {
+    const { chainId, eip1559 } = this.network;
 
     runInAction(() => (this.initializing = true));
 
@@ -379,7 +379,7 @@ export class BaseTransaction {
       getGasPrice(chainId),
       getNextBlockBaseFee(chainId),
       getMaxPriorityFee(chainId),
-      getTransactionCount(chainId, account),
+      this.account.getNonce(chainId),
     ]);
 
     runInAction(() => {
