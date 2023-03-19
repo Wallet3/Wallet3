@@ -1,25 +1,27 @@
 import { AccountBase, SendTxRequest } from '../account/AccountBase';
-import { makeObservable, observable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 
 import { BaseTransaction } from './BaseTransaction';
 import { INetwork } from '../../common/Networks';
 
 export class BatchTransactionRequest extends BaseTransaction {
-  txs: SendTxRequest[];
+  requests: SendTxRequest[];
 
-  constructor(args: { network: INetwork; account: AccountBase; txs: SendTxRequest[] }) {
+  constructor(args: { network: INetwork; account: AccountBase; requests: SendTxRequest[] }) {
     super(args);
-    this.txs = args.txs;
+    this.requests = args.requests;
 
-    makeObservable(this, { txs: observable });
+    makeObservable(this, { requests: observable, removeRequest: action });
   }
 
-  removeTx(request: SendTxRequest) {
-    const index = this.txs.indexOf(request);
+  removeRequest(request: SendTxRequest) {
+    const index = this.requests.indexOf(request);
     if (index < 0) return;
 
-    this.txs.splice(index, 1);
+    this.requests.splice(index, 1);
   }
 
-  send = () => {};
+  send = (pin?: string, onNetworkRequest?: () => void) => {
+    return super.sendRawTx({ onNetworkRequest, txs: this.requests.map((req) => req.tx!) }, pin);
+  };
 }

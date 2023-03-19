@@ -1,10 +1,10 @@
 import { AccountBase, SendTxRequest } from '../../viewmodels/account/AccountBase';
+import { BatchRequest, ERC4337Queue } from '../../viewmodels/transferring/ERC4337Queue';
 import { Placeholder, SafeViewContainer } from '../../components';
 import { SectionList, Text, TouchableOpacity, View } from 'react-native';
 
 import AccountIndicator from '../components/AccountIndicator';
 import Avatar from '../../components/Avatar';
-import { ERC4337Queue } from '../../viewmodels/transferring/ERC4337Queue';
 import { FlatList } from 'react-native-gesture-handler';
 import { INetwork } from '../../common/Networks';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -16,18 +16,19 @@ import styles from '../styles';
 
 interface Props {
   vm: ERC4337Queue;
-  onTxsSelected: (args: { txs: SendTxRequest[]; network: INetwork; account: AccountBase }) => void;
+  onBatchSelected: (args: BatchRequest) => void;
 }
-export default ({ vm, onTxsSelected }: Props) => {
+
+export default ({ vm, onBatchSelected }: Props) => {
   const { chainQueue } = vm;
   const { borderColor, secondaryTextColor } = Theme;
 
-  const renderItem = ({ item }: { item: { network: INetwork; account: AccountBase; txs: Partial<SendTxRequest>[] } }) => {
-    const { account, txs } = item;
+  const renderItem = ({ item }: { item: { network: INetwork; account: AccountBase; requests: Partial<SendTxRequest>[] } }) => {
+    const { account, requests } = item;
 
     return (
       <TouchableOpacity
-        onPress={() => onTxsSelected(item)}
+        onPress={() => onBatchSelected(item)}
         style={{
           flexDirection: 'row',
           alignItems: 'center',
@@ -36,7 +37,7 @@ export default ({ vm, onTxsSelected }: Props) => {
           borderColor,
           borderWidth: 1,
           borderRadius: 12,
-          paddingVertical: 10,
+          paddingVertical: 12,
           paddingHorizontal: 16,
           overflow: 'hidden',
           marginBottom: 12,
@@ -44,10 +45,10 @@ export default ({ vm, onTxsSelected }: Props) => {
         }}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-          <AccountIndicator account={account} />
+          <AccountIndicator account={account} txtStyle={{ fontSize: 17, maxWidth: undefined }} />
         </View>
         <Placeholder />
-        <Text style={{ color: secondaryTextColor, fontSize: 14, fontWeight: '600' }}>{txs.length}</Text>
+        <Text style={{ color: secondaryTextColor, fontSize: 16, fontWeight: '600' }}>{requests.length}</Text>
         <MaterialIcons name="keyboard-arrow-right" size={15} color={secondaryTextColor} style={{ marginBottom: -1 }} />
       </TouchableOpacity>
     );
@@ -57,7 +58,8 @@ export default ({ vm, onTxsSelected }: Props) => {
     <SafeViewContainer style={[styles.container]}>
       <SectionList
         sections={chainQueue}
-        keyExtractor={(c) => `${c.account}_${c.txs.length}`}
+        bounces={false}
+        keyExtractor={(c) => `${c.network.chainId}_${c.account}_${c.requests.length}`}
         renderItem={renderItem}
         renderSectionHeader={({ section }) => (
           <View

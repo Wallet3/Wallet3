@@ -1,4 +1,5 @@
 import Animated, { FadeOutRight } from 'react-native-reanimated';
+import { FadeInDownView, FadeInLeftView, FadeInRightView } from '../../components/animations';
 import React, { useEffect } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
@@ -16,7 +17,7 @@ const { View, Text } = Animated;
 
 interface Props {}
 
-export default observer(({}: Props) => {
+export default observer(() => {
   const { t } = i18n;
   const { backgroundColor, tintColor } = Theme;
   const { count } = ERC4337Queue;
@@ -53,13 +54,17 @@ export default observer(({}: Props) => {
           flexDirection: 'row',
           alignItems: 'center',
           position: 'relative',
-          gap: 4,
+          gap: 8,
         }}
       >
-        <EvilIcons name="sc-telegram" color={tintColor} size={27} style={{ marginTop: -2 }} />
-        <Text numberOfLines={1} style={{ color: tintColor, ...styles.txt }}>
-          {count}
-        </Text>
+        <FadeInLeftView delay={300}>
+          <EvilIcons name="sc-telegram" color={tintColor} size={27} style={{ marginTop: -2 }} />
+        </FadeInLeftView>
+        <FadeInRightView delay={150}>
+          <Text numberOfLines={1} style={{ color: tintColor, ...styles.txt }}>
+            {count}
+          </Text>
+        </FadeInRightView>
       </TouchableOpacity>
     </View>
   );

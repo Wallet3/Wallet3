@@ -6,6 +6,7 @@ import Currency from '../../viewmodels/settings/Currency';
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import Theme from '../../viewmodels/settings/Theme';
+import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 import { t } from 'i18n-js';
 
@@ -14,7 +15,7 @@ interface Props {
   onGasPress?: () => void;
 }
 
-export default ({ vm, onGasPress }: Props) => {
+export default observer(({ vm, onGasPress }: Props) => {
   const { secondaryTextColor } = Theme;
 
   return (
@@ -63,4 +64,4 @@ export default ({ vm, onGasPress }: Props) => {
       </TouchableOpacity>
     </View>
   );
-};
+});

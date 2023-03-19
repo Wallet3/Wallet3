@@ -20,10 +20,12 @@ import { warningColor } from '../../constants/styles';
 interface Props {
   disableBack?: boolean;
   onBack?: () => void;
+  onSendPress?: () => void;
   vm: BatchTransactionRequest;
+  onGasReview?: () => void;
 }
 
-const BatchTxReview = observer(({ disableBack, onBack, vm }: Props) => {
+const BatchTxReview = observer(({ disableBack, onBack, vm, onGasReview, onSendPress }: Props) => {
   const { t } = i18n;
   const { borderColor } = Theme;
 
@@ -36,6 +38,7 @@ const BatchTxReview = observer(({ disableBack, onBack, vm }: Props) => {
           flexDirection: 'row',
           alignItems: 'center',
           paddingHorizontal: 16,
+          paddingEnd: 8,
           paddingVertical: 15,
           borderBottomWidth: 1,
           borderColor,
@@ -62,7 +65,7 @@ const BatchTxReview = observer(({ disableBack, onBack, vm }: Props) => {
           </Text>
         </ScrollView>
         <Placeholder />
-        <TouchableOpacity style={{ padding: 8, marginVertical: -8, marginStart: 0 }}>
+        <TouchableOpacity style={{ padding: 8, marginVertical: -8, marginStart: 4 }}>
           <Ionicons name="trash-outline" color={warningColor} size={15} />
         </TouchableOpacity>
       </View>
@@ -72,24 +75,24 @@ const BatchTxReview = observer(({ disableBack, onBack, vm }: Props) => {
   return (
     <SafeViewContainer style={styles.container}>
       <View style={styles.navBar}>
-        {disableBack ? <View /> : <BackButton onPress={onBack} color={vm.network.color} />}
+        {disableBack ? <View style={{ height: 33 }} /> : <BackButton onPress={onBack} color={vm.network.color} />}
 
         <Text style={styles.navTitle}>{t('modal-review-title')}</Text>
       </View>
 
       <FlatList
-        data={vm.txs}
+        data={vm.requests}
         bounces={false}
         renderItem={renderTx}
         style={[styles.reviewItemsContainer, { overflow: 'hidden' }]}
         contentContainerStyle={{ overflow: 'hidden' }}
       />
 
-      <GasFeeReviewItem vm={vm} />
+      <GasFeeReviewItem vm={vm} onGasPress={onGasReview} />
 
       <View style={{ height: 64 }} />
 
-      <BioAuthSendButton onPress={vm.send} themeColor={vm.network.color} />
+      <BioAuthSendButton onPress={onSendPress} themeColor={vm.network.color} />
     </SafeViewContainer>
   );
 });
@@ -99,7 +102,7 @@ export default observer((props: Props) => {
 
   return (
     <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
-      <BatchTxReview {...props} />
+      <BatchTxReview {...props} onGasReview={() => swiper.current?.scrollTo(1)} />
       <GasReview onBack={() => swiper.current?.scrollTo(0)} vm={props.vm} themeColor={props.vm.network.color} />
     </Swiper>
   );

@@ -445,7 +445,7 @@ export class BaseTransaction {
   }
 
   async sendRawTx(args: SendTxRequest, pin?: string): Promise<SendTxResponse> {
-    if (this.isQueuingTx && this.isERC4337Available) {
+    if (this.isQueuingTx && this.isERC4337Available && args.tx) {
       ERC4337Queue.add(args);
       return { success: true };
     }

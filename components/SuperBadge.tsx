@@ -2,7 +2,6 @@ import { StyleProp, Text, TextStyle, View, ViewStyle } from 'react-native';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
-import { ZoomInView } from './animations';
 
 interface Props {
   containerStyle?: StyleProp<ViewStyle>;

@@ -1,10 +1,13 @@
+import { AccountBase, SendTxRequest } from '../account/AccountBase';
 import { action, computed, makeObservable, observable } from 'mobx';
 
 import App from '../core/App';
+import { INetwork } from '../../common/Networks';
 import LINQ from 'linq';
 import MessageKeys from '../../common/MessageKeys';
 import Networks from '../core/Networks';
-import { SendTxRequest } from '../account/AccountBase';
+
+export type BatchRequest = { requests: SendTxRequest[]; network: INetwork; account: AccountBase };
 
 export class ERC4337Queue {
   queue: SendTxRequest[] = [];
@@ -19,7 +22,7 @@ export class ERC4337Queue {
           data: g
             .groupBy((req) => req.tx!.from!)
             .select((g2) => {
-              return { network: Networks.find(g.key())!, account: App.findAccount(g2.key())!, txs: g2.toArray() };
+              return { network: Networks.find(g.key())!, account: App.findAccount(g2.key())!, requests: g2.toArray() };
             })
             .where((g2) => (g2.account ? true : false))
             .toArray(),
@@ -29,12 +32,28 @@ export class ERC4337Queue {
       .toArray();
   }
 
+  get chainCount() {
+    return this.chainQueue.length;
+  }
+
+  get accountCount() {
+    return LINQ.from(this.chainQueue).sum((g) => g.data.length);
+  }
+
   get count() {
     return this.queue.length;
   }
 
   constructor() {
-    makeObservable(this, { queue: observable, count: computed, add: action, remove: action, chainQueue: computed });
+    makeObservable(this, {
+      queue: observable,
+      count: computed,
+      chainCount: computed,
+      accountCount: computed,
+      add: action,
+      remove: action,
+      chainQueue: computed,
+    });
   }
 
   add(req: SendTxRequest) {
