@@ -5,6 +5,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import ERC4337Queue from '../../viewmodels/transferring/ERC4337Queue';
 import { FadeInRight } from 'react-native-reanimated';
+import MessageKeys from '../../common/MessageKeys';
 import { ReactiveScreen } from '../../utils/device';
 import SquircleViewContainer from '../../components/SquircleViewContainer';
 import Theme from '../../viewmodels/settings/Theme';
@@ -15,11 +16,9 @@ import { startLayoutAnimation } from '../../utils/animations';
 
 const { View, Text } = Animated;
 
-interface Props {
-  close: () => void;
-}
+interface Props {}
 
-export default observer(({ close }: Props) => {
+export default observer(({}: Props) => {
   const { t } = i18n;
   const { backgroundColor, tintColor } = Theme;
   const { count } = ERC4337Queue;
@@ -46,11 +45,12 @@ export default observer(({ close }: Props) => {
     >
       <TouchableOpacity
         activeOpacity={0.8}
+        onPress={() => PubSub.publish(MessageKeys.openERC4337Queue)}
         style={{
           borderRadius: 50,
           height: 72,
           flex: 1,
-          backgroundColor: '#ffffff',
+          backgroundColor: backgroundColor,
           flexDirection: 'row',
           alignItems: 'center',
           paddingStart: 27,

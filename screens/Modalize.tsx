@@ -30,6 +30,7 @@ import {
 
 import { AppVM } from '../viewmodels/core/App';
 import { ClientInfo } from '../common/p2p/Constants';
+import ERC4337Queue from '../modals/erc4337';
 import { FullPasspad } from '../modals/views/Passpad';
 import GlobalPasspad from '../modals/global/GlobalPasspad';
 import { IConfigProps } from 'react-native-modalize/lib/options';
@@ -40,7 +41,6 @@ import InpageDAppAddAssetModal from '../modals/inpage/InpageDAppAddAsset';
 import InpageDAppAddChain from '../modals/inpage/InpageDAppAddChain';
 import InpageDAppSendTx from '../modals/inpage/InpageDAppTxRequest';
 import InpageDAppSign from '../modals/inpage/InpageDAppSign';
-import { KeyRecoveryProvider } from '../viewmodels/tss/KeyRecoveryProvider';
 import { KeyRecoveryRequestor } from '../viewmodels/tss/KeyRecoveryRequestor';
 import { Keyboard } from 'react-native';
 import Loading from '../modals/views/Loading';
@@ -465,6 +465,32 @@ const SendFundsModal = () => {
   );
 };
 
+const ERC4337QueueModal = () => {
+  const { ref, open, close } = useModalize();
+
+  useEffect(() => {
+    PubSub.subscribe(MessageKeys.openERC4337Queue, () => {
+      open();
+      logScreenView('RequestsFundsModal');
+    });
+
+    return () => {
+      PubSub.unsubscribe(MessageKeys.openERC4337Queue);
+    };
+  }, []);
+
+  return (
+    <SquircleModalize
+      ref={ref}
+      adjustToContentHeight
+      disableScrollIfPossible
+      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+    >
+      <ERC4337Queue />
+    </SquircleModalize>
+  );
+};
+
 const BackupTipsModal = () => {
   const { ref, open, close } = useModalize();
   const [context, setContext] = useState<{ upgrade?: boolean; inactiveDevices?: MultiSigKeyDeviceInfo[] }>({});
@@ -837,6 +863,7 @@ export default () => {
     <RequestFundsModal key="request-funds" />,
     <GlobalNetworksMenuModal key="networks-menu" />,
     <GlobalAccountsMenuModal key="accounts-menu" />,
+    <ERC4337QueueModal key="erc4337-queue" />,
     <BackupTipsModal key="backup-tip" />,
     <GlobalLoadingModal key="loading-modal" />,
     <WalletConnect key="walletconnect" />,

@@ -22,6 +22,7 @@ export default {
   openKeyRecoveryRequestor: 'openKeyRecoveryRequestor',
   openKeyRecoveryProvider: 'openKeyRecoveryProvider',
   openGlobalPasspad: 'openGlobalPasspad',
+  openERC4337Queue: 'openERC4337Queue',
   drawerSwipeEnabled: 'drawer-swipeEnabled',
 
   wc_request: 'wc_request',
