@@ -99,11 +99,13 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDon
             </Text>
           </TouchableOpacity>
 
-          <Text style={[{ marginStart: 6, color: themeColor, marginEnd: 8 }, styles.txt]}>/</Text>
+          {current.erc4337 && <Text style={[{ marginStart: 6, color: themeColor, marginEnd: 8 }, styles.txt]}>/</Text>}
 
-          <TouchableOpacity style={styles.option} onPress={() => newAccount('erc4337')}>
-            <Text style={[{ color: themeColor }, styles.txt]}>{t('modal-multi-accounts-button-super-account')}</Text>
-          </TouchableOpacity>
+          {current.erc4337 && (
+            <TouchableOpacity style={styles.option} onPress={() => newAccount('erc4337')}>
+              <Text style={[{ color: themeColor }, styles.txt]}>{t('modal-multi-accounts-button-super-account')}</Text>
+            </TouchableOpacity>
+          )}
         </View>
       ) : (
         <TouchableOpacity style={styles.option} onPress={() => newAccount('eoa')}>

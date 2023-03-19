@@ -465,7 +465,7 @@ export const Testnets: INetwork[] = [
     chainId: 80001,
     color: '#8247E5',
     eip1559: true,
-    erc4337: ERC4337Configs['80001'],
+    // erc4337: ERC4337Configs['80001'],
     defaultTokens: [],
     blockTimeMs: 3 * 1000,
     testnet: true,

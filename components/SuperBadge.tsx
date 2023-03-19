@@ -14,7 +14,7 @@ interface Props {
 
 export default ({ containerStyle, txtStyle, iconSize, iconColor, iconStyle }: Props) => {
   return (
-    <ZoomInView
+    <View
       style={[
         {
           flexDirection: 'row',
@@ -32,6 +32,6 @@ export default ({ containerStyle, txtStyle, iconSize, iconColor, iconStyle }: Pr
         style={[{ marginStart: 4 }, iconStyle]}
         size={iconSize ?? 9}
       />
-    </ZoomInView>
+    </View>
   );
 };

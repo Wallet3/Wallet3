@@ -68,7 +68,7 @@ export default observer(({}: Props) => {
 const styles = StyleSheet.create({
   txt: {
     fontSize: 32,
-    fontWeight: '700',
-    opacity: 0.7,
+    fontWeight: '800',
+    opacity: 0.9,
   },
 });

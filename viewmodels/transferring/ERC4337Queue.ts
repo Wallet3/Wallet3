@@ -1,5 +1,6 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 
+import App from '../core/App';
 import LINQ from 'linq';
 import MessageKeys from '../../common/MessageKeys';
 import Networks from '../core/Networks';
@@ -11,8 +12,18 @@ export class ERC4337Queue {
   get chainQueue() {
     return LINQ.from(this.queue)
       .groupBy((t) => t.tx!.chainId!)
-      .select((g) => {
-        return { network: Networks.find(g.key())!, items: g.toArray() };
+      .select((g, index) => {
+        return {
+          index,
+          network: Networks.find(g.key())!,
+          data: g
+            .groupBy((req) => req.tx!.from!)
+            .select((g2) => {
+              return { account: App.findAccount(g2.key())!, txs: g2.toArray() };
+            })
+            .where((g2) => (g2.account ? true : false))
+            .toArray(),
+        };
       })
       .where((g) => (g.network ? true : false))
       .toArray();
