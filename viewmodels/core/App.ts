@@ -136,6 +136,7 @@ export class AppVM {
       TxHub.on('txConfirmed', (tx) => {
         if (!(tx.from === this.currentAccount?.address && tx.chainId === Networks.current.chainId)) return;
         this.currentAccount.tokens.refreshNativeToken();
+        this.currentAccount.isERC4337 && (this.currentAccount as ERC4337Account).checkActivated(tx.chainId);
       });
 
       setTimeout(() => PairedDevices.scanLan(), 1000);

@@ -1,5 +1,6 @@
 import { BigNumber, BigNumberish } from 'ethers';
 
+import { SimpleAccount } from '@wallet3/account-abstraction-contracts';
 import { SimpleAccountAPI } from '@account-abstraction/sdk';
 import { TransactionDetailsForUserOp } from '@account-abstraction/sdk/dist/src/TransactionDetailsForUserOp';
 import { UserOperationStruct } from '@account-abstraction/contracts/dist/types/EntryPoint';
@@ -10,8 +11,9 @@ export class ERC4337Client extends SimpleAccountAPI {
     opts?: { maxFeePerGas?: BigNumberish; maxPriorityFeePerGas?: BigNumberish }
   ): Promise<UserOperationStruct> {
     const accountContract = await this._getAccountContract();
-    const callData = accountContract.interface.encodeFunctionData('executeBatch', [
+    const callData = (accountContract as unknown as SimpleAccount).interface.encodeFunctionData('executeBatch', [
       transactions.map((transaction) => transaction.target),
+      transactions.map((tx) => tx.value || 0),
       transactions.map((transaction) => transaction.data),
     ]);
 

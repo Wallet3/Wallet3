@@ -4,10 +4,12 @@ import { Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/
 import React, { useRef } from 'react';
 import { StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { formatAddress, formatCurrency } from '../../utils/formatter';
+import { inactivatedColor, themeColor } from '../../constants/styles';
 
 import { AccountBase } from '../../viewmodels/account/AccountBase';
 import AnimatedNumber from '../../components/AnimatedNumber';
 import ColorLogos from '../../assets/icons/networks/color';
+import { ERC4337Account } from '../../viewmodels/account/ERC4337Account';
 import { INetwork } from '../../common/Networks';
 import Image from 'react-native-fast-image';
 import MessageKeys from '../../common/MessageKeys';
@@ -18,7 +20,6 @@ import WhiteLogos from '../../assets/icons/networks/white';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { setStringAsync } from 'expo-clipboard';
-import { themeColor } from '../../constants/styles';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
@@ -148,6 +149,7 @@ export default observer(
                 paddingEnd: 3,
                 borderRadius: 5,
                 marginStart: 2,
+                opacity: (account as ERC4337Account).activatedChains.get(network.chainId) ? 1 : 0.5,
               }}
               txtStyle={{ textTransform: 'uppercase', color: '#fff', fontSize: 10, fontWeight: '700' }}
               iconColor="#fff"

@@ -7,6 +7,11 @@
   resolved "https://registry.yarnpkg.com/@account-abstraction/contracts/-/contracts-0.5.0.tgz#a089aee7b4c446251fbbce7df315bbf8f659e37f"
   integrity sha512-CKyS9Zh5rcYUM+4B6TlaB9+THHzJ+6TY3tWF5QofqvFpqGNvIhF8ddy6wyCmqZw6TB74/yYv7cYD/RarVudfDg==
 
+"@account-abstraction/contracts@npm:@wallet3/account-abstraction-contracts@^0.5.0", "@wallet3/account-abstraction-contracts@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@wallet3/account-abstraction-contracts/-/account-abstraction-contracts-0.5.0.tgz#e2b69c3e6aeab31d9e069c28809d7c86abed974f"
+  integrity sha512-P+zv+lhaLk0k7mmO338udugdFQGk3dc3k5zunwQdmHxGXnb0sYwBXx9gXvTprsBRqvosEvFj35l/KCTwH+IMhA==
+
 "@account-abstraction/sdk@^0.5.0":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@account-abstraction/sdk/-/sdk-0.5.0.tgz#fb306ecb1dba82e10a0277ab716890acf1d2d1ed"

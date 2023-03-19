@@ -189,7 +189,7 @@ export abstract class WalletBase extends EventEmitter<Events> {
       const owner = new Wallet(privateKey);
       let address = '';
 
-      for (let url of getRPCUrls(1)) {
+      for (let url of getRPCUrls(5)) {
         const provider = new ethers.providers.JsonRpcProvider(url);
         const api = new SimpleAccountAPI({
           provider,
@@ -200,11 +200,11 @@ export abstract class WalletBase extends EventEmitter<Events> {
 
         try {
           address = await api.getCounterFactualAddress();
-          if (utils.isAddress(address)) break;
+          if (utils.isAddress(address) && ethers.constants.AddressZero !== address) break;
         } catch (error) {}
       }
 
-      if (!utils.isAddress(address)) return;
+      if (!utils.isAddress(address) || address === ethers.constants.AddressZero) return;
 
       let position = LINQ.from(this.accounts).lastIndexOf((a) => a.isERC4337);
       if (position === -1) position = Math.max(0, this.accounts.length - 1);
