@@ -149,6 +149,7 @@ export default observer(
                 paddingEnd: 3,
                 borderRadius: 5,
                 marginStart: 2,
+                marginVertical: -2,
                 opacity: (account as ERC4337Account).activatedChains.get(network.chainId) ? 1 : 0.5,
               }}
               txtStyle={{ textTransform: 'uppercase', color: '#fff', fontSize: 10, fontWeight: '700' }}

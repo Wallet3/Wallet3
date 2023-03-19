@@ -51,6 +51,8 @@ export class BaseTransaction {
   initializing = false;
   feeToken: ERC20Token | null = null;
 
+  isQueuingTx = false;
+
   constructor(args: { network: INetwork; account: AccountBase }, initChainData = true) {
     this.network = args.network;
     this.account = args.account;
@@ -85,6 +87,7 @@ export class BaseTransaction {
       insufficientFee: computed,
       toAddressRisky: computed,
       loading: computed,
+      isQueuingTx: observable,
 
       setNonce: action,
       setGasLimit: action,
@@ -94,6 +97,7 @@ export class BaseTransaction {
       setToAddress: action,
       setGas: action,
       setFeeToken: action,
+      setIsQueuingTx: action,
     });
 
     this.nativeToken.getBalance();
@@ -104,6 +108,18 @@ export class BaseTransaction {
     if (this.network.feeTokens) this.initFeeToken();
 
     Coingecko.refresh();
+  }
+
+  get isERC4337Account() {
+    return this.account.isERC4337;
+  }
+
+  get isERC4337Network() {
+    return this.network.erc4337 ? true : false;
+  }
+
+  get isERC4337Available() {
+    return this.isERC4337Account && this.isERC4337Network;
   }
 
   get safeTo() {
@@ -357,6 +373,10 @@ export class BaseTransaction {
     });
   }
 
+  setIsQueuingTx(flag: boolean) {
+    this.isQueuingTx = flag;
+  }
+
   protected async initChainData() {
     const { chainId, eip1559 } = this.network;
 
@@ -418,6 +438,10 @@ export class BaseTransaction {
   }
 
   sendRawTx(args: SendTxRequest, pin?: string) {
+    if (this.isQueuingTx) {
+      return;
+    }
+
     return this.account.sendTx(
       {
         ...args,

@@ -401,6 +401,8 @@
   "msg-data-loading": "Loading data",
   "msg-please-enable-biometric": "Please use biometric authentication to authorize this operation.",
 
+  "erc-4337-add-tx-to-queue": "Add to sending queue",
+  
   "misc-show-full-address": "Show full address",
   "button-next": "Next",
   "button-save": "Save",

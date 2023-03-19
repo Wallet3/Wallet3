@@ -398,6 +398,8 @@
   "msg-data-loading": "Veriler yükleniyor",
   "msg-please-enable-biometric":"Bu işlemi yetkilendirmek için biyometrik kimlik doğrulama kullanın lütfen.",
 
+  "erc-4337-add-tx-to-queue": "İşlemi gönderme kuyruğuna ekleyin",
+
   "misc-show-full-address": "Tam adresi göster",
   "button-next": "Sonraki",
   "button-save": "Kaydet",

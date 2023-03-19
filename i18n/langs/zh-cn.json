@@ -394,6 +394,8 @@
   "msg-data-loading": "读取数据中",
   "msg-please-enable-biometric": "请通过生物认证授权该操作",
 
+  "erc-4337-add-tx-to-queue": "添加至发送队列",
+  
   "misc-show-full-address": "显示完整地址",
   "button-next": "继续",
   "button-save": "保存",
