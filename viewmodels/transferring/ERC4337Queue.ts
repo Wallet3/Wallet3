@@ -47,6 +47,10 @@ export class ERC4337Queue {
 
     this.queue.splice(index, 1);
   }
+
+  find(query: (req: SendTxRequest) => boolean) {
+    return this.queue.find(query);
+  }
 }
 
 export default new ERC4337Queue();

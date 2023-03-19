@@ -65,6 +65,7 @@ interface TransferInfo {
   amountWei?: string;
   decimals?: number;
   amount?: string;
+  nft?: string;
 }
 
 interface DAppInteraction {
@@ -76,8 +77,9 @@ interface ExtraInfo {
   decodedFunc?: string;
 }
 
-export type ReadableInfo = { type: 'transfer' | 'dapp-interaction'; readableTxt?: string } & ExtraInfo &
-  (TransferInfo | DAppInteraction);
+export type ReadableInfo = Partial<
+  { type: 'transfer' | 'transfer-nft' | 'dapp-interaction'; readableTxt?: string } & ExtraInfo & TransferInfo & DAppInteraction
+>;
 
 export interface ITransaction extends providers.TransactionRequest {
   hash?: string;

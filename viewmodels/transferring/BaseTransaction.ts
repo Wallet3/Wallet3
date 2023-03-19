@@ -12,7 +12,6 @@ import { estimateGas, eth_call_return, getCode, getGasPrice, getMaxPriorityFee, 
 import { isDomain, resolveDomain } from '../services/DomainResolver';
 
 import AddressTag from '../../models/entities/AddressTag';
-import App from '../core/App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Coingecko from '../../common/apis/Coingecko';
 import { ERC20Token } from '../../models/ERC20';
@@ -20,7 +19,6 @@ import ERC4337Queue from './ERC4337Queue';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
 import { NativeToken } from '../../models/NativeToken';
-import { WalletBase } from '../wallet/WalletBase';
 import { entryPointAddress } from '../../configs/erc4337.json';
 import { fetchAddressInfo } from '../services/EtherscanPublicTag';
 import { getEnsAvatar } from '../../common/ENS';
@@ -35,7 +33,6 @@ export class BaseTransaction {
 
   readonly network: INetwork;
   readonly account: AccountBase;
-  readonly wallet: WalletBase;
   readonly nativeToken: NativeToken;
 
   to = '';
@@ -61,7 +58,6 @@ export class BaseTransaction {
   constructor(args: { network: INetwork; account: AccountBase }, initChainData = true) {
     this.network = args.network;
     this.account = args.account;
-    this.wallet = App.findWallet(this.account.address)!.wallet;
     this.nativeToken = new NativeToken({ ...this.network, owner: this.account.address });
 
     makeObservable(this, {
@@ -111,6 +107,12 @@ export class BaseTransaction {
 
     if (this.network.eip1559) this.refreshEIP1559(this.network.chainId);
     if (this.network.feeTokens) this.initFeeToken();
+
+    this.isQueuingTx = ERC4337Queue.find(
+      (req) => req.tx?.chainId === this.network.chainId && req.tx.from === this.account.address
+    )
+      ? true
+      : false;
 
     Coingecko.refresh();
   }

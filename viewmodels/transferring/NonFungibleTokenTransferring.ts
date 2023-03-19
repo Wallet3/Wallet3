@@ -9,8 +9,8 @@ import { ERC1155Token } from '../../models/ERC1155';
 import { ERC721Token } from '../../models/ERC721';
 import { Gwei_1 } from '../../common/Constants';
 import { INetwork } from '../../common/Networks';
+import i18n from '../../i18n';
 import { showMessage } from 'react-native-flash-message';
-import { startLayoutAnimation } from '../../utils/animations';
 
 export interface NFTMetadata {
   id: string;
@@ -179,7 +179,17 @@ export class NFTTransferring extends BaseTransaction {
       {
         tx: this.txRequest,
         onNetworkRequest,
-        readableInfo: { type: 'transfer-nft', amount: this.erc1155TransferAmount, recipient: this.to, nft: this.nft.title },
+        readableInfo: {
+          type: 'transfer-nft',
+          amount: `${this.erc1155TransferAmount}`,
+          recipient: this.to,
+          nft: this.nft.title,
+          readableTxt: i18n.t('readable-transfer-token', {
+            amount: this.erc1155TransferAmount,
+            symbol: this.nft.title,
+            dest: this.to,
+          }),
+        },
       },
       pin
     );
