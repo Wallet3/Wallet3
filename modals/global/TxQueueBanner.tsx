@@ -28,7 +28,7 @@ export default observer(() => {
   return (
     <View
       entering={FadeInRight.springify()}
-      exiting={FadeOutRight.springify()}
+      exiting={FadeOutRight.delay(500).springify()}
       style={{
         height: 48,
         alignSelf: 'center',
@@ -60,11 +60,11 @@ export default observer(() => {
         <FadeInLeftView delay={300}>
           <EvilIcons name="sc-telegram" color={tintColor} size={27} style={{ marginTop: -2 }} />
         </FadeInLeftView>
-        <FadeInRightView delay={500}>
+        <FadeInDownView delay={500}>
           <Text numberOfLines={1} style={{ color: tintColor, ...styles.txt }}>
             {count}
           </Text>
-        </FadeInRightView>
+        </FadeInDownView>
       </TouchableOpacity>
     </View>
   );

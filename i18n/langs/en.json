@@ -59,7 +59,7 @@
   "home-history-item-type-sent": "Sent",
   "home-history-item-type-transfer": "Sent",
   "home-history-item-type-approve": "Approve",
-  "home-history-item-type--batchTx": "Batch Tx",
+  "home-history-item-type-batchTx": "Batch Transaction",
   "home-history-item-to": "To",
   "home-tab-wallet": "Wallet",
   "home-tab-exchange": "Swap",

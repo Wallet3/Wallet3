@@ -6,6 +6,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import BackButton from '../components/BackButton';
 import { BatchTransactionRequest } from '../../viewmodels/transferring/BatchTransactionRequest';
 import BioAuthSendButton from '../components/BioAuthSendButton';
+import { FadeInDownView } from '../../components/animations';
 import GasFeeReviewItem from '../components/GasFeeReviewItem';
 import GasReview from '../views/GasReview';
 import { Ionicons } from '@expo/vector-icons';
@@ -33,7 +34,8 @@ const BatchTxReview = observer(({ disableBack, onBack, vm, onGasReview, onSendPr
     const { tx, readableInfo } = item;
 
     return (
-      <View
+      <FadeInDownView
+        delay={index * 50}
         style={{
           flexDirection: 'row',
           alignItems: 'center',
@@ -68,7 +70,7 @@ const BatchTxReview = observer(({ disableBack, onBack, vm, onGasReview, onSendPr
         <TouchableOpacity style={{ padding: 8, marginVertical: -8, marginStart: 4 }}>
           <Ionicons name="trash-outline" color={warningColor} size={15} />
         </TouchableOpacity>
-      </View>
+      </FadeInDownView>
     );
   };
 

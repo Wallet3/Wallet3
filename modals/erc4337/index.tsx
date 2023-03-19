@@ -34,11 +34,13 @@ export default observer(({ close, onCritical }: Props) => {
   };
 
   const send = async (pin?: string) => {
+    onCritical?.(true);
     const result = await vm?.send(pin, () => setNetworkBusy(true));
 
     setSuccess(result?.success ?? false);
     result?.success && setTimeout(() => close?.(), 1700);
 
+    onCritical?.(false);
     return result?.success ?? false;
   };
 

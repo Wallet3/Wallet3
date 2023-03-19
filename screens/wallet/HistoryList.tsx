@@ -72,6 +72,7 @@ const Tx = observer(
     const to: string = item.readableInfo?.recipient ?? item.readableInfo?.dapp ?? item.to ?? '';
     const status = item.blockNumber ? (item.status ? 'confirmed' : 'failed') : 'pending';
     const methodName = t(`home-history-item-type-${method ?? (item.data !== '0x' ? 'contract-interaction' : 'sent')}`);
+    const isInteraction = method.endsWith('interaction') || method === 'batchTx';
 
     return (
       <TouchableOpacity style={{ paddingVertical: 12, paddingHorizontal: 8 }} onPress={() => onPress?.(item as Transaction)}>
@@ -87,7 +88,7 @@ const Tx = observer(
               <Text style={{ fontSize: 16, marginEnd: 4, maxWidth: 180, color: textColor }} numberOfLines={1}>
                 {`${cancelTx ? `${t('tip-cancel-action')} ` : ''}${methodName}`}
               </Text>
-              {method.endsWith('-interaction') ? undefined : (
+              {isInteraction ? undefined : (
                 <Text style={{ fontSize: 16, color: textColor, maxWidth: '80%' }} numberOfLines={1}>
                   {`${amount > 0 ? amount : ''} ${nft || tokenSymbol}`.trim()}
                 </Text>

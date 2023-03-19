@@ -467,6 +467,7 @@ const SendFundsModal = () => {
 
 const ERC4337QueueModal = () => {
   const { ref, open, close } = useModalize();
+  const [isCritical, setIsCritical] = useState(false);
 
   useEffect(() => {
     PubSub.subscribe(MessageKeys.openERC4337Queue, () => {
@@ -483,10 +484,12 @@ const ERC4337QueueModal = () => {
     <SquircleModalize
       ref={ref}
       adjustToContentHeight
+      withHandle={!isCritical}
+      panGestureEnabled={!isCritical}
       disableScrollIfPossible
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
-      <ERC4337Queue />
+      <ERC4337Queue close={close} onCritical={setIsCritical} />
     </SquircleModalize>
   );
 };

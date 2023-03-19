@@ -60,11 +60,8 @@ export class ERC4337Queue {
     this.queue.push(req);
   }
 
-  remove(req: SendTxRequest) {
-    const index = this.queue.indexOf(req);
-    if (index < 0) return;
-
-    this.queue.splice(index, 1);
+  remove(requests: SendTxRequest[]) {
+    this.queue = this.queue.filter((req) => !requests.includes(req));
   }
 
   find(query: (req: SendTxRequest) => boolean) {
