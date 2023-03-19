@@ -1,7 +1,7 @@
 import './shim';
+import './configs/polyfill';
 import '@ethersproject/shims';
 import 'react-native-gesture-handler';
-import './configs/polyfill';
 import './configs/debug';
 
 import App from './App';

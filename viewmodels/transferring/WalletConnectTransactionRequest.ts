@@ -39,10 +39,11 @@ export class WalletConnectTransactionRequest extends RawTransactionRequest {
     return { desc: description, icon: icons[0], name, url };
   }
 
-  sendTx(pin?: string) {
+  sendTx(pin?: string, onNetworkRequest?: () => void) {
     return super.sendRawTx(
       {
         tx: this.txRequest,
+        onNetworkRequest,
         readableInfo: {
           type: 'dapp-interaction',
           dapp: this.appMeta.name,

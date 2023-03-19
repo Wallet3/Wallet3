@@ -10,11 +10,11 @@ import { Ionicons } from '@expo/vector-icons';
 import MultiSourceImage from '../../components/MultiSourceImage';
 import { NFTMetadata } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
 import Networks from '../../viewmodels/core/Networks';
-import { Nft } from '../../common/apis/Rarible.types';
 import { ReactiveScreen } from '../../utils/device';
 import { SharedElement } from 'react-navigation-shared-element';
 import Theme from '../../viewmodels/settings/Theme';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
+import { isAndroid } from '../../utils/platform';
 import { lightOrDark } from '../../utils/color';
 import { observer } from 'mobx-react-lite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -42,6 +42,7 @@ const NFTItem = ({
   const [nftBackgroundColor, setNftBackgroundColor] = useState<string>();
   const [titleColor, setTitleColor] = useState(foregroundColor);
   const { previews, previewTypes } = nft;
+  const { borderColor } = Theme;
 
   useEffect(() => {
     if (!nftBackgroundColor) return;
@@ -52,11 +53,7 @@ const NFTItem = ({
     <TouchableOpacity
       key={nft.id}
       activeOpacity={0.75}
-      style={{ marginBottom: 16, ...shadow,
-        // android 
-        borderColor: "transparent",
-        elevation: 5,
-      }}
+      style={{ marginBottom: 16, ...shadow, borderWidth: isAndroid ? 1 : 0, borderColor, borderRadius: 12 }}
       onPress={() => navigation.push('NFTDetails', { item: nft, colorResult })}
     >
       <SharedElement id={`nft.${nft.id}.photo`}>
@@ -64,7 +61,7 @@ const NFTItem = ({
           uriSources={previews}
           sourceTypes={previewTypes}
           backgroundColor={backgroundColor}
-          borderRadius={10}
+          borderRadius={12}
           style={{ width: '100%', height: imageHeight }}
           paused
         />

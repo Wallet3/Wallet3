@@ -1,4 +1,4 @@
-import * as Random from 'expo-random';
+import * as Crypto from 'expo-crypto';
 import * as SecureStore from 'expo-secure-store';
 
 import { computed, makeObservable, observable, runInAction } from 'mobx';
@@ -8,6 +8,7 @@ import { decrypt, encrypt } from '../../utils/cipher';
 import Authentication from './Authentication';
 import MnemonicOnce from './MnemonicOnce';
 import { SignInWeb2Store } from './SignInWeb2Store';
+import { getSecureRandomBytes } from '../../utils/math';
 import { logSignWithWeb2 } from '../services/Analytics';
 import { utils } from 'ethers';
 
@@ -59,7 +60,7 @@ export abstract class SignInWithWeb2 {
   abstract get platform(): string;
 
   async getEncodedRecoverKey(web2UID: string, pin?: string) {
-    if (!(await Authentication.authorize(pin))) return '';
+    if (!(await Authentication.authenticate({ pin }))) return '';
     return encode((await SecureStore.getItemAsync(Keys.recovery(web2UID))) || '');
   }
 
@@ -81,7 +82,7 @@ export abstract class SignInWithWeb2 {
   }
 
   protected async generate() {
-    this.recoveryKey = Buffer.from(Random.getRandomBytes(32)).toString('hex');
+    this.recoveryKey = Buffer.from(getSecureRandomBytes(32)).toString('hex');
     await SecureStore.setItemAsync(Keys.recovery(this.mini_uid), this.recoveryKey);
 
     const plainSecret = await MnemonicOnce.generate(24);
@@ -120,7 +121,7 @@ export abstract class SignInWithWeb2 {
       await SecureStore.setItemAsync(Keys.recovery(this.mini_uid), key);
       return true;
     } catch (error) {
-      console.log(error);
+      __DEV__ && console.log(error);
     }
 
     return false;

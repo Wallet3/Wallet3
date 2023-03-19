@@ -6,7 +6,7 @@ import { TouchableOpacity } from 'react-native';
 
 import { numericFontFamily, secondaryFontColor } from '../../constants/styles';
 
-import { Account } from '../../viewmodels/account/Account';
+import { AccountBase } from '../../viewmodels/account/AccountBase';
 import Avatar from '../../components/Avatar';
 import BackButton from '../components/BackButton';
 import { INetwork } from '../../common/Networks';
@@ -37,7 +37,7 @@ interface SubViewProps {
   themeColor?: string;
   initValue?: string;
   network: INetwork;
-  account?: Account;
+  account?: AccountBase;
 }
 
 export default observer((props: SubViewProps) => {
@@ -48,7 +48,7 @@ export default observer((props: SubViewProps) => {
   const onNumPress = (num: string) => {
     if (num === '.') {
       if (amount.includes('.')) return;
-      setAmount((pre) => pre + '.');
+      setAmount((pre) => `${pre}.`);
       return;
     }
 

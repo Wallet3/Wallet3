@@ -1,4 +1,4 @@
-import { Coin, Separator } from '../../components';
+import { Coin, SafeViewContainer, Separator, Toggle } from '../../components';
 import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Switch, Text, TouchableOpacity, View } from 'react-native';
@@ -9,6 +9,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/core/Networks';
 import { RootStack } from '../navigations';
 import Theme from '../../viewmodels/settings/Theme';
+import ToggleSwitch from 'toggle-switch-react-native';
 import { UserToken } from '../../viewmodels/services/TokensMan';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -50,7 +51,7 @@ const DraggableToken = observer(
       />
       <Text style={{ fontSize: 18, color: textColor }}>{item.symbol}</Text>
       <View style={{ flex: 1 }} />
-      <Switch value={item.shown} onValueChange={(on) => onValueChange(on)} trackColor={{ true: Networks.current.color }} />
+      <Toggle isOn={item.shown ?? false} onToggle={(on) => onValueChange(on)} onColor={Networks.current.color} />
     </TouchableOpacity>
   )
 );
@@ -81,7 +82,7 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeViewContainer style={{ flex: 1, padding: 0 }} paddingHeader>
       <Text style={{ paddingHorizontal: 16, color: secondaryFontColor, paddingBottom: 4 }}>{t('home-tokens-drag-tip')}</Text>
       <Separator style={{ backgroundColor: borderColor }} />
       <DraggableFlatList
@@ -95,6 +96,6 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
           setData(data);
         }}
       />
-    </SafeAreaView>
+    </SafeViewContainer>
   );
 });

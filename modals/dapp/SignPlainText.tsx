@@ -1,8 +1,8 @@
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
-import { Switch, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
-import { Account } from '../../viewmodels/account/Account';
+import { AccountBase } from '../../viewmodels/account/AccountBase';
 import AccountIndicator from '../components/AccountIndicator';
 import { BioType } from '../../viewmodels/auth/Authentication';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';
@@ -24,9 +24,9 @@ interface Props {
   themeColor: string;
   onReject?: () => void;
   onSign?: () => Promise<void>;
-  account?: Account;
+  account?: AccountBase;
   bioType?: BioType;
-  onStandardModeChanged: (on: boolean) => void;
+  onStandardModeChanged?: (on: boolean) => void;
   standardMode?: boolean;
   metadata?: PageMetadata;
 }
@@ -59,7 +59,7 @@ export default observer(
       try {
         setSiwe(new ParsedMessage(msg, metadata?.origin!));
       } catch (error) {
-        console.log(error);
+        __DEV__ && console.log(error);
       }
     }, [msg]);
 
@@ -91,12 +91,12 @@ export default observer(
           </ScrollView>
         )}
 
-        {isByte ? (
+        {/* {isByte ? (
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 }}>
             <Text style={{ color: thirdFontColor }}>{t('modal-sign-with-stand-mode')}</Text>
             <Switch value={standardMode} trackColor={{ true: themeColor }} onValueChange={(v) => onStandardModeChanged(v)} />
           </View>
-        ) : undefined}
+        ) : undefined} */}
 
         <RejectApproveButtons
           disabledApprove={busy}

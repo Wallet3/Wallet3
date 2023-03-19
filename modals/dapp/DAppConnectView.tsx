@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { secureColor, thirdFontColor } from '../../constants/styles';
 
-import { Account } from '../../viewmodels/account/Account';
+import { AccountBase } from '../../viewmodels/account/AccountBase';
 import Avatar from '../../components/Avatar';
 import { INetwork } from '../../common/Networks';
 import { Ionicons } from '@expo/vector-icons';
@@ -14,7 +14,7 @@ import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 
 interface Props {
-  account?: Account;
+  account?: AccountBase;
   network: INetwork;
   onAccountsPress?: () => void;
   onNetworksPress?: () => void;

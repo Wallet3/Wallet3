@@ -4,10 +4,9 @@ import * as Linking from 'expo-linking';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import Bookmarks, { HttpsSecureUrls, isRiskySite, isSecureSite } from '../../viewmodels/customs/Bookmarks';
 import { BreathAnimation, startLayoutAnimation } from '../../utils/animations';
-import { Button, NullableImage, SafeViewContainer } from '../../components';
-import { Dimensions, Modal, Share, StyleProp, Text, TextInput, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { Button, NullableImage } from '../../components';
+import { Dimensions, Share, StyleProp, Text, TextInput, TouchableOpacity, View, ViewStyle } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
-import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Web3View, { PageMetadata } from './Web3View';
 import { WebView, WebViewNavigation } from 'react-native-webview';
 import { secureColor, thirdFontColor, warningColor } from '../../constants/styles';
@@ -16,10 +15,10 @@ import AnimatedLottieView from 'lottie-react-native';
 import { Bar } from 'react-native-progress';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import Collapsible from 'react-native-collapsible';
+import IllustrationAlert from '../../assets/illustrations/misc/alert.svg';
 import { Ionicons } from '@expo/vector-icons';
 import LINQ from 'linq';
 import MessageKeys from '../../common/MessageKeys';
-import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/core/Networks';
 import PopularDApps from '../../configs/urls/popular.json';
 import { Portal } from 'react-native-portalize';
@@ -27,15 +26,16 @@ import { ReactiveScreen } from '../../utils/device';
 import RecentHistory from './components/RecentHistory';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SectionGrid } from 'react-native-super-grid';
+import SquircleModalize from '../../modals/core/SquircleModalize';
 import { StatusBar } from 'expo-status-bar';
 import Theme from '../../viewmodels/settings/Theme';
 import ViewShot from 'react-native-view-shot';
 import i18n from '../../i18n';
 import { isURL } from '../../utils/url';
-import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 import { renderUserBookmarkItem } from './components/BookmarkItem';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const calcIconSize = () => {
   const { width } = ReactiveScreen;
@@ -113,7 +113,8 @@ export const Browser = observer(
     const [smallIconSize, setSmallIconSize] = useState(SmallIconSize);
 
     const { history, favs, recentSites } = Bookmarks;
-    const { backgroundColor, textColor, borderColor, foregroundColor, isLightMode, statusBarStyle } = Theme;
+    const { backgroundColor, secondaryTextColor, textColor, borderColor, foregroundColor, isLightMode, statusBarStyle } =
+      Theme;
 
     useEffect(() => {
       const handler = () => {
@@ -265,6 +266,7 @@ export const Browser = observer(
         data={favs}
         itemContainerStyle={{ padding: 0, margin: 0, marginBottom: 8, ...(itemContainerStyle || ({} as any)) }}
         spacing={8}
+        initialNumToRender={99}
         keyExtractor={(v, index) => `${v.url}-${Bookmarks.has(v.url) || 'ng'}-${index}`}
         renderSectionHeader={({ section }) => (
           <Text
@@ -572,79 +574,63 @@ export const Browser = observer(
         ) : undefined}
 
         <Portal>
-          <Modalize
-            ref={favsRef}
-            adjustToContentHeight
-            disableScrollIfPossible
-            modalStyle={{ padding: 0, margin: 0 }}
-            scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+          <SquircleModalize ref={favsRef} safeAreaStyle={{ height: 439, padding: 0 }} useSafeBottom>
+            <ScrollView horizontal scrollEnabled={false} style={{ flex: 1 }}>
+              <SectionBookmarks bounces={favs.length >= 3} style={{ paddingTop: 12, flex: 1, width: ReactiveScreen.width }} />
+            </ScrollView>
+
+            <RecentHistory
+              disableContextMenu
+              onItemPress={(url) => {
+                goTo(url);
+                closeFavs();
+              }}
+            />
+          </SquircleModalize>
+
+          <SquircleModalize
+            ref={riskyRef}
+            closeOnOverlayTap={false}
+            safeAreaStyle={{ height: 439, padding: 0 }}
+            squircleContainerStyle={{ backgroundColor: warningColor, padding: 16 }}
+            useSafeBottom
           >
-            <SafeAreaProvider style={{ height: 439, padding: 0, ...modalStyle.containerTopBorderRadius }}>
-              <SafeViewContainer
-                style={{
-                  height: 439,
-                  backgroundColor,
-                  flex: 1,
-                  padding: 0,
-                  ...modalStyle.containerTopBorderRadius,
-                  paddingTop: 0,
-                }}
-              >
-                <ScrollView horizontal scrollEnabled={false} style={{ flex: 1 }}>
-                  <SectionBookmarks
-                    bounces={favs.length >= 3}
-                    style={{ paddingTop: 12, flex: 1, width: ReactiveScreen.width }}
-                  />
-                </ScrollView>
+            <Text
+              numberOfLines={1}
+              style={{
+                color: '#fff',
+                fontSize: 27,
+                fontWeight: '600',
+                textTransform: 'uppercase',
+                textAlign: 'center',
+              }}
+            >
+              {t('modal-phishing-title')}
+            </Text>
 
-                <RecentHistory
-                  disableContextMenu
-                  onItemPress={(url) => {
-                    goTo(url);
-                    closeFavs();
-                  }}
-                />
-              </SafeViewContainer>
-            </SafeAreaProvider>
-          </Modalize>
+            <IllustrationAlert width={120} height={120} style={{ alignSelf: 'center', marginVertical: 8 }} />
 
-          <Modalize ref={riskyRef} adjustToContentHeight disableScrollIfPossible withHandle={false} closeOnOverlayTap={false}>
-            <SafeAreaProvider style={{ height: 439, padding: 0, ...modalStyle.containerTopBorderRadius }}>
-              <SafeViewContainer
-                style={{ backgroundColor: warningColor, height: 439, ...modalStyle.containerTopBorderRadius }}
-              >
-                <Text
-                  numberOfLines={1}
-                  style={{ color: '#fff', fontSize: 27, fontWeight: '600', textTransform: 'uppercase', textAlign: 'center' }}
-                >
-                  {t('modal-phishing-title')}
-                </Text>
+            <Text
+              style={{
+                color: '#fff',
+                marginTop: 12,
+                fontSize: 16,
+                fontWeight: '500',
+                lineHeight: 21,
+              }}
+            >
+              {t('modal-phishing-content', { webUrl: `${webUrl.startsWith('https:') ? 'https' : 'http'}://${hostname}` })}
+            </Text>
 
-                <Ionicons name="shield" color="#fff" size={96} style={{ marginVertical: 12, alignSelf: 'center' }} />
+            <View style={{ flex: 1 }} />
 
-                <Text
-                  style={{
-                    color: '#fff',
-                    marginTop: 12,
-                    fontSize: 16,
-                    fontWeight: '500',
-                    lineHeight: 21,
-                  }}
-                >
-                  {t('modal-phishing-content', { webUrl: `${webUrl.startsWith('https:') ? 'https' : 'http'}://${hostname}` })}
-                </Text>
-
-                <View style={{ flex: 1 }} />
-
-                <Button
-                  themeColor={'red'}
-                  txtStyle={{ color: '#fff', textTransform: 'none' }}
-                  title="OK"
-                  onPress={closeRiskyTip}
-                />
-              </SafeViewContainer>
-            </SafeAreaProvider>
-          </Modalize>
+            <Button
+              themeColor="darkorange"
+              txtStyle={{ color: '#fff', textTransform: 'none' }}
+              title="OK"
+              onPress={closeRiskyTip}
+            />
+          </SquircleModalize>
         </Portal>
 
         <StatusBar style={statusBarStyle} />

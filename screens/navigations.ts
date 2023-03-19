@@ -4,6 +4,8 @@ export type LandScreenStack = {
   Welcome: undefined;
   ImportWallet: undefined;
   CreateWallet: undefined;
+  CreateMultiSigWallet: undefined;
+  OtherOptions: undefined;
   Backup: undefined;
   SetupPasscode: undefined;
   Home: undefined;
@@ -11,6 +13,7 @@ export type LandScreenStack = {
   Root: undefined;
   ViewRecoveryKey: undefined;
   SetRecoveryKey: undefined;
+  PairedDevices: undefined;
 };
 
 export type RootStack = {

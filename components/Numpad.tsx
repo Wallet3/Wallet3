@@ -1,5 +1,5 @@
 import { Feather, MaterialIcons } from '@expo/vector-icons';
-import { StyleSheet, Text, TouchableHighlight, View } from 'react-native';
+import { StyleProp, StyleSheet, Text, TouchableHighlight, View, ViewStyle } from 'react-native';
 import { borderColor, fontColor } from '../constants/styles';
 
 import { BioType } from '../viewmodels/auth/Authentication';
@@ -16,14 +16,15 @@ interface Props {
   bioType?: BioType;
   color?: string;
   mode: 'light' | 'dark';
+  style?: StyleProp<ViewStyle>;
 }
 
-export default ({ onPress, onBioAuth, disableDot, bioType, color, mode }: Props) => {
+export default ({ onPress, onBioAuth, disableDot, bioType, color, mode, style }: Props) => {
   const numStyle = { ...viewStyles.num, color };
   const keyboardStyle = { ...viewStyles.keyboard, borderColor: color ?? borderColor };
 
   return (
-    <View style={{ ...viewStyles.numpadContainer, borderColor: color ?? borderColor }}>
+    <View style={{ ...viewStyles.numpadContainer, borderColor: color ?? borderColor, ...(style as any) }}>
       <TouchableHighlight
         style={{ ...keyboardStyle, borderTopLeftRadius: 9.75 }}
         underlayColor={borderColor}
@@ -138,7 +139,7 @@ const viewStyles = StyleSheet.create({
   keyboard: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: '33.3%',
+    width: '33.333%',
     height: '25%',
     minHeight: 49,
     borderBottomWidth: 1,
@@ -154,11 +155,17 @@ const viewStyles = StyleSheet.create({
   },
 });
 
-export const DefaultNumpadHandler = (
-  value: NumpadChar,
-  state: string,
-  setStateAction: React.Dispatch<React.SetStateAction<string>>
-) => {
+export const DefaultNumpadHandler = ({
+  value,
+  state,
+  setStateAction,
+  passLength,
+}: {
+  value: NumpadChar;
+  state: string;
+  setStateAction: React.Dispatch<React.SetStateAction<string>>;
+  passLength?: number;
+}) => {
   if (value === 'del') {
     setStateAction(state.slice(0, -1));
     return;
@@ -169,7 +176,7 @@ export const DefaultNumpadHandler = (
     return;
   }
 
-  if (state.length >= 6) return;
+  if (state.length >= (passLength ?? 6)) return;
 
   setStateAction((pre) => pre + value);
 };

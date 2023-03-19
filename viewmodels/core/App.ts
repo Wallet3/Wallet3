@@ -1,22 +1,28 @@
-import { Wallet, parseXpubkey } from './Wallet';
+import { AccountBase, AccountType, SendTxRequest } from '../account/AccountBase';
+import Authentication, { AuthOptions } from '../auth/Authentication';
+import { WalletBase, parseXpubkey } from '../wallet/WalletBase';
 import { action, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
-import { providers, utils } from 'ethers';
 
-import { Account } from '../account/Account';
+import { AppState } from 'react-native';
 import AppStoreReview from '../services/AppStoreReview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Authentication from '../auth/Authentication';
 import Bookmarks from '../customs/Bookmarks';
 import Contacts from '../customs/Contacts';
 import Database from '../../models/Database';
+import { ERC4337Account } from '../account/ERC4337Account';
 import GasPrice from '../misc/GasPrice';
 import Key from '../../models/entities/Key';
+import KeyRecoveryWatcher from '../tss/management/KeyRecoveryDiscovery';
+import KeySecurity from '../tss/management/KeySecurity';
 import LINQ from 'linq';
 import LinkHub from '../hubs/LinkHub';
-import MessageKeys from '../../common/MessageKeys';
 import MetamaskDAppsHub from '../walletconnect/MetamaskDAppsHub';
+import MultiSigKey from '../../models/entities/MultiSigKey';
+import { MultiSigWallet } from '../wallet/MultiSigWallet';
 import Networks from './Networks';
+import PairedDevices from '../tss/management/PairedDevices';
 import { ReactNativeFirebase } from '@react-native-firebase/app';
+import { SingleSigWallet } from '../wallet/SingleSigWallet';
 import Theme from '../settings/Theme';
 import TxHub from '../hubs/TxHub';
 import UI from '../settings/UI';
@@ -25,6 +31,12 @@ import { fetchChainsOverview } from '../../common/apis/Debank';
 import i18n from '../../i18n';
 import { logAppReset } from '../services/Analytics';
 import { showMessage } from 'react-native-flash-message';
+import { tipWalletUpgrade } from '../misc/MultiSigUpgradeTip';
+import { utils } from 'ethers';
+
+const Keys = {
+  lastUsedAccount: 'lastUsedAccount',
+};
 
 export class AppVM {
   private lastRefreshedTime = 0;
@@ -33,8 +45,12 @@ export class AppVM {
   firebaseApp!: ReactNativeFirebase.FirebaseApp;
 
   initialized = false;
-  wallets: Wallet[] = [];
-  currentAccount: Account | null = null;
+  wallets: WalletBase[] = [];
+  currentAccount: AccountBase | null = null;
+
+  get hasWalletSet() {
+    return this.wallets.length > 0 && Authentication.pinSet;
+  }
 
   get hasWallet() {
     return this.wallets.length > 0;
@@ -54,6 +70,7 @@ export class AppVM {
     makeObservable(this, {
       initialized: observable,
       wallets: observable,
+      hasWalletSet: computed,
       hasWallet: computed,
       reset: action,
       switchAccount: action,
@@ -69,20 +86,81 @@ export class AppVM {
       () => {
         this.currentAccount?.tokens.refreshOverview();
         this.currentAccount?.nfts.refresh();
+        this.currentAccount?.isERC4337 && (this.currentAccount as ERC4337Account).checkActivated(Networks.current.chainId);
         this.allAccounts.forEach((a) => a.tokens.refreshNativeToken());
         UI.gasIndicator && GasPrice.refresh();
       }
     );
+
+    reaction(
+      () => this.currentWallet,
+      () => KeySecurity.checkInactiveDevices(this.currentWallet)
+    );
+
+    AppState.addEventListener('change', (state) => {
+      if (state !== 'active') return;
+      Authentication.appAuthorized && setTimeout(() => KeyRecoveryWatcher.scanLan(), 2000);
+    });
   }
 
-  async addWallet(key: Key) {
+  async init() {
+    await Promise.all([Database.init(), Authentication.init().catch()]);
+    const [_, lastUsedAccount] = await Promise.all([Networks.init().catch(), AsyncStorage.getItem(Keys.lastUsedAccount)]);
+
+    const wallets: WalletBase[] = LINQ.from(
+      await Promise.all(
+        [
+          (await Database.multiSigKeys.find()).map((key) => new MultiSigWallet(key).init()),
+          (await Database.keys.find()).map((key) => new SingleSigWallet(key).init()),
+        ].flat()
+      )
+    )
+      .where((i) => (i ? true : false))
+      .distinct((w) => `${w.keyInfo.bip32Xpubkey}_${w.keyInfo.basePath}_${w.keyInfo.basePathIndex}`)
+      .toArray();
+
+    runInAction(() => {
+      this.wallets = wallets;
+      this.switchAccount(lastUsedAccount || '', true);
+      this.initialized = true;
+      this.allAccounts.filter((a) => a.isERC4337).map((a) => (a as ERC4337Account).checkActivated(Networks.current.chainId));
+    });
+
+    Authentication.once('appAuthorized', () => {
+      WalletConnectHub.init();
+      MetamaskDAppsHub.init();
+      LinkHub.start();
+      Contacts.init();
+
+      TxHub.init().then(() => AppStoreReview.check());
+      TxHub.on('txConfirmed', (tx) => {
+        if (!(tx.from === this.currentAccount?.address && tx.chainId === Networks.current.chainId)) return;
+        this.currentAccount.tokens.refreshNativeToken();
+        this.currentAccount.isERC4337 && (this.currentAccount as ERC4337Account).checkActivated(tx.chainId);
+      });
+
+      setTimeout(() => PairedDevices.scanLan(), 1000);
+      Authentication.on('appAuthorized', () => setTimeout(() => PairedDevices.scanLan(), 1000));
+
+      tipWalletUpgrade(this.currentWallet);
+    });
+
+    PairedDevices.init()
+      .then(() => !this.hasWalletSet && KeyRecoveryWatcher.scanLan())
+      .catch();
+
+    lastUsedAccount && utils.isAddress(lastUsedAccount) && fetchChainsOverview(lastUsedAccount).catch();
+  }
+
+  async addWallet(key: Key | MultiSigKey) {
     if (this.wallets.find((w) => w.isSameKey(key))) return;
     if (this.allAccounts.find((a) => a.address === parseXpubkey(key.bip32Xpubkey))) {
       this.switchAccount(parseXpubkey(key.bip32Xpubkey));
       return;
     }
 
-    const wallet = await new Wallet(key).init();
+    const wallet = await (key instanceof Key ? new SingleSigWallet(key).init() : new MultiSigWallet(key).init());
+
     runInAction(() => {
       this.wallets.push(wallet);
       this.switchAccount(wallet.accounts[0].address);
@@ -99,51 +177,25 @@ export class AppVM {
     return { wallet, accountIndex: account.index, account };
   }
 
-  async sendTxFromAccount(account: string, opts: { tx: providers.TransactionRequest; pin?: string; readableInfo?: any }) {
-    const { wallet, accountIndex } = this.findWallet(account) || {};
-    if (!wallet) {
-      showMessage({ message: i18n.t('msg-account-not-found'), type: 'warning' });
-      return { error: { message: 'Invalid account', code: -32602 } };
-    }
+  async sendTxFromAccount(address: string, opts: SendTxRequest & AuthOptions) {
+    const account = this.findAccount(address);
+    const { pin } = opts;
 
-    const { txHex, error } = await wallet.signTx({
-      ...opts,
-      accountIndex: accountIndex!,
-    });
-
-    if (!txHex || error) {
-      if (error) showMessage({ type: 'warning', message: error.message });
-      return { error: { message: 'Signing tx failed', code: -32602 } };
-    }
-
-    const broadcastTx = {
-      txHex,
-      tx: opts.tx,
-      readableInfo: opts.readableInfo,
-    };
-
-    wallet.sendTx(broadcastTx);
-
-    return { txHash: utils.parseTransaction(txHex).hash || '', error: undefined };
+    return (await account?.sendTx(opts, pin)) ?? { error: { message: 'Invalid account', code: -32602 }, txHash: undefined };
   }
 
   findAccount(account: string) {
     return this.allAccounts.find((a) => a.address === account);
   }
 
-  newAccount() {
+  async newAccount(type: AccountType, onBusy?: (busy: boolean) => void) {
     let { wallet } = this.findWallet(this.currentAccount!.address) || {};
-    let account: Account | undefined;
+    !wallet?.isHDWallet && (wallet = this.wallets.find((w) => w.isHDWallet));
 
-    if (wallet?.isHDWallet) {
-      account = wallet.newAccount();
-    } else {
-      wallet = this.wallets.find((w) => w.isHDWallet);
-      account = wallet?.newAccount();
-    }
+    const account = type === 'eoa' ? wallet?.newEOA() : await wallet?.newERC4337Account(onBusy);
 
     if (!account) {
-      showMessage({ message: i18n.t('msg-no-hd-wallet'), type: 'warning' });
+      !wallet?.isHDWallet && showMessage({ message: i18n.t('msg-no-hd-wallet'), type: 'warning' });
       return;
     }
 
@@ -162,11 +214,13 @@ export class AppVM {
     target.tokens.refreshOverview();
     target.nfts.refresh();
     target.poap.checkDefaultBadge();
+    target.isERC4337 && (target as ERC4337Account).checkActivated(Networks.current.chainId);
+
     this.currentAccount = target;
 
     clearTimeout(this.refreshTimer);
     this.refreshTimer = setTimeout(() => this.refreshAccount(), 1000 * 20);
-    AsyncStorage.setItem('lastUsedAccount', target.address);
+    AsyncStorage.setItem(Keys.lastUsedAccount, target.address);
   }
 
   async refreshAccount() {
@@ -181,7 +235,7 @@ export class AppVM {
     this.refreshTimer = setTimeout(() => this.refreshAccount(), 12 * 1000);
   }
 
-  async removeAccount(account: Account) {
+  async removeAccount(account: AccountBase) {
     if (this.allAccounts.length === 1) return;
 
     const isCurrentAccount = account.address === this.currentAccount?.address;
@@ -190,54 +244,31 @@ export class AppVM {
     const { wallet } = this.findWallet(account.address) || {};
     if (!wallet) return;
 
-    await wallet.removeAccount(account);
+    try {
+      if (wallet.accounts.length > 1) {
+        await wallet.removeAccount(account);
+      } else {
+        if (!(await this.removeWallet(wallet))) return;
+      }
 
-    if (isCurrentAccount) runInAction(() => this.switchAccount(this.allAccounts[Math.max(0, index - 1)].address));
-
-    if (wallet.accounts.length === 0) {
-      runInAction(() => this.wallets.splice(this.wallets.indexOf(wallet), 1));
-      await wallet.delete();
+      if (isCurrentAccount) runInAction(() => this.switchAccount(this.allAccounts[Math.max(0, index - 1)].address));
+    } finally {
+      MetamaskDAppsHub.removeAccount(account.address);
     }
   }
 
-  async init() {
-    await Promise.all([Database.init(), Authentication.init()]);
-    await Promise.all([Networks.init()]);
+  async removeWallet(wallet: WalletBase) {
+    if (!(await wallet.delete())) return false;
 
-    TxHub.init().then(() => {
-      AppStoreReview.check();
-    });
-
-    const wallets = await Promise.all((await Database.keys.find()).map((key) => new Wallet(key).init()));
-    const lastUsedAccount = (await AsyncStorage.getItem('lastUsedAccount')) ?? '';
-    if (utils.isAddress(lastUsedAccount)) fetchChainsOverview(lastUsedAccount);
-
-    Authentication.once('appAuthorized', () => {
-      WalletConnectHub.init();
-      MetamaskDAppsHub.init();
-      LinkHub.start();
-      Contacts.init();
-    });
-
-    PubSub.subscribe(MessageKeys.userSecretsNotVerified, () => {
-      if ((this.currentAccount?.balance || 0) === 0) return;
-      if (this.currentWallet?.signInPlatform) return;
-      setTimeout(() => PubSub.publish(MessageKeys.openBackupSecretTip), 1000);
-    });
-
-    runInAction(() => {
-      this.initialized = true;
-      this.wallets = wallets;
-      this.switchAccount(lastUsedAccount, true);
-    });
+    const index = this.wallets.indexOf(wallet);
+    index >= 0 && runInAction(() => this.wallets.splice(index, 1));
+    return true;
   }
 
   async reset() {
     this.wallets.forEach((w) => w.dispose());
     this.wallets = [];
     this.currentAccount = null;
-
-    PubSub.unsubscribe(MessageKeys.userSecretsNotVerified);
 
     TxHub.reset();
     Contacts.reset();

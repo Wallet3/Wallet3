@@ -8,17 +8,19 @@ import Authentication from '../../viewmodels/auth/Authentication';
 import CopyableText from '../../components/CopyableText';
 import { FullPasspad } from '../../modals/views/Passpad';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import MnemonicOnce from '../../viewmodels/auth/MnemonicOnce';
+import { MnemonicOnce } from '../../viewmodels/auth/MnemonicOnce';
 import { Modalize } from 'react-native-modalize';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/core/Networks';
 import { Portal } from 'react-native-portalize';
 import QRCode from 'react-native-qrcode-svg';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import SignInWithApple from '../../viewmodels/auth/SignInWithApple';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
+import { openGlobalPasspad } from '../../common/Modals';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { usePreventScreenCapture } from 'expo-screen-capture';
 
@@ -32,18 +34,19 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
   const [recoveryKey, setRecoveryKey] = useState<string>();
   const [recoveryKeyPlatform, setRecoveryKeyPlatform] = useState<string>();
   const { textColor } = Theme;
+  const { currentWallet } = App;
+  const [mn] = useState(new MnemonicOnce());
 
   usePreventScreenCapture();
 
   const themeColor = Networks.current.color;
 
   const verify = async (passcode?: string) => {
-    const { wallet } = App.findWallet(App.currentAccount?.address || '') || {};
-    setRecoveryKeyPlatform(wallet?.signInPlatform);
+    setRecoveryKeyPlatform(currentWallet?.signInPlatform);
 
-    const secret = await (wallet?.web2SignedIn
-      ? SignInWithApple.getEncodedRecoverKey(wallet.signInUser!, passcode)
-      : wallet?.getSecret(passcode));
+    const secret = await (currentWallet?.web2SignedIn
+      ? SignInWithApple.getEncodedRecoverKey(currentWallet.signInUser!, passcode)
+      : currentWallet?.getSecret(passcode));
 
     const success = secret ? true : false;
 
@@ -52,11 +55,11 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
     try {
       if (success) {
         close();
-        MnemonicOnce.setSecret(secret!);
+        mn.setSecret(secret!);
 
-        if (wallet?.isHDWallet && !wallet.web2SignedIn) {
-          setWords(MnemonicOnce.secretWords);
-        } else if (wallet?.web2SignedIn) {
+        if (currentWallet?.isHDWallet && !currentWallet.web2SignedIn) {
+          setWords(mn.secretWords);
+        } else if (currentWallet?.web2SignedIn) {
           setRecoveryKey(secret!);
         } else {
           setPrivKey(secret!);
@@ -72,10 +75,9 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
   };
 
   useEffect(() => {
-    setTimeout(() => open(), 0);
-    if (Authentication.biometricType) verify();
-
-    return () => MnemonicOnce.clean();
+    if (currentWallet?.isMultiSig) return;
+    verify().then((v) => !v && navigation.pop());
+    return () => mn.clean();
   }, []);
 
   return (
@@ -117,7 +119,6 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
                 txtLines={1}
                 iconColor={thirdFontColor}
                 txtStyle={{ color: thirdFontColor }}
-                iconStyle={{ marginStart: 6 }}
               />
             </View>
           )}
@@ -142,36 +143,13 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
             <Button
               title={t('settings-security-backup-button-verify')}
               themeColor={themeColor}
-              onPress={() => navigation.navigate('VerifySecret')}
+              onPress={() => navigation.navigate('VerifySecret', { words: mn.secretWords })}
             />
           )}
         </View>
       ) : (
-        <View></View>
+        <View />
       )}
-
-      <Portal>
-        <Modalize
-          ref={authModalRef}
-          disableScrollIfPossible
-          adjustToContentHeight
-          closeOnOverlayTap={false}
-          withHandle={false}
-          panGestureEnabled={false}
-          panGestureComponentEnabled={false}
-          modalStyle={modalStyle.containerTopBorderRadius}
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-        >
-          <FullPasspad
-            appAvailable={true}
-            themeColor={themeColor}
-            height={420}
-            borderRadius={modalStyle.containerTopBorderRadius.borderTopEndRadius}
-            failedAttempts={Authentication.failedAttempts}
-            onCodeEntered={(code) => verify(code)}
-          />
-        </Modalize>
-      </Portal>
     </SafeViewContainer>
   );
 });

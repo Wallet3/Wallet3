@@ -8,10 +8,10 @@ import {
 } from '../../viewmodels/transferring/RequestTypes';
 import { Coin, NullableImage } from '../../components';
 import { FlatList, ListRenderItemInfo, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect } from 'react';
 
-import { Ionicons } from '@expo/vector-icons';
+import IllustrationNoData from '../../assets/illustrations/misc/nodata.svg';
 import Networks from '../../viewmodels/core/Networks';
-import React from 'react';
 import Theme from '../../viewmodels/settings/Theme';
 import Transaction from '../../models/entities/Transaction';
 import dayjs from 'dayjs';
@@ -20,6 +20,7 @@ import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { secondaryFontColor } from '../../constants/styles';
+import { startLayoutAnimation } from '../../utils/animations';
 import { useState } from 'react';
 import { utils } from 'ethers';
 
@@ -57,7 +58,8 @@ const Tx = observer(
     textColor: string;
     iconBackgroundColor: string;
   }) => {
-    const method = Methods.get((item.data as string)?.substring(0, 10)) ?? 'contract-interaction';
+    const method =
+      Methods.get((item.data as string)?.substring(0, 10)) ?? (item.readableInfo?.type as string) ?? 'contract-interaction';
     const { t } = i18n;
 
     const { chainId } = item;
@@ -84,9 +86,9 @@ const Tx = observer(
 
             <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
               <Text style={{ fontSize: 16, marginEnd: 4, maxWidth: 180, color: textColor }} numberOfLines={1}>
-                {(cancelTx ? `${t('tip-cancel-action')} ` : '') + `${methodName}`}
+                {`${cancelTx ? `${t('tip-cancel-action')} ` : ''}${methodName}`}
               </Text>
-              {method === 'contract-interaction' ? undefined : (
+              {method.endsWith('-interaction') ? undefined : (
                 <Text style={{ fontSize: 16, color: textColor, maxWidth: '80%' }} numberOfLines={1}>
                   {`${amount > 0 ? amount : ''} ${nft || tokenSymbol}`.trim()}
                 </Text>
@@ -144,8 +146,10 @@ export default observer(({ data, onTxPress, onEndReached }: Props) => {
   if (data.length === 0) {
     return (
       <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-        <Ionicons name="server-outline" size={32} color={secondaryFontColor} />
-        <Text style={{ color: secondaryFontColor, marginVertical: 12 }}>{t('home-history-notxs')}</Text>
+        <IllustrationNoData width={150} height={150} />
+        <Text style={{ color: secondaryFontColor, marginTop: 24, fontWeight: '500', textTransform: 'capitalize' }}>
+          {t('home-history-notxs')}
+        </Text>
       </View>
     );
   }

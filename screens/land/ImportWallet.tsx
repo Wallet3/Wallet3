@@ -25,7 +25,6 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
   useEffect(() => {
     const success = MnemonicOnce.setSecret(mnemonic);
     setVerified(success);
-    Authentication.setUserSecretsVerified(success);
   }, [mnemonic]);
 
   useEffect(() => {
@@ -72,9 +71,8 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
             textAlignVertical: 'top',
             borderWidth: 1,
             borderColor: themeColor,
-            borderRadius: 10,
+            borderRadius: 12,
             padding: 8,
-            paddingVertical: 24,
             fontSize: 16,
           }}
         />
@@ -104,7 +102,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
         <Button
           reverse
           title={t('land-import-button-sync')}
-          onPress={() => PubSub.publish(MessageKeys.openGlobalQRScanner)}
+          onPress={() => PubSub.publish(MessageKeys.openGlobalQRScanner, t('qrscan-tip-desktop-backup-qrcode'))}
           style={{ marginBottom: 12 }}
           themeColor={themeColor}
           txtStyle={{ textTransform: 'none' }}

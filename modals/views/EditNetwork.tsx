@@ -158,8 +158,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
 
           let rpcUrls = rpc
             .split(',')
-            .map((url) => url.trim().split(/\s/))
-            .flat()
+            .flatMap((url) => url.trim().split(/\s/))
             .map((i) => i.trim())
             .filter((i) => i.toLowerCase().startsWith('http'));
 
@@ -203,7 +202,7 @@ export default ({ network, onDone }: { network?: INetwork; onDone: (network?: IN
           const checkedUrls = match.map((v, i) => (v ? rpcUrls[i] : null)).filter((i) => i) as string[];
 
           if (checkedUrls.length === 0) {
-            setException(`RPC chainId does not match current network id`);
+            setException("RPC chainId does not match current network id");
             return;
           }
 

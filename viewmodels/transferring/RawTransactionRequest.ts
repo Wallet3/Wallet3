@@ -16,7 +16,7 @@ import EtherscanHub, { DecodedFunc } from '../hubs/EtherscanHub';
 import { PreExecResult, preExecTx } from '../../common/apis/Debank';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
-import { Account } from '../account/Account';
+import { AccountBase } from '../account/AccountBase';
 import { BaseTransaction } from './BaseTransaction';
 import { ERC1155Token } from '../../models/ERC1155';
 import { ERC20Token } from '../../models/ERC20';
@@ -29,7 +29,6 @@ import { WCCallRequest_eth_sendTransaction } from '../../models/entities/WCSessi
 import numeral from 'numeral';
 import { showMessage } from 'react-native-flash-message';
 import { sleep } from '../../utils/async';
-import { startLayoutAnimation } from '../../utils/animations';
 
 export interface SpeedupAbleSendParams extends WCCallRequest_eth_sendTransaction {
   speedUp?: boolean;
@@ -37,7 +36,7 @@ export interface SpeedupAbleSendParams extends WCCallRequest_eth_sendTransaction
 
 interface IConstructor {
   network: INetwork;
-  account: Account;
+  account: AccountBase;
   param: SpeedupAbleSendParams;
 }
 
@@ -287,12 +286,11 @@ export class RawTransactionRequest extends BaseTransaction {
         this.type = approved ? 'Approve_ForAll' : 'Revoke_ForAll';
         this.setTo(operator);
 
-        this.account.nfts.fetch(this.network.chainId).then((v) =>
-          runInAction(() => {
-            startLayoutAnimation();
-            this.nfts = v.filter((i) => i.contract.toLowerCase() === param.to.toLowerCase()).slice(0, 12);
-          })
-        );
+        this.account.nfts
+          .fetch(this.network.chainId)
+          .then((v) =>
+            runInAction(() => (this.nfts = v.filter((i) => i.contract.toLowerCase() === param.to.toLowerCase()).slice(0, 12)))
+          );
 
         break;
 
@@ -422,10 +420,10 @@ export class RawTransactionRequest extends BaseTransaction {
       };
 
       if (tx.type === 0) {
-        tx.gasPrice = Number.parseInt((this.maxGasPrice * Gwei_1) as any);
+        tx.gasPrice = Number.parseInt(`${this.maxGasPrice * Gwei_1}`);
       } else {
-        tx.maxFeePerGas = Number.parseInt((this.maxGasPrice * Gwei_1) as any);
-        tx.maxPriorityFeePerGas = Number.parseInt((this.maxPriorityPrice * Gwei_1) as any);
+        tx.maxFeePerGas = Number.parseInt(`${this.maxGasPrice * Gwei_1}`);
+        tx.maxPriorityFeePerGas = Number.parseInt(`${this.maxPriorityPrice * Gwei_1}`);
       }
 
       return tx;

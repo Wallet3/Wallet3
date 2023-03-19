@@ -1,6 +1,5 @@
-import { Button, SafeViewContainer } from '../../components';
 import { Entypo, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { SafeAreaView, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { fontColor, secondaryFontColor } from '../../constants/styles';
 
 import App from '../../viewmodels/core/App';
@@ -11,17 +10,18 @@ import { DrawerScreenProps } from '@react-navigation/drawer';
 import { FullPasspad } from '../../modals/views/Passpad';
 import { InappBrowserModal } from '../Modalize';
 import Langs from '../../viewmodels/settings/Langs';
-import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/core/Networks';
 import { Portal } from 'react-native-portalize';
 import React from 'react';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { ScrollView } from 'react-native-gesture-handler';
+import SquircleModalize from '../../modals/core/SquircleModalize';
 import Theme from '../../viewmodels/settings/Theme';
+import { Toggle } from '../../components';
+import ToggleSwitch from 'toggle-switch-react-native';
 import UI from '../../viewmodels/settings/UI';
 import i18n from '../../i18n';
-import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
-import { openInappBrowser } from '../../modals/InappBrowser';
+import { openInappBrowser } from '../../modals/app/InappBrowser';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 type SettingsStack = {
@@ -34,8 +34,9 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
   const parent = navigation.getParent();
   const [jumpToScreen, setJumpToScreen] = React.useState('');
   const { ref: passcodeRef, open: openPasscode, close: closePasscode } = useModalize();
-  const { ref: resetRef, open: openReset, close: closeReset } = useModalize();
-  const { foregroundColor, textColor, backgroundColor, mode } = Theme;
+  const { ref: resetRef, open: openReset } = useModalize();
+  const { textColor, mode } = Theme;
+  const { currentWallet } = App;
 
   const openChangePasscode = () => {
     openPasscode();
@@ -92,13 +93,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
           <Text style={itemText}>{t('settings-general-gas-indicator')}</Text>
         </View>
 
-        <View>
-          <Switch
-            value={UI.gasIndicator}
-            onValueChange={(v) => UI.switchGasIndicator(v)}
-            trackColor={{ true: Networks.current.color }}
-          />
-        </View>
+        <Toggle isOn={UI.gasIndicator} onToggle={(v) => UI.switchGasIndicator(v)} onColor={Networks.current.color} />
       </View>
 
       <Text style={styles.sectionTitle}>{t('settings-security')}</Text>
@@ -110,13 +105,11 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
             <Text style={itemText}>{t('settings-security-biometric')}</Text>
           </View>
 
-          <View>
-            <Switch
-              value={Authentication.biometricEnabled}
-              onValueChange={(v) => Authentication.setBiometrics(v)}
-              trackColor={{ true: Networks.current.color }}
-            />
-          </View>
+          <Toggle
+            isOn={Authentication.biometricEnabled}
+            onToggle={(v) => Authentication.setBiometrics(v)}
+            onColor={Networks.current.color}
+          />
         </View>
       ) : undefined}
 
@@ -131,18 +124,17 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.itemContainer} onPress={() => parent?.navigate('Backup')}>
-        <View style={styles.itemSubContainer}>
-          <Ionicons name="file-tray-outline" style={styles.itemStartSymbol} size={16} color={textColor} />
-          <Text style={itemText}>{t('settings-security-backup')}</Text>
-          {!Authentication.userSecretsVerified ? (
-            <Ionicons name="alert-circle" size={15} color="darkorange" style={{ marginStart: 4, marginTop: -8 }} />
-          ) : undefined}
-        </View>
-        <View style={styles.itemSubContainer}>
-          <Entypo name="chevron-right" style={styles.itemEndSymbol} />
-        </View>
-      </TouchableOpacity>
+      {!currentWallet?.isMultiSig && (
+        <TouchableOpacity style={styles.itemContainer} onPress={() => parent?.navigate('Backup')}>
+          <View style={styles.itemSubContainer}>
+            <Ionicons name="file-tray-outline" style={styles.itemStartSymbol} size={16} color={textColor} />
+            <Text style={itemText}>{t('settings-security-backup')}</Text>
+          </View>
+          <View style={styles.itemSubContainer}>
+            <Entypo name="chevron-right" style={styles.itemEndSymbol} />
+          </View>
+        </TouchableOpacity>
+      )}
 
       <TouchableOpacity style={styles.itemContainer} onPress={() => openResetApp()}>
         <View style={styles.itemSubContainer}>
@@ -187,19 +179,10 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
       </TouchableOpacity>
 
       <Portal>
-        <Modalize
-          ref={passcodeRef}
-          disableScrollIfPossible
-          adjustToContentHeight
-          panGestureEnabled={false}
-          panGestureComponentEnabled={false}
-          modalStyle={modalStyle.containerTopBorderRadius}
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-        >
+        <SquircleModalize ref={passcodeRef} panGestureEnabled={false} panGestureComponentEnabled={false} withHandle={false}>
           <FullPasspad
             themeColor={Networks.current.color}
             height={420}
-            borderRadius={modalStyle.containerTopBorderRadius.borderTopEndRadius}
             appAvailable={true}
             failedAttempts={Authentication.failedAttempts}
             onCodeEntered={async (code) => {
@@ -216,25 +199,17 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
               return true;
             }}
           />
-        </Modalize>
+        </SquircleModalize>
 
-        <Modalize
-          ref={resetRef}
-          modalHeight={270}
-          disableScrollIfPossible
-          modalStyle={modalStyle.containerTopBorderRadius}
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-        >
-          <SafeAreaProvider style={{ height: 270, backgroundColor, ...modalStyle.containerTopBorderRadius }}>
-            <Confirm
-              onSwipeConfirm={() => App.reset()}
-              confirmButtonTitle={t('settings-reset-modal-button-confirm')}
-              desc={t('settings-modal-erase')}
-              themeColor="crimson"
-              style={{ flex: 1 }}
-            />
-          </SafeAreaProvider>
-        </Modalize>
+        <SquircleModalize ref={resetRef} safeAreaStyle={{ minHeight: 270, height: 270 }}>
+          <Confirm
+            onSwipeConfirm={() => App.reset()}
+            confirmButtonTitle={t('settings-reset-modal-button-confirm')}
+            desc={t('settings-modal-erase')}
+            themeColor="crimson"
+            style={{ flex: 1 }}
+          />
+        </SquircleModalize>
 
         <InappBrowserModal pageKey="settings" />
       </Portal>

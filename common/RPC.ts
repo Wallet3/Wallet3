@@ -148,7 +148,7 @@ export async function eth_call_return(
     data: string;
   },
   fast = false
-) {
+): Promise<{ result?: any; error?: { message: string; code: number; data: any }; id: number } | undefined> {
   let attempts = 0;
   const urls = getRPCUrls(chainId);
 
@@ -162,7 +162,7 @@ export async function eth_call_return(
       });
 
       if (resp.error) {
-        console.log(resp.error, url, args);
+        __DEV__ && console.log(resp.error, url, args);
 
         if (fast) {
           return resp;
@@ -175,7 +175,7 @@ export async function eth_call_return(
 
       return resp;
     } catch (error) {
-      console.error(error, url);
+      __DEV__ && console.error(error, url);
       markRPCFailed(chainId, url);
     }
   }
@@ -353,7 +353,7 @@ export async function getMaxPriorityFeeByRPC(url: string) {
   return Number.parseInt(resp.result || 0);
 }
 
-export async function getCode(chainId: number, contract: string) {
+export async function getCode(chainId: number, contract: string): Promise<string | undefined> {
   const urls = getRPCUrls(chainId);
   let attempts = 0;
 

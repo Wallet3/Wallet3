@@ -143,7 +143,7 @@ const NFTReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, b
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             {generateNetworkIcon({ ...vm.network, width: 15, style: { marginEnd: 5 } })}
             <Text style={{ ...reviewItemValueStyle, color: vm.network.color, maxWidth: 150 }} numberOfLines={1}>
-              {vm.network.network.split(' ')[0]}
+              {vm.network.network}
             </Text>
           </View>
         </View>

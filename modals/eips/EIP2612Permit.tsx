@@ -1,7 +1,9 @@
 import { ActivityIndicator, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { BigNumber, constants, utils } from 'ethers';
 import { Coin, Skeleton } from '../../components';
+import { DateTimeFormatter, formatAddress } from '../../utils/formatter';
 import React, { useEffect, useState } from 'react';
+import { verifiedColor, warningColor } from '../../constants/styles';
 
 import AddressRiskIndicator from '../components/AddressRiskIndicator';
 import { EIP2612 } from '../../eips/eip2612';
@@ -12,12 +14,10 @@ import Networks from '../../viewmodels/core/Networks';
 import { PageMetadata } from '../../screens/browser/Web3View';
 import Theme from '../../viewmodels/settings/Theme';
 import dayjs from 'dayjs';
-import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { openBrowserAsync } from 'expo-web-browser';
 import styles from '../styles';
-import { warningColor } from '../../constants/styles';
 
 interface Props {
   eip2612: EIP2612;
@@ -136,7 +136,7 @@ export default ({ eip2612, metadata, onAddressChecked }: Props) => {
       <View style={reviewItemStyle}>
         <Text style={styles.reviewItemTitle}>{t('modal-dapp-request-sign-deadline')}</Text>
         <Text style={reviewItemValueStyle} numberOfLines={1}>
-          {dayjs(Number(eip2612.message.deadline) * 1000).format('YYYY-MM-DD HH:mm:ss')}
+          {dayjs(Number(eip2612.message.deadline) * 1000).format(DateTimeFormatter)}
         </Text>
       </View>
 
@@ -149,7 +149,7 @@ export default ({ eip2612, metadata, onAddressChecked }: Props) => {
             {network?.network?.split(' ')?.[0]}
           </Text>
 
-          {decimals < 0 ? <ActivityIndicator size="small" style={{ marginStart: 5 }} /> : undefined}
+          {decimals < 0 ? <ActivityIndicator size="small" style={{ marginStart: 6 }} color={verifiedColor} /> : undefined}
         </View>
       </View>
     </View>

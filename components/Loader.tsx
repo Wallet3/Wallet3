@@ -1,6 +1,7 @@
 import { ActivityIndicator, Modal, StyleSheet, Text, View } from 'react-native';
 
 import React from 'react';
+import { verifiedColor } from '../constants/styles';
 
 interface Props {
   loading?: boolean;
@@ -12,7 +13,7 @@ export default ({ loading, message }: Props) => {
     <Modal transparent={true} animationType={'none'} visible={loading}>
       <View style={styles.modalBackground}>
         <View style={styles.activityIndicatorWrapper}>
-          <ActivityIndicator animating={loading} />
+          <ActivityIndicator animating={loading} color={verifiedColor} />
           <Text style={{ marginStart: 16, fontSize: 16, fontWeight: '500' }}>{message}</Text>
         </View>
       </View>
@@ -33,6 +34,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#FFFFFF',
     padding: 36,
+    paddingBottom: 33,
     borderRadius: 12.5,
     display: 'flex',
     alignItems: 'center',

@@ -3,8 +3,9 @@ import * as Linking from 'expo-linking';
 import Networks, { AddEthereumChainParameter } from '../../../viewmodels/core/Networks';
 import { providers, utils } from 'ethers';
 
-import { Account } from '../../../viewmodels/account/Account';
+import { AccountBase } from '../../../viewmodels/account/AccountBase';
 import App from '../../../viewmodels/core/App';
+import { AuthOptions } from '../../../viewmodels/auth/Authentication';
 import DeviceInfo from 'react-native-device-info';
 import { ERC20Token } from '../../../models/ERC20';
 import EventEmitter from 'events';
@@ -14,6 +15,7 @@ import MessageKeys from '../../../common/MessageKeys';
 import MetamaskDAppsHub from '../../../viewmodels/walletconnect/MetamaskDAppsHub';
 import { PageMetadata } from '../Web3View';
 import { ReadableInfo } from '../../../models/entities/Transaction';
+import { SendTxRequest } from '../../../viewmodels/account/AccountBase';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import { WCCallRequest_eth_sendTransaction } from '../../../models/entities/WCSession_v1';
 import i18n from '../../../i18n';
@@ -61,7 +63,7 @@ interface WatchAssetParams {
 
 export interface ConnectInpageDApp extends Payload {
   origin: string;
-  approve: (userSelected: { network: INetwork; account: Account }) => void;
+  approve: (userSelected: { network: INetwork; account: AccountBase }) => void;
   reject: () => void;
 }
 
@@ -72,7 +74,7 @@ export interface InpageDAppSignRequest {
   typedData?: any;
   approve: (opt?: { pin?: string; standardMode?: boolean }) => Promise<boolean>;
   reject: () => void;
-  account: Account;
+  account: AccountBase;
   metadata: PageMetadata;
 }
 
@@ -213,7 +215,7 @@ export class InpageDAppController extends EventEmitter {
     }
 
     return new Promise<string[] | any>((resolve) => {
-      const approve = ({ account, network }: { account: Account; network: INetwork }) => {
+      const approve = ({ account, network }: { account: AccountBase; network: INetwork }) => {
         const app = new InpageDApp();
         app.origin = origin;
         app.lastUsedAccount = account.address;
@@ -270,8 +272,8 @@ export class InpageDAppController extends EventEmitter {
       const approve = async ({ pin, standardMode }: { pin?: string; standardMode?: boolean } = {}) => {
         const signed =
           type === 'typedData'
-            ? await wallet.signTypedData({ typedData, pin, accountIndex, version: typedVersion })
-            : await wallet.signMessage({ msg: msg!, pin, accountIndex, standardMode });
+            ? await wallet.signTypedData({ typedData, pin, accountIndex, version: typedVersion, disableAutoPinRequest: true })
+            : await wallet.signMessage({ msg: msg!, pin, accountIndex, standardMode, disableAutoPinRequest: true });
 
         if (signed) resolve(signed);
 
@@ -326,19 +328,11 @@ export class InpageDAppController extends EventEmitter {
     dapp.setLastUsedTimestamp(Date.now());
 
     return new Promise<string | any>((resolve) => {
-      const approve = async ({
-        pin,
-        tx,
-        readableInfo,
-      }: {
-        pin?: string;
-        tx: providers.TransactionRequest;
-        readableInfo: ReadableInfo;
-      }) => {
+      const approve = async (args: SendTxRequest & AuthOptions) => {
         const { txHash, error } = await App.sendTxFromAccount(dapp.lastUsedAccount, {
-          tx,
-          pin,
-          readableInfo: { ...(readableInfo || {}), dapp: pageMetadata?.title ?? '', icon: pageMetadata?.icon },
+          ...args,
+          network: Networks.find(dapp.lastUsedChainId),
+          readableInfo: { ...args.readableInfo, dapp: pageMetadata?.title ?? '', icon: pageMetadata?.icon },
         });
 
         txHash ? resolve(txHash) : resolve({ error });

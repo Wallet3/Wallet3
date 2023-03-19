@@ -49,6 +49,8 @@ function ipfsUrlToHttps(url: string) {
 
 export async function getEnsAvatar(name: string, owner: string) {
   try {
+    if (!name.toLowerCase().endsWith('.eth')) return;
+
     let nodehash = utils.namehash(name);
 
     let avatar = await fetchAvatar(nodehash, utils.getAddress(owner));
@@ -87,7 +89,7 @@ export async function getText(ens: string, field: string, resolver?: string) {
 
     return getText(ens, field, resolverAddress);
   } catch (error) {
-    console.log(error);
+    __DEV__ && console.log(error);
   }
 }
 

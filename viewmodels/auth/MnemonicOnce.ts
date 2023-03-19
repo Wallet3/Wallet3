@@ -1,9 +1,10 @@
-import * as Random from 'expo-random';
+import * as Crypto from 'expo-crypto';
 import * as ethers from 'ethers';
 
 import Authentication from './Authentication';
 import { DEFAULT_DERIVATION_PATH } from '../../common/Constants';
 import Key from '../../models/entities/Key';
+import { getSecureRandomBytes } from '../../utils/math';
 import { logCreateWallet } from '../services/Analytics';
 import { makeAutoObservable } from 'mobx';
 import { setStringAsync } from 'expo-clipboard';
@@ -24,7 +25,7 @@ export class MnemonicOnce {
   }
 
   async generate(length: 12 | 24 = 12) {
-    const entropy = Random.getRandomBytes(length === 12 ? 16 : 32);
+    const entropy = getSecureRandomBytes(length === 12 ? 16 : 32);
     this.secret = ethers.utils.entropyToMnemonic(entropy);
     return this.secret;
   }
@@ -63,8 +64,7 @@ export class MnemonicOnce {
 
       return await this.savePrivKey();
     } catch (error) {
-      console.error(error);
-      return undefined;
+      __DEV__ && console.error(error);
     } finally {
       this.clean();
       logCreateWallet();
@@ -90,6 +90,8 @@ export class MnemonicOnce {
   }
 
   private async savePrivKey() {
+    if (!this.secret) return;
+
     const key = new Key();
     key.id = Date.now();
     key.secret = await Authentication.encrypt(this.secret);

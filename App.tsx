@@ -1,18 +1,19 @@
 // @ts-nocheck
 
 import * as SplashScreen from 'expo-splash-screen';
-import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
 
 import AppViewModel, { AppVM } from './viewmodels/core/App';
 import AuthViewModel, { Authentication } from './viewmodels/auth/Authentication';
 import Modals, { FullScreenQRScanner, LockScreen } from './screens/Modalize';
-import { Platform, UIManager, TouchableOpacity } from 'react-native';
-import { enableLayoutAnimations } from "react-native-reanimated";
+import React, { useEffect, useState } from 'react';
+import { TouchableOpacity, UIManager } from 'react-native';
+
 import { About } from './screens/settings/About';
 import AddToken from './screens/tokens/AddToken';
 import Backup from './screens/settings/Backup';
 import ChangePasscode from './screens/settings/ChangePasscode';
 import Currencies from './screens/settings/Currencies';
+import ERC4337Queue from './viewmodels/transferring/ERC4337Queue';
 import FlashMessage from 'react-native-flash-message';
 import { Host } from 'react-native-portalize';
 import { Ionicons } from '@expo/vector-icons';
@@ -21,22 +22,22 @@ import Languages from './screens/settings/Languages';
 import NFTDetails from './screens/nfts/Details';
 import { NavigationContainer } from '@react-navigation/native';
 import ProfileScreen from './screens/profile';
-import React from 'react';
+import RecoveryMode from './screens/security/RecoveryMode';
 import Root from './screens/Root';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import Theme from './viewmodels/settings/Theme';
 import Themes from './screens/settings/Themes';
 import Tokens from './screens/tokens/SortTokens';
+import TxQueueBanner from './modals/global/TxQueueBanner';
 import VerifySecret from './screens/settings/VerifySecret';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
 import i18n from './i18n';
 import { logScreenView } from './viewmodels/services/Analytics';
 import { observer } from 'mobx-react-lite';
-import { useFonts } from 'expo-font';
 
 SplashScreen.hideAsync();
-AppViewModel.init();
-
 UIManager.setLayoutAnimationEnabledExperimental?.(true);
 
 const StackRoot = createNativeStackNavigator();
@@ -45,22 +46,19 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
   const { Navigator, Screen } = StackRoot;
   const { t } = i18n;
   const { backgroundColor, foregroundColor, statusBarStyle } = Theme;
+  const [recoveryMode, setRecoveryMode] = useState(false);
   const routeNameRef = React.useRef();
   const navigationRef = React.useRef();
 
-  const [loaded] = useFonts({
-    Questrial: require('./assets/fonts/Questrial.ttf'),
-  });
+  useEffect(() => {
+    AppViewModel.init().catch(() => setRecoveryMode(true));
+  }, []);
 
-  if (!loaded) {
-    return null;
-  }
-
-  if (Platform.OS === 'android') {
-    enableLayoutAnimations(false);
-  }
-
-  return (
+  return recoveryMode ? (
+    <SafeAreaProvider>
+      <RecoveryMode />
+    </SafeAreaProvider>
+  ) : (
     <NavigationContainer
       ref={navigationRef}
       onReady={() => (routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name)}
@@ -79,12 +77,13 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
     >
       <Host style={{ backgroundColor: backgroundColor }}>
         {app.initialized ? (
-          app.hasWallet ? (
+          app.hasWalletSet ? (
             <Navigator
               initialRouteName="Root"
               screenOptions={({ navigation }) => {
                 return {
-                  headerTransparent: Platform.OS === 'ios' ? true : false,
+                  headerTransparent: true,
+                  headerTitleAlign: 'center',
                   headerTintColor: foregroundColor,
                   contentStyle: { backgroundColor },
                   headerLeft: () => (
@@ -96,42 +95,14 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
               }}
             >
               <Screen name="Root" component={Root} options={{ headerShown: false }} />
-              <Screen
-                name="Languages"
-                component={Languages}
-                options={{ title: t('settings-languages'), headerStyle: { backgroundColor } }}
-              />
-              <Screen
-                name="Currencies"
-                component={Currencies}
-                options={{ title: t('settings-currencies'), headerStyle: { backgroundColor } }}
-              />
-              <Screen
-                name="Themes"
-                component={Themes}
-                options={{ title: t('settings-themes'), headerStyle: { backgroundColor } }}
-              />
-              <Screen
-                name="ChangePasscode"
-                component={ChangePasscode}
-                options={{ title: t('settings-security-passcode'), headerStyle: { backgroundColor } }}
-              />
-              <Screen
-                name="Backup"
-                component={Backup}
-                options={{ title: t('settings-security-backup'), headerStyle: { backgroundColor } }}
-              />
-              <Screen
-                name="VerifySecret"
-                component={VerifySecret}
-                options={{ title: t('settings-security-backup-verify'), headerStyle: { backgroundColor } }}
-              />
-              <Screen
-                name="AddToken"
-                component={AddToken}
-                options={{ title: t('home-add-token-title'), headerStyle: { backgroundColor } }}
-              />
-              <Screen name="About" component={About} options={{ title: t('about-title'), headerStyle: { backgroundColor } }} />
+              <Screen name="Languages" component={Languages} options={{ title: t('settings-languages') }} />
+              <Screen name="Currencies" component={Currencies} options={{ title: t('settings-currencies') }} />
+              <Screen name="Themes" component={Themes} options={{ title: t('settings-themes') }} />
+              <Screen name="ChangePasscode" component={ChangePasscode} options={{ title: t('settings-security-passcode') }} />
+              <Screen name="Backup" component={Backup} options={{ title: t('settings-security-backup') }} />
+              <Screen name="VerifySecret" component={VerifySecret} options={{ title: t('settings-security-backup-verify') }} />
+              <Screen name="AddToken" component={AddToken} options={{ title: t('home-add-token-title') }} />
+              <Screen name="About" component={About} options={{ title: t('about-title') }} />
               <Screen
                 name="Profile"
                 component={ProfileScreen}
@@ -178,7 +149,9 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
         ) : undefined}
       </Host>
 
-      {Modals({ app, appAuth })}
+      {ERC4337Queue.count > 0 && <TxQueueBanner />}
+
+      {Modals()}
 
       <FlashMessage position="top" />
       <StatusBar style={statusBarStyle} />
@@ -189,11 +162,4 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
   );
 });
 
-const WalletApp = () => {
-  return (
-    // your code to render your layout
-    <App app={AppViewModel} appAuth={AuthViewModel} />
-  );
-};
-
-export default gestureHandlerRootHOC(WalletApp);
+export default gestureHandlerRootHOC(() => <App app={AppViewModel} appAuth={AuthViewModel} />);

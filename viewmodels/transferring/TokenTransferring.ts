@@ -95,10 +95,10 @@ export class TokenTransferring extends BaseTransaction {
     };
 
     if (tx.type === 0) {
-      tx.gasPrice = Number.parseInt((this.maxGasPrice * Gwei_1) as any);
+      tx.gasPrice = Number.parseInt(`${this.maxGasPrice * Gwei_1}`);
     } else {
-      tx.maxFeePerGas = Number.parseInt((this.maxGasPrice * Gwei_1) as any);
-      tx.maxPriorityFeePerGas = Number.parseInt((this.maxPriorityPrice * Gwei_1) as any);
+      tx.maxFeePerGas = Number.parseInt(`${this.maxGasPrice * Gwei_1}`);
+      tx.maxPriorityFeePerGas = Number.parseInt(`${this.maxPriorityPrice * Gwei_1}`);
     }
 
     return tx;
@@ -183,10 +183,11 @@ export class TokenTransferring extends BaseTransaction {
     this.txException = '';
   }
 
-  sendTx(pin?: string) {
+  sendTx(pin?: string, onNetworkRequest?: () => void) {
     return super.sendRawTx(
       {
         tx: this.txRequest,
+        onNetworkRequest,
         readableInfo: {
           type: 'transfer',
           symbol: this.token.symbol,

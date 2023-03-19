@@ -1,10 +1,15 @@
 import * as Crypto from 'expo-crypto';
-import * as Random from 'expo-random';
 
 import CryptoES from 'crypto-es';
+import { createHash } from 'crypto';
+import { getSecureRandomBytes } from './math';
 
 export async function sha256(input: string): Promise<string> {
   return await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, input);
+}
+
+export function sha256Sync(input: string) {
+  return createHash('sha256').update(input).digest('hex');
 }
 
 export async function md5(input: string) {
@@ -48,7 +53,7 @@ const JsonFormatter = {
 export function encrypt(input: string, key: string) {
   return CryptoES.AES.encrypt(input, key, {
     format: JsonFormatter,
-    iv: CryptoES.enc.Hex.parse(Buffer.from(Random.getRandomBytes(16)).toString('hex')),
+    iv: CryptoES.enc.Hex.parse(getSecureRandomBytes(16).toString('hex')),
   }).toString();
 }
 

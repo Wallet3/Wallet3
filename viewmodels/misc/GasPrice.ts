@@ -21,12 +21,15 @@ class GasPrice {
     clearTimeout(this.timer!);
     const { current } = Networks;
 
-    const price = current.eip1559
-      ? LINQ.from(await Promise.all([getNextBlockBaseFee(current.chainId), getMaxPriorityFee(current.chainId)])).sum()
-      : await getGasPrice(current.chainId);
+    try {
+      const price = current.eip1559
+        ? LINQ.from(await Promise.all([getNextBlockBaseFee(current.chainId), getMaxPriorityFee(current.chainId)])).sum()
+        : await getGasPrice(current.chainId);
 
-    runInAction(() => (this.current = price === undefined ? this.current : price));
-    this.timer = setTimeout(() => this.refresh(), (current.chainId === 1 ? 12 : 5) * 1000);
+      runInAction(() => (this.current = price === undefined ? this.current : price));
+    } finally {
+      this.timer = setTimeout(() => this.refresh(), (current.chainId === 1 ? 12 : 5) * 1000);
+    }
   }
 
   stop() {

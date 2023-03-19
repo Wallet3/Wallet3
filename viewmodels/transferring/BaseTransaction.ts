@@ -1,40 +1,41 @@
-import { BigNumber, providers, utils } from 'ethers';
-import { EncodedERC1271ContractWalletCallData, Gwei_1, MAX_GWEI_PRICE } from '../../common/Constants';
+import { AccountBase, SendTxRequest, SendTxResponse } from '../account/AccountBase';
+import { BigNumber, utils } from 'ethers';
+import {
+  EncodedERC1271ContractWalletCallData,
+  EncodedERC4337EntryPointCallData,
+  Gwei_1,
+  MAX_GWEI_PRICE,
+} from '../../common/Constants';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { clearPendingENSRequests, isENSDomain } from '../services/ENSResolver';
-import {
-  estimateGas,
-  eth_call_return,
-  getCode,
-  getGasPrice,
-  getMaxPriorityFee,
-  getNextBlockBaseFee,
-  getTransactionCount,
-} from '../../common/RPC';
+import { estimateGas, eth_call_return, getCode, getGasPrice, getMaxPriorityFee, getNextBlockBaseFee } from '../../common/RPC';
 import { isDomain, resolveDomain } from '../services/DomainResolver';
 
-import { Account } from '../account/Account';
 import AddressTag from '../../models/entities/AddressTag';
 import App from '../core/App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Coingecko from '../../common/apis/Coingecko';
 import { ERC20Token } from '../../models/ERC20';
+import ERC4337Queue from './ERC4337Queue';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
 import { NativeToken } from '../../models/NativeToken';
-import { Wallet } from '../core/Wallet';
+import { WalletBase } from '../wallet/WalletBase';
+import { entryPointAddress } from '../../configs/erc4337.json';
 import { fetchAddressInfo } from '../services/EtherscanPublicTag';
 import { getEnsAvatar } from '../../common/ENS';
-import { showMessage } from 'react-native-flash-message';
-import { startLayoutAnimation } from '../../utils/animations';
+
+const Keys = {
+  feeToken: (chainId: number | string) => `${chainId}_user_preferred_feeToken`,
+};
 
 export class BaseTransaction {
   private toAddressTypeCache = new Map<string, { isContractWallet: boolean; isContractRecipient: boolean }>();
   private timer?: NodeJS.Timer;
 
   readonly network: INetwork;
-  readonly account: Account;
-  readonly wallet: Wallet;
+  readonly account: AccountBase;
+  readonly wallet: WalletBase;
   readonly nativeToken: NativeToken;
 
   to = '';
@@ -55,7 +56,9 @@ export class BaseTransaction {
   initializing = false;
   feeToken: ERC20Token | null = null;
 
-  constructor(args: { network: INetwork; account: Account }, initChainData = true) {
+  isQueuingTx = false;
+
+  constructor(args: { network: INetwork; account: AccountBase }, initChainData = true) {
     this.network = args.network;
     this.account = args.account;
     this.wallet = App.findWallet(this.account.address)!.wallet;
@@ -89,6 +92,7 @@ export class BaseTransaction {
       insufficientFee: computed,
       toAddressRisky: computed,
       loading: computed,
+      isQueuingTx: observable,
 
       setNonce: action,
       setGasLimit: action,
@@ -98,16 +102,29 @@ export class BaseTransaction {
       setToAddress: action,
       setGas: action,
       setFeeToken: action,
+      setIsQueuingTx: action,
     });
 
     this.nativeToken.getBalance();
 
-    if (initChainData) this.initChainData({ ...args, account: args.account.address });
+    if (initChainData) this.initChainData();
 
     if (this.network.eip1559) this.refreshEIP1559(this.network.chainId);
     if (this.network.feeTokens) this.initFeeToken();
 
     Coingecko.refresh();
+  }
+
+  get isERC4337Account() {
+    return this.account.isERC4337;
+  }
+
+  get isERC4337Network() {
+    return this.network.erc4337 ? true : false;
+  }
+
+  get isERC4337Available() {
+    return this.isERC4337Account && this.isERC4337Network;
   }
 
   get safeTo() {
@@ -275,7 +292,7 @@ export class BaseTransaction {
     const feeToken = this.network.feeTokens.find((t) => t.address === token.address) ?? this.network.feeTokens[0];
     this.feeToken = new ERC20Token({ ...this.network, ...feeToken, owner: this.account.address, contract: feeToken.address });
     this.feeToken.getBalance();
-    AsyncStorage.setItem(`${this.network.chainId}_feeToken`, this.feeToken.address);
+    AsyncStorage.setItem(Keys.feeToken(this.network.chainId), this.feeToken.address);
   }
 
   async setGas(speed: 'rapid' | 'fast' | 'standard') {
@@ -333,14 +350,26 @@ export class BaseTransaction {
       return;
     }
 
-    const result = await eth_call_return(
+    const erc4337EntryPoint = await eth_call_return(
       this.network.chainId,
-      { to: this.toAddress, data: EncodedERC1271ContractWalletCallData },
+      { to: this.toAddress, data: EncodedERC4337EntryPointCallData },
       true
     );
 
-    const errorCode = Number(result?.error?.code);
-    const isContractWallet = Boolean(result?.error?.data && Number.isInteger(errorCode) && errorCode !== -32000);
+    let isContractWallet = erc4337EntryPoint?.result
+      ?.toLowerCase?.()
+      ?.endsWith?.(entryPointAddress.substring(2).toLowerCase());
+
+    if (!isContractWallet) {
+      const erc1271Result = await eth_call_return(
+        this.network.chainId,
+        { to: this.toAddress, data: EncodedERC1271ContractWalletCallData },
+        true
+      );
+
+      const errorCode = Number(erc1271Result?.error?.code);
+      isContractWallet = Boolean(erc1271Result?.error?.data && Number.isInteger(errorCode) && errorCode !== -32000);
+    }
 
     runInAction(() => {
       this.isContractWallet = isContractWallet;
@@ -349,8 +378,12 @@ export class BaseTransaction {
     });
   }
 
-  protected async initChainData({ network, account }: { network: INetwork; account: string }) {
-    const { chainId, eip1559 } = network;
+  setIsQueuingTx(flag: boolean) {
+    this.isQueuingTx = flag;
+  }
+
+  protected async initChainData() {
+    const { chainId, eip1559 } = this.network;
 
     runInAction(() => (this.initializing = true));
 
@@ -358,12 +391,10 @@ export class BaseTransaction {
       getGasPrice(chainId),
       getNextBlockBaseFee(chainId),
       getMaxPriorityFee(chainId),
-      getTransactionCount(chainId, account),
+      this.account.getNonce(chainId),
     ]);
 
     runInAction(() => {
-      startLayoutAnimation();
-
       this.nextBlockBaseFeeWei = Number(nextBaseFee.toFixed(0));
 
       this.setNonce(nonce);
@@ -404,35 +435,29 @@ export class BaseTransaction {
 
   protected async initFeeToken() {
     if (!this.network.feeTokens) return;
-    const tokenAddress = await AsyncStorage.getItem(`${this.network.chainId}_feeToken`);
+    const tokenAddress = await AsyncStorage.getItem(Keys.feeToken(this.network.chainId));
     const token = this.network.feeTokens.find((token) => token.address === tokenAddress) ?? this.network.feeTokens[0];
     const feeToken = new ERC20Token({ ...this.network, ...token, owner: this.account.address, contract: token.address });
     feeToken.getBalance();
     runInAction(() => (this.feeToken = feeToken));
   }
 
-  async sendRawTx(args: { tx?: providers.TransactionRequest; readableInfo?: any }, pin?: string) {
-    const { tx, readableInfo } = args;
-
-    if (!tx) return { success: false, error: 'No transaction' };
-
-    const { txHex, error } = await this.wallet.signTx({
-      accountIndex: this.account.index,
-      tx,
-      pin,
-    });
-
-    if (!txHex || error) {
-      if (error) showMessage({ message: error, type: 'warning' });
-      return { success: false, error };
+  async sendRawTx(args: SendTxRequest, pin?: string): Promise<SendTxResponse> {
+    if (this.isQueuingTx && this.isERC4337Available) {
+      ERC4337Queue.add(args);
+      return { success: true };
     }
 
-    this.wallet.sendTx({
-      tx,
-      txHex,
-      readableInfo,
-    });
-
-    return { success: true, txHex, tx: utils.parseTransaction(txHex) };
+    return this.account.sendTx(
+      {
+        ...args,
+        network: this.network,
+        gas: {
+          maxFeePerGas: Number.parseInt(`${this.maxGasPrice * Gwei_1}`),
+          maxPriorityFeePerGas: Number.parseInt(`${this.maxPriorityPrice * Gwei_1}`),
+        },
+      },
+      pin
+    );
   }
 }

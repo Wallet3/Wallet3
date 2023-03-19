@@ -1,6 +1,7 @@
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import { CoinDetails } from './Coingecko.d';
+import { MINUTE } from '../../utils/time';
 import Networks from '../../viewmodels/core/Networks';
 
 interface Price {
@@ -216,7 +217,7 @@ class Coingecko {
 
   async getMarketChart(id: string, days = 1) {
     const tuple = this.coinIdToMarkets.get(id);
-    if (tuple && tuple.timestamp > Date.now() - 1000 * 60 * 5) return tuple.market;
+    if (tuple && tuple.timestamp > Date.now() - 5 * MINUTE) return tuple.market;
 
     try {
       const resp = await (

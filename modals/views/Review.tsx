@@ -1,8 +1,10 @@
-import { Button, Coin, SafeViewContainer } from '../../components';
+import { Button, Coin, Placeholder, SafeViewContainer } from '../../components';
 import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+import { verifiedColor, warningColor } from '../../constants/styles';
 
+import AddToSendingQueue from '../components/AddToSendingQueue';
 import AddressRiskIndicator from '../components/AddressRiskIndicator';
 import AnimatedNumber from '../../components/AnimatedNumber';
 import BackButton from '../components/BackButton';
@@ -25,7 +27,6 @@ import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 import { utils } from 'ethers';
-import { warningColor } from '../../constants/styles';
 
 interface Props {
   onBack?: () => void;
@@ -36,26 +37,13 @@ interface Props {
   biometricType?: BioType;
   txDataEditable?: boolean;
   onEditDataPress?: () => void;
-  onInteractionStart?: () => void;
-  onInteractionEnd?: () => void;
 }
 
 const ReviewView = observer(
-  ({
-    vm,
-    onBack,
-    onGasPress,
-    onSend,
-    disableBack,
-    biometricType,
-    txDataEditable,
-    onEditDataPress,
-    onInteractionEnd,
-    onInteractionStart,
-  }: Props) => {
+  ({ vm, onBack, onGasPress, onSend, disableBack, biometricType, txDataEditable, onEditDataPress }: Props) => {
     const { t } = i18n;
-    const [busy, setBusy] = React.useState(false);
-    const { borderColor, textColor, secondaryTextColor } = Theme;
+    const [busy, setBusy] = useState(false);
+    const { borderColor, textColor, secondaryTextColor, tintColor } = Theme;
 
     const send = async () => {
       setBusy(true);
@@ -122,10 +110,10 @@ const ReviewView = observer(
                   <Ionicons
                     name={vm.isContractWallet ? 'wallet-outline' : 'warning'}
                     size={8}
-                    color={vm.isContractWallet ? 'dodgerblue' : 'crimson'}
+                    color={vm.isContractWallet ? verifiedColor : 'crimson'}
                     style={{ marginEnd: 4 }}
                   />
-                  <Text style={{ fontSize: 8, color: vm.isContractWallet ? 'dodgerblue' : 'crimson' }}>
+                  <Text style={{ fontSize: 8, color: vm.isContractWallet ? verifiedColor : 'crimson' }}>
                     {t(
                       vm.isContractRecipient
                         ? vm.isContractWallet
@@ -169,7 +157,7 @@ const ReviewView = observer(
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               {generateNetworkIcon({ ...vm.network, width: 15, style: { marginEnd: 5 } })}
               <Text style={{ ...reviewItemValueStyle, color: vm.network.color, maxWidth: 150 }} numberOfLines={1}>
-                {vm.network.network.split(' ')[0]}
+                {vm.network.network}
               </Text>
             </View>
           </View>
@@ -218,18 +206,32 @@ const ReviewView = observer(
         <View
           style={{
             flexDirection: 'row',
-            justifyContent: 'flex-end',
             alignItems: 'center',
+            justifyContent: 'flex-end',
           }}
         >
+          {vm.isERC4337Available ? (
+            <AddToSendingQueue
+              containerStyle={{ marginStart: -10 }}
+              themeColor={tintColor}
+              txtStyle={{ color: secondaryTextColor }}
+              checked={vm.isQueuingTx}
+              onToggle={() => vm.setIsQueuingTx(!vm.isQueuingTx)}
+            />
+          ) : (
+            <View />
+          )}
+
+          {(txDataEditable || (vm.insufficientFee && !vm.loading)) && <Placeholder />}
+
           {vm.insufficientFee && !vm.loading ? <InsufficientFee /> : undefined}
 
           {txDataEditable && !vm.insufficientFee ? (
             <TouchableOpacity
-              style={{ flexDirection: 'row', alignItems: 'center', padding: 12, paddingHorizontal: 16 }}
+              style={{ flexDirection: 'row', alignItems: 'center', padding: 12, paddingHorizontal: 15 }}
               onPress={onEditDataPress}
             >
-              <Text style={{ fontWeight: '600', color: secondaryTextColor, fontSize: 12 }}>
+              <Text style={{ fontWeight: '600', color: secondaryTextColor, fontSize: 12.5 }}>
                 {t('modal-review-edit-tx-message')}
               </Text>
               <MaterialIcons name="keyboard-arrow-right" size={15} color={secondaryTextColor} style={{ marginBottom: -1 }} />
@@ -249,8 +251,6 @@ const ReviewView = observer(
           onSwipeSuccess={onLongSendPress}
           icon={authIcon}
           themeColor={vm.transferToRisky ? warningColor : vm.network.color}
-          onInteractionStart={onInteractionStart}
-          onInteractionEnd={onInteractionEnd}
         />
       </SafeViewContainer>
     );
@@ -258,7 +258,7 @@ const ReviewView = observer(
 );
 
 export default observer((props: Props) => {
-  const { onBack, vm, onSend, disableBack } = props;
+  const { vm } = props;
   const swiper = useRef<Swiper>(null);
   const [type, setType] = useState(0);
 

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import eip2612, { EIP2612, EIP2612Mock } from '../../eips/eip2612';
 
-import { Account } from '../../viewmodels/account/Account';
+import { AccountBase } from '../../viewmodels/account/AccountBase';
 import AccountIndicator from '../components/AccountIndicator';
 import { BioType } from '../../viewmodels/auth/Authentication';
 import Collapsible from 'react-native-collapsible';
@@ -24,7 +24,7 @@ interface Props {
   data: any;
   onReject: () => void;
   onSign: () => Promise<void>;
-  account?: Account;
+  account?: AccountBase;
   bioType?: BioType;
   metadata?: PageMetadata;
 }

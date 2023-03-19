@@ -5,7 +5,7 @@ module.exports = (async () => {
     resolver: { sourceExts, assetExts },
   } = await getDefaultConfig(__dirname);
 
-  assetExts.push('cjs');
+  assetExts.push(...['cjs', 'pem', 'p12']);
 
   return {
     transformer: {

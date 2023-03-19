@@ -115,13 +115,10 @@ class WalletConnectHub extends EventEmitter {
       case '2':
         await this.lazyInitWalletConnectV2([]);
 
-        console.log(uri);
-
         const pairing = await this.walletconnect2.core.pairing.pair({ uri, activatePairing: true });
         const client_v2 = new WalletConnect_v2(this.walletconnect2);
         client_v2.store.isMobile = extra?.fromMobile ?? false;
         client_v2.store.hostname = extra?.hostname || '';
-        console.log('extra:', extra);
 
         this.pendingV2Clients.set(pairing.topic, client_v2);
         this.handleV2Lifecycle(client_v2, pairing.topic, extra);

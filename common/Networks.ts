@@ -21,7 +21,16 @@ import {
   zkSyncPopularTokens,
 } from './tokens';
 
+import ERC4337Configs from '../configs/erc4337.json';
+import { GoerliPopTokens } from './tokens/Goerli';
 import { Gwei_1 } from './Constants';
+
+export interface IERC4337 {
+  bundlerUrls: string[];
+  factoryAddress: string;
+  entryPointAddress: string;
+  paymasterUrl?: string;
+}
 
 export interface INetwork {
   comm_id?: string;
@@ -31,6 +40,7 @@ export interface INetwork {
   color: string;
   l2?: boolean;
   eip1559?: boolean;
+  erc4337?: IERC4337;
   order?: number;
   defaultTokens: IToken[];
   showOverview?: boolean;
@@ -158,6 +168,14 @@ export const PublicNetworks: INetwork[] = [
     explorer: 'https://snowtrace.io',
     etherscanApi: 'https://api.snowtrace.io/api',
     github_dir: 'avalanchec',
+  },
+  {
+    symbol: 'FIL',
+    network: 'Filecoin',
+    chainId: 314,
+    color: '#0090FF',
+    defaultTokens: [],
+    explorer: 'https://beryx.zondax.ch/v1/search/fil/mainnet',
   },
   {
     symbol: 'ETH',
@@ -308,8 +326,7 @@ export const PublicNetworks: INetwork[] = [
     comm_id: 'astr',
     network: 'Astar',
     chainId: 592,
-    explorer: 'https://blockscout.com/astar',
-    etherscanApi: 'https://blockscout.com/astar/api',
+    explorer: 'https://astar.subscan.io',
     color: '#00aee9',
     defaultTokens: [],
   },
@@ -393,8 +410,9 @@ export const Testnets: INetwork[] = [
     chainId: 5,
     color: '#6186ff',
     eip1559: true,
+    erc4337: ERC4337Configs['5'],
     testnet: true,
-    defaultTokens: [],
+    defaultTokens: GoerliPopTokens,
     explorer: 'https://goerli.etherscan.io',
   },
   {
@@ -431,17 +449,39 @@ export const Testnets: INetwork[] = [
     explorer: 'https://goerli.arbiscan.io',
   },
   {
+    symbol: 'ETH',
+    network: 'Base Goerli',
+    chainId: 84531,
+    color: '#588af5',
+    eip1559: true,
+    testnet: true,
+    defaultTokens: [],
+    explorer: 'https://goerli.basescan.org',
+  },
+  {
     comm_id: '',
     symbol: 'MATIC',
     network: 'Mumbai',
     chainId: 80001,
     color: '#8247E5',
     eip1559: true,
+    erc4337: ERC4337Configs['80001'],
     defaultTokens: [],
     blockTimeMs: 3 * 1000,
     testnet: true,
     explorer: 'https://mumbai.polygonscan.com',
     etherscanApi: 'https://mumbai.polygonscan.com/api',
+  },
+  {
+    comm_id: '',
+    symbol: 'ETH',
+    network: 'Japan Open Chain',
+    chainId: 99999,
+    color: '#BC002D',
+    defaultTokens: [],
+    blockTimeMs: 3 * 1000,
+    testnet: true,
+    explorer: 'https://sandbox1.japanopenchain.org',
   },
 ];
 

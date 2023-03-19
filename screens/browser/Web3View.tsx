@@ -3,18 +3,15 @@ import * as Linking from 'expo-linking';
 
 import Animated, { ComplexAnimationBuilder, FadeInDown, FadeOut, FadeOutDown } from 'react-native-reanimated';
 import { Entypo, Feather, Ionicons } from '@expo/vector-icons';
-import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
-import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { WebView, WebViewMessageEvent, WebViewNavigation, WebViewProps } from 'react-native-webview';
 
-import { Account } from '../../viewmodels/account/Account';
+import { AccountBase } from '../../viewmodels/account/AccountBase';
 import AccountSelector from '../../modals/dapp/AccountSelector';
 import App from '../../viewmodels/core/App';
 import Avatar from '../../components/Avatar';
-import DeviceInfo from 'react-native-device-info';
 import GetPageMetadata from './scripts/Metadata';
-import GetIconsFunction from './scripts/GetIconsFunction';
 import HookRainbowKit from './scripts/InjectRainbowKitObserver';
 import HookWalletConnect from './scripts/InjectWalletConnectObserver';
 import { INetwork } from '../../common/Networks';
@@ -22,20 +19,20 @@ import { InpageDAppController } from './controller/InpageDAppController';
 import { JS_POST_MESSAGE_TO_PROVIDER } from './scripts/Utils';
 import LinkHub from '../../viewmodels/hubs/LinkHub';
 import MetamaskMobileProvider from './scripts/Metamask-mobile-provider';
-import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/core/Networks';
 import { NetworksMenu } from '../../modals';
 import { Portal } from 'react-native-portalize';
+import SquircleModalize from '../../modals/core/SquircleModalize';
 import Theme from '../../viewmodels/settings/Theme';
+import { UA } from '../../utils/platform';
 import ViewShot from 'react-native-view-shot';
 import WalletConnectHub from '../../viewmodels/walletconnect/WalletConnectHub';
 import WalletConnectLogo from '../../assets/3rd/walletconnect.svg';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
-import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
-import modalStyles from '../../modals/styles';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export interface PageMetadata {
   icon: string;
@@ -72,17 +69,6 @@ export default observer((props: Web3ViewProps) => {
   const { t } = i18n;
   const { webViewRef, viewShotRef, tabCount, onTabPress } = props;
   const [hub] = useState(new InpageDAppController());
-  const [appName] = useState(`Wallet3/${DeviceInfo.getVersion() || '0.0.0'}`);
-  const [ua] = useState(
-    Platform.OS === 'ios'
-      ? DeviceInfo.isTablet()
-        ? `Mozilla/5.0 (iPad; CPU OS 15_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/98.0.4758.85 Mobile/15E148 Safari/604.1 ${appName}`
-        : `Mozilla/5.0 (iPhone; CPU iPhone OS 15_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/98.0.4758.85 Mobile/15E148 Safari/604.1 ${appName}`
-      : DeviceInfo.isTablet()
-      ? `Mozilla/5.0 (Linux; Android 11; tablet) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.210 Mobile Safari/537.36 ${appName}`
-      : `Mozilla/5.0 (Linux; Android 11; Pixel 4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.210 Mobile Safari/537.36 ${appName}`
-
-  );
 
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
   const { onMetadataChange, onGoHome, onNewTab, expanded, onBookmarksPress, onAppNetworkChange } = props;
@@ -94,7 +80,7 @@ export default observer((props: Web3ViewProps) => {
 
   const [pageMetadata, setPageMetadata] = useState<PageMetadata>();
   const [appNetwork, setAppNetwork] = useState<INetwork>();
-  const [appAccount, setAppAccount] = useState<Account>();
+  const [appAccount, setAppAccount] = useState<AccountBase>();
   const [dapp, setDApp] = useState<ConnectedBrowserDApp | undefined>();
   const [webUrl, setWebUrl] = useState('');
   const [exitingTransition, setExitingTransition] = useState<ComplexAnimationBuilder>();
@@ -242,29 +228,24 @@ export default observer((props: Web3ViewProps) => {
 
   return (
     <Animated.View style={{ flex: 1, position: 'relative' }} exiting={exitingTransition}>
-      <ViewShot ref={viewShotRef} style={{ flex: 1 }} options={{ result: 'data-uri', quality: 0.1, format: 'jpg' }}>
+      <ViewShot ref={viewShotRef} style={{ flex: 1 }} options={{ result: 'tmpfile', quality: 0.1, format: 'jpg' }}>
         <WebView
           {...props}
           ref={webViewRef}
-          nestedScrollEnabled
           automaticallyAdjustContentInsets={false}
           contentInsetAdjustmentBehavior={'never'}
           contentInset={{ bottom: expanded ? 37 + (safeAreaBottom === 0 ? 8 : 0) : 0 }}
           onNavigationStateChange={onNavigationStateChange}
-          userAgent={ua}
+          userAgent={UA}
           allowsFullscreenVideo={false}
           forceDarkOn={mode === 'dark'}
-          injectedJavaScript={`${GetIconsFunction}\ntrue;${GetPageMetadata}\ntrue;\n${HookWalletConnect}\ntrue;${HookRainbowKit}\ntrue;`}
-          onLoadStart= {() => {
-            const webview = (webViewRef as any).current as WebView;
-            webview.injectJavaScript(`${MetamaskMobileProvider}\ntrue;`);
-          }}
+          injectedJavaScript={`${GetPageMetadata}\ntrue;\n${HookWalletConnect}\n${HookRainbowKit}\ntrue;`}
           onMessage={onMessage}
           mediaPlaybackRequiresUserAction
           pullToRefreshEnabled
           allowsInlineMediaPlayback
           allowsBackForwardNavigationGestures
-          // injectedJavaScriptBeforeContentLoaded={`${MetamaskMobileProvider}\ntrue;`}
+          injectedJavaScriptBeforeContentLoaded={`${MetamaskMobileProvider}\ntrue;`}
           onContentProcessDidTerminate={() => ((webViewRef as any)?.current as WebView)?.reload()}
           style={{ backgroundColor }}
           decelerationRate={1}
@@ -321,7 +302,7 @@ export default observer((props: Web3ViewProps) => {
 
             <TouchableOpacity
               style={styles.navTouchableItem}
-              onPress={() => (Platform.OS === 'android' ? onGoHome?.() : dapp ? (onNewTab || onGoHome)?.() : onGoHome?.())}
+              onPress={() => (dapp ? (onNewTab || onGoHome)?.() : onGoHome?.())}
             >
               <Entypo name="circle" size={19} color={tintColor} />
             </TouchableOpacity>
@@ -378,46 +359,32 @@ export default observer((props: Web3ViewProps) => {
       </Animatable.View>
 
       <Portal>
-        <Modalize
-          ref={networksRef}
-          adjustToContentHeight
-          disableScrollIfPossible
-          modalStyle={modalStyle.containerTopBorderRadius}
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-        >
+        <SquircleModalize ref={networksRef}>
           <NetworksMenu
             title={t('modal-dapp-switch-network', { app: pageMetadata?.title?.split(' ')?.[0] ?? '' })}
             selectedNetwork={appNetwork}
             onNetworkPress={(network) => updateDAppNetworkConfig(network)}
           />
-        </Modalize>
+        </SquircleModalize>
 
-        <Modalize
-          ref={accountsRef}
-          adjustToContentHeight
-          disableScrollIfPossible
-          modalStyle={modalStyle.containerTopBorderRadius}
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-        >
-          <SafeAreaProvider style={{ backgroundColor, ...modalStyle.containerTopBorderRadius, ...modalStyles.safeArea, }}>
-            <ScrollView
-              scrollEnabled={false}
-              horizontal
-              style={{ width: '100%', flex: 1 }}
-              contentContainerStyle={{ flexGrow: 1 }}
-            >
-              <AccountSelector
-                single
-                accounts={App.allAccounts}
-                selectedAccounts={appAccount ? [appAccount.address] : []}
-                style={{ padding: 16, height: 430 }}
-                expanded
-                themeColor={appNetwork?.color}
-                onDone={([account]) => updateDAppAccountConfig(account)}
-              />
-            </ScrollView>
-          </SafeAreaProvider>
-        </Modalize>
+        <SquircleModalize ref={accountsRef}>
+          <ScrollView
+            scrollEnabled={false}
+            horizontal
+            style={{ width: '100%', flex: 1 }}
+            contentContainerStyle={{ flexGrow: 1 }}
+          >
+            <AccountSelector
+              single
+              accounts={App.allAccounts}
+              selectedAccounts={appAccount ? [appAccount.address] : []}
+              style={{ padding: 16, height: 430 }}
+              expanded
+              network={appNetwork}
+              onDone={([account]) => updateDAppAccountConfig(account)}
+            />
+          </ScrollView>
+        </SquircleModalize>
       </Portal>
     </Animated.View>
   );

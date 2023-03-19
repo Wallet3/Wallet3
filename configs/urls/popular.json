@@ -5,15 +5,15 @@
     "title": "dagen"
   },
   {
+    "url": "https://nftychat.xyz",
+    "icon": "https://is2-ssl.mzstatic.com/image/thumb/Purple116/v4/ce/70/d9/ce70d968-f990-0151-61e1-fb17d471c1e9/AppIcon-1x_U007emarketing-0-7-0-85-220.png/152x152bb-80.png",
+    "title": "Nftychat"
+  },
+  {
     "url": "https://link3.to",
     "icon": "https://pbs.twimg.com/profile_images/1600681816045670400/cOCd209I_400x400.jpg",
     "title": "Link3",
     "langs": ["zh-cn"]
-  },
-  {
-    "url": "https://learn.metamask.io",
-    "icon": "https://www.useweb3.xyz/images/social.png",
-    "title": "Learn"
   },
   {
     "url": "https://app.mail3.me",
@@ -29,6 +29,11 @@
     "url": "https://opensea.io",
     "icon": "https://storage.googleapis.com/opensea-static/Logomark/Logomark-Blue.png",
     "title": "Opensea"
+  },
+  {
+    "url": "https://learn.metamask.io",
+    "icon": "https://img.icons8.com/emoji/96/null/blue-book.png",
+    "title": "Knowledge"
   },
   {
     "url": "https://revoke.cash",

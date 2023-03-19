@@ -1,8 +1,8 @@
 import { Button, SafeViewContainer } from '../../components';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native';
+import { DateTimeFormatter, formatAddress } from '../../utils/formatter';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { Account } from '../../viewmodels/account/Account';
+import { AccountBase } from '../../viewmodels/account/AccountBase';
 import Avatar from '../../components/Avatar';
 import { Entypo } from '@expo/vector-icons';
 import { INetwork } from '../../common/Networks';
@@ -10,10 +10,10 @@ import Image from 'react-native-fast-image';
 import { MetamaskDApp } from '../../viewmodels/walletconnect/MetamaskDApp';
 import Networks from '../../viewmodels/core/Networks';
 import React from 'react';
+import { ScrollView } from 'react-native-gesture-handler';
 import { WalletConnect_v1 } from '../../viewmodels/walletconnect/WalletConnect_v1';
 import { WalletConnect_v2 } from '../../viewmodels/walletconnect/WalletConnect_v2';
 import dayjs from 'dayjs';
-import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -21,7 +21,7 @@ import { thirdFontColor } from '../../constants/styles';
 
 interface Props {
   client: WalletConnect_v1 | WalletConnect_v2 | MetamaskDApp;
-  defaultAccount?: Account;
+  defaultAccount?: AccountBase;
   defaultNetwork?: INetwork;
 
   onDisconnect: () => void;
@@ -68,7 +68,7 @@ export default observer(({ client, onDisconnect, onNetworkPress, onAccountsPress
       <View style={viewStyles.infoItem}>
         <Text style={viewStyles.itemTxt}>{t('connectedapps-modal-last-used')}:</Text>
         <Text style={viewStyles.itemTxt} numberOfLines={1}>
-          {dayjs(client.lastUsedTimestamp).format('YYYY-MM-DD HH:mm:ss')}
+          {dayjs(client.lastUsedTimestamp).format(DateTimeFormatter)}
         </Text>
       </View>
 

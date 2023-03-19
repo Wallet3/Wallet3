@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { Account } from '../../viewmodels/account/Account';
+import { AccountBase } from '../../viewmodels/account/AccountBase';
 import { BioType } from '../../viewmodels/auth/Authentication';
 import { PageMetadata } from '../../screens/browser/Web3View';
 import { Passpad } from '../views';
+import { SafeViewContainer } from '../../components';
 import SignPlainText from '../dapp/SignPlainText';
 import SignTypedData from '../dapp/SignTypedData';
 import Swiper from 'react-native-swiper';
@@ -17,7 +18,7 @@ interface Props {
   sign: (opt: { pin: string; standardMode?: boolean }) => Promise<boolean>;
   typedData?: any;
   biometricType?: BioType;
-  account?: Account;
+  account?: AccountBase;
   metadata?: PageMetadata;
 }
 
@@ -71,11 +72,13 @@ export default ({ type, msg, themeColor, onReject, typedData, sign, biometricTyp
         />
       ) : undefined}
 
-      <Passpad
-        themeColor={themeColor}
-        onCodeEntered={(c) => sign({ pin: c, standardMode })}
-        onCancel={() => swiper.current?.scrollTo(0)}
-      />
+      <SafeViewContainer>
+        <Passpad
+          themeColor={themeColor}
+          onCodeEntered={(c) => sign({ pin: c, standardMode })}
+          onCancel={() => swiper.current?.scrollTo(0)}
+        />
+      </SafeViewContainer>
     </Swiper>
   );
 };

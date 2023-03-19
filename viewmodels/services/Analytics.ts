@@ -1,7 +1,6 @@
+import { BroadcastTxRequest } from '../wallet/WalletBase';
 import Networks from '../core/Networks';
 import { Platform } from 'react-native';
-import { SendTxRequest } from '../core/Wallet';
-import { SupportedWCSchemes } from '../hubs/LinkHub';
 import Transaction from '../../models/entities/Transaction';
 import analytics from '@react-native-firebase/analytics';
 import { getReadableVersion } from 'react-native-device-info';
@@ -25,7 +24,7 @@ const TxTypes = new Map([
   [Approve_ERC1155, 'ap_1155'],
 ]);
 
-export function logSendTx(request: SendTxRequest) {
+export function logSendTx(request: BroadcastTxRequest) {
   if (Networks.find(request.tx.chainId || 0)?.testnet) return;
 
   const type = TxTypes.get(request.tx.data?.toString().substring(0, 10) || '0x') || 'ci';
@@ -37,6 +36,8 @@ export function logSendTx(request: SendTxRequest) {
 }
 
 export function logTxConfirmed(tx: Transaction) {
+  if (Networks.find(tx.chainId || 0)?.testnet) return;
+
   if (tx.status) {
     log('tx_confirmed', { chainId: tx.chainId });
   } else {
@@ -98,7 +99,7 @@ export function logQRScanned(data: string) {
     type = `.${c[c.length - 1]}`;
   } else if (data.startsWith('http')) {
     type = 'url';
-  } else if (data.startsWith('wc:') || SupportedWCSchemes.find((s) => data.startsWith(s))) {
+  } else if (data.startsWith('wc:')) {
     type = data.includes('@2') ? 'wc_v2' : 'wc_v1';
   }
 
@@ -119,6 +120,30 @@ export function logInpageRequest(args: { chainId: number; method: string } | any
 
 export function logBackup() {
   log('backup_secret');
+}
+
+export function logUpgradedToMultiSigWallet(args: { threshold: string }) {
+  log('upgraded_to_multiSig', args);
+}
+
+export function logDevicePaired() {
+  log('multiSig_new_device_paired');
+}
+
+export function logMultiSigWalletCreated(args: { threshold: string }) {
+  log('multiSig_wallet_created', args);
+}
+
+export function logMultiSigWalletRecovered() {
+  log('multiSig_wallet_recovered');
+}
+
+export function logMultiSigWalletRedistribution() {
+  log('multiSig_wallet_redistribution');
+}
+
+export function logMultiSigKeyAggregated() {
+  log('multiSig_wallet_key_aggregated');
 }
 
 let version = '';

@@ -53,6 +53,10 @@ class Theme {
     AsyncStorage.setItem('theme', mode);
   }
 
+  get appColor() {
+    return '#6186ff';
+  }
+
   get isLightMode() {
     return this.mode === 'light';
   }
@@ -95,7 +99,7 @@ class Theme {
 
   get shadow() {
     return {
-      shadowColor: `#00000050`,
+      shadowColor: '#00000050',
       shadowOffset: {
         width: 0,
         height: 2,

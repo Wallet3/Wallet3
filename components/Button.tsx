@@ -5,10 +5,13 @@ import { StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewSty
 import { BreathAnimation } from '../utils/animations';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
+import { SquircleView } from 'react-native-figma-squircle';
 import SwipeButton from 'rn-swipe-button';
+import { isAndroid } from '../utils/platform';
+import { observable } from 'mobx';
 import { themeColor } from '../constants/styles';
 
-interface Props {
+export interface ButtonProps {
   style?: StyleProp<ViewStyle>;
   txtStyle?: StyleProp<TextStyle>;
   title?: string;
@@ -23,12 +26,12 @@ interface Props {
   onInteractionEnd?: () => void;
 }
 
-export default (props: Props) => {
+export default (props: ButtonProps) => {
   const { disabled, reverse, themeColor, onLongPress, onPress, onSwipeSuccess, title, onInteractionStart, onInteractionEnd } =
     props;
 
   const backgroundColor: any = disabled
-    ? '#D3D3D3'
+    ? '#A2A2A250'
     : reverse
     ? 'transparent'
     : props.themeColor || (props?.style as ViewStyle)?.backgroundColor || styles.default.backgroundColor;
@@ -45,7 +48,7 @@ export default (props: Props) => {
     ...styles.text,
     color: reverse ? (disabled ? 'lightgrey' : themeColor) : '#fff',
     ...((props?.txtStyle as any) || {}),
-    marginStart: props.icon ? 6 : 0,
+    marginStart: props.icon ? 8 : 0,
   };
 
   const arrowIcon = () => <Ionicons name="arrow-forward" size={19} color={backgroundColor} style={{}} />;
@@ -84,8 +87,10 @@ export default (props: Props) => {
       <SwipeButton
         disabled={disabled}
         disabledRailBackgroundColor="transparent"
+        railFillBackgroundColor="transparent"
         disabledThumbIconBackgroundColor="#fff"
-        shouldResetAfterSuccess
+        shouldResetAfterSuccess={!disabled}
+        resetAfterSuccessAnimDuration={5000}
         swipeSuccessThreshold={95}
         containerStyles={{
           backgroundColor: 'transparent',
@@ -99,12 +104,13 @@ export default (props: Props) => {
         thumbIconStyles={{ backgroundColor: 'transparent', borderRadius: 6, borderWidth: 0, height: 32 }}
         titleStyles={txtStyle}
         onSwipeSuccess={onSwipeSuccess}
-        railBackgroundColor={'transparent'}
+        railBackgroundColor="transparent"
         railStyles={{
           maxWidth: '100%',
           borderWidth: 0,
           borderColor: 'black',
-          backgroundColor,
+          backgroundColor: disabled ? 'transparent' : backgroundColor,
+          backfaceVisibility: 'hidden',
           borderRadius: 5,
           margin: 0,
           padding: 0,
@@ -113,15 +119,26 @@ export default (props: Props) => {
         thumbIconComponent={arrowIcon as any}
         thumbIconBackgroundColor="#fff"
         thumbIconWidth={34}
-        titleColor="white"
+        titleColor="#fff"
         height={32}
         title={''}
       />
     </View>
   ) : (
     <TouchableOpacity activeOpacity={0.5} onPress={onPress} onLongPress={onLongPress} disabled={disabled} style={buttonStyle}>
+      {/* <SquircleView
+        style={{ ...buttonStyle, borderRadius: 0, backgroundColor: undefined, borderWidth: 0 }}
+        squircleParams={{
+          cornerSmoothing: 0.9,
+          cornerRadius: buttonStyle.borderRadius,
+          fillColor: buttonStyle.backgroundColor,
+          strokeColor: buttonStyle.borderColor,
+          strokeWidth: buttonStyle.borderWidth,
+        }}
+      > */}
       {props.icon?.()}
       <Text style={txtStyle}>{title}</Text>
+      {/* </SquircleView> */}
     </TouchableOpacity>
   );
 };
@@ -139,8 +156,9 @@ const styles = StyleSheet.create({
 
   text: {
     color: 'white',
+    fontWeight: '500',
     textTransform: 'capitalize',
     fontSize: 17,
-    fontWeight: '500',
+    marginTop: isAndroid ? -2.5 : undefined,
   },
 });

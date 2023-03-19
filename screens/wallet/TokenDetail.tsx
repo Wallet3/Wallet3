@@ -6,9 +6,9 @@ import { Button, Coin, Skeleton } from '../../components';
 import { Defs, LinearGradient, Stop } from 'react-native-svg';
 import { EvilIcons, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { formatAddress, formatCurrency } from '../../utils/formatter';
-import { thirdFontColor, warningColor } from '../../constants/styles';
+import { thirdFontColor, verifiedColor, warningColor } from '../../constants/styles';
 
 import { BreathAnimation } from '../../utils/animations';
 import { INetwork } from '../../common/Networks';
@@ -18,9 +18,8 @@ import Theme from '../../viewmodels/settings/Theme';
 import { TokenData } from '../../viewmodels/services/TokenData';
 import i18n from '../../i18n';
 import { isURL } from '../../utils/url';
-import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
-import { openInappBrowser } from '../../modals/InappBrowser';
+import { openInappBrowser } from '../../modals/app/InappBrowser';
 
 interface Props {
   token?: IToken;
@@ -48,7 +47,13 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
   }, [token]);
 
   return (
-    <View style={{ padding: 16, backgroundColor, ...modalStyle.containerTopBorderRadius, paddingBottom: 24 }}>
+    <ScrollView
+      bounces={false}
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={{ paddingBottom: 24 }}
+      style={{ padding: 16, maxHeight: 760 }}
+    >
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Coin
           chainId={network.chainId}
@@ -72,7 +77,7 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
                 <Ionicons name="warning" size={19} color={warningColor} />
               </Animatable.View>
             ) : (
-              <MaterialIcons name="verified" size={17} color={vm?.verified ? 'dodgerblue' : borderColor} />
+              <MaterialIcons name="verified" size={17} color={vm?.verified ? verifiedColor : borderColor} />
             )}
           </View>
           {vm?.loading ? (
@@ -85,7 +90,7 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
               {vm?.price
                 ? `$ ${vm?.price.toFixed(2)} (${
                     (vm?.priceChangePercentIn24 || 0) > 0
-                      ? '+' + (vm?.priceChangePercentIn24 || 0).toFixed(2)
+                      ? `+${(vm?.priceChangePercentIn24 || 0).toFixed(2)}`
                       : (vm?.priceChangePercentIn24 || 0).toFixed(2)
                   }% 24h)`
                 : '-'}
@@ -248,7 +253,7 @@ export default observer(({ token, themeColor, onSendPress, network }: Props) => 
           </View>
         ) : undefined}
       </View>
-    </View>
+    </ScrollView>
   );
 });
 

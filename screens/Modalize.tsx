@@ -10,6 +10,7 @@ import {
   WalletConnectSign,
   WalletConnectTxRequest,
 } from '../modals';
+import AuthenticationVM, { Authentication } from '../viewmodels/auth/Authentication';
 import {
   ConnectInpageDApp,
   InpageDAppAddAsset,
@@ -19,41 +20,61 @@ import {
 } from './browser/controller/InpageDAppController';
 import { ERC681, ERC681Transferring } from '../viewmodels/transferring/ERC681Transferring';
 import React, { useEffect, useState } from 'react';
+import {
+  ShardProviderUI,
+  ShardReceiverUI,
+  ShardRedistributionReceiverUI,
+  ShardsAggregatorUI,
+  ShardsDistributorUI,
+} from '../modals/tss';
 
 import { AppVM } from '../viewmodels/core/App';
-import { Authentication } from '../viewmodels/auth/Authentication';
-import BackupSecretTip from '../modals/BackupSecretTip';
+import { ClientInfo } from '../common/p2p/Constants';
+import ERC4337Queue from '../modals/erc4337';
 import { FullPasspad } from '../modals/views/Passpad';
-import InappBrowser from '../modals/InappBrowser';
-import InpageConnectDApp from '../modals/InpageConnectDApp';
-import InpageDAppAddAssetModal from '../modals/InpageDAppAddAsset';
-import InpageDAppAddChain from '../modals/InpageDAppAddChain';
-import InpageDAppSendTx from '../modals/InpageDAppTxRequest';
-import InpageDAppSign from '../modals/InpageDAppSign';
+import GlobalPasspad from '../modals/global/GlobalPasspad';
+import { IConfigProps } from 'react-native-modalize/lib/options';
+import InactiveDevicesWarn from '../modals/misc/InactiveDevicesWarn';
+import InappBrowser from '../modals/app/InappBrowser';
+import InpageConnectDApp from '../modals/inpage/InpageConnectDApp';
+import InpageDAppAddAssetModal from '../modals/inpage/InpageDAppAddAsset';
+import InpageDAppAddChain from '../modals/inpage/InpageDAppAddChain';
+import InpageDAppSendTx from '../modals/inpage/InpageDAppTxRequest';
+import InpageDAppSign from '../modals/inpage/InpageDAppSign';
+import { KeyRecoveryRequestor } from '../viewmodels/tss/KeyRecoveryRequestor';
 import { Keyboard } from 'react-native';
 import Loading from '../modals/views/Loading';
 import MessageKeys from '../common/MessageKeys';
-import { Modalize } from 'react-native-modalize';
+import ModalizeContainer from '../modals/core/ModalizeContainer';
+import { MultiSigKeyDeviceInfo } from '../models/entities/MultiSigKey';
+import MultiSigKeyProvider from '../modals/tss/recovery/provider';
+import MultiSigKeyRequestor from '../modals/tss/recovery/requestor';
 import Networks from '../viewmodels/core/Networks';
+import { PairedDevice } from '../viewmodels/tss/management/PairedDevice';
 import { ReactiveScreen } from '../utils/device';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Service } from 'react-native-zeroconf';
+import { ShardProvider } from '../viewmodels/tss/ShardProvider';
+import { ShardsAggregator } from '../viewmodels/tss/ShardsAggregator';
+import { ShardsDistributor } from '../viewmodels/tss/ShardsDistributor';
+import SquircleModalize from '../modals/core/SquircleModalize';
 import Theme from '../viewmodels/settings/Theme';
 import { TokenTransferring } from '../viewmodels/transferring/TokenTransferring';
+import UpgradeWalletTip from '../modals/misc/UpgradeWalletTip';
 import { WCCallRequestRequest } from '../models/entities/WCSession_v1';
 import { WalletConnect_v1 } from '../viewmodels/walletconnect/WalletConnect_v1';
 import { WalletConnect_v2 } from '../viewmodels/walletconnect/WalletConnect_v2';
 import { autorun } from 'mobx';
 import i18n from '../i18n';
+import { isAndroid } from '../utils/platform';
 import { isDomain } from '../viewmodels/services/DomainResolver';
 import { logScreenView } from '../viewmodels/services/Analytics';
 import { observer } from 'mobx-react-lite';
 import { parse } from 'eth-url-parser';
 import { showMessage } from 'react-native-flash-message';
-import styles from '../modals/styles';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { utils } from 'ethers';
 
-const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app: AppVM }) => {
+const WalletConnectRequests = () => {
   const { ref, open, close } = useModalize();
   const [type, setType] = useState<string>();
   const [client, setClient] = useState<WalletConnect_v1>();
@@ -63,7 +84,7 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
     PubSub.subscribe(
       MessageKeys.wc_request,
       (_, { client, request, chainId }: { client: WalletConnect_v1; request: WCCallRequestRequest; chainId?: number }) => {
-        if (!appAuth.appAuthorized) {
+        if (!AuthenticationVM.appAuthorized) {
           client.rejectRequest(request.id, 'Unauthorized');
           return;
         }
@@ -98,22 +119,17 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
   }, []);
 
   return (
-    <Modalize
+    <SquircleModalize
       ref={ref}
-      adjustToContentHeight
+      withHandle={false}
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
       tapGestureEnabled={false}
       closeOnOverlayTap={false}
-      withHandle={false}
-      disableScrollIfPossible
-      modalStyle={styles.containerTopBorderRadius}
-      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
       {type === 'sign' ? <WalletConnectSign client={client!} request={callRequest!} close={close} /> : undefined}
-
       {type === 'sendTx' ? <WalletConnectTxRequest client={client!} request={callRequest!} close={close} /> : undefined}
-    </Modalize>
+    </SquircleModalize>
   );
 };
 
@@ -150,20 +166,16 @@ const WalletConnect = () => {
   }, []);
 
   return (
-    <Modalize
+    <SquircleModalize
       ref={connectDappRef}
-      adjustToContentHeight
+      withHandle={false}
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
       tapGestureEnabled={false}
       closeOnOverlayTap={false}
-      withHandle={false}
-      disableScrollIfPossible
-      modalStyle={styles.containerTopBorderRadius}
-      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
       <WalletConnectDApp uri={state.uri} close={closeConnectDapp} extra={state.extra} directClient={state.client_v2} />
-    </Modalize>
+    </SquircleModalize>
   );
 };
 
@@ -202,20 +214,16 @@ const InpageDAppConnect = () => {
   }, []);
 
   return (
-    <Modalize
+    <SquircleModalize
       ref={connectDappRef}
-      adjustToContentHeight
+      withHandle={false}
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
       tapGestureEnabled={false}
       closeOnOverlayTap={false}
-      withHandle={false}
-      disableScrollIfPossible
-      modalStyle={styles.containerTopBorderRadius}
-      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
       <InpageConnectDApp {...info} close={close} approve={data?.approve} reject={data?.reject} />
-    </Modalize>
+    </SquircleModalize>
   );
 };
 
@@ -261,23 +269,19 @@ const InpageDAppRequests = () => {
   }, []);
 
   return (
-    <Modalize
+    <SquircleModalize
       ref={ref}
-      adjustToContentHeight
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
       tapGestureEnabled={false}
       closeOnOverlayTap={false}
       withHandle={false}
-      disableScrollIfPossible
-      modalStyle={styles.containerTopBorderRadius}
-      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
-      {type === 'sign' ? <InpageDAppSign {...signRequest!} close={close} /> : undefined}
-      {type === 'sendTx' ? <InpageDAppSendTx {...txRequest!} close={close} /> : undefined}
-      {type === 'addChain' ? <InpageDAppAddChain {...addChain!} close={close} /> : undefined}
-      {type === 'addAsset' ? <InpageDAppAddAssetModal {...addAsset!} close={close} /> : undefined}
-    </Modalize>
+      {type === 'sign' && <InpageDAppSign {...signRequest!} close={close} />}
+      {type === 'sendTx' && <InpageDAppSendTx {...txRequest!} close={close} />}
+      {type === 'addChain' && <InpageDAppAddChain {...addChain!} close={close} />}
+      {type === 'addAsset' && <InpageDAppAddAssetModal {...addAsset!} close={close} />}
+    </SquircleModalize>
   );
 };
 
@@ -297,16 +301,7 @@ const GlobalNetworksMenuModal = observer(() => {
   }, []);
 
   return (
-    <Modalize
-      ref={networksRef}
-      adjustToContentHeight
-      disableScrollIfPossible
-      modalStyle={styles.containerTopBorderRadius}
-      closeOnOverlayTap={!editing}
-      panGestureEnabled={!editing}
-      withHandle={!editing}
-      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-    >
+    <SquircleModalize ref={networksRef} withHandle={!editing} closeOnOverlayTap={!editing} panGestureEnabled={!editing}>
       <NetworksMenu
         useContextMenu
         onEditing={setEditing}
@@ -316,7 +311,7 @@ const GlobalNetworksMenuModal = observer(() => {
           Networks.switch(network);
         }}
       />
-    </Modalize>
+    </SquircleModalize>
   );
 });
 
@@ -335,15 +330,9 @@ const GlobalAccountsMenuModal = () => {
   }, []);
 
   return (
-    <Modalize
-      ref={ref}
-      adjustToContentHeight
-      disableScrollIfPossible
-      modalStyle={styles.containerTopBorderRadius}
-      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-    >
+    <SquircleModalize ref={ref}>
       <AccountsMenu close={close} />
-    </Modalize>
+    </SquircleModalize>
   );
 };
 
@@ -361,28 +350,14 @@ const GlobalLoadingModal = () => {
   }, []);
 
   return (
-    <Modalize
+    <SquircleModalize
       ref={ref}
-      adjustToContentHeight
-      disableScrollIfPossible
-      closeOnOverlayTap={false}
       withHandle={false}
-      modalStyle={styles.containerTopBorderRadius}
-      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+      closeOnOverlayTap={false}
+      squircleContainerStyle={{ height: 439, justifyContent: 'center', alignItems: 'center' }}
     >
-      <SafeAreaProvider
-        style={{
-          backgroundColor: Theme.backgroundColor,
-          height: 439,
-          justifyContent: 'center',
-          alignItems: 'center',
-          borderTopRightRadius: 6,
-          borderTopLeftRadius: 6,
-        }}
-      >
-        <Loading />
-      </SafeAreaProvider>
-    </Modalize>
+      <Loading />
+    </SquircleModalize>
   );
 };
 
@@ -401,22 +376,21 @@ const RequestFundsModal = () => {
   }, []);
 
   return (
-    <Modalize
+    <SquircleModalize
       ref={requestRef}
       adjustToContentHeight
       disableScrollIfPossible
-      modalStyle={styles.containerTopBorderRadius}
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
       <Request close={close} />
-    </Modalize>
+    </SquircleModalize>
   );
 };
 
 const SendFundsModal = () => {
   const [vm, setVM] = useState<TokenTransferring>();
   const [isERC681, setIsERC681] = useState(false);
-  const [interacting, setInteracting] = useState(false);
+  const [reviewing, setReviewing] = useState(false);
 
   const { ref: sendRef, open: openSendModal, close: closeSendModal } = useModalize();
 
@@ -467,17 +441,12 @@ const SendFundsModal = () => {
   };
 
   return (
-    <Modalize
+    <SquircleModalize
       key="SendFunds"
       ref={sendRef}
-      adjustToContentHeight
-      disableScrollIfPossible
-      closeOnOverlayTap={!interacting}
-      withHandle={!interacting}
-      panGestureEnabled={!interacting}
-      panGestureComponentEnabled={!interacting}
-      modalStyle={styles.containerTopBorderRadius}
-      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+      withHandle={!reviewing}
+      panGestureEnabled={!reviewing}
+      panGestureComponentEnabled={!reviewing}
       onClosed={() => {
         setIsERC681(false);
         setVM(undefined);
@@ -486,46 +455,65 @@ const SendFundsModal = () => {
       {vm && (
         <Send
           vm={vm}
-          onClose={clear}
+          close={clear}
           erc681={isERC681}
-          onInteractionStart={() => setInteracting(true)}
-          onInteractionEnd={() => setInteracting(false)}
+          onReviewEnter={() => setReviewing(true)}
+          onReviewLeave={() => setReviewing(false)}
         />
       )}
-    </Modalize>
+    </SquircleModalize>
+  );
+};
+
+const ERC4337QueueModal = () => {
+  const { ref, open, close } = useModalize();
+
+  useEffect(() => {
+    PubSub.subscribe(MessageKeys.openERC4337Queue, () => {
+      open();
+      logScreenView('RequestsFundsModal');
+    });
+
+    return () => {
+      PubSub.unsubscribe(MessageKeys.openERC4337Queue);
+    };
+  }, []);
+
+  return (
+    <SquircleModalize
+      ref={ref}
+      adjustToContentHeight
+      disableScrollIfPossible
+      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+    >
+      <ERC4337Queue />
+    </SquircleModalize>
   );
 };
 
 const BackupTipsModal = () => {
   const { ref, open, close } = useModalize();
+  const [context, setContext] = useState<{ upgrade?: boolean; inactiveDevices?: MultiSigKeyDeviceInfo[] }>({});
 
   useEffect(() => {
-    PubSub.subscribe(MessageKeys.openBackupSecretTip, () => open());
+    PubSub.subscribe(MessageKeys.openUpgradeWalletTip, () => {
+      setContext({ upgrade: true });
+      setImmediate(() => open());
+    });
 
-    return () => {
-      PubSub.unsubscribe(MessageKeys.openBackupSecretTip);
-    };
+    PubSub.subscribe(MessageKeys.openInactiveDevicesTip, (_, { devices }) => {
+      setContext({ inactiveDevices: devices });
+      setImmediate(() => open());
+    });
+
+    return () => [MessageKeys.openUpgradeWalletTip, MessageKeys.openInactiveDevicesTip].forEach((t) => PubSub.unsubscribe(t));
   }, []);
 
   return (
-    <Modalize
-      ref={ref}
-      useNativeDriver
-      closeOnOverlayTap={false}
-      withHandle={false}
-      adjustToContentHeight
-      disableScrollIfPossible
-      panGestureEnabled={false}
-      panGestureComponentEnabled={false}
-      scrollViewProps={{
-        scrollEnabled: false,
-        showsVerticalScrollIndicator: false,
-        showsHorizontalScrollIndicator: false,
-        bounces: false,
-      }}
-    >
-      <BackupSecretTip onDone={close} />
-    </Modalize>
+    <ModalizeContainer ref={ref} withHandle={false} panGestureEnabled={false} panGestureComponentEnabled={false}>
+      {context.upgrade && <UpgradeWalletTip onDone={close} />}
+      {context.inactiveDevices && <InactiveDevicesWarn onDone={close} devices={context.inactiveDevices} />}
+    </ModalizeContainer>
   );
 };
 
@@ -546,34 +534,191 @@ export const InappBrowserModal = observer(({ pageKey }: { pageKey?: string }) =>
   }, []);
 
   return (
-    <Modalize
+    <ModalizeContainer
       ref={ref}
-      useNativeDriver
       closeOnOverlayTap={false}
       withHandle={false}
       modalHeight={height}
-      disableScrollIfPossible
+      adjustToContentHeight={undefined}
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
-      scrollViewProps={{
-        scrollEnabled: false,
-        showsVerticalScrollIndicator: false,
-        showsHorizontalScrollIndicator: false,
-        bounces: false,
+      safeAreaStyle={{ width, height }}
+    >
+      {props && (
+        <InappBrowser
+          {...props}
+          close={() => {
+            close();
+            setTimeout(() => setProps(undefined), 500);
+          }}
+        />
+      )}
+    </ModalizeContainer>
+  );
+});
+
+type ShardsParam = {
+  shardsDistributor?: ShardsDistributor;
+  shardReceiver?: boolean;
+  shardsAggregator?: ShardsAggregator;
+  shardProvider?: ShardProvider;
+  keyRecoveryRequestor?: KeyRecoveryRequestor;
+  keyRecoveryProviderService?: Service;
+  shardRedistributionReceiverService?: Service;
+  pairedDevice?: PairedDevice;
+  onClosed?: () => void;
+  openAnimationConfig?: IConfigProps;
+  modalHeight?: number;
+};
+
+export const ShardsModal = observer(() => {
+  const { ref, open, close } = useModalize();
+  const [isCritical, setIsCritical] = useState(false);
+  const [vms, setVMs] = useState<ShardsParam | undefined>();
+  const [queue] = useState<ShardsParam[]>([]);
+
+  const enqueue = (param: ShardsParam) => {
+    queue.push(param);
+
+    if (vms) return;
+    setVMs(queue.shift()!);
+    setImmediate(() => open());
+  };
+
+  const dequeue = () => {
+    setIsCritical(false);
+    setVMs(undefined);
+
+    const next = queue.shift();
+    if (!next) return;
+
+    setVMs(next);
+    setImmediate(() => open());
+  };
+
+  useEffect(() => {
+    PubSub.subscribe(MessageKeys.openShardsDistribution, (_, { vm, onClosed }) => {
+      enqueue({ shardsDistributor: vm, onClosed });
+    });
+
+    PubSub.subscribe(MessageKeys.openShardReceiver, () => {
+      enqueue({ shardReceiver: true });
+    });
+
+    PubSub.subscribe(MessageKeys.openShardProvider, (_, { vm, onClosed }) => {
+      enqueue({ shardProvider: vm, onClosed });
+    });
+
+    PubSub.subscribe(MessageKeys.openKeyRecoveryRequestor, (_, { vm, onClosed }) => {
+      enqueue({ keyRecoveryRequestor: vm, onClosed });
+    });
+
+    PubSub.subscribe(MessageKeys.openKeyRecoveryProvider, (_, { service, onClosed }) => {
+      enqueue({ keyRecoveryProviderService: service, onClosed });
+    });
+
+    PubSub.subscribe(MessageKeys.openShardRedistributionReceiver, (_, { service, onClosed, device }) => {
+      enqueue({ shardRedistributionReceiverService: service, onClosed, pairedDevice: device });
+    });
+
+    return () =>
+      [
+        MessageKeys.openShardsDistribution,
+        MessageKeys.openShardReceiver,
+
+        MessageKeys.openShardProvider,
+        MessageKeys.openKeyRecoveryRequestor,
+        MessageKeys.openShardRedistributionReceiver,
+      ].forEach(PubSub.unsubscribe);
+  }, []);
+
+  return (
+    <ModalizeContainer
+      ref={ref}
+      withHandle={false}
+      closeOnOverlayTap={!isCritical}
+      panGestureEnabled={false}
+      panGestureComponentEnabled={false}
+      openAnimationConfig={vms?.openAnimationConfig}
+      modalHeight={vms?.modalHeight}
+      adjustToContentHeight={vms?.modalHeight ? false : true}
+      onClosed={() => {
+        vms?.onClosed?.();
+        dequeue();
       }}
     >
-      {props ? (
-        <SafeAreaProvider style={{ width, height }}>
-          <InappBrowser
-            {...props}
-            onClose={() => {
-              close();
-              setProps(undefined);
-            }}
-          />
-        </SafeAreaProvider>
-      ) : undefined}
-    </Modalize>
+      {vms?.shardsDistributor && <ShardsDistributorUI vm={vms.shardsDistributor} onCritical={setIsCritical} close={close} />}
+      {vms?.shardReceiver && <ShardReceiverUI close={close} onCritical={setIsCritical} />}
+      {vms?.shardProvider && <ShardProviderUI vm={vms.shardProvider} close={close} />}
+      {vms?.keyRecoveryRequestor && <MultiSigKeyRequestor vm={vms.keyRecoveryRequestor} close={close} />}
+      {vms?.keyRecoveryProviderService && <MultiSigKeyProvider service={vms.keyRecoveryProviderService} close={close} />}
+      {vms?.shardRedistributionReceiverService && (
+        <ShardRedistributionReceiverUI
+          close={close}
+          device={vms.pairedDevice!}
+          onCritical={setIsCritical}
+          service={vms.shardRedistributionReceiverService}
+        />
+      )}
+    </ModalizeContainer>
+  );
+});
+
+export const PriorityShardsModal = observer(() => {
+  const { ref, open, close } = useModalize();
+  const [isCritical, setIsCritical] = useState(false);
+  const [vms, setVMs] = useState<ShardsParam | undefined>();
+  const [queue] = useState<ShardsParam[]>([]);
+
+  const enqueue = (param: ShardsParam) => {
+    queue.push(param);
+
+    if (vms) return;
+    setVMs(queue.shift()!);
+    setImmediate(() => open());
+  };
+
+  const dequeue = () => {
+    setIsCritical(false);
+    setVMs(undefined);
+
+    const next = queue.shift();
+    if (!next) return;
+
+    setVMs(next);
+    setImmediate(() => open());
+  };
+
+  useEffect(() => {
+    PubSub.subscribe(MessageKeys.openShardsAggregator, (_, { vm, onClosed }) => {
+      enqueue({
+        shardsAggregator: vm,
+        onClosed,
+        openAnimationConfig: { timing: { duration: 100 } },
+        modalHeight: ReactiveScreen.height,
+      });
+    });
+
+    return () => [MessageKeys.openShardsAggregator].forEach(PubSub.unsubscribe);
+  }, []);
+
+  return (
+    <ModalizeContainer
+      ref={ref}
+      withHandle={false}
+      closeOnOverlayTap={!isCritical}
+      panGestureEnabled={false}
+      panGestureComponentEnabled={false}
+      openAnimationConfig={vms?.openAnimationConfig}
+      modalHeight={vms?.modalHeight}
+      adjustToContentHeight={vms?.modalHeight ? false : true}
+      onClosed={() => {
+        vms?.onClosed?.();
+        dequeue();
+      }}
+    >
+      {vms?.shardsAggregator && <ShardsAggregatorUI close={close} vm={vms.shardsAggregator} />}
+    </ModalizeContainer>
   );
 });
 
@@ -594,16 +739,15 @@ export const FullScreenQRScanner = observer(() => {
   }, []);
 
   return (
-    <Modalize
+    <ModalizeContainer
       ref={ref}
-      useNativeDriver
       modalHeight={ReactiveScreen.height}
+      adjustToContentHeight={undefined}
       closeOnOverlayTap={false}
-      withHandle={false}
-      disableScrollIfPossible
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
-      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+      withHandle={false}
+      safeAreaStyle={isAndroid ? { ...ReactiveScreen } : undefined}
       modalStyle={{
         borderTopStartRadius: 0,
         borderTopEndRadius: 0,
@@ -613,13 +757,48 @@ export const FullScreenQRScanner = observer(() => {
         flexGrow: 1,
       }}
     >
-      <SafeAreaProvider style={{ width: ReactiveScreen.width,
-        height: ReactiveScreen.height }}>
-        <QRScan tip={tip} done={close} />
-      </SafeAreaProvider>
-    </Modalize>
+      <QRScan tip={tip} close={close} />
+    </ModalizeContainer>
   );
 });
+
+export const GlobalPasspadModal = () => {
+  const { ref, open, close } = useModalize();
+  const [req, setReq] = useState<{
+    passLength?: number;
+    onAutoAuthRequest: () => Promise<boolean>;
+    onPinEntered: (pin: string) => Promise<boolean>;
+    onClosed?: () => void;
+    closeOnOverlayTap?: boolean;
+  }>();
+
+  useEffect(() => {
+    PubSub.subscribe(MessageKeys.openGlobalPasspad, (_, data) => {
+      setReq(data);
+      setImmediate(() => open());
+    });
+
+    return () => {
+      PubSub.unsubscribe(MessageKeys.openGlobalPasspad);
+    };
+  }, []);
+
+  return (
+    <ModalizeContainer
+      ref={ref}
+      closeOnOverlayTap={req?.closeOnOverlayTap ?? false}
+      panGestureEnabled={false}
+      panGestureComponentEnabled={false}
+      withHandle={false}
+      onClosed={() => {
+        req?.onClosed?.();
+        setReq(undefined);
+      }}
+    >
+      {req && <GlobalPasspad {...req} close={close} />}
+    </ModalizeContainer>
+  );
+};
 
 export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication }) => {
   const { ref: lockScreenRef, open: openLockScreen, close: closeLockScreen } = useModalize();
@@ -627,13 +806,13 @@ export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Aut
   const bioAuth = async () => {
     if (!appAuth.biometricEnabled || !appAuth.biometricSupported) return;
 
-    const success = await appAuth.authorize();
+    const success = await appAuth.authorizeApp();
     if (success) closeLockScreen();
   };
 
   useEffect(() => {
     const dispose = autorun(() => {
-      if (!app.hasWallet || (appAuth.appAuthorized && appAuth.appAvailable)) return;
+      if (!app.hasWalletSet || (appAuth.appAuthorized && appAuth.appAvailable)) return;
 
       openLockScreen();
 
@@ -650,17 +829,16 @@ export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Aut
   }, []);
 
   return (
-    <Modalize
+    <ModalizeContainer
       ref={lockScreenRef}
-      useNativeDriver
       modalHeight={ReactiveScreen.height}
+      adjustToContentHeight={undefined}
       closeOnOverlayTap={false}
       withHandle={false}
-      disableScrollIfPossible
       panGestureEnabled={false}
       panGestureComponentEnabled={false}
       modalStyle={{ borderTopStartRadius: 0, borderTopEndRadius: 0 }}
-      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+      safeAreaStyle={{ backgroundColor: Theme.backgroundColor, ...ReactiveScreen }}
     >
       <FullPasspad
         themeColor={Theme.isLightMode ? Theme.foregroundColor : `${Theme.foregroundColor}80`}
@@ -670,26 +848,30 @@ export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Aut
         unlockTimestamp={appAuth.appUnlockTime}
         failedAttempts={appAuth.failedAttempts}
         onCodeEntered={async (code) => {
-          const success = await appAuth.authorize(code);
+          const success = await appAuth.authorizeApp(code);
           if (success) closeLockScreen();
           return success;
         }}
       />
-    </Modalize>
+    </ModalizeContainer>
   );
 });
 
-export default (props: { app: AppVM; appAuth: Authentication }) => {
+export default () => {
   return [
     <SendFundsModal key="send-funds" />,
     <RequestFundsModal key="request-funds" />,
     <GlobalNetworksMenuModal key="networks-menu" />,
     <GlobalAccountsMenuModal key="accounts-menu" />,
+    <ERC4337QueueModal key="erc4337-queue" />,
+    <BackupTipsModal key="backup-tip" />,
     <GlobalLoadingModal key="loading-modal" />,
     <WalletConnect key="walletconnect" />,
-    <WalletConnectRequests key="walletconnect-requests" {...props} />,
+    <WalletConnectRequests key="walletconnect-requests" />,
     <InpageDAppConnect key="inpage-dapp-connect" />,
     <InpageDAppRequests key="inpage-dapp-requests" />,
-    <BackupTipsModal key="backup-tip" />,
+    <ShardsModal key="shards-management" />,
+    <GlobalPasspadModal key="global-passpad" />,
+    <PriorityShardsModal key="shards-aggregation" />,
   ];
 };

@@ -6,14 +6,13 @@ import React, { useState } from 'react';
 import Avatar from '../../components/Avatar';
 import { Confirm } from '../../modals/views/Confirm';
 import ContactDetails from './ContactDetails';
-import { Modalize } from 'react-native-modalize';
+import IllustrationNoData from '../../assets/illustrations/misc/nodata.svg';
 import { Portal } from 'react-native-portalize';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { SafeViewContainer } from '../../components';
+import SquircleModalize from '../../modals/core/SquircleModalize';
 import Theme from '../../viewmodels/settings/Theme';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
-import modalStyle from '../../modals/styles';
+import { isIOS } from '../../utils/platform';
 import { observer } from 'mobx-react-lite';
 import { startLayoutAnimation } from '../../utils/animations';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
@@ -75,57 +74,45 @@ export default observer(() => {
 
   return (
     <View style={{ flex: 1 }}>
-      <FlatList
-        data={Contacts.sorted}
-        renderItem={renderItem}
-        contentContainerStyle={{ paddingTop: 4 }}
-        keyExtractor={(i) => `${i.address}-${i.name}`}
-      />
+      {Contacts.sorted.length === 0 ? (
+        <View style={{ alignSelf: 'center', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+          <IllustrationNoData width={150} height={150} />
+        </View>
+      ) : (
+        <FlatList
+          data={Contacts.sorted}
+          renderItem={renderItem}
+          contentContainerStyle={{ paddingTop: 4 }}
+          keyExtractor={(i) => `${i.address}-${i.name}`}
+        />
+      )}
 
       <Portal>
-        <Modalize
-          ref={accountModal}
-          adjustToContentHeight
-          withHandle={!editing}
-          closeOnOverlayTap={!editing}
-          disableScrollIfPossible
-          modalStyle={modalStyle.containerTopBorderRadius}
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-        >
-          <SafeAreaProvider style={{ height: 430, backgroundColor, ...modalStyle.containerTopBorderRadius }}>
-            <ContactDetails
-              contact={selectedContact}
-              onEditing={setEditing}
-              onSave={() => {
-                closeAccountModal();
-                startLayoutAnimation();
-                Contacts.saveContact(selectedContact!);
-              }}
-            />
-          </SafeAreaProvider>
-        </Modalize>
+        <SquircleModalize ref={accountModal} closeOnOverlayTap={!editing} safeAreaStyle={isIOS ? { height: 439 } : undefined}>
+          <ContactDetails
+            contact={selectedContact}
+            onEditing={setEditing}
+            onSave={() => {
+              closeAccountModal();
+              startLayoutAnimation();
+              Contacts.saveContact(selectedContact!);
+            }}
+          />
+        </SquircleModalize>
 
-        <Modalize
-          ref={confirmModal}
-          adjustToContentHeight
-          disableScrollIfPossible
-          modalStyle={modalStyle.containerTopBorderRadius}
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-        >
-          <SafeAreaProvider style={{ height: 270, backgroundColor, ...modalStyle.containerTopBorderRadius }}>
-            <Confirm
-              confirmButtonTitle={t('button-confirm')}
-              desc={t('contacts-remote-confirm-desc')}
-              themeColor="crimson"
-              style={{ flex: 1 }}
-              onConfirm={() => {
-                closeConfirmModal();
-                startLayoutAnimation();
-                Contacts.remove(selectedContact!);
-              }}
-            />
-          </SafeAreaProvider>
-        </Modalize>
+        <SquircleModalize ref={confirmModal} safeAreaStyle={{ minHeight: 270, height: 270 }}>
+          <Confirm
+            confirmButtonTitle={t('button-confirm')}
+            desc={t('contacts-remote-confirm-desc')}
+            themeColor="crimson"
+            style={{ flex: 1 }}
+            onConfirm={() => {
+              closeConfirmModal();
+              startLayoutAnimation();
+              Contacts.remove(selectedContact!);
+            }}
+          />
+        </SquircleModalize>
       </Portal>
     </View>
   );

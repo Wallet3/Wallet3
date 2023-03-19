@@ -1,11 +1,12 @@
 import * as Animatable from 'react-native-animatable';
 
-import { Button, Numpad, NumpadChar } from '../../components';
+import { Button, Numpad, NumpadChar, Toggle } from '../../components';
 import React, { useEffect, useRef, useState } from 'react';
 import { Switch, Text, View } from 'react-native';
 import { renderEmptyCircle, renderFilledCircle } from '../../components/PasscodeCircle';
 
 import Theme from '../../viewmodels/settings/Theme';
+import ToggleSwitch from 'toggle-switch-react-native';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { secondaryFontColor } from '../../constants/styles';
@@ -98,7 +99,7 @@ export default observer(({ biometricSupported, biometricEnabled, themeColor, onB
         >
           <Text style={{ marginBottom: -2, color: secondaryFontColor }}>{t('land-passcode-enable-biometric')}</Text>
 
-          <Switch value={biometricEnabled} trackColor={{ true: themeColor }} onValueChange={onBiometricValueChange} />
+          <Toggle isOn={biometricEnabled ?? false} onColor={themeColor} onToggle={onBiometricValueChange} />
         </View>
       ) : undefined}
 

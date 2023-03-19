@@ -9,18 +9,18 @@ import GasPrice from '../../viewmodels/misc/GasPrice';
 import { IToken } from '../../common/tokens';
 import { InappBrowserModal } from '../Modalize';
 import MessageKeys from '../../common/MessageKeys';
-import { Modalize } from 'react-native-modalize';
 import Networks from '../../viewmodels/core/Networks';
 import Overview from './Overview';
 import { Portal } from 'react-native-portalize';
+import SquircleModalize from '../../modals/core/SquircleModalize';
 import Theme from '../../viewmodels/settings/Theme';
 import TokenDetail from './TokenDetail';
 import Transaction from '../../models/entities/Transaction';
 import TxDetail from './TxDetail';
 import { View } from 'react-native';
 import WalletConnectHub from '../../viewmodels/walletconnect/WalletConnectHub';
+import { isAndroid } from '../../utils/platform';
 import { logScreenView } from '../../viewmodels/services/Analytics';
-import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
@@ -80,21 +80,15 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         }}
         separatorColor={isLightMode ? undefined : current.color}
         textColor={isLightMode ? '#fff' : current.color}
-        address={currentAccount?.address}
-        balance={currentAccount?.balance}
-        currency={CurrencyViewmodel.currentCurrency.symbol}
+        account={currentAccount!}
         network={current}
-        chainId={current.chainId}
-        avatar={currentAccount?.avatar}
-        ens={currentAccount?.ens.name}
+        currency={CurrencyViewmodel.currentCurrency.symbol}
         connectedApps={WalletConnectHub.connectedCount}
-        disabled={currentAccount?.tokens.loadingTokens}
         onSendPress={() => PubSub.publish(MessageKeys.openSendFundsModal)}
         onRequestPress={() => PubSub.publish(MessageKeys.openRequestFundsModal)}
         onDAppsPress={() => navigation.navigate('ConnectedDapps')}
         gasPrice={GasPrice.currentGwei}
         onQRCodePress={() => openAddressQR()}
-        signInPlatform={currentAccount?.signInPlatform}
       />
 
       <Assets
@@ -108,12 +102,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
       />
 
       <Portal>
-        <Modalize
-          adjustToContentHeight
-          ref={tokenDetailModalize}
-          snapPoint={500}
-          modalStyle={modalStyle.containerTopBorderRadius}
-        >
+        <SquircleModalize ref={tokenDetailModalize}>
           <TokenDetail
             token={selectedToken}
             network={current}
@@ -123,20 +112,15 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
               closeTokenDetail();
             }}
           />
-        </Modalize>
+        </SquircleModalize>
 
-        <Modalize
-          ref={txDetailModalize}
-          adjustToContentHeight
-          snapPoint={500}
-          modalStyle={modalStyle.containerTopBorderRadius}
-        >
+        <SquircleModalize ref={txDetailModalize}>
           <TxDetail tx={selectedTx} close={closeTxDetail} />
-        </Modalize>
+        </SquircleModalize>
 
-        <Modalize ref={addressQRModalize} adjustToContentHeight modalStyle={modalStyle.containerTopBorderRadius}>
-          <AddressQRCode account={currentAccount || undefined} />
-        </Modalize>
+        <SquircleModalize ref={addressQRModalize}>
+          <AddressQRCode account={currentAccount!} />
+        </SquircleModalize>
 
         <InappBrowserModal pageKey="wallet" />
       </Portal>

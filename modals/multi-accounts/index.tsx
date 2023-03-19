@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 
-import { Account } from '../../viewmodels/account/Account';
+import { AccountBase } from '../../viewmodels/account/AccountBase';
 import App from '../../viewmodels/core/App';
 import { Confirm } from '../views/Confirm';
 import EditAccount from './EditAccount';
@@ -19,10 +19,9 @@ export default observer(({ close }: { close?: Function }) => {
   const { t } = i18n;
   const swiper = useRef<Swiper>(null);
   const [type, setType] = useState('');
-  const [account, setAccount] = useState<Account>();
-  const { backgroundColor } = Theme;
+  const [account, setAccount] = useState<AccountBase>();
 
-  const onRemoveAccount = (account: Account) => {
+  const onRemoveAccount = (account: AccountBase) => {
     setType('removeAccount');
     setAccount(account);
     setTimeout(() => swiper.current?.scrollTo(1), 0);
@@ -44,7 +43,7 @@ export default observer(({ close }: { close?: Function }) => {
     setTimeout(() => setType(''), 500);
   };
 
-  const editAccount = (account: Account) => {
+  const editAccount = (account: AccountBase) => {
     setType('editAccount');
     setAccount(account);
     setTimeout(() => swiper.current?.scrollTo(1), 0);
@@ -66,7 +65,7 @@ export default observer(({ close }: { close?: Function }) => {
   };
 
   return (
-    <SafeAreaProvider style={{ ...rootStyles.safeArea, backgroundColor }}>
+    <SafeAreaProvider style={{ ...rootStyles.safeArea }}>
       <Swiper
         ref={swiper}
         showsPagination={false}

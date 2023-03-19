@@ -15,9 +15,10 @@ interface Props {
   iconColor?: string;
   iconStyle?: StyleProp<ViewStyle>;
   txtLines?: number;
+  hideIcon?: boolean;
 }
 
-export default ({ copyText, txtStyle, iconStyle, iconSize, iconColor, title, txtLines }: Props) => {
+export default ({ copyText, txtStyle, iconStyle, iconSize, iconColor, title, txtLines, hideIcon }: Props) => {
   const txtView = useRef<Animatable.Text>(null);
 
   const writeAddressToClipboard = () => {
@@ -29,9 +30,9 @@ export default ({ copyText, txtStyle, iconStyle, iconSize, iconColor, title, txt
     <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={() => writeAddressToClipboard()}>
       <Animatable.Text ref={txtView as any} style={txtStyle} numberOfLines={txtLines || 1}>
         {title || copyText}
+        {'  '}
+        {!hideIcon && <Feather name="copy" size={iconSize ?? 12} color={iconColor ?? '#fff'} style={[iconStyle]} />}
       </Animatable.Text>
-
-      <Feather name="copy" size={iconSize ?? 10} color={iconColor ?? '#fff'} style={iconStyle} />
     </TouchableOpacity>
   );
 };

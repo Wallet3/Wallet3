@@ -1,22 +1,15 @@
 import { borderColor, fontColor, secondaryFontColor } from '../constants/styles';
 
 import { StyleSheet } from 'react-native';
+import Theme from '../viewmodels/settings/Theme';
 
-const ModalBorderRadius = 7;
-
-const ContainerTopBorderRadius = {
-  borderTopStartRadius: ModalBorderRadius,
-  borderTopEndRadius: ModalBorderRadius,
-};
+export const ModalMarginScreen = 6;
 
 export default StyleSheet.create({
   safeArea: {
     height: 445,
     flex: 1,
-    ...ContainerTopBorderRadius,
   },
-
-  containerTopBorderRadius: ContainerTopBorderRadius,
 
   container: {
     padding: 16,
@@ -62,8 +55,8 @@ export default StyleSheet.create({
 
   reviewItemsContainer: {
     borderWidth: 1,
-    borderColor,
-    borderRadius: 10,
+    borderColor: Theme.borderColor,
+    borderRadius: 12,
     marginTop: 10,
   },
 
@@ -72,7 +65,7 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderColor,
+    borderColor: Theme.borderColor,
     paddingVertical: 15,
     paddingHorizontal: 16,
     overflow: 'hidden',
@@ -86,7 +79,7 @@ export default StyleSheet.create({
 
   reviewItemValue: {
     fontSize: 17,
-    color: fontColor,
+    color: Theme.textColor,
     fontWeight: '500',
   },
 

@@ -1,9 +1,8 @@
 import { Etherscan, Opensea, Polygon as PolygonLogo, Rarible } from '../../assets/3rd';
 import { EvilIcons, Ionicons } from '@expo/vector-icons';
 import { NFTMetadata, NFTTransferring } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
-
 import React, { useEffect, useState } from 'react';
-import { Share, Text, TouchableOpacity, View, ScrollView } from 'react-native';
+import { Share, Text, TouchableOpacity, View } from 'react-native';
 
 import Avatar from '../../components/Avatar';
 import { BlurView } from 'expo-blur';
@@ -11,20 +10,21 @@ import { Button } from '../../components';
 import { ChainIds } from '../../common/Networks';
 import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
 import { InappBrowserModal } from '../Modalize';
-import { Modalize } from 'react-native-modalize';
 import MultiSourceImage from '../../components/MultiSourceImage';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/core/Networks';
 import { Portal } from 'react-native-portalize';
 import { ReactiveScreen } from '../../utils/device';
-import SendNFT from '../../modals/SendNFT';
+import { ScrollView } from 'react-native-gesture-handler';
+import SendNFT from '../../modals/app/SendNFT';
+import SquircleModalize from '../../modals/core/SquircleModalize';
 import { StatusBar } from 'expo-status-bar';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { lightOrDark } from '../../utils/color';
 import { observer } from 'mobx-react-lite';
-import { openInappBrowser } from '../../modals/InappBrowser';
-import styles from '../../modals/styles';
+import { openInappBrowser } from '../../modals/app/InappBrowser';
+import { startLayoutAnimation } from '../../utils/animations';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -80,15 +80,12 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
     setMode(lightOrDark(dominantColor) === 'light' ? 'dark' : 'light');
   }, [dominantColor]);
 
-  useEffect(() => {
-    return () => {
-      vm?.dispose();
-    };
-  }, []);
+  useEffect(() => () => vm?.dispose(), []);
+
+  useEffect(() => startLayoutAnimation(), [vm?.nftStandard]);
 
   const openBrowser = (url?: string) => {
     const web = 'https://wallet3.io';
-    // Platform.OS === 'ios' ? openBrowserAsync(url || web) :
     openInappBrowser(url || web, 'nfts');
   };
 
@@ -104,9 +101,6 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
             height: ReactiveScreen.width * 0.9,
             alignSelf: 'center',
             marginBottom: 16,
-            // android 
-            borderColor: "transparent",
-            elevation: 5,
           }}
         >
           <MultiSourceImage
@@ -309,16 +303,9 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
       <StatusBar style={mode} />
 
       <Portal>
-        <Modalize
-          ref={sendRef}
-          onClosed={() => vm?.setTo('')}
-          adjustToContentHeight
-          disableScrollIfPossible
-          modalStyle={styles.containerTopBorderRadius}
-          scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
-        >
-          {vm ? <SendNFT vm={vm} onClose={closeSendModal} /> : undefined}
-        </Modalize>
+        <SquircleModalize ref={sendRef} onClosed={() => vm?.setTo('')}>
+          {vm && <SendNFT vm={vm} onClose={closeSendModal} />}
+        </SquircleModalize>
 
         <InappBrowserModal pageKey="nfts" />
       </Portal>
