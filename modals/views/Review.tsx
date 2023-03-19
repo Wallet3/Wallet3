@@ -11,10 +11,10 @@ import BackButton from '../components/BackButton';
 import { BioType } from '../../viewmodels/auth/Authentication';
 import Currency from '../../viewmodels/settings/Currency';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';
+import GasFeeReviewItem from '../components/GasFeeReviewItem';
 import GasReview from './GasReview';
 import Image from 'react-native-fast-image';
 import InsufficientFee from '../components/InsufficientFee';
-import Networks from '../../viewmodels/core/Networks';
 import { ReactiveScreen } from '../../utils/device';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
@@ -70,7 +70,7 @@ const ReviewView = observer(
           {disableBack ? (
             <View />
           ) : (
-            <BackButton onPress={onBack} color={vm.transferToRisky ? warningColor : Networks.current.color} />
+            <BackButton onPress={onBack} color={vm.transferToRisky ? warningColor : vm.network.color} />
           )}
 
           <Text style={styles.navTitle}>{t('modal-review-title')}</Text>
@@ -163,45 +163,7 @@ const ReviewView = observer(
           </View>
         </View>
 
-        <View
-          style={{
-            ...reviewItemsContainer,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            paddingStart: 16,
-          }}
-        >
-          <Text style={styles.reviewItemTitle}>{t('modal-review-fee')}</Text>
-
-          <TouchableOpacity
-            onPress={onGasPress}
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              padding: 16,
-              paddingVertical: 12,
-              paddingEnd: 14,
-              justifyContent: 'flex-end',
-              width: '75%',
-            }}
-          >
-            <Text style={{ ...styles.reviewItemTitle, fontSize: 15 }}>
-              {`(${Currency.tokenToUSD(vm.estimatedRealFee, vm.feeTokenSymbol).toFixed(2)} USD)`}
-            </Text>
-
-            <AnimatedNumber
-              style={{ ...reviewItemValueStyle, marginStart: 2, marginEnd: 5 }}
-              numberOfLines={1}
-              value={vm.txFee}
-              formatter={(val) => val.toFixed(5)}
-            />
-
-            <Text style={{ ...reviewItemValueStyle }}>{vm.feeTokenSymbol}</Text>
-
-            <MaterialIcons name="keyboard-arrow-right" size={15} color={secondaryTextColor} style={{ marginBottom: -1 }} />
-          </TouchableOpacity>
-        </View>
+        <GasFeeReviewItem vm={vm} onGasPress={onGasPress} />
 
         <View
           style={{

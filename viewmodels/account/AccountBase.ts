@@ -9,6 +9,7 @@ import { INetwork } from '../../common/Networks';
 import { NFTViewer } from './content/NFTViewer';
 import Networks from '../core/Networks';
 import { POAP } from './content/POAP';
+import { ReadableInfo } from '../../models/entities/Transaction';
 import { WalletBase } from '../wallet/WalletBase';
 import { formatAddress } from '../../utils/formatter';
 import { getEnsAvatar } from '../../common/ENS';
@@ -19,7 +20,7 @@ export type AccountType = 'eoa' | 'erc4337';
 export type SendTxRequest = Partial<{
   tx: providers.TransactionRequest;
   txs: providers.TransactionRequest[];
-  readableInfo: any;
+  readableInfo: ReadableInfo;
   network: INetwork;
   gas: { maxFeePerGas: number; maxPriorityFeePerGas: number };
   onNetworkRequest?: () => void;

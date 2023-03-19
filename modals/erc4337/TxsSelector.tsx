@@ -16,18 +16,18 @@ import styles from '../styles';
 
 interface Props {
   vm: ERC4337Queue;
-  onTxsSelected: (requests: SendTxRequest[]) => void;
+  onTxsSelected: (args: { txs: SendTxRequest[]; network: INetwork; account: AccountBase }) => void;
 }
 export default ({ vm, onTxsSelected }: Props) => {
   const { chainQueue } = vm;
   const { borderColor, secondaryTextColor } = Theme;
 
-  const renderItem = ({ item }: { item: { account: AccountBase; txs: Partial<SendTxRequest>[] } }) => {
+  const renderItem = ({ item }: { item: { network: INetwork; account: AccountBase; txs: Partial<SendTxRequest>[] } }) => {
     const { account, txs } = item;
 
     return (
       <TouchableOpacity
-        onPress={() => onTxsSelected(txs)}
+        onPress={() => onTxsSelected(item)}
         style={{
           flexDirection: 'row',
           alignItems: 'center',

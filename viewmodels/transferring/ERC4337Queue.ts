@@ -19,7 +19,7 @@ export class ERC4337Queue {
           data: g
             .groupBy((req) => req.tx!.from!)
             .select((g2) => {
-              return { account: App.findAccount(g2.key())!, txs: g2.toArray() };
+              return { network: Networks.find(g.key())!, account: App.findAccount(g2.key())!, txs: g2.toArray() };
             })
             .where((g2) => (g2.account ? true : false))
             .toArray(),
