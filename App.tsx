@@ -13,6 +13,7 @@ import AddToken from './screens/tokens/AddToken';
 import Backup from './screens/settings/Backup';
 import ChangePasscode from './screens/settings/ChangePasscode';
 import Currencies from './screens/settings/Currencies';
+import ERC4337Queue from './viewmodels/transferring/ERC4337Queue';
 import FlashMessage from 'react-native-flash-message';
 import { Host } from 'react-native-portalize';
 import { Ionicons } from '@expo/vector-icons';
@@ -28,6 +29,7 @@ import { StatusBar } from 'expo-status-bar';
 import Theme from './viewmodels/settings/Theme';
 import Themes from './screens/settings/Themes';
 import Tokens from './screens/tokens/SortTokens';
+import TxQueueBanner from './modals/global/TxQueueBanner';
 import VerifySecret from './screens/settings/VerifySecret';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
@@ -146,6 +148,8 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
           )
         ) : undefined}
       </Host>
+
+      {ERC4337Queue.count > 0 && <TxQueueBanner />}
 
       {Modals()}
 

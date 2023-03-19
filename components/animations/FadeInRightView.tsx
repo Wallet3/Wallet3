@@ -1,15 +1,4 @@
-import Animated, {
-  FadeIn,
-  FadeInDown,
-  FadeInRight,
-  FadeOut,
-  FadeOutDown,
-  FadeOutLeft,
-  FadeOutRight,
-  FadeOutUp,
-  ZoomIn,
-  ZoomOut,
-} from 'react-native-reanimated';
+import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
 import { StyleProp, ViewStyle } from 'react-native';
 
 import React from 'react';

@@ -138,7 +138,7 @@ export default observer(
 
           <MaterialCommunityIcons name="qrcode" size={12} color={textColor} style={{ paddingHorizontal: 6 }} />
 
-          {isERC4337 && (
+          {isERC4337 && (account as ERC4337Account).activatedChains.get(network.chainId) && (
             <SuperBadge
               containerStyle={{
                 flexDirection: 'row',
@@ -150,7 +150,6 @@ export default observer(
                 borderRadius: 5,
                 marginStart: 2,
                 marginVertical: -2,
-                opacity: (account as ERC4337Account).activatedChains.get(network.chainId) ? 1 : 0.5,
               }}
               txtStyle={{ textTransform: 'uppercase', color: '#fff', fontSize: 10, fontWeight: '700' }}
               iconColor="#fff"

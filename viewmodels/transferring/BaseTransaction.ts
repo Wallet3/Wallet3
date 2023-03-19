@@ -16,7 +16,7 @@ import App from '../core/App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Coingecko from '../../common/apis/Coingecko';
 import { ERC20Token } from '../../models/ERC20';
-import ERC4337TxQueue from './ERC4337TxQueue';
+import ERC4337Queue from './ERC4337Queue';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
 import { NativeToken } from '../../models/NativeToken';
@@ -444,7 +444,7 @@ export class BaseTransaction {
 
   async sendRawTx(args: SendTxRequest, pin?: string): Promise<SendTxResponse> {
     if (this.isQueuingTx && this.isERC4337Available) {
-      ERC4337TxQueue.add(args);
+      ERC4337Queue.add(args);
       return { success: true };
     }
 

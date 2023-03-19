@@ -2,6 +2,7 @@ import { StyleProp, Text, TextStyle, View, ViewStyle } from 'react-native';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
+import { ZoomInView } from './animations';
 
 interface Props {
   containerStyle?: StyleProp<ViewStyle>;
@@ -13,7 +14,7 @@ interface Props {
 
 export default ({ containerStyle, txtStyle, iconSize, iconColor, iconStyle }: Props) => {
   return (
-    <View
+    <ZoomInView
       style={[
         {
           flexDirection: 'row',
@@ -31,6 +32,6 @@ export default ({ containerStyle, txtStyle, iconSize, iconColor, iconStyle }: Pr
         style={[{ marginStart: 4 }, iconStyle]}
         size={iconSize ?? 9}
       />
-    </View>
+    </ZoomInView>
   );
 };
