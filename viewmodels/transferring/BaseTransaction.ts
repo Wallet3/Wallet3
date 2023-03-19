@@ -1,4 +1,4 @@
-import { AccountBase, SendTxRequest } from '../account/AccountBase';
+import { AccountBase, SendTxRequest, SendTxResponse } from '../account/AccountBase';
 import { BigNumber, utils } from 'ethers';
 import {
   EncodedERC1271ContractWalletCallData,
@@ -16,6 +16,7 @@ import App from '../core/App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Coingecko from '../../common/apis/Coingecko';
 import { ERC20Token } from '../../models/ERC20';
+import ERC4337TxQueue from './ERC4337TxQueue';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
 import { NativeToken } from '../../models/NativeToken';
@@ -23,6 +24,10 @@ import { WalletBase } from '../wallet/WalletBase';
 import { entryPointAddress } from '../../configs/erc4337.json';
 import { fetchAddressInfo } from '../services/EtherscanPublicTag';
 import { getEnsAvatar } from '../../common/ENS';
+
+const Keys = {
+  feeToken: (chainId: number | string) => `${chainId}_user_preferred_feeToken`,
+};
 
 export class BaseTransaction {
   private toAddressTypeCache = new Map<string, { isContractWallet: boolean; isContractRecipient: boolean }>();
@@ -287,7 +292,7 @@ export class BaseTransaction {
     const feeToken = this.network.feeTokens.find((t) => t.address === token.address) ?? this.network.feeTokens[0];
     this.feeToken = new ERC20Token({ ...this.network, ...feeToken, owner: this.account.address, contract: feeToken.address });
     this.feeToken.getBalance();
-    AsyncStorage.setItem(`${this.network.chainId}_feeToken`, this.feeToken.address);
+    AsyncStorage.setItem(Keys.feeToken(this.network.chainId), this.feeToken.address);
   }
 
   async setGas(speed: 'rapid' | 'fast' | 'standard') {
@@ -430,16 +435,17 @@ export class BaseTransaction {
 
   protected async initFeeToken() {
     if (!this.network.feeTokens) return;
-    const tokenAddress = await AsyncStorage.getItem(`${this.network.chainId}_feeToken`);
+    const tokenAddress = await AsyncStorage.getItem(Keys.feeToken(this.network.chainId));
     const token = this.network.feeTokens.find((token) => token.address === tokenAddress) ?? this.network.feeTokens[0];
     const feeToken = new ERC20Token({ ...this.network, ...token, owner: this.account.address, contract: token.address });
     feeToken.getBalance();
     runInAction(() => (this.feeToken = feeToken));
   }
 
-  sendRawTx(args: SendTxRequest, pin?: string) {
-    if (this.isQueuingTx) {
-      return;
+  async sendRawTx(args: SendTxRequest, pin?: string): Promise<SendTxResponse> {
+    if (this.isQueuingTx && this.isERC4337Available) {
+      ERC4337TxQueue.add(args);
+      return { success: true };
     }
 
     return this.account.sendTx(
