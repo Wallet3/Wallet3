@@ -97,7 +97,6 @@ export default observer(({ vm, close, erc681, onReviewEnter, onReviewLeave }: Pr
             vm={vm}
             onSend={onSendClick}
             disableBack={erc681}
-            biometricType={Authentication.biometricType}
             txDataEditable={vm.isNativeToken}
           />
 

@@ -9,6 +9,8 @@ import { Gwei_1 } from '../../common/Constants';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
 import { NativeToken } from '../../models/NativeToken';
+import { formatAddress } from '../../utils/formatter';
+import i18n from '../../i18n';
 
 export class TokenTransferring extends BaseTransaction {
   token: IToken;
@@ -190,6 +192,11 @@ export class TokenTransferring extends BaseTransaction {
         onNetworkRequest,
         readableInfo: {
           type: 'transfer',
+          readableTxt: i18n.t('readable-transfer-token', {
+            amount: Number(this.amount).toFixed(4),
+            symbol: this.token.symbol,
+            dest: utils.isAddress(this.to) ? formatAddress(this.to, 6, 4, '...') : this.to,
+          }),
           symbol: this.token.symbol,
           decimals: this.token.decimals,
           amountWei: this.amountWei.toString(),

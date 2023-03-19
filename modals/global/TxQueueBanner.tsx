@@ -1,17 +1,15 @@
 import Animated, { FadeOutRight } from 'react-native-reanimated';
-import { FadeInDownView, FadeInRightView, FadeInUpView } from '../../components/animations';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import ERC4337Queue from '../../viewmodels/transferring/ERC4337Queue';
+import { EvilIcons } from '@expo/vector-icons';
 import { FadeInRight } from 'react-native-reanimated';
 import MessageKeys from '../../common/MessageKeys';
 import { ReactiveScreen } from '../../utils/device';
-import SquircleViewContainer from '../../components/SquircleViewContainer';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import { secureColor } from '../../constants/styles';
 import { startLayoutAnimation } from '../../utils/animations';
 
 const { View, Text } = Animated;
@@ -31,12 +29,10 @@ export default observer(({}: Props) => {
       entering={FadeInRight.springify()}
       exiting={FadeOutRight.springify()}
       style={{
-        width: 128,
         height: 48,
-        borderRadius: 50,
         alignSelf: 'center',
         position: 'absolute',
-        right: -64,
+        right: -5,
         top: 81,
         shadowColor: tintColor,
         shadowOffset: { width: 0, height: 0 },
@@ -48,15 +44,19 @@ export default observer(({}: Props) => {
         onPress={() => PubSub.publish(MessageKeys.openERC4337Queue)}
         style={{
           borderRadius: 50,
+          borderTopRightRadius: 0,
+          borderBottomRightRadius: 0,
+          paddingHorizontal: 16,
           height: 72,
           flex: 1,
           backgroundColor: backgroundColor,
           flexDirection: 'row',
           alignItems: 'center',
-          paddingStart: 27,
           position: 'relative',
+          gap: 4,
         }}
       >
+        <EvilIcons name="sc-telegram" color={tintColor} size={27} style={{ marginTop: -2 }} />
         <Text numberOfLines={1} style={{ color: tintColor, ...styles.txt }}>
           {count}
         </Text>
@@ -67,7 +67,7 @@ export default observer(({}: Props) => {
 
 const styles = StyleSheet.create({
   txt: {
-    fontSize: 32,
+    fontSize: 22,
     fontWeight: '800',
     opacity: 0.9,
   },
