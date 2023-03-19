@@ -44,7 +44,7 @@
   "home-drawer-networks": "網絡",
   "home-drawer-contacts": "聯系人",
   "home-drawer-multi-sig": "多簽錢包",
-  "home-history-notxs": "沒有歷史交易",
+  "home-history-noTxs": "沒有歷史交易",
   "home-tokens-title": "代幣",
   "home-tokens-drag-tip": "拖拽代幣可排序",
   "home-add-token-title": "添加代幣",

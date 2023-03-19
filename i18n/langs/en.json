@@ -44,7 +44,7 @@
   "home-drawer-networks": "Networks",
   "home-drawer-contacts": "Contacts",
   "home-drawer-multi-sig": "MultiSig Wallets",
-  "home-history-notxs": "No transactions",
+  "home-history-noTxs": "No transactions",
   "home-tokens-title": "Tokens",
   "home-tokens-drag-tip": "Move tokens with drag and drop",
   "home-add-token-title": "Add a Token",
@@ -59,6 +59,7 @@
   "home-history-item-type-sent": "Sent",
   "home-history-item-type-transfer": "Sent",
   "home-history-item-type-approve": "Approve",
+  "home-history-item-type--batchTx": "Batch Tx",
   "home-history-item-to": "To",
   "home-tab-wallet": "Wallet",
   "home-tab-exchange": "Swap",
@@ -402,6 +403,7 @@
   "msg-please-enable-biometric": "Please use biometric authentication to authorize this operation.",
 
   "erc-4337-add-tx-to-queue": "Add to sending queue",
+
   "readable-transfer-token": "Transfer {{amount}} {{symbol}} to {{dest}}",
   "readable-approve-token": "Approve {{amount}} {{symbol}} to {{dest}}",
 

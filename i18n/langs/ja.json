@@ -44,7 +44,7 @@
   "home-drawer-networks": "ネットワーク",
   "home-drawer-contacts": "連絡先",
   "home-drawer-multi-sig": "マルチシグウォレット",
-  "home-history-notxs": "トランザクションがありません",
+  "home-history-noTxs": "トランザクションがありません",
   "home-tokens-title": "トークン",
   "home-tokens-drag-tip": "ドラッグ＆ドロップによるトークン移動",
   "home-add-token-title": "トークンの追加",
@@ -59,6 +59,7 @@
   "home-history-item-type-sent": "送金",
   "home-history-item-type-transfer": "送金",
   "home-history-item-type-approve": "承認",
+  "home-history-item-type--batchTx": "一括送信",
   "home-history-item-to": "受領者",
   "home-tab-wallet": "ウォレット",
   "home-tab-exchange": "スワップ",
@@ -377,6 +378,9 @@
   "multi-sig-modal-keys-distribution": "秘密鍵は以下のデバイスに配布されます",
 
   "erc-4337-add-tx-to-queue": "取引を送信キューに追加する",
+
+  "readable-transfer-token": "{{amount}} {{symbol}} を {{dest}} に送金する",
+  "readable-approve-token": "{{amount}} {{symbol}} を {{dest}} に承認する",
 
   "msg-invalid-address": "無効なアドレス",
   "msg-invalid-qr-code": "無効なQRコード",

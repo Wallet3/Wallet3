@@ -22,6 +22,9 @@ export class BatchTransactionRequest extends BaseTransaction {
   }
 
   send = (pin?: string, onNetworkRequest?: () => void) => {
-    return super.sendRawTx({ onNetworkRequest, txs: this.requests.map((req) => req.tx!) }, pin);
+    return super.sendRawTx(
+      { onNetworkRequest, txs: this.requests.map((req) => req.tx!), readableInfo: { type: 'batchTx' } },
+      pin
+    );
   };
 }

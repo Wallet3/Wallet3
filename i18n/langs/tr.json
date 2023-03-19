@@ -44,7 +44,7 @@
   "home-drawer-networks": "Ağlar",
   "home-drawer-contacts": "Bağlantılar",
   "home-drawer-multi-sig": "Çok İmzalı Cüzdan",
-  "home-history-notxs": "Henüz İşlem Yok",
+  "home-history-noTxs": "Henüz İşlem Yok",
   "home-tokens-title": "Token'lar",
   "home-tokens-drag-tip": "Token'ları sürükle ve bırak ile taşı",
   "home-add-token-title": "Token Ekle",
@@ -59,6 +59,7 @@
   "home-history-item-type-sent": "Gönderildi",
   "home-history-item-type-transfer": "Gönderildi",
   "home-history-item-type-approve": "Onayla",
+  "home-history-item-type--batchTx": "Toplu işlem",
   "home-history-item-to": "Kime",
   "home-tab-wallet": "Cüzdan",
   "home-tab-exchange": "Değiştir",
@@ -399,6 +400,9 @@
   "msg-please-enable-biometric":"Bu işlemi yetkilendirmek için biyometrik kimlik doğrulama kullanın lütfen.",
 
   "erc-4337-add-tx-to-queue": "İşlemi gönderme kuyruğuna ekleyin",
+
+  "readable-transfer-token": "{{amount}} {{symbol}} 'yi {{dest}} adresine transfer etmek",
+  "readable-approve-token": "{{amount}} {{symbol}} onayla {{dest}} için",
 
   "misc-show-full-address": "Tam adresi göster",
   "button-next": "Sonraki",

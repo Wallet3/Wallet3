@@ -44,7 +44,7 @@
   "home-drawer-networks": "网络",
   "home-drawer-contacts": "联系人",
   "home-drawer-multi-sig": "多签钱包",
-  "home-history-notxs": "没有历史交易",
+  "home-history-noTxs": "没有历史交易",
   "home-tokens-title": "代币",
   "home-tokens-drag-tip": "拖拽代币可排序",
   "home-add-token-title": "添加代币",
@@ -59,6 +59,7 @@
   "home-history-item-type-sent": "发送",
   "home-history-item-type-transfer": "发送",
   "home-history-item-type-approve": "授权",
+  "home-history-item-type--batchTx": "批量交易",
   "home-history-item-to": "目标方",
   "home-tab-wallet": "钱包",
   "home-tab-exchange": "兑换",
@@ -396,6 +397,9 @@
 
   "erc-4337-add-tx-to-queue": "添加至发送队列",
   
+  "readable-transfer-token": "转移 {{amount}} {{symbol}} 到 {{dest}}",
+  "readable-approve-token": "授权 {{amount}} {{symbol}} 予 {{dest}}",
+
   "misc-show-full-address": "显示完整地址",
   "button-next": "继续",
   "button-save": "保存",

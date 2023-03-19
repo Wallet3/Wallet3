@@ -20,7 +20,6 @@ import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { secondaryFontColor } from '../../constants/styles';
-import { startLayoutAnimation } from '../../utils/animations';
 import { useState } from 'react';
 import { utils } from 'ethers';
 
@@ -70,7 +69,7 @@ const Tx = observer(
     const dappIcon = item.readableInfo?.icon;
     const amount = Number(item.readableInfo?.amount) || Number(utils.formatEther(item.value ?? '0'));
     const cancelTx = item.readableInfo?.cancelTx;
-    const to: string = item.readableInfo?.recipient ?? item.readableInfo.dapp ?? item.to ?? '';
+    const to: string = item.readableInfo?.recipient ?? item.readableInfo?.dapp ?? item.to ?? '';
     const status = item.blockNumber ? (item.status ? 'confirmed' : 'failed') : 'pending';
     const methodName = t(`home-history-item-type-${method ?? (item.data !== '0x' ? 'contract-interaction' : 'sent')}`);
 
@@ -148,7 +147,7 @@ export default observer(({ data, onTxPress, onEndReached }: Props) => {
       <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
         <IllustrationNoData width={150} height={150} />
         <Text style={{ color: secondaryFontColor, marginTop: 24, fontWeight: '500', textTransform: 'capitalize' }}>
-          {t('home-history-notxs')}
+          {t('home-history-noTxs')}
         </Text>
       </View>
     );

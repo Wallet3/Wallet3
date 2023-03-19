@@ -60,7 +60,7 @@ export default observer(() => {
         <FadeInLeftView delay={300}>
           <EvilIcons name="sc-telegram" color={tintColor} size={27} style={{ marginTop: -2 }} />
         </FadeInLeftView>
-        <FadeInRightView delay={150}>
+        <FadeInRightView delay={500}>
           <Text numberOfLines={1} style={{ color: tintColor, ...styles.txt }}>
             {count}
           </Text>
