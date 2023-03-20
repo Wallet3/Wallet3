@@ -30,7 +30,6 @@ export default observer(() => {
       entering={FadeInRight.springify()}
       exiting={FadeOutRight.delay(500).springify()}
       style={{
-        height: 48,
         alignSelf: 'center',
         position: 'absolute',
         right: -5,
@@ -48,20 +47,20 @@ export default observer(() => {
           borderTopRightRadius: 0,
           borderBottomRightRadius: 0,
           paddingHorizontal: 16,
-          height: 72,
           flex: 1,
-          backgroundColor: backgroundColor,
+          backgroundColor,
           flexDirection: 'row',
           alignItems: 'center',
           position: 'relative',
+          height: 48,
           gap: 8,
         }}
       >
         <FadeInLeftView delay={300}>
-          <EvilIcons name="sc-telegram" color={tintColor} size={27} style={{ marginTop: -2 }} />
+          <EvilIcons name="sc-telegram" color={tintColor} size={27} style={{ marginTop: 0 }} />
         </FadeInLeftView>
         <FadeInDownView delay={500}>
-          <Text numberOfLines={1} style={{ color: tintColor, ...styles.txt }}>
+          <Text numberOfLines={1} style={{ color: tintColor, ...styles.txt, marginTop: 2.5 }}>
             {count}
           </Text>
         </FadeInDownView>

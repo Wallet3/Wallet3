@@ -23,7 +23,6 @@ import TxHub from '../hubs/TxHub';
 import { showMessage } from 'react-native-flash-message';
 
 export type SignTxRequest = {
-  accountIndex: number;
   tx: providers.TransactionRequest;
 };
 
@@ -244,15 +243,6 @@ export abstract class WalletBase extends EventEmitter<Events> {
     }
 
     account.dispose();
-  }
-
-  async signTx(args: SignTxRequest & AuthOptions) {
-    try {
-      const txHex = await (await this.openWallet(args))?.signTransaction(args.tx);
-      return { txHex };
-    } catch (error: any) {
-      return { error: error.message };
-    }
   }
 
   async sendTx(request: BroadcastTxRequest) {

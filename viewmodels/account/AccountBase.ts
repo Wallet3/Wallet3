@@ -1,6 +1,6 @@
 import * as ethSignUtil from '@metamask/eth-sig-util';
 
-import { SignTypedDataRequest, WalletBase } from '../wallet/WalletBase';
+import { SignTxRequest, SignTypedDataRequest, WalletBase } from '../wallet/WalletBase';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { genColor, genEmoji } from '../../utils/emoji';
 import { providers, utils } from 'ethers';
@@ -133,6 +133,15 @@ export abstract class AccountBase {
     } catch (error) {
     } finally {
       logEthSign('plain');
+    }
+  }
+
+  async signTx(args: SignTxRequest & AuthOptions) {
+    try {
+      const txHex = await (await this.wallet?.openWallet({ ...args, accountIndex: this.index }))?.signTransaction(args.tx);
+      return { txHex };
+    } catch (error: any) {
+      return { error };
     }
   }
 

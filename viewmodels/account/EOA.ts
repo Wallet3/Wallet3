@@ -19,15 +19,14 @@ export class EOA extends AccountBase {
 
     const { tx, readableInfo } = args;
 
-    const { txHex, error } = await this.wallet.signTx({
-      accountIndex: this.index,
+    const { txHex, error } = await this.signTx({
       tx,
       pin,
       disableAutoPinRequest: true,
     });
 
     if (!txHex || error) {
-      if (error) showMessage({ message: error, type: 'warning' });
+      if (error) showMessage({ message: error.message, type: 'warning' });
       return { success: false, error: { message: 'Signing tx failed', code: -32602 } };
     }
 

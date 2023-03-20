@@ -5,6 +5,7 @@ import App from '../core/App';
 import { INetwork } from '../../common/Networks';
 import LINQ from 'linq';
 import Networks from '../core/Networks';
+import { utils } from 'ethers';
 
 export type BatchRequest = { requests: SendTxRequest[]; network: INetwork; account: AccountBase };
 
@@ -19,7 +20,7 @@ export class ERC4337Queue {
           index,
           network: Networks.find(g.key())!,
           data: g
-            .groupBy((req) => req.tx!.from!)
+            .groupBy((req) => utils.getAddress(req.tx!.from!))
             .select((g2) => {
               return { network: Networks.find(g.key())!, account: App.findAccount(g2.key())!, requests: g2.toArray() };
             })
@@ -57,6 +58,7 @@ export class ERC4337Queue {
   }
 
   add(req: SendTxRequest) {
+    if (!req.tx?.from) return;
     req.timestamp = Date.now();
     this.queue.push(req);
   }
