@@ -353,25 +353,13 @@ export class BaseTransaction {
       return;
     }
 
-    const erc4337EntryPoint = await eth_call_return(
+    const erc1271Result = await eth_call_return(
       this.network.chainId,
-      { to: this.toAddress, data: EncodedERC4337EntryPointCallData },
+      { to: this.toAddress, data: EncodedERC1271ContractWalletCallData },
       true
     );
 
-    let isContractWallet = erc4337EntryPoint?.result
-      ?.toLowerCase?.()
-      ?.endsWith?.(entryPointAddress.substring(2).toLowerCase());
-
-    if (!isContractWallet) {
-      const erc1271Result = await eth_call_return(
-        this.network.chainId,
-        { to: this.toAddress, data: EncodedERC1271ContractWalletCallData },
-        true
-      );
-
-      isContractWallet = erc1271Result?.error?.code === 3 || erc1271Result?.result === ERC1271InvalidSignatureResult;
-    }
+    const isContractWallet = erc1271Result?.error?.code === 3 || erc1271Result?.result === ERC1271InvalidSignatureResult;
 
     runInAction(() => {
       this.isContractWallet = isContractWallet;
