@@ -4,6 +4,7 @@ import { eth_call_return, getCode } from '../../common/RPC';
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AuthOptions } from '../auth/Authentication';
 import { HttpRpcClient } from '@account-abstraction/sdk';
 import TxHub from '../hubs/TxHub';
 import { UserOperationStruct } from '@wallet3/account-abstraction-contracts';
@@ -17,6 +18,7 @@ const Keys = {
 
 export class ERC4337Account extends AccountBase {
   readonly type = 'erc4337';
+  readonly accountSubPath = `4337'/`;
   readonly activatedChains = new Map<number, boolean>();
 
   constructor(wallet: WalletBase, address: string, index: number, extra?: { signInPlatform?: string }) {

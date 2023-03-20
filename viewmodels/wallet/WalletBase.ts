@@ -30,17 +30,16 @@ export type SignTxRequest = {
 export type BroadcastTxRequest = {
   tx: providers.TransactionRequest;
   txHex: string;
-  readableInfo: ReadableInfo;
+  readableInfo?: ReadableInfo;
 };
 
 export type SignMessageRequest = {
-  accountIndex: number;
+  accountAddress: string;
   msg: string | Uint8Array;
   standardMode?: boolean;
 };
 
 export type SignTypedDataRequest = {
-  accountIndex: number;
   typedData: any;
   version?: SignTypedDataVersion;
 };
@@ -253,40 +252,6 @@ export abstract class WalletBase extends EventEmitter<Events> {
       return { txHex };
     } catch (error: any) {
       return { error: error.message };
-    }
-  }
-
-  async signMessage(request: SignMessageRequest & AuthOptions) {
-    try {
-      if (utils.isBytes(request.msg) && !request.standardMode) {
-        showMessage({ message: 'DANGEROUS: Wallet 3 rejects signing this data.', type: 'danger' });
-        return undefined;
-      } else {
-        return (await this.openWallet(request))?.signMessage(
-          typeof request.msg === 'string' && utils.isBytesLike(request.msg) ? utils.arrayify(request.msg) : request.msg
-        );
-      }
-    } catch (error) {
-      __DEV__ && console.log(error);
-    } finally {
-      logEthSign('plain');
-    }
-  }
-
-  async signTypedData(request: SignTypedDataRequest & AuthOptions) {
-    try {
-      const key = await this.unlockPrivateKey(request);
-      if (!key) return undefined;
-
-      return ethSignUtil.signTypedData({
-        privateKey: Buffer.from(utils.arrayify(key)),
-        version: request.version ?? SignTypedDataVersion.V4,
-        data: request.typedData,
-      });
-    } catch (error) {
-      __DEV__ && console.error(error);
-    } finally {
-      logEthSign('typed_data');
     }
   }
 

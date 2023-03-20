@@ -69,21 +69,20 @@ export default observer(({ request, client, close }: Props) => {
       return false;
     }
 
-    const { wallet, accountIndex } = App.findWallet(client.lastUsedAccount || App.currentAccount!.address) || {};
-    if (!wallet || accountIndex === undefined) {
+    const account = App.findAccount(client.lastUsedAccount || App.currentAccount!.address);
+    if (!account) {
       showMessage({ message: i18n.t('msg-account-not-found'), type: 'warning' });
       return false;
     }
 
     const signed = typedData
-      ? await wallet.signTypedData({
+      ? await account.signTypedData({
           typedData,
           pin,
-          accountIndex,
           version: SignTypedDataVersion.V4,
           disableAutoPinRequest: true,
         })
-      : await wallet.signMessage({ msg: msg!, pin, accountIndex, standardMode, disableAutoPinRequest: true });
+      : await account.signMessage(msg!, { pin, disableAutoPinRequest: true });
 
     if (signed) {
       client.approveRequest(request.id, signed);

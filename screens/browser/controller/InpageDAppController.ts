@@ -254,8 +254,8 @@ export class InpageDAppController extends EventEmitter {
     const dapp = this.getDApp(origin);
     if (!dapp) return;
 
-    const { wallet, account, accountIndex } = App.findWallet(dapp.lastUsedAccount) || {};
-    if (!wallet || !account || accountIndex === undefined) {
+    const account = App.findAccount(dapp.lastUsedAccount);
+    if (!account) {
       showMessage({ message: i18n.t('msg-account-not-found'), type: 'warning' });
       return { error: { code: Code_InvalidParams, message: 'Invalid account' } };
     }
@@ -268,11 +268,11 @@ export class InpageDAppController extends EventEmitter {
       let type: 'plaintext' | 'typedData' = 'plaintext';
       let typedVersion = SignTypedDataVersion.V4;
 
-      const approve = async ({ pin, standardMode }: { pin?: string; standardMode?: boolean } = {}) => {
+      const approve = async ({ pin }: { pin?: string; standardMode?: boolean } = {}) => {
         const signed =
           type === 'typedData'
-            ? await wallet.signTypedData({ typedData, pin, accountIndex, version: typedVersion, disableAutoPinRequest: true })
-            : await wallet.signMessage({ msg: msg!, pin, accountIndex, standardMode, disableAutoPinRequest: true });
+            ? await account.signTypedData({ typedData, pin, version: typedVersion, disableAutoPinRequest: true })
+            : await account.signMessage(msg!, { pin, disableAutoPinRequest: true });
 
         if (signed) resolve(signed);
 
