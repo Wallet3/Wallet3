@@ -328,7 +328,7 @@ export class InpageDAppController extends EventEmitter {
 
     return new Promise<string | any>((resolve) => {
       const param = params[0] as WCCallRequest_eth_sendTransaction;
-      const network = Networks.find(dapp.lastUsedChainId);
+      const network = Networks.find(dapp.lastUsedChainId)!;
       const account = App.findAccount(dapp.lastUsedAccount);
 
       if (!network || !account) {
@@ -339,14 +339,11 @@ export class InpageDAppController extends EventEmitter {
       const vm = new RawTransactionRequest({ param, network, account });
 
       const approve = async (args: SendTxRequest & AuthOptions) => {
-        const { success, txHash, error, txHashPromise } = await vm.sendRawTx(
-          {
-            ...args,
-            network,
-            readableInfo: { ...args.readableInfo, dapp: pageMetadata?.title ?? '', icon: pageMetadata?.icon },
-          },
-          args.pin
-        );
+        const { success, txHash, error, txHashPromise } = await vm.sendTx({
+          ...args,
+          network,
+          readableInfo: { ...args.readableInfo, dapp: pageMetadata?.title ?? '', icon: pageMetadata?.icon },
+        });
 
         if (error && __DEV__) showMessage({ type: 'warning', message: error.message });
 

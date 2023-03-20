@@ -5,9 +5,10 @@ import Authentication from '../../viewmodels/auth/Authentication';
 import AwaitablePasspad from '../views/AwaitablePasspad';
 import { BatchTransactionRequest } from '../../viewmodels/transferring/BatchTransactionRequest';
 import BatchTxReview from './BatchTxReview';
+import BatchTxSelector from './BatchTxSelector';
+import LINQ from 'linq';
 import Packing from '../views/Packing';
 import { Passpad } from '../views';
-import PendingBatchSelector from './PendingBatchSelector';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { SendTxRequest } from '../../viewmodels/account/AccountBase';
 import Success from '../views/Success';
@@ -21,7 +22,7 @@ interface Props {
 }
 
 export default observer(({ close, onCritical }: Props) => {
-  const { chainQueue, chainCount, accountCount } = ERC4337Queue;
+  const { chainQueue, chainCount, accountCount, queue } = ERC4337Queue;
   const { biometricEnabled } = Authentication;
 
   const swiper = useRef<Swiper>(null);
@@ -74,7 +75,7 @@ export default observer(({ close, onCritical }: Props) => {
       ) : (
         <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
           {(chainCount > 1 || accountCount > 1) && (
-            <PendingBatchSelector vm={ERC4337Queue} onBatchSelected={onBatchSelected} />
+            <BatchTxSelector vm={ERC4337Queue} onBatchSelected={onBatchSelected} />
           )}
 
           {vm && (

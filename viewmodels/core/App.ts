@@ -168,6 +168,9 @@ export class AppVM {
   }
 
   findWallet(accountAddress: string) {
+    if (!utils.isAddress(accountAddress)) return;
+    accountAddress = utils.getAddress(accountAddress);
+
     const wallet = this.wallets.find((w) => w.accounts.find((a) => a.address === accountAddress));
     if (!wallet) return;
 
@@ -185,6 +188,9 @@ export class AppVM {
   }
 
   findAccount(account: string) {
+    if (!utils.isAddress(account)) return;
+    account = utils.getAddress(account);
+
     return this.allAccounts.find((a) => a.address === account);
   }
 

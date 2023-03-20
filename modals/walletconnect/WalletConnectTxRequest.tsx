@@ -35,7 +35,7 @@ export default observer(({ client, request, close }: Props) => {
   };
 
   const sendTx = async (pin?: string) => {
-    const result = await vm.sendTx(pin, () => setNetworkBusy(true));
+    const result = await vm.sendTx({ pin, onNetworkRequest: () => setNetworkBusy(true) });
 
     if (result.success) {
       setVerified(true);
@@ -53,15 +53,7 @@ export default observer(({ client, request, close }: Props) => {
       ) : networkBusy ? (
         <Packing />
       ) : (
-        <TxRequest
-          themeColor={vm.network.color}
-          app={vm.appMeta}
-          vm={vm}
-          onApprove={sendTx}
-          onReject={reject}
-          networkBusy={networkBusy}
-          bioType={biometricType}
-        />
+        <TxRequest app={vm.appMeta} vm={vm} onApprove={sendTx} onReject={reject} bioType={biometricType} />
       )}
     </SafeAreaProvider>
   );

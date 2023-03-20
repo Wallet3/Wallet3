@@ -1,6 +1,8 @@
+import { BigNumber, utils } from 'ethers';
 import { Button, Coin, Placeholder, SafeViewContainer } from '../../components';
 import { FadeInDownView, FadeInRightView } from '../../components/animations';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
+import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import React, { useRef, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
@@ -11,7 +13,6 @@ import ERC4337Queue from '../../viewmodels/transferring/ERC4337Queue';
 import GasFeeReviewItem from '../components/GasFeeReviewItem';
 import GasReview from '../views/GasReview';
 import Image from 'react-native-fast-image';
-import { Ionicons } from '@expo/vector-icons';
 import { SendTxRequest } from '../../viewmodels/account/AccountBase';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
@@ -32,6 +33,7 @@ interface Props {
 const BatchTxReview = observer(({ disableBack, onBack, vm, onGasReview, onSendPress }: Props) => {
   const { t } = i18n;
   const { borderColor } = Theme;
+  const { network } = vm;
 
   const renderTx = ({ item, index }: { item: SendTxRequest; index: number }) => {
     const { tx, readableInfo } = item;
@@ -74,6 +76,12 @@ const BatchTxReview = observer(({ disableBack, onBack, vm, onGasReview, onSendPr
           <Text numberOfLines={1} style={[styles.reviewItemTitle]}>
             {readableInfo?.readableTxt || `${readableInfo?.dapp} ${readableInfo?.decodedFunc}`}
           </Text>
+
+          {BigNumber.from(item.tx?.value ?? 0).gt(0) && (
+            <Text numberOfLines={1} style={[styles.reviewItemTitle, { marginStart: 8 }]}>
+              {`${-utils.formatEther(item.tx?.value ?? 0)} ${network.symbol}`}
+            </Text>
+          )}
         </ScrollView>
         <Placeholder />
         <TouchableOpacity
@@ -94,7 +102,10 @@ const BatchTxReview = observer(({ disableBack, onBack, vm, onGasReview, onSendPr
       <View style={styles.navBar}>
         {disableBack ? <View style={{ height: 33 }} /> : <BackButton onPress={onBack} color={vm.network.color} />}
 
-        <Text style={styles.navTitle}>{t('modal-review-title')}</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <FontAwesome name="dropbox" color={network.color} size={19} style={{ marginEnd: 10 }} />
+          <Text style={[styles.navTitle, { color: network.color }]}>{t('modal-review-title')}</Text>
+        </View>
       </View>
 
       <FlatList

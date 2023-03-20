@@ -1,8 +1,10 @@
 import { Methods, RequestType } from './RequestTypes';
 import { WCCallRequestRequest, WCCallRequest_eth_sendTransaction } from '../../models/entities/WCSession_v1';
 
+import { AuthOptions } from '../auth/Authentication';
 import { RawTransactionRequest } from './RawTransactionRequest';
 import { ReadableInfo } from '../../models/entities/Transaction';
+import { SendTxRequest } from '../account/AccountBase';
 import { WalletConnect_v1 } from '../walletconnect/WalletConnect_v1';
 import { WalletConnect_v2 } from '../walletconnect/WalletConnect_v2';
 import { decodeCallToReadable } from '../services/DecodeFuncCall';
@@ -41,8 +43,8 @@ export class WalletConnectTransactionRequest extends RawTransactionRequest {
     return { desc: description, icon: icons[0], name, url };
   }
 
-  sendTx(pin?: string, onNetworkRequest?: () => void) {
-    const tx = this.txRequest;
+  sendTx(args: SendTxRequest & AuthOptions) {
+    const tx = this.txRequest!;
     const readableInfo: ReadableInfo = {
       type: 'dapp-interaction',
       dapp: this.appMeta.name,
@@ -53,13 +55,9 @@ export class WalletConnectTransactionRequest extends RawTransactionRequest {
       recipient: this.to,
     };
 
-    return super.sendRawTx(
-      {
-        tx,
-        onNetworkRequest,
-        readableInfo: { ...readableInfo, readableTxt: decodeCallToReadable(tx!, { network: this.network, readableInfo }) },
-      },
-      pin
-    );
+    return super.sendTx({
+      ...args,
+      readableInfo: { ...readableInfo, readableTxt: decodeCallToReadable(tx!, { network: this.network, readableInfo }) },
+    });
   }
 }

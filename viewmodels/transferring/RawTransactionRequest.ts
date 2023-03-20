@@ -1,3 +1,4 @@
+import { AccountBase, SendTxRequest } from '../account/AccountBase';
 import {
   ApprovalForAll,
   Approve_ERC20,
@@ -16,7 +17,7 @@ import EtherscanHub, { DecodedFunc } from '../hubs/EtherscanHub';
 import { PreExecResult, preExecTx } from '../../common/apis/Debank';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
-import { AccountBase } from '../account/AccountBase';
+import { AuthOptions } from '../auth/Authentication';
 import { BaseTransaction } from './BaseTransaction';
 import { ERC1155Token } from '../../models/ERC1155';
 import { ERC20Token } from '../../models/ERC20';
@@ -24,6 +25,7 @@ import { ERC721Token } from '../../models/ERC721';
 import { Gwei_1 } from '../../common/Constants';
 import { INetwork } from '../../common/Networks';
 import { NFTMetadata } from './NonFungibleTokenTransferring';
+import { ReadableInfo } from '../../models/entities/Transaction';
 import Sourcify from '../hubs/Sourcify';
 import { WCCallRequest_eth_sendTransaction } from '../../models/entities/WCSession_v1';
 import numeral from 'numeral';
@@ -430,5 +432,15 @@ export class RawTransactionRequest extends BaseTransaction {
     } catch (error) {
       showMessage((error as any)?.message);
     }
+  }
+
+  sendTx(args: SendTxRequest & AuthOptions) {
+    return super.sendRawTx(
+      {
+        tx: this.txRequest,
+        ...args,
+      },
+      args.pin
+    );
   }
 }
