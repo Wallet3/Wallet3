@@ -7,6 +7,7 @@ import AwaitablePasspad from '../views/AwaitablePasspad';
 import Contacts from '../../viewmodels/customs/Contacts';
 import NFTReview from '../views/NFTReview';
 import { NFTTransferring } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
+import Packing from '../views/Packing';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { SafeViewContainer } from '../../components';
 import Success from '../views/Success';
@@ -22,7 +23,6 @@ interface Props {
 }
 
 export default observer(({ vm, onClose }: Props) => {
-  const { backgroundColor } = Theme;
   const swiper = useRef<Swiper>(null);
   const [verified, setVerified] = useState(false);
   const [networkBusy, setNetworkBusy] = useState(false);
@@ -65,9 +65,11 @@ export default observer(({ vm, onClose }: Props) => {
   };
 
   return (
-    <View style={{ height: 445 }}>
+    <View style={{ height: 460 }}>
       {verified ? (
         <Success />
+      ) : networkBusy ? (
+        <Packing />
       ) : (
         <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
           <ContactsPad
@@ -86,7 +88,6 @@ export default observer(({ vm, onClose }: Props) => {
           />
 
           <AwaitablePasspad
-            busy={networkBusy}
             themeColor={vm.network.color}
             onCodeEntered={sendTx}
             onCancel={() => swiper.current?.scrollTo(1)}

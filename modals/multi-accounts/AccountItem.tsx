@@ -101,7 +101,7 @@ export default observer(
                   }}
                   txtStyle={{ textTransform: 'uppercase', color: '#fff', fontSize: 10, fontWeight: '700' }}
                   iconColor="#fff"
-                  iconStyle={{ marginStart: 5 }}
+                  iconStyle={{ marginStart: 3 }}
                   iconSize={12}
                 />
               )}

@@ -176,7 +176,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, txDa
 
         {txDataEditable && !vm.insufficientFee ? (
           <TouchableOpacity
-            style={{ flexDirection: 'row', alignItems: 'center', padding: 12, paddingHorizontal: 15 }}
+            style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 10, paddingHorizontal: 15 }}
             onPress={onEditDataPress}
           >
             <Text style={{ fontWeight: '600', color: secondaryTextColor, fontSize: 12.5 }}>

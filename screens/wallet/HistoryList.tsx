@@ -11,6 +11,7 @@ import { FlatList, ListRenderItemInfo, Text, TouchableOpacity, View } from 'reac
 import React, { useEffect } from 'react';
 
 import IllustrationNoData from '../../assets/illustrations/misc/nodata.svg';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/core/Networks';
 import Theme from '../../viewmodels/settings/Theme';
 import Transaction from '../../models/entities/Transaction';
@@ -102,11 +103,15 @@ const Tx = observer(
               alignItems: 'center',
               backgroundColor: StatusColor[status],
               paddingHorizontal: 6,
+              paddingEnd: 4,
               paddingVertical: 2,
               borderRadius: 4,
             }}
           >
             <Text style={{ color: 'white', fontWeight: '300', fontSize: 12 }}>{t(`modal-tx-details-status-${status}`)}</Text>
+            {item.isERC4337 && (
+              <MaterialCommunityIcons name="lightbulb-on" color={'#fff'} style={[{ marginStart: 2 }]} size={9} />
+            )}
           </View>
         </View>
 

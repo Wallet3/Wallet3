@@ -6,7 +6,7 @@ import { Button, Coin, Skeleton } from '../../components';
 import { Defs, LinearGradient, Stop } from 'react-native-svg';
 import { EvilIcons, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { formatAddress, formatCurrency } from '../../utils/formatter';
 import { thirdFontColor, verifiedColor, warningColor } from '../../constants/styles';
 
@@ -14,6 +14,7 @@ import { BreathAnimation } from '../../utils/animations';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
 import { LineChart } from 'react-native-svg-charts';
+import { ScrollView } from 'react-native-gesture-handler';
 import Theme from '../../viewmodels/settings/Theme';
 import { TokenData } from '../../viewmodels/services/TokenData';
 import i18n from '../../i18n';

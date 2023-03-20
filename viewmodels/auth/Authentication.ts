@@ -141,12 +141,10 @@ export class Authentication extends EventEmitter<Events> {
       return disableAutoPinRequest ? false : await requestPin();
     }
 
-    let { success } = await authenticateAsync(options);
-    if (!success && !pin && !disableAutoPinRequest) {
-      success = await requestPin();
-    }
+    const { success } = await authenticateAsync(options);
+    if (success) return success;
 
-    return success;
+    return disableAutoPinRequest ? false : await requestPin();
   };
 
   private async getMasterKey() {

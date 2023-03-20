@@ -20,7 +20,7 @@ export default (props: Props) => {
       onPress={onToggle}
       style={[
         {
-          padding: 12,
+          paddingVertical: 10,
           paddingHorizontal: 16,
           flexDirection: 'row',
           alignItems: 'center',

@@ -7,6 +7,7 @@ import Authentication from '../../viewmodels/auth/Authentication';
 import { InpageDAppTxRequest } from '../../screens/browser/controller/InpageDAppController';
 import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/core/Networks';
+import Packing from '../views/Packing';
 import { RawTransactionRequest } from '../../viewmodels/transferring/RawTransactionRequest';
 import { ReadableInfo } from '../../models/entities/Transaction';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -28,6 +29,7 @@ export default observer(({ param, chainId, approve, reject, close, account, app 
   const [networkBusy, setNetworkBusy] = useState(false);
   const [userAccount] = useState(App.findAccount(account));
   const { t } = i18n;
+  const { biometricEnabled, biometricType } = Authentication;
 
   const onReject = () => {
     reject();
@@ -81,12 +83,14 @@ export default observer(({ param, chainId, approve, reject, close, account, app 
     <SafeAreaProvider style={{ ...styles.safeArea, height: 500 }}>
       {verified ? (
         <Success />
+      ) : networkBusy ? (
+        <Packing />
       ) : (
         <TxRequest
           vm={vm}
           app={app}
           themeColor={network.color}
-          bioType={Authentication.biometricType}
+          bioType={biometricType}
           onApprove={onApprove}
           onReject={onReject}
           networkBusy={networkBusy}

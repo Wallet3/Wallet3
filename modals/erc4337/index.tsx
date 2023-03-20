@@ -5,6 +5,8 @@ import Authentication from '../../viewmodels/auth/Authentication';
 import AwaitablePasspad from '../views/AwaitablePasspad';
 import { BatchTransactionRequest } from '../../viewmodels/transferring/BatchTransactionRequest';
 import BatchTxReview from './BatchTxReview';
+import Packing from '../views/Packing';
+import { Passpad } from '../views';
 import PendingBatchSelector from './PendingBatchSelector';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { SendTxRequest } from '../../viewmodels/account/AccountBase';
@@ -20,6 +22,7 @@ interface Props {
 
 export default observer(({ close, onCritical }: Props) => {
   const { chainQueue, chainCount, accountCount } = ERC4337Queue;
+  const { biometricEnabled } = Authentication;
 
   const swiper = useRef<Swiper>(null);
   const [success, setSuccess] = useState(false);
@@ -45,7 +48,7 @@ export default observer(({ close, onCritical }: Props) => {
   };
 
   const onSendPress = () => {
-    if (!Authentication.biometricEnabled) {
+    if (!biometricEnabled) {
       goTo(2);
       return;
     }
@@ -66,6 +69,8 @@ export default observer(({ close, onCritical }: Props) => {
     <SafeAreaProvider style={{ ...styles.safeArea }}>
       {success ? (
         <Success />
+      ) : networkBusy ? (
+        <Packing />
       ) : (
         <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
           {(chainCount > 1 || accountCount > 1) && (
@@ -82,7 +87,6 @@ export default observer(({ close, onCritical }: Props) => {
           )}
 
           <AwaitablePasspad
-            busy={networkBusy}
             themeColor={vm?.network.color}
             onCodeEntered={send}
             onCancel={() => goTo(chainCount > 1 || accountCount > 1 ? 1 : 0)}

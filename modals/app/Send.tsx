@@ -5,6 +5,7 @@ import App from '../../viewmodels/core/App';
 import Authentication from '../../viewmodels/auth/Authentication';
 import AwaitablePasspad from '../views/AwaitablePasspad';
 import Contacts from '../../viewmodels/customs/Contacts';
+import Packing from '../views/Packing';
 import { ReactiveScreen } from '../../utils/device';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { SafeViewContainer } from '../../components';
@@ -28,6 +29,7 @@ export default observer(({ vm, close, erc681, onReviewEnter, onReviewLeave }: Pr
   const swiper = useRef<Swiper>(null);
   const [active] = useState({ index: 0 });
   const [networkBusy, setNetworkBusy] = useState(false);
+  const { biometricEnabled } = Authentication;
 
   const goTo = (index: number, animated?: boolean) => {
     swiper.current?.scrollTo(index, animated);
@@ -57,7 +59,7 @@ export default observer(({ vm, close, erc681, onReviewEnter, onReviewLeave }: Pr
       emoji: selfAccount ? { icon: selfAccount.emojiAvatar, color: selfAccount.emojiColor } : undefined,
     });
 
-    if (!Authentication.biometricEnabled) {
+    if (!biometricEnabled) {
       goTo(3);
       return;
     }
@@ -70,6 +72,8 @@ export default observer(({ vm, close, erc681, onReviewEnter, onReviewLeave }: Pr
     <SafeAreaProvider style={{ ...styles.safeArea }}>
       {verified ? (
         <Success />
+      ) : networkBusy ? (
+        <Packing />
       ) : (
         <Swiper
           ref={swiper}
@@ -100,7 +104,7 @@ export default observer(({ vm, close, erc681, onReviewEnter, onReviewLeave }: Pr
             txDataEditable={vm.isNativeToken}
           />
 
-          <AwaitablePasspad busy={networkBusy} themeColor={vm.network.color} onCodeEntered={sendTx} onCancel={() => goTo(2)} />
+          <AwaitablePasspad themeColor={vm.network.color} onCodeEntered={sendTx} onCancel={() => goTo(2)} />
         </Swiper>
       )}
     </SafeAreaProvider>

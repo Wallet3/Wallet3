@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import Authentication from '../../viewmodels/auth/Authentication';
+import Packing from '../views/Packing';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Success from '../views/Success';
 import Theme from '../../viewmodels/settings/Theme';
@@ -22,6 +23,7 @@ export default observer(({ client, request, close }: Props) => {
   const [vm] = useState(new WalletConnectTransactionRequest({ client, request }));
   const [verified, setVerified] = useState(false);
   const [networkBusy, setNetworkBusy] = useState(false);
+  const { biometricEnabled, biometricType } = Authentication;
 
   useEffect(() => {
     return () => vm.dispose();
@@ -48,6 +50,8 @@ export default observer(({ client, request, close }: Props) => {
     <SafeAreaProvider style={{ ...styles.safeArea, height: 520 }}>
       {verified ? (
         <Success />
+      ) : networkBusy ? (
+        <Packing />
       ) : (
         <TxRequest
           themeColor={vm.network.color}
@@ -56,7 +60,7 @@ export default observer(({ client, request, close }: Props) => {
           onApprove={sendTx}
           onReject={reject}
           networkBusy={networkBusy}
-          bioType={Authentication.biometricType}
+          bioType={biometricType}
         />
       )}
     </SafeAreaProvider>
