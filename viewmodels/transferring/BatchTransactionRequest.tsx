@@ -20,6 +20,7 @@ export class BatchTransactionRequest extends BaseTransaction {
     if (index < 0) return;
 
     this.requests.splice(index, 1);
+    ERC4337Queue.remove(request);
   }
 
   send = (pin?: string, onNetworkRequest?: () => void) => {
@@ -29,7 +30,7 @@ export class BatchTransactionRequest extends BaseTransaction {
         pin
       );
     } finally {
-      ERC4337Queue.remove(this.requests);
+      ERC4337Queue.batchRemove(this.requests);
     }
   };
 }

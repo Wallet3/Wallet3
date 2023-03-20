@@ -21,7 +21,7 @@ interface Props {
 export default observer(({ client, request, close }: Props) => {
   const [vm] = useState(new WalletConnectTransactionRequest({ client, request }));
   const [verified, setVerified] = useState(false);
-  const { backgroundColor } = Theme;
+  const [networkBusy, setNetworkBusy] = useState(false);
 
   useEffect(() => {
     return () => vm.dispose();
@@ -33,7 +33,7 @@ export default observer(({ client, request, close }: Props) => {
   };
 
   const sendTx = async (pin?: string) => {
-    const result = await vm.sendTx(pin);
+    const result = await vm.sendTx(pin, () => setNetworkBusy(true));
 
     if (result.success) {
       setVerified(true);
@@ -55,6 +55,7 @@ export default observer(({ client, request, close }: Props) => {
           vm={vm}
           onApprove={sendTx}
           onReject={reject}
+          networkBusy={networkBusy}
           bioType={Authentication.biometricType}
         />
       )}

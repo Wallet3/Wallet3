@@ -15,15 +15,11 @@ interface Props {
   onApprove: (pin?: string) => Promise<boolean>;
   onReject: () => void;
   bioType?: BioType;
+  networkBusy?: boolean;
 }
 
-export default ({ themeColor, vm, app, onApprove, onReject, bioType }: Props) => {
+export default ({ themeColor, vm, app, onApprove, onReject, bioType, networkBusy }: Props) => {
   const swiper = useRef<Swiper>(null);
-  const [networkBusy, setNetworkBusy] = useState(false);
-
-  const sendTx = async (pin?: string) => {
-    onApprove(pin);
-  };
 
   const approve = async () => {
     if (!bioType) {

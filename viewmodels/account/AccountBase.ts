@@ -18,6 +18,7 @@ import { providers } from 'ethers';
 export type AccountType = 'eoa' | 'erc4337';
 
 export type SendTxRequest = Partial<{
+  timestamp: number;
   tx: providers.TransactionRequest;
   txs: providers.TransactionRequest[];
   readableInfo: ReadableInfo;

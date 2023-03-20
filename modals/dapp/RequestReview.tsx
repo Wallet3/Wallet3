@@ -1,12 +1,13 @@
 import { ActivityIndicator, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { AntDesign, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
-import { Coin, SafeViewContainer, Skeleton } from '../../components';
+import { Coin, Placeholder, SafeViewContainer, Skeleton } from '../../components';
 import React, { useEffect, useRef, useState } from 'react';
 import { secondaryFontColor, verifiedColor, warningColor } from '../../constants/styles';
 
 import { AccountBase } from '../../viewmodels/account/AccountBase';
 import AccountIndicator from '../components/AccountIndicator';
+import AddToSendingQueue from '../components/AddToSendingQueue';
 import AddressRiskIndicator from '../components/AddressRiskIndicator';
 import AnimatedNumber from '../../components/AnimatedNumber';
 import BalanceChangePreview from '../views/BalanceChangePreview';
@@ -15,6 +16,7 @@ import Currency from '../../viewmodels/settings/Currency';
 import { DecodedFunc } from '../../viewmodels/hubs/EtherscanHub';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';
 import FuncReview from '../views/FuncReview';
+import GasFeeReviewItem from '../components/GasFeeReviewItem';
 import GasReview from '../views/GasReview';
 import HorizontalNftList from '../components/HorizontalNftList';
 import HorizontalTokenList from '../components/HorizontalTokenList';
@@ -432,53 +434,24 @@ const TxReview = observer(
           </View>
         </View>
 
-        <View
-          style={{
-            ...reviewItemsContainer,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            paddingStart: 16,
-          }}
-        >
-          <Text style={styles.reviewItemTitle}>{t('modal-review-fee')}</Text>
+        <GasFeeReviewItem vm={vm} onGasPress={onGasPress} />
 
-          <TouchableOpacity
-            onPress={onGasPress}
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              padding: 16,
-              paddingVertical: 12,
-              paddingEnd: 12,
-              justifyContent: 'flex-end',
-              width: '75%',
-            }}
-          >
-            <Text style={{ ...styles.reviewItemTitle, fontSize: 15 }}>
-              {`(${Currency.tokenToUSD(vm.estimatedRealFee, vm.feeTokenSymbol).toFixed(2)} USD)`}
-            </Text>
-
-            <AnimatedNumber
-              style={{ ...reviewItemValueStyle, marginStart: 2, marginEnd: 5 }}
-              numberOfLines={1}
-              timing="linear"
-              value={vm.txFee}
-              formatter={(val) => val.toFixed(5)}
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', marginTop: 10 }}>
+          {vm.isERC4337Available ? (
+            <AddToSendingQueue
+              containerStyle={{ marginStart: -8, marginVertical: -10 }}
+              themeColor={network.color}
+              txtStyle={{ color: secondaryTextColor }}
+              checked={vm.isQueuingTx}
+              onToggle={() => vm.setIsQueuingTx(!vm.isQueuingTx)}
             />
+          ) : (
+            <View />
+          )}
 
-            <Text style={reviewItemValueStyle}>{vm.feeTokenSymbol}</Text>
-
-            <MaterialIcons
-              name="keyboard-arrow-right"
-              size={15}
-              color={secondaryTextColor}
-              style={{ marginStart: 2, marginBottom: -1 }}
-            />
-          </TouchableOpacity>
+          {vm.insufficientFee && !vm.loading && <Placeholder />}
+          {vm.insufficientFee && !vm.loading && <InsufficientFee />}
         </View>
-
-        {vm.insufficientFee && !vm.loading ? <InsufficientFee /> : undefined}
 
         {vm.txException ? <TxException exception={vm.txException} /> : undefined}
 

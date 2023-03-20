@@ -4,7 +4,6 @@ import { action, computed, makeObservable, observable } from 'mobx';
 import App from '../core/App';
 import { INetwork } from '../../common/Networks';
 import LINQ from 'linq';
-import MessageKeys from '../../common/MessageKeys';
 import Networks from '../core/Networks';
 
 export type BatchRequest = { requests: SendTxRequest[]; network: INetwork; account: AccountBase };
@@ -52,15 +51,24 @@ export class ERC4337Queue {
       accountCount: computed,
       add: action,
       remove: action,
+      batchRemove: action,
       chainQueue: computed,
     });
   }
 
   add(req: SendTxRequest) {
+    req.timestamp = Date.now();
     this.queue.push(req);
   }
 
-  remove(requests: SendTxRequest[]) {
+  remove(request: SendTxRequest) {
+    const index = this.queue.indexOf(request);
+    if (index < 0) return;
+
+    this.queue.splice(index, 1);
+  }
+
+  batchRemove(requests: SendTxRequest[]) {
     this.queue = this.queue.filter((req) => !requests.includes(req));
   }
 

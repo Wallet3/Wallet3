@@ -1,4 +1,5 @@
 import { Button, Coin, Placeholder, SafeViewContainer } from '../../components';
+import { FadeInDownView, FadeInRightView } from '../../components/animations';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import React, { useRef, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
@@ -6,15 +7,17 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import BackButton from '../components/BackButton';
 import { BatchTransactionRequest } from '../../viewmodels/transferring/BatchTransactionRequest';
 import BioAuthSendButton from '../components/BioAuthSendButton';
-import { FadeInDownView } from '../../components/animations';
+import ERC4337Queue from '../../viewmodels/transferring/ERC4337Queue';
 import GasFeeReviewItem from '../components/GasFeeReviewItem';
 import GasReview from '../views/GasReview';
+import Image from 'react-native-fast-image';
 import { Ionicons } from '@expo/vector-icons';
 import { SendTxRequest } from '../../viewmodels/account/AccountBase';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { startLayoutAnimation } from '../../utils/animations';
 import styles from '../styles';
 import { warningColor } from '../../constants/styles';
 
@@ -34,7 +37,7 @@ const BatchTxReview = observer(({ disableBack, onBack, vm, onGasReview, onSendPr
     const { tx, readableInfo } = item;
 
     return (
-      <FadeInDownView
+      <FadeInRightView
         delay={index * 50}
         style={{
           flexDirection: 'row',
@@ -46,7 +49,7 @@ const BatchTxReview = observer(({ disableBack, onBack, vm, onGasReview, onSendPr
           borderColor,
         }}
       >
-        <Text style={styles.reviewItemTitle}>{index + 1}. </Text>
+        <Text style={[styles.reviewItemTitle, { minWidth: 20 }]}>{index + 1}. </Text>
         <ScrollView
           horizontal
           showsVerticalScrollIndicator={false}
@@ -59,18 +62,30 @@ const BatchTxReview = observer(({ disableBack, onBack, vm, onGasReview, onSendPr
               size={18}
               chainId={vm.network.chainId}
               symbol={readableInfo['symbol']}
-              style={{ marginHorizontal: 8 }}
+              style={{ marginStart: 5, marginEnd: 8 }}
+            />
+          )}
+          {readableInfo?.icon && (
+            <Image
+              source={{ uri: readableInfo.icon }}
+              style={{ width: 19, height: 19, marginStart: 5, marginEnd: 8, borderRadius: 3 }}
             />
           )}
           <Text numberOfLines={1} style={[styles.reviewItemTitle]}>
-            {readableInfo?.readableTxt}
+            {readableInfo?.readableTxt || `${readableInfo?.dapp} ${readableInfo?.decodedFunc}`}
           </Text>
         </ScrollView>
         <Placeholder />
-        <TouchableOpacity style={{ padding: 8, marginVertical: -8, marginStart: 4 }}>
-          <Ionicons name="trash-outline" color={warningColor} size={15} />
+        <TouchableOpacity
+          style={{ padding: 8, marginVertical: -8, marginStart: 4 }}
+          onPress={() => {
+            vm.removeRequest(item);
+            startLayoutAnimation();
+          }}
+        >
+          <Ionicons name="trash-outline" color={warningColor} size={17} />
         </TouchableOpacity>
-      </FadeInDownView>
+      </FadeInRightView>
     );
   };
 
@@ -86,6 +101,7 @@ const BatchTxReview = observer(({ disableBack, onBack, vm, onGasReview, onSendPr
         data={vm.requests}
         bounces={false}
         renderItem={renderTx}
+        keyExtractor={(t) => `${t.network?.chainId}-${t.tx?.from}-${t.timestamp}`}
         style={[styles.reviewItemsContainer, { overflow: 'hidden' }]}
         contentContainerStyle={{ overflow: 'hidden' }}
       />
@@ -94,7 +110,7 @@ const BatchTxReview = observer(({ disableBack, onBack, vm, onGasReview, onSendPr
 
       <View style={{ height: 64 }} />
 
-      <BioAuthSendButton onPress={onSendPress} themeColor={vm.network.color} />
+      <BioAuthSendButton onPress={onSendPress} themeColor={vm.network.color} disabled={vm.requests.length === 0} />
     </SafeViewContainer>
   );
 });
