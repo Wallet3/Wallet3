@@ -6,6 +6,7 @@ import { makeObservable, observable, runInAction } from 'mobx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { HttpRpcClient } from '@account-abstraction/sdk';
 import TxHub from '../hubs/TxHub';
+import { UserOperationStruct } from '@wallet3/account-abstraction-contracts';
 import { WalletBase } from '../wallet/WalletBase';
 import { createERC4337Client } from '../services/ERC4337';
 
@@ -73,23 +74,29 @@ export class ERC4337Account extends AccountBase {
     const client = await createERC4337Client(network.chainId, owner);
     if (!client) return { success: false };
 
-    const op = Array.isArray(txs)
-      ? await client.createSignedUserOpForTransactions(
-          txs.map((tx) => {
-            return {
-              target: utils.getAddress(tx.to!),
-              value: tx.value || 0,
-              data: (tx.data as string) || '0x',
-            };
-          }),
-          gas
-        )
-      : await client.createSignedUserOp({
-          target: utils.getAddress(tx!.to!),
-          value: tx!.value || 0,
-          data: (tx!.data as string) || '0x',
-          ...gas,
-        });
+    let op!: UserOperationStruct;
+
+    try {
+      op = Array.isArray(txs)
+        ? await client.createSignedUserOpForTransactions(
+            txs.map((tx) => {
+              return {
+                target: utils.getAddress(tx.to!),
+                value: tx.value || 0,
+                data: (tx.data as string) || '0x',
+              };
+            }),
+            gas
+          )
+        : await client.createSignedUserOp({
+            target: utils.getAddress(tx!.to!),
+            value: tx!.value || 0,
+            data: (tx!.data as string) || '0x',
+            ...gas,
+          });
+    } catch (error) {
+      return { success: false };
+    }
 
     if (!op) return { success: false };
 
@@ -106,7 +113,17 @@ export class ERC4337Account extends AccountBase {
         const opHash = await http.sendUserOpToBundler(op);
         TxHub.watchERC4337Op(network, opHash, op, { ...tx, readableInfo }).catch();
 
-        return { success: true, txHash: opHash };
+        const txHashPromise = new Promise<string>((resolve) => {
+          const handler = (opId: string, txHash: string) => {
+            if (opId !== opHash) return;
+            resolve(txHash);
+            TxHub.off('opHashResolved', handler);
+          };
+
+          TxHub.on('opHashResolved', handler);
+        });
+
+        return { success: true, txHash: opHash, txHashPromise };
       } catch (error) {}
     }
 

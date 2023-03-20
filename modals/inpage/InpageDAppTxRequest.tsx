@@ -23,34 +23,15 @@ interface Props extends InpageDAppTxRequest {
   close: () => void;
 }
 
-export default observer(({ param, chainId, approve, reject, close, account, app }: Props) => {
+export default observer(({ approve, reject, close, app, vm }: Props) => {
   const [verified, setVerified] = useState(false);
-  const [network] = useState(Networks.find(chainId) ?? Networks.Ethereum);
   const [networkBusy, setNetworkBusy] = useState(false);
-  const [userAccount] = useState(App.findAccount(account));
-  const { t } = i18n;
-  const { biometricEnabled, biometricType } = Authentication;
+  const { biometricType } = Authentication;
 
   const onReject = () => {
     reject();
     close();
   };
-
-  if (!userAccount) {
-    return (
-      <SafeAreaProvider style={{ ...styles.safeArea, height: 370 }}>
-        <SafeViewContainer style={{ flex: 1 }}>
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Ionicons name="warning" size={72} color={'crimson'} />
-            <Text style={{ color: 'crimson' }}>{t('msg-no-account-authorized-to-dapp')}</Text>
-          </View>
-          <Button title={t('button-cancel')} onPress={onReject} themeColor="crimson" />
-        </SafeViewContainer>
-      </SafeAreaProvider>
-    );
-  }
-
-  const [vm] = useState(new RawTransactionRequest({ param, network, account: userAccount }));
 
   const onApprove = async (pin?: string) => {
     const tx = vm.txRequest;
@@ -86,15 +67,7 @@ export default observer(({ param, chainId, approve, reject, close, account, app 
       ) : networkBusy ? (
         <Packing />
       ) : (
-        <TxRequest
-          vm={vm}
-          app={app}
-          themeColor={network.color}
-          bioType={biometricType}
-          onApprove={onApprove}
-          onReject={onReject}
-          networkBusy={networkBusy}
-        />
+        <TxRequest vm={vm} app={app} bioType={biometricType} onApprove={onApprove} onReject={onReject} />
       )}
     </SafeAreaProvider>
   );

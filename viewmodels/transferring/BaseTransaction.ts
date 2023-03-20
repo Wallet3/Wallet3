@@ -1,12 +1,6 @@
 import { AccountBase, SendTxRequest, SendTxResponse } from '../account/AccountBase';
 import { BigNumber, utils } from 'ethers';
-import {
-  ERC1271InvalidSignatureResult,
-  EncodedERC1271ContractWalletCallData,
-  EncodedERC4337EntryPointCallData,
-  Gwei_1,
-  MAX_GWEI_PRICE,
-} from '../../common/Constants';
+import { ERC1271InvalidSignatureResult, EncodedERC1271CallData, Gwei_1, MAX_GWEI_PRICE } from '../../common/Constants';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { clearPendingENSRequests, isENSDomain } from '../services/ENSResolver';
 import { estimateGas, eth_call_return, getCode, getGasPrice, getMaxPriorityFee, getNextBlockBaseFee } from '../../common/RPC';
@@ -20,7 +14,6 @@ import ERC4337Queue from './ERC4337Queue';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
 import { NativeToken } from '../../models/NativeToken';
-import { entryPointAddress } from '../../configs/erc4337.json';
 import { fetchAddressInfo } from '../services/EtherscanPublicTag';
 import { getEnsAvatar } from '../../common/ENS';
 
@@ -355,7 +348,7 @@ export class BaseTransaction {
 
     const erc1271Result = await eth_call_return(
       this.network.chainId,
-      { to: this.toAddress, data: EncodedERC1271ContractWalletCallData },
+      { to: this.toAddress, data: EncodedERC1271CallData },
       true
     );
 

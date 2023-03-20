@@ -14,6 +14,7 @@ import InpageDApp from '../../../models/entities/InpageDApp';
 import MessageKeys from '../../../common/MessageKeys';
 import MetamaskDAppsHub from '../../../viewmodels/walletconnect/MetamaskDAppsHub';
 import { PageMetadata } from '../Web3View';
+import { RawTransactionRequest } from '../../../viewmodels/transferring/RawTransactionRequest';
 import { ReadableInfo } from '../../../models/entities/Transaction';
 import { SendTxRequest } from '../../../viewmodels/account/AccountBase';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
@@ -79,9 +80,7 @@ export interface InpageDAppSignRequest {
 }
 
 export interface InpageDAppTxRequest {
-  chainId: number;
-  param: WCCallRequest_eth_sendTransaction;
-  account: string;
+  vm: RawTransactionRequest;
   app: { name: string; icon: string; verified: boolean };
   approve: (obj: SendTxRequest & AuthOptions) => Promise<boolean>;
   reject: () => void;
@@ -328,18 +327,41 @@ export class InpageDAppController extends EventEmitter {
     dapp.setLastUsedTimestamp(Date.now());
 
     return new Promise<string | any>((resolve) => {
-      const approve = async (args: SendTxRequest & AuthOptions) => {
-        const { txHash, error } = await App.sendTxFromAccount(dapp.lastUsedAccount, {
-          ...args,
-          network: Networks.find(dapp.lastUsedChainId),
-          readableInfo: { ...args.readableInfo, dapp: pageMetadata?.title ?? '', icon: pageMetadata?.icon },
-        });
+      const param = params[0] as WCCallRequest_eth_sendTransaction;
+      const network = Networks.find(dapp.lastUsedChainId);
+      const account = App.findAccount(dapp.lastUsedAccount);
 
-        txHash ? resolve(txHash) : resolve({ error });
+      if (!network || !account) {
+        resolve({ error: { code: Code_InvalidParams, message: 'No such network or account' } });
+        return;
+      }
+
+      const vm = new RawTransactionRequest({ param, network, account });
+
+      const approve = async (args: SendTxRequest & AuthOptions) => {
+        const { success, txHash, error, txHashPromise } = await vm.sendRawTx(
+          {
+            ...args,
+            network,
+            readableInfo: { ...args.readableInfo, dapp: pageMetadata?.title ?? '', icon: pageMetadata?.icon },
+          },
+          args.pin
+        );
 
         if (error && __DEV__) showMessage({ type: 'warning', message: error.message });
 
-        return txHash ? true : false;
+        if (txHash) {
+          resolve(txHash);
+          return true;
+        }
+
+        if (error) {
+          resolve(error);
+          return false;
+        }
+
+        txHashPromise?.then((tx) => resolve(tx));
+        return txHashPromise || success ? true : false;
       };
 
       const reject = () => resolve({ error: { code: Code_UserRejected, message: 'The request was rejected by the user' } });
@@ -347,10 +369,8 @@ export class InpageDAppController extends EventEmitter {
       PubSub.publish(MessageKeys.openInpageDAppSendTransaction, {
         approve,
         reject,
-        param: params[0] as WCCallRequest_eth_sendTransaction,
-        chainId: Number(dapp.lastUsedChainId),
-        account: dapp.lastUsedAccount,
         app: { name: pageMetadata!.title, icon: pageMetadata!.icon, verified: isSecureSite(pageMetadata!.origin) },
+        vm,
       } as InpageDAppTxRequest);
     });
   }

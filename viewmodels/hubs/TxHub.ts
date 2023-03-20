@@ -24,6 +24,7 @@ import { showMessage } from 'react-native-flash-message';
 
 interface Events {
   txConfirmed: (tx: Transaction) => void;
+  opHashResolved: (opHash: string, txHash: string) => void;
 }
 
 class TxHub extends EventEmitter<Events> {
@@ -123,11 +124,14 @@ class TxHub extends EventEmitter<Events> {
         const client = await createERC4337Client(tx.chainId);
 
         try {
-          const txHash = await client?.getUserOpReceipt((tx as ERC4337Transaction).opHash);
+          const opHash = (tx as ERC4337Transaction).opHash;
+          const txHash = await client?.getUserOpReceipt(opHash);
           if (!txHash) continue;
 
           tx.hash = txHash;
           await tx.save();
+
+          this.emit('opHashResolved', opHash, txHash);
         } catch (error) {
           continue;
         }
@@ -274,7 +278,7 @@ class TxHub extends EventEmitter<Events> {
     tx.value = txReq.value?.toString() || '0x0';
     tx.gasPrice = Number(opJson.maxFeePerGas || Gwei_1);
     tx.timestamp = Date.now();
-    tx.readableInfo = txReq.readableInfo;
+    tx.readableInfo = txReq.readableInfo!;
     await tx.save();
 
     this.addPendingTx(tx);
@@ -297,7 +301,7 @@ class TxHub extends EventEmitter<Events> {
     t.nonce = tx.nonce! as number;
     t.value = tx.value!.toString();
     t.timestamp = Date.now();
-    t.readableInfo = tx.readableInfo;
+    t.readableInfo = tx.readableInfo!;
 
     await t.save();
     return t;

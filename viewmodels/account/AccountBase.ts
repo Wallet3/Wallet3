@@ -31,6 +31,7 @@ export type SendTxResponse = {
   success: boolean;
   txHash?: string;
   error?: { message: string; code: number };
+  txHashPromise?: Promise<string>;
 };
 
 export abstract class AccountBase {
