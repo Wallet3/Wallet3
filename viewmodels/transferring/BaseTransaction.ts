@@ -1,6 +1,7 @@
 import { AccountBase, SendTxRequest, SendTxResponse } from '../account/AccountBase';
 import { BigNumber, utils } from 'ethers';
 import {
+  ERC1271InvalidSignatureResult,
   EncodedERC1271ContractWalletCallData,
   EncodedERC4337EntryPointCallData,
   Gwei_1,
@@ -369,8 +370,7 @@ export class BaseTransaction {
         true
       );
 
-      const errorCode = Number(erc1271Result?.error?.code);
-      isContractWallet = Boolean(erc1271Result?.error?.data && Number.isInteger(errorCode) && errorCode !== -32000);
+      isContractWallet = erc1271Result?.error?.code === 3 || erc1271Result?.result === ERC1271InvalidSignatureResult;
     }
 
     runInAction(() => {
