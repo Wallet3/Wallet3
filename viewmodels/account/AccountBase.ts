@@ -136,7 +136,6 @@ export abstract class AccountBase {
     }
   }
 
-
   async signTypedData(request: SignTypedDataRequest & AuthOptions) {
     const wallet = await this.wallet?.openWallet({ ...request, accountIndex: this.index, subPath: this.accountSubPath });
     if (!wallet) return;

@@ -24,7 +24,7 @@ export default (props: Props) => {
           paddingHorizontal: 16,
           flexDirection: 'row',
           alignItems: 'center',
-          gap: 8,
+          gap: 5,
         },
         containerStyle,
       ]}

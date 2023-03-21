@@ -436,26 +436,7 @@ const TxReview = observer(
 
         <GasFeeReviewItem vm={vm} onGasPress={onGasPress} />
 
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', marginTop: 10 }}>
-          {vm.isERC4337Available ? (
-            <AddToSendingQueue
-              containerStyle={{ marginStart: -8, marginVertical: -10 }}
-              themeColor={network.color}
-              txtStyle={{ color: secondaryTextColor }}
-              checked={vm.isQueuingTx}
-              onToggle={() => vm.setIsQueuingTx(!vm.isQueuingTx)}
-            />
-          ) : (
-            <View />
-          )}
-
-          {vm.insufficientFee && !vm.loading && <Placeholder />}
-          {vm.insufficientFee && !vm.loading && <InsufficientFee />}
-        </View>
-
-        {vm.txException ? <TxException exception={vm.txException} /> : undefined}
-
-        {(vm.type === 'Approve_ERC20' || vm.type === 'Approve_ForAll') && vm.isValidParams && (
+        {(vm.type === 'Approve_ERC20' || vm.type === 'Approve_ForAll') && !vm.txException && (
           <TinyInfo
             icon={vm.toAddressRisky ? 'warning' : 'information-circle'}
             color={vm.toAddressRisky ? warningColor : thirdTextColor}
@@ -464,6 +445,25 @@ const TxReview = observer(
             delay={2500}
           />
         )}
+
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', marginTop: 8 }}>
+          {vm.isERC4337Available ? (
+            <AddToSendingQueue
+              containerStyle={{ marginStart: -8, marginVertical: -10 }}
+              themeColor={network.color}
+              txtStyle={{ color: vm.isQueuingTx ? network.color : secondaryTextColor }}
+              checked={vm.isQueuingTx}
+              onToggle={() => vm.setIsQueuingTx(!vm.isQueuingTx)}
+            />
+          ) : (
+            <View />
+          )}
+
+          {((vm.insufficientFee && !vm.loading) || vm.type.startsWith('Approve')) && <Placeholder />}
+          {vm.insufficientFee && !vm.loading && <InsufficientFee />}
+        </View>
+
+        {vm.txException ? <TxException exception={vm.txException} /> : undefined}
 
         <View style={{ flex: 1 }} />
 
