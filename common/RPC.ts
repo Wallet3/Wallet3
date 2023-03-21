@@ -1,4 +1,4 @@
-import { BigNumber, utils } from 'ethers';
+import { BigNumber, BigNumberish } from 'ethers';
 
 import Networks from '../viewmodels/core/Networks';
 import Providers from '../configs/providers.json';
@@ -208,7 +208,7 @@ export async function estimateGas(
     to: string;
     gas?: string | number;
     gasPrice?: string | number;
-    value?: string | number;
+    value?: BigNumberish;
     data: string;
   }
 ) {

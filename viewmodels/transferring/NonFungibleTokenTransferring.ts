@@ -48,7 +48,8 @@ export class NFTTransferring extends BaseTransaction {
       this.network &&
       this.nftStandard &&
       !this.insufficientFee &&
-      !this.txException
+      !this.txException &&
+      this.isValidAccountAndNetwork
     );
   }
 
@@ -133,19 +134,7 @@ export class NFTTransferring extends BaseTransaction {
     if (!this.nftStandard) return;
     if (!this.toAddress) return;
 
-    runInAction(() => (this.isEstimatingGas = true));
-
-    const { gas, errorMessage } = await estimateGas(this.network.chainId, {
-      from: this.account.address,
-      data: this.txData,
-      to: this.nft.contract,
-    });
-
-    runInAction(() => {
-      this.isEstimatingGas = false;
-      this.setGasLimit(gas || 0);
-      this.txException = errorMessage || '';
-    });
+    return super.estimateGas({ data: this.txData, to: this.nft.contract });
   }
 
   get txRequest(): providers.TransactionRequest | undefined {

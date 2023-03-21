@@ -7,6 +7,7 @@ import ERC4337Queue from './ERC4337Queue';
 import { INetwork } from '../../common/Networks';
 import LINQ from 'linq';
 import { createERC4337Client } from '../services/ERC4337';
+import { estimateGas } from '../../common/RPC';
 
 export class BatchTransactionRequest extends BaseTransaction {
   requests: SendTxRequest[];
@@ -16,30 +17,45 @@ export class BatchTransactionRequest extends BaseTransaction {
     this.requests = args.requests;
 
     makeObservable(this, { requests: observable, removeRequest: action });
+
+    this.estimateGas();
   }
 
   async estimateGas() {
     runInAction(() => (this.isEstimatingGas = true));
 
-    const inaccurateGas = LINQ.from(this.requests).sum((req) => BigNumber.from(req.tx!.gasLimit).toNumber());
-    this.setGasLimit(inaccurateGas + 100_000);
+    const inaccurateGas =
+      LINQ.from(this.requests).sum((req) => BigNumber.from(req.tx!.gasLimit).toNumber()) -
+      100_000 * this.requests.length +
+      100_000;
 
     let totalGas = inaccurateGas;
     let errorMessage = '';
-
     try {
       const client = await createERC4337Client(this.network.chainId);
-      const op = await client?.createUnsignedUserOpForTransactionRequests(this.requests.map((req) => req.tx!));
-      totalGas = op ? (op.callGasLimit as BigNumber).add(op.preVerificationGas as BigNumber).toNumber() : inaccurateGas;
-    } catch (error) {
-      errorMessage = (error as Error).message;
-    }
+      if (!client) return;
 
-    runInAction(() => {
-      this.isEstimatingGas = false;
-      this.setGasLimit(totalGas);
-      this.txException = errorMessage || '';
-    });
+      const callData = await client.encodeBatchExecute(
+        this.requests.map((req) => req.tx!.to!),
+        this.requests.map((req) => req.tx!.value || '0x0'),
+        this.requests.map((req) => req.tx!.data as string)
+      );
+
+      const estimated = await estimateGas(this.network.chainId, {
+        from: this.network.erc4337!.entryPointAddress,
+        to: this.account.address,
+        data: callData,
+      });
+
+      totalGas = Math.max(estimated.gas ?? 0 + 100_000, totalGas);
+      errorMessage = estimated.errorMessage || errorMessage;
+    } finally {
+      runInAction(() => {
+        this.isEstimatingGas = false;
+        this.setGasLimit(totalGas);
+        this.txException = errorMessage || '';
+      });
+    }
   }
 
   removeRequest(request: SendTxRequest) {

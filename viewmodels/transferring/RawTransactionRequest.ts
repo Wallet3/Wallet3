@@ -318,11 +318,10 @@ export class RawTransactionRequest extends BaseTransaction {
         });
     }
 
-    if (param.gas || param.gasLimit) {
+    if ((param.gas || param.gasLimit) && !this.isERC4337Network) {
       runInAction(() => this.setGasLimit(param.gas || param.gasLimit || 0));
     } else {
       this.estimateGas({
-        from: this.account.address,
         to: param.to,
         data: param.data,
         value: !Number(param.value) ? '0x0' : BigNumber.from(param.value).toHexString(),
@@ -396,7 +395,8 @@ export class RawTransactionRequest extends BaseTransaction {
       this.nonce >= 0 &&
       this.isValidGas &&
       !this.txException &&
-      !this.insufficientFee
+      !this.insufficientFee &&
+      this.isValidAccountAndNetwork
     );
   }
 

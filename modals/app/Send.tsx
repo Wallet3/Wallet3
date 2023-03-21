@@ -1,19 +1,18 @@
-import { ContactsPad, Passpad, ReviewPad, SendAmount } from '../views';
-import React, { useEffect, useRef, useState } from 'react';
+import { ContactsPad, ReviewPad, SendAmount } from '../views';
+import React, { useRef, useState } from 'react';
 
 import App from '../../viewmodels/core/App';
 import Authentication from '../../viewmodels/auth/Authentication';
 import AwaitablePasspad from '../views/AwaitablePasspad';
 import Contacts from '../../viewmodels/customs/Contacts';
 import Packing from '../views/Packing';
-import { ReactiveScreen } from '../../utils/device';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { SafeViewContainer } from '../../components';
 import Success from '../views/Success';
 import Swiper from 'react-native-swiper';
-import Theme from '../../viewmodels/settings/Theme';
 import { TokenTransferring } from '../../viewmodels/transferring/TokenTransferring';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { showMessage } from 'react-native-flash-message';
 import styles from '../styles';
 
 interface Props {
@@ -43,6 +42,9 @@ export default observer(({ vm, close, erc681, onReviewEnter, onReviewLeave }: Pr
     if (result.success) {
       setVerified(true);
       setTimeout(() => close?.(), 1700);
+    } else {
+      showMessage({ message: i18n.t('tx-hub-transaction-failed'), type: 'danger' });
+      setTimeout(() => close?.(), 500);
     }
 
     onReviewLeave?.();

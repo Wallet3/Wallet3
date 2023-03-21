@@ -7,7 +7,10 @@ import { getSecureRandomBytes } from '../../utils/math';
 
 const ERC4337Clients = new Map<string, ERC4337Client>();
 
-export async function createERC4337Client(chainId: number, owner = new Wallet(getSecureRandomBytes(32))) {
+let owner!: Wallet;
+const createDefaultOwner = () => owner ?? (owner = new Wallet(getSecureRandomBytes(32)));
+
+export async function createERC4337Client(chainId: number, owner = createDefaultOwner()) {
   const key = `${chainId}:${owner.address}`;
 
   const cache = ERC4337Clients.get(key);

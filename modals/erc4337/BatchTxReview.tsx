@@ -104,7 +104,7 @@ const BatchTxReview = observer(({ disableBack, onBack, vm, onGasReview, onSendPr
         {disableBack ? <View style={{ height: 33 }} /> : <BackButton onPress={onBack} color={vm.network.color} />}
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <FontAwesome name="dropbox" color={network.color} size={19} style={{ marginEnd: 10 }} />
+          <FontAwesome name="dropbox" color={network.color} size={20} style={{ marginEnd: 10 }} />
           <Text style={[styles.navTitle, { color: network.color }]}>{t('modal-review-title')}</Text>
         </View>
       </View>

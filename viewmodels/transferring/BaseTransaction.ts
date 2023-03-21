@@ -1,5 +1,5 @@
 import { AccountBase, SendTxRequest, SendTxResponse } from '../account/AccountBase';
-import { BigNumber, utils } from 'ethers';
+import { BigNumber, BigNumberish, utils } from 'ethers';
 import { ERC1271InvalidSignatureResult, EncodedERC1271CallData, Gwei_1, MAX_GWEI_PRICE } from '../../common/Constants';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { clearPendingENSRequests, isENSDomain } from '../services/ENSResolver';
@@ -123,6 +123,12 @@ export class BaseTransaction {
 
   get isERC4337Available() {
     return this.isERC4337Account && this.isERC4337Network;
+  }
+
+  get isValidAccountAndNetwork() {
+    const valid = (this.isERC4337Account && this.isERC4337Network) || (!this.isERC4337Account && !this.isERC4337Network);
+    if (!valid) runInAction(() => (this.txException = 'Current network does not support ERC4337 yet.'));
+    return valid;
   }
 
   get safeTo() {
@@ -399,41 +405,39 @@ export class BaseTransaction {
     });
   }
 
-  protected async estimateGas(args: { from: string; to: string; data: string; value?: string }) {
+  protected async estimateGas(args: { to: string; data: string; value?: BigNumberish }) {
     runInAction(() => (this.isEstimatingGas = true));
+    args.value = args.value || '0x0';
 
-    let gas = 21000;
-    let errorMessage = '';
+    const { gas, errorMessage } = this.isERC4337Available
+      ? await this.estimateERC4337Gas(args)
+      : await estimateGas(this.network.chainId, { ...args, from: this.account.address });
+
+    runInAction(() => {
+      this.isEstimatingGas = false;
+      this.setGasLimit(gas || 0);
+      this.txException = errorMessage || '';
+    });
+  }
+
+  private async estimateERC4337Gas(args: { to: string; value?: BigNumberish; data: string }) {
+    const client = await createERC4337Client(this.network.chainId);
+    const callData = await client?.encodeExecute(args.to, args.value || 0, args.data);
 
     try {
-      if (this.isERC4337Available) {
-        const client = await createERC4337Client(this.network.chainId);
-        const callData = await client?.encodeExecute(args.to, args.value || 0, args.data);
+      const initGas = (await (this.account as ERC4337Account).checkActivated(this.network.chainId))
+        ? BigNumber.from(5000)
+        : await client?.estimateCreationGas(await client?.getInitCode());
 
-        const initGas = (await (this.account as ERC4337Account).checkActivated(this.network.chainId))
-          ? BigNumber.from(5000)
-          : await client?.estimateCreationGas(await client?.getInitCode());
-
-        const estimatedOp = await estimateGas(this.network.chainId, {
-          from: this.network.erc4337!.entryPointAddress,
-          to: this.account.address,
-          data: callData!,
-        });
-
-        gas = estimatedOp.gas! + 100_000 + (initGas as BigNumber).toNumber?.() ?? 0;
-      } else {
-        const estimated = await estimateGas(this.network.chainId, args);
-        gas = estimated.gas || gas;
-        errorMessage = estimated.errorMessage || '';
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      runInAction(() => {
-        this.isEstimatingGas = false;
-        this.setGasLimit(gas || 0);
-        this.txException = errorMessage || '';
+      const estimatedOp = await estimateGas(this.network.chainId, {
+        from: this.network.erc4337!.entryPointAddress,
+        to: this.account.address,
+        data: callData!,
       });
+
+      return { gas: estimatedOp.gas! + 100_000 + (initGas as BigNumber).toNumber?.() ?? 0 };
+    } catch (error) {
+      return { errorMessage: (error as Error).message };
     }
   }
 

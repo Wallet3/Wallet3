@@ -14,10 +14,10 @@ export default ({ exception }: { exception: string }) => {
       bounces={false}
       entering={FadeIn.springify()}
       exiting={FadeOut.springify()}
-      contentContainerStyle={{ alignItems: 'center', marginVertical: -12, paddingHorizontal: 16 }}
+      contentContainerStyle={{ alignItems: 'center', paddingHorizontal: 16 }}
       style={{
         borderRadius: 10,
-        marginTop: 8,
+        marginTop: 5,
         backgroundColor: 'crimson',
         minHeight: 22,
         maxHeight: 30,

@@ -68,7 +68,8 @@ export class TokenTransferring extends BaseTransaction {
       this.network &&
       !this.insufficientFee &&
       !this.token.loading &&
-      !this.txException
+      !this.txException &&
+      this.isValidAccountAndNetwork
     );
   }
 
@@ -162,7 +163,7 @@ export class TokenTransferring extends BaseTransaction {
       ? this.encodedUserTxData
       : (this.token as ERC20Token).encodeTransferData(this.toAddress, this.amountWei);
 
-    return super.estimateGas({ from: this.account.address, to: this.toAddress, data: data });
+    return super.estimateGas({ value: this.isNativeToken ? this.amountWei : 0, to: this.toAddress, data: data });
   }
 
   setToken(token: IToken) {

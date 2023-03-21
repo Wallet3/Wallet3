@@ -10,7 +10,9 @@ import { WCCallRequestRequest } from '../../models/entities/WCSession_v1';
 import { WalletConnectTransactionRequest } from '../../viewmodels/transferring/WalletConnectTransactionRequest';
 import { WalletConnect_v1 } from '../../viewmodels/walletconnect/WalletConnect_v1';
 import { WalletConnect_v2 } from '../../viewmodels/walletconnect/WalletConnect_v2';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { showMessage } from 'react-native-flash-message';
 import styles from '../styles';
 
 interface Props {
@@ -41,6 +43,9 @@ export default observer(({ client, request, close }: Props) => {
       setVerified(true);
       client.approveRequest(request.id, result['tx']?.hash || '');
       setTimeout(() => close(), 1700);
+    } else {
+      showMessage({ message: i18n.t('tx-hub-transaction-failed'), type: 'danger' });
+      setTimeout(() => close?.(), 500);
     }
 
     return result.success;
