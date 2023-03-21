@@ -145,7 +145,7 @@ export default observer(
                 alignItems: 'center',
                 backgroundColor: '#ffffff30',
                 paddingVertical: 2,
-                paddingStart: 5,
+                paddingStart: 6,
                 paddingEnd: 3,
                 borderRadius: 5,
                 marginStart: 2,
@@ -153,7 +153,7 @@ export default observer(
               }}
               txtStyle={{ textTransform: 'uppercase', color: '#fff', fontSize: 10, fontWeight: '700' }}
               iconColor="#fff"
-              iconStyle={{ marginStart: 4 }}
+              iconStyle={{ marginStart: 2 }}
               iconSize={9}
             />
           )}

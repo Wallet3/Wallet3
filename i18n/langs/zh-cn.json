@@ -395,8 +395,9 @@
   "msg-data-loading": "读取数据中",
   "msg-please-enable-biometric": "请通过生物认证授权该操作",
 
-  "erc-4337-add-tx-to-queue": "添加至发送队列",
-  
+  "erc4337-add-tx-to-queue": "添加至发送队列",
+  "erc4337-not-support-gas-adjustment": "超级账户不支持手动设置 Gas",
+
   "readable-transfer-token": "转移 {{amount}} {{symbol}} 到 {{dest}}",
   "readable-approve-token": "授权 {{amount}} {{symbol}} 予 {{dest}}",
 

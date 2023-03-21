@@ -2,7 +2,7 @@ import { Button, Coin, SafeViewContainer } from '../../components';
 import { Entypo, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import React, { useRef } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { secondaryFontColor, verifiedColor } from '../../constants/styles';
+import { secondaryFontColor, verifiedColor, warningColor } from '../../constants/styles';
 
 import AnimatedNumber from '../../components/AnimatedNumber';
 import BackButton from '../components/BackButton';
@@ -200,7 +200,12 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
           ) : undefined}
         </View>
 
-        {!vm.isValidGas && <TxException exception={t('tip-invalid-gas-price')} />}
+        {(!vm.isValidGas || vm.isERC4337Network) && (
+          <TxException
+            containerStyle={{ marginTop: 10, backgroundColor: vm.isERC4337Network ? 'darkorange' : warningColor }}
+            exception={t(vm.isERC4337Network ? 'erc4337-not-support-gas-adjustment' : 'tip-invalid-gas-price')}
+          />
+        )}
 
         <View style={{ flex: 1 }} />
 

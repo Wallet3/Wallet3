@@ -402,7 +402,9 @@
   "msg-data-loading": "Loading data",
   "msg-please-enable-biometric": "Please use biometric authentication to authorize this operation.",
 
-  "erc-4337-add-tx-to-queue": "Add to sending queue",
+  "erc4337-add-tx-to-queue": "Add to sending queue",
+  "erc4337-not-support-gas-adjustment": "Super accounts do not support Gas adjustment.",
+  
 
   "readable-transfer-token": "Transfer {{amount}} {{symbol}} to {{dest}}",
   "readable-approve-token": "Approve {{amount}} {{symbol}} to {{dest}}",

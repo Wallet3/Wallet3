@@ -30,7 +30,7 @@ export default (props: Props) => {
       ]}
     >
       <Ionicons name="checkbox" color={checked ? themeColor : 'lightgrey'} size={iconSize ?? 12.5} />
-      <Text style={[{ fontWeight: '600', color: '#333', fontSize: 12.5 }, txtStyle]}>{t('erc-4337-add-tx-to-queue')}</Text>
+      <Text style={[{ fontWeight: '600', color: '#333', fontSize: 12.5 }, txtStyle]}>{t('erc4337-add-tx-to-queue')}</Text>
     </TouchableOpacity>
   );
 };
