@@ -1,17 +1,13 @@
-import { Button, Coin, Placeholder, SafeViewContainer } from '../../components';
-import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
-import React, { useEffect, useRef, useState } from 'react';
+import { Coin, Placeholder, SafeViewContainer } from '../../components';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import React, { useRef, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { verifiedColor, warningColor } from '../../constants/styles';
 
 import AddToSendingQueue from '../components/AddToSendingQueue';
 import AddressRiskIndicator from '../components/AddressRiskIndicator';
-import AnimatedNumber from '../../components/AnimatedNumber';
 import BackButton from '../components/BackButton';
 import BioAuthSendButton from '../components/BioAuthSendButton';
-import { BioType } from '../../viewmodels/auth/Authentication';
-import Currency from '../../viewmodels/settings/Currency';
-import FaceID from '../../assets/icons/app/FaceID-white.svg';
 import GasFeeReviewItem from '../components/GasFeeReviewItem';
 import GasReview from './GasReview';
 import Image from 'react-native-fast-image';
@@ -171,7 +167,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, txDa
         )}
 
         {(txDataEditable || (vm.insufficientFee && !vm.loading)) && <Placeholder />}
-        
+
         {vm.insufficientFee && !vm.loading ? <InsufficientFee /> : undefined}
 
         {txDataEditable && !vm.insufficientFee ? (

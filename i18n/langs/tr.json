@@ -399,7 +399,7 @@
   "msg-data-loading": "Veriler yükleniyor",
   "msg-please-enable-biometric":"Bu işlemi yetkilendirmek için biyometrik kimlik doğrulama kullanın lütfen.",
 
-  "erc-4337-add-tx-to-queue": "İşlemi gönderme kuyruğuna ekleyin",
+  "erc-4337-add-tx-to-queue": "Kuyruğa katılın",
 
   "readable-transfer-token": "{{amount}} {{symbol}} 'yi {{dest}} adresine transfer etmek",
   "readable-approve-token": "{{amount}} {{symbol}} onayla {{dest}} için",

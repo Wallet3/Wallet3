@@ -27,9 +27,12 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
   const { borderColor, textColor, secondaryTextColor } = Theme;
   const swiper = useRef<Swiper>(null);
 
+  const editable = !vm.isERC4337Network;
   const reviewItemStyle = { ...styles.reviewItem, borderColor };
   const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
-  const reviewItemValueStyle = { ...styles.reviewItemValue, color: textColor, minWidth: 64 };
+  const reviewItemValueStyle = { ...styles.reviewItemValue, color: editable ? textColor : 'lightgrey', minWidth: 64 };
+  const reviewItemTitle = [styles.reviewItemTitle, { color: editable ? secondaryTextColor : 'lightgrey' }];
+  const gasGweiLabel = [styles.gasGweiLabel, { color: editable ? secondaryTextColor : 'lightgrey' }];
 
   return (
     <Swiper
@@ -47,14 +50,15 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
           <Text style={styles.navTitle}>{t('modal-review-fee')}</Text>
         </View>
 
-        <View style={reviewItemsContainer}>
+        <View style={[reviewItemsContainer]}>
           <View style={{ ...reviewItemStyle, paddingBottom: 12 }}>
-            <Text style={styles.reviewItemTitle}>{t('modal-gas-review-limit')}</Text>
+            <Text style={reviewItemTitle}>{t('modal-gas-review-limit')}</Text>
 
             <TextInput
               keyboardType="number-pad"
               selectTextOnFocus
               placeholder="21000"
+              editable={editable}
               textAlign="right"
               style={{ ...reviewItemValueStyle, fontSize: 20 }}
               maxLength={12}
@@ -64,7 +68,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
           </View>
 
           <View style={{ ...reviewItemStyle, paddingBottom: 12 }}>
-            <Text style={styles.reviewItemTitle}>{t('modal-gas-review-max-price')}</Text>
+            <Text style={reviewItemTitle}>{t('modal-gas-review-max-price')}</Text>
 
             <View style={{ marginBottom: -8 }}>
               <TextInput
@@ -73,6 +77,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
                 placeholder="20.00"
                 textAlign="right"
                 maxLength={12}
+                editable={editable}
                 style={{ ...reviewItemValueStyle, fontSize: 20 }}
                 defaultValue={`${Number(vm.maxGasPrice.toFixed(5))}`}
                 onChangeText={(txt) => vm.setMaxGasPrice(txt)}
@@ -82,12 +87,12 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
                 {vm.network.eip1559 ? <Fire width={8} height={8} style={{ marginEnd: 3 }} /> : undefined}
                 {vm.network.eip1559 ? (
                   <AnimatedNumber
-                    style={styles.gasGweiLabel}
+                    style={gasGweiLabel}
                     value={vm.nextBlockBaseFee}
                     formatter={(val) => `${val.toFixed(6)} Gwei`}
                   />
                 ) : (
-                  <Text style={styles.gasGweiLabel}>Gwei</Text>
+                  <Text style={gasGweiLabel}>Gwei</Text>
                 )}
               </View>
             </View>
@@ -95,7 +100,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
 
           {vm.network.eip1559 ? (
             <View style={{ ...reviewItemStyle, paddingBottom: 12 }}>
-              <Text style={styles.reviewItemTitle}>{t('modal-gas-review-priority-price')}</Text>
+              <Text style={reviewItemTitle}>{t('modal-gas-review-priority-price')}</Text>
 
               <View style={{ marginBottom: -8 }}>
                 <TextInput
@@ -104,23 +109,25 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
                   placeholder="1.00"
                   textAlign="right"
                   maxLength={12}
+                  editable={editable}
                   style={{ ...reviewItemValueStyle, fontSize: 20 }}
                   defaultValue={`${Number(vm.maxPriorityPrice.toFixed(6))}`}
                   onChangeText={(txt) => vm.setPriorityPrice(txt)}
                 />
-                <Text style={{ ...styles.gasGweiLabel, marginTop: -2 }}>Gwei</Text>
+                <Text style={[gasGweiLabel, { marginTop: -2 }]}>Gwei</Text>
               </View>
             </View>
           ) : undefined}
 
           <View style={{ ...reviewItemStyle, borderBottomWidth: 0, paddingBottom: 12 }}>
-            <Text style={styles.reviewItemTitle}>{t('modal-gas-review-nonce')}</Text>
+            <Text style={reviewItemTitle}>{t('modal-gas-review-nonce')}</Text>
 
             <TextInput
               keyboardType="number-pad"
               selectTextOnFocus
               placeholder="0"
               textAlign="right"
+              editable={editable}
               style={{ ...reviewItemValueStyle, fontSize: 20 }}
               maxLength={12}
               defaultValue={`${vm.nonce}`}
@@ -138,19 +145,23 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
               flex: 1,
             }}
           >
-            <TouchableOpacity style={styles.gasSpeedItem} onPress={() => vm.setGas('rapid')}>
-              <Ionicons name="rocket" size={12} color="tomato" />
-              <Text style={{ ...styles.gasItemText, color: 'tomato' }}>{t('modal-gas-review-rapid')}</Text>
+            <TouchableOpacity disabled={!editable} style={styles.gasSpeedItem} onPress={() => vm.setGas('rapid')}>
+              <Ionicons name="rocket" size={12} color={editable ? 'tomato' : 'lightgrey'} />
+              <Text style={{ ...styles.gasItemText, color: editable ? 'tomato' : 'lightgrey' }}>
+                {t('modal-gas-review-rapid')}
+              </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.gasSpeedItem} onPress={() => vm.setGas('fast')}>
-              <Ionicons name="car-sport" size={13} color="dodgerblue" />
-              <Text style={{ ...styles.gasItemText, color: verifiedColor }}>{t('modal-gas-review-fast')}</Text>
+            <TouchableOpacity disabled={!editable} style={styles.gasSpeedItem} onPress={() => vm.setGas('fast')}>
+              <Ionicons name="car-sport" size={13} color={editable ? 'dodgerblue' : 'lightgrey'} />
+              <Text style={{ ...styles.gasItemText, color: editable ? 'dodgerblue' : 'lightgrey' }}>
+                {t('modal-gas-review-fast')}
+              </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.gasSpeedItem} onPress={() => vm.setGas('standard')}>
-              <FontAwesome5 name="walking" size={12} color="darkorchid" />
-              <Text style={{ ...styles.gasItemText, color: 'darkorchid' }} numberOfLines={1}>
+            <TouchableOpacity disabled={!editable} style={styles.gasSpeedItem} onPress={() => vm.setGas('standard')}>
+              <FontAwesome5 name="walking" size={12} color={editable ? 'darkorchid' : 'lightgrey'} />
+              <Text style={{ ...styles.gasItemText, color: editable ? 'darkorchid' : 'lightgrey' }} numberOfLines={1}>
                 {t('modal-gas-review-standard')}
               </Text>
             </TouchableOpacity>

@@ -169,14 +169,14 @@ export const PublicNetworks: INetwork[] = [
     etherscanApi: 'https://api.snowtrace.io/api',
     github_dir: 'avalanchec',
   },
-  {
-    symbol: 'FIL',
-    network: 'Filecoin',
-    chainId: 314,
-    color: '#0090FF',
-    defaultTokens: [],
-    explorer: 'https://beryx.zondax.ch/v1/search/fil/mainnet',
-  },
+  // {
+  //   symbol: 'FIL',
+  //   network: 'Filecoin',
+  //   chainId: 314,
+  //   color: '#0090FF',
+  //   defaultTokens: [],
+  //   explorer: 'https://beryx.zondax.ch/v1/search/fil/mainnet',
+  // },
   {
     symbol: 'ETH',
     comm_id: 'boba',

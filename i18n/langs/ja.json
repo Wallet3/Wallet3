@@ -377,7 +377,7 @@
   "multi-sig-modal-create-threshold": "あなたは {{threshold}}/{{max}} マルチシグウォレットを作成しています。トランザクションを作成するには、少なくとも {{threshold}} 台のデバイスが必要です。",
   "multi-sig-modal-keys-distribution": "秘密鍵は以下のデバイスに配布されます",
 
-  "erc-4337-add-tx-to-queue": "取引を送信キューに追加する",
+  "erc-4337-add-tx-to-queue": "送信キューに追加する",
 
   "readable-transfer-token": "{{amount}} {{symbol}} を {{dest}} に送金する",
   "readable-approve-token": "{{amount}} {{symbol}} を {{dest}} に承認する",
