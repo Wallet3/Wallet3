@@ -10,10 +10,12 @@ import AddressTag from '../../models/entities/AddressTag';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Coingecko from '../../common/apis/Coingecko';
 import { ERC20Token } from '../../models/ERC20';
+import { ERC4337Account } from '../account/ERC4337Account';
 import ERC4337Queue from './ERC4337Queue';
 import { INetwork } from '../../common/Networks';
 import { IToken } from '../../common/tokens';
 import { NativeToken } from '../../models/NativeToken';
+import { createERC4337Client } from '../services/ERC4337';
 import { fetchAddressInfo } from '../services/EtherscanPublicTag';
 import { getEnsAvatar } from '../../common/ENS';
 
@@ -400,13 +402,39 @@ export class BaseTransaction {
   protected async estimateGas(args: { from: string; to: string; data: string; value?: string }) {
     runInAction(() => (this.isEstimatingGas = true));
 
-    const { gas, errorMessage } = await estimateGas(this.network.chainId, args);
+    let gas = 21000;
+    let errorMessage = '';
 
-    runInAction(() => {
-      this.isEstimatingGas = false;
-      this.setGasLimit(gas || 0);
-      this.txException = errorMessage || '';
-    });
+    try {
+      if (this.isERC4337Available) {
+        const client = await createERC4337Client(this.network.chainId);
+        const callData = await client?.encodeExecute(args.to, args.value || 0, args.data);
+
+        const initGas = (await (this.account as ERC4337Account).checkActivated(this.network.chainId))
+          ? BigNumber.from(5000)
+          : await client?.estimateCreationGas(await client?.getInitCode());
+
+        const estimatedOp = await estimateGas(this.network.chainId, {
+          from: this.network.erc4337!.entryPointAddress,
+          to: this.account.address,
+          data: callData!,
+        });
+
+        gas = estimatedOp.gas! + 100_000 + (initGas as BigNumber).toNumber?.() ?? 0;
+      } else {
+        const estimated = await estimateGas(this.network.chainId, args);
+        gas = estimated.gas || gas;
+        errorMessage = estimated.errorMessage || '';
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      runInAction(() => {
+        this.isEstimatingGas = false;
+        this.setGasLimit(gas || 0);
+        this.txException = errorMessage || '';
+      });
+    }
   }
 
   protected refreshEIP1559(chainId: number) {

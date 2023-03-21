@@ -1,21 +1,39 @@
-import { BigNumber, BigNumberish } from 'ethers';
+import { BigNumber, BigNumberish, providers } from 'ethers';
 
-import { SimpleAccount } from '@wallet3/account-abstraction-contracts';
 import { SimpleAccountAPI } from '@account-abstraction/sdk';
 import { TransactionDetailsForUserOp } from '@account-abstraction/sdk/dist/src/TransactionDetailsForUserOp';
 import { UserOperationStruct } from '@account-abstraction/contracts/dist/types/EntryPoint';
 
+type GasOption = { maxFeePerGas?: BigNumberish; maxPriorityFeePerGas?: BigNumberish };
+
 export class ERC4337Client extends SimpleAccountAPI {
+  async encodeBatchExecute(targets: string[], values: BigNumberish[], data: string[]) {
+    const accountContract = await this._getAccountContract();
+    return accountContract.interface.encodeFunctionData('executeBatch', [targets, values, data]);
+  }
+
+  async createUnsignedUserOpForTransactionRequests(txs: providers.TransactionRequest[], opts?: GasOption) {
+    return this.createUnsignedUserOpForTransactions(
+      txs.map((tx) => {
+        return {
+          target: tx.to!,
+          data: tx.data! as string,
+          value: tx.value,
+        };
+      }),
+      opts
+    );
+  }
+
   async createUnsignedUserOpForTransactions(
     transactions: TransactionDetailsForUserOp[],
-    opts?: { maxFeePerGas?: BigNumberish; maxPriorityFeePerGas?: BigNumberish }
+    opts?: GasOption
   ): Promise<UserOperationStruct> {
-    const accountContract = await this._getAccountContract();
-    const callData = (accountContract as unknown as SimpleAccount).interface.encodeFunctionData('executeBatch', [
+    const callData = await this.encodeBatchExecute(
       transactions.map((transaction) => transaction.target),
       transactions.map((tx) => tx.value || 0),
-      transactions.map((transaction) => transaction.data),
-    ]);
+      transactions.map((transaction) => transaction.data)
+    );
 
     const callGasLimit = await this.provider.estimateGas({
       from: this.entryPointAddress,

@@ -16,6 +16,7 @@ import Image from 'react-native-fast-image';
 import { SendTxRequest } from '../../viewmodels/account/AccountBase';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
+import { formatCurrency } from '../../utils/formatter';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { startLayoutAnimation } from '../../utils/animations';
@@ -77,9 +78,9 @@ const BatchTxReview = observer(({ disableBack, onBack, vm, onGasReview, onSendPr
             {readableInfo?.readableTxt || `${readableInfo?.dapp} ${readableInfo?.decodedFunc}`}
           </Text>
 
-          {BigNumber.from(item.tx?.value ?? 0).gt(0) && (
+          {BigNumber.from(item.tx?.value ?? 0).gt(0) && (tx?.data?.length ?? 0) >= 10 && (
             <Text numberOfLines={1} style={[styles.reviewItemTitle, { marginStart: 8 }]}>
-              {`${-utils.formatEther(item.tx?.value ?? 0)} ${network.symbol}`}
+              {`${-formatCurrency(utils.formatEther(item.tx?.value ?? 0), '', '0.0000')} ${network.symbol}`}
             </Text>
           )}
         </ScrollView>

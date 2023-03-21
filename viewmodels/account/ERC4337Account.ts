@@ -7,9 +7,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthOptions } from '../auth/Authentication';
 import { HttpRpcClient } from '@account-abstraction/sdk';
 import TxHub from '../hubs/TxHub';
-import { UserOperationStruct } from '@wallet3/account-abstraction-contracts';
+import { UserOperationStruct } from '@account-abstraction/contracts';
 import { WalletBase } from '../wallet/WalletBase';
 import { createERC4337Client } from '../services/ERC4337';
+import { sleep } from '../../utils/async';
 
 const Keys = {
   accountActivated: (address: string, chainId: number) => `${chainId}_${address}_erc4337_activated`,
@@ -112,7 +113,9 @@ export class ERC4337Account extends AccountBase {
       }
 
       try {
+        console.log('send op to bundler');
         const opHash = await http.sendUserOpToBundler(op);
+
         TxHub.watchERC4337Op(network, opHash, op, { ...tx, readableInfo }).catch();
 
         const txHashPromise = new Promise<string>((resolve) => {
@@ -126,7 +129,9 @@ export class ERC4337Account extends AccountBase {
         });
 
         return { success: true, txHash: opHash, txHashPromise };
-      } catch (error) {}
+      } catch (error) {
+        console.error(error);
+      }
     }
 
     return { success: false, error: { message: 'Network error', code: -1 } };

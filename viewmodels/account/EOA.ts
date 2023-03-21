@@ -5,6 +5,7 @@ import { TransactionRequest } from '@ethersproject/abstract-provider';
 import { getTransactionCount } from '../../common/RPC';
 import { showMessage } from 'react-native-flash-message';
 import { utils } from 'ethers';
+import { SignTxRequest } from '../wallet/WalletBase';
 
 export class EOA extends AccountBase {
   readonly accountSubPath: string | undefined;
@@ -14,6 +15,15 @@ export class EOA extends AccountBase {
     return getTransactionCount(chainId, this.address);
   }
 
+  async signTx(args: SignTxRequest & AuthOptions) {
+    try {
+      const txHex = await (await this.wallet?.openWallet({ ...args, accountIndex: this.index }))?.signTransaction(args.tx);
+      return { txHex };
+    } catch (error: any) {
+      return { error };
+    }
+  }
+  
   async sendTx(args: { tx: TransactionRequest; readableInfo?: ReadableInfo }, pin?: string) {
     if (!this.wallet) return { success: false, error: { message: 'Account not available', code: -1 } };
 

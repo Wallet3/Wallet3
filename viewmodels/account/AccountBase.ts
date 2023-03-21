@@ -136,14 +136,6 @@ export abstract class AccountBase {
     }
   }
 
-  async signTx(args: SignTxRequest & AuthOptions) {
-    try {
-      const txHex = await (await this.wallet?.openWallet({ ...args, accountIndex: this.index }))?.signTransaction(args.tx);
-      return { txHex };
-    } catch (error: any) {
-      return { error };
-    }
-  }
 
   async signTypedData(request: SignTypedDataRequest & AuthOptions) {
     const wallet = await this.wallet?.openWallet({ ...request, accountIndex: this.index, subPath: this.accountSubPath });

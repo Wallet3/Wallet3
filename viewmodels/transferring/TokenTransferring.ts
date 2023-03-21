@@ -158,16 +158,11 @@ export class TokenTransferring extends BaseTransaction {
   async estimateGas() {
     if (!this.toAddress) return;
 
-    runInAction(() => (this.isEstimatingGas = true));
-    const { gas, errorMessage } = this.isNativeToken
-      ? await (this.token as NativeToken).estimateGas(this.toAddress, this.encodedUserTxData)
-      : await (this.token as ERC20Token).estimateGas(this.toAddress, this.amountWei);
+    const data = this.isNativeToken
+      ? this.encodedUserTxData
+      : (this.token as ERC20Token).encodeTransferData(this.toAddress, this.amountWei);
 
-    runInAction(() => {
-      this.isEstimatingGas = false;
-      this.setGasLimit(gas || 0);
-      this.txException = errorMessage || '';
-    });
+    return super.estimateGas({ from: this.account.address, to: this.toAddress, data: data });
   }
 
   setToken(token: IToken) {

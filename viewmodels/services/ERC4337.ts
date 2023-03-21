@@ -5,10 +5,12 @@ import Networks from '../core/Networks';
 import { getRPCUrls } from '../../common/RPC';
 import { getSecureRandomBytes } from '../../utils/math';
 
-const ERC4337Clients = new Map<number, ERC4337Client>();
+const ERC4337Clients = new Map<string, ERC4337Client>();
 
 export async function createERC4337Client(chainId: number, owner = new Wallet(getSecureRandomBytes(32))) {
-  const cache = ERC4337Clients.get(chainId);
+  const key = `${chainId}:${owner.address}`;
+
+  const cache = ERC4337Clients.get(key);
   if (cache) return cache;
 
   const network = Networks.find(chainId);
@@ -34,6 +36,6 @@ export async function createERC4337Client(chainId: number, owner = new Wallet(ge
     factoryAddress,
   });
 
-  ERC4337Clients.set(chainId, client);
+  ERC4337Clients.set(key, client);
   return client;
 }
