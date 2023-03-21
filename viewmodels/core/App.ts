@@ -198,7 +198,7 @@ export class AppVM {
     let { wallet } = this.findWallet(this.currentAccount!.address) || {};
     !wallet?.isHDWallet && (wallet = this.wallets.find((w) => w.isHDWallet));
 
-    const account = type === 'eoa' ? wallet?.newEOA() : await wallet?.newERC4337Account(onBusy);
+    const account = type === 'eoa' ? wallet?.newEOA() : await wallet?.newERC4337Account(Networks.current, onBusy);
 
     if (!account) {
       !wallet?.isHDWallet && showMessage({ message: i18n.t('msg-no-hd-wallet'), type: 'warning' });

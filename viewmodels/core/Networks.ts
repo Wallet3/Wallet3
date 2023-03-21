@@ -67,6 +67,10 @@ class Networks {
       .concat(this._all.filter((network) => !this.pinnedChains.includes(network.chainId)));
   }
 
+  get categorized() {
+    return [{ category: 'pinned', data: this.pinnedChains }];
+  }
+
   constructor() {
     makeObservable(this, {
       current: observable,
