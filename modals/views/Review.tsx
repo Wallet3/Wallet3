@@ -167,11 +167,11 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, txDa
             onToggle={() => vm.setIsQueuingTx(!vm.isQueuingTx)}
           />
         ) : (
-          <View />
+          <View style={{ height: 32, width: 1 }} />
         )}
 
         {(txDataEditable || (vm.insufficientFee && !vm.loading)) && <Placeholder />}
-
+        
         {vm.insufficientFee && !vm.loading ? <InsufficientFee /> : undefined}
 
         {txDataEditable && !vm.insufficientFee ? (

@@ -321,11 +321,7 @@ export class RawTransactionRequest extends BaseTransaction {
     if ((param.gas || param.gasLimit) && !this.isERC4337Network) {
       runInAction(() => this.setGasLimit(param.gas || param.gasLimit || 0));
     } else {
-      this.estimateGas({
-        to: param.to,
-        data: param.data,
-        value: !Number(param.value) ? '0x0' : BigNumber.from(param.value).toHexString(),
-      });
+      this.estimateGas({ to: param.to, data: param.data, value: param.value });
     }
 
     if (param.gasPrice && param.speedUp) {

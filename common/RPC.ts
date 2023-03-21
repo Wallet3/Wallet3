@@ -201,6 +201,12 @@ export async function callRPC(url: string, payload: { method: string; data?: str
   return resp.result;
 }
 
+/**
+ * if the value is not undefined, it must be 0x123xxx, never be 0x0123!!!
+ * @param chainId 
+ * @param args 
+ * @returns 
+ */
 export async function estimateGas(
   chainId: number,
   args: {

@@ -126,9 +126,9 @@ export class BaseTransaction {
   }
 
   get isValidAccountAndNetwork() {
-    const valid = (this.isERC4337Account && this.isERC4337Network) || (!this.isERC4337Account && !this.isERC4337Network);
-    if (!valid) runInAction(() => (this.txException = 'Current network does not support ERC4337 yet.'));
-    return valid;
+    if (!this.isERC4337Account) return true;
+    if (!this.isERC4337Network) runInAction(() => (this.txException = 'Current network does not support ERC4337 yet.'));
+    return this.isERC4337Network;
   }
 
   get safeTo() {
@@ -407,7 +407,7 @@ export class BaseTransaction {
 
   protected async estimateGas(args: { to: string; data: string; value?: BigNumberish }) {
     runInAction(() => (this.isEstimatingGas = true));
-    args.value = args.value || '0x0';
+    args.value = BigNumber.from(args.value || 0).eq(0) ? '0x0' : BigNumber.from(args.value).toHexString().replace('0x0', '0x');
 
     const { gas, errorMessage } = this.isERC4337Available
       ? await this.estimateERC4337Gas(args)

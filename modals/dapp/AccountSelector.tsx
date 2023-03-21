@@ -90,9 +90,9 @@ export default observer(({ accounts, selectedAccounts, onDone, single, style, ex
             containerStyle={{
               marginStart: 8,
               borderRadius: 5,
-              paddingStart: 8,
+              paddingStart: 7,
               paddingVertical: 2,
-              paddingEnd: 5,
+              paddingEnd: 3,
               flexDirection: 'row',
               alignItems: 'center',
               backgroundColor: (item as ERC4337Account).activatedChains.get(network?.chainId || 0)
@@ -101,7 +101,7 @@ export default observer(({ accounts, selectedAccounts, onDone, single, style, ex
             }}
             txtStyle={{ textTransform: 'uppercase', color: '#fff', fontSize: 10 }}
             iconColor="#fff"
-            iconStyle={{ marginStart: 4 }}
+            iconStyle={{ marginStart: 2 }}
             iconSize={11}
           />
         )}

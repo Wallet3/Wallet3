@@ -163,7 +163,7 @@ export class TokenTransferring extends BaseTransaction {
       ? this.encodedUserTxData
       : (this.token as ERC20Token).encodeTransferData(this.toAddress, this.amountWei);
 
-    return super.estimateGas({ value: this.isNativeToken ? this.amountWei : 0, to: this.toAddress, data: data });
+    return super.estimateGas({ to: this.toAddress, data: data });
   }
 
   setToken(token: IToken) {

@@ -17,7 +17,7 @@ export default ({ style }: Props) => {
         {
           color: 'crimson',
           textAlign: 'right',
-          fontSize: 12,
+          fontSize: 12.5,
           fontWeight: '600',
           marginEnd: 18,
         },
