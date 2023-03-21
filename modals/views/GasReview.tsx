@@ -27,7 +27,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
   const { borderColor, textColor, secondaryTextColor } = Theme;
   const swiper = useRef<Swiper>(null);
 
-  const editable = !vm.isERC4337Network;
+  const editable = !vm.isERC4337Account;
   const reviewItemStyle = { ...styles.reviewItem, borderColor };
   const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
   const reviewItemValueStyle = { ...styles.reviewItemValue, color: editable ? textColor : 'lightgrey', minWidth: 64 };
