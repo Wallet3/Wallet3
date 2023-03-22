@@ -96,7 +96,7 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
       {currentAccount?.isERC4337 && !current.erc4337 && (
         <TxException
           exception={i18n.t('erc4337-current-network-not-available')}
-          containerStyle={{ backgroundColor: 'darkorange' }}
+          containerStyle={{ backgroundColor: 'orange' }}
         />
       )}
 

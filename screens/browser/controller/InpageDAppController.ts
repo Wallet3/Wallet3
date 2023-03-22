@@ -357,7 +357,10 @@ export class InpageDAppController extends EventEmitter {
           return false;
         }
 
-        txHashPromise?.then((tx) => resolve(tx));
+        txHashPromise?.then((tx) => {
+          resolve(tx);
+          console.log('tx hash resolved', tx);
+        });
         return txHashPromise || success ? true : false;
       };
 

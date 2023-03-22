@@ -123,13 +123,14 @@ export class ERC4337Account extends AccountBase {
       }
 
       try {
-        console.log('send op to bundler');
         const opHash = await http.sendUserOpToBundler(op);
+        console.log('send op to bundler');
 
         TxHub.watchERC4337Op(network, opHash, op, { ...tx, readableInfo }).catch();
 
         const txHashPromise = new Promise<string>((resolve) => {
           const handler = (opId: string, txHash: string) => {
+            console.log('op hash resolved', txHash);
             if (opId !== opHash) return;
             resolve(txHash);
             TxHub.off('opHashResolved', handler);
@@ -138,7 +139,7 @@ export class ERC4337Account extends AccountBase {
           TxHub.on('opHashResolved', handler);
         });
 
-        return { success: true, txHash: opHash, txHashPromise };
+        return { success: true, txHashPromise };
       } catch (error) {
         console.error(error);
       }

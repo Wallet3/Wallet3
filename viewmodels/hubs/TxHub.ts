@@ -125,7 +125,7 @@ class TxHub extends EventEmitter<Events> {
 
         try {
           const opHash = (tx as ERC4337Transaction).opHash;
-          const txHash = await client?.getUserOpReceipt(opHash);
+          const txHash = await client?.getUserOpReceipt(opHash, 5 * MINUTE);
           if (!txHash) continue;
 
           tx.hash = txHash;
