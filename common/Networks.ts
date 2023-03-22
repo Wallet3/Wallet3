@@ -24,6 +24,7 @@ import {
 import ERC4337Configs from '../configs/erc4337.json';
 import { GoerliPopTokens } from './tokens/Goerli';
 import { Gwei_1 } from './Constants';
+import { MumbaiPopTokens } from './tokens/Mumbai';
 
 export interface IERC4337 {
   bundlerUrls: string[];
@@ -468,7 +469,7 @@ export const Testnets: INetwork[] = [
     color: '#8247E5',
     eip1559: true,
     erc4337: ERC4337Configs['80001'],
-    defaultTokens: [],
+    defaultTokens: MumbaiPopTokens,
     blockTimeMs: 3 * 1000,
     testnet: true,
     explorer: 'https://mumbai.polygonscan.com',

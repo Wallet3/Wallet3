@@ -211,7 +211,7 @@ export async function estimateGas(
   chainId: number,
   args: {
     from: string;
-    to: string;
+    to?: string;
     gas?: string | number;
     gasPrice?: string | number;
     value?: BigNumberish;

@@ -18,6 +18,7 @@ import { NativeToken } from '../../models/NativeToken';
 import { createERC4337Client } from '../services/ERC4337';
 import { fetchAddressInfo } from '../services/EtherscanPublicTag';
 import { getEnsAvatar } from '../../common/ENS';
+import { getSecureRandomBytes } from '../../utils/math';
 
 const Keys = {
   feeToken: (chainId: number | string) => `${chainId}_user_preferred_feeToken`,
@@ -405,7 +406,7 @@ export class BaseTransaction {
     });
   }
 
-  protected async estimateGas(args: { to: string; data: string; value?: BigNumberish }) {
+  protected async estimateGas(args: { to?: string; data: string; value?: BigNumberish }) {
     runInAction(() => (this.isEstimatingGas = true));
     args.value = BigNumber.from(args.value || 0).eq(0) ? '0x0' : BigNumber.from(args.value).toHexString().replace('0x0', '0x');
 
@@ -420,9 +421,23 @@ export class BaseTransaction {
     });
   }
 
-  private async estimateERC4337Gas(args: { to: string; value?: BigNumberish; data: string }) {
+  private async estimateERC4337Gas(args: { to?: string; value?: BigNumberish; data: string }) {
     const client = await createERC4337Client(this.network.chainId);
-    const callData = await client?.encodeExecute(args.to, args.value || 0, args.data);
+
+    console.log('estimate gas', args);
+
+    let callData = '0x';
+    if (utils.isAddress(args.to || '')) {
+      callData = (await client?.encodeExecute(args.to!, args.value || 0, args.data)) ?? '0x';
+    } else {
+      callData =
+        (await client?.encodeCreate2(
+          args.value!,
+          utils.formatBytes32String(`${await this.account.getNonce(this.network.chainId)}`),
+          args.data
+        )) ?? '0x';
+      console.log('create 2', callData);
+    }
 
     try {
       const initGas = (await (this.account as ERC4337Account).checkActivated(this.network.chainId))
@@ -458,7 +473,7 @@ export class BaseTransaction {
   }
 
   async sendRawTx(args: SendTxRequest, pin?: string): Promise<SendTxResponse> {
-    if (this.isQueuingTx && this.isERC4337Available && args.tx) {
+    if (this.isQueuingTx && this.isERC4337Available && args.tx && utils.isAddress(this.toAddress)) {
       ERC4337Queue.add(args);
       return { success: true };
     }

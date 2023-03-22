@@ -33,7 +33,7 @@
     "@react-navigation/stack": "^6.3.16",
     "@tradle/react-native-http": "^2.0.0",
     "@unstoppabledomains/resolution": "^8.5.0",
-    "@wallet3/account-abstraction-contracts": "^0.5.1",
+    "@wallet3/account-abstraction-contracts": "^0.5.2",
     "@walletconnect/client": "^1.8.0",
     "@walletconnect/utils": "^2.5.1",
     "@walletconnect/web3wallet": "^1.5.0",

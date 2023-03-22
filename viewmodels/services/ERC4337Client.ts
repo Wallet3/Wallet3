@@ -4,15 +4,26 @@ import { SimpleAccountAPI } from '@account-abstraction/sdk';
 import { TransactionDetailsForUserOp } from '@account-abstraction/sdk/dist/src/TransactionDetailsForUserOp';
 import { UserOperationStruct } from '@account-abstraction/contracts/dist/types/EntryPoint';
 
-type GasOption = { maxFeePerGas?: BigNumberish; maxPriorityFeePerGas?: BigNumberish };
+type GasOptions = { maxFeePerGas?: BigNumberish; maxPriorityFeePerGas?: BigNumberish };
+type Create2Options = { value: BigNumberish; salt: string; bytecode: string };
 
 export class ERC4337Client extends SimpleAccountAPI {
+  async encodeCreate2(value: BigNumberish, salt: string, bytecode: string) {
+    const ca = await this._getAccountContract();
+    return ca.interface.encodeFunctionData('executeContractDeployment', [value, salt, bytecode]);
+  }
+
   async encodeBatchExecute(targets: string[], values: BigNumberish[], data: string[]) {
     const accountContract = await this._getAccountContract();
     return accountContract.interface.encodeFunctionData('executeBatch', [targets, values, data]);
   }
 
-  async createUnsignedUserOpForTransactionRequests(txs: providers.TransactionRequest[], opts?: GasOption) {
+  async createUnsignedUserOpForCreate2(args: Create2Options, gas?: GasOptions) {
+    const callData = await this.encodeCreate2(args.value, args.salt, args.bytecode);
+    return this.createUnsignedUserOpForCallData(callData, gas);
+  }
+
+  async createUnsignedUserOpForTransactionRequests(txs: providers.TransactionRequest[], opts?: GasOptions) {
     return this.createUnsignedUserOpForTransactions(
       txs.map((tx) => {
         return {
@@ -27,7 +38,7 @@ export class ERC4337Client extends SimpleAccountAPI {
 
   async createUnsignedUserOpForTransactions(
     transactions: TransactionDetailsForUserOp[],
-    opts?: GasOption
+    opts?: GasOptions
   ): Promise<UserOperationStruct> {
     const callData = await this.encodeBatchExecute(
       transactions.map((transaction) => transaction.target),
@@ -35,9 +46,13 @@ export class ERC4337Client extends SimpleAccountAPI {
       transactions.map((transaction) => transaction.data)
     );
 
+    return this.createUnsignedUserOpForCallData(callData, opts);
+  }
+
+  async createUnsignedUserOpForCallData(callData: string, opts?: GasOptions) {
     const callGasLimit = await this.provider.estimateGas({
       from: this.entryPointAddress,
-      to: this.getAccountAddress(),
+      to: await this.getAccountAddress(),
       data: callData,
     });
 
@@ -69,10 +84,11 @@ export class ERC4337Client extends SimpleAccountAPI {
     };
   }
 
-  async createSignedUserOpForTransactions(
-    transactions: TransactionDetailsForUserOp[],
-    opts?: { maxFeePerGas?: BigNumberish; maxPriorityFeePerGas?: BigNumberish }
-  ) {
+  async createSignedUserOpForTransactions(transactions: TransactionDetailsForUserOp[], opts?: GasOptions) {
     return super.signUserOp(await this.createUnsignedUserOpForTransactions(transactions, opts));
+  }
+
+  async createSignedUserOpForCreate2(args: Create2Options, gas?: GasOptions) {
+    return super.signUserOp(await this.createUnsignedUserOpForCreate2(args, gas));
   }
 }

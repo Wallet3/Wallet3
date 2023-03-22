@@ -80,23 +80,33 @@ export class ERC4337Account extends AccountBase {
     let op!: UserOperationStruct;
 
     try {
-      op = Array.isArray(txs)
-        ? await client.createSignedUserOpForTransactions(
-            txs.map((tx) => {
-              return {
-                target: utils.getAddress(tx.to!),
-                value: tx.value || 0,
-                data: (tx.data as string) || '0x',
-              };
-            }),
-            gas
-          )
-        : await client.createSignedUserOp({
-            target: utils.getAddress(tx!.to!),
-            value: tx!.value || 0,
-            data: (tx!.data as string) || '0x',
-            ...gas,
-          });
+      if (Array.isArray(txs)) {
+        const requests = txs.map((tx) => {
+          return {
+            target: utils.getAddress(tx.to!),
+            value: tx.value || 0,
+            data: (tx.data as string) || '0x',
+          };
+        });
+
+        op = await client.createSignedUserOpForTransactions(requests, gas);
+      } else {
+        op = utils.isAddress(tx!.to || '')
+          ? await client.createSignedUserOp({
+              target: utils.getAddress(tx!.to!),
+              value: tx!.value || 0,
+              data: (tx!.data as string) || '0x',
+              ...gas,
+            })
+          : await client.createSignedUserOpForCreate2(
+              {
+                bytecode: tx!.data as string,
+                salt: utils.formatBytes32String(`${await this.getNonce(network.chainId)}`),
+                value: tx?.value || '0x0',
+              },
+              gas
+            );
+      }
     } catch (error) {
       return { success: false };
     }

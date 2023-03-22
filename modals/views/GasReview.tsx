@@ -202,7 +202,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
 
         {(!vm.isValidGas || vm.isERC4337Network) && (
           <TxException
-            containerStyle={{ marginTop: 10, backgroundColor: vm.isERC4337Network ? 'deepskyblue' : warningColor }}
+            containerStyle={{ marginTop: 10, backgroundColor: vm.isERC4337Network ? 'dodgerblue' : warningColor }}
             exception={t(vm.isERC4337Network ? 'erc4337-not-support-gas-adjustment' : 'tip-invalid-gas-price')}
           />
         )}

@@ -447,7 +447,7 @@ const TxReview = observer(
         )}
 
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', marginTop: 8 }}>
-          {vm.isERC4337Available ? (
+          {vm.isERC4337Available && vm.toAddress ? (
             <AddToSendingQueue
               containerStyle={{ marginStart: -8, marginVertical: -10 }}
               themeColor={network.color}

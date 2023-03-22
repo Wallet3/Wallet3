@@ -5095,10 +5095,10 @@
     "@urql/core" ">=2.3.1"
     wonka "^4.0.14"
 
-"@wallet3/account-abstraction-contracts@^0.5.1":
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/@wallet3/account-abstraction-contracts/-/account-abstraction-contracts-0.5.1.tgz#8805b35f9d5891db2c483e9dfcc0b18c4b4787f4"
-  integrity sha512-2ap8x4DCtJ8C/bX13DdE316QFC1RpHd4lUiPf5Og7l25B3KQrT2211obiCf1v9HacdJHeirheoqyqsczIuSdWA==
+"@wallet3/account-abstraction-contracts@^0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@wallet3/account-abstraction-contracts/-/account-abstraction-contracts-0.5.2.tgz#d179a5c407e9699b8ae68534ba99930f249f8b9f"
+  integrity sha512-Ind1QXZ5nDujnLdJr18y3YAgm8IW4WKj4fZYVCEWE8nWqivKfW0vnA+JAsVeZkpjYOh9l1MEhxcOFVb3zZObaw==
 
 "@walletconnect/auth-client@^2.0.3":
   version "2.0.3"
