@@ -378,7 +378,8 @@
   "multi-sig-modal-keys-distribution": "秘密鍵は以下のデバイスに配布されます",
 
   "erc4337-add-tx-to-queue": "送信キューに追加する",
-  "erc4337-not-support-gas-adjustment": "スーパーアカウントではガスの調整はサポートされていません。",
+  "erc4337-not-support-gas-adjustment": "ガス設定はスーパーアカウントでは読み取り専用モードです。",
+  "erc4337-current-network-not-available": "このネットワークは現在、スーパーアカウントをサポートしていません。",
 
   "readable-transfer-token": "{{amount}} {{symbol}} を {{dest}} に送金する",
   "readable-approve-token": "{{amount}} {{symbol}} を {{dest}} に承認する",

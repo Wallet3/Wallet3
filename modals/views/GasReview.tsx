@@ -30,9 +30,9 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
   const editable = !vm.isERC4337Account;
   const reviewItemStyle = { ...styles.reviewItem, borderColor };
   const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
-  const reviewItemValueStyle = { ...styles.reviewItemValue, color: editable ? textColor : 'lightgrey', minWidth: 64 };
-  const reviewItemTitle = [styles.reviewItemTitle, { color: editable ? secondaryTextColor : 'lightgrey' }];
-  const gasGweiLabel = [styles.gasGweiLabel, { color: editable ? secondaryTextColor : 'lightgrey' }];
+  const reviewItemValueStyle = { ...styles.reviewItemValue, color: textColor, minWidth: 64 };
+  const reviewItemTitle = [styles.reviewItemTitle, { color: secondaryTextColor }];
+  const gasGweiLabel = [styles.gasGweiLabel, { color: secondaryTextColor }];
 
   return (
     <Swiper
@@ -202,7 +202,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
 
         {(!vm.isValidGas || vm.isERC4337Network) && (
           <TxException
-            containerStyle={{ marginTop: 10, backgroundColor: vm.isERC4337Network ? 'darkorange' : warningColor }}
+            containerStyle={{ marginTop: 10, backgroundColor: vm.isERC4337Network ? 'deepskyblue' : warningColor }}
             exception={t(vm.isERC4337Network ? 'erc4337-not-support-gas-adjustment' : 'tip-invalid-gas-price')}
           />
         )}

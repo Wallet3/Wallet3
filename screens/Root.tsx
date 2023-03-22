@@ -6,6 +6,7 @@ import { Platform, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 
 import App from '../viewmodels/core/App';
+import Avatar from '../components/Avatar';
 import BrowserScreen from './browser/MultiTabIndex';
 import ContactsScreen from './contacts';
 import DAppsScreen from './dapps';
@@ -129,7 +130,14 @@ const RootTab = observer(() => {
                   onPress={() => PubSub.publish(MessageKeys.openAccountsMenu)}
                   style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 0 }}
                 >
-                  <Logo height={16} width={170} color={foregroundColor} />
+                  <Avatar
+                    size={18}
+                    uri={currentAccount?.avatar}
+                    emoji={currentAccount?.emojiAvatar}
+                    backgroundColor={'transparent' || currentAccount?.emojiColor}
+                    emojiSize={12}
+                  />
+                  <Logo height={16} width={100} color={foregroundColor} />
                 </TouchableOpacity>
               </View>
 

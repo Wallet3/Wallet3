@@ -422,6 +422,7 @@ export const Testnets: INetwork[] = [
     chainId: 11155111,
     color: '#6186ff',
     eip1559: true,
+    erc4337: ERC4337Configs['11155111'],
     testnet: true,
     defaultTokens: [],
     explorer: 'https://sepolia.etherscan.io',

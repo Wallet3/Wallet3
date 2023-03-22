@@ -400,7 +400,8 @@
   "msg-please-enable-biometric": "Bu işlemi yetkilendirmek için biyometrik kimlik doğrulama kullanın lütfen.",
 
   "erc4337-add-tx-to-queue": "Kuyruğa katılın",
-  "erc4337-not-support-gas-adjustment": "Süper hesaplar, gaz ayarını desteklemez.",
+  "erc4337-not-support-gas-adjustment": "Gas ayarı süper hesapta salt okunur moddadır.",
+  "erc4337-current-network-not-available": "Ağ şu anda süper hesapları desteklememektedir.",
 
   "readable-transfer-token": "{{amount}} {{symbol}} 'yi {{dest}} adresine transfer etmek",
   "readable-approve-token": "{{amount}} {{symbol}} onayla {{dest}} için",

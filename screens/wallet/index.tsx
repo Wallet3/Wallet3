@@ -17,8 +17,10 @@ import Theme from '../../viewmodels/settings/Theme';
 import TokenDetail from './TokenDetail';
 import Transaction from '../../models/entities/Transaction';
 import TxDetail from './TxDetail';
+import TxException from '../../modals/components/TxException';
 import { View } from 'react-native';
 import WalletConnectHub from '../../viewmodels/walletconnect/WalletConnectHub';
+import i18n from '../../i18n';
 import { isAndroid } from '../../utils/platform';
 import { logScreenView } from '../../viewmodels/services/Analytics';
 import { observer } from 'mobx-react-lite';
@@ -90,6 +92,13 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         gasPrice={GasPrice.currentGwei}
         onQRCodePress={() => openAddressQR()}
       />
+
+      {currentAccount?.isERC4337 && !current.erc4337 && (
+        <TxException
+          exception={i18n.t('erc4337-current-network-not-available')}
+          containerStyle={{ backgroundColor: 'darkorange' }}
+        />
+      )}
 
       <Assets
         tokens={currentAccount?.tokens.tokens}
