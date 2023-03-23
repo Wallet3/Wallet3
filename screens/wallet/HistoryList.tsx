@@ -103,9 +103,9 @@ const Tx = observer(
               alignItems: 'center',
               backgroundColor: StatusColor[status],
               paddingHorizontal: 6,
-              paddingEnd: 4,
+              paddingEnd: 5.5,
               paddingVertical: 2,
-              borderRadius: 4,
+              borderRadius: 5,
             }}
           >
             <Text style={{ color: 'white', fontWeight: '300', fontSize: 12 }}>{t(`modal-tx-details-status-${status}`)}</Text>

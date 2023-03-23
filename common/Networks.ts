@@ -21,7 +21,7 @@ import {
   zkSyncPopularTokens,
 } from './tokens';
 
-import ERC4337Configs from '../configs/erc4337.json';
+import ERC4337Configs from '../configs/erc4337.config';
 import { GoerliPopTokens } from './tokens/Goerli';
 import { Gwei_1 } from './Constants';
 import { MumbaiPopTokens } from './tokens/Mumbai';
@@ -405,19 +405,17 @@ export const PublicNetworks: INetwork[] = [
 
 export const Testnets: INetwork[] = [
   {
-    comm_id: '',
     symbol: 'ETH',
     network: 'Goerli',
     chainId: 5,
     color: '#6186ff',
     eip1559: true,
-    erc4337: ERC4337Configs['5'],
+    erc4337: ERC4337Configs.Goerli,
     testnet: true,
     defaultTokens: GoerliPopTokens,
     explorer: 'https://goerli.etherscan.io',
   },
   {
-    comm_id: '',
     symbol: 'ETH',
     network: 'Sepolia',
     chainId: 11155111,
@@ -429,7 +427,6 @@ export const Testnets: INetwork[] = [
     explorer: 'https://sepolia.etherscan.io',
   },
   {
-    comm_id: '',
     symbol: 'ETH',
     network: 'Optimism Goerli',
     chainId: 420,
@@ -440,7 +437,6 @@ export const Testnets: INetwork[] = [
     explorer: 'https://goerli-optimism.etherscan.io',
   },
   {
-    comm_id: '',
     symbol: 'ETH',
     network: 'Arbitrum Goerli',
     chainId: 421613,
@@ -462,13 +458,12 @@ export const Testnets: INetwork[] = [
     explorer: 'https://goerli.basescan.org',
   },
   {
-    comm_id: '',
     symbol: 'MATIC',
     network: 'Mumbai',
     chainId: 80001,
     color: '#8247E5',
     eip1559: true,
-    erc4337: ERC4337Configs['80001'],
+    erc4337: ERC4337Configs.Mumbai,
     defaultTokens: MumbaiPopTokens,
     blockTimeMs: 3 * 1000,
     testnet: true,
@@ -476,7 +471,6 @@ export const Testnets: INetwork[] = [
     etherscanApi: 'https://mumbai.polygonscan.com/api',
   },
   {
-    comm_id: '',
     symbol: 'ETH',
     network: 'Japan Open Chain',
     chainId: 99999,
@@ -485,6 +479,15 @@ export const Testnets: INetwork[] = [
     blockTimeMs: 3 * 1000,
     testnet: true,
     explorer: 'https://sandbox1.japanopenchain.org',
+  },
+  {
+    symbol: 'xDai',
+    network: 'Chiado',
+    chainId: 10200,
+    color: '#48A9A6',
+    defaultTokens: [],
+    testnet: true,
+    explorer: 'https://blockscout.com/gnosis/chiado',
   },
 ];
 

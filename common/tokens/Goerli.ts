@@ -5,4 +5,11 @@ export const WETH = {
   shown: true,
 };
 
-export const GoerliPopTokens = [WETH];
+export const USDC = {
+  address: '0x07865c6E87B9F70255377e024ace6630C1Eaa37F',
+  decimals: 6,
+  symbol: 'USDC',
+  shown: true,
+};
+
+export const GoerliPopTokens = [WETH, USDC];
