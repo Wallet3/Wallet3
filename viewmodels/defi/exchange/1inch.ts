@@ -1,5 +1,5 @@
 import { BigNumber, providers, utils } from 'ethers';
-import { ETH, IToken } from '../../../common/tokens';
+import { ETH, ITokenMetadata } from '../../../common/tokens';
 import { SwapProtocol, SwapResponse, fetchTokens, quote, swap } from '../../../common/apis/1inch';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { swapFeePercent, swapFeeReferrer } from '../../../configs/secret';
@@ -157,7 +157,7 @@ export class OneInch {
 
     AsyncStorage.setItem(Keys.userSelectedNetwork, `${network.chainId}`);
 
-    let allTokens = JSON.parse((await AsyncStorage.getItem(Keys.networkTokens(network.chainId))) || '[]') as IToken[];
+    let allTokens = JSON.parse((await AsyncStorage.getItem(Keys.networkTokens(network.chainId))) || '[]') as ITokenMetadata[];
     const userTokens = await TokensMan.loadUserTokens(this.userSelectedNetwork.chainId, this.account.address);
 
     if (allTokens.length === 0) {

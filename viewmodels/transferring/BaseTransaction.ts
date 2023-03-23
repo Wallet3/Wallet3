@@ -13,14 +13,14 @@ import { ERC20Token } from '../../models/ERC20';
 import { ERC4337Account } from '../account/ERC4337Account';
 import ERC4337Queue from './ERC4337Queue';
 import { INetwork } from '../../common/Networks';
-import { IToken } from '../../common/tokens';
+import { ITokenMetadata } from '../../common/tokens';
 import { NativeToken } from '../../models/NativeToken';
 import { createERC4337Client } from '../services/ERC4337';
 import { fetchAddressInfo } from '../services/EtherscanPublicTag';
 import { getEnsAvatar } from '../../common/ENS';
 
 const Keys = {
-  feeToken: (chainId: number | string) => `${chainId}_user_preferred_feeToken`,
+  feeToken: (chainId: number | string, account: string) => `${chainId}_${account}_preferred_feeToken`,
 };
 
 export class BaseTransaction {
@@ -85,6 +85,7 @@ export class BaseTransaction {
       toAddressRisky: computed,
       loading: computed,
       isQueuingTx: observable,
+      feeTokens: computed,
 
       setNonce: action,
       setGasLimit: action,
@@ -102,7 +103,7 @@ export class BaseTransaction {
     if (initChainData) this.initChainData();
 
     if (this.network.eip1559) this.refreshEIP1559(this.network.chainId);
-    if (this.network.feeTokens) this.initFeeToken();
+    if (this.network.erc4337?.feeTokens) this.initFeeToken();
 
     this.isQueuingTx = ERC4337Queue.find(
       (req) => req.tx?.chainId === this.network.chainId && req.tx.from === this.account.address
@@ -123,6 +124,15 @@ export class BaseTransaction {
 
   get isInERC4337() {
     return this.isERC4337Account && this.isERC4337Network;
+  }
+
+  get feeTokens() {
+    const tokens: ITokenMetadata[] | undefined = this.network.erc4337?.feeTokens?.map(
+      (t) => new ERC20Token({ ...t, chainId: this.network.chainId, owner: this.account.address, contract: t.address })
+    );
+
+    tokens?.unshift(this.nativeToken);
+    return tokens;
   }
 
   get isValidAccountAndNetwork() {
@@ -291,12 +301,13 @@ export class BaseTransaction {
     } catch (error) {}
   }
 
-  setFeeToken(token: IToken) {
-    if (!this.network.feeTokens) return;
-    const feeToken = this.network.feeTokens.find((t) => t.address === token.address) ?? this.network.feeTokens[0];
-    this.feeToken = new ERC20Token({ ...this.network, ...feeToken, owner: this.account.address, contract: feeToken.address });
-    this.feeToken.getBalance();
-    AsyncStorage.setItem(Keys.feeToken(this.network.chainId), this.feeToken.address);
+  setFeeToken(token: ITokenMetadata) {
+    if (!this.feeTokens) return;
+
+    AsyncStorage.setItem(Keys.feeToken(this.network.chainId, this.account.address), token.address);
+
+    const feeToken = this.feeTokens.find((t) => t.address === token.address) ?? this.feeTokens[0];
+    
   }
 
   async setGas(speed: 'rapid' | 'fast' | 'standard') {
@@ -462,11 +473,20 @@ export class BaseTransaction {
   }
 
   protected async initFeeToken() {
-    if (!this.network.feeTokens) return;
-    const tokenAddress = await AsyncStorage.getItem(Keys.feeToken(this.network.chainId));
-    const token = this.network.feeTokens.find((token) => token.address === tokenAddress) ?? this.network.feeTokens[0];
-    const feeToken = new ERC20Token({ ...this.network, ...token, owner: this.account.address, contract: token.address });
-    feeToken.getBalance();
+    if (!this.feeTokens) return;
+    const tokenAddress = await AsyncStorage.getItem(Keys.feeToken(this.network.chainId, this.account.address));
+    const userPreferred = this.feeTokens.find((token) => token.address === tokenAddress);
+
+    const feeToken = userPreferred
+      ? new ERC20Token({
+          ...this.network,
+          ...userPreferred,
+          owner: this.account.address,
+          contract: userPreferred.address,
+        })
+      : null;
+
+    feeToken?.getBalance();
     runInAction(() => (this.feeToken = feeToken));
   }
 

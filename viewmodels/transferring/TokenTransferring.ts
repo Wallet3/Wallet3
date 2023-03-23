@@ -7,13 +7,13 @@ import { BaseTransaction } from './BaseTransaction';
 import { ERC20Token } from '../../models/ERC20';
 import { Gwei_1 } from '../../common/Constants';
 import { INetwork } from '../../common/Networks';
-import { IToken } from '../../common/tokens';
+import { ITokenMetadata } from '../../common/tokens';
 import { NativeToken } from '../../models/NativeToken';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 
 export class TokenTransferring extends BaseTransaction {
-  token: IToken;
+  token: ITokenMetadata;
   amount = '0';
   userTxData = '0x';
 
@@ -114,7 +114,7 @@ export class TokenTransferring extends BaseTransaction {
     to,
   }: {
     targetNetwork: INetwork;
-    defaultToken?: IToken;
+    defaultToken?: ITokenMetadata;
     autoSetToken?: boolean;
     to?: string;
   }) {
@@ -166,7 +166,7 @@ export class TokenTransferring extends BaseTransaction {
     return super.estimateGas({ to: this.toAddress, data: data });
   }
 
-  setToken(token: IToken) {
+  setToken(token: ITokenMetadata) {
     if (this.token.address === token.address) return;
 
     this.token = token;

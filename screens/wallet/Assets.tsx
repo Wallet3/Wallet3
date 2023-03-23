@@ -9,7 +9,7 @@ import { borderColor, secondaryFontColor } from '../../constants/styles';
 import ERC20Tokens from './ERC20Tokens';
 import HistoryList from './HistoryList';
 import { INetwork } from '../../common/Networks';
-import { IToken } from '../../common/tokens';
+import { ITokenMetadata } from '../../common/tokens';
 import { RootNavigationProps } from '../navigations';
 import { RotateAnimation } from '../../utils/animations';
 import Swiper from 'react-native-swiper';
@@ -20,12 +20,12 @@ import { observer } from 'mobx-react-lite';
 import { useNavigation } from '@react-navigation/core';
 
 interface Props {
-  tokens?: IToken[];
+  tokens?: ITokenMetadata[];
   themeColor: string;
   network: INetwork;
   loadingTokens?: boolean;
   onRefreshRequest?: () => Promise<void>;
-  onTokenPress?: (token: IToken) => void;
+  onTokenPress?: (token: ITokenMetadata) => void;
   onTxPress?: (tx: Transaction) => void;
 }
 

@@ -6,7 +6,7 @@ import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ERC20Token } from '../../../models/ERC20';
-import { IToken } from '../../../common/tokens';
+import { ITokenMetadata } from '../../../common/tokens';
 import { NativeToken } from '../../../models/NativeToken';
 import Networks from '../../core/Networks';
 import { clearBalanceCache } from '../../../common/apis/Debank';
@@ -160,7 +160,7 @@ export class AccountTokens {
 
     const currentChainId = Networks.current.chainId;
 
-    const tokens: IToken[] =
+    const tokens: ITokenMetadata[] =
       targetChainId === currentChainId ? this.allTokens : await TokensMan.loadUserTokens(targetChainId, this.owner);
 
     const found = tokens.find((t) => t.address.toLowerCase() === lower);

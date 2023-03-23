@@ -9,7 +9,7 @@ import {
   FTMPopularTokens,
   HarmonyDefaultToken,
   HecoPopularTokens,
-  IToken,
+  ITokenMetadata,
   MetisPopularTokens,
   MoonriverDefaultToken,
   NovaPopularTokens,
@@ -30,7 +30,8 @@ export interface IERC4337 {
   bundlerUrls: string[];
   factoryAddress: string;
   entryPointAddress: string;
-  paymasterUrl?: string;
+  paymasterAddress?: string;
+  feeTokens?: ITokenMetadata[];
 }
 
 export interface INetwork {
@@ -43,7 +44,7 @@ export interface INetwork {
   eip1559?: boolean;
   erc4337?: IERC4337;
   order?: number;
-  defaultTokens: IToken[];
+  defaultTokens: ITokenMetadata[];
   showOverview?: boolean;
   blockTimeMs?: number;
   explorer: string;
@@ -52,7 +53,6 @@ export interface INetwork {
   addrPrefix?: string;
   github_dir?: string;
   isUserAdded?: boolean;
-  feeTokens?: IToken[];
   minWei?: number;
   browserBarIconSize?: number;
   testnet?: boolean;

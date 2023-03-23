@@ -20,7 +20,7 @@ export * from './Moonriver';
 export * from './PartnerTokens';
 export * from './Nova';
 
-export interface IToken {
+export interface ITokenMetadata {
   address: string;
   decimals: number;
   symbol: string;

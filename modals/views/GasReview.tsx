@@ -27,6 +27,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
   const { borderColor, textColor, secondaryTextColor } = Theme;
   const swiper = useRef<Swiper>(null);
 
+  const { network } = vm;
   const editable = !vm.isERC4337Account;
   const reviewItemStyle = { ...styles.reviewItem, borderColor };
   const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
@@ -84,8 +85,8 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
               />
 
               <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-                {vm.network.eip1559 ? <Fire width={8} height={8} style={{ marginEnd: 3 }} /> : undefined}
-                {vm.network.eip1559 ? (
+                {network.eip1559 ? <Fire width={8} height={8} style={{ marginEnd: 3 }} /> : undefined}
+                {network.eip1559 ? (
                   <AnimatedNumber
                     style={gasGweiLabel}
                     value={vm.nextBlockBaseFee}
@@ -98,7 +99,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
             </View>
           </View>
 
-          {vm.network.eip1559 ? (
+          {network.eip1559 ? (
             <View style={{ ...reviewItemStyle, paddingBottom: 12 }}>
               <Text style={reviewItemTitle}>{t('modal-gas-review-priority-price')}</Text>
 
@@ -177,7 +178,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
                   forceRefresh
                   symbol={vm.feeToken.symbol}
                   address={vm.feeToken.address}
-                  chainId={vm.network.chainId}
+                  chainId={network.chainId}
                   size={14}
                 />
                 <Text
@@ -219,10 +220,10 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
       </SafeViewContainer>
 
       <Tokenlist
-        network={vm.network}
-        tokens={vm.network.feeTokens}
-        selectedToken={vm.network.feeTokens?.find((t) => t.address === vm.feeToken?.address)}
-        themeColor={vm.network.color}
+        network={network}
+        tokens={network.erc4337?.feeTokens}
+        selectedToken={network.erc4337?.feeTokens?.find((t) => t.address === vm.feeToken?.address)}
+        themeColor={network.color}
         onBack={() => swiper.current?.scrollTo(0)}
         onTokenSelected={(token) => {
           vm.setFeeToken(token);

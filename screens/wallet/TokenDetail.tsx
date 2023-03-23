@@ -12,7 +12,7 @@ import { thirdFontColor, verifiedColor, warningColor } from '../../constants/sty
 
 import { BreathAnimation } from '../../utils/animations';
 import { INetwork } from '../../common/Networks';
-import { IToken } from '../../common/tokens';
+import { ITokenMetadata } from '../../common/tokens';
 import { LineChart } from 'react-native-svg-charts';
 import { ScrollView } from 'react-native-gesture-handler';
 import Theme from '../../viewmodels/settings/Theme';
@@ -23,10 +23,10 @@ import { observer } from 'mobx-react-lite';
 import { openInappBrowser } from '../../modals/app/InappBrowser';
 
 interface Props {
-  token?: IToken;
+  token?: ITokenMetadata;
   network: INetwork;
   themeColor?: string;
-  onSendPress?: (token?: IToken) => void;
+  onSendPress?: (token?: ITokenMetadata) => void;
 }
 
 const Gradient = () => (

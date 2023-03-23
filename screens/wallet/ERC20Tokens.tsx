@@ -3,12 +3,12 @@ import { FlatList, ListRenderItemInfo, RefreshControl, Text, TouchableOpacity, V
 import React, { useState } from 'react';
 
 import { INetwork } from '../../common/Networks';
-import { IToken } from '../../common/tokens';
+import { ITokenMetadata } from '../../common/tokens';
 import Theme from '../../viewmodels/settings/Theme';
 import { formatCurrency } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
 
-const Token = observer(({ item, onPress, chainId }: { item: IToken; onPress?: (token: IToken) => void; chainId: number }) => {
+const Token = observer(({ item, onPress, chainId }: { item: ITokenMetadata; onPress?: (token: ITokenMetadata) => void; chainId: number }) => {
   const { textColor } = Theme;
 
   return (
@@ -55,14 +55,14 @@ export default observer(
     onTokenPress,
     network,
   }: {
-    tokens?: IToken[];
+    tokens?: ITokenMetadata[];
     loading?: boolean;
     separatorColor?: string;
     onRefreshRequest?: () => Promise<any>;
-    onTokenPress?: (token: IToken) => void;
+    onTokenPress?: (token: ITokenMetadata) => void;
     network: INetwork;
   }) => {
-    const renderItem = ({ item }: ListRenderItemInfo<IToken>) => (
+    const renderItem = ({ item }: ListRenderItemInfo<ITokenMetadata>) => (
       <Token chainId={network.chainId} item={item} onPress={onTokenPress} />
     );
     const [manuallyLoading, setManuallyLoading] = useState(false);

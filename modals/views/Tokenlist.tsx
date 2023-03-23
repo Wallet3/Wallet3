@@ -4,17 +4,17 @@ import { FlatList, ListRenderItemInfo, Text, TouchableOpacity, View } from 'reac
 import BackButton from '../components/BackButton';
 import { Feather } from '@expo/vector-icons';
 import { INetwork } from '../../common/Networks';
-import { IToken } from '../../common/tokens';
+import { ITokenMetadata } from '../../common/tokens';
 import React from 'react';
 import Theme from '../../viewmodels/settings/Theme';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
 
 interface Props {
-  onTokenSelected?: (token: IToken) => void;
-  selectedToken?: IToken | null;
+  onTokenSelected?: (token: ITokenMetadata) => void;
+  selectedToken?: ITokenMetadata | null;
   onBack?: () => void;
-  tokens?: IToken[];
+  tokens?: ITokenMetadata[];
   themeColor?: string;
   network: INetwork;
 }
@@ -22,7 +22,7 @@ interface Props {
 export default observer((props: Props) => {
   const { textColor } = Theme;
 
-  const renderItem = ({ item }: ListRenderItemInfo<IToken>) => {
+  const renderItem = ({ item }: ListRenderItemInfo<ITokenMetadata>) => {
     return (
       <TouchableOpacity
         onPress={() => props.onTokenSelected?.(item)}

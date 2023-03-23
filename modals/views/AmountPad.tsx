@@ -8,7 +8,7 @@ import { AccountBase } from '../../viewmodels/account/AccountBase';
 import Avatar from '../../components/Avatar';
 import BackButton from '../components/BackButton';
 import { INetwork } from '../../common/Networks';
-import { IToken } from '../../common/tokens';
+import { ITokenMetadata } from '../../common/tokens';
 import { MaterialIcons } from '@expo/vector-icons';
 import MessageKeys from '../../common/MessageKeys';
 import Networks from '../../viewmodels/core/Networks';
@@ -24,7 +24,7 @@ interface SubViewProps {
   close?: () => void;
   onTokenPress?: () => void;
   onTokenBack?: () => void;
-  token: IToken;
+  token: ITokenMetadata;
   disableBack?: boolean;
   disableBalance?: boolean;
   disableButton?: boolean;
