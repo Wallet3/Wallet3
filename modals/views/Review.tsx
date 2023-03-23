@@ -154,7 +154,7 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, txDa
           justifyContent: 'flex-end',
         }}
       >
-        {vm.isERC4337Available ? (
+        {vm.isInERC4337 ? (
           <AddToSendingQueue
             containerStyle={{ marginStart: -10 }}
             themeColor={tintColor}

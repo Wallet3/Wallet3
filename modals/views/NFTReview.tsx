@@ -146,7 +146,7 @@ const NFTReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, b
       <GasFeeReviewItem vm={vm} onGasPress={onGasPress} />
 
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', marginTop: 10 }}>
-        {vm.isERC4337Available && (
+        {vm.isInERC4337 && (
           <AddToSendingQueue
             containerStyle={{ marginStart: -8, marginVertical: -10 }}
             themeColor={vm.network.color}

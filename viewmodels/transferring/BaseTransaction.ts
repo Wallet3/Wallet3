@@ -121,7 +121,7 @@ export class BaseTransaction {
     return this.network.erc4337 ? true : false;
   }
 
-  get isERC4337Available() {
+  get isInERC4337() {
     return this.isERC4337Account && this.isERC4337Network;
   }
 
@@ -411,7 +411,7 @@ export class BaseTransaction {
     args.value = BigNumber.from(args.value || 0).eq(0) ? '0x0' : BigNumber.from(args.value).toHexString().replace('0x0', '0x');
     args.data = args.data || '0x';
 
-    const { gas, errorMessage } = this.isERC4337Available
+    const { gas, errorMessage } = this.isInERC4337
       ? await this.estimateERC4337Gas(args)
       : await estimateGas(this.network.chainId, { ...args, from: this.account.address });
 
@@ -471,7 +471,7 @@ export class BaseTransaction {
   }
 
   async sendRawTx(args: SendTxRequest, pin?: string): Promise<SendTxResponse> {
-    if (this.isQueuingTx && this.isERC4337Available && args.tx && utils.isAddress(this.toAddress)) {
+    if (this.isQueuingTx && this.isInERC4337 && args.tx && utils.isAddress(this.toAddress)) {
       ERC4337Queue.add(args);
       return { success: true };
     }
