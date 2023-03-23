@@ -1,8 +1,7 @@
 import { Button, Coin, SafeViewContainer } from '../../components';
 import { Entypo, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import React, { useRef } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { secondaryFontColor, verifiedColor, warningColor } from '../../constants/styles';
+import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import AnimatedNumber from '../../components/AnimatedNumber';
 import BackButton from '../components/BackButton';
@@ -15,6 +14,7 @@ import TxException from '../components/TxException';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import styles from '../styles';
+import { warningColor } from '../../constants/styles';
 
 interface GasProps {
   onBack?: () => void;
@@ -137,7 +137,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
           </View>
         </View>
 
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{ flexDirection: 'row', gap: 12 }}>
           <View
             style={{
               ...reviewItemsContainer,
@@ -169,7 +169,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
           </View>
 
           {vm.isERC4337Account && feeToken ? (
-            <View style={{ ...reviewItemsContainer, marginStart: 12 }}>
+            <View style={{ ...reviewItemsContainer }}>
               <TouchableOpacity
                 onPress={() => swiper.current?.scrollTo(1)}
                 style={{ ...styles.gasSpeedItem, paddingStart: 12, paddingEnd: 8, flexDirection: 'row', alignItems: 'center' }}

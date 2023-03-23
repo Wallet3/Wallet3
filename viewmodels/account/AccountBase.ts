@@ -11,6 +11,7 @@ import { AuthOptions } from '../auth/Authentication';
 import CurrencyViewmodel from '../settings/Currency';
 import { ENSViewer } from './content/ENSViewer';
 import { INetwork } from '../../common/Networks';
+import { ITokenMetadata } from '../../common/tokens';
 import { NFTViewer } from './content/NFTViewer';
 import Networks from '../core/Networks';
 import { POAP } from './content/POAP';
@@ -29,6 +30,7 @@ export type SendTxRequest = Partial<{
   readableInfo: ReadableInfo;
   network: INetwork;
   gas: { maxFeePerGas: number; maxPriorityFeePerGas: number };
+  feeToken?: ITokenMetadata | null;
   onNetworkRequest?: () => void;
 }>;
 

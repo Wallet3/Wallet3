@@ -8,6 +8,7 @@ import { AuthOptions } from '../auth/Authentication';
 import { HttpRpcClient } from '@account-abstraction/sdk';
 import TxHub from '../hubs/TxHub';
 import { UserOperationStruct } from '@account-abstraction/contracts';
+import { Wallet3Paymaster } from '../services/ERC4337Paymaster';
 import { WalletBase } from '../wallet/WalletBase';
 import { createERC4337Client } from '../services/ERC4337';
 import { sleep } from '../../utils/async';
@@ -74,7 +75,12 @@ export class ERC4337Account extends AccountBase {
 
     const { bundlerUrls, entryPointAddress, factoryAddress } = network.erc4337;
 
-    const client = await createERC4337Client(network.chainId, owner);
+    const paymaster =
+      network.erc4337.paymasterAddress && args.feeToken
+        ? new Wallet3Paymaster(network.erc4337.paymasterAddress, args.feeToken)
+        : undefined;
+
+    const client = await createERC4337Client(network, owner, paymaster);
     if (!client) return { success: false };
 
     let op!: UserOperationStruct;

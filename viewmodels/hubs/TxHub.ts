@@ -76,9 +76,11 @@ class TxHub extends EventEmitter<Events> {
 
     await runInAction(async () => (this.txs = confirmed));
 
-    const abandonedTxs = unconfirmedTxs.filter((un) =>
-      minedTxs.find((t) => t.from.toLowerCase() === un.from.toLowerCase() && t.chainId === un.chainId && t.nonce >= un.nonce)
-    );
+    const abandonedTxs = unconfirmedTxs
+      .concat(unconfirmed4337Txs)
+      .filter((un) =>
+        minedTxs.find((t) => t.from.toLowerCase() === un.from.toLowerCase() && t.chainId === un.chainId && t.nonce >= un.nonce)
+      );
 
     unconfirmedTxs = unconfirmedTxs.filter((un) => !abandonedTxs.find((ab) => ab.hash === un.hash));
 
@@ -121,7 +123,11 @@ class TxHub extends EventEmitter<Events> {
 
     for (let tx of this.pendingTxs) {
       if (!tx.hash && tx.isERC4337) {
-        const client = await createERC4337Client(tx.chainId);
+        const client = await createERC4337Client(Networks.find(tx.chainId)!);
+        if (!client) {
+          abandonedTxs.push(tx);
+          continue;
+        }
 
         try {
           const opHash = (tx as ERC4337Transaction).opHash;

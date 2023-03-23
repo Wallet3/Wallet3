@@ -434,7 +434,7 @@ export class BaseTransaction {
   }
 
   private async estimateERC4337Gas(args: { to?: string; value?: BigNumberish; data: string }) {
-    const client = await createERC4337Client(this.network.chainId);
+    const client = await createERC4337Client(this.network);
     let callData = '0x';
 
     if (utils.isAddress(args.to || '')) {
@@ -491,6 +491,7 @@ export class BaseTransaction {
       {
         ...args,
         network: this.network,
+        feeToken: this.feeToken,
         gas: {
           maxFeePerGas: Number.parseInt(`${this.maxGasPrice * Gwei_1}`),
           maxPriorityFeePerGas: Number.parseInt(`${this.maxPriorityPrice * Gwei_1}`),
