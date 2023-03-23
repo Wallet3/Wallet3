@@ -3,13 +3,13 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 import { estimateGas, eth_call } from '../common/RPC';
 
 import ERC20ABI from '../abis/ERC20.json';
-import { ITokenMetadata } from '../common/tokens';
+import { IFungibleToken } from './Interfaces';
 
 const call_symbol = '0x95d89b41';
 const call_decimals = '0x313ce567';
 const call_name = '0x06fdde03';
 
-export class ERC20Token implements ITokenMetadata {
+export class ERC20Token implements IFungibleToken {
   private owner = '';
   readonly address: string;
   readonly erc20: ethers.Contract;

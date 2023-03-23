@@ -12,6 +12,7 @@ import Coingecko from '../../common/apis/Coingecko';
 import { ERC20Token } from '../../models/ERC20';
 import { ERC4337Account } from '../account/ERC4337Account';
 import ERC4337Queue from './ERC4337Queue';
+import { IFungibleToken } from '../../models/Interfaces';
 import { INetwork } from '../../common/Networks';
 import { ITokenMetadata } from '../../common/tokens';
 import { NativeToken } from '../../models/NativeToken';
@@ -47,7 +48,7 @@ export class BaseTransaction {
   nonce = 0;
   txException = '';
   initializing = false;
-  feeToken: ERC20Token | null = null;
+  feeToken: IFungibleToken | null = null;
 
   isQueuingTx = false;
 
@@ -127,7 +128,7 @@ export class BaseTransaction {
   }
 
   get feeTokens() {
-    const tokens: ITokenMetadata[] | undefined = this.network.erc4337?.feeTokens?.map(
+    const tokens: IFungibleToken[] | undefined = this.network.erc4337?.feeTokens?.map(
       (t) => new ERC20Token({ ...t, chainId: this.network.chainId, owner: this.account.address, contract: t.address })
     );
 
@@ -306,8 +307,7 @@ export class BaseTransaction {
 
     AsyncStorage.setItem(Keys.feeToken(this.network.chainId, this.account.address), token.address);
 
-    const feeToken = this.feeTokens.find((t) => t.address === token.address) ?? this.feeTokens[0];
-    
+    this.feeToken = this.feeTokens.find((t) => t.address === token.address) ?? (this.feeTokens[0] || null);
   }
 
   async setGas(speed: 'rapid' | 'fast' | 'standard') {
@@ -475,19 +475,10 @@ export class BaseTransaction {
   protected async initFeeToken() {
     if (!this.feeTokens) return;
     const tokenAddress = await AsyncStorage.getItem(Keys.feeToken(this.network.chainId, this.account.address));
-    const userPreferred = this.feeTokens.find((token) => token.address === tokenAddress);
+    const userPreferred = this.feeTokens.find((token) => token.address === tokenAddress) ?? this.feeTokens[0];
 
-    const feeToken = userPreferred
-      ? new ERC20Token({
-          ...this.network,
-          ...userPreferred,
-          owner: this.account.address,
-          contract: userPreferred.address,
-        })
-      : null;
-
-    feeToken?.getBalance();
-    runInAction(() => (this.feeToken = feeToken));
+    userPreferred?.getBalance();
+    runInAction(() => (this.feeToken = userPreferred));
   }
 
   async sendRawTx(args: SendTxRequest, pin?: string): Promise<SendTxResponse> {

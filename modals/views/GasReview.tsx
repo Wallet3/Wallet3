@@ -27,7 +27,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
   const { borderColor, textColor, secondaryTextColor } = Theme;
   const swiper = useRef<Swiper>(null);
 
-  const { network } = vm;
+  const { network, feeTokens, feeToken } = vm;
   const editable = !vm.isERC4337Account;
   const reviewItemStyle = { ...styles.reviewItem, borderColor };
   const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
@@ -168,19 +168,13 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
             </TouchableOpacity>
           </View>
 
-          {vm.feeToken ? (
+          {vm.isERC4337Account && feeToken ? (
             <View style={{ ...reviewItemsContainer, marginStart: 12 }}>
               <TouchableOpacity
                 onPress={() => swiper.current?.scrollTo(1)}
-                style={{ ...styles.gasSpeedItem, paddingStart: 10, paddingEnd: 6, flexDirection: 'row', alignItems: 'center' }}
+                style={{ ...styles.gasSpeedItem, paddingStart: 12, paddingEnd: 8, flexDirection: 'row', alignItems: 'center' }}
               >
-                <Coin
-                  forceRefresh
-                  symbol={vm.feeToken.symbol}
-                  address={vm.feeToken.address}
-                  chainId={network.chainId}
-                  size={14}
-                />
+                <Coin forceRefresh symbol={feeToken.symbol} address={feeToken.address} chainId={network.chainId} size={14} />
                 <Text
                   numberOfLines={1}
                   style={{
@@ -189,11 +183,11 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
                     marginStart: 6,
                     marginEnd: 2,
                     color: textColor,
-                    fontWeight: '500',
+                    fontWeight: '600',
                     maxWidth: 100,
                   }}
                 >
-                  {vm.feeToken.symbol}
+                  {feeToken.symbol}
                 </Text>
                 <Entypo name="chevron-right" color={secondaryTextColor} />
               </TouchableOpacity>
@@ -221,8 +215,8 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
 
       <Tokenlist
         network={network}
-        tokens={network.erc4337?.feeTokens}
-        selectedToken={network.erc4337?.feeTokens?.find((t) => t.address === vm.feeToken?.address)}
+        tokens={feeTokens}
+        selectedToken={vm.feeToken}
         themeColor={network.color}
         onBack={() => swiper.current?.scrollTo(0)}
         onTokenSelected={(token) => {
