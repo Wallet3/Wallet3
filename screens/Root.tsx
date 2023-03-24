@@ -131,11 +131,11 @@ const RootTab = observer(() => {
                   style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 0 }}
                 >
                   <Avatar
-                    size={18}
+                    size={20}
                     uri={currentAccount?.avatar}
                     emoji={currentAccount?.emojiAvatar}
-                    backgroundColor={'transparent' || currentAccount?.emojiColor}
-                    emojiSize={12}
+                    backgroundColor={currentAccount?.emojiColor}
+                    emojiSize={8}
                     style={{ marginEnd: -2 }}
                   />
                   <Logo height={16} width={100} color={foregroundColor} />

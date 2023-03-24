@@ -45,7 +45,7 @@ export default observer((props: Props) => {
           {item.symbol}
         </Text>
         <View style={{ flex: 1 }} />
-        {props.selectedToken === item && <Feather name="check" size={16} color={props.themeColor} />}
+        {props.selectedToken?.address === item.address && <Feather name="check" size={16} color={props.themeColor} />}
       </TouchableOpacity>
     );
   };

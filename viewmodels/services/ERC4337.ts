@@ -17,7 +17,11 @@ export async function createERC4337Client(network: INetwork, owner = createDefau
   const key = `${chainId}:${owner.address}`;
 
   const cache = ERC4337Clients.get(key);
-  if (cache) return cache;
+
+  if (cache) {
+    cache.paymasterAPI = paymaster;
+    return cache;
+  }
 
   if (!erc4337) return;
 

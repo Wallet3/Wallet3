@@ -68,7 +68,7 @@ export class TokenTransferring extends BaseTransaction {
       this.network &&
       !this.insufficientFee &&
       !this.token.loading &&
-      !this.txException &&
+      
       this.isValidAccountAndNetwork
     );
   }

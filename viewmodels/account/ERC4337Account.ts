@@ -1,14 +1,14 @@
 import { AccountBase, SendTxRequest, SendTxResponse } from './AccountBase';
-import { BigNumber, utils } from 'ethers';
-import { eth_call_return, getCode } from '../../common/RPC';
+import { BigNumber, providers, utils } from 'ethers';
+import { eth_call_return, getCode, getRPCUrls } from '../../common/RPC';
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthOptions } from '../auth/Authentication';
 import { HttpRpcClient } from '@account-abstraction/sdk';
+import { Paymaster } from '../services/Paymaster';
 import TxHub from '../hubs/TxHub';
 import { UserOperationStruct } from '@account-abstraction/contracts';
-import { Wallet3Paymaster } from '../services/ERC4337Paymaster';
 import { WalletBase } from '../wallet/WalletBase';
 import { createERC4337Client } from '../services/ERC4337';
 import { sleep } from '../../utils/async';
@@ -58,7 +58,7 @@ export class ERC4337Account extends AccountBase {
   async sendTx(args: SendTxRequest, pin?: string): Promise<SendTxResponse> {
     if (!this.wallet) return { success: false, error: { message: 'Account not available', code: -1 } };
 
-    const { tx, txs, network, gas, readableInfo, onNetworkRequest } = args;
+    let { tx, txs, network, gas, readableInfo, onNetworkRequest, feeToken } = args;
     if (!(tx || txs)) return { success: false };
     if (!network?.erc4337) return { success: false, error: { message: 'ERC4337 not supported', code: -1 } };
 
@@ -73,15 +73,25 @@ export class ERC4337Account extends AccountBase {
 
     onNetworkRequest?.();
 
-    const { bundlerUrls, entryPointAddress, factoryAddress } = network.erc4337;
+    const { bundlerUrls, entryPointAddress, paymasterAddress } = network.erc4337;
 
     const paymaster =
-      network.erc4337.paymasterAddress && args.feeToken
-        ? new Wallet3Paymaster(network.erc4337.paymasterAddress, args.feeToken)
+      paymasterAddress && feeToken?.address
+        ? new Paymaster({
+            account: this,
+            feeToken,
+            paymasterAddress: paymasterAddress,
+            provider: new providers.JsonRpcProvider(getRPCUrls(network.chainId)[0]),
+          })
         : undefined;
 
     const client = await createERC4337Client(network, owner, paymaster);
     if (!client) return { success: false };
+
+    if (paymaster) {
+      txs = txs || [tx!];
+      txs.unshift(...paymaster.buildApprove());
+    }
 
     let op!: UserOperationStruct;
 
@@ -114,6 +124,7 @@ export class ERC4337Account extends AccountBase {
             );
       }
     } catch (error) {
+      console.error(error);
       return { success: false };
     }
 

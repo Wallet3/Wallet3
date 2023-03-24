@@ -123,7 +123,7 @@ export class BaseTransaction {
     return this.network.erc4337 ? true : false;
   }
 
-  get isInERC4337() {
+  get isUsingERC4337() {
     return this.isERC4337Account && this.isERC4337Network;
   }
 
@@ -304,7 +304,7 @@ export class BaseTransaction {
 
   setFeeToken(token: ITokenMetadata) {
     if (!this.feeTokens) return;
-
+    console.log('set fee token', token);
     AsyncStorage.setItem(Keys.feeToken(this.network.chainId, this.account.address), token.address);
 
     this.feeToken = this.feeTokens.find((t) => t.address === token.address) ?? (this.feeTokens[0] || null);
@@ -422,7 +422,7 @@ export class BaseTransaction {
     args.value = BigNumber.from(args.value || 0).eq(0) ? '0x0' : BigNumber.from(args.value).toHexString().replace('0x0', '0x');
     args.data = args.data || '0x';
 
-    const { gas, errorMessage } = this.isInERC4337
+    const { gas, errorMessage } = this.isUsingERC4337
       ? await this.estimateERC4337Gas(args)
       : await estimateGas(this.network.chainId, { ...args, from: this.account.address });
 
@@ -477,15 +477,18 @@ export class BaseTransaction {
     const tokenAddress = await AsyncStorage.getItem(Keys.feeToken(this.network.chainId, this.account.address));
     const userPreferred = this.feeTokens.find((token) => token.address === tokenAddress) ?? this.feeTokens[0];
 
+    console.log('userPreferred', userPreferred.symbol);
     userPreferred?.getBalance();
     runInAction(() => (this.feeToken = userPreferred));
   }
 
   async sendRawTx(args: SendTxRequest, pin?: string): Promise<SendTxResponse> {
-    if (this.isQueuingTx && this.isInERC4337 && args.tx && utils.isAddress(this.toAddress)) {
+    if (this.isQueuingTx && this.isUsingERC4337 && args.tx && utils.isAddress(this.toAddress)) {
       ERC4337Queue.add(args);
       return { success: true };
     }
+
+    console.log('send fee token', this.feeToken?.symbol);
 
     return this.account.sendTx(
       {
