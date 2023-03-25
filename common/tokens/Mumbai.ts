@@ -10,6 +10,7 @@ export const Mumbai_USDC = {
   decimals: 6,
   symbol: 'USDC',
   shown: true,
+  isStable: true,
 };
 
 export const MumbaiPopTokens = [Mumbai_WMATIC, Mumbai_USDC];

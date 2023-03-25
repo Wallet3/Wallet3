@@ -52,7 +52,6 @@ export class ERC4337Client extends SimpleAccountAPI {
   }
 
   async createUnsignedUserOpForCallData(callData: string, opts?: FeeOptions & GasOptions) {
-    console.log('createUnsignedUserOpForCallData');
     const phantom = await this.checkAccountPhantom();
 
     let callGasLimit = BigNumber.from(phantom ? 320_000 : 120_000);
@@ -99,18 +98,15 @@ export class ERC4337Client extends SimpleAccountAPI {
       partialUserOp.paymasterAndData = (await this.paymasterAPI.getPaymasterAndData(userOpForPm)) || '0x';
     }
 
-    console.log('preVerificationGas bf', partialUserOp.preVerificationGas, partialUserOp.verificationGasLimit.toString());
-
     return {
       ...partialUserOp,
       preVerificationGas: await this.getPreVerificationGas(partialUserOp),
       signature: '',
-    };
+    } as UserOperationStruct;
   }
 
   async createSignedUserOpForTransactions(transactions: TransactionDetailsForUserOp[], opts?: GasOptions) {
     const op = await this.createUnsignedUserOpForTransactions(transactions, opts);
-    console.log('preVerificationGas af', op.preVerificationGas);
     return super.signUserOp(op);
   }
 

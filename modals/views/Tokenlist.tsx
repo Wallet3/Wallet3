@@ -14,7 +14,7 @@ interface Props {
   onTokenSelected?: (token: ITokenMetadata) => void;
   selectedToken?: ITokenMetadata | null;
   onBack?: () => void;
-  tokens?: ITokenMetadata[];
+  tokens?: ITokenMetadata[] | null;
   themeColor?: string;
   network: INetwork;
 }

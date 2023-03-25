@@ -30,7 +30,7 @@ export class TokenTransferring extends BaseTransaction {
       if (this.isNativeToken) {
         const ether = utils.parseEther(this.amount);
         if (ether.eq(this.account.nativeToken.balance!)) {
-          return BigNumber.from(this.account.nativeToken.balance!).sub(this.txFeeWei);
+          return BigNumber.from(this.account.nativeToken.balance!).sub(this.nativeFeeWei);
         }
       }
 
@@ -52,12 +52,6 @@ export class TokenTransferring extends BaseTransaction {
     return !this.token.address;
   }
 
-  get insufficientFee() {
-    return this.isNativeToken
-      ? this.amountWei.add(this.txFeeWei).gt(this.account.nativeToken.balance!)
-      : this.txFeeWei.gt(this.account.nativeToken.balance!);
-  }
-
   get isValidParams() {
     return (
       !this.loading &&
@@ -68,7 +62,7 @@ export class TokenTransferring extends BaseTransaction {
       this.network &&
       !this.insufficientFee &&
       !this.token.loading &&
-      
+      !this.txException &&
       this.isValidAccountAndNetwork
     );
   }
@@ -179,6 +173,12 @@ export class TokenTransferring extends BaseTransaction {
   setAmount(amount: string) {
     this.amount = amount;
     this.txException = '';
+
+    try {
+      this.valueWei = this.isNativeToken ? utils.parseEther(this.amount) : BigNumber.from(0);
+    } catch (error) {
+      this.valueWei = BigNumber.from(0);
+    }
   }
 
   sendTx(pin?: string, onNetworkRequest?: () => void) {

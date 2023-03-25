@@ -59,7 +59,6 @@ export class RawTransactionRequest extends BaseTransaction {
   nfts: NFTMetadata[] = [];
 
   type: RequestType = 'Unknown';
-  valueWei = BigNumber.from(0);
   tokenAmountWei = BigNumber.from(0);
   tokenDecimals = 18;
   tokenSymbol = '';
@@ -92,10 +91,13 @@ export class RawTransactionRequest extends BaseTransaction {
 
   get value() {
     try {
-      if (this.valueWei.add(this.txFeeWei).gt(this.nativeToken.balance)) {
-        return Math.max(0, Number(utils.formatEther(this.nativeToken.balance.sub(this.txFeeWei)))).toLocaleString(undefined, {
-          maximumFractionDigits: 6,
-        });
+      if (this.valueWei.add(this.nativeFeeWei).gt(this.nativeToken.balance)) {
+        return Math.max(0, Number(utils.formatEther(this.nativeToken.balance.sub(this.nativeFeeWei)))).toLocaleString(
+          undefined,
+          {
+            maximumFractionDigits: 6,
+          }
+        );
       }
 
       return Number(utils.formatEther(this.valueWei)).toLocaleString(undefined, {
@@ -121,7 +123,6 @@ export class RawTransactionRequest extends BaseTransaction {
 
     makeObservable(this, {
       type: observable,
-      valueWei: observable,
       value: computed,
       tokenAmountWei: observable,
       tokenAmount: computed,
@@ -380,10 +381,6 @@ export class RawTransactionRequest extends BaseTransaction {
     }
   }
 
-  get insufficientFee() {
-    return this.valueWei.add(this.txFeeWei).gt(this.nativeToken.balance);
-  }
-
   get isValidParams() {
     return (
       !this.loading &&
@@ -401,7 +398,7 @@ export class RawTransactionRequest extends BaseTransaction {
       let valueEther = BigNumber.from(this.param.value || 0);
 
       if (valueEther.gt(0) && valueEther.eq(this.nativeToken.balance)) {
-        valueEther = BigNumber.from(this.nativeToken.balance!).sub(this.txFeeWei);
+        valueEther = BigNumber.from(this.nativeToken.balance!).sub(this.nativeFeeWei);
         valueEther = valueEther.lt(0) ? BigNumber.from(0) : valueEther;
       }
 

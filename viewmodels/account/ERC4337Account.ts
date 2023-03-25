@@ -4,14 +4,12 @@ import { eth_call_return, getCode, getRPCUrls } from '../../common/RPC';
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { AuthOptions } from '../auth/Authentication';
 import { HttpRpcClient } from '@account-abstraction/sdk';
 import { Paymaster } from '../services/Paymaster';
 import TxHub from '../hubs/TxHub';
 import { UserOperationStruct } from '@account-abstraction/contracts';
 import { WalletBase } from '../wallet/WalletBase';
 import { createERC4337Client } from '../services/ERC4337';
-import { sleep } from '../../utils/async';
 
 const Keys = {
   accountActivated: (address: string, chainId: number) => `${chainId}_${address}_erc4337_activated`,

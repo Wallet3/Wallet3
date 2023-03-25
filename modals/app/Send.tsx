@@ -1,5 +1,5 @@
 import { ContactsPad, ReviewPad, SendAmount } from '../views';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import App from '../../viewmodels/core/App';
 import Authentication from '../../viewmodels/auth/Authentication';
@@ -69,6 +69,10 @@ export default observer(({ vm, close, erc681, onReviewEnter, onReviewLeave }: Pr
     if (await sendTx()) return;
     goTo(3);
   };
+
+  useEffect(() => {
+    return () => vm.dispose();
+  }, []);
 
   return (
     <SafeAreaProvider style={{ ...styles.safeArea }}>

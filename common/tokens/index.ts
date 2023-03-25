@@ -31,4 +31,6 @@ export interface ITokenMetadata {
   amount?: string;
   shown?: boolean;
   loading?: boolean;
+
+  isStable?: boolean;
 }

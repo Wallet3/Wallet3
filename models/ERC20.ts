@@ -24,6 +24,7 @@ export class ERC20Token implements IFungibleToken {
   balance = BigNumber.from(0);
   iconUrl?: string;
   shown?: boolean;
+  isStable = false;
   order?: number;
 
   loading = false;
@@ -48,6 +49,7 @@ export class ERC20Token implements IFungibleToken {
     iconUrl?: string;
     shown?: boolean;
     order?: number;
+    isStable?: boolean;
   }) {
     this.address = utils.getAddress(props.contract);
     this.erc20 = new ethers.Contract(this.address, ERC20ABI);
@@ -61,6 +63,7 @@ export class ERC20Token implements IFungibleToken {
     this.iconUrl = props.iconUrl;
     this.shown = props.shown;
     this.order = props.order;
+    this.isStable = props.isStable ?? false;
 
     this.setOwner(props.owner);
 

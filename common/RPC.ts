@@ -232,14 +232,17 @@ export async function estimateGas(
       });
 
       if (resp.error) {
-        errorMessage = resp.error.message;
-        if (errors++ > 3) break; // Speed up error checking
+        console.log('estimateGas', resp.error);
+
+        errorMessage = resp.error.message || errorMessage;
+        if (errors++ >= 3) break; // Speed up error checking
 
         continue;
       }
 
       return { gas: Number(resp.result as string) };
     } catch (error) {
+      console.log('estimateGas', error);
       markRPCFailed(chainId, url);
     }
   }

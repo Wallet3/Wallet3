@@ -15,6 +15,7 @@ export const DAI = {
   decimals: 18,
   symbol: 'DAI',
   shown: true,
+  isStable: true,
 };
 
 export const USDC = {
@@ -22,36 +23,42 @@ export const USDC = {
   decimals: 6,
   symbol: 'USDC',
   shown: true,
+  isStable: true,
 };
 
 export const USDT = {
   address: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
   decimals: 6,
   symbol: 'USDT',
+  isStable: true,
 };
 
 export const TUSD = {
   address: '0x0000000000085d4780B73119b644AE5ecd22b376',
   decimals: 18,
   symbol: 'TUSD',
+  isStable: true,
 };
 
 export const BUSD = {
   address: '0x4Fabb145d64652a948d72533023f6E7A623C7C53',
   decimals: 18,
   symbol: 'BUSD',
+  isStable: true,
 };
 
 export const sUSD = {
   address: '0x57Ab1ec28D129707052df4dF418D58a2D46d5f51',
   decimals: 18,
   symbol: 'sUSD',
+  isStable: true,
 };
 
 export const PAX = {
   address: '0x8E870D67F660D95d5be530380D0eC0bd388289E1',
   decimals: 18,
   symbol: 'PAX',
+  isStable: true,
 };
 
 export const WBTC = {
