@@ -1149,7 +1149,7 @@ PODS:
     - react-native-video/Video (= 5.2.1)
   - react-native-video/Video (5.2.1):
     - React-Core
-  - react-native-view-shot (3.5.0):
+  - react-native-view-shot (3.6.0):
     - React-Core
   - react-native-webview (11.26.1):
     - React-Core
@@ -1682,7 +1682,7 @@ SPEC CHECKSUMS:
   react-native-slider: 33b8d190b59d4f67a541061bb91775d53d617d9d
   react-native-tcp-socket: e724380c910c2e704816ec817ed28f1342246ff7
   react-native-video: c26780b224543c62d5e1b2a7244a5cd1b50e8253
-  react-native-view-shot: 792829857bbb23a9c8acdad9a640554bdee397a3
+  react-native-view-shot: 705f999ac2a24e4e6c909c0ca65c732ed33ca2ff
   react-native-webview: 9f111dfbcfc826084d6c507f569e5e03342ee1c1
   react-native-zeroconf: 54249f2fcc76e4eb97bce9d07469e8eeb638b1f5
   React-perflogger: 0bb0522a12e058f6eb69d888bc16f40c16c4b907

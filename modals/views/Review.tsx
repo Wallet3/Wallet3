@@ -147,43 +147,45 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, txDa
 
       <GasFeeReviewItem vm={vm} onGasPress={onGasPress} />
 
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'flex-end',
-        }}
-      >
-        {vm.isUsingERC4337 ? (
-          <AddToSendingQueue
-            containerStyle={{ marginStart: -10 }}
-            themeColor={tintColor}
-            txtStyle={{ color: secondaryTextColor }}
-            checked={vm.isQueuingTx}
-            onToggle={() => vm.setIsQueuingTx(!vm.isQueuingTx)}
-          />
-        ) : (
-          <View style={{ height: 32, width: 1 }} />
-        )}
+      {vm.txException ? (
+        <TxException exception={vm.txException} containerStyle={{ marginTop: 10 }} />
+      ) : (
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+          }}
+        >
+          {vm.isUsingERC4337 ? (
+            <AddToSendingQueue
+              containerStyle={{ marginStart: -10 }}
+              themeColor={tintColor}
+              txtStyle={{ color: secondaryTextColor }}
+              checked={vm.isQueuingTx}
+              onToggle={() => vm.setIsQueuingTx(!vm.isQueuingTx)}
+            />
+          ) : (
+            <View style={{ height: 32, width: 1 }} />
+          )}
 
-        {(txDataEditable || (vm.insufficientFee && !vm.loading)) && <Placeholder />}
+          {(txDataEditable || (vm.insufficientFee && !vm.loading)) && <Placeholder />}
 
-        {vm.insufficientFee && !vm.loading ? <InsufficientFee /> : undefined}
+          {vm.insufficientFee && !vm.loading ? <InsufficientFee /> : undefined}
 
-        {txDataEditable && !vm.insufficientFee ? (
-          <TouchableOpacity
-            style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 10, paddingHorizontal: 15 }}
-            onPress={onEditDataPress}
-          >
-            <Text style={{ fontWeight: '600', color: secondaryTextColor, fontSize: 12.5 }}>
-              {t('modal-review-edit-tx-message')}
-            </Text>
-            <MaterialIcons name="keyboard-arrow-right" size={15} color={secondaryTextColor} style={{ marginBottom: -1 }} />
-          </TouchableOpacity>
-        ) : undefined}
-      </View>
-
-      {vm.txException ? <TxException exception={vm.txException} /> : undefined}
+          {txDataEditable && !vm.insufficientFee ? (
+            <TouchableOpacity
+              style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 10, paddingHorizontal: 15 }}
+              onPress={onEditDataPress}
+            >
+              <Text style={{ fontWeight: '600', color: secondaryTextColor, fontSize: 12.5 }}>
+                {t('modal-review-edit-tx-message')}
+              </Text>
+              <MaterialIcons name="keyboard-arrow-right" size={15} color={secondaryTextColor} style={{ marginBottom: -1 }} />
+            </TouchableOpacity>
+          ) : undefined}
+        </View>
+      )}
 
       <View style={{ flex: 1 }} />
 

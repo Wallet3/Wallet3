@@ -72,6 +72,12 @@ export const MATIC_WBTC = {
   symbol: 'WBTC',
 };
 
+export const MATIC_JPYC = {
+  address: '0x431D5dfF03120AFA4bDf332c61A6e1766eF37BDB',
+  decimals: 18,
+  symbol: 'JPYC',
+};
+
 export const PolygonPopularTokens = [
   MATIC_DAI,
   MATIC_USDC,
