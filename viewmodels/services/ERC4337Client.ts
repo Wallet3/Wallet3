@@ -62,7 +62,7 @@ export class ERC4337Client extends SimpleAccountAPI {
         data: callData,
       });
     } catch (error) {
-      console.log(error);
+      console.log('estimateERC4337 Gas', error);
     }
 
     const initCode = await this.getInitCode();

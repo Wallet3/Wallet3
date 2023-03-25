@@ -26,7 +26,6 @@ import { ITokenMetadata } from '../../common/tokens';
 import { NativeToken } from '../../models/NativeToken';
 import { Paymaster } from '../services/Paymaster';
 import { createERC4337Client } from '../services/ERC4337';
-import erc4337 from '../../modals/erc4337';
 import { fetchAddressInfo } from '../services/EtherscanPublicTag';
 import { getEnsAvatar } from '../../common/ENS';
 
@@ -441,8 +440,6 @@ export class BaseTransaction {
       ? await this.estimateERC4337Gas(args)
       : await estimateGas(this.network.chainId, { ...args, from: this.account.address });
 
-    console.log(gas, errorMessage);
-
     runInAction(() => {
       this.isEstimatingGas = false;
       this.setGasLimit(gas || 0);
@@ -452,15 +449,15 @@ export class BaseTransaction {
 
   private async estimateERC4337Gas(args: { to?: string; value?: BigNumberish; data: string }) {
     const client = await createERC4337Client(this.network);
-    if (!client) return {};
+    if (!client) return { errorMessage: 'Network is not available' };
 
     let callData = '0x';
 
     if (utils.isAddress(args.to || '')) {
-      callData = (await client?.encodeExecute(args.to!, args.value || 0, args.data)) ?? '0x';
+      callData = (await client.encodeExecute(args.to!, args.value || 0, args.data)) ?? '0x';
     } else {
       callData =
-        (await client?.encodeCreate2(
+        (await client.encodeCreate2(
           args.value!,
           utils.formatBytes32String(`${await this.account.getNonce(this.network.chainId)}`),
           args.data
@@ -492,7 +489,8 @@ export class BaseTransaction {
 
     const { erc4337, chainId } = this.network;
 
-    if (!erc4337 || !this.feeToken?.address) return;
+    if (!erc4337) return;
+    if (!this.feeToken?.address) return;
     if (!erc4337.paymasterAddress) return;
 
     const paymaster = new Paymaster({

@@ -169,7 +169,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
             </TouchableOpacity>
           </View>
 
-          {vm.isERC4337Account && feeToken ? (
+          {vm.isERC4337Account && (feeTokens?.length ?? 0) > 0 && feeToken ? (
             <View style={{ ...reviewItemsContainer }}>
               <TouchableOpacity
                 onPress={() => swiper.current?.scrollTo(1)}

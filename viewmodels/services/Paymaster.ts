@@ -6,6 +6,7 @@ import { ITokenMetadata } from '../../common/tokens';
 import OracleABI from '../../abis/TokenOracle.json';
 import { PaymasterAPI } from '@account-abstraction/sdk';
 import { UserOperationStruct } from '@account-abstraction/contracts';
+import { getHash } from '../../configs/secret';
 
 export class Paymaster extends PaymasterAPI {
   address: string;
@@ -36,8 +37,11 @@ export class Paymaster extends PaymasterAPI {
   }
 
   async getPaymasterAndData(_: Partial<UserOperationStruct>): Promise<string | undefined> {
-    const result = utils.solidityPack(['address', 'address'], [this.address, this.feeToken.address]);
-    console.log('paymaster', result);
+    const result = utils.solidityPack(
+      ['address', 'address', 'bytes'],
+      [this.address, this.feeToken.address, await getHash(this.account.address)]
+    );
+
     return result;
   }
 
