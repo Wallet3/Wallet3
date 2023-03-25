@@ -86,8 +86,12 @@ export class AppVM {
       () => {
         this.currentAccount?.tokens.refreshOverview();
         this.currentAccount?.nfts.refresh();
-        this.currentAccount?.isERC4337 && (this.currentAccount as ERC4337Account).checkActivated(Networks.current.chainId);
         this.allAccounts.forEach((a) => a.tokens.refreshNativeToken());
+
+        if (Networks.current.erc4337) {
+          this.allAccounts.forEach((a) => a.isERC4337 && (a as ERC4337Account).checkActivated(Networks.current.chainId));
+        }
+
         UI.gasIndicator && GasPrice.refresh();
       }
     );

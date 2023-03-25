@@ -13,4 +13,20 @@ export const Mumbai_USDC = {
   isStable: true,
 };
 
-export const MumbaiPopTokens = [Mumbai_WMATIC, Mumbai_USDC];
+export const Mumbai_USDT = {
+  address: '0x466DD1e48570FAA2E7f69B75139813e4F8EF75c2',
+  decimals: 6,
+  symbol: 'USDT',
+  shown: true,
+  isStable: true,
+};
+
+export const Mumbai_Dai = {
+  address: '0x3eA3EfA40DB89571E9d0bbF123678E90647644EE',
+  decimals: 18,
+  symbol: 'DAI',
+  shown: true,
+  isStable: true,
+};
+
+export const MumbaiPopTokens = [Mumbai_WMATIC, Mumbai_USDC, Mumbai_Dai, Mumbai_USDT];

@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BaseTransaction } from './BaseTransaction';
 import { ERC20Token } from '../../models/ERC20';
 import { Gwei_1 } from '../../common/Constants';
+import { IFungibleToken } from '../../models/Interfaces';
 import { INetwork } from '../../common/Networks';
 import { ITokenMetadata } from '../../common/tokens';
 import { NativeToken } from '../../models/NativeToken';
@@ -49,7 +50,7 @@ export class TokenTransferring extends BaseTransaction {
   }
 
   get isNativeToken() {
-    return !this.token.isNative;
+    return this.token.isNative;
   }
 
   get isValidParams() {
@@ -160,7 +161,7 @@ export class TokenTransferring extends BaseTransaction {
     return super.estimateGas({ to: this.toAddress, data: data });
   }
 
-  setToken(token: ITokenMetadata) {
+  setToken(token: IFungibleToken) {
     if (this.token.address === token.address) return;
 
     this.token = token;

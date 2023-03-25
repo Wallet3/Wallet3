@@ -12,5 +12,12 @@
       { "icon": "https://login.xyz/favicon.png", "title": "siwe", "url": "https://login.xyz" },
       { "icon": "https://app.uniswap.org/images/192x192_App_Icon.png", "title": "Uniswap", "url": "https://app.uniswap.org" }
     ]
+  },
+  {
+    "title": "Faucets",
+    "data": [
+      { "title": "Paradigm", "url": "https://faucet.paradigm.xyz" },
+      { "title": "Mumbai Faucet", "url": "https://faucet.cask.fi" }
+    ]
   }
 ]

@@ -6,6 +6,7 @@ import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ERC20Token } from '../../../models/ERC20';
+import { IFungibleToken } from '../../../models/Interfaces';
 import { ITokenMetadata } from '../../../common/tokens';
 import { NativeToken } from '../../../models/NativeToken';
 import Networks from '../../core/Networks';
@@ -22,8 +23,8 @@ export class AccountTokens {
 
   owner: string;
 
-  tokens: UserToken[] = []; // favorite tokens
-  allTokens: UserToken[] = [];
+  tokens: IFungibleToken[] = []; // favorite tokens
+  allTokens: IFungibleToken[] = [];
   nativeToken!: NativeToken;
   loadingTokens = false;
   balanceUSD = 0;
@@ -133,7 +134,7 @@ export class AccountTokens {
     runInAction(() => (this.balanceUSD = balance.usd_value));
   }
 
-  toggleToken(token: UserToken) {
+  toggleToken(token: IFungibleToken) {
     token.shown = !token.shown;
 
     this.allTokens = [
@@ -148,19 +149,19 @@ export class AccountTokens {
     TokensMan.saveUserTokens(Networks.current.chainId, this.owner, this.allTokens);
   }
 
-  sortTokens(tokens: UserToken[]) {
+  sortTokens(tokens: IFungibleToken[]) {
     this.allTokens = tokens;
     this.tokens = [this.tokens[0], ...tokens.filter((t) => t.shown)];
     TokensMan.saveUserTokens(Networks.current.chainId, this.owner, tokens);
   }
 
-  async addToken(token: UserToken, targetChainId = Networks.current.chainId) {
+  async addToken(token: IFungibleToken, targetChainId = Networks.current.chainId) {
     if (!token.address) return;
     const lower = token.address.toLowerCase();
 
     const currentChainId = Networks.current.chainId;
 
-    const tokens: ITokenMetadata[] =
+    const tokens: IFungibleToken[] =
       targetChainId === currentChainId ? this.allTokens : await TokensMan.loadUserTokens(targetChainId, this.owner);
 
     const found = tokens.find((t) => t.address.toLowerCase() === lower);
