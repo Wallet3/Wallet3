@@ -6,10 +6,11 @@ import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import AnimatedNumber from '../../components/AnimatedNumber';
 import BackButton from '../components/BackButton';
 import { BaseTransaction } from '../../viewmodels/transferring/BaseTransaction';
+import FeeTokenList from './TokenBalanceList';
 import Fire from '../../assets/icons/app/fire.svg';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
-import Tokenlist from './Tokenlist';
+import Tokenlist from './TokenPlainList';
 import TxException from '../components/TxException';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -31,7 +32,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
   const editable = !vm.isERC4337Account;
   const reviewItemStyle = { ...styles.reviewItem, borderColor };
   const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
-  const reviewItemValueStyle = { ...styles.reviewItemValue, color: editable? textColor: 'lightgrey', minWidth: 64 };
+  const reviewItemValueStyle = { ...styles.reviewItemValue, color: editable ? textColor : 'lightgrey', minWidth: 64 };
   const reviewItemTitle = [styles.reviewItemTitle, { color: secondaryTextColor }];
   const gasGweiLabel = [styles.gasGweiLabel, { color: secondaryTextColor }];
 
@@ -213,7 +214,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
         />
       </SafeViewContainer>
 
-      <Tokenlist
+      <FeeTokenList
         network={network}
         tokens={feeTokens}
         selectedToken={vm.feeToken}

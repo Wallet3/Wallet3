@@ -3,7 +3,7 @@ import React, { useRef } from 'react';
 import AmountPad from './AmountPad';
 import { ITokenMetadata } from '../../common/tokens';
 import Swiper from 'react-native-swiper';
-import Tokenlist from './Tokenlist';
+import Tokenlist from './TokenPlainList';
 import { TransferRequesting } from '../../viewmodels/transferring/TransferRequesting';
 import { observer } from 'mobx-react-lite';
 
