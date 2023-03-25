@@ -49,7 +49,7 @@ export class TokenTransferring extends BaseTransaction {
   }
 
   get isNativeToken() {
-    return !this.token.address;
+    return !this.token.isNative;
   }
 
   get isValidParams() {

@@ -32,5 +32,6 @@ export interface ITokenMetadata {
   shown?: boolean;
   loading?: boolean;
 
+  isNative?: boolean;
   isStable?: boolean;
 }

@@ -8,6 +8,7 @@ export class NativeToken implements IFungibleToken {
   owner: string;
   readonly decimals = 18;
   readonly address = '';
+  readonly isNative = true;
 
   chainId: number = 1;
   symbol: string = '';

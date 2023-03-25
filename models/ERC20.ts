@@ -14,6 +14,7 @@ export class ERC20Token implements IFungibleToken {
   readonly address: string;
   readonly erc20: ethers.Contract;
   readonly chainId: number;
+  readonly isNative = false;
   private call_balanceOfOwner = '';
   private allowanceMap = new Map<string, BigNumber>();
 

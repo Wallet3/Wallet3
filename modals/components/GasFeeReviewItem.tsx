@@ -42,9 +42,11 @@ export default observer(({ vm, onGasPress }: Props) => {
           width: '75%',
         }}
       >
-        <Text style={{ ...styles.reviewItemTitle, fontSize: 15 }}>
-          {`(${Currency.tokenToUSD(vm.estimatedRealFee, vm.feeTokenSymbol).toFixed(2)} USD)`}
-        </Text>
+        {!vm.feeToken?.isStable && (
+          <Text style={{ ...styles.reviewItemTitle, fontSize: 15 }}>
+            {`(${Currency.tokenToUSD(vm.estimatedRealFee, vm.feeTokenSymbol).toFixed(2)} USD)`}
+          </Text>
+        )}
 
         <AnimatedNumber
           style={{ ...styles.reviewItemValue, marginStart: 2, marginEnd: 5 }}

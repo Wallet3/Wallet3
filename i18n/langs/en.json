@@ -186,7 +186,7 @@
   "modal-review-to": "To",
   "modal-review-amount": "Amount",
   "modal-review-network": "Network",
-  "modal-review-fee": "Tx Fee",
+  "modal-review-fee": "Max Fee",
   "modal-review-button-send": "Send",
   "modal-review-button-slide-to-send": "Slide to Send",
   "modal-review-button-confirm": "Confirm",
