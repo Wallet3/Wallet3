@@ -205,6 +205,10 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
           />
         )}
 
+        {vm.feeToken?.address && !vm.feeServiceAvailable && (
+          <TxException exception="Fee paying service is not available." containerStyle={{ marginTop: 10 }} />
+        )}
+
         <View style={{ flex: 1 }} />
 
         <Button

@@ -62,11 +62,11 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, txDa
         <View style={reviewItemStyle}>
           <Text style={styles.reviewItemTitle}>{t('modal-review-send')}</Text>
 
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', gap: 6 }}>
             <Text
-              style={{ ...reviewItemValueStyle, marginEnd: 8, maxWidth: ReactiveScreen.width - 215 }}
-              numberOfLines={1}
+              style={{ ...reviewItemValueStyle, marginEnd: 2, maxWidth: ReactiveScreen.width - 215 }}
               ellipsizeMode="middle"
+              numberOfLines={1}
             >
               {vm.amount}
             </Text>
@@ -76,10 +76,11 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, txDa
               chainId={vm.network.chainId}
               symbol={vm.token!.symbol}
               forceRefresh
+              size={19}
               iconUrl={vm.token?.logoURI}
             />
 
-            <Text style={{ ...reviewItemValueStyle, marginStart: 8 }}>{vm.token.symbol}</Text>
+            <Text style={reviewItemValueStyle}>{vm.token.symbol}</Text>
           </View>
         </View>
 

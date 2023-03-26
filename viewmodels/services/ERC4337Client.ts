@@ -11,7 +11,7 @@ type Create2Options = { value: BigNumberish; salt: string; bytecode: string };
 
 export class ERC4337Client extends SimpleAccountAPI {
   async getVerificationGasLimit(): Promise<BigNumberish> {
-    return BigNumber.from(150_000);
+    return BigNumber.from(120_000);
   }
 
   async encodeCreate2(value: BigNumberish, salt: string, bytecode: string) {
