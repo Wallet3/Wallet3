@@ -10,6 +10,7 @@ export const Goerli_USDC = {
   decimals: 6,
   symbol: 'USDC',
   shown: true,
+  isStable: true,
 };
 
 export const GoerliPopTokens = [Goerli_WETH, Goerli_USDC];

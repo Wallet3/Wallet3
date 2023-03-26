@@ -1,10 +1,9 @@
-import ERC4337Transaction, { UserOperationS, userOpsToJSON } from '../../models/entities/ERC4337Transaction';
+import ERC4337Transaction, { userOpsToJSON } from '../../models/entities/ERC4337Transaction';
 import { HOUR, MINUTE, SECOND } from '../../utils/time';
 import { IsNull, LessThanOrEqual, MoreThan, Not } from 'typeorm';
 import Transaction, { ITransaction } from '../../models/entities/Transaction';
-import { Wallet, providers, utils } from 'ethers';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
-import { getRPCUrls, getTransactionReceipt, sendTransaction } from '../../common/RPC';
+import { getTransactionReceipt, sendTransaction } from '../../common/RPC';
 
 import Database from '../../models/Database';
 import EventEmitter from 'eventemitter3';
@@ -12,11 +11,9 @@ import { Gwei_1 } from '../../common/Constants';
 import { INetwork } from '../../common/Networks';
 import LINQ from 'linq';
 import Networks from '../core/Networks';
-import { SimpleAccountAPI } from '@account-abstraction/sdk';
 import { UserOperationStruct } from '@account-abstraction/contracts/dist/types/EntryPoint';
 import { createERC4337Client } from '../services/ERC4337';
 import { formatAddress } from '../../utils/formatter';
-import { getSecureRandomBytes } from '../../utils/math';
 import i18n from '../../i18n';
 import { isTransactionAbandoned } from '../services/EtherscanPublicTag';
 import { logTxConfirmed } from '../services/Analytics';
@@ -194,11 +191,14 @@ class TxHub extends EventEmitter<Events> {
 
       try {
         await tx.save();
-      } catch (error) {}
+      } catch (error) {
+        __DEV__ && console.error(error);
+      }
 
-      const invalidTxs = await this.repository.find({
-        where: { from: tx.from, chainId: tx.chainId, nonce: LessThanOrEqual(tx.nonce), blockNumber: IsNull() },
-      });
+      const invalidTxsWhere = { from: tx.from, chainId: tx.chainId, nonce: LessThanOrEqual(tx.nonce), blockNumber: IsNull() };
+      const invalidTxs = (await this.repository.find({ where: invalidTxsWhere })).concat(
+        await this.erc4337Repo.find({ where: invalidTxsWhere })
+      );
 
       abandonedTxs.push(...invalidTxs);
       await Promise.all(invalidTxs.map((t) => t.remove()));

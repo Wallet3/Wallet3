@@ -2,6 +2,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 
 import AnimatedNumber from '../../components/AnimatedNumber';
 import { BaseTransaction } from '../../viewmodels/transferring/BaseTransaction';
+import { Coin } from '../../components';
 import Currency from '../../viewmodels/settings/Currency';
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
@@ -17,6 +18,7 @@ interface Props {
 
 export default observer(({ vm, onGasPress }: Props) => {
   const { secondaryTextColor } = Theme;
+  const { feeToken } = vm;
 
   return (
     <View
@@ -42,7 +44,7 @@ export default observer(({ vm, onGasPress }: Props) => {
           width: '75%',
         }}
       >
-        {!vm.feeToken?.isStable && (
+        {!feeToken?.isStable && (
           <Text style={{ ...styles.reviewItemTitle, fontSize: 15 }}>
             {`(${Currency.tokenToUSD(vm.estimatedRealFee, vm.feeTokenSymbol).toFixed(2)} USD)`}
           </Text>
@@ -54,6 +56,17 @@ export default observer(({ vm, onGasPress }: Props) => {
           value={vm.txFee}
           formatter={(val) => val.toFixed(5)}
         />
+
+        {feeToken?.isStable === true && (
+          <Coin
+            size={16}
+            forceRefresh
+            address={feeToken.address}
+            chainId={vm.network.chainId}
+            symbol={feeToken.symbol}
+            style={{ marginEnd: 5 }}
+          />
+        )}
 
         <Text style={styles.reviewItemValue}>{vm.feeTokenSymbol}</Text>
 

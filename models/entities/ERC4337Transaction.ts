@@ -37,10 +37,13 @@ export async function userOpsToJSON(op: Partial<UserOperationStruct>) {
     ) as UserOperationS;
 }
 
-@Entity({ name: '_dev_erc4337_txs_v1' })
+@Entity({ name: '_dev_erc4337_txs_v2' })
 export default class ERC4337Transaction extends Transaction {
   @PrimaryColumn()
   opHash!: string;
+
+  @Column({ nullable: true })
+  hash: string = '';
 
   get isERC4337() {
     return true;
