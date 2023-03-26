@@ -173,6 +173,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
           {vm.isERC4337Account && (feeTokens?.length ?? 0) > 0 && feeToken ? (
             <View style={{ ...reviewItemsContainer }}>
               <TouchableOpacity
+                disabled={!vm.feeServiceAvailable}
                 onPress={() => swiper.current?.scrollTo(1)}
                 style={{ ...styles.gasSpeedItem, paddingStart: 12, paddingEnd: 8, flexDirection: 'row', alignItems: 'center' }}
               >

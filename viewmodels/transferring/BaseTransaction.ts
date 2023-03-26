@@ -37,6 +37,7 @@ export class BaseTransaction {
   private toAddressTypeCache = new Map<string, { isContractWallet: boolean; isContractRecipient: boolean }>();
   private timer?: NodeJS.Timer;
   private disposeTxFeeWatcher: IReactionDisposer;
+  private paymaster?: Paymaster;
 
   readonly network: INetwork;
   readonly account: AccountBase;
@@ -64,6 +65,7 @@ export class BaseTransaction {
   feeTokens: IFungibleToken[] | null = null;
   feeToken: IFungibleToken | null = null;
   feeTokenWei = BigNumber.from(0);
+  feeServiceAvailable = false;
 
   isQueuingTx = false;
 
@@ -99,6 +101,7 @@ export class BaseTransaction {
       feeToken: observable,
       feeTokens: observable,
       feeTokenWei: observable,
+      feeServiceAvailable: observable,
       feeTokenSymbol: computed,
       insufficientFee: computed,
       toAddressRisky: computed,
@@ -320,6 +323,7 @@ export class BaseTransaction {
     if (!this.feeTokens) return;
 
     this.feeToken = this.feeTokens.find((t) => t.address === token.address) ?? (this.feeTokens[0] || null);
+    this.paymaster?.setFeeToken(this.feeToken);
     this.estimateFeeToken(this.nativeFeeWei);
 
     token?.getBalance();
@@ -490,7 +494,7 @@ export class BaseTransaction {
   protected async estimateFeeToken(totalGas: BigNumber) {
     if (totalGas.eq(0)) return;
 
-    const { erc4337, chainId } = this.network;
+    const { erc4337 } = this.network;
 
     if (this.feeToken?.isNative) {
       runInAction(() => (this.feeTokenWei = this.nativeFeeWei));
@@ -500,15 +504,10 @@ export class BaseTransaction {
     if (!this.feeToken?.address) return;
     if (!erc4337?.paymasterAddress) return;
 
-    const paymaster = new Paymaster({
-      account: this.account,
-      feeToken: this.feeToken,
-      paymasterAddress: erc4337.paymasterAddress,
-      provider: new providers.JsonRpcProvider(getRPCUrls(chainId)[0]),
-      network: this.network,
-    });
+    const serviceAvailable = (await this.paymaster?.isServiceAvailable(totalGas)) ?? false;
+    runInAction(() => (this.feeServiceAvailable = serviceAvailable));
 
-    const erc20Amount = await paymaster.getTokenAmount(totalGas, this.feeToken.address);
+    const erc20Amount = await this.paymaster?.getFeeTokenAmount(totalGas, this.feeToken.address);
     if (!erc20Amount) return;
 
     runInAction(() => (this.feeTokenWei = erc20Amount));
@@ -523,8 +522,11 @@ export class BaseTransaction {
   }
 
   protected async initFeeTokens() {
+    const { erc4337 } = this.network;
+    if (!erc4337?.feeTokens?.length || !erc4337?.paymasterAddress) return;
+
     const tokens: IFungibleToken[] | null =
-      this.network.erc4337?.feeTokens?.map(
+      erc4337.feeTokens.map(
         (t) => new ERC20Token({ ...t, chainId: this.network.chainId, owner: this.account.address, contract: t.address })
       ) || null;
 
@@ -535,6 +537,14 @@ export class BaseTransaction {
 
     const tokenAddress = await AsyncStorage.getItem(Keys.feeToken(this.network.chainId, this.account.address));
     const userPreferred = this.feeTokens?.find((token) => token.address === tokenAddress) ?? this.nativeToken;
+
+    this.paymaster = new Paymaster({
+      account: this.account,
+      feeToken: userPreferred,
+      paymasterAddress: erc4337.paymasterAddress,
+      provider: new providers.JsonRpcProvider(getRPCUrls(this.network.chainId)[0]),
+      network: this.network,
+    });
 
     runInAction(() => (this.feeToken = userPreferred));
   }

@@ -11,9 +11,10 @@ import { UserOperationStruct } from '@account-abstraction/contracts';
 import { getHash } from '../../configs/secret';
 
 export class Paymaster extends PaymasterAPI {
+  private erc20: ERC20Token;
+
   address: string;
   feeToken: IFungibleToken;
-  erc20: ERC20Token;
   account: AccountBase;
   oracle: Contract;
   network: INetwork;
@@ -30,14 +31,30 @@ export class Paymaster extends PaymasterAPI {
     this.feeToken = opts.feeToken;
     this.account = opts.account;
     this.network = opts.network;
-    this.erc20 = new ERC20Token({ owner: this.address, chainId: 1, contract: this.feeToken.address });
     this.oracle = new Contract(this.address, OracleABI, opts.provider);
+
+    this.erc20 = new ERC20Token({ owner: this.address, chainId: this.network.chainId, contract: this.feeToken.address });
   }
 
-  async getTokenAmount(totalGas: BigNumberish, erc20: string) {
+  setFeeToken(token: IFungibleToken) {
+    this.feeToken = token;
+  }
+
+  async isServiceAvailable(necessaryGasWei: BigNumberish) {
     try {
-      const erc20Amount: BigNumberish = await this.oracle.getTokenValueOfEth(erc20, totalGas);
-      return BigNumber.from(erc20Amount);
+      const balance: BigNumber = await this.oracle.getDeposit();
+      return balance.gte(necessaryGasWei);
+    } catch (error) {}
+
+    return false;
+  }
+
+  async getFeeTokenAmount(totalGas: BigNumberish, erc20: string) {
+    if (this.feeToken.isNative) return BigNumber.from(totalGas);
+
+    try {
+      const erc20Amount: BigNumber = await this.oracle.getTokenValueOfEth(erc20, totalGas);
+      return erc20Amount;
     } catch (error) {}
   }
 
@@ -55,6 +72,8 @@ export class Paymaster extends PaymasterAPI {
   }
 
   async buildApprove(feeAmount: BigNumber): Promise<providers.TransactionRequest[]> {
+    if (this.feeToken.isNative) return [];
+
     const requests: providers.TransactionRequest[] = [];
 
     const allowance = await this.feeToken.allowance(this.account.address, this.address);
