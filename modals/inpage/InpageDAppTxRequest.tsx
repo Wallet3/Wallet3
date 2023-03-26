@@ -1,5 +1,5 @@
 import { Button, SafeViewContainer } from '../../components';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 
 import App from '../../viewmodels/core/App';
@@ -28,6 +28,10 @@ export default observer(({ approve, reject, close, app, vm }: Props) => {
   const [verified, setVerified] = useState(false);
   const [networkBusy, setNetworkBusy] = useState(false);
   const { biometricType } = Authentication;
+
+  useEffect(() => {
+    return () => vm.dispose();
+  }, []);
 
   const onReject = () => {
     reject();

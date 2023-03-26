@@ -8,6 +8,7 @@ import { borderColor, secondaryFontColor } from '../../constants/styles';
 
 import ERC20Tokens from './ERC20Tokens';
 import HistoryList from './HistoryList';
+import { IFungibleToken } from '../../models/Interfaces';
 import { INetwork } from '../../common/Networks';
 import { ITokenMetadata } from '../../common/tokens';
 import { RootNavigationProps } from '../navigations';
@@ -20,12 +21,12 @@ import { observer } from 'mobx-react-lite';
 import { useNavigation } from '@react-navigation/core';
 
 interface Props {
-  tokens?: ITokenMetadata[];
+  tokens?: IFungibleToken[];
   themeColor: string;
   network: INetwork;
   loadingTokens?: boolean;
   onRefreshRequest?: () => Promise<void>;
-  onTokenPress?: (token: ITokenMetadata) => void;
+  onTokenPress?: (token: IFungibleToken) => void;
   onTxPress?: (tx: Transaction) => void;
 }
 

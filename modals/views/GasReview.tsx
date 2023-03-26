@@ -148,22 +148,22 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
             }}
           >
             <TouchableOpacity disabled={!editable} style={styles.gasSpeedItem} onPress={() => vm.setGas('rapid')}>
-              <Ionicons name="rocket" size={12} color={editable ? 'tomato' : 'lightgrey'} />
-              <Text style={{ ...styles.gasItemText, color: editable ? 'tomato' : 'lightgrey' }}>
+              <Ionicons name="rocket" size={12} color={editable ? 'tomato' : secondaryTextColor} />
+              <Text style={{ ...styles.gasItemText, color: editable ? 'tomato' : secondaryTextColor }}>
                 {t('modal-gas-review-rapid')}
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity disabled={!editable} style={styles.gasSpeedItem} onPress={() => vm.setGas('fast')}>
-              <Ionicons name="car-sport" size={13} color={editable ? 'dodgerblue' : 'lightgrey'} />
-              <Text style={{ ...styles.gasItemText, color: editable ? 'dodgerblue' : 'lightgrey' }}>
+              <Ionicons name="car-sport" size={13} color={editable ? 'dodgerblue' : secondaryTextColor} />
+              <Text style={{ ...styles.gasItemText, color: editable ? 'dodgerblue' : secondaryTextColor }}>
                 {t('modal-gas-review-fast')}
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity disabled={!editable} style={styles.gasSpeedItem} onPress={() => vm.setGas('standard')}>
-              <FontAwesome5 name="walking" size={12} color={editable ? 'darkorchid' : 'lightgrey'} />
-              <Text style={{ ...styles.gasItemText, color: editable ? 'darkorchid' : 'lightgrey' }} numberOfLines={1}>
+              <FontAwesome5 name="walking" size={12} color={editable ? 'darkorchid' : secondaryTextColor} />
+              <Text style={{ ...styles.gasItemText, color: editable ? 'darkorchid' : secondaryTextColor }} numberOfLines={1}>
                 {t('modal-gas-review-standard')}
               </Text>
             </TouchableOpacity>

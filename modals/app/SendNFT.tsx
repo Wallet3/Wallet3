@@ -26,9 +26,7 @@ export default observer(({ vm, onClose }: Props) => {
   const [networkBusy, setNetworkBusy] = useState(false);
 
   useEffect(() => {
-    return () => {
-      vm.dispose();
-    };
+    return () => vm.dispose();
   }, []);
 
   const sendTx = async (pin?: string) => {

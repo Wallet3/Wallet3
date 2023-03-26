@@ -491,13 +491,12 @@ export class BaseTransaction {
     const { erc4337, chainId } = this.network;
 
     if (this.feeToken?.isNative) {
-      runInAction(() => (this.feeTokenWei = BigNumber.from(0)));
+      runInAction(() => (this.feeTokenWei = this.nativeFeeWei));
       return;
     }
 
-    if (!erc4337) return;
     if (!this.feeToken?.address) return;
-    if (!erc4337.paymasterAddress) return;
+    if (!erc4337?.paymasterAddress) return;
 
     const paymaster = new Paymaster({
       account: this.account,

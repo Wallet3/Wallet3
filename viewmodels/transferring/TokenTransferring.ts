@@ -14,7 +14,7 @@ import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 
 export class TokenTransferring extends BaseTransaction {
-  token: ITokenMetadata;
+  token: IFungibleToken;
   amount = '0';
   userTxData = '0x';
 
@@ -28,10 +28,20 @@ export class TokenTransferring extends BaseTransaction {
 
   get amountWei() {
     try {
-      if (this.isNativeToken) {
-        const ether = utils.parseEther(this.amount);
-        if (ether.eq(this.account.nativeToken.balance!)) {
+      // if (this.isNativeToken && (this.feeToken?.isNative || !this.feeToken)) {
+      //   const ether = utils.parseEther(this.amount);
+      //   if (ether.eq(this.account.nativeToken.balance!)) {
+      //     return BigNumber.from(this.account.nativeToken.balance!).sub(this.nativeFeeWei);
+      //   }
+      // }
+
+      if (this.token.address === (this.feeToken?.address ?? '')) {
+        if (this.isNativeToken && utils.parseEther(this.amount).eq(this.account.nativeToken.balance)) {
           return BigNumber.from(this.account.nativeToken.balance!).sub(this.nativeFeeWei);
+        }
+
+        if (utils.parseUnits(this.amount, this.token.decimals).eq(this.token.balance ?? '0')) {
+          return BigNumber.from(this.token.balance).sub(this.feeTokenWei);
         }
       }
 
@@ -50,7 +60,7 @@ export class TokenTransferring extends BaseTransaction {
   }
 
   get isNativeToken() {
-    return this.token.isNative;
+    return this.token.isNative ?? false;
   }
 
   get isValidParams() {
@@ -109,7 +119,7 @@ export class TokenTransferring extends BaseTransaction {
     to,
   }: {
     targetNetwork: INetwork;
-    defaultToken?: ITokenMetadata;
+    defaultToken?: IFungibleToken;
     autoSetToken?: boolean;
     to?: string;
   }) {

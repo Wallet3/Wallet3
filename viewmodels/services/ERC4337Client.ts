@@ -70,7 +70,7 @@ export class ERC4337Client extends SimpleAccountAPI {
     const initGas = await this.estimateCreationGas(initCode);
     const verificationGasLimit = BigNumber.from(await this.getVerificationGasLimit())
       .add(initGas)
-      .add(this.paymasterAPI ? (phantom ? 320_000 : 100_000) : 0);
+      .add(150_000); // postOp
 
     const feeData = opts ?? (await this.provider.getFeeData());
     const maxFeePerGas = feeData.maxFeePerGas ?? 0;
