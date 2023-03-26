@@ -1,5 +1,5 @@
 import ERC4337Transaction, { UserOperationS, userOpsToJSON } from '../../models/entities/ERC4337Transaction';
-import { HOUR, MINUTE } from '../../utils/time';
+import { HOUR, MINUTE, SECOND } from '../../utils/time';
 import { IsNull, LessThanOrEqual, MoreThan, Not } from 'typeorm';
 import Transaction, { ITransaction } from '../../models/entities/Transaction';
 import { Wallet, providers, utils } from 'ethers';
@@ -76,13 +76,11 @@ class TxHub extends EventEmitter<Events> {
 
     await runInAction(async () => (this.txs = confirmed));
 
-    const abandonedTxs = unconfirmedTxs
-      .concat(unconfirmed4337Txs)
-      .filter((un) =>
-        minedTxs.find((t) => t.from.toLowerCase() === un.from.toLowerCase() && t.chainId === un.chainId && t.nonce >= un.nonce)
-      );
+    const abandonedTxs = unconfirmedTxs.filter((un) =>
+      minedTxs.find((t) => t.from.toLowerCase() === un.from.toLowerCase() && t.chainId === un.chainId && t.nonce >= un.nonce)
+    );
 
-    unconfirmedTxs = unconfirmedTxs.filter((un) => !abandonedTxs.find((ab) => ab.hash === un.hash));
+    unconfirmedTxs = unconfirmedTxs.concat(unconfirmed4337Txs).filter((un) => !abandonedTxs.find((ab) => ab.hash === un.hash));
 
     abandonedTxs.map((t) => t.remove());
 
@@ -131,8 +129,25 @@ class TxHub extends EventEmitter<Events> {
 
         try {
           const opHash = (tx as ERC4337Transaction).opHash;
-          const txHash = await client?.getUserOpReceipt(opHash, 5 * MINUTE);
-          if (!txHash) continue;
+
+          if (!opHash) {
+            abandonedTxs.push(tx);
+            continue;
+          }
+
+          const txHash: string | null = await Promise.any([
+            client.getUserOpReceipt(opHash),
+            new Promise<null>((resolve) => setTimeout(() => resolve(null), 30 * SECOND)),
+          ]);
+
+          if (!txHash) {
+            if (tx.timestamp < Date.now() - (__DEV__ ? 0.1 : 3) * HOUR) {
+              this.emit('opHashResolved', opHash, '');
+              abandonedTxs.push(tx);
+            }
+
+            continue;
+          }
 
           tx.hash = txHash;
           await tx.save();
