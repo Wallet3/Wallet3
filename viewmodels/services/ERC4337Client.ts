@@ -10,6 +10,10 @@ type FeeOptions = { feeToken?: ITokenMetadata | null };
 type Create2Options = { value: BigNumberish; salt: string; bytecode: string };
 
 export class ERC4337Client extends SimpleAccountAPI {
+  async getVerificationGasLimit(): Promise<BigNumberish> {
+    return BigNumber.from(150_000);
+  }
+
   async encodeCreate2(value: BigNumberish, salt: string, bytecode: string) {
     const ca = await this._getAccountContract();
     return ca.interface.encodeFunctionData('executeContractDeployment', [value, salt, bytecode]);
@@ -68,9 +72,7 @@ export class ERC4337Client extends SimpleAccountAPI {
     const initCode = await this.getInitCode();
 
     const initGas = await this.estimateCreationGas(initCode);
-    const verificationGasLimit = BigNumber.from(await this.getVerificationGasLimit())
-      .add(initGas)
-      .add(150_000); // postOp
+    const verificationGasLimit = BigNumber.from(await this.getVerificationGasLimit()).add(initGas);
 
     const feeData = opts ?? (await this.provider.getFeeData());
     const maxFeePerGas = feeData.maxFeePerGas ?? 0;

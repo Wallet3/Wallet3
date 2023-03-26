@@ -14,7 +14,7 @@ export default ({ exception, containerStyle }: { exception: string; containerSty
       bounces={false}
       entering={FadeIn.springify()}
       exiting={FadeOut.springify()}
-      contentContainerStyle={{ alignItems: 'center', paddingHorizontal: 16 }}
+      contentContainerStyle={{ alignItems: 'center', paddingHorizontal: 12 }}
       style={[
         {
           borderRadius: 10,
@@ -27,7 +27,7 @@ export default ({ exception, containerStyle }: { exception: string; containerSty
       ]}
     >
       <Ionicons name="alert-circle" color="white" size={16} style={{ marginBottom: -1 }} />
-      <Text style={{ color: 'white', marginStart: 8, fontSize: 12 }}>{exception}</Text>
+      <Text style={{ color: 'white', marginStart: 6, fontSize: 12 }}>{exception}</Text>
     </Animated.ScrollView>
   );
 };

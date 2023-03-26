@@ -316,11 +316,13 @@ export class BaseTransaction {
     } catch (error) {}
   }
 
-  setFeeToken(token: ITokenMetadata) {
+  setFeeToken(token: IFungibleToken) {
     if (!this.feeTokens) return;
 
     this.feeToken = this.feeTokens.find((t) => t.address === token.address) ?? (this.feeTokens[0] || null);
     this.estimateFeeToken(this.nativeFeeWei);
+
+    token?.getBalance();
     AsyncStorage.setItem(Keys.feeToken(this.network.chainId, this.account.address), token.address);
   }
 

@@ -8,6 +8,7 @@ import BackButton from '../components/BackButton';
 import { BaseTransaction } from '../../viewmodels/transferring/BaseTransaction';
 import FeeTokenList from './TokenBalanceList';
 import Fire from '../../assets/icons/app/fire.svg';
+import { IFungibleToken } from '../../models/Interfaces';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
 import Tokenlist from './TokenPlainList';
@@ -221,7 +222,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
         themeColor={network.color}
         onBack={() => swiper.current?.scrollTo(0)}
         onTokenSelected={(token) => {
-          vm.setFeeToken(token);
+          vm.setFeeToken(token as IFungibleToken);
           swiper.current?.scrollTo(0);
         }}
       />

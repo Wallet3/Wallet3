@@ -405,7 +405,7 @@
 
   "erc4337-add-tx-to-queue": "Add to sending queue",
   "erc4337-not-support-gas-adjustment": "Gas setting is read-only in super account.",
-  "erc4337-current-network-not-available": "This network does not support super accounts at the moment.",
+  "erc4337-current-network-not-available": "This network doesn't support super accounts at the moment.",
 
   "readable-transfer-token": "Transfer {{amount}} {{symbol}} to {{dest}}",
   "readable-approve-token": "Approve {{amount}} {{symbol}} to {{dest}}",
