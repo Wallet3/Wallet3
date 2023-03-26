@@ -414,7 +414,7 @@ export class BaseTransaction {
     runInAction(() => {
       this.nextBlockBaseFeeWei = Number(nextBaseFee.toFixed(0));
 
-      this.setNonce(nonce);
+      this.setNonce(nonce.toNumber());
 
       if (eip1559) {
         const priFee = (priorityFee || Gwei_1) / Gwei_1 + (chainId === 1 ? 0.2 : 0.05);
@@ -490,6 +490,11 @@ export class BaseTransaction {
 
     const { erc4337, chainId } = this.network;
 
+    if (this.feeToken?.isNative) {
+      runInAction(() => (this.feeTokenWei = BigNumber.from(0)));
+      return;
+    }
+
     if (!erc4337) return;
     if (!this.feeToken?.address) return;
     if (!erc4337.paymasterAddress) return;
@@ -499,6 +504,7 @@ export class BaseTransaction {
       feeToken: this.feeToken,
       paymasterAddress: erc4337.paymasterAddress,
       provider: new providers.JsonRpcProvider(getRPCUrls(chainId)[0]),
+      network: this.network,
     });
 
     const erc20Amount = await paymaster.getTokenAmount(totalGas, this.feeToken.address);
@@ -542,10 +548,7 @@ export class BaseTransaction {
       {
         ...args,
         network: this.network,
-        fee:
-          this.feeToken && this.feeToken.isNative === false
-            ? { feeToken: this.feeToken!, maxAmountInWei: this.feeTokenWei }
-            : undefined,
+        feeToken: this.feeToken?.isNative === false ? { erc20: this.feeToken, maxAmountInWei: this.feeTokenWei } : undefined,
         gas: {
           maxFeePerGas: Number.parseInt(`${this.maxGasPrice * Gwei_1}`),
           maxPriorityFeePerGas: Number.parseInt(`${this.maxPriorityPrice * Gwei_1}`),

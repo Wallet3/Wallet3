@@ -37,7 +37,7 @@ export default observer(({ vm, onGasPress }: Props) => {
           alignItems: 'center',
           padding: 16,
           paddingVertical: 12,
-          paddingEnd: 14,
+          paddingEnd: 12,
           justifyContent: 'flex-end',
           width: '75%',
         }}

@@ -1,6 +1,6 @@
 import * as ethSignUtil from '@metamask/eth-sig-util';
 
-import { BigNumberish, providers, utils } from 'ethers';
+import { BigNumber, BigNumberish, providers, utils } from 'ethers';
 import { SignTxRequest, SignTypedDataRequest, WalletBase } from '../wallet/WalletBase';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { genColor, genEmoji } from '../../utils/emoji';
@@ -31,7 +31,7 @@ export type SendTxRequest = Partial<{
   readableInfo: ReadableInfo;
   network: INetwork;
   gas: { maxFeePerGas: number; maxPriorityFeePerGas: number };
-  fee?: { feeToken: IFungibleToken; maxAmountInWei: BigNumberish };
+  feeToken?: { erc20: IFungibleToken; maxAmountInWei: BigNumber };
   onNetworkRequest?: () => void;
 }>;
 
@@ -126,7 +126,7 @@ export abstract class AccountBase {
     });
   }
 
-  abstract getNonce(chainId: number): Promise<number>;
+  abstract getNonce(chainId: number): Promise<BigNumber>;
   abstract sendTx(args: SendTxRequest, pin?: string): Promise<SendTxResponse>;
 
   async signMessage(msg: string | Uint8Array, auth?: AuthOptions | undefined): Promise<string | undefined> {

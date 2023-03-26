@@ -1,18 +1,19 @@
+import { BigNumber, utils } from 'ethers';
+
 import { AccountBase } from './AccountBase';
 import { AuthOptions } from '../auth/Authentication';
 import { ReadableInfo } from '../../models/entities/Transaction';
+import { SignTxRequest } from '../wallet/WalletBase';
 import { TransactionRequest } from '@ethersproject/abstract-provider';
 import { getTransactionCount } from '../../common/RPC';
 import { showMessage } from 'react-native-flash-message';
-import { utils } from 'ethers';
-import { SignTxRequest } from '../wallet/WalletBase';
 
 export class EOA extends AccountBase {
   readonly accountSubPath: string | undefined;
   readonly type = 'eoa';
 
-  getNonce(chainId: number) {
-    return getTransactionCount(chainId, this.address);
+  async getNonce(chainId: number) {
+    return BigNumber.from(await getTransactionCount(chainId, this.address));
   }
 
   async signTx(args: SignTxRequest & AuthOptions) {
@@ -23,7 +24,7 @@ export class EOA extends AccountBase {
       return { error };
     }
   }
-  
+
   async sendTx(args: { tx: TransactionRequest; readableInfo?: ReadableInfo }, pin?: string) {
     if (!this.wallet) return { success: false, error: { message: 'Account not available', code: -1 } };
 
