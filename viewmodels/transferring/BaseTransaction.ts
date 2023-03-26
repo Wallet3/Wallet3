@@ -320,6 +320,7 @@ export class BaseTransaction {
     if (!this.feeTokens) return;
 
     this.feeToken = this.feeTokens.find((t) => t.address === token.address) ?? (this.feeTokens[0] || null);
+    this.estimateFeeToken(this.nativeFeeWei);
     AsyncStorage.setItem(Keys.feeToken(this.network.chainId, this.account.address), token.address);
   }
 
@@ -484,8 +485,8 @@ export class BaseTransaction {
     }
   }
 
-  protected async estimateFeeToken(totalGas: BigNumberish) {
-    if (BigNumber.from(totalGas).eq(0)) return;
+  protected async estimateFeeToken(totalGas: BigNumber) {
+    if (totalGas.eq(0)) return;
 
     const { erc4337, chainId } = this.network;
 
@@ -541,7 +542,10 @@ export class BaseTransaction {
       {
         ...args,
         network: this.network,
-        feeToken: this.feeToken,
+        fee:
+          this.feeToken && this.feeToken.isNative === false
+            ? { feeToken: this.feeToken!, maxAmountInWei: this.feeTokenWei }
+            : undefined,
         gas: {
           maxFeePerGas: Number.parseInt(`${this.maxGasPrice * Gwei_1}`),
           maxPriorityFeePerGas: Number.parseInt(`${this.maxPriorityPrice * Gwei_1}`),

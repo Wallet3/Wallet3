@@ -1,15 +1,16 @@
 import * as ethSignUtil from '@metamask/eth-sig-util';
 
+import { BigNumberish, providers, utils } from 'ethers';
 import { SignTxRequest, SignTypedDataRequest, WalletBase } from '../wallet/WalletBase';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { genColor, genEmoji } from '../../utils/emoji';
-import { providers, utils } from 'ethers';
 
 import { AccountTokens } from './content/AccountTokens';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthOptions } from '../auth/Authentication';
 import CurrencyViewmodel from '../settings/Currency';
 import { ENSViewer } from './content/ENSViewer';
+import { IFungibleToken } from '../../models/Interfaces';
 import { INetwork } from '../../common/Networks';
 import { ITokenMetadata } from '../../common/tokens';
 import { NFTViewer } from './content/NFTViewer';
@@ -30,7 +31,7 @@ export type SendTxRequest = Partial<{
   readableInfo: ReadableInfo;
   network: INetwork;
   gas: { maxFeePerGas: number; maxPriorityFeePerGas: number };
-  feeToken?: ITokenMetadata | null;
+  fee?: { feeToken: IFungibleToken; maxAmountInWei: BigNumberish };
   onNetworkRequest?: () => void;
 }>;
 

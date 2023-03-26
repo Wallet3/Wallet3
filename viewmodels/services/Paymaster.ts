@@ -1,8 +1,9 @@
 import { BigNumber, BigNumberish, Contract, providers, utils } from 'ethers';
+import { ITokenMetadata, USDT } from '../../common/tokens';
 
 import { AccountBase } from '../account/AccountBase';
 import { ERC20Token } from '../../models/ERC20';
-import { ITokenMetadata } from '../../common/tokens';
+import { IFungibleToken } from '../../models/Interfaces';
 import OracleABI from '../../abis/TokenOracle.json';
 import { PaymasterAPI } from '@account-abstraction/sdk';
 import { UserOperationStruct } from '@account-abstraction/contracts';
@@ -10,14 +11,14 @@ import { getHash } from '../../configs/secret';
 
 export class Paymaster extends PaymasterAPI {
   address: string;
-  feeToken: ITokenMetadata;
+  feeToken: IFungibleToken;
   erc20: ERC20Token;
   account: AccountBase;
   oracle: Contract;
 
   constructor(opts: {
     paymasterAddress: string;
-    feeToken: ITokenMetadata;
+    feeToken: IFungibleToken;
     provider: providers.JsonRpcProvider;
     account: AccountBase;
   }) {
@@ -45,18 +46,20 @@ export class Paymaster extends PaymasterAPI {
     return result;
   }
 
-  buildApprove(): providers.TransactionRequest[] {
+  async buildApprove(feeAmount: BigNumberish): Promise<providers.TransactionRequest[]> {
     const requests: providers.TransactionRequest[] = [];
 
-    const amount = utils.parseUnits('10', this.feeToken.decimals);
-    const approve = this.erc20.encodeApproveData(this.address, amount);
+    const allowance = await this.feeToken.allowance(this.account.address, this.address);
+    if (allowance.gte(feeAmount)) return [];
+
+    if (this.feeToken.address === USDT.address && allowance.gt(0)) {
+      const zero = this.erc20.encodeApproveData(this.address, 0);
+      requests.push({ to: this.feeToken.address, data: zero });
+    }
+
+    const approve = this.erc20.encodeApproveData(this.address, feeAmount);
     requests.push({ to: this.feeToken.address, data: approve });
 
     return requests;
-  }
-
-  buildRevoke(): providers.TransactionRequest {
-    const data = this.erc20.encodeApproveData(this.address, '0x0');
-    return { to: this.feeToken.address, data };
   }
 }
