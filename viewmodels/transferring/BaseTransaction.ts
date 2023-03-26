@@ -505,7 +505,12 @@ export class BaseTransaction {
     if (!erc4337?.paymasterAddress) return;
 
     const serviceAvailable = (await this.paymaster?.isServiceAvailable(totalGas)) ?? false;
-    runInAction(() => (this.feeServiceAvailable = serviceAvailable));
+    runInAction(() => {
+      this.feeServiceAvailable = serviceAvailable;
+      if (!serviceAvailable) this.feeToken = null;
+    });
+
+    if (!serviceAvailable) return;
 
     const erc20Amount = await this.paymaster?.getFeeTokenAmount(totalGas, this.feeToken.address);
     if (!erc20Amount) return;

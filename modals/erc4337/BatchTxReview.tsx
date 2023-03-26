@@ -59,21 +59,23 @@ const BatchTxReview = observer(({ disableBack, onBack, vm, onGasReview, onSendPr
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ alignItems: 'center' }}
         >
-          {readableInfo?.['symbol'] && (
-            <Coin
-              address={tx!.to!}
-              size={18}
-              chainId={vm.network.chainId}
-              symbol={readableInfo['symbol']}
-              style={{ marginStart: 5, marginEnd: 8 }}
-            />
-          )}
-          {readableInfo?.icon && (
+          {readableInfo?.icon ? (
             <Image
               source={{ uri: readableInfo.icon }}
               style={{ width: 19, height: 19, marginStart: 5, marginEnd: 8, borderRadius: 3 }}
             />
+          ) : (
+            readableInfo?.['symbol'] && (
+              <Coin
+                address={tx!.to!}
+                size={18}
+                chainId={vm.network.chainId}
+                symbol={readableInfo['symbol']}
+                style={{ marginStart: 5, marginEnd: 8 }}
+              />
+            )
           )}
+
           <Text numberOfLines={1} style={[styles.reviewItemTitle]}>
             {readableInfo?.readableTxt || `${readableInfo?.dapp} ${readableInfo?.decodedFunc}`}
           </Text>

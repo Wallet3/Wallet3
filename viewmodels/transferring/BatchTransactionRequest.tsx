@@ -32,7 +32,7 @@ export class BatchTransactionRequest extends BaseTransaction {
     let totalGas = inaccurateGas;
     let errorMessage = '';
     try {
-      const client = await createERC4337Client(this.network.chainId);
+      const client = await createERC4337Client(this.network);
       if (!client) return;
 
       const callData = await client.encodeBatchExecute(
@@ -66,9 +66,9 @@ export class BatchTransactionRequest extends BaseTransaction {
     ERC4337Queue.remove(request);
   }
 
-  send = (pin?: string, onNetworkRequest?: () => void) => {
+  send = async (pin?: string, onNetworkRequest?: () => void) => {
     try {
-      return super.sendRawTx(
+      return await super.sendRawTx(
         { onNetworkRequest, txs: this.requests.map((req) => req.tx!), readableInfo: { type: 'batchTx' } },
         pin
       );

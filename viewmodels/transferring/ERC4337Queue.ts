@@ -58,7 +58,8 @@ export class ERC4337Queue {
   }
 
   add(req: SendTxRequest) {
-    if (!req.tx?.from) return;
+    if (!utils.isAddress(req.tx?.from ?? '')) return;
+    req.tx!.from = utils.getAddress(req.tx?.from!);
     req.timestamp = Date.now();
     this.queue.push(req);
   }
