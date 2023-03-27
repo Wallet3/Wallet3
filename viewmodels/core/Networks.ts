@@ -1,6 +1,6 @@
 import * as ethers from 'ethers';
 
-import { AllNetworks, INetwork, PublicNetworks } from '../../common/Networks';
+import { AllNetworks, INetwork, PublicNetworks, Testnets } from '../../common/Networks';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { callRPC, deleteRPCUrlCache, getNextBlockBaseFeeByRPC } from '../../common/RPC';
 
@@ -68,7 +68,21 @@ class Networks {
   }
 
   get categorized() {
-    return [{ category: 'pinned', data: this.pinnedChains }];
+    const unpinned = PublicNetworks.filter((network) => !this.pinnedChains.includes(network.chainId));
+
+    const groups = [
+      { category: 'pinned', data: this.pinnedChains.map((chainId) => this.find(chainId)!) },
+      { category: 'core', data: unpinned.filter((n) => n.category === 'core') },
+      { category: 'l2', data: unpinned.filter((n) => n.l2 && n.category !== 'core') },
+      {
+        category: 'evm-compatible',
+        data: unpinned.filter((n) => (!n.category || n.category === 'evm-compatible') && !n.l2),
+      },
+      { category: 'user-added', data: this.userChains },
+      { category: 'testnet', data: Testnets },
+    ];
+
+    return groups.filter((g) => g.data.length > 0);
   }
 
   constructor() {
@@ -77,10 +91,14 @@ class Networks {
       switch: action,
       reset: action,
       remove: action,
+      pin: action,
+      unpin: action,
       userChains: observable,
       pinnedChains: observable,
+
       _all: computed,
       all: computed,
+      categorized: computed,
     });
   }
 
@@ -139,18 +157,18 @@ class Networks {
     AsyncStorage.setItem(Keys.currentNetwork, JSON.stringify(network.chainId));
   }
 
-  async pin(network: INetwork) {
+  pin(network: INetwork) {
     network.pinned = true;
     if (this.pinnedChains.includes(network.chainId)) return;
     this.pinnedChains.unshift(network.chainId);
-    await AsyncStorage.setItem(Keys.pinnedChains, JSON.stringify(this.pinnedChains));
+    AsyncStorage.setItem(Keys.pinnedChains, JSON.stringify(this.pinnedChains));
   }
 
-  async unpin(network: INetwork) {
+  unpin(network: INetwork) {
     network.pinned = false;
     if (!this.pinnedChains.includes(network.chainId)) return;
     this.pinnedChains = this.pinnedChains.filter((i) => i !== network.chainId);
-    await AsyncStorage.setItem(Keys.pinnedChains, JSON.stringify(this.pinnedChains));
+    AsyncStorage.setItem(Keys.pinnedChains, JSON.stringify(this.pinnedChains));
   }
 
   has(chainId: number | string) {

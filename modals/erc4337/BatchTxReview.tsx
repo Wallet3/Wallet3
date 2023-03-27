@@ -40,7 +40,7 @@ const BatchTxReview = observer(({ disableBack, onBack, vm, onGasReview, onSendPr
     const { tx, readableInfo } = item;
 
     return (
-      <FadeInRightView
+      <FadeInDownView
         delay={index * 50}
         style={{
           flexDirection: 'row',
@@ -96,7 +96,7 @@ const BatchTxReview = observer(({ disableBack, onBack, vm, onGasReview, onSendPr
         >
           <Ionicons name="trash-outline" color={warningColor} size={17} />
         </TouchableOpacity>
-      </FadeInRightView>
+      </FadeInDownView>
     );
   };
 

@@ -1,6 +1,6 @@
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
 import { Entypo, Feather, MaterialCommunityIcons, Octicons } from '@expo/vector-icons';
-import { FlatList, ListRenderItemInfo, NativeSyntheticEvent, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, ListRenderItemInfo, NativeSyntheticEvent, SectionList, Text, TouchableOpacity, View } from 'react-native';
 import { NetworkIcons, generateNetworkIcon } from '../../assets/icons/networks/color';
 import { SafeViewContainer, Separator } from '../../components';
 import { useEffect, useRef, useState } from 'react';
@@ -15,35 +15,38 @@ import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { isIOS } from '../../utils/platform';
+import { observer } from 'mobx-react-lite';
 import { startLayoutAnimation } from '../../utils/animations';
 import styles from '../styles';
 
 interface Props {
   onNetworkPress?: (network: INetwork) => void;
-  networks?: INetwork[];
+  // networks?: INetwork[];
   selectedNetwork?: INetwork | null;
   title?: string;
   useContextMenu?: boolean;
   onEditing?: (editing: boolean) => void;
 }
 
-export default ({ title, onNetworkPress, selectedNetwork, useContextMenu, onEditing, networks }: Props) => {
+type NetworkCategory = { category: string; data: INetwork[] };
+
+export default observer(({ title, onNetworkPress, selectedNetwork, useContextMenu, onEditing }: Props) => {
   const { t } = i18n;
   const { backgroundColor, secondaryTextColor, borderColor } = Theme;
-  const [nets, setNets] = useState<INetwork[]>();
+  // const [nets, setNets] = useState<NetworkCategory[]>();
   const [editNetwork, setEditNetwork] = useState<INetwork>();
   const swiper = useRef<Swiper>(null);
-  const flatList = useRef<FlatList>(null);
+  const flatList = useRef<SectionList>(null);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setNets(networks ?? Networks.all), 25);
+  // useEffect(() => {
+  //   const timer = setTimeout(() => setNets(Networks.categorized), 25);
 
-    return () => {
-      clearTimeout(timer);
-    };
-  }, []);
+  //   return () => {
+  //     clearTimeout(timer);
+  //   };
+  // }, []);
 
-  const renderItem = ({ item }: ListRenderItemInfo<INetwork>) => {
+  const renderItem = ({ item }: { item: INetwork }) => {
     return (
       <TouchableOpacity
         style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 9, paddingHorizontal: 16 }}
@@ -99,8 +102,7 @@ export default ({ title, onNetworkPress, selectedNetwork, useContextMenu, onEdit
     );
   };
 
-  const renderContextMenuItem = (props: ListRenderItemInfo<INetwork>) => {
-    const { item } = props;
+  const renderContextMenuItem = ({ item }: { item: INetwork }) => {
     const actions: any[] = [
       { title: t('button-edit'), systemIcon: 'square.and.pencil' },
       item.pinned ? { title: t('button-unpin'), systemIcon: 'pin.slash' } : { title: t('button-pin'), systemIcon: 'pin' },
@@ -116,13 +118,12 @@ export default ({ title, onNetworkPress, selectedNetwork, useContextMenu, onEdit
           onEditing?.(true);
           break;
         case 1:
-          startLayoutAnimation();
           item.pinned ? Networks.unpin(item) : Networks.pin(item);
-          setTimeout(() => setNets(Networks.all));
+          startLayoutAnimation();
           break;
         case 2:
+          Networks.remove(item.chainId);
           startLayoutAnimation();
-          Networks.remove(item.chainId).then(() => setNets(Networks.all));
           break;
       }
     };
@@ -135,7 +136,7 @@ export default ({ title, onNetworkPress, selectedNetwork, useContextMenu, onEdit
           item.isUserAdded ? [{ title: t('button-remove'), destructive: true, systemIcon: 'trash.slash' } as any] : []
         )}
       >
-        {renderItem(props)}
+        {renderItem({ item })}
       </ContextMenu>
     );
   };
@@ -156,14 +157,30 @@ export default ({ title, onNetworkPress, selectedNetwork, useContextMenu, onEdit
             {title ?? t('modal-networks-switch')}
           </Text>
           <Separator style={{ marginVertical: 4, backgroundColor: borderColor }} />
-          <FlatList
+          <SectionList
             ref={flatList}
             keyExtractor={(i) => `${i.chainId}`}
-            data={nets}
+            sections={Networks.categorized}
             renderItem={useContextMenu ? renderContextMenuItem : renderItem}
             contentContainerStyle={{ paddingBottom: 36 }}
             style={{ marginHorizontal: -16, marginTop: -4, marginBottom: -36 }}
             onScrollToIndexFailed={() => {}}
+            renderSectionHeader={({ section }) => (
+              <View style={{ marginHorizontal: 16, paddingTop: 6, marginBottom: 0, paddingStart: 24 }}>
+                <Text
+                  style={{
+                    fontWeight: '500',
+                    color: secondaryTextColor,
+                    fontSize: 11,
+                    textShadowColor: '#fff',
+                    textShadowOffset: { width: 0, height: 0 },
+                    textShadowRadius: 3,
+                  }}
+                >
+                  {t(`network-category-${section.category}`)}
+                </Text>
+              </View>
+            )}
           />
         </SafeViewContainer>
 
@@ -171,4 +188,4 @@ export default ({ title, onNetworkPress, selectedNetwork, useContextMenu, onEdit
       </Swiper>
     </SafeAreaProvider>
   );
-};
+});

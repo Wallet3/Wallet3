@@ -57,6 +57,7 @@ export interface INetwork {
   browserBarIconSize?: number;
   testnet?: boolean;
   pinned?: boolean;
+  category?: 'core' | 'l2' | 'evm-compatible';
 }
 
 export const ChainIds = {
@@ -87,6 +88,7 @@ export const PublicNetworks: INetwork[] = [
     blockTimeMs: 12 * 1000,
     explorer: 'https://etherscan.io',
     etherscanApi: 'https://api.etherscan.io/api',
+    category: 'core',
   },
   {
     symbol: 'ETH',
@@ -101,6 +103,7 @@ export const PublicNetworks: INetwork[] = [
     explorer: 'https://arbiscan.io',
     etherscanApi: 'https://api.arbiscan.io/api',
     github_dir: 'arbitrum',
+    category: 'core',
   },
   {
     symbol: 'ETH',
@@ -114,6 +117,7 @@ export const PublicNetworks: INetwork[] = [
     showOverview: false,
     explorer: 'https://optimistic.etherscan.io',
     etherscanApi: 'https://api-optimistic.etherscan.io/api',
+    category: 'core',
   },
   {
     symbol: 'MATIC',
@@ -127,6 +131,7 @@ export const PublicNetworks: INetwork[] = [
     blockTimeMs: 3 * 1000,
     explorer: 'https://polygonscan.com',
     etherscanApi: 'https://api.polygonscan.com/api',
+    category: 'core',
   },
   {
     symbol: 'BNB',
@@ -141,6 +146,7 @@ export const PublicNetworks: INetwork[] = [
     etherscanApi: 'https://api.bscscan.com/api',
     github_dir: 'smartchain',
     minWei: 5 * Gwei_1,
+    category: 'core',
   },
   {
     symbol: 'xDAI',
@@ -169,6 +175,7 @@ export const PublicNetworks: INetwork[] = [
     explorer: 'https://snowtrace.io',
     etherscanApi: 'https://api.snowtrace.io/api',
     github_dir: 'avalanchec',
+    category: 'core',
   },
   // {
   //   symbol: 'FIL',
@@ -213,6 +220,18 @@ export const PublicNetworks: INetwork[] = [
     etherscanApi: 'https://explorer.celo.org/api',
   },
   {
+    symbol: 'FTM',
+    comm_id: 'ftm',
+    chainId: 250,
+    network: 'Fantom',
+    color: '#13b5ec',
+    order: 4,
+    defaultTokens: FTMPopularTokens,
+    blockTimeMs: 10 * 1000,
+    explorer: 'https://ftmscan.com',
+    etherscanApi: 'https://api.ftmscan.com/api',
+  },
+  {
     symbol: 'CANTO',
     chainId: 7700,
     network: 'CANTO',
@@ -229,6 +248,7 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: NovaPopularTokens,
     explorer: 'https://nova.arbiscan.io',
     etherscanApi: 'https://api-nova.arbiscan.io/api',
+    l2: true,
   },
   {
     symbol: 'RON',
@@ -239,18 +259,6 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: RoninPopularTokens,
     explorer: 'https://explorer.roninchain.com',
     addrPrefix: 'ronin:',
-  },
-  {
-    symbol: 'FTM',
-    comm_id: 'ftm',
-    chainId: 250,
-    network: 'Fantom',
-    color: '#13b5ec',
-    order: 4,
-    defaultTokens: FTMPopularTokens,
-    blockTimeMs: 10 * 1000,
-    explorer: 'https://ftmscan.com',
-    etherscanApi: 'https://api.ftmscan.com/api',
   },
   {
     symbol: 'ETH',
