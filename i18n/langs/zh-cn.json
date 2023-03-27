@@ -395,6 +395,14 @@
   "msg-data-loading": "读取数据中",
   "msg-please-enable-biometric": "请通过生物认证授权该操作",
 
+
+  "network-category-core": "主要网络",
+  "network-category-l2": "二层网络",
+  "network-category-pinned": "已置顶",
+  "network-category-evm-compatible": "EVM 兼容网络",
+  "network-category-user-added": "用户添加",
+  "network-category-testnet": "测试网络",
+
   "erc4337-add-tx-to-queue": "添加至发送队列",
   "erc4337-not-support-gas-adjustment": " Gas 设置在超级账户下为只读模式",
   "erc4337-current-network-not-available": "当前网络暂不支持超级账户",

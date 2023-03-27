@@ -403,11 +403,11 @@
   "msg-data-loading": "Loading data",
   "msg-please-enable-biometric": "Please use biometric authentication to authorize this operation.",
 
-  "network-category-core": "Core Networks",
-  "network-category-l2": "Layer2 Networks",
-  "network-category-pinned": "Pinned Networks",
+  "network-category-core": "Primary Networks",
+  "network-category-l2": "Layer2s",
+  "network-category-pinned": "Pinned",
   "network-category-evm-compatible": "EVM-Compatible",
-  "network-category-user-added": "User Added Networks",
+  "network-category-user-added": "User-added Networks",
   "network-category-testnet": "Testnets",
 
   "erc4337-add-tx-to-queue": "Add to sending queue",

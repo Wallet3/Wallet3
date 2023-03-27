@@ -399,6 +399,13 @@
   "msg-data-loading": "Veriler yükleniyor",
   "msg-please-enable-biometric": "Bu işlemi yetkilendirmek için biyometrik kimlik doğrulama kullanın lütfen.",
 
+  "network-category-core": "Birincil Ağ",
+  "network-category-l2": "Katman-2 ağı",
+  "network-category-pinned": "Sabitlenmiş",
+  "network-category-evm-compatible": "EVM-uyumlu ağ",
+  "network-category-user-added": "Kullanıcı eklenen ağ",
+  "network-category-testnet": "Testnets",
+
   "erc4337-add-tx-to-queue": "Kuyruğa katılın",
   "erc4337-not-support-gas-adjustment": "Gas ayarı süper hesapta salt okunur moddadır.",
   "erc4337-current-network-not-available": "Ağ şu anda süper hesapları desteklememektedir.",

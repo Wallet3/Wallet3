@@ -377,6 +377,13 @@
   "multi-sig-modal-create-threshold": "あなたは {{threshold}}/{{max}} マルチシグウォレットを作成しています。トランザクションを作成するには、少なくとも {{threshold}} 台のデバイスが必要です。",
   "multi-sig-modal-keys-distribution": "秘密鍵は以下のデバイスに配布されます",
 
+  "network-category-core": "プライマリネットワーク",
+  "network-category-l2": "レイヤー2ネットワーク",
+  "network-category-pinned": "ピン留め",
+  "network-category-evm-compatible": "EVM 互換ネットワーク",
+  "network-category-user-added": "ユーザー追加",
+  "network-category-testnet": "Testnets",
+
   "erc4337-add-tx-to-queue": "送信キューに追加する",
   "erc4337-not-support-gas-adjustment": "ガス設定はスーパーアカウントでは読み取り専用モードです。",
   "erc4337-current-network-not-available": "このネットワークは現在、スーパーアカウントをサポートしていません。",

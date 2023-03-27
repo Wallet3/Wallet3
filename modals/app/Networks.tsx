@@ -1,50 +1,36 @@
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
-import { Entypo, Feather, MaterialCommunityIcons, Octicons } from '@expo/vector-icons';
-import { FlatList, ListRenderItemInfo, NativeSyntheticEvent, SectionList, Text, TouchableOpacity, View } from 'react-native';
+import { Entypo, Feather } from '@expo/vector-icons';
+import { NativeSyntheticEvent, SectionList, Text, TouchableOpacity, View } from 'react-native';
 import { NetworkIcons, generateNetworkIcon } from '../../assets/icons/networks/color';
 import { SafeViewContainer, Separator } from '../../components';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 import EditNetwork from '../views/EditNetwork';
 import { INetwork } from '../../common/Networks';
 import Networks from '../../viewmodels/core/Networks';
 import React from 'react';
-import { ReactiveScreen } from '../../utils/device';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
-import { isIOS } from '../../utils/platform';
 import { observer } from 'mobx-react-lite';
 import { startLayoutAnimation } from '../../utils/animations';
 import styles from '../styles';
 
 interface Props {
   onNetworkPress?: (network: INetwork) => void;
-  // networks?: INetwork[];
   selectedNetwork?: INetwork | null;
   title?: string;
   useContextMenu?: boolean;
   onEditing?: (editing: boolean) => void;
 }
 
-type NetworkCategory = { category: string; data: INetwork[] };
-
 export default observer(({ title, onNetworkPress, selectedNetwork, useContextMenu, onEditing }: Props) => {
   const { t } = i18n;
   const { backgroundColor, secondaryTextColor, borderColor } = Theme;
-  // const [nets, setNets] = useState<NetworkCategory[]>();
   const [editNetwork, setEditNetwork] = useState<INetwork>();
   const swiper = useRef<Swiper>(null);
   const flatList = useRef<SectionList>(null);
-
-  // useEffect(() => {
-  //   const timer = setTimeout(() => setNets(Networks.categorized), 25);
-
-  //   return () => {
-  //     clearTimeout(timer);
-  //   };
-  // }, []);
 
   const renderItem = ({ item }: { item: INetwork }) => {
     return (
@@ -153,10 +139,11 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
     <SafeAreaProvider style={{ ...styles.safeArea }}>
       <Swiper ref={swiper} showsPagination={false} showsButtons={false} loop={false} scrollEnabled={false}>
         <SafeViewContainer style={{ padding: 16 }}>
-          <Text style={{ color: secondaryTextColor }} numberOfLines={1}>
+          <Text style={{ color: secondaryTextColor, fontSize: 12, paddingStart: 24 }} numberOfLines={1}>
             {title ?? t('modal-networks-switch')}
           </Text>
-          <Separator style={{ marginVertical: 4, backgroundColor: borderColor }} />
+          <Separator style={{ marginVertical: 4, backgroundColor: borderColor, marginStart: 24 }} />
+
           <SectionList
             ref={flatList}
             keyExtractor={(i) => `${i.chainId}`}
