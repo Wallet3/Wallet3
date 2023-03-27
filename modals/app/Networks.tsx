@@ -139,7 +139,7 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
     <SafeAreaProvider style={{ ...styles.safeArea }}>
       <Swiper ref={swiper} showsPagination={false} showsButtons={false} loop={false} scrollEnabled={false}>
         <SafeViewContainer style={{ padding: 16 }}>
-          <Text style={{ color: secondaryTextColor, fontSize: 12, paddingStart: 24 }} numberOfLines={1}>
+          <Text style={{ color: secondaryTextColor, fontSize: 11, fontWeight: '500', paddingStart: 24 }} numberOfLines={1}>
             {title ?? t('modal-networks-switch')}
           </Text>
           <Separator style={{ marginVertical: 4, backgroundColor: borderColor, marginStart: 24 }} />

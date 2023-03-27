@@ -18,7 +18,9 @@ interface Props {
 
 export default observer(({ vm, onGasPress }: Props) => {
   const { secondaryTextColor } = Theme;
-  const { feeToken } = vm;
+  const { paymaster } = vm;
+
+  console.log('paymaster is', paymaster?.address, paymaster?.feeTokenAmount);
 
   return (
     <View
@@ -44,7 +46,7 @@ export default observer(({ vm, onGasPress }: Props) => {
           width: '75%',
         }}
       >
-        {!feeToken?.isStable && (
+        {!paymaster?.feeToken?.isStable && (
           <Text style={{ ...styles.reviewItemTitle, fontSize: 15 }}>
             {`(${Currency.tokenToUSD(vm.estimatedRealFee, vm.feeTokenSymbol).toFixed(2)} USD)`}
           </Text>
@@ -53,17 +55,17 @@ export default observer(({ vm, onGasPress }: Props) => {
         <AnimatedNumber
           style={{ ...styles.reviewItemValue, marginStart: 2, marginEnd: 5 }}
           numberOfLines={1}
-          value={vm.txFee}
+          value={paymaster?.feeTokenAmount ?? vm.txFee}
           formatter={(val) => val.toFixed(5)}
         />
 
-        {feeToken?.isStable === true && (
+        {paymaster?.feeToken?.isStable === true && (
           <Coin
             size={16}
             forceRefresh
-            address={feeToken.address}
+            address={paymaster?.feeToken.address}
             chainId={vm.network.chainId}
-            symbol={feeToken.symbol}
+            symbol={paymaster?.feeToken.symbol}
             style={{ marginEnd: 5 }}
           />
         )}

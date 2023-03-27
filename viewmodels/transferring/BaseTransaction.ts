@@ -25,6 +25,7 @@ import { INetwork } from '../../common/Networks';
 import { ITokenMetadata } from '../../common/tokens';
 import { NativeToken } from '../../models/NativeToken';
 import { Paymaster } from '../services/Paymaster';
+import { SECOND } from '../../utils/time';
 import { createERC4337Client } from '../services/ERC4337';
 import { fetchAddressInfo } from '../services/EtherscanPublicTag';
 import { getEnsAvatar } from '../../common/ENS';
@@ -35,10 +36,10 @@ const Keys = {
 
 export class BaseTransaction {
   private toAddressTypeCache = new Map<string, { isContractWallet: boolean; isContractRecipient: boolean }>();
-  private timer?: NodeJS.Timer;
+  private gasPriceRefreshTimer?: NodeJS.Timer;
   private disposeTxFeeWatcher: IReactionDisposer;
-  private paymaster?: Paymaster;
 
+  paymaster?: Paymaster | null = null;
   readonly network: INetwork;
   readonly account: AccountBase;
   readonly nativeToken: NativeToken;
@@ -61,11 +62,7 @@ export class BaseTransaction {
   maxPriorityPrice = 0; // Gwei
   nonce = 0;
   txException = '';
-
   feeTokens: IFungibleToken[] | null = null;
-  feeToken: IFungibleToken | null = null;
-  feeTokenWei = BigNumber.from(0);
-  feeServiceAvailable = false;
 
   isQueuingTx = false;
 
@@ -96,17 +93,16 @@ export class BaseTransaction {
       txException: observable,
       txFee: computed,
       nativeFeeWei: computed,
+      estimatedRealNativeFeeWei: computed,
       isValidGas: computed,
       initializing: observable,
-      feeToken: observable,
       feeTokens: observable,
-      feeTokenWei: observable,
-      feeServiceAvailable: observable,
       feeTokenSymbol: computed,
       insufficientFee: computed,
       toAddressRisky: computed,
       loading: computed,
       isQueuingTx: observable,
+      paymaster: observable,
 
       setNonce: action,
       setGasLimit: action,
@@ -134,7 +130,7 @@ export class BaseTransaction {
 
     Coingecko.refresh();
 
-    this.disposeTxFeeWatcher = autorun(() => this.estimateFeeToken(this.nativeFeeWei));
+    this.disposeTxFeeWatcher = autorun(() => this.paymaster?.calcFeeTokenAmount(this.nativeFeeWei));
   }
 
   get isERC4337Account() {
@@ -192,16 +188,14 @@ export class BaseTransaction {
   }
 
   get insufficientFee() {
-    return this.feeToken?.address
-      ? this.feeTokenWei.gt(this.feeToken.balance || 0)
-      : this.valueWei.add(this.nativeFeeWei).gt(this.nativeToken.balance);
+    return this.paymaster?.insufficientFee ?? this.valueWei.add(this.nativeFeeWei).gt(this.nativeToken.balance);
   }
 
   get loading() {
     return this.initializing || this.nativeToken.loading || this.isEstimatingGas;
   }
 
-  get estimatedRealFeeWei() {
+  get estimatedRealNativeFeeWei() {
     try {
       const maxGasPriceWei = BigNumber.from((this.maxGasPrice * Gwei_1).toFixed(0));
       const nextBlockBaseFeeWei = BigNumber.from(this.nextBlockBaseFeeWei);
@@ -218,21 +212,19 @@ export class BaseTransaction {
 
   get txFee() {
     try {
-      return this.feeToken?.address
-        ? Number(utils.formatUnits(this.feeTokenWei, this.feeToken.decimals))
-        : Number(utils.formatEther(this.nativeFeeWei));
+      return this.paymaster?.feeTokenAmount ?? Number(utils.formatEther(this.nativeFeeWei));
     } catch (error) {
       return 0;
     }
   }
 
   get feeTokenSymbol() {
-    return this.feeToken?.symbol ?? this.network.symbol;
+    return this.paymaster?.feeToken?.symbol ?? this.network.symbol;
   }
 
   get estimatedRealFee() {
     try {
-      return Number(utils.formatEther(this.estimatedRealFeeWei));
+      return Number(utils.formatEther(this.estimatedRealNativeFeeWei));
     } catch {
       return 0;
     }
@@ -322,11 +314,12 @@ export class BaseTransaction {
   setFeeToken(token: IFungibleToken) {
     if (!this.feeTokens) return;
 
-    this.feeToken = this.feeTokens.find((t) => t.address === token.address) ?? (this.feeTokens[0] || null);
-    this.paymaster?.setFeeToken(this.feeToken);
-    this.estimateFeeToken(this.nativeFeeWei);
+    const feeToken = this.feeTokens.find((t) => t.address === token.address) ?? (this.feeTokens[0] || null);
+    if (!feeToken) return;
 
-    token?.getBalance();
+    this.paymaster?.setFeeToken(feeToken);
+    this.paymaster?.calcFeeTokenAmount(this.nativeFeeWei);
+
     AsyncStorage.setItem(Keys.feeToken(this.network.chainId, this.account.address), token.address);
   }
 
@@ -361,7 +354,7 @@ export class BaseTransaction {
   }
 
   dispose() {
-    clearTimeout(this.timer);
+    clearTimeout(this.gasPriceRefreshTimer);
     this.disposeTxFeeWatcher();
   }
 
@@ -491,38 +484,10 @@ export class BaseTransaction {
     }
   }
 
-  protected async estimateFeeToken(totalGas: BigNumber) {
-    if (totalGas.eq(0)) return;
-
-    const { erc4337 } = this.network;
-
-    if (this.feeToken?.isNative) {
-      runInAction(() => (this.feeTokenWei = this.nativeFeeWei));
-      return;
-    }
-
-    if (!this.feeToken?.address) return;
-    if (!erc4337?.paymasterAddress) return;
-
-    const serviceAvailable = (await this.paymaster?.isServiceAvailable(totalGas)) ?? false;
-    runInAction(() => {
-      this.feeServiceAvailable = serviceAvailable;
-      if (!serviceAvailable) this.feeToken = null;
-    });
-
-    if (!serviceAvailable) return;
-
-    const erc20Amount = await this.paymaster?.getFeeTokenAmount(totalGas, this.feeToken.address);
-    if (!erc20Amount) return;
-
-    runInAction(() => (this.feeTokenWei = erc20Amount));
-    console.log(this.feeToken.symbol, utils.formatUnits(erc20Amount, this.feeToken.decimals));
-  }
-
   protected refreshEIP1559(chainId: number) {
     getNextBlockBaseFee(chainId).then((nextBaseFee) => {
       runInAction(() => (this.nextBlockBaseFeeWei = nextBaseFee));
-      this.timer = setTimeout(() => this.refreshEIP1559(chainId), 1000 * (chainId === 1 ? 10 : 5));
+      this.gasPriceRefreshTimer = setTimeout(() => this.refreshEIP1559(chainId), 12 * SECOND);
     });
   }
 
@@ -543,15 +508,15 @@ export class BaseTransaction {
     const tokenAddress = await AsyncStorage.getItem(Keys.feeToken(this.network.chainId, this.account.address));
     const userPreferred = this.feeTokens?.find((token) => token.address === tokenAddress) ?? this.nativeToken;
 
-    this.paymaster = new Paymaster({
-      account: this.account,
-      feeToken: userPreferred,
-      paymasterAddress: erc4337.paymasterAddress,
-      provider: new providers.JsonRpcProvider(getRPCUrls(this.network.chainId)[0]),
-      network: this.network,
+    runInAction(() => {
+      this.paymaster = new Paymaster({
+        account: this.account,
+        feeToken: userPreferred,
+        paymasterAddress: erc4337!.paymasterAddress!,
+        provider: new providers.JsonRpcProvider(getRPCUrls(this.network.chainId)[0]),
+        network: this.network,
+      });
     });
-
-    runInAction(() => (this.feeToken = userPreferred));
   }
 
   async sendRawTx(args: SendTxRequest, pin?: string): Promise<SendTxResponse> {
@@ -564,7 +529,10 @@ export class BaseTransaction {
       {
         ...args,
         network: this.network,
-        feeToken: this.feeToken?.isNative === false ? { erc20: this.feeToken, maxAmountInWei: this.feeTokenWei } : undefined,
+        feeToken:
+          this.paymaster?.feeToken?.isNative === false
+            ? { erc20: this.paymaster.feeToken, maxAmountInWei: this.paymaster.feeTokenWei }
+            : undefined,
         gas: {
           maxFeePerGas: Number.parseInt(`${this.maxGasPrice * Gwei_1}`),
           maxPriorityFeePerGas: Number.parseInt(`${this.maxPriorityPrice * Gwei_1}`),

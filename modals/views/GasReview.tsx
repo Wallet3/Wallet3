@@ -29,7 +29,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
   const { borderColor, textColor, secondaryTextColor } = Theme;
   const swiper = useRef<Swiper>(null);
 
-  const { network, feeTokens, feeToken } = vm;
+  const { network, feeTokens, paymaster } = vm;
   const editable = !vm.isERC4337Account;
   const reviewItemStyle = { ...styles.reviewItem, borderColor };
   const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
@@ -170,14 +170,20 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
             </TouchableOpacity>
           </View>
 
-          {vm.isERC4337Account && (feeTokens?.length ?? 0) > 0 && feeToken ? (
+          {vm.isERC4337Account && (feeTokens?.length ?? 0) > 0 && paymaster?.feeToken ? (
             <View style={{ ...reviewItemsContainer }}>
               <TouchableOpacity
-                disabled={!vm.feeServiceAvailable}
+                disabled={vm.paymaster?.serviceUnavailable}
                 onPress={() => swiper.current?.scrollTo(1)}
                 style={{ ...styles.gasSpeedItem, paddingStart: 12, paddingEnd: 8, flexDirection: 'row', alignItems: 'center' }}
               >
-                <Coin forceRefresh symbol={feeToken.symbol} address={feeToken.address} chainId={network.chainId} size={14} />
+                <Coin
+                  forceRefresh
+                  symbol={paymaster.feeToken.symbol}
+                  address={paymaster.feeToken.address}
+                  chainId={network.chainId}
+                  size={14}
+                />
                 <Text
                   numberOfLines={1}
                   style={{
@@ -190,7 +196,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
                     maxWidth: 100,
                   }}
                 >
-                  {feeToken.symbol}
+                  {paymaster.feeToken.symbol}
                 </Text>
                 <Entypo name="chevron-right" color={secondaryTextColor} />
               </TouchableOpacity>
@@ -205,7 +211,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
           />
         )}
 
-        {vm.feeToken?.address && !vm.feeServiceAvailable && (
+        {vm.paymaster?.serviceUnavailable && (
           <TxException exception="Fee paying service is not available." containerStyle={{ marginTop: 10 }} />
         )}
 
@@ -223,7 +229,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
       <FeeTokenList
         network={network}
         tokens={feeTokens}
-        selectedToken={vm.feeToken}
+        selectedToken={vm.paymaster?.feeToken}
         themeColor={network.color}
         onBack={() => swiper.current?.scrollTo(0)}
         onTokenSelected={(token) => {

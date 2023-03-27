@@ -1,5 +1,6 @@
-import { BigNumber, BigNumberish, Contract, providers, utils } from 'ethers';
+import { BigNumber, BigNumberish, Contract, ethers, providers, utils } from 'ethers';
 import { ITokenMetadata, USDT } from '../../common/tokens';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
 import { AccountBase } from '../account/AccountBase';
 import { ERC20Token } from '../../models/ERC20';
@@ -12,12 +13,27 @@ import { getHash } from '../../configs/secret';
 
 export class Paymaster extends PaymasterAPI {
   private erc20: ERC20Token;
+  private contract: Contract;
 
   address: string;
-  feeToken: IFungibleToken;
   account: AccountBase;
-  oracle: Contract;
   network: INetwork;
+
+  feeToken: IFungibleToken;
+  feeTokenWei = BigNumber.from(0);
+  serviceUnavailable = false;
+
+  get insufficientFee() {
+    return this.feeTokenWei.gt(this.feeToken.balance || 0);
+  }
+
+  get feeTokenAmount() {
+    try {
+      return Number(utils.formatUnits(this.feeTokenWei, this.feeToken.decimals));
+    } catch (error) {
+      return 0;
+    }
+  }
 
   constructor(opts: {
     paymasterAddress: string;
@@ -31,30 +47,47 @@ export class Paymaster extends PaymasterAPI {
     this.feeToken = opts.feeToken;
     this.account = opts.account;
     this.network = opts.network;
-    this.oracle = new Contract(this.address, OracleABI, opts.provider);
+    this.contract = new Contract(this.address, OracleABI, opts.provider);
+    this.erc20 = new ERC20Token({
+      owner: this.address,
+      chainId: this.network.chainId,
+      contract: this.feeToken.address || ethers.constants.AddressZero,
+    });
 
-    this.erc20 = new ERC20Token({ owner: this.address, chainId: this.network.chainId, contract: this.feeToken.address });
+    makeObservable(this, {
+      feeToken: observable,
+      feeTokenWei: observable,
+      serviceUnavailable: observable,
+      insufficientFee: computed,
+      feeTokenAmount: computed,
+
+      calcFeeTokenAmount: action,
+      setFeeToken: action,
+    });
   }
 
   setFeeToken(token: IFungibleToken) {
     this.feeToken = token;
+    token.getBalance();
   }
 
   async isServiceAvailable(necessaryGasWei: BigNumberish) {
     try {
-      const balance: BigNumber = await this.oracle.getDeposit();
-      return balance.gte(necessaryGasWei);
+      const balance: BigNumber = await this.contract.getDeposit();
+      runInAction(() => (this.serviceUnavailable = balance.lt(necessaryGasWei)));
     } catch (error) {}
-
-    return false;
   }
 
-  async getFeeTokenAmount(totalGas: BigNumberish, erc20: string) {
-    if (this.feeToken.isNative) return BigNumber.from(totalGas);
+  async calcFeeTokenAmount(totalGas: BigNumber) {
+    if (this.feeToken.isNative) {
+      this.feeTokenWei = totalGas;
+      return;
+    }
 
     try {
-      const erc20Amount: BigNumber = await this.oracle.getTokenValueOfEth(erc20, totalGas);
-      return erc20Amount;
+      this.feeTokenWei = BigNumber.from(0);
+      const erc20Amount: BigNumber = await this.contract.getTokenValueOfEth(this.feeToken.address, totalGas);
+      runInAction(() => (this.feeTokenWei = erc20Amount));
     } catch (error) {}
   }
 
