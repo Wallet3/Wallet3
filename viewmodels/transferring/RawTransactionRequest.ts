@@ -338,7 +338,7 @@ export class RawTransactionRequest extends BaseTransaction {
     if (!param.to) {
       runInAction(() => {
         this.feeTokens = null;
-        this.feeToken = null;
+        this.paymaster = null;
       });
     }
 

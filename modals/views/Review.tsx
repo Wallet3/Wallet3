@@ -1,7 +1,7 @@
+import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
 import { Coin, Placeholder, SafeViewContainer } from '../../components';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import React, { useRef, useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
 import { verifiedColor, warningColor } from '../../constants/styles';
 
 import AddToSendingQueue from '../components/AddToSendingQueue';
@@ -22,6 +22,7 @@ import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { startLayoutAnimation } from '../../utils/animations';
 import styles from '../styles';
 import { utils } from 'ethers';
 
@@ -49,6 +50,8 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, txDa
   const reviewItemStyle = { ...styles.reviewItem, borderColor };
   const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
   const reviewItemValueStyle = { ...styles.reviewItemValue, color: textColor };
+
+  useEffect(() => startLayoutAnimation(), [vm.paymaster?.loading, vm.loading]);
 
   return (
     <SafeViewContainer style={styles.container}>
@@ -137,11 +140,14 @@ const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, txDa
         <View style={{ ...reviewItemStyle, borderBottomWidth: 0 }}>
           <Text style={styles.reviewItemTitle}>{t('modal-review-network')}</Text>
 
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            {generateNetworkIcon({ ...vm.network, width: 15, style: { marginEnd: 5 } })}
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+            {generateNetworkIcon({ ...vm.network, width: 15 })}
+
             <Text style={{ ...reviewItemValueStyle, color: vm.network.color, maxWidth: 150 }} numberOfLines={1}>
               {vm.network.network}
             </Text>
+
+            {(vm.loading || vm.paymaster?.loading) && <ActivityIndicator color={vm.network.color} size={'small'} />}
           </View>
         </View>
       </View>

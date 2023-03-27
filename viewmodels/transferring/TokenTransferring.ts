@@ -8,8 +8,6 @@ import { ERC20Token } from '../../models/ERC20';
 import { Gwei_1 } from '../../common/Constants';
 import { IFungibleToken } from '../../models/Interfaces';
 import { INetwork } from '../../common/Networks';
-import { ITokenMetadata } from '../../common/tokens';
-import { NativeToken } from '../../models/NativeToken';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 
@@ -28,20 +26,13 @@ export class TokenTransferring extends BaseTransaction {
 
   get amountWei() {
     try {
-      // if (this.isNativeToken && (this.feeToken?.isNative || !this.feeToken)) {
-      //   const ether = utils.parseEther(this.amount);
-      //   if (ether.eq(this.account.nativeToken.balance!)) {
-      //     return BigNumber.from(this.account.nativeToken.balance!).sub(this.nativeFeeWei);
-      //   }
-      // }
-
-      if (this.token.address === (this.feeToken?.address ?? '')) {
+      if (this.token.address === (this.paymaster?.feeToken?.address ?? '')) {
         if (this.isNativeToken && utils.parseEther(this.amount).eq(this.account.nativeToken.balance)) {
           return BigNumber.from(this.account.nativeToken.balance!).sub(this.nativeFeeWei);
         }
 
         if (utils.parseUnits(this.amount, this.token.decimals).eq(this.token.balance ?? '0')) {
-          return BigNumber.from(this.token.balance).sub(this.feeTokenWei);
+          return BigNumber.from(this.token.balance).sub(this.paymaster?.feeTokenWei ?? 0);
         }
       }
 

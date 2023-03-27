@@ -20,8 +20,6 @@ export default observer(({ vm, onGasPress }: Props) => {
   const { secondaryTextColor } = Theme;
   const { paymaster } = vm;
 
-  console.log('paymaster is', paymaster?.address, paymaster?.feeTokenAmount);
-
   return (
     <View
       style={{

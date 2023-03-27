@@ -130,7 +130,7 @@ export class BaseTransaction {
 
     Coingecko.refresh();
 
-    this.disposeTxFeeWatcher = autorun(() => this.paymaster?.calcFeeTokenAmount(this.nativeFeeWei));
+    this.disposeTxFeeWatcher = autorun(() => this.paymaster?.calcFeeTokenAmount(this.estimatedRealNativeFeeWei));
   }
 
   get isERC4337Account() {
@@ -317,8 +317,7 @@ export class BaseTransaction {
     const feeToken = this.feeTokens.find((t) => t.address === token.address) ?? (this.feeTokens[0] || null);
     if (!feeToken) return;
 
-    this.paymaster?.setFeeToken(feeToken);
-    this.paymaster?.calcFeeTokenAmount(this.nativeFeeWei);
+    this.paymaster?.setFeeTokenAndCalcTokenAmount(feeToken, this.estimatedRealNativeFeeWei);
 
     AsyncStorage.setItem(Keys.feeToken(this.network.chainId, this.account.address), token.address);
   }

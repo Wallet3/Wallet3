@@ -22,6 +22,7 @@ export class Paymaster extends PaymasterAPI {
   feeToken: IFungibleToken;
   feeTokenWei = BigNumber.from(0);
   serviceUnavailable = false;
+  loading = false;
 
   get insufficientFee() {
     return this.feeTokenWei.gt(this.feeToken.balance || 0);
@@ -58,17 +59,21 @@ export class Paymaster extends PaymasterAPI {
       feeToken: observable,
       feeTokenWei: observable,
       serviceUnavailable: observable,
+      loading: observable,
       insufficientFee: computed,
       feeTokenAmount: computed,
 
       calcFeeTokenAmount: action,
-      setFeeToken: action,
+      setFeeTokenAndCalcTokenAmount: action,
     });
   }
 
-  setFeeToken(token: IFungibleToken) {
+  setFeeTokenAndCalcTokenAmount(token: IFungibleToken, totalGas: BigNumber) {
     this.feeToken = token;
     token.getBalance();
+
+    this.feeTokenWei = BigNumber.from(0);
+    this.calcFeeTokenAmount(totalGas);
   }
 
   async isServiceAvailable(necessaryGasWei: BigNumberish) {
@@ -84,10 +89,19 @@ export class Paymaster extends PaymasterAPI {
       return;
     }
 
+    if (totalGas.eq(0)) {
+      this.feeTokenWei = totalGas;
+      return;
+    }
+
     try {
-      this.feeTokenWei = BigNumber.from(0);
+      this.loading = true;
       const erc20Amount: BigNumber = await this.contract.getTokenValueOfEth(this.feeToken.address, totalGas);
-      runInAction(() => (this.feeTokenWei = erc20Amount));
+
+      runInAction(() => {
+        this.feeTokenWei = erc20Amount;
+        this.loading = false;
+      });
     } catch (error) {}
   }
 
