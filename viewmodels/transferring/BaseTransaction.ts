@@ -2,7 +2,7 @@ import { AccountBase, SendTxRequest, SendTxResponse } from '../account/AccountBa
 import { BigNumber, BigNumberish, providers, utils } from 'ethers';
 import { ERC1271InvalidSignatureResult, EncodedERC1271CallData, Gwei_1, MAX_GWEI_PRICE } from '../../common/Constants';
 import { IReactionDisposer, action, autorun, computed, makeObservable, observable, runInAction } from 'mobx';
-import { clearPendingENSRequests, isENSDomain } from '../services/ENSResolver';
+import { clearPendingENSRequests, isENSDomain } from '../services/ens/ENSResolver';
 import {
   estimateGas,
   eth_call_return,
@@ -12,7 +12,7 @@ import {
   getNextBlockBaseFee,
   getRPCUrls,
 } from '../../common/RPC';
-import { isDomain, resolveDomain } from '../services/DomainResolver';
+import { isDomain, resolveDomain } from '../services/ens/DomainResolver';
 
 import AddressTag from '../../models/entities/AddressTag';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -24,9 +24,9 @@ import { IFungibleToken } from '../../models/Interfaces';
 import { INetwork } from '../../common/Networks';
 import { ITokenMetadata } from '../../common/tokens';
 import { NativeToken } from '../../models/NativeToken';
-import { Paymaster } from '../services/Paymaster';
+import { Paymaster } from '../services/erc4337/Paymaster';
 import { SECOND } from '../../utils/time';
-import { createERC4337Client } from '../services/ERC4337';
+import { createERC4337Client } from '../services/erc4337/ERC4337';
 import { fetchAddressInfo } from '../services/EtherscanPublicTag';
 import { getEnsAvatar } from '../../common/ENS';
 

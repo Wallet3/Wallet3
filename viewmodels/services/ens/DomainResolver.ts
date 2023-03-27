@@ -1,8 +1,8 @@
 import { isENSDomain, resolveENS } from './ENSResolver';
-import { isKey3DidDomain, resolveKey3Did } from '../../common/apis/Key3did';
+import { isKey3DidDomain, resolveKey3Did } from '../../../common/apis/Key3did';
 import { isUnstoppableDomain, resolveUnstoppableDomain, reverseLookup } from './UnstoppableDomains';
 
-import Networks from '../core/Networks';
+import Networks from '../../core/Networks';
 
 export async function resolveDomain(domain: string, chainId: number) {
   if (isENSDomain(domain)) {

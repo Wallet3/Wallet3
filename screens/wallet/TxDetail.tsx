@@ -149,7 +149,7 @@ export default observer(({ tx, close }: { tx?: Transaction; close?: Function }) 
         </TouchableOpacity>
       </View>
 
-      {tx?.blockNumber && tx.blockNumber >= 0 ? undefined : (
+      {(tx?.blockNumber ?? -1) >= 0 || tx?.isERC4337 ? undefined : (
         <View style={{ flexDirection: 'row' }}>
           <Button
             title={t('button-cancel-tx')}

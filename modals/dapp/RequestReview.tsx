@@ -64,7 +64,7 @@ const TxReview = observer(
     const reviewItemValueStyle = { ...styles.reviewItemValue, color: textColor };
     const safeThemeColor = vm.toAddressRisky ? warningColor : thirdTextColor;
 
-    useEffect(() => startLayoutAnimation(), [vm.nfts]);
+    useEffect(() => startLayoutAnimation(), [vm.nfts, vm.paymaster?.loading]);
 
     return (
       <SafeViewContainer>
@@ -422,14 +422,14 @@ const TxReview = observer(
 
           <View style={{ ...reviewItemStyle, borderBottomWidth: 0 }}>
             <Text style={styles.reviewItemTitle}>{t('modal-review-network')}</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              {generateNetworkIcon({ ...network, width: 15, style: { marginEnd: 6 } })}
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+              {generateNetworkIcon({ ...network, width: 15 })}
 
               <Text style={{ ...reviewItemValueStyle, color: network?.color }} numberOfLines={1}>
                 {network?.network}
               </Text>
 
-              {vm.loading ? <ActivityIndicator size="small" style={{ marginStart: 5 }} color={verifiedColor} /> : undefined}
+              {(vm.loading || vm.paymaster?.loading) && <ActivityIndicator size="small" color={verifiedColor} />}
             </View>
           </View>
         </View>

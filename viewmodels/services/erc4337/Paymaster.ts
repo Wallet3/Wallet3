@@ -1,15 +1,15 @@
 import { BigNumber, BigNumberish, Contract, ethers, providers, utils } from 'ethers';
-import { ITokenMetadata, USDT } from '../../common/tokens';
+import { ITokenMetadata, USDT } from '../../../common/tokens';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
-import { AccountBase } from '../account/AccountBase';
-import { ERC20Token } from '../../models/ERC20';
-import { IFungibleToken } from '../../models/Interfaces';
-import { INetwork } from '../../common/Networks';
-import OracleABI from '../../abis/TokenOracle.json';
+import { AccountBase } from '../../account/AccountBase';
+import { ERC20Token } from '../../../models/ERC20';
+import { IFungibleToken } from '../../../models/Interfaces';
+import { INetwork } from '../../../common/Networks';
+import OracleABI from '../../../abis/TokenOracle.json';
 import { PaymasterAPI } from '@account-abstraction/sdk';
 import { UserOperationStruct } from '@account-abstraction/contracts';
-import { getHash } from '../../configs/secret';
+import { getHash } from '../../../configs/secret';
 
 export class Paymaster extends PaymasterAPI {
   private erc20: ERC20Token;
@@ -56,10 +56,10 @@ export class Paymaster extends PaymasterAPI {
     });
 
     makeObservable(this, {
+      loading: observable,
       feeToken: observable,
       feeTokenWei: observable,
       serviceUnavailable: observable,
-      loading: observable,
       insufficientFee: computed,
       feeTokenAmount: computed,
 

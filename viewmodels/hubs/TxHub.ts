@@ -12,7 +12,7 @@ import { INetwork } from '../../common/Networks';
 import LINQ from 'linq';
 import Networks from '../core/Networks';
 import { UserOperationStruct } from '@account-abstraction/contracts/dist/types/EntryPoint';
-import { createERC4337Client } from '../services/ERC4337';
+import { createERC4337Client } from '../services/erc4337/ERC4337';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
 import { isTransactionAbandoned } from '../services/EtherscanPublicTag';

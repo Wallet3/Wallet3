@@ -6,7 +6,7 @@ import { BigNumber } from 'ethers';
 import ERC4337Queue from './ERC4337Queue';
 import { INetwork } from '../../common/Networks';
 import LINQ from 'linq';
-import { createERC4337Client } from '../services/ERC4337';
+import { createERC4337Client } from '../services/erc4337/ERC4337';
 import { estimateGas } from '../../common/RPC';
 
 export class BatchTransactionRequest extends BaseTransaction {

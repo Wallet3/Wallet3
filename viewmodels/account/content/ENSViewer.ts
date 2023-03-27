@@ -1,4 +1,4 @@
-import * as Unstoppable from '../../services/UnstoppableDomains';
+import * as Unstoppable from '../../services/ens/UnstoppableDomains';
 
 import { getEnsAvatar, getText } from '../../../common/ENS';
 import { makeAutoObservable, runInAction } from 'mobx';

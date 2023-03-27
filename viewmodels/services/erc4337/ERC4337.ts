@@ -1,11 +1,11 @@
 import { BytesLike, Wallet, providers } from 'ethers';
 
 import { ERC4337Client } from './ERC4337Client';
-import { INetwork } from '../../common/Networks';
-import Networks from '../core/Networks';
+import { INetwork } from '../../../common/Networks';
+import Networks from '../../core/Networks';
 import { PaymasterAPI } from '@account-abstraction/sdk';
-import { getRPCUrls } from '../../common/RPC';
-import { getSecureRandomBytes } from '../../utils/math';
+import { getRPCUrls } from '../../../common/RPC';
+import { getSecureRandomBytes } from '../../../utils/math';
 
 const ERC4337Clients = new Map<string, ERC4337Client>();
 

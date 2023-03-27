@@ -5,11 +5,11 @@ import { makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { HttpRpcClient } from '@account-abstraction/sdk';
-import { Paymaster } from '../services/Paymaster';
+import { Paymaster } from '../services/erc4337/Paymaster';
 import TxHub from '../hubs/TxHub';
 import { UserOperationStruct } from '@account-abstraction/contracts';
 import { WalletBase } from '../wallet/WalletBase';
-import { createERC4337Client } from '../services/ERC4337';
+import { createERC4337Client } from '../services/erc4337/ERC4337';
 
 const Keys = {
   accountActivated: (address: string, chainId: number) => `${chainId}_${address}_erc4337_activated`,

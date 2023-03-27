@@ -1,6 +1,6 @@
 import { BigNumber, BigNumberish, providers } from 'ethers';
 
-import { ITokenMetadata } from '../../common/tokens';
+import { ITokenMetadata } from '../../../common/tokens';
 import { SimpleAccountAPI } from '@account-abstraction/sdk';
 import { TransactionDetailsForUserOp } from '@account-abstraction/sdk/dist/src/TransactionDetailsForUserOp';
 import { UserOperationStruct } from '@account-abstraction/contracts/dist/types/EntryPoint';
