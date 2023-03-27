@@ -11,6 +11,7 @@ import Fire from '../../assets/icons/app/fire.svg';
 import { IFungibleToken } from '../../models/Interfaces';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
+import TinyInfo from '../components/TinyInfo';
 import Tokenlist from './TokenPlainList';
 import TxException from '../components/TxException';
 import i18n from '../../i18n';
@@ -26,7 +27,7 @@ interface GasProps {
 
 export default observer(({ onBack, vm, themeColor }: GasProps) => {
   const { t } = i18n;
-  const { borderColor, textColor, secondaryTextColor } = Theme;
+  const { borderColor, textColor, secondaryTextColor, thirdTextColor } = Theme;
   const swiper = useRef<Swiper>(null);
 
   const { network, feeTokens, paymaster } = vm;
@@ -148,18 +149,14 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
               flex: 1,
             }}
           >
-            <TouchableOpacity disabled={!editable} style={styles.gasSpeedItem} onPress={() => vm.setGas('rapid')}>
-              <Ionicons name="rocket" size={12} color={editable ? 'tomato' : secondaryTextColor} />
-              <Text style={{ ...styles.gasItemText, color: editable ? 'tomato' : secondaryTextColor }}>
-                {t('modal-gas-review-rapid')}
-              </Text>
+            <TouchableOpacity style={styles.gasSpeedItem} onPress={() => vm.setGas('rapid')}>
+              <Ionicons name="rocket" size={12} color={'tomato'} />
+              <Text style={{ ...styles.gasItemText, color: 'tomato' }}>{t('modal-gas-review-rapid')}</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity disabled={!editable} style={styles.gasSpeedItem} onPress={() => vm.setGas('fast')}>
-              <Ionicons name="car-sport" size={13} color={editable ? 'dodgerblue' : secondaryTextColor} />
-              <Text style={{ ...styles.gasItemText, color: editable ? 'dodgerblue' : secondaryTextColor }}>
-                {t('modal-gas-review-fast')}
-              </Text>
+            <TouchableOpacity style={styles.gasSpeedItem} onPress={() => vm.setGas('fast')}>
+              <Ionicons name="car-sport" size={13} color={'dodgerblue'} />
+              <Text style={{ ...styles.gasItemText, color: 'dodgerblue' }}>{t('modal-gas-review-fast')}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity disabled={!editable} style={styles.gasSpeedItem} onPress={() => vm.setGas('standard')}>
@@ -170,17 +167,24 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
             </TouchableOpacity>
           </View>
 
-          {vm.isERC4337Account && (feeTokens?.length ?? 0) > 0 && paymaster?.feeToken ? (
+          {vm.isERC4337Account && vm.feeTokens?.length ? (
             <View style={{ ...reviewItemsContainer }}>
               <TouchableOpacity
-                disabled={vm.paymaster?.serviceUnavailable}
+                disabled={paymaster?.serviceUnavailable}
                 onPress={() => swiper.current?.scrollTo(1)}
-                style={{ ...styles.gasSpeedItem, paddingStart: 12, paddingEnd: 8, flexDirection: 'row', alignItems: 'center' }}
+                style={{
+                  ...styles.gasSpeedItem,
+                  paddingStart: 12,
+                  paddingEnd: 8,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  opacity: paymaster?.serviceUnavailable ? 0.2 : 1,
+                }}
               >
                 <Coin
                   forceRefresh
-                  symbol={paymaster.feeToken.symbol}
-                  address={paymaster.feeToken.address}
+                  symbol={paymaster?.feeToken?.symbol ?? network.symbol}
+                  address={paymaster?.feeToken?.address ?? ''}
                   chainId={network.chainId}
                   size={14}
                 />
@@ -196,7 +200,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
                     maxWidth: 100,
                   }}
                 >
-                  {paymaster.feeToken.symbol}
+                  {paymaster?.feeToken?.symbol ?? network.symbol}
                 </Text>
                 <Entypo name="chevron-right" color={secondaryTextColor} />
               </TouchableOpacity>
@@ -211,8 +215,11 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
           />
         )}
 
-        {vm.paymaster?.serviceUnavailable && (
-          <TxException exception="Fee paying service is not available." containerStyle={{ marginTop: 10 }} />
+        {paymaster?.serviceUnavailable && (
+          <TxException
+            exception="Fee paying service is not available."
+            containerStyle={{ marginTop: 10, backgroundColor: 'orange' }}
+          />
         )}
 
         <View style={{ flex: 1 }} />
@@ -226,17 +233,26 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
         />
       </SafeViewContainer>
 
-      <FeeTokenList
-        network={network}
-        tokens={feeTokens}
-        selectedToken={vm.paymaster?.feeToken}
-        themeColor={network.color}
-        onBack={() => swiper.current?.scrollTo(0)}
-        onTokenSelected={(token) => {
-          vm.setFeeToken(token as IFungibleToken);
-          swiper.current?.scrollTo(0);
-        }}
-      />
+      <SafeViewContainer style={{ flex: 1, paddingHorizontal: 0, paddingTop: 0 }}>
+        <FeeTokenList
+          network={network}
+          tokens={feeTokens}
+          selectedToken={paymaster?.feeToken}
+          themeColor={network.color}
+          onBack={() => swiper.current?.scrollTo(0)}
+          onTokenSelected={(token) => {
+            vm.setFeeToken(token as IFungibleToken);
+            swiper.current?.scrollTo(0);
+          }}
+        />
+
+        <TinyInfo
+          icon="information-circle"
+          color={thirdTextColor}
+          message="The service provider will charge 5-20% service fee if you pay gas fee with ERC20 tokens."
+          style={{ paddingHorizontal: 16, paddingEnd: 24 }}
+        />
+      </SafeViewContainer>
     </Swiper>
   );
 });

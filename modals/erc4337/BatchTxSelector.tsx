@@ -4,11 +4,8 @@ import { Placeholder, SafeViewContainer } from '../../components';
 import { SectionList, Text, TouchableOpacity, View } from 'react-native';
 
 import AccountIndicator from '../components/AccountIndicator';
-import Avatar from '../../components/Avatar';
-import { FlatList } from 'react-native-gesture-handler';
 import { INetwork } from '../../common/Networks';
 import { MaterialIcons } from '@expo/vector-icons';
-import Networks from '../../viewmodels/core/Networks';
 import React from 'react';
 import Theme from '../../viewmodels/settings/Theme';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
@@ -59,7 +56,7 @@ export default ({ vm, onBatchSelected }: Props) => {
       <SectionList
         sections={chainQueue}
         bounces={false}
-        keyExtractor={(c) => `${c.network.chainId}_${c.account}_${c.requests.length}`}
+        keyExtractor={(c) => `${c.network.chainId}_${c.account.address}_${c.requests.length}`}
         renderItem={renderItem}
         renderSectionHeader={({ section }) => (
           <View
@@ -68,7 +65,7 @@ export default ({ vm, onBatchSelected }: Props) => {
               alignItems: 'center',
               paddingHorizontal: 22,
               paddingVertical: 8,
-              paddingBottom: 10,
+              paddingBottom: 11,
               gap: 5,
             }}
           >

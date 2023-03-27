@@ -14,21 +14,24 @@ import { getHash } from '../../../configs/secret';
 export class Paymaster extends PaymasterAPI {
   private erc20: ERC20Token;
   private contract: Contract;
+  private balance = BigNumber.from(0);
 
   address: string;
   account: AccountBase;
   network: INetwork;
 
-  feeToken: IFungibleToken;
+  feeToken: IFungibleToken | null;
   feeTokenWei = BigNumber.from(0);
   serviceUnavailable = false;
   loading = false;
 
   get insufficientFee() {
-    return this.feeTokenWei.gt(this.feeToken.balance || 0);
+    return this.feeTokenWei.gt(this.feeToken?.balance || 0);
   }
 
   get feeTokenAmount() {
+    if (!this.feeToken) return 0;
+
     try {
       return Number(utils.formatUnits(this.feeTokenWei, this.feeToken.decimals));
     } catch (error) {
@@ -69,6 +72,8 @@ export class Paymaster extends PaymasterAPI {
   }
 
   setFeeTokenAndCalcTokenAmount(token: IFungibleToken, totalGas: BigNumber) {
+    if (this.serviceUnavailable) return;
+
     this.feeToken = token;
     token.getBalance();
 
@@ -78,12 +83,19 @@ export class Paymaster extends PaymasterAPI {
 
   async isServiceAvailable(necessaryGasWei: BigNumberish) {
     try {
-      const balance: BigNumber = await this.contract.getDeposit();
-      runInAction(() => (this.serviceUnavailable = balance.lt(necessaryGasWei)));
+      if (this.balance.eq(0)) this.balance = await this.contract.getDeposit();
     } catch (error) {}
+
+    const unavailable = this.balance.lt(necessaryGasWei);
+    runInAction(() => {
+      this.serviceUnavailable = unavailable;
+      if (unavailable) this.feeToken = null;
+    });
   }
 
   async calcFeeTokenAmount(totalGas: BigNumber) {
+    if (!this.feeToken) return;
+
     if (this.feeToken.isNative) {
       this.feeTokenWei = totalGas;
       return;
@@ -106,6 +118,8 @@ export class Paymaster extends PaymasterAPI {
   }
 
   async getPaymasterAndData(_: Partial<UserOperationStruct>): Promise<string | undefined> {
+    if (!this.feeToken) return;
+
     const result = utils.solidityPack(
       ['address', 'address', 'bytes'],
       [
@@ -119,6 +133,7 @@ export class Paymaster extends PaymasterAPI {
   }
 
   async buildApprove(feeAmount: BigNumber): Promise<providers.TransactionRequest[]> {
+    if (!this.feeToken) return [];
     if (this.feeToken.isNative) return [];
 
     const requests: providers.TransactionRequest[] = [];

@@ -53,8 +53,8 @@ export default observer(({ vm, onGasPress }: Props) => {
         <AnimatedNumber
           style={{ ...styles.reviewItemValue, marginStart: 2, marginEnd: 5 }}
           numberOfLines={1}
-          value={paymaster?.feeTokenAmount ?? vm.txFee}
-          formatter={(val) => val.toFixed(5)}
+          value={vm.txFee}
+          formatter={(val) => val.toFixed(paymaster?.feeToken?.isStable ? 4 : 5)}
         />
 
         {paymaster?.feeToken?.isStable === true && (

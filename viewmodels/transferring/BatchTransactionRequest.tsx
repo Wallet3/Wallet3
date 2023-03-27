@@ -26,8 +26,8 @@ export class BatchTransactionRequest extends BaseTransaction {
 
     const inaccurateGas =
       LINQ.from(this.requests).sum((req) => BigNumber.from(req.tx!.gasLimit).toNumber()) -
-      100_000 * this.requests.length +
-      100_000;
+      150_000 * this.requests.length +
+      150_000;
 
     let totalGas = inaccurateGas;
     let errorMessage = '';

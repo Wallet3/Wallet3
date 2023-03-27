@@ -22,7 +22,6 @@ import { ERC4337Account } from '../account/ERC4337Account';
 import ERC4337Queue from './ERC4337Queue';
 import { IFungibleToken } from '../../models/Interfaces';
 import { INetwork } from '../../common/Networks';
-import { ITokenMetadata } from '../../common/tokens';
 import { NativeToken } from '../../models/NativeToken';
 import { Paymaster } from '../services/erc4337/Paymaster';
 import { SECOND } from '../../utils/time';
@@ -130,7 +129,10 @@ export class BaseTransaction {
 
     Coingecko.refresh();
 
-    this.disposeTxFeeWatcher = autorun(() => this.paymaster?.calcFeeTokenAmount(this.estimatedRealNativeFeeWei));
+    this.disposeTxFeeWatcher = autorun(() => {
+      this.paymaster?.calcFeeTokenAmount(this.estimatedRealNativeFeeWei);
+      this.paymaster?.isServiceAvailable(this.estimatedRealNativeFeeWei);
+    });
   }
 
   get isERC4337Account() {
@@ -188,7 +190,9 @@ export class BaseTransaction {
   }
 
   get insufficientFee() {
-    return this.paymaster?.insufficientFee ?? this.valueWei.add(this.nativeFeeWei).gt(this.nativeToken.balance);
+    return this.paymaster?.feeToken
+      ? this.paymaster.insufficientFee
+      : this.valueWei.add(this.nativeFeeWei).gt(this.nativeToken.balance);
   }
 
   get loading() {
@@ -212,7 +216,7 @@ export class BaseTransaction {
 
   get txFee() {
     try {
-      return this.paymaster?.feeTokenAmount ?? Number(utils.formatEther(this.nativeFeeWei));
+      return this.paymaster?.feeToken ? this.paymaster?.feeTokenAmount : Number(utils.formatEther(this.nativeFeeWei));
     } catch (error) {
       return 0;
     }
