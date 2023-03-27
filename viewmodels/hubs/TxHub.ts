@@ -19,16 +19,18 @@ import { isTransactionAbandoned } from '../services/EtherscanPublicTag';
 import { logTxConfirmed } from '../services/Analytics';
 import { showMessage } from 'react-native-flash-message';
 
+type DBTransaction = ERC4337Transaction | Transaction;
+
 interface Events {
-  txConfirmed: (tx: Transaction) => void;
+  txConfirmed: (tx: DBTransaction) => void;
   opHashResolved: (opHash: string, txHash: string) => void;
 }
 
 class TxHub extends EventEmitter<Events> {
   private watchTimer!: NodeJS.Timeout;
 
-  pendingTxs: Transaction[] = [];
-  txs: Transaction[] = [];
+  pendingTxs: DBTransaction[] = [];
+  txs: DBTransaction[] = [];
 
   get allTxs() {
     return this.pendingTxs.concat(this.txs);
@@ -67,7 +69,7 @@ class TxHub extends EventEmitter<Events> {
       this.erc4337Repo.find({ where: { blockHash: IsNull() } }),
     ]);
 
-    const confirmed = LINQ.from(minedTxs.concat(mined4337Txs))
+    const confirmed: DBTransaction[] = LINQ.from(minedTxs.concat(mined4337Txs))
       .orderByDescending((t) => t.timestamp)
       .toArray();
 
@@ -113,8 +115,8 @@ class TxHub extends EventEmitter<Events> {
   async watchPendingTxs() {
     clearTimeout(this.watchTimer);
 
-    const confirmedTxs: Transaction[] = [];
-    const abandonedTxs: Transaction[] = [];
+    const confirmedTxs: DBTransaction[] = [];
+    const abandonedTxs: DBTransaction[] = [];
 
     for (let tx of this.pendingTxs) {
       if (!tx.hash && tx.isERC4337) {

@@ -1,7 +1,7 @@
 import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
 import { BigNumber, BigNumberish, providers, utils } from 'ethers';
+import Transaction, { ReadableInfo } from './Transaction';
 
-import Transaction from './Transaction';
 import { UserOperationStruct } from '@account-abstraction/contracts/dist/types/EntryPoint';
 
 export type UserOperationS = {
@@ -37,13 +37,61 @@ export async function userOpsToJSON(op: Partial<UserOperationStruct>) {
     ) as UserOperationS;
 }
 
-@Entity({ name: '_dev_erc4337_txs_v2' })
-export default class ERC4337Transaction extends Transaction {
+@Entity({ name: '_dev_erc4337_txs_v3' })
+export default class ERC4337Transaction extends BaseEntity {
   @PrimaryColumn()
   opHash!: string;
 
   @Column({ nullable: true })
   hash: string = '';
+
+  @Column()
+  chainId!: number;
+
+  @Column()
+  from!: string;
+
+  @Column()
+  to!: string;
+
+  @Column()
+  value!: string;
+
+  @Column()
+  gas!: number;
+
+  @Column()
+  gasPrice!: number;
+
+  @Column({ default: 0 })
+  priorityPrice!: number;
+
+  @Column()
+  nonce!: number;
+
+  @Column({ type: 'text', default: '' })
+  data!: string;
+
+  @Column()
+  timestamp!: number;
+
+  @Column({ nullable: true })
+  blockNumber?: number;
+
+  @Column({ nullable: true })
+  blockHash?: string;
+
+  @Column({ nullable: true })
+  status?: boolean;
+
+  @Column({ nullable: true })
+  transactionIndex?: number;
+
+  @Column({ nullable: true })
+  gasUsed?: number;
+
+  @Column({ nullable: true, type: 'simple-json' })
+  readableInfo!: ReadableInfo;
 
   get isERC4337() {
     return true;
