@@ -5,6 +5,7 @@ import { NetworkIcons, generateNetworkIcon } from '../../assets/icons/networks/c
 import { SafeViewContainer, Separator } from '../../components';
 import { useRef, useState } from 'react';
 
+import { BlurView } from 'expo-blur';
 import EditNetwork from '../views/EditNetwork';
 import { INetwork } from '../../common/Networks';
 import Networks from '../../viewmodels/core/Networks';
@@ -27,7 +28,7 @@ interface Props {
 
 export default observer(({ title, onNetworkPress, selectedNetwork, useContextMenu, onEditing }: Props) => {
   const { t } = i18n;
-  const { backgroundColor, secondaryTextColor, borderColor } = Theme;
+  const { backgroundColor, secondaryTextColor, thirdTextColor, borderColor } = Theme;
   const [editNetwork, setEditNetwork] = useState<INetwork>();
   const swiper = useRef<Swiper>(null);
   const flatList = useRef<SectionList>(null);
@@ -138,30 +139,25 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
   return (
     <SafeAreaProvider style={{ ...styles.safeArea }}>
       <Swiper ref={swiper} showsPagination={false} showsButtons={false} loop={false} scrollEnabled={false}>
-        <SafeViewContainer style={{ padding: 16 }}>
-          <Text style={{ color: secondaryTextColor, fontSize: 11, fontWeight: '500', paddingStart: 24 }} numberOfLines={1}>
-            {title ?? t('modal-networks-switch')}
-          </Text>
-          <Separator style={{ marginVertical: 4, backgroundColor: borderColor, marginStart: 24 }} />
-
+        <SafeViewContainer style={{ padding: 16, paddingTop: 0 }}>
           <SectionList
             ref={flatList}
             keyExtractor={(i) => `${i.chainId}`}
             sections={Networks.categorized}
             renderItem={useContextMenu ? renderContextMenuItem : renderItem}
             contentContainerStyle={{ paddingBottom: 36 }}
-            style={{ marginHorizontal: -16, marginTop: -4, marginBottom: -36 }}
+            style={{ marginHorizontal: -16, marginTop: -4, marginBottom: -36, paddingTop: 12 }}
             onScrollToIndexFailed={() => {}}
             renderSectionHeader={({ section }) => (
-              <View style={{ marginHorizontal: 16, paddingTop: 6, marginBottom: 0, paddingStart: 24 }}>
+              <View style={{ marginHorizontal: 16, paddingTop: 6, marginBottom: 2 }}>
                 <Text
                   style={{
-                    fontWeight: '500',
-                    color: secondaryTextColor,
-                    fontSize: 11,
+                    fontSize: 12,
+                    fontWeight: '400',
                     textShadowColor: '#fff',
                     textShadowOffset: { width: 0, height: 0 },
                     textShadowRadius: 3,
+                    color: thirdTextColor,
                   }}
                 >
                   {t(`network-category-${section.category}`)}
