@@ -42,6 +42,7 @@ export default {
   10: <Optimism width={47} height={47} style={styles.optimism} />,
   100: <XDai width={50} height={50} style={styles.xdai} />,
   137: <Polygon width={45} height={45} style={styles.polygon} />,
+  1101: <Polygon width={45} height={45} style={styles.polygon} />,
   43114: <Avalanche width={60} height={60} style={styles.avalanche} />,
   250: <Fantom width={60} height={60} style={styles.fantom} />,
   42220: <Celo width={49} height={49} style={styles.celo} />,
@@ -108,6 +109,8 @@ export function generateNetworkIcon(props: {
     case 10:
       return <Optimism key={chainId} width={width} height={height ?? width} style={style} />;
     case 137:
+    case 1101:
+    case 1442:
       return <Polygon key={chainId} width={width} height={height ?? width} style={style} />;
     case 100:
       return <XDai key={chainId} width={width} height={height ?? width} style={style} />;

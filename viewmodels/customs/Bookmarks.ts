@@ -106,7 +106,9 @@ class Bookmarks {
     AsyncStorage.getItem(Keys.bookmarks)
       .then((v) =>
         runInAction(() => {
-          this._favs = LINQ.from((JSON.parse(v || '[]') as any[]).concat(__DEV__ ? DevApps : []))
+          this._favs = LINQ.from(
+            (__DEV__ ? (DevApps as { title: string; data: Bookmark[] }[]) : []).concat(JSON.parse(v || '[]'))
+          )
             .distinct((g) => g.title)
             .toArray();
           this._favUrls = new Map(this._favs.flatMap((g) => g.data.map((item) => [item.url, g.title] as [string, string])));

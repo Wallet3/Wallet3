@@ -30,6 +30,7 @@ import Nova from './nova.svg';
 import OKEx from './okex.svg';
 import Optimism from './optimism.svg';
 import Polygon from './polygon.svg';
+import PolygonZkEVM from './polygon-zkevm.svg';
 import React from 'react';
 import Ronin from './ronin.svg';
 import Shiden from './shiden.svg';
@@ -86,6 +87,7 @@ const FTM = generateNetworkIcon({ chainId: 250, width: 32 });
 const HECO = generateNetworkIcon({ chainId: 128, width: 32 });
 const OKX = generateNetworkIcon({ chainId: 66, width: 32 });
 const POLY = generateNetworkIcon({ chainId: 137, width: 27, height: 32 });
+const POLYGONZKEVM = generateNetworkIcon({ chainId: 1101, width: 29, height: 32 });
 const xDAI = generateNetworkIcon({ chainId: 100, width: 32 });
 const BOBA = generateNetworkIcon({ chainId: 288, width: 32 });
 const AURORA = generateNetworkIcon({ chainId: 1313161554, width: 32 });
@@ -129,6 +131,8 @@ export const NetworkIcons = {
   128: HECO,
   66: OKX,
   137: POLY,
+  1101: POLYGONZKEVM,
+  1442: POLYGONZKEVM,
   80001: POLY,
   100: xDAI,
   288: BOBA,
@@ -177,6 +181,9 @@ export function generateNetworkIcon(props: {
     case 137:
     case 80001:
       return <Polygon key={chainId} width={width} height={height ?? width} style={style} />;
+    case 1101:
+    case 1442:
+      return <PolygonZkEVM key={chainId} width={width} height={height ?? width} style={style} />;
     case 100:
       return <XDai key={chainId} width={width} height={height ?? width} style={style} />;
     case 288:

@@ -17,6 +17,7 @@
     "title": "Faucets",
     "data": [
       { "title": "Paradigm", "url": "https://faucet.paradigm.xyz" },
+      { "title": "USDC", "url": "https://usdcfaucet.com" },
       { "title": "Mumbai Faucet", "url": "https://faucet.cask.fi" }
     ]
   }
