@@ -120,6 +120,16 @@ export const PublicNetworks: INetwork[] = [
     category: 'core',
   },
   {
+    symbol: 'ETH',
+    explorer: 'https://explorer.zksync.io',
+    chainId: 324,
+    color: '#8C8DFC',
+    l2: true,
+    network: 'zkSync Era',
+    defaultTokens: [],
+    category: 'core',
+  },
+  {
     symbol: 'MATIC',
     comm_id: 'matic',
     network: 'Polygon',
@@ -453,6 +463,15 @@ export const Testnets: INetwork[] = [
     testnet: true,
     defaultTokens: [],
     explorer: 'https://goerli.arbiscan.io',
+  },
+  {
+    symbol: 'ETH',
+    network: 'zkSync Era Testnet',
+    chainId: 280,
+    color: '#4E529A',
+    testnet: true,
+    defaultTokens: [],
+    explorer: 'https://goerli.explorer.zksync.io',
   },
   {
     symbol: 'ETH',

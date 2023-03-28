@@ -53,7 +53,8 @@ export default {
   25: <Cronos width={49} height={49} style={styles.cronos} />,
   1666600000: <Harmony width={52} height={52} style={styles.harmony} />,
   2020: <Ronin width={42} height={42} style={styles.ronin} />,
-  280: <ZKSync width={49} height={49} style={styles.zkSync} />,
+  280: <ZKSync width={52} height={52} style={styles.zkSync} />,
+  324: <ZKSync width={52} height={52} style={styles.zkSync} />,
   1088: <Metis width={64} height={64} style={styles.metis} />,
   8217: <Klaytn width={37} height={37} style={styles.klaytn} />,
   2152: <Findora width={42} height={42} style={styles.findora} />,
@@ -140,6 +141,7 @@ export function generateNetworkIcon(props: {
     case 2020:
       return <Ronin key={chainId} width={width} height={height ?? width} style={style} />;
     case 280:
+    case 324:
       return <ZKSync key={chainId} width={width} height={height ?? width} style={style} />;
     case 8217:
       return <Klaytn key={chainId} width={width} height={height ?? width} style={style} />;

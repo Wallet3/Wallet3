@@ -140,6 +140,7 @@ export const NetworkIcons = {
   1285: MOONRIVER,
   2020: RONIN,
   280: ZSYNC,
+  324: ZSYNC,
   8217: KLAYTN,
   2152: FINDORA,
   1088: METIS,
@@ -210,6 +211,7 @@ export function generateNetworkIcon(props: {
     case 2020:
       return <Ronin key={chainId} width={width} height={height ?? width} style={style} />;
     case 280:
+    case 324:
       return <ZKSync key={chainId} width={width} height={height ?? width} style={style} />;
     case 8217:
       return <Klaytn key={chainId} width={width} height={height ?? width} style={style} />;
