@@ -76,10 +76,10 @@ export class ERC4337Account extends AccountBase {
     const paymaster =
       paymasterAddress && fee
         ? new Paymaster({
-            account: this,
-            feeToken: fee.erc20,
-            paymasterAddress: paymasterAddress,
             network,
+            account: this,
+            paymasterAddress,
+            feeToken: fee.erc20,
             provider: new providers.JsonRpcProvider(getRPCUrls(network.chainId)[0]),
           })
         : undefined;
@@ -145,10 +145,12 @@ export class ERC4337Account extends AccountBase {
 
         const txHashPromise = new Promise<string>((resolve) => {
           const handler = (opId: string, txHash: string) => {
-            console.log('op hash resolved', txHash);
-            if (opId !== opHash) return;
-            resolve(txHash);
-            TxHub.off('opHashResolved', handler);
+            try {
+              if (opId !== opHash) return;
+              resolve(txHash);
+            } finally {
+              TxHub.off('opHashResolved', handler);
+            }
           };
 
           TxHub.on('opHashResolved', handler);

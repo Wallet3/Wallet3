@@ -118,7 +118,7 @@ export class Paymaster extends PaymasterAPI {
   }
 
   async getPaymasterAndData(_: Partial<UserOperationStruct>): Promise<string | undefined> {
-    if (!this.feeToken) return;
+    if (!this.feeToken || this.feeToken.isNative) return '0x';
 
     const result = utils.solidityPack(
       ['address', 'address', 'bytes'],
@@ -139,7 +139,7 @@ export class Paymaster extends PaymasterAPI {
     const requests: providers.TransactionRequest[] = [];
 
     const allowance = await this.feeToken.allowance(this.account.address, this.address);
-    if (allowance.gte(feeAmount)) return [];
+    if (allowance.gte(feeAmount.add(feeAmount.div(2)))) return [];
 
     if (this.feeToken.address === USDT.address && allowance.gt(0)) {
       const zero = this.erc20.encodeApproveData(this.address, 0);
