@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 
 import AmountPad from './AmountPad';
+import { IFungibleToken } from '../../models/Interfaces';
 import Swiper from 'react-native-swiper';
 import { TokenTransferring } from '../../viewmodels/transferring/TokenTransferring';
 import Tokenlist from './TokenPlainList';
@@ -39,7 +40,7 @@ export default observer(({ onNext, onBack, vm }: Props) => {
         network={vm.network}
         onTokenSelected={(token) => {
           swiper.current?.scrollTo(0);
-          vm.setToken(token);
+          vm.setToken(token as IFungibleToken);
         }}
       />
     </Swiper>

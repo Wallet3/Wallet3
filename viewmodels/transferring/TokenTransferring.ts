@@ -63,7 +63,7 @@ export class TokenTransferring extends BaseTransaction {
       return this.paymaster.insufficientFee;
     }
 
-    return this.estimatedRealNativeFeeWei.gt(this.account.nativeToken.balance);
+    return this.nativeFeeWei.gt(this.account.nativeToken.balance);
   }
 
   get isValidParams() {
