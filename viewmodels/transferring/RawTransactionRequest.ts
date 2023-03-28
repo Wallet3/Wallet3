@@ -404,8 +404,8 @@ export class RawTransactionRequest extends BaseTransaction {
     try {
       let valueEther = BigNumber.from(this.param.value || 0);
 
-      if (valueEther.gt(0) && valueEther.eq(this.nativeToken.balance)) {
-        valueEther = BigNumber.from(this.nativeToken.balance!).sub(this.nativeFeeWei);
+      if (valueEther.gte(this.nativeToken.balance)) {
+        valueEther = BigNumber.from(this.nativeToken.balance).sub(this.nativeFeeWei);
         valueEther = valueEther.lt(0) ? BigNumber.from(0) : valueEther;
       }
 

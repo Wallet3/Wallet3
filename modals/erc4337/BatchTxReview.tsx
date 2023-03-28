@@ -16,6 +16,7 @@ import Image from 'react-native-fast-image';
 import { SendTxRequest } from '../../viewmodels/account/AccountBase';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
+import TxException from '../components/TxException';
 import { formatCurrency } from '../../utils/formatter';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
@@ -122,9 +123,15 @@ const BatchTxReview = observer(({ disableBack, onBack, vm, onGasReview, onSendPr
 
       <GasFeeReviewItem vm={vm} onGasPress={onGasReview} />
 
-      <View style={{ height: 64 }} />
+      {vm.txException && <TxException exception={vm.txException} containerStyle={{ marginTop: 10 }} />}
 
-      <BioAuthSendButton onPress={onSendPress} themeColor={vm.network.color} disabled={vm.requests.length === 0} />
+      <View style={{ maxHeight: 64, minHeight: 12, flex: 1 }} />
+
+      <BioAuthSendButton
+        onPress={onSendPress}
+        themeColor={vm.network.color}
+        disabled={vm.requests.length === 0 || vm.invalidParams}
+      />
     </SafeViewContainer>
   );
 });

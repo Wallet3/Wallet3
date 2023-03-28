@@ -190,7 +190,7 @@ export class BaseTransaction {
   }
 
   get insufficientFee() {
-    return this.paymaster?.feeToken
+    return this.paymaster?.feeToken?.isNative === false
       ? this.paymaster.insufficientFee
       : this.valueWei.add(this.nativeFeeWei).gt(this.nativeToken.balance);
   }
@@ -216,7 +216,9 @@ export class BaseTransaction {
 
   get txFee() {
     try {
-      return this.paymaster?.feeToken ? this.paymaster?.feeTokenAmount : Number(utils.formatEther(this.nativeFeeWei));
+      return this.paymaster?.feeToken
+        ? this.paymaster?.feeTokenAmount
+        : Number(utils.formatEther(this.estimatedRealNativeFeeWei));
     } catch (error) {
       return 0;
     }
@@ -341,15 +343,15 @@ export class BaseTransaction {
     runInAction(() => {
       switch (speed) {
         case 'rapid':
-          this.setMaxGasPrice(basePrice + (this.network.eip1559 ? priorityPrice : 0) + 10);
-          if (eip1559) this.setPriorityPrice(priorityPrice + 3);
+          this.setMaxGasPrice(basePrice + (this.network.eip1559 ? priorityPrice + 5 : 0) + 25);
+          if (eip1559) this.setPriorityPrice(priorityPrice + 5);
           break;
         case 'fast':
-          this.setMaxGasPrice(Math.max(basePrice, priorityPrice + 1.1));
+          this.setMaxGasPrice(basePrice + (this.network.eip1559 ? priorityPrice + 1 : 0) + 10);
           if (eip1559) this.setPriorityPrice(priorityPrice + 1);
           break;
         case 'standard':
-          this.setMaxGasPrice(Math.max(basePrice - 3, 0.1 + priorityPrice));
+          this.setMaxGasPrice(basePrice + (this.network.eip1559 ? priorityPrice : 0));
           if (eip1559) this.setPriorityPrice(priorityPrice);
           break;
       }

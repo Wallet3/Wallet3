@@ -1,5 +1,5 @@
 import { AccountBase, SendTxRequest } from '../account/AccountBase';
-import { action, makeObservable, observable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
 import { BaseTransaction } from './BaseTransaction';
 import { BigNumber } from 'ethers';
@@ -16,9 +16,13 @@ export class BatchTransactionRequest extends BaseTransaction {
     super(args);
     this.requests = args.requests;
 
-    makeObservable(this, { requests: observable, removeRequest: action });
+    makeObservable(this, { requests: observable, removeRequest: action, invalidParams: computed });
 
     this.estimateGas();
+  }
+
+  get invalidParams() {
+    return this.insufficientFee;
   }
 
   async estimateGas() {

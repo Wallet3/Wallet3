@@ -55,7 +55,15 @@ export class TokenTransferring extends BaseTransaction {
   }
 
   get insufficientFee() {
-    return this.amountWei.gt(this.token.balance ?? 0);
+    if (this.token.isNative) {
+      return this.nativeFeeWei.add(this.amountWei).gt(this.token.balance!);
+    }
+
+    if (this.token.address === this.paymaster?.feeToken?.address) {
+      return this.paymaster.insufficientFee;
+    }
+
+    return this.estimatedRealNativeFeeWei.gt(this.account.nativeToken.balance);
   }
 
   get isValidParams() {
