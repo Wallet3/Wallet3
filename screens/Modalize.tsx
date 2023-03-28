@@ -305,6 +305,7 @@ const GlobalNetworksMenuModal = observer(() => {
       <NetworksMenu
         useContextMenu
         onEditing={setEditing}
+        networks={Networks.categorized}
         selectedNetwork={Networks.current}
         onNetworkPress={(network) => {
           closeNetworksModal();

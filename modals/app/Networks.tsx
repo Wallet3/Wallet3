@@ -24,9 +24,10 @@ interface Props {
   title?: string;
   useContextMenu?: boolean;
   onEditing?: (editing: boolean) => void;
+  networks: { category: string; data: INetwork[] }[];
 }
 
-export default observer(({ title, onNetworkPress, selectedNetwork, useContextMenu, onEditing }: Props) => {
+export default observer(({ networks, onNetworkPress, selectedNetwork, useContextMenu, onEditing }: Props) => {
   const { t } = i18n;
   const { backgroundColor, secondaryTextColor, thirdTextColor, borderColor } = Theme;
   const [editNetwork, setEditNetwork] = useState<INetwork>();
@@ -143,7 +144,7 @@ export default observer(({ title, onNetworkPress, selectedNetwork, useContextMen
           <SectionList
             ref={flatList}
             keyExtractor={(i) => `${i.chainId}`}
-            sections={Networks.categorized}
+            sections={networks}
             renderItem={useContextMenu ? renderContextMenuItem : renderItem}
             contentContainerStyle={{ paddingBottom: 36 }}
             style={{ marginHorizontal: -16, marginTop: -4, marginBottom: -36, paddingTop: 12 }}

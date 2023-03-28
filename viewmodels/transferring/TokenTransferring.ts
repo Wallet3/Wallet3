@@ -54,6 +54,10 @@ export class TokenTransferring extends BaseTransaction {
     return this.token.isNative ?? false;
   }
 
+  get insufficientFee() {
+    return this.amountWei.gt(this.token.balance ?? 0);
+  }
+
   get isValidParams() {
     return (
       !this.loading &&
