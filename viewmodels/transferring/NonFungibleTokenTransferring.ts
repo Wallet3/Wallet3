@@ -1,6 +1,5 @@
 import { BigNumber, providers, utils } from 'ethers';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
-import { estimateGas, eth_call } from '../../common/RPC';
 
 import { AccountBase } from '../account/AccountBase';
 import App from '../core/App';
@@ -9,6 +8,7 @@ import { ERC1155Token } from '../../models/ERC1155';
 import { ERC721Token } from '../../models/ERC721';
 import { Gwei_1 } from '../../common/Constants';
 import { INetwork } from '../../common/Networks';
+import { eth_call } from '../../common/RPC';
 import i18n from '../../i18n';
 import { showMessage } from 'react-native-flash-message';
 
@@ -113,7 +113,7 @@ export class NFTTransferring extends BaseTransaction {
     }
   }
 
-  private estimatingTimer: any;
+  private estimatingTimer?: NodeJS.Timer;
   setTransferAmount(amount: number) {
     this.erc1155TransferAmount = Math.max(1, Math.min(amount, Number(this.erc1155Balance)));
     this.isEstimatingGas = true;
@@ -159,7 +159,7 @@ export class NFTTransferring extends BaseTransaction {
 
       return tx;
     } catch (error) {
-      showMessage((error as any).message);
+      showMessage({ message: (error as Error).message });
     }
   }
 

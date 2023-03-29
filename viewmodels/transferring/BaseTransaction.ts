@@ -386,7 +386,7 @@ export class BaseTransaction {
 
     const erc1271Result = await eth_call_return(
       this.network.chainId,
-      { to: this.toAddress, data: EncodedERC1271CallData },
+      { to: this.toAddress, data: EncodedERC1271CallData, from: this.account.address },
       true
     );
 
@@ -443,7 +443,7 @@ export class BaseTransaction {
 
     const { gas, errorMessage } = this.isUsingERC4337
       ? await this.estimateERC4337Gas(args)
-      : await estimateGas(this.network.chainId, { ...args, from: this.account.address });
+      : await estimateGas(this.network.chainId, { from: this.account.address, ...args });
 
     runInAction(() => {
       this.isEstimatingGas = false;

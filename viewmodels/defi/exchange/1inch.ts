@@ -9,14 +9,17 @@ import App from '../../core/App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ERC20Token } from '../../../models/ERC20';
 import { INetwork } from '../../../common/Networks';
+import { InpageDAppTxRequest } from '../../../screens/browser/controller/InpageDAppController';
 import LINQ from 'linq';
 import MessageKeys from '../../../common/MessageKeys';
 import { NativeToken } from '../../../models/NativeToken';
 import Networks from '../../core/Networks';
+import { RawTransactionRequest } from '../../transferring/RawTransactionRequest';
 import { ReadableInfo } from '../../../models/entities/Transaction';
 import { SupportedChains } from './1inchSupportedChains';
 import TokensMan from '../../services/TokensMan';
 import TxHub from '../../hubs/TxHub';
+import { WCCallRequest_eth_sendTransaction } from '../../../models/entities/WCSession_v1';
 
 const Keys = {
   userSelectedNetwork: 'exchange-userSelectedNetwork',
@@ -364,8 +367,14 @@ export class OneInch {
       return;
     }
 
+    const vm = new RawTransactionRequest({
+      account: this.account,
+      network: this.userSelectedNetwork,
+      param: { from: this.account.address, to: this.swapFrom!.address, data } as WCCallRequest_eth_sendTransaction,
+    });
+
     const approve = async (opts: { pin: string; tx: providers.TransactionRequest; readableInfo: ReadableInfo }) => {
-      const { txHash } = await App.sendTxFromAccount(this.account.address, opts);
+      const { txHash } = await vm.sendTx({ ...opts, network: this.userSelectedNetwork });
 
       if (txHash) {
         runInAction(() => {
@@ -381,11 +390,11 @@ export class OneInch {
     PubSub.publish(MessageKeys.openInpageDAppSendTransaction, {
       approve,
       reject,
-      param: { from: this.account.address, to: this.swapFrom!.address, data },
+      vm,
       chainId: this.userSelectedNetwork.chainId,
       account: this.account.address,
       app,
-    });
+    } as InpageDAppTxRequest);
   }
 
   async swap() {
@@ -409,8 +418,20 @@ export class OneInch {
       });
     }
 
+    const vm = new RawTransactionRequest({
+      param: {
+        from: this.account.address,
+        to: swapResponse.tx.to,
+        data: swapResponse.tx.data,
+        value: swapResponse.tx.value,
+        gas: swapResponse.tx.gas,
+      } as WCCallRequest_eth_sendTransaction,
+      account: this.account,
+      network: this.userSelectedNetwork,
+    });
+
     const approve = async (opts: { pin: string; tx: providers.TransactionRequest; readableInfo: ReadableInfo }) => {
-      const { txHash } = await App.sendTxFromAccount(this.account.address, opts);
+      const { txHash } = await vm.sendTx({ ...opts, network: this.userSelectedNetwork });
       const result = txHash ? true : false;
 
       if (result) {
@@ -428,17 +449,11 @@ export class OneInch {
     PubSub.publish(MessageKeys.openInpageDAppSendTransaction, {
       approve,
       reject,
-      param: {
-        from: this.account.address,
-        to: swapResponse.tx.to,
-        data: swapResponse.tx.data,
-        value: swapResponse.tx.value,
-        gas: swapResponse.tx.gas,
-      },
+      vm,
       chainId: this.userSelectedNetwork.chainId,
       account: this.account.address,
       app,
-    });
+    } as InpageDAppTxRequest);
   }
 
   enqueueTx(hash: string) {

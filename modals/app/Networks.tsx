@@ -1,6 +1,6 @@
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
 import { Entypo, Feather } from '@expo/vector-icons';
-import { NativeSyntheticEvent, SectionList, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, NativeSyntheticEvent, SectionList, Text, TouchableOpacity, View } from 'react-native';
 import { NetworkIcons, generateNetworkIcon } from '../../assets/icons/networks/color';
 import { SafeViewContainer, Separator } from '../../components';
 import { useRef, useState } from 'react';
@@ -24,15 +24,15 @@ interface Props {
   title?: string;
   useContextMenu?: boolean;
   onEditing?: (editing: boolean) => void;
-  networks: { category: string; data: INetwork[] }[];
+  networks?: { category: string; data: INetwork[] }[];
+  flatNetworks?: INetwork[];
 }
 
-export default observer(({ networks, onNetworkPress, selectedNetwork, useContextMenu, onEditing }: Props) => {
+export default observer(({ networks, onNetworkPress, selectedNetwork, useContextMenu, onEditing, flatNetworks }: Props) => {
   const { t } = i18n;
   const { backgroundColor, secondaryTextColor, thirdTextColor, borderColor } = Theme;
   const [editNetwork, setEditNetwork] = useState<INetwork>();
   const swiper = useRef<Swiper>(null);
-  const flatList = useRef<SectionList>(null);
 
   const renderItem = ({ item }: { item: INetwork }) => {
     return (
@@ -141,31 +141,39 @@ export default observer(({ networks, onNetworkPress, selectedNetwork, useContext
     <SafeAreaProvider style={{ ...styles.safeArea }}>
       <Swiper ref={swiper} showsPagination={false} showsButtons={false} loop={false} scrollEnabled={false}>
         <SafeViewContainer style={{ padding: 16, paddingTop: 0 }}>
-          <SectionList
-            ref={flatList}
-            keyExtractor={(i) => `${i.chainId}`}
-            sections={networks}
-            renderItem={useContextMenu ? renderContextMenuItem : renderItem}
-            contentContainerStyle={{ paddingBottom: 36 }}
-            style={{ marginHorizontal: -16, marginTop: -4, marginBottom: -36, paddingTop: 12 }}
-            onScrollToIndexFailed={() => {}}
-            renderSectionHeader={({ section }) => (
-              <View style={{ marginHorizontal: 16, paddingTop: 6, marginBottom: 2 }}>
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontWeight: '400',
-                    textShadowColor: '#fff',
-                    textShadowOffset: { width: 0, height: 0 },
-                    textShadowRadius: 3,
-                    color: thirdTextColor,
-                  }}
-                >
-                  {t(`network-category-${section.category}`)}
-                </Text>
-              </View>
-            )}
-          />
+          {networks ? (
+            <SectionList
+              keyExtractor={(i) => `${i.chainId}`}
+              sections={networks}
+              renderItem={useContextMenu ? renderContextMenuItem : renderItem}
+              contentContainerStyle={{ paddingBottom: 36 }}
+              style={{ marginHorizontal: -16, marginTop: -4, marginBottom: -36, paddingTop: 12 }}
+              onScrollToIndexFailed={() => {}}
+              renderSectionHeader={({ section }) => (
+                <View style={{ marginHorizontal: 16, paddingTop: 6, marginBottom: 2 }}>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      fontWeight: '400',
+                      textShadowColor: '#fff',
+                      textShadowOffset: { width: 0, height: 0 },
+                      textShadowRadius: 3,
+                      color: thirdTextColor,
+                    }}
+                  >
+                    {t(`network-category-${section.category}`)}
+                  </Text>
+                </View>
+              )}
+            />
+          ) : (
+            <FlatList
+              data={flatNetworks}
+              renderItem={renderItem}
+              contentContainerStyle={{ paddingBottom: 36 }}
+              style={{ marginHorizontal: -16, marginTop: -4, marginBottom: -36, paddingTop: 12 }}
+            />
+          )}
         </SafeViewContainer>
 
         <EditNetwork network={editNetwork} onDone={onSaveNetwork} />

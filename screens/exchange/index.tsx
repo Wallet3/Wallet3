@@ -10,7 +10,6 @@ import AccountSelector from '../../modals/dapp/AccountSelector';
 import App from '../../viewmodels/core/App';
 import Avatar from '../../components/Avatar';
 import Collapsible from 'react-native-collapsible';
-import { ITokenMetadata } from '../../common/tokens';
 import { NetworksMenu } from '../../modals';
 import { OneInch } from '../../assets/3rd';
 import { Portal } from 'react-native-portalize';
@@ -341,7 +340,7 @@ export default observer(() => {
         <SquircleModalize ref={networksRef}>
           <NetworksMenu
             title={t('modal-dapp-switch-network', { app: '1inch Exchange' })}
-            networks={VM.networks}
+            flatNetworks={VM.networks}
             selectedNetwork={VM.userSelectedNetwork}
             onNetworkPress={(network) => {
               VM.switchNetwork(network);

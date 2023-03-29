@@ -319,7 +319,7 @@ export class RawTransactionRequest extends BaseTransaction {
         });
     }
 
-    if ((param.gas || param.gasLimit) && !this.isERC4337Network) {
+    if ((param.gas || param.gasLimit) && !this.isUsingERC4337) {
       runInAction(() => this.setGasLimit(param.gas || param.gasLimit || 0));
     } else {
       this.estimateGas({ to: param.to, data: param.data, value: param.value });

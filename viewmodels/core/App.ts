@@ -31,7 +31,6 @@ import { fetchChainsOverview } from '../../common/apis/Debank';
 import i18n from '../../i18n';
 import { logAppReset } from '../services/Analytics';
 import { showMessage } from 'react-native-flash-message';
-import { tipWalletUpgrade } from '../misc/MultiSigUpgradeTip';
 import { utils } from 'ethers';
 
 const Keys = {
@@ -145,8 +144,6 @@ export class AppVM {
 
       setTimeout(() => PairedDevices.scanLan(), 1000);
       Authentication.on('appAuthorized', () => setTimeout(() => PairedDevices.scanLan(), 1000));
-
-      tipWalletUpgrade(this.currentWallet);
     });
 
     PairedDevices.init()

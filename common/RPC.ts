@@ -162,7 +162,7 @@ export async function eth_call_return(
       });
 
       if (resp.error) {
-        __DEV__ && console.log(resp.error, url, args);
+        __DEV__ && console.log('eth_call_return', resp.error, url, args);
 
         if (fast) {
           return resp;
@@ -227,7 +227,7 @@ export async function estimateGas(
       const resp = await post(url, {
         jsonrpc: '2.0',
         method: 'eth_estimateGas',
-        params: [args],
+        params: [args, 'latest'],
         id: Date.now(),
       });
 
