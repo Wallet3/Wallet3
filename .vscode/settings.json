@@ -33,6 +33,7 @@
         "keccak",
         "Keychain",
         "libp2p",
+        "Linea",
         "linq",
         "Metas",
         "Modalize",

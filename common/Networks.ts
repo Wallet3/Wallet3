@@ -477,6 +477,16 @@ export const Testnets: INetwork[] = [
   },
   {
     symbol: 'ETH',
+    network: 'Linea',
+    chainId: 59140,
+    color: '#3d65e8',
+    eip1559: true,
+    testnet: true,
+    defaultTokens: [],
+    explorer: 'https://explorer.goerli.linea.build',
+  },
+  {
+    symbol: 'ETH',
     network: 'zkSync Era Testnet',
     chainId: 280,
     color: '#4E529A',

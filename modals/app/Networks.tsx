@@ -14,6 +14,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
+import { isAndroid } from '../../utils/platform';
 import { observer } from 'mobx-react-lite';
 import { startLayoutAnimation } from '../../utils/animations';
 import styles from '../styles';
@@ -176,7 +177,7 @@ export default observer(({ networks, onNetworkPress, selectedNetwork, useContext
                 data={flatNetworks}
                 renderItem={renderItem}
                 contentContainerStyle={{ paddingBottom: 36 }}
-                style={{ marginHorizontal: -16, marginTop: -4, marginBottom: -36, paddingTop: 0 }}
+                style={{ marginHorizontal: -16, marginTop: -4, marginBottom: isAndroid ? 0 : -36, paddingTop: 0 }}
               />
             </View>
           )}

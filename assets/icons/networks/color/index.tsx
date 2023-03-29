@@ -9,6 +9,7 @@ import Bsc from './bnb.svg';
 import Canto from './canto.svg';
 import Celo from './celo.svg';
 import { Coin } from '../../../../components';
+import Consensys from './consensys.svg';
 import Cronos from './cronos.svg';
 import { Entypo } from '@expo/vector-icons';
 import Ethereum from './ethereum2.svg';
@@ -249,6 +250,8 @@ export function generateNetworkIcon(props: {
       return <Base key={chainId} width={width} height={height ?? width} style={style} />;
     case 99999:
       return <JapanOpenChain key={chainId} width={width} height={height ?? width} style={style} />;
+    case 59140:
+      return <Consensys key={chainId} width={width} height={height ?? width} style={style} />;
     default:
       return coins[symbol?.toLowerCase() || ''] ? (
         <Coin symbol={symbol} size={height ?? width} address="" chainId={chainId} style={style as any} />
@@ -281,4 +284,5 @@ export default {
   1285: <Moonriver width={42} height={42} style={{ ...styles.moonriver, opacity: 1 }} />,
   122: <Fuse width={32} height={32} style={{ ...styles.fuse, opacity: 1 }} />,
   336: <Shiden width={40} height={40} style={{ ...styles.shiden, opacity: 1 }} />,
+  59140: <Consensys width={40} height={40} style={{ ...styles.shiden, opacity: 1 }} />,
 };
