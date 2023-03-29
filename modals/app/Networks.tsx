@@ -167,12 +167,18 @@ export default observer(({ networks, onNetworkPress, selectedNetwork, useContext
               )}
             />
           ) : (
-            <FlatList
-              data={flatNetworks}
-              renderItem={renderItem}
-              contentContainerStyle={{ paddingBottom: 36 }}
-              style={{ marginHorizontal: -16, marginTop: -4, marginBottom: -36, paddingTop: 12 }}
-            />
+            <View>
+              <Text style={{ color: secondaryTextColor, marginTop: 16 }} numberOfLines={1}>
+                {t('modal-networks-switch')}
+              </Text>
+              <Separator style={{ marginVertical: 4, backgroundColor: borderColor }} />
+              <FlatList
+                data={flatNetworks}
+                renderItem={renderItem}
+                contentContainerStyle={{ paddingBottom: 36 }}
+                style={{ marginHorizontal: -16, marginTop: -4, marginBottom: -36, paddingTop: 0 }}
+              />
+            </View>
           )}
         </SafeViewContainer>
 
