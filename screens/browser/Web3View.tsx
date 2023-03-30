@@ -253,7 +253,7 @@ export default observer((props: Web3ViewProps) => {
           onLoadStart={
             isAndroid
               ? () => {
-                  ((webViewRef as any)?.current as WebView).injectJavaScript(`${MetamaskMobileProvider}\ntrue;`);
+                  ((webViewRef as any)?.current as WebView)?.injectJavaScript(`${MetamaskMobileProvider}\ntrue;`);
                 }
               : undefined
           }
