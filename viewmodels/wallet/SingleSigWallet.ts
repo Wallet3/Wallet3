@@ -23,7 +23,7 @@ export class SingleSigWallet extends WalletBase {
 
     const components = key.bip32Xpubkey.split(':');
     this.isHDWallet = components[components.length - 1].startsWith('xpub');
-    super.signInPlatform = components.length > 1 ? (components[0] as any) : undefined;
+    super.signInPlatform = components.length > 1 ? (components[0] as 'apple' | 'google') : undefined;
     this.signInUser = components.length > 1 ? components[1] : undefined;
   }
 

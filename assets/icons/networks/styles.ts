@@ -114,7 +114,7 @@ export default StyleSheet.create({
   },
 
   zkSync: {
-    marginTop: -36,
+    marginTop: -37,
     marginEnd: -7,
     alignSelf: 'flex-end',
     opacity: 0.5,

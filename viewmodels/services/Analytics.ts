@@ -4,7 +4,7 @@ import { Platform } from 'react-native';
 import Transaction from '../../models/entities/Transaction';
 import analytics from '@react-native-firebase/analytics';
 import { getReadableVersion } from 'react-native-device-info';
-import { isDomain } from './DomainResolver';
+import { isDomain } from './ens/DomainResolver';
 import { utils } from 'ethers';
 
 const Transfer_ERC20 = '0xa9059cbb';

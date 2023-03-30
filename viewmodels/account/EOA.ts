@@ -1,30 +1,43 @@
+import { BigNumber, utils } from 'ethers';
+
 import { AccountBase } from './AccountBase';
+import { AuthOptions } from '../auth/Authentication';
+import { ReadableInfo } from '../../models/entities/Transaction';
+import { SignTxRequest } from '../wallet/WalletBase';
 import { TransactionRequest } from '@ethersproject/abstract-provider';
 import { getTransactionCount } from '../../common/RPC';
 import { showMessage } from 'react-native-flash-message';
-import { utils } from 'ethers';
 
 export class EOA extends AccountBase {
+  readonly accountSubPath: string | undefined;
   readonly type = 'eoa';
 
-  getNonce(chainId: number) {
-    return getTransactionCount(chainId, this.address);
+  async getNonce(chainId: number) {
+    return BigNumber.from(await getTransactionCount(chainId, this.address));
   }
 
-  async sendTx(args: { tx: TransactionRequest; readableInfo?: any }, pin?: string) {
+  async signTx(args: SignTxRequest & AuthOptions) {
+    try {
+      const txHex = await (await this.wallet?.openWallet({ ...args, accountIndex: this.index }))?.signTransaction(args.tx);
+      return { txHex };
+    } catch (error: any) {
+      return { error };
+    }
+  }
+
+  async sendTx(args: { tx: TransactionRequest; readableInfo?: ReadableInfo }, pin?: string) {
     if (!this.wallet) return { success: false, error: { message: 'Account not available', code: -1 } };
 
     const { tx, readableInfo } = args;
 
-    const { txHex, error } = await this.wallet.signTx({
-      accountIndex: this.index,
+    const { txHex, error } = await this.signTx({
       tx,
       pin,
       disableAutoPinRequest: true,
     });
 
     if (!txHex || error) {
-      if (error) showMessage({ message: error, type: 'warning' });
+      if (error) showMessage({ message: error.message, type: 'warning' });
       return { success: false, error: { message: 'Signing tx failed', code: -32602 } };
     }
 

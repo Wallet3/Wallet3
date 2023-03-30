@@ -1,27 +1,38 @@
+import * as ethSignUtil from '@metamask/eth-sig-util';
+
+import { BigNumber, BigNumberish, providers, utils } from 'ethers';
+import { SignTxRequest, SignTypedDataRequest, WalletBase } from '../wallet/WalletBase';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { genColor, genEmoji } from '../../utils/emoji';
 
 import { AccountTokens } from './content/AccountTokens';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AuthOptions } from '../auth/Authentication';
 import CurrencyViewmodel from '../settings/Currency';
 import { ENSViewer } from './content/ENSViewer';
+import { IFungibleToken } from '../../models/Interfaces';
 import { INetwork } from '../../common/Networks';
+import { ITokenMetadata } from '../../common/tokens';
 import { NFTViewer } from './content/NFTViewer';
 import Networks from '../core/Networks';
 import { POAP } from './content/POAP';
-import { WalletBase } from '../wallet/WalletBase';
+import { Paymaster } from '../services/erc4337/Paymaster';
+import { ReadableInfo } from '../../models/entities/Transaction';
+import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import { formatAddress } from '../../utils/formatter';
 import { getEnsAvatar } from '../../common/ENS';
-import { providers } from 'ethers';
+import { logEthSign } from '../services/Analytics';
 
 export type AccountType = 'eoa' | 'erc4337';
 
 export type SendTxRequest = Partial<{
+  timestamp: number;
   tx: providers.TransactionRequest;
   txs: providers.TransactionRequest[];
-  readableInfo: any;
+  readableInfo: ReadableInfo;
   network: INetwork;
   gas: { maxFeePerGas: number; maxPriorityFeePerGas: number };
+  paymaster?: Paymaster | null;
   onNetworkRequest?: () => void;
 }>;
 
@@ -29,12 +40,14 @@ export type SendTxResponse = {
   success: boolean;
   txHash?: string;
   error?: { message: string; code: number };
+  txHashPromise?: Promise<string>;
 };
 
 export abstract class AccountBase {
   protected wallet: WalletBase | null;
 
   abstract readonly type: AccountType;
+  abstract readonly accountSubPath: string | undefined;
   readonly address: string;
   readonly index: number;
   readonly signInPlatform?: string;
@@ -114,8 +127,34 @@ export abstract class AccountBase {
     });
   }
 
+  abstract getNonce(chainId: number): Promise<BigNumber>;
   abstract sendTx(args: SendTxRequest, pin?: string): Promise<SendTxResponse>;
-  abstract getNonce(chainId: number): Promise<number>;
+
+  async signMessage(msg: string | Uint8Array, auth?: AuthOptions | undefined): Promise<string | undefined> {
+    try {
+      const wallet = await this.wallet?.openWallet({ accountIndex: this.index, subPath: this.accountSubPath, ...auth });
+      return await wallet?.signMessage(typeof msg === 'string' && utils.isBytesLike(msg) ? utils.arrayify(msg) : msg);
+    } catch (error) {
+    } finally {
+      logEthSign('plain');
+    }
+  }
+
+  async signTypedData(request: SignTypedDataRequest & AuthOptions) {
+    const wallet = await this.wallet?.openWallet({ ...request, accountIndex: this.index, subPath: this.accountSubPath });
+    if (!wallet) return;
+
+    try {
+      return ethSignUtil.signTypedData({
+        privateKey: Buffer.from(utils.arrayify(wallet.privateKey)),
+        version: request.version ?? SignTypedDataVersion.V4,
+        data: request.typedData,
+      });
+    } catch (error) {
+    } finally {
+      logEthSign('typed_data');
+    }
+  }
 
   setAvatar(objs: { emoji?: string; color?: string; nickname?: string }) {
     this.emojiAvatar = objs.emoji || this.emojiAvatar;

@@ -48,7 +48,7 @@ export default ({ chainId, address, containerStyle, onAddressChecked, risky, lab
       style={{ flexDirection: 'row', alignItems: 'center', ...(containerStyle || ({} as any)) }}
     >
       {dangerous && <Ionicons name="warning" color={color} size={9} style={{ marginEnd: 4 }} />}
-      <Text style={{ fontSize: 9, color, fontWeight: '600' }} numberOfLines={1}>
+      <Text style={{ fontSize: 9, color, fontWeight: '600' }} ellipsizeMode="middle" numberOfLines={1}>
         {publicName}
       </Text>
       {!dangerous && <Ionicons name="checkmark-circle" color={color} size={9} style={{ marginStart: 4 }} />}

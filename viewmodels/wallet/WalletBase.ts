@@ -1,46 +1,41 @@
-import * as ethSignUtil from '@metamask/eth-sig-util';
-
-import Authentication, { AuthOptions } from '../auth/Authentication';
-import { PaymasterAPI, SimpleAccountAPI } from '@account-abstraction/sdk';
 import { Wallet, ethers, providers, utils } from 'ethers';
 import { action, makeObservable, observable, runInAction } from 'mobx';
-import { entryPointAddress, factoryAddress } from '../../configs/erc4337.json';
-import { eth_call_return, getRPCUrls } from '../../common/RPC';
-import { logEthSign, logSendTx } from '../services/Analytics';
 
 import { AccountBase } from '../account/AccountBase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AuthOptions } from '../auth/Authentication';
 import { BaseEntity } from 'typeorm';
 import { EOA } from '../account/EOA';
 import { ERC4337Account } from '../account/ERC4337Account';
 import EventEmitter from 'eventemitter3';
+import { INetwork } from '../../common/Networks';
 import Key from '../../models/entities/Key';
 import LINQ from 'linq';
 import MultiSigKey from '../../models/entities/MultiSigKey';
 import { ReadableInfo } from '../../models/entities/Transaction';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
+import { SimpleAccountAPI } from '@account-abstraction/sdk';
 import TxHub from '../hubs/TxHub';
-import { showMessage } from 'react-native-flash-message';
+import { getRPCUrls } from '../../common/RPC';
+import { logSendTx } from '../services/Analytics';
 
 export type SignTxRequest = {
-  accountIndex: number;
   tx: providers.TransactionRequest;
 };
 
 export type BroadcastTxRequest = {
   tx: providers.TransactionRequest;
   txHex: string;
-  readableInfo: ReadableInfo;
+  readableInfo?: ReadableInfo;
 };
 
 export type SignMessageRequest = {
-  accountIndex: number;
+  accountAddress: string;
   msg: string | Uint8Array;
   standardMode?: boolean;
 };
 
 export type SignTypedDataRequest = {
-  accountIndex: number;
   typedData: any;
   version?: SignTypedDataVersion;
 };
@@ -170,7 +165,7 @@ export abstract class WalletBase extends EventEmitter<Events> {
     return account;
   }
 
-  async newERC4337Account(onBusy?: (busy: boolean) => void) {
+  async newERC4337Account(network: INetwork, onBusy?: (busy: boolean) => void) {
     if (!this.isHDWallet) return;
 
     const erc4337s = this.accounts.filter((a) => a.isERC4337);
@@ -187,29 +182,31 @@ export abstract class WalletBase extends EventEmitter<Events> {
 
     try {
       const owner = new Wallet(privateKey);
-      let address = '';
+      let superAccount = '';
 
-      for (let url of getRPCUrls(5)) {
+      for (let url of getRPCUrls(network.chainId)) {
         const provider = new ethers.providers.JsonRpcProvider(url);
         const api = new SimpleAccountAPI({
           provider,
           owner,
-          entryPointAddress: entryPointAddress,
-          factoryAddress: factoryAddress,
+          entryPointAddress: network.erc4337!.entryPointAddress,
+          factoryAddress: network.erc4337!.factoryAddress,
         });
 
         try {
-          address = await api.getCounterFactualAddress();
-          if (utils.isAddress(address) && ethers.constants.AddressZero !== address) break;
-        } catch (error) {}
+          superAccount = await api.getCounterFactualAddress();
+          if (utils.isAddress(superAccount) && ethers.constants.AddressZero !== superAccount) break;
+        } catch (error) {
+          console.log(error);
+        }
       }
 
-      if (!utils.isAddress(address) || address === ethers.constants.AddressZero) return;
+      if (!utils.isAddress(superAccount) || superAccount === ethers.constants.AddressZero) return;
 
       let position = LINQ.from(this.accounts).lastIndexOf((a) => a.isERC4337);
       if (position === -1) position = Math.max(0, this.accounts.length - 1);
 
-      const erc4337 = new ERC4337Account(this, address, index);
+      const erc4337 = new ERC4337Account(this, superAccount, index);
       runInAction(() => this.accounts.splice(position + 1, 0, erc4337));
       erc4337s.push(erc4337);
 
@@ -245,49 +242,6 @@ export abstract class WalletBase extends EventEmitter<Events> {
     }
 
     account.dispose();
-  }
-
-  async signTx(args: SignTxRequest & AuthOptions) {
-    try {
-      const txHex = await (await this.openWallet(args))?.signTransaction(args.tx);
-      return { txHex };
-    } catch (error: any) {
-      return { error: error.message };
-    }
-  }
-
-  async signMessage(request: SignMessageRequest & AuthOptions) {
-    try {
-      if (utils.isBytes(request.msg) && !request.standardMode) {
-        showMessage({ message: 'DANGEROUS: Wallet 3 rejects signing this data.', type: 'danger' });
-        return undefined;
-      } else {
-        return (await this.openWallet(request))?.signMessage(
-          typeof request.msg === 'string' && utils.isBytesLike(request.msg) ? utils.arrayify(request.msg) : request.msg
-        );
-      }
-    } catch (error) {
-      __DEV__ && console.log(error);
-    } finally {
-      logEthSign('plain');
-    }
-  }
-
-  async signTypedData(request: SignTypedDataRequest & AuthOptions) {
-    try {
-      const key = await this.unlockPrivateKey(request);
-      if (!key) return undefined;
-
-      return ethSignUtil.signTypedData({
-        privateKey: Buffer.from(utils.arrayify(key)),
-        version: request.version ?? SignTypedDataVersion.V4,
-        data: request.typedData,
-      });
-    } catch (error) {
-      __DEV__ && console.error(error);
-    } finally {
-      logEthSign('typed_data');
-    }
   }
 
   async sendTx(request: BroadcastTxRequest) {

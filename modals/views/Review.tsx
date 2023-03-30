@@ -1,20 +1,17 @@
-import { Button, Coin, Placeholder, SafeViewContainer } from '../../components';
-import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
+import { Coin, Placeholder, SafeViewContainer } from '../../components';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useRef, useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
 import { verifiedColor, warningColor } from '../../constants/styles';
 
 import AddToSendingQueue from '../components/AddToSendingQueue';
 import AddressRiskIndicator from '../components/AddressRiskIndicator';
-import AnimatedNumber from '../../components/AnimatedNumber';
 import BackButton from '../components/BackButton';
-import { BioType } from '../../viewmodels/auth/Authentication';
-import Currency from '../../viewmodels/settings/Currency';
-import FaceID from '../../assets/icons/app/FaceID-white.svg';
+import BioAuthSendButton from '../components/BioAuthSendButton';
+import GasFeeReviewItem from '../components/GasFeeReviewItem';
 import GasReview from './GasReview';
 import Image from 'react-native-fast-image';
 import InsufficientFee from '../components/InsufficientFee';
-import Networks from '../../viewmodels/core/Networks';
 import { ReactiveScreen } from '../../utils/device';
 import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
@@ -25,6 +22,7 @@ import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
+import { startLayoutAnimation } from '../../utils/animations';
 import styles from '../styles';
 import { utils } from 'ethers';
 
@@ -34,175 +32,131 @@ interface Props {
   onGasPress?: () => void;
   disableBack?: boolean;
   vm: TokenTransferring;
-  biometricType?: BioType;
   txDataEditable?: boolean;
   onEditDataPress?: () => void;
 }
 
-const ReviewView = observer(
-  ({ vm, onBack, onGasPress, onSend, disableBack, biometricType, txDataEditable, onEditDataPress }: Props) => {
-    const { t } = i18n;
-    const [busy, setBusy] = useState(false);
-    const { borderColor, textColor, secondaryTextColor, tintColor } = Theme;
+const ReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, txDataEditable, onEditDataPress }: Props) => {
+  const { t } = i18n;
+  const [busy, setBusy] = useState(false);
+  const { borderColor, textColor, secondaryTextColor, tintColor } = Theme;
 
-    const send = async () => {
-      setBusy(true);
-      await onSend?.();
-      setBusy(false);
-    };
+  const send = async () => {
+    setBusy(true);
+    await onSend?.();
+    setBusy(false);
+  };
 
-    const sendTitle = biometricType === 'faceid' ? t('modal-review-button-slide-to-send') : t('modal-review-button-send');
-    const onLongSendPress = biometricType === 'faceid' ? send : undefined;
-    const onSendPress = biometricType === 'faceid' ? undefined : send;
-    const authIcon = biometricType
-      ? biometricType === 'fingerprint'
-        ? () => <MaterialCommunityIcons name="fingerprint" size={19} color="#fff" />
-        : () => <FaceID width={12.5} height={12.5} style={{ marginEnd: 4 }} />
-      : undefined;
+  const reviewItemStyle = { ...styles.reviewItem, borderColor };
+  const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
+  const reviewItemValueStyle = { ...styles.reviewItemValue, color: textColor };
 
-    const reviewItemStyle = { ...styles.reviewItem, borderColor };
-    const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
-    const reviewItemValueStyle = { ...styles.reviewItemValue, color: textColor };
+  useEffect(() => startLayoutAnimation(), [vm.paymaster?.loading, vm.loading]);
 
-    return (
-      <SafeViewContainer style={styles.container}>
-        <View style={styles.navBar}>
-          {disableBack ? (
-            <View />
-          ) : (
-            <BackButton onPress={onBack} color={vm.transferToRisky ? warningColor : Networks.current.color} />
-          )}
+  return (
+    <SafeViewContainer style={styles.container}>
+      <View style={styles.navBar}>
+        {disableBack ? <View /> : <BackButton onPress={onBack} color={vm.transferToRisky ? warningColor : vm.network.color} />}
 
-          <Text style={styles.navTitle}>{t('modal-review-title')}</Text>
-        </View>
+        <Text style={styles.navTitle}>{t('modal-review-title')}</Text>
+      </View>
 
-        <View style={reviewItemsContainer}>
-          <View style={reviewItemStyle}>
-            <Text style={styles.reviewItemTitle}>{t('modal-review-send')}</Text>
+      <View style={reviewItemsContainer}>
+        <View style={reviewItemStyle}>
+          <Text style={styles.reviewItemTitle}>{t('modal-review-send')}</Text>
 
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-              <Text
-                style={{ ...reviewItemValueStyle, marginEnd: 8, maxWidth: ReactiveScreen.width - 215 }}
-                numberOfLines={1}
-                ellipsizeMode="middle"
-              >
-                {vm.amount}
-              </Text>
-
-              <Coin
-                address={vm.token.address}
-                chainId={vm.network.chainId}
-                symbol={vm.token!.symbol}
-                forceRefresh
-                iconUrl={vm.token?.logoURI}
-              />
-
-              <Text style={{ ...reviewItemValueStyle, marginStart: 8 }}>{vm.token.symbol}</Text>
-            </View>
-          </View>
-
-          <View style={reviewItemStyle}>
-            <Text style={styles.reviewItemTitle}>{t('modal-review-to')}</Text>
-
-            <View style={{ flexDirection: 'row', maxWidth: '72%', alignItems: 'center', position: 'relative' }}>
-              {(vm.hasZWSP || vm.isContractRecipient) && (
-                <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', end: 0, bottom: -11.5 }}>
-                  <Ionicons
-                    name={vm.isContractWallet ? 'wallet-outline' : 'warning'}
-                    size={8}
-                    color={vm.isContractWallet ? verifiedColor : 'crimson'}
-                    style={{ marginEnd: 4 }}
-                  />
-                  <Text style={{ fontSize: 8, color: vm.isContractWallet ? verifiedColor : 'crimson' }}>
-                    {t(
-                      vm.isContractRecipient
-                        ? vm.isContractWallet
-                          ? 'tip-recipient-is-contract-wallet'
-                          : 'tip-recipient-is-contract'
-                        : 'tip-zero-width-space'
-                    )}
-                  </Text>
-                </View>
-              )}
-
-              {vm.avatar ? (
-                <Image source={{ uri: vm.avatar }} style={{ width: 15, height: 15, marginEnd: 5, borderRadius: 100 }} />
-              ) : undefined}
-
-              <Text
-                numberOfLines={1}
-                style={{
-                  ...reviewItemValueStyle,
-                  color: vm.transferToRisky ? warningColor : vm.isContractWallet ? 'dodgerblue' : textColor,
-                }}
-              >
-                {utils.isAddress(vm.to) ? formatAddress(vm.toAddress, 8, 6) : formatAddress(vm.safeTo, 14, 6, '...')}
-              </Text>
-
-              {!vm.hasZWSP && !vm.isContractRecipient && vm.toAddressTag && (
-                <AddressRiskIndicator
-                  address={vm.toAddress}
-                  chainId={vm.network.chainId}
-                  label={vm.toAddressTag?.publicName}
-                  risky={vm.toAddressTag?.dangerous}
-                  containerStyle={{ position: 'absolute', bottom: -11.5, right: 0 }}
-                />
-              )}
-            </View>
-          </View>
-
-          <View style={{ ...reviewItemStyle, borderBottomWidth: 0 }}>
-            <Text style={styles.reviewItemTitle}>{t('modal-review-network')}</Text>
-
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              {generateNetworkIcon({ ...vm.network, width: 15, style: { marginEnd: 5 } })}
-              <Text style={{ ...reviewItemValueStyle, color: vm.network.color, maxWidth: 150 }} numberOfLines={1}>
-                {vm.network.network}
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        <View
-          style={{
-            ...reviewItemsContainer,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            paddingStart: 16,
-          }}
-        >
-          <Text style={styles.reviewItemTitle}>{t('modal-review-fee')}</Text>
-
-          <TouchableOpacity
-            onPress={onGasPress}
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              padding: 16,
-              paddingVertical: 12,
-              paddingEnd: 14,
-              justifyContent: 'flex-end',
-              width: '75%',
-            }}
-          >
-            <Text style={{ ...styles.reviewItemTitle, fontSize: 15 }}>
-              {`(${Currency.tokenToUSD(vm.estimatedRealFee, vm.feeTokenSymbol).toFixed(2)} USD)`}
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', gap: 6 }}>
+            <Text
+              style={{ ...reviewItemValueStyle, marginEnd: 2, maxWidth: ReactiveScreen.width - 215 }}
+              ellipsizeMode="middle"
+              numberOfLines={1}
+            >
+              {vm.amount}
             </Text>
 
-            <AnimatedNumber
-              style={{ ...reviewItemValueStyle, marginStart: 2, marginEnd: 5 }}
-              numberOfLines={1}
-              value={vm.txFee}
-              formatter={(val) => val.toFixed(5)}
+            <Coin
+              address={vm.token.address}
+              chainId={vm.network.chainId}
+              symbol={vm.token!.symbol}
+              forceRefresh
+              size={19}
+              iconUrl={vm.token?.logoURI}
             />
 
-            <Text style={{ ...reviewItemValueStyle }}>{vm.feeTokenSymbol}</Text>
-
-            <MaterialIcons name="keyboard-arrow-right" size={15} color={secondaryTextColor} style={{ marginBottom: -1 }} />
-          </TouchableOpacity>
+            <Text style={reviewItemValueStyle}>{vm.token.symbol}</Text>
+          </View>
         </View>
 
+        <View style={reviewItemStyle}>
+          <Text style={styles.reviewItemTitle}>{t('modal-review-to')}</Text>
+
+          <View style={{ flexDirection: 'row', maxWidth: '72%', alignItems: 'center', position: 'relative' }}>
+            {(vm.hasZWSP || vm.isContractRecipient) && (
+              <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', end: 0, bottom: -11.5 }}>
+                <Ionicons
+                  name={vm.isContractWallet ? 'wallet-outline' : 'warning'}
+                  size={8}
+                  color={vm.isContractWallet ? verifiedColor : 'crimson'}
+                  style={{ marginEnd: 4 }}
+                />
+                <Text style={{ fontSize: 8, color: vm.isContractWallet ? verifiedColor : 'crimson' }}>
+                  {t(
+                    vm.isContractRecipient
+                      ? vm.isContractWallet
+                        ? 'tip-recipient-is-contract-wallet'
+                        : 'tip-recipient-is-contract'
+                      : 'tip-zero-width-space'
+                  )}
+                </Text>
+              </View>
+            )}
+
+            {vm.avatar ? (
+              <Image source={{ uri: vm.avatar }} style={{ width: 15, height: 15, marginEnd: 5, borderRadius: 100 }} />
+            ) : undefined}
+
+            <Text
+              numberOfLines={1}
+              style={{
+                ...reviewItemValueStyle,
+                color: vm.transferToRisky ? warningColor : vm.isContractWallet ? 'dodgerblue' : textColor,
+              }}
+            >
+              {utils.isAddress(vm.to) ? formatAddress(vm.toAddress, 8, 6) : formatAddress(vm.safeTo, 14, 6, '...')}
+            </Text>
+
+            {!vm.hasZWSP && !vm.isContractRecipient && vm.toAddressTag && (
+              <AddressRiskIndicator
+                address={vm.toAddress}
+                chainId={vm.network.chainId}
+                label={vm.toAddressTag?.publicName}
+                risky={vm.toAddressTag?.dangerous}
+                containerStyle={{ position: 'absolute', bottom: -11.5, right: 0 }}
+              />
+            )}
+          </View>
+        </View>
+
+        <View style={{ ...reviewItemStyle, borderBottomWidth: 0 }}>
+          <Text style={styles.reviewItemTitle}>{t('modal-review-network')}</Text>
+
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+            {generateNetworkIcon({ ...vm.network, width: 15 })}
+
+            <Text style={{ ...reviewItemValueStyle, color: vm.network.color, maxWidth: 150 }} numberOfLines={1}>
+              {vm.network.network}
+            </Text>
+
+            {(vm.loading || vm.paymaster?.loading) && <ActivityIndicator color={vm.network.color} size={'small'} />}
+          </View>
+        </View>
+      </View>
+
+      <GasFeeReviewItem vm={vm} onGasPress={onGasPress} />
+
+      {vm.txException ? (
+        <TxException exception={vm.txException} containerStyle={{ marginTop: 10 }} />
+      ) : (
         <View
           style={{
             flexDirection: 'row',
@@ -210,7 +164,7 @@ const ReviewView = observer(
             justifyContent: 'flex-end',
           }}
         >
-          {vm.isERC4337Available ? (
+          {vm.isUsingERC4337 ? (
             <AddToSendingQueue
               containerStyle={{ marginStart: -10 }}
               themeColor={tintColor}
@@ -219,7 +173,7 @@ const ReviewView = observer(
               onToggle={() => vm.setIsQueuingTx(!vm.isQueuingTx)}
             />
           ) : (
-            <View />
+            <View style={{ height: 32, width: 1 }} />
           )}
 
           {(txDataEditable || (vm.insufficientFee && !vm.loading)) && <Placeholder />}
@@ -228,7 +182,7 @@ const ReviewView = observer(
 
           {txDataEditable && !vm.insufficientFee ? (
             <TouchableOpacity
-              style={{ flexDirection: 'row', alignItems: 'center', padding: 12, paddingHorizontal: 15 }}
+              style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 10, paddingHorizontal: 12.5 }}
               onPress={onEditDataPress}
             >
               <Text style={{ fontWeight: '600', color: secondaryTextColor, fontSize: 12.5 }}>
@@ -238,24 +192,18 @@ const ReviewView = observer(
             </TouchableOpacity>
           ) : undefined}
         </View>
+      )}
 
-        {vm.txException ? <TxException exception={vm.txException} /> : undefined}
+      <View style={{ flex: 1 }} />
 
-        <View style={{ flex: 1 }} />
-
-        <Button
-          title={sendTitle}
-          disabled={!vm.isValidParams || busy}
-          onPress={onSendPress}
-          onLongPress={onLongSendPress}
-          onSwipeSuccess={onLongSendPress}
-          icon={authIcon}
-          themeColor={vm.transferToRisky ? warningColor : vm.network.color}
-        />
-      </SafeViewContainer>
-    );
-  }
-);
+      <BioAuthSendButton
+        disabled={!vm.isValidParams || busy}
+        onPress={send}
+        themeColor={vm.transferToRisky ? warningColor : vm.network.color}
+      />
+    </SafeViewContainer>
+  );
+});
 
 export default observer((props: Props) => {
   const { vm } = props;

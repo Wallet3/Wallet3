@@ -11,6 +11,7 @@ import { FlatList, ListRenderItemInfo, Text, TouchableOpacity, View } from 'reac
 import React, { useEffect } from 'react';
 
 import IllustrationNoData from '../../assets/illustrations/misc/nodata.svg';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/core/Networks';
 import Theme from '../../viewmodels/settings/Theme';
 import Transaction from '../../models/entities/Transaction';
@@ -20,7 +21,6 @@ import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 import { secondaryFontColor } from '../../constants/styles';
-import { startLayoutAnimation } from '../../utils/animations';
 import { useState } from 'react';
 import { utils } from 'ethers';
 
@@ -70,9 +70,10 @@ const Tx = observer(
     const dappIcon = item.readableInfo?.icon;
     const amount = Number(item.readableInfo?.amount) || Number(utils.formatEther(item.value ?? '0'));
     const cancelTx = item.readableInfo?.cancelTx;
-    const to: string = item.readableInfo?.recipient ?? item.readableInfo.dapp ?? item.to ?? '';
+    const to: string = item.readableInfo?.recipient ?? item.readableInfo?.dapp ?? item.to ?? '';
     const status = item.blockNumber ? (item.status ? 'confirmed' : 'failed') : 'pending';
     const methodName = t(`home-history-item-type-${method ?? (item.data !== '0x' ? 'contract-interaction' : 'sent')}`);
+    const isInteraction = method.endsWith('interaction') || method === 'batchTx';
 
     return (
       <TouchableOpacity style={{ paddingVertical: 12, paddingHorizontal: 8 }} onPress={() => onPress?.(item as Transaction)}>
@@ -88,7 +89,7 @@ const Tx = observer(
               <Text style={{ fontSize: 16, marginEnd: 4, maxWidth: 180, color: textColor }} numberOfLines={1}>
                 {`${cancelTx ? `${t('tip-cancel-action')} ` : ''}${methodName}`}
               </Text>
-              {method.endsWith('-interaction') ? undefined : (
+              {isInteraction ? undefined : (
                 <Text style={{ fontSize: 16, color: textColor, maxWidth: '80%' }} numberOfLines={1}>
                   {`${amount > 0 ? amount : ''} ${nft || tokenSymbol}`.trim()}
                 </Text>
@@ -102,11 +103,15 @@ const Tx = observer(
               alignItems: 'center',
               backgroundColor: StatusColor[status],
               paddingHorizontal: 6,
+              paddingEnd: 5.5,
               paddingVertical: 2,
-              borderRadius: 4,
+              borderRadius: 5,
             }}
           >
             <Text style={{ color: 'white', fontWeight: '300', fontSize: 12 }}>{t(`modal-tx-details-status-${status}`)}</Text>
+            {item.isERC4337 && (
+              <MaterialCommunityIcons name="lightbulb-on" color={'#fff'} style={[{ marginStart: 2 }]} size={9} />
+            )}
           </View>
         </View>
 
@@ -148,7 +153,7 @@ export default observer(({ data, onTxPress, onEndReached }: Props) => {
       <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
         <IllustrationNoData width={150} height={150} />
         <Text style={{ color: secondaryFontColor, marginTop: 24, fontWeight: '500', textTransform: 'capitalize' }}>
-          {t('home-history-notxs')}
+          {t('home-history-noTxs')}
         </Text>
       </View>
     );

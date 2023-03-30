@@ -42,6 +42,7 @@ export default {
   10: <Optimism width={47} height={47} style={styles.optimism} />,
   100: <XDai width={50} height={50} style={styles.xdai} />,
   137: <Polygon width={45} height={45} style={styles.polygon} />,
+  1101: <Polygon width={45} height={45} style={styles.polygon} />,
   43114: <Avalanche width={60} height={60} style={styles.avalanche} />,
   250: <Fantom width={60} height={60} style={styles.fantom} />,
   42220: <Celo width={49} height={49} style={styles.celo} />,
@@ -53,7 +54,8 @@ export default {
   25: <Cronos width={49} height={49} style={styles.cronos} />,
   1666600000: <Harmony width={52} height={52} style={styles.harmony} />,
   2020: <Ronin width={42} height={42} style={styles.ronin} />,
-  280: <ZKSync width={49} height={49} style={styles.zkSync} />,
+  280: <ZKSync width={52} height={52} style={styles.zkSync} />,
+  324: <ZKSync width={52} height={52} style={styles.zkSync} />,
   1088: <Metis width={64} height={64} style={styles.metis} />,
   8217: <Klaytn width={37} height={37} style={styles.klaytn} />,
   2152: <Findora width={42} height={42} style={styles.findora} />,
@@ -107,6 +109,8 @@ export function generateNetworkIcon(props: {
     case 10:
       return <Optimism key={chainId} width={width} height={height ?? width} style={style} />;
     case 137:
+    case 1101:
+    case 1442:
       return <Polygon key={chainId} width={width} height={height ?? width} style={style} />;
     case 100:
       return <XDai key={chainId} width={width} height={height ?? width} style={style} />;
@@ -140,6 +144,7 @@ export function generateNetworkIcon(props: {
     case 2020:
       return <Ronin key={chainId} width={width} height={height ?? width} style={style} />;
     case 280:
+    case 324:
       return <ZKSync key={chainId} width={width} height={height ?? width} style={style} />;
     case 8217:
       return <Klaytn key={chainId} width={width} height={height ?? width} style={style} />;

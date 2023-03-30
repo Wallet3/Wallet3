@@ -1,4 +1,4 @@
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { FadeInDown, FadeOutUp } from 'react-native-reanimated';
 import { StyleProp, ViewStyle } from 'react-native';
 
 import { Ionicons } from '@expo/vector-icons';
@@ -16,7 +16,7 @@ interface Props {
 
 export default ({ icon, color, message, delay, style }: Props) => {
   return (
-    <Animated.View style={{ flexDirection: 'row', ...(style as any) }} entering={FadeInDown.delay(delay ?? 0).springify()}>
+    <Animated.View style={{ flexDirection: 'row', ...(style as any) }} exiting={FadeOutUp.springify()}>
       <Ionicons name={icon as any} color={color} style={{ marginEnd: 5, marginTop: isAndroid ? 3 : 1 }} />
       <Text style={{ fontSize: 12, fontWeight: '600', marginEnd: 2, color: color }}>{message}</Text>
     </Animated.View>

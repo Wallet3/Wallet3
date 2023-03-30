@@ -6,7 +6,7 @@ import Assets from './Assets';
 import CurrencyViewmodel from '../../viewmodels/settings/Currency';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import GasPrice from '../../viewmodels/misc/GasPrice';
-import { IToken } from '../../common/tokens';
+import { ITokenMetadata } from '../../common/tokens';
 import { InappBrowserModal } from '../Modalize';
 import MessageKeys from '../../common/MessageKeys';
 import Networks from '../../viewmodels/core/Networks';
@@ -17,8 +17,10 @@ import Theme from '../../viewmodels/settings/Theme';
 import TokenDetail from './TokenDetail';
 import Transaction from '../../models/entities/Transaction';
 import TxDetail from './TxDetail';
+import TxException from '../../modals/components/TxException';
 import { View } from 'react-native';
 import WalletConnectHub from '../../viewmodels/walletconnect/WalletConnectHub';
+import i18n from '../../i18n';
 import { isAndroid } from '../../utils/platform';
 import { logScreenView } from '../../viewmodels/services/Analytics';
 import { observer } from 'mobx-react-lite';
@@ -36,11 +38,11 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
   const { ref: tokenDetailModalize, open: openTokenDetail, close: closeTokenDetail } = useModalize();
   const { ref: txDetailModalize, open: openTxDetail, close: closeTxDetail } = useModalize();
   const { ref: addressQRModalize, open: openAddressQR } = useModalize();
-  const [selectedToken, setSelectedToken] = useState<IToken>();
+  const [selectedToken, setSelectedToken] = useState<ITokenMetadata>();
   const [selectedTx, setSelectedTx] = useState<Transaction>();
   const { backgroundColor, isLightMode, mode } = Theme;
 
-  const onTokenPress = (token: IToken) => {
+  const onTokenPress = (token: ITokenMetadata) => {
     setSelectedToken(token);
     setTimeout(() => openTokenDetail(), 0);
   };
@@ -90,6 +92,13 @@ export default observer(({ navigation }: DrawerScreenProps<RootStackParamList, '
         gasPrice={GasPrice.currentGwei}
         onQRCodePress={() => openAddressQR()}
       />
+
+      {currentAccount?.isERC4337 && !current.erc4337 && (
+        <TxException
+          exception={i18n.t('erc4337-current-network-not-available')}
+          containerStyle={{ backgroundColor: 'orange' }}
+        />
+      )}
 
       <Assets
         tokens={currentAccount?.tokens.tokens}

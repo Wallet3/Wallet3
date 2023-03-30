@@ -52,7 +52,7 @@ export default class Transaction extends BaseEntity {
   gasUsed?: number;
 
   @Column({ nullable: true, type: 'simple-json' })
-  readableInfo: { type: 'transfer'; dapp?: string; icon?: string; cancelTx?: boolean } & any;
+  readableInfo!: ReadableInfo;
 
   get isERC4337() {
     return false;
@@ -65,6 +65,7 @@ interface TransferInfo {
   amountWei?: string;
   decimals?: number;
   amount?: string;
+  nft?: string;
 }
 
 interface DAppInteraction {
@@ -74,9 +75,14 @@ interface DAppInteraction {
 
 interface ExtraInfo {
   decodedFunc?: string;
+  cancelTx?: boolean;
 }
 
-export type ReadableInfo = { type: 'transfer' | 'dapp-interaction' } & ExtraInfo & (TransferInfo | DAppInteraction);
+export type ReadableInfo = Partial<
+  { type: 'transfer' | 'transfer-nft' | 'dapp-interaction' | 'batchTx'; readableTxt?: string } & ExtraInfo &
+    TransferInfo &
+    DAppInteraction
+>;
 
 export interface ITransaction extends providers.TransactionRequest {
   hash?: string;

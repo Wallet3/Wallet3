@@ -31,4 +31,23 @@ export const ARBI_wstETH = {
   symbol: 'wstETH',
 };
 
-export const ArbiPopularTokens = [ARBI_DAI, ARBI_USDC, ARBI_USDT, ARBI_WBTC, ARBI_wstETH];
+export const ARBI_ARB = {
+  address: '0x912CE59144191C1204E64559FE8253a0e49E6548',
+  decimals: 18,
+  symbol: 'ARB',
+  shown: true,
+};
+
+export const ARBI_CRV = {
+  address: '0x11cDb42B0EB46D95f990BeDD4695A6e3fA034978',
+  decimals: 18,
+  symbol: 'CRV',
+};
+
+export const ARBI_LINK = {
+  address: '0xf97f4df75117a78c1A5a0DBb814Af92458539FB4',
+  decimals: 18,
+  symbol: 'LINK',
+};
+
+export const ArbiPopularTokens = [ARBI_ARB, ARBI_DAI, ARBI_USDC, ARBI_USDT, ARBI_WBTC, ARBI_wstETH];

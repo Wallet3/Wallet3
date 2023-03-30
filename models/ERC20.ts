@@ -3,16 +3,18 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 import { estimateGas, eth_call } from '../common/RPC';
 
 import ERC20ABI from '../abis/ERC20.json';
+import { IFungibleToken } from './Interfaces';
 
 const call_symbol = '0x95d89b41';
 const call_decimals = '0x313ce567';
 const call_name = '0x06fdde03';
 
-export class ERC20Token {
+export class ERC20Token implements IFungibleToken {
   private owner = '';
   readonly address: string;
   readonly erc20: ethers.Contract;
   readonly chainId: number;
+  readonly isNative = false;
   private call_balanceOfOwner = '';
   private allowanceMap = new Map<string, BigNumber>();
 
@@ -23,6 +25,7 @@ export class ERC20Token {
   balance = BigNumber.from(0);
   iconUrl?: string;
   shown?: boolean;
+  isStable = false;
   order?: number;
 
   loading = false;
@@ -47,6 +50,7 @@ export class ERC20Token {
     iconUrl?: string;
     shown?: boolean;
     order?: number;
+    isStable?: boolean;
   }) {
     this.address = utils.getAddress(props.contract);
     this.erc20 = new ethers.Contract(this.address, ERC20ABI);
@@ -60,6 +64,7 @@ export class ERC20Token {
     this.iconUrl = props.iconUrl;
     this.shown = props.shown;
     this.order = props.order;
+    this.isStable = props.isStable ?? false;
 
     this.setOwner(props.owner);
 

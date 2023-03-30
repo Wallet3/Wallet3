@@ -20,17 +20,17 @@ export default (props: Props) => {
       onPress={onToggle}
       style={[
         {
-          padding: 12,
+          paddingVertical: 10,
           paddingHorizontal: 16,
           flexDirection: 'row',
           alignItems: 'center',
-          gap: 8,
+          gap: 5,
         },
         containerStyle,
       ]}
     >
       <Ionicons name="checkbox" color={checked ? themeColor : 'lightgrey'} size={iconSize ?? 12.5} />
-      <Text style={[{ fontWeight: '600', color: '#333', fontSize: 12.2 }, txtStyle]}>{t('erc-4337-add-tx-to-queue')}</Text>
+      <Text style={[{ fontWeight: '600', color: '#333', fontSize: 12.5 }, txtStyle]}>{t('erc4337-add-tx-to-queue')}</Text>
     </TouchableOpacity>
   );
 };

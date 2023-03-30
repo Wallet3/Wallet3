@@ -1,20 +1,19 @@
-import { ContactsPad, Passpad } from '../views';
 import React, { useEffect, useRef, useState } from 'react';
 
 import App from '../../viewmodels/core/App';
 import Authentication from '../../viewmodels/auth/Authentication';
 import AwaitablePasspad from '../views/AwaitablePasspad';
 import Contacts from '../../viewmodels/customs/Contacts';
+import { ContactsPad } from '../views';
 import NFTReview from '../views/NFTReview';
 import { NFTTransferring } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { SafeViewContainer } from '../../components';
+import Packing from '../views/Packing';
 import Success from '../views/Success';
 import Swiper from 'react-native-swiper';
-import Theme from '../../viewmodels/settings/Theme';
 import { View } from 'react-native';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import styles from '../styles';
+import { showMessage } from 'react-native-flash-message';
 
 interface Props {
   vm: NFTTransferring;
@@ -22,15 +21,12 @@ interface Props {
 }
 
 export default observer(({ vm, onClose }: Props) => {
-  const { backgroundColor } = Theme;
   const swiper = useRef<Swiper>(null);
   const [verified, setVerified] = useState(false);
   const [networkBusy, setNetworkBusy] = useState(false);
 
   useEffect(() => {
-    return () => {
-      vm.dispose();
-    };
+    return () => vm.dispose();
   }, []);
 
   const sendTx = async (pin?: string) => {
@@ -39,6 +35,9 @@ export default observer(({ vm, onClose }: Props) => {
     if (result.success) {
       setVerified(true);
       setTimeout(() => onClose?.(), 1700);
+    } else {
+      showMessage({ message: i18n.t('tx-hub-transaction-failed'), type: 'danger' });
+      setTimeout(() => close?.(), 500);
     }
 
     return result.success;
@@ -65,9 +64,11 @@ export default observer(({ vm, onClose }: Props) => {
   };
 
   return (
-    <View style={{ height: 445 }}>
+    <View style={{ height: 460 }}>
       {verified ? (
         <Success />
+      ) : networkBusy ? (
+        <Packing />
       ) : (
         <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
           <ContactsPad
@@ -86,7 +87,6 @@ export default observer(({ vm, onClose }: Props) => {
           />
 
           <AwaitablePasspad
-            busy={networkBusy}
             themeColor={vm.network.color}
             onCodeEntered={sendTx}
             onCancel={() => swiper.current?.scrollTo(1)}

@@ -13,15 +13,16 @@ export default ({ style }: Props) => {
   return (
     <Animated.Text
       entering={FadeIn.springify()}
-      style={{
-        color: 'crimson',
-        textAlign: 'right',
-        fontSize: 12,
-        fontWeight: '600',
-        marginEnd: 18,
-        marginTop: 6,
-        ...(style || ({} as any)),
-      }}
+      style={[
+        {
+          color: 'crimson',
+          textAlign: 'right',
+          fontSize: 12.5,
+          fontWeight: '600',
+          marginEnd: 18,
+        },
+        style,
+      ]}
     >
       {t('tip-insufficient-funds')}
     </Animated.Text>

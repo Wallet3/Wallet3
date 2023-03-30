@@ -1,7 +1,7 @@
+import Authentication, { AuthOptions } from '../auth/Authentication';
 import MultiSigKey, { MultiSigKeyDeviceInfo } from '../../models/entities/MultiSigKey';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
-import Authentication from '../auth/Authentication';
 import { ShardsAggregator } from '../tss/ShardsAggregator';
 import { WalletBase } from './WalletBase';
 import { logMultiSigKeyAggregated } from '../services/Analytics';
@@ -113,14 +113,14 @@ export class MultiSigWallet extends WalletBase {
     return undefined;
   }
 
-  protected async unlockPrivateKey(args: { pin?: string; accountIndex?: number; disableCache?: boolean; subPath?: string }) {
+  protected async unlockPrivateKey(args: { accountIndex?: number; disableCache?: boolean; subPath?: string } & AuthOptions) {
     const { pin, accountIndex, disableCache, subPath } = args;
 
     try {
       const { bip32XprvKey } = this.key.cachedSecrets || {};
 
       if (!disableCache && bip32XprvKey) {
-        const xprivkey = (await Authentication.decrypt(bip32XprvKey, { pin }))!;
+        const xprivkey = (await Authentication.decrypt(bip32XprvKey, args))!;
         const bip32 = utils.HDNode.fromExtendedKey(xprivkey);
         const account = bip32.derivePath(`${subPath ?? ''}${accountIndex ?? 0}`);
         return account.privateKey;

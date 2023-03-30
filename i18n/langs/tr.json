@@ -44,7 +44,7 @@
   "home-drawer-networks": "Ağlar",
   "home-drawer-contacts": "Bağlantılar",
   "home-drawer-multi-sig": "Çok İmzalı Cüzdan",
-  "home-history-notxs": "Henüz İşlem Yok",
+  "home-history-noTxs": "Henüz İşlem Yok",
   "home-tokens-title": "Token'lar",
   "home-tokens-drag-tip": "Token'ları sürükle ve bırak ile taşı",
   "home-add-token-title": "Token Ekle",
@@ -59,6 +59,7 @@
   "home-history-item-type-sent": "Gönderildi",
   "home-history-item-type-transfer": "Gönderildi",
   "home-history-item-type-approve": "Onayla",
+  "home-history-item-type-batchTx": "Toplu işlem",
   "home-history-item-to": "Kime",
   "home-tab-wallet": "Cüzdan",
   "home-tab-exchange": "Değiştir",
@@ -309,7 +310,7 @@
   "multi-sig-screen-security-level-high": "Güvenli",
   "multi-sig-screen-security-level-medium": "Orta",
   "multi-sig-screen-security-level-low": "Güvenli Değil",
-  
+
   "multi-sig-modal-title-welcome": "Çok İmzalı Cüzdan",
   "multi-sig-modal-title-preparations": "Hazırlık",
   "multi-sig-modal-title-connect-devices": "Cihazları Bağlayın",
@@ -361,7 +362,7 @@
   "multi-sig-modal-txt-aggregation-done": "Başarılı Onay",
   "multi-sig-modal-txt-aggregation-error": "Bir hata oluştu. Anahtarlar eşleşmeyebilir.",
   "multi-sig-modal-txt-aggregation-at-least": "Devam etmek için en az {{n}} güvenilir cihaza bağlanmanız gerekiyor.",
-  
+
   "multi-sig-modal-msg-threshold-too-high": "Dikkat: eğer cihazlarınızdan herhangi biri zarar görür veya kaybolan durumda cüzdanınız kurtarılamayacaktır. En az bir cihaz daha eklemeniz önerilir.",
   "multi-sig-modal-msg-pairing-code-not-match": "Eşleşme kodu eşleşmiyor, lütfen güvenli bir ortamda tekrar deneyin.",
   "multi-sig-modal-msg-network-lost": "Diğer cihazlarla olan ağ bağlantısı kesildi, lütfen ağınızı kontrol edin ve yeniden deneyin.",
@@ -396,9 +397,21 @@
   "msg-currently-ethereum-and-evm-networks-support": "Şu anda Wallet 3 Ethereum ve EVM ağlarını desteklemektedir",
   "msg-database-error": "Veritabanı hatası, devam edilemiyor",
   "msg-data-loading": "Veriler yükleniyor",
-  "msg-please-enable-biometric":"Bu işlemi yetkilendirmek için biyometrik kimlik doğrulama kullanın lütfen.",
+  "msg-please-enable-biometric": "Bu işlemi yetkilendirmek için biyometrik kimlik doğrulama kullanın lütfen.",
 
-  "erc-4337-add-tx-to-queue": "İşlemi gönderme kuyruğuna ekleyin",
+  "network-category-core": "Birincil Ağ",
+  "network-category-l2": "Katman-2 ağı",
+  "network-category-pinned": "Sabitlenmiş",
+  "network-category-evm-compatible": "EVM-uyumlu ağ",
+  "network-category-user-added": "Kullanıcı eklenen ağ",
+  "network-category-testnet": "Testnets",
+
+  "erc4337-add-tx-to-queue": "Kuyruğa katılın",
+  "erc4337-not-support-gas-adjustment": "Gas ayarı süper hesapta salt okunur moddadır.",
+  "erc4337-current-network-not-available": "Ağ şu anda süper hesapları desteklememektedir.",
+
+  "readable-transfer-token": "{{amount}} {{symbol}} 'yi {{dest}} adresine transfer etmek",
+  "readable-approve-token": "{{amount}} {{symbol}} onayla {{dest}} için",
 
   "misc-show-full-address": "Tam adresi göster",
   "button-next": "Sonraki",

@@ -9,7 +9,6 @@ import { SafeViewContainer } from '../../components';
 import Swiper from 'react-native-swiper';
 
 interface Props {
-  themeColor?: string;
   vm: RawTransactionRequest;
   app: { icon: string; name: string; verified?: boolean };
   onApprove: (pin?: string) => Promise<boolean>;
@@ -17,13 +16,8 @@ interface Props {
   bioType?: BioType;
 }
 
-export default ({ themeColor, vm, app, onApprove, onReject, bioType }: Props) => {
+export default ({ vm, app, onApprove, onReject, bioType }: Props) => {
   const swiper = useRef<Swiper>(null);
-  const [networkBusy, setNetworkBusy] = useState(false);
-
-  const sendTx = async (pin?: string) => {
-    onApprove(pin);
-  };
 
   const approve = async () => {
     if (!bioType) {
@@ -48,8 +42,7 @@ export default ({ themeColor, vm, app, onApprove, onReject, bioType }: Props) =>
       <RequestReview vm={vm} app={app} onReject={onReject} onApprove={approve} account={vm.account} bioType={bioType} />
 
       <AwaitablePasspad
-        busy={networkBusy}
-        themeColor={themeColor}
+        themeColor={vm.network.color}
         onCodeEntered={(c) => onApprove(c)}
         onCancel={() => swiper.current?.scrollTo(0)}
       />

@@ -5,6 +5,7 @@ import { SafeAreaView, Switch, Text, TouchableOpacity, View } from 'react-native
 import { fontColor, secondaryFontColor } from '../../constants/styles';
 
 import App from '../../viewmodels/core/App';
+import { IFungibleToken } from '../../models/Interfaces';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/core/Networks';
 import { RootStack } from '../navigations';
@@ -60,11 +61,11 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
   const { t } = i18n;
   const { currentAccount } = App;
   const { allTokens } = currentAccount?.tokens ?? { allTokens: [] };
-  const [data, setData] = useState<UserToken[]>([]);
+  const [data, setData] = useState<IFungibleToken[]>([]);
   const { borderColor, textColor } = Theme;
   const { current } = Networks;
 
-  const renderItem = (props: RenderItemParams<UserToken>) => (
+  const renderItem = (props: RenderItemParams<IFungibleToken>) => (
     <DraggableToken
       chainId={current.chainId}
       {...props}

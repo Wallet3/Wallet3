@@ -4,7 +4,7 @@ import App from '../core/App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Networks from '../core/Networks';
 import { getEnsAvatar } from '../../common/ENS';
-import { reverseLookupAddress } from '../services/DomainResolver';
+import { reverseLookupAddress } from '../services/ens/DomainResolver';
 
 export interface IContact {
   address: string;

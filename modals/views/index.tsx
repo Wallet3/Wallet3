@@ -4,6 +4,6 @@ import Passpad from './Passpad';
 import RequestAmount from './RequestAmount';
 import ReviewPad from './Review';
 import SendAmount from './SendAmount';
-import Tokenlist from './Tokenlist';
+import Tokenlist from './TokenPlainList';
 
 export { ContactsPad, SendAmount, ReviewPad, NFCPad, Tokenlist, RequestAmount, Passpad };

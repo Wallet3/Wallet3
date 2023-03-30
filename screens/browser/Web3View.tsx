@@ -362,6 +362,7 @@ export default observer((props: Web3ViewProps) => {
         <SquircleModalize ref={networksRef}>
           <NetworksMenu
             title={t('modal-dapp-switch-network', { app: pageMetadata?.title?.split(' ')?.[0] ?? '' })}
+            networks={Networks.categorized}
             selectedNetwork={appNetwork}
             onNetworkPress={(network) => updateDAppNetworkConfig(network)}
           />

@@ -1,6 +1,5 @@
 import { BigNumber, providers, utils } from 'ethers';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
-import { estimateGas, eth_call } from '../../common/RPC';
 
 import { AccountBase } from '../account/AccountBase';
 import App from '../core/App';
@@ -9,8 +8,9 @@ import { ERC1155Token } from '../../models/ERC1155';
 import { ERC721Token } from '../../models/ERC721';
 import { Gwei_1 } from '../../common/Constants';
 import { INetwork } from '../../common/Networks';
+import { eth_call } from '../../common/RPC';
+import i18n from '../../i18n';
 import { showMessage } from 'react-native-flash-message';
-import { startLayoutAnimation } from '../../utils/animations';
 
 export interface NFTMetadata {
   id: string;
@@ -48,7 +48,8 @@ export class NFTTransferring extends BaseTransaction {
       this.network &&
       this.nftStandard &&
       !this.insufficientFee &&
-      !this.txException
+      !this.txException &&
+      this.isValidAccountAndNetwork
     );
   }
 
@@ -112,7 +113,7 @@ export class NFTTransferring extends BaseTransaction {
     }
   }
 
-  private estimatingTimer: any;
+  private estimatingTimer?: NodeJS.Timer;
   setTransferAmount(amount: number) {
     this.erc1155TransferAmount = Math.max(1, Math.min(amount, Number(this.erc1155Balance)));
     this.isEstimatingGas = true;
@@ -133,19 +134,7 @@ export class NFTTransferring extends BaseTransaction {
     if (!this.nftStandard) return;
     if (!this.toAddress) return;
 
-    runInAction(() => (this.isEstimatingGas = true));
-
-    const { gas, errorMessage } = await estimateGas(this.network.chainId, {
-      from: this.account.address,
-      data: this.txData,
-      to: this.nft.contract,
-    });
-
-    runInAction(() => {
-      this.isEstimatingGas = false;
-      this.setGasLimit(gas || 0);
-      this.txException = errorMessage || '';
-    });
+    return super.estimateGas({ data: this.txData, to: this.nft.contract });
   }
 
   get txRequest(): providers.TransactionRequest | undefined {
@@ -170,7 +159,7 @@ export class NFTTransferring extends BaseTransaction {
 
       return tx;
     } catch (error) {
-      showMessage((error as any).message);
+      showMessage({ message: (error as Error).message });
     }
   }
 
@@ -179,7 +168,17 @@ export class NFTTransferring extends BaseTransaction {
       {
         tx: this.txRequest,
         onNetworkRequest,
-        readableInfo: { type: 'transfer-nft', amount: this.erc1155TransferAmount, recipient: this.to, nft: this.nft.title },
+        readableInfo: {
+          type: 'transfer-nft',
+          amount: `${this.erc1155TransferAmount}`,
+          recipient: this.to,
+          nft: this.nft.title,
+          readableTxt: i18n.t('readable-transfer-token', {
+            amount: this.erc1155TransferAmount,
+            symbol: this.nft.title,
+            dest: this.to,
+          }),
+        },
       },
       pin
     );

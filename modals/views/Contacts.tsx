@@ -17,7 +17,7 @@ import Swiper from 'react-native-swiper';
 import Theme from '../../viewmodels/settings/Theme';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
-import { isDomain } from '../../viewmodels/services/DomainResolver';
+import { isDomain } from '../../viewmodels/services/ens/DomainResolver';
 import { isIOS } from '../../utils/platform';
 import { observer } from 'mobx-react-lite';
 import { parse as parseERC681 } from 'eth-url-parser';

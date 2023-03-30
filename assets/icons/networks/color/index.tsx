@@ -9,6 +9,7 @@ import Bsc from './bnb.svg';
 import Canto from './canto.svg';
 import Celo from './celo.svg';
 import { Coin } from '../../../../components';
+import Consensys from './consensys.svg';
 import Cronos from './cronos.svg';
 import { Entypo } from '@expo/vector-icons';
 import Ethereum from './ethereum2.svg';
@@ -30,6 +31,7 @@ import Nova from './nova.svg';
 import OKEx from './okex.svg';
 import Optimism from './optimism.svg';
 import Polygon from './polygon.svg';
+import PolygonZkEVM from './polygon-zkevm.svg';
 import React from 'react';
 import Ronin from './ronin.svg';
 import Shiden from './shiden.svg';
@@ -86,6 +88,7 @@ const FTM = generateNetworkIcon({ chainId: 250, width: 32 });
 const HECO = generateNetworkIcon({ chainId: 128, width: 32 });
 const OKX = generateNetworkIcon({ chainId: 66, width: 32 });
 const POLY = generateNetworkIcon({ chainId: 137, width: 27, height: 32 });
+const POLYGONZKEVM = generateNetworkIcon({ chainId: 1101, width: 29, height: 32 });
 const xDAI = generateNetworkIcon({ chainId: 100, width: 32 });
 const BOBA = generateNetworkIcon({ chainId: 288, width: 32 });
 const AURORA = generateNetworkIcon({ chainId: 1313161554, width: 32 });
@@ -129,6 +132,8 @@ export const NetworkIcons = {
   128: HECO,
   66: OKX,
   137: POLY,
+  1101: POLYGONZKEVM,
+  1442: POLYGONZKEVM,
   80001: POLY,
   100: xDAI,
   288: BOBA,
@@ -140,6 +145,7 @@ export const NetworkIcons = {
   1285: MOONRIVER,
   2020: RONIN,
   280: ZSYNC,
+  324: ZSYNC,
   8217: KLAYTN,
   2152: FINDORA,
   1088: METIS,
@@ -176,6 +182,9 @@ export function generateNetworkIcon(props: {
     case 137:
     case 80001:
       return <Polygon key={chainId} width={width} height={height ?? width} style={style} />;
+    case 1101:
+    case 1442:
+      return <PolygonZkEVM key={chainId} width={width} height={height ?? width} style={style} />;
     case 100:
       return <XDai key={chainId} width={width} height={height ?? width} style={style} />;
     case 288:
@@ -210,6 +219,7 @@ export function generateNetworkIcon(props: {
     case 2020:
       return <Ronin key={chainId} width={width} height={height ?? width} style={style} />;
     case 280:
+    case 324:
       return <ZKSync key={chainId} width={width} height={height ?? width} style={style} />;
     case 8217:
       return <Klaytn key={chainId} width={width} height={height ?? width} style={style} />;
@@ -240,6 +250,8 @@ export function generateNetworkIcon(props: {
       return <Base key={chainId} width={width} height={height ?? width} style={style} />;
     case 99999:
       return <JapanOpenChain key={chainId} width={width} height={height ?? width} style={style} />;
+    case 59140:
+      return <Consensys key={chainId} width={width} height={height ?? width} style={style} />;
     default:
       return coins[symbol?.toLowerCase() || ''] ? (
         <Coin symbol={symbol} size={height ?? width} address="" chainId={chainId} style={style as any} />
@@ -272,4 +284,5 @@ export default {
   1285: <Moonriver width={42} height={42} style={{ ...styles.moonriver, opacity: 1 }} />,
   122: <Fuse width={32} height={32} style={{ ...styles.fuse, opacity: 1 }} />,
   336: <Shiden width={40} height={40} style={{ ...styles.shiden, opacity: 1 }} />,
+  59140: <Consensys width={40} height={40} style={{ ...styles.shiden, opacity: 1 }} />,
 };

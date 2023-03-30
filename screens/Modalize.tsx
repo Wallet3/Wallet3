@@ -66,7 +66,7 @@ import { WalletConnect_v2 } from '../viewmodels/walletconnect/WalletConnect_v2';
 import { autorun } from 'mobx';
 import i18n from '../i18n';
 import { isAndroid } from '../utils/platform';
-import { isDomain } from '../viewmodels/services/DomainResolver';
+import { isDomain } from '../viewmodels/services/ens/DomainResolver';
 import { logScreenView } from '../viewmodels/services/Analytics';
 import { observer } from 'mobx-react-lite';
 import { parse } from 'eth-url-parser';
@@ -305,6 +305,7 @@ const GlobalNetworksMenuModal = observer(() => {
       <NetworksMenu
         useContextMenu
         onEditing={setEditing}
+        networks={Networks.categorized}
         selectedNetwork={Networks.current}
         onNetworkPress={(network) => {
           closeNetworksModal();
@@ -467,6 +468,7 @@ const SendFundsModal = () => {
 
 const ERC4337QueueModal = () => {
   const { ref, open, close } = useModalize();
+  const [isCritical, setIsCritical] = useState(false);
 
   useEffect(() => {
     PubSub.subscribe(MessageKeys.openERC4337Queue, () => {
@@ -483,10 +485,12 @@ const ERC4337QueueModal = () => {
     <SquircleModalize
       ref={ref}
       adjustToContentHeight
+      withHandle={!isCritical}
+      panGestureEnabled={!isCritical}
       disableScrollIfPossible
       scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
     >
-      <ERC4337Queue />
+      <ERC4337Queue close={close} onCritical={setIsCritical} />
     </SquircleModalize>
   );
 };

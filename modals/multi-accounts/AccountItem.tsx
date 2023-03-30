@@ -89,9 +89,10 @@ export default observer(
                   containerStyle={{
                     marginStart: 8,
                     borderRadius: 5,
-                    paddingStart: 8,
-                    paddingEnd: 5,
+                    paddingStart: 6,
+                    paddingEnd: 3,
                     paddingVertical: 2,
+                    paddingBottom: 2.5,
                     marginTop: -2,
                     flexDirection: 'row',
                     alignItems: 'center',
@@ -101,8 +102,8 @@ export default observer(
                   }}
                   txtStyle={{ textTransform: 'uppercase', color: '#fff', fontSize: 10, fontWeight: '700' }}
                   iconColor="#fff"
-                  iconStyle={{ marginStart: 5 }}
-                  iconSize={12}
+                  iconStyle={{ marginStart: 2 }}
+                  iconSize={10}
                 />
               )}
             </View>

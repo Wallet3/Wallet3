@@ -32,7 +32,7 @@ export async function fetchAddressInfo(chainId: number, address: string) {
 
   let item = await Database.cloud_address_tags.findOne({ where: { address: key } });
 
-  if (item && Date.now() < item?.lastUpdatedTimestamp + (__DEV__ ? 1 : (chainId === 1 ? 7 : 90) * DAY)) {
+  if (item && Date.now() < item?.lastUpdatedTimestamp + (__DEV__ ? 1 : 7 * DAY)) {
     TagsCache.set(key, item);
     return item;
   }
@@ -40,7 +40,11 @@ export async function fetchAddressInfo(chainId: number, address: string) {
   const root = await getHTML(chainId, address, 'address');
   if (!root) return item;
 
-  const warnings = (root?.querySelectorAll('span.u-label--danger, span.u-label--warning, .badge.bg-warning, .badge.bg-danger') || [])
+  const warnings = (
+    root?.querySelectorAll(
+      'span.u-label--danger, span.u-label--warning, .badge.bg-warning, .badge.bg-danger:not(.position-absolute), .alert.alert-danger'
+    ) || []
+  )
     .filter((i) => i.innerText && i.innerText.toUpperCase() !== 'OUT')
     .map((e) => e.innerText);
 
@@ -52,6 +56,7 @@ export async function fetchAddressInfo(chainId: number, address: string) {
     "span.u-label--secondary[data-toggle='tooltip']",
     'span[rel=tooltipEns] span',
     '.badge .text-truncate span',
+    '.badge.bg-secondary span.text-truncate',
     'div.d-flex.flex-wrap.align-items-center a.d-flex span.text-truncate',
   ];
 

@@ -14,6 +14,7 @@ import InpageDApp from '../../../models/entities/InpageDApp';
 import MessageKeys from '../../../common/MessageKeys';
 import MetamaskDAppsHub from '../../../viewmodels/walletconnect/MetamaskDAppsHub';
 import { PageMetadata } from '../Web3View';
+import { RawTransactionRequest } from '../../../viewmodels/transferring/RawTransactionRequest';
 import { ReadableInfo } from '../../../models/entities/Transaction';
 import { SendTxRequest } from '../../../viewmodels/account/AccountBase';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
@@ -79,11 +80,9 @@ export interface InpageDAppSignRequest {
 }
 
 export interface InpageDAppTxRequest {
-  chainId: number;
-  param: WCCallRequest_eth_sendTransaction;
-  account: string;
+  vm: RawTransactionRequest;
   app: { name: string; icon: string; verified: boolean };
-  approve: (obj: { pin?: string; tx?: providers.TransactionRequest; readableInfo: ReadableInfo }) => Promise<boolean>;
+  approve: (obj: SendTxRequest & AuthOptions) => Promise<boolean>;
   reject: () => void;
 }
 
@@ -255,8 +254,8 @@ export class InpageDAppController extends EventEmitter {
     const dapp = this.getDApp(origin);
     if (!dapp) return;
 
-    const { wallet, account, accountIndex } = App.findWallet(dapp.lastUsedAccount) || {};
-    if (!wallet || !account || accountIndex === undefined) {
+    const account = App.findAccount(dapp.lastUsedAccount);
+    if (!account) {
       showMessage({ message: i18n.t('msg-account-not-found'), type: 'warning' });
       return { error: { code: Code_InvalidParams, message: 'Invalid account' } };
     }
@@ -269,11 +268,11 @@ export class InpageDAppController extends EventEmitter {
       let type: 'plaintext' | 'typedData' = 'plaintext';
       let typedVersion = SignTypedDataVersion.V4;
 
-      const approve = async ({ pin, standardMode }: { pin?: string; standardMode?: boolean } = {}) => {
+      const approve = async ({ pin }: { pin?: string; standardMode?: boolean } = {}) => {
         const signed =
           type === 'typedData'
-            ? await wallet.signTypedData({ typedData, pin, accountIndex, version: typedVersion, disableAutoPinRequest: true })
-            : await wallet.signMessage({ msg: msg!, pin, accountIndex, standardMode, disableAutoPinRequest: true });
+            ? await account.signTypedData({ typedData, pin, version: typedVersion, disableAutoPinRequest: true })
+            : await account.signMessage(msg!, { pin, disableAutoPinRequest: true });
 
         if (signed) resolve(signed);
 
@@ -328,18 +327,41 @@ export class InpageDAppController extends EventEmitter {
     dapp.setLastUsedTimestamp(Date.now());
 
     return new Promise<string | any>((resolve) => {
+      const param = params[0] as WCCallRequest_eth_sendTransaction;
+      const network = Networks.find(dapp.lastUsedChainId)!;
+      const account = App.findAccount(dapp.lastUsedAccount);
+
+      if (!network || !account) {
+        resolve({ error: { code: Code_InvalidParams, message: 'No such network or account' } });
+        return;
+      }
+
+      const vm = new RawTransactionRequest({ param, network, account });
+
       const approve = async (args: SendTxRequest & AuthOptions) => {
-        const { txHash, error } = await App.sendTxFromAccount(dapp.lastUsedAccount, {
+        const { success, txHash, error, txHashPromise } = await vm.sendTx({
           ...args,
-          network: Networks.find(dapp.lastUsedChainId),
+          network,
           readableInfo: { ...args.readableInfo, dapp: pageMetadata?.title ?? '', icon: pageMetadata?.icon },
         });
 
-        txHash ? resolve(txHash) : resolve({ error });
-
         if (error && __DEV__) showMessage({ type: 'warning', message: error.message });
 
-        return txHash ? true : false;
+        if (txHash) {
+          resolve(txHash);
+          return true;
+        }
+
+        if (error) {
+          resolve(error);
+          return false;
+        }
+
+        txHashPromise?.then((tx) => {
+          resolve(tx);
+          console.log('tx hash resolved', tx);
+        });
+        return txHashPromise || success ? true : false;
       };
 
       const reject = () => resolve({ error: { code: Code_UserRejected, message: 'The request was rejected by the user' } });
@@ -347,10 +369,8 @@ export class InpageDAppController extends EventEmitter {
       PubSub.publish(MessageKeys.openInpageDAppSendTransaction, {
         approve,
         reject,
-        param: params[0] as WCCallRequest_eth_sendTransaction,
-        chainId: Number(dapp.lastUsedChainId),
-        account: dapp.lastUsedAccount,
         app: { name: pageMetadata!.title, icon: pageMetadata!.icon, verified: isSecureSite(pageMetadata!.origin) },
+        vm,
       } as InpageDAppTxRequest);
     });
   }

@@ -41,4 +41,28 @@ export const OP_wstETH = {
   symbol: 'wstETH',
 };
 
+export const OP_WETH = {
+  address: '0x4200000000000000000000000000000000000006',
+  decimals: 18,
+  symbol: 'WETH',
+};
+
+export const OP_LDO = {
+  address: '0xFdb794692724153d1488CcdBE0C56c252596735F',
+  decimals: 18,
+  symbol: 'LDO',
+};
+
+export const OP_CRV = {
+  address: '0x0994206dfE8De6Ec6920FF4D779B0d950605Fb53',
+  decimals: 18,
+  symbol: 'CRV',
+};
+
+export const OP_LINK = {
+  address: '0x350a791Bfc2C21F9Ed5d10980Dad2e2638ffa7f6',
+  decimals: 18,
+  symbol: 'LINK',
+};
+
 export const OpPopularTokens = [OP_OP, OP_DAI, OP_USDC, OP_USDT, OP_WBTC, OP_wstETH];

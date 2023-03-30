@@ -31,7 +31,6 @@ import { fetchChainsOverview } from '../../common/apis/Debank';
 import i18n from '../../i18n';
 import { logAppReset } from '../services/Analytics';
 import { showMessage } from 'react-native-flash-message';
-import { tipWalletUpgrade } from '../misc/MultiSigUpgradeTip';
 import { utils } from 'ethers';
 
 const Keys = {
@@ -86,8 +85,12 @@ export class AppVM {
       () => {
         this.currentAccount?.tokens.refreshOverview();
         this.currentAccount?.nfts.refresh();
-        this.currentAccount?.isERC4337 && (this.currentAccount as ERC4337Account).checkActivated(Networks.current.chainId);
         this.allAccounts.forEach((a) => a.tokens.refreshNativeToken());
+
+        if (Networks.current.erc4337) {
+          this.allAccounts.forEach((a) => a.isERC4337 && (a as ERC4337Account).checkActivated(Networks.current.chainId));
+        }
+
         UI.gasIndicator && GasPrice.refresh();
       }
     );
@@ -141,8 +144,6 @@ export class AppVM {
 
       setTimeout(() => PairedDevices.scanLan(), 1000);
       Authentication.on('appAuthorized', () => setTimeout(() => PairedDevices.scanLan(), 1000));
-
-      tipWalletUpgrade(this.currentWallet);
     });
 
     PairedDevices.init()
@@ -168,6 +169,9 @@ export class AppVM {
   }
 
   findWallet(accountAddress: string) {
+    if (!utils.isAddress(accountAddress)) return;
+    accountAddress = utils.getAddress(accountAddress);
+
     const wallet = this.wallets.find((w) => w.accounts.find((a) => a.address === accountAddress));
     if (!wallet) return;
 
@@ -185,6 +189,9 @@ export class AppVM {
   }
 
   findAccount(account: string) {
+    if (!utils.isAddress(account)) return;
+    account = utils.getAddress(account);
+
     return this.allAccounts.find((a) => a.address === account);
   }
 
@@ -192,7 +199,7 @@ export class AppVM {
     let { wallet } = this.findWallet(this.currentAccount!.address) || {};
     !wallet?.isHDWallet && (wallet = this.wallets.find((w) => w.isHDWallet));
 
-    const account = type === 'eoa' ? wallet?.newEOA() : await wallet?.newERC4337Account(onBusy);
+    const account = type === 'eoa' ? wallet?.newEOA() : await wallet?.newERC4337Account(Networks.current, onBusy);
 
     if (!account) {
       !wallet?.isHDWallet && showMessage({ message: i18n.t('msg-no-hd-wallet'), type: 'warning' });

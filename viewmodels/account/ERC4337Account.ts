@@ -1,13 +1,15 @@
 import { AccountBase, SendTxRequest, SendTxResponse } from './AccountBase';
-import { BigNumber, utils } from 'ethers';
-import { eth_call_return, getCode } from '../../common/RPC';
+import { BigNumber, providers, utils } from 'ethers';
+import { eth_call_return, getCode, getRPCUrls } from '../../common/RPC';
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { HttpRpcClient } from '@account-abstraction/sdk';
+import { Paymaster } from '../services/erc4337/Paymaster';
 import TxHub from '../hubs/TxHub';
+import { UserOperationStruct } from '@account-abstraction/contracts';
 import { WalletBase } from '../wallet/WalletBase';
-import { createERC4337Client } from '../services/ERC4337';
+import { createERC4337Client } from '../services/erc4337/ERC4337';
 
 const Keys = {
   accountActivated: (address: string, chainId: number) => `${chainId}_${address}_erc4337_activated`,
@@ -16,6 +18,7 @@ const Keys = {
 
 export class ERC4337Account extends AccountBase {
   readonly type = 'erc4337';
+  readonly accountSubPath = `4337'/`;
   readonly activatedChains = new Map<number, boolean>();
 
   constructor(wallet: WalletBase, address: string, index: number, extra?: { signInPlatform?: string }) {
@@ -24,12 +27,12 @@ export class ERC4337Account extends AccountBase {
   }
 
   async getNonce(chainId: number) {
-    if (!(await this.checkActivated(chainId))) return 0;
+    if (!(await this.checkActivated(chainId))) return BigNumber.from(0);
 
     const resp = await eth_call_return(chainId, { to: this.address, data: '0xaffed0e0' });
-    if (!resp || resp.error) return 0;
+    if (!resp || resp.error) return BigNumber.from(0);
 
-    return BigNumber.from(resp.result).toNumber();
+    return BigNumber.from(resp.result);
   }
 
   async checkActivated(chainId: number, cacheOnly = false) {
@@ -53,7 +56,7 @@ export class ERC4337Account extends AccountBase {
   async sendTx(args: SendTxRequest, pin?: string): Promise<SendTxResponse> {
     if (!this.wallet) return { success: false, error: { message: 'Account not available', code: -1 } };
 
-    const { tx, txs, network, gas, readableInfo, onNetworkRequest } = args;
+    let { tx, txs, network, gas, readableInfo, onNetworkRequest, paymaster } = args;
     if (!(tx || txs)) return { success: false };
     if (!network?.erc4337) return { success: false, error: { message: 'ERC4337 not supported', code: -1 } };
 
@@ -68,32 +71,54 @@ export class ERC4337Account extends AccountBase {
 
     onNetworkRequest?.();
 
-    const { bundlerUrls, entryPointAddress, factoryAddress } = network.erc4337;
+    const { bundlerUrls, entryPointAddress } = network.erc4337;
 
-    const client = await createERC4337Client(network.chainId, owner);
+    const client = await createERC4337Client(network, owner, paymaster!);
     if (!client) return { success: false };
 
-    const op = Array.isArray(txs)
-      ? await client.createSignedUserOpForTransactions(
-          txs.map((tx) => {
-            return {
-              target: utils.getAddress(tx.to!),
-              value: tx.value || 0,
-              data: (tx.data as string) || '0x',
-            };
-          }),
-          gas
-        )
-      : await client.createSignedUserOp({
-          target: utils.getAddress(tx!.to!),
-          value: tx!.value || 0,
-          data: (tx!.data as string) || '0x',
-          ...gas,
+    if (paymaster?.feeToken?.isNative === false) {
+      txs = txs || [tx!];
+      txs.unshift(...(await paymaster.buildApprove()));
+    }
+
+    let op!: UserOperationStruct;
+
+    try {
+      if (Array.isArray(txs)) {
+        const requests = txs.map((tx) => {
+          return {
+            target: utils.getAddress(tx.to!),
+            value: tx.value || 0,
+            data: (tx.data as string) || '0x',
+          };
         });
+
+        op = await client.createSignedUserOpForTransactions(requests, gas);
+      } else {
+        op = utils.isAddress(tx!.to || '')
+          ? await client.createSignedUserOp({
+              target: utils.getAddress(tx!.to!),
+              value: tx!.value || 0,
+              data: (tx!.data as string) || '0x',
+              ...gas,
+            })
+          : await client.createSignedUserOpForCreate2(
+              {
+                bytecode: tx!.data as string,
+                salt: utils.formatBytes32String(`${await this.getNonce(network.chainId)}`),
+                value: tx?.value || '0x0',
+              },
+              gas
+            );
+      }
+    } catch (error) {
+      console.error(error);
+      return { success: false };
+    }
 
     if (!op) return { success: false };
 
-    for (let bundlerUrl of bundlerUrls) {
+    for (const bundlerUrl of bundlerUrls) {
       const http = new HttpRpcClient(bundlerUrl, entryPointAddress, network.chainId);
 
       try {
@@ -104,10 +129,26 @@ export class ERC4337Account extends AccountBase {
 
       try {
         const opHash = await http.sendUserOpToBundler(op);
+
         TxHub.watchERC4337Op(network, opHash, op, { ...tx, readableInfo }).catch();
 
-        return { success: true, txHash: opHash };
-      } catch (error) {}
+        const txHashPromise = new Promise<string>((resolve) => {
+          const handler = (opId: string, txHash: string) => {
+            try {
+              if (opId !== opHash) return;
+              resolve(txHash);
+            } finally {
+              TxHub.off('opHashResolved', handler);
+            }
+          };
+
+          TxHub.on('opHashResolved', handler);
+        });
+
+        return { success: true, txHashPromise };
+      } catch (error) {
+        console.error(error);
+      }
     }
 
     return { success: false, error: { message: 'Network error', code: -1 } };

@@ -1,9 +1,13 @@
+import { AccountBase, SendTxRequest } from '../account/AccountBase';
 import { action, computed, makeObservable, observable } from 'mobx';
 
+import App from '../core/App';
+import { INetwork } from '../../common/Networks';
 import LINQ from 'linq';
-import MessageKeys from '../../common/MessageKeys';
 import Networks from '../core/Networks';
-import { SendTxRequest } from '../account/AccountBase';
+import { utils } from 'ethers';
+
+export type BatchRequest = { requests: SendTxRequest[]; network: INetwork; account: AccountBase };
 
 export class ERC4337Queue {
   queue: SendTxRequest[] = [];
@@ -11,11 +15,29 @@ export class ERC4337Queue {
   get chainQueue() {
     return LINQ.from(this.queue)
       .groupBy((t) => t.tx!.chainId!)
-      .select((g) => {
-        return { network: Networks.find(g.key())!, items: g.toArray() };
+      .select((g, index) => {
+        return {
+          index,
+          network: Networks.find(g.key())!,
+          data: g
+            .groupBy((req) => utils.getAddress(req.tx!.from!))
+            .select((g2) => {
+              return { network: Networks.find(g.key())!, account: App.findAccount(g2.key())!, requests: g2.toArray() };
+            })
+            .where((g2) => (g2.account ? true : false))
+            .toArray(),
+        };
       })
       .where((g) => (g.network ? true : false))
       .toArray();
+  }
+
+  get chainCount() {
+    return this.chainQueue.length;
+  }
+
+  get accountCount() {
+    return LINQ.from(this.chainQueue).sum((g) => g.data.length);
   }
 
   get count() {
@@ -23,18 +45,38 @@ export class ERC4337Queue {
   }
 
   constructor() {
-    makeObservable(this, { queue: observable, count: computed, add: action, remove: action, chainQueue: computed });
+    makeObservable(this, {
+      queue: observable,
+      count: computed,
+      chainCount: computed,
+      accountCount: computed,
+      add: action,
+      remove: action,
+      batchRemove: action,
+      chainQueue: computed,
+    });
   }
 
   add(req: SendTxRequest) {
+    if (!utils.isAddress(req.tx?.from ?? '')) return;
+    req.tx!.from = utils.getAddress(req.tx?.from!);
+    req.timestamp = Date.now();
     this.queue.push(req);
   }
 
-  remove(req: SendTxRequest) {
-    const index = this.queue.indexOf(req);
+  remove(request: SendTxRequest) {
+    const index = this.queue.indexOf(request);
     if (index < 0) return;
 
     this.queue.splice(index, 1);
+  }
+
+  batchRemove(requests: SendTxRequest[]) {
+    this.queue = this.queue.filter((req) => !requests.includes(req));
+  }
+
+  find(query: (req: SendTxRequest) => boolean) {
+    return this.queue.find(query);
   }
 }
 

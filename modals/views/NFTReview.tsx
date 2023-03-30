@@ -1,13 +1,16 @@
 import { AntDesign, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
-import { Button, Coin, SafeViewContainer } from '../../components';
+import { Button, Coin, Placeholder, SafeViewContainer } from '../../components';
 import React, { useRef } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
+import AddToSendingQueue from '../components/AddToSendingQueue';
 import AnimatedNumber from '../../components/AnimatedNumber';
 import BackButton from '../components/BackButton';
+import BioAuthSendButton from '../components/BioAuthSendButton';
 import { BioType } from '../../viewmodels/auth/Authentication';
 import Currency from '../../viewmodels/settings/Currency';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';
+import GasFeeReviewItem from '../components/GasFeeReviewItem';
 import GasReview from './GasReview';
 import Image from 'react-native-fast-image';
 import InsufficientFee from '../components/InsufficientFee';
@@ -45,15 +48,6 @@ const NFTReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, b
     await onSend?.();
     setBusy(false);
   };
-
-  const sendTitle = biometricType === 'faceid' ? t('modal-review-button-slide-to-send') : t('modal-review-button-send');
-  const onLongSendPress = biometricType === 'faceid' ? send : undefined;
-  const onSendPress = biometricType === 'faceid' ? undefined : send;
-  const authIcon = biometricType
-    ? biometricType === 'fingerprint'
-      ? () => <MaterialCommunityIcons name="fingerprint" size={19} color="#fff" />
-      : () => <FaceID width={12.5} height={12.5} style={{ marginEnd: 4 }} />
-    : undefined;
 
   const reviewItemStyle = { ...styles.reviewItem, borderColor };
   const reviewItemsContainer = { ...styles.reviewItemsContainer, borderColor };
@@ -149,60 +143,31 @@ const NFTReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, b
         </View>
       </View>
 
-      <View
-        style={{
-          ...reviewItemsContainer,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          paddingStart: 16,
-        }}
-      >
-        <Text style={styles.reviewItemTitle}>{t('modal-review-fee')}</Text>
+      <GasFeeReviewItem vm={vm} onGasPress={onGasPress} />
 
-        <TouchableOpacity
-          onPress={onGasPress}
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            padding: 16,
-            paddingVertical: 12,
-            paddingEnd: 14,
-            justifyContent: 'flex-end',
-            width: '75%',
-          }}
-        >
-          <Text style={{ ...styles.reviewItemTitle, fontSize: 15 }}>
-            {`(${Currency.tokenToUSD(vm.estimatedRealFee, vm.feeTokenSymbol).toFixed(2)} USD)`}
-          </Text>
-
-          <AnimatedNumber
-            style={{ ...reviewItemValueStyle, marginStart: 2, marginEnd: 5 }}
-            numberOfLines={1}
-            value={vm.txFee}
-            formatter={(val) => val.toFixed(5)}
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', marginTop: 10 }}>
+        {vm.isUsingERC4337 && (
+          <AddToSendingQueue
+            containerStyle={{ marginStart: -8, marginVertical: -10 }}
+            themeColor={vm.network.color}
+            txtStyle={{ color: secondaryTextColor }}
+            checked={vm.isQueuingTx}
+            onToggle={() => vm.setIsQueuingTx(!vm.isQueuingTx)}
           />
+        )}
 
-          <Text style={{ ...reviewItemValueStyle }}>{vm.feeTokenSymbol}</Text>
-
-          <MaterialIcons name="keyboard-arrow-right" size={15} color={secondaryTextColor} style={{ marginBottom: -1 }} />
-        </TouchableOpacity>
+        {vm.insufficientFee && !vm.loading && <Placeholder />}
+        {vm.insufficientFee && !vm.loading && <InsufficientFee />}
       </View>
-
-      {vm.insufficientFee && !vm.loading ? <InsufficientFee /> : undefined}
 
       {vm.txException ? <TxException exception={vm.txException} /> : undefined}
 
       <View style={{ flex: 1 }} />
 
-      <Button
-        title={sendTitle}
+      <BioAuthSendButton
         themeColor={vm.hasZWSP || vm.isContractRecipient ? 'crimson' : vm.network.color}
         disabled={!vm.isValidParams || busy}
-        onPress={onSendPress}
-        onLongPress={onLongSendPress}
-        onSwipeSuccess={onLongSendPress}
-        icon={authIcon}
+        onPress={send}
       />
     </SafeViewContainer>
   );

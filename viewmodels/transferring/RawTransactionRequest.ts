@@ -1,3 +1,4 @@
+import { AccountBase, SendTxRequest } from '../account/AccountBase';
 import {
   ApprovalForAll,
   Approve_ERC20,
@@ -16,7 +17,7 @@ import EtherscanHub, { DecodedFunc } from '../hubs/EtherscanHub';
 import { PreExecResult, preExecTx } from '../../common/apis/Debank';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
-import { AccountBase } from '../account/AccountBase';
+import { AuthOptions } from '../auth/Authentication';
 import { BaseTransaction } from './BaseTransaction';
 import { ERC1155Token } from '../../models/ERC1155';
 import { ERC20Token } from '../../models/ERC20';
@@ -24,6 +25,7 @@ import { ERC721Token } from '../../models/ERC721';
 import { Gwei_1 } from '../../common/Constants';
 import { INetwork } from '../../common/Networks';
 import { NFTMetadata } from './NonFungibleTokenTransferring';
+import { ReadableInfo } from '../../models/entities/Transaction';
 import Sourcify from '../hubs/Sourcify';
 import { WCCallRequest_eth_sendTransaction } from '../../models/entities/WCSession_v1';
 import numeral from 'numeral';
@@ -57,7 +59,6 @@ export class RawTransactionRequest extends BaseTransaction {
   nfts: NFTMetadata[] = [];
 
   type: RequestType = 'Unknown';
-  valueWei = BigNumber.from(0);
   tokenAmountWei = BigNumber.from(0);
   tokenDecimals = 18;
   tokenSymbol = '';
@@ -90,10 +91,13 @@ export class RawTransactionRequest extends BaseTransaction {
 
   get value() {
     try {
-      if (this.valueWei.add(this.txFeeWei).gt(this.nativeToken.balance)) {
-        return Math.max(0, Number(utils.formatEther(this.nativeToken.balance.sub(this.txFeeWei)))).toLocaleString(undefined, {
-          maximumFractionDigits: 6,
-        });
+      if (this.valueWei.add(this.nativeFeeWei).gt(this.nativeToken.balance)) {
+        return Math.max(0, Number(utils.formatEther(this.nativeToken.balance.sub(this.nativeFeeWei)))).toLocaleString(
+          undefined,
+          {
+            maximumFractionDigits: 6,
+          }
+        );
       }
 
       return Number(utils.formatEther(this.valueWei)).toLocaleString(undefined, {
@@ -119,7 +123,6 @@ export class RawTransactionRequest extends BaseTransaction {
 
     makeObservable(this, {
       type: observable,
-      valueWei: observable,
       value: computed,
       tokenAmountWei: observable,
       tokenAmount: computed,
@@ -316,15 +319,10 @@ export class RawTransactionRequest extends BaseTransaction {
         });
     }
 
-    if (param.gas || param.gasLimit) {
+    if ((param.gas || param.gasLimit) && !this.isUsingERC4337) {
       runInAction(() => this.setGasLimit(param.gas || param.gasLimit || 0));
     } else {
-      this.estimateGas({
-        from: this.account.address,
-        to: param.to,
-        data: param.data,
-        value: !Number(param.value) ? '0x0' : BigNumber.from(param.value).toHexString(),
-      });
+      this.estimateGas({ to: param.to, data: param.data, value: param.value });
     }
 
     if (param.gasPrice && param.speedUp) {
@@ -336,6 +334,13 @@ export class RawTransactionRequest extends BaseTransaction {
     }
 
     if (param.nonce) runInAction(() => this.setNonce(param.nonce));
+
+    if (!param.to) {
+      runInAction(() => {
+        this.feeTokens = null;
+        this.paymaster = null;
+      });
+    }
 
     if (!isRawTx || !PreExecChains.has(this.network.chainId) || __DEV__) {
       runInAction(() => (this.preExecuting = false));
@@ -383,10 +388,6 @@ export class RawTransactionRequest extends BaseTransaction {
     }
   }
 
-  get insufficientFee() {
-    return this.valueWei.add(this.txFeeWei).gt(this.nativeToken.balance);
-  }
-
   get isValidParams() {
     return (
       !this.loading &&
@@ -394,7 +395,8 @@ export class RawTransactionRequest extends BaseTransaction {
       this.nonce >= 0 &&
       this.isValidGas &&
       !this.txException &&
-      !this.insufficientFee
+      !this.insufficientFee &&
+      this.isValidAccountAndNetwork
     );
   }
 
@@ -402,8 +404,8 @@ export class RawTransactionRequest extends BaseTransaction {
     try {
       let valueEther = BigNumber.from(this.param.value || 0);
 
-      if (valueEther.gt(0) && valueEther.eq(this.nativeToken.balance)) {
-        valueEther = BigNumber.from(this.nativeToken.balance!).sub(this.txFeeWei);
+      if (valueEther.gte(this.nativeToken.balance)) {
+        valueEther = BigNumber.from(this.nativeToken.balance).sub(this.nativeFeeWei);
         valueEther = valueEther.lt(0) ? BigNumber.from(0) : valueEther;
       }
 
@@ -430,5 +432,15 @@ export class RawTransactionRequest extends BaseTransaction {
     } catch (error) {
       showMessage((error as any)?.message);
     }
+  }
+
+  sendTx(args: SendTxRequest & AuthOptions) {
+    return super.sendRawTx(
+      {
+        tx: this.txRequest,
+        ...args,
+      },
+      args.pin
+    );
   }
 }
