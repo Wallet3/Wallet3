@@ -1,4 +1,4 @@
-import { BigNumber, ethers } from 'ethers';
+import { BigNumber, ethers, utils } from 'ethers';
 
 import Arbitrum from './Arbitrum';
 import ChainLinkOracleABI from '../../abis/ChainLinkOracle.json';
@@ -28,5 +28,5 @@ export async function getTokenPrice(chainId: number, erc20: string) {
   const contract = new ethers.Contract(feed.oracle, ChainLinkOracleABI);
   const [_, price] = contract.interface.decodeFunctionResult('latestRoundData', result);
 
-  return price as BigNumber;
+  return Number(utils.formatUnits(price, 8));
 }

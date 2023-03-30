@@ -10,11 +10,13 @@ import OracleABI from '../../../abis/TokenOracle.json';
 import { PaymasterAPI } from '@account-abstraction/sdk';
 import { UserOperationStruct } from '@account-abstraction/contracts';
 import { getHash } from '../../../configs/secret';
+import { getTokenPrice } from '../../../common/oracles';
 
 export class Paymaster extends PaymasterAPI {
   private erc20: ERC20Token;
   private contract: Contract;
   private balance = BigNumber.from(0);
+  private priceCache = new Map<string, number>();
 
   address: string;
   account: AccountBase;
@@ -22,6 +24,8 @@ export class Paymaster extends PaymasterAPI {
 
   feeToken: IFungibleToken | null;
   feeTokenWei = BigNumber.from(0);
+  feeTokenPriceInUSD = 0;
+
   serviceUnavailable = false;
   loading = false;
 
@@ -34,6 +38,15 @@ export class Paymaster extends PaymasterAPI {
 
     try {
       return Number(utils.formatUnits(this.feeTokenWei, this.feeToken.decimals));
+    } catch (error) {
+      return 0;
+    }
+  }
+
+  get feeTokenInUSD() {
+    try {
+      if (!this.feeTokenPriceInUSD) return 0;
+      return this.feeTokenPriceInUSD * this.feeTokenAmount;
     } catch (error) {
       return 0;
     }
@@ -62,6 +75,7 @@ export class Paymaster extends PaymasterAPI {
       loading: observable,
       feeToken: observable,
       feeTokenWei: observable,
+      feeTokenPriceInUSD: observable,
       serviceUnavailable: observable,
       insufficientFee: computed,
       feeTokenAmount: computed,
@@ -75,18 +89,28 @@ export class Paymaster extends PaymasterAPI {
     if (this.serviceUnavailable) return;
 
     this.feeToken = token;
+    this.feeTokenPriceInUSD = 0;
     token.getBalance();
 
     this.feeTokenWei = BigNumber.from(0);
     this.calcFeeTokenAmount(totalGas);
   }
 
-  async isServiceAvailable(necessaryGasWei: BigNumberish) {
-    try {
-      if (this.balance.eq(0)) this.balance = await this.contract.getDeposit();
-    } catch (error) {}
+  async isServiceAvailable(necessaryGasWei: BigNumber) {
+    if (necessaryGasWei.eq(0)) return;
+    let blocked = false;
 
-    const unavailable = this.balance.lt(necessaryGasWei);
+    if (this.balance.eq(0)) {
+      try {
+        [this.balance, blocked] = await Promise.all([
+          this.contract.getDeposit(),
+          this.contract.isAccountBlocked(this.account.address),
+        ]);
+      } catch (error) {}
+    }
+
+    const unavailable = this.balance.lt(necessaryGasWei) || blocked;
+
     runInAction(() => {
       this.serviceUnavailable = unavailable;
       if (unavailable) this.feeToken = null;
@@ -98,6 +122,7 @@ export class Paymaster extends PaymasterAPI {
 
     if (this.feeToken.isNative) {
       this.feeTokenWei = totalGas;
+      this.fetchTokenPrice(this.feeToken.address);
       return;
     }
 
@@ -108,13 +133,27 @@ export class Paymaster extends PaymasterAPI {
 
     try {
       this.loading = true;
-      const erc20Amount: BigNumber = await this.contract.getTokenValueOfEth(this.feeToken.address, totalGas);
+      const [erc20Wei] = await Promise.all([this.contract.getTokenValueOfEth(this.feeToken.address, totalGas)]);
+      if (!this.feeToken.isStable) this.fetchTokenPrice(this.feeToken.address);
 
       runInAction(() => {
-        this.feeTokenWei = erc20Amount;
+        this.feeTokenWei = erc20Wei as BigNumber;
         this.loading = false;
       });
     } catch (error) {}
+  }
+
+  private async fetchTokenPrice(address: string) {
+    const cache = this.priceCache.get(address);
+    if (cache) {
+      runInAction(() => (this.feeTokenPriceInUSD = cache));
+      return;
+    }
+
+    const price = (await getTokenPrice(this.network.chainId, address)) || 0;
+    this.priceCache.set(address, price);
+
+    runInAction(() => (this.feeTokenPriceInUSD = price));
   }
 
   async getPaymasterAndData(_: Partial<UserOperationStruct>): Promise<string | undefined> {

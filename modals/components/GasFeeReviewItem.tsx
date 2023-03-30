@@ -46,7 +46,11 @@ export default observer(({ vm, onGasPress }: Props) => {
       >
         {!paymaster?.feeToken?.isStable && (
           <Text style={{ ...styles.reviewItemTitle, fontSize: 15 }}>
-            {`(${Currency.tokenToUSD(vm.estimatedRealFee, vm.feeTokenSymbol).toFixed(2)} USD)`}
+            {`(${
+              paymaster?.feeTokenInUSD
+                ? paymaster.feeTokenInUSD.toFixed(2)
+                : Currency.tokenToUSD(vm.estimatedRealFee, vm.feeTokenSymbol).toFixed(2)
+            } USD)`}
           </Text>
         )}
 
