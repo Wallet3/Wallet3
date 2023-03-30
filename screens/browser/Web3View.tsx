@@ -5,6 +5,7 @@ import Animated, { ComplexAnimationBuilder, FadeInDown, FadeOut, FadeOutDown } f
 import { Entypo, Feather, Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { UA, isAndroid, isIOS } from '../../utils/platform';
 import { WebView, WebViewMessageEvent, WebViewNavigation, WebViewProps } from 'react-native-webview';
 
 import { AccountBase } from '../../viewmodels/account/AccountBase';
@@ -24,7 +25,6 @@ import { NetworksMenu } from '../../modals';
 import { Portal } from 'react-native-portalize';
 import SquircleModalize from '../../modals/core/SquircleModalize';
 import Theme from '../../viewmodels/settings/Theme';
-import { UA } from '../../utils/platform';
 import ViewShot from 'react-native-view-shot';
 import WalletConnectHub from '../../viewmodels/walletconnect/WalletConnectHub';
 import WalletConnectLogo from '../../assets/3rd/walletconnect.svg';
@@ -239,17 +239,24 @@ export default observer((props: Web3ViewProps) => {
           userAgent={UA}
           allowsFullscreenVideo={false}
           forceDarkOn={mode === 'dark'}
-          injectedJavaScript={`${GetPageMetadata}\ntrue;\n${HookWalletConnect}\n${HookRainbowKit}\ntrue;`}
           onMessage={onMessage}
           mediaPlaybackRequiresUserAction
           pullToRefreshEnabled
           allowsInlineMediaPlayback
           allowsBackForwardNavigationGestures
-          injectedJavaScriptBeforeContentLoaded={`${MetamaskMobileProvider}\ntrue;`}
           onContentProcessDidTerminate={() => ((webViewRef as any)?.current as WebView)?.reload()}
           style={{ backgroundColor }}
           decelerationRate={1}
           allowsLinkPreview
+          injectedJavaScriptBeforeContentLoaded={isIOS ? `${MetamaskMobileProvider}\ntrue;` : undefined}
+          injectedJavaScript={`${GetPageMetadata}\ntrue;\n${HookWalletConnect}\n${HookRainbowKit}\ntrue;`}
+          onLoadStart={
+            isAndroid
+              ? () => {
+                  ((webViewRef as any)?.current as WebView).injectJavaScript(`${MetamaskMobileProvider}\ntrue;`);
+                }
+              : undefined
+          }
         />
       </ViewShot>
 
