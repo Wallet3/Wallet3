@@ -534,10 +534,7 @@ export class BaseTransaction {
       {
         ...args,
         network: this.network,
-        feeToken:
-          this.paymaster?.feeToken?.isNative === false
-            ? { erc20: this.paymaster.feeToken, maxAmountInWei: this.paymaster.feeTokenWei }
-            : undefined,
+        paymaster: this.paymaster,
         gas: {
           maxFeePerGas: Number.parseInt(`${this.maxGasPrice * Gwei_1}`),
           maxPriorityFeePerGas: Number.parseInt(`${this.maxPriorityPrice * Gwei_1}`),

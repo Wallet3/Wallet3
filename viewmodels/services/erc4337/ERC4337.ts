@@ -30,7 +30,7 @@ export async function createERC4337Client(network: INetwork, owner = createDefau
 
   let provider!: providers.JsonRpcProvider;
 
-  for (let url of rpcUrls) {
+  for (const url of rpcUrls) {
     provider = new providers.JsonRpcProvider(url);
 
     try {

@@ -56,7 +56,7 @@ export class ERC4337Account extends AccountBase {
   async sendTx(args: SendTxRequest, pin?: string): Promise<SendTxResponse> {
     if (!this.wallet) return { success: false, error: { message: 'Account not available', code: -1 } };
 
-    let { tx, txs, network, gas, readableInfo, onNetworkRequest, feeToken: fee } = args;
+    let { tx, txs, network, gas, readableInfo, onNetworkRequest, paymaster } = args;
     if (!(tx || txs)) return { success: false };
     if (!network?.erc4337) return { success: false, error: { message: 'ERC4337 not supported', code: -1 } };
 
@@ -71,25 +71,14 @@ export class ERC4337Account extends AccountBase {
 
     onNetworkRequest?.();
 
-    const { bundlerUrls, entryPointAddress, paymasterAddress } = network.erc4337;
+    const { bundlerUrls, entryPointAddress } = network.erc4337;
 
-    const paymaster =
-      paymasterAddress && fee
-        ? new Paymaster({
-            network,
-            account: this,
-            paymasterAddress,
-            feeToken: fee.erc20,
-            provider: new providers.JsonRpcProvider(getRPCUrls(network.chainId)[0]),
-          })
-        : undefined;
-
-    const client = await createERC4337Client(network, owner, paymaster);
+    const client = await createERC4337Client(network, owner, paymaster!);
     if (!client) return { success: false };
 
-    if (paymaster && fee) {
+    if (paymaster?.feeToken?.isNative === false) {
       txs = txs || [tx!];
-      txs.unshift(...(await paymaster.buildApprove(fee.maxAmountInWei)));
+      txs.unshift(...(await paymaster.buildApprove()));
     }
 
     let op!: UserOperationStruct;
@@ -129,7 +118,7 @@ export class ERC4337Account extends AccountBase {
 
     if (!op) return { success: false };
 
-    for (let bundlerUrl of bundlerUrls) {
+    for (const bundlerUrl of bundlerUrls) {
       const http = new HttpRpcClient(bundlerUrl, entryPointAddress, network.chainId);
 
       try {

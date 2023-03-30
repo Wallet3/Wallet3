@@ -231,7 +231,7 @@ export async function estimateGas(
       });
 
       if (resp.error) {
-        console.log('estimateGas', resp.error);
+        __DEV__ && console.log('estimateGas', resp.error);
 
         errorMessage = resp.error.message || errorMessage;
         if (errors++ >= 3) break; // Speed up error checking

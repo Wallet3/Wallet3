@@ -16,6 +16,7 @@ import { ITokenMetadata } from '../../common/tokens';
 import { NFTViewer } from './content/NFTViewer';
 import Networks from '../core/Networks';
 import { POAP } from './content/POAP';
+import { Paymaster } from '../services/erc4337/Paymaster';
 import { ReadableInfo } from '../../models/entities/Transaction';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import { formatAddress } from '../../utils/formatter';
@@ -31,7 +32,7 @@ export type SendTxRequest = Partial<{
   readableInfo: ReadableInfo;
   network: INetwork;
   gas: { maxFeePerGas: number; maxPriorityFeePerGas: number };
-  feeToken?: { erc20: IFungibleToken; maxAmountInWei: BigNumber };
+  paymaster?: Paymaster | null;
   onNetworkRequest?: () => void;
 }>;
 

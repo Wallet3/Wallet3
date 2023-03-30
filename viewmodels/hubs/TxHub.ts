@@ -118,7 +118,7 @@ class TxHub extends EventEmitter<Events> {
     const confirmedTxs: DBTransaction[] = [];
     const abandonedTxs: DBTransaction[] = [];
 
-    for (let tx of this.pendingTxs) {
+    for (const tx of this.pendingTxs) {
       if (!tx.hash && tx.isERC4337) {
         const client = await createERC4337Client(Networks.find(tx.chainId)!);
         if (!client) {
@@ -286,6 +286,7 @@ class TxHub extends EventEmitter<Events> {
   };
 
   async watchERC4337Op(network: INetwork, opHash: string, op: UserOperationStruct, txReq: ITransaction) {
+    if (!opHash) return;
     if (await this.erc4337Repo.exist({ where: { opHash } })) return;
     const opJson = await userOpsToJSON(op);
 

@@ -171,7 +171,7 @@ export class Paymaster extends PaymasterAPI {
     return result;
   }
 
-  async buildApprove(feeAmount: BigNumber): Promise<providers.TransactionRequest[]> {
+  async buildApprove(feeAmount: BigNumber = this.feeTokenWei): Promise<providers.TransactionRequest[]> {
     if (!this.feeToken) return [];
     if (this.feeToken.isNative) return [];
 
