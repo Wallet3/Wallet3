@@ -35,10 +35,9 @@ interface Props {
   onGasPress?: () => void;
   disableBack?: boolean;
   vm: NFTTransferring;
-  biometricType?: BioType;
 }
 
-const NFTReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack, biometricType }: Props) => {
+const NFTReviewView = observer(({ vm, onBack, onGasPress, onSend, disableBack }: Props) => {
   const { t } = i18n;
   const [busy, setBusy] = React.useState(false);
   const { borderColor, textColor, secondaryTextColor } = Theme;

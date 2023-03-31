@@ -64,9 +64,6 @@ export default observer(({ approve, reject, close, app, vm }: Props) => {
 
     if (result) {
       setTimeout(() => close(), 1750);
-    } else {
-      showMessage({ message: i18n.t('tx-hub-transaction-failed'), type: 'danger' });
-      setTimeout(() => close?.(), 500);
     }
 
     return result;

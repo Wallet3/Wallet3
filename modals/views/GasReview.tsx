@@ -215,7 +215,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
           />
         )}
 
-        {paymaster?.serviceUnavailable && (
+        {vm.isUsingERC4337 && paymaster?.serviceUnavailable && (
           <TxException
             exception="Fee paying service is not available."
             containerStyle={{ marginTop: 10, backgroundColor: 'orange' }}

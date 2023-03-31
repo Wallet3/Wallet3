@@ -43,8 +43,7 @@ export default observer(({ vm, close, erc681, onReviewEnter, onReviewLeave }: Pr
       setVerified(true);
       setTimeout(() => close?.(), 1700);
     } else {
-      showMessage({ message: i18n.t('tx-hub-transaction-failed'), type: 'danger' });
-      setTimeout(() => close?.(), 500);
+      !pin && goTo(3);
     }
 
     onReviewLeave?.();
@@ -66,8 +65,7 @@ export default observer(({ vm, close, erc681, onReviewEnter, onReviewLeave }: Pr
       return;
     }
 
-    if (await sendTx()) return;
-    goTo(3);
+    await sendTx();
   };
 
   useEffect(() => {

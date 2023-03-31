@@ -37,15 +37,12 @@ export default observer(({ client, request, close }: Props) => {
   };
 
   const sendTx = async (pin?: string) => {
-    const result = await vm.sendTx({ pin, onNetworkRequest: () => setNetworkBusy(true) });
+    const result = await vm.sendTx({ pin, onNetworkRequest: () => setNetworkBusy(true), });
 
     if (result.success) {
       setVerified(true);
       client.approveRequest(request.id, result['tx']?.hash || '');
       setTimeout(() => close(), 1700);
-    } else {
-      showMessage({ message: i18n.t('tx-hub-transaction-failed'), type: 'danger' });
-      setTimeout(() => close?.(), 500);
     }
 
     return result.success;

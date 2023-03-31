@@ -149,7 +149,11 @@ export class BaseTransaction {
 
   get isValidAccountAndNetwork() {
     if (!this.isERC4337Account) return true;
-    if (!this.isERC4337Network) runInAction(() => (this.txException = 'Current network does not support ERC4337 yet.'));
+    if (!this.isERC4337Network) {
+      runInAction(() => (this.txException = 'Current network does not support ERC4337 yet.'));
+      return false;
+    }
+
     return this.isERC4337Network;
   }
 

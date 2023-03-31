@@ -89,25 +89,24 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDon
 
       <Separator style={{ marginBottom: 4, opacity: 0.5, backgroundColor: borderColor }} />
 
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <MaterialIcons name="add-circle" size={22} color={themeColor} />
+      {__DEV__ ? (
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <MaterialIcons name="add-circle" size={22} color={themeColor} />
 
-        <TouchableOpacity style={styles.option} onPress={() => newAccount('eoa')}>
-          <Text style={[{ marginStart: 10, color: themeColor }, styles.txt]}>
-            {t('modal-multi-accounts-button-create-account')}
-          </Text>
-        </TouchableOpacity>
-
-        {current.erc4337 && <Text style={[{ marginStart: 6, color: themeColor, marginEnd: 8 }, styles.txt]}>/</Text>}
-
-        {current.erc4337 && (
-          <TouchableOpacity style={styles.option} onPress={() => newAccount('erc4337')}>
-            <Text style={[{ color: themeColor }, styles.txt]}>{t('modal-multi-accounts-button-super-account')}</Text>
+          <TouchableOpacity style={styles.option} onPress={() => newAccount('eoa')}>
+            <Text style={[{ marginStart: 10, color: themeColor }, styles.txt]}>
+              {t('modal-multi-accounts-button-create-account')}
+            </Text>
           </TouchableOpacity>
-        )}
-      </View>
-      {/* {__DEV__ ? (
-      
+
+          {current.erc4337 && <Text style={[{ marginStart: 6, color: themeColor, marginEnd: 8 }, styles.txt]}>/</Text>}
+
+          {current.erc4337 && (
+            <TouchableOpacity style={styles.option} onPress={() => newAccount('erc4337')}>
+              <Text style={[{ color: themeColor }, styles.txt]}>{t('modal-multi-accounts-button-super-account')}</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       ) : (
         <TouchableOpacity style={styles.option} onPress={() => newAccount('eoa')}>
           <MaterialIcons name="add-circle" size={22} color={themeColor} />
@@ -115,7 +114,7 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDon
             {t('modal-multi-accounts-button-create-account')}
           </Text>
         </TouchableOpacity>
-      )} */}
+      )}
 
       <TouchableOpacity style={styles.option} onPress={onImportWallet}>
         <Ionicons name="key-outline" size={19} color={themeColor} style={{ paddingHorizontal: 1.5 }} />
