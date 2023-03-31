@@ -46,11 +46,12 @@ export async function fetchAddressInfo(chainId: number, address: string) {
       'span.u-label--danger, span.u-label--warning, .badge.bg-warning, .badge.bg-danger:not(.position-absolute), .alert.alert-danger'
     ) || []
   )
-    .filter((i) => i.innerText && !IgnoredTexts.includes(i.innerText.toUpperCase()))
+    .filter((i) => i.innerText && !IgnoredTexts.find((a) => i.innerText.toUpperCase().includes(a)))
     .map((e) => e.innerText);
 
   let alert = root?.querySelector('div.alert-warning, div.alert-danger, .badge.bg-danger')?.innerText;
   alert = alert?.startsWith('×') ? alert.substring(1) : alert;
+  alert = IgnoredTexts.find((a) => alert?.toUpperCase().includes(a)) ? undefined : alert;
 
   const tagSelectors = [
     "span.u-label--secondary span[data-toggle='tooltip']",
