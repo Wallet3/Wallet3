@@ -119,6 +119,7 @@ export default observer(({ accounts, selectedAccounts, onDone, single, style, ex
         data={accounts}
         renderItem={renderItem}
         keyExtractor={(i) => i.address}
+        initialNumToRender={20}
         contentContainerStyle={{ paddingBottom: expanded ? 36 : 8 }}
         style={{ flex: 1, marginHorizontal: -16, paddingHorizontal: 16, marginBottom: expanded ? -36 : 12 }}
       />

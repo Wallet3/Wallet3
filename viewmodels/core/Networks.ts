@@ -85,6 +85,10 @@ class Networks {
     return groups.filter((g) => g.data.length > 0);
   }
 
+  get categorized4337() {
+    return this.categorized.map((g) => ({ ...g, data: g.data.filter((i) => i.erc4337) })).filter((g) => g.data.length > 0);
+  }
+
   constructor() {
     makeObservable(this, {
       current: observable,

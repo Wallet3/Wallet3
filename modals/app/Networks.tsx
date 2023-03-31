@@ -150,6 +150,7 @@ export default observer(({ networks, onNetworkPress, selectedNetwork, useContext
               contentContainerStyle={{ paddingBottom: 36 }}
               style={{ marginHorizontal: -16, marginTop: -4, marginBottom: -36, paddingTop: 12 }}
               onScrollToIndexFailed={() => {}}
+              initialNumToRender={20}
               renderSectionHeader={({ section }) => (
                 <View style={{ marginHorizontal: 16, paddingTop: 6, marginBottom: 2 }}>
                   <Text
@@ -176,6 +177,7 @@ export default observer(({ networks, onNetworkPress, selectedNetwork, useContext
               <FlatList
                 data={flatNetworks}
                 renderItem={renderItem}
+                initialNumToRender={20}
                 contentContainerStyle={{ paddingBottom: 36 }}
                 style={{ marginHorizontal: -16, marginTop: -4, marginBottom: isAndroid ? 0 : -36, paddingTop: 0 }}
               />

@@ -9,6 +9,7 @@ import { utils } from 'ethers';
 
 const TagsCache = new Map<string, AddressTag | null>();
 const AbandonCache = new Map<string, boolean>();
+const IgnoredTexts = ['OUT', 'CONNECTION LOST', 'SOMETHING WENT WRONG'];
 
 async function getHTML(chainId: number, param: string, type: 'address' | 'tx') {
   const explorer = Networks.find(chainId)?.explorer;
@@ -45,7 +46,7 @@ export async function fetchAddressInfo(chainId: number, address: string) {
       'span.u-label--danger, span.u-label--warning, .badge.bg-warning, .badge.bg-danger:not(.position-absolute), .alert.alert-danger'
     ) || []
   )
-    .filter((i) => i.innerText && i.innerText.toUpperCase() !== 'OUT')
+    .filter((i) => i.innerText && !IgnoredTexts.includes(i.innerText.toUpperCase()))
     .map((e) => e.innerText);
 
   let alert = root?.querySelector('div.alert-warning, div.alert-danger, .badge.bg-danger')?.innerText;
