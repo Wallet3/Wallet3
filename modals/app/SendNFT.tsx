@@ -24,6 +24,7 @@ export default observer(({ vm, onClose }: Props) => {
   const swiper = useRef<Swiper>(null);
   const [verified, setVerified] = useState(false);
   const [networkBusy, setNetworkBusy] = useState(false);
+  const { biometricType, biometricEnabled } = Authentication;
 
   useEffect(() => {
     return () => vm.dispose();
@@ -36,8 +37,7 @@ export default observer(({ vm, onClose }: Props) => {
       setVerified(true);
       setTimeout(() => onClose?.(), 1700);
     } else {
-      showMessage({ message: i18n.t('tx-hub-transaction-failed'), type: 'danger' });
-      setTimeout(() => close?.(), 500);
+      !pin && swiper.current?.scrollTo(2);
     }
 
     return result.success;
@@ -53,14 +53,12 @@ export default observer(({ vm, onClose }: Props) => {
       emoji: selfAccount ? { icon: selfAccount.emojiAvatar, color: selfAccount.emojiColor } : undefined,
     });
 
-    if (!Authentication.biometricEnabled) {
+    if (!biometricEnabled) {
       swiper.current?.scrollTo(2);
       return;
     }
 
-    if (await sendTx()) return;
-
-    swiper.current?.scrollTo(2);
+    await sendTx();
   };
 
   return (
@@ -79,12 +77,7 @@ export default observer(({ vm, onClose }: Props) => {
             }}
           />
 
-          <NFTReview
-            onBack={() => swiper.current?.scrollTo(0)}
-            vm={vm}
-            onSend={onSendClick}
-            biometricType={Authentication.biometricType}
-          />
+          <NFTReview onBack={() => swiper.current?.scrollTo(0)} vm={vm} onSend={onSendClick} />
 
           <AwaitablePasspad
             themeColor={vm.network.color}

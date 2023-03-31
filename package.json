@@ -19,7 +19,6 @@
     "@metamask/eth-sig-util": "^4.0.1",
     "@metamask/mobile-provider": "^2.1.0",
     "@react-native-async-storage/async-storage": "1.18.1",
-    "@react-native-community/netinfo": "^9.3.7",
     "@react-native-community/slider": "4.4.2",
     "@react-native-firebase/analytics": "^17.4.0",
     "@react-native-firebase/app": "^17.4.0",
@@ -96,7 +95,7 @@
     "react-native-collapsible": "^1.6.0",
     "react-native-context-menu-view": "^1.9.1",
     "react-native-crypto": "^2.2.0",
-    "react-native-device-info": "^10.5.0",
+    "react-native-device-info": "^10.5.1",
     "react-native-draggable-flatlist": "^4.0.1",
     "react-native-fast-image": "^8.6.3",
     "react-native-figma-squircle": "^0.3.3",
@@ -116,7 +115,7 @@
     "react-native-screens": "~3.20.0",
     "react-native-shared-element": "0.8.8",
     "react-native-super-grid": "^5.0.0",
-    "react-native-svg": "13.8.0",
+    "react-native-svg": "13.9.0",
     "react-native-svg-charts": "^5.4.0",
     "react-native-swiper": "^1.6.0",
     "react-native-tcp-socket": "^6.0.6",
@@ -161,7 +160,7 @@
     "react-native-svg-transformer": "^1.0.0",
     "react-test-renderer": "^18.2.0",
     "rn-nodeify": "^10.3.0",
-    "typescript": "^5.0.2"
+    "typescript": "^5.0.3"
   },
   "resolutions": {
     "expo-modules-core": "^1.2.6",
