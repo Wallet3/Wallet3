@@ -2,12 +2,14 @@ export const AVAX_DAI_e = {
   address: '0xd586E7F844cEa2F87f50152665BCbc2C279D8d70',
   decimals: 18,
   symbol: 'DAI.e',
+  isStable: true,
 };
 
 export const AVAX_USDC_e = {
   address: '0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664',
   decimals: 6,
   symbol: 'USDC.e',
+  isStable: true,
 };
 
 export const AVAX_USDC = {
@@ -15,12 +17,14 @@ export const AVAX_USDC = {
   decimals: 6,
   shown: true,
   symbol: 'USDC',
+  isStable: true,
 };
 
 export const AVAX_USDt = {
   address: '0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7',
   decimals: 6,
   symbol: 'USDt',
+  isStable: true,
 };
 
 export const AVAX_YUSD = {

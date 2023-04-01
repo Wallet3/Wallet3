@@ -1,6 +1,7 @@
 import { BigNumber, ethers, utils } from 'ethers';
 
 import Arbitrum from './Arbitrum';
+import BNBChain from './BNBChain';
 import ChainLinkOracleABI from '../../abis/ChainLinkOracle.json';
 import Ethereum from './Ethereum';
 import Optimism from './Optimism';
@@ -14,6 +15,7 @@ const Chains = {
   42161: Arbitrum,
   10: Optimism,
   137: Polygon,
+  56: BNBChain,
 } as { [chain: number]: { [address: string]: { name: string; oracle: string } } };
 
 export async function getTokenPrice(chainId: number, erc20: string) {

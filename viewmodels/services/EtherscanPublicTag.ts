@@ -9,7 +9,7 @@ import { utils } from 'ethers';
 
 const TagsCache = new Map<string, AddressTag | null>();
 const AbandonCache = new Map<string, boolean>();
-const IgnoredTexts = ['OUT', 'CONNECTION LOST', 'SOMETHING WENT WRONG'];
+const IgnoredTexts = ['OUT', 'CONNECTION LOST', 'SOMETHING WENT WRONG', 'FAILED', 'ERROR'];
 
 async function getHTML(chainId: number, param: string, type: 'address' | 'tx') {
   const explorer = Networks.find(chainId)?.explorer;

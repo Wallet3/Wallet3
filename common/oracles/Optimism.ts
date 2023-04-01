@@ -1,5 +1,3 @@
-import { OP_WETH } from '../tokens/Optimism';
-
 export default {
   '': {
     name: 'ETH/USD',
@@ -19,5 +17,10 @@ export default {
   '0x350a791Bfc2C21F9Ed5d10980Dad2e2638ffa7f6': {
     name: 'LINK/USD',
     oracle: '0xCc232dcFAAE6354cE191Bd574108c1aD03f86450',
+  },
+
+  '0x6fd9d7AD17242c41f7131d257212c54A0e816691': {
+    name: 'UNI/USD',
+    oracle: '0x11429eE838cC01071402f21C219870cbAc0a59A0',
   },
 };

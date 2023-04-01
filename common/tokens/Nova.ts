@@ -3,6 +3,7 @@ export const NOVA_USDC = {
   symbol: 'USDC',
   decimals: 6,
   shown: true,
+  isStable: true,
 };
 
 export const NOVA_DAI = {
@@ -10,6 +11,7 @@ export const NOVA_DAI = {
   symbol: 'DAI',
   decimals: 18,
   shown: true,
+  isStable: true,
 };
 
 export const NovaPopularTokens = [NOVA_USDC, NOVA_DAI];

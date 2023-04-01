@@ -21,6 +21,7 @@ export const BSC_DAI = {
   address: '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3',
   decimals: 18,
   symbol: 'DAI',
+  isStable: true,
 };
 
 export const BSC_USDC = {
@@ -28,6 +29,7 @@ export const BSC_USDC = {
   decimals: 18,
   symbol: 'USDC',
   shown: true,
+  isStable: true,
 };
 
 export const BSC_ETH = {
@@ -41,6 +43,7 @@ export const BSC_BUSD = {
   decimals: 18,
   symbol: 'BUSD',
   shown: true,
+  isStable: true,
 };
 
 export const BSC_USDT = {
@@ -48,6 +51,7 @@ export const BSC_USDT = {
   decimals: 18,
   symbol: 'USDT',
   shown: true,
+  isStable: true,
 };
 
 export const BSC_MATIC = {
