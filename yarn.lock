@@ -4287,24 +4287,24 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/slider/-/slider-4.4.2.tgz#1fea0eb3ae31841fe87bd6c4fc67569066e9cf4b"
   integrity sha512-D9bv+3Vd2gairAhnRPAghwccgEmoM7g562pm8i4qB3Esrms5mggF81G3UvCyc0w3jjtFHh8dpQkfEoKiP0NW/Q==
 
-"@react-native-firebase/analytics@^17.4.0":
-  version "17.4.0"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-17.4.0.tgz#b8689acb29c205e4ce9dc8422078081bcdfd9dcc"
-  integrity sha512-89t+FmyKq3WyXYXqJqOgxsA/zwom3VoBaM3R4c5GfAMYD3QZHyyUGS1OMMuCqVaNV2MnoOi+1kEJEjLFxKIHbQ==
+"@react-native-firebase/analytics@^17.4.1":
+  version "17.4.1"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-17.4.1.tgz#093da22912ec4d72ae83c482c1237b50a57e2bc2"
+  integrity sha512-ihhWVOki9nt3xHYaaftm7zC0hV89/M1H6+zGrnwLyzsqC6ljzqFBvqq10swZ7MtMOsKkNP+mjdAlAHycN/Fvjw==
 
-"@react-native-firebase/app@^17.4.0":
-  version "17.4.0"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-17.4.0.tgz#44aa5d02bb3ddc8f21c99341775f422af6b3d0b5"
-  integrity sha512-nd2H5j0lmMTpmny6gEeeUl5AEe6DUUWuYgzAbyjHI7jFJU5rjpNGh9mpciredKnijCfE2382M3ZboPcYUL77ow==
+"@react-native-firebase/app@^17.4.1":
+  version "17.4.1"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-17.4.1.tgz#ad0151344348a8890c98a64bc287756db5895c5a"
+  integrity sha512-Fv4ArGXXeLPKikHpGt0t821Sd/fpNEsN+akcXEzrrfSx5wxYTBWd74IS3Pq2gHjHl9DS0fzXPJIfevQT8aXKzw==
   dependencies:
     "@expo/config-plugins" "^5.0.4"
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
-"@react-native-firebase/firestore@^17.4.0":
-  version "17.4.0"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/firestore/-/firestore-17.4.0.tgz#2c9d4454b3fd2a7e67a75beab54f816b1b89f86c"
-  integrity sha512-rFgf+j6NP5FOiWjzJtliuLQryxqWsCiLJ/aT8tWyFOBEqQtke+GQ9ofo4KPB0OdbziU11mFJgZjfcrErkRyU3g==
+"@react-native-firebase/firestore@^17.4.1":
+  version "17.4.1"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/firestore/-/firestore-17.4.1.tgz#e1d7b5efa5ae6d17890042b7b1768629cd5262ff"
+  integrity sha512-tqTIZZeDzQZnAj7oWrS2nhJRuhmgDzekMcNIUWtj+say7pcfm3LM7twqpz6AqZdrKvZvdEG/9uPTGFG3An0kOQ==
 
 "@react-native-google-signin/google-signin@^9.0.2":
   version "9.0.2"
@@ -4993,10 +4993,10 @@
     "@types/scheduler" "*"
     csstype "^3.0.2"
 
-"@types/react@~17.0.53":
-  version "17.0.53"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.53.tgz#10d4d5999b8af3d6bc6a9369d7eb953da82442ab"
-  integrity sha512-1yIpQR2zdYu1Z/dc1OxC+MA6GR240u3gcnP4l6mvj/PJiVaqHsQPmWttsvHsfnhfPbU2FuGmo0wSITPygjBmsw==
+"@types/react@~17.0.55":
+  version "17.0.55"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.55.tgz#f94eac1a37929cd86d1cc084c239c08dcfd10e5f"
+  integrity sha512-kBcAhmT8RivFDYxHdy8QfPKu+WyfiiGjdPb9pIRtd6tj05j0zRHq5DBGW5Ogxv5cwSKd93BVgUk/HZ4I9p3zNg==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"

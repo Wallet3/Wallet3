@@ -166,7 +166,7 @@ export class WalletConnect_v2 extends EventEmitter {
     if (platforms.length > 1 || !eip155?.chains?.length) {
       this.rejectSession(getSdkError('INVALID_SESSION_SETTLE_REQUEST'));
       PubSub.publish(MessageKeys.walletconnect.notSupportedSessionProposal, this);
-      showMessage({ type: 'info', message: i18n.t('msg-currently-ethereum-and-evm-networks-support') });
+      showMessage({ type: 'info', message: i18n.t('msg-currently-ethereum-and-evm-networks-support'), duration: 5000 });
       return false;
     }
 
@@ -176,7 +176,12 @@ export class WalletConnect_v2 extends EventEmitter {
       this.rejectSession(getSdkError('UNSUPPORTED_CHAINS'));
       PubSub.publish(MessageKeys.walletconnect.notSupportedSessionProposal, this);
       this.emit(MessageKeys.walletconnect.notSupportedSessionProposal);
-      showMessage({ type: 'info', message: i18n.t('msg-the-app-does-not-support-chain', { network: notSupportedChain }) });
+      showMessage({
+        type: 'info',
+        message: i18n.t('msg-the-app-does-not-support-chain', { network: notSupportedChain }),
+        duration: 5000,
+      });
+
       return false;
     }
 
