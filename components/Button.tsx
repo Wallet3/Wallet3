@@ -31,7 +31,7 @@ export default (props: ButtonProps) => {
     props;
 
   const backgroundColor: any = disabled
-    ? '#A2A2A250'
+    ? '#D7D7D7'
     : reverse
     ? 'transparent'
     : props.themeColor || (props?.style as ViewStyle)?.backgroundColor || styles.default.backgroundColor;
@@ -109,7 +109,7 @@ export default (props: ButtonProps) => {
           maxWidth: '100%',
           borderWidth: 0,
           borderColor: 'black',
-          backgroundColor: disabled ? 'transparent' : backgroundColor,
+          backgroundColor: backgroundColor,
           backfaceVisibility: 'hidden',
           borderRadius: 5,
           margin: 0,
@@ -126,19 +126,8 @@ export default (props: ButtonProps) => {
     </View>
   ) : (
     <TouchableOpacity activeOpacity={0.5} onPress={onPress} onLongPress={onLongPress} disabled={disabled} style={buttonStyle}>
-      {/* <SquircleView
-        style={{ ...buttonStyle, borderRadius: 0, backgroundColor: undefined, borderWidth: 0 }}
-        squircleParams={{
-          cornerSmoothing: 0.9,
-          cornerRadius: buttonStyle.borderRadius,
-          fillColor: buttonStyle.backgroundColor,
-          strokeColor: buttonStyle.borderColor,
-          strokeWidth: buttonStyle.borderWidth,
-        }}
-      > */}
       {props.icon?.()}
       <Text style={txtStyle}>{title}</Text>
-      {/* </SquircleView> */}
     </TouchableOpacity>
   );
 };
