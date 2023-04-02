@@ -50,6 +50,10 @@ export default observer(({ vm, close, erc681, onReviewEnter, onReviewLeave }: Pr
     return result.success;
   };
 
+  useEffect(() => {
+    erc681 && onReviewEnter?.();
+  }, [erc681]);
+
   const onSendClick = async () => {
     const selfAccount = App.allAccounts.find((c) => c.address === vm.toAddress);
 

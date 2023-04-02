@@ -5,11 +5,9 @@ import { StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewSty
 import { BreathAnimation } from '../utils/animations';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { SquircleView } from 'react-native-figma-squircle';
 import SwipeButton from 'rn-swipe-button';
 import Theme from '../viewmodels/settings/Theme';
 import { isAndroid } from '../utils/platform';
-import { observable } from 'mobx';
 import { themeColor } from '../constants/styles';
 
 export interface ButtonProps {
@@ -29,7 +27,9 @@ export default (props: ButtonProps) => {
   const { disabled, reverse, themeColor, onLongPress, onPress, onSwipeSuccess, title } = props;
 
   const backgroundColor: any = disabled
-    ? '#D7D7D7'
+    ? Theme.isLightMode
+      ? '#D7D7D7'
+      : '#5A5A5A'
     : reverse
     ? 'transparent'
     : props.themeColor || (props?.style as ViewStyle)?.backgroundColor || styles.default.backgroundColor;
