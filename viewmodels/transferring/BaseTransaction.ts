@@ -457,7 +457,7 @@ export class BaseTransaction {
   }
 
   private async estimateERC4337Gas(args: { to?: string; value?: BigNumberish; data: string }) {
-    const client = await createERC4337Client(this.network);
+    const client = await createERC4337Client(this.network, undefined, undefined, { accountAddress: this.account.address });
     if (!client) return { errorMessage: 'Network is not available' };
 
     let callData = '0x';

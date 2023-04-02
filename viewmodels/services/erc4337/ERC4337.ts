@@ -7,12 +7,21 @@ import { PaymasterAPI } from '@account-abstraction/sdk';
 import { getRPCUrls } from '../../../common/RPC';
 import { getSecureRandomBytes } from '../../../utils/math';
 
+interface InitParams {
+  accountAddress?: string;
+}
+
 const ERC4337Clients = new Map<string, ERC4337Client>();
 
 let owner!: Wallet;
 const createDefaultOwner = () => owner ?? (owner = new Wallet(getSecureRandomBytes(32)));
 
-export async function createERC4337Client(network: INetwork, owner = createDefaultOwner(), paymaster?: PaymasterAPI) {
+export async function createERC4337Client(
+  network: INetwork,
+  owner = createDefaultOwner(),
+  paymaster?: PaymasterAPI,
+  initParams?: InitParams
+) {
   const { chainId, erc4337 } = network;
   const key = `${chainId}:${owner.address}`;
 
@@ -44,6 +53,7 @@ export async function createERC4337Client(network: INetwork, owner = createDefau
     entryPointAddress,
     factoryAddress,
     paymasterAPI: paymaster,
+    ...initParams,
   });
 
   ERC4337Clients.set(key, client);
