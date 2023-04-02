@@ -10,6 +10,7 @@ interface Props {
   disabled?: boolean;
   themeColor?: string;
 }
+
 export default ({ onPress, disabled, themeColor }: Props) => {
   const { biometricType } = Authentication;
   const { t } = i18n;

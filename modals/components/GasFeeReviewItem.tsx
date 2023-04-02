@@ -17,13 +17,14 @@ interface Props {
 }
 
 export default observer(({ vm, onGasPress }: Props) => {
-  const { secondaryTextColor } = Theme;
+  const { secondaryTextColor, borderColor } = Theme;
   const { paymaster } = vm;
 
   return (
     <View
       style={{
         ...styles.reviewItemsContainer,
+        borderColor,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',

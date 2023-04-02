@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { SquircleView } from 'react-native-figma-squircle';
 import SwipeButton from 'rn-swipe-button';
+import Theme from '../viewmodels/settings/Theme';
 import { isAndroid } from '../utils/platform';
 import { observable } from 'mobx';
 import { themeColor } from '../constants/styles';
@@ -22,13 +23,10 @@ export interface ButtonProps {
   onSwipeSuccess?: () => void;
   themeColor?: string;
   reverse?: boolean;
-  onInteractionStart?: () => void;
-  onInteractionEnd?: () => void;
 }
 
 export default (props: ButtonProps) => {
-  const { disabled, reverse, themeColor, onLongPress, onPress, onSwipeSuccess, title, onInteractionStart, onInteractionEnd } =
-    props;
+  const { disabled, reverse, themeColor, onLongPress, onPress, onSwipeSuccess, title } = props;
 
   const backgroundColor: any = disabled
     ? '#D7D7D7'
@@ -36,7 +34,7 @@ export default (props: ButtonProps) => {
     ? 'transparent'
     : props.themeColor || (props?.style as ViewStyle)?.backgroundColor || styles.default.backgroundColor;
 
-  const buttonStyle = {
+  const buttonStyle: StyleProp<ViewStyle> = {
     ...styles.default,
     ...((props?.style as any) || {}),
     backgroundColor: reverse && disabled ? 'transparent' : backgroundColor,
@@ -54,13 +52,7 @@ export default (props: ButtonProps) => {
   const arrowIcon = () => <Ionicons name="arrow-forward" size={19} color={backgroundColor} style={{}} />;
 
   return onSwipeSuccess ? (
-    <View
-      style={{ ...((props?.style as any) || {}), backgroundColor, borderRadius: 7, height: 42 }}
-      onTouchStart={onInteractionStart}
-      onTouchEnd={onInteractionEnd}
-      onPointerEnter={onInteractionStart}
-      onPointerLeave={onInteractionEnd}
-    >
+    <View style={{ ...((props?.style as any) || {}), backgroundColor, borderRadius: 7, height: 42 }}>
       <Animatable.View
         animation={disabled ? undefined : BreathAnimation}
         duration={2200}
@@ -125,7 +117,18 @@ export default (props: ButtonProps) => {
       />
     </View>
   ) : (
-    <TouchableOpacity activeOpacity={0.5} onPress={onPress} onLongPress={onLongPress} disabled={disabled} style={buttonStyle}>
+    <TouchableOpacity
+      activeOpacity={0.5}
+      onPress={onPress}
+      onLongPress={onLongPress}
+      disabled={disabled}
+      style={[
+        buttonStyle,
+        {
+          opacity: disabled ? 0.45 : 1,
+        },
+      ]}
+    >
       {props.icon?.()}
       <Text style={txtStyle}>{title}</Text>
     </TouchableOpacity>

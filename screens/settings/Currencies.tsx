@@ -36,15 +36,13 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
   );
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <SafeViewContainer style={{ paddingTop: 0 }}>
-        <FlatList
-          data={CurrencyViewmodel.supportedCurrencies}
-          renderItem={renderItem}
-          keyExtractor={(i) => i.currency}
-          ItemSeparatorComponent={() => <View style={{ height: 0.333, backgroundColor: borderColor }} />}
-        />
-      </SafeViewContainer>
-    </SafeAreaView>
+    <SafeViewContainer paddingHeader>
+      <FlatList
+        data={CurrencyViewmodel.supportedCurrencies}
+        renderItem={renderItem}
+        keyExtractor={(i) => i.currency}
+        ItemSeparatorComponent={() => <View style={{ height: 0.333, backgroundColor: borderColor }} />}
+      />
+    </SafeViewContainer>
   );
 });

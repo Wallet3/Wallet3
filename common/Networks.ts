@@ -152,6 +152,7 @@ export const PublicNetworks: INetwork[] = [
     explorer: 'https://polygonscan.com',
     etherscanApi: 'https://api.polygonscan.com/api',
     category: 'core',
+    erc4337: ERC4337Configs.Polygon
   },
   {
     symbol: 'BNB',
