@@ -334,8 +334,8 @@ export class BaseTransaction {
 
   async setGas(speed: 'rapid' | 'fast' | 'standard') {
     const { eip1559, chainId } = this.network;
-    const wei = (await getGasPrice(chainId)) || Gwei_1;
-    const basePrice = wei / Gwei_1;
+    const wei = (eip1559 ? await getNextBlockBaseFee(chainId) : await getGasPrice(chainId)) || Gwei_1;
+    const basePriceGwei = wei / Gwei_1;
 
     let priorityPrice = 0;
 
@@ -347,15 +347,15 @@ export class BaseTransaction {
     runInAction(() => {
       switch (speed) {
         case 'rapid':
-          this.setMaxGasPrice(basePrice + (this.network.eip1559 ? priorityPrice + 5 : 0) + 25);
+          this.setMaxGasPrice(basePriceGwei + (this.network.eip1559 ? priorityPrice + 5 : 0) + 25);
           if (eip1559) this.setPriorityPrice(priorityPrice + 5);
           break;
         case 'fast':
-          this.setMaxGasPrice(basePrice + (this.network.eip1559 ? priorityPrice + 1 : 0) + 10);
+          this.setMaxGasPrice(basePriceGwei + (this.network.eip1559 ? priorityPrice + 1 : 0) + 10);
           if (eip1559) this.setPriorityPrice(priorityPrice + 1);
           break;
         case 'standard':
-          this.setMaxGasPrice(basePrice + (this.network.eip1559 ? priorityPrice : 0));
+          this.setMaxGasPrice(basePriceGwei + (this.network.eip1559 ? priorityPrice : 0));
           if (eip1559) this.setPriorityPrice(priorityPrice);
           break;
       }

@@ -429,7 +429,7 @@ const TxReview = observer(
                 {network?.network}
               </Text>
 
-              {(vm.loading || vm.paymaster?.loading) && <ActivityIndicator size="small" color={verifiedColor} />}
+              {(vm.loading || vm.paymaster?.loading) && <ActivityIndicator size="small" color={network.color} />}
             </View>
           </View>
         </View>
