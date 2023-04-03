@@ -222,7 +222,7 @@ export class BaseTransaction {
     try {
       return this.paymaster?.feeToken
         ? this.paymaster?.feeTokenAmount
-        : Number(utils.formatEther(this.estimatedRealNativeFeeWei));
+        : Number(utils.formatEther(this.nativeFeeWei));
     } catch (error) {
       return 0;
     }
