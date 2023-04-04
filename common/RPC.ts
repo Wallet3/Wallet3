@@ -110,8 +110,10 @@ export async function getTransactionCount(chainId: number, address: string) {
         id: Date.now(),
       });
 
-      const { result } = resp as { id: number; result: string };
-      return Number.parseInt(result);
+      const { result, error } = resp as { id: number; result: string; error: any };
+      if (error) continue;
+
+      return Number.parseInt(result) || 0;
     } catch (error) {
       markRPCFailed(chainId, url);
     }

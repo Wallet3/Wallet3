@@ -220,9 +220,7 @@ export class BaseTransaction {
 
   get txFee() {
     try {
-      return this.paymaster?.feeToken
-        ? this.paymaster?.feeTokenAmount
-        : Number(utils.formatEther(this.nativeFeeWei));
+      return this.paymaster?.feeToken ? this.paymaster?.feeTokenAmount : Number(utils.formatEther(this.nativeFeeWei));
     } catch (error) {
       return 0;
     }
@@ -418,7 +416,7 @@ export class BaseTransaction {
       getMaxPriorityFee(chainId),
       this.account.getNonce(chainId),
     ]);
-
+console.log('init completed', gasPrice, nextBaseFee,priorityFee,nonce)
     runInAction(() => {
       this.nextBlockBaseFeeWei = Number(nextBaseFee.toFixed(0));
 

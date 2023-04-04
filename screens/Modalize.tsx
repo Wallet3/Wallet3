@@ -74,11 +74,29 @@ import { showMessage } from 'react-native-flash-message';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { utils } from 'ethers';
 
+type WalletConnectRequestParam = {
+  type: 'sign' | 'sendTx';
+  request: WCCallRequestRequest;
+  client: WalletConnect_v1;
+};
+
 const WalletConnectRequests = () => {
   const { ref, open, close } = useModalize();
-  const [type, setType] = useState<string>();
-  const [client, setClient] = useState<WalletConnect_v1>();
-  const [callRequest, setCallRequest] = useState<WCCallRequestRequest>();
+  const [currentRequestParam, setCurrentRequestParam] = useState<WalletConnectRequestParam | undefined>();
+  const [queue] = useState<WalletConnectRequestParam[]>([]);
+
+  const enqueue = (param: WalletConnectRequestParam) => {
+    queue.push(param);
+
+    if (currentRequestParam) return;
+    dequeue();
+  };
+
+  const dequeue = () => {
+    const next = queue.shift();
+    setCurrentRequestParam(next);
+    next && setImmediate(() => open());
+  };
 
   useEffect(() => {
     PubSub.subscribe(
@@ -89,27 +107,19 @@ const WalletConnectRequests = () => {
           return;
         }
 
-        setType(undefined);
-        setCallRequest(undefined);
-        setClient(client);
-
         switch (request.method) {
           case 'eth_sign':
           case 'personal_sign':
           case 'eth_signTypedData':
           case 'eth_signTypedData_v3':
           case 'eth_signTypedData_v4':
-            setCallRequest(request);
-            setType('sign');
+            enqueue({ request, type: 'sign', client });
             break;
           case 'eth_sendTransaction':
           case 'eth_signTransaction':
-            setCallRequest(request);
-            setType('sendTx');
+            enqueue({ request, type: 'sendTx', client });
             break;
         }
-
-        setTimeout(() => open(), 10);
       }
     );
 
@@ -126,9 +136,10 @@ const WalletConnectRequests = () => {
       panGestureComponentEnabled={false}
       tapGestureEnabled={false}
       closeOnOverlayTap={false}
+      onClosed={() => dequeue()}
     >
-      {type === 'sign' ? <WalletConnectSign client={client!} request={callRequest!} close={close} /> : undefined}
-      {type === 'sendTx' ? <WalletConnectTxRequest client={client!} request={callRequest!} close={close} /> : undefined}
+      {currentRequestParam?.type === 'sign' && <WalletConnectSign {...currentRequestParam} close={close} />}
+      {currentRequestParam?.type === 'sendTx' && <WalletConnectTxRequest {...currentRequestParam} close={close} />}
     </SquircleModalize>
   );
 };
@@ -585,19 +596,16 @@ export const ShardsModal = observer(() => {
     queue.push(param);
 
     if (vms) return;
-    setVMs(queue.shift()!);
-    setImmediate(() => open());
+    dequeue();
   };
 
   const dequeue = () => {
     setIsCritical(false);
-    setVMs(undefined);
 
     const next = queue.shift();
-    if (!next) return;
-
     setVMs(next);
-    setImmediate(() => open());
+
+    next && setImmediate(() => open());
   };
 
   useEffect(() => {
