@@ -138,6 +138,7 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: [],
     category: 'core',
     explorer: 'https://zkevm.polygonscan.com',
+    etherscanApi: 'https://api-zkevm.polygonscan.com/api',
   },
   {
     symbol: 'MATIC',
@@ -152,7 +153,7 @@ export const PublicNetworks: INetwork[] = [
     explorer: 'https://polygonscan.com',
     etherscanApi: 'https://api.polygonscan.com/api',
     category: 'core',
-    erc4337: ERC4337Configs.Polygon
+    erc4337: ERC4337Configs.Polygon,
   },
   {
     symbol: 'BNB',
