@@ -24,6 +24,8 @@ export async function getTokenPrice(chainId: number, erc20: string) {
   const chain = Chains[chainId];
   const feed = chain[erc20];
 
+  if (!feed) return;
+
   const result = await eth_call<string>(chainId, { to: feed.oracle, data: call });
   if (!result) return;
 
