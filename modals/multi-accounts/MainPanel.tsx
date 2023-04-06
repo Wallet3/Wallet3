@@ -6,6 +6,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import AccountItem from './AccountItem';
 import App from '../../viewmodels/core/App';
+import DeviceInfo from 'react-native-device-info';
 import Networks from '../../viewmodels/core/Networks';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
@@ -26,6 +27,7 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDon
   const { borderColor, textColor, backgroundColor } = Theme;
   const [busy, setBusy] = useState(false);
   const themeColor = current.color;
+  const [isERC4337Version] = useState(DeviceInfo.getVersion().includes('4.337'));
 
   const renderAccount = ({ item }: ListRenderItemInfo<AccountBase>) => (
     <AccountItem
@@ -89,7 +91,7 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDon
 
       <Separator style={{ marginBottom: 4, opacity: 0.5, backgroundColor: borderColor }} />
 
-      {__DEV__ ? (
+      {__DEV__ || isERC4337Version ? (
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <MaterialIcons name="add-circle" size={22} color={themeColor} />
 

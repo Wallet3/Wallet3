@@ -87,9 +87,7 @@ const WalletConnectRequests = () => {
 
   const enqueue = (param: WalletConnectRequestParam) => {
     queue.push(param);
-
-    if (currentRequestParam) return;
-    dequeue();
+    !currentRequestParam && dequeue();
   };
 
   const dequeue = () => {
@@ -101,7 +99,7 @@ const WalletConnectRequests = () => {
   useEffect(() => {
     PubSub.subscribe(
       MessageKeys.wc_request,
-      (_, { client, request, chainId }: { client: WalletConnect_v1; request: WCCallRequestRequest; chainId?: number }) => {
+      (_, { client, request }: { client: WalletConnect_v1; request: WCCallRequestRequest; chainId?: number }) => {
         if (!AuthenticationVM.appAuthorized) {
           client.rejectRequest(request.id, 'Unauthorized');
           return;
@@ -126,7 +124,7 @@ const WalletConnectRequests = () => {
     return () => {
       PubSub.unsubscribe(MessageKeys.wc_request);
     };
-  }, []);
+  }, [currentRequestParam]);
 
   return (
     <SquircleModalize
@@ -637,7 +635,6 @@ export const ShardsModal = observer(() => {
       [
         MessageKeys.openShardsDistribution,
         MessageKeys.openShardReceiver,
-
         MessageKeys.openShardProvider,
         MessageKeys.openKeyRecoveryRequestor,
         MessageKeys.openShardRedistributionReceiver,

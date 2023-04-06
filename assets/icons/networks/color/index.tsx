@@ -254,7 +254,7 @@ export function generateNetworkIcon(props: {
       return <Consensys key={chainId} width={width} height={height ?? width} style={style} />;
     default:
       return coins[symbol?.toLowerCase() || ''] ? (
-        <Coin symbol={symbol} size={height ?? width} address="" chainId={chainId} style={style as any} />
+        <Coin key={chainId} symbol={symbol} size={height ?? width} address="" chainId={chainId} style={style as any} />
       ) : (
         <EVMIcon key={chainId} size={width} color={color!} style={style} hideEVMTitle={hideEVMTitle} />
       );

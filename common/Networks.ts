@@ -25,6 +25,7 @@ import ERC4337Configs from '../configs/erc4337.config';
 import { GoerliPopTokens } from './tokens/Goerli';
 import { Gwei_1 } from './Constants';
 import { MumbaiPopTokens } from './tokens/Mumbai';
+import { SepoliaTokens } from './tokens/Sepolia';
 
 export interface IERC4337 {
   bundlerUrls: string[];
@@ -454,7 +455,7 @@ export const Testnets: INetwork[] = [
     eip1559: true,
     erc4337: ERC4337Configs.Sepolia,
     testnet: true,
-    defaultTokens: [],
+    defaultTokens: SepoliaTokens,
     explorer: 'https://sepolia.etherscan.io',
   },
   {
