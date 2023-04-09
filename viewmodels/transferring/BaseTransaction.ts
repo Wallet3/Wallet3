@@ -416,7 +416,7 @@ export class BaseTransaction {
       getMaxPriorityFee(chainId),
       this.account.getNonce(chainId),
     ]);
-console.log('init completed', gasPrice, nextBaseFee,priorityFee,nonce)
+
     runInAction(() => {
       this.nextBlockBaseFeeWei = Number(nextBaseFee.toFixed(0));
 

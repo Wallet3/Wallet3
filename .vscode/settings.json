@@ -40,6 +40,7 @@
         "Multipeer",
         "noapps",
         "nodehash",
+        "nodeify",
         "Numberish",
         "Passpad",
         "POAP",
