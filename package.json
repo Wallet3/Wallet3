@@ -131,7 +131,7 @@
     "stream-browserify": "^3.0.0",
     "text-encoding-polyfill": "^0.6.7",
     "toggle-switch-react-native": "^3.3.0",
-    "typeorm": "^0.3.13",
+    "typeorm": "^0.3.14",
     "url": "^0.11.0",
     "validator": "^13.9.0",
     "vm-browserify": "1.1.2"

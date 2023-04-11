@@ -9,7 +9,6 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import BackButton from '../components/BackButton';
 import { BatchTransactionRequest } from '../../viewmodels/transferring/BatchTransactionRequest';
 import BioAuthSendButton from '../components/BioAuthSendButton';
-import ERC4337Queue from '../../viewmodels/transferring/ERC4337Queue';
 import GasFeeReviewItem from '../components/GasFeeReviewItem';
 import GasReview from '../views/GasReview';
 import Image from 'react-native-fast-image';
