@@ -52,7 +52,7 @@ export class WalletConnectTransactionRequest extends RawTransactionRequest {
       decodedFunc: this.decodedFunc?.fullFunc,
       symbol: this.erc20?.symbol,
       amount: Number(this.tokenAmount).toString(),
-      recipient: this.to,
+      recipient: this.type === 'Contract Interaction' ? '' : this.to,
     };
 
     return super.sendTx({
