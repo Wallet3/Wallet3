@@ -47,9 +47,9 @@ export function parseXpubkey(mixedKey: string) {
 
 export const WalletBaseKeys = {
   removedEOAIndexes: (id: string | number) => `${id}-removed-indexes`,
-  removedERC4337Indexes: (walletId: string | number) => `${walletId}-removed-erc4337-indexes`,
+  removedERC4337Indexes: (walletId: string | number) => `${walletId}-removed-erc4337-indexes-preview`,
   addressCount: (walletId: string | number) => `${walletId}-address-count`,
-  erc4337Accounts: (walletId: string | number) => `${walletId}-erc4337-accounts`,
+  erc4337Accounts: (walletId: string | number) => `${walletId}-erc4337-accounts-preview`,
 };
 
 interface Events {}

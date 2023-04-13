@@ -12893,10 +12893,10 @@ react-native-view-shot@3.6.0:
   resolved "https://registry.yarnpkg.com/react-native-view-shot/-/react-native-view-shot-3.6.0.tgz#2c5febd03cb1effb9923372b29aed227c680d9fd"
   integrity sha512-QUYGaIaAxQwOTydUzqGMooBwrg455cuOQgTloZ+gPO1QCUuLRdncCqrEMwKW5eUnN5U8JGMKeFRll2m6egOxtA==
 
-react-native-web@~0.19.2:
-  version "0.19.2"
-  resolved "https://registry.yarnpkg.com/react-native-web/-/react-native-web-0.19.2.tgz#189fe0c14f314f314bb0a2a3ad4105c14b6e34c8"
-  integrity sha512-3SfidqzCnCYV5k8ZiTakZ+w11JUYkRTXoM+B10ew6PNjspW+woyH2/RXKkHdfQqBScmFh4c4LZomEmBTsr8zyw==
+react-native-web@~0.19.4:
+  version "0.19.4"
+  resolved "https://registry.yarnpkg.com/react-native-web/-/react-native-web-0.19.4.tgz#3d99f268ff5567df8b11a2150905a7c262e22dcc"
+  integrity sha512-laZjyzpTmsuuifAKTujp+VQRBA2ZcWga6MpxIw72QmeR/3spILNy4m/fdnCyO4E9UKH3d6vNMWbatZK3Nr6F+w==
   dependencies:
     "@babel/runtime" "^7.18.6"
     fbjs "^3.0.4"

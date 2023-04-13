@@ -423,7 +423,7 @@ const TxReview = observer(
           <View style={{ ...reviewItemStyle, borderBottomWidth: 0 }}>
             <Text style={styles.reviewItemTitle}>{t('modal-review-network')}</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-              {generateNetworkIcon({ ...network, width: 15 })}
+              {generateNetworkIcon({ ...network, width: 15, hideEVMTitle: true })}
 
               <Text style={{ ...reviewItemValueStyle, color: network?.color }} numberOfLines={1}>
                 {network?.network}
