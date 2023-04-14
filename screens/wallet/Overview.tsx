@@ -129,7 +129,7 @@ export default observer(
               containerStyle={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                backgroundColor: '#ffffff30',
+                backgroundColor: mode === 'dark' ? themeColor : '#ffffff30',
                 paddingVertical: 2,
                 paddingStart: 6,
                 paddingEnd: 3,

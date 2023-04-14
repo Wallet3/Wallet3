@@ -55,7 +55,7 @@ export class TokenTransferring extends BaseTransaction {
   }
 
   get insufficientFee() {
-    if (this.token.isNative) {
+    if (this.token.isNative && (this.paymaster?.feeToken?.isNative ?? true)) {
       return this.nativeFeeWei.add(this.amountWei).gt(this.token.balance!);
     }
 
