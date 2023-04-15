@@ -16,6 +16,7 @@ import Ethereum from './ethereum2.svg';
 import EthereumClassic from './ethereum-classic.svg';
 import Evmos from './evmos.svg';
 import Fantom from './fantom.svg';
+import FastImage from 'react-native-fast-image';
 import Findora from './findora.svg';
 import Fuse from './fuse.svg';
 import Harmony from './harmony-one.svg';
@@ -34,12 +35,13 @@ import Polygon from './polygon.svg';
 import PolygonZkEVM from './polygon-zkevm.svg';
 import React from 'react';
 import Ronin from './ronin.svg';
-import Scroll from './scroll.svg';
 import Shiden from './shiden.svg';
 import XDai from './xdai.svg';
 import ZKSync from './zksync.svg';
 import coins from '../../crypto';
 import styles from '../styles';
+
+const ScrollImg = require('./scroll.png');
 
 export const EVMIcon = ({
   color,
@@ -121,6 +123,7 @@ const NOVA = generateNetworkIcon({ chainId: 42170, width: 27, height: 32 });
 const CANTO = generateNetworkIcon({ chainId: 7700, width: 27, height: 32 });
 const BASE = generateNetworkIcon({ chainId: 84531, width: 27, height: 32 });
 const JOC = generateNetworkIcon({ chainId: 99999, width: 27, height: 32 });
+const SCROLL = generateNetworkIcon({ chainId: 534353, width: 27, height: 32 });
 
 export const NetworkIcons = {
   1: ETH,
@@ -158,6 +161,7 @@ export const NetworkIcons = {
   7700: CANTO,
   84531: BASE,
   99999: JOC,
+  534353: SCROLL,
 };
 
 export function generateNetworkIcon(props: {
@@ -254,7 +258,7 @@ export function generateNetworkIcon(props: {
     case 59140:
       return <Consensys key={chainId} width={width} height={height ?? width} style={style} />;
     case 534353:
-      return <Scroll key={chainId} width={width} height={height ?? width} style={style} />;
+      return <FastImage key={chainId} source={ScrollImg} style={[{ width, height }, style as any]} />;
     default:
       return coins[symbol?.toLowerCase() || ''] ? (
         <Coin key={chainId} symbol={symbol} size={height ?? width} address="" chainId={chainId} style={style as any} />

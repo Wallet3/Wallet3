@@ -483,7 +483,6 @@ export const Testnets: INetwork[] = [
     network: 'Scroll Alpha',
     chainId: 534353,
     color: '#edb940',
-    eip1559: true,
     testnet: true,
     defaultTokens: [],
     explorer: 'https://blockscout.scroll.io',

@@ -108,9 +108,7 @@ class Networks {
 
   async init() {
     const chains = await Database.chains.find();
-    const userEditedSystemChains = chains.filter((c) =>
-      (__DEV__ ? AllNetworks : PublicNetworks).find((n) => n.chainId === Number(c.id))
-    );
+    const userEditedSystemChains = chains.filter((c) => AllNetworks.find((n) => n.chainId === Number(c.id)));
 
     for (let sc of userEditedSystemChains) {
       const pn = PublicNetworks.find((n) => n.chainId === Number(sc.id));

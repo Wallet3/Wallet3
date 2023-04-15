@@ -48,7 +48,7 @@ export default observer((props: CoinProps) => {
     width: size,
     height: size,
     ...((props.style as any) || {}),
-    borderRadius: props.iconUrl ? size / 2 : props.borderRadius || 0,
+    borderRadius: props.iconUrl ? size / 2 : props.borderRadius || 5,
   };
 
   useEffect(() => {
