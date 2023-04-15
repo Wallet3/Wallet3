@@ -1,5 +1,6 @@
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { Button, Coin, Numpad, SafeViewContainer } from '../../components';
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { numericFontFamily, secondaryFontColor } from '../../constants/styles';
@@ -9,7 +10,6 @@ import Avatar from '../../components/Avatar';
 import BackButton from '../components/BackButton';
 import { INetwork } from '../../common/Networks';
 import { ITokenMetadata } from '../../common/tokens';
-import { MaterialIcons } from '@expo/vector-icons';
 import MessageKeys from '../../common/MessageKeys';
 import Networks from '../../viewmodels/core/Networks';
 import Theme from '../../viewmodels/settings/Theme';
@@ -95,9 +95,17 @@ export default observer((props: SubViewProps) => {
                 uri={props.account?.avatar}
                 emojiSize={9}
               />
+
               <Text style={{ marginStart: 8, color: thirdTextColor, fontSize: 12.5, marginBottom: -1 }}>
                 {t('profile-my-qrcode') || props.account?.miniDisplayName}
               </Text>
+
+              <MaterialCommunityIcons
+                name="qrcode"
+                size={12}
+                color={thirdTextColor}
+                style={{ paddingHorizontal: 6, marginBottom: -1 }}
+              />
             </TouchableOpacity>
           ) : (
             <View />
