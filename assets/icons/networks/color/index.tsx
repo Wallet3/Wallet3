@@ -34,6 +34,7 @@ import Polygon from './polygon.svg';
 import PolygonZkEVM from './polygon-zkevm.svg';
 import React from 'react';
 import Ronin from './ronin.svg';
+import Scroll from './scroll.svg';
 import Shiden from './shiden.svg';
 import XDai from './xdai.svg';
 import ZKSync from './zksync.svg';
@@ -252,6 +253,8 @@ export function generateNetworkIcon(props: {
       return <JapanOpenChain key={chainId} width={width} height={height ?? width} style={style} />;
     case 59140:
       return <Consensys key={chainId} width={width} height={height ?? width} style={style} />;
+    case 534353:
+      return <Scroll key={chainId} width={width} height={height ?? width} style={style} />;
     default:
       return coins[symbol?.toLowerCase() || ''] ? (
         <Coin key={chainId} symbol={symbol} size={height ?? width} address="" chainId={chainId} style={style as any} />
