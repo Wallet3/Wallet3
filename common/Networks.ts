@@ -355,6 +355,14 @@ export const PublicNetworks: INetwork[] = [
     github_dir: 'doge',
   },
   {
+    symbol: 'CFX',
+    chainId: 1030,
+    network: 'Conflux eSpace',
+    explorer: 'https://evm.confluxscan.net',
+    defaultTokens: [],
+    color: '#61c7d6',
+  },
+  {
     symbol: 'ASTR',
     comm_id: 'astr',
     network: 'Astar',

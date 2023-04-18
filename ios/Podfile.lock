@@ -637,7 +637,7 @@ PODS:
     - React-Core
   - ExpoAppleAuthentication (6.0.1):
     - ExpoModulesCore
-  - ExpoBlur (12.2.2):
+  - ExpoBlur (12.3.0):
     - ExpoModulesCore
   - ExpoClipboard (4.1.2):
     - ExpoModulesCore
@@ -1615,7 +1615,7 @@ SPEC CHECKSUMS:
   Expo: 81418098ffb16914b2e190f54e06db923248e4a1
   ExpoAdapterGoogleSignIn: 98a113d9c0ed1ce7cf6259f0907d3f93209b0d7f
   ExpoAppleAuthentication: 7bd5e4150d59e8df37aa80b425850ae88adf9e65
-  ExpoBlur: fac3c6318fdf409dd5740afd3313b2bd52a35bac
+  ExpoBlur: b0d995dbfc725fc5b7ee60da076131995300815d
   ExpoClipboard: 9b87df0ad145e3aa841614fab6aea54b7a604850
   ExpoCrypto: 9105610a09cd6290b900bd82fc5d190e489125a3
   ExpoHaptics: 5156bc5160d8e04c170dd6e645a71154951a2ad9
