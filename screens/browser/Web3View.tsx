@@ -252,9 +252,7 @@ export default observer((props: Web3ViewProps) => {
           injectedJavaScript={`${GetPageMetadata}\ntrue;\n${HookWalletConnect}\n${HookRainbowKit}\ntrue;`}
           onLoadStart={
             isAndroid
-              ? () => {
-                  ((webViewRef as any)?.current as WebView)?.injectJavaScript(`${MetamaskMobileProvider}\ntrue;`);
-                }
+              ? () => ((webViewRef as any)?.current as WebView)?.injectJavaScript?.(`${MetamaskMobileProvider}\ntrue;`)
               : undefined
           }
         />

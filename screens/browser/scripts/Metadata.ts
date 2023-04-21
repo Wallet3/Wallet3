@@ -76,4 +76,9 @@ window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'metadata', payload
      title: document.title || location.hostname, 
      desc: document.querySelector('meta[name="description"]') && document.querySelector('meta[name="description"]').content, 
      themeColor: document.querySelector('meta[name="theme-color"]') && document.querySelector('meta[name="theme-color"]').content,
-    } }));`;
+    } }));
+    
+if (window.ethereum) {
+    window.ethereum.isWallet3 = true;
+}
+`;

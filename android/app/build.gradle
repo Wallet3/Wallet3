@@ -120,7 +120,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 59
-        versionName "4.337.1"
+        versionName "4.1.19"
     }
 
     splits {
