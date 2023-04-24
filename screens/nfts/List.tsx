@@ -1,11 +1,10 @@
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import App from '../../viewmodels/core/App';
 import { BlurView } from 'expo-blur';
 import { INetwork } from '../../common/Networks';
-import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
 import { Ionicons } from '@expo/vector-icons';
 import MultiSourceImage from '../../components/MultiSourceImage';
 import { NFTMetadata } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
@@ -15,7 +14,6 @@ import { SharedElement } from 'react-navigation-shared-element';
 import Theme from '../../viewmodels/settings/Theme';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import { isAndroid } from '../../utils/platform';
-import { lightOrDark } from '../../utils/color';
 import { observer } from 'mobx-react-lite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -38,23 +36,16 @@ const NFTItem = ({
   network: INetwork;
   nft: NFTMetadata;
 }) => {
-  const [colorResult, setColorResult] = useState<ImageColorsResult>();
-  const [nftBackgroundColor, setNftBackgroundColor] = useState<string>();
-  const [titleColor, setTitleColor] = useState(foregroundColor);
+  const [titleColor] = useState(foregroundColor);
   const { previews, previewTypes } = nft;
   const { borderColor } = Theme;
-
-  useEffect(() => {
-    if (!nftBackgroundColor) return;
-    setTitleColor(lightOrDark(nftBackgroundColor) === 'light' ? '#222' : '#ffffffee');
-  }, [nftBackgroundColor]);
 
   return (
     <TouchableOpacity
       key={nft.id}
       activeOpacity={0.75}
-      style={{ marginBottom: 16, ...shadow, borderWidth: isAndroid ? 1 : 0, borderColor, borderRadius: 12 }}
-      onPress={() => navigation.push('NFTDetails', { item: nft, colorResult })}
+      style={{ marginBottom: 16, backgroundColor, ...shadow, borderWidth: isAndroid ? 1 : 0, borderColor, borderRadius: 12 }}
+      onPress={() => navigation.push('NFTDetails', { item: nft })}
     >
       <SharedElement id={`nft.${nft.id}.photo`}>
         <MultiSourceImage
@@ -104,7 +95,7 @@ const NFTItem = ({
                 fontSize: 17,
                 maxWidth: '80%',
                 paddingStart: 2,
-                textShadowColor: nftBackgroundColor || '#585858',
+                textShadowColor: '#585858',
                 textShadowOffset: { width: 0, height: 0 },
                 textShadowRadius: 4,
               }}

@@ -81,20 +81,6 @@ export default observer(
               </Text>
               <MaterialIcons name="keyboard-arrow-down" style={{ marginStart: 2 }} color={textColor} size={12} />
             </TouchableOpacity>
-
-            {avatar ? (
-              <Image
-                source={{ uri: avatar }}
-                style={{
-                  width: 16,
-                  height: 16,
-                  borderRadius: 100,
-                  marginEnd: 8,
-                  borderWidth: 1,
-                  borderColor: '#ffffff90',
-                }}
-              />
-            ) : undefined}
           </View>
 
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -143,7 +129,7 @@ export default observer(
               containerStyle={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                backgroundColor: '#ffffff30',
+                backgroundColor: mode === 'dark' ? themeColor : '#ffffff30',
                 paddingVertical: 2,
                 paddingStart: 6,
                 paddingEnd: 3,

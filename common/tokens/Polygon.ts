@@ -3,6 +3,7 @@ export const MATIC_DAI = {
   decimals: 18,
   symbol: 'DAI',
   shown: true,
+  isStable: true,
 };
 
 export const MATIC_AAVE = {
@@ -22,12 +23,14 @@ export const MATIC_USDC = {
   decimals: 6,
   symbol: 'USDC',
   shown: true,
+  isStable: true,
 };
 
 export const MATIC_USDT = {
   address: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
   decimals: 6,
   symbol: 'USDT',
+  isStable: true,
 };
 
 export const MATIC_CRV = {
@@ -76,6 +79,7 @@ export const MATIC_JPYC = {
   address: '0x431D5dfF03120AFA4bDf332c61A6e1766eF37BDB',
   decimals: 18,
   symbol: 'JPYC',
+  isStable: true,
 };
 
 export const PolygonPopularTokens = [

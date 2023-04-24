@@ -189,4 +189,18 @@ export default StyleSheet.create({
     alignSelf: 'flex-end',
     opacity: 0.75,
   },
+
+  scroll: {
+    marginTop: -42,
+    marginEnd: -10,
+    alignSelf: 'flex-end',
+    opacity: 0.75,
+  },
+
+  conflux: {
+    marginTop: -42,
+    marginEnd: -1,
+    alignSelf: 'flex-end',
+    opacity: 0.5,
+  },
 });

@@ -31,7 +31,7 @@ interface Props {
 
 export default observer(({ networks, onNetworkPress, selectedNetwork, useContextMenu, onEditing, flatNetworks }: Props) => {
   const { t } = i18n;
-  const { backgroundColor, secondaryTextColor, thirdTextColor, borderColor } = Theme;
+  const { backgroundColor, secondaryTextColor, thirdTextColor, borderColor, isLightMode } = Theme;
   const [editNetwork, setEditNetwork] = useState<INetwork>();
   const swiper = useRef<Swiper>(null);
 
@@ -150,17 +150,16 @@ export default observer(({ networks, onNetworkPress, selectedNetwork, useContext
               contentContainerStyle={{ paddingBottom: 36 }}
               style={{ marginHorizontal: -16, marginTop: -4, marginBottom: -36, paddingTop: 12 }}
               onScrollToIndexFailed={() => {}}
+              initialNumToRender={20}
               renderSectionHeader={({ section }) => (
                 <View style={{ marginHorizontal: 16, paddingTop: 6, marginBottom: 2 }}>
                   <Text
-                    style={{
-                      fontSize: 12,
-                      fontWeight: '400',
-                      textShadowColor: '#fff',
-                      textShadowOffset: { width: 0, height: 0 },
-                      textShadowRadius: 3,
-                      color: thirdTextColor,
-                    }}
+                    style={[
+                      { fontSize: 12, fontWeight: '400', color: thirdTextColor },
+                      isLightMode
+                        ? { textShadowColor: '#fff', textShadowOffset: { width: 0, height: 0 }, textShadowRadius: 3 }
+                        : undefined,
+                    ]}
                   >
                     {t(`network-category-${section.category}`)}
                   </Text>
@@ -176,6 +175,7 @@ export default observer(({ networks, onNetworkPress, selectedNetwork, useContext
               <FlatList
                 data={flatNetworks}
                 renderItem={renderItem}
+                initialNumToRender={20}
                 contentContainerStyle={{ paddingBottom: 36 }}
                 style={{ marginHorizontal: -16, marginTop: -4, marginBottom: isAndroid ? 0 : -36, paddingTop: 0 }}
               />

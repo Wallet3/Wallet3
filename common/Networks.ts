@@ -25,6 +25,7 @@ import ERC4337Configs from '../configs/erc4337.config';
 import { GoerliPopTokens } from './tokens/Goerli';
 import { Gwei_1 } from './Constants';
 import { MumbaiPopTokens } from './tokens/Mumbai';
+import { SepoliaTokens } from './tokens/Sepolia';
 
 export interface IERC4337 {
   bundlerUrls: string[];
@@ -138,6 +139,7 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: [],
     category: 'core',
     explorer: 'https://zkevm.polygonscan.com',
+    etherscanApi: 'https://api-zkevm.polygonscan.com/api',
   },
   {
     symbol: 'MATIC',
@@ -152,6 +154,7 @@ export const PublicNetworks: INetwork[] = [
     explorer: 'https://polygonscan.com',
     etherscanApi: 'https://api.polygonscan.com/api',
     category: 'core',
+    erc4337: ERC4337Configs.Polygon,
   },
   {
     symbol: 'BNB',
@@ -352,6 +355,14 @@ export const PublicNetworks: INetwork[] = [
     github_dir: 'doge',
   },
   {
+    symbol: 'CFX',
+    chainId: 1030,
+    network: 'Conflux eSpace',
+    explorer: 'https://evm.confluxscan.net',
+    defaultTokens: [],
+    color: '#61c7d6',
+  },
+  {
     symbol: 'ASTR',
     comm_id: 'astr',
     network: 'Astar',
@@ -452,7 +463,7 @@ export const Testnets: INetwork[] = [
     eip1559: true,
     erc4337: ERC4337Configs.Sepolia,
     testnet: true,
-    defaultTokens: [],
+    defaultTokens: SepoliaTokens,
     explorer: 'https://sepolia.etherscan.io',
   },
   {
@@ -474,6 +485,15 @@ export const Testnets: INetwork[] = [
     testnet: true,
     defaultTokens: [],
     explorer: 'https://goerli.arbiscan.io',
+  },
+  {
+    symbol: 'ETH',
+    network: 'Scroll Alpha',
+    chainId: 534353,
+    color: '#edb940',
+    testnet: true,
+    defaultTokens: [],
+    explorer: 'https://blockscout.scroll.io',
   },
   {
     symbol: 'ETH',
@@ -521,10 +541,21 @@ export const Testnets: INetwork[] = [
     eip1559: true,
     erc4337: ERC4337Configs.Mumbai,
     defaultTokens: MumbaiPopTokens,
-    blockTimeMs: 3 * 1000,
     testnet: true,
     explorer: 'https://mumbai.polygonscan.com',
     etherscanApi: 'https://mumbai.polygonscan.com/api',
+  },
+  {
+    symbol: 'AVAX',
+    comm_id: 'avax',
+    chainId: 43113,
+    network: 'Avalanche Fuji',
+    color: '#E84142',
+    testnet: true,
+    eip1559: true,
+    defaultTokens: [],
+    explorer: 'https://testnet.snowtrace.io',
+    github_dir: 'avalanchec',
   },
   {
     symbol: 'ETH',

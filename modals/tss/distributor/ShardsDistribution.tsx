@@ -33,7 +33,9 @@ const DeviceStatus = observer(({ item, vm }: { item: ShardSender | ClientInfo; v
 
   return (
     <View style={{ marginStart: 24 }}>
-      {status === ShardTransferringStatus.sending && <ActivityIndicator size="small" color={verifiedColor} />}
+      {status === ShardTransferringStatus.sending && (
+        <ActivityIndicator size="small" color={verifiedColor} style={{ marginEnd: 4 }} />
+      )}
 
       {status === ShardTransferringStatus.ackFailed && (
         <ZoomInView>

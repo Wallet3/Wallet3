@@ -3,6 +3,7 @@ export const ARBI_USDT = {
   decimals: 6,
   symbol: 'USDT',
   shown: true,
+  isStable: true,
 };
 
 export const ARBI_USDC = {
@@ -10,6 +11,7 @@ export const ARBI_USDC = {
   decimals: 6,
   symbol: 'USDC',
   shown: true,
+  isStable: true,
 };
 
 export const ARBI_DAI = {
@@ -17,6 +19,7 @@ export const ARBI_DAI = {
   decimals: 18,
   symbol: 'DAI',
   shown: true,
+  isStable: true,
 };
 
 export const ARBI_WBTC = {

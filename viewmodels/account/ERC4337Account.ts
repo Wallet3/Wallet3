@@ -73,7 +73,7 @@ export class ERC4337Account extends AccountBase {
 
     const { bundlerUrls, entryPointAddress } = network.erc4337;
 
-    const client = await createERC4337Client(network, owner, paymaster!);
+    const client = await createERC4337Client(network, owner, paymaster!, { accountAddress: this.address });
     if (!client) return { success: false };
 
     if (paymaster?.feeToken?.isNative === false) {

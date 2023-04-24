@@ -85,6 +85,10 @@ class Networks {
     return groups.filter((g) => g.data.length > 0);
   }
 
+  get categorized4337() {
+    return this.categorized.map((g) => ({ ...g, data: g.data.filter((i) => i.erc4337) })).filter((g) => g.data.length > 0);
+  }
+
   constructor() {
     makeObservable(this, {
       current: observable,
@@ -104,9 +108,7 @@ class Networks {
 
   async init() {
     const chains = await Database.chains.find();
-    const userEditedSystemChains = chains.filter((c) =>
-      (__DEV__ ? AllNetworks : PublicNetworks).find((n) => n.chainId === Number(c.id))
-    );
+    const userEditedSystemChains = chains.filter((c) => AllNetworks.find((n) => n.chainId === Number(c.id)));
 
     for (let sc of userEditedSystemChains) {
       const pn = PublicNetworks.find((n) => n.chainId === Number(sc.id));
@@ -150,36 +152,36 @@ class Networks {
     });
   }
 
-  switch(network: INetwork) {
+  switch = (network: INetwork) => {
     if (this.current.chainId === network.chainId) return;
 
     this.current = network;
     AsyncStorage.setItem(Keys.currentNetwork, JSON.stringify(network.chainId));
-  }
+  };
 
-  pin(network: INetwork) {
+  pin = (network: INetwork) => {
     network.pinned = true;
     if (this.pinnedChains.includes(network.chainId)) return;
     this.pinnedChains.unshift(network.chainId);
     AsyncStorage.setItem(Keys.pinnedChains, JSON.stringify(this.pinnedChains));
-  }
+  };
 
-  unpin(network: INetwork) {
+  unpin = (network: INetwork) => {
     network.pinned = false;
     if (!this.pinnedChains.includes(network.chainId)) return;
     this.pinnedChains = this.pinnedChains.filter((i) => i !== network.chainId);
     AsyncStorage.setItem(Keys.pinnedChains, JSON.stringify(this.pinnedChains));
-  }
+  };
 
-  has(chainId: number | string) {
+  has = (chainId: number | string) => {
     return this._all.some((n) => n.chainId === Number(chainId));
-  }
+  };
 
-  find(chainId: number | string) {
+  find = (chainId: number | string) => {
     return this._all.find((n) => n.chainId === Number(chainId));
-  }
+  };
 
-  async remove(chainId: number) {
+  remove = async (chainId: number) => {
     const chain = this.userChains.find((c) => c.chainId === chainId);
     if (!chain) return;
 
@@ -194,14 +196,14 @@ class Networks {
     if (isCurrent) this.switch(this.Ethereum);
 
     await Promise.all([userChain?.remove(), this.unpin(chain)]);
-  }
+  };
 
-  reset() {
+  reset = () => {
     this.switch(this.Ethereum);
     this.userChains = [];
-  }
+  };
 
-  async add(chain: AddEthereumChainParameter) {
+  add = async (chain: AddEthereumChainParameter) => {
     if (!Number.isSafeInteger(Number(chain?.chainId))) return false;
     if (this.find(chain.chainId)) return false;
     if (chain.rpcUrls?.length === 0) return false;
@@ -257,9 +259,9 @@ class Networks {
     await nc.save();
 
     return true;
-  }
+  };
 
-  async update(network: INetwork) {
+  update = async (network: INetwork) => {
     const value = this.find(network.chainId);
     if (!value) return;
 
@@ -292,7 +294,7 @@ class Networks {
     userChain.save();
 
     deleteRPCUrlCache(value.chainId);
-  }
+  };
 
   get MainnetWsProvider() {
     const [wss] = (providers['1'] as string[]).filter((r) => r.startsWith('wss://'));
@@ -301,14 +303,14 @@ class Networks {
     return provider;
   }
 
-  async testRPC(rpcUrl: string, expectedChainId: number | string) {
+  testRPC = async (rpcUrl: string, expectedChainId: number | string) => {
     try {
       const chainId = await callRPC(rpcUrl, { method: 'eth_chainId' });
       return Number(chainId) === Number(expectedChainId);
     } catch (error) {}
 
     return false;
-  }
+  };
 }
 
 export default new Networks();

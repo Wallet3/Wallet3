@@ -10,6 +10,7 @@ import { SECOND } from '../../../utils/time';
 import { Service } from 'react-native-zeroconf';
 import ShardKey from '../../../models/entities/ShardKey';
 import { ShardProvider } from '../ShardProvider';
+import { globalId } from '../../../common/p2p/Utils';
 import { handleRawService } from './Common';
 import { openShardProvider } from '../../../common/Modals';
 import { sha256Sync } from '../../../utils/cipher';
@@ -51,7 +52,7 @@ class PairedDevices {
     const verHash = service.txt?.['version'];
     const device = devices.find((d) => sha256Sync(d.shard.secretsInfo.version).substring(0, 16) === verHash);
 
-    if (!device) return;
+    if (!device || service.txt?.info?.globalId === globalId) return;
 
     const vm = new ShardProvider({ service, shardKey: device.shard });
     vm.once('shardSent' as any, () => this.handledIds.add(reqId));

@@ -70,7 +70,7 @@ const Tx = observer(
     const dappIcon = item.readableInfo?.icon;
     const amount = Number(item.readableInfo?.amount) || Number(utils.formatEther(item.value ?? '0'));
     const cancelTx = item.readableInfo?.cancelTx;
-    const to: string = item.readableInfo?.recipient ?? item.readableInfo?.dapp ?? item.to ?? '';
+    const to: string = item.readableInfo?.recipient || item.readableInfo?.dapp || item.to || '';
     const status = item.blockNumber ? (item.status ? 'confirmed' : 'failed') : 'pending';
     const methodName = t(`home-history-item-type-${method ?? (item.data !== '0x' ? 'contract-interaction' : 'sent')}`);
     const isInteraction = method.endsWith('interaction') || method === 'batchTx';

@@ -6,6 +6,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import AccountItem from './AccountItem';
 import App from '../../viewmodels/core/App';
+import DeviceInfo from 'react-native-device-info';
 import Networks from '../../viewmodels/core/Networks';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
@@ -22,17 +23,18 @@ interface Props {
 export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDone }: Props) => {
   const { t } = i18n;
   const { current } = Networks;
+  const { borderColor, textColor, backgroundColor,tintColor } = Theme;
+
   const list = useRef<FlatList>(null);
-  const { borderColor, textColor, backgroundColor } = Theme;
   const [busy, setBusy] = useState(false);
-  const themeColor = current.color;
+  const [isERC4337Version] = useState(DeviceInfo.getVersion().startsWith('4.337'));
 
   const renderAccount = ({ item }: ListRenderItemInfo<AccountBase>) => (
     <AccountItem
       account={item}
       currentNetwork={current}
       textColor={textColor}
-      themeColor={themeColor}
+      themeColor={tintColor}
       onEdit={onEditAccount}
       onRemove={onRemoveAccount}
       previewBackgroundColor={backgroundColor}
@@ -89,36 +91,36 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDon
 
       <Separator style={{ marginBottom: 4, opacity: 0.5, backgroundColor: borderColor }} />
 
-      {__DEV__ ? (
+      {__DEV__ || isERC4337Version ? (
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <MaterialIcons name="add-circle" size={22} color={themeColor} />
+          <MaterialIcons name="add-circle" size={22} color={tintColor} />
 
           <TouchableOpacity style={styles.option} onPress={() => newAccount('eoa')}>
-            <Text style={[{ marginStart: 10, color: themeColor }, styles.txt]}>
+            <Text style={[{ marginStart: 10, color: tintColor }, styles.txt]}>
               {t('modal-multi-accounts-button-create-account')}
             </Text>
           </TouchableOpacity>
 
-          {current.erc4337 && <Text style={[{ marginStart: 6, color: themeColor, marginEnd: 8 }, styles.txt]}>/</Text>}
+          {current.erc4337 && <Text style={[{ marginStart: 6, color: tintColor, marginEnd: 8 }, styles.txt]}>/</Text>}
 
           {current.erc4337 && (
             <TouchableOpacity style={styles.option} onPress={() => newAccount('erc4337')}>
-              <Text style={[{ color: themeColor }, styles.txt]}>{t('modal-multi-accounts-button-super-account')}</Text>
+              <Text style={[{ color: tintColor }, styles.txt]}>{t('modal-multi-accounts-button-super-account')}</Text>
             </TouchableOpacity>
           )}
         </View>
       ) : (
         <TouchableOpacity style={styles.option} onPress={() => newAccount('eoa')}>
-          <MaterialIcons name="add-circle" size={22} color={themeColor} />
-          <Text style={{ marginStart: 10, color: themeColor, fontWeight: '600', fontSize: 15 }}>
+          <MaterialIcons name="add-circle" size={22} color={tintColor} />
+          <Text style={{ marginStart: 10, color: tintColor, fontWeight: '600', fontSize: 15 }}>
             {t('modal-multi-accounts-button-create-account')}
           </Text>
         </TouchableOpacity>
       )}
 
       <TouchableOpacity style={styles.option} onPress={onImportWallet}>
-        <Ionicons name="key-outline" size={19} color={themeColor} style={{ paddingHorizontal: 1.5 }} />
-        <Text style={[{ marginStart: 10, color: themeColor }, styles.txt]}>
+        <Ionicons name="key-outline" size={19} color={tintColor} style={{ paddingHorizontal: 1.5 }} />
+        <Text style={[{ marginStart: 10, color: tintColor }, styles.txt]}>
           {t('modal-multi-accounts-button-import-account')}
         </Text>
       </TouchableOpacity>

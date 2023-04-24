@@ -9,6 +9,7 @@ import Bsc from './bnb.svg';
 import Canto from './canto.svg';
 import Celo from './celo.svg';
 import { Coin } from '../../../../components';
+import Conflux from './conflux.svg';
 import Consensys from './consensys.svg';
 import Cronos from './cronos.svg';
 import { Entypo } from '@expo/vector-icons';
@@ -16,6 +17,7 @@ import Ethereum from './ethereum2.svg';
 import EthereumClassic from './ethereum-classic.svg';
 import Evmos from './evmos.svg';
 import Fantom from './fantom.svg';
+import FastImage from 'react-native-fast-image';
 import Findora from './findora.svg';
 import Fuse from './fuse.svg';
 import Harmony from './harmony-one.svg';
@@ -39,6 +41,8 @@ import XDai from './xdai.svg';
 import ZKSync from './zksync.svg';
 import coins from '../../crypto';
 import styles from '../styles';
+
+const ScrollImg = require('./scroll.png');
 
 export const EVMIcon = ({
   color,
@@ -120,6 +124,8 @@ const NOVA = generateNetworkIcon({ chainId: 42170, width: 27, height: 32 });
 const CANTO = generateNetworkIcon({ chainId: 7700, width: 27, height: 32 });
 const BASE = generateNetworkIcon({ chainId: 84531, width: 27, height: 32 });
 const JOC = generateNetworkIcon({ chainId: 99999, width: 27, height: 32 });
+const SCROLL = generateNetworkIcon({ chainId: 534353, width: 27, height: 32 });
+const CONFLUX = generateNetworkIcon({ chainId: 1030, width: 27, height: 32 });
 
 export const NetworkIcons = {
   1: ETH,
@@ -157,6 +163,8 @@ export const NetworkIcons = {
   7700: CANTO,
   84531: BASE,
   99999: JOC,
+  534353: SCROLL,
+  1030: CONFLUX,
 };
 
 export function generateNetworkIcon(props: {
@@ -252,9 +260,13 @@ export function generateNetworkIcon(props: {
       return <JapanOpenChain key={chainId} width={width} height={height ?? width} style={style} />;
     case 59140:
       return <Consensys key={chainId} width={width} height={height ?? width} style={style} />;
+    case 534353:
+      return <FastImage key={chainId} source={ScrollImg} style={[{ width, height }, style as any]} />;
+    case 1030:
+      return <Conflux key={chainId} width={width} height={height ?? width} style={style} />;
     default:
       return coins[symbol?.toLowerCase() || ''] ? (
-        <Coin symbol={symbol} size={height ?? width} address="" chainId={chainId} style={style as any} />
+        <Coin key={chainId} symbol={symbol} size={height ?? width} address="" chainId={chainId} style={style as any} />
       ) : (
         <EVMIcon key={chainId} size={width} color={color!} style={style} hideEVMTitle={hideEVMTitle} />
       );

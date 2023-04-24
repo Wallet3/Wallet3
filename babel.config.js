@@ -11,7 +11,6 @@ module.exports = function (api) {
         'module-resolver',
         {
           alias: {
-            'expo-random': 'expo-crypto',
             '@account-abstraction/contracts': '@wallet3/account-abstraction-contracts',
           },
         },

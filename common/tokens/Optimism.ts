@@ -9,18 +9,21 @@ export const OP_USDC = {
   address: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
   decimals: 6,
   symbol: 'USDC',
+  isStable: true,
 };
 
 export const OP_DAI = {
   address: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
   decimals: 18,
   symbol: 'DAI',
+  isStable: true,
 };
 
 export const OP_USDT = {
   address: '0x94b008aA00579c1307B0EF2c499aD98a8ce58e58',
   decimals: 6,
   symbol: 'USDT',
+  isStable: true,
 };
 
 export const OP_WBTC = {
@@ -57,6 +60,12 @@ export const OP_CRV = {
   address: '0x0994206dfE8De6Ec6920FF4D779B0d950605Fb53',
   decimals: 18,
   symbol: 'CRV',
+};
+
+export const OP_UNI = {
+  address: '0x6fd9d7AD17242c41f7131d257212c54A0e816691',
+  decimals: 18,
+  symbol: 'UNI',
 };
 
 export const OP_LINK = {

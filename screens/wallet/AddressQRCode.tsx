@@ -55,11 +55,12 @@ export default observer(({ account }: { account: AccountBase }) => {
             style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 12, maxWidth: '70%', marginHorizontal: 16 }}
           >
             <Avatar
-              size={27}
+              size={25}
+              uri={account?.avatar}
               emoji={account?.emojiAvatar}
               emojiMarginStart={1}
               emojiMarginTop={1}
-              emojiSize={11}
+              emojiSize={10}
               backgroundColor={account?.emojiColor}
             />
 

@@ -9,6 +9,7 @@ import Boba from './boba.svg';
 import Canto from './canto.svg';
 import Celo from './celo.svg';
 import { Coin } from '../../../../components';
+import Conflux from './conflux.svg';
 import Cronos from './cronos.svg';
 import { Entypo } from '@expo/vector-icons';
 import Ethereum from './ethereum.svg';
@@ -30,6 +31,7 @@ import Optimism from './optimism.svg';
 import Polygon from './polygon.svg';
 import React from 'react';
 import Ronin from './ronin.svg';
+import Scroll from './scroll.svg';
 import Shiden from './shiden.svg';
 import XDai from './xdai.svg';
 import ZKSync from './zksync.svg';
@@ -68,6 +70,8 @@ export default {
   7700: <Canto width={45} height={45} style={styles.canto} />,
   84531: <Base width={45} height={45} style={styles.canto} />,
   99999: <JapanOpenChain width={45} height={45} style={styles.canto} />,
+  534353: <Scroll width={56} height={56} style={styles.scroll} />,
+  1030: <Conflux width={45} height={45} style={styles.conflux} />,
 };
 
 export const EVMIcon = ({
@@ -171,6 +175,10 @@ export function generateNetworkIcon(props: {
       return <Base key={chainId} width={width} height={height ?? width} style={style} />;
     case 99999:
       return <JapanOpenChain key={chainId} width={width} height={height ?? width} style={style} />;
+    case 534353:
+      return <Scroll key={chainId} width={width} height={height ?? width} style={style} />;
+    case 1030:
+      return <Conflux key={chainId} width={width} height={height ?? width} style={style} />;
     default:
       return coins[symbol?.toLowerCase() || ''] ? (
         <Coin symbol={symbol} size={height ?? width} address="" chainId={chainId} style={style as any} />

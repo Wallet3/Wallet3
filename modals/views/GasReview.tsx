@@ -249,7 +249,7 @@ export default observer(({ onBack, vm, themeColor }: GasProps) => {
         <TinyInfo
           icon="information-circle"
           color={thirdTextColor}
-          message="The service provider will charge 5-15% service fee if you pay gas fee with ERC20 tokens."
+          message="The service provider will charge 5-25% service fee if you pay gas fee with ERC20 tokens."
           style={{ paddingHorizontal: 16, paddingEnd: 24 }}
         />
       </SafeViewContainer>

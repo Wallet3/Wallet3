@@ -169,7 +169,7 @@
   "profile-addresses": "Addresses",
   "profile-more-records": "More Records",
   "profile-badges": "Badges",
-  "profile-my-qrcode": "",
+  "profile-my-qrcode": "QRCode",
   "modal-multi-accounts-title": "Accounts",
   "modal-multi-accounts-remove-account-desc": "Are you sure to remove this account?\n{{addr}}",
   "modal-multi-accounts-button-create-account": "Create an account",

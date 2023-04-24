@@ -50,6 +50,10 @@ export default observer(({ vm, close, erc681, onReviewEnter, onReviewLeave }: Pr
     return result.success;
   };
 
+  useEffect(() => {
+    erc681 && onReviewEnter?.();
+  }, [erc681]);
+
   const onSendClick = async () => {
     const selfAccount = App.allAccounts.find((c) => c.address === vm.toAddress);
 
@@ -108,7 +112,7 @@ export default observer(({ vm, close, erc681, onReviewEnter, onReviewLeave }: Pr
             txDataEditable={vm.isNativeToken}
           />
 
-          <AwaitablePasspad themeColor={vm.network.color} onCodeEntered={sendTx} onCancel={() => goTo(2)} />
+          <AwaitablePasspad themeColor={vm.network.color} onCodeEntered={sendTx} onCancel={() => goTo(erc681 ? 0 : 2)} />
         </Swiper>
       )}
     </SafeAreaProvider>

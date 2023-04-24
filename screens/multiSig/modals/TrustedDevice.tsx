@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 
 import Authentication from '../../../viewmodels/auth/Authentication';
 import BackableScrollTitles from '../../../modals/components/BackableScrollTitles';
+import { DAY } from '../../../utils/time';
 import { DateTimeFormatter } from '../../../utils/formatter';
 import DeleteConfirmationView from './views/DeleteConfirmationView';
 import { DeviceOverview } from './views/DeviceOverview';
+import KeySecurity from '../../../viewmodels/tss/management/KeySecurity';
 import ModalRootContainer from '../../../modals/core/ModalRootContainer';
 import { MultiSigKeyDeviceInfo } from '../../../models/entities/MultiSigKey';
 import Theme from '../../../viewmodels/settings/Theme';
@@ -33,7 +35,6 @@ export default ({ device, close, onDeleteDevice: onDelete, disableRemove, onDevi
   };
 
   const authAndNext = async () => {
-    console.log('go auth and next');
     (await Authentication.authenticate()) && goTo(1);
   };
 
@@ -61,6 +62,7 @@ export default ({ device, close, onDeleteDevice: onDelete, disableRemove, onDevi
           deviceInfo={device}
           disableButton={disableRemove}
           lastUsedAt={lastUsedAt}
+          expired={device.lastUsedAt < KeySecurity.InactiveDeadline}
           onNext={authAndNext}
           onDeviceNameChanged={onDeviceNameChanged}
           buttonTitle={t('button-remove')}
