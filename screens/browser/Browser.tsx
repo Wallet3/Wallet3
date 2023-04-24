@@ -225,6 +225,15 @@ export const Browser = observer(
       goTo(addr);
     };
 
+    const onShouldStartLoadWithRequest= (event) => {
+      const isExternalLink = !event.url.match(/^https?:/i) || event.url.match(/(twitter\.com\/)|(t\.me\/)|(telegram\.me\/)|(facebook\.com\/)|(whatsapp\.com\/)/i)
+      if (event.url !== 'about:blank' && isExternalLink) {
+        Linking.openURL(event.url)
+        return false
+      }
+      return true
+    }
+
     const onNavigationStateChange = (event: WebViewNavigation) => {
       if (!event.url) return;
 
@@ -518,6 +527,9 @@ export const Browser = observer(
                 title: hostname,
               });
             }}
+            originWhitelist={['http://*', 'https://*', 'intent://*']}
+            setSupportMultipleWindows={false}
+            onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
             onLoadProgress={({ nativeEvent }) => setLoadingProgress(nativeEvent.progress)}
             onLoadEnd={() => {
               setLoadingProgress(1);
