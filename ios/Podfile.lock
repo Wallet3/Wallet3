@@ -629,7 +629,7 @@ PODS:
   - EXImageLoader (4.1.1):
     - ExpoModulesCore
     - React-Core
-  - Expo (48.0.11):
+  - Expo (48.0.15):
     - ExpoModulesCore
   - ExpoAdapterGoogleSignIn (9.0.2):
     - ExpoModulesCore
@@ -663,7 +663,7 @@ PODS:
     - ExpoModulesCore
   - EXSecureStore (12.1.1):
     - ExpoModulesCore
-  - EXSplashScreen (0.18.1):
+  - EXSplashScreen (0.18.2):
     - ExpoModulesCore
     - React-Core
   - EXSQLite (11.1.1):
@@ -1245,14 +1245,14 @@ PODS:
     - React-Core
     - SDWebImage (~> 5.11.1)
     - SDWebImageWebPCoder (~> 0.8.4)
-  - RNFBAnalytics (17.4.2):
+  - RNFBAnalytics (17.4.3):
     - Firebase/Analytics (= 10.7.0)
     - React-Core
     - RNFBApp
-  - RNFBApp (17.4.2):
+  - RNFBApp (17.4.3):
     - Firebase/CoreOnly (= 10.7.0)
     - React-Core
-  - RNFBFirestore (17.4.2):
+  - RNFBFirestore (17.4.3):
     - Firebase/Firestore (= 10.7.0)
     - nanopb (< 2.30910.0, >= 2.30908.0)
     - React-Core
@@ -1612,7 +1612,7 @@ SPEC CHECKSUMS:
   EXFileSystem: 844e86ca9b5375486ecc4ef06d3838d5597d895d
   EXFont: 6ea3800df746be7233208d80fe379b8ed74f4272
   EXImageLoader: fd053169a8ee932dd83bf1fe5487a50c26d27c2b
-  Expo: 81418098ffb16914b2e190f54e06db923248e4a1
+  Expo: 62bba165c9cd30a2983176e7d975ae688b6334b6
   ExpoAdapterGoogleSignIn: 98a113d9c0ed1ce7cf6259f0907d3f93209b0d7f
   ExpoAppleAuthentication: 7bd5e4150d59e8df37aa80b425850ae88adf9e65
   ExpoBlur: b0d995dbfc725fc5b7ee60da076131995300815d
@@ -1627,7 +1627,7 @@ SPEC CHECKSUMS:
   ExpoWebBrowser: 033d34c478d9986da2f1679729041423837626e0
   EXScreenCapture: d9284f4a6508c86d0d463805b93672397d18de0f
   EXSecureStore: e8923258361cc406d0401af380f12bd05b2b720f
-  EXSplashScreen: cd7fb052dff5ba8311d5c2455ecbebffe1b7a8ca
+  EXSplashScreen: 0e0a9ba0cf7553094e93213099bd7b42e6e237e9
   EXSQLite: 848167441b14cb6cdd6ae46c8d62289161a79550
   FBLazyVector: a89a0525bc7ca174675045c2b492b5280d5a2470
   FBReactNativeSpec: 7714e6bc1e9ea23df6c4cb42f0b2fd9c6a3a559c
@@ -1695,9 +1695,9 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: b90b71f45b8b97be43bc4284e71a6af48ac9f547
   RNDeviceInfo: 475a4c447168d0ad4c807e48ef5e0963a0f4eb1b
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
-  RNFBAnalytics: 37f524d72996cd658b188ce750d9a45ed5dcf5de
-  RNFBApp: 0f6bd7ee155a50f5e68cd68aab2709a4d24bfdff
-  RNFBFirestore: a782f9e265cf715c4058d44923b2017269a1381d
+  RNFBAnalytics: 2cce6dc6ba18d3ecd92974fc97956bb2df2cdf77
+  RNFBApp: e8a35f0ef545dfa1be1f09411ea2078f870a9089
+  RNFBFirestore: 7ea903241b28f46edcb04b4cc35054e58ee2fa29
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNGoogleSignin: 22e468a9474dbcb8618d8847205ad4f0b2575d13
   RNImageColors: 9ac05083b52d5c350e6972650ae3ba0e556466c1

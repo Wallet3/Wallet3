@@ -13,6 +13,7 @@ import Conflux from './conflux.svg';
 import Consensys from './consensys.svg';
 import Cronos from './cronos.svg';
 import { Entypo } from '@expo/vector-icons';
+import Eos from './eos.svg';
 import Ethereum from './ethereum2.svg';
 import EthereumClassic from './ethereum-classic.svg';
 import Evmos from './evmos.svg';
@@ -126,6 +127,7 @@ const BASE = generateNetworkIcon({ chainId: 84531, width: 27, height: 32 });
 const JOC = generateNetworkIcon({ chainId: 99999, width: 27, height: 32 });
 const SCROLL = generateNetworkIcon({ chainId: 534353, width: 27, height: 32 });
 const CONFLUX = generateNetworkIcon({ chainId: 1030, width: 27, height: 32 });
+const EOS = generateNetworkIcon({ chainId: 17777, width: 27, height: 32 });
 
 export const NetworkIcons = {
   1: ETH,
@@ -165,6 +167,7 @@ export const NetworkIcons = {
   99999: JOC,
   534353: SCROLL,
   1030: CONFLUX,
+  17777: EOS,
 };
 
 export function generateNetworkIcon(props: {
@@ -264,6 +267,8 @@ export function generateNetworkIcon(props: {
       return <FastImage key={chainId} source={ScrollImg} style={[{ width, height }, style as any]} />;
     case 1030:
       return <Conflux key={chainId} width={width} height={height ?? width} style={style} />;
+    case 17777:
+      return <Eos key={chainId} width={width} height={height ?? width} style={style} />;
     default:
       return coins[symbol?.toLowerCase() || ''] ? (
         <Coin key={chainId} symbol={symbol} size={height ?? width} address="" chainId={chainId} style={style as any} />

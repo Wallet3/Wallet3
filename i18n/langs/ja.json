@@ -168,7 +168,7 @@
   "profile-addresses": "アドレス",
   "profile-more-records": "他のレコード",
   "profile-badges": "バッジ",
-  "profile-my-qrcode": "私のQRCode",
+  "profile-my-qrcode": "QRCode",
   "modal-multi-accounts-title": "アカウント",
   "modal-multi-accounts-remove-account-desc": "このアカウントを削除してもよろしいですか？\n{{addr}}",
   "modal-multi-accounts-button-create-account": "通常アカウント",

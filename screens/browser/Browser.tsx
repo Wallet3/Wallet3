@@ -26,6 +26,7 @@ import { ReactiveScreen } from '../../utils/device';
 import RecentHistory from './components/RecentHistory';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SectionGrid } from 'react-native-super-grid';
+import { ShouldStartLoadRequest } from 'react-native-webview/lib/WebViewTypes';
 import SquircleModalize from '../../modals/core/SquircleModalize';
 import { StatusBar } from 'expo-status-bar';
 import Theme from '../../viewmodels/settings/Theme';
@@ -50,6 +51,9 @@ const calcIconSize = () => {
 const { LargeIconSize, SmallIconSize } = calcIconSize();
 
 type WebRiskLevel = 'verified' | 'tls' | 'insecure' | 'risky';
+
+const RegexHttps = /^https?\:/i;
+const RegexSocials = /(twitter\.com|t\.me|facebook\.com|whatsapp\.com)/i;
 
 interface Props {
   pageId: number;
@@ -225,14 +229,16 @@ export const Browser = observer(
       goTo(addr);
     };
 
-    const onShouldStartLoadWithRequest= (event) => {
-      const isExternalLink = !event.url.match(/^https?:/i) || event.url.match(/(twitter\.com\/)|(t\.me\/)|(telegram\.me\/)|(facebook\.com\/)|(whatsapp\.com\/)/i)
+    const onShouldStartLoadWithRequest = (event: ShouldStartLoadRequest) => {
+      const isExternalLink = !RegexHttps.test(event.url) || RegexSocials.test(event.url);
+
       if (event.url !== 'about:blank' && isExternalLink) {
-        Linking.openURL(event.url)
-        return false
+        Linking.openURL(event.url);
+        return false;
       }
-      return true
-    }
+
+      return true;
+    };
 
     const onNavigationStateChange = (event: WebViewNavigation) => {
       if (!event.url) return;

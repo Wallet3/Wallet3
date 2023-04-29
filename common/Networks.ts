@@ -355,6 +355,14 @@ export const PublicNetworks: INetwork[] = [
     github_dir: 'doge',
   },
   {
+    symbol: 'EOS',
+    chainId: 17777,
+    network: 'EOS',
+    explorer: 'https://explorer.evm.eosnetwork.com',
+    defaultTokens: [],
+    color: '#0f4fe3',
+  },
+  {
     symbol: 'CFX',
     chainId: 1030,
     network: 'Conflux eSpace',
