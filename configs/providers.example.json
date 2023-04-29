@@ -29,6 +29,9 @@
     "https://rpc-mainnet.matic.network",
     "https://matic-mainnet-archive-rpc.bwarelabs.com"
   ],
+    "144": [
+    "https://connect.phi.network",
+  ],
 
   "250": ["https://rpc.ftm.tools", "https://rpc.fantom.network", "https://rpcapi.fantom.network"],
 
