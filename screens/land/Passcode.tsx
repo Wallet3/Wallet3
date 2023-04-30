@@ -14,7 +14,7 @@ import { sleep } from '../../utils/async';
 import styles from './styles';
 import { themeColor } from '../../constants/styles';
 
-export default observer(({ route }: NativeStackScreenProps<LandScreenStack, 'Backup'>) => {
+export default observer(({ route, navigation }: NativeStackScreenProps<LandScreenStack, 'Backup'>) => {
   const { t } = i18n;
   const [busy, setBusy] = useState(false);
 
@@ -44,6 +44,7 @@ export default observer(({ route }: NativeStackScreenProps<LandScreenStack, 'Bac
         onBiometricValueChange={(v) => Authentication.setBiometrics(v)}
         onDone={finishInitialization}
         themeColor={themeColor}
+        navigation={navigation}
       />
       <Loader loading={busy} message={t('land-passcode-encrypting')} />
     </SafeViewContainer>
