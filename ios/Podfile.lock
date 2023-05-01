@@ -1127,7 +1127,7 @@ PODS:
     - glog
   - react-native-context-menu-view (1.9.1):
     - React
-  - react-native-quick-base64 (2.0.5):
+  - react-native-quick-base64 (2.0.6):
     - React-Core
   - react-native-randombytes (3.6.1):
     - React-Core
@@ -1670,7 +1670,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 9885f6f94d231b95a739ef7bb50536fb87ce7539
   React-logger: 3f8ebad1be1bf3299d1ab6d7f971802d7395c7ef
   react-native-context-menu-view: a54a97ead7e44b0671a8c2b48ac70b9e4e2a19fb
-  react-native-quick-base64: e657e9197e61b60a9dec49807843052b830da254
+  react-native-quick-base64: 62290829c619fbabca4c41cfec75ae759d08fc1c
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: 1d596539b05a78f2b346e954e7c577f6f9be7544
   react-native-slider: 33b8d190b59d4f67a541061bb91775d53d617d9d

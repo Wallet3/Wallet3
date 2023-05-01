@@ -8001,10 +8001,10 @@ eventemitter3@^4.0.7:
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
   integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
 
-eventemitter3@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-5.0.0.tgz#084eb7f5b5388df1451e63f4c2aafd71b217ccb3"
-  integrity sha512-riuVbElZZNXLeLEoprfNYoDSwTBRR44X3mnhdI1YcnENpWTCsTTVZ2zFuqQcpoyqPQIUXdiPEU0ECAq0KQRaHg==
+eventemitter3@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-5.0.1.tgz#53f5ffd0a492ac800721bb42c66b841de96423c4"
+  integrity sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA==
 
 events@^3.0.0, events@^3.3.0:
   version "3.3.0"
@@ -12562,6 +12562,13 @@ react-native-quick-base64@^2.0.5:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/react-native-quick-base64/-/react-native-quick-base64-2.0.5.tgz#461a0748f65bf83befa1c4159749d781440796c0"
   integrity sha512-waRcIlchdLCSzpWYqRNIN5NyE5PxKyedMQ/sTgA/fcEkBzwp3EOwjhsfVuJuBtc1bHL2Mg34pxDVBxyLU3Mu2Q==
+  dependencies:
+    base64-js "^1.5.1"
+
+react-native-quick-base64@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/react-native-quick-base64/-/react-native-quick-base64-2.0.6.tgz#be5d02186697dafea9cce6b982ba6a2322f2ce42"
+  integrity sha512-sCHsp4EzOL5OZF+77UfMolhgFDo1nM9TbwNFNExVqOFbMwj13KTGwStwjM9diunCHR9hKEt4LEGf9Afq3FOXzA==
   dependencies:
     base64-js "^1.5.1"
 
