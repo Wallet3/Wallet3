@@ -24,7 +24,7 @@ interface Props {
 export default observer(
   ({ biometricSupported, biometricEnabled, themeColor, onBiometricValueChange, onDone, navigation }: Props) => {
     const { t } = i18n;
-    const { foregroundColor, tintColor, isLightMode, mode } = Theme;
+    const { foregroundColor, tintColor, isLightMode, mode, textColor } = Theme;
 
     const passcodeLength = 6;
     const [passcode, setPasscode] = useState('');
@@ -71,22 +71,25 @@ export default observer(
       tipView.current?.fadeIn?.();
     }, [passcode]);
 
+    const reset = () => (
+      <TouchableOpacity
+        style={{ padding: 12, margin: -12 }}
+        onPress={() => {
+          setPasscode('');
+          setConfirm('');
+          setVerified(false);
+        }}
+      >
+        <Text style={{ color: textColor, fontWeight: '500' }}>{t('button-reset')}</Text>
+      </TouchableOpacity>
+    );
+
     useEffect(() => {
-      navigation?.setOptions({
-        headerRight: () => (
-          <TouchableOpacity
-            style={{ padding: 12, margin: -12 }}
-            onPress={() => {
-              setPasscode('');
-              setConfirm('');
-              setVerified(false);
-            }}
-          >
-            <Text>{t('button-reset')}</Text>
-          </TouchableOpacity>
-        ),
-      });
-    }, []);
+      if (!navigation) return;
+
+      const headerRight = (passcode || confirm).length > 0 ? reset : undefined;
+      navigation.setOptions({ headerRight });
+    }, [passcode]);
 
     return (
       <View style={{ flex: 1 }}>
