@@ -32,6 +32,7 @@ import { StatusBar } from 'expo-status-bar';
 import Theme from '../../viewmodels/settings/Theme';
 import ViewShot from 'react-native-view-shot';
 import i18n from '../../i18n';
+import { isAndroid } from '../../utils/platform';
 import { isURL } from '../../utils/url';
 import { observer } from 'mobx-react-lite';
 import { renderUserBookmarkItem } from './components/BookmarkItem';
@@ -516,7 +517,7 @@ export const Browser = observer(
           <Web3View
             originWhitelist={['http://*', 'https://*', 'intent://*']}
             setSupportMultipleWindows={false}
-            onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
+            onShouldStartLoadWithRequest={isAndroid ? onShouldStartLoadWithRequest : undefined}
             webViewRef={webview}
             viewShotRef={viewShot}
             tabCount={globalState?.pageCount}

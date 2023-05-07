@@ -80,7 +80,7 @@ export default observer(
           setVerified(false);
         }}
       >
-        <Text style={{ color: textColor, fontWeight: '500' }}>{t('button-reset')}</Text>
+        <Text style={{ color: textColor, fontWeight: '600' }}>{t('button-reset')}</Text>
       </TouchableOpacity>
     );
 
