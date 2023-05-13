@@ -13,7 +13,7 @@ const EIP2612Schema = {
   domain: {
     $$type: 'object',
     name: 'string',
-    version: 'string',
+    version: { type: 'string', nullable: true, optional: true },
     chainId: ['string', 'number'],
     verifyingContract: {
       type: 'string',
@@ -54,6 +54,7 @@ class EIP2612Checker {
     }
 
     const result = this.checker(obj);
+    if (result !== true) console.log(result);
     return result === true;
   }
 }
