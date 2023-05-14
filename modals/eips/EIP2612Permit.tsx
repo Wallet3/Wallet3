@@ -95,12 +95,16 @@ export default ({ eip2612, metadata, onAddressChecked }: Props) => {
             />
           )}
 
-          <Coin
-            symbol={symbol}
-            size={20}
-            address={eip2612.domain.verifyingContract}
-            chainId={Number(eip2612.domain.chainId)}
-          />
+          {symbol ? (
+            <Coin
+              symbol={symbol}
+              size={20}
+              address={eip2612.domain.verifyingContract}
+              chainId={Number(eip2612.domain.chainId)}
+            />
+          ) : (
+            <Skeleton style={{ width: 20 }} />
+          )}
 
           <Text style={{ ...reviewItemValueStyle, marginStart: 4, maxWidth: 64 }} numberOfLines={1}>
             {symbol || eip2612.domain.name}

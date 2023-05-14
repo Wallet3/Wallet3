@@ -4,7 +4,7 @@ import { utils } from 'ethers';
 
 export interface EIP2612 {
   primaryType: 'Permit';
-  domain: { name: string; version: string; chainId: string; verifyingContract: string };
+  domain: { name: string; version?: string; chainId: string; verifyingContract: string };
   message: { owner: string; spender: string; value: string; nonce: string; deadline: string };
 }
 
@@ -54,7 +54,8 @@ class EIP2612Checker {
     }
 
     const result = this.checker(obj);
-    if (result !== true) console.log(result);
+    if (__DEV__ && result !== true) console.log(result);
+
     return result === true;
   }
 }

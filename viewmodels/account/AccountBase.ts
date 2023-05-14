@@ -1,7 +1,7 @@
 import * as ethSignUtil from '@metamask/eth-sig-util';
 
-import { BigNumber, BigNumberish, ContractReceipt, providers, utils } from 'ethers';
-import { SignTxRequest, SignTypedDataRequest, WalletBase } from '../wallet/WalletBase';
+import { BigNumber, providers, utils } from 'ethers';
+import { SignTypedDataRequest, WalletBase } from '../wallet/WalletBase';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { genColor, genEmoji } from '../../utils/emoji';
 
@@ -10,18 +10,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthOptions } from '../auth/Authentication';
 import CurrencyViewmodel from '../settings/Currency';
 import { ENSViewer } from './content/ENSViewer';
-import { IFungibleToken } from '../../models/Interfaces';
 import { INetwork } from '../../common/Networks';
-import { ITokenMetadata } from '../../common/tokens';
 import { NFTViewer } from './content/NFTViewer';
-import Networks from '../core/Networks';
 import { POAP } from './content/POAP';
 import { Paymaster } from '../services/erc4337/Paymaster';
 import { ReadableInfo } from '../../models/entities/Transaction';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import { formatAddress } from '../../utils/formatter';
-import { getEnsAvatar } from '../../common/ENS';
 import { logEthSign } from '../services/Analytics';
 
 export type AccountType = 'eoa' | 'erc4337';

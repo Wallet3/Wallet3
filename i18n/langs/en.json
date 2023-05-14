@@ -227,7 +227,7 @@
   "modal-dapp-request-to": "To",
   "modal-dapp-approve-to": "Approve To",
   "modal-dapp-request-deploy-contract": "Deploy Contract",
-  "modal-dapp-request-sign-deadline": "Expired At",
+  "modal-dapp-request-sign-deadline": "Expire At",
   "modal-dapp-not-supported-network": "Not Supported Network",
   "modal-dapp-add-new-network-title": "Add an EVM Network",
   "modal-dapp-add-new-network-network": "Network",
