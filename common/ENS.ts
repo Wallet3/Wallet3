@@ -146,9 +146,7 @@ async function fetchAvatar(nodehash: string, owner: string, resolver = ENSResolv
             })
           );
 
-          if (owner !== tokenOwner) {
-            return null;
-          }
+          if (!tokenOwner || !utils.isAddress(tokenOwner)) return null;
 
           linkage.push({ type: 'owner', content: tokenOwner });
         } else if (match[1] === 'erc1155') {
@@ -160,9 +158,9 @@ async function fetchAvatar(nodehash: string, owner: string, resolver = ENSResolv
             })
           );
 
-          if (balance.isZero()) {
-            return null;
-          }
+          // if (balance.isZero()) {
+          //   return null;
+          // }
           linkage.push({ type: 'balance', content: balance.toString() });
         }
 
@@ -171,6 +169,7 @@ async function fetchAvatar(nodehash: string, owner: string, resolver = ENSResolv
           to: utils.getAddress(comps[0]),
           data: utils.hexConcat([selector, tokenId]),
         };
+
         let metadataUrl = _parseString((await eth_call(1, tx))!);
         if (metadataUrl == null) {
           return null;
