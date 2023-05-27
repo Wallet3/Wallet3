@@ -101,6 +101,7 @@ export abstract class AccountBase {
       tokens: observable,
       displayName: computed,
       balance: computed,
+      avatar: computed,
       emojiAvatar: observable,
       emojiColor: observable,
       nickname: observable,

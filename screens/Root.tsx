@@ -136,11 +136,7 @@ const RootTab = observer(() => {
                     emoji={currentAccount?.emojiAvatar}
                     backgroundColor={currentAccount?.emojiColor}
                     emojiSize={8}
-                    style={{
-                      marginEnd: -2,
-                      borderWidth: currentAccount?.avatar ? 1 : 0,
-                      borderColor: currentAccount?.emojiColor,
-                    }}
+                    style={{ marginEnd: -2 }}
                   />
                   <Logo height={16} width={100} color={foregroundColor} />
                 </TouchableOpacity>

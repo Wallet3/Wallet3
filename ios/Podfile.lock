@@ -1151,7 +1151,7 @@ PODS:
     - React-Core
   - react-native-view-shot (3.6.0):
     - React-Core
-  - react-native-webview (12.0.2):
+  - react-native-webview (12.1.0):
     - React-Core
   - react-native-zeroconf (0.13.8):
     - React-Core
@@ -1678,7 +1678,7 @@ SPEC CHECKSUMS:
   react-native-tcp-socket: e724380c910c2e704816ec817ed28f1342246ff7
   react-native-video: c26780b224543c62d5e1b2a7244a5cd1b50e8253
   react-native-view-shot: 705f999ac2a24e4e6c909c0ca65c732ed33ca2ff
-  react-native-webview: 203b6a1c7507737f777c91d7e10c30e7e67c1a17
+  react-native-webview: 13db17f7c7fe8f91c826e9afcc369cbc74507ea0
   react-native-zeroconf: 5b38b434ccc6ca245c8a5ffd64a4501e67f9edcb
   React-perflogger: d21f182895de9d1b077f8a3cd00011095c8c9100
   React-RCTActionSheet: 0151f83ef92d2a7139bba7dfdbc8066632a6d47b
