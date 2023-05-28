@@ -9,7 +9,8 @@
     "*.beaconcha.in",
     "llamanodes.com",
     "llamarpc.com",
-    "web3q.io"
+    "web3q.io",
+    "attest.sh"
   ],
   "DeFi": [
     "*.uniswap.org",
@@ -199,6 +200,7 @@
     "defi.instadapp.io",
     "clarity.so",
     "etherscan.io",
+    "easscan.org",
     "www.ankr.com",
     "gnosis-safe.io",
     "chainlist.org",

@@ -25,6 +25,7 @@ interface Props extends FastImageProps {
   backgroundColor?: string;
   borderRadius?: number;
   loadingIconSize?: number;
+  loadingIconStyle?: StyleProp<ViewStyle>;
   onColorParsed?: (colors: ImageColorsResult) => void;
   containerStyle?: StyleProp<ViewStyle>;
 }
@@ -117,6 +118,7 @@ export default (props: Props) => {
             name="hexagon"
             size={props.loadingIconSize || Number((props.style as any)?.width) || 64}
             color="#55555555"
+            style={props.loadingIconStyle}
           />
         </Animatable.View>
       )}

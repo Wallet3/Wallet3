@@ -54,6 +54,13 @@ export const sUSD = {
   isStable: true,
 };
 
+export const crvUSD = {
+  address: '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E',
+  decimals: 18,
+  symbol: 'crvUSD',
+  isStable: true,
+};
+
 export const PAX = {
   address: '0x8E870D67F660D95d5be530380D0eC0bd388289E1',
   decimals: 18,

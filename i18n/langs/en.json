@@ -404,7 +404,7 @@
   "msg-please-enable-biometric": "Please use biometric authentication to authorize this operation.",
 
   "network-category-core": "Primary Networks",
-  "network-category-l2": "Layer2s",
+  "network-category-l2": "Layer2 Networks",
   "network-category-pinned": "Pinned",
   "network-category-evm-compatible": "EVM-Compatible",
   "network-category-user-added": "User-added Networks",

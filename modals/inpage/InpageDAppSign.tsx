@@ -18,7 +18,7 @@ export default observer(({ msg, type, chainId, typedData, approve, reject, close
   const [verified, setVerified] = useState(false);
   const [themeColor] = useState(Networks.find(chainId)?.color ?? Networks.Ethereum.color);
   const { bottom } = useSafeAreaInsets();
-  const [height] = useState(styles.safeArea.height + (typedData ? bottom : 0));
+  const [height] = useState(styles.safeArea.height + (typedData ? bottom + 16 : 0));
 
   const onReject = () => {
     reject();

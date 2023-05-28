@@ -106,7 +106,9 @@ export class Paymaster extends PaymasterAPI {
           this.contract.getDeposit(),
           this.contract.isAccountBlocked(this.account.address),
         ]);
-      } catch (error) {}
+      } catch (error) {
+        __DEV__ && console.log(error);
+      }
     }
 
     const unavailable = this.balance.lt(necessaryGasWei) || blocked;
