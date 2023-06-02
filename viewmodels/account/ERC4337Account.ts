@@ -29,7 +29,7 @@ export class ERC4337Account extends AccountBase {
   async getNonce(chainId: number) {
     if (!(await this.checkActivated(chainId))) return BigNumber.from(0);
 
-    const resp = await eth_call_return(chainId, { to: this.address, data: '0xaffed0e0' });
+    const resp = await eth_call_return(chainId, { to: this.address, data: '0xd087d288' });
     if (!resp || resp.error) return BigNumber.from(0);
 
     return BigNumber.from(resp.result);
@@ -82,38 +82,27 @@ export class ERC4337Account extends AccountBase {
     }
 
     let op!: UserOperationStruct;
+    txs = txs || [tx!];
 
-    try {
-      if (Array.isArray(txs)) {
-        const requests = txs.map((tx) => {
-          return {
-            target: utils.getAddress(tx.to!),
-            value: tx.value || 0,
-            data: (tx.data as string) || '0x',
-          };
-        });
+    if (tx && !utils.isAddress(tx!.to || '')) {
+      op = await client.createSignedUserOpForCreate2(
+        {
+          bytecode: tx!.data as string,
+          salt: utils.formatBytes32String(`${await this.getNonce(network.chainId)}`),
+          value: tx?.value || '0x0',
+        },
+        gas
+      );
+    } else {
+      const requests = txs.map((tx) => {
+        return {
+          target: utils.getAddress(tx.to!),
+          value: tx.value || 0,
+          data: (tx.data as string) || '0x',
+        };
+      });
 
-        op = await client.createSignedUserOpForTransactions(requests, gas);
-      } else {
-        op = utils.isAddress(tx!.to || '')
-          ? await client.createSignedUserOp({
-              target: utils.getAddress(tx!.to!),
-              value: tx!.value || 0,
-              data: (tx!.data as string) || '0x',
-              ...gas,
-            })
-          : await client.createSignedUserOpForCreate2(
-              {
-                bytecode: tx!.data as string,
-                salt: utils.formatBytes32String(`${await this.getNonce(network.chainId)}`),
-                value: tx?.value || '0x0',
-              },
-              gas
-            );
-      }
-    } catch (error) {
-      console.error(error);
-      return { success: false };
+      op = await client.createSignedUserOpForTransactions(requests, gas);
     }
 
     if (!op) return { success: false };

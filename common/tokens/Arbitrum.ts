@@ -6,13 +6,21 @@ export const ARBI_USDT = {
   isStable: true,
 };
 
-export const ARBI_USDC = {
+export const ARBI_USDC_e = {
   address: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
+  decimals: 6,
+  symbol: 'USDC.e',
+  shown: false,
+  isStable: true,
+};
+
+export const ARBI_USDC = {
+  address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
   decimals: 6,
   symbol: 'USDC',
   shown: true,
   isStable: true,
-};
+}
 
 export const ARBI_DAI = {
   address: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
@@ -53,4 +61,4 @@ export const ARBI_LINK = {
   symbol: 'LINK',
 };
 
-export const ArbiPopularTokens = [ARBI_ARB, ARBI_DAI, ARBI_USDC, ARBI_USDT, ARBI_WBTC, ARBI_wstETH];
+export const ArbiPopularTokens = [ARBI_ARB, ARBI_DAI, ARBI_USDC, ARBI_USDC_e, ARBI_USDT, ARBI_WBTC, ARBI_wstETH];

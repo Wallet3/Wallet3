@@ -629,7 +629,7 @@ PODS:
   - EXImageLoader (4.1.1):
     - ExpoModulesCore
     - React-Core
-  - Expo (48.0.17):
+  - Expo (48.0.19):
     - ExpoModulesCore
   - ExpoAdapterGoogleSignIn (9.0.2):
     - ExpoModulesCore
@@ -1151,7 +1151,7 @@ PODS:
     - React-Core
   - react-native-view-shot (3.6.0):
     - React-Core
-  - react-native-webview (12.1.0):
+  - react-native-webview (12.2.0):
     - React-Core
   - react-native-zeroconf (0.13.8):
     - React-Core
@@ -1259,7 +1259,7 @@ PODS:
     - nanopb (< 2.30910.0, >= 2.30908.0)
     - React-Core
     - RNFBApp
-  - RNGestureHandler (2.10.1):
+  - RNGestureHandler (2.10.2):
     - React-Core
   - RNGoogleSignin (9.0.2):
     - GoogleSignIn (~> 6.2)
@@ -1612,7 +1612,7 @@ SPEC CHECKSUMS:
   EXFileSystem: 844e86ca9b5375486ecc4ef06d3838d5597d895d
   EXFont: 6ea3800df746be7233208d80fe379b8ed74f4272
   EXImageLoader: fd053169a8ee932dd83bf1fe5487a50c26d27c2b
-  Expo: d351b4546895fb99ae4e5a1bc39df770ab9dc7d1
+  Expo: 8448e3a2aa1b295f029c81551e1ab6d986517fdb
   ExpoAdapterGoogleSignIn: 98a113d9c0ed1ce7cf6259f0907d3f93209b0d7f
   ExpoAppleAuthentication: 7bd5e4150d59e8df37aa80b425850ae88adf9e65
   ExpoBlur: b0d995dbfc725fc5b7ee60da076131995300815d
@@ -1678,7 +1678,7 @@ SPEC CHECKSUMS:
   react-native-tcp-socket: e724380c910c2e704816ec817ed28f1342246ff7
   react-native-video: c26780b224543c62d5e1b2a7244a5cd1b50e8253
   react-native-view-shot: 705f999ac2a24e4e6c909c0ca65c732ed33ca2ff
-  react-native-webview: 13db17f7c7fe8f91c826e9afcc369cbc74507ea0
+  react-native-webview: 35e076d88994c63f4435de2058e4091d1c92415e
   react-native-zeroconf: 5b38b434ccc6ca245c8a5ffd64a4501e67f9edcb
   React-perflogger: d21f182895de9d1b077f8a3cd00011095c8c9100
   React-RCTActionSheet: 0151f83ef92d2a7139bba7dfdbc8066632a6d47b
@@ -1699,7 +1699,7 @@ SPEC CHECKSUMS:
   RNFBAnalytics: 3444df9286d36b630b5fae9283a5c797b524e437
   RNFBApp: 0d8bf86673bbad0524d1ceac3944d71ccf48a0e4
   RNFBFirestore: f16efbd47cd136fe84cb93dc87ad4155807db221
-  RNGestureHandler: 42ec7c28dd02d540ed6c9159c57a98ff016492dc
+  RNGestureHandler: f75d81410b40aaa99e71ae8f8bb7a88620c95042
   RNGoogleSignin: 22e468a9474dbcb8618d8847205ad4f0b2575d13
   RNReanimated: cc5e3aa479cb9170bcccf8204291a6950a3be128
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f

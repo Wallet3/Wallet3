@@ -14,6 +14,11 @@ export class ERC4337Client extends SimpleAccountAPI {
     return BigNumber.from(150_000);
   }
 
+  async getPreVerificationGas(userOp: Partial<UserOperationStruct>): Promise<number> {
+    const vg = await super.getPreVerificationGas(userOp);
+    return Math.max(vg, 50_000); // 0.6.0
+  }
+
   async encodeCreate2(value: BigNumberish, salt: string, bytecode: string) {
     const ca = await this._getAccountContract();
     return ca.interface.encodeFunctionData('executeContractDeployment', [value, salt, bytecode]);
@@ -65,6 +70,9 @@ export class ERC4337Client extends SimpleAccountAPI {
         to: await this.getAccountAddress(),
         data: callData,
       });
+
+      // 0.6.0
+      callGasLimit = callGasLimit.lt(33100) ? BigNumber.from(33100) : callGasLimit;
     } catch (error) {
       console.log('estimateERC4337 Gas', error);
     }

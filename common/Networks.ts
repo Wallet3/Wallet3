@@ -168,7 +168,7 @@ export const PublicNetworks: INetwork[] = [
     explorer: 'https://bscscan.com',
     etherscanApi: 'https://api.bscscan.com/api',
     github_dir: 'smartchain',
-    minWei: 5 * Gwei_1,
+    minWei: Gwei_1,
     category: 'core',
   },
   {
