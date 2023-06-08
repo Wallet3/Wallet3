@@ -10,6 +10,11 @@
     "title": "Perp"
   },
   {
+    "url": "https://verse.bitcoin.com",
+    "icon": "https://verse.bitcoin.com/images/favicon.png",
+    "title": "Verse"
+  },
+  {
     "url": "https://learn.metamask.io",
     "icon": "https://img.icons8.com/emoji/96/null/blue-book.png",
     "title": "Learn"
