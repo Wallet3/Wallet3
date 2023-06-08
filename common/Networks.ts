@@ -114,6 +114,7 @@ export const PublicNetworks: INetwork[] = [
     color: '#FF0420',
     order: 3,
     l2: true,
+    eip1559: true,
     defaultTokens: OpPopularTokens,
     showOverview: false,
     explorer: 'https://optimistic.etherscan.io',

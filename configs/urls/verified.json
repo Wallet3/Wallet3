@@ -24,6 +24,8 @@
     "*.balancer.fi",
     "*.1inch.io",
     "app.hashflow.com",
+    "frax.finance",
+    "app.frax.finance",
     "pancakeswap.finance",
     "*.dydx.exchange",
     "*.velodrome.finance",

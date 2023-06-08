@@ -59,7 +59,7 @@ export async function fetchAddressInfo(chainId: number, address: string) {
     'span[rel=tooltipEns] span',
     '.badge .text-truncate span',
     '.badge.bg-secondary span.text-truncate',
-    'div.d-flex.flex-wrap.align-items-center a.d-flex span.text-truncate',
+    'div.d-flex.flex-wrap.align-items-center a.d-flex span.text-truncate:not(.hash-tag)',
   ];
 
   let publicNameTag!: HTMLElement;
