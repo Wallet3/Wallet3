@@ -432,7 +432,7 @@ export class InpageDAppController extends EventEmitter {
   }
 
   private async wallet_watchAsset(origin: string, asset: WatchAssetParams) {
-    if (!asset?.options?.address || asset?.type?.toUpperCase() !== 'ERC20')
+    if (!utils.isAddress(asset?.options?.address) || asset?.type?.toUpperCase() !== 'ERC20')
       return { error: { code: Code_InvalidParams, message: 'Invalid request' } };
 
     const dapp = this.getDApp(origin);
