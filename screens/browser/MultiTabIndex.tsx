@@ -263,7 +263,11 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
         bounces={false}
         initialScrollIndex={0}
         keyboardShouldPersistTaps={persistentKeyboard}
-        onScrollToIndexFailed={({ index }) => setTimeout(() => swiper.current?.scrollToIndex({ index, animated: true }), 500)}
+        onScrollToIndexFailed={({ index }) => setTimeout(() => {
+          try{
+            swiper.current?.scrollToIndex({ index, animated: true });
+          }catch(e){}
+        }, 500)}
       />
 
       <Portal>
@@ -286,7 +290,9 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
                 closeTabsModal();
               }}
               onJumpToPage={(index) => {
-                swiper.current?.scrollToIndex({ index, animated: true });
+                try{
+                  swiper.current?.scrollToIndex({ index, animated: true });
+                }catch(e){}
                 closeTabsModal();
               }}
             />
