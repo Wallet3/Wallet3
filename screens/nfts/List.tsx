@@ -17,6 +17,8 @@ import { isAndroid } from '../../utils/platform';
 import { observer } from 'mobx-react-lite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+const TitleView = isAndroid ? View : BlurView;
+
 const NFTItem = ({
   nft,
   navigation,
@@ -75,7 +77,7 @@ const NFTItem = ({
             overflow: 'hidden',
           }}
         >
-          <BlurView
+          <TitleView
             tint={mode}
             intensity={10}
             style={{
@@ -104,7 +106,7 @@ const NFTItem = ({
               {nft.title}
             </Text>
             {generateNetworkIcon({ ...network, hideEVMTitle: true, width: 22, style: { marginStart: 8 } })}
-          </BlurView>
+          </TitleView>
         </View>
       </View>
     </TouchableOpacity>

@@ -21,6 +21,7 @@ import SquircleModalize from '../../modals/core/SquircleModalize';
 import { StatusBar } from 'expo-status-bar';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
+import { isAndroid } from '../../utils/platform';
 import { lightOrDark } from '../../utils/color';
 import { observer } from 'mobx-react-lite';
 import { openInappBrowser } from '../../modals/app/InappBrowser';
@@ -30,17 +31,20 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { Ethereum, Optimism, Arbitrum, Polygon, Avalanche, BNBChain } = ChainIds;
 
+const RootView = isAndroid ? View : BlurView;
+
 export default observer(({ navigation, route }: NativeStackScreenProps<any, any>) => {
   const { item, colorResult } = route.params as { item: NFTMetadata; colorResult?: ImageColorsResult };
   const { t } = i18n;
   const { top, bottom } = useSafeAreaInsets();
   const { current } = Networks;
-  const { backgroundColor, shadow, foregroundColor, statusBarStyle } = Theme;
+  const { backgroundColor, shadow, noShadow, foregroundColor, statusBarStyle } = Theme;
   const [dominantColor, setDominantColor] = useState(backgroundColor);
   const [primaryColor, setPrimaryColor] = useState(foregroundColor);
   const [detailColor, setDetailColor] = useState(foregroundColor);
   const [mode, setMode] = useState<'light' | 'dark'>(statusBarStyle);
   const { images, types } = item;
+  const [androidShadow] = useState(isAndroid ? noShadow : undefined);
 
   const [vm] = useState<NFTTransferring | undefined>(
     new NFTTransferring({
@@ -90,7 +94,7 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
   };
 
   return (
-    <BlurView intensity={10} style={{ flex: 1, backgroundColor: dominantColor }}>
+    <RootView intensity={10} style={{ flex: 1, backgroundColor: dominantColor }}>
       <ScrollView contentContainerStyle={{ paddingTop: top + 57, paddingBottom: bottom }} showsVerticalScrollIndicator={false}>
         <View
           style={{
@@ -254,24 +258,34 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
             name="arrow-back-outline"
             size={20}
             color={primaryColor}
-            style={{ shadowColor: dominantColor, shadowOffset: { width: 0, height: 0 }, shadowRadius: 3, shadowOpacity: 0.5 }}
+            style={[
+              {
+                shadowColor: dominantColor,
+                shadowOffset: { width: 0, height: 0 },
+                shadowRadius: 3,
+                shadowOpacity: 0.5,
+              },
+            ]}
           />
         </TouchableOpacity>
 
         <Text
           numberOfLines={1}
-          style={{
-            color: primaryColor,
-            alignSelf: 'center',
-            fontSize: 19,
-            marginStart: 12,
-            fontWeight: '600',
-            marginBottom: -1,
-            maxWidth: '65%',
-            textShadowColor: dominantColor || '#585858',
-            textShadowOffset: { width: 0, height: 0 },
-            textShadowRadius: 3,
-          }}
+          style={[
+            {
+              color: primaryColor,
+              alignSelf: 'center',
+              fontSize: 19,
+              marginStart: 12,
+              fontWeight: '600',
+              marginBottom: -1,
+              maxWidth: '65%',
+              textShadowColor: dominantColor || '#585858',
+              textShadowOffset: { width: 0, height: 0 },
+              textShadowRadius: 3,
+            },
+            androidShadow,
+          ]}
         >
           {item.title}
         </Text>
@@ -295,7 +309,15 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
             name="share-outline"
             size={24}
             color={primaryColor}
-            style={{ shadowColor: dominantColor, shadowOffset: { width: 0, height: 0 }, shadowRadius: 3, shadowOpacity: 0.5 }}
+            style={[
+              {
+                shadowColor: dominantColor,
+                shadowOffset: { width: 0, height: 0 },
+                shadowRadius: 3,
+                shadowOpacity: 0.5,
+              },
+              androidShadow,
+            ]}
           />
         </TouchableOpacity>
       </View>
@@ -309,6 +331,6 @@ export default observer(({ navigation, route }: NativeStackScreenProps<any, any>
 
         <InappBrowserModal pageKey="nfts" />
       </Portal>
-    </BlurView>
+    </RootView>
   );
 });
