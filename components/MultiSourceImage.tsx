@@ -13,6 +13,7 @@ import SvgImage from 'react-native-remote-svg';
 import Video from 'react-native-video';
 import { convertIPFSProtocol } from '../utils/url';
 import { getMemorySize } from '../utils/device';
+import { isAndroid } from '../utils/platform';
 import { md5 } from '../utils/cipher';
 
 // @ts-ignore
@@ -40,6 +41,7 @@ export default (props: Props) => {
   const parseColor = async (url: string) => {
     if (!url) return;
     if (!onColorParsed) return;
+    if (isAndroid) return;
     if ((await getMemorySize()) < 3072) return;
 
     const itemKey = `image-colors-${await md5(url)}`;
