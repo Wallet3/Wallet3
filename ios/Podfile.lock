@@ -889,7 +889,7 @@ PODS:
   - hermes-engine (0.71.11):
     - hermes-engine/Pre-built (= 0.71.11)
   - hermes-engine/Pre-built (0.71.11)
-  - ImageColors (2.0.0):
+  - ImageColors (2.1.0):
     - ExpoModulesCore
   - leveldb-library (1.22.2)
   - libevent (2.1.12)
@@ -1682,7 +1682,7 @@ SPEC CHECKSUMS:
   GTMAppAuth: 99fb010047ba3973b7026e45393f51f27ab965ae
   GTMSessionFetcher: e8647203b65cee28c5f73d0f473d096653945e72
   hermes-engine: 34c863b446d0135b85a6536fa5fd89f48196f848
-  ImageColors: 45c49d919843ab3947890c3ceef70d639d38d780
+  ImageColors: 40ad01e18595d6a600dc733097f727fbd95d07d9
   leveldb-library: f03246171cce0484482ec291f88b6d563699ee06
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   libwebp: f62cb61d0a484ba548448a4bd52aabf150ff6eef
