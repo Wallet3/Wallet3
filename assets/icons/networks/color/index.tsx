@@ -1,9 +1,10 @@
-import { StyleProp, Text, View, ViewStyle } from 'react-native';
+import { Image, StyleProp, Text, View, ViewStyle } from 'react-native';
 
 import Arbitrum from './arbitrum.svg';
 import Aurora from './aurora.svg';
 import Avalanche from './avalanche.svg';
 import Base from './base.svg';
+import BitTorrent from './btt.svg';
 import Boba from './boba.svg';
 import Bsc from './bnb.svg';
 import Canto from './canto.svg';
@@ -44,6 +45,7 @@ import coins from '../../crypto';
 import styles from '../styles';
 
 const ScrollImg = require('./scroll.png');
+const ZoraImg = require('./zora.png');
 
 export const EVMIcon = ({
   color,
@@ -265,10 +267,14 @@ export function generateNetworkIcon(props: {
       return <Consensys key={chainId} width={width} height={height ?? width} style={style} />;
     case 534353:
       return <FastImage key={chainId} source={ScrollImg} style={[{ width, height }, style as any]} />;
+    case 7777777:
+      return <FastImage key={chainId} source={ZoraImg} style={[{ width, height }, style as any]} />;
     case 1030:
       return <Conflux key={chainId} width={width} height={height ?? width} style={style} />;
     case 17777:
       return <Eos key={chainId} width={width} height={height ?? width} style={style} />;
+    case 199:
+      return <BitTorrent key={chainId} width={width} height={height ?? width} style={style} />;
     default:
       return coins[symbol?.toLowerCase() || ''] ? (
         <Coin key={chainId} symbol={symbol} size={height ?? width} address="" chainId={chainId} style={style as any} />

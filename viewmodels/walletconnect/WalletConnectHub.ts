@@ -117,6 +117,7 @@ class WalletConnectHub extends EventEmitter {
 
         const pairing = await this.walletconnect2.core.pairing.pair({ uri, activatePairing: true });
         const client_v2 = new WalletConnect_v2(this.walletconnect2);
+
         client_v2.store.isMobile = extra?.fromMobile ?? false;
         client_v2.store.hostname = extra?.hostname || '';
 

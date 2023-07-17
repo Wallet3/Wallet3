@@ -212,6 +212,15 @@ export const PublicNetworks: INetwork[] = [
   // },
   {
     symbol: 'ETH',
+    network: 'Zora',
+    chainId: 7777777,
+    color: '#496DD7',
+    l2: true,
+    defaultTokens: [],
+    explorer: 'https://explorer.zora.energy',
+  },
+  {
+    symbol: 'ETH',
     comm_id: 'boba',
     network: 'Boba',
     chainId: 288,
@@ -449,6 +458,15 @@ export const PublicNetworks: INetwork[] = [
     etherscanApi: 'https://cronos.org/explorer/api',
     color: '#474169',
     defaultTokens: [],
+  },
+  {
+    symbol: 'BTT',
+    chainId: 199,
+    network: 'BitTorrent',
+    color: '#7B6FEA',
+    defaultTokens: [],
+    explorer: 'https://bttcscan.com',
+    etherscanApi: 'https://api.bttcscan.com/api',
   },
 ];
 

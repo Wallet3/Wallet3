@@ -162,6 +162,7 @@ const WalletConnect = () => {
     });
 
     PubSub.subscribe(MessageKeys.walletconnect.notSupportedSessionProposal, () => {
+      showMessage({ message: i18n.t('modal-dapp-not-supported-network'), type: 'info' });
       closeConnectDapp();
       setState({});
     });

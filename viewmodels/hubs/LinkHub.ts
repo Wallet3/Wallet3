@@ -21,6 +21,7 @@ export const SupportedWCSchemes = [
   'celowallet:',
   'bitpie:',
   'abt:',
+  'metamask:',
 ];
 
 const urls = ['https:'];

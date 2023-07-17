@@ -35,6 +35,7 @@
 				<string>huobiwallet</string>
 				<string>imtokenv2</string>
 				<string>tpoutside</string>
+				<string>metamask</string>
 				<string>pillarwallet</string>
 				<string>celowallet</string>
 				<string>bitpie</string>
@@ -47,7 +48,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>20230628150646</string>
+	<string>20230717085803</string>
 	<key>FirebaseAutomaticScreenReportingEnabled</key>
 	<false/>
 	<key>ITSAppUsesNonExemptEncryption</key>
