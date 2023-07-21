@@ -110,6 +110,7 @@ export const Browser = observer(
     const [pageMetadata, setPageMetadata] = useState<{ icon: string; title: string; desc?: string; origin: string }>();
     const [suggests, setSuggests] = useState<string[]>([]);
     const [webRiskLevel, setWebRiskLevel] = useState<WebRiskLevel>('insecure');
+    const [checkingRisk, setCheckingRisk] = useState(false);
 
     const { ref: favsRef, open: openFavs, close: closeFavs } = useModalize();
     const { ref: riskyRef, open: openRiskyTip, close: closeRiskyTip } = useModalize();
@@ -153,16 +154,23 @@ export const Browser = observer(
     }, [viewShot.current]);
 
     useEffect(() => {
-      isSecureSite(webUrl)
-        ? setWebRiskLevel('verified')
-        : isRiskySite(webUrl).then((risky) => {
-            if (risky) {
-              setWebRiskLevel('risky');
-              openRiskyTip();
-            } else {
-              webUrl.startsWith('https://') ? setWebRiskLevel('tls') : setWebRiskLevel('insecure');
-            }
-          });
+      if (isSecureSite(webUrl)) {
+        setWebRiskLevel('verified');
+        setCheckingRisk(false);
+      } else {
+        setCheckingRisk(true);
+
+        isRiskySite(webUrl).then((risky) => {
+          setCheckingRisk(false);
+
+          if (risky) {
+            setWebRiskLevel('risky');
+            openRiskyTip();
+          } else {
+            webUrl.startsWith('https://') ? setWebRiskLevel('tls') : setWebRiskLevel('insecure');
+          }
+        });
+      }
     }, [webUrl]);
 
     const refresh = () => {
@@ -373,7 +381,7 @@ export const Browser = observer(
                 }}
               />
 
-              {isFocus || !webUrl ? undefined : (
+              {isFocus || !webUrl || checkingRisk ? undefined : (
                 <TouchableOpacity style={{ position: 'absolute', left: 0, paddingStart: 8 }}>
                   {webRiskLevel === 'verified' ? (
                     <Ionicons
@@ -613,6 +621,7 @@ export const Browser = observer(
             safeAreaStyle={{ height: 439, padding: 0 }}
             squircleContainerStyle={{ backgroundColor: warningColor, padding: 16 }}
             useSafeBottom
+            handleStyle={{ marginTop: -3, backgroundColor: Theme.borderColor, width: 36, opacity: 0.25 }}
           >
             <Text
               numberOfLines={1}
@@ -622,6 +631,7 @@ export const Browser = observer(
                 fontWeight: '600',
                 textTransform: 'uppercase',
                 textAlign: 'center',
+                marginTop: 4,
               }}
             >
               {t('modal-phishing-title')}
