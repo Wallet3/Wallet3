@@ -7203,10 +7203,10 @@ crypt@0.0.2, crypt@~0.0.1:
   resolved "https://registry.yarnpkg.com/crypt/-/crypt-0.0.2.tgz#88d7ff7ec0dfb86f713dc87bbb42d044d3e6c41b"
   integrity sha1-iNf/fsDfuG9xPch7u0LQRNPmxBs=
 
-crypto-es@^1.2.7:
-  version "1.2.7"
-  resolved "https://registry.npmjs.org/crypto-es/-/crypto-es-1.2.7.tgz"
-  integrity sha512-UUqiVJ2gUuZFmbFsKmud3uuLcNP2+Opt+5ysmljycFCyhA0+T16XJmo1ev/t5kMChMqWh7IEvURNCqsg+SjZGQ==
+crypto-es@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/crypto-es/-/crypto-es-2.0.3.tgz#ca95e0bd017c4febfe6e09194e51b291c0e3739d"
+  integrity sha512-/VAp8U1txXXEV8AmXw2J/zBRSc1TheAeN6wikI3J7aX7jl2V9WhH7X+IabAH3PkwqboEAZ47yROSvDCp3/Fgaw==
 
 crypto-js@^4.1.1:
   version "4.1.1"
@@ -11084,10 +11084,10 @@ mobx-react-lite@^3.4.3:
   resolved "https://registry.yarnpkg.com/mobx-react-lite/-/mobx-react-lite-3.4.3.tgz#3a4c22c30bfaa8b1b2aa48d12b2ba811c0947ab7"
   integrity sha512-NkJREyFTSUXR772Qaai51BnE1voWx56LOL80xG7qkZr6vo8vEaLF3sz1JNUVh+rxmUzxYaqOhfuxTfqUh0FXUg==
 
-mobx@^6.9.0:
-  version "6.9.0"
-  resolved "https://registry.yarnpkg.com/mobx/-/mobx-6.9.0.tgz#8a894c26417c05bed2cf7499322e589ee9787397"
-  integrity sha512-HdKewQEREEJgsWnErClfbFoVebze6rGazxFLU/XUyrII8dORfVszN1V0BMRnQSzcgsNNtkX8DHj3nC6cdWE9YQ==
+mobx@^6.10.0:
+  version "6.10.0"
+  resolved "https://registry.yarnpkg.com/mobx/-/mobx-6.10.0.tgz#3537680fe98d45232cc19cc8f76280bd8bb6b0b7"
+  integrity sha512-WMbVpCMFtolbB8swQ5E2YRrU+Yu8iLozCVx3CdGjbBKlP7dFiCSuiG06uea3JCFN5DnvtAX7+G5Bp82e2xu0ww==
 
 ms@2.0.0:
   version "2.0.0"
