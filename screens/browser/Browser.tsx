@@ -53,6 +53,7 @@ const { LargeIconSize, SmallIconSize } = calcIconSize();
 
 type WebRiskLevel = 'verified' | 'tls' | 'insecure' | 'risky';
 
+const RegexWC = /^(metamask|trust|safe|rainbow|uniswap|zerion|imtokenv2|spot|omni|dfw|tpoutside|robinhood-wallet|bitkeep|mathwallet|exodus|enjinwallet)\:\/\/wc\?/i;
 const RegexHttps = /^https?\:/i;
 const RegexSocials = /(twitter\.com|t\.me|facebook\.com|whatsapp\.com)/i;
 
@@ -239,8 +240,14 @@ export const Browser = observer(
     };
 
     const onShouldStartLoadWithRequest = (event: ShouldStartLoadRequest) => {
-      const isExternalLink = !RegexHttps.test(event.url) || RegexSocials.test(event.url);
+      const isWCLink = RegexWC.test(event.url)
+      if(isWCLink){
+        const url = event.url.replace(RegexWC, "wallet3://wc?")
+        Linking.openURL(url);
+        return false
+      }
 
+      const isExternalLink = !RegexHttps.test(event.url) || RegexSocials.test(event.url);
       if (event.url !== 'about:blank' && isExternalLink) {
         Linking.openURL(event.url);
         return false;
@@ -523,9 +530,9 @@ export const Browser = observer(
 
         {uri ? (
           <Web3View
-            originWhitelist={['http://*', 'https://*', 'intent://*']}
+            originWhitelist={['*']}
             setSupportMultipleWindows={false}
-            onShouldStartLoadWithRequest={isAndroid ? onShouldStartLoadWithRequest : undefined}
+            onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
             webViewRef={webview}
             viewShotRef={viewShot}
             tabCount={globalState?.pageCount}

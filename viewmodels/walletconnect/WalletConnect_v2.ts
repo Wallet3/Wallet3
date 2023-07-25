@@ -314,7 +314,7 @@ export class WalletConnect_v2 extends EventEmitter {
         return;
       case 'wallet_switchEthereumChain':
         const [switchChainParams] = (request.params as { chainId: string }[]) || [];
-        if (!Networks.has(switchChainParams.chainId)) {
+        if (!Networks.has(Number(switchChainParams.chainId))) {
           this.rejectRequest(id, 'Chain not supported');
           return;
         }
