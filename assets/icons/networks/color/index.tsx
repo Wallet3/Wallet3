@@ -264,6 +264,7 @@ export function generateNetworkIcon(props: {
     case 99999:
       return <JapanOpenChain key={chainId} width={width} height={height ?? width} style={style} />;
     case 59140:
+    case 59144:
       return <Consensys key={chainId} width={width} height={height ?? width} style={style} />;
     case 534353:
       return <FastImage key={chainId} source={ScrollImg} style={[{ width, height }, style as any]} />;
@@ -308,4 +309,5 @@ export default {
   122: <Fuse width={32} height={32} style={{ ...styles.fuse, opacity: 1 }} />,
   336: <Shiden width={40} height={40} style={{ ...styles.shiden, opacity: 1 }} />,
   59140: <Consensys width={40} height={40} style={{ ...styles.shiden, opacity: 1 }} />,
+  59144: <Consensys width={40} height={40} style={{ ...styles.shiden, opacity: 1 }} />,
 };

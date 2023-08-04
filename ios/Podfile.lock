@@ -661,7 +661,7 @@ PODS:
   - EXImageLoader (4.3.0):
     - ExpoModulesCore
     - React-Core
-  - Expo (49.0.4):
+  - Expo (49.0.6):
     - ExpoModulesCore
   - ExpoAdapterGoogleSignIn (10.0.1):
     - ExpoModulesCore
@@ -683,7 +683,7 @@ PODS:
     - ExpoModulesCore
   - ExpoLocalization (14.3.0):
     - ExpoModulesCore
-  - ExpoModulesCore (1.5.7):
+  - ExpoModulesCore (1.5.9):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
     - React-NativeModulesApple
@@ -691,7 +691,7 @@ PODS:
     - ReactCommon/turbomodule/core
   - ExpoSecureStore (12.3.1):
     - ExpoModulesCore
-  - ExpoSQLite (11.3.1):
+  - ExpoSQLite (11.3.2):
     - ExpoModulesCore
   - ExpoStoreReview (6.4.0):
     - ExpoModulesCore
@@ -699,7 +699,7 @@ PODS:
     - ExpoModulesCore
   - EXScreenCapture (5.3.0):
     - ExpoModulesCore
-  - EXSplashScreen (0.20.4):
+  - EXSplashScreen (0.20.5):
     - ExpoModulesCore
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
@@ -1215,9 +1215,9 @@ PODS:
   - React-jsinspector (0.72.3)
   - React-logger (0.72.3):
     - glog
-  - react-native-context-menu-view (1.10.0):
+  - react-native-context-menu-view (1.11.0):
     - React
-  - react-native-quick-base64 (2.0.6):
+  - react-native-quick-base64 (2.0.7):
     - React-Core
   - react-native-randombytes (3.6.1):
     - React-Core
@@ -1369,7 +1369,7 @@ PODS:
     - nanopb (< 2.30910.0, >= 2.30908.0)
     - React-Core
     - RNFBApp
-  - RNGestureHandler (2.12.0):
+  - RNGestureHandler (2.12.1):
     - React-Core
   - RNGoogleSignin (10.0.1):
     - GoogleSignIn (~> 7.0)
@@ -1403,7 +1403,7 @@ PODS:
     - React-RCTText
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.22.1):
+  - RNScreens (3.23.0):
     - React-Core
     - React-RCTImage
   - RNSharedElement (0.8.8):
@@ -1741,7 +1741,7 @@ SPEC CHECKSUMS:
   EXFileSystem: d7f59869885cfeab3ac771e2a8d0f5ed98cd3fdb
   EXFont: 738c44c390953ebcbab075a4848bfbef025fd9ee
   EXImageLoader: 34b214f9387e98f3c73989f15d8d5b399c9ab3f7
-  Expo: 57e6a756328a9dfe6e1342a1f048a26e98b27b08
+  Expo: 5601f86edc81c7e7e1772b9af9ae58fa3b45ad53
   ExpoAdapterGoogleSignIn: b6e7ca3d25261737d31c274460b503ff1b6cb303
   ExpoAppleAuthentication: 7bdf1a2962ebfe9b00eb4183a17b78d736e57185
   ExpoBlur: a2c90bdfa4ff9f459cdb0f83191bddf020e3e2db
@@ -1751,13 +1751,13 @@ SPEC CHECKSUMS:
   ExpoKeepAwake: be4cbd52d9b177cde0fd66daa1913afa3161fc1d
   ExpoLocalAuthentication: bd9d9037a96a11ccc456e327ddb404df02da10ca
   ExpoLocalization: be37fdd0b5930c6a49cd307b4542f4b426d6134c
-  ExpoModulesCore: f8f3cac222bb0f574c77664d7e05817eaa97434b
+  ExpoModulesCore: e4e437139259c5a73530a8895af69774ff8ec12d
   ExpoSecureStore: 57db3b6da8b59046e2057e95bf7738a8027b47c3
-  ExpoSQLite: fdbc8d08a0efa64fd4ebbc5c261d55fc0ae3b21d
+  ExpoSQLite: 4caf114e0f7ef450525b88799e8168ea9860fb66
   ExpoStoreReview: f154c9fdf3dbd877ca0115757f0b2b6f43dd9db4
   ExpoWebBrowser: 2c788f9c07718a780fe6d8bf2f6195c47609faaa
   EXScreenCapture: 81002ba5fb40a367fba9047d223068abb558594d
-  EXSplashScreen: 89586b0961acd173b04713b7457949b063a659da
+  EXSplashScreen: c0e7f2d4a640f3b875808ed0b88575538daf6d82
   FBLazyVector: 4cce221dd782d3ff7c4172167bba09d58af67ccb
   FBReactNativeSpec: c6bd9e179757b3c0ecf815864fae8032377903ef
   Firebase: 07150e75d142fb9399f6777fa56a187b17f833a0
@@ -1799,8 +1799,8 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 59d1eb03af7d30b7d66589c410f13151271e8006
   React-jsinspector: b511447170f561157547bc0bef3f169663860be7
   React-logger: c5b527272d5f22eaa09bb3c3a690fee8f237ae95
-  react-native-context-menu-view: 4cd5ecaabd2cbb420018b3242ca1eef5efa0a629
-  react-native-quick-base64: 62290829c619fbabca4c41cfec75ae759d08fc1c
+  react-native-context-menu-view: c13b66d44f85b7e7d791a6fbc1e6218c6047eb90
+  react-native-quick-base64: a5dbe4528f1453e662fcf7351029500b8b63e7bb
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: 9697629f7b2cda43cf52169bb7e0767d330648c2
   react-native-slider: 33b8d190b59d4f67a541061bb91775d53d617d9d
@@ -1832,10 +1832,10 @@ SPEC CHECKSUMS:
   RNFBAnalytics: b6e9ef75ebfccc29dd4adcff032eb4f5f2affc53
   RNFBApp: 147c3274daa84d7410d457510548d5fb3b317e37
   RNFBFirestore: 6e4f66156e5762fb26894cc9824bf1e60264f7e9
-  RNGestureHandler: dec4645026e7401a0899f2846d864403478ff6a5
+  RNGestureHandler: c0d04458598fcb26052494ae23dda8f8f5162b13
   RNGoogleSignin: ccaa4a81582cf713eea562c5dd9dc1961a715fd0
   RNReanimated: 9f7068e43b9358a46a688d94a5a3adb258139457
-  RNScreens: 50ffe2fa2342eabb2d0afbe19f7c1af286bc7fb3
+  RNScreens: 6a8a3c6b808aa48dca1780df7b73ea524f602c63
   RNSharedElement: 504fa28a235b12505b6daedbb452a9ec96809bd0
   RNSVG: 80584470ff1ffc7994923ea135a3e5ad825546b9
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d

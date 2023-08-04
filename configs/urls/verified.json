@@ -204,6 +204,7 @@
     "clarity.so",
     "etherscan.io",
     "easscan.org",
+    "*.lineascan.build",
     "www.ankr.com",
     "gnosis-safe.io",
     "chainlist.org",

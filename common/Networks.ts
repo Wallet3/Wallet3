@@ -24,6 +24,7 @@ import {
 import ERC4337Configs from '../configs/erc4337.config';
 import { GoerliPopTokens } from './tokens/Goerli';
 import { Gwei_1 } from './Constants';
+import { Linea_PopularTokens } from './tokens/Linea';
 import { MumbaiPopTokens } from './tokens/Mumbai';
 import { SepoliaTokens } from './tokens/Sepolia';
 
@@ -141,6 +142,16 @@ export const PublicNetworks: INetwork[] = [
     category: 'core',
     explorer: 'https://zkevm.polygonscan.com',
     etherscanApi: 'https://api-zkevm.polygonscan.com/api',
+  },
+  {
+    symbol: 'ETH',
+    chainId: 59144,
+    color: '#3d65e8',
+    l2: true,
+    network: 'Linea',
+    defaultTokens: Linea_PopularTokens,
+    category: 'core',
+    explorer: 'https://lineascan.build',
   },
   {
     symbol: 'MATIC',
@@ -524,13 +535,13 @@ export const Testnets: INetwork[] = [
   },
   {
     symbol: 'ETH',
-    network: 'Linea',
+    network: 'Linea Testnet',
     chainId: 59140,
     color: '#3d65e8',
     eip1559: true,
     testnet: true,
     defaultTokens: [],
-    explorer: 'https://explorer.goerli.linea.build',
+    explorer: 'https://goerli.lineascan.build',
   },
   {
     symbol: 'ETH',
