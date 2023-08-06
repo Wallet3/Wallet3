@@ -162,6 +162,20 @@ export default StyleSheet.create({
     opacity: 0.5,
   },
 
+  base: {
+    marginTop: -36,
+    marginEnd: -0,
+    alignSelf: 'flex-end',
+    opacity: 0.5,
+  },
+
+  linea: {
+    marginTop: -36,
+    marginEnd: -4,
+    alignSelf: 'flex-end',
+    opacity: 0.5,
+  },
+
   shiden: {
     marginTop: -36,
     marginEnd: -5,

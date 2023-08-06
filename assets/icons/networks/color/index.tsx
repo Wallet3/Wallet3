@@ -166,6 +166,7 @@ export const NetworkIcons = {
   42170: NOVA,
   7700: CANTO,
   84531: BASE,
+  8453: BASE,
   99999: JOC,
   534353: SCROLL,
   1030: CONFLUX,
@@ -260,6 +261,7 @@ export function generateNetworkIcon(props: {
     case 7700:
       return <Canto key={chainId} width={width} height={height ?? width} style={style} />;
     case 84531:
+    case 8453:
       return <Base key={chainId} width={width} height={height ?? width} style={style} />;
     case 99999:
       return <JapanOpenChain key={chainId} width={width} height={height ?? width} style={style} />;
@@ -308,6 +310,8 @@ export default {
   1285: <Moonriver width={42} height={42} style={{ ...styles.moonriver, opacity: 1 }} />,
   122: <Fuse width={32} height={32} style={{ ...styles.fuse, opacity: 1 }} />,
   336: <Shiden width={40} height={40} style={{ ...styles.shiden, opacity: 1 }} />,
-  59140: <Consensys width={40} height={40} style={{ ...styles.shiden, opacity: 1 }} />,
-  59144: <Consensys width={40} height={40} style={{ ...styles.shiden, opacity: 1 }} />,
+  59140: <Consensys width={40} height={40} style={{ ...styles.linea, opacity: 1 }} />,
+  59144: <Consensys width={40} height={40} style={{ ...styles.linea, opacity: 1 }} />,
+  8453: <Base width={40} height={40} style={{ ...styles.base, opacity: 1 }} />,
+  84531: <Base width={40} height={40} style={{ ...styles.base, opacity: 1 }} />,
 };
