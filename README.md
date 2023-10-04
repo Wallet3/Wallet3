@@ -11,3 +11,8 @@ Available on the App Store
 3. Copy `configs/providers.example.json` to `configs/providers.json`, `secret.example.ts` to `secret.ts`.
 4. Fill valid provider urls in `configs/providers.json`.
 5. Launch with `yarn ios`
+
+## Note
+The configuration file is not included in the source code. 
+
+This project is not a free open-source project and does not have any open-source License. The code here is for security audit purposes only. Any unauthorized use of the code is illegal. Unless official paid authorization is obtained from the authorities, all legal actions will be taken.
