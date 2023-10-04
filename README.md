@@ -19,7 +19,7 @@ The configuration files are not included in the source code.
 
 **This project is not a free open-source project and does not have any open-source license. The code here is for security audit purposes only.**
 
-**Any unauthorized use of the code is illegal, whether it's partial use or distribution with modified logos and functionalities. Legal responsibilities will be pursued indefinitely against both the development and user companies unless official paid authorization is obtained. We assume no liability for any user asset loss due to illegal use.**
+**Any unauthorized use of the code is illegal, whether it's partial use or distribution with modified logos and functionalities. Legal responsibilities will be pursued indefinitely against both the development and client company and end-users unless official paid authorization is obtained. We assume no liability for any user asset loss due to illegal use.**
 
 All rights reserved by ChainBow Co. Ltd (Japan, Tokyo). 
 For commercial licensing and custom development, please contact: team@chainbow.co.jp.
