@@ -1,6 +1,8 @@
-# A Secure Wallet for Web3
+# A Secure Wallet for Web3, Support MultiSig & ERC-4337: Account Abstraction
 
-Available on the App Store
+https://wallet3.io
+
+Available on the App Store & Google Play
 
 [![Wallet 3, App Store](/assets/3rd/download-on-the-app-store.svg)](https://apps.apple.com/jp/app/wallet-3-mobile/id1597395741)
 
@@ -13,6 +15,12 @@ Available on the App Store
 5. Launch with `yarn ios`
 
 ## Note
-The configuration file is not included in the source code. 
+The configuration files are not included in the source code. 
 
-This project is not a free open-source project and does not have any open-source License. The code here is for security audit purposes only. Any unauthorized use of the code is illegal. Unless official paid authorization is obtained from the authorities, all legal actions will be taken.
+**This project is not a free open-source project and does not have any open-source license. The code here is for security audit purposes only.**
+
+**Any unauthorized use of the code is illegal, whether it's partial use or distribution with modified logos and functionalities. Legal responsibilities will be pursued indefinitely against both the development and user companies unless official paid authorization is obtained. We assume no liability for any user asset loss due to illegal use.**
+
+All rights reserved by ChainBow Co. Ltd (Japan, Tokyo). 
+For commercial licensing and custom development, please contact: team@chainbow.co.jp.
+
