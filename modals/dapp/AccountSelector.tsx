@@ -1,29 +1,33 @@
 import { Button, SafeViewContainer } from '../../components';
+import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { FlatList, StyleProp, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import React, { useState } from 'react';
+import { inactivatedColor, secondaryFontColor } from '../../constants/styles';
 
-import { Account } from '../../viewmodels/account/Account';
+import { AccountBase } from '../../viewmodels/account/AccountBase';
 import Avatar from '../../components/Avatar';
-import { Feather } from '@expo/vector-icons';
+import { ERC4337Account } from '../../viewmodels/account/ERC4337Account';
+import { INetwork } from '../../common/Networks';
+import SuperBadge from '../../components/SuperBadge';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import { secondaryFontColor } from '../../constants/styles';
 
 interface Props {
-  accounts: Account[];
+  accounts: AccountBase[];
   selectedAccounts: string[];
   onDone: (selectedAccounts: string[]) => void;
   single?: boolean;
   style?: StyleProp<ViewStyle>;
   expanded?: boolean;
-  themeColor?: string;
+  network?: INetwork;
 }
 
-export default observer(({ accounts, selectedAccounts, onDone, single, style, expanded, themeColor }: Props) => {
+export default observer(({ accounts, selectedAccounts, onDone, single, style, expanded, network }: Props) => {
   const [selected, setSelected] = useState(selectedAccounts);
   const { t } = i18n;
   const { borderColor, textColor } = Theme;
+  const themeColor = network?.color;
 
   const toggleAddress = (account: string) => {
     if (single || expanded) {
@@ -40,7 +44,7 @@ export default observer(({ accounts, selectedAccounts, onDone, single, style, ex
     }
   };
 
-  const renderItem = ({ item }: { item: Account }) => {
+  const renderItem = ({ item }: { item: AccountBase }) => {
     return (
       <TouchableOpacity
         onPress={() => toggleAddress(item.address)}
@@ -80,6 +84,27 @@ export default observer(({ accounts, selectedAccounts, onDone, single, style, ex
         >
           {item.displayName}
         </Text>
+
+        {item.isERC4337 && (
+          <SuperBadge
+            containerStyle={{
+              marginStart: 8,
+              borderRadius: 5,
+              paddingStart: 7,
+              paddingVertical: 2,
+              paddingEnd: 3,
+              flexDirection: 'row',
+              alignItems: 'center',
+              backgroundColor: (item as ERC4337Account).activatedChains.get(network?.chainId || 0)
+                ? themeColor
+                : inactivatedColor,
+            }}
+            txtStyle={{ textTransform: 'uppercase', color: '#fff', fontSize: 10 }}
+            iconColor="#fff"
+            iconStyle={{ marginStart: 2 }}
+            iconSize={11}
+          />
+        )}
       </TouchableOpacity>
     );
   };
@@ -94,6 +119,7 @@ export default observer(({ accounts, selectedAccounts, onDone, single, style, ex
         data={accounts}
         renderItem={renderItem}
         keyExtractor={(i) => i.address}
+        initialNumToRender={20}
         contentContainerStyle={{ paddingBottom: expanded ? 36 : 8 }}
         style={{ flex: 1, marginHorizontal: -16, paddingHorizontal: 16, marginBottom: expanded ? -36 : 12 }}
       />

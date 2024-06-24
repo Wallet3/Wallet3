@@ -18,6 +18,7 @@ const gmx = require('./gmx.png');
 const pancake = require('./cake.png');
 const mdex = require('./mdex.png');
 const one_inch = require('./1inch.png');
+const baofinance = require('./baofinance.png');
 const nomiswap = require('./nomiswap.png');
 const biswap = require('./biswap.png');
 const wombat = require('./wombat.png');
@@ -82,6 +83,7 @@ const keywords = [
   { key: 'bancor', img: bancor },
   { key: 'defiswap', img: defiswap },
   { key: 'levinswap', img: levinswap },
+  { key: 'baofinance', img: baofinance },
 ];
 
 export function generateDexLogo(protocol: string, style: StyleProp<ImageStyle>) {

@@ -9,6 +9,7 @@ import { utils } from 'ethers';
 
 const TagsCache = new Map<string, AddressTag | null>();
 const AbandonCache = new Map<string, boolean>();
+const IgnoredTexts = ['OUT', 'CONNECTION LOST', 'SOMETHING WENT WRONG', 'FAILED', 'ERROR', 'UNREAD'];
 
 async function getHTML(chainId: number, param: string, type: 'address' | 'tx') {
   const explorer = Networks.find(chainId)?.explorer;
@@ -32,7 +33,7 @@ export async function fetchAddressInfo(chainId: number, address: string) {
 
   let item = await Database.cloud_address_tags.findOne({ where: { address: key } });
 
-  if (item && Date.now() < item?.lastUpdatedTimestamp + (__DEV__ ? 1 : (chainId === 1 ? 7 : 90) * DAY)) {
+  if (item && Date.now() < item?.lastUpdatedTimestamp + (__DEV__ ? 1 : 15 * DAY)) {
     TagsCache.set(key, item);
     return item;
   }
@@ -40,19 +41,25 @@ export async function fetchAddressInfo(chainId: number, address: string) {
   const root = await getHTML(chainId, address, 'address');
   if (!root) return item;
 
-  const warnings = (root?.querySelectorAll('span.u-label--danger, span.u-label--warning, .badge.bg-warning, .badge.bg-danger') || [])
-    .filter((i) => i.innerText && i.innerText.toUpperCase() !== 'OUT')
+  const warnings = (
+    root?.querySelectorAll(
+      'span.u-label--danger, span.u-label--warning, .badge.bg-warning, .badge.bg-danger:not(.position-absolute), .alert.alert-danger'
+    ) || []
+  )
+    .filter((i) => i.innerText && !IgnoredTexts.find((a) => i.innerText.toUpperCase().includes(a)))
     .map((e) => e.innerText);
 
   let alert = root?.querySelector('div.alert-warning, div.alert-danger, .badge.bg-danger')?.innerText;
   alert = alert?.startsWith('×') ? alert.substring(1) : alert;
+  alert = IgnoredTexts.find((a) => alert?.toUpperCase().includes(a)) ? undefined : alert;
 
   const tagSelectors = [
     "span.u-label--secondary span[data-toggle='tooltip']",
     "span.u-label--secondary[data-toggle='tooltip']",
     'span[rel=tooltipEns] span',
     '.badge .text-truncate span',
-    'div.d-flex.flex-wrap.align-items-center a.d-flex span.text-truncate',
+    '.badge.bg-secondary span.text-truncate',
+    'div.d-flex.flex-wrap.align-items-center a.d-flex span.text-truncate:not(.hash-tag)',
   ];
 
   let publicNameTag!: HTMLElement;

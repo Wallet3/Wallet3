@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
 
-@Entity({ name: 'cloud_address_tags' })
+@Entity({ name: 'cloud_address_tags_v1' })
 export default class AddressTag extends BaseEntity {
   @PrimaryColumn()
   address!: string;

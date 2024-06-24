@@ -3,8 +3,6 @@ import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 
 import AnimatedLottieView from 'lottie-react-native';
-import Authentication from '../../viewmodels/auth/Authentication';
-import MnemonicOnce from '../../viewmodels/auth/MnemonicOnce';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/core/Networks';
 import { SortWords } from '../components/SecretWords';
@@ -13,10 +11,11 @@ import i18n from '../../i18n';
 import { logBackup } from '../../viewmodels/services/Analytics';
 import { observer } from 'mobx-react-lite';
 
-export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
+export default observer(({ navigation, route }: NativeStackScreenProps<{}, never>) => {
   const { t } = i18n;
   const [verified, setVerified] = useState(false);
   const { textColor } = Theme;
+  const [words] = useState((route.params['words'] as string[]) || []);
 
   return (
     <SafeViewContainer style={{ flex: 1 }} paddingHeader>
@@ -48,7 +47,7 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
           <Text style={{ color: textColor }}>{t('land-backup-sort-words')}</Text>
           <SortWords
             color={textColor}
-            words={MnemonicOnce.secretWords}
+            words={words}
             onVerified={(v) => {
               setVerified(v);
               v && logBackup();

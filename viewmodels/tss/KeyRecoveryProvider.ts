@@ -30,10 +30,10 @@ export class KeyRecoveryProvider extends TCPClient {
 
   send = async (pin?: string) => {
     try {
-      const [bip32Secret, rootSecret] = (await Authentication.decryptForever(
-        [this.key.secrets.bip32Shard, this.key.secrets.rootShard],
-        pin
-      )) as string[];
+      const [bip32Secret, rootSecret] =
+        ((await Authentication.decryptForever([this.key.secrets.bip32Shard, this.key.secrets.rootShard], {
+          pin,
+        })) as string[]) ?? [];
 
       if (!bip32Secret || !rootSecret) return false;
 
@@ -61,30 +61,8 @@ export class KeyRecoveryProvider extends TCPClient {
       super.secureWriteString(JSON.stringify(data));
 
       this.key.lastUsedTimestamp = Date.now();
-      this.key.save();
-
-      const id = `${this.remoteInfo!.globalId}-${this.key.distributionId}`;
-
-      if (this.key.id !== id) {
-        const newPaired =
-          (await ShardKey.findOne({
-            where: { ownerDevice: { globalId: this.remoteInfo?.globalId }, distributionId: this.key.distributionId },
-          })) ?? new ShardKey();
-
-        newPaired.id = id;
-        newPaired.distributionId = this.key.distributionId;
-        newPaired.ownerDevice = this.remoteInfo!;
-        newPaired.secretsInfo = data.secretsInfo;
-        newPaired.createdAt = Date.now();
-        newPaired.lastUsedTimestamp = Date.now();
-        newPaired.secrets = {
-          bip32Shard: await Authentication.encryptForever(bip32Secret),
-          rootShard: await Authentication.encryptForever(rootSecret),
-        };
-
-        await newPaired.save();
-        setImmediate(() => PairedDevices.refresh());
-      }
+      this.key.ownerDevice = this.remoteInfo!;
+      await this.key.save();
 
       runInAction(() => (this.distributed = true));
       return true;

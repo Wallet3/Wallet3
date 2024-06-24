@@ -1,5 +1,5 @@
-import { Modalize, ModalizeProps, useModalize } from 'react-native-modalize';
-import { Platform, StyleProp, ViewStyle } from 'react-native';
+import { Modalize, ModalizeProps } from 'react-native-modalize';
+import { StyleProp, ViewStyle } from 'react-native';
 
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -27,7 +27,14 @@ export default React.forwardRef<Modalize, Props>((props: Props, ref) => {
         bounces: false,
       }}
       {...props}
-      modalStyle={{ ...(props.modalStyle as any), backgroundColor: 'transparent' }}
+      modalStyle={{
+        ...(props.modalStyle as any),
+        backgroundColor: '#ffffff00',
+        shadowColor: undefined,
+        shadowOffset: undefined,
+        shadowOpacity: 0,
+        shadowRadius: 0,
+      }}
     >
       <SafeAreaProvider style={[isAndroid ? { minHeight: 439 } : undefined, props.safeAreaStyle]}>
         {props.children}

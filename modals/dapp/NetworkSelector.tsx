@@ -84,6 +84,7 @@ export default observer(({ networks, selectedChains, onDone, single }: Props) =>
         data={networks}
         renderItem={renderItem}
         keyExtractor={(i) => `${i.chainId}`}
+        initialNumToRender={20}
         contentContainerStyle={{ paddingBottom: 8 }}
         style={{ flex: 1, marginHorizontal: -16, paddingHorizontal: 16, marginBottom: 12 }}
       />

@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { ShardSender, ShardTransferringStatus } from '../../../viewmodels/tss/ShardSender';
 import { ShardsDistributionStatus, ShardsDistributor } from '../../../viewmodels/tss/ShardsDistributor';
 import { getDeviceBasicInfo, getDeviceInfo } from '../../../common/p2p/Utils';
-import { secureColor, warningColor } from '../../../constants/styles';
+import { secureColor, verifiedColor, warningColor } from '../../../constants/styles';
 
 import Button from '../components/Button';
 import { ClientInfo } from '../../../common/p2p/Constants';
@@ -33,7 +33,9 @@ const DeviceStatus = observer(({ item, vm }: { item: ShardSender | ClientInfo; v
 
   return (
     <View style={{ marginStart: 24 }}>
-      {status === ShardTransferringStatus.sending && <ActivityIndicator size="small" />}
+      {status === ShardTransferringStatus.sending && (
+        <ActivityIndicator size="small" color={verifiedColor} style={{ marginEnd: 4 }} />
+      )}
 
       {status === ShardTransferringStatus.ackFailed && (
         <ZoomInView>

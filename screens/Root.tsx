@@ -6,11 +6,13 @@ import { Platform, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 
 import App from '../viewmodels/core/App';
+import Avatar from '../components/Avatar';
 import BrowserScreen from './browser/MultiTabIndex';
 import ContactsScreen from './contacts';
 import DAppsScreen from './dapps';
 import Drawer from './drawer';
 import ExchangeScreen from './exchange';
+import Logo from '../assets/icons/app/TextLogo.svg';
 import MessageKeys from '../common/MessageKeys';
 import MultiSigScreen from './multiSig';
 import NFTList from './nfts/List';
@@ -127,7 +129,15 @@ const RootTab = observer(() => {
                   onPress={() => PubSub.publish(MessageKeys.openAccountsMenu)}
                   style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 0 }}
                 >
-                  <Text style={{ fontFamily: 'Questrial', fontSize: 21, color: foregroundColor }}>Wallet 3</Text>
+                  <Avatar
+                    size={20}
+                    uri={currentAccount?.avatar}
+                    emoji={currentAccount?.emojiAvatar}
+                    backgroundColor={currentAccount?.emojiColor}
+                    emojiSize={8}
+                    style={{ marginEnd: -2 }}
+                  />
+                  <Logo height={16} width={100} color={foregroundColor} />
                 </TouchableOpacity>
               </View>
 

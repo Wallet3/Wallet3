@@ -3,7 +3,7 @@ import { FlatList, ListRenderItemInfo, Text, TouchableOpacity, View } from 'reac
 import React, { useRef, useState } from 'react';
 
 import { ERC20Token } from '../../../models/ERC20';
-import { IToken } from '../../../common/tokens';
+import { ITokenMetadata } from '../../../common/tokens';
 import Theme from '../../../viewmodels/settings/Theme';
 import { formatCurrency } from '../../../utils/formatter';
 import i18n from '../../../i18n';
@@ -12,11 +12,11 @@ import { startLayoutAnimation } from '../../../utils/animations';
 import { utils } from 'ethers';
 
 interface Props {
-  tokens: IToken[];
-  selectedToken?: IToken;
+  tokens: ITokenMetadata[];
+  selectedToken?: ITokenMetadata | null;
   chainId: number;
   themeColor?: string;
-  onTokenSelected?: (token: IToken) => void;
+  onTokenSelected?: (token: ITokenMetadata) => void;
   onAddTokenRequested?: (token: ERC20Token) => void;
 }
 
@@ -48,7 +48,7 @@ export default observer((props: Props) => {
     setUserToken(token);
   };
 
-  const renderItem = ({ item }: ListRenderItemInfo<IToken>) => {
+  const renderItem = ({ item }: ListRenderItemInfo<ITokenMetadata>) => {
     const opacity = props.selectedToken?.address === item.address ? 0.25 : 1;
 
     return (

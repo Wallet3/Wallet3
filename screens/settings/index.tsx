@@ -16,6 +16,7 @@ import React from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import SquircleModalize from '../../modals/core/SquircleModalize';
 import Theme from '../../viewmodels/settings/Theme';
+import { Toggle } from '../../components';
 import ToggleSwitch from 'toggle-switch-react-native';
 import UI from '../../viewmodels/settings/UI';
 import i18n from '../../i18n';
@@ -92,7 +93,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
           <Text style={itemText}>{t('settings-general-gas-indicator')}</Text>
         </View>
 
-        <ToggleSwitch isOn={UI.gasIndicator} onToggle={(v) => UI.switchGasIndicator(v)} onColor={Networks.current.color} />
+        <Toggle isOn={UI.gasIndicator} onToggle={(v) => UI.switchGasIndicator(v)} onColor={Networks.current.color} />
       </View>
 
       <Text style={styles.sectionTitle}>{t('settings-security')}</Text>
@@ -104,7 +105,7 @@ export default observer(({ navigation }: DrawerScreenProps<SettingsStack, 'Setti
             <Text style={itemText}>{t('settings-security-biometric')}</Text>
           </View>
 
-          <ToggleSwitch
+          <Toggle
             isOn={Authentication.biometricEnabled}
             onToggle={(v) => Authentication.setBiometrics(v)}
             onColor={Networks.current.color}

@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 
-import { Account } from '../../viewmodels/account/Account';
+import { AccountBase } from '../../viewmodels/account/AccountBase';
 import AccountSelector from '../dapp/AccountSelector';
 import App from '../../viewmodels/core/App';
 import DAppConnectView from '../dapp/DAppConnectView';
@@ -16,7 +16,7 @@ import styles from '../styles';
 
 interface Props {
   close: () => void;
-  approve?: (userSelected: { network: INetwork; account: Account }) => void;
+  approve?: (userSelected: { network: INetwork; account: AccountBase }) => void;
   reject?: () => void;
   appName?: string;
   appDesc?: string;
@@ -37,7 +37,7 @@ const ConnectPivot = observer(
     appDesc?: string;
     appIcon?: string;
     appUrl?: string;
-    onApprove: (userSelected: { account: Account; network: INetwork }) => void;
+    onApprove: (userSelected: { account: AccountBase; network: INetwork }) => void;
     onReject: () => void;
   }) => {
     const swiper = useRef<Swiper>(null);
@@ -101,7 +101,7 @@ const ConnectPivot = observer(
             accounts={App.allAccounts}
             selectedAccounts={[account.address]}
             onDone={onSelectAccountsDone}
-            themeColor={selectedNetwork.color}
+            network={selectedNetwork}
           />
         ) : undefined}
       </Swiper>
@@ -112,7 +112,7 @@ const ConnectPivot = observer(
 export default observer((props: Props) => {
   const { approve, reject, close, appName, appDesc, appIcon, appUrl } = props;
 
-  const onConnect = (userSelected: { network: INetwork; account: Account }) => {
+  const onConnect = (userSelected: { network: INetwork; account: AccountBase }) => {
     approve?.(userSelected);
     close();
   };

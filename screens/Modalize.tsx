@@ -10,6 +10,7 @@ import {
   WalletConnectSign,
   WalletConnectTxRequest,
 } from '../modals';
+import AuthenticationVM, { Authentication } from '../viewmodels/auth/Authentication';
 import {
   ConnectInpageDApp,
   InpageDAppAddAsset,
@@ -28,8 +29,8 @@ import {
 } from '../modals/tss';
 
 import { AppVM } from '../viewmodels/core/App';
-import { Authentication } from '../viewmodels/auth/Authentication';
 import { ClientInfo } from '../common/p2p/Constants';
+import ERC4337Queue from '../modals/erc4337';
 import { FullPasspad } from '../modals/views/Passpad';
 import GlobalPasspad from '../modals/global/GlobalPasspad';
 import { IConfigProps } from 'react-native-modalize/lib/options';
@@ -40,7 +41,6 @@ import InpageDAppAddAssetModal from '../modals/inpage/InpageDAppAddAsset';
 import InpageDAppAddChain from '../modals/inpage/InpageDAppAddChain';
 import InpageDAppSendTx from '../modals/inpage/InpageDAppTxRequest';
 import InpageDAppSign from '../modals/inpage/InpageDAppSign';
-import { KeyRecoveryProvider } from '../viewmodels/tss/KeyRecoveryProvider';
 import { KeyRecoveryRequestor } from '../viewmodels/tss/KeyRecoveryRequestor';
 import { Keyboard } from 'react-native';
 import Loading from '../modals/views/Loading';
@@ -66,7 +66,7 @@ import { WalletConnect_v2 } from '../viewmodels/walletconnect/WalletConnect_v2';
 import { autorun } from 'mobx';
 import i18n from '../i18n';
 import { isAndroid } from '../utils/platform';
-import { isDomain } from '../viewmodels/services/DomainResolver';
+import { isDomain } from '../viewmodels/services/ens/DomainResolver';
 import { logScreenView } from '../viewmodels/services/Analytics';
 import { observer } from 'mobx-react-lite';
 import { parse } from 'eth-url-parser';
@@ -74,24 +74,36 @@ import { showMessage } from 'react-native-flash-message';
 import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 import { utils } from 'ethers';
 
-const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app: AppVM }) => {
+type WalletConnectRequestParam = {
+  type: 'sign' | 'sendTx';
+  request: WCCallRequestRequest;
+  client: WalletConnect_v1;
+};
+
+const WalletConnectRequests = () => {
   const { ref, open, close } = useModalize();
-  const [type, setType] = useState<string>();
-  const [client, setClient] = useState<WalletConnect_v1>();
-  const [callRequest, setCallRequest] = useState<WCCallRequestRequest>();
+  const [currentRequestParam, setCurrentRequestParam] = useState<WalletConnectRequestParam | undefined>();
+  const [queue] = useState<WalletConnectRequestParam[]>([]);
+
+  const enqueue = (param: WalletConnectRequestParam) => {
+    queue.push(param);
+    !currentRequestParam && dequeue();
+  };
+
+  const dequeue = () => {
+    const next = queue.shift();
+    setCurrentRequestParam(next);
+    next && setImmediate(() => open());
+  };
 
   useEffect(() => {
     PubSub.subscribe(
       MessageKeys.wc_request,
-      (_, { client, request, chainId }: { client: WalletConnect_v1; request: WCCallRequestRequest; chainId?: number }) => {
-        if (!appAuth.appAuthorized) {
+      (_, { client, request }: { client: WalletConnect_v1; request: WCCallRequestRequest; chainId?: number }) => {
+        if (!AuthenticationVM.appAuthorized) {
           client.rejectRequest(request.id, 'Unauthorized');
           return;
         }
-
-        setType(undefined);
-        setCallRequest(undefined);
-        setClient(client);
 
         switch (request.method) {
           case 'eth_sign':
@@ -99,24 +111,20 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
           case 'eth_signTypedData':
           case 'eth_signTypedData_v3':
           case 'eth_signTypedData_v4':
-            setCallRequest(request);
-            setType('sign');
+            enqueue({ request, type: 'sign', client });
             break;
           case 'eth_sendTransaction':
           case 'eth_signTransaction':
-            setCallRequest(request);
-            setType('sendTx');
+            enqueue({ request, type: 'sendTx', client });
             break;
         }
-
-        setTimeout(() => open(), 10);
       }
     );
 
     return () => {
       PubSub.unsubscribe(MessageKeys.wc_request);
     };
-  }, []);
+  }, [currentRequestParam]);
 
   return (
     <SquircleModalize
@@ -126,9 +134,10 @@ const WalletConnectRequests = ({ appAuth, app }: { appAuth: Authentication; app:
       panGestureComponentEnabled={false}
       tapGestureEnabled={false}
       closeOnOverlayTap={false}
+      onClosed={() => dequeue()}
     >
-      {type === 'sign' ? <WalletConnectSign client={client!} request={callRequest!} close={close} /> : undefined}
-      {type === 'sendTx' ? <WalletConnectTxRequest client={client!} request={callRequest!} close={close} /> : undefined}
+      {currentRequestParam?.type === 'sign' && <WalletConnectSign {...currentRequestParam} close={close} />}
+      {currentRequestParam?.type === 'sendTx' && <WalletConnectTxRequest {...currentRequestParam} close={close} />}
     </SquircleModalize>
   );
 };
@@ -153,6 +162,7 @@ const WalletConnect = () => {
     });
 
     PubSub.subscribe(MessageKeys.walletconnect.notSupportedSessionProposal, () => {
+      showMessage({ message: i18n.t('modal-dapp-not-supported-network'), type: 'info' });
       closeConnectDapp();
       setState({});
     });
@@ -305,6 +315,7 @@ const GlobalNetworksMenuModal = observer(() => {
       <NetworksMenu
         useContextMenu
         onEditing={setEditing}
+        networks={Networks.categorized}
         selectedNetwork={Networks.current}
         onNetworkPress={(network) => {
           closeNetworksModal();
@@ -465,6 +476,35 @@ const SendFundsModal = () => {
   );
 };
 
+const ERC4337QueueModal = () => {
+  const { ref, open, close } = useModalize();
+  const [isCritical, setIsCritical] = useState(false);
+
+  useEffect(() => {
+    PubSub.subscribe(MessageKeys.openERC4337Queue, () => {
+      open();
+      logScreenView('RequestsFundsModal');
+    });
+
+    return () => {
+      PubSub.unsubscribe(MessageKeys.openERC4337Queue);
+    };
+  }, []);
+
+  return (
+    <SquircleModalize
+      ref={ref}
+      adjustToContentHeight
+      withHandle={!isCritical}
+      panGestureEnabled={!isCritical}
+      disableScrollIfPossible
+      scrollViewProps={{ showsVerticalScrollIndicator: false, scrollEnabled: false }}
+    >
+      <ERC4337Queue close={close} onCritical={setIsCritical} />
+    </SquircleModalize>
+  );
+};
+
 const BackupTipsModal = () => {
   const { ref, open, close } = useModalize();
   const [context, setContext] = useState<{ upgrade?: boolean; inactiveDevices?: MultiSigKeyDeviceInfo[] }>({});
@@ -555,19 +595,16 @@ export const ShardsModal = observer(() => {
     queue.push(param);
 
     if (vms) return;
-    setVMs(queue.shift()!);
-    setImmediate(() => open());
+    dequeue();
   };
 
   const dequeue = () => {
     setIsCritical(false);
-    setVMs(undefined);
 
     const next = queue.shift();
-    if (!next) return;
-
     setVMs(next);
-    setImmediate(() => open());
+
+    next && setImmediate(() => open());
   };
 
   useEffect(() => {
@@ -599,7 +636,6 @@ export const ShardsModal = observer(() => {
       [
         MessageKeys.openShardsDistribution,
         MessageKeys.openShardReceiver,
-
         MessageKeys.openShardProvider,
         MessageKeys.openKeyRecoveryRequestor,
         MessageKeys.openShardRedistributionReceiver,
@@ -780,7 +816,7 @@ export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Aut
   const bioAuth = async () => {
     if (!appAuth.biometricEnabled || !appAuth.biometricSupported) return;
 
-    const success = await appAuth.authorize();
+    const success = await appAuth.authorizeApp();
     if (success) closeLockScreen();
   };
 
@@ -822,7 +858,7 @@ export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Aut
         unlockTimestamp={appAuth.appUnlockTime}
         failedAttempts={appAuth.failedAttempts}
         onCodeEntered={async (code) => {
-          const success = await appAuth.authorize(code);
+          const success = await appAuth.authorizeApp(code);
           if (success) closeLockScreen();
           return success;
         }}
@@ -831,16 +867,17 @@ export const LockScreen = observer(({ app, appAuth }: { app: AppVM; appAuth: Aut
   );
 });
 
-export default (props: { app: AppVM; appAuth: Authentication }) => {
+export default () => {
   return [
     <SendFundsModal key="send-funds" />,
     <RequestFundsModal key="request-funds" />,
     <GlobalNetworksMenuModal key="networks-menu" />,
     <GlobalAccountsMenuModal key="accounts-menu" />,
+    <ERC4337QueueModal key="erc4337-queue" />,
     <BackupTipsModal key="backup-tip" />,
     <GlobalLoadingModal key="loading-modal" />,
     <WalletConnect key="walletconnect" />,
-    <WalletConnectRequests key="walletconnect-requests" {...props} />,
+    <WalletConnectRequests key="walletconnect-requests" />,
     <InpageDAppConnect key="inpage-dapp-connect" />,
     <InpageDAppRequests key="inpage-dapp-requests" />,
     <ShardsModal key="shards-management" />,

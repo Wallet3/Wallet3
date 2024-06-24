@@ -60,7 +60,7 @@ export abstract class SignInWithWeb2 {
   abstract get platform(): string;
 
   async getEncodedRecoverKey(web2UID: string, pin?: string) {
-    if (!(await Authentication.authorize(pin))) return '';
+    if (!(await Authentication.authenticate({ pin }))) return '';
     return encode((await SecureStore.getItemAsync(Keys.recovery(web2UID))) || '');
   }
 

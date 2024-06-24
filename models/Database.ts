@@ -2,6 +2,7 @@ import { DataSource, EntityManager, EntitySchema, MixedList, Repository } from '
 
 import AddressTag from './entities/AddressTag';
 import Chain from './entities/Chain';
+import ERC4337Transaction from './entities/ERC4337Transaction';
 import EtherscanContract from './entities/EtherscanContract';
 import InpageDApp from './entities/InpageDApp';
 import Key from './entities/Key';
@@ -26,6 +27,7 @@ const Schemas: MixedList<Function | string | EntitySchema> = [
   UrlTag,
   MultiSigKey,
   ShardKey,
+  ERC4337Transaction,
 ];
 
 class Database {
@@ -35,6 +37,7 @@ class Database {
   multiSigKeys!: Repository<MultiSigKey>;
   shardKeys!: Repository<ShardKey>;
   txs!: Repository<Transaction>;
+  erc4337Txs!: Repository<ERC4337Transaction>;
   wcV1Sessions!: Repository<WCSession_v1>;
   wcV2Sessions!: Repository<WCV2_Session>;
   inpageDApps!: Repository<InpageDApp>;
@@ -58,18 +61,19 @@ class Database {
     await this._dataSource.initialize();
 
     this.keys = this._dataSource.getRepository(Key);
-    this.txs = this._dataSource.getRepository(Transaction);
-    this.wcV1Sessions = this._dataSource.getRepository(WCSession_v1);
-    this.inpageDApps = this._dataSource.getRepository(InpageDApp);
+    this.multiSigKeys = this._dataSource.getRepository(MultiSigKey);
     this.chains = this._dataSource.getRepository(Chain);
+    this.shardKeys = this._dataSource.getRepository(ShardKey);
+
+    this.wcV1Sessions = this._dataSource.getRepository(WCSession_v1);
+    this.wcV2Sessions = this._dataSource.getRepository(WCV2_Session);
+    this.txs = this._dataSource.getRepository(Transaction);
+    this.erc4337Txs = this._dataSource.getRepository(ERC4337Transaction);
+    this.inpageDApps = this._dataSource.getRepository(InpageDApp);
     this.etherscan_contracts = this._dataSource.getRepository(EtherscanContract);
     this.sourcify_metadata = this._dataSource.getRepository(SourcifyMetadata);
     this.cloud_address_tags = this._dataSource.getRepository(AddressTag);
-    this.wcV2Sessions = this._dataSource.getRepository(WCV2_Session);
     this.urls = this._dataSource.getRepository(UrlTag);
-
-    this.multiSigKeys = this._dataSource.getRepository(MultiSigKey);
-    this.shardKeys = this._dataSource.getRepository(ShardKey);
   }
 
   execTransaction<T>(runInTransaction: (entityManager: EntityManager) => Promise<T>) {
@@ -85,6 +89,7 @@ class Database {
       this.inpageDApps.clear(),
       this.chains.clear(),
       this.multiSigKeys.clear(),
+      this.erc4337Txs.clear(),
     ]);
   }
 }

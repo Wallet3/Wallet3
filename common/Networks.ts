@@ -9,7 +9,7 @@ import {
   FTMPopularTokens,
   HarmonyDefaultToken,
   HecoPopularTokens,
-  IToken,
+  ITokenMetadata,
   MetisPopularTokens,
   MoonriverDefaultToken,
   NovaPopularTokens,
@@ -21,7 +21,20 @@ import {
   zkSyncPopularTokens,
 } from './tokens';
 
+import ERC4337Configs from '../configs/erc4337.config';
+import { GoerliPopTokens } from './tokens/Goerli';
 import { Gwei_1 } from './Constants';
+import { Linea_PopularTokens } from './tokens/Linea';
+import { MumbaiPopTokens } from './tokens/Mumbai';
+import { SepoliaTokens } from './tokens/Sepolia';
+
+export interface IERC4337 {
+  bundlerUrls: string[];
+  factoryAddress: string;
+  entryPointAddress: string;
+  paymasterAddress?: string;
+  feeTokens?: ITokenMetadata[];
+}
 
 export interface INetwork {
   comm_id?: string;
@@ -31,8 +44,9 @@ export interface INetwork {
   color: string;
   l2?: boolean;
   eip1559?: boolean;
+  erc4337?: IERC4337;
   order?: number;
-  defaultTokens: IToken[];
+  defaultTokens: ITokenMetadata[];
   showOverview?: boolean;
   blockTimeMs?: number;
   explorer: string;
@@ -41,11 +55,11 @@ export interface INetwork {
   addrPrefix?: string;
   github_dir?: string;
   isUserAdded?: boolean;
-  feeTokens?: IToken[];
   minWei?: number;
   browserBarIconSize?: number;
   testnet?: boolean;
   pinned?: boolean;
+  category?: 'core' | 'l2' | 'evm-compatible';
 }
 
 export const ChainIds = {
@@ -76,6 +90,7 @@ export const PublicNetworks: INetwork[] = [
     blockTimeMs: 12 * 1000,
     explorer: 'https://etherscan.io',
     etherscanApi: 'https://api.etherscan.io/api',
+    category: 'core',
   },
   {
     symbol: 'ETH',
@@ -90,6 +105,7 @@ export const PublicNetworks: INetwork[] = [
     explorer: 'https://arbiscan.io',
     etherscanApi: 'https://api.arbiscan.io/api',
     github_dir: 'arbitrum',
+    category: 'core',
   },
   {
     symbol: 'ETH',
@@ -99,10 +115,56 @@ export const PublicNetworks: INetwork[] = [
     color: '#FF0420',
     order: 3,
     l2: true,
+    eip1559: true,
     defaultTokens: OpPopularTokens,
     showOverview: false,
     explorer: 'https://optimistic.etherscan.io',
     etherscanApi: 'https://api-optimistic.etherscan.io/api',
+    category: 'core',
+  },
+  {
+    symbol: 'ETH',
+    network: 'Base',
+    chainId: 8453,
+    color: '#588af5',
+    eip1559: true,
+    l2: true,
+    defaultTokens: [],
+    category: 'core',
+    explorer: 'https://basescan.org',
+    etherscanApi: 'https://api.basescan.org/api',
+  },
+  {
+    symbol: 'ETH',
+    chainId: 59144,
+    color: '#3d65e8',
+    l2: true,
+    network: 'Linea',
+    defaultTokens: Linea_PopularTokens,
+    category: 'core',
+    explorer: 'https://lineascan.build',
+    etherscanApi: 'https://api.lineascan.build/api',
+  },
+  {
+    symbol: 'ETH',
+    explorer: 'https://explorer.zksync.io',
+    chainId: 324,
+    color: '#8C8DFC',
+    l2: true,
+    network: 'zkSync Era',
+    defaultTokens: [],
+    category: 'core',
+  },
+  {
+    symbol: 'ETH',
+    chainId: 1101,
+    color: '#a726c1',
+    l2: true,
+    network: 'Polygon zkEVM',
+    defaultTokens: [],
+    category: 'core',
+    explorer: 'https://zkevm.polygonscan.com',
+    etherscanApi: 'https://api-zkevm.polygonscan.com/api',
   },
   {
     symbol: 'MATIC',
@@ -116,6 +178,8 @@ export const PublicNetworks: INetwork[] = [
     blockTimeMs: 3 * 1000,
     explorer: 'https://polygonscan.com',
     etherscanApi: 'https://api.polygonscan.com/api',
+    category: 'core',
+    erc4337: ERC4337Configs.Polygon,
   },
   {
     symbol: 'BNB',
@@ -129,7 +193,8 @@ export const PublicNetworks: INetwork[] = [
     explorer: 'https://bscscan.com',
     etherscanApi: 'https://api.bscscan.com/api',
     github_dir: 'smartchain',
-    minWei: 5 * Gwei_1,
+    minWei: Gwei_1,
+    category: 'core',
   },
   {
     symbol: 'xDAI',
@@ -138,6 +203,7 @@ export const PublicNetworks: INetwork[] = [
     chainId: 100,
     color: '#48A9A6',
     order: 3,
+    category: 'core',
     defaultTokens: xDaiPopularTokens,
     blockTimeMs: 5 * 1000,
     explorer: 'https://gnosisscan.io',
@@ -158,6 +224,24 @@ export const PublicNetworks: INetwork[] = [
     explorer: 'https://snowtrace.io',
     etherscanApi: 'https://api.snowtrace.io/api',
     github_dir: 'avalanchec',
+    category: 'core',
+  },
+  // {
+  //   symbol: 'FIL',
+  //   network: 'Filecoin',
+  //   chainId: 314,
+  //   color: '#0090FF',
+  //   defaultTokens: [],
+  //   explorer: 'https://beryx.zondax.ch/v1/search/fil/mainnet',
+  // },
+  {
+    symbol: 'ETH',
+    network: 'Zora',
+    chainId: 7777777,
+    color: '#496DD7',
+    l2: true,
+    defaultTokens: [],
+    explorer: 'https://explorer.zora.energy',
   },
   {
     symbol: 'ETH',
@@ -194,6 +278,18 @@ export const PublicNetworks: INetwork[] = [
     etherscanApi: 'https://explorer.celo.org/api',
   },
   {
+    symbol: 'FTM',
+    comm_id: 'ftm',
+    chainId: 250,
+    network: 'Fantom',
+    color: '#13b5ec',
+    order: 4,
+    defaultTokens: FTMPopularTokens,
+    blockTimeMs: 10 * 1000,
+    explorer: 'https://ftmscan.com',
+    etherscanApi: 'https://api.ftmscan.com/api',
+  },
+  {
     symbol: 'CANTO',
     chainId: 7700,
     network: 'CANTO',
@@ -210,6 +306,7 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: NovaPopularTokens,
     explorer: 'https://nova.arbiscan.io',
     etherscanApi: 'https://api-nova.arbiscan.io/api',
+    l2: true,
   },
   {
     symbol: 'RON',
@@ -220,18 +317,6 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: RoninPopularTokens,
     explorer: 'https://explorer.roninchain.com',
     addrPrefix: 'ronin:',
-  },
-  {
-    symbol: 'FTM',
-    comm_id: 'ftm',
-    chainId: 250,
-    network: 'Fantom',
-    color: '#13b5ec',
-    order: 4,
-    defaultTokens: FTMPopularTokens,
-    blockTimeMs: 10 * 1000,
-    explorer: 'https://ftmscan.com',
-    etherscanApi: 'https://api.ftmscan.com/api',
   },
   {
     symbol: 'ETH',
@@ -304,12 +389,27 @@ export const PublicNetworks: INetwork[] = [
     github_dir: 'doge',
   },
   {
+    symbol: 'EOS',
+    chainId: 17777,
+    network: 'EOS',
+    explorer: 'https://explorer.evm.eosnetwork.com',
+    defaultTokens: [],
+    color: '#0f4fe3',
+  },
+  {
+    symbol: 'CFX',
+    chainId: 1030,
+    network: 'Conflux eSpace',
+    explorer: 'https://evm.confluxscan.net',
+    defaultTokens: [],
+    color: '#61c7d6',
+  },
+  {
     symbol: 'ASTR',
     comm_id: 'astr',
     network: 'Astar',
     chainId: 592,
-    explorer: 'https://blockscout.com/astar',
-    etherscanApi: 'https://blockscout.com/astar/api',
+    explorer: 'https://astar.subscan.io',
     color: '#00aee9',
     defaultTokens: [],
   },
@@ -383,33 +483,41 @@ export const PublicNetworks: INetwork[] = [
     color: '#474169',
     defaultTokens: [],
   },
+  {
+    symbol: 'BTT',
+    chainId: 199,
+    network: 'BitTorrent',
+    color: '#7B6FEA',
+    defaultTokens: [],
+    explorer: 'https://bttcscan.com',
+    etherscanApi: 'https://api.bttcscan.com/api',
+  },
 ];
 
 export const Testnets: INetwork[] = [
   {
-    comm_id: '',
     symbol: 'ETH',
     network: 'Goerli',
     chainId: 5,
     color: '#6186ff',
     eip1559: true,
+    erc4337: ERC4337Configs.Goerli,
     testnet: true,
-    defaultTokens: [],
+    defaultTokens: GoerliPopTokens,
     explorer: 'https://goerli.etherscan.io',
   },
   {
-    comm_id: '',
     symbol: 'ETH',
     network: 'Sepolia',
     chainId: 11155111,
     color: '#6186ff',
     eip1559: true,
+    erc4337: ERC4337Configs.Sepolia,
     testnet: true,
-    defaultTokens: [],
+    defaultTokens: SepoliaTokens,
     explorer: 'https://sepolia.etherscan.io',
   },
   {
-    comm_id: '',
     symbol: 'ETH',
     network: 'Optimism Goerli',
     chainId: 420,
@@ -420,7 +528,6 @@ export const Testnets: INetwork[] = [
     explorer: 'https://goerli-optimism.etherscan.io',
   },
   {
-    comm_id: '',
     symbol: 'ETH',
     network: 'Arbitrum Goerli',
     chainId: 421613,
@@ -429,6 +536,43 @@ export const Testnets: INetwork[] = [
     testnet: true,
     defaultTokens: [],
     explorer: 'https://goerli.arbiscan.io',
+  },
+  {
+    symbol: 'ETH',
+    network: 'Scroll Alpha',
+    chainId: 534353,
+    color: '#edb940',
+    testnet: true,
+    defaultTokens: [],
+    explorer: 'https://blockscout.scroll.io',
+  },
+  {
+    symbol: 'ETH',
+    network: 'Linea Testnet',
+    chainId: 59140,
+    color: '#3d65e8',
+    eip1559: true,
+    testnet: true,
+    defaultTokens: [],
+    explorer: 'https://goerli.lineascan.build',
+  },
+  {
+    symbol: 'ETH',
+    network: 'zkSync Era Testnet',
+    chainId: 280,
+    color: '#4E529A',
+    testnet: true,
+    defaultTokens: [],
+    explorer: 'https://goerli.explorer.zksync.io',
+  },
+  {
+    symbol: 'ETH',
+    chainId: 1442,
+    color: '#a726c1',
+    network: 'Polygon zkEVM Testnet',
+    defaultTokens: [],
+    testnet: true,
+    explorer: 'https://zkevm.polygonscan.com',
   },
   {
     symbol: 'ETH',
@@ -441,20 +585,30 @@ export const Testnets: INetwork[] = [
     explorer: 'https://goerli.basescan.org',
   },
   {
-    comm_id: '',
     symbol: 'MATIC',
     network: 'Mumbai',
     chainId: 80001,
     color: '#8247E5',
     eip1559: true,
-    defaultTokens: [],
-    blockTimeMs: 3 * 1000,
+    erc4337: ERC4337Configs.Mumbai,
+    defaultTokens: MumbaiPopTokens,
     testnet: true,
     explorer: 'https://mumbai.polygonscan.com',
     etherscanApi: 'https://mumbai.polygonscan.com/api',
   },
   {
-    comm_id: '',
+    symbol: 'AVAX',
+    comm_id: 'avax',
+    chainId: 43113,
+    network: 'Avalanche Fuji',
+    color: '#E84142',
+    testnet: true,
+    eip1559: true,
+    defaultTokens: [],
+    explorer: 'https://testnet.snowtrace.io',
+    github_dir: 'avalanchec',
+  },
+  {
     symbol: 'ETH',
     network: 'Japan Open Chain',
     chainId: 99999,
@@ -463,6 +617,15 @@ export const Testnets: INetwork[] = [
     blockTimeMs: 3 * 1000,
     testnet: true,
     explorer: 'https://sandbox1.japanopenchain.org',
+  },
+  {
+    symbol: 'xDai',
+    network: 'Chiado',
+    chainId: 10200,
+    color: '#48A9A6',
+    defaultTokens: [],
+    testnet: true,
+    explorer: 'https://blockscout.com/gnosis/chiado',
   },
 ];
 

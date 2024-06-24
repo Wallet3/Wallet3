@@ -10,7 +10,6 @@ import AccountSelector from '../../modals/dapp/AccountSelector';
 import App from '../../viewmodels/core/App';
 import Avatar from '../../components/Avatar';
 import Collapsible from 'react-native-collapsible';
-import { IToken } from '../../common/tokens';
 import { NetworksMenu } from '../../modals';
 import { OneInch } from '../../assets/3rd';
 import { Portal } from 'react-native-portalize';
@@ -340,8 +339,8 @@ export default observer(() => {
       <Portal>
         <SquircleModalize ref={networksRef}>
           <NetworksMenu
-            title={t('modal-dapp-switch-network', { app: 'Exchange' })}
-            networks={VM.networks}
+            title={t('modal-dapp-switch-network', { app: '1inch Exchange' })}
+            flatNetworks={VM.networks}
             selectedNetwork={VM.userSelectedNetwork}
             onNetworkPress={(network) => {
               VM.switchNetwork(network);
@@ -351,25 +350,32 @@ export default observer(() => {
         </SquircleModalize>
 
         <SquircleModalize ref={accountsRef}>
-          <AccountSelector
-            single
-            accounts={App.allAccounts}
-            selectedAccounts={[VM.account?.address || '']}
-            style={{ padding: 16, height: 430 }}
-            expanded
-            themeColor={VM.userSelectedNetwork.color}
-            onDone={([account]) => {
-              closeAccountsModal();
-              VM.switchAccount(account);
-            }}
-          />
+          <ScrollView
+            horizontal
+            pagingEnabled={false}
+            style={{ flex: 1, flexGrow: 1 }}
+            contentContainerStyle={{ flex: 1, flexGrow: 1 }}
+          >
+            <AccountSelector
+              single
+              accounts={App.allAccounts}
+              selectedAccounts={[VM.account?.address || '']}
+              style={{ padding: 16, height: 430 }}
+              expanded
+              network={VM.userSelectedNetwork}
+              onDone={([account]) => {
+                closeAccountsModal();
+                VM.switchAccount(account);
+              }}
+            />
+          </ScrollView>
         </SquircleModalize>
 
         <SquircleModalize ref={fromSelectorRef}>
           <ScrollView horizontal scrollEnabled={false} style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
             <TokenSelector
               tokens={VM.tokens}
-              selectedToken={VM.swapFrom as IToken}
+              selectedToken={VM.swapFrom}
               chainId={chainId}
               themeColor={userSelectedNetwork.color}
               onAddTokenRequested={(t) => VM.addToken(t)}
@@ -387,7 +393,7 @@ export default observer(() => {
               tokens={VM.tokens}
               chainId={chainId}
               themeColor={userSelectedNetwork.color}
-              selectedToken={VM.swapTo as IToken}
+              selectedToken={VM.swapTo}
               onAddTokenRequested={(t) => VM.addToken(t)}
               onTokenSelected={(t) => {
                 VM.switchSwapTo(t as any);

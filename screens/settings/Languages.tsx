@@ -30,16 +30,14 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
   );
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <SafeViewContainer style={{ paddingTop: 0 }}>
-        <FlatList
-          data={Langs.supportedLangs}
-          renderItem={renderItem}
-          keyExtractor={(i) => i.value}
-          ItemSeparatorComponent={() => <View style={{ height: 0.333, backgroundColor: borderColor }} />}
-          style={{}}
-        />
-      </SafeViewContainer>
-    </SafeAreaView>
+    <SafeViewContainer paddingHeader>
+      <FlatList
+        data={Langs.supportedLangs}
+        renderItem={renderItem}
+        keyExtractor={(i) => i.value}
+        ItemSeparatorComponent={() => <View style={{ height: 0.333, backgroundColor: borderColor }} />}
+        style={{}}
+      />
+    </SafeViewContainer>
   );
 });

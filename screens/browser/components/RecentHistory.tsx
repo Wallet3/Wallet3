@@ -90,7 +90,7 @@ export default observer(({ onItemPress, tabCount, onTabsPress, disableContextMen
             return (
               <ContextMenu
                 key={item.origin}
-                actions={disableContextMenu ? [] : actions}
+                actions={disableContextMenu || isAndroid ? undefined : actions}
                 onPress={onActionPress}
                 previewBackgroundColor={backgroundColor}
                 style={{ marginHorizontal: 4 }}
@@ -117,7 +117,15 @@ export default observer(({ onItemPress, tabCount, onTabsPress, disableContextMen
                     containerStyle={{ marginEnd: 6 }}
                     imageBackgroundColor={backgroundColor}
                   />
-                  <Text style={{ color: item.themeColor || '#999', maxWidth: 150, marginBottom: -1 }} numberOfLines={1}>
+                  <Text
+                    numberOfLines={1}
+                    style={{
+                      color: item.themeColor || '#999',
+                      maxWidth: 150,
+                      marginBottom: -1,
+                      marginTop: isAndroid ? -2 : undefined,
+                    }}
+                  >
                     {item.title}
                   </Text>
                 </TouchableOpacity>

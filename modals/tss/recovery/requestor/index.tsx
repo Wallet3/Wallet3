@@ -12,6 +12,7 @@ import Theme from '../../../../viewmodels/settings/Theme';
 import i18n from '../../../../i18n';
 import { observer } from 'mobx-react-lite';
 import { useNavigation } from '@react-navigation/native';
+import { verifiedColor } from '../../../../constants/styles';
 
 interface Props {
   vm: KeyRecoveryRequestor;
@@ -69,7 +70,7 @@ export default observer(({ close, onCritical, vm }: Props) => {
 
         {step === 2 && (
           <FadeInDownView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <ActivityIndicator size="small" />
+            <ActivityIndicator size="small" color={verifiedColor} />
             <Text style={{ color: secondaryTextColor, marginVertical: 24 }}>{t('msg-wait-a-moment')}</Text>
           </FadeInDownView>
         )}

@@ -2,33 +2,37 @@ import * as Animatable from 'react-native-animatable';
 import * as ExpoLinking from 'expo-linking';
 
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
-import { Account } from '../../viewmodels/account/Account';
+import { AccountBase } from '../../viewmodels/account/AccountBase';
 import Avatar from '../../components/Avatar';
 import { BlankPNG } from '../../common/Constants';
 import CachedImage from 'react-native-fast-image';
 import CopyableText from '../../components/CopyableText';
+import { ERC4337Account } from '../../viewmodels/account/ERC4337Account';
 import { Ionicons } from '@expo/vector-icons';
 import Networks from '../../viewmodels/core/Networks';
 import QRCode from 'react-native-qrcode-svg';
+import SuperBadge from '../../components/SuperBadge';
 import Theme from '../../viewmodels/settings/Theme';
 import { formatAddress } from '../../utils/formatter';
 import i18n from '../../i18n';
+import { inactivatedColor } from '../../constants/styles';
 import { isIOS } from '../../utils/platform';
-import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 import { openInappBrowser } from '../../modals/app/InappBrowser';
 import { setStringAsync } from 'expo-clipboard';
+import { startLayoutAnimation } from '../../utils/animations';
 
-export default observer(({ account }: { account?: Account }) => {
+export default observer(({ account }: { account: AccountBase }) => {
   const { t } = i18n;
-  const { backgroundColor, thirdTextColor } = Theme;
+  const { thirdTextColor } = Theme;
   const { current } = Networks;
-  const { address, avatar } = account || {};
+  const { address, avatar, isERC4337 } = account;
   const ens = account?.ens.name;
   const [showFullAddress, setShowFullAddress] = useState(false);
   const explorerView = useRef<Animatable.View>(null);
+  const [isERC4337Activated, setIsERC4337Activated] = useState(false);
 
   const [etherscan] = useState(
     ExpoLinking.parse(current.explorer)
@@ -36,32 +40,53 @@ export default observer(({ account }: { account?: Account }) => {
       .filter((i) => i.length > 3)[0]
   );
 
+  useEffect(() => startLayoutAnimation(), [showFullAddress]);
+  useEffect(() => {
+    isERC4337 && (account as ERC4337Account).checkActivated(current.chainId, true).then(setIsERC4337Activated);
+  }, []);
+
   const prefixedAddress = current?.addrPrefix ? `${current?.addrPrefix}${address?.substring(2)}` : address;
 
   return (
     <View style={{ padding: 16, flex: 1, height: 430 }}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
         <View style={{ alignItems: 'center', marginTop: -16 }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 12, maxWidth: '70%' }}>
+          <View
+            style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 12, maxWidth: '70%', marginHorizontal: 16 }}
+          >
             <Avatar
-              size={27}
+              size={25}
+              uri={account?.avatar}
               emoji={account?.emojiAvatar}
               emojiMarginStart={1}
               emojiMarginTop={1}
-              emojiSize={11}
+              emojiSize={10}
               backgroundColor={account?.emojiColor}
             />
 
             <CopyableText
-              iconStyle={{ display: 'none' }}
+              hideIcon
               copyText={ens || account?.nickname || `Account ${(account?.index ?? 0) + 1}`}
               txtStyle={{ color: thirdTextColor, fontSize: 21, fontWeight: '500', marginStart: 8 }}
             />
+
+            {isERC4337 && (
+              <SuperBadge
+                containerStyle={{
+                  backgroundColor: isERC4337Activated ? current.color : inactivatedColor,
+                  paddingHorizontal: 8,
+                  paddingEnd: 6,
+                  paddingVertical: 2,
+                }}
+                iconSize={11}
+                txtStyle={{ fontSize: 12 }}
+              />
+            )}
           </View>
 
           <CopyableText
             copyText={prefixedAddress || ''}
-            iconSize={10}
+            iconSize={12}
             iconColor={thirdTextColor}
             iconStyle={{ marginStart: 5 }}
             txtLines={2}

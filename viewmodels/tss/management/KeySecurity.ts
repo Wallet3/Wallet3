@@ -1,6 +1,5 @@
 import { DAY, SECOND } from '../../../utils/time';
 
-import { AsyncLocalStorage } from 'async_hooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MultiSigKey from '../../../models/entities/MultiSigKey';
 import { MultiSigWallet } from '../../wallet/MultiSigWallet';
@@ -18,13 +17,15 @@ const Keys = {
 };
 
 class KeySecurity {
-  readonly inactiveDAYS = 20 * DAY;
+  readonly InactiveDays = 20 * DAY;
+  readonly InactiveDeadline = Date.now() - this.InactiveDays;
 
   async checkInactiveDevices(wallet?: WalletBase) {
     if (!wallet?.isMultiSig) return;
 
-    const expired = Date.now() - (__DEV__ ? 10 * SECOND : this.inactiveDAYS);
-    const inactiveDevices = (wallet as MultiSigWallet).key.secretsInfo.devices.filter((i) => i.lastUsedAt < expired);
+    const inactiveDevices = (wallet as MultiSigWallet).key.secretsInfo.devices.filter(
+      (i) => i.lastUsedAt < this.InactiveDeadline
+    );
     if (inactiveDevices.length === 0) return;
 
     const lastCheck = Number((await AsyncStorage.getItem(Keys.lastInactiveDevicesCheckTimestamp(wallet.keyInfo.id))) || 0);
@@ -33,8 +34,7 @@ class KeySecurity {
   }
 
   checkSecurityLevel(key: MultiSigKey) {
-    const expired = Date.now() - 30 * DAY;
-    const notUsedDevices = (key.secretsInfo.devices || []).filter((v) => v.lastUsedAt < expired);
+    const notUsedDevices = (key.secretsInfo.devices || []).filter((v) => v.lastUsedAt < this.InactiveDeadline);
     const thresholdRate = key.secretsInfo.threshold / (key.secretsInfo.devices.length + 1);
 
     let score = 0;

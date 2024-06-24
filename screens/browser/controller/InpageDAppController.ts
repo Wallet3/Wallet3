@@ -3,8 +3,9 @@ import * as Linking from 'expo-linking';
 import Networks, { AddEthereumChainParameter } from '../../../viewmodels/core/Networks';
 import { providers, utils } from 'ethers';
 
-import { Account } from '../../../viewmodels/account/Account';
+import { AccountBase } from '../../../viewmodels/account/AccountBase';
 import App from '../../../viewmodels/core/App';
+import { AuthOptions } from '../../../viewmodels/auth/Authentication';
 import DeviceInfo from 'react-native-device-info';
 import { ERC20Token } from '../../../models/ERC20';
 import EventEmitter from 'events';
@@ -13,7 +14,9 @@ import InpageDApp from '../../../models/entities/InpageDApp';
 import MessageKeys from '../../../common/MessageKeys';
 import MetamaskDAppsHub from '../../../viewmodels/walletconnect/MetamaskDAppsHub';
 import { PageMetadata } from '../Web3View';
+import { RawTransactionRequest } from '../../../viewmodels/transferring/RawTransactionRequest';
 import { ReadableInfo } from '../../../models/entities/Transaction';
+import { SendTxRequest } from '../../../viewmodels/account/AccountBase';
 import { SignTypedDataVersion } from '@metamask/eth-sig-util';
 import { WCCallRequest_eth_sendTransaction } from '../../../models/entities/WCSession_v1';
 import i18n from '../../../i18n';
@@ -61,7 +64,7 @@ interface WatchAssetParams {
 
 export interface ConnectInpageDApp extends Payload {
   origin: string;
-  approve: (userSelected: { network: INetwork; account: Account }) => void;
+  approve: (userSelected: { network: INetwork; account: AccountBase }) => void;
   reject: () => void;
 }
 
@@ -72,16 +75,14 @@ export interface InpageDAppSignRequest {
   typedData?: any;
   approve: (opt?: { pin?: string; standardMode?: boolean }) => Promise<boolean>;
   reject: () => void;
-  account: Account;
+  account: AccountBase;
   metadata: PageMetadata;
 }
 
 export interface InpageDAppTxRequest {
-  chainId: number;
-  param: WCCallRequest_eth_sendTransaction;
-  account: string;
+  vm: RawTransactionRequest;
   app: { name: string; icon: string; verified: boolean };
-  approve: (obj: { pin?: string; tx?: providers.TransactionRequest; readableInfo: ReadableInfo }) => Promise<boolean>;
+  approve: (obj: SendTxRequest & AuthOptions) => Promise<boolean>;
   reject: () => void;
 }
 
@@ -213,7 +214,7 @@ export class InpageDAppController extends EventEmitter {
     }
 
     return new Promise<string[] | any>((resolve) => {
-      const approve = ({ account, network }: { account: Account; network: INetwork }) => {
+      const approve = ({ account, network }: { account: AccountBase; network: INetwork }) => {
         const app = new InpageDApp();
         app.origin = origin;
         app.lastUsedAccount = account.address;
@@ -253,8 +254,8 @@ export class InpageDAppController extends EventEmitter {
     const dapp = this.getDApp(origin);
     if (!dapp) return;
 
-    const { wallet, account, accountIndex } = App.findWallet(dapp.lastUsedAccount) || {};
-    if (!wallet || !account || accountIndex === undefined) {
+    const account = App.findAccount(dapp.lastUsedAccount);
+    if (!account) {
       showMessage({ message: i18n.t('msg-account-not-found'), type: 'warning' });
       return { error: { code: Code_InvalidParams, message: 'Invalid account' } };
     }
@@ -267,11 +268,11 @@ export class InpageDAppController extends EventEmitter {
       let type: 'plaintext' | 'typedData' = 'plaintext';
       let typedVersion = SignTypedDataVersion.V4;
 
-      const approve = async ({ pin, standardMode }: { pin?: string; standardMode?: boolean } = {}) => {
+      const approve = async ({ pin }: { pin?: string; standardMode?: boolean } = {}) => {
         const signed =
           type === 'typedData'
-            ? await wallet.signTypedData({ typedData, pin, accountIndex, version: typedVersion })
-            : await wallet.signMessage({ msg: msg!, pin, accountIndex, standardMode });
+            ? await account.signTypedData({ typedData, pin, version: typedVersion, disableAutoPinRequest: true })
+            : await account.signMessage(msg!, { pin, disableAutoPinRequest: true });
 
         if (signed) resolve(signed);
 
@@ -326,26 +327,42 @@ export class InpageDAppController extends EventEmitter {
     dapp.setLastUsedTimestamp(Date.now());
 
     return new Promise<string | any>((resolve) => {
-      const approve = async ({
-        pin,
-        tx,
-        readableInfo,
-      }: {
-        pin?: string;
-        tx: providers.TransactionRequest;
-        readableInfo: ReadableInfo;
-      }) => {
-        const { txHash, error } = await App.sendTxFromAccount(dapp.lastUsedAccount, {
-          tx,
-          pin,
-          readableInfo: { ...(readableInfo || {}), dapp: pageMetadata?.title ?? '', icon: pageMetadata?.icon },
-        });
+      const param = params[0] as WCCallRequest_eth_sendTransaction;
+      const network = Networks.find(dapp.lastUsedChainId)!;
+      const account = App.findAccount(dapp.lastUsedAccount);
 
-        txHash ? resolve(txHash) : resolve({ error });
+      if (!network || !account) {
+        resolve({ error: { code: Code_InvalidParams, message: 'No such network or account' } });
+        return;
+      }
+
+      const vm = new RawTransactionRequest({ param, network, account });
+
+      const approve = async (args: SendTxRequest & AuthOptions) => {
+        const { success, txHash, error, txHashPromise } = await vm.sendTx({
+          ...args,
+          network,
+          readableInfo: { ...args.readableInfo, dapp: pageMetadata?.title ?? '', icon: pageMetadata?.icon },
+        });
 
         if (error && __DEV__) showMessage({ type: 'warning', message: error.message });
 
-        return txHash ? true : false;
+        if (txHash) {
+          resolve(txHash);
+          return true;
+        }
+
+        if (error) {
+          resolve(error);
+          return false;
+        }
+
+        txHashPromise?.then((tx) => {
+          resolve(tx);
+          __DEV__ && console.log('tx hash resolved', tx);
+        });
+
+        return txHashPromise || success ? true : false;
       };
 
       const reject = () => resolve({ error: { code: Code_UserRejected, message: 'The request was rejected by the user' } });
@@ -353,10 +370,8 @@ export class InpageDAppController extends EventEmitter {
       PubSub.publish(MessageKeys.openInpageDAppSendTransaction, {
         approve,
         reject,
-        param: params[0] as WCCallRequest_eth_sendTransaction,
-        chainId: Number(dapp.lastUsedChainId),
-        account: dapp.lastUsedAccount,
         app: { name: pageMetadata!.title, icon: pageMetadata!.icon, verified: isSecureSite(pageMetadata!.origin) },
+        vm,
       } as InpageDAppTxRequest);
     });
   }
@@ -417,7 +432,7 @@ export class InpageDAppController extends EventEmitter {
   }
 
   private async wallet_watchAsset(origin: string, asset: WatchAssetParams) {
-    if (!asset?.options?.address || asset?.type?.toUpperCase() !== 'ERC20')
+    if (!utils.isAddress(asset?.options?.address) || asset?.type?.toUpperCase() !== 'ERC20')
       return { error: { code: Code_InvalidParams, message: 'Invalid request' } };
 
     const dapp = this.getDApp(origin);

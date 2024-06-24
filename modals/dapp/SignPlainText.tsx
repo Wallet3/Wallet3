@@ -1,8 +1,8 @@
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
-import { Switch, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
-import { Account } from '../../viewmodels/account/Account';
+import { AccountBase } from '../../viewmodels/account/AccountBase';
 import AccountIndicator from '../components/AccountIndicator';
 import { BioType } from '../../viewmodels/auth/Authentication';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';
@@ -24,7 +24,7 @@ interface Props {
   themeColor: string;
   onReject?: () => void;
   onSign?: () => Promise<void>;
-  account?: Account;
+  account?: AccountBase;
   bioType?: BioType;
   onStandardModeChanged?: (on: boolean) => void;
   standardMode?: boolean;

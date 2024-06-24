@@ -17,6 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import EventEmitter from 'eventemitter3';
 import { getSecureRandomBytes } from '../../utils/math';
 import { logWalletLocked } from '../services/Analytics';
+import { openGlobalPasspad } from '../../common/Modals';
 import { toMilliseconds } from '../../utils/time';
 
 const Keys = {
@@ -28,6 +29,11 @@ const Keys = {
 };
 
 export type BioType = 'faceid' | 'fingerprint' | 'iris';
+
+export type AuthOptions = {
+  pin?: string;
+  disableAutoPinRequest?: boolean;
+};
 
 interface Events {
   appAuthorized: () => void;
@@ -121,13 +127,25 @@ export class Authentication extends EventEmitter<Events> {
     });
   }
 
-  private async authenticate({ pin, options }: { pin?: string; options?: LocalAuthenticationOptions } = {}): Promise<boolean> {
+  authenticate = async ({
+    pin,
+    options,
+    disableAutoPinRequest,
+  }: { options?: LocalAuthenticationOptions } & AuthOptions = {}): Promise<boolean> => {
     if (pin) return await this.verifyPin(pin);
-    if (!this.biometricSupported) return false;
+
+    const requestPin = async () =>
+      await openGlobalPasspad({ closeOnOverlayTap: true, onPinEntered: this.verifyPin, authentication: this });
+
+    if (!this.biometricSupported) {
+      return disableAutoPinRequest ? false : await requestPin();
+    }
 
     const { success } = await authenticateAsync(options);
-    return success;
-  }
+    if (success) return success;
+
+    return disableAutoPinRequest ? false : await requestPin();
+  };
 
   private async getMasterKey() {
     let masterKey = await SecureStore.getItemAsync(Keys.masterKey);
@@ -180,8 +198,8 @@ export class Authentication extends EventEmitter<Events> {
     return success;
   };
 
-  authorize = async (pin?: string) => {
-    const success = await this.authenticate({ pin });
+  authorizeApp = async (pin?: string) => {
+    const success = await this.authenticate({ pin, disableAutoPinRequest: true });
 
     if (!this.appAuthorized) {
       runInAction(() => (this.appAuthorized = success));
@@ -195,8 +213,8 @@ export class Authentication extends EventEmitter<Events> {
     return encrypt(data, await this.getMasterKey());
   };
 
-  decrypt = async <T = string | string[]>(data: T, pin?: string): Promise<T | undefined> => {
-    if (!(await this.authenticate({ pin }))) return undefined;
+  decrypt = async <T = string | string[]>(data: T, authOptions?: AuthOptions): Promise<T | undefined> => {
+    if (!(await this.authenticate(authOptions))) return undefined;
 
     const masterKey = await this.getMasterKey();
 
@@ -211,8 +229,8 @@ export class Authentication extends EventEmitter<Events> {
     return encrypt(data, await this.getForeverKey());
   };
 
-  decryptForever = async <T = string | string[]>(data: T, pin?: string): Promise<T | undefined> => {
-    if (!(await this.authenticate({ pin }))) return undefined;
+  decryptForever = async <T = string | string[]>(data: T, authOptions?: AuthOptions): Promise<T | undefined> => {
+    if (!(await this.authenticate(authOptions))) return undefined;
 
     const foreverKey = await this.getForeverKey();
 

@@ -3,6 +3,7 @@ export const CELO_USD = {
   decimals: 18,
   symbol: 'cUSD',
   shown: true,
+  isStable: true,
 };
 
 export const CELO_EUR = {
@@ -10,6 +11,7 @@ export const CELO_EUR = {
   decimals: 18,
   symbol: 'cEUR',
   shown: true,
+  isStable: true,
 };
 
 export const CELO_USDC = {
@@ -17,12 +19,14 @@ export const CELO_USDC = {
   decimals: 6,
   symbol: 'USDC',
   shown: true,
+  isStable: true,
 };
 
 export const CELO_USDT = {
   address: '0x88eeC49252c8cbc039DCdB394c0c2BA2f1637EA0',
   decimals: 6,
   symbol: 'USDT',
+  isStable: true,
 };
 
 export const CeloPopularTokens = [CELO_USD, CELO_EUR, CELO_USDC, CELO_USDT];

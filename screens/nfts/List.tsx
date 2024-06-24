@@ -1,23 +1,23 @@
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import App from '../../viewmodels/core/App';
 import { BlurView } from 'expo-blur';
 import { INetwork } from '../../common/Networks';
-import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
 import { Ionicons } from '@expo/vector-icons';
 import MultiSourceImage from '../../components/MultiSourceImage';
 import { NFTMetadata } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
 import Networks from '../../viewmodels/core/Networks';
-import { Nft } from '../../common/apis/Rarible.types';
 import { ReactiveScreen } from '../../utils/device';
 import { SharedElement } from 'react-navigation-shared-element';
 import Theme from '../../viewmodels/settings/Theme';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
-import { lightOrDark } from '../../utils/color';
+import { isAndroid } from '../../utils/platform';
 import { observer } from 'mobx-react-lite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+const TitleView = isAndroid ? View : BlurView;
 
 const NFTItem = ({
   nft,
@@ -38,29 +38,23 @@ const NFTItem = ({
   network: INetwork;
   nft: NFTMetadata;
 }) => {
-  const [colorResult, setColorResult] = useState<ImageColorsResult>();
-  const [nftBackgroundColor, setNftBackgroundColor] = useState<string>();
-  const [titleColor, setTitleColor] = useState(foregroundColor);
+  const [titleColor] = useState(foregroundColor);
   const { previews, previewTypes } = nft;
-
-  useEffect(() => {
-    if (!nftBackgroundColor) return;
-    setTitleColor(lightOrDark(nftBackgroundColor) === 'light' ? '#222' : '#ffffffee');
-  }, [nftBackgroundColor]);
+  const { borderColor } = Theme;
 
   return (
     <TouchableOpacity
       key={nft.id}
       activeOpacity={0.75}
-      style={{ marginBottom: 16, ...shadow }}
-      onPress={() => navigation.push('NFTDetails', { item: nft, colorResult })}
+      style={{ marginBottom: 16, backgroundColor, ...shadow, borderWidth: isAndroid ? 1 : 0, borderColor, borderRadius: 12 }}
+      onPress={() => navigation.push('NFTDetails', { item: nft })}
     >
       <SharedElement id={`nft.${nft.id}.photo`}>
         <MultiSourceImage
           uriSources={previews}
           sourceTypes={previewTypes}
           backgroundColor={backgroundColor}
-          borderRadius={10}
+          borderRadius={12}
           style={{ width: '100%', height: imageHeight }}
           paused
         />
@@ -83,7 +77,7 @@ const NFTItem = ({
             overflow: 'hidden',
           }}
         >
-          <BlurView
+          <TitleView
             tint={mode}
             intensity={10}
             style={{
@@ -103,7 +97,7 @@ const NFTItem = ({
                 fontSize: 17,
                 maxWidth: '80%',
                 paddingStart: 2,
-                textShadowColor: nftBackgroundColor || '#585858',
+                textShadowColor: '#585858',
                 textShadowOffset: { width: 0, height: 0 },
                 textShadowRadius: 4,
               }}
@@ -112,7 +106,7 @@ const NFTItem = ({
               {nft.title}
             </Text>
             {generateNetworkIcon({ ...network, hideEVMTitle: true, width: 22, style: { marginStart: 8 } })}
-          </BlurView>
+          </TitleView>
         </View>
       </View>
     </TouchableOpacity>

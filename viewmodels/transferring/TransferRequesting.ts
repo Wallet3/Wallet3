@@ -5,10 +5,10 @@ import { build, parse } from 'eth-url-parser';
 import App from '../core/App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { INetwork } from '../../common/Networks';
-import { IToken } from '../../common/tokens';
+import { ITokenMetadata } from '../../common/tokens';
 
 export class TransferRequesting {
-  token: IToken;
+  token: ITokenMetadata;
   amount = '0';
 
   readonly network: INetwork;
@@ -78,7 +78,7 @@ export class TransferRequesting {
     });
   }
 
-  setToken(token: IToken) {
+  setToken(token: ITokenMetadata) {
     this.token = token;
 
     AsyncStorage.setItem(`${this.network.chainId}-${this.currentAccount.address}-LastUsedToken`, token.address);

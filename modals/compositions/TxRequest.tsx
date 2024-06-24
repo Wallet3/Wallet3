@@ -1,5 +1,6 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 
+import AwaitablePasspad from '../views/AwaitablePasspad';
 import { BioType } from '../../viewmodels/auth/Authentication';
 import { Passpad } from '../views';
 import { RawTransactionRequest } from '../../viewmodels/transferring/RawTransactionRequest';
@@ -8,7 +9,6 @@ import { SafeViewContainer } from '../../components';
 import Swiper from 'react-native-swiper';
 
 interface Props {
-  themeColor?: string;
   vm: RawTransactionRequest;
   app?: { icon: string; name: string; verified?: boolean };
   onApprove: (pin?: string) => Promise<boolean>;
@@ -16,7 +16,7 @@ interface Props {
   bioType?: BioType;
 }
 
-export default ({ themeColor, vm, app, onApprove, onReject, bioType }: Props) => {
+export default ({ vm, app, onApprove, onReject, bioType }: Props) => {
   const swiper = useRef<Swiper>(null);
 
   const approve = async () => {
@@ -40,9 +40,12 @@ export default ({ themeColor, vm, app, onApprove, onReject, bioType }: Props) =>
       automaticallyAdjustContentInsets
     >
       <RequestReview vm={vm} app={app} onReject={onReject} onApprove={approve} account={vm.account} bioType={bioType} />
-      <SafeViewContainer>
-        <Passpad themeColor={themeColor} onCodeEntered={(c) => onApprove(c)} onCancel={() => swiper.current?.scrollTo(0)} />
-      </SafeViewContainer>
+
+      <AwaitablePasspad
+        themeColor={vm.network.color}
+        onCodeEntered={(c) => onApprove(c)}
+        onCancel={() => swiper.current?.scrollTo(0)}
+      />
     </Swiper>
   );
 };

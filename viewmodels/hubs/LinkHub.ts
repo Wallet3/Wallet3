@@ -5,7 +5,7 @@ import { decode as decodeBase64, isValid as isBase64 } from 'js-base64';
 import Authentication from '../auth/Authentication';
 import MessageKeys from '../../common/MessageKeys';
 import i18n from '../../i18n';
-import { isDomain } from '../services/DomainResolver';
+import { isDomain } from '../services/ens/DomainResolver';
 import { isURL } from '../../utils/url';
 import { showMessage } from 'react-native-flash-message';
 import { utils } from 'ethers';
@@ -21,6 +21,7 @@ export const SupportedWCSchemes = [
   'celowallet:',
   'bitpie:',
   'abt:',
+  'metamask:',
 ];
 
 const urls = ['https:'];

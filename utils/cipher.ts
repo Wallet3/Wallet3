@@ -19,7 +19,7 @@ export async function md5(input: string) {
 const JsonFormatter = {
   stringify: function (cipherParams: CryptoES.lib.CipherParams) {
     // create json object with ciphertext
-    const jsonObj: any = { ct: cipherParams.ciphertext.toString(CryptoES.enc.Base64) }; // optionally add iv and salt
+    const jsonObj: any = { ct: cipherParams.ciphertext!.toString(CryptoES.enc.Base64) }; // optionally add iv and salt
 
     if (cipherParams.iv) {
       jsonObj.iv = cipherParams.iv.toString();

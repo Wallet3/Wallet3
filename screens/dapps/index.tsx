@@ -4,7 +4,7 @@ import React, { useRef, useState } from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { borderColor, secondaryFontColor } from '../../constants/styles';
 
-import { Account } from '../../viewmodels/account/Account';
+import { AccountBase } from '../../viewmodels/account/AccountBase';
 import AccountSelector from '../../modals/dapp/AccountSelector';
 import App from '../../viewmodels/core/App';
 import DAppInfo from './DAppInfo';
@@ -32,7 +32,7 @@ import { useModalize } from 'react-native-modalize/lib/utils/use-modalize';
 
 interface Props {
   client: WalletConnect_v1 | MetamaskDApp | WalletConnect_v2;
-  allAccounts: Account[];
+  allAccounts: AccountBase[];
   close: Function;
 }
 
@@ -42,8 +42,6 @@ const DApp = observer(({ client, allAccounts, close }: Props) => {
 
   const [defaultAccount, setDefaultAccount] = useState(client.activeAccount);
   const [defaultNetwork, setDefaultNetwork] = useState(client.activeNetwork);
-
-  const { backgroundColor } = Theme;
 
   const disconnect = () => {
     startLayoutAnimation();
@@ -97,7 +95,7 @@ const DApp = observer(({ client, allAccounts, close }: Props) => {
             accounts={allAccounts}
             selectedAccounts={client.accounts}
             onDone={selectAccounts}
-            themeColor={defaultNetwork.color}
+            network={defaultNetwork}
           />
         ) : undefined}
       </Swiper>

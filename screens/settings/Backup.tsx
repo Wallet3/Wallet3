@@ -15,6 +15,7 @@ import Networks from '../../viewmodels/core/Networks';
 import { Portal } from 'react-native-portalize';
 import QRCode from 'react-native-qrcode-svg';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { ScrollView } from 'react-native-gesture-handler';
 import SignInWithApple from '../../viewmodels/auth/SignInWithApple';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
@@ -76,14 +77,14 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
 
   useEffect(() => {
     if (currentWallet?.isMultiSig) return;
-    openGlobalPasspad({ closeOnOverlayTap: false, onAutoAuthRequest: verify, onPinEntered: verify });
+    verify().then((v) => !v && navigation.pop());
     return () => mn.clean();
   }, []);
 
   return (
     <SafeViewContainer paddingHeader includeTopPadding>
       {authorized ? (
-        <View style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1, margin: -16 }} contentContainerStyle={{ padding: 16 }}>
           <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: -12, marginBottom: -8 }}>
             <MaterialCommunityIcons name="shield-key" size={64} color={'#61D800'} />
           </View>
@@ -119,7 +120,6 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
                 txtLines={1}
                 iconColor={thirdFontColor}
                 txtStyle={{ color: thirdFontColor }}
-                iconStyle={{ marginStart: 6 }}
               />
             </View>
           )}
@@ -138,16 +138,16 @@ export default observer(({ navigation }: NativeStackScreenProps<any, never>) => 
             </View>
           )}
 
-          <View style={{ flex: 1 }} />
+          <View style={{ flex: 1, minHeight: 24 }} />
 
           {words.length > 0 && (
             <Button
               title={t('settings-security-backup-button-verify')}
               themeColor={themeColor}
-              onPress={() => navigation.navigate('VerifySecret')}
+              onPress={() => navigation.navigate('VerifySecret', { words: mn.secretWords })}
             />
           )}
-        </View>
+        </ScrollView>
       ) : (
         <View />
       )}

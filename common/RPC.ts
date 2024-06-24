@@ -1,4 +1,4 @@
-import { BigNumber, utils } from 'ethers';
+import { BigNumber, BigNumberish } from 'ethers';
 
 import Networks from '../viewmodels/core/Networks';
 import Providers from '../configs/providers.json';
@@ -14,14 +14,13 @@ export function getRPCUrls(chainId: number | string): string[] {
   if (cache.has(Number(chainId))) return cache.get(Number(chainId)) || [];
 
   let urls: string[] = Providers[`${Number(chainId)}`]?.filter((p) => p.startsWith('http')) ?? [];
-  let availableUrls: string[];
 
   const network = Networks.find(chainId);
   const failed = failedRPCs.get(Number(chainId));
 
   urls.unshift(...(network?.rpcUrls ?? []));
 
-  availableUrls = urls.filter((url) => !(failed?.has(url) ?? false));
+  const availableUrls = urls.filter((url) => !(failed?.has(url) ?? false));
   urls = Array.from(new Set(availableUrls.length === 0 ? urls : availableUrls));
 
   if (urls.length === 0) return [];
@@ -48,7 +47,7 @@ function markRPCFailed(chainId: number | string, rpc: string) {
 export async function getBalance(chainId: number, address: string): Promise<BigNumber> {
   const urls = getRPCUrls(chainId);
 
-  for (let url of urls) {
+  for (const url of urls) {
     try {
       const result = await post(url, {
         jsonrpc: '2.0',
@@ -80,7 +79,7 @@ export async function sendTransaction(chainId: number, txHex: string) {
       id: Date.now(),
     });
 
-  for (let url of urls) {
+  for (const url of urls) {
     try {
       const resp = (await eth_sendRawTransaction(url)) as {
         id: number;
@@ -103,7 +102,7 @@ export async function sendTransaction(chainId: number, txHex: string) {
 export async function getTransactionCount(chainId: number, address: string) {
   const urls = getRPCUrls(chainId);
 
-  for (let url of urls) {
+  for (const url of urls) {
     try {
       const resp = await post(url, {
         jsonrpc: '2.0',
@@ -112,8 +111,10 @@ export async function getTransactionCount(chainId: number, address: string) {
         id: Date.now(),
       });
 
-      const { result } = resp as { id: number; result: string };
-      return Number.parseInt(result);
+      const { result, error } = resp as { id: number; result: string; error: any };
+      if (error) continue;
+
+      return Number.parseInt(result) || 0;
     } catch (error) {
       markRPCFailed(chainId, url);
     }
@@ -149,11 +150,11 @@ export async function eth_call_return(
     data: string;
   },
   fast = false
-) {
+): Promise<{ result?: any; error?: { message: string; code: number; data: any }; id: number } | undefined> {
   let attempts = 0;
   const urls = getRPCUrls(chainId);
 
-  for (let url of urls) {
+  for (const url of urls) {
     try {
       const resp = await post(url, {
         jsonrpc: '2.0',
@@ -163,7 +164,7 @@ export async function eth_call_return(
       });
 
       if (resp.error) {
-        __DEV__ && console.log(resp.error, url, args);
+        __DEV__ && console.log('eth_call_return', resp.error, url, args);
 
         if (fast) {
           return resp;
@@ -187,7 +188,7 @@ export async function eth_call_return(
 export async function rawCall(chainId: number | string, payload: any) {
   const urls = getRPCUrls(chainId);
 
-  for (let url of urls) {
+  for (const url of urls) {
     try {
       const resp = await post(url, { jsonrpc: '2.0', id: Date.now(), ...payload });
       return resp.result;
@@ -202,14 +203,20 @@ export async function callRPC(url: string, payload: { method: string; data?: str
   return resp.result;
 }
 
+/**
+ * if the value is not undefined, it must be 0x123xxx, never be 0x0123!!!
+ * @param chainId
+ * @param args
+ * @returns
+ */
 export async function estimateGas(
   chainId: number,
   args: {
     from: string;
-    to: string;
+    to?: string;
     gas?: string | number;
     gasPrice?: string | number;
-    value?: string | number;
+    value?: BigNumberish;
     data: string;
   }
 ) {
@@ -217,24 +224,27 @@ export async function estimateGas(
   let errorMessage = '';
   let errors = 0;
 
-  for (let url of urls) {
+  for (const url of urls) {
     try {
       const resp = await post(url, {
         jsonrpc: '2.0',
         method: 'eth_estimateGas',
-        params: [args],
+        params: [args, 'latest'],
         id: Date.now(),
       });
 
       if (resp.error) {
-        errorMessage = resp.error.message;
-        if (errors++ > 3) break; // Speed up error checking
+        __DEV__ && console.log('estimateGas', resp.error);
+
+        errorMessage = resp.error.message || errorMessage;
+        if (errors++ >= 3) break; // Speed up error checking
 
         continue;
       }
 
       return { gas: Number(resp.result as string) };
     } catch (error) {
+      console.log('estimateGas', error);
       markRPCFailed(chainId, url);
     }
   }
@@ -246,7 +256,7 @@ export async function getGasPrice(chainId: number) {
   let attempts = 0;
   const urls = getRPCUrls(chainId);
 
-  for (let url of urls) {
+  for (const url of urls) {
     try {
       const resp = await post(url, {
         jsonrpc: '2.0',
@@ -275,7 +285,7 @@ export async function getGasPrice(chainId: number) {
 export async function getTransactionReceipt(chainId: number, hash: string) {
   const urls = getRPCUrls(chainId);
 
-  for (let url of urls) {
+  for (const url of urls) {
     try {
       const resp = await post(url, { jsonrpc: '2.0', method: 'eth_getTransactionReceipt', params: [hash], id: Date.now() });
 
@@ -305,7 +315,7 @@ export async function getTransactionReceipt(chainId: number, hash: string) {
 export async function getNextBlockBaseFee(chainId: number) {
   const urls = getRPCUrls(chainId);
 
-  for (let url of urls) {
+  for (const url of urls) {
     try {
       return await getNextBlockBaseFeeByRPC(url);
     } catch (error) {
@@ -334,7 +344,7 @@ export async function getNextBlockBaseFeeByRPC(url: string) {
 export async function getMaxPriorityFee(chainId: number) {
   const urls = getRPCUrls(chainId);
 
-  for (let url of urls) {
+  for (const url of urls) {
     try {
       return await getMaxPriorityFeeByRPC(url);
     } catch (error) {}
@@ -354,11 +364,11 @@ export async function getMaxPriorityFeeByRPC(url: string) {
   return Number.parseInt(resp.result || 0);
 }
 
-export async function getCode(chainId: number, contract: string) {
+export async function getCode(chainId: number, contract: string): Promise<string | undefined> {
   const urls = getRPCUrls(chainId);
   let attempts = 0;
 
-  for (let url of urls) {
+  for (const url of urls) {
     try {
       const resp = await post(url, { jsonrpc: '2.0', method: 'eth_getCode', params: [contract, 'latest'], id: Date.now() });
 

@@ -1,19 +1,19 @@
-import { ContactsPad, Passpad } from '../views';
 import React, { useEffect, useRef, useState } from 'react';
 
 import App from '../../viewmodels/core/App';
 import Authentication from '../../viewmodels/auth/Authentication';
+import AwaitablePasspad from '../views/AwaitablePasspad';
 import Contacts from '../../viewmodels/customs/Contacts';
+import { ContactsPad } from '../views';
 import NFTReview from '../views/NFTReview';
 import { NFTTransferring } from '../../viewmodels/transferring/NonFungibleTokenTransferring';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { SafeViewContainer } from '../../components';
+import Packing from '../views/Packing';
 import Success from '../views/Success';
 import Swiper from 'react-native-swiper';
-import Theme from '../../viewmodels/settings/Theme';
 import { View } from 'react-native';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import styles from '../styles';
+import { showMessage } from 'react-native-flash-message';
 
 interface Props {
   vm: NFTTransferring;
@@ -21,22 +21,23 @@ interface Props {
 }
 
 export default observer(({ vm, onClose }: Props) => {
-  const { backgroundColor } = Theme;
   const swiper = useRef<Swiper>(null);
   const [verified, setVerified] = useState(false);
+  const [networkBusy, setNetworkBusy] = useState(false);
+  const { biometricType, biometricEnabled } = Authentication;
 
   useEffect(() => {
-    return () => {
-      vm.dispose();
-    };
+    return () => vm.dispose();
   }, []);
 
   const sendTx = async (pin?: string) => {
-    const result = await vm.sendTx(pin);
+    const result = await vm.sendTx(pin, () => setNetworkBusy(true));
 
     if (result.success) {
       setVerified(true);
       setTimeout(() => onClose?.(), 1700);
+    } else {
+      !pin && swiper.current?.scrollTo(2);
     }
 
     return result.success;
@@ -52,20 +53,20 @@ export default observer(({ vm, onClose }: Props) => {
       emoji: selfAccount ? { icon: selfAccount.emojiAvatar, color: selfAccount.emojiColor } : undefined,
     });
 
-    if (!Authentication.biometricEnabled) {
+    if (!biometricEnabled) {
       swiper.current?.scrollTo(2);
       return;
     }
 
-    if (await sendTx()) return;
-
-    swiper.current?.scrollTo(2);
+    await sendTx();
   };
 
   return (
-    <View style={{ height: 445 }}>
+    <View style={{ height: 460 }}>
       {verified ? (
         <Success />
+      ) : networkBusy ? (
+        <Packing />
       ) : (
         <Swiper ref={swiper} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
           <ContactsPad
@@ -76,16 +77,13 @@ export default observer(({ vm, onClose }: Props) => {
             }}
           />
 
-          <NFTReview
-            onBack={() => swiper.current?.scrollTo(0)}
-            vm={vm}
-            onSend={onSendClick}
-            biometricType={Authentication.biometricType}
-          />
+          <NFTReview onBack={() => swiper.current?.scrollTo(0)} vm={vm} onSend={onSendClick} />
 
-          <SafeViewContainer>
-            <Passpad themeColor={vm.network.color} onCodeEntered={sendTx} onCancel={() => swiper.current?.scrollTo(1)} />
-          </SafeViewContainer>
+          <AwaitablePasspad
+            themeColor={vm.network.color}
+            onCodeEntered={sendTx}
+            onCancel={() => swiper.current?.scrollTo(1)}
+          />
         </Swiper>
       )}
     </View>

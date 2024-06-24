@@ -2,12 +2,13 @@ import { BigNumber, utils } from 'ethers';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { estimateGas, getBalance } from '../common/RPC';
 
-import { IToken } from '../common/tokens';
+import { IFungibleToken } from './Interfaces';
 
-export class NativeToken implements IToken {
+export class NativeToken implements IFungibleToken {
   owner: string;
   readonly decimals = 18;
   readonly address = '';
+  readonly isNative = true;
 
   chainId: number = 1;
   symbol: string = '';

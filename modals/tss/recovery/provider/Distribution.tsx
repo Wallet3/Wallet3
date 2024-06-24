@@ -1,19 +1,17 @@
-import { FadeInDownView, ZoomInView } from '../../../../components/animations';
 import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 import { useOptimizedCornerRadius, useOptimizedSafeBottom } from '../../../../utils/hardware';
 
 import Button from '../../components/Button';
+import { FadeInDownView } from '../../../../components/animations';
 import IllustrationSecureFiles from '../../../../assets/illustrations/misc/secure_files.svg';
 import { KeyRecoveryProvider } from '../../../../viewmodels/tss/KeyRecoveryProvider';
-import LottieView from 'lottie-react-native';
 import { Passpad } from '../../../views';
 import { ReactiveScreen } from '../../../../utils/device';
 import Success from '../../../views/Success';
 import Theme from '../../../../viewmodels/settings/Theme';
 import i18n from '../../../../i18n';
 import { observer } from 'mobx-react-lite';
-import { openGlobalPasspad } from '../../../../common/Modals';
 import { secureColor } from '../../../../constants/styles';
 
 interface Props {
@@ -42,7 +40,7 @@ export default observer(({ vm, close, onCritical }: Props) => {
 
   const send = async () => {
     setBusy(true);
-    await openGlobalPasspad({ onAutoAuthRequest: vm.send, onPinEntered: vm.send, closeOnOverlayTap: true });
+    await vm.send();
     setBusy(false);
   };
 

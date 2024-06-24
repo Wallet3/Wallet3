@@ -1,10 +1,11 @@
-import { Coin, SafeViewContainer, Separator } from '../../components';
+import { Coin, SafeViewContainer, Separator, Toggle } from '../../components';
 import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { fontColor, secondaryFontColor } from '../../constants/styles';
 
 import App from '../../viewmodels/core/App';
+import { IFungibleToken } from '../../models/Interfaces';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Networks from '../../viewmodels/core/Networks';
 import { RootStack } from '../navigations';
@@ -51,7 +52,7 @@ const DraggableToken = observer(
       />
       <Text style={{ fontSize: 18, color: textColor }}>{item.symbol}</Text>
       <View style={{ flex: 1 }} />
-      <ToggleSwitch isOn={item.shown ?? false} onToggle={(on) => onValueChange(on)} onColor={Networks.current.color} />
+      <Toggle isOn={item.shown ?? false} onToggle={(on) => onValueChange(on)} onColor={Networks.current.color} />
     </TouchableOpacity>
   )
 );
@@ -60,11 +61,11 @@ export default observer(({ navigation }: NativeStackScreenProps<RootStack, 'Toke
   const { t } = i18n;
   const { currentAccount } = App;
   const { allTokens } = currentAccount?.tokens ?? { allTokens: [] };
-  const [data, setData] = useState<UserToken[]>([]);
+  const [data, setData] = useState<IFungibleToken[]>([]);
   const { borderColor, textColor } = Theme;
   const { current } = Networks;
 
-  const renderItem = (props: RenderItemParams<UserToken>) => (
+  const renderItem = (props: RenderItemParams<IFungibleToken>) => (
     <DraggableToken
       chainId={current.chainId}
       {...props}

@@ -2,15 +2,16 @@ import React, { useState } from 'react';
 
 import Authentication from '../../../viewmodels/auth/Authentication';
 import BackableScrollTitles from '../../../modals/components/BackableScrollTitles';
+import { DAY } from '../../../utils/time';
 import { DateTimeFormatter } from '../../../utils/formatter';
 import DeleteConfirmationView from './views/DeleteConfirmationView';
 import { DeviceOverview } from './views/DeviceOverview';
+import KeySecurity from '../../../viewmodels/tss/management/KeySecurity';
 import ModalRootContainer from '../../../modals/core/ModalRootContainer';
 import { MultiSigKeyDeviceInfo } from '../../../models/entities/MultiSigKey';
 import Theme from '../../../viewmodels/settings/Theme';
 import dayjs from 'dayjs';
 import i18n from '../../../i18n';
-import { openGlobalPasspad } from '../../../common/Modals';
 import { sleep } from '../../../utils/async';
 import { startLayoutAnimation } from '../../../utils/animations';
 
@@ -34,12 +35,7 @@ export default ({ device, close, onDeleteDevice: onDelete, disableRemove, onDevi
   };
 
   const authAndNext = async () => {
-    const success = await openGlobalPasspad({
-      onAutoAuthRequest: Authentication.authorize,
-      onPinEntered: Authentication.authorize,
-    });
-
-    success && goTo(1);
+    (await Authentication.authenticate()) && goTo(1);
   };
 
   const doDelete = () => {
@@ -66,6 +62,7 @@ export default ({ device, close, onDeleteDevice: onDelete, disableRemove, onDevi
           deviceInfo={device}
           disableButton={disableRemove}
           lastUsedAt={lastUsedAt}
+          expired={device.lastUsedAt < KeySecurity.InactiveDeadline}
           onNext={authAndNext}
           onDeviceNameChanged={onDeviceNameChanged}
           buttonTitle={t('button-remove')}

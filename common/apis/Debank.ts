@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DeBankApiKey } from '../../configs/secret';
-import { IToken } from '../tokens';
+import { ITokenMetadata } from '../tokens';
 import { post } from '../../utils/fetch';
 import { utils } from 'ethers';
 
@@ -80,7 +80,7 @@ export async function getBalance(address: string, chainId: number, debankId?: ch
 
 export async function getTokens(address: string, chainId: number, debankId?: chain, is_all = false) {
   if (MemoryCache.has(CacheKeys.user_tokens(chainId, address))) {
-    return MemoryCache.get(CacheKeys.user_tokens(chainId, address)) as IToken[];
+    return MemoryCache.get(CacheKeys.user_tokens(chainId, address)) as ITokenMetadata[];
   }
 
   if (DebankSupportedChains.size > 0 && !DebankSupportedChains.get(chainId)) return [];
@@ -116,7 +116,7 @@ export async function getTokens(address: string, chainId: number, debankId?: cha
   const result = debankTokens
     ? debankTokens
         .filter((t) => utils.isAddress(t.id))
-        .map<IToken>((t) => {
+        .map<ITokenMetadata>((t) => {
           return {
             address: utils.getAddress(t.id),
             decimals: t.decimals,

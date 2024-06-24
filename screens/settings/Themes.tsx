@@ -33,12 +33,10 @@ export default observer(({ navigation }: NativeStackScreenProps<{}, never>) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <SafeViewContainer style={{ paddingTop: 0 }}>
-        <ThemeItem textColor={textColor} onPress={() => setTheme('light')} item="light" />
-        <View style={{ height: 0.333, backgroundColor: borderColor }} />
-        <ThemeItem textColor={textColor} onPress={() => setTheme('dark')} item="dark" />
-      </SafeViewContainer>
-    </SafeAreaView>
+    <SafeViewContainer paddingHeader>
+      <ThemeItem textColor={textColor} onPress={() => setTheme('light')} item="light" />
+      <View style={{ height: 0.333, backgroundColor: borderColor }} />
+      <ThemeItem textColor={textColor} onPress={() => setTheme('dark')} item="dark" />
+    </SafeViewContainer>
   );
 });

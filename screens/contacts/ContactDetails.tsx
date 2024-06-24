@@ -1,5 +1,5 @@
-import { AntDesign, EvilIcons, FontAwesome, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { Button, SafeViewContainer } from '../../components';
+import { EvilIcons, Ionicons } from '@expo/vector-icons';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 import Avatar from '../../components/Avatar';
@@ -19,7 +19,7 @@ export default observer(
     const textInputStyle = { ...styles.textInput, color: secondaryTextColor };
 
     return (
-      <SafeViewContainer style={{ padding: 16 }}>
+      <SafeViewContainer>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
           <View>
             <Text

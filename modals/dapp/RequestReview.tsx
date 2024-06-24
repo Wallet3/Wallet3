@@ -1,12 +1,13 @@
 import { ActivityIndicator, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { AntDesign, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
-import { Coin, SafeViewContainer, Skeleton } from '../../components';
+import { Coin, Placeholder, SafeViewContainer, Skeleton } from '../../components';
 import React, { useEffect, useRef, useState } from 'react';
-import { secondaryFontColor, warningColor } from '../../constants/styles';
+import { secondaryFontColor, verifiedColor, warningColor } from '../../constants/styles';
 
-import { Account } from '../../viewmodels/account/Account';
+import { AccountBase } from '../../viewmodels/account/AccountBase';
 import AccountIndicator from '../components/AccountIndicator';
+import AddToSendingQueue from '../components/AddToSendingQueue';
 import AddressRiskIndicator from '../components/AddressRiskIndicator';
 import AnimatedNumber from '../../components/AnimatedNumber';
 import BalanceChangePreview from '../views/BalanceChangePreview';
@@ -15,6 +16,7 @@ import Currency from '../../viewmodels/settings/Currency';
 import { DecodedFunc } from '../../viewmodels/hubs/EtherscanHub';
 import FaceID from '../../assets/icons/app/FaceID-white.svg';
 import FuncReview from '../views/FuncReview';
+import GasFeeReviewItem from '../components/GasFeeReviewItem';
 import GasReview from '../views/GasReview';
 import HorizontalNftList from '../components/HorizontalNftList';
 import HorizontalTokenList from '../components/HorizontalTokenList';
@@ -45,7 +47,7 @@ interface Props {
   onGasPress?: () => void;
   onDecodedFuncPress?: (decodedFunc: DecodedFunc) => void;
   onBalanceChangePreviewPress?: (previewResult: PreExecResult) => void;
-  account: Account;
+  account: AccountBase;
   bioType?: BioType;
 }
 
@@ -62,7 +64,7 @@ const TxReview = observer(
     const reviewItemValueStyle = { ...styles.reviewItemValue, color: textColor };
     const safeThemeColor = vm.toAddressRisky ? warningColor : thirdTextColor;
 
-    useEffect(() => startLayoutAnimation(), [vm.nfts]);
+    useEffect(() => startLayoutAnimation(), [vm.nfts, vm.paymaster?.loading]);
 
     return (
       <SafeViewContainer>
@@ -420,69 +422,21 @@ const TxReview = observer(
 
           <View style={{ ...reviewItemStyle, borderBottomWidth: 0 }}>
             <Text style={styles.reviewItemTitle}>{t('modal-review-network')}</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              {generateNetworkIcon({ ...network, width: 15, style: { marginEnd: 6 } })}
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+              {generateNetworkIcon({ ...network, width: 15, hideEVMTitle: true })}
 
               <Text style={{ ...reviewItemValueStyle, color: network?.color }} numberOfLines={1}>
                 {network?.network}
               </Text>
 
-              {vm.loading ? <ActivityIndicator size="small" style={{ marginStart: 5 }} /> : undefined}
+              {(vm.loading || vm.paymaster?.loading) && <ActivityIndicator size="small" color={network.color} />}
             </View>
           </View>
         </View>
 
-        <View
-          style={{
-            ...reviewItemsContainer,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            paddingStart: 16,
-          }}
-        >
-          <Text style={styles.reviewItemTitle}>{t('modal-review-fee')}</Text>
+        <GasFeeReviewItem vm={vm} onGasPress={onGasPress} />
 
-          <TouchableOpacity
-            onPress={onGasPress}
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              padding: 16,
-              paddingVertical: 12,
-              paddingEnd: 12,
-              justifyContent: 'flex-end',
-              width: '75%',
-            }}
-          >
-            <Text style={{ ...styles.reviewItemTitle, fontSize: 15 }}>
-              {`(${Currency.tokenToUSD(vm.estimatedRealFee, vm.feeTokenSymbol).toFixed(2)} USD)`}
-            </Text>
-
-            <AnimatedNumber
-              style={{ ...reviewItemValueStyle, marginStart: 2, marginEnd: 5 }}
-              numberOfLines={1}
-              timing="linear"
-              value={vm.txFee}
-              formatter={(val) => val.toFixed(5)}
-            />
-
-            <Text style={reviewItemValueStyle}>{vm.feeTokenSymbol}</Text>
-
-            <MaterialIcons
-              name="keyboard-arrow-right"
-              size={15}
-              color={secondaryTextColor}
-              style={{ marginStart: 2, marginBottom: -1 }}
-            />
-          </TouchableOpacity>
-        </View>
-
-        {vm.insufficientFee && !vm.loading ? <InsufficientFee /> : undefined}
-
-        {vm.txException ? <TxException exception={vm.txException} /> : undefined}
-
-        {(vm.type === 'Approve_ERC20' || vm.type === 'Approve_ForAll') && vm.isValidParams && (
+        {(vm.type === 'Approve_ERC20' || vm.type === 'Approve_ForAll') && !vm.txException && (
           <TinyInfo
             icon={vm.toAddressRisky ? 'warning' : 'information-circle'}
             color={vm.toAddressRisky ? warningColor : thirdTextColor}
@@ -491,6 +445,25 @@ const TxReview = observer(
             delay={2500}
           />
         )}
+
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', marginTop: 8 }}>
+          {vm.isUsingERC4337 && vm.toAddress ? (
+            <AddToSendingQueue
+              containerStyle={{ marginStart: -8, marginVertical: -10 }}
+              themeColor={network.color}
+              txtStyle={{ color: vm.isQueuingTx ? network.color : secondaryTextColor }}
+              checked={vm.isQueuingTx}
+              onToggle={() => vm.setIsQueuingTx(!vm.isQueuingTx)}
+            />
+          ) : (
+            <View />
+          )}
+
+          {((vm.insufficientFee && !vm.loading) || vm.type.startsWith('Approve')) && <Placeholder />}
+          {vm.insufficientFee && !vm.loading && <InsufficientFee />}
+        </View>
+
+        {vm.txException ? <TxException exception={vm.txException} /> : undefined}
 
         <View style={{ flex: 1 }} />
 

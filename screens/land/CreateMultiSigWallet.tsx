@@ -1,5 +1,5 @@
 import { Button, Loader, SafeViewContainer } from '../../components';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { openKeyRecoveryRequestor, openShardsDistributors } from '../../common/Modals';
 import { secondaryFontColor, secureColor, thirdFontColor, verifiedColor } from '../../constants/styles';
@@ -9,6 +9,7 @@ import IllustrationPartying from '../../assets/illustrations/misc/partying.svg';
 import IllustrationWorld from '../../assets/illustrations/tss/world.svg';
 import { Ionicons } from '@expo/vector-icons';
 import { KeyRecoveryRequestor } from '../../viewmodels/tss/KeyRecoveryRequestor';
+import MnemonicOnce from '../../viewmodels/auth/MnemonicOnce';
 import ModalizeContainer from '../../modals/core/ModalizeContainer';
 import MultiWalletQRScan from './modals/MultiWalletQRScan';
 import { Portal } from 'react-native-portalize';
@@ -54,6 +55,10 @@ export default observer(() => {
     const vm = new KeyRecoveryRequestor();
     openKeyRecoveryRequestor({ vm });
   };
+
+  useEffect(() => {
+    MnemonicOnce.clean();
+  }, []);
 
   return (
     <SafeViewContainer style={{ flex: 1, backgroundColor: '#fff' }} paddingHeader>

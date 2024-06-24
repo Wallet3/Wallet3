@@ -40,7 +40,7 @@ export const DeviceOverview = ({
   return (
     <FadeInDownView style={{ flex: 1 }} delay={300}>
       <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-        <Device deviceId={deviceInfo.device} os={deviceInfo!.rn_os!} style={{ width: 108, height: 150 }} />
+        <Device deviceId={deviceInfo.device} os={deviceInfo!.rn_os!} style={{ width: 108, height: 150 }} autoPlay />
         <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 16 }}>
           <TextInput
             defaultValue={deviceInfo.name}

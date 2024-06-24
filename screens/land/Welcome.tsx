@@ -5,6 +5,7 @@ import { secondaryFontColor, themeColor, thirdFontColor } from '../../constants/
 
 import { Ionicons } from '@expo/vector-icons';
 import { LandScreenStack } from '../navigations';
+import Logo from '../../assets/icons/app/TextLogo.svg';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import SignInWithApple from '../../viewmodels/auth/SignInWithApple';
 import SignInWithGoogle from '../../viewmodels/auth/SignInWithGoogle';
@@ -22,9 +23,9 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
   return (
     <SafeViewContainer style={{ flex: 1, backgroundColor: '#fff', alignItems: 'center' }}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text animation="fadeInUp" style={{ fontFamily: 'Questrial', fontWeight: '600', fontSize: 42, color: '#6186ff' }}>
-          Wallet 3
-        </Text>
+        <View animation="fadeInUp">
+          <Logo width={145} color="#6186ff" />
+        </View>
         <Text animation="fadeInUp" delay={500} style={{ color: secondaryFontColor, fontSize: 12, fontWeight: '500' }}>
           A Secure Wallet for Web3
         </Text>
@@ -52,7 +53,7 @@ export default observer(({ navigation }: NativeStackScreenProps<LandScreenStack,
         <View animation="fadeInUp" delay={300}>
           <Button
             title={t('land-welcome-create-wallet')}
-            onPress={() => navigation.navigate('CreateMultiSigWallet')}
+            onPress={() => navigation.navigate('CreateWallet')}
             txtStyle={{ textTransform: 'none' }}
             disabled={!read}
           />

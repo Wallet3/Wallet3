@@ -4,15 +4,16 @@ import * as SplashScreen from 'expo-splash-screen';
 
 import AppViewModel, { AppVM } from './viewmodels/core/App';
 import AuthViewModel, { Authentication } from './viewmodels/auth/Authentication';
-import Modals, { FullScreenQRScanner, GlobalPasspadModal, LockScreen } from './screens/Modalize';
+import Modals, { FullScreenQRScanner, LockScreen } from './screens/Modalize';
+import React, { useEffect, useState } from 'react';
 import { TouchableOpacity, UIManager } from 'react-native';
 
 import { About } from './screens/settings/About';
 import AddToken from './screens/tokens/AddToken';
 import Backup from './screens/settings/Backup';
-import { CardStyleInterpolators } from '@react-navigation/stack';
 import ChangePasscode from './screens/settings/ChangePasscode';
 import Currencies from './screens/settings/Currencies';
+import ERC4337Queue from './viewmodels/transferring/ERC4337Queue';
 import FlashMessage from 'react-native-flash-message';
 import { Host } from 'react-native-portalize';
 import { Ionicons } from '@expo/vector-icons';
@@ -21,22 +22,22 @@ import Languages from './screens/settings/Languages';
 import NFTDetails from './screens/nfts/Details';
 import { NavigationContainer } from '@react-navigation/native';
 import ProfileScreen from './screens/profile';
-import React from 'react';
+import RecoveryMode from './screens/security/RecoveryMode';
 import Root from './screens/Root';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import Theme from './viewmodels/settings/Theme';
 import Themes from './screens/settings/Themes';
 import Tokens from './screens/tokens/SortTokens';
+import TxQueueBanner from './modals/global/TxQueueBanner';
 import VerifySecret from './screens/settings/VerifySecret';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
 import i18n from './i18n';
 import { logScreenView } from './viewmodels/services/Analytics';
 import { observer } from 'mobx-react-lite';
-import { useFonts } from 'expo-font';
 
 SplashScreen.hideAsync();
-AppViewModel.init();
-
 UIManager.setLayoutAnimationEnabledExperimental?.(true);
 
 const StackRoot = createNativeStackNavigator();
@@ -45,18 +46,19 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
   const { Navigator, Screen } = StackRoot;
   const { t } = i18n;
   const { backgroundColor, foregroundColor, statusBarStyle } = Theme;
+  const [recoveryMode, setRecoveryMode] = useState(false);
   const routeNameRef = React.useRef();
   const navigationRef = React.useRef();
 
-  const [loaded] = useFonts({
-    Questrial: require('./assets/fonts/Questrial.ttf'),
-  });
+  useEffect(() => {
+    AppViewModel.init().catch(() => setRecoveryMode(true));
+  }, []);
 
-  if (!loaded) {
-    return null;
-  }
-
-  return (
+  return recoveryMode ? (
+    <SafeAreaProvider>
+      <RecoveryMode />
+    </SafeAreaProvider>
+  ) : (
     <NavigationContainer
       ref={navigationRef}
       onReady={() => (routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name)}
@@ -147,7 +149,9 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
         ) : undefined}
       </Host>
 
-      {Modals({ app, appAuth })}
+      {ERC4337Queue.count > 0 && <TxQueueBanner />}
+
+      {Modals()}
 
       <FlashMessage position="top" />
       <StatusBar style={statusBarStyle} />
@@ -158,4 +162,4 @@ const App = observer(({ app, appAuth }: { app: AppVM; appAuth: Authentication })
   );
 });
 
-export default () => <App app={AppViewModel} appAuth={AuthViewModel} />;
+export default gestureHandlerRootHOC(() => <App app={AppViewModel} appAuth={AuthViewModel} />);

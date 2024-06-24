@@ -55,6 +55,7 @@ export default observer(({ nfts, style, inOut, themeColor }: Props) => {
             uriSources={[t.content]}
             style={{ width: 25, height: 25, borderRadius: 5, backgroundColor: borderColor }}
             loadingIconSize={10}
+            loadingIconStyle={{ marginStart: 3 }}
           />
         </View>
       ))}

@@ -23,7 +23,8 @@ export default ({ uri, backgroundColor, emoji, size, emojiSize, style, emojiMarg
         width: size,
         height: size,
         borderRadius: size / 2,
-        backgroundColor: backgroundColor,
+        backgroundColor,
+        overflow: 'hidden',
       }}
     />
   ) : (

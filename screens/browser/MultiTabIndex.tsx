@@ -263,7 +263,9 @@ export default observer((props: BottomTabScreenProps<{}, never>) => {
         bounces={false}
         initialScrollIndex={0}
         keyboardShouldPersistTaps={persistentKeyboard}
-        onScrollToIndexFailed={({ index }) => setTimeout(() => swiper.current?.scrollToIndex({ index, animated: true }), 500)}
+        onScrollToIndexFailed={({ index }) =>
+          setTimeout(() => swiper.current?.scrollToIndex({ index: Math.min(tabs.size, index), animated: true }), 500)
+        }
       />
 
       <Portal>

@@ -19,6 +19,7 @@ import i18n from '../../../i18n';
 import { observer } from 'mobx-react-lite';
 import { openGlobalPasspad } from '../../../common/Modals';
 import { sleep } from '../../../utils/async';
+import { verifiedColor } from '../../../constants/styles';
 
 interface Props {
   wallet: MultiSigWallet;
@@ -58,8 +59,7 @@ export default observer(({ wallet, close, onCritical }: Props) => {
       return vm ? true : false;
     };
 
-    if (!(await openGlobalPasspad({ onAutoAuthRequest: auth, onPinEntered: auth }))) return;
-
+    if (!(await auth())) return;
     goTo(1);
   };
 
@@ -105,7 +105,7 @@ export default observer(({ wallet, close, onCritical }: Props) => {
 
         {step === 2 && (
           <FadeInDownView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <ActivityIndicator size="small" />
+            <ActivityIndicator size="small" color={verifiedColor} />
             <Text style={{ color: secondaryTextColor, marginVertical: 24 }}>{t('msg-wait-a-moment')}</Text>
           </FadeInDownView>
         )}

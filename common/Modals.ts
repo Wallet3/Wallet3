@@ -1,6 +1,6 @@
 import { IShardsDistributorConstruction, ShardsDistributor } from '../viewmodels/tss/ShardsDistributor';
 
-import Authentication from '../viewmodels/auth/Authentication';
+import { Authentication } from '../viewmodels/auth/Authentication';
 import { KeyRecoveryRequestor } from '../viewmodels/tss/KeyRecoveryRequestor';
 import MessageKeys from './MessageKeys';
 import { MultiSigKeyDeviceInfo } from '../models/entities/MultiSigKey';
@@ -14,26 +14,30 @@ import { showMessage } from 'react-native-flash-message';
 export async function openGlobalPasspad(req: {
   passLength?: number;
   closeOnOverlayTap?: boolean;
-  onAutoAuthRequest: () => Promise<boolean>;
+  onAutoAuthRequest?: () => Promise<boolean>;
   onPinEntered: (pin: string) => Promise<boolean>;
+  authentication: Authentication;
 }) {
-  if (!Authentication.pinSet) {
-    if (!Authentication.biometricSupported) {
+  const { authentication } = req;
+  const { pinSet, biometricEnabled, biometricSupported } = authentication;
+
+  if (!pinSet) {
+    if (!biometricSupported) {
       showMessage({ message: i18n.t('msg-please-enable-biometric'), type: 'info' });
       return false;
     } else {
-      !Authentication.biometricEnabled && (await Authentication.setBiometrics(true));
+      !biometricEnabled && (await authentication.setBiometrics(true));
     }
   }
 
-  const fast = Authentication.biometricEnabled;
-  const fastOnly = !Authentication.pinSet && Authentication.biometricEnabled;
+  const fast = biometricEnabled;
+  const fastOnly = !pinSet && biometricEnabled;
 
-  if ((fast || fastOnly) && (await req.onAutoAuthRequest())) {
+  if ((fast || fastOnly) && (await req.onAutoAuthRequest?.())) {
     return true;
   }
 
-  if (fastOnly || !Authentication.pinSet) {
+  if (fastOnly || !pinSet) {
     showMessage({ message: i18n.t('msg-please-enable-biometric'), type: 'info' });
     return false;
   }
@@ -42,7 +46,7 @@ export async function openGlobalPasspad(req: {
     let handled = false;
 
     const onAutoAuthHook = async () => {
-      const success = await req.onAutoAuthRequest();
+      const success = (await req.onAutoAuthRequest?.()) ?? false;
       success && resolve(success);
       handled = success;
       return success;
@@ -63,7 +67,7 @@ export async function openGlobalPasspad(req: {
       closeOnOverlayTap: true,
       ...req,
       onPinEntered: onPinEnteredHook,
-      onAutoAuthRequest: fast || fastOnly ? undefined : onAutoAuthHook, // override requests onAutoAuthRequest
+      onAutoAuthRequest: fast || fastOnly ? undefined : req.onAutoAuthRequest ? onAutoAuthHook : undefined, // override requests onAutoAuthRequest
       onClosed: onClosedHook,
     });
   });

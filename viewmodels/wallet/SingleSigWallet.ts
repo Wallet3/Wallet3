@@ -1,6 +1,5 @@
-import { action, makeObservable } from 'mobx';
+import Authentication, { AuthOptions } from '../auth/Authentication';
 
-import Authentication from '../auth/Authentication';
 import Key from '../../models/entities/Key';
 import { WalletBase } from './WalletBase';
 import { utils } from 'ethers';
@@ -24,22 +23,23 @@ export class SingleSigWallet extends WalletBase {
 
     const components = key.bip32Xpubkey.split(':');
     this.isHDWallet = components[components.length - 1].startsWith('xpub');
-    super.signInPlatform = components.length > 1 ? (components[0] as any) : undefined;
+    super.signInPlatform = components.length > 1 ? (components[0] as 'apple' | 'google') : undefined;
     this.signInUser = components.length > 1 ? components[1] : undefined;
-
   }
 
-  protected async unlockPrivateKey({ pin, accountIndex }: { pin?: string; accountIndex?: number }) {
+  protected async unlockPrivateKey(args: { pin?: string; accountIndex?: number; subPath?: string } & AuthOptions) {
+    const { accountIndex, subPath } = args;
+
     try {
       if (this.isHDWallet) {
-        const xprivkey = await Authentication.decrypt(this._key.bip32Xprivkey, pin);
+        const xprivkey = await Authentication.decrypt(this._key.bip32Xprivkey, args);
         if (!xprivkey) return undefined;
 
         const bip32 = utils.HDNode.fromExtendedKey(xprivkey);
-        const account = bip32.derivePath(`${accountIndex ?? 0}`);
+        const account = bip32.derivePath(`${subPath ?? ''}${accountIndex ?? 0}`);
         return account.privateKey;
       } else {
-        const privkey = await Authentication.decrypt(this._key.secret, pin);
+        const privkey = await Authentication.decrypt(this._key.secret, args);
         return privkey;
       }
     } catch (error) {}
@@ -47,7 +47,7 @@ export class SingleSigWallet extends WalletBase {
 
   async getSecret(pin?: string) {
     try {
-      return await Authentication.decrypt(this._key.secret, pin);
+      return await Authentication.decrypt(this._key.secret, { pin });
     } catch (error) {}
   }
 

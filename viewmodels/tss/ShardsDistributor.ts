@@ -15,7 +15,7 @@ import { TCPServer } from '../../common/p2p/TCPServer';
 import { btoa } from 'react-native-quick-base64';
 import { getSecureRandomBytes } from '../../utils/math';
 import i18n from '../../i18n';
-import { reverseLookupAddress } from '../services/DomainResolver';
+import { reverseLookupAddress } from '../services/ens/DomainResolver';
 import secretjs from 'secrets.js-grempe';
 import { sha256Sync } from '../../utils/cipher';
 import { showMessage } from 'react-native-flash-message';

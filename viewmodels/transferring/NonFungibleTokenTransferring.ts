@@ -1,16 +1,16 @@
 import { BigNumber, providers, utils } from 'ethers';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
-import { estimateGas, eth_call } from '../../common/RPC';
 
-import { Account } from '../account/Account';
+import { AccountBase } from '../account/AccountBase';
 import App from '../core/App';
 import { BaseTransaction } from './BaseTransaction';
 import { ERC1155Token } from '../../models/ERC1155';
 import { ERC721Token } from '../../models/ERC721';
 import { Gwei_1 } from '../../common/Constants';
 import { INetwork } from '../../common/Networks';
+import { eth_call } from '../../common/RPC';
+import i18n from '../../i18n';
 import { showMessage } from 'react-native-flash-message';
-import { startLayoutAnimation } from '../../utils/animations';
 
 export interface NFTMetadata {
   id: string;
@@ -28,7 +28,7 @@ export interface NFTMetadata {
 interface IConstructor {
   nft: NFTMetadata;
   network: INetwork;
-  account?: Account;
+  account?: AccountBase;
 }
 
 export class NFTTransferring extends BaseTransaction {
@@ -48,7 +48,8 @@ export class NFTTransferring extends BaseTransaction {
       this.network &&
       this.nftStandard &&
       !this.insufficientFee &&
-      !this.txException
+      !this.txException &&
+      this.isValidAccountAndNetwork
     );
   }
 
@@ -112,7 +113,7 @@ export class NFTTransferring extends BaseTransaction {
     }
   }
 
-  private estimatingTimer: any;
+  private estimatingTimer?: NodeJS.Timer;
   setTransferAmount(amount: number) {
     this.erc1155TransferAmount = Math.max(1, Math.min(amount, Number(this.erc1155Balance)));
     this.isEstimatingGas = true;
@@ -133,19 +134,7 @@ export class NFTTransferring extends BaseTransaction {
     if (!this.nftStandard) return;
     if (!this.toAddress) return;
 
-    runInAction(() => (this.isEstimatingGas = true));
-
-    const { gas, errorMessage } = await estimateGas(this.network.chainId, {
-      from: this.account.address,
-      data: this.txData,
-      to: this.nft.contract,
-    });
-
-    runInAction(() => {
-      this.isEstimatingGas = false;
-      this.setGasLimit(gas || 0);
-      this.txException = errorMessage || '';
-    });
+    return super.estimateGas({ data: this.txData, to: this.nft.contract });
   }
 
   get txRequest(): providers.TransactionRequest | undefined {
@@ -154,7 +143,7 @@ export class NFTTransferring extends BaseTransaction {
         chainId: this.network.chainId,
         from: this.account.address,
         to: this.nft.contract,
-        value: 0,
+        value: '0x0',
         nonce: this.nonce,
         data: this.txData,
         gasLimit: this.gasLimit,
@@ -162,23 +151,34 @@ export class NFTTransferring extends BaseTransaction {
       };
 
       if (tx.type === 0) {
-        tx.gasPrice = Number.parseInt((this.maxGasPrice * Gwei_1) as any);
+        tx.gasPrice = Number.parseInt(`${this.maxGasPrice * Gwei_1}`);
       } else {
-        tx.maxFeePerGas = Number.parseInt((this.maxGasPrice * Gwei_1) as any);
-        tx.maxPriorityFeePerGas = Number.parseInt((this.maxPriorityPrice * Gwei_1) as any);
+        tx.maxFeePerGas = Number.parseInt(`${this.maxGasPrice * Gwei_1}`);
+        tx.maxPriorityFeePerGas = Number.parseInt(`${this.maxPriorityPrice * Gwei_1}`);
       }
 
       return tx;
     } catch (error) {
-      showMessage((error as any).message);
+      showMessage({ message: (error as Error).message });
     }
   }
 
-  sendTx(pin?: string) {
+  sendTx(pin?: string, onNetworkRequest?: () => void) {
     return super.sendRawTx(
       {
         tx: this.txRequest,
-        readableInfo: { type: 'transfer-nft', amount: this.erc1155TransferAmount, recipient: this.to, nft: this.nft.title },
+        onNetworkRequest,
+        readableInfo: {
+          type: 'transfer-nft',
+          amount: `${this.erc1155TransferAmount}`,
+          recipient: this.to,
+          nft: this.nft.title,
+          readableTxt: i18n.t('readable-transfer-token', {
+            amount: this.erc1155TransferAmount,
+            symbol: this.nft.title,
+            dest: this.to,
+          }),
+        },
       },
       pin
     );
@@ -191,7 +191,7 @@ export class NFTTransferring extends BaseTransaction {
 
   get openseaLink() {
     return this.network.chainId === 1
-      ? `https://opensea.io/assets/${this.nft.contract}/${this.nft.tokenId}`
+      ? `https://opensea.io/assets/ethereum/${this.nft.contract}/${this.nft.tokenId}`
       : `https://opensea.io/assets/${this.network.symbol.toLowerCase()}/${this.nft.contract}/${this.nft.tokenId}`;
   }
 
@@ -200,6 +200,8 @@ export class NFTTransferring extends BaseTransaction {
 
     return this.network.chainId === 1
       ? `https://rarible.com/token/${item.contract}:${item.tokenId}`
-      : `https://rarible.com/token/${this.network.network.toLowerCase()}/${item.contract}:${item.tokenId}`;
+      : `https://rarible.com/token/${this.network.network.toLowerCase()}/${item.contract}:${BigNumber.from(
+          item.tokenId
+        ).toString()}`;
   }
 }

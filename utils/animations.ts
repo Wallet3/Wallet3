@@ -16,7 +16,6 @@ const SpringLayoutAnimConfig: LayoutAnimationConfig = {
 };
 
 export function startLayoutAnimation() {
-  __DEV__ && console.log('call startLayoutAnimation');
   LayoutAnimation.configureNext(LayoutAnimConfig);
 }
 

@@ -6,7 +6,19 @@
         "icon": "https://cdn.iconscout.com/icon/free/png-512/metamask-2728406-2261817.png?f=avif&w=512",
         "title": "test",
         "url": "https://metamask.github.io/test-dapp/"
-      }
+      },
+      { "icon": "https://walletconnect.com/meta/favicon.ico", "title": "wc v2", "url": "https://react-app.walletconnect.com" },
+      { "icon": "https://walletconnect.com/meta/favicon.ico", "title": "wc v1", "url": "https://example.walletconnect.org" },
+      { "icon": "https://login.xyz/favicon.png", "title": "siwe", "url": "https://login.xyz" },
+      { "icon": "https://app.uniswap.org/images/192x192_App_Icon.png", "title": "Uniswap", "url": "https://app.uniswap.org" }
+    ]
+  },
+  {
+    "title": "Faucets",
+    "data": [
+      { "title": "Paradigm", "url": "https://faucet.paradigm.xyz" },
+      { "title": "USDC", "url": "https://usdcfaucet.com" },
+      { "title": "Mumbai Faucet", "url": "https://faucet.cask.fi" }
     ]
   }
 ]

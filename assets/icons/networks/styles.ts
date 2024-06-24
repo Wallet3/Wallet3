@@ -114,7 +114,7 @@ export default StyleSheet.create({
   },
 
   zkSync: {
-    marginTop: -36,
+    marginTop: -37,
     marginEnd: -7,
     alignSelf: 'flex-end',
     opacity: 0.5,
@@ -162,6 +162,20 @@ export default StyleSheet.create({
     opacity: 0.5,
   },
 
+  base: {
+    marginTop: -36,
+    marginEnd: -0,
+    alignSelf: 'flex-end',
+    opacity: 0.5,
+  },
+
+  linea: {
+    marginTop: -36,
+    marginEnd: -4,
+    alignSelf: 'flex-end',
+    opacity: 0.5,
+  },
+
   shiden: {
     marginTop: -36,
     marginEnd: -5,
@@ -188,5 +202,19 @@ export default StyleSheet.create({
     marginEnd: -1,
     alignSelf: 'flex-end',
     opacity: 0.75,
+  },
+
+  scroll: {
+    marginTop: -42,
+    marginEnd: -10,
+    alignSelf: 'flex-end',
+    opacity: 0.75,
+  },
+
+  conflux: {
+    marginTop: -42,
+    marginEnd: -1,
+    alignSelf: 'flex-end',
+    opacity: 0.5,
   },
 });

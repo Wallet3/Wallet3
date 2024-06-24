@@ -19,6 +19,7 @@ import { logDevicePaired } from '../../../viewmodels/services/Analytics';
 import { observer } from 'mobx-react-lite';
 import { openGlobalPasspad } from '../../../common/Modals';
 import { sleep } from '../../../utils/async';
+import { verifiedColor } from '../../../constants/styles';
 
 interface Props {
   wallet: MultiSigWallet;
@@ -47,14 +48,8 @@ export default observer(({ wallet, close, onCritical }: Props) => {
   };
 
   const goToAggregation = async () => {
-    let vm: ShardsAggregator | undefined;
-
-    const auth = async (pin?: string) => {
-      vm = await wallet.requestShardsAggregator({ rootShard: true, bip32Shard: true, autoStart: true }, pin);
-      return vm ? true : false;
-    };
-
-    if (!(await openGlobalPasspad({ onAutoAuthRequest: auth, onPinEntered: auth }))) return;
+    const vm = await wallet.requestShardsAggregator({ rootShard: true, bip32Shard: true, autoStart: true });
+    if (!vm) return;
 
     setAggregator(vm!);
     goTo(1);
@@ -127,7 +122,7 @@ export default observer(({ wallet, close, onCritical }: Props) => {
 
         {step === 2 && (
           <FadeInDownView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <ActivityIndicator size="small" />
+            <ActivityIndicator size="small" color={verifiedColor} />
             <Text style={{ color: secondaryTextColor, marginVertical: 24 }}>{t('msg-wait-a-moment')}</Text>
           </FadeInDownView>
         )}

@@ -4,13 +4,11 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Button } from '../../components';
 import { Gwei_1 } from '../../common/Constants';
 import Networks from '../../viewmodels/core/Networks';
-import Theme from '../../viewmodels/settings/Theme';
 import Transaction from '../../models/entities/Transaction';
 import { TxController } from '../../viewmodels/misc/TxController';
 import { formatAddress } from '../../utils/formatter';
 import { generateNetworkIcon } from '../../assets/icons/networks/color';
 import i18n from '../../i18n';
-import modalStyle from '../../modals/styles';
 import { observer } from 'mobx-react-lite';
 import { openInappBrowser } from '../../modals/app/InappBrowser';
 import { thirdFontColor } from '../../constants/styles';
@@ -19,7 +17,6 @@ import { utils } from 'ethers';
 export default observer(({ tx, close }: { tx?: Transaction; close?: Function }) => {
   const { t } = i18n;
   const [network] = useState(Networks.find(tx?.chainId || 1) || Networks.current);
-  const { backgroundColor } = Theme;
 
   const speedUp = (cancelTx?: boolean) => {
     if (!tx) return;
@@ -152,7 +149,7 @@ export default observer(({ tx, close }: { tx?: Transaction; close?: Function }) 
         </TouchableOpacity>
       </View>
 
-      {tx?.blockNumber && tx.blockNumber >= 0 ? undefined : (
+      {(tx?.blockNumber ?? -1) >= 0 || tx?.isERC4337 ? undefined : (
         <View style={{ flexDirection: 'row' }}>
           <Button
             title={t('button-cancel-tx')}

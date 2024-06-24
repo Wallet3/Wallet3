@@ -6,12 +6,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BaseTransaction } from './BaseTransaction';
 import { ERC20Token } from '../../models/ERC20';
 import { Gwei_1 } from '../../common/Constants';
+import { IFungibleToken } from '../../models/Interfaces';
 import { INetwork } from '../../common/Networks';
-import { IToken } from '../../common/tokens';
-import { NativeToken } from '../../models/NativeToken';
+import { formatAddress } from '../../utils/formatter';
+import i18n from '../../i18n';
 
 export class TokenTransferring extends BaseTransaction {
-  token: IToken;
+  token: IFungibleToken;
   amount = '0';
   userTxData = '0x';
 
@@ -25,10 +26,13 @@ export class TokenTransferring extends BaseTransaction {
 
   get amountWei() {
     try {
-      if (this.isNativeToken) {
-        const ether = utils.parseEther(this.amount);
-        if (ether.eq(this.account.nativeToken.balance!)) {
-          return BigNumber.from(this.account.nativeToken.balance!).sub(this.txFeeWei);
+      if (this.token.address === (this.paymaster?.feeToken?.address ?? '')) {
+        if (this.isNativeToken && utils.parseEther(this.amount).eq(this.account.nativeToken.balance)) {
+          return BigNumber.from(this.account.nativeToken.balance!).sub(this.nativeFeeWei);
+        }
+
+        if (utils.parseUnits(this.amount, this.token.decimals).eq(this.token.balance ?? '0')) {
+          return BigNumber.from(this.token.balance).sub(this.paymaster?.feeTokenWei ?? 0);
         }
       }
 
@@ -47,13 +51,17 @@ export class TokenTransferring extends BaseTransaction {
   }
 
   get isNativeToken() {
-    return !this.token.address;
+    return this.token.isNative ?? false;
   }
 
   get insufficientFee() {
-    return this.isNativeToken
-      ? this.amountWei.add(this.txFeeWei).gt(this.account.nativeToken.balance!)
-      : this.txFeeWei.gt(this.account.nativeToken.balance!);
+    if (this.token.isNative && (this.paymaster?.feeToken?.isNative ?? true)) {
+      return this.nativeFeeWei.add(this.amountWei).gt(this.token.balance!);
+    }
+
+    return this.paymaster?.feeToken?.isNative === false
+      ? this.paymaster.insufficientFee
+      : this.nativeFeeWei.gt(this.account.nativeToken.balance);
   }
 
   get isValidParams() {
@@ -66,7 +74,8 @@ export class TokenTransferring extends BaseTransaction {
       this.network &&
       !this.insufficientFee &&
       !this.token.loading &&
-      !this.txException
+      !this.txException &&
+      this.isValidAccountAndNetwork
     );
   }
 
@@ -95,10 +104,10 @@ export class TokenTransferring extends BaseTransaction {
     };
 
     if (tx.type === 0) {
-      tx.gasPrice = Number.parseInt((this.maxGasPrice * Gwei_1) as any);
+      tx.gasPrice = Number.parseInt(`${this.maxGasPrice * Gwei_1}`);
     } else {
-      tx.maxFeePerGas = Number.parseInt((this.maxGasPrice * Gwei_1) as any);
-      tx.maxPriorityFeePerGas = Number.parseInt((this.maxPriorityPrice * Gwei_1) as any);
+      tx.maxFeePerGas = Number.parseInt(`${this.maxGasPrice * Gwei_1}`);
+      tx.maxPriorityFeePerGas = Number.parseInt(`${this.maxPriorityPrice * Gwei_1}`);
     }
 
     return tx;
@@ -111,7 +120,7 @@ export class TokenTransferring extends BaseTransaction {
     to,
   }: {
     targetNetwork: INetwork;
-    defaultToken?: IToken;
+    defaultToken?: IFungibleToken;
     autoSetToken?: boolean;
     to?: string;
   }) {
@@ -156,19 +165,14 @@ export class TokenTransferring extends BaseTransaction {
   async estimateGas() {
     if (!this.toAddress) return;
 
-    runInAction(() => (this.isEstimatingGas = true));
-    const { gas, errorMessage } = this.isNativeToken
-      ? await (this.token as NativeToken).estimateGas(this.toAddress, this.encodedUserTxData)
-      : await (this.token as ERC20Token).estimateGas(this.toAddress, this.amountWei);
+    const data = this.isNativeToken
+      ? this.encodedUserTxData
+      : (this.token as ERC20Token).encodeTransferData(this.toAddress, this.amountWei);
 
-    runInAction(() => {
-      this.isEstimatingGas = false;
-      this.setGasLimit(gas || 0);
-      this.txException = errorMessage || '';
-    });
+    return super.estimateGas({ to: this.isNativeToken ? this.toAddress : this.token.address, data: data });
   }
 
-  setToken(token: IToken) {
+  setToken(token: IFungibleToken) {
     if (this.token.address === token.address) return;
 
     this.token = token;
@@ -181,14 +185,26 @@ export class TokenTransferring extends BaseTransaction {
   setAmount(amount: string) {
     this.amount = amount;
     this.txException = '';
+
+    try {
+      this.valueWei = this.isNativeToken ? utils.parseEther(this.amount) : BigNumber.from(0);
+    } catch (error) {
+      this.valueWei = BigNumber.from(0);
+    }
   }
 
-  sendTx(pin?: string) {
+  sendTx(pin?: string, onNetworkRequest?: () => void) {
     return super.sendRawTx(
       {
         tx: this.txRequest,
+        onNetworkRequest,
         readableInfo: {
           type: 'transfer',
+          readableTxt: i18n.t('readable-transfer-token', {
+            amount: Number(this.amount).toFixed(4),
+            symbol: this.token.symbol,
+            dest: utils.isAddress(this.to) ? formatAddress(this.to, 6, 4, '...') : this.to,
+          }),
           symbol: this.token.symbol,
           decimals: this.token.decimals,
           amountWei: this.amountWei.toString(),

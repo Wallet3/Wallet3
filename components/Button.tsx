@@ -5,10 +5,9 @@ import { StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewSty
 import { BreathAnimation } from '../utils/animations';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { SquircleView } from 'react-native-figma-squircle';
 import SwipeButton from 'rn-swipe-button';
+import Theme from '../viewmodels/settings/Theme';
 import { isAndroid } from '../utils/platform';
-import { observable } from 'mobx';
 import { themeColor } from '../constants/styles';
 
 export interface ButtonProps {
@@ -22,21 +21,20 @@ export interface ButtonProps {
   onSwipeSuccess?: () => void;
   themeColor?: string;
   reverse?: boolean;
-  onInteractionStart?: () => void;
-  onInteractionEnd?: () => void;
 }
 
 export default (props: ButtonProps) => {
-  const { disabled, reverse, themeColor, onLongPress, onPress, onSwipeSuccess, title, onInteractionStart, onInteractionEnd } =
-    props;
+  const { disabled, reverse, themeColor, onLongPress, onPress, onSwipeSuccess, title } = props;
 
   const backgroundColor: any = disabled
-    ? '#A2A2A250'
+    ? Theme.isLightMode
+      ? '#D7D7D7'
+      : '#5A5A5A'
     : reverse
     ? 'transparent'
     : props.themeColor || (props?.style as ViewStyle)?.backgroundColor || styles.default.backgroundColor;
 
-  const buttonStyle = {
+  const buttonStyle: StyleProp<ViewStyle> = {
     ...styles.default,
     ...((props?.style as any) || {}),
     backgroundColor: reverse && disabled ? 'transparent' : backgroundColor,
@@ -54,13 +52,7 @@ export default (props: ButtonProps) => {
   const arrowIcon = () => <Ionicons name="arrow-forward" size={19} color={backgroundColor} style={{}} />;
 
   return onSwipeSuccess ? (
-    <View
-      style={{ ...((props?.style as any) || {}), backgroundColor, borderRadius: 7, height: 42 }}
-      onTouchStart={onInteractionStart}
-      onTouchEnd={onInteractionEnd}
-      onPointerEnter={onInteractionStart}
-      onPointerLeave={onInteractionEnd}
-    >
+    <View style={{ ...((props?.style as any) || {}), backgroundColor, borderRadius: 7, height: 42 }}>
       <Animatable.View
         animation={disabled ? undefined : BreathAnimation}
         duration={2200}
@@ -109,7 +101,7 @@ export default (props: ButtonProps) => {
           maxWidth: '100%',
           borderWidth: 0,
           borderColor: 'black',
-          backgroundColor: disabled ? 'transparent' : backgroundColor,
+          backgroundColor: backgroundColor,
           backfaceVisibility: 'hidden',
           borderRadius: 5,
           margin: 0,
@@ -125,20 +117,20 @@ export default (props: ButtonProps) => {
       />
     </View>
   ) : (
-    <TouchableOpacity activeOpacity={0.5} onPress={onPress} onLongPress={onLongPress} disabled={disabled} style={buttonStyle}>
-      {/* <SquircleView
-        style={{ ...buttonStyle, borderRadius: 0, backgroundColor: undefined, borderWidth: 0 }}
-        squircleParams={{
-          cornerSmoothing: 0.9,
-          cornerRadius: buttonStyle.borderRadius,
-          fillColor: buttonStyle.backgroundColor,
-          strokeColor: buttonStyle.borderColor,
-          strokeWidth: buttonStyle.borderWidth,
-        }}
-      > */}
+    <TouchableOpacity
+      activeOpacity={0.5}
+      onPress={onPress}
+      onLongPress={onLongPress}
+      disabled={disabled}
+      style={[
+        buttonStyle,
+        {
+          opacity: disabled ? 0.45 : 1,
+        },
+      ]}
+    >
       {props.icon?.()}
       <Text style={txtStyle}>{title}</Text>
-      {/* </SquircleView> */}
     </TouchableOpacity>
   );
 };

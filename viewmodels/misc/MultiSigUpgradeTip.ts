@@ -10,7 +10,7 @@ export async function tipWalletUpgrade(wallet?: WalletBase) {
   const lastTip = Number((await AsyncStorage.getItem(key)) || '0');
 
   try {
-    if (Date.now() < (__DEV__ ? 0 : lastTip + 90 * DAY)) return;
+    if (Date.now() < (__DEV__ ? lastTip + 10 * DAY : lastTip + 90 * DAY)) return;
     setTimeout(() => PubSub.publish(MessageKeys.openUpgradeWalletTip), 2000);
   } finally {
     AsyncStorage.setItem(key, `${Date.now()}`);

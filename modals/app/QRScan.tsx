@@ -28,7 +28,7 @@ export default observer(({ tip, close, handler, style }: Props) => {
 
     if (handled) {
       logQRScanned(data);
-      close?.();
+      setTimeout(() => close?.(), 50);
     }
   };
 

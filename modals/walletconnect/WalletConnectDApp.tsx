@@ -2,7 +2,7 @@ import { Button, SafeViewContainer } from '../../components';
 import React, { useEffect, useRef, useState } from 'react';
 import { Text, View } from 'react-native';
 
-import { Account } from '../../viewmodels/account/Account';
+import { AccountBase } from '../../viewmodels/account/AccountBase';
 import AccountSelector from '../dapp/AccountSelector';
 import App from '../../viewmodels/core/App';
 import DAppConnectView from '../dapp/DAppConnectView';
@@ -29,7 +29,7 @@ interface DAppProps {
   onConnect: () => void;
 
   network: INetwork;
-  account?: Account;
+  account?: AccountBase;
 }
 
 const DApp = observer(({ client, onNetworksPress, onAccountsPress, close, onConnect, account, network }: DAppProps) => {
@@ -138,7 +138,7 @@ const ConnectDApp = observer(({ client, close }: ConnectDAppProps) => {
           accounts={App.allAccounts}
           selectedAccounts={client.accounts}
           onDone={selectAccounts}
-          themeColor={network.color}
+          network={network}
         />
       ) : undefined}
     </Swiper>

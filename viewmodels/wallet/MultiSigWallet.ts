@@ -1,13 +1,11 @@
+import Authentication, { AuthOptions } from '../auth/Authentication';
 import MultiSigKey, { MultiSigKeyDeviceInfo } from '../../models/entities/MultiSigKey';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
-import { openGlobalPasspad, openShardsAggregator } from '../../common/Modals';
 
-import Authentication from '../auth/Authentication';
-import { BaseEntity } from 'typeorm';
 import { ShardsAggregator } from '../tss/ShardsAggregator';
 import { WalletBase } from './WalletBase';
 import { logMultiSigKeyAggregated } from '../services/Analytics';
-import secretjs from 'secrets.js-grempe';
+import { openShardsAggregator } from '../../common/Modals';
 import { sleep } from '../../utils/async';
 import { utils } from 'ethers';
 
@@ -115,16 +113,16 @@ export class MultiSigWallet extends WalletBase {
     return undefined;
   }
 
-  protected async unlockPrivateKey(args: { pin?: string; accountIndex?: number; disableCache?: boolean }) {
-    const { pin, accountIndex, disableCache } = args;
+  protected async unlockPrivateKey(args: { accountIndex?: number; disableCache?: boolean; subPath?: string } & AuthOptions) {
+    const { pin, accountIndex, disableCache, subPath } = args;
 
     try {
       const { bip32XprvKey } = this.key.cachedSecrets || {};
 
       if (!disableCache && bip32XprvKey) {
-        const xprivkey = (await Authentication.decrypt(bip32XprvKey, pin))!;
+        const xprivkey = (await Authentication.decrypt(bip32XprvKey, args))!;
         const bip32 = utils.HDNode.fromExtendedKey(xprivkey);
-        const account = bip32.derivePath(`${accountIndex ?? 0}`);
+        const account = bip32.derivePath(`${subPath ?? ''}${accountIndex ?? 0}`);
         return account.privateKey;
       }
 
@@ -144,7 +142,7 @@ export class MultiSigWallet extends WalletBase {
       if (!xprv) return;
 
       const bip32 = utils.HDNode.fromExtendedKey(xprv);
-      const account = bip32.derivePath(`${accountIndex ?? 0}`);
+      const account = bip32.derivePath(`${subPath ?? ''}${accountIndex ?? 0}`);
       return account.privateKey;
     } catch (error) {}
   }
@@ -157,7 +155,7 @@ export class MultiSigWallet extends WalletBase {
           params.rootShard ? this.key.secrets.rootShard : undefined,
           this.key.secrets.verifySignKey,
         ],
-        pin
+        { pin }
       )) || [];
 
     if (!verifyPrivKey) return;
@@ -177,7 +175,7 @@ export class MultiSigWallet extends WalletBase {
 
   async delete() {
     const auth = async (pin?: string) => ((await this.unlockPrivateKey({ pin, disableCache: true })) ? true : false);
-    if (!(await openGlobalPasspad({ onAutoAuthRequest: auth, onPinEntered: auth }))) return false;
+    if (!(await auth())) return false;
 
     return super.delete();
   }

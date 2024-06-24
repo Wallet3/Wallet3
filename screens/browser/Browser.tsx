@@ -26,11 +26,13 @@ import { ReactiveScreen } from '../../utils/device';
 import RecentHistory from './components/RecentHistory';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SectionGrid } from 'react-native-super-grid';
+import { ShouldStartLoadRequest } from 'react-native-webview/lib/WebViewTypes';
 import SquircleModalize from '../../modals/core/SquircleModalize';
 import { StatusBar } from 'expo-status-bar';
 import Theme from '../../viewmodels/settings/Theme';
 import ViewShot from 'react-native-view-shot';
 import i18n from '../../i18n';
+import { isAndroid } from '../../utils/platform';
 import { isURL } from '../../utils/url';
 import { observer } from 'mobx-react-lite';
 import { renderUserBookmarkItem } from './components/BookmarkItem';
@@ -50,6 +52,11 @@ const calcIconSize = () => {
 const { LargeIconSize, SmallIconSize } = calcIconSize();
 
 type WebRiskLevel = 'verified' | 'tls' | 'insecure' | 'risky';
+
+const RegexWC =
+  /^(metamask|trust|safe|rainbow|uniswap|zerion|imtokenv2|spot|omni|dfw|tpoutside|robinhood-wallet|bitkeep|mathwallet|exodus|enjinwallet)\:\/\/wc\?/i;
+const RegexHttps = /^https?\:/i;
+const RegexSocials = /(twitter\.com|t\.me|facebook\.com|whatsapp\.com)/i;
 
 interface Props {
   pageId: number;
@@ -105,6 +112,7 @@ export const Browser = observer(
     const [pageMetadata, setPageMetadata] = useState<{ icon: string; title: string; desc?: string; origin: string }>();
     const [suggests, setSuggests] = useState<string[]>([]);
     const [webRiskLevel, setWebRiskLevel] = useState<WebRiskLevel>('insecure');
+    const [checkingRisk, setCheckingRisk] = useState(false);
 
     const { ref: favsRef, open: openFavs, close: closeFavs } = useModalize();
     const { ref: riskyRef, open: openRiskyTip, close: closeRiskyTip } = useModalize();
@@ -148,16 +156,23 @@ export const Browser = observer(
     }, [viewShot.current]);
 
     useEffect(() => {
-      isSecureSite(webUrl)
-        ? setWebRiskLevel('verified')
-        : isRiskySite(webUrl).then((risky) => {
-            if (risky) {
-              setWebRiskLevel('risky');
-              openRiskyTip();
-            } else {
-              webUrl.startsWith('https://') ? setWebRiskLevel('tls') : setWebRiskLevel('insecure');
-            }
-          });
+      if (isSecureSite(webUrl)) {
+        setWebRiskLevel('verified');
+        setCheckingRisk(false);
+      } else {
+        setCheckingRisk(true);
+
+        isRiskySite(webUrl).then((risky) => {
+          setCheckingRisk(false);
+
+          if (risky) {
+            setWebRiskLevel('risky');
+            openRiskyTip();
+          } else {
+            webUrl.startsWith('https://') ? setWebRiskLevel('tls') : setWebRiskLevel('insecure');
+          }
+        });
+      }
     }, [webUrl]);
 
     const refresh = () => {
@@ -223,6 +238,23 @@ export const Browser = observer(
       }
 
       goTo(addr);
+    };
+
+    const onShouldStartLoadWithRequest = (event: ShouldStartLoadRequest) => {
+      const isWCLink = RegexWC.test(event.url);
+      if (isWCLink) {
+        const url = event.url.replace(RegexWC, 'wallet3://wc?');
+        Linking.openURL(url);
+        return false;
+      }
+
+      const isExternalLink = !RegexHttps.test(event.url) || RegexSocials.test(event.url);
+      if (event.url !== 'about:blank' && isExternalLink) {
+        Linking.openURL(event.url);
+        return false;
+      }
+
+      return true;
     };
 
     const onNavigationStateChange = (event: WebViewNavigation) => {
@@ -357,7 +389,7 @@ export const Browser = observer(
                 }}
               />
 
-              {isFocus || !webUrl ? undefined : (
+              {isFocus || !webUrl || checkingRisk ? undefined : (
                 <TouchableOpacity style={{ position: 'absolute', left: 0, paddingStart: 8 }}>
                   {webRiskLevel === 'verified' ? (
                     <Ionicons
@@ -499,6 +531,9 @@ export const Browser = observer(
 
         {uri ? (
           <Web3View
+            originWhitelist={['*']}
+            setSupportMultipleWindows={false}
+            onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
             webViewRef={webview}
             viewShotRef={viewShot}
             tabCount={globalState?.pageCount}
@@ -594,6 +629,7 @@ export const Browser = observer(
             safeAreaStyle={{ height: 439, padding: 0 }}
             squircleContainerStyle={{ backgroundColor: warningColor, padding: 16 }}
             useSafeBottom
+            handleStyle={{ marginTop: -3, backgroundColor: Theme.borderColor, width: 36, opacity: 0.25 }}
           >
             <Text
               numberOfLines={1}
@@ -603,6 +639,7 @@ export const Browser = observer(
                 fontWeight: '600',
                 textTransform: 'uppercase',
                 textAlign: 'center',
+                marginTop: 4,
               }}
             >
               {t('modal-phishing-title')}

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { Account } from '../../viewmodels/account/Account';
+import { AccountBase } from '../../viewmodels/account/AccountBase';
 import { BioType } from '../../viewmodels/auth/Authentication';
 import { PageMetadata } from '../../screens/browser/Web3View';
 import { Passpad } from '../views';
@@ -18,7 +18,7 @@ interface Props {
   sign: (opt: { pin: string; standardMode?: boolean }) => Promise<boolean>;
   typedData?: any;
   biometricType?: BioType;
-  account?: Account;
+  account?: AccountBase;
   metadata?: PageMetadata;
 }
 

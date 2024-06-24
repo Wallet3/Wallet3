@@ -43,7 +43,14 @@ const Devices = new Map([
 
 const keys = Array.from(Devices.keys());
 
-export default ({ os, deviceId, style }: { os: 'ios' | 'android'; deviceId?: string; style?: StyleProp<ViewStyle> }) => {
+interface Props {
+  os: 'ios' | 'android';
+  deviceId?: string;
+  style?: StyleProp<ViewStyle>;
+  autoPlay?: boolean;
+}
+
+export default ({ os, deviceId, style, autoPlay }: Props) => {
   const [device] = useState(
     Devices.get(keys.find((k) => (iosDevice.generationByIdentifier(deviceId ?? '')?.toLowerCase() ?? os).includes(k))!)
   );
@@ -52,7 +59,7 @@ export default ({ os, deviceId, style }: { os: 'ios' | 'android'; deviceId?: str
     <FastImage source={device} style={style as any} resizeMode="contain" />
   ) : (
     <View style={[style, { justifyContent: 'center', alignItems: 'center' }]}>
-      <LottieView style={[style]} source={require('../assets/animations/android-phone.json')} autoPlay />
+      <LottieView style={[style]} source={require('../assets/animations/android-phone.json')} autoPlay={autoPlay} />
     </View>
   );
 };

@@ -22,7 +22,7 @@ import { parseMilliseconds } from '../../utils/time';
 import styles from '../styles';
 import { warningColor } from '../../constants/styles';
 
-interface Props {
+export interface PasspadProps {
   themeColor?: string;
   onCodeEntered: (code: string) => Promise<boolean>;
   onCancel?: () => void;
@@ -46,7 +46,7 @@ const Passpad = ({
   failedAttempts,
   passLength,
   numPadStyle,
-}: Props) => {
+}: PasspadProps) => {
   const { t } = i18n;
   const passcodeLength = passLength || 6;
   const [passcode, setPasscode] = useState('');
@@ -69,7 +69,7 @@ const Passpad = ({
   }, [passcode]);
 
   return (
-    <View style={{ flex: 1, ...(style as any) }}>
+    <View style={[{ flex: 1 }, style]}>
       <Placeholder />
 
       <Animatable.View ref={passcodeView as any} style={{ flexDirection: 'row', justifyContent: 'center' }}>

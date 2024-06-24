@@ -13,6 +13,7 @@ import SvgImage from 'react-native-remote-svg';
 import Video from 'react-native-video';
 import { convertIPFSProtocol } from '../utils/url';
 import { getMemorySize } from '../utils/device';
+import { isAndroid } from '../utils/platform';
 import { md5 } from '../utils/cipher';
 
 // @ts-ignore
@@ -25,6 +26,7 @@ interface Props extends FastImageProps {
   backgroundColor?: string;
   borderRadius?: number;
   loadingIconSize?: number;
+  loadingIconStyle?: StyleProp<ViewStyle>;
   onColorParsed?: (colors: ImageColorsResult) => void;
   containerStyle?: StyleProp<ViewStyle>;
 }
@@ -39,6 +41,7 @@ export default (props: Props) => {
   const parseColor = async (url: string) => {
     if (!url) return;
     if (!onColorParsed) return;
+    if (isAndroid) return;
     if ((await getMemorySize()) < 3072) return;
 
     const itemKey = `image-colors-${await md5(url)}`;
@@ -117,6 +120,7 @@ export default (props: Props) => {
             name="hexagon"
             size={props.loadingIconSize || Number((props.style as any)?.width) || 64}
             color="#55555555"
+            style={props.loadingIconStyle}
           />
         </Animatable.View>
       )}

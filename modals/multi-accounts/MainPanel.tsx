@@ -1,40 +1,40 @@
-import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view';
-import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { FlatList, ListRenderItemInfo, NativeSyntheticEvent, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useEffect, useRef } from 'react';
-import { SafeViewContainer, Separator } from '../../components';
+import { AccountBase, AccountType } from '../../viewmodels/account/AccountBase';
+import { FlatList, ListRenderItemInfo, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Loader, SafeViewContainer, Separator } from '../../components';
+import React, { useEffect, useRef, useState } from 'react';
 
-import { Account } from '../../viewmodels/account/Account';
 import AccountItem from './AccountItem';
 import App from '../../viewmodels/core/App';
-import CachedImage from 'react-native-fast-image';
+import DeviceInfo from 'react-native-device-info';
 import Networks from '../../viewmodels/core/Networks';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Theme from '../../viewmodels/settings/Theme';
 import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
-import rootStyles from '../styles';
 import { secondaryFontColor } from '../../constants/styles';
-import { utils } from 'ethers';
 
 interface Props {
-  onRemoveAccount?: (account: Account) => void;
-  onEditAccount?: (account: Account) => void;
+  onRemoveAccount?: (account: AccountBase) => void;
+  onEditAccount?: (account: AccountBase) => void;
   onImportWallet?: () => void;
   onDone?: () => void;
 }
 
 export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDone }: Props) => {
   const { t } = i18n;
-  const themeColor = Networks.current.color;
-  const list = useRef<FlatList>(null);
-  const { borderColor, textColor, backgroundColor } = Theme;
+  const { current } = Networks;
+  const { borderColor, textColor, backgroundColor,tintColor } = Theme;
 
-  const renderAccount = ({ item }: ListRenderItemInfo<Account>) => (
+  const list = useRef<FlatList>(null);
+  const [busy, setBusy] = useState(false);
+  const [isERC4337Version] = useState(DeviceInfo.getVersion().startsWith('4.337'));
+
+  const renderAccount = ({ item }: ListRenderItemInfo<AccountBase>) => (
     <AccountItem
       account={item}
+      currentNetwork={current}
       textColor={textColor}
-      themeColor={themeColor}
+      themeColor={tintColor}
       onEdit={onEditAccount}
       onRemove={onRemoveAccount}
       previewBackgroundColor={backgroundColor}
@@ -45,9 +45,11 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDon
     />
   );
 
-  const newAccount = async () => {
-    App.newAccount();
-    setTimeout(() => list.current?.scrollToEnd({ animated: true }), 150);
+  const newAccount = async (type: AccountType) => {
+    await App.newAccount(type, (busy) => setBusy(busy));
+
+    const index = App.allAccounts.findIndex((a) => a === App.currentAccount);
+    index >= 5 && setTimeout(() => list.current?.scrollToIndex({ index, animated: true }), 100);
   };
 
   useEffect(() => {
@@ -84,23 +86,46 @@ export default observer(({ onRemoveAccount, onEditAccount, onImportWallet, onDon
         keyExtractor={(i) => i.address}
         style={{ flex: 1, marginHorizontal: -16 }}
         contentContainerStyle={{ paddingVertical: 4 }}
+        onScrollToIndexFailed={({ index }) => setTimeout(() => list.current?.scrollToIndex({ index }), 200)}
       />
 
       <Separator style={{ marginBottom: 4, opacity: 0.5, backgroundColor: borderColor }} />
 
-      <TouchableOpacity style={styles.option} onPress={newAccount}>
-        <MaterialIcons name="add-circle" size={22} color={themeColor} />
-        <Text style={{ marginStart: 10, color: themeColor, fontWeight: '600', fontSize: 15 }}>
-          {t('modal-multi-accounts-button-create-account')}
-        </Text>
-      </TouchableOpacity>
+      {__DEV__ || isERC4337Version ? (
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <MaterialIcons name="add-circle" size={22} color={tintColor} />
+
+          <TouchableOpacity style={styles.option} onPress={() => newAccount('eoa')}>
+            <Text style={[{ marginStart: 10, color: tintColor }, styles.txt]}>
+              {t('modal-multi-accounts-button-create-account')}
+            </Text>
+          </TouchableOpacity>
+
+          {current.erc4337 && <Text style={[{ marginStart: 6, color: tintColor, marginEnd: 8 }, styles.txt]}>/</Text>}
+
+          {current.erc4337 && (
+            <TouchableOpacity style={styles.option} onPress={() => newAccount('erc4337')}>
+              <Text style={[{ color: tintColor }, styles.txt]}>{t('modal-multi-accounts-button-super-account')}</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      ) : (
+        <TouchableOpacity style={styles.option} onPress={() => newAccount('eoa')}>
+          <MaterialIcons name="add-circle" size={22} color={tintColor} />
+          <Text style={{ marginStart: 10, color: tintColor, fontWeight: '600', fontSize: 15 }}>
+            {t('modal-multi-accounts-button-create-account')}
+          </Text>
+        </TouchableOpacity>
+      )}
 
       <TouchableOpacity style={styles.option} onPress={onImportWallet}>
-        <Ionicons name="key-outline" size={19} color={themeColor} style={{ paddingHorizontal: 1.5 }} />
-        <Text style={{ marginStart: 10, color: themeColor, fontWeight: '600', fontSize: 15 }}>
+        <Ionicons name="key-outline" size={19} color={tintColor} style={{ paddingHorizontal: 1.5 }} />
+        <Text style={[{ marginStart: 10, color: tintColor }, styles.txt]}>
           {t('modal-multi-accounts-button-import-account')}
         </Text>
       </TouchableOpacity>
+
+      <Loader loading={busy} message={t('msg-data-loading')} />
     </SafeViewContainer>
   );
 });
@@ -110,5 +135,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 8,
+  },
+
+  txt: {
+    fontWeight: '600',
+    fontSize: 15,
   },
 });

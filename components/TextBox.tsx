@@ -4,6 +4,7 @@ import { StyleProp, Text, TextInput, TouchableOpacity, View, ViewStyle } from 'r
 import { borderColor, fontColor, secondaryFontColor } from '../constants/styles';
 
 import { getStringAsync } from 'expo-clipboard';
+import { isAndroid } from '../utils/platform';
 
 interface Props {
   onChangeText: (text: string) => void;
@@ -61,10 +62,13 @@ export default ({
         ...((style as any) || {}),
       }}
     >
-      <Text style={{ fontSize: 18, color: secondaryFontColor, marginEnd: title ? 12 : 0 }}>{title}</Text>
+      <Text style={{ fontSize: 18, color: secondaryFontColor, marginEnd: title ? 12 : 0, marginTop: isAndroid ? -2 : 0 }}>
+        {title}
+      </Text>
+
       <TextInput
         ref={addrRef}
-        style={{ fontSize: 20, flex: 1, color: textColor ?? fontColor }}
+        style={{ fontSize: 20, flex: 1, color: textColor ?? fontColor, marginBottom: isAndroid ? -2 : 0 }}
         value={value ?? innerValue}
         placeholder={placeholder}
         defaultValue={defaultValue}

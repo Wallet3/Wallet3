@@ -1,9 +1,9 @@
 import React, { useRef } from 'react';
 
 import AmountPad from './AmountPad';
-import { IToken } from '../../common/tokens';
+import { ITokenMetadata } from '../../common/tokens';
 import Swiper from 'react-native-swiper';
-import Tokenlist from './Tokenlist';
+import Tokenlist from './TokenPlainList';
 import { TransferRequesting } from '../../viewmodels/transferring/TransferRequesting';
 import { observer } from 'mobx-react-lite';
 
@@ -17,7 +17,7 @@ interface Props {
 export default observer(({ vm, onNext, themeColor, close }: Props) => {
   const swiper = useRef<Swiper>(null);
 
-  const selectToken = (token: IToken) => {
+  const selectToken = (token: ITokenMetadata) => {
     vm.setToken(token);
     swiper.current?.scrollTo(0);
   };

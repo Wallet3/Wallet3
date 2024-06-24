@@ -15,3 +15,6 @@ LogBox.ignoreLogs([
   'socketDidDisconnect with nil clientDelegate for',
   'RCTView has a shadow set but cannot calculate shadow efficiently',
 ]);
+
+if (__DEV__) {
+}

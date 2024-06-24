@@ -2,94 +2,91 @@ import { Coin, Skeleton } from '../../components';
 import { FlatList, ListRenderItemInfo, RefreshControl, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
 
+import { IFungibleToken } from '../../models/Interfaces';
 import { INetwork } from '../../common/Networks';
-import { IToken } from '../../common/tokens';
+import { ITokenMetadata } from '../../common/tokens';
 import Theme from '../../viewmodels/settings/Theme';
 import { formatCurrency } from '../../utils/formatter';
 import { observer } from 'mobx-react-lite';
 
-const Token = observer(({ item, onPress, chainId }: { item: IToken; onPress?: (token: IToken) => void; chainId: number }) => {
-  const { textColor } = Theme;
+const Token = observer(
+  ({ item, onPress, chainId }: { item: IFungibleToken; onPress?: (token: IFungibleToken) => void; chainId: number }) => {
+    const { textColor } = Theme;
 
-  return (
-    <TouchableOpacity
-      onPress={() => onPress?.(item)}
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginHorizontal: -16,
-        paddingVertical: 16,
-        paddingBottom: 13,
-        paddingHorizontal: 22,
-      }}
-    >
-      <Coin
-        chainId={chainId}
-        address={item.address}
-        symbol={item.symbol}
-        style={{ width: 36, height: 36, marginEnd: 16 }}
-        iconUrl={item.logoURI}
-      />
-      <Text style={{ fontSize: 18, color: textColor }} numberOfLines={1}>
-        {item.symbol}
-      </Text>
-      <View style={{ flex: 1 }} />
-
-      {item.loading ? (
-        <Skeleton />
-      ) : (
-        <Text style={{ fontSize: 19, color: textColor }} numberOfLines={1}>
-          {formatCurrency(item.amount || '0', '')}
+    return (
+      <TouchableOpacity
+        onPress={() => onPress?.(item)}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginHorizontal: -16,
+          paddingVertical: 16,
+          paddingBottom: 13,
+          paddingHorizontal: 22,
+        }}
+      >
+        <Coin
+          chainId={chainId}
+          address={item.address}
+          symbol={item.symbol}
+          style={{ width: 36, height: 36, marginEnd: 16 }}
+          iconUrl={item.logoURI}
+        />
+        <Text style={{ fontSize: 18, color: textColor }} numberOfLines={1}>
+          {item.symbol}
         </Text>
-      )}
-    </TouchableOpacity>
-  );
-});
+        <View style={{ flex: 1 }} />
 
-export default observer(
-  ({
-    tokens,
-    loading,
-    separatorColor,
-    onRefreshRequest,
-    onTokenPress,
-    network,
-  }: {
-    tokens?: IToken[];
-    loading?: boolean;
-    separatorColor?: string;
-    onRefreshRequest?: () => Promise<any>;
-    onTokenPress?: (token: IToken) => void;
-    network: INetwork;
-  }) => {
-    const renderItem = ({ item }: ListRenderItemInfo<IToken>) => (
-      <Token chainId={network.chainId} item={item} onPress={onTokenPress} />
-    );
-    const [manuallyLoading, setManuallyLoading] = useState(false);
-
-    return (tokens?.length ?? 0) > 0 && !loading ? (
-      <FlatList
-        data={tokens}
-        keyExtractor={(i) => i.address}
-        renderItem={renderItem}
-        style={{ paddingHorizontal: 16 }}
-        contentContainerStyle={{ paddingBottom: 5 }}
-        ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: separatorColor, marginStart: 56 }} />}
-        refreshControl={
-          <RefreshControl
-            refreshing={manuallyLoading}
-            onRefresh={async () => {
-              setManuallyLoading(true);
-              await onRefreshRequest?.();
-              setManuallyLoading(false);
-            }}
-          />
-        }
-      />
-    ) : (
-      <View style={{ flex: 1, padding: 16, paddingVertical: 12 }}>
-        <Skeleton style={{ height: 52, width: '100%' }} />
-      </View>
+        {item.loading ? (
+          <Skeleton />
+        ) : (
+          <Text style={{ fontSize: 19, color: textColor }} numberOfLines={1}>
+            {formatCurrency(item.amount || '0', '')}
+          </Text>
+        )}
+      </TouchableOpacity>
     );
   }
 );
+
+interface Props {
+  tokens?: IFungibleToken[];
+  loading?: boolean;
+  separatorColor?: string;
+  onRefreshRequest?: () => Promise<any>;
+  onTokenPress?: (token: IFungibleToken) => void;
+  network: INetwork;
+}
+
+export default observer(({ tokens, loading, separatorColor, onRefreshRequest, onTokenPress, network }: Props) => {
+  const [manuallyLoading, setManuallyLoading] = useState(false);
+
+  const renderItem = ({ item }: ListRenderItemInfo<IFungibleToken>) => (
+    <Token chainId={network.chainId} item={item} onPress={onTokenPress} />
+  );
+
+  return (tokens?.length ?? 0) > 0 && !loading ? (
+    <FlatList
+      data={tokens}
+      keyExtractor={(i) => i.address}
+      renderItem={renderItem}
+      style={{ paddingHorizontal: 16 }}
+      contentContainerStyle={{ paddingBottom: 5 }}
+      ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: separatorColor, marginStart: 56 }} />}
+      refreshControl={
+        <RefreshControl
+          refreshing={manuallyLoading}
+          onRefresh={async () => {
+            setManuallyLoading(true);
+            await onRefreshRequest?.();
+            setManuallyLoading(false);
+          }}
+        />
+      }
+    />
+  ) : (
+    <View style={{ flex: 1, padding: 16, paddingVertical: 12 }}>
+      <Skeleton style={{ height: 52, width: '100%' }} />
+    </View>
+  );
+});

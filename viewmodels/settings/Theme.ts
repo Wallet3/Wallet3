@@ -109,6 +109,18 @@ class Theme {
     };
   }
 
+  get noShadow() {
+    return {
+      shadowColor: undefined,
+      shadowOffset: undefined,
+      shadowRadius: undefined,
+      shadowOpacity: undefined,
+      textShadowColor: undefined,
+      textShadowOffset: undefined,
+      textShadowRadius: undefined,
+    };
+  }
+
   reset() {
     this.setTheme('light');
   }

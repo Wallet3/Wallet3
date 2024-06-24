@@ -1,20 +1,25 @@
-import { StyleProp, Text, View, ViewStyle } from 'react-native';
+import { Image, StyleProp, Text, View, ViewStyle } from 'react-native';
 
 import Arbitrum from './arbitrum.svg';
 import Aurora from './aurora.svg';
 import Avalanche from './avalanche.svg';
 import Base from './base.svg';
+import BitTorrent from './btt.svg';
 import Boba from './boba.svg';
 import Bsc from './bnb.svg';
 import Canto from './canto.svg';
 import Celo from './celo.svg';
 import { Coin } from '../../../../components';
+import Conflux from './conflux.svg';
+import Consensys from './consensys.svg';
 import Cronos from './cronos.svg';
 import { Entypo } from '@expo/vector-icons';
+import Eos from './eos.svg';
 import Ethereum from './ethereum2.svg';
 import EthereumClassic from './ethereum-classic.svg';
 import Evmos from './evmos.svg';
 import Fantom from './fantom.svg';
+import FastImage from 'react-native-fast-image';
 import Findora from './findora.svg';
 import Fuse from './fuse.svg';
 import Harmony from './harmony-one.svg';
@@ -30,6 +35,7 @@ import Nova from './nova.svg';
 import OKEx from './okex.svg';
 import Optimism from './optimism.svg';
 import Polygon from './polygon.svg';
+import PolygonZkEVM from './polygon-zkevm.svg';
 import React from 'react';
 import Ronin from './ronin.svg';
 import Shiden from './shiden.svg';
@@ -37,6 +43,9 @@ import XDai from './xdai.svg';
 import ZKSync from './zksync.svg';
 import coins from '../../crypto';
 import styles from '../styles';
+
+const ScrollImg = require('./scroll.png');
+const ZoraImg = require('./zora.png');
 
 export const EVMIcon = ({
   color,
@@ -86,6 +95,7 @@ const FTM = generateNetworkIcon({ chainId: 250, width: 32 });
 const HECO = generateNetworkIcon({ chainId: 128, width: 32 });
 const OKX = generateNetworkIcon({ chainId: 66, width: 32 });
 const POLY = generateNetworkIcon({ chainId: 137, width: 27, height: 32 });
+const POLYGONZKEVM = generateNetworkIcon({ chainId: 1101, width: 29, height: 32 });
 const xDAI = generateNetworkIcon({ chainId: 100, width: 32 });
 const BOBA = generateNetworkIcon({ chainId: 288, width: 32 });
 const AURORA = generateNetworkIcon({ chainId: 1313161554, width: 32 });
@@ -117,6 +127,9 @@ const NOVA = generateNetworkIcon({ chainId: 42170, width: 27, height: 32 });
 const CANTO = generateNetworkIcon({ chainId: 7700, width: 27, height: 32 });
 const BASE = generateNetworkIcon({ chainId: 84531, width: 27, height: 32 });
 const JOC = generateNetworkIcon({ chainId: 99999, width: 27, height: 32 });
+const SCROLL = generateNetworkIcon({ chainId: 534353, width: 27, height: 32 });
+const CONFLUX = generateNetworkIcon({ chainId: 1030, width: 27, height: 32 });
+const EOS = generateNetworkIcon({ chainId: 17777, width: 27, height: 32 });
 
 export const NetworkIcons = {
   1: ETH,
@@ -129,6 +142,8 @@ export const NetworkIcons = {
   128: HECO,
   66: OKX,
   137: POLY,
+  1101: POLYGONZKEVM,
+  1442: POLYGONZKEVM,
   80001: POLY,
   100: xDAI,
   288: BOBA,
@@ -140,6 +155,7 @@ export const NetworkIcons = {
   1285: MOONRIVER,
   2020: RONIN,
   280: ZSYNC,
+  324: ZSYNC,
   8217: KLAYTN,
   2152: FINDORA,
   1088: METIS,
@@ -150,7 +166,11 @@ export const NetworkIcons = {
   42170: NOVA,
   7700: CANTO,
   84531: BASE,
+  8453: BASE,
   99999: JOC,
+  534353: SCROLL,
+  1030: CONFLUX,
+  17777: EOS,
 };
 
 export function generateNetworkIcon(props: {
@@ -176,6 +196,9 @@ export function generateNetworkIcon(props: {
     case 137:
     case 80001:
       return <Polygon key={chainId} width={width} height={height ?? width} style={style} />;
+    case 1101:
+    case 1442:
+      return <PolygonZkEVM key={chainId} width={width} height={height ?? width} style={style} />;
     case 100:
       return <XDai key={chainId} width={width} height={height ?? width} style={style} />;
     case 288:
@@ -210,6 +233,7 @@ export function generateNetworkIcon(props: {
     case 2020:
       return <Ronin key={chainId} width={width} height={height ?? width} style={style} />;
     case 280:
+    case 324:
       return <ZKSync key={chainId} width={width} height={height ?? width} style={style} />;
     case 8217:
       return <Klaytn key={chainId} width={width} height={height ?? width} style={style} />;
@@ -237,12 +261,26 @@ export function generateNetworkIcon(props: {
     case 7700:
       return <Canto key={chainId} width={width} height={height ?? width} style={style} />;
     case 84531:
+    case 8453:
       return <Base key={chainId} width={width} height={height ?? width} style={style} />;
     case 99999:
       return <JapanOpenChain key={chainId} width={width} height={height ?? width} style={style} />;
+    case 59140:
+    case 59144:
+      return <Consensys key={chainId} width={width} height={height ?? width} style={style} />;
+    case 534353:
+      return <FastImage key={chainId} source={ScrollImg} style={[{ width, height }, style as any]} />;
+    case 7777777:
+      return <FastImage key={chainId} source={ZoraImg} style={[{ width, height }, style as any]} />;
+    case 1030:
+      return <Conflux key={chainId} width={width} height={height ?? width} style={style} />;
+    case 17777:
+      return <Eos key={chainId} width={width} height={height ?? width} style={style} />;
+    case 199:
+      return <BitTorrent key={chainId} width={width} height={height ?? width} style={style} />;
     default:
       return coins[symbol?.toLowerCase() || ''] ? (
-        <Coin symbol={symbol} size={height ?? width} address="" chainId={chainId} style={style as any} />
+        <Coin key={chainId} symbol={symbol} size={height ?? width} address="" chainId={chainId} style={style as any} />
       ) : (
         <EVMIcon key={chainId} size={width} color={color!} style={style} hideEVMTitle={hideEVMTitle} />
       );
@@ -272,4 +310,8 @@ export default {
   1285: <Moonriver width={42} height={42} style={{ ...styles.moonriver, opacity: 1 }} />,
   122: <Fuse width={32} height={32} style={{ ...styles.fuse, opacity: 1 }} />,
   336: <Shiden width={40} height={40} style={{ ...styles.shiden, opacity: 1 }} />,
+  59140: <Consensys width={40} height={40} style={{ ...styles.linea, opacity: 1 }} />,
+  59144: <Consensys width={40} height={40} style={{ ...styles.linea, opacity: 1 }} />,
+  8453: <Base width={40} height={40} style={{ ...styles.base, opacity: 1 }} />,
+  84531: <Base width={40} height={40} style={{ ...styles.base, opacity: 1 }} />,
 };

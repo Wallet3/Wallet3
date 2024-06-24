@@ -21,12 +21,14 @@ export const xDAI_USDC = {
   decimals: 6,
   symbol: 'USDC',
   shown: true,
+  isStable: true,
 };
 
 export const xDAI_USDT = {
   address: '0x4ECaBa5870353805a9F068101A40E0f32ed605C6',
   decimals: 6,
   symbol: 'USDT',
+  isStable: true,
 };
 
 export const xDAI_HNY = {
